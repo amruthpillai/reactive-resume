@@ -213,10 +213,17 @@ const Section = <T,>({
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
 
             return (
-              <div key={item.id} className={cn("space-y-2", className)}>
-                <div>
-                  {children?.(item as T)}
-                  {url !== undefined && section.separateLinks && <Link url={url} />}
+              <div
+                key={item.id}
+                className={cn("relative space-y-2 pl-4 group-[.sidebar]:pl-0", className)}
+              >
+                <div className="relative -ml-4 group-[.sidebar]:ml-0">
+                  <div className="pl-4 group-[.sidebar]:pl-0">
+                    {children?.(item as T)}
+                    {url !== undefined && section.separateLinks && <Link url={url} />}
+                  </div>
+
+                  <div className="absolute inset-y-0 -left-px border-l-4 border-primary group-[.sidebar]:hidden" />
                 </div>
 
                 {summary !== undefined && !isEmptyString(summary) && (
@@ -231,6 +238,8 @@ const Section = <T,>({
                 {keywords !== undefined && keywords.length > 0 && (
                   <p className="text-sm">{keywords.join(", ")}</p>
                 )}
+
+                <div className="absolute inset-y-0 left-0 border-l border-primary group-[.sidebar]:hidden" />
               </div>
             );
           })}
