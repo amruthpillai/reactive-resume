@@ -54,6 +54,8 @@ services:
   chrome:
     image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - ${CHROME_PORT:-8080}:3000
     environment:
