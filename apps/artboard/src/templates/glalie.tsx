@@ -44,30 +44,17 @@ const Header = () => {
           <div className="text-base">{basics.headline}</div>
         </div>
 
-        <div className="flex flex-col items-start gap-y-1.5 rounded border border-primary px-3 py-4 text-left text-sm">
+        <div className="flex flex-col items-start gap-y-1.5 rounded border border-primary px-3 py-4 text-left text-md">
+          {/* Location */}
           {basics.location && (
             <div className="flex items-center gap-x-1.5">
               <i className="ph ph-bold ph-map-pin text-primary" />
               <div>{basics.location}</div>
             </div>
           )}
-          {basics.phone && (
-            <div className="flex items-center gap-x-1.5">
-              <i className="ph ph-bold ph-phone text-primary" />
-              <a href={`tel:${basics.phone}`} target="_blank" rel="noreferrer">
-                {basics.phone}
-              </a>
-            </div>
-          )}
-          {basics.email && (
-            <div className="flex items-center gap-x-1.5">
-              <i className="ph ph-bold ph-at text-primary" />
-              <a href={`mailto:${basics.email}`} target="_blank" rel="noreferrer">
-                {basics.email}
-              </a>
-            </div>
-          )}
+          {/* Website */}
           <Link url={basics.url} />
+          {/* Custom fields (linkedin, github) */}
           {basics.customFields.map((item) => (
             <div key={item.id} className="flex items-center gap-x-1.5">
               <i className={cn(`ph ph-bold ph-${item.icon} text-primary`)} />
@@ -80,6 +67,24 @@ const Header = () => {
               )}
             </div>
           ))}
+          {/* Email */}
+          {basics.email && (
+            <div className="flex items-center gap-x-1.5">
+              <i className="ph ph-bold ph-at text-primary" />
+              <a href={`mailto:${basics.email}`} target="_blank" rel="noreferrer">
+                {basics.email}
+              </a>
+            </div>
+          )}
+          {/* Phone */}
+          {basics.phone && (
+            <div className="flex items-center gap-x-1.5">
+              <i className="ph ph-bold ph-phone text-primary" />
+              <a href={`tel:${basics.phone}`} target="_blank" rel="noreferrer">
+                {basics.phone}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
