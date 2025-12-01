@@ -164,7 +164,7 @@ const LinkedEntity = ({ name, url, separateLinks, className }: LinkedEntityProps
     <Link
       url={url}
       label={name}
-      icon={<i className="ph ph-bold ph-globe text-primary group-[.sidebar]:text-primary" />}
+      icon={<i className="ph ph-arrow-up-right -ml-1 text-primary group-[.sidebar]:text-primary" />}
       iconOnRight={true}
       className={className}
     />
@@ -236,7 +236,16 @@ const Section = <T,>({
                 {level !== undefined && level > 0 && <Rating level={level} />}
 
                 {keywords !== undefined && keywords.length > 0 && (
-                  <p className="text-sm">{keywords.join(", ")}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {keywords.map((keyword) => (
+                      <span
+                        key={keyword}
+                        className="rounded-sm border bg-primary/20 px-2 py-0.5 text-xs"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
                 )}
 
                 <div className="absolute inset-y-0 left-0 border-l border-primary group-[.sidebar]:hidden" />
@@ -376,7 +385,7 @@ const Skills = () => {
       {(item) => (
         <div>
           <div className="font-bold">{item.name}</div>
-          <div>{item.description}</div>
+          <div className="text-sm italic">{item.description}</div>
         </div>
       )}
     </Section>
