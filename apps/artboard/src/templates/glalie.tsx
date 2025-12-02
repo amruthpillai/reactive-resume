@@ -245,7 +245,7 @@ const Section = <T,>({
                     {keywords.map((keyword) => (
                       <span
                         key={keyword}
-                        className="rounded-sm border bg-primary/20 px-2 py-0.5 text-xs"
+                        className="rounded-sm border bg-primary/20 px-2 py-0.5 text-sm"
                       >
                         {keyword}
                       </span>
@@ -402,7 +402,7 @@ const Interests = () => {
 
   return (
     <Section<Interest> section={section} keywordsKey="keywords" className="space-y-0.5">
-      {(item) => <div className="font-bold">{item.name}</div>}
+      {(item) => <div className="">{item.name}</div>}
     </Section>
   );
 };
