@@ -402,7 +402,7 @@ const Interests = () => {
 
   return (
     <Section<Interest> section={section} keywordsKey="keywords" className="space-y-0.5">
-      {(item) => <div className="">{item.name}</div>}
+      {(item) => <div className="font-normal">{item.name}</div>}
     </Section>
   );
 };
