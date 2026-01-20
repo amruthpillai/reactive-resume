@@ -29,6 +29,8 @@ type AIChatResponse = {
 	};
 };
 
+const FAB_TIMEOUT_MS = 60_000;
+
 export function AIChatPanel() {
 	const aiEnabled = useAIStore((state) => state.enabled);
 	const aiConfig = useAIStore((state) => ({
@@ -41,7 +43,7 @@ export function AIChatPanel() {
 	const { resumeId } = useParams({ from: "/builder/$resumeId" });
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const { isOpen, fabVisible, lastInteraction, messages, toggle, open, close, hideFab, addMessage, touch } =
+	const { isOpen, fabVisible, lastInteraction, messages, toggle, close, hideFab, addMessage, touch } =
 		useAIChatStore();
 
 	const [input, setInput] = useState("");
@@ -76,7 +78,7 @@ export function AIChatPanel() {
 	useEffect(() => {
 		if (!fabVisible || isOpen) return;
 		const last = lastInteraction ?? Date.now();
-		const remaining = Math.max(0, 60_000 - (Date.now() - last));
+		const remaining = Math.max(0, FAB_TIMEOUT_MS - (Date.now() - last));
 		const timer = setTimeout(() => {
 			if (!useAIChatStore.getState().isOpen) hideFab();
 		}, remaining);
@@ -173,7 +175,7 @@ export function AIChatPanel() {
 				>
 					<Button
 						size="icon"
-					variant="default"
+						variant="default"
 						className="pointer-events-auto shadow-lg"
 						onClick={() => {
 							toggle();
@@ -184,20 +186,6 @@ export function AIChatPanel() {
 					</Button>
 				</motion.div>
 			) : null}
-
-			{!fabVisible && (
-				<Button
-					className="hidden"
-					variant="ghost"
-					size="icon"
-					onClick={() => {
-						open();
-						touch();
-					}}
-				>
-					<SparkleIcon />
-				</Button>
-			)}
 		</>
 	);
 }
