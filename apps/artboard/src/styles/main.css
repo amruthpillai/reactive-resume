@@ -27,3 +27,32 @@ body {
 .wysiwyg {
   @apply prose-foreground prose max-w-none prose-headings:mb-2 prose-headings:mt-0 prose-p:mb-2 prose-p:mt-0 prose-p:leading-normal prose-a:break-all prose-ol:mb-2 prose-ol:mt-0 prose-ul:mb-2 prose-ul:mt-0 prose-li:mb-2 prose-li:mt-0 prose-li:leading-normal prose-img:mb-2 prose-img:mt-0 prose-hr:mb-2 prose-hr:mt-0;
 }
+
+@media print {
+
+  p,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Force flex-column layout for list-based sections to ensure correct pagination flow while respecting gaps */
+  section#experience>.grid,
+  section#education>.grid,
+  section#projects>.grid,
+  section#volunteer>.grid,
+  section#publications>.grid,
+  section#references>.grid,
+  section#awards>.grid,
+  section#certifications>.grid,
+  section[id^="custom"]>.grid {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
