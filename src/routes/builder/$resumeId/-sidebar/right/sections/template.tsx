@@ -30,8 +30,8 @@ function TemplateSectionForm() {
 		<div className="flex @md:flex-row flex-col items-stretch gap-x-4 gap-y-2">
 			<Button
 				variant="ghost"
-				className="group/preview relative h-auto w-40 shrink-0 cursor-pointer p-0"
 				onClick={onOpenTemplateGallery}
+				className="group/preview relative h-auto w-40 shrink-0 cursor-pointer p-0"
 			>
 				<div className="relative z-10 aspect-page size-full overflow-hidden rounded-md opacity-100 transition-opacity group-hover/preview:opacity-50">
 					<img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
@@ -48,9 +48,9 @@ function TemplateSectionForm() {
 					<p className="text-muted-foreground text-sm">{i18n.t(metadata.description)}</p>
 				</div>
 
-				<div className="flex flex-wrap gap-1.5">
+				<div className="flex flex-wrap gap-2.5">
 					{metadata.tags.map((tag) => (
-						<Badge key={tag} variant="outline">
+						<Badge key={tag} variant="secondary">
 							{tag}
 						</Badge>
 					))}

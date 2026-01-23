@@ -8,11 +8,7 @@ export const iconSchema = z
 	);
 
 export const urlSchema = z.object({
-	url: z
-		.string()
-		.describe(
-			"The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). Leave blank to hide.",
-		),
+	url: z.string().describe("The URL to show as a link. Must be a valid URL with a protocol (http:// or https://)."),
 	label: z.string().describe("The label to display for the URL. Leave blank to display the URL as-is."),
 });
 
@@ -21,7 +17,7 @@ export const pictureSchema = z.object({
 	url: z
 		.string()
 		.describe(
-			"The URL to the picture to display on the resume. Must be a valid URL with a protocol (http:// or https://). Leave blank to hide.",
+			"The URL to the picture to display on the resume. Must be a valid URL with a protocol (http:// or https://).",
 		),
 	size: z
 		.number()
@@ -65,18 +61,14 @@ export const customFieldSchema = z.object({
 	id: z.string().describe("The unique identifier for the custom field. Usually generated as a UUID."),
 	icon: iconSchema,
 	text: z.string().describe("The text to display for the custom field."),
-	link: z
-		.url()
-		.or(z.literal(""))
-		.describe("If the custom field should be a link, the URL to link to. Leave blank to hide.")
-		.catch(""),
+	link: z.url().or(z.literal("")).describe("If the custom field should be a link, the URL to link to.").catch(""),
 });
 
 export const basicsSchema = z.object({
 	name: z.string().describe("The full name of the author of the resume."),
 	headline: z.string().describe("The headline of the author of the resume."),
-	email: z.email().or(z.literal("")).describe("The email address of the author of the resume. Leave blank to hide."),
-	phone: z.string().describe("The phone number of the author of the resume. Leave blank to hide."),
+	email: z.email().or(z.literal("")).describe("The email address of the author of the resume."),
+	phone: z.string().describe("The phone number of the author of the resume."),
 	location: z.string().describe("The location of the author of the resume."),
 	website: urlSchema.describe("The website of the author of the resume."),
 	customFields: z.array(customFieldSchema).describe("The custom fields to display on the resume."),
@@ -86,9 +78,7 @@ export const summarySchema = z.object({
 	title: z.string().describe("The title of the summary of the resume."),
 	columns: z.number().describe("The number of columns the summary should span across."),
 	hidden: z.boolean().describe("Whether to hide the summary from the resume."),
-	content: z
-		.string()
-		.describe("The content of the summary of the resume. This should be a HTML-formatted string. Leave blank to hide."),
+	content: z.string().describe("The content of the summary of the resume. This should be a HTML-formatted string."),
 });
 
 export const baseItemSchema = z.object({
@@ -101,9 +91,7 @@ export const awardItemSchema = baseItemSchema.extend({
 	awarder: z.string().describe("The awarder of the award."),
 	date: z.string().describe("The date when the award was received."),
 	website: urlSchema.describe("The website of the award, if any."),
-	description: z
-		.string()
-		.describe("The description of the award. This should be a HTML-formatted string. Leave blank to hide."),
+	description: z.string().describe("The description of the award. This should be a HTML-formatted string."),
 });
 
 export const certificationItemSchema = baseItemSchema.extend({
@@ -111,9 +99,7 @@ export const certificationItemSchema = baseItemSchema.extend({
 	issuer: z.string().describe("The issuer of the certification."),
 	date: z.string().describe("The date when the certification was received."),
 	website: urlSchema.describe("The website of the certification, if any."),
-	description: z
-		.string()
-		.describe("The description of the certification. This should be a HTML-formatted string. Leave blank to hide."),
+	description: z.string().describe("The description of the certification. This should be a HTML-formatted string."),
 });
 
 export const educationItemSchema = baseItemSchema.extend({
@@ -124,9 +110,7 @@ export const educationItemSchema = baseItemSchema.extend({
 	location: z.string().describe("The location of the school or institution."),
 	period: z.string().describe("The period of time the education was obtained over."),
 	website: urlSchema.describe("The website of the school or institution, if any."),
-	description: z
-		.string()
-		.describe("The description of the education. This should be a HTML-formatted string. Leave blank to hide."),
+	description: z.string().describe("The description of the education. This should be a HTML-formatted string."),
 });
 
 export const experienceItemSchema = baseItemSchema.extend({
@@ -135,9 +119,7 @@ export const experienceItemSchema = baseItemSchema.extend({
 	location: z.string().describe("The location of the company or organization."),
 	period: z.string().describe("The period of time the author was employed at the company or organization."),
 	website: urlSchema.describe("The website of the company or organization, if any."),
-	description: z
-		.string()
-		.describe("The description of the experience. This should be a HTML-formatted string. Leave blank to hide."),
+	description: z.string().describe("The description of the experience. This should be a HTML-formatted string."),
 });
 
 export const interestItemSchema = baseItemSchema.extend({
@@ -177,9 +159,7 @@ export const projectItemSchema = baseItemSchema.extend({
 	name: z.string().min(1).describe("The name of the project."),
 	period: z.string().describe("The period of time the project was worked on."),
 	website: urlSchema.describe("The link to the project, if any."),
-	description: z
-		.string()
-		.describe("The description of the project. This should be a HTML-formatted string. Leave blank to hide."),
+	description: z.string().describe("The description of the project. This should be a HTML-formatted string."),
 });
 
 export const publicationItemSchema = baseItemSchema.extend({
@@ -187,17 +167,18 @@ export const publicationItemSchema = baseItemSchema.extend({
 	publisher: z.string().describe("The publisher of the publication."),
 	date: z.string().describe("The date when the publication was published."),
 	website: urlSchema.describe("The link to the publication, if any."),
-	description: z
-		.string()
-		.describe("The description of the publication. This should be a HTML-formatted string. Leave blank to hide."),
+	description: z.string().describe("The description of the publication. This should be a HTML-formatted string."),
 });
 
 export const referenceItemSchema = baseItemSchema.extend({
 	name: z.string().min(1).describe("The name of the reference, or a note such as 'Available upon request'."),
+	position: z.string().describe("The position or job title of the reference."),
+	website: urlSchema.describe("The website or LinkedIn profile of the reference, if any."),
+	phone: z.string().describe("The phone number of the reference."),
 	description: z
 		.string()
 		.describe(
-			"The description of the reference. Can be used to display a quote, a testimonial, etc. This should be a HTML-formatted string. Leave blank to hide.",
+			"The description of the reference. Can be used to display a quote, a testimonial, etc. This should be a HTML-formatted string.",
 		),
 });
 
@@ -230,9 +211,7 @@ export const volunteerItemSchema = baseItemSchema.extend({
 	website: urlSchema.describe("The link to the organization or company, if any."),
 	description: z
 		.string()
-		.describe(
-			"The description of the volunteer experience. This should be a HTML-formatted string. Leave blank to hide.",
-		),
+		.describe("The description of the volunteer experience. This should be a HTML-formatted string."),
 });
 
 export const baseSectionSchema = z.object({
@@ -842,7 +821,7 @@ export const sampleResumeData: ResumeData = {
 		},
 		skills: {
 			title: "Technical Skills",
-			columns: 2,
+			columns: 1,
 			hidden: false,
 			items: [
 				{
@@ -899,42 +878,6 @@ export const sampleResumeData: ResumeData = {
 					level: 4,
 					keywords: ["Profiling", "Memory Management", "Frame Rate"],
 				},
-				{
-					id: "skill7",
-					hidden: false,
-					icon: "git-branch",
-					name: "Version Control",
-					proficiency: "Advanced",
-					level: 5,
-					keywords: ["Git", "Perforce", "Plastic SCM"],
-				},
-				{
-					id: "skill8",
-					hidden: false,
-					icon: "devices",
-					name: "Platform Development",
-					proficiency: "Advanced",
-					level: 4,
-					keywords: ["PC", "Console (PS5/Xbox)", "Mobile", "Switch"],
-				},
-				{
-					id: "skill9",
-					hidden: false,
-					icon: "network",
-					name: "Multiplayer/Networking",
-					proficiency: "Intermediate",
-					level: 3,
-					keywords: ["Photon", "Mirror", "Client-Server", "P2P"],
-				},
-				{
-					id: "skill10",
-					hidden: false,
-					icon: "palette",
-					name: "Shaders & VFX",
-					proficiency: "Intermediate",
-					level: 3,
-					keywords: ["Shader Graph", "HLSL", "Particle Systems"],
-				},
 			],
 		},
 		languages: {
@@ -960,7 +903,7 @@ export const sampleResumeData: ResumeData = {
 		},
 		interests: {
 			title: "Interests",
-			columns: 2,
+			columns: 1,
 			hidden: false,
 			items: [
 				{
@@ -1132,6 +1075,9 @@ export const sampleResumeData: ResumeData = {
 					id: "ref1",
 					hidden: false,
 					name: "Available upon request",
+					position: "",
+					website: { url: "", label: "" },
+					phone: "",
 					description: "",
 				},
 			],

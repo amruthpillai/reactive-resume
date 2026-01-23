@@ -4,6 +4,7 @@ import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
 import { RichInput } from "@/components/input/rich-input";
+import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -28,6 +29,9 @@ export function CreateReferenceDialog({ data }: DialogProps<"resume.sections.ref
 			id: generateId(),
 			hidden: data?.item?.hidden ?? false,
 			name: data?.item?.name ?? "",
+			position: data?.item?.position ?? "",
+			website: data?.item?.website ?? { url: "", label: "" },
+			phone: data?.item?.phone ?? "",
 			description: data?.item?.description ?? "",
 		},
 	});
@@ -83,6 +87,9 @@ export function UpdateReferenceDialog({ data }: DialogProps<"resume.sections.ref
 			id: data.item.id,
 			hidden: data.item.hidden,
 			name: data.item.name,
+			position: data.item.position,
+			website: data.item.website,
+			phone: data.item.phone,
 			description: data.item.description,
 		},
 	});
@@ -140,12 +147,60 @@ function ReferenceForm() {
 				control={form.control}
 				name="name"
 				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
+					<FormItem>
 						<FormLabel>
 							<Trans>Name</Trans>
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="position"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>
+							<Trans>Position</Trans>
+						</FormLabel>
+						<FormControl>
+							<Input {...field} />
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="phone"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>
+							<Trans>Phone</Trans>
+						</FormLabel>
+						<FormControl>
+							<Input {...field} />
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="website"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>
+							<Trans>Website</Trans>
+						</FormLabel>
+						<FormControl>
+							<URLInput {...field} value={field.value} onChange={field.onChange} />
 						</FormControl>
 						<FormMessage />
 					</FormItem>

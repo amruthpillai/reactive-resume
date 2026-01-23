@@ -45,7 +45,7 @@ function RouteComponent() {
 						variant="link"
 						className="h-5 justify-start text-muted-foreground text-xs active:scale-100"
 					>
-						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener noreferrer">
+						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
 							<Trans>Help translate the app to your language</Trans>
 							<ArrowRightIcon className="size-3" />
 						</a>

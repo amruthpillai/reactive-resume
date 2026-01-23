@@ -18,6 +18,9 @@ const searchSchema = z.object({ token: z.string().min(1) });
 export const Route = createFileRoute("/auth/reset-password")({
 	component: RouteComponent,
 	validateSearch: zodValidator(searchSchema),
+	beforeLoad: async ({ context }) => {
+		if (context.flags.disableEmailAuth) throw redirect({ to: "/auth/login", replace: true });
+	},
 	onError: (error) => {
 		if (error instanceof SearchParamError) {
 			throw redirect({ to: "/auth/login" });

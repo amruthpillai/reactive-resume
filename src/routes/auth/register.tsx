@@ -19,6 +19,7 @@ export const Route = createFileRoute("/auth/register")({
 	component: RouteComponent,
 	beforeLoad: async ({ context }) => {
 		if (context.session) throw redirect({ to: "/dashboard", replace: true });
+		if (context.flags.disableSignups) throw redirect({ to: "/auth/login", replace: true });
 		return { session: null };
 	},
 });
@@ -43,6 +44,7 @@ type FormValues = z.infer<typeof formSchema>;
 function RouteComponent() {
 	const [submitted, setSubmitted] = useState(false);
 	const [showPassword, toggleShowPassword] = useToggle(false);
+	const { flags } = Route.useRouteContext();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -96,102 +98,104 @@ function RouteComponent() {
 				</div>
 			</div>
 
-			<Form {...form}>
-				<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-					<FormField
-						control={form.control}
-						name="name"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Name</Trans>
-								</FormLabel>
-								<FormControl>
-									<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+			{!flags.disableEmailAuth && (
+				<Form {...form}>
+					<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										<Trans>Name</Trans>
+									</FormLabel>
+									<FormControl>
+										<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-					<FormField
-						control={form.control}
-						name="username"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Username</Trans>
-								</FormLabel>
-								<FormControl>
-									<Input
-										min={3}
-										max={64}
-										autoComplete="username"
-										placeholder="john.doe"
-										className="lowercase"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="email"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Email Address</Trans>
-								</FormLabel>
-								<FormControl>
-									<Input
-										type="email"
-										autoComplete="email"
-										placeholder="john.doe@example.com"
-										className="lowercase"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Password</Trans>
-								</FormLabel>
-								<div className="flex items-center gap-x-1.5">
+						<FormField
+							control={form.control}
+							name="username"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										<Trans>Username</Trans>
+									</FormLabel>
 									<FormControl>
 										<Input
-											min={6}
+											min={3}
 											max={64}
-											type={showPassword ? "text" : "password"}
-											autoComplete="new-password"
+											autoComplete="username"
+											placeholder="john.doe"
+											className="lowercase"
 											{...field}
 										/>
 									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-									<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
-										{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-									</Button>
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										<Trans>Email Address</Trans>
+									</FormLabel>
+									<FormControl>
+										<Input
+											type="email"
+											autoComplete="email"
+											placeholder="john.doe@example.com"
+											className="lowercase"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-					<Button type="submit" className="w-full">
-						<Trans>Sign up</Trans>
-					</Button>
-				</form>
-			</Form>
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										<Trans>Password</Trans>
+									</FormLabel>
+									<div className="flex items-center gap-x-1.5">
+										<FormControl>
+											<Input
+												min={6}
+												max={64}
+												type={showPassword ? "text" : "password"}
+												autoComplete="new-password"
+												{...field}
+											/>
+										</FormControl>
+
+										<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+											{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+										</Button>
+									</div>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<Button type="submit" className="w-full">
+							<Trans>Sign up</Trans>
+						</Button>
+					</form>
+				</Form>
+			)}
 
 			<SocialAuth />
 		</>

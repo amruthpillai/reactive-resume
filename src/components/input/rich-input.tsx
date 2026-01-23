@@ -269,11 +269,7 @@ function EditorToolbar({ editor }: { editor: Editor }) {
 						return;
 					}
 
-					ctx.editor
-						.chain()
-						.focus()
-						.setLink({ href: url, target: "_blank", rel: "noopener noreferrer nofollow" })
-						.run();
+					ctx.editor.chain().focus().setLink({ href: url, target: "_blank", rel: "noopener nofollow" }).run();
 				},
 				unsetLink: () => ctx.editor.chain().focus().unsetLink().run(),
 

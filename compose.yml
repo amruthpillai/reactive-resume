@@ -100,7 +100,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      gotenberg:
+      browserless:
         condition: service_healthy
       seaweedfs-create-bucket:
         condition: service_completed_successfully

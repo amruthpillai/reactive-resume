@@ -65,6 +65,7 @@ export const env = createEnv({
 
 		// Feature Flags
 		FLAG_DEBUG_PRINTER: z.stringbool().default(false),
-		FLAG_DISABLE_SIGNUP: z.stringbool().default(false),
+		FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
+		FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
 	},
 });

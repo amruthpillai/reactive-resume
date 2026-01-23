@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 import {
-	ArrowsClockwiseIcon,
 	CircleNotchIcon,
 	CubeFocusIcon,
 	FileJsIcon,
@@ -28,7 +27,7 @@ export function BuilderDock() {
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const { data: session } = authClient.useSession();
 	const params = useParams({ from: "/builder/$resumeId" });
-	const { zoomIn, zoomOut, resetTransform, centerView } = useControls();
+	const { zoomIn, zoomOut, centerView } = useControls();
 
 	const { data: resume } = useQuery(orpc.resume.getById.queryOptions({ input: { id: params.resumeId } }));
 	const { mutateAsync: printResumeAsPDF, isPending: isPrinting } = useMutation(
@@ -39,11 +38,6 @@ export function BuilderDock() {
 		if (!session || !resume) return "";
 		return `${window.location.origin}/${session.user.username}/${resume.slug}`;
 	}, [session, resume]);
-
-	const onReset = useCallback(() => {
-		resetTransform();
-		centerView();
-	}, [resetTransform, centerView]);
 
 	const onCopyUrl = useCallback(async () => {
 		await copyToClipboard(publicUrl);
@@ -79,7 +73,6 @@ export function BuilderDock() {
 			>
 				<DockIcon icon={MagnifyingGlassPlusIcon} title={t`Zoom in`} onClick={() => zoomIn(0.1)} />
 				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.1)} />
-				<DockIcon icon={ArrowsClockwiseIcon} title={t`Reset zoom`} onClick={() => onReset()} />
 				<DockIcon icon={CubeFocusIcon} title={t`Center view`} onClick={() => centerView()} />
 				<div className="mx-1 h-8 w-px bg-border" />
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { and, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { Pool, type QueryResult } from "pg";
 import { schema } from "@/integrations/drizzle";
 import { ReactiveResumeV4JSONImporter } from "@/integrations/import/reactive-resume-v4-json";
 import { defaultResumeData } from "@/schema/resume/data";
@@ -43,23 +43,28 @@ const localPool = new Pool({ connectionString: localUrl });
 const productionDb = drizzle({ client: productionPool });
 const localDb = drizzle({ client: localPool, schema });
 
-// == Persistent mapping file path ==
+// == Persistent mapping file paths ==
 const USER_ID_MAP_FILE = "./scripts/migration/user-id-map.json";
+const RESUME_ID_MAP_FILE = "./scripts/migration/resume-id-map.json";
 
 // == Progress checkpoint file path ==
 const PROGRESS_FILE = "./scripts/migration/resume-progress.json";
 
 // You may tune this for your use case
 // Reduced from 10000 to avoid PostgreSQL message format errors
-const BATCH_SIZE = 5000;
+const BATCH_SIZE = 10_000;
 
 // Chunk size for actual inserts - smaller to avoid PostgreSQL message size limits
 // Especially important for resumes as they contain large JSONB data
 const INSERT_CHUNK_SIZE = 1000;
 
 // == Progress checkpoint interface ==
+// Uses cursor-based pagination with (createdAt, id) composite key for efficiency
 interface MigrationProgress {
-	currentOffset: number;
+	// Cursor for pagination - last seen createdAt timestamp
+	lastSeenCreatedAt: string | null;
+	// Cursor for pagination - last seen id (for tiebreaker when timestamps are equal)
+	lastSeenId: string | null;
 	resumesCreated: number;
 	statisticsCreated: number;
 	skipped: number;
@@ -76,7 +81,7 @@ async function loadProgress(): Promise<MigrationProgress | null> {
 		const text = await fs.readFile(PROGRESS_FILE, { encoding: "utf-8" });
 		const progress = JSON.parse(text) as MigrationProgress;
 		console.log(`📂 Found existing progress file. Last updated: ${progress.lastUpdated}`);
-		console.log(`   Resuming from offset ${progress.currentOffset}...`);
+		console.log(`   Resuming from cursor (createdAt: ${progress.lastSeenCreatedAt}, id: ${progress.lastSeenId})...`);
 		return progress;
 	} catch (e) {
 		console.warn("⚠️  Failed to load progress file, starting from beginning.", e);
@@ -88,7 +93,7 @@ async function saveProgress(progress: MigrationProgress): Promise<void> {
 	try {
 		progress.lastUpdated = new Date().toISOString();
 		await fs.writeFile(PROGRESS_FILE, JSON.stringify(progress, null, 2), { encoding: "utf-8" });
-		console.log(`💾 Progress saved at offset ${progress.currentOffset}`);
+		console.log(`💾 Progress saved at cursor (createdAt: ${progress.lastSeenCreatedAt}, id: ${progress.lastSeenId})`);
 	} catch (e) {
 		console.error("🚨 Failed to save progress:", e);
 	}
@@ -114,15 +119,35 @@ async function loadUserIdMapFromFile(): Promise<Map<string, string>> {
 	return new Map<string, string>();
 }
 
+async function loadResumeIdMapFromFile(): Promise<Map<string, string>> {
+	try {
+		const text = await fs.readFile(RESUME_ID_MAP_FILE, { encoding: "utf-8" });
+		const obj = JSON.parse(text);
+		return new Map(Object.entries(obj));
+	} catch (e) {
+		console.warn("⚠️  Failed to load resumeIdMap from disk, continuing with empty map.", e);
+	}
+	return new Map<string, string>();
+}
+
+async function saveResumeIdMapToFile(resumeIdMap: Map<string, string>) {
+	const obj: Record<string, string> = Object.fromEntries(resumeIdMap.entries());
+	await fs.writeFile(RESUME_ID_MAP_FILE, JSON.stringify(obj, null, "\t"), { encoding: "utf-8" });
+}
+
 export async function migrateResumes() {
 	const migrationStart = performance.now();
 	console.log("⌛ Starting resume migration...");
 
 	let hasMore = true;
-	let currentOffset = 0;
 
-	// Load persistent userIdMap from file
+	// Cursor-based pagination state
+	let lastSeenCreatedAt: string | null = null;
+	let lastSeenId: string | null = null;
+
+	// Load persistent ID maps from file
 	const userIdMap = await loadUserIdMapFromFile();
+	const resumeIdMap = await loadResumeIdMapFromFile();
 
 	// Track migration stats
 	let resumesCreated = 0;
@@ -134,7 +159,8 @@ export async function migrateResumes() {
 	// Load saved progress if exists
 	const savedProgress = await loadProgress();
 	if (savedProgress) {
-		currentOffset = savedProgress.currentOffset;
+		lastSeenCreatedAt = savedProgress.lastSeenCreatedAt;
+		lastSeenId = savedProgress.lastSeenId;
 		resumesCreated = savedProgress.resumesCreated;
 		statisticsCreated = savedProgress.statisticsCreated;
 		skipped = savedProgress.skipped;
@@ -144,7 +170,8 @@ export async function migrateResumes() {
 
 	// Helper to get current progress object
 	const getCurrentProgress = (): MigrationProgress => ({
-		currentOffset,
+		lastSeenCreatedAt,
+		lastSeenId,
 		resumesCreated,
 		statisticsCreated,
 		skipped,
@@ -159,6 +186,7 @@ export async function migrateResumes() {
 		shutdownRequested = true;
 		console.log("\n⚠️  Shutdown requested. Saving progress...");
 		await saveProgress(getCurrentProgress());
+		await saveResumeIdMapToFile(resumeIdMap);
 		console.log("👋 Exiting. Run the script again to resume from where you left off.");
 		process.exit(0);
 	};
@@ -173,14 +201,32 @@ export async function migrateResumes() {
 		// Check if shutdown was requested
 		if (shutdownRequested) break;
 
-		console.log(`📥 Fetching resumes batch from production database (OFFSET ${currentOffset})...`);
+		console.log(
+			`📥 Fetching resumes batch from production database (cursor: createdAt=${lastSeenCreatedAt}, id=${lastSeenId})...`,
+		);
 
-		const resumes = (await productionDb.execute(sql`
-			SELECT id, title, slug, data, visibility, locked, "userId", "createdAt", "updatedAt"
-			FROM "Resume"
-			ORDER BY "id" ASC
-			LIMIT ${BATCH_SIZE} OFFSET ${currentOffset}
-		`)) as unknown as ProductionResume[];
+		// Use cursor-based pagination for better performance
+		// Tuple comparison syntax allows Postgres to use composite index efficiently
+		let resumes: ProductionResume[];
+
+		if (lastSeenCreatedAt && lastSeenId) {
+			const result = (await productionDb.execute(sql`
+				SELECT id, title, slug, data, visibility, locked, "userId", "createdAt", "updatedAt"
+				FROM "Resume"
+				WHERE ("createdAt", id) < (${lastSeenCreatedAt}::timestamp, ${lastSeenId})
+				ORDER BY "createdAt" DESC, id DESC
+				LIMIT ${BATCH_SIZE}
+			`)) as unknown as QueryResult<ProductionResume>;
+			resumes = result.rows;
+		} else {
+			const result = (await productionDb.execute(sql`
+				SELECT id, title, slug, data, visibility, locked, "userId", "createdAt", "updatedAt"
+				FROM "Resume"
+				ORDER BY "createdAt" DESC, id DESC
+				LIMIT ${BATCH_SIZE}
+			`)) as unknown as QueryResult<ProductionResume>;
+			resumes = result.rows;
+		}
 
 		console.log(`📋 Found ${resumes.length} resumes in this batch.`);
 
@@ -196,11 +242,11 @@ export async function migrateResumes() {
 		// Escape single quotes in IDs (though UUIDs shouldn't contain them, this is safer)
 		const resumeIdsForSql = resumeIds.map((id) => `'${id.replace(/'/g, "''")}'`).join(", ");
 
-		const statistics = (await productionDb.execute(sql`
+		const { rows: statistics } = (await productionDb.execute(sql`
 			SELECT id, views, downloads, "resumeId", "createdAt", "updatedAt"
 			FROM "Statistics"
 			WHERE "resumeId" IN (${sql.raw(resumeIdsForSql)})
-		`)) as unknown as ProductionStatistics[];
+		`)) as unknown as QueryResult<ProductionStatistics>;
 
 		// Create a map of resumeId -> statistics for quick lookup
 		const statisticsMap = new Map<string, ProductionStatistics>();
@@ -222,8 +268,15 @@ export async function migrateResumes() {
 
 		if (resumesToProcess.length === 0) {
 			console.log(`⏭️  All resumes in this batch have userIds not found in userIdMap.`);
-			currentOffset += resumes.length;
+			// Update cursor to the last resume in this batch
+			const lastResume = resumes[resumes.length - 1];
+			if (lastResume) {
+				lastSeenCreatedAt =
+					lastResume.createdAt instanceof Date ? lastResume.createdAt.toISOString() : String(lastResume.createdAt);
+				lastSeenId = lastResume.id;
+			}
 			totalResumesProcessed += resumes.length;
+			await saveProgress(getCurrentProgress());
 			continue;
 		}
 
@@ -244,8 +297,15 @@ export async function migrateResumes() {
 
 		if (resumesWithValidUsers.length === 0) {
 			console.log(`⏭️  All resumes in this batch have userIds not found in local database.`);
-			currentOffset += resumes.length;
+			// Update cursor to the last resume in this batch
+			const lastResume = resumes[resumes.length - 1];
+			if (lastResume) {
+				lastSeenCreatedAt =
+					lastResume.createdAt instanceof Date ? lastResume.createdAt.toISOString() : String(lastResume.createdAt);
+				lastSeenId = lastResume.id;
+			}
 			totalResumesProcessed += resumes.length;
+			await saveProgress(getCurrentProgress());
 			continue;
 		}
 
@@ -281,8 +341,15 @@ export async function migrateResumes() {
 
 		if (resumesToInsert.length === 0) {
 			console.log(`⏭️  All resumes in this batch already exist in target DB.`);
-			currentOffset += resumes.length;
+			// Update cursor to the last resume in this batch
+			const lastResume = resumes[resumes.length - 1];
+			if (lastResume) {
+				lastSeenCreatedAt =
+					lastResume.createdAt instanceof Date ? lastResume.createdAt.toISOString() : String(lastResume.createdAt);
+				lastSeenId = lastResume.id;
+			}
 			totalResumesProcessed += resumes.length;
+			await saveProgress(getCurrentProgress());
 			continue;
 		}
 
@@ -307,6 +374,9 @@ export async function migrateResumes() {
 				const isPublic = resume.visibility === "public";
 
 				const newResumeId = generateId();
+
+				// Track the ID mapping for future reference
+				resumeIdMap.set(resume.id, newResumeId);
 
 				return {
 					resumeData: {
@@ -369,13 +439,23 @@ export async function migrateResumes() {
 			console.log(
 				`✅ Bulk inserted ${resumesToInsertData.length} resumes in ${batchTimeMs.toFixed(1)} ms (avg ${(batchTimeMs / resumesToInsertData.length).toFixed(1)} ms/resume)`,
 			);
+
+			// Save resume ID map after each successful batch
+			await saveResumeIdMapToFile(resumeIdMap);
 		} catch (error) {
 			console.error(`🚨 Failed to bulk insert resumes batch:`, error);
 			errors++;
 			// Continue with next batch even if this one fails
 		}
 
-		currentOffset += resumes.length;
+		// Update cursor to the last resume in this batch
+		const lastResume = resumes[resumes.length - 1];
+		if (lastResume) {
+			lastSeenCreatedAt =
+				lastResume.createdAt instanceof Date ? lastResume.createdAt.toISOString() : String(lastResume.createdAt);
+			lastSeenId = lastResume.id;
+		}
+
 		totalResumesProcessed += resumes.length;
 		console.log(`📦 Processed ${totalResumesProcessed} resumes so far...\n`);
 
@@ -398,6 +478,9 @@ export async function migrateResumes() {
 	console.log(
 		`⏱️  Total migration time: ${migrationDurationMs.toFixed(1)} ms (${(migrationDurationMs / 1000).toFixed(2)} seconds)`,
 	);
+
+	// Final save of the mapping (ensures up-to-date state)
+	await saveResumeIdMapToFile(resumeIdMap);
 
 	// Clear progress file on successful completion (only if not interrupted)
 	if (!shutdownRequested) {

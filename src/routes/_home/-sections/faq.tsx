@@ -36,7 +36,7 @@ const getFaqItems = (): FAQItemData[] => [
 				<a
 					href={crowdinUrl}
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener"
 					className={buttonVariants({ variant: "link", className: "h-auto px-0!" })}
 				>
 					contribute to the translations on Crowdin

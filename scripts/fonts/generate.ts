@@ -13,10 +13,20 @@ const argForce = args.includes("--force");
 const argCompress = args.includes("--compress");
 const argLimit = args.includes("--limit") ? parseInt(args[args.indexOf("--limit") + 1], 10) : 500;
 
-const blacklistedFonts = ["Material Icons", "Material Symbols", "Noto Color Emoji"];
+const skippedFamilies = ["Material Icons", "Material Symbols", "Noto Color Emoji"];
+
+const FONTS_DIR = "./scripts/fonts";
+const RESPONSE_FILE = `${FONTS_DIR}/response.json`;
+const WEBFONTLIST_FILE = `${FONTS_DIR}/webfontlist.json`;
 
 async function getGoogleFontsJSON() {
-	const contents = await readFile("data/fonts/response.json", "utf-8");
+	let contents: string | null = null;
+
+	try {
+		contents = await readFile(RESPONSE_FILE, "utf-8");
+	} catch {
+		// If the file doesn't exist or there's an error reading, just continue.
+	}
 
 	if (!argForce && contents) return JSON.parse(contents) as APIResponse;
 
@@ -28,8 +38,8 @@ async function getGoogleFontsJSON() {
 	const data = (await response.json()) as APIResponse;
 
 	const jsonString = argCompress ? JSON.stringify(data) : JSON.stringify(data, null, 2);
-	await mkdir("data/fonts", { recursive: true });
-	await writeFile("data/fonts/response.json", jsonString, "utf-8");
+	await mkdir(FONTS_DIR, { recursive: true });
+	await writeFile(RESPONSE_FILE, jsonString, "utf-8");
 
 	return data;
 }
@@ -45,7 +55,7 @@ export async function generateFonts() {
 	console.log(`Found ${response.items.length} fonts in total.`);
 
 	const filteredItems = response.items.filter(
-		(item) => !blacklistedFonts.some((blacklist) => item.family.includes(blacklist)),
+		(item) => !skippedFamilies.some((family) => item.family.includes(family)),
 	);
 
 	const result: WebFont[] = filteredItems.slice(0, argLimit).map((item) => {
@@ -54,6 +64,7 @@ export async function generateFonts() {
 
 		// 2. files: all files, but change "regular"->"400", "italic"->"400italic"
 		const files: Record<string, string> = {};
+
 		for (const [variant, url] of Object.entries(item.files)) {
 			let key = variant;
 			if (variant === "regular") key = "400";
@@ -62,17 +73,18 @@ export async function generateFonts() {
 		}
 
 		return {
+			type: "web",
 			category: item.category,
 			family: item.family,
 			weights,
 			preview: item.menu,
 			files,
-		};
+		} satisfies WebFont;
 	});
 
 	const jsonString = argCompress ? JSON.stringify(result) : JSON.stringify(result, null, 2);
-	await mkdir("data/fonts", { recursive: true });
-	await writeFile("data/fonts/webfontlist.json", jsonString, "utf-8");
+	await mkdir(FONTS_DIR, { recursive: true });
+	await writeFile(WEBFONTLIST_FILE, jsonString, "utf-8");
 
 	console.log(`Generated ${result.length} fonts in the list.`);
 }

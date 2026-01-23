@@ -30,7 +30,11 @@ export function PikachuTemplate({ pageIndex, pageLayout }: TemplateProps) {
 					data-layout="sidebar"
 					className="group page-sidebar flex w-(--page-sidebar-width) shrink-0 flex-col space-y-3"
 				>
-					{isFirstPage && <PagePicture className="max-h-full! max-w-full!" />}
+					{isFirstPage && (
+						<div className="flex items-center justify-center">
+							<PagePicture />
+						</div>
+					)}
 
 					{!fullWidth && (
 						<div className="shrink-0 space-y-4 overflow-x-hidden">

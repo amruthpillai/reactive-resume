@@ -9,15 +9,27 @@ export async function resetDatabase() {
 	const pool = new Pool({ connectionString: env.DATABASE_URL });
 	const db = drizzle({ client: pool });
 
+	// Extract the username from a PostgreSQL connection string like: postgresql://postgres:password@localhost:5432/db
+	const username = (() => {
+		try {
+			const match = env.DATABASE_URL.match(/^postgres(?:ql)?:\/\/([^:]+):[^@]+@/);
+			return match ? match[1] : undefined;
+		} catch {
+			return undefined;
+		}
+	})();
+
+	console.log("🔑 Username:", username);
+
 	try {
 		await db.transaction(async (tx) => {
 			await tx.execute(sql`DROP SCHEMA drizzle CASCADE`);
 			await tx.execute(sql`CREATE SCHEMA drizzle`);
-			await tx.execute(sql`GRANT ALL ON SCHEMA drizzle TO postgres`);
+			await tx.execute(sql.raw(`GRANT ALL ON SCHEMA drizzle TO ${username}`));
 
 			await tx.execute(sql`DROP SCHEMA public CASCADE`);
 			await tx.execute(sql`CREATE SCHEMA public`);
-			await tx.execute(sql`GRANT ALL ON SCHEMA public TO postgres`);
+			await tx.execute(sql.raw(`GRANT ALL ON SCHEMA public TO ${username}`));
 		});
 
 		console.log("✅ Database reset completed");

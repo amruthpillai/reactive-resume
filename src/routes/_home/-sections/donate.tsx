@@ -205,7 +205,7 @@ export const DonationBanner = () => (
 				transition={{ duration: 0.6, delay: 0.6 }}
 			>
 				<Button asChild size="lg" className="h-11 gap-2 px-6">
-					<a href="https://opencollective.com/reactive-resume" target="_blank" rel="noopener noreferrer">
+					<a href="https://opencollective.com/reactive-resume" target="_blank" rel="noopener">
 						<HeartIcon aria-hidden="true" weight="fill" className="text-rose-400 dark:text-rose-600" />
 						Open Collective
 						<span className="sr-only"> ({t`opens in new tab`})</span>
@@ -213,7 +213,7 @@ export const DonationBanner = () => (
 				</Button>
 
 				<Button asChild size="lg" className="h-11 gap-2 px-6">
-					<a href="https://github.com/sponsors/AmruthPillai" target="_blank" rel="noopener noreferrer">
+					<a href="https://github.com/sponsors/AmruthPillai" target="_blank" rel="noopener">
 						<GithubLogoIcon aria-hidden="true" weight="fill" className="text-zinc-400 dark:text-zinc-600" />
 						GitHub Sponsors
 						<span className="sr-only"> ({t`opens in new tab`})</span>

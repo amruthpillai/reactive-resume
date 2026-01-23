@@ -28,7 +28,7 @@ export function ProductHuntBanner() {
 	return (
 		<a
 			target="_blank"
-			rel="noopener noreferrer"
+			rel="noopener"
 			className="flex h-8 items-center justify-center bg-secondary text-center font-medium text-[0.85rem] text-secondary-foreground tracking-tight underline-offset-2 hover:underline"
 			href="https://www.producthunt.com/products/reactive-resume/launches/reactive-resume-v5-2?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2"
 		>

@@ -34,7 +34,7 @@
     <a href="https://opencollective.com/reactive-resume"><img src="https://img.shields.io/opencollective/all/reactive-resume?style=flat-square" alt="Open Collective" /></a>
   </p>
 
-  <a href="https://www.producthunt.com/products/reactive-resume?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2" target="_blank" rel="noopener noreferrer"><img alt="Reactive Resume v5 - A free and open-source resume builder. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065182&amp;theme=light&amp;t=1768850745585"></a>
+  <a href="https://www.producthunt.com/products/reactive-resume?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2" target="_blank" rel="noopener"><img alt="Reactive Resume v5 - A free and open-source resume builder. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065182&amp;theme=light&amp;t=1768850745585"></a>
 </div>
 
 ---

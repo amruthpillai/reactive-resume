@@ -186,7 +186,7 @@ export function getSectionComponent(
 							style={{ gridTemplateColumns: `repeat(${customSection.columns}, 1fr)` }}
 						>
 							{visibleItems.map((item) => (
-								<div key={item.id} className={cn(`section-item section-item-${customSection.type} *:space-y-1`)}>
+								<div key={item.id} className={cn(`section-item section-item-${customSection.type}`)}>
 									{renderItemByType(customSection.type, item, itemClassName)}
 								</div>
 							))}

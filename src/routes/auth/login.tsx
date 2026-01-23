@@ -33,6 +33,7 @@ function RouteComponent() {
 	const router = useRouter();
 	const navigate = useNavigate();
 	const [showPassword, toggleShowPassword] = useToggle(false);
+	const { flags } = Route.useRouteContext();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -86,80 +87,84 @@ function RouteComponent() {
 					<Trans>Sign in to your account</Trans>
 				</h1>
 
-				<div className="text-muted-foreground">
-					<Trans>
-						Don't have an account?{" "}
-						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
-							<Link to="/auth/register">
-								Create one now <ArrowRightIcon />
-							</Link>
-						</Button>
-					</Trans>
-				</div>
+				{!flags.disableSignups && (
+					<div className="text-muted-foreground">
+						<Trans>
+							Don't have an account?{" "}
+							<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
+								<Link to="/auth/register">
+									Create one now <ArrowRightIcon />
+								</Link>
+							</Button>
+						</Trans>
+					</div>
+				)}
 			</div>
 
-			<Form {...form}>
-				<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-					<FormField
-						control={form.control}
-						name="identifier"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Email Address</Trans>
-								</FormLabel>
-								<FormControl>
-									<Input autoComplete="email" placeholder="john.doe@example.com" className="lowercase" {...field} />
-								</FormControl>
-								<FormMessage />
-								<FormDescription>
-									<Trans>You can also use your username to login.</Trans>
-								</FormDescription>
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<div className="flex items-center justify-between">
+			{!flags.disableEmailAuth && (
+				<Form {...form}>
+					<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+						<FormField
+							control={form.control}
+							name="identifier"
+							render={({ field }) => (
+								<FormItem>
 									<FormLabel>
-										<Trans>Password</Trans>
+										<Trans>Email Address</Trans>
 									</FormLabel>
-
-									<Button asChild tabIndex={-1} variant="link" className="h-auto p-0 text-xs leading-none">
-										<Link to="/auth/forgot-password">
-											<Trans>Forgot Password?</Trans>
-										</Link>
-									</Button>
-								</div>
-								<div className="flex items-center gap-x-1.5">
 									<FormControl>
-										<Input
-											min={6}
-											max={64}
-											type={showPassword ? "text" : "password"}
-											autoComplete="current-password"
-											{...field}
-										/>
+										<Input autoComplete="email" placeholder="john.doe@example.com" className="lowercase" {...field} />
 									</FormControl>
+									<FormMessage />
+									<FormDescription>
+										<Trans>You can also use your username to login.</Trans>
+									</FormDescription>
+								</FormItem>
+							)}
+						/>
 
-									<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
-										{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-									</Button>
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<div className="flex items-center justify-between">
+										<FormLabel>
+											<Trans>Password</Trans>
+										</FormLabel>
 
-					<Button type="submit" className="w-full">
-						<Trans>Sign in</Trans>
-					</Button>
-				</form>
-			</Form>
+										<Button asChild tabIndex={-1} variant="link" className="h-auto p-0 text-xs leading-none">
+											<Link to="/auth/forgot-password">
+												<Trans>Forgot Password?</Trans>
+											</Link>
+										</Button>
+									</div>
+									<div className="flex items-center gap-x-1.5">
+										<FormControl>
+											<Input
+												min={6}
+												max={64}
+												type={showPassword ? "text" : "password"}
+												autoComplete="current-password"
+												{...field}
+											/>
+										</FormControl>
+
+										<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+											{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+										</Button>
+									</div>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<Button type="submit" className="w-full">
+							<Trans>Sign in</Trans>
+						</Button>
+					</form>
+				</Form>
+			)}
 
 			<SocialAuth />
 		</>

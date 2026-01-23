@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon } from "@phosphor-icons/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,6 +14,9 @@ import { authClient } from "@/integrations/auth/client";
 
 export const Route = createFileRoute("/auth/forgot-password")({
 	component: RouteComponent,
+	beforeLoad: async ({ context }) => {
+		if (context.flags.disableEmailAuth) throw redirect({ to: "/auth/login", replace: true });
+	},
 });
 
 const formSchema = z.object({

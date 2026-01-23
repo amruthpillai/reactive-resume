@@ -26,6 +26,7 @@ const getAuthConfig = () => {
 	if (isCustomOAuthProviderEnabled()) {
 		authConfigs.push({
 			providerId: "custom",
+			disableSignUp: env.FLAG_DISABLE_SIGNUPS,
 			clientId: env.OAUTH_CLIENT_ID as string,
 			clientSecret: env.OAUTH_CLIENT_SECRET as string,
 			discoveryUrl: env.OAUTH_DISCOVERY_URL,
@@ -75,12 +76,12 @@ const getAuthConfig = () => {
 		},
 
 		emailAndPassword: {
-			enabled: true,
+			enabled: !env.FLAG_DISABLE_EMAIL_AUTH,
 			autoSignIn: true,
 			minPasswordLength: 6,
 			maxPasswordLength: 64,
 			requireEmailVerification: false,
-			disableSignUp: env.FLAG_DISABLE_SIGNUP,
+			disableSignUp: env.FLAG_DISABLE_SIGNUPS || env.FLAG_DISABLE_EMAIL_AUTH,
 			sendResetPassword: async ({ user, url }) => {
 				await sendEmail({
 					to: user.email,
@@ -135,6 +136,7 @@ const getAuthConfig = () => {
 		socialProviders: {
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
+				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GOOGLE_CLIENT_ID!,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
@@ -153,6 +155,7 @@ const getAuthConfig = () => {
 
 			github: {
 				enabled: !!env.GITHUB_CLIENT_ID && !!env.GITHUB_CLIENT_SECRET,
+				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GITHUB_CLIENT_ID!,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null

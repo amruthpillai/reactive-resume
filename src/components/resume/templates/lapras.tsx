@@ -33,7 +33,7 @@ export function LaprasTemplate({ pageIndex, pageLayout }: TemplateProps) {
 					"--heading-negative-margin": `${headingNegativeMargin}pt`,
 				} as React.CSSProperties
 			}
-			className="template-lapras page-content space-y-7 px-(--page-margin-x) py-(--page-margin-y)"
+			className="template-lapras page-content space-y-7 px-(--page-margin-x) py-(--page-margin-y) print:p-0"
 		>
 			{isFirstPage && <Header />}
 

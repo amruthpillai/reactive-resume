@@ -76,7 +76,7 @@ export function Footer() {
 								<a
 									href={social.url}
 									target="_blank"
-									rel="noopener noreferrer"
+									rel="noopener"
 									aria-label={`${social.label} (${t`opens in new tab`})`}
 								>
 									<social.icon aria-hidden="true" size={18} />
@@ -123,7 +123,7 @@ function FooterLink({ url, label }: FooterLinkItem) {
 			<a
 				href={url}
 				target="_blank"
-				rel="noopener noreferrer"
+				rel="noopener"
 				className="relative inline-block text-sm transition-colors hover:text-foreground"
 			>
 				{label}

@@ -48,7 +48,7 @@ export function Hero() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.8 }}
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener"
 					href="https://docs.rxresu.me/getting-started"
 				>
 					<Badge variant="secondary" className="h-auto gap-1.5 px-3 py-0.5">
@@ -104,7 +104,7 @@ export function Hero() {
 					</Button>
 
 					<Button asChild size="lg" variant="ghost" className="gap-2 px-4">
-						<a href="https://docs.rxresu.me" target="_blank" rel="noopener noreferrer">
+						<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
 							<BookIcon aria-hidden="true" className="size-4" />
 							<Trans>Learn More</Trans>
 							<span className="sr-only">

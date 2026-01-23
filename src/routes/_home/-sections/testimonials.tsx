@@ -103,7 +103,7 @@ export function Testimonials() {
 						<a
 							href={`mailto:${email}`}
 							target="_blank"
-							rel="noopener noreferrer"
+							rel="noopener"
 							className="font-medium text-foreground underline underline-offset-2 transition-colors hover:text-primary"
 						>
 							{email}

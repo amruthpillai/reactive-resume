@@ -16,7 +16,8 @@ import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { getSession } from "@/integrations/auth/functions";
 import type { AuthSession } from "@/integrations/auth/types";
-import type { orpc } from "@/integrations/orpc/client";
+import { client, type orpc } from "@/integrations/orpc/client";
+import type { FeatureFlags } from "@/integrations/orpc/services/flags";
 import { getLocale, isRTL, type Locale, loadLocale } from "@/utils/locale";
 import { getTheme, type Theme } from "@/utils/theme";
 import appCss from "../styles/globals.css?url";
@@ -27,6 +28,7 @@ type RouterContext = {
 	orpc: typeof orpc;
 	queryClient: QueryClient;
 	session: AuthSession | null;
+	flags: FeatureFlags;
 };
 
 const appName = "Reactive Resume";
@@ -70,9 +72,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		};
 	},
 	beforeLoad: async () => {
-		const [theme, locale, session] = await Promise.all([getTheme(), getLocale(), getSession()]);
+		const [theme, locale, session, flags] = await Promise.all([
+			getTheme(),
+			getLocale(),
+			getSession(),
+			client.flags.get(),
+		]);
 
-		return { theme, locale, session };
+		return { theme, locale, session, flags };
 	},
 });
 
