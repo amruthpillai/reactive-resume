@@ -185,6 +185,7 @@ const getAuthConfig = () => {
 				usernameNormalization: (value) => toUsername(value),
 				displayUsernameNormalization: (value) => toUsername(value),
 				validationOrder: { username: "post-normalization", displayUsername: "post-normalization" },
+				usernameValidator:(username)=> /^[a-z0-9._-]+$/.test(username)
 			}),
 			twoFactor({
 				issuer: "Reactive Resume",
