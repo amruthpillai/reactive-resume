@@ -472,7 +472,7 @@ msgstr "ካታላንኛ"
 msgid "Center Align"
 msgstr "መሀከል ማሰለፊያ"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:87
+#: src/routes/builder/$resumeId/-components/dock.tsx:82
 msgid "Center view"
 msgstr "መመለሻን ወደ መሀከል አድርግ"
 
@@ -595,7 +595,7 @@ msgstr "የመከላከያ ኮዶችን ቅጂ አድርግ"
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "ይህንን ሚስጥራዊ ቁልፍ ቅጂ አድርጉ እና ውስጥ በመተግበሪያዎቻችሁ መረጃዎን ለመድረስ ይጠቀሙበት።"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:89
+#: src/routes/builder/$resumeId/-components/dock.tsx:84
 msgid "Copy URL"
 msgstr "URL ቅጂ አድርግ"
 
@@ -859,19 +859,19 @@ msgstr "ለ Reactive Resume መዋጮ አድርግ"
 msgid "Download"
 msgstr "አውርድ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:56
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:51
 msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
 msgstr "የየታሪክዎን ቅጂ በ JSON ቅርጸ ፋይል ያውርዱ። ይህንን ፋይል ለመመዝገብ ወይም የየታሪክዎን ወደ AI አጋር ጨምሮ በሌሎች መተግበሪያዎች ለማስመጣት ይጠቀሙበት።"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:79
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:74
 msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
 msgstr "የየታሪክዎን ቅጂ በ PDF ቅርጽ ያውርዱ። ይህንን ፋይል ለህትመት ወይም የየታሪክዎን ለማስተዋወቅ በቀላሉ ለመካፈል ይጠቀሙበት።"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:90
+#: src/routes/builder/$resumeId/-components/dock.tsx:85
 msgid "Download JSON"
 msgstr "JSON አውርድ"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:92
+#: src/routes/builder/$resumeId/-components/dock.tsx:87
 msgid "Download PDF"
 msgstr "PDF አውርድ"
 
@@ -1680,11 +1680,6 @@ msgstr "ወደ የየታሪክው ባለቤት በተካፈለዎት የይለ�
 msgid "Please enter the URL you want to link to:"
 msgstr "ሊያገናኙት የሚፈልጉትን URL እባክዎን ያስገቡ፡"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:61
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:30
-msgid "Please wait while your PDF is being generated..."
-msgstr "እባክዎ የ PDF ፋይልዎ እየተመነጨ ሲሆን ይጠብቁ…"
-
 #: src/utils/locale.ts:104
 msgid "Polish"
 msgstr "ፖላንድኛ"
@@ -2238,8 +2233,8 @@ msgstr "ገጽታ"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "ከዚያም መተግበሪያው ሰጥቶት የ 6 አሃዝ ኮድ ያስገቡ ለመቀጠል።"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:69
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:38
+#: src/routes/builder/$resumeId/-components/dock.tsx:66
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:35
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "PDF በማመንጨት ጊዜ ችግኝ ተፈጥሯል፣ እባክዎን ጥቂት ጊዜ በኋላ ደግመው ይሞክሩ።"
 
@@ -2264,11 +2259,6 @@ msgstr "ይህ ለየታሪክዎ ተመቻቹ የ URL ስም ነው።"
 #: src/dialogs/resume/import.tsx:104
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "ይህ በ AI አቅራቢው ምላሽ ላይ በመመርኮዝ ጥቂት ደቂቃዎች ሊወስድ ይችላል። እባክዎ መስኮቱን አትዘጉ ወይም ገጹን አታሻሽሉ።"
-
-#: src/routes/builder/$resumeId/-components/dock.tsx:62
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:31
-msgid "This may take a while depending on the server capacity. Please do not close the window or refresh the page."
-msgstr "ይህ በሰርቨሩ አቅም ላይ በመመርኮዝ ጥቂት ጊዜ ሊወስድ ይችላል። እባክዎ መስኮቱን አትዘጉ ወይም ገጹን አታሻሽሉ።"
 
 #: src/components/resume/store/resume.ts:53
 msgid "This resume is locked and cannot be updated."
@@ -2713,15 +2703,14 @@ msgstr "የየታሪክዎ የህዝብ አገናኝ አሁን በይለፍ ቃ�
 msgid "Your support ensures the project remains free and accessible for everyone, now and in the future."
 msgstr "ድጋፍዎ ፕሮጀክቱ አሁንም ሆነ በወደፊትም ለሁሉም ነፃ እና የሚደረስ እንዲቆይ ያረጋግጣል።"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:85
+#: src/routes/builder/$resumeId/-components/dock.tsx:80
 msgid "Zoom in"
 msgstr "አቅርብ"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx:86
+#: src/routes/builder/$resumeId/-components/dock.tsx:81
 msgid "Zoom out"
 msgstr "አጉር"
 
 #: src/utils/locale.ts:122
 msgid "Zulu"
 msgstr "ዙሉ"
-
