@@ -8,7 +8,7 @@ msgstr ""
 "Language: ar\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-24 18:34\n"
+"PO-Revision-Date: 2026-01-24 22:03\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
@@ -496,6 +496,10 @@ msgstr "تغيير السمة إلى..."
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "غيّرت رأيك؟ أعد تسمية سيرتك الذاتية إلى شيء أكثر وصفًا."
 
+#: src/routes/_home/-sections/footer.tsx:31
+msgid "Changelog"
+msgstr ""
+
 #: src/routes/auth/forgot-password.tsx:111
 msgid "Check your email for a link to reset your password."
 msgstr "تحقق من بريدك الإلكتروني للحصول على رابط لإعادة تعيين كلمة المرور."
@@ -570,10 +574,6 @@ msgstr "تابع من حيث توقفت"
 #: src/dialogs/resume/import.tsx:197
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "تابع من حيث توقفت عن طريق استيراد سيرة ذاتية موجودة أنشأتها باستخدام Reactive Resume أو أي أداة إنشاء سيرة ذاتية أخرى. تتضمن التنسيقات المدعومة PDF وMicrosoft Word وملفات JSON من Reactive Resume."
-
-#: src/routes/_home/-sections/footer.tsx:38
-msgid "Contributing"
-msgstr "المساهمة"
 
 #: src/routes/_home/-sections/donate.tsx:188
 msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
@@ -833,9 +833,9 @@ msgstr "جاري تعطيل المصادقة الثنائية..."
 msgid "Disconnect"
 msgstr "قطع الاتصال"
 
-#: src/routes/_home/-sections/footer.tsx:35
-msgid "Discussions"
-msgstr "المناقشات"
+#: src/routes/_home/-sections/footer.tsx:38
+msgid "Discord"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx:28
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:40
@@ -845,10 +845,6 @@ msgstr "إرشادات الاستخدام"
 #: src/routes/auth/login.tsx:92
 msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
 msgstr "لا تملك حسابًا؟ <0><1>أنشئ واحدًا الآن <2/></1></0>"
-
-#: src/routes/_home/-sections/footer.tsx:31
-msgid "Donate"
-msgstr "تبرع"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:31
 msgid "Donate to Reactive Resume"
@@ -1371,6 +1367,10 @@ msgstr "التخطيط"
 msgid "Learn More"
 msgstr "اعرف المزيد"
 
+#: src/components/resume/preview.tsx:179
+msgid "Learn more about how to fit content on a page"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx:63
 msgid "Leave empty to reset the title to the original."
 msgstr "اتركه فارغًا لإعادة تعيين العنوان إلى الأصل."
@@ -1603,7 +1603,7 @@ msgstr "صفحة"
 msgid "Page {0}"
 msgstr "صفحة {0}"
 
-#: src/components/resume/preview.tsx:113
+#: src/components/resume/preview.tsx:152
 msgid "Page {pageNumber} of {totalNumberOfPages}"
 msgstr "الصفحة {pageNumber} من {totalNumberOfPages}"
 
@@ -1683,7 +1683,7 @@ msgstr "يُرجى إدخال عنوان URL الذي تريد الربط به:"
 #: src/routes/builder/$resumeId/-components/dock.tsx:61
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:30
 msgid "Please wait while your PDF is being generated..."
-msgstr ""
+msgstr "يُرجى الانتظار أثناء إنشاء ملف PDF الخاص بك..."
 
 #: src/utils/locale.ts:104
 msgid "Polish"
@@ -1825,9 +1825,9 @@ msgstr "إعادة التسمية"
 msgid "Report a Bug"
 msgstr "الإبلاغ عن خطأ برمجي"
 
-#: src/routes/_home/-sections/footer.tsx:36
-msgid "Report an Issue"
-msgstr "الإبلاغ عن مشكلة"
+#: src/routes/_home/-sections/footer.tsx:35
+msgid "Report an issue"
+msgstr ""
 
 #: src/routes/dashboard/settings/profile.tsx:202
 msgid "Resend verification email"
@@ -2081,7 +2081,7 @@ msgstr "حدث خطأ ما. يُرجى المحاولة مرة أخرى."
 msgid "Sort by"
 msgstr "فرز حسب"
 
-#: src/routes/_home/-sections/footer.tsx:29
+#: src/routes/_home/-sections/footer.tsx:30
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:46
 msgid "Source Code"
 msgstr "شفرة المصدر"
@@ -2101,6 +2101,10 @@ msgstr "الإسبانية"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:64
 msgid "Sponsors"
 msgstr "الرعاة"
+
+#: src/routes/_home/-sections/footer.tsx:29
+msgid "Sponsorships"
+msgstr ""
 
 #: src/components/level/combobox.tsx:16
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx:233
@@ -2131,6 +2135,10 @@ msgstr "الإحصاءات"
 #: src/components/input/rich-input.tsx:355
 msgid "Strike"
 msgstr "شطب"
+
+#: src/routes/_home/-sections/footer.tsx:37
+msgid "Subreddit"
+msgstr ""
 
 #: src/utils/resume/section.tsx:92
 msgid "Summary"
@@ -2216,6 +2224,10 @@ msgstr "لن يتمكن مفتاح واجهة برمجة التطبيقات هذ
 msgid "The command you're looking for doesn't exist."
 msgstr "أمر البحث غير موجود."
 
+#: src/components/resume/preview.tsx:174
+msgid "The content is too tall for this page, this may cause undesirable results when exporting to PDF."
+msgstr ""
+
 #: src/routes/auth/resume-password.tsx:75
 msgid "The password you entered is incorrect"
 msgstr "كلمة المرور التي أدخلتها غير صحيحة"
@@ -2268,7 +2280,7 @@ msgstr "قد يستغرق هذا بضع دقائق اعتمادًا على اس�
 #: src/routes/builder/$resumeId/-components/dock.tsx:62
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:31
 msgid "This may take a while depending on the server capacity. Please do not close the window or refresh the page."
-msgstr ""
+msgstr "قد يستغرق هذا بعض الوقت حسب سعة الخادم. يُرجى عدم إغلاق النافذة أو تحديث الصفحة."
 
 #: src/components/resume/store/resume.ts:53
 msgid "This resume is locked and cannot be updated."
@@ -2313,8 +2325,7 @@ msgstr "لحذف حسابك، تحتاج إلى إدخال نص التأكيد �
 msgid "Track your resume's views and downloads"
 msgstr "تتبّع مشاهدات سيرتك الذاتية وتنزيلاتها"
 
-#: src/routes/_home/-sections/footer.tsx:30
-#: src/routes/_home/-sections/footer.tsx:37
+#: src/routes/_home/-sections/footer.tsx:36
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:58
 msgid "Translations"
 msgstr "الترجمات"
@@ -2724,3 +2735,4 @@ msgstr "تصغير"
 #: src/utils/locale.ts:122
 msgid "Zulu"
 msgstr "الزولو"
+
