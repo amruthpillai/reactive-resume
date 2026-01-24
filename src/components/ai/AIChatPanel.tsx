@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { XIcon, PaperPlaneRightIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 // import { Input } from "@/components/animate-ui/components/input";
