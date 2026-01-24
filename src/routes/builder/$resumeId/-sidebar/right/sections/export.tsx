@@ -27,6 +27,9 @@ export function ExportSectionBuilder() {
 
 	const onDownloadPDF = useCallback(async () => {
 		const filename = generateFilename(resume.data.basics.name, "pdf");
+		const toastId = toast.loading(t`Please wait while your PDF is being generated...`, {
+			description: t`This may take a while depending on the server capacity. Please do not close the window or refresh the page.`,
+		});
 
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
@@ -34,6 +37,8 @@ export function ExportSectionBuilder() {
 		} catch (error) {
 			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
 			console.error("[Error from printResumeAsPDF]:", error);
+		} finally {
+			toast.dismiss(toastId);
 		}
 	}, [resume, printResumeAsPDF]);
 

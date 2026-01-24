@@ -1,3 +1,4 @@
+import { ORPCError } from "@orpc/server";
 import type { InferSelectModel } from "drizzle-orm";
 import puppeteer, { type Browser, type ConnectOptions } from "puppeteer-core";
 import type { schema } from "@/integrations/drizzle";
@@ -19,23 +20,16 @@ const pageDimensions = {
 
 const SCREENSHOT_TTL = 1000 * 60 * 60; // 1 hour
 
-let browser: Browser | null = null;
-
 async function getBrowser(): Promise<Browser> {
 	const endpoint = new URL(env.PRINTER_ENDPOINT);
 	const isWebSocket = endpoint.protocol.startsWith("ws");
 
-	const connectOptions: ConnectOptions = {
-		acceptInsecureCerts: true,
-		defaultViewport: pageDimensions.a4,
-	};
+	const connectOptions: ConnectOptions = { acceptInsecureCerts: true };
 
 	if (isWebSocket) connectOptions.browserWSEndpoint = env.PRINTER_ENDPOINT;
 	else connectOptions.browserURL = env.PRINTER_ENDPOINT;
 
-	if (browser?.connected) return browser;
-	browser = await puppeteer.connect(connectOptions);
-	return browser;
+	return puppeteer.connect(connectOptions);
 }
 
 export const printerService = {
@@ -110,83 +104,96 @@ export const printerService = {
 			marginY = Math.round(data.metadata.page.marginY / 0.75);
 		}
 
-		// Step 4: Connect to the browser and navigate to the printer route
-		const browser = await getBrowser();
+		let browser: Browser | null = null;
 
-		// Set locale cookie so the resume renders in the correct language
-		await browser.setCookie({ name: "locale", value: locale, domain });
+		try {
+			// Step 4: Connect to the browser and navigate to the printer route
+			browser = await getBrowser();
 
-		const page = await browser.newPage();
+			// Set locale cookie so the resume renders in the correct language
+			await browser.setCookie({ name: "locale", value: locale, domain });
 
-		// Wait for the page to fully load (network idle + custom loaded attribute)
-		await page.goto(url, { waitUntil: "networkidle0" });
-		await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
+			const page = await browser.newPage();
 
-		// Step 5: Adjust the DOM for proper PDF pagination
-		// This runs in the browser context to modify CSS before PDF generation
-		await page.evaluate((marginY: number) => {
-			const root = document.documentElement;
-			const container = document.querySelector(".resume-preview-container") as HTMLElement | null;
+			// Wait for the page to fully load (network idle + custom loaded attribute)
+			await page.setViewport(pageDimensions[format]);
+			await page.goto(url, { waitUntil: "networkidle0" });
+			await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
 
-			// The --page-height CSS variable controls the height of each resume page.
-			// We need to reduce it by the PDF margins so content fits within the printable area.
-			// Without this, content would overflow and create empty pages.
-			const containerHeight = container ? getComputedStyle(container).getPropertyValue("--page-height").trim() : null;
-			const rootHeight = getComputedStyle(root).getPropertyValue("--page-height").trim();
-			const currentHeight = containerHeight || rootHeight;
-			const heightValue = Number.parseFloat(currentHeight);
+			// Step 5: Adjust the DOM for proper PDF pagination
+			// This runs in the browser context to modify CSS before PDF generation
+			await page.evaluate(
+				(marginY: number, minPageHeight: number) => {
+					const root = document.documentElement;
+					const container = document.querySelector(".resume-preview-container") as HTMLElement | null;
 
-			if (!Number.isNaN(heightValue)) {
-				// Subtract top + bottom margins from page height
-				const newHeight = `${heightValue - marginY}px`;
-				if (container) container.style.setProperty("--page-height", newHeight);
-				root.style.setProperty("--page-height", newHeight);
-			}
+					// The --page-height CSS variable controls the height of each resume page.
+					// We need to reduce it by the PDF margins so content fits within the printable area.
+					// Without this, content would overflow and create empty pages.
+					const containerHeight = container
+						? getComputedStyle(container).getPropertyValue("--page-height").trim()
+						: null;
+					const rootHeight = getComputedStyle(root).getPropertyValue("--page-height").trim();
+					const currentHeight = containerHeight || rootHeight;
+					const heightValue = Math.max(Number.parseFloat(currentHeight), minPageHeight);
 
-			// Add page break CSS to each resume page element (identified by data-page-index attribute)
-			// This ensures each visual resume page starts a new PDF page
-			const pageElements = document.querySelectorAll("[data-page-index]");
+					if (!Number.isNaN(heightValue)) {
+						// Subtract top + bottom margins from page height
+						const newHeight = `${heightValue - marginY}px`;
+						if (container) container.style.setProperty("--page-height", newHeight);
+						root.style.setProperty("--page-height", newHeight);
+					}
 
-			for (const el of pageElements) {
-				const element = el as HTMLElement;
-				const index = Number.parseInt(element.getAttribute("data-page-index") ?? "0", 10);
+					// Add page break CSS to each resume page element (identified by data-page-index attribute)
+					// This ensures each visual resume page starts a new PDF page
+					const pageElements = document.querySelectorAll("[data-page-index]");
 
-				// Force a page break before each page except the first
-				if (index > 0) element.style.breakBefore = "page";
+					for (const el of pageElements) {
+						const element = el as HTMLElement;
+						const index = Number.parseInt(element.getAttribute("data-page-index") ?? "0", 10);
 
-				// Allow content within a page to break naturally if it overflows
-				// (e.g., if a single page has more content than fits on one PDF page)
-				element.style.breakInside = "auto";
-			}
-		}, marginY);
+						// Force a page break before each page except the first
+						if (index > 0) element.style.breakBefore = "page";
 
-		// Step 6: Generate the PDF with the specified dimensions and margins
-		const pdfBuffer = await page.pdf({
-			width: `${pageDimensions[format].width}px`,
-			height: `${pageDimensions[format].height}px`,
-			tagged: true, // Adds accessibility tags to the PDF
-			waitForFonts: true, // Ensures all fonts are loaded before rendering
-			printBackground: true, // Includes background colors and images
-			margin: {
-				top: marginY,
-				right: marginX,
-				// bottom: marginY,
-				left: marginX,
-			},
-		});
+						// Allow content within a page to break naturally if it overflows
+						// (e.g., if a single page has more content than fits on one PDF page)
+						element.style.breakInside = "auto";
+					}
+				},
+				marginY,
+				pageDimensions[format].height,
+			);
 
-		await page.close();
+			// Step 6: Generate the PDF with the specified dimensions and margins
+			const pdfBuffer = await page.pdf({
+				width: `${pageDimensions[format].width}px`,
+				height: `${pageDimensions[format].height}px`,
+				tagged: true, // Adds accessibility tags to the PDF
+				waitForFonts: true, // Ensures all fonts are loaded before rendering
+				printBackground: true, // Includes background colors and images
+				margin: {
+					top: marginY,
+					right: marginX,
+					// bottom: marginY,
+					left: marginX,
+				},
+			});
 
-		// Step 7: Upload the generated PDF to storage
-		const result = await uploadFile({
-			userId,
-			resumeId: id,
-			data: new Uint8Array(pdfBuffer),
-			contentType: "application/pdf",
-			type: "pdf",
-		});
+			// Step 7: Upload the generated PDF to storage
+			const result = await uploadFile({
+				userId,
+				resumeId: id,
+				data: new Uint8Array(pdfBuffer),
+				contentType: "application/pdf",
+				type: "pdf",
+			});
 
-		return result.url;
+			return result.url;
+		} catch (error) {
+			throw new ORPCError("INTERNAL_SERVER_ERROR", error as Error);
+		} finally {
+			if (browser) await browser.close();
+		}
 	},
 
 	getResumeScreenshot: async (
@@ -228,27 +235,34 @@ export const printerService = {
 		const token = generatePrinterToken(id);
 		const url = `${baseUrl}/printer/${id}?token=${token}`;
 
-		const browser = await getBrowser();
+		let browser: Browser | null = null;
 
-		await browser.setCookie({ name: "locale", value: locale, domain });
+		try {
+			browser = await getBrowser();
 
-		const page = await browser.newPage();
+			await browser.setCookie({ name: "locale", value: locale, domain });
 
-		await page.goto(url, { waitUntil: "networkidle0" });
-		await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
+			const page = await browser.newPage();
 
-		const screenshotBuffer = await page.screenshot({ type: "webp", quality: 80 });
+			await page.setViewport(pageDimensions.a4);
+			await page.goto(url, { waitUntil: "networkidle0" });
+			await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
 
-		await page.close();
+			const screenshotBuffer = await page.screenshot({ type: "webp", quality: 80 });
 
-		const result = await uploadFile({
-			userId,
-			resumeId: id,
-			data: new Uint8Array(screenshotBuffer),
-			contentType: "image/webp",
-			type: "screenshot",
-		});
+			const result = await uploadFile({
+				userId,
+				resumeId: id,
+				data: new Uint8Array(screenshotBuffer),
+				contentType: "image/webp",
+				type: "screenshot",
+			});
 
-		return result.url;
+			return result.url;
+		} catch (error) {
+			throw new ORPCError("INTERNAL_SERVER_ERROR", error as Error);
+		} finally {
+			if (browser) await browser.close();
+		}
 	},
 };

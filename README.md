@@ -225,6 +225,16 @@ Other ways to support:
 - Improve documentation
 - Help with translations
 
+## Star History
+
+<a href="https://www.star-history.com/#amruthpillai/reactive-resume&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=amruthpillai/reactive-resume&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=amruthpillai/reactive-resume&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=amruthpillai/reactive-resume&type=date&legend=top-left" />
+ </picture>
+</a>
+
 ## Contributing
 
 Contributions make open-source thrive. Whether fixing a typo or adding a feature, all contributions are welcome.

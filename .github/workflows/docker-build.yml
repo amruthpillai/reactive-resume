@@ -3,6 +3,7 @@ name: Build Docker Image
 on:
   workflow_dispatch:
   push:
+    branches: [ main ]
     tags: [ "v*.*.*" ]
 
 concurrency:
@@ -205,3 +206,13 @@ jobs:
         run: |
           docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }}
           docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }}
+
+      - name: Redeploy Stack
+        uses: appleboy/ssh-action@v1
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          script: |
+            cd docker
+            ./manage_stack.sh up reactive_resume
