@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-24 17:25\n"
+"PO-Revision-Date: 2026-01-24 22:03\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -40,7 +40,7 @@ msgstr "(s'ouvre dans un nouvel onglet)"
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx:122
 msgid "{0, plural, one {# item} other {# items}}"
-msgstr ""
+msgstr "{0, plural, one {# élément} other {# éléments}}"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx:244
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx:149
@@ -108,7 +108,7 @@ msgstr "Un projet-passion de <0>Amruth Pillai</0>."
 #: src/dialogs/resume/index.tsx:69
 #: src/dialogs/resume/index.tsx:178
 msgid "A resume with this slug already exists."
-msgstr ""
+msgstr "Un CV avec ce slug existe déjà."
 
 #: src/routes/_home/-sections/faq.tsx:27
 msgid "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
@@ -405,7 +405,7 @@ msgstr "Largeur de la bordure"
 
 #: src/components/command-palette/index.tsx:82
 msgid "Builder Command Palette"
-msgstr ""
+msgstr "Palette de commandes du créateur"
 
 #: src/utils/locale.ts:74
 msgid "Bulgarian"
@@ -496,6 +496,10 @@ msgstr "Changez de thème pour..."
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Vous avez changé d'avis ? Renommez votre CV en quelque chose de plus descriptif."
 
+#: src/routes/_home/-sections/footer.tsx:31
+msgid "Changelog"
+msgstr ""
+
 #: src/routes/auth/forgot-password.tsx:111
 msgid "Check your email for a link to reset your password."
 msgstr "Consultez votre messagerie pour obtenir un lien pour réinitialiser votre mot de passe."
@@ -570,10 +574,6 @@ msgstr "Continuez là où vous vous êtes arrêté"
 #: src/dialogs/resume/import.tsx:197
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "Reprenez là où vous vous étiez arrêté en important un CV que vous avez créé à l'aide de Reactive Resume ou d'un autre outil de création de CV. Les formats pris en charge sont les suivants : PDF, Microsoft Word, ainsi que les fichiers JSON de Reactive Resume."
-
-#: src/routes/_home/-sections/footer.tsx:38
-msgid "Contributing"
-msgstr "Contribution"
 
 #: src/routes/_home/-sections/donate.tsx:188
 msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
@@ -833,9 +833,9 @@ msgstr "Désactivation de l'authentification à deux facteurs..."
 msgid "Disconnect"
 msgstr "Déconnecter"
 
-#: src/routes/_home/-sections/footer.tsx:35
-msgid "Discussions"
-msgstr "Discussions"
+#: src/routes/_home/-sections/footer.tsx:38
+msgid "Discord"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx:28
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:40
@@ -845,10 +845,6 @@ msgstr "Documentation"
 #: src/routes/auth/login.tsx:92
 msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
 msgstr "Vous n'avez pas de compte ? <0><1>Créez-en un maintenant <2/></1></0>"
-
-#: src/routes/_home/-sections/footer.tsx:31
-msgid "Donate"
-msgstr "Faire un don"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:31
 msgid "Donate to Reactive Resume"
@@ -869,7 +865,7 @@ msgstr "Téléchargez un exemplaire de votre CV au format PDF. Utilisez ce fichi
 
 #: src/routes/builder/$resumeId/-components/dock.tsx:90
 msgid "Download JSON"
-msgstr ""
+msgstr "Télécharger le JSON"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx:92
 msgid "Download PDF"
@@ -1371,6 +1367,10 @@ msgstr "Mise en page"
 msgid "Learn More"
 msgstr "En savoir plus"
 
+#: src/components/resume/preview.tsx:179
+msgid "Learn more about how to fit content on a page"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx:63
 msgid "Leave empty to reset the title to the original."
 msgstr "Laissez le champ vide pour rétablir le titre d'origine."
@@ -1481,7 +1481,7 @@ msgstr "Modèle"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx:108
 msgid "Move to"
-msgstr ""
+msgstr "Déplacer vers"
 
 #: src/routes/_home/-sections/features.tsx:70
 msgid "Multilingual"
@@ -1517,7 +1517,7 @@ msgstr "Nouvelle ligne"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx:145
 msgid "New Page"
-msgstr ""
+msgstr "Nouvelle page"
 
 #: src/dialogs/auth/change-password.tsx:110
 #: src/routes/auth/reset-password.tsx:85
@@ -1526,7 +1526,7 @@ msgstr "Nouveau mot de passe"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx:134
 msgid "New Section"
-msgstr ""
+msgstr "Nouvelle section"
 
 #: src/routes/_home/-sections/features.tsx:52
 msgid "No Advertising, No Tracking"
@@ -1603,7 +1603,7 @@ msgstr "Page"
 msgid "Page {0}"
 msgstr "Page {0}"
 
-#: src/components/resume/preview.tsx:113
+#: src/components/resume/preview.tsx:152
 msgid "Page {pageNumber} of {totalNumberOfPages}"
 msgstr "Page {pageNumber} sur {totalNumberOfPages}"
 
@@ -1657,7 +1657,7 @@ msgstr "Persan"
 
 #: src/routes/_home/-sections/features.tsx:95
 msgid "Personalize your resume with any colors, fonts or designs, and make it your own."
-msgstr ""
+msgstr "Personnalisez votre CV avec les couleurs, polices ou designs de votre choix, et faites-en le vôtre."
 
 #: src/dialogs/resume/sections/reference.tsx:184
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx:98
@@ -1683,7 +1683,7 @@ msgstr "Veuillez saisir l'URL vers laquelle vous souhaitez rediriger :"
 #: src/routes/builder/$resumeId/-components/dock.tsx:61
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:30
 msgid "Please wait while your PDF is being generated..."
-msgstr ""
+msgstr "Veuillez patienter pendant que votre PDF est en cours de génération..."
 
 #: src/utils/locale.ts:104
 msgid "Polish"
@@ -1825,9 +1825,9 @@ msgstr "Renommer"
 msgid "Report a Bug"
 msgstr "Signaler un bug"
 
-#: src/routes/_home/-sections/footer.tsx:36
-msgid "Report an Issue"
-msgstr "Signaler un problème"
+#: src/routes/_home/-sections/footer.tsx:35
+msgid "Report an issue"
+msgstr ""
 
 #: src/routes/dashboard/settings/profile.tsx:202
 msgid "Resend verification email"
@@ -1930,7 +1930,7 @@ msgstr "Secret copié dans le presse-papiers."
 
 #: src/dialogs/resume/sections/custom.tsx:172
 msgid "Section Type"
-msgstr ""
+msgstr "Type de section"
 
 #: src/components/ui/combobox.tsx:41
 #: src/components/ui/multiple-combobox.tsx:49
@@ -2081,7 +2081,7 @@ msgstr "Une erreur s'est produite. Veuillez réessayer."
 msgid "Sort by"
 msgstr "Trier par"
 
-#: src/routes/_home/-sections/footer.tsx:29
+#: src/routes/_home/-sections/footer.tsx:30
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:46
 msgid "Source Code"
 msgstr "Code source"
@@ -2101,6 +2101,10 @@ msgstr "Espagnol"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:64
 msgid "Sponsors"
 msgstr "Sponsors"
+
+#: src/routes/_home/-sections/footer.tsx:29
+msgid "Sponsorships"
+msgstr ""
 
 #: src/components/level/combobox.tsx:16
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx:233
@@ -2131,6 +2135,10 @@ msgstr "Statistiques"
 #: src/components/input/rich-input.tsx:355
 msgid "Strike"
 msgstr "Barré"
+
+#: src/routes/_home/-sections/footer.tsx:37
+msgid "Subreddit"
+msgstr ""
 
 #: src/utils/resume/section.tsx:92
 msgid "Summary"
@@ -2216,6 +2224,10 @@ msgstr "La clé API ne pourra plus accéder à vos données après la suppressio
 msgid "The command you're looking for doesn't exist."
 msgstr "La commande que vous recherchez n'existe pas."
 
+#: src/components/resume/preview.tsx:174
+msgid "The content is too tall for this page, this may cause undesirable results when exporting to PDF."
+msgstr ""
+
 #: src/routes/auth/resume-password.tsx:75
 msgid "The password you entered is incorrect"
 msgstr "Le mot de passe saisi est incorrect"
@@ -2241,7 +2253,7 @@ msgstr "Ensuite, entrez le code à 6 chiffres fourni par l'application pour cont
 #: src/routes/builder/$resumeId/-components/dock.tsx:69
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:38
 msgid "There was a problem while generating the PDF, please try again in some time."
-msgstr ""
+msgstr "Un problème est survenu lors de la génération du PDF, veuillez réessayer dans quelque temps."
 
 #: src/routes/builder/$resumeId/-components/header.tsx:103
 #: src/routes/dashboard/resumes/-components/resume-card.tsx:80
@@ -2268,7 +2280,7 @@ msgstr "Cela peut prendre quelques minutes, en fonction de la réponse du fourni
 #: src/routes/builder/$resumeId/-components/dock.tsx:62
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx:31
 msgid "This may take a while depending on the server capacity. Please do not close the window or refresh the page."
-msgstr ""
+msgstr "Cela peut prendre un certain temps, selon la capacité du serveur. Ne fermez pas la fenêtre et n’actualisez pas la page."
 
 #: src/components/resume/store/resume.ts:53
 msgid "This resume is locked and cannot be updated."
@@ -2313,8 +2325,7 @@ msgstr "Pour supprimer votre compte, vous devez saisir le texte de confirmation 
 msgid "Track your resume's views and downloads"
 msgstr "Suivez les consultations et les téléchargements de votre CV"
 
-#: src/routes/_home/-sections/footer.tsx:30
-#: src/routes/_home/-sections/footer.tsx:37
+#: src/routes/_home/-sections/footer.tsx:36
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx:58
 msgid "Translations"
 msgstr "Traductions"
@@ -2649,7 +2660,7 @@ msgstr "Votre clé API a été copiée dans le presse-papiers."
 
 #: src/routes/builder/$resumeId/index.tsx:18
 msgid "Your changes are saved automatically."
-msgstr ""
+msgstr "Vos modifications sont enregistrées automatiquement."
 
 #: src/routes/_home/-sections/features.tsx:59
 msgid "Your data is secure, and never shared or sold to anyone."
@@ -2724,3 +2735,4 @@ msgstr "Zoom arrière"
 #: src/utils/locale.ts:122
 msgid "Zulu"
 msgstr "Zoulou"
+
