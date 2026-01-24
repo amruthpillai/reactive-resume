@@ -88,7 +88,7 @@ const extensions = [
 			class: "rounded-md px-0.5 py-px",
 		},
 	}),
-	TextAlign.configure({ types: ["heading", "paragraph"] }),
+	TextAlign.configure({ types: ["heading", "paragraph", "listItem"] }),
 	TableKit.configure(),
 ];
 

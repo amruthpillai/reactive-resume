@@ -66,4 +66,48 @@
 	small {
 		font-size: calc(var(--page-body-font-size) * 0.9pt);
 	}
+
+	/* RTL Support: Apply RTL direction when text is right-aligned */
+	p[style*="text-align: right"],
+	h1[style*="text-align: right"],
+	h2[style*="text-align: right"],
+	h3[style*="text-align: right"],
+	h4[style*="text-align: right"],
+	h5[style*="text-align: right"],
+	h6[style*="text-align: right"],
+	li[style*="text-align: right"],
+	ul[style*="text-align: right"],
+	ol[style*="text-align: right"] {
+		direction: rtl;
+	}
+
+	/* LTR Support: Apply LTR direction when text is left-aligned */
+	p[style*="text-align: left"],
+	h1[style*="text-align: left"],
+	h2[style*="text-align: left"],
+	h3[style*="text-align: left"],
+	h4[style*="text-align: left"],
+	h5[style*="text-align: left"],
+	h6[style*="text-align: left"],
+	li[style*="text-align: left"],
+	ul[style*="text-align: left"],
+	ol[style*="text-align: left"] {
+		direction: ltr;
+	}
+
+	/* When list items are RTL, make bullets/numbers appear on the right */
+	li[style*="text-align: right"] {
+		text-align: right;
+	}
+
+	/* Parent list inherits direction from its items */
+	ul:has(li[style*="text-align: right"]),
+	ol:has(li[style*="text-align: right"]) {
+		direction: rtl;
+	}
+
+	ul:has(li[style*="text-align: left"]),
+	ol:has(li[style*="text-align: left"]) {
+		direction: ltr;
+	}
 }
