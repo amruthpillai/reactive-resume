@@ -1,0 +1,321 @@
+---
+title: "Single Sign-On (SSO)"
+description: "A guide to setting up custom OAuth providers like Authentik, Authelia, Keycloak, or any OIDC-compliant identity provider for Single Sign-On (SSO) in your self-hosted instance."
+---
+
+## Overview
+
+Reactive Resume supports custom OAuth providers, allowing you to integrate with enterprise identity providers and self-hosted authentication solutions. This is particularly useful for organizations that want to:
+
+- Use a centralized identity provider (Authentik, Authelia, Keycloak, etc.)
+- Enforce Single Sign-On (SSO) across all internal applications
+- Integrate with existing LDAP/Active Directory infrastructure
+
+<Info>
+  Custom OAuth is designed for **self-hosted instances**. If you're using the hosted version at [rxresu.me](https://rxresu.me), you can use the built-in Google and GitHub sign-in options.
+</Info>
+
+## Environment Variables
+
+To enable a custom OAuth provider, you need to configure the following environment variables in your `.env` file:
+
+### Required Variables
+
+| Variable | Description |
+|----------|-------------|
+| `OAUTH_CLIENT_ID` | The client ID provided by your OAuth provider |
+| `OAUTH_CLIENT_SECRET` | The client secret provided by your OAuth provider |
+
+### Endpoint Configuration
+
+You must configure endpoints using **one** of these two methods:
+
+<Tabs>
+  <Tab title="Option A: OIDC Discovery (Recommended)">
+    For OIDC-compliant providers (most modern identity providers), you only need to set the discovery URL:
+
+    | Variable | Description |
+    |----------|-------------|
+    | `OAUTH_DISCOVERY_URL` | Your provider's `.well-known/openid-configuration` URL |
+
+    The discovery URL automatically provides the authorization, token, and userinfo endpoints.
+
+    **Examples:**
+    - Authentik: `https://auth.example.com/application/o/reactive-resume/.well-known/openid-configuration`
+    - Keycloak: `https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration`
+    - Authelia: `https://auth.example.com/.well-known/openid-configuration`
+  </Tab>
+
+  <Tab title="Option B: Manual URLs">
+    For providers that don't support OIDC discovery, you must set all three URLs:
+
+    | Variable | Description |
+    |----------|-------------|
+    | `OAUTH_AUTHORIZATION_URL` | The URL where users are redirected to authorize |
+    | `OAUTH_TOKEN_URL` | The URL to exchange authorization codes for tokens |
+    | `OAUTH_USER_INFO_URL` | The URL to fetch user profile information |
+  </Tab>
+</Tabs>
+
+### Optional Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `OAUTH_PROVIDER_NAME` | Display name shown on the sign-in button | `Custom OAuth` |
+| `OAUTH_SCOPES` | Space-separated list of OAuth scopes | `openid profile email` |
+
+## Callback URL
+
+When configuring your OAuth provider, you'll need to set the **callback URL** (also called redirect URI). Use the following format:
+
+```
+{APP_URL}/api/auth/oauth2/callback/custom
+```
+
+For example, if your `APP_URL` is `https://resume.example.com`, the callback URL would be:
+
+```
+https://resume.example.com/api/auth/oauth2/callback/custom
+```
+
+<Warning>
+  Make sure the callback URL exactly matches what you configure in your OAuth provider. A mismatch will cause authentication to fail.
+</Warning>
+
+## Profile Mapping
+
+Reactive Resume automatically maps user profile data from the OAuth provider. The following fields are used:
+
+| Reactive Resume Field | OAuth Profile Fields (in order of preference) |
+|-----------------------|-----------------------------------------------|
+| **Email** (required) | `email` |
+| **Name** | `name` → `preferred_username` → email prefix |
+| **Username** | `preferred_username` → email prefix |
+| **Avatar** | `image` → `picture` → `avatar_url` |
+
+<Info>
+  The OAuth provider **must** return an email address. If no email is provided, authentication will fail with an error.
+</Info>
+
+## Provider-Specific Setup
+
+### Authentik
+
+<Steps>
+  <Step title="Create an OAuth2/OpenID Provider">
+    In the Authentik admin interface, navigate to **Applications → Providers** and create a new **OAuth2/OpenID Provider**.
+
+    - **Name**: Reactive Resume
+    - **Authorization flow**: Use your preferred authorization flow
+    - **Client type**: Confidential
+    - **Redirect URIs**: `https://resume.example.com/api/auth/oauth2/callback/custom`
+  </Step>
+
+  <Step title="Create an Application">
+    Navigate to **Applications → Applications** and create a new application:
+
+    - **Name**: Reactive Resume
+    - **Slug**: `reactive-resume`
+    - **Provider**: Select the provider you just created
+  </Step>
+
+  <Step title="Copy credentials">
+    From the provider settings, copy the **Client ID** and **Client Secret**.
+  </Step>
+
+  <Step title="Configure environment variables">
+```bash .env
+OAUTH_PROVIDER_NAME="Authentik"
+OAUTH_CLIENT_ID="your-client-id"
+OAUTH_CLIENT_SECRET="your-client-secret"
+OAUTH_DISCOVERY_URL="https://auth.example.com/application/o/reactive-resume/.well-known/openid-configuration"
+```
+  </Step>
+</Steps>
+
+### Authelia
+
+<Steps>
+  <Step title="Configure an OIDC client">
+    Add a client configuration to your Authelia `configuration.yml`:
+
+```yaml
+identity_providers:
+  oidc:
+    clients:
+      - client_id: reactive-resume
+        client_name: Reactive Resume
+        client_secret: 'your-hashed-secret'  # Use authelia hash-password to generate
+        public: false
+        authorization_policy: two_factor  # or one_factor
+        redirect_uris:
+          - https://resume.example.com/api/auth/oauth2/callback/custom
+        scopes:
+          - openid
+          - profile
+          - email
+        token_endpoint_auth_method: client_secret_post
+```
+
+    <Info>
+      Generate the hashed secret using: `authelia crypto hash generate pbkdf2 --variant sha512`
+    </Info>
+  </Step>
+
+  <Step title="Configure environment variables">
+```bash .env
+OAUTH_PROVIDER_NAME="Authelia"
+OAUTH_CLIENT_ID="reactive-resume"
+OAUTH_CLIENT_SECRET="your-plain-secret"
+OAUTH_DISCOVERY_URL="https://auth.example.com/.well-known/openid-configuration"
+```
+
+    <Warning>
+      Use the **plain text** secret in Reactive Resume's environment, not the hashed version used in Authelia's configuration.
+    </Warning>
+  </Step>
+</Steps>
+
+### Keycloak
+
+<Steps>
+  <Step title="Create a client">
+    In the Keycloak admin console:
+
+    1. Select your realm
+    2. Navigate to **Clients → Create client**
+    3. Set **Client ID** (e.g., `reactive-resume`)
+    4. Set **Client authentication** to **On**
+    5. Enable **Standard flow**
+  </Step>
+
+  <Step title="Configure redirect URI">
+    In the client settings, add the redirect URI:
+
+    - **Valid redirect URIs**: `https://resume.example.com/api/auth/oauth2/callback/custom`
+  </Step>
+
+  <Step title="Copy credentials">
+    Go to the **Credentials** tab and copy the **Client secret**.
+  </Step>
+
+  <Step title="Configure environment variables">
+```bash .env
+OAUTH_PROVIDER_NAME="Keycloak"
+OAUTH_CLIENT_ID="reactive-resume"
+OAUTH_CLIENT_SECRET="your-client-secret"
+OAUTH_DISCOVERY_URL="https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration"
+```
+  </Step>
+</Steps>
+
+### Generic OIDC Provider
+
+For any other OIDC-compliant provider:
+
+```bash .env
+OAUTH_PROVIDER_NAME="My SSO"
+OAUTH_CLIENT_ID="your-client-id"
+OAUTH_CLIENT_SECRET="your-client-secret"
+OAUTH_DISCOVERY_URL="https://sso.example.com/.well-known/openid-configuration"
+```
+
+### Non-OIDC Provider (Manual Configuration)
+
+For providers that don't support OIDC discovery:
+
+```bash .env
+OAUTH_PROVIDER_NAME="Custom Provider"
+OAUTH_CLIENT_ID="your-client-id"
+OAUTH_CLIENT_SECRET="your-client-secret"
+OAUTH_AUTHORIZATION_URL="https://provider.example.com/oauth/authorize"
+OAUTH_TOKEN_URL="https://provider.example.com/oauth/token"
+OAUTH_USER_INFO_URL="https://provider.example.com/oauth/userinfo"
+OAUTH_SCOPES="openid profile email"
+```
+
+## Complete Example
+
+Here's a complete `.env` snippet showing custom OAuth alongside other authentication options:
+
+```bash .env
+# --- Authentication ---
+AUTH_SECRET="your-32-byte-hex-secret"
+
+# Built-in Social Auth (optional, can coexist with custom OAuth)
+# GOOGLE_CLIENT_ID=""
+# GOOGLE_CLIENT_SECRET=""
+# GITHUB_CLIENT_ID=""
+# GITHUB_CLIENT_SECRET=""
+
+# Custom OAuth Provider (e.g., Authentik)
+OAUTH_PROVIDER_NAME="Company SSO"
+OAUTH_CLIENT_ID="reactive-resume-client-id"
+OAUTH_CLIENT_SECRET="reactive-resume-client-secret"
+OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.well-known/openid-configuration"
+# OAUTH_SCOPES="openid profile email"  # Defaults to these scopes if not set
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="'OAuth Provider did not return an email address' error">
+    Your OAuth provider must return an email address for user creation. Ensure:
+    - The `email` scope is included in your scopes
+    - Your provider is configured to release the email claim
+    - The user has an email address set in the identity provider
+  </Accordion>
+
+  <Accordion title="Redirect URI mismatch error">
+    The callback URL configured in your OAuth provider must exactly match:
+    ```
+    {APP_URL}/api/auth/oauth2/callback/custom
+    ```
+    Common issues:
+    - Trailing slash mismatch
+    - HTTP vs HTTPS mismatch
+    - Port number differences
+    - Path case sensitivity
+  </Accordion>
+
+  <Accordion title="Custom OAuth button not appearing">
+    The custom OAuth option only appears if both `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` are set, **and** either:
+    - `OAUTH_DISCOVERY_URL` is set, **or**
+    - All three manual URLs are set (`OAUTH_AUTHORIZATION_URL`, `OAUTH_TOKEN_URL`, `OAUTH_USER_INFO_URL`)
+
+    Double-check your environment variables and restart the container.
+  </Accordion>
+
+  <Accordion title="CORS or network errors during authentication">
+    If running behind a reverse proxy:
+    - Ensure `APP_URL` matches your public URL
+    - Verify the proxy passes the correct headers (`X-Forwarded-Proto`, `X-Forwarded-Host`)
+    - Check that your OAuth provider allows the redirect URI from your domain
+  </Accordion>
+
+  <Accordion title="User profile data is missing or incorrect">
+    The profile mapping depends on your provider returning standard claims:
+    - `email` (required)
+    - `name` or `preferred_username` for display name
+    - `picture`, `image`, or `avatar_url` for avatar
+
+    Check your provider's documentation to ensure these claims are included in the ID token or userinfo response.
+  </Accordion>
+</AccordionGroup>
+
+## Security Considerations
+
+<CardGroup cols={2}>
+  <Card title="Use HTTPS" icon="lock">
+    Always use HTTPS for both your Reactive Resume instance and OAuth provider in production. OAuth tokens should never be transmitted over unencrypted connections.
+  </Card>
+  <Card title="Protect secrets" icon="key">
+    Never commit `OAUTH_CLIENT_SECRET` to version control. Use environment variables or a secrets manager.
+  </Card>
+  <Card title="Verify redirect URIs" icon="shield-check">
+    Configure your OAuth provider to only allow the exact redirect URI. Avoid wildcards in redirect URI configurations.
+  </Card>
+  <Card title="Review scopes" icon="list-check">
+    Only request the scopes you need. The default (`openid profile email`) is sufficient for Reactive Resume.
+  </Card>
+</CardGroup>
