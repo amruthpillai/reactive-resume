@@ -106,7 +106,7 @@ export const ResumePreview = ({ showPageNumbers, pageClassName, className, ...pr
 					const pageNumber = pageIndex + 1;
 
 					return (
-						<div key={pageIndex} className="relative">
+						<div key={pageIndex} data-page-index={pageIndex} className="relative">
 							{showPageNumbers && totalNumberOfPages > 1 && (
 								<div className="absolute -top-6 left-0">
 									<span className="font-medium text-foreground text-xs">
@@ -117,14 +117,7 @@ export const ResumePreview = ({ showPageNumbers, pageClassName, className, ...pr
 								</div>
 							)}
 
-							<div
-								className={cn(
-									`page page-${pageIndex}`,
-									pageIndex > 0 && "print:break-before-page",
-									styles.page,
-									pageClassName,
-								)}
-							>
+							<div className={cn(`page page-${pageIndex}`, styles.page, pageClassName)}>
 								<TemplateComponent pageIndex={pageIndex} pageLayout={pageLayout} />
 							</div>
 						</div>

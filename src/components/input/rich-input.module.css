@@ -32,10 +32,8 @@
 	:where(li) {
 		margin-top: var(--list-margin);
 		margin-bottom: var(--list-margin);
-	}
-
-	:where(li p) {
-		display: inline;
+		margin-left: 1rem;
+		list-style-position: outside;
 	}
 
 	:where(li ul li, li ol li) {

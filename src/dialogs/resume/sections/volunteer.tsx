@@ -3,17 +3,11 @@ import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import {
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/animate-ui/components/radix/dialog";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
@@ -33,18 +27,23 @@ export function CreateVolunteerDialog({ data }: DialogProps<"resume.sections.vol
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			id: generateId(),
-			hidden: data?.hidden ?? false,
-			organization: data?.organization ?? "",
-			location: data?.location ?? "",
-			period: data?.period ?? "",
-			website: data?.website ?? { url: "", label: "" },
-			description: data?.description ?? "",
+			hidden: data?.item?.hidden ?? false,
+			organization: data?.item?.organization ?? "",
+			location: data?.item?.location ?? "",
+			period: data?.item?.period ?? "",
+			website: data?.item?.website ?? { url: "", label: "" },
+			description: data?.item?.description ?? "",
 		},
 	});
 
-	const onSubmit = (values: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			draft.sections.volunteer.items.push(values);
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (section) section.items.push(formData);
+			} else {
+				draft.sections.volunteer.items.push(formData);
+			}
 		});
 		closeDialog();
 	};
@@ -85,21 +84,27 @@ export function UpdateVolunteerDialog({ data }: DialogProps<"resume.sections.vol
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			id: data.id,
-			hidden: data.hidden,
-			organization: data.organization,
-			location: data.location,
-			period: data.period,
-			website: data.website,
-			description: data.description,
+			id: data.item.id,
+			hidden: data.item.hidden,
+			organization: data.item.organization,
+			location: data.item.location,
+			period: data.item.period,
+			website: data.item.website,
+			description: data.item.description,
 		},
 	});
 
-	const onSubmit = (values: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			const index = draft.sections.volunteer.items.findIndex((item) => item.id === values.id);
-			if (index === -1) return;
-			draft.sections.volunteer.items[index] = values;
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) section.items[index] = formData;
+			} else {
+				const index = draft.sections.volunteer.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) draft.sections.volunteer.items[index] = formData;
+			}
 		});
 		closeDialog();
 	};

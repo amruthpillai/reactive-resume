@@ -10,7 +10,7 @@ export function PageIcon({ icon, className }: { icon: string; className?: string
 
 	return (
 		<i
-			className={cn("ph", `ph-${icon}`, className)}
+			className={cn("ph shrink-0", `ph-${icon}`, className)}
 			style={{ fontSize: `${iconContext.size}px`, color: iconContext.color }}
 		/>
 	);

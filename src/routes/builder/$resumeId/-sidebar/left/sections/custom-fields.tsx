@@ -1,12 +1,13 @@
 import { Trans } from "@lingui/react/macro";
-import { DotsSixVerticalIcon, ListPlusIcon, XIcon } from "@phosphor-icons/react";
+import { DotsSixVerticalIcon, LinkIcon, ListPlusIcon, XIcon } from "@phosphor-icons/react";
 import { Reorder, useDragControls } from "motion/react";
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import type z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { IconPicker } from "@/components/input/icon-picker";
+import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { basicsSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -41,7 +42,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 	}
 
 	function handleAdd() {
-		customFieldsArray.append({ id: generateId(), icon: "acorn", text: "" });
+		customFieldsArray.append({ id: generateId(), icon: "acorn", text: "", link: "" });
 		form.handleSubmit(onSubmit)();
 	}
 
@@ -87,7 +88,39 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 						)}
 					/>
 
-					<Button size="icon" variant="ghost" className="ml-2" onClick={() => handleRemove(index)}>
+					<Popover>
+						<PopoverTrigger asChild>
+							<Button size="icon" variant="ghost" className="ml-1">
+								<LinkIcon />
+							</Button>
+						</PopoverTrigger>
+
+						<PopoverContent align="center">
+							<div className="flex flex-col gap-y-1.5">
+								<span className="text-muted-foreground text-xs">
+									<Trans>Enter the URL to link to</Trans>
+								</span>
+
+								<Controller
+									control={form.control}
+									name={`customFields.${index}.link`}
+									render={({ field }) => (
+										<Input
+											type="url"
+											value={field.value}
+											placeholder="Must start with https://"
+											onChange={(e) => {
+												field.onChange(e.target.value);
+												form.handleSubmit(onSubmit)();
+											}}
+										/>
+									)}
+								/>
+							</div>
+						</PopoverContent>
+					</Popover>
+
+					<Button size="icon" variant="ghost" onClick={() => handleRemove(index)}>
 						<XIcon />
 					</Button>
 				</CustomFieldItem>

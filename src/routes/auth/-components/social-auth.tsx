@@ -4,7 +4,7 @@ import { FingerprintSimpleIcon, GithubLogoIcon, GoogleLogoIcon, VaultIcon } from
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Button } from "@/components/ui/button";
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";

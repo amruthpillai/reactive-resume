@@ -4,10 +4,10 @@ import { DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ResumePreview } from "@/components/resume/preview";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { orpc } from "@/integrations/orpc/client";
 import { downloadFromUrl } from "@/utils/file";
@@ -77,7 +77,7 @@ function RouteComponent() {
 
 			<Button
 				size="lg"
-				variant="outline"
+				variant="secondary"
 				disabled={isPrinting}
 				className="fixed right-4 bottom-4 z-50 hidden rounded-full px-4 md:inline-flex print:hidden"
 				onClick={handleDownload}

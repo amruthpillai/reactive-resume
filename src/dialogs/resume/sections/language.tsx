@@ -4,15 +4,9 @@ import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import {
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/animate-ui/components/radix/dialog";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -33,16 +27,21 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			id: generateId(),
-			hidden: data?.hidden ?? false,
-			language: data?.language ?? "",
-			fluency: data?.fluency ?? "",
-			level: data?.level ?? 0,
+			hidden: data?.item?.hidden ?? false,
+			language: data?.item?.language ?? "",
+			fluency: data?.item?.fluency ?? "",
+			level: data?.item?.level ?? 0,
 		},
 	});
 
-	const onSubmit = (data: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			draft.sections.languages.items.push(data);
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (section) section.items.push(formData);
+			} else {
+				draft.sections.languages.items.push(formData);
+			}
 		});
 		closeDialog();
 	};
@@ -83,19 +82,25 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			id: data.id,
-			hidden: data.hidden,
-			language: data.language,
-			fluency: data.fluency,
-			level: data.level,
+			id: data.item.id,
+			hidden: data.item.hidden,
+			language: data.item.language,
+			fluency: data.item.fluency,
+			level: data.item.level,
 		},
 	});
 
-	const onSubmit = (data: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			const index = draft.sections.languages.items.findIndex((item) => item.id === data.id);
-			if (index === -1) return;
-			draft.sections.languages.items[index] = data;
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) section.items[index] = formData;
+			} else {
+				const index = draft.sections.languages.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) draft.sections.languages.items[index] = formData;
+			}
 		});
 		closeDialog();
 	};

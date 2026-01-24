@@ -26,6 +26,7 @@ const getAuthConfig = () => {
 	if (isCustomOAuthProviderEnabled()) {
 		authConfigs.push({
 			providerId: "custom",
+			disableSignUp: env.FLAG_DISABLE_SIGNUPS,
 			clientId: env.OAUTH_CLIENT_ID as string,
 			clientSecret: env.OAUTH_CLIENT_SECRET as string,
 			discoveryUrl: env.OAUTH_DISCOVERY_URL,
@@ -75,17 +76,17 @@ const getAuthConfig = () => {
 		},
 
 		emailAndPassword: {
-			enabled: true,
+			enabled: !env.FLAG_DISABLE_EMAIL_AUTH,
 			autoSignIn: true,
 			minPasswordLength: 6,
 			maxPasswordLength: 64,
 			requireEmailVerification: false,
-			disableSignUp: env.FLAG_DISABLE_SIGNUP,
+			disableSignUp: env.FLAG_DISABLE_SIGNUPS || env.FLAG_DISABLE_EMAIL_AUTH,
 			sendResetPassword: async ({ user, url }) => {
 				await sendEmail({
 					to: user.email,
 					subject: "Reset your password",
-					text: `To reset your password, please visit the following URL: ${url}. If you did not request a password reset, please ignore this email.`,
+					text: `You requested a password reset for your Reactive Resume account.\n\nTo reset your password, please visit the following URL:\n${url}.\n\nIf you did not request a password reset, please ignore this email.`,
 				});
 			},
 			password: {
@@ -101,7 +102,7 @@ const getAuthConfig = () => {
 				await sendEmail({
 					to: user.email,
 					subject: "Verify your email",
-					text: `You recently signed up for an account on Reactive Resume.\nTo verify your email, please visit the following URL: ${url}`,
+					text: `You recently signed up for an account on Reactive Resume.\n\nTo verify your email, please visit the following URL:\n${url}`,
 				});
 			},
 		},
@@ -113,7 +114,7 @@ const getAuthConfig = () => {
 					await sendEmail({
 						to: newEmail,
 						subject: "Verify your new email",
-						text: `You recently requested to change your email on Reactive Resume from ${user.email} to ${newEmail}.\nTo verify this change, please visit the following URL: ${url}\nIf you did not request this change, please ignore this email.`,
+						text: `You recently requested to change your email on Reactive Resume from ${user.email} to ${newEmail}.\n\nTo verify this change, please visit the following URL:\n${url}\n\nIf you did not request this change, please ignore this email.`,
 					});
 				},
 			},
@@ -135,6 +136,7 @@ const getAuthConfig = () => {
 		socialProviders: {
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
+				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GOOGLE_CLIENT_ID!,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
@@ -153,6 +155,7 @@ const getAuthConfig = () => {
 
 			github: {
 				enabled: !!env.GITHUB_CLIENT_ID && !!env.GITHUB_CLIENT_SECRET,
+				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GITHUB_CLIENT_ID!,
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
@@ -171,21 +174,29 @@ const getAuthConfig = () => {
 		},
 
 		plugins: [
-			apiKey(),
+			apiKey({
+				enableSessionForAPIKeys: true,
+				rateLimit: {
+					enabled: true,
+					timeWindow: 1000 * 60 * 60 * 24, // 1 day
+					maxRequests: 500, // 500 requests per day
+				},
+			}),
 			username({
 				minUsernameLength: 3,
 				maxUsernameLength: 64,
 				usernameNormalization: (value) => toUsername(value),
 				displayUsernameNormalization: (value) => toUsername(value),
+				usernameValidator: (username) => /^[a-z0-9._-]+$/.test(username),
 				validationOrder: { username: "post-normalization", displayUsername: "post-normalization" },
 			}),
 			twoFactor({
 				issuer: "Reactive Resume",
 			}),
 			passkey({
+				origin: env.APP_URL,
 				rpName: "Reactive Resume",
 				rpID: new URL(env.APP_URL).hostname,
-				origin: env.APP_URL,
 			}),
 			genericOAuth({
 				config: authConfigs,

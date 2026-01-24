@@ -18,6 +18,10 @@ const sectionClassName = cn(
 	// Icon Colors in Sidebar Layout
 	"group-data-[layout=sidebar]:[&_.section-item_i]:text-(--page-background-color)!",
 
+	// Level Display in Sidebar Layout
+	"group-data-[layout=sidebar]:[&_.section-item-level>div]:bg-(--page-background-color)",
+	"group-data-[layout=sidebar]:[&_.section-item-level>div]:text-(--page-background-color)",
+
 	// Section Item Header in Sidebar Layout
 	"group-data-[layout=sidebar]:[&_.section-item-header>div]:flex-col",
 	"group-data-[layout=sidebar]:[&_.section-item-header>div]:items-start",
@@ -32,10 +36,18 @@ export function ChikoritaTemplate({ pageIndex, pageLayout }: TemplateProps) {
 
 	return (
 		<div className="template-chikorita page-content">
+			{/* Sidebar Background */}
+			{!fullWidth && (
+				<div className="page-sidebar-background absolute inset-y-0 right-0 z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)" />
+			)}
+
 			{isFirstPage && <Header />}
 
 			<div className="flex">
-				<main data-layout="main" className="group page-main flex-1 space-y-4 px-(--page-margin-x) py-(--page-margin-y)">
+				<main
+					data-layout="main"
+					className="group page-main z-10 flex-1 space-y-4 px-(--page-margin-x) py-(--page-margin-y)"
+				>
 					{main.map((section) => {
 						const Component = getSectionComponent(section, { sectionClassName });
 						return <Component key={section} id={section} />;
@@ -45,7 +57,7 @@ export function ChikoritaTemplate({ pageIndex, pageLayout }: TemplateProps) {
 				{!fullWidth && (
 					<aside
 						data-layout="sidebar"
-						className="group page-sidebar w-(--page-sidebar-width) shrink-0 space-y-4 overflow-x-hidden bg-(--page-primary-color) px-(--page-margin-x) pb-(--page-margin-y) text-(--page-background-color)"
+						className="group page-sidebar z-10 w-(--page-sidebar-width) shrink-0 space-y-4 overflow-x-hidden px-(--page-margin-x) py-(--page-margin-y) text-(--page-background-color)"
 					>
 						{sidebar.map((section) => {
 							const Component = getSectionComponent(section, { sectionClassName });
@@ -63,7 +75,7 @@ function Header() {
 
 	return (
 		<div className="page-header relative flex">
-			<div className="flex items-center pt-(--page-margin-y) pl-(--page-margin-x)">
+			<div className="flex flex-1 items-center pt-(--page-margin-y) pl-(--page-margin-x)">
 				<PagePicture />
 
 				<div className="page-basics space-y-2 px-(--page-margin-x)">
@@ -104,14 +116,14 @@ function Header() {
 						{basics.customFields.map((field) => (
 							<div key={field.id} className="basics-item-custom">
 								<PageIcon icon={field.icon} />
-								<span>{field.text}</span>
+								{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
 							</div>
 						))}
 					</div>
 				</div>
 			</div>
 
-			<div className="w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)" />
+			<div className="w-(--page-sidebar-width) shrink-0" />
 		</div>
 	);
 }

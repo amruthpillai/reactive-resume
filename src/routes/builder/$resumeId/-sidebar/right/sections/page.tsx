@@ -2,12 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
-import { Switch } from "@/components/animate-ui/components/radix/switch";
 import { getLocaleOptions } from "@/components/locale/combobox";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Combobox } from "@/components/ui/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { Switch } from "@/components/ui/switch";
 import { pageSchema } from "@/schema/resume/data";
 import { SectionBase } from "../shared/section-base";
 

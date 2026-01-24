@@ -7,9 +7,9 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { ColorPicker } from "@/components/input/color-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -32,8 +32,8 @@ function PictureSectionForm() {
 	const picture = useResumeStore((state) => state.resume.data.picture);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const { mutate: uploadFile } = useMutation(orpc.storage.uploadFile.mutationOptions());
-	const { mutate: deleteFile } = useMutation(orpc.storage.deleteFile.mutationOptions());
+	const { mutate: uploadFile } = useMutation(orpc.storage.uploadFile.mutationOptions({ meta: { noInvalidate: true } }));
+	const { mutate: deleteFile } = useMutation(orpc.storage.deleteFile.mutationOptions({ meta: { noInvalidate: true } }));
 
 	const form = useForm({
 		resolver: zodResolver(pictureSchema),
@@ -53,22 +53,16 @@ function PictureSectionForm() {
 	};
 
 	const onDeletePicture = () => {
+		if (!picture.url) return;
+
+		const appOrigin = window.location.origin;
+		const pictureOrigin = new URL(picture.url).origin;
+
 		const filename = picture.url.split("/").pop();
 		if (!filename) return;
 
-		const toastId = toast.loading(t`Deleting picture...`);
-
-		deleteFile(
-			{ filename },
-			{
-				onSuccess: () => {
-					toast.dismiss(toastId);
-				},
-				onError: (error) => {
-					toast.error(error.message, { id: toastId });
-				},
-			},
-		);
+		// If the picture is from the same origin, attempt to delete it
+		if (pictureOrigin === appOrigin) deleteFile({ filename });
 
 		form.setValue("url", "", { shouldDirty: true });
 		form.handleSubmit(onSubmit)();
@@ -85,6 +79,7 @@ function PictureSectionForm() {
 				form.setValue("url", url, { shouldDirty: true });
 				form.handleSubmit(onSubmit)();
 				toast.dismiss(toastId);
+				if (fileInputRef.current) fileInputRef.current.value = "";
 			},
 			onError: (error) => {
 				toast.error(error.message, { id: toastId });

@@ -38,30 +38,102 @@ const dialogTypeSchema = z.discriminatedUnion("type", [
 		}),
 	}),
 	z.object({ type: z.literal("resume.template.gallery"), data: z.undefined() }),
-	z.object({ type: z.literal("resume.sections.profiles.create"), data: profileItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.profiles.update"), data: profileItemSchema }),
-	z.object({ type: z.literal("resume.sections.experience.create"), data: experienceItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.experience.update"), data: experienceItemSchema }),
-	z.object({ type: z.literal("resume.sections.education.create"), data: educationItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.education.update"), data: educationItemSchema }),
-	z.object({ type: z.literal("resume.sections.projects.create"), data: projectItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.projects.update"), data: projectItemSchema }),
-	z.object({ type: z.literal("resume.sections.skills.create"), data: skillItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.skills.update"), data: skillItemSchema }),
-	z.object({ type: z.literal("resume.sections.languages.create"), data: languageItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.languages.update"), data: languageItemSchema }),
-	z.object({ type: z.literal("resume.sections.awards.create"), data: awardItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.awards.update"), data: awardItemSchema }),
-	z.object({ type: z.literal("resume.sections.certifications.create"), data: certificationItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.certifications.update"), data: certificationItemSchema }),
-	z.object({ type: z.literal("resume.sections.publications.create"), data: publicationItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.publications.update"), data: publicationItemSchema }),
-	z.object({ type: z.literal("resume.sections.interests.create"), data: interestItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.interests.update"), data: interestItemSchema }),
-	z.object({ type: z.literal("resume.sections.volunteer.create"), data: volunteerItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.volunteer.update"), data: volunteerItemSchema }),
-	z.object({ type: z.literal("resume.sections.references.create"), data: referenceItemSchema.optional() }),
-	z.object({ type: z.literal("resume.sections.references.update"), data: referenceItemSchema }),
+	z.object({
+		type: z.literal("resume.sections.profiles.create"),
+		data: z.object({ item: profileItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.profiles.update"),
+		data: z.object({ item: profileItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.experience.create"),
+		data: z.object({ item: experienceItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.experience.update"),
+		data: z.object({ item: experienceItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.education.create"),
+		data: z.object({ item: educationItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.education.update"),
+		data: z.object({ item: educationItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.projects.create"),
+		data: z.object({ item: projectItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.projects.update"),
+		data: z.object({ item: projectItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.skills.create"),
+		data: z.object({ item: skillItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.skills.update"),
+		data: z.object({ item: skillItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.languages.create"),
+		data: z.object({ item: languageItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.languages.update"),
+		data: z.object({ item: languageItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.awards.create"),
+		data: z.object({ item: awardItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.awards.update"),
+		data: z.object({ item: awardItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.certifications.create"),
+		data: z.object({ item: certificationItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.certifications.update"),
+		data: z.object({ item: certificationItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.publications.create"),
+		data: z.object({ item: publicationItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.publications.update"),
+		data: z.object({ item: publicationItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.interests.create"),
+		data: z.object({ item: interestItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.interests.update"),
+		data: z.object({ item: interestItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.volunteer.create"),
+		data: z.object({ item: volunteerItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.volunteer.update"),
+		data: z.object({ item: volunteerItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.references.create"),
+		data: z.object({ item: referenceItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.references.update"),
+		data: z.object({ item: referenceItemSchema, customSectionId: z.string().optional() }),
+	}),
 	z.object({ type: z.literal("resume.sections.custom.create"), data: customSectionSchema.optional() }),
 	z.object({ type: z.literal("resume.sections.custom.update"), data: customSectionSchema }),
 ]);

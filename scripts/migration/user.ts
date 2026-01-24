@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { inArray, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { Pool, type QueryResult } from "pg";
 import { schema } from "@/integrations/drizzle";
 import { generateId, toUsername } from "@/utils/string";
 
@@ -18,7 +18,6 @@ interface ProductionUser {
 	email: string;
 	locale: string;
 	emailVerified: boolean;
-	twoFactorEnabled: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	provider: ProductionProvider;
@@ -28,11 +27,6 @@ interface ProductionSecrets {
 	id: string;
 	password: string | null;
 	lastSignedIn: Date;
-	verificationToken: string | null;
-	twoFactorSecret: string | null;
-	twoFactorBackupCodes: string[];
-	refreshToken: string | null;
-	resetToken: string | null;
 	userId: string;
 }
 
@@ -69,18 +63,20 @@ const USER_ID_MAP_FILE = "./scripts/migration/user-id-map.json";
 const PROGRESS_FILE = "./scripts/migration/user-progress.json";
 
 // You may tune this for your use case
-// Reduced from 10000 to avoid PostgreSQL message format errors
-const BATCH_SIZE = 5000;
+const BATCH_SIZE = 10_000;
 
 // Chunk size for actual inserts - smaller to avoid PostgreSQL message size limits
 const INSERT_CHUNK_SIZE = 1000;
 
 // == Progress checkpoint interface ==
+// Uses cursor-based pagination with (createdAt, id) composite key for efficiency
 interface MigrationProgress {
-	currentOffset: number;
+	// Cursor for pagination - last seen createdAt timestamp
+	lastSeenCreatedAt: string | null;
+	// Cursor for pagination - last seen id (for tiebreaker when timestamps are equal)
+	lastSeenId: string | null;
 	usersCreated: number;
 	accountsCreated: number;
-	twoFactorCreated: number;
 	skipped: number;
 	totalUsersProcessed: number;
 	lastUpdated: string;
@@ -94,7 +90,7 @@ async function loadProgress(): Promise<MigrationProgress | null> {
 		const text = await fs.readFile(PROGRESS_FILE, { encoding: "utf-8" });
 		const progress = JSON.parse(text) as MigrationProgress;
 		console.log(`📂 Found existing progress file. Last updated: ${progress.lastUpdated}`);
-		console.log(`   Resuming from offset ${progress.currentOffset}...`);
+		console.log(`   Resuming from cursor (createdAt: ${progress.lastSeenCreatedAt}, id: ${progress.lastSeenId})...`);
 		return progress;
 	} catch (e) {
 		console.warn("⚠️  Failed to load progress file, starting from beginning.", e);
@@ -106,7 +102,7 @@ async function saveProgress(progress: MigrationProgress): Promise<void> {
 	try {
 		progress.lastUpdated = new Date().toISOString();
 		await fs.writeFile(PROGRESS_FILE, JSON.stringify(progress, null, 2), { encoding: "utf-8" });
-		console.log(`💾 Progress saved at offset ${progress.currentOffset}`);
+		console.log(`💾 Progress saved at cursor (createdAt: ${progress.lastSeenCreatedAt}, id: ${progress.lastSeenId})`);
 	} catch (e) {
 		console.error("🚨 Failed to save progress:", e);
 	}
@@ -142,7 +138,10 @@ export async function migrateUsers() {
 	console.log("⌛ Starting user migration...");
 
 	let hasMore = true;
-	let currentOffset = 0;
+
+	// Cursor-based pagination state
+	let lastSeenCreatedAt: string | null = null;
+	let lastSeenId: string | null = null;
 
 	// Load persistent userIdMap from file
 	const userIdMap = await loadUserIdMapFromFile();
@@ -150,27 +149,26 @@ export async function migrateUsers() {
 	// Track migration stats
 	let usersCreated = 0;
 	let accountsCreated = 0;
-	let twoFactorCreated = 0;
 	let skipped = 0;
 	let totalUsersProcessed = 0;
 
 	// Load saved progress if exists
 	const savedProgress = await loadProgress();
 	if (savedProgress) {
-		currentOffset = savedProgress.currentOffset;
+		lastSeenCreatedAt = savedProgress.lastSeenCreatedAt;
+		lastSeenId = savedProgress.lastSeenId;
 		usersCreated = savedProgress.usersCreated;
 		accountsCreated = savedProgress.accountsCreated;
-		twoFactorCreated = savedProgress.twoFactorCreated;
 		skipped = savedProgress.skipped;
 		totalUsersProcessed = savedProgress.totalUsersProcessed;
 	}
 
 	// Helper to get current progress object
 	const getCurrentProgress = (): MigrationProgress => ({
-		currentOffset,
+		lastSeenCreatedAt,
+		lastSeenId,
 		usersCreated,
 		accountsCreated,
-		twoFactorCreated,
 		skipped,
 		totalUsersProcessed,
 		lastUpdated: new Date().toISOString(),
@@ -194,14 +192,30 @@ export async function migrateUsers() {
 		// Check if shutdown was requested
 		if (shutdownRequested) break;
 
-		console.log(`📥 Fetching users batch from production database (OFFSET ${currentOffset})...`);
+		console.log(
+			`📥 Fetching users batch from production database (cursor: createdAt=${lastSeenCreatedAt}, id=${lastSeenId})...`,
+		);
 
-		const users = (await productionDb.execute(sql`
-			SELECT id, name, picture, username, email, locale, "emailVerified", "twoFactorEnabled", "createdAt", "updatedAt", provider
-			FROM "User"
-			ORDER BY "id" ASC
-			LIMIT ${BATCH_SIZE} OFFSET ${currentOffset}
-		`)) as unknown as ProductionUser[];
+		let users: ProductionUser[];
+
+		if (lastSeenCreatedAt && lastSeenId) {
+			const result = (await productionDb.execute(sql`
+				SELECT id, name, picture, username, email, locale, "emailVerified", "createdAt", "updatedAt", provider
+				FROM "User"
+				WHERE ("createdAt", id) < (${lastSeenCreatedAt}::timestamp, ${lastSeenId})
+				ORDER BY "createdAt" DESC, id DESC
+				LIMIT ${BATCH_SIZE}
+			`)) as unknown as QueryResult<ProductionUser>;
+			users = result.rows;
+		} else {
+			const result = (await productionDb.execute(sql`
+				SELECT id, name, picture, username, email, locale, "emailVerified", "createdAt", "updatedAt", provider
+				FROM "User"
+				ORDER BY "createdAt" DESC, id DESC
+				LIMIT ${BATCH_SIZE}
+			`)) as unknown as QueryResult<ProductionUser>;
+			users = result.rows;
+		}
 
 		console.log(`📋 Found ${users.length} users in this batch.`);
 
@@ -217,11 +231,11 @@ export async function migrateUsers() {
 		// Escape single quotes in IDs (though UUIDs shouldn't contain them, this is safer)
 		const userIdsForSql = userIds.map((id) => `'${id.replace(/'/g, "''")}'`).join(", ");
 
-		const secrets = (await productionDb.execute(sql`
-			SELECT id, password, "lastSignedIn", "verificationToken", "twoFactorSecret", "twoFactorBackupCodes", "refreshToken", "resetToken", "userId"
+		const { rows: secrets } = (await productionDb.execute(sql`
+			SELECT id, password, "lastSignedIn", "userId"
 			FROM "Secrets"
 			WHERE "userId" IN (${sql.raw(userIdsForSql)})
-		`)) as unknown as ProductionSecrets[];
+		`)) as unknown as QueryResult<ProductionSecrets>;
 
 		// Create a map of userId -> secrets for quick lookup
 		const secretsMap = new Map<string, ProductionSecrets>();
@@ -240,8 +254,15 @@ export async function migrateUsers() {
 
 		if (usersToProcess.length === 0) {
 			console.log(`⏭️  All users in this batch were already migrated.`);
-			currentOffset += users.length;
+			// Update cursor to the last user in this batch
+			const lastUser = users[users.length - 1];
+			if (lastUser) {
+				lastSeenCreatedAt =
+					lastUser.createdAt instanceof Date ? lastUser.createdAt.toISOString() : String(lastUser.createdAt);
+				lastSeenId = lastUser.id;
+			}
 			totalUsersProcessed += users.length;
+			await saveProgress(getCurrentProgress());
 			continue;
 		}
 
@@ -287,9 +308,16 @@ export async function migrateUsers() {
 
 		if (usersToInsert.length === 0) {
 			console.log(`⏭️  All users in this batch already exist in target DB.`);
-			currentOffset += users.length;
+			// Update cursor to the last user in this batch
+			const lastUser = users[users.length - 1];
+			if (lastUser) {
+				lastSeenCreatedAt =
+					lastUser.createdAt instanceof Date ? lastUser.createdAt.toISOString() : String(lastUser.createdAt);
+				lastSeenId = lastUser.id;
+			}
 			totalUsersProcessed += users.length;
 			await saveUserIdMapToFile(userIdMap);
+			await saveProgress(getCurrentProgress());
 			continue;
 		}
 
@@ -308,7 +336,7 @@ export async function migrateUsers() {
 					username: username,
 					displayUsername: displayUsername,
 					emailVerified: user.emailVerified,
-					twoFactorEnabled: user.twoFactorEnabled,
+					twoFactorEnabled: false, // All users start with 2FA disabled in the new system
 					createdAt: user.createdAt,
 					updatedAt: user.updatedAt,
 				},
@@ -339,7 +367,6 @@ export async function migrateUsers() {
 					accountId: accountId,
 					providerId: providerId,
 					password: userSecrets?.password ?? null,
-					refreshToken: userSecrets?.refreshToken ?? null,
 					createdAt: userData.createdAt,
 					updatedAt: userData.updatedAt,
 				};
@@ -352,34 +379,6 @@ export async function migrateUsers() {
 			}
 			accountsCreated += accountsToInsert.length;
 
-			// Prepare two-factor entries for bulk insert
-			const twoFactorToInsert = usersToInsertData
-				.map(({ originalUser, newUserId, userData }) => {
-					const userSecrets = secretsMap.get(originalUser.id);
-
-					if (originalUser.twoFactorEnabled && userSecrets?.twoFactorSecret) {
-						return {
-							id: generateId(),
-							userId: newUserId,
-							secret: userSecrets.twoFactorSecret,
-							backupCodes: userSecrets.twoFactorBackupCodes.join(","),
-							createdAt: userData.createdAt,
-							updatedAt: userData.updatedAt,
-						};
-					}
-					return null;
-				})
-				.filter((entry): entry is NonNullable<typeof entry> => entry !== null);
-
-			// Bulk insert two-factor entries (chunked)
-			if (twoFactorToInsert.length > 0) {
-				for (let i = 0; i < twoFactorToInsert.length; i += INSERT_CHUNK_SIZE) {
-					const chunk = twoFactorToInsert.slice(i, i + INSERT_CHUNK_SIZE);
-					await localDb.insert(schema.twoFactor).values(chunk);
-				}
-				twoFactorCreated += twoFactorToInsert.length;
-			}
-
 			const batchEnd = performance.now();
 			const batchTimeMs = batchEnd - batchStart;
 			console.log(
@@ -388,15 +387,24 @@ export async function migrateUsers() {
 
 			// Save progress after each batch
 			await saveUserIdMapToFile(userIdMap);
-			await saveProgress(getCurrentProgress());
 		} catch (error) {
 			console.error(`🚨 Failed to bulk insert users batch:`, error);
 			// Continue with next batch even if this one fails
 		}
 
-		currentOffset += users.length;
+		// Update cursor to the last user in this batch
+		const lastUser = users[users.length - 1];
+		if (lastUser) {
+			lastSeenCreatedAt =
+				lastUser.createdAt instanceof Date ? lastUser.createdAt.toISOString() : String(lastUser.createdAt);
+			lastSeenId = lastUser.id;
+		}
+
 		totalUsersProcessed += users.length;
 		console.log(`📦 Processed ${totalUsersProcessed} users so far...\n`);
+
+		// Save progress after updating cursor
+		await saveProgress(getCurrentProgress());
 	}
 
 	// Remove signal handlers
@@ -409,7 +417,6 @@ export async function migrateUsers() {
 	console.log("\n📊 Migration Summary:");
 	console.log(`   Users created: ${usersCreated}`);
 	console.log(`   Accounts created: ${accountsCreated}`);
-	console.log(`   Two-factor entries created: ${twoFactorCreated}`);
 	console.log(`   Skipped (already exist): ${skipped}`);
 	console.log(
 		`⏱️  Total migration time: ${migrationDurationMs.toFixed(1)} ms (${(migrationDurationMs / 1000).toFixed(2)} seconds)`,

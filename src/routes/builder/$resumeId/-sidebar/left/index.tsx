@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useRef } from "react";
 import { match } from "ts-pattern";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { UserDropdownMenu } from "@/components/user/dropdown-menu";

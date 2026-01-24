@@ -3,10 +3,10 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, BookIcon, SparkleIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { CometCard } from "@/components/animation/comet-card";
 import { Spotlight } from "@/components/animation/spotlight";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export function Hero() {
 	return (
@@ -27,6 +27,7 @@ export function Hero() {
 						muted
 						autoPlay
 						playsInline
+						// @ts-expect-error - typescript doesn't know about fetchpriority for video elements
 						fetchpriority="high"
 						src="/videos/timelapse.webm"
 						aria-label={t`Timelapse demonstration of building a resume with Reactive Resume`}
@@ -47,7 +48,7 @@ export function Hero() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.8 }}
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener"
 					href="https://docs.rxresu.me/getting-started"
 				>
 					<Badge variant="secondary" className="h-auto gap-1.5 px-3 py-0.5">
@@ -103,7 +104,7 @@ export function Hero() {
 					</Button>
 
 					<Button asChild size="lg" variant="ghost" className="gap-2 px-4">
-						<a href="https://docs.rxresu.me" target="_blank" rel="noopener noreferrer">
+						<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
 							<BookIcon aria-hidden="true" className="size-4" />
 							<Trans>Learn More</Trans>
 							<span className="sr-only">

@@ -3,7 +3,7 @@ name: Build Docker Image
 on:
   workflow_dispatch:
   push:
-    branches: ["main"]
+    tags: [ "v*.*.*" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -66,8 +66,7 @@ jobs:
             ghcr.io/${{ env.IMAGE }}
             docker.io/${{ env.IMAGE }}
           tags: |
-            type=sha,format=short,suffix=-${{ matrix.arch }}
-            type=raw,value=v${{ steps.version.outputs.version }}-${{ matrix.arch }}
+            type=sha,prefix=sha-,suffix=-${{ matrix.arch }}
 
       - name: Build and Push by Digest
         id: build
@@ -80,6 +79,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha,scope=${{ env.IMAGE }}-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ env.IMAGE }}-${{ matrix.arch }}
 
@@ -110,7 +110,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           sparse-checkout: package.json
           sparse-checkout-cone-mode: false
@@ -142,6 +142,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Parse version components
+        id: semver
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
+
       - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -150,30 +160,48 @@ jobs:
             ghcr.io/${{ env.IMAGE }}
             docker.io/${{ env.IMAGE }}
           tags: |
-            type=sha,format=short
+            type=sha,prefix=sha-
             type=raw,value=latest
             type=raw,value=v${{ steps.version.outputs.version }}
+            type=raw,value=v${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
+            type=raw,value=v${{ steps.semver.outputs.major }}
 
       - name: Create manifest list and push
+        id: manifest
         working-directory: /tmp/digests
         run: |
           set -euo pipefail
           docker buildx imagetools create \
             $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            --annotation "index:org.opencontainers.image.licenses=MIT" \
+            --annotation "index:org.opencontainers.image.title=Reactive Resume" \
+            --annotation "index:org.opencontainers.image.description=A free and open-source resume builder." \
+            --annotation "index:org.opencontainers.image.vendor=Amruth Pillai" \
+            --annotation "index:org.opencontainers.image.url=https://rxresu.me" \
+            --annotation "index:org.opencontainers.image.documentation=https://docs.rxresu.me" \
+            --annotation "index:org.opencontainers.image.source=https://github.com/amruthpillai/reactive-resume" \
+            --annotation "index:org.opencontainers.image.version=${{ steps.version.outputs.version }}" \
             $(printf 'ghcr.io/${{ env.IMAGE }}@sha256:%s ' *) \
             $(printf 'docker.io/${{ env.IMAGE }}@sha256:%s ' *)
+          
+          # Get the digest of the multi-arch manifest
+          GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          echo "ghcr_digest=$GHCR_DIGEST" >> "$GITHUB_OUTPUT"
+          echo "docker_digest=$DOCKER_DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign images with Cosign
+        run: |
+          # Sign GHCR image
+          cosign sign --yes ghcr.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.ghcr_digest }}
+          
+          # Sign Docker Hub image
+          cosign sign --yes docker.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.docker_digest }}
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:latest
-
-      - name: Redeploy Service
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: appleboy/ssh-action@v1
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          script: |
-            cd docker
-            ./manage_stack.sh up reactive_resume
+          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }}
+          docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }}

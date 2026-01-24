@@ -3,17 +3,11 @@ import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import {
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/animate-ui/components/radix/dialog";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
@@ -33,18 +27,23 @@ export function CreateCertificationDialog({ data }: DialogProps<"resume.sections
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			id: generateId(),
-			hidden: data?.hidden ?? false,
-			title: data?.title ?? "",
-			issuer: data?.issuer ?? "",
-			date: data?.date ?? "",
-			website: data?.website ?? { url: "", label: "" },
-			description: data?.description ?? "",
+			hidden: data?.item?.hidden ?? false,
+			title: data?.item?.title ?? "",
+			issuer: data?.item?.issuer ?? "",
+			date: data?.item?.date ?? "",
+			website: data?.item?.website ?? { url: "", label: "" },
+			description: data?.item?.description ?? "",
 		},
 	});
 
-	const onSubmit = (values: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			draft.sections.certifications.items.push(values);
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (section) section.items.push(formData);
+			} else {
+				draft.sections.certifications.items.push(formData);
+			}
 		});
 		closeDialog();
 	};
@@ -85,21 +84,27 @@ export function UpdateCertificationDialog({ data }: DialogProps<"resume.sections
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			id: data.id,
-			hidden: data.hidden,
-			title: data.title,
-			issuer: data.issuer,
-			date: data.date,
-			website: data.website,
-			description: data.description,
+			id: data.item.id,
+			hidden: data.item.hidden,
+			title: data.item.title,
+			issuer: data.item.issuer,
+			date: data.item.date,
+			website: data.item.website,
+			description: data.item.description,
 		},
 	});
 
-	const onSubmit = (values: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			const index = draft.sections.certifications.items.findIndex((item) => item.id === values.id);
-			if (index === -1) return;
-			draft.sections.certifications.items[index] = values;
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) section.items[index] = formData;
+			} else {
+				const index = draft.sections.certifications.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) draft.sections.certifications.items[index] = formData;
+			}
 		});
 		closeDialog();
 	};

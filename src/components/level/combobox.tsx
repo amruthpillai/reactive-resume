@@ -5,7 +5,7 @@ import type z from "zod";
 import { levelDesignSchema } from "@/schema/resume/data";
 import { Combobox, type ComboboxProps } from "../ui/combobox";
 
-export type LevelType = z.infer<typeof levelDesignSchema>["type"];
+type LevelType = z.infer<typeof levelDesignSchema>["type"];
 
 type LevelTypeComboboxProps = Omit<ComboboxProps, "options">;
 

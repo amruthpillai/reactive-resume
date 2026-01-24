@@ -30,7 +30,11 @@ export function PikachuTemplate({ pageIndex, pageLayout }: TemplateProps) {
 					data-layout="sidebar"
 					className="group page-sidebar flex w-(--page-sidebar-width) shrink-0 flex-col space-y-3"
 				>
-					{isFirstPage && <PagePicture className="max-h-full! max-w-full!" />}
+					{isFirstPage && (
+						<div className="flex items-center justify-center">
+							<PagePicture />
+						</div>
+					)}
 
 					{!fullWidth && (
 						<div className="shrink-0 space-y-4 overflow-x-hidden">
@@ -42,7 +46,7 @@ export function PikachuTemplate({ pageIndex, pageLayout }: TemplateProps) {
 					)}
 				</aside>
 
-				<main data-layout="main" className="group page-main space-y-3">
+				<main data-layout="main" className="group page-main flex-1 space-y-3">
 					{isFirstPage && <Header />}
 
 					<div className="space-y-4 pb-(--page-margin-y)">
@@ -102,7 +106,7 @@ function Header() {
 				{basics.customFields.map((field) => (
 					<div key={field.id} className="basics-item-custom">
 						<PageIcon icon={field.icon} />
-						<span>{field.text}</span>
+						{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
 					</div>
 				))}
 			</div>

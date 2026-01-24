@@ -8,6 +8,26 @@ import { useResumeStore } from "../store/resume";
 import type { TemplateProps } from "./types";
 
 const sectionClassName = cn(
+	// Heading Decoration in Sidebar Layout
+	"group-data-[layout=sidebar]:[&>h6]:px-4",
+	"group-data-[layout=sidebar]:[&>h6]:relative",
+	"group-data-[layout=sidebar]:[&>h6]:inline-flex",
+	"group-data-[layout=sidebar]:[&>h6]:items-center",
+	"group-data-[layout=sidebar]:[&>h6]:before:content-['']",
+	"group-data-[layout=sidebar]:[&>h6]:before:absolute",
+	"group-data-[layout=sidebar]:[&>h6]:before:left-0",
+	"group-data-[layout=sidebar]:[&>h6]:before:rounded-full",
+	"group-data-[layout=sidebar]:[&>h6]:before:size-2",
+	"group-data-[layout=sidebar]:[&>h6]:before:border",
+	"group-data-[layout=sidebar]:[&>h6]:before:border-(--page-primary-color)",
+	"group-data-[layout=sidebar]:[&>h6]:after:content-['']",
+	"group-data-[layout=sidebar]:[&>h6]:after:absolute",
+	"group-data-[layout=sidebar]:[&>h6]:after:right-0",
+	"group-data-[layout=sidebar]:[&>h6]:after:rounded-full",
+	"group-data-[layout=sidebar]:[&>h6]:after:size-2",
+	"group-data-[layout=sidebar]:[&>h6]:after:border",
+	"group-data-[layout=sidebar]:[&>h6]:after:border-(--page-primary-color)",
+
 	// Section in Sidebar Layout
 	"group-data-[layout=sidebar]:[&_.section-item-header>div]:flex-col",
 	"group-data-[layout=sidebar]:[&_.section-item-header>div]:items-start",
@@ -113,7 +133,7 @@ function Header() {
 					{basics.customFields.map((field) => (
 						<div key={field.id} className="basics-item-custom">
 							<PageIcon icon={field.icon} />
-							<span>{field.text}</span>
+							{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
 						</div>
 					))}
 				</div>

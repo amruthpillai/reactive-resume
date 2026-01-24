@@ -11,6 +11,10 @@ The **Custom CSS** panel lets you write your own CSS rules to change how your re
 - **Auto-save**: there is no “Save” button—your CSS is saved automatically when it changes.
 - **Scoped styling (mostly)**: to avoid affecting the rest of the app, your CSS is *usually* scoped to the resume preview.
 
+<Frame caption="Screenshot of the Custom CSS section in the right sidebar">
+  <img src="/images/guides/using-custom-css/screenshot-1.webp" alt="Screenshot of the Custom CSS section in the right sidebar" />
+</Frame>
+
 ## Where to find it
 
 In the resume builder, open the **right sidebar** and select **Custom CSS** (the `CSS` section).
@@ -54,30 +58,30 @@ Example:
 
 ### Formatting tip (to avoid scoping edge-cases)
 
-Keep each rule’s selector on **one line**, for example:
+Keep each rule's selector on **one line**, for example:
 
 ```css
 .page-section-experience .section-item-title { font-weight: 700; }
 ```
 
-Avoid splitting a selector across multiple lines unless you’ve confirmed it behaves as expected.
+Avoid splitting a selector across multiple lines unless you've confirmed it behaves as expected.
 
 ## Finding the right selectors
 
 ### Use autocomplete in the editor
 
-In the Custom CSS editor, type a `.` (dot). You’ll get suggestions for commonly-used class selectors, including:
+In the Custom CSS editor, type a `.` (dot). You'll get suggestions for commonly-used class selectors, including:
 
 - **Page-level**: `.page`, `.page-content`, `.page-header`, `.page-basics`, `.page-main`, `.page-sidebar`, `.page-picture`
 - **Section-level**: `.page-section`, `.section-content`
 - **Section types**: `.page-section-experience`, `.page-section-education`, `.page-section-projects`, etc.
-- **Generic item building blocks**: `.section-item`, `.section-item-header`, `.section-item-title`, `.section-item-description`, `.section-item-metadata`, `.section-item-link`, etc.
+- **Generic item building blocks**: `.section-item`, `.section-item-header`, `.section-item-title`, `.section-item-description`, `.section-item-metadata`, `.section-item-website`, etc.
 - **Per-section item selectors**: `.experience-item`, `.skills-item`, `.profiles-item`, etc.
 - **Template wrapper**: `.template-azurill`, `.template-onyx`, `.template-gengar`, etc.
 
 ### Stable “starter selectors”
 
-If you’re not sure where to start, these are usually safe:
+If you're not sure where to start, these are usually safe:
 
 - `.page` (the resume page container)
 - `.page-section` (each resume section)
@@ -194,11 +198,11 @@ Example (tighten spacing without changing your layout settings):
 ### 5) Style links like a “chip” (useful for project links)
 
 ```css
-.section-item-link a {
+.section-item-website a {
   display: inline-block;
-  padding: 2pt 6pt;
+  padding: 3pt 9pt;
   border-radius: 999pt;
-  border: 1pt solid color-mix(in srgb, var(--page-primary-color) 45%, transparent);
+  border: 2pt solid color-mix(in srgb, var(--page-primary-color) 45%, transparent);
   text-decoration: none;
 }
 ```
@@ -241,40 +245,25 @@ Example (tighten spacing without changing your layout settings):
 }
 ```
 
-### 9) Highlight a specific section (example: Experience)
+### 9) Highlight a specific section (example: Profiles)
 
 ```css
-.page-section-experience {
-  background: color-mix(in srgb, var(--page-primary-color) 6%, transparent);
+.page-section-profiles {
+  background: color-mix(in srgb, var(--page-primary-color) 10%, transparent);
   border-radius: 8pt;
-  padding: 8pt;
-}
-```
-
-### 10) Print-only adjustments (manually scoped)
-
-```css
-@media print {
-  .resume-preview-container .page {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .resume-preview-container a {
-    text-decoration: none;
-  }
+  padding: 8pt 12pt;
 }
 ```
 
 ## Troubleshooting
 
-### My CSS doesn’t do anything
+### My CSS doesn't do anything
 
 - Make sure **Enable** is turned on.
 - Prefer targeting `.page`, `.page-section`, and `.section-item` instead of `body`.
 - Use your browser devtools to **inspect** the preview and confirm the element/class names.
 
-### My `@media` rules affect the whole app / don’t apply
+### My `@media` rules affect the whole app / don't apply
 
-At-rules aren’t auto-scoped. Prefix selectors inside them with `.resume-preview-container` as shown above.
+At-rules aren't auto-scoped. Prefix selectors inside them with `.resume-preview-container` as shown above.
 

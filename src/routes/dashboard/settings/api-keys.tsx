@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
-import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -25,9 +25,9 @@ function RouteComponent() {
 		queryKey: ["auth", "api-keys"],
 		queryFn: () => authClient.apiKey.list(),
 		select: ({ data }) => {
-			if (!data) return [];
+			if (!data?.apiKeys) return [];
 
-			return data
+			return data.apiKeys
 				.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 				.filter((key) => !!key.expiresAt && key.expiresAt.getTime() > Date.now());
 		},
@@ -85,7 +85,7 @@ function RouteComponent() {
 						</p>
 
 						<Button asChild variant="link">
-							<a href="https://docs.rxresu.me/api-reference" target="_blank" rel="noopener noreferrer">
+							<a href="https://docs.rxresu.me/api-reference" target="_blank" rel="noopener">
 								<LinkSimpleIcon />
 								<Trans>API Reference</Trans>
 							</a>

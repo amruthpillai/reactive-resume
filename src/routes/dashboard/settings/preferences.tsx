@@ -3,9 +3,9 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, GearSixIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { LocaleCombobox } from "@/components/locale/combobox";
 import { ThemeCombobox } from "@/components/theme/combobox";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { DashboardHeader } from "../-components/header";
@@ -45,7 +45,7 @@ function RouteComponent() {
 						variant="link"
 						className="h-5 justify-start text-muted-foreground text-xs active:scale-100"
 					>
-						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener noreferrer">
+						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
 							<Trans>Help translate the app to your language</Trans>
 							<ArrowRightIcon className="size-3" />
 						</a>

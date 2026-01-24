@@ -15,13 +15,8 @@ export const printerRouter = {
 		.input(z.object({ id: z.string() }))
 		.output(z.object({ url: z.string() }))
 		.handler(async ({ input, context }) => {
-			// Get resume to find the owner's userId for storage key
 			const resume = await resumeService.getByIdForPrinter({ id: input.id });
-
-			const url = await printerService.printResumeAsPDF({
-				id: input.id,
-				userId: resume.userId,
-			});
+			const url = await printerService.printResumeAsPDF(resume);
 
 			if (!context.user) {
 				await resumeService.statistics.increment({ id: input.id, downloads: true });
@@ -40,11 +35,9 @@ export const printerRouter = {
 		})
 		.input(z.object({ id: z.string() }))
 		.output(z.object({ url: z.string() }))
-		.handler(async ({ input, context }) => {
-			const url = await printerService.getResumeScreenshot({
-				id: input.id,
-				userId: context.user.id,
-			});
+		.handler(async ({ input }) => {
+			const resume = await resumeService.getByIdForPrinter({ id: input.id });
+			const url = await printerService.getResumeScreenshot(resume);
 
 			return { url };
 		}),

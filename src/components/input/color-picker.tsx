@@ -1,8 +1,8 @@
 import { EyedropperIcon } from "@phosphor-icons/react";
 import { Slider as SliderPrimitive, Slot as SlotPrimitive } from "radix-ui";
 import * as React from "react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
 import { VisuallyHiddenInput } from "@/components/input/visually-hidden-input";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -826,6 +826,4 @@ export {
 	ColorPickerSwatch as Swatch,
 	ColorPickerEyeDropper as EyeDropper,
 	ColorPickerInput as Input,
-	//
-	useColorPickerStore as useColorPicker,
 };

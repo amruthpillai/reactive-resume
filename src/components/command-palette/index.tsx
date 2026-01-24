@@ -1,13 +1,7 @@
 import { Trans } from "@lingui/react/macro";
 import { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/animate-ui/components/radix/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Command, CommandEmpty, CommandInput, CommandList } from "../ui/command";
 import { NavigationCommandGroup } from "./pages/navigation";
 import { PreferencesCommandGroup } from "./pages/preferences";
@@ -83,7 +77,7 @@ export function CommandPalette() {
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogHeader className="sr-only">
+			<DialogHeader className="sr-only print:hidden">
 				<DialogTitle>
 					<Trans>Builder Command Palette</Trans>
 				</DialogTitle>

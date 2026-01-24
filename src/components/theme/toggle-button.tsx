@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useCallback, useRef } from "react";
 import { flushSync } from "react-dom";
-import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Button } from "@/components/ui/button";
 import { useTheme } from "./provider";
 
 export function ThemeToggleButton(props: React.ComponentProps<typeof Button>) {

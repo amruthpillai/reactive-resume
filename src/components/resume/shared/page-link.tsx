@@ -10,7 +10,7 @@ export function PageLink({ url, label, className }: Props) {
 	if (!url) return null;
 
 	return (
-		<a href={url} target="_blank" rel="noopener noreferrer" className={cn("block truncate", className)}>
+		<a href={url} target="_blank" rel="noopener" className={cn("inline-block text-wrap break-all", className)}>
 			{label || url}
 		</a>
 	);

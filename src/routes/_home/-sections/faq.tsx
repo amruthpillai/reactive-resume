@@ -2,13 +2,8 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
-import { buttonVariants } from "@/components/animate-ui/components/buttons/button";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/animate-ui/components/radix/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/style";
 
 const crowdinUrl = "https://crowdin.com/project/reactive-resume";
@@ -41,7 +36,7 @@ const getFaqItems = (): FAQItemData[] => [
 				<a
 					href={crowdinUrl}
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener"
 					className={buttonVariants({ variant: "link", className: "h-auto px-0!" })}
 				>
 					contribute to the translations on Crowdin

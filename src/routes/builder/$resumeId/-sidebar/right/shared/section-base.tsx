@@ -1,11 +1,6 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/animate-ui/components/radix/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { getSectionIcon, getSectionTitle, type RightSidebarSection } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
 import { useSectionStore } from "../../../-store/section";

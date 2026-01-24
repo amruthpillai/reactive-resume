@@ -1,6 +1,6 @@
 ---
 title: "Self-Hosting with Docker"
-description: "A comprehensive guide to self-host Reactive Resume with Docker (Postgres + Gotenberg), including a detailed environment variable reference and troubleshooting tips."
+description: "A comprehensive guide to self-host Reactive Resume with Docker (Postgres + Printer), including a detailed environment variable reference and troubleshooting tips."
 ---
 
 ## Overview
@@ -11,8 +11,8 @@ Reactive Resume can be self-hosted using Docker in a matter of minutes, and this
   <Card title="PostgreSQL">
     Stores accounts, resumes, and application data.
   </Card>
-  <Card title="Gotenberg">
-    Generates PDFs by rendering a special print route.
+  <Card title="Printer">
+    Generates PDFs and screenshots using a headless Chromium browser.
   </Card>
   <Card title="Email (optional)">
     SMTP for verification emails, password reset, etc. If not configured, emails are logged to the server console.
@@ -34,7 +34,7 @@ You can pull the latest app image from:
     Docker Engine + Docker Compose plugin (or Docker Desktop).
   </Card>
   <Card title="Compute">
-    2 vCPU / 2 GB RAM minimum (4 GB recommended if Postgres + Gotenberg run on the same host).
+    2 vCPU / 2 GB RAM minimum (4 GB recommended if Postgres + Printer run on the same host).
   </Card>
   <Card title="Storage">
     Enough for Postgres + uploads (start with 10-20 GB and scale as needed).
@@ -64,11 +64,9 @@ APP_URL="http://localhost:3000"
 PRINTER_APP_URL="http://host.docker.internal:3000"
 
 # --- Printer ---
-GOTENBERG_ENDPOINT="http://gotenberg:3000"
-
-# Gotenberg Authentication (Optional)
-# GOTENBERG_USERNAME=""
-# GOTENBERG_PASSWORD=""
+# If using browserless with token authentication, include the token as a query parameter:
+# PRINTER_ENDPOINT="ws://printer:3000?token=your-secret-token"
+PRINTER_ENDPOINT="ws://printer:3000"
 
 # --- Database (PostgreSQL) ---
 DATABASE_URL="postgresql://postgres:postgres@postgres:5432/postgres"
@@ -121,10 +119,8 @@ S3_FORCE_PATH_STYLE="false"
 
 # --- Feature Flags ---
 FLAG_DEBUG_PRINTER="false"
-FLAG_DISABLE_SIGNUP="false"
-
-# --- Others ---
-# GOOGLE_CLOUD_API_KEY=""
+FLAG_DISABLE_SIGNUPS="false"
+FLAG_DISABLE_EMAIL_AUTH="false"
 ```
   </Step>
 
@@ -150,7 +146,7 @@ FLAG_DISABLE_SIGNUP="false"
   </Step>
 
   <Step title="Create compose.yml">
-    This setup runs Postgres + Gotenberg + Reactive Resume on a private Docker network.
+    This setup runs Postgres + Printer + Reactive Resume on a private Docker network.
 
     <CodeGroup>
 
@@ -171,18 +167,19 @@ services:
       timeout: 5s
       retries: 10
 
-  gotenberg:
-    image: gotenberg/gotenberg:edge
+  printer:
+    image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
     ports:
       - "4000:3000"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
-      - CHROMIUM_AUTO_START=true
-      - LIBREOFFICE_DISABLE_ROUTES=true
+      - HEALTH=true
+      - CONCURRENT=20
+      - QUEUED=10
+      # Optional: Set a token for authentication
+      # - TOKEN=your-secret-token
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=your-secret-token"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -201,10 +198,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      gotenberg:
+      printer:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -214,6 +211,20 @@ volumes:
 ```
 
     </CodeGroup>
+
+    <Note>
+      **Alternative Printer Options**: If you don't want to use browserless, you can also use a lightweight headless Chrome Docker image like `chromedp/headless-shell`:
+
+      ```yaml
+      chrome:
+        image: chromedp/headless-shell:latest
+        restart: unless-stopped
+        ports:
+          - "9222:9222"
+      ```
+
+      Then set `PRINTER_ENDPOINT` to `http://chrome:9222` (or `http://localhost:9222` if running outside Docker Compose). This provides the same PDF/screenshot generation functionality with a smaller image footprint.
+    </Note>
 
     <Tip>
       Prefer pulling from Docker Hub? Keep <code>amruthpillai/reactive-resume:latest</code>. Prefer GHCR? Swap it to <code>ghcr.io/amruthpillai/reactive-resume:latest</code>.
@@ -254,7 +265,7 @@ docker compose logs -f reactive-resume
     <ul>
       <li><code>APP_URL</code></li>
       <li><code>DATABASE_URL</code></li>
-      <li><code>GOTENBERG_ENDPOINT</code></li>
+      <li><code>PRINTER_ENDPOINT</code></li>
       <li><code>AUTH_SECRET</code></li>
     </ul>
   </Card>
@@ -272,12 +283,25 @@ docker compose logs -f reactive-resume
   <Accordion title="Server">
     - **`TZ`**: Sets the container timezone (affects logs and server-side timestamps). Recommended: `Etc/UTC`.
     - **`APP_URL`**: Canonical/public URL for your instance (used for absolute URLs, redirects, and auth flows). If behind a reverse proxy, set this to your public HTTPS URL (for example, `https://resume.example.com`).
-    - **`PRINTER_APP_URL`** (optional): Overrides the base URL used when rendering the print route for Gotenberg. Defaults to `APP_URL`. Useful when Gotenberg must access the app via a different internal URL (for example, `http://host.docker.internal:3000`).
+    - **`PRINTER_APP_URL`** (optional): Overrides the base URL used when rendering the print route for the printer. Defaults to `APP_URL`. Useful when the printer must access the app via a different internal URL (for example, `http://host.docker.internal:3000`).
   </Accordion>
 
-  <Accordion title="Printer (Gotenberg)">
-    - **`GOTENBERG_ENDPOINT`**: Base URL where Reactive Resume reaches Gotenberg. In Compose: `http://gotenberg:3000`.
-    - **`GOTENBERG_USERNAME`** / **`GOTENBERG_PASSWORD`** (optional): Use if Gotenberg is configured with Basic Auth (recommended only if Gotenberg is reachable outside your private network).
+  <Accordion title="Printer">
+    - **`PRINTER_ENDPOINT`**: Base URL where Reactive Resume reaches the printer service. In Compose: `http://printer:3000`. If using browserless with token authentication, include the token as a query parameter: `ws://printer:3000?token=your-secret-token`.
+    
+    <Note>
+      **Alternative to browserless**: You can use a lightweight headless Chrome Docker image like `chromedp/headless-shell`:
+
+      ```yaml
+      chrome:
+        image: chromedp/headless-shell:latest
+        restart: unless-stopped
+        ports:
+          - "9222:9222"
+      ```
+
+      Set `PRINTER_ENDPOINT` to `http://chrome:9222` (in Docker Compose) or `http://localhost:9222` (if running externally). This provides the same PDF/screenshot generation with a smaller image footprint.
+    </Note>
   </Accordion>
 
   <Accordion title="Database (PostgreSQL)">
@@ -337,7 +361,8 @@ openssl rand -hex 32
 
   <Accordion title="Feature Flags">
     - **`FLAG_DEBUG_PRINTER`**: Bypasses the printer-only access restriction (useful when debugging `/printer/{resumeId}`). Recommended: keep `"false"` in production.
-    - **`FLAG_DISABLE_SIGNUP`**: Disables new signups (web app and server). Useful for private instances.
+    - **`FLAG_DISABLE_SIGNUPS`**: Disables new signups (web app and server). Useful for private instances.
+    - **`FLAG_DISABLE_EMAIL_AUTH`**: Disables email/password login entirely. Also disables email verification, forgot password, and reset password flows. Users can still sign up via social auth (Google/GitHub/Custom OAuth), unless FLAG_DISABLE_SIGNUPS is also set to true. Useful when only SSO is required.
   </Accordion>
 </AccordionGroup>
 
@@ -386,7 +411,7 @@ The Docker Compose configuration includes a health check that periodically calls
 
 ```yaml
 healthcheck:
-  test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+  test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
   interval: 30s
   timeout: 10s
   retries: 3
@@ -439,10 +464,10 @@ A healthy response returns HTTP 200. Any other response (or a connection failure
   </Accordion>
 
   <Accordion title="PDF export fails / printing is stuck">
-    - **Common cause**: Reactive Resume can't reach Gotenberg or Gotenberg can't reach your app.
+    - **Common cause**: Reactive Resume can't reach the printer or the printer can't reach your app.
     - **Checks**:
-      - `GOTENBERG_ENDPOINT` should usually be `http://gotenberg:3000` in Compose.
-      - If you use `PRINTER_APP_URL="http://host.docker.internal:3000"`, ensure `extra_hosts: host-gateway` is present for Gotenberg.
+      - `PRINTER_ENDPOINT` should usually be `http://printer:3000` in Compose.
+      - If you use `PRINTER_APP_URL="http://host.docker.internal:3000"`, ensure `extra_hosts: host-gateway` is present for the printer service.
   </Accordion>
 
   <Accordion title="Uploads disappear after restart">

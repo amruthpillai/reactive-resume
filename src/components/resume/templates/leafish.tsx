@@ -100,7 +100,7 @@ function Header() {
 					{basics.customFields.map((field) => (
 						<div key={field.id} className="basics-item-custom">
 							<PageIcon icon={field.icon} />
-							<span>{field.text}</span>
+							{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
 						</div>
 					))}
 				</div>

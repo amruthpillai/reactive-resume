@@ -10,18 +10,22 @@ type ProjectsItemProps = SectionItem<"projects"> & {
 export function ProjectsItem({ className, ...item }: ProjectsItemProps) {
 	return (
 		<div className={cn("projects-item", className)}>
+			{/* Header */}
 			<div className="section-item-header projects-item-header">
+				{/* Row 1 */}
 				<div className="flex items-center justify-between">
-					<p className="section-item-title projects-item-title">
-						<strong>{item.name}</strong>
-					</p>
-					<p className="section-item-metadata text-right">{item.period}</p>
+					<strong className="section-item-title projects-item-title">{item.name}</strong>
+					<span className="section-item-metadata projects-item-period text-right">{item.period}</span>
 				</div>
 			</div>
+
+			{/* Description */}
 			<div className="section-item-description projects-item-description">
 				<TiptapContent content={item.description} />
 			</div>
-			<div className="section-item-link projects-item-link">
+
+			{/* Website */}
+			<div className="section-item-website projects-item-website">
 				<PageLink {...item.website} label={item.website.label} />
 			</div>
 		</div>

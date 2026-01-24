@@ -10,17 +10,17 @@ type ProfilesItemProps = SectionItem<"profiles"> & {
 export function ProfilesItem({ className, ...item }: ProfilesItemProps) {
 	return (
 		<div className={cn("profiles-item", className)}>
+			{/* Header */}
 			<div className="section-item-header flex items-center gap-x-1.5">
-				<PageIcon icon={item.icon} className="section-item-icon profiles-item-icon shrink-0" />
-				<p className="section-item-network profiles-item-network">
-					<strong>{item.network}</strong>
-				</p>
+				<PageIcon icon={item.icon} className="section-item-icon profiles-item-icon" />
+				<strong className="section-item-title profiles-item-network">{item.network}</strong>
 			</div>
 
+			{/* Website */}
 			<PageLink
 				{...item.website}
 				label={item.website.label || item.username}
-				className="section-item-link profiles-item-link"
+				className="section-item-website profiles-item-website"
 			/>
 		</div>
 	);

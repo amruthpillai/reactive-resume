@@ -9,14 +9,14 @@ type InterestsItemProps = SectionItem<"interests"> & {
 export function InterestsItem({ className, ...item }: InterestsItemProps) {
 	return (
 		<div className={cn("interests-item", className)}>
+			{/* Header */}
 			<div className="section-item-header flex items-center gap-x-1.5">
-				<PageIcon icon={item.icon} className="section-item-icon interests-item-icon shrink-0" />
-				<p className="section-item-name interests-item-name">
-					<strong>{item.name}</strong>
-				</p>
+				<PageIcon icon={item.icon} className="section-item-icon interests-item-icon" />
+				<strong className="section-item-title interests-item-name">{item.name}</strong>
 			</div>
 
-			<p className="section-item-keywords interests-item-keywords opacity-80">{item.keywords.join(", ")}</p>
+			{/* Keywords */}
+			<span className="section-item-keywords interests-item-keywords opacity-80">{item.keywords.join(", ")}</span>
 		</div>
 	);
 }

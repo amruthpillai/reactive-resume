@@ -4,7 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useCallback, useMemo } from "react";
 import { match } from "ts-pattern";
-import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Button } from "@/components/ui/button";
 import { useDialogStore } from "@/dialogs/store";
 import { useAuthAccounts } from "./hooks";
 

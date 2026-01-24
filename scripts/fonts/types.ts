@@ -42,6 +42,7 @@ export type Weight = "100" | "200" | "300" | "400" | "500" | "600" | "700" | "80
 type FileWeight = Weight | `${Weight}italic`;
 
 export type WebFont = {
+	type: "web";
 	category: Category;
 	family: string;
 	weights: Weight[];

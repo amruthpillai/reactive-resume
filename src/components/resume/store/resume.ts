@@ -25,9 +25,8 @@ type ResumeStore = ResumeStoreState & ResumeStoreActions;
 const controller = new AbortController();
 const signal = controller.signal;
 
-const _syncResume = async (resume: Resume | null) => {
-	if (!resume) return;
-	await orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
+const _syncResume = (resume: Resume) => {
+	orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
 };
 
 const syncResume = debounce(_syncResume, 500, { signal });
@@ -49,12 +48,13 @@ export const useResumeStore = create<ResumeStore>()(
 		updateResumeData: (fn) => {
 			set((state) => {
 				if (!state.resume) return state;
+
 				if (state.resume.isLocked) {
 					errorToastId = toast.error(t`This resume is locked and cannot be updated.`, { id: errorToastId });
 					return state;
 				}
 
-				fn(state.resume.data as WritableDraft<ResumeData>);
+				fn(state.resume.data);
 				syncResume(current(state.resume));
 			});
 		},

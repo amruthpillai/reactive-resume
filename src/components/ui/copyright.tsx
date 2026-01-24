@@ -9,7 +9,7 @@ export function Copyright({ className, ...props }: Props) {
 			<p>
 				<Trans>
 					Licensed under{" "}
-					<a href="#" target="_blank" rel="noopener noreferrer" className="font-medium underline underline-offset-2">
+					<a href="#" target="_blank" rel="noopener" className="font-medium underline underline-offset-2">
 						MIT
 					</a>
 					.
@@ -25,7 +25,7 @@ export function Copyright({ className, ...props }: Props) {
 					A passion project by{" "}
 					<a
 						target="_blank"
-						rel="noopener noreferrer"
+						rel="noopener"
 						href="https://amruthpillai.com"
 						className="font-medium underline underline-offset-2"
 					>

@@ -4,6 +4,7 @@ import { Trans } from "@lingui/react/macro";
 import { PaletteIcon, SignOutIcon, TranslateIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { useTheme } from "@/components/theme/provider";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,8 +17,7 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-} from "@/components/animate-ui/components/radix/dropdown-menu";
-import { useTheme } from "@/components/theme/provider";
+} from "@/components/ui/dropdown-menu";
 import { authClient } from "@/integrations/auth/client";
 import type { AuthSession } from "@/integrations/auth/types";
 import { isLocale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";

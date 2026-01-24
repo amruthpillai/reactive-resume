@@ -1,37 +1,167 @@
 import { Trans } from "@lingui/react/macro";
 import {
+	ArrowBendUpRightIcon,
 	CopySimpleIcon,
 	DotsSixVerticalIcon,
 	DotsThreeVerticalIcon,
 	EyeClosedIcon,
 	EyeIcon,
+	FileIcon,
+	FolderPlusIcon,
 	PencilSimpleLineIcon,
+	PlusCircleIcon,
 	PlusIcon,
 	TrashSimpleIcon,
 } from "@phosphor-icons/react";
 import { Reorder, useDragControls } from "motion/react";
+import { useMemo } from "react";
+import { useResumeStore } from "@/components/resume/store/resume";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-} from "@/components/animate-ui/components/radix/dropdown-menu";
-import { useResumeStore } from "@/components/resume/store/resume";
+} from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import type { SectionItem as SectionItemType, SectionType } from "@/schema/resume/data";
+import {
+	addItemToSection,
+	createCustomSectionWithItem,
+	createPageWithSection,
+	getCompatibleMoveTargets,
+	getSourceSectionTitle,
+	removeItemFromSource,
+} from "@/utils/resume/move-item";
 import { cn } from "@/utils/style";
+
+// ============================================================================
+// MoveItemSubmenu Component
+// ============================================================================
+
+type MoveItemSubmenuProps = {
+	type: SectionType;
+	item: SectionItemType;
+	customSectionId?: string;
+};
+
+/**
+ * Submenu component for moving items between sections/pages.
+ * Displays compatible targets grouped by page with options to:
+ * - Move to existing compatible section
+ * - Create new section on existing page
+ * - Create new page with new section
+ */
+function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) {
+	const resume = useResumeStore((state) => state.resume);
+	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+
+	/** Compute compatible move targets grouped by page */
+	const moveTargets = useMemo(
+		() => getCompatibleMoveTargets(resume.data, type, customSectionId),
+		[resume.data, type, customSectionId],
+	);
+
+	/** Get the current section's title (used when creating new sections) */
+	const currentSectionTitle = useMemo(
+		() => getSourceSectionTitle(resume.data, type, customSectionId),
+		[resume.data, type, customSectionId],
+	);
+
+	/** Handler: Move item to an existing section */
+	const handleMoveToSection = (targetSectionId: string) => {
+		updateResumeData((draft) => {
+			const removedItem = removeItemFromSource(draft, item.id, type, customSectionId);
+			if (!removedItem) return;
+			addItemToSection(draft, removedItem, targetSectionId, type);
+		});
+	};
+
+	/** Handler: Create a new custom section on an existing page and move the item there */
+	const handleNewSectionOnPage = (pageIndex: number) => {
+		updateResumeData((draft) => {
+			const removedItem = removeItemFromSource(draft, item.id, type, customSectionId);
+			if (!removedItem) return;
+			createCustomSectionWithItem(draft, removedItem, type, currentSectionTitle, pageIndex);
+		});
+	};
+
+	/** Handler: Create a new page with a new custom section and move the item there */
+	const handleNewPage = () => {
+		updateResumeData((draft) => {
+			const removedItem = removeItemFromSource(draft, item.id, type, customSectionId);
+			if (!removedItem) return;
+			createPageWithSection(draft, removedItem, type, currentSectionTitle);
+		});
+	};
+
+	return (
+		<DropdownMenuSub>
+			<DropdownMenuSubTrigger>
+				<ArrowBendUpRightIcon />
+				<Trans>Move to</Trans>
+			</DropdownMenuSubTrigger>
+
+			<DropdownMenuSubContent>
+				{/* Render each page as a submenu */}
+				{moveTargets.map(({ pageIndex, sections }) => (
+					<DropdownMenuSub key={pageIndex}>
+						<DropdownMenuSubTrigger>
+							<FileIcon />
+							<Trans>Page {pageIndex + 1}</Trans>
+						</DropdownMenuSubTrigger>
+
+						<DropdownMenuSubContent>
+							{/* Existing compatible sections on this page */}
+							{sections.map(({ sectionId, sectionTitle }) => (
+								<DropdownMenuItem key={sectionId} onSelect={() => handleMoveToSection(sectionId)}>
+									{sectionTitle}
+								</DropdownMenuItem>
+							))}
+
+							{/* Separator if there are existing sections */}
+							{sections.length > 0 && <DropdownMenuSeparator />}
+
+							{/* Option to create a new section on this page */}
+							<DropdownMenuItem onSelect={() => handleNewSectionOnPage(pageIndex)}>
+								<FolderPlusIcon />
+								<Trans>New Section</Trans>
+							</DropdownMenuItem>
+						</DropdownMenuSubContent>
+					</DropdownMenuSub>
+				))}
+
+				<DropdownMenuSeparator />
+
+				{/* Option to create a new page with a new section */}
+				<DropdownMenuItem onSelect={handleNewPage}>
+					<PlusCircleIcon />
+					<Trans>New Page</Trans>
+				</DropdownMenuItem>
+			</DropdownMenuSubContent>
+		</DropdownMenuSub>
+	);
+}
+
+// ============================================================================
+// SectionItem Component
+// ============================================================================
 
 type Props<T extends SectionItemType> = {
 	type: SectionType;
 	item: T;
 	title: string;
 	subtitle?: string;
+	customSectionId?: string;
 };
 
-export function SectionItem<T extends SectionItemType>({ type, item, title, subtitle }: Props<T>) {
+export function SectionItem<T extends SectionItemType>({ type, item, title, subtitle, customSectionId }: Props<T>) {
 	const confirm = useConfirm();
 	const controls = useDragControls();
 	const { openDialog } = useDialogStore();
@@ -39,20 +169,30 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 
 	const onToggleVisibility = () => {
 		updateResumeData((draft) => {
-			const section = draft.sections[type];
-			if (!("items" in section)) return;
-			const index = section.items.findIndex((_item) => _item.id === item.id);
-			if (index === -1) return;
-			section.items[index].hidden = !section.items[index].hidden;
+			if (customSectionId) {
+				const section = draft.customSections.find((s) => s.id === customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((_item) => _item.id === item.id);
+				if (index === -1) return;
+				section.items[index].hidden = !section.items[index].hidden;
+			} else {
+				const section = draft.sections[type];
+				if (!("items" in section)) return;
+				const index = section.items.findIndex((_item) => _item.id === item.id);
+				if (index === -1) return;
+				section.items[index].hidden = !section.items[index].hidden;
+			}
 		});
 	};
 
 	const onUpdate = () => {
-		openDialog(`resume.sections.${type}.update`, item);
+		// Type assertion needed because TypeScript can't narrow the union type through template literals
+		openDialog(`resume.sections.${type}.update`, { item, customSectionId } as never);
 	};
 
 	const onDuplicate = () => {
-		openDialog(`resume.sections.${type}.create`, item);
+		// Type assertion needed because TypeScript can't narrow the union type through template literals
+		openDialog(`resume.sections.${type}.create`, { item, customSectionId } as never);
 	};
 
 	const onDelete = async () => {
@@ -64,11 +204,19 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 		if (!confirmed) return;
 
 		updateResumeData((draft) => {
-			const section = draft.sections[type];
-			if (!("items" in section)) return;
-			const index = section.items.findIndex((_item) => _item.id === item.id);
-			if (index === -1) return;
-			section.items.splice(index, 1);
+			if (customSectionId) {
+				const section = draft.customSections.find((s) => s.id === customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((_item) => _item.id === item.id);
+				if (index === -1) return;
+				section.items.splice(index, 1);
+			} else {
+				const section = draft.sections[type];
+				if (!("items" in section)) return;
+				const index = section.items.findIndex((_item) => _item.id === item.id);
+				if (index === -1) return;
+				section.items.splice(index, 1);
+			}
 		});
 	};
 
@@ -84,7 +232,7 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 			className="group relative flex h-18 select-none border-b"
 		>
 			<div
-				className="flex cursor-ns-resize touch-none items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/20 group-hover:opacity-100"
+				className="flex cursor-ns-resize touch-none items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 group-hover:opacity-100"
 				onPointerDown={(e) => {
 					e.preventDefault();
 					controls.start(e);
@@ -96,7 +244,7 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 			<button
 				onClick={onUpdate}
 				className={cn(
-					"flex flex-1 flex-col items-start justify-center space-y-0.5 pl-1.5 text-left opacity-100 transition-opacity hover:bg-secondary/20 focus:outline-none focus-visible:ring-1",
+					"flex flex-1 flex-col items-start justify-center space-y-0.5 pl-1.5 text-left opacity-100 transition-opacity hover:bg-secondary/40 focus:outline-none focus-visible:ring-1",
 					item.hidden && "opacity-50",
 				)}
 			>
@@ -106,7 +254,7 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<button className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/20 focus:outline-none focus-visible:ring-1 group-hover:opacity-100">
+					<button className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 focus:outline-none focus-visible:ring-1 group-hover:opacity-100">
 						<DotsThreeVerticalIcon />
 					</button>
 				</DropdownMenuTrigger>
@@ -131,6 +279,8 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 							<CopySimpleIcon />
 							<Trans>Duplicate</Trans>
 						</DropdownMenuItem>
+
+						<MoveItemSubmenu type={type} item={item} customSectionId={customSectionId} />
 					</DropdownMenuGroup>
 
 					<DropdownMenuSeparator />
@@ -147,26 +297,32 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 	);
 }
 
-type AddButtonProps = {
+type AddButtonProps = Omit<ButtonProps, "type"> & {
 	type: SectionType | "custom";
-	children: React.ReactNode;
+	customSectionId?: string;
 };
 
-export function SectionAddItemButton({ type, children }: AddButtonProps) {
+export function SectionAddItemButton({ type, customSectionId, className, children, ...props }: AddButtonProps) {
 	const { openDialog } = useDialogStore();
 
 	const handleAdd = () => {
-		openDialog(`resume.sections.${type}.create`, undefined);
+		if (type === "custom") {
+			openDialog("resume.sections.custom.create", undefined);
+		} else {
+			openDialog(`resume.sections.${type}.create`, customSectionId ? { customSectionId } : undefined);
+		}
 	};
 
 	return (
-		<button
-			type="button"
+		<Button
+			tapScale={1}
+			variant="ghost"
 			onClick={handleAdd}
-			className="flex w-full items-center gap-x-2 px-3 py-4 font-medium hover:bg-secondary/20 focus:outline-none focus-visible:ring-1"
+			className={cn("h-12 w-full justify-start rounded-t-none", className)}
+			{...props}
 		>
 			<PlusIcon />
 			{children}
-		</button>
+		</Button>
 	);
 }

@@ -9,7 +9,8 @@ import {
 	PencilSimpleLineIcon,
 	PlusIcon,
 } from "@phosphor-icons/react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
+import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -22,8 +23,7 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-} from "@/components/animate-ui/components/radix/dropdown-menu";
-import { useResumeStore } from "@/components/resume/store/resume";
+} from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";

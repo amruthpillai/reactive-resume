@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: only used in places where we know the value is not null */
+
 import z, { flattenError, ZodError } from "zod";
 import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { type Template, templateSchema } from "@/schema/templates";
@@ -122,7 +124,6 @@ type V4ResumeData = {
 			items: Array<{
 				id: string;
 				visible: boolean;
-				name?: string;
 				title?: string;
 				awarder?: string;
 				date?: string;
@@ -235,8 +236,8 @@ type V4ResumeData = {
 			items: Array<{
 				id: string;
 				visible: boolean;
-				language?: string;
-				fluency?: string;
+				name?: string;
+				description?: string;
 				level?: number;
 			}>;
 		};
@@ -390,6 +391,20 @@ type V4ResumeData = {
 	};
 };
 
+// Transform layout section ID from V4 format to new format
+// V4 uses "custom.{id}" for custom sections, new format just uses "{id}"
+const transformLayoutSectionId = (id: string): string => {
+	if (id.startsWith("custom.")) return id.slice(7);
+	return id;
+};
+
+// Transform layout column by stripping "custom." prefix from section IDs
+const transformLayoutColumn = (column: string[]): string[] => {
+	return column
+		.filter((id) => id !== "summary") // Summary is handled separately
+		.map(transformLayoutSectionId);
+};
+
 export class ReactiveResumeV4JSONImporter {
 	parse(json: string): ResumeData {
 		try {
@@ -422,6 +437,7 @@ export class ReactiveResumeV4JSONImporter {
 						id: field.id ?? generateId(),
 						icon: field.icon ?? "",
 						text: field.text ?? "",
+						link: "",
 					})),
 				},
 				summary: {
@@ -432,16 +448,16 @@ export class ReactiveResumeV4JSONImporter {
 				},
 				sections: {
 					profiles: {
-						title: (v4Data.sections.profiles?.name ?? "").trim() || "Profiles",
+						title: v4Data.sections.profiles?.name ?? "",
 						columns: v4Data.sections.profiles?.columns ?? 1,
 						hidden: !(v4Data.sections.profiles?.visible ?? true),
 						items: (v4Data.sections.profiles?.items ?? [])
-							.filter((item) => item.network && item.network.trim().length > 0)
+							.filter((item) => item.network && item.network.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
 								icon: item.icon ?? "",
-								network: item.network?.trim() || "Other",
+								network: item.network!,
 								username: item.username ?? "",
 								website: {
 									url: item.url?.href ?? "",
@@ -450,15 +466,15 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					experience: {
-						title: (v4Data.sections.experience?.name ?? "").trim() || "Experience",
+						title: v4Data.sections.experience?.name ?? "",
 						columns: v4Data.sections.experience?.columns ?? 1,
 						hidden: !(v4Data.sections.experience?.visible ?? true),
 						items: (v4Data.sections.experience?.items ?? [])
-							.filter((item) => item.company && item.company.trim().length > 0)
+							.filter((item) => item.company && item.company.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								company: item.company?.trim() || "Company",
+								company: item.company!,
 								position: item.position ?? "",
 								location: item.location ?? "",
 								period: item.date ?? "",
@@ -470,15 +486,15 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					education: {
-						title: (v4Data.sections.education?.name ?? "").trim() || "Education",
+						title: v4Data.sections.education?.name ?? "",
 						columns: v4Data.sections.education?.columns ?? 1,
 						hidden: !(v4Data.sections.education?.visible ?? true),
 						items: (v4Data.sections.education?.items ?? [])
-							.filter((item) => item.institution && item.institution.trim().length > 0)
+							.filter((item) => item.institution && item.institution.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								school: item.institution?.trim() || "School",
+								school: item.institution!,
 								degree: item.studyType ?? "",
 								area: item.area ?? "",
 								grade: item.score ?? "",
@@ -492,15 +508,15 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					projects: {
-						title: (v4Data.sections.projects?.name ?? "").trim() || "Projects",
+						title: v4Data.sections.projects?.name ?? "",
 						columns: v4Data.sections.projects?.columns ?? 1,
 						hidden: !(v4Data.sections.projects?.visible ?? true),
 						items: (v4Data.sections.projects?.items ?? [])
-							.filter((item) => item.name && item.name.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								name: item.name?.trim() || "Project",
+								name: item.name!,
 								period: item.date ?? "",
 								website: {
 									url: item.url?.href ?? "",
@@ -510,59 +526,59 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					skills: {
-						title: (v4Data.sections.skills?.name ?? "").trim() || "Skills",
+						title: v4Data.sections.skills?.name ?? "",
 						columns: v4Data.sections.skills?.columns ?? 1,
 						hidden: !(v4Data.sections.skills?.visible ?? true),
 						items: (v4Data.sections.skills?.items ?? [])
-							.filter((item) => item.name && item.name.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
 								icon: "",
-								name: item.name?.trim() || "Skill",
+								name: item.name!,
 								proficiency: item.description ?? "",
 								level: clampLevel(item.level ?? 0),
 								keywords: item.keywords ?? [],
 							})),
 					},
 					languages: {
-						title: (v4Data.sections.languages?.name ?? "").trim() || "Languages",
+						title: v4Data.sections.languages?.name ?? "",
 						columns: v4Data.sections.languages?.columns ?? 1,
 						hidden: !(v4Data.sections.languages?.visible ?? true),
 						items: (v4Data.sections.languages?.items ?? [])
-							.filter((item) => item.language && item.language.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								language: item.language?.trim() || "Language",
-								fluency: item.fluency ?? "",
+								language: item.name!,
+								fluency: item.description ?? "",
 								level: clampLevel(item.level ?? 0),
 							})),
 					},
 					interests: {
-						title: (v4Data.sections.interests?.name ?? "").trim() || "Interests",
+						title: v4Data.sections.interests?.name ?? "",
 						columns: v4Data.sections.interests?.columns ?? 1,
 						hidden: !(v4Data.sections.interests?.visible ?? true),
 						items: (v4Data.sections.interests?.items ?? [])
-							.filter((item) => item.name && item.name.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
 								icon: "",
-								name: item.name?.trim() || "Interest",
+								name: item.name!,
 								keywords: item.keywords ?? [],
 							})),
 					},
 					awards: {
-						title: (v4Data.sections.awards?.name ?? "").trim() || "Awards",
+						title: v4Data.sections.awards?.name ?? "",
 						columns: v4Data.sections.awards?.columns ?? 1,
 						hidden: !(v4Data.sections.awards?.visible ?? true),
 						items: (v4Data.sections.awards?.items ?? [])
-							.filter((item) => (item.title || item.name) && (item.title?.trim() || item.name?.trim() || "").length > 0)
+							.filter((item) => item.title && item.title.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								title: (item.title || item.name)?.trim() || "Award",
+								title: item.title!,
 								awarder: item.awarder ?? "",
 								date: item.date ?? "",
 								website: {
@@ -573,15 +589,15 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					certifications: {
-						title: (v4Data.sections.certifications?.name ?? "").trim() || "Certifications",
+						title: v4Data.sections.certifications?.name ?? "",
 						columns: v4Data.sections.certifications?.columns ?? 1,
 						hidden: !(v4Data.sections.certifications?.visible ?? true),
 						items: (v4Data.sections.certifications?.items ?? [])
-							.filter((item) => item.name && item.name.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								title: item.name?.trim() || "Certification",
+								title: item.name!,
 								issuer: item.issuer ?? "",
 								date: item.date ?? "",
 								website: {
@@ -592,15 +608,15 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					publications: {
-						title: (v4Data.sections.publications?.name ?? "").trim() || "Publications",
+						title: v4Data.sections.publications?.name ?? "",
 						columns: v4Data.sections.publications?.columns ?? 1,
 						hidden: !(v4Data.sections.publications?.visible ?? true),
 						items: (v4Data.sections.publications?.items ?? [])
-							.filter((item) => item.name && item.name.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								title: item.name?.trim() || "Publication",
+								title: item.name!,
 								publisher: item.publisher ?? "",
 								date: item.date ?? "",
 								website: {
@@ -611,15 +627,15 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					volunteer: {
-						title: (v4Data.sections.volunteer?.name ?? "").trim() || "Volunteering",
+						title: v4Data.sections.volunteer?.name ?? "",
 						columns: v4Data.sections.volunteer?.columns ?? 1,
 						hidden: !(v4Data.sections.volunteer?.visible ?? true),
 						items: (v4Data.sections.volunteer?.items ?? [])
-							.filter((item) => item.organization && item.organization.trim().length > 0)
+							.filter((item) => item.organization && item.organization.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								organization: item.organization?.trim() || "Organization",
+								organization: item.organization!,
 								location: item.location ?? "",
 								period: item.date ?? "",
 								website: {
@@ -630,64 +646,47 @@ export class ReactiveResumeV4JSONImporter {
 							})),
 					},
 					references: {
-						title: (v4Data.sections.references?.name ?? "").trim() || "References",
+						title: v4Data.sections.references?.name ?? "",
 						columns: v4Data.sections.references?.columns ?? 1,
 						hidden: !(v4Data.sections.references?.visible ?? true),
 						items: (v4Data.sections.references?.items ?? [])
-							.filter((item) => item.name && item.name.trim().length > 0)
+							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
-								name: item.name?.trim() || "Reference",
-								description: item.summary ?? item.description ?? "",
+								name: item.name!,
+								position: item.description ?? "",
+								phone: "",
+								website: {
+									url: item.url?.href ?? "",
+									label: item.url?.label ?? "",
+								},
+								description: item.summary ?? "",
 							})),
 					},
 				},
-				customSections: Object.entries(v4Data.sections.custom ?? {}).map(([sectionId, section]) => {
-					const itemsHtml = section.items
+				customSections: Object.entries(v4Data.sections.custom ?? {}).map(([sectionId, section]) => ({
+					id: section.id || sectionId,
+					title: section.name ?? "",
+					type: "experience" as const, // Default to experience type as it has the most compatible fields
+					columns: section.columns ?? 1,
+					hidden: !(section.visible ?? true),
+					items: section.items
 						.filter((item) => item.visible !== false)
-						.map((item) => {
-							const parts: string[] = [];
-
-							if (item.name) {
-								parts.push(`<h3>${item.name}</h3>`);
-							}
-
-							if (item.description) {
-								parts.push(`<p>${item.description}</p>`);
-							}
-
-							if (item.date || item.location) {
-								const details = [item.date, item.location].filter(Boolean).join(" • ");
-								if (details) parts.push(`<p><em>${details}</em></p>`);
-							}
-
-							if (item.summary) {
-								parts.push(`<div>${item.summary}</div>`);
-							}
-
-							if (item.keywords && item.keywords.length > 0) {
-								parts.push(`<p><strong>Keywords:</strong> ${item.keywords.join(", ")}</p>`);
-							}
-
-							if (item.url?.href) {
-								const label = item.url.label || item.url.href;
-								parts.push(`<p><a href="${item.url.href}">${label}</a></p>`);
-							}
-
-							return parts.length > 0 ? `<div style="margin-bottom: 1em;">${parts.join("")}</div>` : "";
-						})
-						.filter(Boolean)
-						.join("");
-
-					return {
-						id: section.id || sectionId,
-						title: section.name ?? "",
-						columns: section.columns ?? 1,
-						hidden: !(section.visible ?? true),
-						content: itemsHtml || "",
-					};
-				}),
+						.map((item, index) => ({
+							id: item.id || generateId(),
+							hidden: !item.visible,
+							company: item.name?.trim() || `#${index + 1}`,
+							position: item.description ?? "",
+							location: item.location ?? "",
+							period: item.date ?? "",
+							website: {
+								url: item.url?.href ?? "",
+								label: item.url?.label ?? "",
+							},
+							description: item.summary ?? "",
+						})),
+				})),
 				metadata: {
 					template: (templateSchema.safeParse(v4Data.metadata.template).success
 						? v4Data.metadata.template
@@ -695,12 +694,12 @@ export class ReactiveResumeV4JSONImporter {
 					layout: {
 						sidebarWidth: clampSidebarWidth(35),
 						pages: (v4Data.metadata.layout ?? []).map((page) => {
-							const main = page[0] ?? [];
-							const sidebar = page[1] ?? [];
+							const main = transformLayoutColumn(page[0] ?? []);
+							const sidebar = transformLayoutColumn(page[1] ?? []);
 							return {
 								fullWidth: sidebar.length === 0,
-								main: main.filter((id) => id !== "summary"),
-								sidebar: sidebar,
+								main,
+								sidebar,
 							};
 						}),
 					},

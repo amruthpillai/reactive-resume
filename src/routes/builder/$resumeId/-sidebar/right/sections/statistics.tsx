@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { InfoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
-import { Accordion, AccordionContent, AccordionItem } from "@/components/animate-ui/components/radix/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { orpc } from "@/integrations/orpc/client";
 import { SectionBase } from "../shared/section-base";

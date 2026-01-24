@@ -13,7 +13,7 @@ export function PageSummary({ className }: PageSummaryProps) {
 	return (
 		<section
 			className={cn(
-				"page-section page-section-summary wrap-break-word",
+				"page-section page-section-summary",
 				section.hidden && "hidden",
 				section.content === "" && "hidden",
 				className,

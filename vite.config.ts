@@ -4,8 +4,22 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
+import type { Plugin } from "vite";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+
+// Polyfill for Reflect.getMetadata() (required by @better-auth/passkey)
+const REFLECT_POLYFILL = `if("function"!=typeof Reflect.getMetadata){const e=new WeakMap,t=(t,a)=>e.get(t)?.get(a),a=(t,a)=>{let n=e.get(t);n||(n=new Map,e.set(t,n));let f=n.get(a);return f||(f=new Map,n.set(a,f)),f},n=(e,a,f)=>{const c=t(a,f);if(c?.has(e))return c.get(e);const s=Object.getPrototypeOf(a);return s?n(e,s,f):void 0};Reflect.getMetadata=(e,t,a)=>n(e,t,a),Reflect.getOwnMetadata=(e,a,n)=>t(a,n)?.get(e),Reflect.defineMetadata=(e,t,n,f)=>a(n,f).set(e,t),Reflect.hasMetadata=(e,t,a)=>void 0!==n(e,t,a),Reflect.hasOwnMetadata=(e,a,n)=>t(a,n)?.has(e)??!1,Reflect.metadata=(e,t)=>(n,f)=>a(n,f).set(e,t)};`;
+
+function reflectPolyfillPlugin(): Plugin {
+	return {
+		name: "reflect-polyfill",
+		renderChunk(code, chunk) {
+			if (chunk.fileName.includes("passkey")) return `${REFLECT_POLYFILL}\n${code}`;
+			return null;
+		},
+	};
+}
 
 const config = defineConfig({
 	define: {
@@ -51,6 +65,7 @@ const config = defineConfig({
 	},
 
 	plugins: [
+		reflectPolyfillPlugin(),
 		lingui(),
 		tailwindcss(),
 		nitro({ plugins: ["plugins/1.migrate.ts"] }),

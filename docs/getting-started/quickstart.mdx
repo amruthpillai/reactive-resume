@@ -112,7 +112,7 @@ Before you begin, ensure you have the following installed:
     This will start:
     - **PostgreSQL** — Database for storing user data and resumes
     - **SeaweedFS** — S3-compatible storage for file uploads
-    - **Gotenberg** — PDF generation service
+    - **Printer** — PDF and screenshot generation service (browserless/chromium)
     - **Reactive Resume** — The main application
   </Step>
   
@@ -133,7 +133,7 @@ Here's what each service in the stack does:
 |---------|------|-------------|
 | `postgres` | 5432 | PostgreSQL database for storing all application data |
 | `seaweedfs` | 8333 | S3-compatible object storage for file uploads |
-| `gotenberg` | 4000 | Headless Chrome service for PDF generation |
+| `printer` | 4000 | Headless Chromium service for PDF and screenshot generation |
 | `app` | 3000 | The main Reactive Resume application |
 
 ### Health Checks
@@ -159,15 +159,13 @@ Here's a complete list of environment variables you can configure:
 | `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host:5432/db` |
 | `AUTH_SECRET` | Secret key for authentication | Generate with `openssl rand -base64 32` |
 | `APP_URL` | Public URL of your Application | `https://rxresu.me` |
-| `GOTENBERG_ENDPOINT` | URL of the Gotenberg PDF service | `http://gotenberg:4000` |
+| `PRINTER_ENDPOINT` | URL of the printer service | `http://printer:3000` |
 
 ### Optional Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `PRINTER_APP_URL` | Public URL for Gotenberg to access the Application | — |
-| `GOTENBERG_USERNAME` | Gotenberg Basic Auth Username (if enabled) | — |
-| `GOTENBERG_PASSWORD` | Gotenberg Basic Auth Password (if enabled) | — |
+| `PRINTER_APP_URL` | Public URL for the printer to access the Application | — |
 | `GOOGLE_CLIENT_ID` | Google OAuth Client ID | — |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret | — |
 | `GITHUB_CLIENT_ID` | GitHub OAuth Client ID | — |
@@ -193,12 +191,17 @@ Here's a complete list of environment variables you can configure:
 | `S3_BUCKET` | S3 Bucket Name | — |
 | `S3_FORCE_PATH_STYLE` | Use path-style URLs for S3 (set `true` for MinIO/SeaweedFS) | `false` |
 | `FLAG_DEBUG_PRINTER` | Used for debugging the printer route | `false` |
-| `FLAG_DISABLE_SIGNUP` | Disables new user signups | `false` |
+| `FLAG_DISABLE_SIGNUPS` | Disables new user signups | `false` |
+| `FLAG_DISABLE_EMAIL_AUTH` | Disables email/password login (SSO only) | `false` |
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
 
 <Note>
-  **Hybrid Setup Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while the Gotenberg PDF service is running inside Docker. In this scenario, Gotenberg needs to reach your local app to render resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to communicate with services running on your host machine.
+  **Hybrid Setup Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while the printer service is running inside Docker. In this scenario, the printer needs to reach your local app to render resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to communicate with services running on your host machine.
+</Note>
+
+<Note>
+  **Alternative Printer Options**: If you don't want to use browserless, you can use any headless Chrome/Chromium instance with its remote debugging port open. For example, run `chromium --remote-debugging-port=9222` and point `PRINTER_ENDPOINT` to that instance.
 </Note>
 
 ---

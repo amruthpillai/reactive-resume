@@ -584,6 +584,9 @@ export class JSONResumeImporter {
 						id: generateId(),
 						hidden: false,
 						name: ref.name || "",
+						position: "",
+						website: { url: "", label: "" },
+						phone: "",
 						description: ref.reference ? `<p>${ref.reference}</p>` : "",
 					})),
 			};

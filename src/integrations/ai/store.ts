@@ -5,7 +5,7 @@ import { create } from "zustand/react";
 
 export type AIProvider = "vercel-ai-gateway" | "openai" | "gemini" | "anthropic" | "ollama";
 
-export type TestStatus = "unverified" | "success" | "failure";
+type TestStatus = "unverified" | "success" | "failure";
 
 type AIStoreState = {
 	enabled: boolean;

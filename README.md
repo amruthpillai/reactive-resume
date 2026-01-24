@@ -1,4 +1,3 @@
-<!--
 <div align="center" markdown="1">
   <a href="https://go.warp.dev/Reactive-Resume">
     <img alt="Warp Sponsorship" width="400" src="https://github.com/warpdotdev/brand-assets/blob/main/Github/Sponsor/Warp-Github-LG-03.png?raw=true" />
@@ -10,7 +9,6 @@
 </div>
 
 ---
--->
 
 <div align="center">
   <a href="https://rxresu.me">
@@ -36,7 +34,7 @@
     <a href="https://opencollective.com/reactive-resume"><img src="https://img.shields.io/opencollective/all/reactive-resume?style=flat-square" alt="Open Collective" /></a>
   </p>
 
-  <a href="https://www.producthunt.com/products/reactive-resume?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2" target="_blank" rel="noopener noreferrer"><img alt="Reactive Resume v5 - A free and open-source resume builder. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065182&amp;theme=light&amp;t=1768850745585"></a>
+  <a href="https://www.producthunt.com/products/reactive-resume?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2" target="_blank" rel="noopener"><img alt="Reactive Resume v5 - A free and open-source resume builder. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065182&amp;theme=light&amp;t=1768850745585"></a>
 </div>
 
 ---
@@ -192,7 +190,7 @@ Comprehensive guides are available at [docs.rxresu.me](https://docs.rxresu.me):
 Reactive Resume can be self-hosted using Docker. The stack includes:
 
 - **PostgreSQL** — Database for storing user data and resumes
-- **Gotenberg** — Headless Chrome service for PDF generation
+- **Printer** — Headless Chromium service for PDF and screenshot generation
 - **SeaweedFS** (optional) — S3-compatible storage for file uploads
 
 Pull the latest image from Docker Hub or GitHub Container Registry:

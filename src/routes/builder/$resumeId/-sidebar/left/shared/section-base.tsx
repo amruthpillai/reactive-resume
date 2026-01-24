@@ -1,12 +1,7 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/animate-ui/components/radix/accordion";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import type { SectionType } from "@/schema/resume/data";
 import { getSectionIcon, getSectionTitle, type LeftSidebarSection } from "@/utils/resume/section";
 import { cn } from "@/utils/style";

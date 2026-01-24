@@ -1,10 +1,12 @@
 import { ORPCError } from "@orpc/client";
 import { and, arrayContains, asc, desc, eq, sql } from "drizzle-orm";
+import { get } from "es-toolkit/compat";
 import { match } from "ts-pattern";
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
 import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData } from "@/schema/resume/data";
+import { env } from "@/utils/env";
 import type { Locale } from "@/utils/locale";
 import { hashPassword } from "@/utils/password";
 import { generateId } from "@/utils/string";
@@ -146,6 +148,20 @@ export const resumeService = {
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
 
+		try {
+			if (!resume.data.picture.url) throw new Error("Picture is not available");
+
+			// Convert picture URL to base64 data, so there's no fetching required on the client.
+			const url = resume.data.picture.url.replace(env.APP_URL, "http://localhost:3000");
+			const base64 = await fetch(url)
+				.then((res) => res.arrayBuffer())
+				.then((buffer) => Buffer.from(buffer).toString("base64"));
+
+			resume.data.picture.url = `data:image/jpeg;base64,${base64}`;
+		} catch {
+			// Ignore errors, as the picture is not always available
+		}
+
 		return resume;
 	},
 
@@ -223,16 +239,26 @@ export const resumeService = {
 		input.data = input.data ?? defaultResumeData;
 		input.data.metadata.page.locale = input.locale;
 
-		await db.insert(schema.resume).values({
-			id,
-			name: input.name,
-			slug: input.slug,
-			tags: input.tags,
-			userId: input.userId,
-			data: input.data,
-		});
+		try {
+			await db.insert(schema.resume).values({
+				id,
+				name: input.name,
+				slug: input.slug,
+				tags: input.tags,
+				userId: input.userId,
+				data: input.data,
+			});
 
-		return id;
+			return id;
+		} catch (error) {
+			const constraint = get(error, "cause.constraint") as string | undefined;
+
+			if (constraint === "resume_slug_user_id_unique") {
+				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
+			}
+
+			throw error;
+		}
 	},
 
 	update: async (input: {
@@ -259,12 +285,24 @@ export const resumeService = {
 			isPublic: input.isPublic,
 		};
 
-		await db
-			.update(schema.resume)
-			.set(updateData)
-			.where(
-				and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
-			);
+		try {
+			await db
+				.update(schema.resume)
+				.set(updateData)
+				.where(
+					and(
+						eq(schema.resume.id, input.id),
+						eq(schema.resume.isLocked, false),
+						eq(schema.resume.userId, input.userId),
+					),
+				);
+		} catch (error) {
+			if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
+				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
+			}
+
+			throw error;
+		}
 	},
 
 	setLocked: async (input: { id: string; userId: string; isLocked: boolean }): Promise<void> => {

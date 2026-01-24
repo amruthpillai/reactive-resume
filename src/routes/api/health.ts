@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { sql } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
+import { printerService } from "@/integrations/orpc/services/printer";
 import { getStorageService } from "@/integrations/orpc/services/storage";
 
 function isUnhealthy(check: unknown): boolean {
@@ -20,6 +21,7 @@ async function handler() {
 		timestamp: new Date().toISOString(),
 		uptime: `${process.uptime().toFixed(2)}s`,
 		database: await checkDatabase(),
+		printer: await checkPrinter(),
 		storage: await checkStorage(),
 	};
 
@@ -50,11 +52,23 @@ async function checkDatabase() {
 	}
 }
 
+async function checkPrinter() {
+	try {
+		const result = await printerService.healthcheck();
+
+		return { status: "healthy", ...result };
+	} catch (error) {
+		return {
+			status: "unhealthy",
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
+	}
+}
+
 async function checkStorage() {
 	try {
 		const storageService = getStorageService();
-		const result = await storageService.healthcheck();
-		return result;
+		return await storageService.healthcheck();
 	} catch (error) {
 		return {
 			status: "unhealthy",

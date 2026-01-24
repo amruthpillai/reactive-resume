@@ -10,21 +10,27 @@ type VolunteerItemProps = SectionItem<"volunteer"> & {
 export function VolunteerItem({ className, ...item }: VolunteerItemProps) {
 	return (
 		<div className={cn("volunteer-item", className)}>
+			{/* Header */}
 			<div className="section-item-header volunteer-item-header">
+				{/* Row 1 */}
 				<div className="flex items-center justify-between">
-					<p className="section-item-title volunteer-item-title">
-						<strong>{item.organization}</strong>
-					</p>
-					<p className="section-item-metadata text-right">{item.period}</p>
+					<strong className="section-item-title volunteer-item-title">{item.organization}</strong>
+					<span className="section-item-metadata volunteer-item-period text-right">{item.period}</span>
 				</div>
+
+				{/* Row 2 */}
 				<div className="flex items-center justify-between">
-					<p className="section-item-location volunteer-item-location">{item.location}</p>
+					<span className="section-item-metadata volunteer-item-location">{item.location}</span>
 				</div>
 			</div>
+
+			{/* Description */}
 			<div className="section-item-description volunteer-item-description">
 				<TiptapContent content={item.description} />
 			</div>
-			<div className="section-item-link volunteer-item-link">
+
+			{/* Website */}
+			<div className="section-item-website volunteer-item-website">
 				<PageLink {...item.website} label={item.website.label} />
 			</div>
 		</div>

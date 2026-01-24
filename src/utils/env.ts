@@ -15,9 +15,7 @@ export const env = createEnv({
 		PRINTER_APP_URL: z.url({ protocol: /https?/ }).optional(),
 
 		// Printer
-		GOTENBERG_ENDPOINT: z.url({ protocol: /https?/ }),
-		GOTENBERG_USERNAME: z.string().min(1).optional(),
-		GOTENBERG_PASSWORD: z.string().min(1).optional(),
+		PRINTER_ENDPOINT: z.url({ protocol: /^(wss?|https?)$/ }),
 
 		// Database
 		DATABASE_URL: z.url({ protocol: /postgres(ql)?/ }),
@@ -67,6 +65,7 @@ export const env = createEnv({
 
 		// Feature Flags
 		FLAG_DEBUG_PRINTER: z.stringbool().default(false),
-		FLAG_DISABLE_SIGNUP: z.stringbool().default(false),
+		FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
+		FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
 	},
 });

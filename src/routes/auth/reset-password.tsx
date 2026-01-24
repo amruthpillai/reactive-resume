@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/integrations/auth/client";
@@ -18,6 +18,9 @@ const searchSchema = z.object({ token: z.string().min(1) });
 export const Route = createFileRoute("/auth/reset-password")({
 	component: RouteComponent,
 	validateSearch: zodValidator(searchSchema),
+	beforeLoad: async ({ context }) => {
+		if (context.flags.disableEmailAuth) throw redirect({ to: "/auth/login", replace: true });
+	},
 	onError: (error) => {
 		if (error instanceof SearchParamError) {
 			throw redirect({ to: "/auth/login" });

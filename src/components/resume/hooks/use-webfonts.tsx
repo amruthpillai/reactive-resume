@@ -1,10 +1,18 @@
 import { useEffect } from "react";
+import { useIsMounted } from "usehooks-ts";
 import type z from "zod";
 import webfontlist from "@/components/typography/webfontlist.json";
 import type { typographySchema } from "@/schema/resume/data";
 
 export function useWebfonts(typography: z.infer<typeof typographySchema>) {
+	const isMounted = useIsMounted();
+
 	useEffect(() => {
+		if (!isMounted()) return;
+
+		const body = document.body;
+		if (body) body.setAttribute("data-wf-loaded", "false");
+
 		async function loadFont(family: string, weights: string[]) {
 			const font = webfontlist.find((font) => font.family === family);
 			if (!font) return;
@@ -36,6 +44,14 @@ export function useWebfonts(typography: z.infer<typeof typographySchema>) {
 		Promise.all([
 			loadFont(bodyTypography.fontFamily, bodyTypography.fontWeights),
 			loadFont(headingTypography.fontFamily, headingTypography.fontWeights),
-		]);
-	}, [typography]);
+		]).then(() => {
+			if (isMounted() && body) body.setAttribute("data-wf-loaded", "true");
+		});
+
+		return () => {
+			if (isMounted()) {
+				if (body) body.removeAttribute("data-wf-loaded");
+			}
+		};
+	}, [isMounted, typography]);
 }

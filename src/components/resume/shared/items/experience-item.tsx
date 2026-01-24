@@ -10,22 +10,28 @@ type ExperienceItemProps = SectionItem<"experience"> & {
 export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 	return (
 		<div className={cn("experience-item", className)}>
+			{/* Header */}
 			<div className="section-item-header experience-item-header">
+				{/* Row 1 */}
 				<div className="flex items-center justify-between">
-					<p className="section-item-title experience-item-title">
-						<strong>{item.company}</strong>
-					</p>
-					<p className="section-item-metadata experience-item-metadata text-right">{item.location}</p>
+					<strong className="section-item-title experience-item-title">{item.company}</strong>
+					<span className="section-item-metadata experience-item-location text-right">{item.location}</span>
 				</div>
+
+				{/* Row 2 */}
 				<div className="flex items-center justify-between">
-					<p>{item.position}</p>
-					<p className="section-item-metadata experience-item-metadata text-right">{item.period}</p>
+					<span className="section-item-metadata experience-item-position">{item.position}</span>
+					<span className="section-item-metadata experience-item-period text-right">{item.period}</span>
 				</div>
 			</div>
+
+			{/* Description */}
 			<div className="section-item-description experience-item-description">
 				<TiptapContent content={item.description} />
 			</div>
-			<div className="section-item-link experience-item-link">
+
+			{/* Website */}
+			<div className="section-item-website experience-item-website">
 				<PageLink {...item.website} label={item.website.label} />
 			</div>
 		</div>

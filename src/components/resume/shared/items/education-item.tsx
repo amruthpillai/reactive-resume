@@ -10,26 +10,32 @@ type EducationItemProps = SectionItem<"education"> & {
 export function EducationItem({ className, ...item }: EducationItemProps) {
 	return (
 		<div className={cn("education-item", className)}>
+			{/* Header */}
 			<div className="section-item-header education-item-header mb-2">
+				{/* Row 1 */}
 				<div className="flex items-center justify-between">
-					<p className="section-item-title education-item-title">
-						<strong>{item.school}</strong>
-					</p>
-					<p className="section-item-metadata education-item-metadata text-right">
+					<strong className="section-item-title education-item-title">{item.school}</strong>
+					<span className="section-item-metadata education-item-degree-grade text-right">
 						{[item.degree, item.grade].filter(Boolean).join(" • ")}
-					</p>
+					</span>
 				</div>
+
+				{/* Row 2 */}
 				<div className="flex items-center justify-between">
-					<p>{item.area}</p>
-					<p className="section-item-metadata education-item-metadata text-right">
+					<span className="section-item-metadata education-item-area">{item.area}</span>
+					<span className="section-item-metadata education-item-location-period text-right">
 						{[item.location, item.period].filter(Boolean).join(" • ")}
-					</p>
+					</span>
 				</div>
 			</div>
+
+			{/* Description */}
 			<div className="section-item-description education-item-description">
 				<TiptapContent content={item.description} />
 			</div>
-			<div className="section-item-link education-item-link">
+
+			{/* Website */}
+			<div className="section-item-website education-item-website">
 				<PageLink {...item.website} label={item.website.label} />
 			</div>
 		</div>

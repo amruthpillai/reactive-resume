@@ -4,17 +4,11 @@ import { AtIcon, PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
 import type z from "zod";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import {
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/animate-ui/components/radix/dialog";
 import { IconPicker } from "@/components/input/icon-picker";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
@@ -35,17 +29,22 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			id: generateId(),
-			hidden: data?.hidden ?? false,
-			icon: data?.icon ?? "acorn",
-			network: data?.network ?? "",
-			username: data?.username ?? "",
-			website: data?.website ?? { url: "", label: "" },
+			hidden: data?.item?.hidden ?? false,
+			icon: data?.item?.icon ?? "acorn",
+			network: data?.item?.network ?? "",
+			username: data?.item?.username ?? "",
+			website: data?.item?.website ?? { url: "", label: "" },
 		},
 	});
 
-	const onSubmit = (data: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			draft.sections.profiles.items.push(data);
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (section) section.items.push(formData);
+			} else {
+				draft.sections.profiles.items.push(formData);
+			}
 		});
 		closeDialog();
 	};
@@ -86,20 +85,26 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			id: data.id,
-			hidden: data.hidden,
-			icon: data.icon,
-			network: data.network,
-			username: data.username,
-			website: data.website,
+			id: data.item.id,
+			hidden: data.item.hidden,
+			icon: data.item.icon,
+			network: data.item.network,
+			username: data.item.username,
+			website: data.item.website,
 		},
 	});
 
-	const onSubmit = (data: FormValues) => {
+	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			const index = draft.sections.profiles.items.findIndex((item) => item.id === data.id);
-			if (index === -1) return;
-			draft.sections.profiles.items[index] = data;
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) section.items[index] = formData;
+			} else {
+				const index = draft.sections.profiles.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) draft.sections.profiles.items[index] = formData;
+			}
 		});
 		closeDialog();
 	};

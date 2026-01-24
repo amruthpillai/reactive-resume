@@ -16,9 +16,9 @@ import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { type CSSProperties, forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 import { match } from "ts-pattern";
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import { Switch } from "@/components/animate-ui/components/radix/switch";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import type { SectionType } from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
@@ -166,10 +166,13 @@ export function LayoutPages() {
 
 			updateResumeData((draft) => {
 				const pageToDelete = draft.metadata.layout.pages[pageIndex];
-				// Move all sections from deleted page to first page
-				const firstPage = draft.metadata.layout.pages[0];
-				firstPage.main.push(...pageToDelete.main);
-				firstPage.sidebar.push(...pageToDelete.sidebar);
+				// Find the first available page that isn't being deleted
+				const targetPageIndex = pageIndex === 0 ? 1 : 0;
+				const targetPage = draft.metadata.layout.pages[targetPageIndex];
+
+				// Move all sections from deleted page to target page
+				targetPage.main.push(...pageToDelete.main);
+				targetPage.sidebar.push(...pageToDelete.sidebar);
 
 				draft.metadata.layout.pages.splice(pageIndex, 1);
 			});
@@ -289,7 +292,7 @@ function LayoutColumn({ pageIndex, columnId, items, disabled = false }: LayoutCo
 
 	return (
 		<SortableContext id={droppableId} items={items} strategy={verticalListSortingStrategy}>
-			<div className={cn(disabled && "opacity-50")}>
+			<div className={cn("space-y-1.5", disabled && "opacity-50")}>
 				<div className="@md:row-start-1 pl-4 font-medium text-xs">{getColumnLabel(columnId)}</div>
 
 				<div
@@ -355,7 +358,7 @@ const LayoutItemContent = forwardRef<HTMLDivElement, LayoutItemContentProps>(
 				data-dragging={isDragging ? "true" : undefined}
 				className={cn(
 					"group/item flex cursor-grab touch-none select-none items-center gap-x-2 rounded-md border border-border bg-background px-2 py-1.5 font-medium text-sm transition-all duration-200 ease-out",
-					"hover:bg-secondary/20 active:cursor-grabbing active:border-primary/60 active:bg-secondary/20",
+					"hover:bg-secondary/40 active:cursor-grabbing active:border-primary/60 active:bg-secondary/40",
 					"data-[overlay=true]:cursor-grabbing data-[overlay=true]:border-primary/60 data-[overlay=true]:bg-background",
 					"data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-primary/60 data-[dragging=true]:bg-background",
 					className,

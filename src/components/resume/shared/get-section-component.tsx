@@ -1,5 +1,7 @@
 import { match } from "ts-pattern";
-import type { SectionType } from "@/schema/resume/data";
+import type { CustomSectionItem, SectionItem, SectionType } from "@/schema/resume/data";
+import { cn } from "@/utils/style";
+import { useResumeStore } from "../store/resume";
 import { AwardsItem } from "./items/awards-item";
 import { CertificationsItem } from "./items/certifications-item";
 import { EducationItem } from "./items/education-item";
@@ -12,7 +14,6 @@ import { PublicationsItem } from "./items/publications-item";
 import { ReferencesItem } from "./items/references-item";
 import { SkillsItem } from "./items/skills-item";
 import { VolunteerItem } from "./items/volunteer-item";
-import { PageCustomSection } from "./page-custom";
 import { PageSection } from "./page-section";
 import { PageSummary } from "./page-summary";
 
@@ -20,6 +21,28 @@ type SectionComponentProps = {
 	sectionClassName?: string;
 	itemClassName?: string;
 };
+
+// Helper to render item component based on type
+function renderItemByType(type: SectionType, item: CustomSectionItem, itemClassName?: string) {
+	return match(type)
+		.with("profiles", () => <ProfilesItem {...(item as SectionItem<"profiles">)} className={itemClassName} />)
+		.with("experience", () => <ExperienceItem {...(item as SectionItem<"experience">)} className={itemClassName} />)
+		.with("education", () => <EducationItem {...(item as SectionItem<"education">)} className={itemClassName} />)
+		.with("projects", () => <ProjectsItem {...(item as SectionItem<"projects">)} className={itemClassName} />)
+		.with("skills", () => <SkillsItem {...(item as SectionItem<"skills">)} className={itemClassName} />)
+		.with("languages", () => <LanguagesItem {...(item as SectionItem<"languages">)} className={itemClassName} />)
+		.with("interests", () => <InterestsItem {...(item as SectionItem<"interests">)} className={itemClassName} />)
+		.with("awards", () => <AwardsItem {...(item as SectionItem<"awards">)} className={itemClassName} />)
+		.with("certifications", () => (
+			<CertificationsItem {...(item as SectionItem<"certifications">)} className={itemClassName} />
+		))
+		.with("publications", () => (
+			<PublicationsItem {...(item as SectionItem<"publications">)} className={itemClassName} />
+		))
+		.with("volunteer", () => <VolunteerItem {...(item as SectionItem<"volunteer">)} className={itemClassName} />)
+		.with("references", () => <ReferencesItem {...(item as SectionItem<"references">)} className={itemClassName} />)
+		.exhaustive();
+}
 
 export function getSectionComponent(
 	section: "summary" | SectionType | (string & {}),
@@ -127,9 +150,38 @@ export function getSectionComponent(
 			return ReferencesSection;
 		})
 		.otherwise(() => {
-			const CustomSection = ({ id }: { id: string }) => (
-				<PageCustomSection sectionId={id} className={sectionClassName} />
-			);
-			return CustomSection;
+			// Custom section - render based on its type
+			const CustomSectionComponent = ({ id }: { id: string }) => {
+				const customSection = useResumeStore((state) => state.resume.data.customSections.find((s) => s.id === id));
+
+				if (!customSection) return null;
+				if (customSection.hidden) return null;
+				if (customSection.items.length === 0) return null;
+
+				const visibleItems = customSection.items.filter((item) => !item.hidden);
+				if (visibleItems.length === 0) return null;
+
+				return (
+					<section className={cn(`page-section page-section-custom page-section-${id}`, sectionClassName)}>
+						<h6 className="mb-1 text-(--page-primary-color)">{customSection.title}</h6>
+
+						<div
+							className="section-content grid gap-x-(--page-gap-x) gap-y-(--page-gap-y)"
+							style={{ gridTemplateColumns: `repeat(${customSection.columns}, 1fr)` }}
+						>
+							{visibleItems.map((item) => (
+								<div
+									key={item.id}
+									className={cn(`section-item section-item-${customSection.type} print:break-inside-avoid`)}
+								>
+									{renderItemByType(customSection.type, item, itemClassName)}
+								</div>
+							))}
+						</div>
+					</section>
+				);
+			};
+
+			return CustomSectionComponent;
 		});
 }

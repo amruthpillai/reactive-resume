@@ -1,8 +1,23 @@
 name: reactive_resume
 
 services:
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   postgres:
-    image: postgres:18
+    image: postgres:latest
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
@@ -19,25 +34,30 @@ services:
       timeout: 10s
       retries: 3
 
-  gotenberg:
-    image: gotenberg/gotenberg:8
+  browserless:
+    image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    environment:
-      - WEBHOOK_DISABLE=true
-      - CHROMIUM_AUTO_START=true
-      - LIBREOFFICE_DISABLE_ROUTES=true
-      - PROMETHEUS_DISABLE_COLLECT=true
-      - CHROMIUM_HOST_RESOLVER_RULES=MAP localhost host.docker.internal
     ports:
       - "4000:3000"
+    environment:
+      - QUEUED=30
+      - HEALTH=true
+      - CONCURRENT=20
+      - TOKEN=1234567890
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      start_period: 10s
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test:
+        ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=1234567890"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # As an alternative to browserless, you can also use a lightweight image like chromedp/headless-shell:latest
+  # See https://docs.rxresu.me/self-hosting/docker#alternative-printer-options for more information.
+  # chrome:
+  #   image: chromedp/headless-shell:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "9222:9222"
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
@@ -88,6 +108,6 @@ services:
       retries: 3
 
 volumes:
+  mailpit_data:
   postgres_data:
   seaweedfs_data:
-  mailpit_data:

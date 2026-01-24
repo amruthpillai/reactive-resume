@@ -120,10 +120,10 @@ The Service does not include built-in behavioral advertising or third-party anal
 
 We share information only as needed to provide the Service:
 
-### PDF generation and screenshots (Gotenberg)
-When you export to PDF or request a screenshot, the Service sends a request to a configured **Gotenberg** endpoint to render a resume URL.
+### PDF generation and screenshots (Printer)
+When you export to PDF or request a screenshot, the Service sends a request to a configured printer endpoint (a headless Chromium browser) to render a resume URL.
 
-Depending on your deployment, Gotenberg may be:
+Depending on your deployment, the printer may be:
 
 - Self-hosted and controlled by the Service Operator, or
 - Operated by a third party (in which case the third party will process the resume content for rendering)
