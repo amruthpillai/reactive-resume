@@ -26,16 +26,16 @@ type SocialLink = {
 
 const getResourceLinks = (): FooterLinkItem[] => [
 	{ url: "https://docs.rxresu.me", label: t`Documentation` },
+	{ url: "https://opencollective.com/reactive-resume", label: t`Sponsorships` },
 	{ url: "https://github.com/amruthpillai/reactive-resume", label: t`Source Code` },
-	{ url: "https://crowdin.com/project/reactive-resume", label: t`Translations` },
-	{ url: "https://opencollective.com/reactive-resume", label: t`Donate` },
+	{ url: "https://docs.rxresu.me/changelog", label: t`Changelog` },
 ];
 
 const getCommunityLinks = (): FooterLinkItem[] => [
-	{ url: "https://github.com/amruthpillai/reactive-resume/discussions", label: t`Discussions` },
-	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: t`Report an Issue` },
+	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: t`Report an issue` },
 	{ url: "https://crowdin.com/project/reactive-resume", label: t`Translations` },
-	{ url: "https://github.com/amruthpillai/reactive-resume/blob/main/CONTRIBUTING.md", label: t`Contributing` },
+	{ url: "https://reddit.com/r/reactiveresume", label: t`Subreddit` },
+	{ url: "https://discord.gg/EE8yFqW4", label: t`Discord` },
 ];
 
 const socialLinks: SocialLink[] = [

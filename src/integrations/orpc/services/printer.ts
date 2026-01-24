@@ -2,32 +2,25 @@ import { ORPCError } from "@orpc/server";
 import type { InferSelectModel } from "drizzle-orm";
 import puppeteer, { type Browser, type ConnectOptions } from "puppeteer-core";
 import type { schema } from "@/integrations/drizzle";
+import { pageDimensionsAsPixels } from "@/schema/page";
 import { printMarginTemplates } from "@/schema/templates";
 import { env } from "@/utils/env";
 import { generatePrinterToken } from "@/utils/printer-token";
 import { getStorageService, uploadFile } from "./storage";
 
-const pageDimensions = {
-	a4: {
-		width: 794,
-		height: 1123,
-	},
-	letter: {
-		width: 816,
-		height: 1056,
-	},
-} as const;
-
 const SCREENSHOT_TTL = 1000 * 60 * 60; // 1 hour
 
 async function getBrowser(): Promise<Browser> {
+	const args = ["--disable-dev-shm-usage", "--disable-features=LocalNetworkAccessChecks,site-per-process,FedCm"];
+
 	const endpoint = new URL(env.PRINTER_ENDPOINT);
 	const isWebSocket = endpoint.protocol.startsWith("ws");
-
 	const connectOptions: ConnectOptions = { acceptInsecureCerts: true };
 
-	if (isWebSocket) connectOptions.browserWSEndpoint = env.PRINTER_ENDPOINT;
-	else connectOptions.browserURL = env.PRINTER_ENDPOINT;
+	endpoint.searchParams.append("launch", JSON.stringify({ args }));
+
+	if (isWebSocket) connectOptions.browserWSEndpoint = endpoint.toString();
+	else connectOptions.browserURL = endpoint.toString();
 
 	return puppeteer.connect(connectOptions);
 }
@@ -116,7 +109,7 @@ export const printerService = {
 			const page = await browser.newPage();
 
 			// Wait for the page to fully load (network idle + custom loaded attribute)
-			await page.setViewport(pageDimensions[format]);
+			await page.setViewport(pageDimensionsAsPixels[format]);
 			await page.goto(url, { waitUntil: "networkidle0" });
 			await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
 
@@ -161,13 +154,13 @@ export const printerService = {
 					}
 				},
 				marginY,
-				pageDimensions[format].height,
+				pageDimensionsAsPixels[format].height,
 			);
 
 			// Step 6: Generate the PDF with the specified dimensions and margins
 			const pdfBuffer = await page.pdf({
-				width: `${pageDimensions[format].width}px`,
-				height: `${pageDimensions[format].height}px`,
+				width: `${pageDimensionsAsPixels[format].width}px`,
+				height: `${pageDimensionsAsPixels[format].height}px`,
 				tagged: true, // Adds accessibility tags to the PDF
 				waitForFonts: true, // Ensures all fonts are loaded before rendering
 				printBackground: true, // Includes background colors and images
@@ -244,7 +237,7 @@ export const printerService = {
 
 			const page = await browser.newPage();
 
-			await page.setViewport(pageDimensions.a4);
+			await page.setViewport(pageDimensionsAsPixels.a4);
 			await page.goto(url, { waitUntil: "networkidle0" });
 			await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
 

@@ -27,16 +27,12 @@
 	"navigation": {
 		"tabs": [
 			{
+				"icon": "book",
 				"tab": "Documentation",
 				"groups": [
 					{
 						"group": "Getting Started",
-						"pages": [
-							"getting-started/index",
-							"getting-started/quickstart",
-							"guides/accessing-the-previous-version",
-							"getting-started/changelog"
-						]
+						"pages": ["getting-started/index", "getting-started/quickstart", "guides/accessing-the-previous-version"]
 					},
 					{
 						"group": "Account",
@@ -53,6 +49,7 @@
 							"guides/creating-your-first-resume",
 							"guides/choosing-a-template",
 							"guides/moving-items-between-sections",
+							"guides/fitting-content-on-a-page",
 							"guides/exporting-your-resume",
 							"guides/sharing-your-resume-publicly",
 							"guides/using-private-notes",
@@ -86,6 +83,12 @@
 				]
 			},
 			{
+				"icon": "clock",
+				"tab": "Changelog",
+				"pages": ["changelog/index"]
+			},
+			{
+				"icon": "code",
 				"tab": "API Reference",
 				"openapi": "/spec.json"
 			}
