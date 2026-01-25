@@ -4,6 +4,7 @@ import { BrainIcon, CheckCircleIcon, InfoIcon, XCircleIcon } from "@phosphor-ico
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { useMemo } from "react";
 import { useIsClient } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
@@ -21,16 +22,45 @@ export const Route = createFileRoute("/dashboard/settings/ai")({
 	component: RouteComponent,
 });
 
-const providerOptions: ComboboxOption<AIProvider>[] = [
-	{ value: "vercel-ai-gateway", label: "Vercel AI Gateway", keywords: ["vercel", "gateway", "ai"] },
-	{ value: "openai", label: "OpenAI", keywords: ["openai", "gpt", "chatgpt"] },
-	{ value: "gemini", label: "Google Gemini", keywords: ["gemini", "google", "bard"] },
-	{ value: "anthropic", label: "Anthropic Claude", keywords: ["anthropic", "claude", "ai"] },
-	{ value: "ollama", label: "Ollama", keywords: ["ollama", "ai", "local"] },
+const providerOptions: (ComboboxOption<AIProvider> & { defaultBaseURL: string })[] = [
+	{
+		value: "openai",
+		label: "OpenAI",
+		keywords: ["openai", "gpt", "chatgpt"],
+		defaultBaseURL: "https://api.openai.com/v1",
+	},
+	{
+		value: "ollama",
+		label: "Ollama",
+		keywords: ["ollama", "ai", "local"],
+		defaultBaseURL: "http://localhost:11434",
+	},
+	{
+		value: "anthropic",
+		label: "Anthropic Claude",
+		keywords: ["anthropic", "claude", "ai"],
+		defaultBaseURL: "https://api.anthropic.com/v1",
+	},
+	{
+		value: "vercel-ai-gateway",
+		label: "Vercel AI Gateway",
+		keywords: ["vercel", "gateway", "ai"],
+		defaultBaseURL: "https://ai-gateway.vercel.sh/v1/ai",
+	},
+	{
+		value: "gemini",
+		label: "Google Gemini",
+		keywords: ["gemini", "google", "bard"],
+		defaultBaseURL: "https://generativelanguage.googleapis.com/v1beta",
+	},
 ];
 
 function AIForm() {
 	const { set, model, apiKey, baseURL, provider, enabled, testStatus } = useAIStore();
+
+	const selectedOption = useMemo(() => {
+		return providerOptions.find((option) => option.value === provider);
+	}, [provider]);
 
 	const { mutate: testConnection, isPending: isTesting } = useMutation({
 		mutationFn: async () => {
@@ -113,21 +143,19 @@ function AIForm() {
 				/>
 			</div>
 
-			{provider === "ollama" && (
-				<div className="flex flex-col gap-y-2 sm:col-span-2">
-					<Label htmlFor="base-url">
-						<Trans>Base URL (Optional)</Trans>
-					</Label>
-					<Input
-						id="base-url"
-						type="url"
-						value={baseURL}
-						disabled={enabled}
-						placeholder="http://localhost:11434"
-						onChange={(e) => handleBaseURLChange(e.target.value)}
-					/>
-				</div>
-			)}
+			<div className="flex flex-col gap-y-2 sm:col-span-2">
+				<Label htmlFor="base-url">
+					<Trans>Base URL (Optional)</Trans>
+				</Label>
+				<Input
+					id="base-url"
+					type="url"
+					value={baseURL}
+					disabled={enabled}
+					placeholder={selectedOption?.defaultBaseURL}
+					onChange={(e) => handleBaseURLChange(e.target.value)}
+				/>
+			</div>
 
 			<div>
 				<Button variant="outline" disabled={isTesting || enabled} onClick={() => testConnection()}>

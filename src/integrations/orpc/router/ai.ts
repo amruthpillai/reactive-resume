@@ -12,7 +12,7 @@ import pdfParserUserPrompt from "@/integrations/ai/prompts/pdf-parser-user.md?ra
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { protectedProcedure } from "../context";
 
-const aiProviderSchema = z.enum(["vercel-ai-gateway", "openai", "anthropic", "gemini", "ollama"]);
+const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -20,18 +20,19 @@ type GetModelInput = {
 	provider: AIProvider;
 	model: string;
 	apiKey: string;
-	baseURL?: string;
+	baseURL: string;
 };
 
 function getModel(input: GetModelInput) {
-	const { provider, model, apiKey, baseURL } = input;
+	const { provider, model, apiKey } = input;
+	const baseURL = input.baseURL || undefined;
 
 	return match(provider)
-		.with("vercel-ai-gateway", () => createGateway({ apiKey }).languageModel(model))
-		.with("openai", () => createOpenAI({ apiKey }).languageModel(model))
-		.with("anthropic", () => createAnthropic({ apiKey }).languageModel(model))
-		.with("gemini", () => createGoogleGenerativeAI({ apiKey }).languageModel(model))
+		.with("openai", () => createOpenAI({ apiKey, baseURL }).languageModel(model))
 		.with("ollama", () => createOllama({ apiKey, baseURL }).languageModel(model))
+		.with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
+		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
+		.with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
 		.exhaustive();
 }
 
@@ -39,7 +40,7 @@ const aiCredentialsSchema = z.object({
 	provider: aiProviderSchema,
 	model: z.string(),
 	apiKey: z.string(),
-	baseURL: z.string().optional(),
+	baseURL: z.string(),
 });
 
 const fileInputSchema = z.object({
@@ -54,7 +55,7 @@ export const aiRouter = {
 				provider: aiProviderSchema,
 				model: z.string(),
 				apiKey: z.string(),
-				baseURL: z.string().optional(),
+				baseURL: z.string(),
 			}),
 		)
 		.handler(async function* ({ input }) {
