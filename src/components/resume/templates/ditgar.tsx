@@ -1,3 +1,4 @@
+import { isRTL } from "@/utils/locale";
 import { cn } from "@/utils/style";
 import { getSectionComponent } from "../shared/get-section-component";
 import { PageIcon } from "../shared/page-icon";
@@ -28,7 +29,8 @@ const sectionClassName = cn(
 export function DitgarTemplate({ pageIndex, pageLayout }: TemplateProps) {
 	const isFirstPage = pageIndex === 0;
 	const { main, sidebar, fullWidth } = pageLayout;
-	const rtlDirection = useResumeStore((state) => state.resume.data.metadata.layout.rtlDirection);
+	const locale = useResumeStore((state) => state.resume.data.metadata.page.locale);
+	const rtlDirection = isRTL(locale);
 
 	const SummaryComponent = getSectionComponent("summary", {
 		sectionClassName: cn(sectionClassName, "px-(--page-margin-x) pt-(--page-margin-y)"),

@@ -378,10 +378,6 @@ export const layoutSchema = z.object({
 		.catch(35)
 		.describe("The width of the sidebar column, defined as a percentage of the page width."),
 	pages: z.array(pageLayoutSchema).describe("The pages to display in the layout."),
-	rtlDirection: z
-		.boolean()
-		.catch(false)
-		.describe("Whether to enable right-to-left (RTL) direction for the entire resume layout."),
 });
 
 export const cssSchema = z.object({
@@ -583,7 +579,6 @@ export const defaultResumeData: ResumeData = {
 		template: "onyx",
 		layout: {
 			sidebarWidth: 35,
-			rtlDirection: false,
 			pages: [
 				{
 					fullWidth: false,
