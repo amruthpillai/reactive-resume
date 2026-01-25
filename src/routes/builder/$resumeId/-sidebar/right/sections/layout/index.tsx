@@ -6,6 +6,7 @@ import { useResumeStore } from "@/components/resume/store/resume";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { metadataSchema } from "@/schema/resume/data";
 import { SectionBase } from "../../shared/section-base";
 import { LayoutPages } from "./pages";
@@ -24,18 +25,22 @@ const formSchema = metadataSchema.shape.layout.omit({ pages: true });
 type FormValues = z.infer<typeof formSchema>;
 
 function LayoutSectionForm() {
-	const sidebarWidth = useResumeStore((state) => state.resume.data.metadata.layout.sidebarWidth);
+	const layout = useResumeStore((state) => state.resume.data.metadata.layout);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
 	const form = useForm<FormValues>({
 		mode: "onChange",
 		resolver: zodResolver(formSchema),
-		defaultValues: { sidebarWidth },
+		defaultValues: {
+			sidebarWidth: layout.sidebarWidth,
+			rtlDirection: layout.rtlDirection ?? false,
+		},
 	});
 
 	const onSubmit = (data: FormValues) => {
 		updateResumeData((draft) => {
 			draft.metadata.layout.sidebarWidth = data.sidebarWidth;
+			draft.metadata.layout.rtlDirection = data.rtlDirection;
 		});
 	};
 
@@ -82,6 +87,27 @@ function LayoutSectionForm() {
 								</FormControl>
 							</div>
 							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="rtlDirection"
+					render={({ field }) => (
+						<FormItem className="flex items-center gap-x-2">
+							<FormControl>
+								<Switch
+									checked={field.value}
+									onCheckedChange={(checked) => {
+										field.onChange(checked);
+										form.handleSubmit(onSubmit)();
+									}}
+								/>
+							</FormControl>
+							<FormLabel className="font-medium text-muted-foreground text-xs">
+								<Trans>Right to Left Direction</Trans>
+							</FormLabel>
 						</FormItem>
 					)}
 				/>

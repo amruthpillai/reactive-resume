@@ -28,17 +28,28 @@ const sectionClassName = cn(
 export function DitgarTemplate({ pageIndex, pageLayout }: TemplateProps) {
 	const isFirstPage = pageIndex === 0;
 	const { main, sidebar, fullWidth } = pageLayout;
+	const rtlDirection = useResumeStore((state) => state.resume.data.metadata.layout.rtlDirection);
 
 	const SummaryComponent = getSectionComponent("summary", {
 		sectionClassName: cn(sectionClassName, "px-(--page-margin-x) pt-(--page-margin-y)"),
 	});
 
 	return (
-		<div className="template-ditgar page-content">
+		<div
+			className="template-ditgar page-content grid min-h-[inherit] grid-cols-3"
+			style={{ direction: rtlDirection ? "rtl" : "ltr" }}
+		>
 			{/* Sidebar Background */}
 			{(!fullWidth || isFirstPage) && (
-				<div className="page-sidebar-background absolute inset-y-0 left-0 z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)/20" />
+				<div className={`page-sidebar-background absolute inset-y-0 ${rtlDirection ? 'right-0' : 'left-0'} z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)/20`} />
 			)}
+
+			<div
+				data-layout="sidebar"
+				className={cn("sidebar group flex flex-col", !(isFirstPage || !fullWidth) && "hidden")}
+			>
+				{isFirstPage && <Header />}
+			</div>
 
 			<div className="flex">
 				{(!fullWidth || isFirstPage) && (

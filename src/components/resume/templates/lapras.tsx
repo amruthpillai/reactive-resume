@@ -21,6 +21,7 @@ const sectionClassName = cn(
 export function LaprasTemplate({ pageIndex, pageLayout }: TemplateProps) {
 	const isFirstPage = pageIndex === 0;
 	const { main, sidebar, fullWidth } = pageLayout;
+	const rtlDirection = useResumeStore((state) => state.resume.data.metadata.layout.rtlDirection);
 
 	const containerBorderRadius = useResumeStore((state) => Math.min(state.resume.data.picture.borderRadius, 30));
 	const headingNegativeMargin = useResumeStore((state) => state.resume.data.metadata.typography.heading.fontSize + 6);
@@ -31,6 +32,7 @@ export function LaprasTemplate({ pageIndex, pageLayout }: TemplateProps) {
 				{
 					"--container-border-radius": `${containerBorderRadius}pt`,
 					"--heading-negative-margin": `${headingNegativeMargin}pt`,
+					direction: rtlDirection ? "rtl" : "ltr",
 				} as React.CSSProperties
 			}
 			className="template-lapras page-content space-y-6 px-(--page-margin-x) pt-(--page-margin-y) print:p-0"
@@ -74,7 +76,7 @@ function Header() {
 					<p className="basics-headline">{basics.headline}</p>
 				</div>
 
-				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-(--page-primary-color) *:border-r *:py-0.5 *:pr-2 *:last:border-r-0">
+				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-(--page-primary-color) *:border-e *:py-0.5 *:pe-2 *:last:border-e-0">
 					{basics.email && (
 						<div className="basics-item-email">
 							<EnvelopeIcon />

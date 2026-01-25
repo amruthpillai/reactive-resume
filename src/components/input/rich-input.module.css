@@ -1,6 +1,8 @@
 .tiptap_content {
 	--list-margin: 0.25rem;
 	--table-border-color: var(--page-text-color);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 
 	:where(p) {
 		margin-top: 0.5rem;
@@ -76,6 +78,9 @@
 	ul[style*="text-align: right"],
 	ol[style*="text-align: right"] {
 		direction: rtl;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		white-space: normal;
 	}
 
 	/* LTR Support: Apply LTR direction when text is left-aligned */
@@ -90,6 +95,9 @@
 	ul[style*="text-align: left"],
 	ol[style*="text-align: left"] {
 		direction: ltr;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		white-space: normal;
 	}
 
 	/* When list items are RTL, make bullets/numbers appear on the right */
@@ -115,6 +123,8 @@
 	font-weight: var(--page-body-font-weight);
 	line-height: var(--page-body-line-height);
 	color: var(--page-text-color);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 
 	[class*="dark"] & {
 		--table-border-color: var(--color-foreground);

@@ -15,9 +15,13 @@ const sectionClassName = cn();
 export function OnyxTemplate({ pageIndex, pageLayout }: TemplateProps) {
 	const isFirstPage = pageIndex === 0;
 	const { main, sidebar, fullWidth } = pageLayout;
+	const rtlDirection = useResumeStore((state) => state.resume.data.metadata.layout.rtlDirection);
 
 	return (
-		<div className="template-onyx page-content space-y-(--page-gap-y) px-(--page-margin-x) pt-(--page-margin-y) print:p-0">
+		<div
+			className="template-onyx page-content space-y-(--page-gap-y) px-(--page-margin-x) py-(--page-margin-y) print:p-0"
+			style={{ direction: rtlDirection ? "rtl" : "ltr" }}
+		>
 			{isFirstPage && <Header />}
 
 			<main data-layout="main" className="group page-main space-y-(--page-gap-y)">

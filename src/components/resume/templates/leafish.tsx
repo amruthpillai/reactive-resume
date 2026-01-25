@@ -19,9 +19,10 @@ const sectionClassName = cn(
 export function LeafishTemplate({ pageIndex, pageLayout }: TemplateProps) {
 	const isFirstPage = pageIndex === 0;
 	const { main, sidebar, fullWidth } = pageLayout;
+	const rtlDirection = useResumeStore((state) => state.resume.data.metadata.layout.rtlDirection);
 
 	return (
-		<div className="template-leafish page-content space-y-4">
+		<div className="template-leafish page-content space-y-4" style={{ direction: rtlDirection ? "rtl" : "ltr" }}>
 			{isFirstPage && <Header />}
 
 			<div className="flex gap-x-(--page-margin-x) px-(--page-margin-x) pt-(--page-margin-y)">

@@ -163,3 +163,24 @@
 		scroll-behavior: auto !important;
 	}
 }
+
+.resume-preview-container {
+	.page-section .section-item {
+		break-inside: avoid;
+	}
+}
+
+/* Fix for ScrollArea viewport width overflow */
+[data-slot="scroll-area-viewport"] > div {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	box-sizing: border-box !important;
+}
+
+[data-slot="scroll-area-viewport"] {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+}

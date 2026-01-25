@@ -18,9 +18,13 @@ const sectionClassName = cn(
 export function RhyhornTemplate({ pageIndex, pageLayout }: TemplateProps) {
 	const isFirstPage = pageIndex === 0;
 	const { main, sidebar, fullWidth } = pageLayout;
+	const rtlDirection = useResumeStore((state) => state.resume.data.metadata.layout.rtlDirection);
 
 	return (
-		<div className="template-rhyhorn page-content space-y-4 px-(--page-margin-x) pt-(--page-margin-y) print:p-0">
+		<div
+			className="template-rhyhorn page-content space-y-4 px-(--page-margin-x) py-(--page-margin-y) print:p-0"
+			style={{ direction: rtlDirection ? "rtl" : "ltr" }}
+		>
 			{isFirstPage && <Header />}
 
 			<main data-layout="main" className="group page-main space-y-4">
@@ -53,7 +57,7 @@ function Header() {
 					<p className="basics-headline">{basics.headline}</p>
 				</div>
 
-				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-(--page-primary-color) *:border-r *:py-0.5 *:pr-2 *:last:border-r-0">
+				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-(--page-primary-color) *:border-e *:py-0.5 *:pe-2 *:last:border-e-0">
 					{basics.email && (
 						<div className="basics-item-email">
 							<EnvelopeIcon />
