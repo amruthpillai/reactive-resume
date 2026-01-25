@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { AIChatPanel } from "@/components/ai/AIChatPanel";
+import { SparkleIcon } from "@phosphor-icons/react";
+import { useAIStore } from "@/integrations/ai/store";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
@@ -28,32 +32,52 @@ import { orpc } from "@/integrations/orpc/client";
 import { useBuilderSidebar } from "../-store/sidebar";
 
 export function BuilderHeader() {
+	const aiEnabled = useAIStore((state) => state.enabled);
+	const [aiOpen, setAIOpen] = useState(false);
 	const name = useResumeStore((state) => state.resume.name);
 	const isLocked = useResumeStore((state) => state.resume.isLocked);
 	const toggleSidebar = useBuilderSidebar((state) => state.toggleSidebar);
 
 	return (
-		<div className="absolute inset-x-0 top-0 z-10 flex h-14 items-center justify-between border-b bg-popover px-1.5">
-			<Button size="icon" variant="ghost" onClick={() => toggleSidebar("left")}>
-				<SidebarSimpleIcon />
-			</Button>
-
-			<div className="flex items-center gap-x-1">
-				<Button asChild size="icon" variant="ghost">
-					<Link to="/dashboard/resumes" search={{ sort: "lastUpdatedAt", tags: [] }}>
-						<HouseSimpleIcon />
-					</Link>
+		<>
+			<div className="absolute inset-x-0 top-0 z-10 flex h-14 items-center justify-between border-b bg-popover px-1.5">
+				<Button size="icon" variant="ghost" onClick={() => toggleSidebar("left")}>
+					<SidebarSimpleIcon />
 				</Button>
-				<span className="mr-2.5 text-muted-foreground">/</span>
-				<h2 className="flex-1 truncate font-medium">{name}</h2>
-				{isLocked && <LockSimpleIcon className="ml-2 text-muted-foreground" />}
-				<BuilderHeaderDropdown />
+
+				<div className="flex items-center gap-x-1">
+					<Button asChild size="icon" variant="ghost">
+						<Link to="/dashboard/resumes" search={{ sort: "lastUpdatedAt", tags: [] }}>
+							<HouseSimpleIcon />
+						</Link>
+					</Button>
+					<span className="mr-2.5 text-muted-foreground">/</span>
+					<h2 className="flex-1 truncate font-medium">{name}</h2>
+					{isLocked && <LockSimpleIcon className="ml-2 text-muted-foreground" />}
+					{aiEnabled && (
+						<Button
+							size="sm"
+							variant="outline"
+							className="ml-2"
+							onClick={() => setAIOpen(true)}
+						>
+							<SparkleIcon className="mr-1 h-4 w-4" />
+							Build with AI
+						</Button>
+					)}
+
+					<BuilderHeaderDropdown />
+
+				</div>
+
+				<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
+					<SidebarSimpleIcon className="-scale-x-100" />
+				</Button>
 			</div>
 
-			<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
-				<SidebarSimpleIcon className="-scale-x-100" />
-			</Button>
-		</div>
+			<AIChatPanel open={aiOpen} onClose={() => setAIOpen(false)} />
+
+		</>
 	);
 }
 
