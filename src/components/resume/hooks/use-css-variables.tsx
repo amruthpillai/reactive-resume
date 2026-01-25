@@ -1,17 +1,7 @@
 import { useMemo } from "react";
 import type z from "zod";
+import { pageDimensionsAsMillimeters } from "@/schema/page";
 import type { resumeDataSchema } from "@/schema/resume/data";
-
-const pageDimensions = {
-	a4: {
-		width: "210mm",
-		height: "297mm",
-	},
-	letter: {
-		width: "216mm",
-		height: "279mm",
-	},
-} as const;
 
 type UseCssVariablesProps = Pick<z.infer<typeof resumeDataSchema>, "picture" | "metadata">;
 
@@ -28,8 +18,8 @@ export const useCSSVariables = ({ picture, metadata }: UseCssVariablesProps) => 
 
 	return {
 		"--picture-border-radius": `${picture.borderRadius}pt`,
-		"--page-width": pageDimensions[metadata.page.format].width,
-		"--page-height": pageDimensions[metadata.page.format].height,
+		"--page-width": pageDimensionsAsMillimeters[metadata.page.format].width,
+		"--page-height": pageDimensionsAsMillimeters[metadata.page.format].height,
 		"--page-sidebar-width": `${metadata.layout.sidebarWidth}%`,
 		"--page-text-color": metadata.design.colors.text,
 		"--page-primary-color": metadata.design.colors.primary,

@@ -390,7 +390,10 @@ export const pageSchema = z.object({
 	gapY: z.number().min(0).describe("The vertical gap between the sections of the page, defined in points (pt)."),
 	marginX: z.number().min(0).describe("The horizontal margin of the page, defined in points (pt)."),
 	marginY: z.number().min(0).describe("The vertical margin of the page, defined in points (pt)."),
-	format: z.enum(["a4", "letter"]).describe("The format of the page. Can be 'a4' or 'letter'."),
+	format: z
+		.enum(["a4", "letter", "free-form"])
+		.describe("The format of the page. Can be 'a4', 'letter' or 'free-form'.")
+		.catch("a4"),
 	locale: z
 		.string()
 		.describe("The locale of the page. Used for displaying pre-translated section headings, if not overridden.")

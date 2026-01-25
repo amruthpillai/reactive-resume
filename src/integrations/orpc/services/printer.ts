@@ -115,18 +115,49 @@ export const printerService = {
 
 			// Step 5: Adjust the DOM for proper PDF pagination
 			// This runs in the browser context to modify CSS before PDF generation
-			await page.evaluate(
-				(marginY: number, minPageHeight: number) => {
+			// For free-form: measure actual content height, don't add page breaks
+			// For A4/Letter: adjust page height for margins, add page breaks
+			const isFreeForm = format === "free-form";
+
+			const contentHeight = await page.evaluate(
+				(marginY: number, isFreeForm: boolean, minPageHeight: number) => {
 					const root = document.documentElement;
+					const pageElements = document.querySelectorAll("[data-page-index]");
 					const container = document.querySelector(".resume-preview-container") as HTMLElement | null;
 
+					if (isFreeForm) {
+						// For free-form: add visual gaps between pages, then measure total height
+						// Convert marginY from PDF points to CSS pixels (1pt = 0.75px)
+						const marginYAsPixels = marginY * 0.75;
+						const numberOfPages = pageElements.length;
+
+						// Add margin between pages (except the last one)
+						for (let i = 0; i < numberOfPages - 1; i++) {
+							const pageEl = pageElements[i] as HTMLElement;
+							pageEl.style.marginBottom = `${marginYAsPixels}px`;
+						}
+
+						// Now measure the total height (margins are now part of the DOM)
+						let totalHeight = 0;
+						for (const el of pageElements) {
+							const pageEl = el as HTMLElement;
+							// offsetHeight includes padding and border, but not margin
+							const style = getComputedStyle(pageEl);
+							const marginBottom = Number.parseFloat(style.marginBottom) || 0;
+							totalHeight += pageEl.offsetHeight + marginBottom;
+						}
+
+						return Math.max(totalHeight, minPageHeight);
+					}
+
+					// For A4/Letter: existing behavior
 					// The --page-height CSS variable controls the height of each resume page.
 					// We need to reduce it by the PDF margins so content fits within the printable area.
 					// Without this, content would overflow and create empty pages.
+					const rootHeight = getComputedStyle(root).getPropertyValue("--page-height").trim();
 					const containerHeight = container
 						? getComputedStyle(container).getPropertyValue("--page-height").trim()
 						: null;
-					const rootHeight = getComputedStyle(root).getPropertyValue("--page-height").trim();
 					const currentHeight = containerHeight || rootHeight;
 					const heightValue = Math.max(Number.parseFloat(currentHeight), minPageHeight);
 
@@ -139,8 +170,6 @@ export const printerService = {
 
 					// Add page break CSS to each resume page element (identified by data-page-index attribute)
 					// This ensures each visual resume page starts a new PDF page
-					const pageElements = document.querySelectorAll("[data-page-index]");
-
 					for (const el of pageElements) {
 						const element = el as HTMLElement;
 						const index = Number.parseInt(element.getAttribute("data-page-index") ?? "0", 10);
@@ -152,22 +181,29 @@ export const printerService = {
 						// (e.g., if a single page has more content than fits on one PDF page)
 						element.style.breakInside = "auto";
 					}
+
+					return null; // Fixed height from pageDimensionsAsPixels for A4/Letter
 				},
 				marginY,
+				isFreeForm,
 				pageDimensionsAsPixels[format].height,
 			);
 
 			// Step 6: Generate the PDF with the specified dimensions and margins
+			// For free-form: use measured content height (with minimum constraint)
+			// For A4/Letter: use fixed dimensions from pageDimensionsAsPixels
+			const pdfHeight = isFreeForm && contentHeight ? contentHeight : pageDimensionsAsPixels[format].height;
+
 			const pdfBuffer = await page.pdf({
 				width: `${pageDimensionsAsPixels[format].width}px`,
-				height: `${pageDimensionsAsPixels[format].height}px`,
+				height: `${pdfHeight}px`,
 				tagged: true, // Adds accessibility tags to the PDF
 				waitForFonts: true, // Ensures all fonts are loaded before rendering
 				printBackground: true, // Includes background colors and images
 				margin: {
+					bottom: 0,
 					top: marginY,
 					right: marginX,
-					// bottom: marginY,
 					left: marginX,
 				},
 			});

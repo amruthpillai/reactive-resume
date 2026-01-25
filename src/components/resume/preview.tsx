@@ -160,7 +160,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 				<TemplateComponent pageIndex={pageIndex} pageLayout={pageLayout} />
 			</div>
 
-			{pageHeight > maxPageHeight && (
+			{metadata.page.format !== "free-form" && pageHeight > maxPageHeight && (
 				<div className="absolute start-0 top-full mt-4 print:hidden">
 					<a
 						rel="noopener"

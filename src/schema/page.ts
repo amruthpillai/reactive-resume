@@ -7,6 +7,10 @@ export const pageDimensionsAsPixels = {
 		width: 816,
 		height: 1056,
 	},
+	"free-form": {
+		width: 794,
+		height: 1123, // used as minimum height
+	},
 } as const;
 
 export const pageDimensionsAsMillimeters = {
@@ -17,5 +21,9 @@ export const pageDimensionsAsMillimeters = {
 	letter: {
 		width: "216mm",
 		height: "279mm",
+	},
+	"free-form": {
+		width: "210mm",
+		height: "297mm", // used as minimum height
 	},
 } as const;

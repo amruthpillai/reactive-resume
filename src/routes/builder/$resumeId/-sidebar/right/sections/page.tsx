@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
@@ -71,13 +72,14 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans context="Page Format (A4 or Letter)">Format</Trans>
+								<Trans context="Page Format (A4, Letter or Free-Form)">Format</Trans>
 							</FormLabel>
 							<FormControl>
 								<Combobox
 									options={[
-										{ value: "a4", label: "A4" },
-										{ value: "letter", label: "Letter" },
+										{ value: "a4", label: t`A4` },
+										{ value: "letter", label: t`Letter` },
+										{ value: "free-form", label: t`Free-Form` },
 									]}
 									value={field.value}
 									onValueChange={(value) => {
