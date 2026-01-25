@@ -11,7 +11,7 @@ export function ProfilesItem({ className, ...item }: ProfilesItemProps) {
 	return (
 		<div className={cn("profiles-item", className)}>
 			{/* Header */}
-			<div className="section-item-header flex items-center gap-x-1.5">
+			<div className="section-item-header profiles-item-header flex items-center gap-x-1.5">
 				<PageIcon icon={item.icon} className="section-item-icon profiles-item-icon" />
 				<strong className="section-item-title profiles-item-network">{item.network}</strong>
 			</div>

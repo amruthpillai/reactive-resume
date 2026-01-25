@@ -10,7 +10,7 @@ export function LanguagesItem({ className, ...item }: LanguagesItemProps) {
 	return (
 		<div className={cn("languages-item", className)}>
 			{/* Header */}
-			<div className="section-item-header flex flex-col">
+			<div className="section-item-header languages-item-header flex flex-col">
 				{/* Row 1 */}
 				<strong className="section-item-title languages-item-name">{item.language}</strong>
 

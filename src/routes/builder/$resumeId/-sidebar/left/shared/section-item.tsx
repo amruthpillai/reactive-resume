@@ -244,7 +244,7 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 			<button
 				onClick={onUpdate}
 				className={cn(
-					"flex flex-1 flex-col items-start justify-center space-y-0.5 pl-1.5 text-left opacity-100 transition-opacity hover:bg-secondary/40 focus:outline-none focus-visible:ring-1",
+					"flex flex-1 flex-col items-start justify-center space-y-0.5 pl-1.5 text-start opacity-100 transition-opacity hover:bg-secondary/40 focus:outline-none focus-visible:ring-1",
 					item.hidden && "opacity-50",
 				)}
 			>

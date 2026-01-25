@@ -13,15 +13,15 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 			{/* Header */}
 			<div className="section-item-header experience-item-header">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<strong className="section-item-title experience-item-title">{item.company}</strong>
-					<span className="section-item-metadata experience-item-location text-right">{item.location}</span>
+					<span className="section-item-metadata experience-item-location shrink-0 text-end">{item.location}</span>
 				</div>
 
 				{/* Row 2 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<span className="section-item-metadata experience-item-position">{item.position}</span>
-					<span className="section-item-metadata experience-item-period text-right">{item.period}</span>
+					<span className="section-item-metadata experience-item-period shrink-0 text-end">{item.period}</span>
 				</div>
 			</div>
 

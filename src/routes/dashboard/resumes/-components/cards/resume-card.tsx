@@ -1,9 +1,11 @@
 import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 import { CircleNotchIcon, LockSimpleIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo } from "react";
+import { match, P } from "ts-pattern";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
 import { ResumeContextMenu } from "../menus/context-menu";
@@ -14,6 +16,8 @@ type ResumeCardProps = {
 };
 
 export function ResumeCard({ resume }: ResumeCardProps) {
+	const { i18n } = useLingui();
+
 	const { data: screenshotData, isLoading } = useQuery(
 		orpc.printer.getResumeScreenshot.queryOptions({ input: { id: resume.id } }),
 	);
@@ -21,24 +25,27 @@ export function ResumeCard({ resume }: ResumeCardProps) {
 	const imageSrc = screenshotData?.url;
 
 	const updatedAt = useMemo(() => {
-		return new Date(resume.updatedAt).toLocaleDateString();
-	}, [resume.updatedAt]);
+		return Intl.DateTimeFormat(i18n.locale, { dateStyle: "long", timeStyle: "short" }).format(resume.updatedAt);
+	}, [i18n.locale, resume.updatedAt]);
 
 	return (
 		<ResumeContextMenu resume={resume}>
 			<Link to="/builder/$resumeId" params={{ resumeId: resume.id }} className="cursor-default">
 				<BaseCard title={resume.name} description={t`Last updated on ${updatedAt}`} tags={resume.tags}>
-					{isLoading || !imageSrc ? (
-						<div className="flex size-full items-center justify-center">
-							<CircleNotchIcon weight="thin" className="size-12 animate-spin" />
-						</div>
-					) : (
-						<img
-							src={imageSrc}
-							alt={resume.name}
-							className={cn("size-full object-cover transition-all", resume.isLocked && "blur-xs")}
-						/>
-					)}
+					{match({ isLoading, imageSrc })
+						.with({ isLoading: true }, () => (
+							<div className="flex size-full items-center justify-center">
+								<CircleNotchIcon weight="thin" className="size-12 animate-spin" />
+							</div>
+						))
+						.with({ imageSrc: P.string }, () => (
+							<img
+								src={imageSrc}
+								alt={resume.name}
+								className={cn("size-full object-cover transition-all", resume.isLocked && "blur-xs")}
+							/>
+						))
+						.otherwise(() => null)}
 
 					<ResumeLockOverlay isLocked={resume.isLocked} />
 				</BaseCard>

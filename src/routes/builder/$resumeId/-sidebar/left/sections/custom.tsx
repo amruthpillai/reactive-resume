@@ -110,7 +110,7 @@ function CustomSectionContainer({ section }: { section: CustomSection }) {
 					type="button"
 					onClick={onUpdateSection}
 					className={cn(
-						"flex flex-1 flex-col items-start justify-center space-y-0.5 p-4 text-left transition-opacity hover:bg-secondary/40 focus:outline-none focus-visible:ring-1",
+						"flex flex-1 flex-col items-start justify-center space-y-0.5 p-4 text-start transition-opacity hover:bg-secondary/40 focus:outline-none focus-visible:ring-1",
 						section.hidden && "opacity-50",
 					)}
 				>

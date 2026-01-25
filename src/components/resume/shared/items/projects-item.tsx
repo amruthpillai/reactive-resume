@@ -13,9 +13,9 @@ export function ProjectsItem({ className, ...item }: ProjectsItemProps) {
 			{/* Header */}
 			<div className="section-item-header projects-item-header">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<strong className="section-item-title projects-item-title">{item.name}</strong>
-					<span className="section-item-metadata projects-item-period text-right">{item.period}</span>
+					<span className="section-item-metadata projects-item-period shrink-0 text-end">{item.period}</span>
 				</div>
 			</div>
 

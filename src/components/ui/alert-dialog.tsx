@@ -63,7 +63,7 @@ type AlertDialogHeaderProps = AlertDialogHeaderPrimitiveProps;
 
 function AlertDialogHeader({ className, ...props }: AlertDialogHeaderProps) {
 	return (
-		<AlertDialogHeaderPrimitive className={cn("flex flex-col gap-2 text-center sm:text-left", className)} {...props} />
+		<AlertDialogHeaderPrimitive className={cn("flex flex-col gap-2 text-center sm:text-start", className)} {...props} />
 	);
 }
 

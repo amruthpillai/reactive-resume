@@ -13,13 +13,13 @@ export function CertificationsItem({ className, ...item }: CertificationsItemPro
 			{/* Header */}
 			<div className="section-item-header certifications-item-header">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<strong className="section-item-title certifications-item-title">{item.title}</strong>
-					<span className="section-item-metadata certifications-item-date text-right">{item.date}</span>
+					<span className="section-item-metadata certifications-item-date shrink-0 text-end">{item.date}</span>
 				</div>
 
 				{/* Row 2 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<span className="section-item-metadata certifications-item-issuer">{item.issuer}</span>
 				</div>
 			</div>

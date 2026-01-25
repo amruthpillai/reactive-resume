@@ -13,12 +13,12 @@ export function ReferencesItem({ className, ...item }: ReferencesItemProps) {
 			{/* Header */}
 			<div className="section-item-header references-item-header">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<strong className="section-item-title references-item-name">{item.name}</strong>
 				</div>
 
 				{/* Row 2 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<span className="section-item-metadata references-item-position">{item.position}</span>
 				</div>
 			</div>
@@ -31,9 +31,7 @@ export function ReferencesItem({ className, ...item }: ReferencesItemProps) {
 			{/* Footer */}
 			<div className="section-item-footer references-item-footer flex flex-col">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
-					<span className="section-item-metadata references-item-phone">{item.phone}</span>
-				</div>
+				<span className="section-item-metadata references-item-phone inline-block">{item.phone}</span>
 
 				{/* Row 2 */}
 				<PageLink

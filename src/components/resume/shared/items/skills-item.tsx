@@ -17,14 +17,12 @@ export function SkillsItem({ className, ...item }: SkillsItemProps) {
 			</div>
 
 			{/* Proficiency */}
-			<div className="flex items-center justify-between">
-				<span className="section-item-metadata skills-item-proficiency">{item.proficiency}</span>
-			</div>
+			<span className="section-item-metadata skills-item-proficiency inline-block">{item.proficiency}</span>
 
 			{/* Keywords */}
-			<div className="flex items-center justify-between">
-				<span className="section-item-keywords skills-item-keywords opacity-80">{item.keywords.join(", ")}</span>
-			</div>
+			<span className="section-item-keywords skills-item-keywords inline-block opacity-80">
+				{item.keywords.join(", ")}
+			</span>
 
 			{/* Level */}
 			<PageLevel level={item.level} className="section-item-level skills-item-level" />

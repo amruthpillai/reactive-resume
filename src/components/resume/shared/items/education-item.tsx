@@ -13,17 +13,17 @@ export function EducationItem({ className, ...item }: EducationItemProps) {
 			{/* Header */}
 			<div className="section-item-header education-item-header mb-2">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<strong className="section-item-title education-item-title">{item.school}</strong>
-					<span className="section-item-metadata education-item-degree-grade text-right">
+					<span className="section-item-metadata education-item-degree-grade shrink-0 text-end">
 						{[item.degree, item.grade].filter(Boolean).join(" • ")}
 					</span>
 				</div>
 
 				{/* Row 2 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<span className="section-item-metadata education-item-area">{item.area}</span>
-					<span className="section-item-metadata education-item-location-period text-right">
+					<span className="section-item-metadata education-item-location-period shrink-0 text-end">
 						{[item.location, item.period].filter(Boolean).join(" • ")}
 					</span>
 				</div>

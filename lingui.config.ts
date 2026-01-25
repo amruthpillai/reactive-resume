@@ -62,6 +62,9 @@ export default defineConfig({
 		"zu-ZA": "en-US",
 		default: "en-US",
 	},
+	formatOptions: {
+		lineNumbers: false,
+	},
 	catalogs: [
 		{
 			path: "<rootDir>/locales/{locale}",

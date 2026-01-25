@@ -13,13 +13,13 @@ export function PublicationsItem({ className, ...item }: PublicationsItemProps) 
 			{/* Header */}
 			<div className="section-item-header publications-item-header">
 				{/* Row 1 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<strong className="section-item-title publications-item-title">{item.title}</strong>
-					<span className="section-item-metadata publications-item-date text-right">{item.date}</span>
+					<span className="section-item-metadata publications-item-date shrink-0 text-end">{item.date}</span>
 				</div>
 
 				{/* Row 2 */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-start justify-between gap-x-2">
 					<span className="section-item-metadata publications-item-publisher">{item.publisher}</span>
 				</div>
 			</div>

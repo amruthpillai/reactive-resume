@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { DotsThreeIcon, DownloadSimpleIcon, PlusIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
@@ -32,7 +33,7 @@ export function ListView({ resumes }: Props) {
 					size="lg"
 					variant="ghost"
 					tapScale={0.99}
-					className="h-12 w-full justify-start gap-x-4 text-left"
+					className="h-12 w-full justify-start gap-x-4 text-start"
 					onClick={handleCreateResume}
 				>
 					<PlusIcon />
@@ -56,7 +57,7 @@ export function ListView({ resumes }: Props) {
 					size="lg"
 					variant="ghost"
 					tapScale={0.99}
-					className="h-12 w-full justify-start gap-x-4 text-left"
+					className="h-12 w-full justify-start gap-x-4 text-start"
 					onClick={handleImportResume}
 				>
 					<DownloadSimpleIcon />
@@ -90,9 +91,11 @@ export function ListView({ resumes }: Props) {
 }
 
 function ResumeListItem({ resume }: { resume: Resume }) {
+	const { i18n } = useLingui();
+
 	const updatedAt = useMemo(() => {
-		return new Date(resume.updatedAt).toLocaleDateString();
-	}, [resume.updatedAt]);
+		return Intl.DateTimeFormat(i18n.locale, { dateStyle: "long", timeStyle: "short" }).format(resume.updatedAt);
+	}, [i18n.locale, resume.updatedAt]);
 
 	return (
 		<div className="flex items-center gap-x-2">
@@ -101,7 +104,7 @@ function ResumeListItem({ resume }: { resume: Resume }) {
 				size="lg"
 				variant="ghost"
 				tapScale={0.99}
-				className="h-12 w-full flex-1 justify-start gap-x-4 text-left"
+				className="h-12 w-full flex-1 justify-start gap-x-4 text-start"
 			>
 				<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
 					<div className="size-3" />

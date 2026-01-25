@@ -47,7 +47,7 @@ export function ExportSectionBuilder() {
 			<Button
 				variant="outline"
 				onClick={onDownloadJSON}
-				className="h-auto gap-x-4 whitespace-normal p-4! text-left font-normal active:scale-98"
+				className="h-auto gap-x-4 whitespace-normal p-4! text-start font-normal active:scale-98"
 			>
 				<FileJsIcon className="size-6 shrink-0" />
 				<div className="flex flex-1 flex-col gap-y-1">
@@ -65,7 +65,7 @@ export function ExportSectionBuilder() {
 				variant="outline"
 				disabled={isPrinting}
 				onClick={onDownloadPDF}
-				className="h-auto gap-x-4 whitespace-normal p-4! text-left font-normal active:scale-98"
+				className="h-auto gap-x-4 whitespace-normal p-4! text-start font-normal active:scale-98"
 			>
 				{isPrinting ? (
 					<CircleNotchIcon className="size-6 shrink-0 animate-spin" />
