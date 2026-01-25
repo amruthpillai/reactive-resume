@@ -11,7 +11,7 @@ type Props = {
 export function DashboardHeader({ title, icon: IconComponent, className }: Props) {
 	return (
 		<div className={cn("relative flex items-center justify-center gap-x-2.5 md:justify-start", className)}>
-			<SidebarTrigger className="absolute left-0 md:hidden" />
+			<SidebarTrigger className="absolute start-0 md:hidden" />
 			<IconComponent weight="light" className="size-5" />
 			<h1 className="font-medium text-xl tracking-tight">{title}</h1>
 		</div>

@@ -10,7 +10,7 @@ export function BuilderSidebarEdge({ side, children }: Props) {
 		<div
 			className={cn(
 				"absolute inset-y-0 hidden w-12 flex-col items-center justify-between bg-popover py-2.5 sm:flex",
-				side === "left" ? "left-0 border-r" : "right-0 border-l",
+				side === "left" ? "start-0 border-r" : "end-0 border-l",
 			)}
 		>
 			{children}

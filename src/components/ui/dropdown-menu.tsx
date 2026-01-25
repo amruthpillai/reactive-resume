@@ -79,7 +79,7 @@ function DropdownMenuItem({ className, inset, variant = "default", disabled, ...
 			data-inset={inset}
 			data-variant={variant}
 			className={cn(
-				"relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-inset:pl-8 data-[variant=destructive]:text-destructive data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 data-[variant=destructive]:*:[svg]:text-destructive!",
+				"relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-inset:ps-8 data-[variant=destructive]:text-destructive data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 data-[variant=destructive]:*:[svg]:text-destructive!",
 				"data-[variant=destructive]:data-highlighted:bg-destructive/10 data-[variant=destructive]:data-highlighted:text-destructive data-highlighted:bg-accent data-highlighted:text-accent-foreground dark:data-[variant=destructive]:data-highlighted:bg-destructive/20",
 				className,
 			)}
@@ -95,14 +95,14 @@ function DropdownMenuCheckboxItem({ className, children, checked, disabled, ...p
 		<DropdownMenuCheckboxItemPrimitive
 			disabled={disabled}
 			className={cn(
-				"relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+				"relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 				"data-highlighted:bg-accent data-highlighted:text-accent-foreground",
 				className,
 			)}
 			checked={checked}
 			{...props}
 		>
-			<span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+			<span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
 				<DropdownMenuItemIndicatorPrimitive initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}>
 					<CheckIcon className="size-4" />
 				</DropdownMenuItemIndicatorPrimitive>
@@ -125,13 +125,13 @@ function DropdownMenuRadioItem({ className, children, disabled, ...props }: Drop
 		<DropdownMenuRadioItemPrimitive
 			disabled={disabled}
 			className={cn(
-				"relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+				"relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 				"data-highlighted:bg-accent data-highlighted:text-accent-foreground",
 				className,
 			)}
 			{...props}
 		>
-			<span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+			<span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
 				<DropdownMenuItemIndicatorPrimitive layoutId="dropdown-menu-item-indicator-radio">
 					<CircleIcon className="size-2 fill-current" />
 				</DropdownMenuItemIndicatorPrimitive>
@@ -149,7 +149,7 @@ function DropdownMenuLabel({ className, inset, ...props }: DropdownMenuLabelProp
 	return (
 		<DropdownMenuLabelPrimitive
 			data-inset={inset}
-			className={cn("px-2 py-1.5 font-medium text-sm data-inset:pl-8", className)}
+			className={cn("px-2 py-1.5 font-medium text-sm data-inset:ps-8", className)}
 			{...props}
 		/>
 	);
@@ -188,7 +188,7 @@ function DropdownMenuSubTrigger({ disabled, className, inset, children, ...props
 			disabled={disabled}
 			data-inset={inset}
 			className={cn(
-				"flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden data-inset:pl-8 data-[state=open]:text-accent-foreground",
+				"flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden data-inset:ps-8 data-[state=open]:text-accent-foreground",
 				"data-[state=open]:**:data-[slot=chevron]:rotate-90 **:data-[slot=chevron]:transition-transform **:data-[slot=chevron]:duration-300 **:data-[slot=chevron]:ease-in-out",
 				"data-highlighted:bg-accent data-highlighted:text-accent-foreground",
 				className,

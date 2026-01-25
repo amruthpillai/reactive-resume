@@ -95,7 +95,7 @@ function SidebarItemList({ items }: SidebarItemListProps) {
 					<SidebarMenuButton asChild title={i18n.t(item.label)}>
 						<Link to={item.href} activeProps={{ className: "bg-sidebar-accent" }}>
 							{item.icon}
-							<span className="shrink-0 transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ml-8 group-data-[collapsible=icon]:opacity-0">
+							<span className="shrink-0 transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ms-8 group-data-[collapsible=icon]:opacity-0">
 								{i18n.t(item.label)}
 							</span>
 						</Link>
@@ -161,7 +161,7 @@ export function DashboardSidebar() {
 										</AvatarFallback>
 									</Avatar>
 
-									<div className="transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ml-8 group-data-[collapsible=icon]:opacity-0">
+									<div className="transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ms-8 group-data-[collapsible=icon]:opacity-0">
 										<p className="font-medium">{session.user.name}</p>
 										<p className="text-muted-foreground text-xs">{session.user.email}</p>
 									</div>

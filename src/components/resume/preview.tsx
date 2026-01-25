@@ -147,7 +147,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 	return (
 		<div data-page-index={pageIndex} className="relative">
 			{showPageNumbers && totalNumberOfPages > 1 && (
-				<div className="absolute -top-6 left-0 print:hidden">
+				<div className="absolute start-0 -top-6 print:hidden">
 					<span className="font-medium text-foreground text-xs">
 						<Trans>
 							Page {pageNumber} of {totalNumberOfPages}
@@ -161,7 +161,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 			</div>
 
 			{pageHeight > maxPageHeight && (
-				<div className="absolute top-full left-0 mt-4 print:hidden">
+				<div className="absolute start-0 top-full mt-4 print:hidden">
 					<a
 						rel="noopener"
 						target="_blank"
@@ -177,7 +177,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 							</AlertTitle>
 							<AlertDescription className="text-xs underline-offset-2 group-hover/link:underline">
 								<Trans>Learn more about how to fit content on a page</Trans>
-								<ArrowRightIcon color="currentColor" className="ml-1 inline size-3" />
+								<ArrowRightIcon color="currentColor" className="ms-1 inline size-3" />
 							</AlertDescription>
 						</Alert>
 					</a>

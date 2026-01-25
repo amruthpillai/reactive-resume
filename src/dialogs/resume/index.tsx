@@ -116,7 +116,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 					<ResumeForm />
 
 					<DialogFooter>
-						<ButtonGroup aria-label="Create Resume with Options" className="gap-x-px">
+						<ButtonGroup aria-label="Create Resume with Options" className="gap-x-px rtl:flex-row-reverse">
 							<Button type="submit" disabled={isPending}>
 								<Trans>Create</Trans>
 							</Button>
@@ -331,7 +331,7 @@ function ResumeForm() {
 								<InputGroupAddon align="inline-start" className="hidden sm:flex">
 									<InputGroupText>{slugPrefix}</InputGroupText>
 								</InputGroupAddon>
-								<InputGroupInput min={1} max={64} className="pl-0!" {...field} />
+								<InputGroupInput min={1} max={64} className="ps-0!" {...field} />
 							</InputGroup>
 						</FormControl>
 						<FormMessage />

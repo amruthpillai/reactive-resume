@@ -7,8 +7,8 @@ export function Prefooter() {
 		<section id="prefooter" className="relative overflow-hidden py-16 md:py-24">
 			{/* Background decoration */}
 			<div aria-hidden="true" className="pointer-events-none absolute inset-0">
-				<div className="absolute top-0 left-1/4 size-96 rounded-full bg-primary/5 blur-3xl" />
-				<div className="absolute right-1/4 bottom-0 size-96 rounded-full bg-primary/5 blur-3xl" />
+				<div className="absolute start-1/4 top-0 size-96 rounded-full bg-primary/5 blur-3xl" />
+				<div className="absolute end-1/4 bottom-0 size-96 rounded-full bg-primary/5 blur-3xl" />
 			</div>
 
 			<div className="relative space-y-8">

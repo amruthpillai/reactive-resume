@@ -131,7 +131,7 @@ function MultipleCombobox<TValue extends string | number = string>({
 		) : (
 			<>
 				<span className="truncate">{selectionCount > 0 ? `${selectionCount} selected` : placeholder}</span>
-				<CaretUpDownIcon aria-hidden className="ml-2 shrink-0 opacity-50" />
+				<CaretUpDownIcon aria-hidden className="ms-2 shrink-0 opacity-50" />
 			</>
 		);
 

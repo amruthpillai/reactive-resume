@@ -119,7 +119,7 @@ export function Hero() {
 			<motion.div
 				aria-hidden="true"
 				role="presentation"
-				className="absolute bottom-8 left-1/2 -translate-x-1/2"
+				className="absolute start-1/2 bottom-8 -translate-x-1/2"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ delay: 2, duration: 1 }}

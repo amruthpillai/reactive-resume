@@ -172,15 +172,15 @@
 
 /* Fix for ScrollArea viewport width overflow */
 [data-slot="scroll-area-viewport"] > div {
+	box-sizing: border-box !important;
 	display: block !important;
 	width: 100% !important;
-	max-width: 100% !important;
 	min-width: 0 !important;
-	box-sizing: border-box !important;
+	max-width: 100% !important;
 }
 
 [data-slot="scroll-area-viewport"] {
+	box-sizing: border-box !important;
 	width: 100% !important;
 	max-width: 100% !important;
-	box-sizing: border-box !important;
 }

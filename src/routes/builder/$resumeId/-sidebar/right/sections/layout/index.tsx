@@ -87,7 +87,6 @@ function LayoutSectionForm() {
 						</FormItem>
 					)}
 				/>
-
 			</form>
 		</Form>
 	);

@@ -58,7 +58,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 								<FormControl>
 									<IconPicker
 										{...field}
-										className="rounded-r-none! border-r-0!"
+										className="rounded-r-none! border-e-0!"
 										onChange={(icon) => {
 											field.onChange(icon);
 											form.handleSubmit(onSubmit)();
@@ -90,7 +90,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button size="icon" variant="ghost" className="ml-1">
+							<Button size="icon" variant="ghost" className="ms-1">
 								<LinkIcon />
 							</Button>
 						</PopoverTrigger>
@@ -155,7 +155,7 @@ function CustomFieldItem({ field, children }: CustomFieldItemProps) {
 			<Button
 				size="icon"
 				variant="ghost"
-				className="mr-2 touch-none"
+				className="me-2 touch-none"
 				onPointerDown={(e) => {
 					e.preventDefault();
 					controls.start(e);

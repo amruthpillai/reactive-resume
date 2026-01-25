@@ -1,8 +1,10 @@
 import { i18n, type MessageDescriptor, type Messages } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
 import Cookies from "js-cookie";
+import { useMemo } from "react";
 import z from "zod";
 
 const localeSchema = z.union([
@@ -142,6 +144,12 @@ const RTL_LANGUAGES = new Set([
 export function isRTL(locale: string): boolean {
 	const language = locale.split("-")[0].toLowerCase();
 	return RTL_LANGUAGES.has(language);
+}
+
+export function useIsRTL() {
+	const { i18n } = useLingui();
+
+	return useMemo(() => isRTL(i18n.locale), [i18n.locale]);
 }
 
 export const getLocale = createIsomorphicFn()

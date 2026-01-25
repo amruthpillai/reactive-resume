@@ -89,7 +89,7 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 			<div className="flex flex-wrap items-center gap-1.5">
 				{chips.map((chip, idx) => (
 					<div key={chip + idx} className="relative">
-						<Badge variant="outline" className="flex select-none items-center gap-1 pr-1 pl-2">
+						<Badge variant="outline" className="flex select-none items-center gap-1 ps-2 pe-1">
 							<span>{chip}</span>
 							<button
 								type="button"
@@ -99,7 +99,7 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 									e.stopPropagation();
 									removeChip(idx);
 								}}
-								className="ml-0.5 hover:text-destructive focus:outline-none"
+								className="ms-0.5 hover:text-destructive focus:outline-none"
 							>
 								<XIcon className="size-3" />
 							</button>

@@ -104,7 +104,7 @@ function PasskeyItem({ passkey }: PasskeyItemProps) {
 				<TrashSimpleIcon />
 			</Button>
 
-			<span className="mx-2 truncate text-nowrap border-r pr-2 font-medium">{passkey.name ?? "1Password"}</span>
+			<span className="mx-2 truncate text-nowrap border-r pe-2 font-medium">{passkey.name ?? "1Password"}</span>
 
 			<span className="flex-1 truncate text-nowrap text-muted-foreground text-xs">
 				<Trans>Added on {passkey.createdAt.toLocaleDateString()}</Trans>

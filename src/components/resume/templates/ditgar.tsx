@@ -16,10 +16,10 @@ const sectionClassName = cn(
 	"group-data-[layout=sidebar]:[&_.section-item-header>div]:items-start",
 
 	// Decoration Line in Section Item Header
-	"group-data-[layout=main]:[&_.section-item-header]:pl-2",
+	"group-data-[layout=main]:[&_.section-item-header]:ps-2",
 	"group-data-[layout=main]:[&_.section-item-header]:py-0.5",
-	"group-data-[layout=main]:[&_.section-item-header]:-ml-2.5",
-	"group-data-[layout=main]:[&_.section-item-header]:border-l-2",
+	"group-data-[layout=main]:[&_.section-item-header]:-ms-2.5",
+	"group-data-[layout=main]:[&_.section-item-header]:border-s-2",
 	"group-data-[layout=main]:[&_.section-item-header]:border-(--page-primary-color)",
 );
 
@@ -43,7 +43,9 @@ export function DitgarTemplate({ pageIndex, pageLayout }: TemplateProps) {
 		>
 			{/* Sidebar Background */}
 			{(!fullWidth || isFirstPage) && (
-				<div className={`page-sidebar-background absolute inset-y-0 ${rtlDirection ? 'right-0' : 'left-0'} z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)/20`} />
+				<div
+					className={`page-sidebar-background absolute inset-y-0 ${rtlDirection ? "end-0" : "start-0"} z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)/20`}
+				/>
 			)}
 
 			<div

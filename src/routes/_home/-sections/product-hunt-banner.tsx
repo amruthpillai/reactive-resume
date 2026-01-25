@@ -33,7 +33,7 @@ export function ProductHuntBanner() {
 			href="https://www.producthunt.com/products/reactive-resume/launches/reactive-resume-v5-2?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2"
 		>
 			<Trans>Reactive Resume is launching on Product Hunt today, head over to show some love!</Trans>
-			<HeartIcon weight="fill" color="#DA552F" className="ml-2 size-3.5" />
+			<HeartIcon weight="fill" color="#DA552F" className="ms-2 size-3.5" />
 		</a>
 	);
 }

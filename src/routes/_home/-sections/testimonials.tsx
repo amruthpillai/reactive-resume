@@ -115,10 +115,10 @@ export function Testimonials() {
 
 			<div className="relative">
 				{/* Left fade */}
-				<div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-16 bg-linear-to-r from-background to-transparent sm:w-24 md:w-32 lg:w-48" />
+				<div className="pointer-events-none absolute start-0 top-0 bottom-0 z-10 w-16 bg-linear-to-r from-background to-transparent sm:w-24 md:w-32 lg:w-48" />
 
 				{/* Right fade */}
-				<div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-16 bg-linear-to-l from-background to-transparent sm:w-24 md:w-32 lg:w-48" />
+				<div className="pointer-events-none absolute end-0 top-0 bottom-0 z-10 w-16 bg-linear-to-l from-background to-transparent sm:w-24 md:w-32 lg:w-48" />
 
 				<div className="flex flex-col gap-y-6">
 					<MarqueeRow testimonials={row1} rowId="row1" direction="left" duration={50} />

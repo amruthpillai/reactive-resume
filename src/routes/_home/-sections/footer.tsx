@@ -134,7 +134,7 @@ function FooterLink({ url, label }: FooterLinkItem) {
 					initial={{ width: 0, opacity: 0 }}
 					animate={isHovered ? { width: "100%", opacity: 1 } : { width: 0, opacity: 0 }}
 					transition={{ duration: 0.25, ease: "easeOut" }}
-					className="pointer-events-none absolute -bottom-0.5 left-0 h-px rounded bg-primary"
+					className="pointer-events-none absolute start-0 -bottom-0.5 h-px rounded bg-primary"
 				/>
 			</a>
 		</li>

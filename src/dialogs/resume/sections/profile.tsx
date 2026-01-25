@@ -155,7 +155,7 @@ function ProfileForm() {
 					render={({ field }) => (
 						<FormItem className="shrink-0">
 							<FormControl>
-								<IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-r-0!" />
+								<IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
 							</FormControl>
 						</FormItem>
 					)}

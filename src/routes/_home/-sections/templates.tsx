@@ -23,7 +23,7 @@ function TemplateItem({ metadata }: TemplateItemProps) {
 				<div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
 				{/* Template name on hover */}
-				<div className="absolute right-0 bottom-0 left-0 translate-y-full p-4 transition-transform duration-300 group-hover:translate-y-0">
+				<div className="absolute start-0 end-0 bottom-0 translate-y-full p-4 transition-transform duration-300 group-hover:translate-y-0">
 					<p className="font-semibold text-white drop-shadow-lg">{metadata.name}</p>
 				</div>
 

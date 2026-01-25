@@ -41,7 +41,9 @@ export function ChikoritaTemplate({ pageIndex, pageLayout }: TemplateProps) {
 		<div className="template-chikorita page-content" style={{ direction: rtlDirection ? "rtl" : "ltr" }}>
 			{/* Sidebar Background */}
 			{!fullWidth && (
-				<div className={`page-sidebar-background absolute inset-y-0 ${rtlDirection ? 'left-0' : 'right-0'} z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)`} />
+				<div
+					className={`page-sidebar-background absolute inset-y-0 ${rtlDirection ? "start-0" : "end-0"} z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)`}
+				/>
 			)}
 
 			{isFirstPage && <Header />}
@@ -78,7 +80,7 @@ function Header() {
 
 	return (
 		<div className="page-header relative flex">
-			<div className="flex flex-1 items-center pt-(--page-margin-y) ps-(--page-margin-x)">
+			<div className="flex flex-1 items-center ps-(--page-margin-x) pt-(--page-margin-y)">
 				<PagePicture />
 
 				<div className="page-basics space-y-2 px-(--page-margin-x)">

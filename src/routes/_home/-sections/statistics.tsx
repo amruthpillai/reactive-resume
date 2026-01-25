@@ -38,7 +38,7 @@ function StatisticCard({ statistic, index }: StatisticCardProps) {
 
 	return (
 		<motion.div
-			className="group relative flex flex-col items-center justify-center gap-y-4 border-r border-b p-8 transition-colors last:border-r-0 hover:bg-secondary/30 sm:border-b-0 xl:py-12"
+			className="group relative flex flex-col items-center justify-center gap-y-4 border-r border-b p-8 transition-colors last:border-e-0 hover:bg-secondary/30 sm:border-b-0 xl:py-12"
 			initial={{ opacity: 0, y: 20 }}
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true, margin: "-50px" }}
@@ -47,7 +47,7 @@ function StatisticCard({ statistic, index }: StatisticCardProps) {
 			{/* Background decoration */}
 			<div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
 				<motion.div
-					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/2"
+					className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/2"
 					initial={{ scale: 0.8, opacity: 0 }}
 					whileInView={{ scale: 1, opacity: 1 }}
 					viewport={{ once: true }}

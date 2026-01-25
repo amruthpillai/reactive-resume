@@ -293,7 +293,7 @@ function LayoutColumn({ pageIndex, columnId, items, disabled = false }: LayoutCo
 	return (
 		<SortableContext id={droppableId} items={items} strategy={verticalListSortingStrategy}>
 			<div className={cn("space-y-1.5", disabled && "opacity-50")}>
-				<div className="@md:row-start-1 pl-4 font-medium text-xs">{getColumnLabel(columnId)}</div>
+				<div className="@md:row-start-1 ps-4 font-medium text-xs">{getColumnLabel(columnId)}</div>
 
 				<div
 					ref={setNodeRef}

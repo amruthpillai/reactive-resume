@@ -44,9 +44,9 @@ export function BuilderHeader() {
 						<HouseSimpleIcon />
 					</Link>
 				</Button>
-				<span className="mr-2.5 text-muted-foreground">/</span>
+				<span className="me-2.5 text-muted-foreground">/</span>
 				<h2 className="flex-1 truncate font-medium">{name}</h2>
-				{isLocked && <LockSimpleIcon className="ml-2 text-muted-foreground" />}
+				{isLocked && <LockSimpleIcon className="ms-2 text-muted-foreground" />}
 				<BuilderHeaderDropdown />
 			</div>
 
@@ -131,24 +131,24 @@ function BuilderHeaderDropdown() {
 
 			<DropdownMenuContent>
 				<DropdownMenuItem disabled={isLocked} onSelect={handleUpdate}>
-					<PencilSimpleLineIcon className="mr-2" />
+					<PencilSimpleLineIcon className="me-2" />
 					<Trans>Update</Trans>
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onSelect={handleDuplicate}>
-					<CopySimpleIcon className="mr-2" />
+					<CopySimpleIcon className="me-2" />
 					<Trans>Duplicate</Trans>
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onSelect={handleToggleLock}>
-					{isLocked ? <LockSimpleOpenIcon className="mr-2" /> : <LockSimpleIcon className="mr-2" />}
+					{isLocked ? <LockSimpleOpenIcon className="me-2" /> : <LockSimpleIcon className="me-2" />}
 					{isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
 				<DropdownMenuItem variant="destructive" disabled={isLocked} onSelect={handleDelete}>
-					<TrashSimpleIcon className="mr-2" />
+					<TrashSimpleIcon className="me-2" />
 					<Trans>Delete</Trans>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

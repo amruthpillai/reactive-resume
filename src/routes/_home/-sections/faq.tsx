@@ -66,11 +66,11 @@ export function FAQ() {
 	return (
 		<section
 			id="frequently-asked-questions"
-			className="flex flex-col gap-x-16 gap-y-6 p-4 md:p-8 lg:flex-row lg:gap-x-24 xl:py-16"
+			className="flex flex-col gap-x-16 gap-y-6 p-4 md:p-8 lg:flex-row lg:gap-x-18 xl:py-16"
 		>
 			<motion.h2
 				className={cn(
-					"font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl",
+					"flex-1 font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl",
 					"flex shrink-0 flex-wrap items-center gap-x-1.5 lg:flex-col lg:items-start",
 				)}
 				initial={{ opacity: 0, x: -20 }}
@@ -86,7 +86,7 @@ export function FAQ() {
 			</motion.h2>
 
 			<motion.div
-				className="max-w-2xl flex-1 lg:ml-auto 2xl:max-w-3xl"
+				className="max-w-2xl flex-2 lg:ml-auto 2xl:max-w-3xl"
 				initial={{ opacity: 0, y: 20 }}
 				whileInView={{ opacity: 1, y: 0 }}
 				viewport={{ once: true }}

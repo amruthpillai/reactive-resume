@@ -109,7 +109,7 @@ function Combobox<TValue extends string | number = string>({
 					) : (
 						<>
 							{selectedLabel ?? placeholder}
-							<CaretUpDownIcon className="ml-2 shrink-0 opacity-50" />
+							<CaretUpDownIcon className="ms-2 shrink-0 opacity-50" />
 						</>
 					)}
 				</Button>

@@ -54,7 +54,7 @@ export function URLInput({ value, onChange, ...props }: Props) {
 
 			<InputGroupInput
 				value={urlValue}
-				className={cn(props.className, "pl-0!")}
+				className={cn(props.className, "ps-0!")}
 				onChange={handleUrlChange}
 				{...props}
 			/>

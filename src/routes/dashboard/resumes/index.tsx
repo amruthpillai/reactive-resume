@@ -73,7 +73,7 @@ function RouteComponent() {
 
 			<Separator />
 
-			<div className="flex items-center">
+			<div className="flex items-center gap-x-4">
 				<Combobox
 					value={sort}
 					options={sortOptions}
@@ -116,7 +116,7 @@ function RouteComponent() {
 					}}
 				/>
 
-				<Tabs className="ml-auto" value={view} onValueChange={onViewChange}>
+				<Tabs className="ltr:ms-auto rtl:me-auto" value={view} onValueChange={onViewChange}>
 					<TabsList>
 						<TabsTrigger value="grid" className="rounded-r-none">
 							<GridFourIcon />

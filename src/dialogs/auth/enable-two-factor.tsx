@@ -283,11 +283,11 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
 								<div className="flex items-center gap-x-2">
 									<Button type="button" variant="outline" onClick={handleDownloadBackupCodes} className="flex-1">
-										<ArrowDownIcon className="mr-2 size-4" />
+										<ArrowDownIcon className="me-2 size-4" />
 										<Trans>Download</Trans>
 									</Button>
 									<Button type="button" variant="ghost" onClick={handleCopyBackupCodes} className="flex-1">
-										<CopyIcon className="mr-2 size-4" />
+										<CopyIcon className="me-2 size-4" />
 										<Trans>Copy</Trans>
 									</Button>
 								</div>

@@ -36,7 +36,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 		>
 			<AccordionItem value={type} className="group/accordion space-y-4">
 				<div className="flex items-center">
-					<AccordionTrigger asChild className="mr-2 items-center justify-center">
+					<AccordionTrigger asChild className="me-2 items-center justify-center">
 						<Button size="icon" variant="ghost">
 							<CaretRightIcon />
 						</Button>

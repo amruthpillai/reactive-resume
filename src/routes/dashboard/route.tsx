@@ -29,7 +29,7 @@ function RouteComponent() {
 		<SidebarProvider open={sidebarState} onOpenChange={handleSidebarOpenChange}>
 			<DashboardSidebar />
 
-			<main className="@container flex-1 p-4 md:pl-2">
+			<main className="@container flex-1 p-4 md:ps-2">
 				<Outlet />
 			</main>
 		</SidebarProvider>
