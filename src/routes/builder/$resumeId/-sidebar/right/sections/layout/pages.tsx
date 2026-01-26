@@ -256,15 +256,14 @@ function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth
 					<span className="font-medium text-xs">
 						<Trans>Page {pageIndex + 1}</Trans>
 					</span>
-					{sidebarType !== SidebarTyp.NO_SIDEBAR && (
-						<label className="flex cursor-pointer items-center gap-2">
-							<Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
+					{/* todo: we should only show the full with toggle when sidebarType !== SidebarTyp.NO_SIDEBAR */}
+					<label className="flex cursor-pointer items-center gap-2">
+						<Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
 
-							<span className="font-medium text-muted-foreground text-xs">
-								<Trans>Full Width</Trans>
-							</span>
-						</label>
-					)}
+						<span className="font-medium text-muted-foreground text-xs">
+							<Trans>Full Width</Trans>
+						</span>
+					</label>
 				</div>
 
 				{canDelete && (
