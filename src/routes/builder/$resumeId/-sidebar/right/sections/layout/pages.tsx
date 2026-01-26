@@ -19,6 +19,7 @@ import { match } from "ts-pattern";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { SidebarTyp, templates } from "@/dialogs/resume/template/data.ts";
 import type { SectionType } from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
@@ -62,6 +63,9 @@ const createDroppableId = (pageIndex: number, columnId: ColumnId): string => {
 
 export function LayoutPages() {
 	const [activeId, setActiveId] = useState<string | null>(null);
+
+	const template = useResumeStore((state) => state.resume.data.metadata.template);
+	const templateSidebarType: SidebarTyp = templates[template].sideBarType;
 
 	const layout = useResumeStore((state) => state.resume.data.metadata.layout);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
@@ -218,6 +222,7 @@ export function LayoutPages() {
 						canDelete={layout.pages.length > 1}
 						onDelete={handleDeletePage}
 						onToggleFullWidth={handleToggleFullWidth}
+						sidebarType={templateSidebarType}
 					/>
 				))}
 
@@ -238,9 +243,12 @@ type PageContainerProps = {
 	canDelete: boolean;
 	onDelete: (pageIndex: number) => void;
 	onToggleFullWidth: (pageIndex: number, fullWidth: boolean) => void;
+	sidebarType: SidebarTyp;
 };
 
-function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth }: PageContainerProps) {
+function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth, sidebarType }: PageContainerProps) {
+	const sidebarPresent: boolean = !page.fullWidth && sidebarType !== SidebarTyp.NO_SIDEBAR;
+
 	return (
 		<div className="space-y-3 rounded-md border border-dashed bg-background/40">
 			<div className="flex items-center justify-between bg-secondary/50 px-4 py-3">
@@ -248,14 +256,15 @@ function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth
 					<span className="font-medium text-xs">
 						<Trans>Page {pageIndex + 1}</Trans>
 					</span>
+					{sidebarType !== SidebarTyp.NO_SIDEBAR && (
+						<label className="flex cursor-pointer items-center gap-2">
+							<Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
 
-					<label className="flex cursor-pointer items-center gap-2">
-						<Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
-
-						<span className="font-medium text-muted-foreground text-xs">
-							<Trans>Full Width</Trans>
-						</span>
-					</label>
+							<span className="font-medium text-muted-foreground text-xs">
+								<Trans>Full Width</Trans>
+							</span>
+						</label>
+					)}
 				</div>
 
 				{canDelete && (
@@ -269,11 +278,25 @@ function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth
 			<div
 				className={cn(
 					"grid w-full gap-x-4 gap-y-2 p-4 pt-0 font-medium",
-					page.fullWidth ? "grid-cols-1" : "@md:grid-cols-2",
+					sidebarPresent ? "grid-cols-2" : "@md:grid-cols-1",
 				)}
 			>
-				<LayoutColumn pageIndex={pageIndex} columnId="main" items={page.main} disabled={false} />
-				{!page.fullWidth && <LayoutColumn pageIndex={pageIndex} columnId="sidebar" items={page.sidebar} />}
+				<LayoutColumn
+					pageIndex={pageIndex}
+					columnId="main"
+					items={page.main}
+					disabled={false}
+					className={cn(sidebarType === SidebarTyp.LEFT ? "order-2" : "order-1")}
+				/>
+
+				{sidebarPresent && (
+					<LayoutColumn
+						pageIndex={pageIndex}
+						columnId="sidebar"
+						items={page.sidebar}
+						className={cn(sidebarType === SidebarTyp.LEFT ? "order-1" : "order-2")}
+					/>
+				)}
 			</div>
 		</div>
 	);
@@ -284,15 +307,16 @@ type LayoutColumnProps = {
 	columnId: ColumnId;
 	items: string[];
 	disabled?: boolean;
+	className?: string;
 };
 
-function LayoutColumn({ pageIndex, columnId, items, disabled = false }: LayoutColumnProps) {
+function LayoutColumn({ pageIndex, columnId, items, disabled = false, className }: LayoutColumnProps) {
 	const droppableId = createDroppableId(pageIndex, columnId);
 	const { setNodeRef, isOver } = useDroppable({ id: droppableId, disabled });
 
 	return (
 		<SortableContext id={droppableId} items={items} strategy={verticalListSortingStrategy}>
-			<div className={cn("space-y-1.5", disabled && "opacity-50")}>
+			<div className={cn("space-y-1.5", disabled && "opacity-50", className)}>
 				<div className="@md:row-start-1 ps-4 font-medium text-xs">{getColumnLabel(columnId)}</div>
 
 				<div
