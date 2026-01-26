@@ -19,7 +19,7 @@ import { match } from "ts-pattern";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { SidebarTyp, templates } from "@/dialogs/resume/template/data.ts";
+import { SidebarType, templates } from "@/dialogs/resume/template/data.ts";
 import type { SectionType } from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
@@ -65,7 +65,7 @@ export function LayoutPages() {
 	const [activeId, setActiveId] = useState<string | null>(null);
 
 	const template = useResumeStore((state) => state.resume.data.metadata.template);
-	const templateSidebarType: SidebarTyp = templates[template].sideBarType;
+	const templateSidebarType: SidebarType = templates[template].sideBarType;
 
 	const layout = useResumeStore((state) => state.resume.data.metadata.layout);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
@@ -243,11 +243,11 @@ type PageContainerProps = {
 	canDelete: boolean;
 	onDelete: (pageIndex: number) => void;
 	onToggleFullWidth: (pageIndex: number, fullWidth: boolean) => void;
-	sidebarType: SidebarTyp;
+	sidebarType: SidebarType;
 };
 
 function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth, sidebarType }: PageContainerProps) {
-	const sidebarPresent: boolean = !page.fullWidth && sidebarType !== SidebarTyp.NO_SIDEBAR;
+	const sidebarPresent: boolean = !page.fullWidth && sidebarType !== SidebarType.NO_SIDEBAR;
 
 	return (
 		<div className="space-y-3 rounded-md border border-dashed bg-background/40">
@@ -285,7 +285,7 @@ function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth
 					columnId="main"
 					items={page.main}
 					disabled={false}
-					className={cn(sidebarType === SidebarTyp.LEFT ? "order-2" : "order-1")}
+					className={cn(sidebarType === SidebarType.LEFT ? "order-2" : "order-1")}
 				/>
 
 				{sidebarPresent && (
@@ -293,7 +293,7 @@ function PageContainer({ pageIndex, page, canDelete, onDelete, onToggleFullWidth
 						pageIndex={pageIndex}
 						columnId="sidebar"
 						items={page.sidebar}
-						className={cn(sidebarType === SidebarTyp.LEFT ? "order-1" : "order-2")}
+						className={cn(sidebarType === SidebarType.LEFT ? "order-1" : "order-2")}
 					/>
 				)}
 			</div>
