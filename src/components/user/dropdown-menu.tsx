@@ -60,7 +60,7 @@ export function UserDropdownMenu({ children }: Props) {
 		});
 	}
 
-	if (!session) return null;
+	if (!session?.user) return null;
 
 	return (
 		<DropdownMenu>
