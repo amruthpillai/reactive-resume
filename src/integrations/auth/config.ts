@@ -5,6 +5,7 @@ import { betterAuth } from "better-auth/minimal";
 import { apiKey, type GenericOAuthConfig, genericOAuth, twoFactor } from "better-auth/plugins";
 import { username } from "better-auth/plugins/username";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { and, eq, or } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
@@ -110,7 +111,7 @@ const getAuthConfig = () => {
 		user: {
 			changeEmail: {
 				enabled: true,
-				sendChangeEmailVerification: async ({ user, newEmail, url }) => {
+				sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
 					await sendEmail({
 						to: newEmail,
 						subject: "Verify your new email",
@@ -161,12 +162,44 @@ const getAuthConfig = () => {
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GITHUB_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
+					const login = profile.login ?? String(profile.id);
+					const normalizedLogin = toUsername(login);
+					const [legacyAccount] = await db
+						.select({
+							accountId: schema.account.accountId,
+							email: schema.user.email,
+							emailVerified: schema.user.emailVerified,
+							username: schema.user.username,
+							displayUsername: schema.user.displayUsername,
+						})
+						.from(schema.account)
+						.innerJoin(schema.user, eq(schema.account.userId, schema.user.id))
+						.where(
+							and(
+								eq(schema.account.providerId, "github"),
+								or(eq(schema.user.username, normalizedLogin), eq(schema.user.displayUsername, login)),
+							),
+						)
+						.limit(1);
+
+					if (legacyAccount) {
+						return {
+							id: legacyAccount.accountId,
+							name: profile.name,
+							email: legacyAccount.email,
+							image: profile.avatar_url,
+							username: legacyAccount.username,
+							displayUsername: legacyAccount.displayUsername,
+							emailVerified: legacyAccount.emailVerified,
+						};
+					}
+
 					return {
 						name: profile.name,
 						email: profile.email,
 						image: profile.avatar_url,
-						username: profile.login,
-						displayUsername: profile.login,
+						username: normalizedLogin,
+						displayUsername: login,
 						emailVerified: true,
 					};
 				},

@@ -1,5 +1,7 @@
 import { t } from "@lingui/core/macro";
 import {
+	ArrowUUpLeftIcon,
+	ArrowUUpRightIcon,
 	CircleNotchIcon,
 	CubeFocusIcon,
 	FileJsIcon,
@@ -13,9 +15,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useCallback, useMemo } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useControls } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
+import { useTemporalStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { authClient } from "@/integrations/auth/client";
@@ -34,6 +38,19 @@ export function BuilderDock() {
 	const { mutateAsync: printResumeAsPDF, isPending: isPrinting } = useMutation(
 		orpc.printer.printResumeAsPDF.mutationOptions(),
 	);
+
+	const { undo, redo, pastStates, futureStates } = useTemporalStore((state) => ({
+		undo: state.undo,
+		redo: state.redo,
+		pastStates: state.pastStates,
+		futureStates: state.futureStates,
+	}));
+
+	const canUndo = pastStates.length > 1;
+	const canRedo = futureStates.length > 0;
+
+	useHotkeys("mod+z", () => undo(), { enabled: canUndo, preventDefault: true });
+	useHotkeys(["mod+y", "mod+shift+z"], () => redo(), { enabled: canRedo, preventDefault: true });
 
 	const publicUrl = useMemo(() => {
 		if (!session?.user.username || !resume?.slug) return "";
@@ -82,6 +99,9 @@ export function BuilderDock() {
 				transition={{ duration: 0.2 }}
 				className="flex items-center rounded-r-full rounded-l-full bg-popover px-2 shadow-xl"
 			>
+				<DockIcon icon={ArrowUUpLeftIcon} title={t`Undo (Ctrl+Z)`} disabled={!canUndo} onClick={() => undo()} />
+				<DockIcon icon={ArrowUUpRightIcon} title={t`Redo (Ctrl+Y)`} disabled={!canRedo} onClick={() => redo()} />
+				<div className="mx-1 h-8 w-px bg-border" />
 				<DockIcon icon={MagnifyingGlassPlusIcon} title={t`Zoom in`} onClick={() => zoomIn(0.1)} />
 				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.1)} />
 				<DockIcon icon={CubeFocusIcon} title={t`Center view`} onClick={() => centerView()} />

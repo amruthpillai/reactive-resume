@@ -22,6 +22,7 @@ services:
     restart: unless-stopped
     environment:
       - QUEUED=30
+      - TIMEOUT=-1
       - HEALTH=true
       - CONCURRENT=20
       - TOKEN=1234567890
