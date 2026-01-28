@@ -16,9 +16,11 @@ export function InterestsItem({ className, ...item }: InterestsItemProps) {
 			</div>
 
 			{/* Keywords */}
-			<span className="section-item-keywords interests-item-keywords inline-block opacity-80">
-				{item.keywords.join(", ")}
-			</span>
+			{item.keywords.length > 0 && (
+				<span className="section-item-keywords interests-item-keywords inline-block opacity-80">
+					{item.keywords.join(", ")}
+				</span>
+			)}
 		</div>
 	);
 }
