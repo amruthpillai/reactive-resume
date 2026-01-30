@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { useCallback } from "react";
-import { useConfirm } from "@/hooks/use-confirm";
 import { useDialogStore } from "@/dialogs/store";
+import { useConfirm } from "@/hooks/use-confirm";
 
 interface UseFormBlockerOptions {
 	shouldBlock: () => boolean;
@@ -33,10 +33,15 @@ export function useFormBlocker({ shouldBlock }: UseFormBlockerOptions) {
 				requestClose();
 			}
 		},
-		onInteractOutside: (event: Event) => {
+		onPointerDownOutside: (event: Event) => {
 			if (shouldBlock()) {
 				event.preventDefault();
 				requestClose();
+			}
+		},
+		onInteractOutside: (event: Event) => {
+			if (shouldBlock()) {
+				event.preventDefault();
 			}
 		},
 	};
