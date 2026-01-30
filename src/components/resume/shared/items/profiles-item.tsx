@@ -16,7 +16,15 @@ export function ProfilesItem({ className, ...item }: ProfilesItemProps) {
 			<div className="section-item-header profiles-item-header flex items-center gap-x-1.5">
 				<PageIcon icon={item.icon} className="section-item-icon profiles-item-icon" />
 				<strong className="section-item-title profiles-item-network">
-					{shouldOverride ? item.website.label || item.username : item.network}
+					{shouldOverride && item.website.url ? (
+						<a href={item.website.url} target="_blank" rel="noreferrer">
+							{item.website.label || item.username}
+						</a>
+					) : shouldOverride ? (
+						item.website.label || item.username
+					) : (
+						item.network
+					)}
 				</strong>
 			</div>
 
