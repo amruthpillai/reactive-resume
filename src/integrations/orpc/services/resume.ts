@@ -10,6 +10,7 @@ import { env } from "@/utils/env";
 import type { Locale } from "@/utils/locale";
 import { hashPassword } from "@/utils/password";
 import { generateId } from "@/utils/string";
+import { applyResumePatch, type JsonPatchOp } from "../helpers/resume-patch";
 import { hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
 
@@ -303,6 +304,72 @@ export const resumeService = {
 
 			throw error;
 		}
+	},
+
+	patch: async (input: { id: string; userId: string; patch: JsonPatchOp[] }) => {
+		const [resume] = await db
+			.select({
+				id: schema.resume.id,
+				name: schema.resume.name,
+				slug: schema.resume.slug,
+				tags: schema.resume.tags,
+				data: schema.resume.data,
+				isPublic: schema.resume.isPublic,
+				isLocked: schema.resume.isLocked,
+				password: schema.resume.password,
+			})
+			.from(schema.resume)
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+		if (!resume) throw new ORPCError("NOT_FOUND");
+		if (resume.isLocked) throw new ORPCError("RESUME_LOCKED");
+
+		const patched = applyResumePatch({
+			target: {
+				name: resume.name,
+				slug: resume.slug,
+				tags: resume.tags,
+				isPublic: resume.isPublic,
+				data: resume.data,
+			},
+			patch: input.patch,
+		});
+
+		try {
+			await db
+				.update(schema.resume)
+				.set({
+					name: patched.name,
+					slug: patched.slug,
+					tags: patched.tags,
+					data: patched.data,
+					isPublic: patched.isPublic,
+				})
+				.where(
+					and(
+						eq(schema.resume.id, input.id),
+						eq(schema.resume.isLocked, false),
+						eq(schema.resume.userId, input.userId),
+					),
+				);
+		} catch (error) {
+			if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
+				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
+			}
+
+			throw error;
+		}
+
+		return {
+			id: resume.id,
+			name: patched.name,
+			slug: patched.slug,
+			tags: patched.tags,
+			data: patched.data,
+			isPublic: patched.isPublic,
+			isLocked: resume.isLocked,
+			hasPassword: resume.password !== null,
+		};
 	},
 
 	setLocked: async (input: { id: string; userId: string; isLocked: boolean }): Promise<void> => {

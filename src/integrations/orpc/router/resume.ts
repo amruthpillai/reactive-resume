@@ -2,6 +2,7 @@ import z from "zod";
 import { resumeDataSchema } from "@/schema/resume/data";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { generateRandomName, slugify } from "@/utils/string";
+import { jsonPatchSchema } from "../helpers/resume-patch";
 import { protectedProcedure, publicProcedure, serverOnlyProcedure } from "../context";
 import { resumeService } from "../services/resume";
 
@@ -248,6 +249,67 @@ export const resumeRouter = {
 				tags: input.tags,
 				data: input.data,
 				isPublic: input.isPublic,
+			});
+		}),
+
+	patch: protectedProcedure
+		.route({
+			method: "PATCH",
+			path: "/resume/{id}",
+			tags: ["Resume"],
+			summary: "Patch a resume",
+			description:
+				"Apply a JSON Patch document to a resume. Supports add/replace/remove/test and by-id paths for section items and custom sections.",
+		})
+		.input(
+			z.object({
+				id: z.string(),
+				patch: jsonPatchSchema,
+			}),
+		)
+		.errors({
+			INVALID_PATCH: {
+				message: "The patch document is invalid or failed schema validation.",
+				status: 400,
+			},
+			INVALID_PATCH_PATH: {
+				message: "The patch path is not allowed or malformed.",
+				status: 400,
+			},
+			PATCH_TARGET_NOT_FOUND: {
+				message: "The patch target path could not be resolved.",
+				status: 404,
+			},
+			PATCH_CONFLICT: {
+				message: "The patch test operation failed.",
+				status: 409,
+			},
+			RESUME_LOCKED: {
+				message: "This resume is locked and cannot be updated.",
+				status: 400,
+			},
+			RESUME_SLUG_ALREADY_EXISTS: {
+				message: "A resume with this slug already exists.",
+				status: 400,
+			},
+		})
+		.output(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+				slug: z.string(),
+				tags: z.array(z.string()),
+				data: resumeDataSchema,
+				isPublic: z.boolean(),
+				isLocked: z.boolean(),
+				hasPassword: z.boolean(),
+			}),
+		)
+		.handler(async ({ context, input }) => {
+			return await resumeService.patch({
+				id: input.id,
+				userId: context.user.id,
+				patch: input.patch,
 			});
 		}),
 
