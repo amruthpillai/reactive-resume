@@ -11,6 +11,8 @@ export const jsonPatchOpSchema = z.discriminatedUnion("op", [
 	z.object({ op: z.literal("replace"), path: jsonPatchPathSchema, value: z.unknown() }),
 	z.object({ op: z.literal("remove"), path: jsonPatchPathSchema }),
 	z.object({ op: z.literal("test"), path: jsonPatchPathSchema, value: z.unknown() }),
+	z.object({ op: z.literal("move"), from: jsonPatchPathSchema, path: jsonPatchPathSchema }),
+	z.object({ op: z.literal("copy"), from: jsonPatchPathSchema, path: jsonPatchPathSchema }),
 ]);
 
 export const jsonPatchSchema = z.array(jsonPatchOpSchema);
@@ -53,18 +55,60 @@ const sectionsWithIcon = new Set<SectionType>(["profiles", "skills", "interests"
 
 const allowedLayoutIds = new Set<string>(["summary", ...sectionTypeSchema.options]);
 
-type ResolvedPatchOp = JsonPatchOp & { pathSegments: string[] };
+type ResolvedPatchOp = JsonPatchOp & { pathSegments: string[]; fromSegments?: string[] };
 
 export function applyResumePatch(input: { target: ResumePatchTarget; patch: JsonPatchOp[] }): ResumePatchTarget {
 	const next = structuredClone(input.target);
+	const originalCustomSectionIds = new Set(input.target.data.customSections.map((section) => section.id));
+	const patchFlags = { touchesCustomSections: false, touchesLayout: false };
 
 	for (const op of input.patch) {
+		if (op.op === "move") {
+			const fromSegments = resolvePatchPath(op.from, op, next, { forFrom: true });
+			markPatchImpact(fromSegments, patchFlags);
+
+			const value = getValueAtPath(next, fromSegments, op.from);
+			const { parent: fromParent, key: fromKey } = getParentAndKey(next, fromSegments, op.from);
+			applyRemove(fromParent, fromKey);
+
+			const pathSegments = resolvePatchPath(op.path, op, next);
+			markPatchImpact(pathSegments, patchFlags);
+
+			const normalizedValue = normalizeAddValue(pathSegments, value, next);
+			const { parent, key } = getParentAndKey(next, pathSegments, op.path);
+			applyAdd(parent, key, normalizedValue);
+			continue;
+		}
+
+		if (op.op === "copy") {
+			const fromSegments = resolvePatchPath(op.from, op, next);
+			const value = structuredClone(getValueAtPath(next, fromSegments, op.from));
+			const pathSegments = resolvePatchPath(op.path, op, next);
+			markPatchImpact(pathSegments, patchFlags);
+
+			const normalizedValue = normalizeAddValue(pathSegments, value, next);
+			const { parent, key } = getParentAndKey(next, pathSegments, op.path);
+			applyAdd(parent, key, normalizedValue);
+			continue;
+		}
+
 		const resolved = resolvePatchOp(op, next);
-		const normalized = normalizeOpValue(resolved, next);
+		markPatchImpact(resolved.pathSegments, patchFlags);
+
+		if (resolved.op === "test") {
+			applyPatchOperation(next, resolved);
+			continue;
+		}
+
+		const existingValue = resolved.op === "replace" ? safeGetValueAtPath(next, resolved.pathSegments) : undefined;
+		const normalized = normalizeOpValue(resolved, next, existingValue);
 		applyPatchOperation(next, normalized);
 	}
 
-	normalizeLayout(next.data);
+	normalizeLayout(next.data, {
+		addNewCustomSections: patchFlags.touchesCustomSections && !patchFlags.touchesLayout,
+		originalCustomSectionIds,
+	});
 
 	const parsed = patchTargetSchema.safeParse(next);
 	if (!parsed.success) {
@@ -79,28 +123,41 @@ export function applyResumePatch(input: { target: ResumePatchTarget; patch: Json
 }
 
 function resolvePatchOp(op: JsonPatchOp, target: ResumePatchTarget): ResolvedPatchOp {
-	const pathSegments = parseJsonPointer(op.path);
-	validatePatchPath(pathSegments, op);
-
-	const resolved = resolveById(pathSegments, target.data);
-
-	return { ...op, pathSegments: resolved };
+	const pathSegments = resolvePatchPath(op.path, op, target);
+	return { ...op, pathSegments };
 }
 
-function validatePatchPath(pathSegments: string[], op: JsonPatchOp) {
+function resolvePatchPath(
+	path: string,
+	op: JsonPatchOp,
+	target: ResumePatchTarget,
+	options: { forFrom?: boolean } = {},
+): string[] {
+	const pathSegments = parseJsonPointer(path);
+	validatePatchPath(pathSegments, op, path, options);
+	return resolveById(pathSegments, target.data);
+}
+
+function validatePatchPath(
+	pathSegments: string[],
+	op: JsonPatchOp,
+	path: string,
+	options: { forFrom?: boolean } = {},
+) {
 	if (pathSegments.length === 0) {
-		throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: op.path } });
+		throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path } });
 	}
 
 	if (pathSegments.some((segment) => forbiddenPathSegments.has(segment))) {
-		throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: op.path } });
+		throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path } });
 	}
 
 	if (pathSegments[0] === "data") return;
 
 	if (topLevelPaths.has(pathSegments[0]) && pathSegments.length === 1) {
-		if (op.op === "remove" && nonRemovableTopLevelPaths.has(pathSegments[0])) {
-			throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: op.path } });
+		const effectiveOp = options.forFrom ? "remove" : op.op;
+		if (effectiveOp === "remove" && nonRemovableTopLevelPaths.has(pathSegments[0])) {
+			throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path } });
 		}
 		return;
 	}
@@ -109,7 +166,7 @@ function validatePatchPath(pathSegments: string[], op: JsonPatchOp) {
 		return;
 	}
 
-	throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: op.path } });
+	throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path } });
 }
 
 function resolveById(pathSegments: string[], data: ResumeData): string[] {
@@ -122,15 +179,7 @@ function resolveById(pathSegments: string[], data: ResumeData): string[] {
 		}
 
 		if (pathSegments[3] === "items" && pathSegments.length >= 5) {
-			const itemSegment = pathSegments[4];
-			if (shouldResolveId(itemSegment)) {
-				const items = data.sections[sectionType as SectionType]?.items ?? [];
-				const index = items.findIndex((item) => item.id === itemSegment);
-				if (index === -1) {
-					throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
-				}
-				pathSegments[4] = String(index);
-			}
+			resolveItemsById(pathSegments, 4, data.sections[sectionType as SectionType]?.items ?? []);
 		}
 
 		return pathSegments;
@@ -138,7 +187,17 @@ function resolveById(pathSegments: string[], data: ResumeData): string[] {
 
 	if (pathSegments[1] === "customSections" && pathSegments.length >= 3) {
 		const customSectionSegment = pathSegments[2];
-		if (shouldResolveId(customSectionSegment)) {
+		if (customSectionSegment === "id") {
+			const customSectionId = pathSegments[3];
+			if (!customSectionId) {
+				throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: toJsonPointer(pathSegments) } });
+			}
+			const index = data.customSections.findIndex((section) => section.id === customSectionId);
+			if (index === -1) {
+				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
+			}
+			pathSegments.splice(2, 2, String(index));
+		} else if (shouldResolveId(customSectionSegment)) {
 			const index = data.customSections.findIndex((section) => section.id === customSectionSegment);
 			if (index === -1) {
 				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
@@ -153,22 +212,40 @@ function resolveById(pathSegments: string[], data: ResumeData): string[] {
 				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
 			}
 
-			const itemSegment = pathSegments[4];
-			if (shouldResolveId(itemSegment)) {
-				const index = section.items.findIndex((item) => item.id === itemSegment);
-				if (index === -1) {
-					throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
-				}
-				pathSegments[4] = String(index);
-			}
+			resolveItemsById(pathSegments, 4, section.items);
 		}
 	}
 
 	return pathSegments;
 }
 
-function normalizeOpValue(op: ResolvedPatchOp, target: ResumePatchTarget): ResolvedPatchOp {
+function resolveItemsById(pathSegments: string[], itemSegmentIndex: number, items: Array<{ id: string }>) {
+	const itemSegment = pathSegments[itemSegmentIndex];
+	if (itemSegment === "id") {
+		const itemId = pathSegments[itemSegmentIndex + 1];
+		if (!itemId) {
+			throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: toJsonPointer(pathSegments) } });
+		}
+		const index = items.findIndex((item) => item.id === itemId);
+		if (index === -1) {
+			throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
+		}
+		pathSegments.splice(itemSegmentIndex, 2, String(index));
+		return;
+	}
+
+	if (shouldResolveId(itemSegment)) {
+		const index = items.findIndex((item) => item.id === itemSegment);
+		if (index === -1) {
+			throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: toJsonPointer(pathSegments) } });
+		}
+		pathSegments[itemSegmentIndex] = String(index);
+	}
+}
+
+function normalizeOpValue(op: ResolvedPatchOp, target: ResumePatchTarget, existingValue?: unknown): ResolvedPatchOp {
 	if (!("value" in op)) return op;
+	if (op.op === "test") return op;
 
 	if (isSectionItemsArrayPath(op.pathSegments)) {
 		const sectionType = op.pathSegments[2] as SectionType;
@@ -178,7 +255,7 @@ function normalizeOpValue(op: ResolvedPatchOp, target: ResumePatchTarget): Resol
 
 	if (isSectionItemPath(op.pathSegments)) {
 		const sectionType = op.pathSegments[2] as SectionType;
-		const nextValue = normalizeItem(sectionType, op.value);
+		const nextValue = normalizeItem(sectionType, op.value, existingValue);
 		return { ...op, value: nextValue };
 	}
 
@@ -188,7 +265,7 @@ function normalizeOpValue(op: ResolvedPatchOp, target: ResumePatchTarget): Resol
 	}
 
 	if (isCustomSectionPath(op.pathSegments)) {
-		const nextValue = normalizeCustomSection(op.value);
+		const nextValue = normalizeCustomSection(op.value, existingValue);
 		return { ...op, value: nextValue };
 	}
 
@@ -200,7 +277,7 @@ function normalizeOpValue(op: ResolvedPatchOp, target: ResumePatchTarget): Resol
 
 	if (isCustomSectionItemPath(op.pathSegments)) {
 		const sectionType = getCustomSectionType(target.data, op.pathSegments[2]);
-		const nextValue = normalizeItem(sectionType, op.value);
+		const nextValue = normalizeItem(sectionType, op.value, existingValue);
 		return { ...op, value: nextValue };
 	}
 
@@ -221,19 +298,23 @@ function normalizeItemsArray(sectionType: SectionType, value: unknown) {
 	return value.map((item) => normalizeItem(sectionType, item));
 }
 
-function normalizeItem(sectionType: SectionType, value: unknown) {
+function normalizeItem(sectionType: SectionType, value: unknown, existingValue?: unknown) {
 	if (!value || typeof value !== "object" || Array.isArray(value)) return value;
 
+	const existing =
+		existingValue && typeof existingValue === "object" && !Array.isArray(existingValue)
+			? (existingValue as Record<string, unknown>)
+			: undefined;
 	const item = { ...(value as Record<string, unknown>) };
-	if (item.id === undefined) item.id = generateId();
-	if (item.hidden === undefined) item.hidden = false;
+	if (item.id === undefined) item.id = existing?.id ?? generateId();
+	if (item.hidden === undefined) item.hidden = existing?.hidden ?? false;
 
 	if (sectionsWithWebsite.has(sectionType) && item.website === undefined) {
-		item.website = { url: "", label: "" };
+		item.website = existing?.website ?? { url: "", label: "" };
 	}
 
 	if (sectionsWithIcon.has(sectionType) && item.icon === undefined) {
-		item.icon = "";
+		item.icon = existing?.icon ?? "";
 	}
 
 	return item;
@@ -244,15 +325,20 @@ function normalizeCustomSections(value: unknown) {
 	return value.map((section) => normalizeCustomSection(section));
 }
 
-function normalizeCustomSection(value: unknown) {
+function normalizeCustomSection(value: unknown, existingValue?: unknown) {
 	if (!value || typeof value !== "object" || Array.isArray(value)) return value;
 
+	const existing =
+		existingValue && typeof existingValue === "object" && !Array.isArray(existingValue)
+			? (existingValue as Record<string, unknown>)
+			: undefined;
 	const section = { ...(value as Record<string, unknown>) };
-	if (section.id === undefined) section.id = generateId();
-	if (section.hidden === undefined) section.hidden = false;
-	if (section.columns === undefined) section.columns = 1;
-	if (section.title === undefined) section.title = "";
-	if (section.items === undefined) section.items = [];
+	if (section.id === undefined) section.id = existing?.id ?? generateId();
+	if (section.hidden === undefined) section.hidden = existing?.hidden ?? false;
+	if (section.columns === undefined) section.columns = existing?.columns ?? 1;
+	if (section.title === undefined) section.title = existing?.title ?? "";
+	if (section.type === undefined) section.type = existing?.type;
+	if (section.items === undefined) section.items = existing?.items ?? [];
 
 	if (Array.isArray(section.items) && typeof section.type === "string") {
 		const type = section.type as SectionType;
@@ -262,8 +348,73 @@ function normalizeCustomSection(value: unknown) {
 	return section;
 }
 
+function normalizeAddValue(pathSegments: string[], value: unknown, target: ResumePatchTarget) {
+	const normalized = normalizeOpValue(
+		{
+			op: "add",
+			path: toJsonPointer(pathSegments),
+			pathSegments,
+			value,
+		},
+		target,
+	);
+
+	return "value" in normalized ? normalized.value : value;
+}
+
+function safeGetValueAtPath(target: ResumePatchTarget, pathSegments: string[]) {
+	try {
+		return getValueAtPath(target, pathSegments, toJsonPointer(pathSegments));
+	} catch {
+		return undefined;
+	}
+}
+
+function getValueAtPath(target: ResumePatchTarget, segments: string[], path: string) {
+	let current: unknown = target;
+
+	for (const segment of segments) {
+		if (Array.isArray(current)) {
+			if (segment === "-") {
+				throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path } });
+			}
+			const index = toArrayIndex(segment);
+			if (index === null || index >= current.length) {
+				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path } });
+			}
+			current = current[index];
+			continue;
+		}
+
+		if (current && typeof current === "object") {
+			if (!(segment in current)) {
+				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path } });
+			}
+			current = (current as Record<string, unknown>)[segment];
+			continue;
+		}
+
+		throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path } });
+	}
+
+	return current;
+}
+
+function markPatchImpact(
+	pathSegments: string[],
+	flags: { touchesCustomSections: boolean; touchesLayout: boolean },
+) {
+	if (pathSegments[0] === "data" && pathSegments[1] === "customSections") {
+		flags.touchesCustomSections = true;
+	}
+
+	if (pathSegments[0] === "data" && pathSegments[1] === "metadata" && pathSegments[2] === "layout") {
+		flags.touchesLayout = true;
+	}
+}
+
 function applyPatchOperation(target: ResumePatchTarget, op: ResolvedPatchOp) {
-	const { parent, key } = getParentAndKey(target, op);
+	const { parent, key } = getParentAndKey(target, op.pathSegments, op.path);
 
 	switch (op.op) {
 		case "add":
@@ -292,10 +443,9 @@ function applyPatchOperation(target: ResumePatchTarget, op: ResolvedPatchOp) {
 	throw new ORPCError("INVALID_PATCH", { status: 400, data: { op } });
 }
 
-function getParentAndKey(target: ResumePatchTarget, op: ResolvedPatchOp) {
-	const segments = op.pathSegments;
+function getParentAndKey(target: ResumePatchTarget, segments: string[], path: string) {
 	if (segments.length === 0) {
-		throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path: op.path } });
+		throw new ORPCError("INVALID_PATCH_PATH", { status: 400, data: { path } });
 	}
 
 	let parent: unknown = target;
@@ -304,16 +454,16 @@ function getParentAndKey(target: ResumePatchTarget, op: ResolvedPatchOp) {
 		if (Array.isArray(parent)) {
 			const index = toArrayIndex(segment);
 			if (index === null || index >= parent.length) {
-				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: op.path } });
+				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path } });
 			}
 			parent = parent[index];
 		} else if (parent && typeof parent === "object") {
 			if (!(segment in parent)) {
-				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: op.path } });
+				throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path } });
 			}
 			parent = (parent as Record<string, unknown>)[segment];
 		} else {
-			throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path: op.path } });
+			throw new ORPCError("PATCH_TARGET_NOT_FOUND", { status: 404, data: { path } });
 		}
 	}
 
@@ -404,7 +554,10 @@ function applyTest(parent: unknown, key: string, value: unknown) {
 	}
 }
 
-function normalizeLayout(data: ResumeData) {
+function normalizeLayout(
+	data: ResumeData,
+	options: { addNewCustomSections: boolean; originalCustomSectionIds: Set<string> },
+) {
 	const pages = (data as Partial<ResumeData>).metadata?.layout?.pages;
 	if (!pages) return;
 
@@ -421,14 +574,17 @@ function normalizeLayout(data: ResumeData) {
 		for (const id of page.sidebar) referencedIds.add(id);
 	}
 
-	const unreferencedCustomIds = data.customSections
-		.map((section) => section.id)
-		.filter((id) => !referencedIds.has(id));
+	if (options.addNewCustomSections) {
+		const newCustomSectionIds = data.customSections
+			.map((section) => section.id)
+			.filter((id) => !options.originalCustomSectionIds.has(id))
+			.filter((id) => !referencedIds.has(id));
 
-	if (unreferencedCustomIds.length > 0) {
-		const firstPage = pages[0];
-		if (firstPage) {
-			firstPage.main.push(...unreferencedCustomIds);
+		if (newCustomSectionIds.length > 0) {
+			const firstPage = pages[0];
+			if (firstPage) {
+				firstPage.main.push(...newCustomSectionIds);
+			}
 		}
 	}
 }
@@ -452,7 +608,7 @@ function toJsonPointer(path: Array<PropertyKey>): string {
 }
 
 function shouldResolveId(segment: string): boolean {
-	return segment !== "-" && !isArrayIndex(segment);
+	return segment !== "-" && segment !== "id" && !isArrayIndex(segment);
 }
 
 function isArrayIndex(segment: string): boolean {

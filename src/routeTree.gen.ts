@@ -36,6 +36,7 @@ import { Route as DashboardSettingsDangerZoneRouteImport } from "./routes/dashbo
 import { Route as DashboardSettingsApiKeysRouteImport } from "./routes/dashboard/settings/api-keys";
 import { Route as DashboardSettingsAiRouteImport } from "./routes/dashboard/settings/ai";
 import { Route as ApiRpcSplatRouteImport } from "./routes/api/rpc.$";
+import { Route as ApiResumeIdRouteImport } from "./routes/api/resume/$id";
 import { Route as ApiOpenapiSplatRouteImport } from "./routes/api/openapi.$";
 import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth.$";
 import { Route as DashboardSettingsAuthenticationIndexRouteImport } from "./routes/dashboard/settings/authentication/index";
@@ -178,6 +179,11 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   path: "/api/rpc/$",
   getParentRoute: () => rootRouteImport,
 } as any);
+const ApiResumeIdRoute = ApiResumeIdRouteImport.update({
+  id: "/api/resume/$id",
+  path: "/api/resume/$id",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ApiOpenapiSplatRoute = ApiOpenapiSplatRouteImport.update({
   id: "/api/openapi/$",
   path: "/api/openapi/$",
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   "/dashboard/": typeof DashboardIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
+  "/api/resume/$id": typeof ApiResumeIdRoute;
   "/api/rpc/$": typeof ApiRpcSplatRoute;
   "/dashboard/settings/ai": typeof DashboardSettingsAiRoute;
   "/dashboard/settings/api-keys": typeof DashboardSettingsApiKeysRoute;
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   "/dashboard": typeof DashboardIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
+  "/api/resume/$id": typeof ApiResumeIdRoute;
   "/api/rpc/$": typeof ApiRpcSplatRoute;
   "/dashboard/settings/ai": typeof DashboardSettingsAiRoute;
   "/dashboard/settings/api-keys": typeof DashboardSettingsApiKeysRoute;
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   "/dashboard/": typeof DashboardIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
+  "/api/resume/$id": typeof ApiResumeIdRoute;
   "/api/rpc/$": typeof ApiRpcSplatRoute;
   "/dashboard/settings/ai": typeof DashboardSettingsAiRoute;
   "/dashboard/settings/api-keys": typeof DashboardSettingsApiKeysRoute;
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | "/dashboard/"
     | "/api/auth/$"
     | "/api/openapi/$"
+    | "/api/resume/$id"
     | "/api/rpc/$"
     | "/dashboard/settings/ai"
     | "/dashboard/settings/api-keys"
@@ -337,6 +347,7 @@ export interface FileRouteTypes {
     | "/dashboard"
     | "/api/auth/$"
     | "/api/openapi/$"
+    | "/api/resume/$id"
     | "/api/rpc/$"
     | "/dashboard/settings/ai"
     | "/dashboard/settings/api-keys"
@@ -369,6 +380,7 @@ export interface FileRouteTypes {
     | "/dashboard/"
     | "/api/auth/$"
     | "/api/openapi/$"
+    | "/api/resume/$id"
     | "/api/rpc/$"
     | "/dashboard/settings/ai"
     | "/dashboard/settings/api-keys"
@@ -392,6 +404,7 @@ export interface RootRouteChildren {
   PrinterResumeIdRoute: typeof PrinterResumeIdRoute;
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
   ApiOpenapiSplatRoute: typeof ApiOpenapiSplatRoute;
+  ApiResumeIdRoute: typeof ApiResumeIdRoute;
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute;
   UploadsUserIdSplatRoute: typeof UploadsUserIdSplatRoute;
 }
@@ -587,6 +600,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ApiRpcSplatRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/api/resume/$id": {
+      id: "/api/resume/$id";
+      path: "/api/resume/$id";
+      fullPath: "/api/resume/$id";
+      preLoaderRoute: typeof ApiResumeIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/api/openapi/$": {
       id: "/api/openapi/$";
       path: "/api/openapi/$";
@@ -698,6 +718,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrinterResumeIdRoute: PrinterResumeIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiOpenapiSplatRoute: ApiOpenapiSplatRoute,
+  ApiResumeIdRoute: ApiResumeIdRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   UploadsUserIdSplatRoute: UploadsUserIdSplatRoute,
 };
