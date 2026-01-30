@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
-import { AtIcon, PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
+import { AtIcon, InfoIcon, PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
-import { useForm, useFormContext, useFormState } from "react-hook-form";
+import { useForm, useFormContext, useFormState, useWatch } from "react-hook-form";
 import type z from "zod";
 import { IconPicker } from "@/components/input/icon-picker";
 import { URLInput } from "@/components/input/url-input";
@@ -12,6 +12,8 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { type DialogProps, useDialogStore } from "@/dialogs/store";
 import { profileItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
@@ -34,6 +36,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 			network: data?.item?.network ?? "",
 			username: data?.item?.username ?? "",
 			website: data?.item?.website ?? { url: "", label: "" },
+			useLabelAsNetwork: data?.item?.useLabelAsNetwork ?? false,
 		},
 	});
 
@@ -91,6 +94,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 			network: data.item.network,
 			username: data.item.username,
 			website: data.item.website,
+			useLabelAsNetwork: data.item.useLabelAsNetwork,
 		},
 	});
 
@@ -145,6 +149,9 @@ function ProfileForm() {
 	const isNetworkInvalid = useMemo(() => {
 		return networkState.errors && Object.keys(networkState.errors).length > 0;
 	}, [networkState]);
+
+	const { username, website } = useWatch({ control: form.control });
+	const isOverrideDisabled = !username && !website?.label;
 
 	return (
 		<>
@@ -213,6 +220,38 @@ function ProfileForm() {
 						<FormControl>
 							<URLInput {...field} value={field.value} onChange={field.onChange} />
 						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="useLabelAsNetwork"
+				render={({ field }) => (
+					<FormItem className="sm:col-span-full">
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-x-2">
+								<FormLabel className={cn(isOverrideDisabled && "opacity-50")}>
+									<Trans>Override Network Title</Trans>
+								</FormLabel>
+								<Tooltip>
+									<TooltipTrigger disabled={isOverrideDisabled}>
+										<InfoIcon size={14} className={cn(isOverrideDisabled && "opacity-50")} />
+									</TooltipTrigger>
+									<TooltipContent>
+										<Trans>Use the username or website label as the network title</Trans>
+									</TooltipContent>
+								</Tooltip>
+							</div>
+							<FormControl>
+								<Switch
+									disabled={isOverrideDisabled}
+									checked={field.value}
+									onCheckedChange={field.onChange}
+								/>
+							</FormControl>
+						</div>
 						<FormMessage />
 					</FormItem>
 				)}

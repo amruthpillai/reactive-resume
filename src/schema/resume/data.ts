@@ -153,6 +153,10 @@ export const profileItemSchema = baseItemSchema.extend({
 	network: z.string().min(1).describe("The name of the network or platform."),
 	username: z.string().describe("The username of the author on the network or platform."),
 	website: urlSchema.describe("The link to the profile of the author on the network or platform, if any."),
+	useLabelAsNetwork: z
+		.boolean()
+		.catch(false)
+		.describe("Whether to use the label of the link as the name of the network."),
 });
 
 export const projectItemSchema = baseItemSchema.extend({
