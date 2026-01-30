@@ -55,12 +55,12 @@ const config = defineConfig({
 
 	server: {
 		host: true,
-		port: 3000,
+		port: 3001,
 		strictPort: true,
 		allowedHosts: true,
 		hmr: {
 			host: "localhost",
-			port: 3000,
+			port: 3001,
 		},
 	},
 
