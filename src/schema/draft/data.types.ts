@@ -425,7 +425,7 @@ export namespace DraftResume {
 
 	/**
 	 * @remarks Stores a custom section, mapping a type to its items.
-	 * @example { type: "projects", items: [] }
+	 * @example { title: "Projects", type: "projects", items: [] }
 	 */
 	export type CustomSectionData = ZodInfer<typeof customSectionDataSchema>;
 

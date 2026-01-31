@@ -352,9 +352,10 @@ export const customSectionItemDataSchema = z.union([
 
 /**
  * @remarks Validates a custom section structure for drafts.
- * @example { type: "projects", items: [] }
+ * @example { title: "Projects", type: "projects", items: [] }
  */
 export const customSectionDataSchema = z.object({
+	title: z.string(),
 	type: sectionTypeSchema,
 	items: z.array(customSectionItemDataSchema),
 });
