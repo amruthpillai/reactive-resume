@@ -19,6 +19,7 @@ const formSchema = customSectionSchema;
 type FormValues = z.infer<typeof formSchema>;
 
 const SECTION_TYPE_OPTIONS: { value: SectionType; label: string }[] = [
+	{ value: "summary", label: "Summary" },
 	{ value: "experience", label: "Experience" },
 	{ value: "education", label: "Education" },
 	{ value: "projects", label: "Projects" },
