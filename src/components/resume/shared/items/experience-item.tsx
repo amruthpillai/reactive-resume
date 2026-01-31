@@ -2,6 +2,7 @@ import { TiptapContent } from "@/components/input/rich-input";
 import type { SectionItem } from "@/schema/resume/data";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
+import { LinkedTitle } from "../linked-title";
 import { PageLink } from "../page-link";
 
 type ExperienceItemProps = SectionItem<"experience"> & {
@@ -15,7 +16,12 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 			<div className="section-item-header experience-item-header">
 				{/* Row 1 */}
 				<div className="flex items-start justify-between gap-x-2">
-					<strong className="section-item-title experience-item-title">{item.company}</strong>
+					<LinkedTitle
+						title={item.company}
+						website={item.website}
+						showLinkInTitle={item.options?.showLinkInTitle}
+						className="section-item-title experience-item-title"
+					/>
 					<span className="section-item-metadata experience-item-location shrink-0 text-end">{item.location}</span>
 				</div>
 
@@ -34,9 +40,11 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 			</div>
 
 			{/* Website */}
-			<div className="section-item-website experience-item-website">
-				<PageLink {...item.website} label={item.website.label} />
-			</div>
+			{!item.options?.showLinkInTitle && (
+				<div className="section-item-website experience-item-website">
+					<PageLink {...item.website} label={item.website.label} />
+				</div>
+			)}
 		</div>
 	);
 }
