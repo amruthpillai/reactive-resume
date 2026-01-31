@@ -16,3 +16,4 @@
  */
 export * from "./data.schema";
 export * from "./data.types";
+export * from "./factory";

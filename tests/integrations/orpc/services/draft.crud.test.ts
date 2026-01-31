@@ -7,7 +7,8 @@
  * without relying on external infrastructure.
  */
 import { ORPCError } from "@orpc/client";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { draftFactory } from "@/schema/draft/data";
 import {
 	createDraftDataWithDetails,
 	createEmptyDraftData,
@@ -48,6 +49,142 @@ describe("draftService.create/getById", () => {
 
 		expect(record.id).toBe(draftId);
 		expect(record.data).toEqual(payload);
+	});
+
+	/**
+	 * @remarks
+	 * Ensures create uses the canonical empty draft factory when no payload is provided.
+	 */
+	it("creates an empty draft when data is omitted", async () => {
+		const userId = "00000000-0000-0000-0000-000000000004";
+		const draftId = await draftService.create({ userId });
+
+		const record = await draftService.getById({ id: draftId, userId });
+
+		expect(record.data).toEqual(createEmptyDraftData());
+	});
+
+	/**
+	 * @remarks
+	 * Ensures invalid create payloads are rejected during normalization.
+	 */
+	it("rejects invalid partial create payloads", async () => {
+		const userId = "00000000-0000-0000-0000-000000000006";
+		const invalidPayload: unknown = {
+			basics: {
+				website: {
+					url: 123,
+				},
+			},
+		};
+
+		await expect(draftService.create({ userId, data: invalidPayload })).rejects.toBeInstanceOf(ORPCError);
+	});
+
+	/**
+	 * @remarks
+	 * Ensures partial payloads are deep-merged onto the empty skeleton.
+	 */
+	it("deep merges partial create payloads with the empty skeleton", async () => {
+		const userId = "00000000-0000-0000-0000-000000000005";
+		const partialPayload: unknown = {
+			basics: {
+				name: "Ada Lovelace",
+				website: { url: "https://example.com" },
+			},
+			summary: {
+				content: "First programmer.",
+			},
+			metadata: {
+				notes: "Initial agent capture.",
+			},
+			sections: {
+				experience: {
+					title: "Experience",
+				},
+			},
+		};
+
+		const draftId = await draftService.create({ userId, data: partialPayload });
+		const record = await draftService.getById({ id: draftId, userId });
+
+		expect(record.data.basics.name).toBe("Ada Lovelace");
+		expect(record.data.basics.headline).toBe("");
+		expect(record.data.basics.website.url).toBe("https://example.com");
+		expect(record.data.basics.website.label).toBe("");
+		expect(record.data.summary.content).toBe("First programmer.");
+		expect(record.data.summary.title).toBe("");
+		expect(record.data.metadata.notes).toBe("Initial agent capture.");
+		expect(record.data.sections.experience.title).toBe("Experience");
+		expect(record.data.sections.experience.items).toHaveLength(0);
+		expect(record.data.sections.skills.title).toBe("");
+	});
+
+	/**
+	 * @remarks
+	 * Ensures array fields are replaced (not concatenated) during create merges.
+	 */
+	it("replaces array fields when merging partial create payloads", async () => {
+		const userId = "00000000-0000-0000-0000-000000000006";
+
+		const baseDraft = draftFactory.draft.empty();
+		const baseCustomField = draftFactory.basics.customField.empty("base-custom-field");
+		baseCustomField.text = "Base Field";
+		baseDraft.basics.customFields = [baseCustomField];
+
+		const baseCustomSection = draftFactory.customSections.item.empty("base-custom-section", "projects");
+		const baseCustomItem = draftFactory.sections.item.empty("projects", "base-project");
+		baseCustomItem.name = "Base Project";
+		baseCustomSection.items = [baseCustomItem];
+		baseDraft.customSections = [baseCustomSection];
+
+		const baseSkill = draftFactory.sections.item.empty("skills", "base-skill");
+		baseSkill.name = "Base Skill";
+		baseDraft.sections.skills.items = [baseSkill];
+
+		const patchCustomField = draftFactory.basics.customField.empty("patch-custom-field");
+		patchCustomField.text = "Patch Field";
+		const patchCustomSection = draftFactory.customSections.item.empty("patch-custom-section", "projects");
+		const patchCustomItem = draftFactory.sections.item.empty("projects", "patch-project");
+		patchCustomItem.name = "Patch Project";
+		patchCustomSection.items = [patchCustomItem];
+		const patchSkill = draftFactory.sections.item.empty("skills", "patch-skill");
+		patchSkill.name = "Patch Skill";
+
+		const partialPayload: unknown = {
+			basics: {
+				customFields: [patchCustomField],
+			},
+			customSections: [patchCustomSection],
+			sections: {
+				skills: {
+					title: "Skills",
+					items: [patchSkill],
+				},
+			},
+		};
+
+		const factorySpy = vi.spyOn(draftFactory.draft, "empty").mockReturnValue(baseDraft);
+
+		try {
+			const draftId = await draftService.create({ userId, data: partialPayload });
+			const record = await draftService.getById({ id: draftId, userId });
+
+			expect(record.data.basics.customFields).toHaveLength(1);
+			expect(record.data.basics.customFields[0]?.id).toBe("patch-custom-field");
+			expect(record.data.basics.customFields.map((item) => item.id)).not.toContain("base-custom-field");
+
+			expect(record.data.customSections).toHaveLength(1);
+			expect(record.data.customSections[0]?.id).toBe("patch-custom-section");
+			expect(record.data.customSections[0]?.items[0]?.id).toBe("patch-project");
+			expect(record.data.customSections.map((section) => section.id)).not.toContain("base-custom-section");
+
+			expect(record.data.sections.skills.items).toHaveLength(1);
+			expect(record.data.sections.skills.items[0]?.id).toBe("patch-skill");
+			expect(record.data.sections.skills.items.map((item) => item.id)).not.toContain("base-skill");
+		} finally {
+			factorySpy.mockRestore();
+		}
 	});
 
 	/**

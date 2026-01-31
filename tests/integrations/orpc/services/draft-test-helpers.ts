@@ -10,7 +10,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle, type PgliteDatabase } from "drizzle-orm/pglite";
 import { vi } from "vitest";
 import { schema } from "@/integrations/drizzle";
-import type { DraftData } from "@/schema/draft/data";
+import { draftFactory, type DraftData } from "@/schema/draft/data";
 
 let testDb: PgliteDatabase<typeof schema>;
 let client: PGlite;
@@ -31,35 +31,7 @@ vi.mock("@/integrations/drizzle/client", () => ({
  *
  * @returns A DraftData-compliant object populated with empty strings and arrays.
  */
-export const createEmptyDraftData = (): DraftData => ({
-	picture: { url: "" },
-	basics: {
-		name: "",
-		headline: "",
-		email: "",
-		phone: "",
-		location: "",
-		website: { label: "", url: "" },
-		customFields: [],
-	},
-	summary: { title: "", content: "" },
-	sections: {
-		profiles: { title: "", items: [] },
-		experience: { title: "", items: [] },
-		education: { title: "", items: [] },
-		projects: { title: "", items: [] },
-		skills: { title: "", items: [] },
-		languages: { title: "", items: [] },
-		interests: { title: "", items: [] },
-		awards: { title: "", items: [] },
-		certifications: { title: "", items: [] },
-		publications: { title: "", items: [] },
-		volunteer: { title: "", items: [] },
-		references: { title: "", items: [] },
-	},
-	customSections: [],
-	metadata: { notes: "" },
-});
+export const createEmptyDraftData = (): DraftData => draftFactory.draft.empty();
 
 /**
  * @remarks

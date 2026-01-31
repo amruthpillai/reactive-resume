@@ -1,4 +1,4 @@
-import type { DraftData } from "@/schema/draft/data";
+import { draftFactory, type DraftData } from "@/schema/draft/data";
 import type { DraftOperation } from "@/schema/draft/operations";
 
 /**
@@ -10,79 +10,6 @@ type ItemOpsOperation = Extract<DraftOperation, { op: "itemOps" }>;
  * @remarks Represents a list item that is addressable by a stable identifier.
  */
 type ItemWithId = { id: string };
-
-/**
- * @remarks Creates a labeled URL payload with empty values.
- * @returns An empty labeled URL object.
- */
-const createEmptyLabeledUrl = () => ({ label: "", url: "" });
-
-/**
- * @remarks Creates an empty custom field entry for iterative drafting.
- * @param id - The stable identifier for the custom field.
- * @returns A custom field payload with empty values.
- */
-const createEmptyCustomField = (id: string): DraftData["basics"]["customFields"][number] => ({
-	id,
-	text: "",
-	link: "",
-});
-
-/**
- * @remarks Produces an empty list item shape for a given section type.
- * @param section - The target section to initialize.
- * @param id - The stable identifier for the item.
- * @returns An item payload with empty values.
- */
-const createEmptyItemForSection = (
-	section: keyof DraftData["sections"],
-	id: string,
-): DraftData["sections"][keyof DraftData["sections"]]["items"][number] => {
-	switch (section) {
-		case "profiles":
-			return { id, network: "", username: "", website: createEmptyLabeledUrl() };
-		case "experience":
-			return {
-				id,
-				company: "",
-				position: "",
-				location: "",
-				period: "",
-				website: createEmptyLabeledUrl(),
-				description: "",
-			};
-		case "education":
-			return {
-				id,
-				school: "",
-				degree: "",
-				area: "",
-				grade: "",
-				location: "",
-				period: "",
-				website: createEmptyLabeledUrl(),
-				description: "",
-			};
-		case "projects":
-			return { id, name: "", period: "", website: createEmptyLabeledUrl(), description: "" };
-		case "skills":
-			return { id, name: "", proficiency: "", level: 0, keywords: [] };
-		case "languages":
-			return { id, language: "", fluency: "", level: 0 };
-		case "interests":
-			return { id, name: "", keywords: [] };
-		case "awards":
-			return { id, title: "", awarder: "", date: "", website: createEmptyLabeledUrl(), description: "" };
-		case "certifications":
-			return { id, title: "", issuer: "", date: "", website: createEmptyLabeledUrl(), description: "" };
-		case "publications":
-			return { id, title: "", publisher: "", date: "", website: createEmptyLabeledUrl(), description: "" };
-		case "volunteer":
-			return { id, organization: "", location: "", period: "", website: createEmptyLabeledUrl(), description: "" };
-		case "references":
-			return { id, name: "", position: "", website: createEmptyLabeledUrl(), phone: "", description: "" };
-	}
-};
 
 /**
  * @remarks Applies item-level operations to a targeted list in the draft.
@@ -98,7 +25,7 @@ export const applyItemOpsOperation = (draft: DraftData, operation: ItemOpsOperat
 			const nextItems = applyItemOpsToList(
 				sectionData.items as ItemWithId[],
 				operation,
-				(id) => createEmptyItemForSection(section, id) as ItemWithId,
+				(id) => draftFactory.sections.item.empty(section, id) as ItemWithId,
 			) as typeof sectionData.items;
 
 			return {
@@ -116,7 +43,7 @@ export const applyItemOpsOperation = (draft: DraftData, operation: ItemOpsOperat
 			const nextItems = applyItemOpsToList(
 				draft.basics.customFields as ItemWithId[],
 				operation,
-				(id) => createEmptyCustomField(id) as ItemWithId,
+				(id) => draftFactory.basics.customField.empty(id) as ItemWithId,
 			) as DraftData["basics"]["customFields"];
 
 			return {
@@ -136,7 +63,7 @@ export const applyItemOpsOperation = (draft: DraftData, operation: ItemOpsOperat
 			const nextItems = applyItemOpsToList(
 				section.items as ItemWithId[],
 				operation,
-				(id) => createEmptyItemForSection(section.type, id) as ItemWithId,
+				(id) => draftFactory.sections.item.empty(section.type, id) as ItemWithId,
 			) as DraftData["customSections"][number]["items"];
 			const nextSections = [...draft.customSections];
 			nextSections[sectionIndex] = { ...section, items: nextItems };

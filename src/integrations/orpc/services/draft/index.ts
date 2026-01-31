@@ -2,11 +2,68 @@ import { ORPCError } from "@orpc/client";
 import { and, desc, eq } from "drizzle-orm";
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
-import { draftDataSchema, type DraftData } from "@/schema/draft/data";
+import { draftDataSchema, draftFactory, type DraftData } from "@/schema/draft/data";
+import { type DeepMergeLeafURI, deepmergeCustom } from "deepmerge-ts";
 import type { DraftOperation } from "@/schema/draft/operations";
 import { generateId } from "@/utils/string";
 import { applyItemOpsOperation } from "./item-ops";
 import { applySetFieldOperation } from "./set-field";
+
+/**
+ * @remarks Identifies plain object values for safe deep merging.
+ * @param value - The candidate value to inspect.
+ * @returns True when the value is a plain object.
+ */
+const isPlainObject = (value: unknown): value is Record<string, unknown> => {
+	if (typeof value !== "object" || value === null) return false;
+	if (Array.isArray(value)) return false;
+	return Object.getPrototypeOf(value) === Object.prototype;
+};
+
+/**
+ * @remarks Deep merge function that replaces arrays instead of concatenating them.
+ */
+const deepmergeDraft = deepmergeCustom<
+	unknown,
+	{
+		DeepMergeArraysURI: DeepMergeLeafURI;
+	}
+>({
+	mergeArrays: false,
+});
+
+/**
+ * @remarks Deeply merges a partial payload onto a base draft shape.
+ * @param base - The canonical empty draft payload.
+ * @param patch - The partial payload to overlay.
+ * @returns A merged draft candidate for validation.
+ */
+const mergeDraftData = (base: DraftData, patch: unknown): DraftData => {
+	const safePatch = isPlainObject(patch) ? patch : {};
+	return deepmergeDraft(base, safePatch) as DraftData;
+};
+
+/**
+ * @remarks Normalizes a partial draft payload into a full DraftData structure.
+ * @param data - The partial payload provided by the client.
+ * @returns A validated DraftData payload.
+ * @throws ORPCError - Thrown when the merged payload is invalid.
+ */
+const normalizeDraftCreateData = (data?: unknown): DraftData => {
+	const base = draftFactory.draft.empty();
+	const merged = mergeDraftData(base, data ?? {});
+	const validation = draftDataSchema.safeParse(merged);
+
+	if (!validation.success) {
+		throw new ORPCError("DRAFT_INVALID_CREATE", {
+			status: 400,
+			data: validation.error.issues,
+			message: "Draft create payload produced an invalid draft.",
+		});
+	}
+
+	return validation.data;
+};
 
 /**
  * @remarks Represents the minimal shape returned for draft listings.
@@ -106,16 +163,18 @@ export const draftService = {
 
 	/**
 	 * @remarks Creates a new draft record for a user.
-	 * @param input - The draft data to persist.
+	 * @param input - The partial draft data to persist.
 	 * @returns The identifier of the newly created draft.
+	 * @throws ORPCError - Thrown when the provided payload is invalid.
 	 */
-	create: async (input: { userId: string; data: DraftData }): Promise<string> => {
+	create: async (input: { userId: string; data?: unknown }): Promise<string> => {
 		const id = generateId();
+		const data = normalizeDraftCreateData(input.data);
 
 		await db.insert(schema.draft).values({
 			id,
 			userId: input.userId,
-			data: input.data,
+			data,
 		});
 
 		return id;

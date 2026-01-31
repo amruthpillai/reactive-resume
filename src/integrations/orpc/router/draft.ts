@@ -64,10 +64,16 @@ const createDraft = protectedProcedure
 		path: "/draft/create",
 		tags: ["Draft"],
 		summary: "Create draft",
-		description: "Create a draft record with the provided draft data payload.",
+		description: "Create a draft record by overlaying partial data onto an empty draft.",
 	})
-	.input(z.object({ data: draftDataSchema }))
+	.input(z.object({ data: z.record(z.string(), z.any()).optional() }))
 	.output(z.string().describe("The ID of the created draft."))
+	.errors({
+		DRAFT_INVALID_CREATE: {
+			message: "Draft create payload produced an invalid draft.",
+			status: 400,
+		},
+	})
 	.handler(async ({ context, input }) => {
 		return draftService.create({ userId: context.user.id, data: input.data });
 	});

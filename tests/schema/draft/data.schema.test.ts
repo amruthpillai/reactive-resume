@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DraftData } from "@/schema/draft/data";
-import { draftDataSchema, urlValueSchema } from "@/schema/draft/data";
+import { draftDataSchema, draftFactory, type DraftData, urlValueSchema } from "@/schema/draft/data";
 
 /**
  * @remarks
@@ -10,35 +9,7 @@ import { draftDataSchema, urlValueSchema } from "@/schema/draft/data";
  * @returns A DraftData-compliant object populated with empty strings and arrays.
  * @see {@link draftDataSchema}
  */
-const createEmptyDraftData = (): DraftData => ({
-	picture: { url: "" },
-	basics: {
-		name: "",
-		headline: "",
-		email: "",
-		phone: "",
-		location: "",
-		website: { label: "", url: "" },
-		customFields: [],
-	},
-	summary: { title: "", content: "" },
-	sections: {
-		profiles: { title: "", items: [] },
-		experience: { title: "", items: [] },
-		education: { title: "", items: [] },
-		projects: { title: "", items: [] },
-		skills: { title: "", items: [] },
-		languages: { title: "", items: [] },
-		interests: { title: "", items: [] },
-		awards: { title: "", items: [] },
-		certifications: { title: "", items: [] },
-		publications: { title: "", items: [] },
-		volunteer: { title: "", items: [] },
-		references: { title: "", items: [] },
-	},
-	customSections: [],
-	metadata: { notes: "" },
-});
+const createEmptyDraftData = (): DraftData => draftFactory.draft.empty();
 
 /**
  * @remarks
