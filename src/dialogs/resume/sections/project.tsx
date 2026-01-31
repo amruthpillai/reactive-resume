@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
@@ -29,6 +30,7 @@ export function CreateProjectDialog({ data }: DialogProps<"resume.sections.proje
 		defaultValues: {
 			id: generateId(),
 			hidden: data?.item?.hidden ?? false,
+			options: data?.item?.options ?? { showLinkInTitle: false },
 			name: data?.item?.name ?? "",
 			period: data?.item?.period ?? "",
 			website: data?.item?.website ?? { url: "", label: "" },
@@ -88,6 +90,7 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 		defaultValues: {
 			id: data.item.id,
 			hidden: data.item.hidden,
+			options: data.item.options ?? { showLinkInTitle: false },
 			name: data.item.name,
 			period: data.item.period,
 			website: data.item.website,
@@ -187,9 +190,29 @@ function ProjectForm() {
 							<Trans>Website</Trans>
 						</FormLabel>
 						<FormControl>
-							<URLInput {...field} value={field.value} onChange={field.onChange} />
+							<URLInput
+								{...field}
+								value={field.value}
+								onChange={field.onChange}
+								hideLabelButton={form.watch("options.showLinkInTitle")}
+							/>
 						</FormControl>
 						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="options.showLinkInTitle"
+				render={({ field }) => (
+					<FormItem className="flex items-center gap-x-2 sm:col-span-full">
+						<FormControl>
+							<Switch checked={field.value} onCheckedChange={field.onChange} />
+						</FormControl>
+						<FormLabel className="!mt-0">
+							<Trans>Show link in title</Trans>
+						</FormLabel>
 					</FormItem>
 				)}
 			/>

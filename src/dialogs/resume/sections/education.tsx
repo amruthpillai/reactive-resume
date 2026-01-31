@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
@@ -29,6 +30,7 @@ export function CreateEducationDialog({ data }: DialogProps<"resume.sections.edu
 		defaultValues: {
 			id: generateId(),
 			hidden: data?.item?.hidden ?? false,
+			options: data?.item?.options ?? { showLinkInTitle: false },
 			school: data?.item?.school ?? "",
 			degree: data?.item?.degree ?? "",
 			area: data?.item?.area ?? "",
@@ -92,6 +94,7 @@ export function UpdateEducationDialog({ data }: DialogProps<"resume.sections.edu
 		defaultValues: {
 			id: data.item.id,
 			hidden: data.item.hidden,
+			options: data.item.options ?? { showLinkInTitle: false },
 			school: data.item.school,
 			degree: data.item.degree,
 			area: data.item.area,
@@ -259,9 +262,29 @@ function EducationForm() {
 							<Trans>Website</Trans>
 						</FormLabel>
 						<FormControl>
-							<URLInput {...field} value={field.value} onChange={field.onChange} />
+							<URLInput
+								{...field}
+								value={field.value}
+								onChange={field.onChange}
+								hideLabelButton={form.watch("options.showLinkInTitle")}
+							/>
 						</FormControl>
 						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="options.showLinkInTitle"
+				render={({ field }) => (
+					<FormItem className="flex items-center gap-x-2 sm:col-span-full">
+						<FormControl>
+							<Switch checked={field.value} onCheckedChange={field.onChange} />
+						</FormControl>
+						<FormLabel className="!mt-0">
+							<Trans>Show link in title</Trans>
+						</FormLabel>
 					</FormItem>
 				)}
 			/>

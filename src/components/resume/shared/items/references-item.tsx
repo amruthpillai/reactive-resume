@@ -2,6 +2,7 @@ import { TiptapContent } from "@/components/input/rich-input";
 import type { SectionItem } from "@/schema/resume/data";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
+import { LinkedTitle } from "../linked-title";
 import { PageLink } from "../page-link";
 
 type ReferencesItemProps = SectionItem<"references"> & {
@@ -15,7 +16,12 @@ export function ReferencesItem({ className, ...item }: ReferencesItemProps) {
 			<div className="section-item-header references-item-header">
 				{/* Row 1 */}
 				<div className="flex items-start justify-between gap-x-2">
-					<strong className="section-item-title references-item-name">{item.name}</strong>
+					<LinkedTitle
+						title={item.name}
+						website={item.website}
+						showLinkInTitle={item.options?.showLinkInTitle}
+						className="section-item-title references-item-name"
+					/>
 				</div>
 
 				{/* Row 2 */}
@@ -37,11 +43,13 @@ export function ReferencesItem({ className, ...item }: ReferencesItemProps) {
 				<span className="section-item-metadata references-item-phone inline-block">{item.phone}</span>
 
 				{/* Row 2 */}
-				<PageLink
-					{...item.website}
-					label={item.website.label}
-					className="section-item-website references-item-website"
-				/>
+				{!item.options?.showLinkInTitle && (
+					<PageLink
+						{...item.website}
+						label={item.website.label}
+						className="section-item-website references-item-website"
+					/>
+				)}
 			</div>
 		</div>
 	);
