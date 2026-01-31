@@ -35,6 +35,13 @@ import { SectionAddItemButton, SectionItem } from "../shared/section-item";
 
 function getItemTitle(type: SectionType, item: CustomSectionItemType): string {
 	return match(type)
+		.with("summary", () => {
+			if ("content" in item) {
+				const stripped = item.content.replace(/<[^>]*>/g, "").trim();
+				return stripped.length > 50 ? `${stripped.slice(0, 50)}...` : stripped || "Summary";
+			}
+			return "Summary";
+		})
 		.with("profiles", () => ("network" in item ? item.network : ""))
 		.with("experience", () => ("company" in item ? item.company : ""))
 		.with("education", () => ("school" in item ? item.school : ""))
@@ -52,6 +59,7 @@ function getItemTitle(type: SectionType, item: CustomSectionItemType): string {
 
 function getItemSubtitle(type: SectionType, item: CustomSectionItemType): string | undefined {
 	return match(type)
+		.with("summary", () => undefined)
 		.with("profiles", () => ("username" in item ? item.username : undefined))
 		.with("experience", () => ("position" in item ? item.position : undefined))
 		.with("education", () => ("degree" in item ? item.degree : undefined))
