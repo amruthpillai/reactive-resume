@@ -13,6 +13,7 @@ import {
 	publicationItemSchema,
 	referenceItemSchema,
 	skillItemSchema,
+	summaryItemSchema,
 	volunteerItemSchema,
 } from "@/schema/resume/data";
 
@@ -133,6 +134,14 @@ const dialogTypeSchema = z.discriminatedUnion("type", [
 	z.object({
 		type: z.literal("resume.sections.references.update"),
 		data: z.object({ item: referenceItemSchema, customSectionId: z.string().optional() }),
+	}),
+	z.object({
+		type: z.literal("resume.sections.summary.create"),
+		data: z.object({ item: summaryItemSchema.optional(), customSectionId: z.string().optional() }).optional(),
+	}),
+	z.object({
+		type: z.literal("resume.sections.summary.update"),
+		data: z.object({ item: summaryItemSchema, customSectionId: z.string().optional() }),
 	}),
 	z.object({ type: z.literal("resume.sections.custom.create"), data: customSectionSchema.optional() }),
 	z.object({ type: z.literal("resume.sections.custom.update"), data: customSectionSchema }),
