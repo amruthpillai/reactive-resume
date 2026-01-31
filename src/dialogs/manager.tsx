@@ -8,6 +8,7 @@ import { CreateResumeDialog, DuplicateResumeDialog, UpdateResumeDialog } from ".
 import { ImportResumeDialog } from "./resume/import";
 import { CreateAwardDialog, UpdateAwardDialog } from "./resume/sections/award";
 import { CreateCertificationDialog, UpdateCertificationDialog } from "./resume/sections/certification";
+import { CreateCoverLetterDialog, UpdateCoverLetterDialog } from "./resume/sections/cover-letter";
 import { CreateCustomSectionDialog, UpdateCustomSectionDialog } from "./resume/sections/custom";
 import { CreateEducationDialog, UpdateEducationDialog } from "./resume/sections/education";
 import { CreateExperienceDialog, UpdateExperienceDialog } from "./resume/sections/experience";
@@ -62,6 +63,8 @@ export function DialogManager() {
 		.with({ type: "resume.sections.references.update" }, ({ data }) => <UpdateReferenceDialog data={data} />)
 		.with({ type: "resume.sections.summary.create" }, ({ data }) => <CreateSummaryItemDialog data={data} />)
 		.with({ type: "resume.sections.summary.update" }, ({ data }) => <UpdateSummaryItemDialog data={data} />)
+		.with({ type: "resume.sections.cover-letter.create" }, ({ data }) => <CreateCoverLetterDialog data={data} />)
+		.with({ type: "resume.sections.cover-letter.update" }, ({ data }) => <UpdateCoverLetterDialog data={data} />)
 		.with({ type: "resume.sections.custom.create" }, ({ data }) => <CreateCustomSectionDialog data={data} />)
 		.with({ type: "resume.sections.custom.update" }, ({ data }) => <UpdateCustomSectionDialog data={data} />)
 		.otherwise(() => null);

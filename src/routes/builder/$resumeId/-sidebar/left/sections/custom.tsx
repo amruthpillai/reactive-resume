@@ -33,6 +33,7 @@ import type {
 	CustomSectionType,
 } from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
+import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
 import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
@@ -41,7 +42,7 @@ function getItemTitle(type: CustomSectionType, item: CustomSectionItemType): str
 	return match(type)
 		.with("summary", () => {
 			if ("content" in item) {
-				const stripped = item.content.replace(/<[^>]*>/g, "").trim();
+				const stripped = stripHtml(item.content);
 				return stripped.length > 50 ? `${stripped.slice(0, 50)}...` : stripped || "Summary";
 			}
 			return "Summary";
@@ -58,6 +59,13 @@ function getItemTitle(type: CustomSectionType, item: CustomSectionItemType): str
 		.with("publications", () => ("title" in item ? item.title : ""))
 		.with("volunteer", () => ("organization" in item ? item.organization : ""))
 		.with("references", () => ("name" in item ? item.name : ""))
+		.with("cover-letter", () => {
+			if ("recipient" in item) {
+				const stripped = stripHtml(item.recipient);
+				return stripped.length > 50 ? `${stripped.slice(0, 50)}...` : stripped || "Cover Letter";
+			}
+			return "Cover Letter";
+		})
 		.exhaustive();
 }
 
@@ -76,6 +84,13 @@ function getItemSubtitle(type: CustomSectionType, item: CustomSectionItemType): 
 		.with("publications", () => ("publisher" in item ? item.publisher : undefined))
 		.with("volunteer", () => ("period" in item ? item.period : undefined))
 		.with("references", () => undefined)
+		.with("cover-letter", () => {
+			if ("content" in item) {
+				const stripped = stripHtml(item.content);
+				return stripped.length > 50 ? `${stripped.slice(0, 50)}...` : stripped || undefined;
+			}
+			return undefined;
+		})
 		.exhaustive();
 }
 

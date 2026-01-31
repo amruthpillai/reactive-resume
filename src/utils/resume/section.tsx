@@ -9,6 +9,7 @@ import {
 	CompassToolIcon,
 	DiamondsFourIcon,
 	DownloadIcon,
+	EnvelopeSimpleIcon,
 	FileCssIcon,
 	FootballIcon,
 	GraduationCapIcon,
@@ -34,6 +35,9 @@ import type { SectionType } from "@/schema/resume/data";
 import { cn } from "../style";
 
 export type LeftSidebarSection = "picture" | "basics" | "summary" | SectionType | "custom";
+
+// CustomSectionType values that are not in SectionType (used in custom sections only)
+export type CustomOnlyType = "cover-letter";
 
 export type RightSidebarSection =
 	| "template"
@@ -83,7 +87,7 @@ export const rightSidebarSections: RightSidebarSection[] = [
 	"information",
 ] as const;
 
-export const getSectionTitle = (type: SidebarSection): string => {
+export const getSectionTitle = (type: SidebarSection | CustomOnlyType): string => {
 	return (
 		match(type)
 			// Left Sidebar Sections
@@ -104,6 +108,9 @@ export const getSectionTitle = (type: SidebarSection): string => {
 			.with("references", () => t`References`)
 			.with("custom", () => t`Custom Sections`)
 
+			// Custom Section Types (not in main sidebar)
+			.with("cover-letter", () => t`Cover Letter`)
+
 			// Right Sidebar Sections
 			.with("template", () => t`Template`)
 			.with("layout", () => t`Layout`)
@@ -121,7 +128,7 @@ export const getSectionTitle = (type: SidebarSection): string => {
 	);
 };
 
-export const getSectionIcon = (type: SidebarSection, props?: IconProps): React.ReactNode => {
+export const getSectionIcon = (type: SidebarSection | CustomOnlyType, props?: IconProps): React.ReactNode => {
 	const iconProps = { ...props, className: cn("shrink-0", props?.className) };
 
 	return (
@@ -143,6 +150,9 @@ export const getSectionIcon = (type: SidebarSection, props?: IconProps): React.R
 			.with("volunteer", () => <HandHeartIcon {...iconProps} />)
 			.with("references", () => <PhoneIcon {...iconProps} />)
 			.with("custom", () => <StarIcon {...iconProps} />)
+
+			// Custom Section Types (not in main sidebar)
+			.with("cover-letter", () => <EnvelopeSimpleIcon {...iconProps} />)
 
 			// Right Sidebar Sections
 			.with("template", () => <DiamondsFourIcon {...iconProps} />)

@@ -220,6 +220,13 @@ export const volunteerItemSchema = baseItemSchema.extend({
 		.describe("The description of the volunteer experience. This should be a HTML-formatted string."),
 });
 
+export const coverLetterItemSchema = baseItemSchema.extend({
+	recipient: z.string().describe("The recipient's address block as HTML (name, title, company, address, email)."),
+	content: z.string().describe("The cover letter body as HTML (salutation, paragraphs, closing, signature)."),
+});
+
+export type CoverLetterItem = z.infer<typeof coverLetterItemSchema>;
+
 export const baseSectionSchema = z.object({
 	title: z.string().describe("The title of the section."),
 	columns: z.number().describe("The number of columns the section should span across."),
@@ -307,11 +314,16 @@ export const sectionTypeSchema = z.enum([
 	"publications",
 	"volunteer",
 	"references",
+	"cover-letter",
 ]);
 
 export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
 
 export const customSectionItemSchema = z.union([
+	// coverLetterItemSchema must come before summaryItemSchema because both have 'content',
+	// but coverLetterItemSchema also requires 'recipient'. If summaryItemSchema is first,
+	// cover letter items will match it and lose the 'recipient' field.
+	coverLetterItemSchema,
 	summaryItemSchema,
 	profileItemSchema,
 	experienceItemSchema,

@@ -64,6 +64,7 @@ export function generateRandomName() {
  * @param html - The HTML string to strip.
  * @returns The text content without HTML tags.
  */
-export function stripHtml(html: string) {
+export function stripHtml(html: string | undefined) {
+	if (!html) return "";
 	return html.replace(/<[^>]*>/g, "").trim();
 }

@@ -3,39 +3,22 @@ import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
+import { RichInput } from "@/components/input/rich-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
-import { type CustomSectionType, customSectionSchema } from "@/schema/resume/data";
+import { coverLetterItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
-const formSchema = customSectionSchema;
+const formSchema = coverLetterItemSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: string }[] = [
-	{ value: "summary", label: "Summary" },
-	{ value: "experience", label: "Experience" },
-	{ value: "education", label: "Education" },
-	{ value: "projects", label: "Projects" },
-	{ value: "profiles", label: "Profiles" },
-	{ value: "skills", label: "Skills" },
-	{ value: "languages", label: "Languages" },
-	{ value: "interests", label: "Interests" },
-	{ value: "awards", label: "Awards" },
-	{ value: "certifications", label: "Certifications" },
-	{ value: "publications", label: "Publications" },
-	{ value: "volunteer", label: "Volunteer" },
-	{ value: "references", label: "References" },
-	{ value: "cover-letter", label: "Cover Letter" },
-];
-
-export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.create">) {
+export function CreateCoverLetterDialog({ data }: DialogProps<"resume.sections.cover-letter.create">) {
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
@@ -43,21 +26,18 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			id: generateId(),
-			title: data?.title ?? "",
-			type: data?.type ?? "experience",
-			columns: data?.columns ?? 1,
-			hidden: data?.hidden ?? false,
-			items: data?.items ?? [],
+			hidden: data?.item?.hidden ?? false,
+			recipient: data?.item?.recipient ?? "",
+			content: data?.item?.content ?? "",
 		},
 	});
 
 	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			draft.customSections.push(formData);
-
-			const lastPageIndex = draft.metadata.layout.pages.length - 1;
-			if (lastPageIndex < 0) return;
-			draft.metadata.layout.pages[lastPageIndex].main.push(formData.id);
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (section) section.items.push(formData);
+			}
 		});
 		closeDialog();
 	};
@@ -69,16 +49,16 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new custom section</Trans>
+					<Trans>Create a new cover letter</Trans>
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
 
 			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<CustomSectionForm />
+				<form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+					<CoverLetterForm />
 
-					<DialogFooter className="sm:col-span-full">
+					<DialogFooter>
 						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
@@ -93,27 +73,28 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	);
 }
 
-export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.update">) {
+export function UpdateCoverLetterDialog({ data }: DialogProps<"resume.sections.cover-letter.update">) {
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			id: data.id,
-			title: data.title,
-			type: data.type,
-			columns: data.columns,
-			hidden: data.hidden,
-			items: data.items,
+			id: data.item.id,
+			hidden: data.item.hidden,
+			recipient: data.item.recipient,
+			content: data.item.content,
 		},
 	});
 
 	const onSubmit = (formData: FormValues) => {
 		updateResumeData((draft) => {
-			const index = draft.customSections.findIndex((item) => item.id === formData.id);
-			if (index === -1) return;
-			draft.customSections[index] = formData;
+			if (data?.customSectionId) {
+				const section = draft.customSections.find((s) => s.id === data.customSectionId);
+				if (!section) return;
+				const index = section.items.findIndex((item) => item.id === formData.id);
+				if (index !== -1) section.items[index] = formData;
+			}
 		});
 		closeDialog();
 	};
@@ -125,16 +106,16 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing custom section</Trans>
+					<Trans>Update an existing cover letter</Trans>
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
 
 			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<CustomSectionForm isUpdate />
+				<form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+					<CoverLetterForm />
 
-					<DialogFooter className="sm:col-span-full">
+					<DialogFooter>
 						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
@@ -149,21 +130,21 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	);
 }
 
-function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
+function CoverLetterForm() {
 	const form = useFormContext<FormValues>();
 
 	return (
 		<>
 			<FormField
 				control={form.control}
-				name="title"
+				name="recipient"
 				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
+					<FormItem>
 						<FormLabel>
-							<Trans>Title</Trans>
+							<Trans>Recipient</Trans>
 						</FormLabel>
 						<FormControl>
-							<Input {...field} />
+							<RichInput {...field} value={field.value} onChange={field.onChange} />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
@@ -172,24 +153,14 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 
 			<FormField
 				control={form.control}
-				name="type"
+				name="content"
 				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
+					<FormItem>
 						<FormLabel>
-							<Trans>Section Type</Trans>
+							<Trans>Content</Trans>
 						</FormLabel>
 						<FormControl>
-							<select
-								{...field}
-								disabled={isUpdate}
-								className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-							>
-								{SECTION_TYPE_OPTIONS.map((option) => (
-									<option key={option.value} value={option.value}>
-										{option.label}
-									</option>
-								))}
-							</select>
+							<RichInput {...field} value={field.value} onChange={field.onChange} />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
