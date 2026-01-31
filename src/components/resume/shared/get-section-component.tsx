@@ -1,5 +1,5 @@
 import { match } from "ts-pattern";
-import type { CustomSectionItem, SectionItem, SectionType } from "@/schema/resume/data";
+import type { CustomSectionItem, SectionItem, SectionType, SummaryItem as SummaryItemType } from "@/schema/resume/data";
 import { cn } from "@/utils/style";
 import { useResumeStore } from "../store/resume";
 import { AwardsItem } from "./items/awards-item";
@@ -13,6 +13,7 @@ import { ProjectsItem } from "./items/projects-item";
 import { PublicationsItem } from "./items/publications-item";
 import { ReferencesItem } from "./items/references-item";
 import { SkillsItem } from "./items/skills-item";
+import { SummaryItem } from "./items/summary-item";
 import { VolunteerItem } from "./items/volunteer-item";
 import { PageSection } from "./page-section";
 import { PageSummary } from "./page-summary";
@@ -25,6 +26,7 @@ type SectionComponentProps = {
 // Helper to render item component based on type
 function renderItemByType(type: SectionType, item: CustomSectionItem, itemClassName?: string) {
 	return match(type)
+		.with("summary", () => <SummaryItem {...(item as SummaryItemType)} className={itemClassName} />)
 		.with("profiles", () => <ProfilesItem {...(item as SectionItem<"profiles">)} className={itemClassName} />)
 		.with("experience", () => <ExperienceItem {...(item as SectionItem<"experience">)} className={itemClassName} />)
 		.with("education", () => <EducationItem {...(item as SectionItem<"education">)} className={itemClassName} />)
@@ -163,7 +165,9 @@ export function getSectionComponent(
 
 				return (
 					<section className={cn(`page-section page-section-custom page-section-${id}`, sectionClassName)}>
-						<h6 className="mb-1.5 text-(--page-primary-color)">{customSection.title}</h6>
+						{customSection.type !== "summary" && (
+							<h6 className="mb-1.5 text-(--page-primary-color)">{customSection.title}</h6>
+						)}
 
 						<div
 							className="section-content grid gap-x-(--page-gap-x) gap-y-(--page-gap-y)"
