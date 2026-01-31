@@ -1,5 +1,6 @@
 import z from "zod";
 import { draftDataSchema } from "@/schema/draft/data";
+import { draftOperationListSchema } from "@/schema/draft/operations";
 import { protectedProcedure } from "../context";
 import { draftService } from "../services/draft";
 
@@ -90,6 +91,30 @@ const updateDraft = protectedProcedure
 	});
 
 /**
+ * @remarks Applies a batch of draft operations to an existing draft.
+ * @see draftService.applyOperations
+ */
+const applyDraftOperations = protectedProcedure
+	.route({
+		method: "POST",
+		path: "/draft/{id}/ops",
+		tags: ["Draft"],
+		summary: "Apply draft operations",
+		description: "Apply an ordered list of draft operations to a draft record.",
+	})
+	.input(z.object({ id: z.string(), operations: draftOperationListSchema }))
+	.output(z.void())
+	.errors({
+		DRAFT_INVALID_OPERATION: {
+			message: "Draft operations produced an invalid payload.",
+			status: 400,
+		},
+	})
+	.handler(async ({ context, input }) => {
+		return draftService.applyOperations({ id: input.id, userId: context.user.id, operations: input.operations });
+	});
+
+/**
  * @remarks Removes a draft record for the authenticated user.
  * @see draftService.delete
  */
@@ -116,5 +141,6 @@ export const draftRouter = {
 	getById: getDraftById,
 	create: createDraft,
 	update: updateDraft,
+	applyOperations: applyDraftOperations,
 	delete: deleteDraft,
 };

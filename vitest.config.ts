@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 /**
@@ -8,6 +9,11 @@ import { defineConfig } from "vitest/config";
  * @see {@link https://vitest.dev/config/ | Vitest configuration reference}
  */
 export default defineConfig({
+	resolve: {
+		alias: {
+			"@": fileURLToPath(new URL("./src", import.meta.url)),
+		},
+	},
 	test: {
 		environment: "node",
 		include: ["src/**/*.test.ts"],

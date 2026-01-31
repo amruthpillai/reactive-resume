@@ -2,7 +2,8 @@ import { ORPCError } from "@orpc/client";
 import { and, desc, eq } from "drizzle-orm";
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
-import type { DraftData } from "@/schema/draft/data";
+import { draftDataSchema, type DraftData } from "@/schema/draft/data";
+import type { DraftOperation } from "@/schema/draft/operations";
 import { generateId } from "@/utils/string";
 
 /**
@@ -24,6 +25,33 @@ export type DraftRecord = {
 	data: DraftData;
 	createdAt: Date;
 	updatedAt: Date;
+};
+
+/**
+ * @remarks Applies a single draft operation to an existing draft payload.
+ * @param draft - The current draft payload.
+ * @param operation - The operation to apply.
+ * @returns The updated draft payload.
+ */
+const applyDraftOperation = (draft: DraftData, operation: DraftOperation): DraftData => {
+	switch (operation.op) {
+		case "replacePicture":
+			return { ...draft, picture: operation.data };
+		case "replaceBasics":
+			return { ...draft, basics: operation.data };
+		case "replaceSummary":
+			return { ...draft, summary: operation.data };
+		case "replaceMetadata":
+			return { ...draft, metadata: operation.data };
+		case "replaceSection":
+			return { ...draft, sections: { ...draft.sections, [operation.section]: operation.data } };
+		case "replaceCustomSections":
+			return { ...draft, customSections: operation.data };
+		default: {
+			const _exhaustive: never = operation;
+			return _exhaustive;
+		}
+	}
 };
 
 /**
@@ -116,5 +144,32 @@ export const draftService = {
 			.returning({ id: schema.draft.id });
 
 		if (deleted.length === 0) throw new ORPCError("NOT_FOUND");
+	},
+
+	/**
+	 * @remarks Applies an ordered list of draft operations to a draft payload.
+	 * @param input - The draft identifier, owner, and list of operations.
+	 * @returns A void promise when the draft has been updated.
+	 * @throws ORPCError - Thrown when the draft does not exist.
+	 * @throws ORPCError - Thrown when the resulting draft payload is invalid.
+	 */
+	applyOperations: async (input: { id: string; userId: string; operations: DraftOperation[] }): Promise<void> => {
+		const current = await draftService.getById({ id: input.id, userId: input.userId });
+
+		const nextDraft = input.operations.reduce(applyDraftOperation, current.data);
+		const validation = draftDataSchema.safeParse(nextDraft);
+
+		if (!validation.success) {
+			throw new ORPCError("DRAFT_INVALID_OPERATION", {
+				status: 400,
+				data: validation.error.issues,
+				message: "Draft operations produced an invalid payload.",
+			});
+		}
+
+		await db
+			.update(schema.draft)
+			.set({ data: validation.data })
+			.where(and(eq(schema.draft.id, input.id), eq(schema.draft.userId, input.userId)));
 	},
 };
