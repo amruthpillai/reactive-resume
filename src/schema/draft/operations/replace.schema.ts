@@ -2,16 +2,10 @@
  * @packageDocumentation
  *
  * @remarks
- * Runtime validation schemas for DraftResume command/operation payloads.
- * This module defines intent-preserving operations that mutate a draft
- * without requiring deep-partial payloads.
+ * Replace-style DraftResume operation schemas. These operations swap entire
+ * top-level blocks, preserving a clear "replace" intent for batch processing.
  *
- * Design intent:
- * - Keep operations explicit and small to reduce ambiguity in chunked agents.
- * - Avoid deep-partial schema complexity by using replace-style operations.
- * - Validate the final draft payload after applying operations.
- *
- * @see {@link ./data.schema | DraftResume data schema}
+ * @see {@link ./operations.schema | DraftResume operation schema}
  */
 import z from "zod";
 import {
@@ -33,7 +27,7 @@ import {
 	skillsSectionDataSchema,
 	summaryDataSchema,
 	volunteerSectionDataSchema,
-} from "./data.schema";
+} from "../data/data.schema";
 
 /**
  * @remarks Accepts any supported section payload for replace operations.
@@ -108,22 +102,3 @@ export const replaceCustomSectionsOperationSchema = z.object({
 	op: z.literal("replaceCustomSections"),
 	data: z.array(customSectionDataSchema),
 });
-
-/**
- * @remarks Union of all supported draft operations.
- * @example { op: "replaceSummary", data: { title: "", content: "" } }
- */
-export const draftOperationSchema = z.discriminatedUnion("op", [
-	replacePictureOperationSchema,
-	replaceBasicsOperationSchema,
-	replaceSummaryOperationSchema,
-	replaceMetadataOperationSchema,
-	replaceSectionOperationSchema,
-	replaceCustomSectionsOperationSchema,
-]);
-
-/**
- * @remarks Validates a non-empty list of draft operations.
- * @example [{ op: "replaceBasics", data: { name: "", headline: "", email: "", phone: "", location: "", website: { label: "", url: "" }, customFields: [] } }]
- */
-export const draftOperationListSchema = z.array(draftOperationSchema).min(1);

@@ -12,14 +12,14 @@
  * - Type-only imports: `import type` keeps Zod out of runtime bundles for consumers.
  * - Clear layering: runtime validation stays in `data.schema.ts`, compile-time types live here.
  *
- * Most consumers should import from the stable barrel `data.ts` to avoid coupling to
- * internal filenames. This type module must not import from the barrel to keep
+ * Most consumers should import from the stable barrel `@/schema/draft/data` to avoid
+ * coupling to internal filenames. This type module must not import from the barrel to keep
  * dependencies acyclic.
  *
- * @see {@link ./data | DraftResume barrel}
+ * @see {@link ./index | DraftResume barrel}
  * @see {@link ./data.schema | DraftResume schema}
  * @example
- * import type { DraftData } from "./data";
+ * import type { DraftData } from "@/schema/draft/data";
  */
 import type { infer as ZodInfer } from "zod";
 import type {

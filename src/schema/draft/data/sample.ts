@@ -1,4 +1,4 @@
-import type { DraftData } from "./data";
+import type { DraftData } from "./data.types";
 
 export const sampleDraftData: DraftData = {
 	picture: {

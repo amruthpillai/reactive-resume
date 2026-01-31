@@ -15,7 +15,7 @@ import {
 	teardownDraftServiceTestContext,
 } from "./draft-test-helpers";
 
-let draftService: typeof import("@/integrations/orpc/services/draft/draft").draftService;
+let draftService: typeof import("@/integrations/orpc/services/draft").draftService;
 
 beforeAll(async () => {
 	({ draftService } = await setupDraftServiceTestContext());
@@ -36,7 +36,7 @@ afterAll(async () => {
 describe("draftService.applyOperations", () => {
 	/**
 	 * @remarks
-	 * Applies replace-style operations and verifies persisted state changes.
+	 * Applies field-level and item-level operations and verifies persisted state changes.
 	 */
 	it("applies batched operations to a persisted draft", async () => {
 		const userId = "00000000-0000-0000-0000-000000000001";
@@ -44,31 +44,36 @@ describe("draftService.applyOperations", () => {
 
 		const operations: DraftOperation[] = [
 			{
-				op: "replaceBasics",
-				data: {
-					name: "Ada Lovelace",
-					headline: "Analyst",
-					email: "ada@example.com",
-					phone: "",
-					location: "London",
-					website: { label: "Portfolio", url: "https://example.com" },
-					customFields: [],
-				},
+				op: "setField",
+				path: "basics.name",
+				value: "Ada Lovelace",
 			},
 			{
-				op: "replaceSummary",
-				data: {
-					title: "Summary",
-					content: "First programmer.",
-				},
+				op: "setField",
+				path: "basics.location",
+				value: "London",
 			},
 			{
-				op: "replaceSection",
-				section: "experience",
-				data: {
-					title: "Experience",
-					items: [],
-				},
+				op: "setField",
+				path: "summary.content",
+				value: "First programmer.",
+			},
+			{
+				op: "setField",
+				path: "sections.experience.title",
+				value: "Experience",
+			},
+			{
+				op: "itemOps",
+				action: "upsert",
+				target: { kind: "section", section: "experience" },
+				items: [{ id: "experience-1", company: "Analytical Engine" }],
+			},
+			{
+				op: "itemOps",
+				action: "upsert",
+				target: { kind: "section", section: "experience" },
+				items: [{ id: "experience-1", position: "Analyst" }],
 			},
 		];
 
@@ -79,5 +84,7 @@ describe("draftService.applyOperations", () => {
 		expect(updated.data.basics.location).toBe("London");
 		expect(updated.data.summary.content).toBe("First programmer.");
 		expect(updated.data.sections.experience.title).toBe("Experience");
+		expect(updated.data.sections.experience.items[0]?.company).toBe("Analytical Engine");
+		expect(updated.data.sections.experience.items[0]?.position).toBe("Analyst");
 	});
 });

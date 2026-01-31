@@ -5,6 +5,8 @@ import { db } from "@/integrations/drizzle/client";
 import { draftDataSchema, type DraftData } from "@/schema/draft/data";
 import type { DraftOperation } from "@/schema/draft/operations";
 import { generateId } from "@/utils/string";
+import { applyItemOpsOperation } from "./item-ops";
+import { applySetFieldOperation } from "./set-field";
 
 /**
  * @remarks Represents the minimal shape returned for draft listings.
@@ -35,6 +37,10 @@ export type DraftRecord = {
  */
 const applyDraftOperation = (draft: DraftData, operation: DraftOperation): DraftData => {
 	switch (operation.op) {
+		case "setField":
+			return applySetFieldOperation(draft, operation);
+		case "itemOps":
+			return applyItemOpsOperation(draft, operation);
 		case "replacePicture":
 			return { ...draft, picture: operation.data };
 		case "replaceBasics":

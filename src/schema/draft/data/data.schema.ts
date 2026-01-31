@@ -6,11 +6,11 @@
  * This module intentionally owns the runtime contract. Compile-time types are derived
  * in `data.types.ts` to prevent divergence between validation and typing.
  *
- * Most consumers should import from the stable barrel `data.ts` to avoid coupling
- * to internal filenames. This schema module must not import from the barrel to keep
- * dependencies acyclic.
+ * Most consumers should import from the stable barrel `@/schema/draft/data`
+ * to avoid coupling to internal filenames. This schema module must not import
+ * from the barrel to keep dependencies acyclic.
  *
- * @see {@link ./data | DraftResume barrel}
+ * @see {@link ./index | DraftResume barrel}
  * @see {@link ./data.types | DraftResume types}
  */
 import z from "zod";

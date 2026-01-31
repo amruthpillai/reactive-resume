@@ -86,7 +86,7 @@ The resume schema is defined in `src/schema/resume/data.ts`. Key concepts:
 
 The draft schema is defined in `src/schema/draft/`. Key concepts:
 - **DraftData** - Iterative draft data with permissive empty values
-- **Draft operations** - Command-style updates validated in `src/schema/draft/operations.schema.ts`
+- **Draft operations** - Command-style updates validated in `src/schema/draft/operations/operations.schema.ts`
 
 ### Resume Templates
 
