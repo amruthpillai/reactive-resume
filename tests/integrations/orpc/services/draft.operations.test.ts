@@ -15,7 +15,7 @@ import {
 	teardownDraftServiceTestContext,
 } from "./draft-test-helpers";
 
-let draftService: typeof import("@/integrations/orpc/services/draft").draftService;
+let draftService: typeof import("@/integrations/orpc/services/draft/draft").draftService;
 
 beforeAll(async () => {
 	({ draftService } = await setupDraftServiceTestContext());

@@ -32,6 +32,14 @@ export const labeledUrlSchema = z.object({
 });
 
 /**
+ * @remarks Defines the shared identity contract for draft list items.
+ * @example { id: "exp-analytical-engine-7f3k" }
+ */
+export const listItemDataSchema = z.object({
+	id: z.string(),
+});
+
+/**
  * @remarks Validates the picture data for a draft.
  * @example { url: "" }
  */
@@ -43,7 +51,7 @@ export const pictureDataSchema = z.object({
  * @remarks Validates a custom field entry for a draft.
  * @example { text: "Open to relocation", link: "" }
  */
-export const customFieldDataSchema = z.object({
+export const customFieldDataSchema = listItemDataSchema.extend({
 	text: z.string(),
 	link: urlValueSchema,
 });
@@ -75,7 +83,7 @@ export const summaryDataSchema = z.object({
  * @remarks Validates a profile item entry.
  * @example { network: "", username: "", website: { label: "", url: "" } }
  */
-export const profileItemDataSchema = z.object({
+export const profileItemDataSchema = listItemDataSchema.extend({
 	network: z.string(),
 	username: z.string(),
 	website: labeledUrlSchema,
@@ -85,7 +93,7 @@ export const profileItemDataSchema = z.object({
  * @remarks Validates an experience item entry.
  * @example { company: "", position: "", location: "", period: "", website: { label: "", url: "" }, description: "" }
  */
-export const experienceItemDataSchema = z.object({
+export const experienceItemDataSchema = listItemDataSchema.extend({
 	company: z.string(),
 	position: z.string(),
 	location: z.string(),
@@ -98,7 +106,7 @@ export const experienceItemDataSchema = z.object({
  * @remarks Validates an education item entry.
  * @example { school: "", degree: "", area: "", grade: "", location: "", period: "", website: { label: "", url: "" }, description: "" }
  */
-export const educationItemDataSchema = z.object({
+export const educationItemDataSchema = listItemDataSchema.extend({
 	school: z.string(),
 	degree: z.string(),
 	area: z.string(),
@@ -113,7 +121,7 @@ export const educationItemDataSchema = z.object({
  * @remarks Validates a project item entry.
  * @example { name: "", period: "", website: { label: "", url: "" }, description: "" }
  */
-export const projectItemDataSchema = z.object({
+export const projectItemDataSchema = listItemDataSchema.extend({
 	name: z.string(),
 	period: z.string(),
 	website: labeledUrlSchema,
@@ -124,7 +132,7 @@ export const projectItemDataSchema = z.object({
  * @remarks Validates a skill item entry.
  * @example { name: "", proficiency: "", level: 0, keywords: [] }
  */
-export const skillItemDataSchema = z.object({
+export const skillItemDataSchema = listItemDataSchema.extend({
 	name: z.string(),
 	proficiency: z.string(),
 	level: z.number(),
@@ -135,7 +143,7 @@ export const skillItemDataSchema = z.object({
  * @remarks Validates a language item entry.
  * @example { language: "", fluency: "", level: 0 }
  */
-export const languageItemDataSchema = z.object({
+export const languageItemDataSchema = listItemDataSchema.extend({
 	language: z.string(),
 	fluency: z.string(),
 	level: z.number(),
@@ -145,7 +153,7 @@ export const languageItemDataSchema = z.object({
  * @remarks Validates an interest item entry.
  * @example { name: "", keywords: [] }
  */
-export const interestItemDataSchema = z.object({
+export const interestItemDataSchema = listItemDataSchema.extend({
 	name: z.string(),
 	keywords: z.array(z.string()),
 });
@@ -154,7 +162,7 @@ export const interestItemDataSchema = z.object({
  * @remarks Validates an award item entry.
  * @example { title: "", awarder: "", date: "", website: { label: "", url: "" }, description: "" }
  */
-export const awardItemDataSchema = z.object({
+export const awardItemDataSchema = listItemDataSchema.extend({
 	title: z.string(),
 	awarder: z.string(),
 	date: z.string(),
@@ -166,7 +174,7 @@ export const awardItemDataSchema = z.object({
  * @remarks Validates a certification item entry.
  * @example { title: "", issuer: "", date: "", website: { label: "", url: "" }, description: "" }
  */
-export const certificationItemDataSchema = z.object({
+export const certificationItemDataSchema = listItemDataSchema.extend({
 	title: z.string(),
 	issuer: z.string(),
 	date: z.string(),
@@ -178,7 +186,7 @@ export const certificationItemDataSchema = z.object({
  * @remarks Validates a publication item entry.
  * @example { title: "", publisher: "", date: "", website: { label: "", url: "" }, description: "" }
  */
-export const publicationItemDataSchema = z.object({
+export const publicationItemDataSchema = listItemDataSchema.extend({
 	title: z.string(),
 	publisher: z.string(),
 	date: z.string(),
@@ -190,7 +198,7 @@ export const publicationItemDataSchema = z.object({
  * @remarks Validates a volunteer item entry.
  * @example { organization: "", location: "", period: "", website: { label: "", url: "" }, description: "" }
  */
-export const volunteerItemDataSchema = z.object({
+export const volunteerItemDataSchema = listItemDataSchema.extend({
 	organization: z.string(),
 	location: z.string(),
 	period: z.string(),
@@ -202,7 +210,7 @@ export const volunteerItemDataSchema = z.object({
  * @remarks Validates a reference item entry.
  * @example { name: "", position: "", website: { label: "", url: "" }, phone: "", description: "" }
  */
-export const referenceItemDataSchema = z.object({
+export const referenceItemDataSchema = listItemDataSchema.extend({
 	name: z.string(),
 	position: z.string(),
 	website: labeledUrlSchema,
@@ -354,7 +362,7 @@ export const customSectionItemDataSchema = z.union([
  * @remarks Validates a custom section structure for drafts.
  * @example { title: "Projects", type: "projects", items: [] }
  */
-export const customSectionDataSchema = z.object({
+export const customSectionDataSchema = listItemDataSchema.extend({
 	title: z.string(),
 	type: sectionTypeSchema,
 	items: z.array(customSectionItemDataSchema),

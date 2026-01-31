@@ -39,6 +39,7 @@ import type {
 	interestItemDataSchema,
 	interestsSectionDataSchema,
 	labeledUrlSchema,
+	listItemDataSchema,
 	languageItemDataSchema,
 	languagesSectionDataSchema,
 	metadataDataSchema,
@@ -74,6 +75,12 @@ export type UrlValue = ZodInfer<typeof urlValueSchema>;
 export type LabeledURL = ZodInfer<typeof labeledUrlSchema>;
 
 /**
+ * @remarks Represents the shared identity contract for draft list items.
+ * @example { id: "exp-analytical-engine-7f3k" }
+ */
+export type ListItemData = ZodInfer<typeof listItemDataSchema>;
+
+/**
  * @remarks Namespace that groups Draft Resume data types for cohesive use.
  * @see DraftResume.DraftData
  */
@@ -88,7 +95,7 @@ export namespace DraftResume {
 	 * @remarks Captures a custom field with optional link-like content.
 	 * @example { text: "Open to relocation", link: "" }
 	 */
-	export type CustomFieldData = ZodInfer<typeof customFieldDataSchema>;
+	export type CustomFieldData = ListItemData & ZodInfer<typeof customFieldDataSchema>;
 
 	/**
 	 * @remarks Encapsulates the primary identity fields for the draft owner.
@@ -106,73 +113,73 @@ export namespace DraftResume {
 	 * @remarks Captures a social or professional profile entry.
 	 * @example { network: "GitHub", username: "aperson", website: { label: "", url: "" } }
 	 */
-	export type ProfileItemData = ZodInfer<typeof profileItemDataSchema>;
+	export type ProfileItemData = ListItemData & ZodInfer<typeof profileItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single work experience entry.
 	 * @example { company: "Acme", position: "", location: "", period: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type ExperienceItemData = ZodInfer<typeof experienceItemDataSchema>;
+	export type ExperienceItemData = ListItemData & ZodInfer<typeof experienceItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single education entry.
 	 * @example { school: "Example University", degree: "", area: "", grade: "", location: "", period: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type EducationItemData = ZodInfer<typeof educationItemDataSchema>;
+	export type EducationItemData = ListItemData & ZodInfer<typeof educationItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single project entry.
 	 * @example { name: "Project X", period: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type ProjectItemData = ZodInfer<typeof projectItemDataSchema>;
+	export type ProjectItemData = ListItemData & ZodInfer<typeof projectItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single skill entry.
 	 * @example { name: "TypeScript", proficiency: "Advanced", level: 0, keywords: [] }
 	 */
-	export type SkillItemData = ZodInfer<typeof skillItemDataSchema>;
+	export type SkillItemData = ListItemData & ZodInfer<typeof skillItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single language entry.
 	 * @example { language: "English", fluency: "", level: 0 }
 	 */
-	export type LanguageItemData = ZodInfer<typeof languageItemDataSchema>;
+	export type LanguageItemData = ListItemData & ZodInfer<typeof languageItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single interest entry.
 	 * @example { name: "Photography", keywords: [] }
 	 */
-	export type InterestItemData = ZodInfer<typeof interestItemDataSchema>;
+	export type InterestItemData = ListItemData & ZodInfer<typeof interestItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single award entry.
 	 * @example { title: "Top Performer", awarder: "", date: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type AwardItemData = ZodInfer<typeof awardItemDataSchema>;
+	export type AwardItemData = ListItemData & ZodInfer<typeof awardItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single certification entry.
 	 * @example { title: "Certification", issuer: "", date: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type CertificationItemData = ZodInfer<typeof certificationItemDataSchema>;
+	export type CertificationItemData = ListItemData & ZodInfer<typeof certificationItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single publication entry.
 	 * @example { title: "Publication", publisher: "", date: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type PublicationItemData = ZodInfer<typeof publicationItemDataSchema>;
+	export type PublicationItemData = ListItemData & ZodInfer<typeof publicationItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single volunteer entry.
 	 * @example { organization: "Org", location: "", period: "", website: { label: "", url: "" }, description: "" }
 	 */
-	export type VolunteerItemData = ZodInfer<typeof volunteerItemDataSchema>;
+	export type VolunteerItemData = ListItemData & ZodInfer<typeof volunteerItemDataSchema>;
 
 	/**
 	 * @remarks Represents a single reference entry.
 	 * @example { name: "Reference", position: "", website: { label: "", url: "" }, phone: "", description: "" }
 	 */
-	export type ReferenceItemData = ZodInfer<typeof referenceItemDataSchema>;
+	export type ReferenceItemData = ListItemData & ZodInfer<typeof referenceItemDataSchema>;
 
 	/**
 	 * @remarks Enumerates built-in section identifiers supported by the draft.
@@ -427,7 +434,7 @@ export namespace DraftResume {
 	 * @remarks Stores a custom section, mapping a type to its items.
 	 * @example { title: "Projects", type: "projects", items: [] }
 	 */
-	export type CustomSectionData = ZodInfer<typeof customSectionDataSchema>;
+	export type CustomSectionData = ListItemData & ZodInfer<typeof customSectionDataSchema>;
 
 	/**
 	 * @remarks Holds metadata for draft-specific behaviors or notes.

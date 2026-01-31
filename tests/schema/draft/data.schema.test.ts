@@ -57,6 +57,34 @@ describe("draftDataSchema", () => {
 	});
 
 	/**
+	 * @remarks Ensures list items require stable identifiers.
+	 */
+	it("rejects list items without ids", () => {
+		const invalidPayload: unknown = {
+			...createEmptyDraftData(),
+			sections: {
+				...createEmptyDraftData().sections,
+				experience: {
+					...createEmptyDraftData().sections.experience,
+					items: [
+						{
+							company: "Institute for Advanced Study",
+							position: "Professor of Mathematics",
+							location: "Princeton, NJ, USA",
+							period: "1933 - 1957",
+							website: { label: "ias.edu", url: "https://www.ias.edu" },
+							description: "Missing id should be rejected.",
+						},
+					],
+				},
+			},
+		};
+
+		const result = draftDataSchema.safeParse(invalidPayload);
+		expect(result.success).toBe(false);
+	});
+
+	/**
 	 * @remarks Ensures missing top-level keys are rejected to preserve schema shape.
 	 */
 	it("rejects missing required top-level fields", () => {

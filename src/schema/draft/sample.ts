@@ -16,14 +16,17 @@ export const sampleDraftData: DraftData = {
 		},
 		customFields: [
 			{
+				id: "cf-born",
 				text: "Born: Budapest, 1903",
 				link: "",
 			},
 			{
+				id: "cf-citizenship",
 				text: "Citizenship: Hungarian-American",
 				link: "",
 			},
 			{
+				id: "cf-fields",
 				text: "Fields: Mathematics, Physics, Computer Science, Economics",
 				link: "",
 			},
@@ -41,6 +44,7 @@ export const sampleDraftData: DraftData = {
 			title: "Profiles",
 			items: [
 				{
+					id: "profile-wikipedia",
 					network: "Wikipedia",
 					username: "",
 					website: {
@@ -49,6 +53,7 @@ export const sampleDraftData: DraftData = {
 					},
 				},
 				{
+					id: "profile-genealogy",
 					network: "Mathematics Genealogy Project",
 					username: "",
 					website: {
@@ -57,6 +62,7 @@ export const sampleDraftData: DraftData = {
 					},
 				},
 				{
+					id: "profile-ias",
 					network: "Institute for Advanced Study",
 					username: "",
 					website: {
@@ -70,6 +76,7 @@ export const sampleDraftData: DraftData = {
 			title: "Experience",
 			items: [
 				{
+					id: "exp-ias-professor",
 					company: "Institute for Advanced Study",
 					position: "Professor of Mathematics",
 					location: "Princeton, NJ, USA",
@@ -83,6 +90,7 @@ export const sampleDraftData: DraftData = {
 						"and influenced early digital computer design through the IAS computer project.",
 				},
 				{
+					id: "exp-los-alamos",
 					company: "Los Alamos National Laboratory",
 					position: "Consultant, Manhattan Project",
 					location: "Los Alamos, NM, USA",
@@ -96,6 +104,7 @@ export const sampleDraftData: DraftData = {
 						"to computational approaches for weapons physics.",
 				},
 				{
+					id: "exp-princeton-visit",
 					company: "Princeton University",
 					position: "Visiting Professor",
 					location: "Princeton, NJ, USA",
@@ -113,6 +122,7 @@ export const sampleDraftData: DraftData = {
 			title: "Education",
 			items: [
 				{
+					id: "edu-budapest-phd",
 					school: "Pazmany Peter University (University of Budapest)",
 					degree: "PhD",
 					area: "Mathematics",
@@ -126,6 +136,7 @@ export const sampleDraftData: DraftData = {
 					description: "Completed doctorate in mathematics at age 23.",
 				},
 				{
+					id: "edu-eth-zurich",
 					school: "ETH Zurich",
 					degree: "Dipl. Ing.",
 					area: "Chemical Engineering",
@@ -145,6 +156,7 @@ export const sampleDraftData: DraftData = {
 			title: "Projects",
 			items: [
 				{
+					id: "proj-edvac",
 					name: "First Draft of a Report on the EDVAC",
 					period: "1945",
 					website: {
@@ -156,6 +168,7 @@ export const sampleDraftData: DraftData = {
 						"for modern digital computers.",
 				},
 				{
+					id: "proj-monte-carlo",
 					name: "Monte Carlo Method (with Stanislaw Ulam)",
 					period: "1940s",
 					website: {
@@ -166,6 +179,7 @@ export const sampleDraftData: DraftData = {
 						"Pioneered stochastic simulation techniques for complex physical and mathematical systems.",
 				},
 				{
+					id: "proj-von-neumann",
 					name: "von Neumann Architecture",
 					period: "1945 - 1950",
 					website: {
@@ -181,24 +195,28 @@ export const sampleDraftData: DraftData = {
 			title: "Skills",
 			items: [
 				{
+					id: "skill-math-analysis",
 					name: "Mathematical Analysis",
 					proficiency: "Expert",
 					level: 5,
 					keywords: ["Measure theory", "Functional analysis", "Operator theory"],
 				},
 				{
+					id: "skill-game-theory",
 					name: "Game Theory",
 					proficiency: "Expert",
 					level: 5,
 					keywords: ["Minimax theorem", "Zero-sum games", "Equilibrium analysis"],
 				},
 				{
+					id: "skill-numerical",
 					name: "Numerical Methods",
 					proficiency: "Advanced",
 					level: 4,
 					keywords: ["Approximation", "Stability", "Numerical integration"],
 				},
 				{
+					id: "skill-computer-arch",
 					name: "Computer Architecture",
 					proficiency: "Advanced",
 					level: 4,
@@ -210,16 +228,19 @@ export const sampleDraftData: DraftData = {
 			title: "Languages",
 			items: [
 				{
+					id: "lang-hungarian",
 					language: "Hungarian",
 					fluency: "Native",
 					level: 5,
 				},
 				{
+					id: "lang-german",
 					language: "German",
 					fluency: "Fluent",
 					level: 4,
 				},
 				{
+					id: "lang-english",
 					language: "English",
 					fluency: "Fluent",
 					level: 4,
@@ -230,18 +251,22 @@ export const sampleDraftData: DraftData = {
 			title: "Interests",
 			items: [
 				{
+					id: "interest-computing",
 					name: "Computing Machinery",
 					keywords: ["Automatic computing", "Digital logic", "Programming"],
 				},
 				{
+					id: "interest-nuclear",
 					name: "Nuclear Physics",
 					keywords: ["Hydrodynamics", "Shock waves", "Implosion modeling"],
 				},
 				{
+					id: "interest-economics",
 					name: "Economics and Strategy",
 					keywords: ["Decision theory", "Game theory", "Utility"],
 				},
 				{
+					id: "interest-logic",
 					name: "Mathematical Logic",
 					keywords: ["Set theory", "Axiomatization", "Foundations"],
 				},
@@ -251,6 +276,7 @@ export const sampleDraftData: DraftData = {
 			title: "Awards",
 			items: [
 				{
+					id: "award-fermi",
 					title: "Enrico Fermi Award",
 					awarder: "U.S. Atomic Energy Commission",
 					date: "1956",
@@ -261,6 +287,7 @@ export const sampleDraftData: DraftData = {
 					description: "Recognized for contributions to nuclear physics and the atomic energy program.",
 				},
 				{
+					id: "award-medal-merit",
 					title: "Medal for Merit",
 					awarder: "United States",
 					date: "1947",
@@ -281,6 +308,7 @@ export const sampleDraftData: DraftData = {
 			title: "Publications",
 			items: [
 				{
+					id: "pub-theory-games",
 					title: "Theory of Games and Economic Behavior",
 					publisher: "Princeton University Press",
 					date: "1944",
@@ -292,6 +320,7 @@ export const sampleDraftData: DraftData = {
 						"Co-authored with Oskar Morgenstern; established the mathematical foundations of game theory.",
 				},
 				{
+					id: "pub-quantum",
 					title: "Mathematical Foundations of Quantum Mechanics",
 					publisher: "Princeton University Press",
 					date: "1932",
@@ -303,6 +332,7 @@ export const sampleDraftData: DraftData = {
 						"Formalized the Hilbert space framework for quantum mechanics and operator theory.",
 				},
 				{
+					id: "pub-computer-brain",
 					title: "The Computer and the Brain",
 					publisher: "Yale University Press",
 					date: "1958",
@@ -319,6 +349,7 @@ export const sampleDraftData: DraftData = {
 			title: "Public Service",
 			items: [
 				{
+					id: "vol-atomic-energy",
 					organization: "U.S. Atomic Energy Commission - General Advisory Committee",
 					location: "Washington, DC, USA",
 					period: "1947 - 1952",
@@ -335,6 +366,7 @@ export const sampleDraftData: DraftData = {
 			title: "References",
 			items: [
 				{
+					id: "ref-upon-request",
 					name: "Available upon request",
 					position: "",
 					website: {
@@ -349,10 +381,12 @@ export const sampleDraftData: DraftData = {
 	},
 	customSections: [
 		{
+			id: "custom-defense-projects",
 			title: "Defense Research Projects",
 			type: "projects",
 			items: [
 				{
+					id: "proj-shockwave",
 					name: "Shockwave and Hydrodynamic Calculations",
 					period: "1940s",
 					website: {

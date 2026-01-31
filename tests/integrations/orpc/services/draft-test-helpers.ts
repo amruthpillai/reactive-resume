@@ -107,7 +107,7 @@ export const setupDraftServiceTestContext = async () => {
 		);
 	`);
 
-	return await import("@/integrations/orpc/services/draft");
+	return await import("@/integrations/orpc/services/draft/draft");
 };
 
 /**

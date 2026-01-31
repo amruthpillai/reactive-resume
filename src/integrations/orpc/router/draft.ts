@@ -2,7 +2,7 @@ import z from "zod";
 import { draftDataSchema } from "@/schema/draft/data";
 import { draftOperationListSchema } from "@/schema/draft/operations";
 import { protectedProcedure } from "../context";
-import { draftService } from "../services/draft";
+import { draftService } from "../services/draft/draft";
 
 /**
  * @remarks Lists draft identifiers for the authenticated user.
