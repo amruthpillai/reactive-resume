@@ -8,6 +8,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { applyItemOpsOperation } from "@/integrations/orpc/services/draft/item-ops";
+import type { DraftData, DraftResume } from "@/schema/draft/data";
 import { createEmptyDraftData } from "./draft-test-helpers";
 
 /**
@@ -84,7 +85,7 @@ describe("applyItemOpsOperation", () => {
 	 * Supports non-section targets such as custom fields and custom sections.
 	 */
 	it("upserts custom fields and custom section items", () => {
-		const draft = {
+		const draft: DraftData = {
 			...createEmptyDraftData(),
 			customSections: [
 				{
@@ -112,7 +113,11 @@ describe("applyItemOpsOperation", () => {
 
 		expect(withCustomSectionItem.basics.customFields[0]?.text).toBe("Open to relocation");
 		expect(withCustomSectionItem.basics.customFields[0]?.link).toBe("");
-		expect(withCustomSectionItem.customSections[0]?.items[0]?.id).toBe("custom-item-1");
-		expect(withCustomSectionItem.customSections[0]?.items[0]?.name).toBe("Analytical Engine Notes");
+		const customSection = withCustomSectionItem.customSections[0];
+		const customItem = customSection?.items[0] as DraftResume.ProjectItemData | undefined;
+
+		expect(customSection?.type).toBe("projects");
+		expect(customItem?.id).toBe("custom-item-1");
+		expect(customItem?.name).toBe("Analytical Engine Notes");
 	});
 });
