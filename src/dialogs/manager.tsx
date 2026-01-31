@@ -18,6 +18,7 @@ import { CreateProjectDialog, UpdateProjectDialog } from "./resume/sections/proj
 import { CreatePublicationDialog, UpdatePublicationDialog } from "./resume/sections/publication";
 import { CreateReferenceDialog, UpdateReferenceDialog } from "./resume/sections/reference";
 import { CreateSkillDialog, UpdateSkillDialog } from "./resume/sections/skill";
+import { CreateSummaryItemDialog, UpdateSummaryItemDialog } from "./resume/sections/summary-item";
 import { CreateVolunteerDialog, UpdateVolunteerDialog } from "./resume/sections/volunteer";
 import { TemplateGalleryDialog } from "./resume/template/gallery";
 import { useDialogStore } from "./store";
@@ -59,6 +60,8 @@ export function DialogManager() {
 		.with({ type: "resume.sections.volunteer.update" }, ({ data }) => <UpdateVolunteerDialog data={data} />)
 		.with({ type: "resume.sections.references.create" }, ({ data }) => <CreateReferenceDialog data={data} />)
 		.with({ type: "resume.sections.references.update" }, ({ data }) => <UpdateReferenceDialog data={data} />)
+		.with({ type: "resume.sections.summary.create" }, ({ data }) => <CreateSummaryItemDialog data={data} />)
+		.with({ type: "resume.sections.summary.update" }, ({ data }) => <UpdateSummaryItemDialog data={data} />)
 		.with({ type: "resume.sections.custom.create" }, ({ data }) => <CreateCustomSectionDialog data={data} />)
 		.with({ type: "resume.sections.custom.update" }, ({ data }) => <UpdateCustomSectionDialog data={data} />)
 		.otherwise(() => null);
