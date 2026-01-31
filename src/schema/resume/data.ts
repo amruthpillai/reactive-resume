@@ -7,6 +7,17 @@ export const iconSchema = z
 		"The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available.",
 	);
 
+export const itemOptionsSchema = z
+	.object({
+		showLinkInTitle: z
+			.boolean()
+			.catch(false)
+			.describe(
+				"If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+			),
+	})
+	.catch({ showLinkInTitle: false });
+
 export const urlSchema = z.object({
 	url: z.string().describe("The URL to show as a link. Must be a valid URL with a protocol (http:// or https://)."),
 	label: z.string().describe("The label to display for the URL. Leave blank to display the URL as-is."),
@@ -84,6 +95,7 @@ export const summarySchema = z.object({
 export const baseItemSchema = z.object({
 	id: z.string().describe("The unique identifier for the item. Usually generated as a UUID."),
 	hidden: z.boolean().describe("Whether to hide the item from the resume."),
+	options: itemOptionsSchema.optional().describe("Display options for this item."),
 });
 
 export const summaryItemSchema = baseItemSchema.extend({
