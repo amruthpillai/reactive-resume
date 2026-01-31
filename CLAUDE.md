@@ -64,6 +64,7 @@ pnpm knip
 - `plugins/` - Nitro server plugins (eg. auto-migration on startup)
 - `migrations/` - Drizzle database migrations
 - `locales/` - i18n translation files (managed by Lingui)
+- `tests/` - mirrors `src/` folder structure for related `*.test.ts` files.
 
 ### Key Integrations (`src/integrations/`)
 

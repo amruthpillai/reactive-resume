@@ -2,20 +2,18 @@
  * @packageDocumentation
  *
  * @remarks
- * Exercises the Draft command/operation API using an in-memory Postgres instance.
- * The goal is to validate that batched operations mutate persisted drafts as expected,
- * without relying on an external database.
+ * Shared helpers for Draft service tests that rely on an in-memory Postgres instance.
+ * The helpers centralize database setup/teardown and provide reusable draft fixtures
+ * to keep test suites focused on behavior rather than boilerplate.
  */
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle, type PgliteDatabase } from "drizzle-orm/pglite";
+import { vi } from "vitest";
 import { schema } from "@/integrations/drizzle";
 import type { DraftData } from "@/schema/draft/data";
-import type { DraftOperation } from "@/schema/draft/operations";
 
 let testDb: PgliteDatabase<typeof schema>;
 let client: PGlite;
-let draftService: typeof import("./draft").draftService;
 
 /**
  * @remarks
@@ -33,7 +31,7 @@ vi.mock("@/integrations/drizzle/client", () => ({
  *
  * @returns A DraftData-compliant object populated with empty strings and arrays.
  */
-const createEmptyDraftData = (): DraftData => ({
+export const createEmptyDraftData = (): DraftData => ({
 	picture: { url: "" },
 	basics: {
 		name: "",
@@ -65,10 +63,36 @@ const createEmptyDraftData = (): DraftData => ({
 
 /**
  * @remarks
+ * Produces a DraftData payload that differs from the empty baseline, enabling
+ * update assertions without deep-partial merges.
+ *
+ * @returns A DraftData payload with populated basics and summary fields.
+ */
+export const createDraftDataWithDetails = (): DraftData => ({
+	...createEmptyDraftData(),
+	basics: {
+		name: "Ada Lovelace",
+		headline: "Analyst",
+		email: "ada@example.com",
+		phone: "",
+		location: "London",
+		website: { label: "Portfolio", url: "https://example.com" },
+		customFields: [],
+	},
+	summary: {
+		title: "Summary",
+		content: "First programmer.",
+	},
+});
+
+/**
+ * @remarks
  * Initializes an in-memory Postgres database and Drizzle client, then
  * creates the minimal schema required by the draft service.
+ *
+ * @returns The draft service module bound to the in-memory database.
  */
-const setupInMemoryDatabase = async () => {
+export const setupDraftServiceTestContext = async () => {
 	client = new PGlite("memory://");
 	await client.waitReady;
 	testDb = drizzle({ client, schema });
@@ -82,70 +106,22 @@ const setupInMemoryDatabase = async () => {
 			"updated_at" timestamptz NOT NULL DEFAULT now()
 		);
 	`);
+
+	return await import("@/integrations/orpc/services/draft");
 };
-
-beforeAll(async () => {
-	await setupInMemoryDatabase();
-	({ draftService } = await import("./draft"));
-});
-
-beforeEach(async () => {
-	await client.exec(`DELETE FROM "draft";`);
-});
-
-afterAll(async () => {
-	await client.close();
-});
 
 /**
  * @remarks
- * Validates that the draft service applies a batched set of operations in order.
+ * Removes all draft rows from the in-memory database to keep test isolation.
  */
-describe("draftService.applyOperations", () => {
-	/**
-	 * @remarks
-	 * Applies replace-style operations and verifies persisted state changes.
-	 */
-	it("applies batched operations to a persisted draft", async () => {
-		const userId = "00000000-0000-0000-0000-000000000001";
-		const draftId = await draftService.create({ userId, data: createEmptyDraftData() });
+export const resetDraftServiceTestContext = async (): Promise<void> => {
+	await client.exec(`DELETE FROM "draft";`);
+};
 
-		const operations: DraftOperation[] = [
-			{
-				op: "replaceBasics",
-				data: {
-					name: "Ada Lovelace",
-					headline: "Analyst",
-					email: "ada@example.com",
-					phone: "",
-					location: "London",
-					website: { label: "Portfolio", url: "https://example.com" },
-					customFields: [],
-				},
-			},
-			{
-				op: "replaceSummary",
-				data: {
-					title: "Summary",
-					content: "First programmer.",
-				},
-			},
-			{
-				op: "replaceSection",
-				section: "experience",
-				data: {
-					title: "Experience",
-					items: [],
-				},
-			},
-		];
-
-		await draftService.applyOperations({ id: draftId, userId, operations });
-
-		const updated = await draftService.getById({ id: draftId, userId });
-		expect(updated.data.basics.name).toBe("Ada Lovelace");
-		expect(updated.data.basics.location).toBe("London");
-		expect(updated.data.summary.content).toBe("First programmer.");
-		expect(updated.data.sections.experience.title).toBe("Experience");
-	});
-});
+/**
+ * @remarks
+ * Closes the in-memory database connection after a test suite completes.
+ */
+export const teardownDraftServiceTestContext = async (): Promise<void> => {
+	await client.close();
+};

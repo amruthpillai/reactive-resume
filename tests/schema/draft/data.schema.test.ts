@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { DraftData } from "./data";
-import { draftDataSchema, urlValueSchema } from "./data";
+import type { DraftData } from "@/schema/draft/data";
+import { draftDataSchema, urlValueSchema } from "@/schema/draft/data";
 
 /**
  * @remarks
