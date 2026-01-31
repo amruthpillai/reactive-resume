@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { languageItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -46,8 +47,10 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -61,7 +64,7 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 					<LanguageForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 
@@ -105,8 +108,10 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -120,7 +125,7 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 					<LanguageForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 

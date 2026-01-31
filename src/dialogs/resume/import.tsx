@@ -14,6 +14,7 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { useAIStore } from "@/integrations/ai/store";
 import { JSONResumeImporter } from "@/integrations/import/json-resume";
 import { ReactiveResumeJSONImporter } from "@/integrations/import/reactive-resume-json";
@@ -97,6 +98,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 		if (!file) return;
 		form.setValue("file", file, { shouldDirty: true });
 	};
+
+	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = async (values: FormValues) => {
 		if (values.type === "") return;
@@ -182,7 +185,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	};
 
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<DownloadSimpleIcon />

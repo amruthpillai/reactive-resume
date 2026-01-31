@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { interestItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 import { cn } from "@/utils/style";
@@ -48,8 +49,10 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -63,7 +66,7 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 					<InterestForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 
@@ -107,8 +110,10 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -122,7 +127,7 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 					<InterestForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 

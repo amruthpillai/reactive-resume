@@ -1,15 +1,25 @@
 import { t } from "@lingui/core/macro";
 import { useCallback } from "react";
+import type { FieldValues, UseFormReturn } from "react-hook-form";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 
 interface UseFormBlockerOptions {
-	shouldBlock: () => boolean;
+	shouldBlock?: () => boolean;
 }
 
-export function useFormBlocker({ shouldBlock }: UseFormBlockerOptions) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
+export function useFormBlocker<T extends FieldValues>(form: UseFormReturn<T>, options?: UseFormBlockerOptions) {
 	const confirm = useConfirm();
+	const closeDialog = useDialogStore((state) => state.closeDialog);
+
+	// Subscribe to formState changes by reading during render (react-hook-form requirement)
+	const { isDirty, isSubmitting } = form.formState;
+
+	const shouldBlock = useCallback(() => {
+		// Use custom shouldBlock if provided, otherwise use default form state check
+		if (options?.shouldBlock) return options.shouldBlock();
+		return isDirty && !isSubmitting;
+	}, [options, isDirty, isSubmitting]);
 
 	const requestClose = useCallback(async () => {
 		if (!shouldBlock()) {

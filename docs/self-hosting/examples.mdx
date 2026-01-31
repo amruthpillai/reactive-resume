@@ -59,14 +59,14 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH}"
 
   postgres:
-    image: postgres:16
+    image: postgres:latest
     restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     networks:
       - reactive_resume_network
     healthcheck:
@@ -79,10 +79,11 @@ services:
     image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
     environment:
-      - TIMEOUT=120000
-      - CONCURRENT=10
+      - QUEUED=10
       - HEALTH=true
-      - TOKEN=your-secret-token
+      - CONCURRENT=5
+      # Optional: Set a token for authentication
+      # - TOKEN=your-secret-token
     networks:
       - reactive_resume_network
     healthcheck:
@@ -166,14 +167,14 @@ services:
       - app
 
   postgres:
-    image: postgres:16
+    image: postgres:latest
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     networks:
       - reactive_resume_network
     healthcheck:
@@ -186,17 +187,13 @@ services:
     image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
     environment:
-      - TIMEOUT=120000
-      - CONCURRENT=10
+      - QUEUED=10
       - HEALTH=true
-      - TOKEN=your-secret-token
+      - CONCURRENT=5
+      # Optional: Set a token for authentication
+      # - TOKEN=your-secret-token
     networks:
       - reactive_resume_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=your-secret-token"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   app:
     image: amruthpillai/reactive-resume:latest
@@ -312,8 +309,7 @@ This example demonstrates a production-grade Docker Swarm deployment with multip
 ```yaml compose-swarm.yml lines expandable
 services:
   postgres:
-    image: postgres:18
-    command: postgres -c config_file=/etc/postgresql.conf
+    image: postgres:latest
     networks:
       - reactive_resume_network
     volumes:
@@ -322,37 +318,24 @@ services:
       - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=$POSTGRES_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-    configs:
-      - source: reactive_resume_postgres_config
-        target: /etc/postgresql.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
     deploy:
       mode: replicated
       replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
 
   printer:
     image: ghcr.io/browserless/chromium:latest
     networks:
       - reactive_resume_network
     environment:
-      - TIMEOUT=120000
-      - CONCURRENT=10
+      - QUEUED=10
       - HEALTH=true
+      - CONCURRENT=5
       # Optional: Set a token for authentication
       # - TOKEN=your-secret-token
     healthcheck:
@@ -361,19 +344,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
     deploy:
       mode: replicated
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+      replicas: 1
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
@@ -391,19 +364,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
     deploy:
       mode: replicated
       replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
 
   seaweedfs_create_bucket:
     image: quay.io/minio/mc:latest
@@ -420,11 +383,6 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 10s
-        max_attempts: 5
-        window: 120s
 
   app:
     image: ghcr.io/amruthpillai/reactive-resume:latest
@@ -461,27 +419,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
     deploy:
       mode: replicated
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback
-        order: start-first
-      rollback_config:
-        parallelism: 1
-        delay: 10s
+      replicas: 1
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.app.rule=Host(`rxresu.me`)"

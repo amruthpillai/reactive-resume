@@ -14,6 +14,7 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -45,6 +46,8 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 		},
 	});
 
+	const { blockEvents } = useFormBlocker(form);
+
 	const onSubmit = async (values: FormValues) => {
 		const toastId = toast.loading(t`Creating your API key...`);
 
@@ -63,7 +66,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 	};
 
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />

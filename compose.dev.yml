@@ -20,9 +20,9 @@ services:
     image: postgres:latest
     restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql
     ports:
@@ -40,9 +40,9 @@ services:
     ports:
       - "4000:3000"
     environment:
-      - QUEUED=30
+      - QUEUED=10
       - HEALTH=true
-      - CONCURRENT=20
+      - CONCURRENT=5
       - TOKEN=1234567890
     healthcheck:
       test:

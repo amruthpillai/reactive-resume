@@ -153,14 +153,14 @@ FLAG_DISABLE_EMAIL_AUTH="false"
 ```yaml compose.yml
 services:
   postgres:
-    image: postgres:16
+    image: postgres:latest
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 10s

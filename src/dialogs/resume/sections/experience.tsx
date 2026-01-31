@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { experienceItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -49,8 +50,10 @@ export function CreateExperienceDialog({ data }: DialogProps<"resume.sections.ex
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -64,7 +67,7 @@ export function CreateExperienceDialog({ data }: DialogProps<"resume.sections.ex
 					<ExperienceForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 
@@ -111,8 +114,10 @@ export function UpdateExperienceDialog({ data }: DialogProps<"resume.sections.ex
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -126,7 +131,7 @@ export function UpdateExperienceDialog({ data }: DialogProps<"resume.sections.ex
 					<ExperienceForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 

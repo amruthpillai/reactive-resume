@@ -94,7 +94,7 @@ function BuilderLayout({ initialLayout, ...props }: BuilderLayoutProps) {
 		<div className="flex h-svh flex-col" {...props}>
 			<BuilderHeader />
 
-			<ResizableGroup orientation="horizontal" onLayoutChange={onLayoutChange} className="mt-14 flex-1">
+			<ResizableGroup orientation="horizontal" className="mt-14 flex-1" onLayoutChange={onLayoutChange}>
 				<ResizablePanel
 					collapsible
 					id="left"
@@ -107,11 +107,11 @@ function BuilderLayout({ initialLayout, ...props }: BuilderLayoutProps) {
 				>
 					<BuilderSidebarLeft />
 				</ResizablePanel>
-				<ResizableSeparator withHandle className="z-20 border-r" />
+				<ResizableSeparator withHandle className="z-20 border-s" />
 				<ResizablePanel id="artboard" defaultSize={artboardSize} className="h-[calc(100svh-3.5rem)]">
 					<Outlet />
 				</ResizablePanel>
-				<ResizableSeparator withHandle className="z-20 border-l" />
+				<ResizableSeparator withHandle className="z-20 border-e" />
 				<ResizablePanel
 					collapsible
 					id="right"

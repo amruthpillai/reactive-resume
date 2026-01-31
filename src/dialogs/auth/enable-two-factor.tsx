@@ -16,6 +16,7 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -52,6 +53,17 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 		resolver: zodResolver(verifyFormSchema),
 		defaultValues: {
 			code: "",
+		},
+	});
+
+	const enableFormState = enableForm.formState;
+	const verifyFormState = verifyForm.formState;
+
+	const { blockEvents, requestClose } = useFormBlocker(enableForm, {
+		shouldBlock: () => {
+			if (step === "enable") return enableFormState.isDirty && !enableFormState.isSubmitting;
+			if (step === "verify") return verifyFormState.isDirty && !verifyFormState.isSubmitting;
+			return false;
 		},
 	});
 
@@ -136,7 +148,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 	};
 
 	return (
-		<DialogContent className="max-w-md">
+		<DialogContent className="max-w-md" {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle>
 					{match(step)
@@ -257,7 +269,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 									/>
 
 									<DialogFooter className="gap-x-2">
-										<Button type="button" variant="outline" onClick={closeDialog}>
+										<Button type="button" variant="outline" onClick={requestClose}>
 											<Trans>Cancel</Trans>
 										</Button>
 										<Button type="submit">

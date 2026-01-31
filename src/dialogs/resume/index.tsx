@@ -57,9 +57,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 		form.setValue("slug", slugify(name), { shouldDirty: true });
 	}, [form, name]);
 
-	const { blockEvents } = useFormBlocker({
-		shouldBlock: () => form.formState.isDirty && !form.formState.isSubmitting,
-	});
+	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (data: FormValues) => {
 		const toastId = toast.loading(t`Creating your resume...`);
@@ -170,9 +168,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 		form.setValue("slug", slugify(name), { shouldDirty: true });
 	}, [form, name]);
 
-	const { blockEvents } = useFormBlocker({
-		shouldBlock: () => form.formState.isDirty && !form.formState.isSubmitting,
-	});
+	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (data: FormValues) => {
 		const toastId = toast.loading(t`Updating your resume...`);
@@ -243,9 +239,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 		form.setValue("slug", slugify(name), { shouldDirty: true });
 	}, [form, name]);
 
-	const { blockEvents } = useFormBlocker({
-		shouldBlock: () => form.formState.isDirty && !form.formState.isSubmitting,
-	});
+	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (values: FormValues) => {
 		const toastId = toast.loading(t`Duplicating your resume...`);

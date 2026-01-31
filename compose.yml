@@ -5,9 +5,9 @@ services:
     image: postgres:latest
     restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
@@ -21,10 +21,9 @@ services:
     image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
     environment:
-      - QUEUED=30
-      - TIMEOUT=-1
+      - QUEUED=10
       - HEALTH=true
-      - CONCURRENT=20
+      - CONCURRENT=5
       - TOKEN=1234567890
     healthcheck:
       test:

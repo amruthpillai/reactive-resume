@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -41,6 +42,8 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 		},
 	});
 
+	const { blockEvents } = useFormBlocker(form);
+
 	const onSubmit = async (data: FormValues) => {
 		const toastId = toast.loading(t`Updating your password...`);
 
@@ -60,7 +63,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 	};
 
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PasswordIcon />
