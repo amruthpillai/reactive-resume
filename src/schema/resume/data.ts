@@ -86,6 +86,12 @@ export const baseItemSchema = z.object({
 	hidden: z.boolean().describe("Whether to hide the item from the resume."),
 });
 
+export const summaryItemSchema = baseItemSchema.extend({
+	content: z.string().describe("The rich text content of the summary item. This should be a HTML-formatted string."),
+});
+
+export type SummaryItem = z.infer<typeof summaryItemSchema>;
+
 export const awardItemSchema = baseItemSchema.extend({
 	title: z.string().min(1).describe("The title of the award."),
 	awarder: z.string().describe("The awarder of the award."),
@@ -288,6 +294,7 @@ export type SectionData<T extends SectionType = SectionType> = z.infer<typeof se
 export type SectionItem<T extends SectionType = SectionType> = SectionData<T>["items"][number];
 
 export const sectionTypeSchema = z.enum([
+	"summary",
 	"profiles",
 	"experience",
 	"education",
@@ -302,7 +309,10 @@ export const sectionTypeSchema = z.enum([
 	"references",
 ]);
 
+export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
+
 export const customSectionItemSchema = z.union([
+	summaryItemSchema,
 	profileItemSchema,
 	experienceItemSchema,
 	educationItemSchema,

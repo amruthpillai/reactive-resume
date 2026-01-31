@@ -11,14 +11,15 @@ import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
-import { customSectionSchema, type SectionType } from "@/schema/resume/data";
+import { type CustomSectionType, customSectionSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
 const formSchema = customSectionSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SECTION_TYPE_OPTIONS: { value: SectionType; label: string }[] = [
+const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: string }[] = [
+	{ value: "summary", label: "Summary" },
 	{ value: "experience", label: "Experience" },
 	{ value: "education", label: "Education" },
 	{ value: "projects", label: "Projects" },
