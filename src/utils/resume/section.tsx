@@ -37,7 +37,7 @@ import { cn } from "../style";
 export type LeftSidebarSection = "picture" | "basics" | "summary" | SectionType | "custom";
 
 // CustomSectionType values that are not in SectionType (used in custom sections only)
-export type CustomOnlyType = "cover-letter";
+type CustomOnlyType = "cover-letter";
 
 export type RightSidebarSection =
 	| "template"
