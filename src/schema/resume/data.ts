@@ -309,6 +309,8 @@ export const sectionTypeSchema = z.enum([
 	"references",
 ]);
 
+export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
+
 export const customSectionItemSchema = z.union([
 	summaryItemSchema,
 	profileItemSchema,

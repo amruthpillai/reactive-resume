@@ -27,13 +27,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
-import type { CustomSection, CustomSectionItem as CustomSectionItemType, SectionType } from "@/schema/resume/data";
+import type { CustomSection, CustomSectionItem as CustomSectionItemType, CustomSectionType } from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
 import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
 
-function getItemTitle(type: SectionType, item: CustomSectionItemType): string {
+function getItemTitle(type: CustomSectionType, item: CustomSectionItemType): string {
 	return match(type)
 		.with("summary", () => {
 			if ("content" in item) {
@@ -57,7 +57,7 @@ function getItemTitle(type: SectionType, item: CustomSectionItemType): string {
 		.exhaustive();
 }
 
-function getItemSubtitle(type: SectionType, item: CustomSectionItemType): string | undefined {
+function getItemSubtitle(type: CustomSectionType, item: CustomSectionItemType): string | undefined {
 	return match(type)
 		.with("summary", () => undefined)
 		.with("profiles", () => ("username" in item ? item.username : undefined))

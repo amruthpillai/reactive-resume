@@ -1,5 +1,11 @@
 import { match } from "ts-pattern";
-import type { CustomSectionItem, SectionItem, SectionType, SummaryItem as SummaryItemType } from "@/schema/resume/data";
+import type {
+	CustomSectionItem,
+	CustomSectionType,
+	SectionItem,
+	SectionType,
+	SummaryItem as SummaryItemType,
+} from "@/schema/resume/data";
 import { cn } from "@/utils/style";
 import { useResumeStore } from "../store/resume";
 import { AwardsItem } from "./items/awards-item";
@@ -24,7 +30,7 @@ type SectionComponentProps = {
 };
 
 // Helper to render item component based on type
-function renderItemByType(type: SectionType, item: CustomSectionItem, itemClassName?: string) {
+function renderItemByType(type: CustomSectionType, item: CustomSectionItem, itemClassName?: string) {
 	return match(type)
 		.with("summary", () => <SummaryItem {...(item as SummaryItemType)} className={itemClassName} />)
 		.with("profiles", () => <ProfilesItem {...(item as SectionItem<"profiles">)} className={itemClassName} />)
