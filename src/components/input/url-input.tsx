@@ -24,9 +24,10 @@ function ensurePrefix(url: string) {
 type Props = Omit<React.ComponentProps<"input">, "value" | "onChange"> & {
 	value: z.infer<typeof urlSchema>;
 	onChange: (value: z.infer<typeof urlSchema>) => void;
+	hideLabelButton?: boolean;
 };
 
-export function URLInput({ value, onChange, ...props }: Props) {
+export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) {
 	const handleUrlChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			onChange({
@@ -59,6 +60,7 @@ export function URLInput({ value, onChange, ...props }: Props) {
 				{...props}
 			/>
 
+		{!hideLabelButton && (
 			<InputGroupAddon align="inline-end">
 				<Popover>
 					<PopoverTrigger asChild>
@@ -77,6 +79,7 @@ export function URLInput({ value, onChange, ...props }: Props) {
 					</PopoverContent>
 				</Popover>
 			</InputGroupAddon>
+		)}
 		</InputGroup>
 	);
 }
