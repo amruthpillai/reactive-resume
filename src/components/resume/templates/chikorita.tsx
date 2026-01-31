@@ -38,7 +38,7 @@ export function ChikoritaTemplate({ pageIndex, pageLayout }: TemplateProps) {
 		<div className="template-chikorita page-content">
 			{/* Sidebar Background */}
 			{!fullWidth && (
-				<div className="page-sidebar-background absolute inset-y-0 z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color) ltr:end-0 rtl:start-0" />
+				<div className="page-sidebar-background pointer-events-none absolute inset-y-0 z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color) ltr:end-0 rtl:start-0" />
 			)}
 
 			{isFirstPage && <Header />}

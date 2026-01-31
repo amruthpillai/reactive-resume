@@ -120,6 +120,10 @@ const getAuthConfig = () => {
 				},
 			},
 			additionalFields: {
+				name: {
+					type: "string",
+					required: true,
+				},
 				username: {
 					type: "string",
 					required: true,

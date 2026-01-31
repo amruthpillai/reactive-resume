@@ -27,14 +27,14 @@ export function GlalieTemplate({ pageIndex, pageLayout }: TemplateProps) {
 		<div className="template-glalie page-content">
 			{/* Sidebar Background */}
 			{(!fullWidth || isFirstPage) && (
-				<div className="page-sidebar-background absolute inset-y-0 z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)/20 ltr:start-0 rtl:end-0" />
+				<div className="page-sidebar-background pointer-events-none absolute inset-y-0 z-0 w-(--page-sidebar-width) shrink-0 bg-(--page-primary-color)/20 ltr:start-0 rtl:end-0" />
 			)}
 
 			<div className="flex">
 				{(!fullWidth || isFirstPage) && (
 					<aside
 						data-layout="sidebar"
-						className="group page-sidebar flex w-(--page-sidebar-width) shrink-0 flex-col space-y-4 px-(--page-margin-x) pt-(--page-margin-y)"
+						className="group page-sidebar z-10 flex w-(--page-sidebar-width) shrink-0 flex-col space-y-4 px-(--page-margin-x) pt-(--page-margin-y)"
 					>
 						{isFirstPage && <Header />}
 
@@ -49,7 +49,7 @@ export function GlalieTemplate({ pageIndex, pageLayout }: TemplateProps) {
 					</aside>
 				)}
 
-				<main data-layout="main" className="group page-main">
+				<main data-layout="main" className="group page-main z-10">
 					<div className="space-y-4 px-(--page-margin-x) pt-(--page-margin-y)">
 						{main.map((section) => {
 							const Component = getSectionComponent(section, { sectionClassName });
