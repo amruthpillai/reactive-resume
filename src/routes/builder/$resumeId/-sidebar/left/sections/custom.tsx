@@ -27,7 +27,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
-import type { CustomSection, CustomSectionItem as CustomSectionItemType, CustomSectionType } from "@/schema/resume/data";
+import type {
+	CustomSection,
+	CustomSectionItem as CustomSectionItemType,
+	CustomSectionType,
+} from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
 import { SectionBase } from "../shared/section-base";

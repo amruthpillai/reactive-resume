@@ -62,7 +62,11 @@ function isStandardSectionId(sectionId: string): sectionId is SectionType {
  * @param customSectionId - The custom section ID (if applicable)
  * @returns The section title
  */
-export function getSourceSectionTitle(resumeData: ResumeData, type: CustomSectionType, customSectionId?: string): string {
+export function getSourceSectionTitle(
+	resumeData: ResumeData,
+	type: CustomSectionType,
+	customSectionId?: string,
+): string {
 	if (customSectionId) {
 		const customSection = resumeData.customSections.find((s) => s.id === customSectionId);
 		return customSection?.title ?? getDefaultSectionTitle(type);

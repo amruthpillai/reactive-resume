@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
-import { customSectionSchema, type CustomSectionType } from "@/schema/resume/data";
+import { type CustomSectionType, customSectionSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
 const formSchema = customSectionSchema;

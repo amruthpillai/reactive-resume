@@ -30,7 +30,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
-import type { CustomSectionItem, CustomSectionType, SectionItem as SectionItemType, SectionType } from "@/schema/resume/data";
+import type {
+	CustomSectionItem,
+	CustomSectionType,
+	SectionItem as SectionItemType,
+	SectionType,
+} from "@/schema/resume/data";
 import {
 	addItemToSection,
 	createCustomSectionWithItem,
@@ -161,7 +166,13 @@ type Props<T extends CustomSectionItem | SectionItemType> = {
 	customSectionId?: string;
 };
 
-export function SectionItem<T extends CustomSectionItem | SectionItemType>({ type, item, title, subtitle, customSectionId }: Props<T>) {
+export function SectionItem<T extends CustomSectionItem | SectionItemType>({
+	type,
+	item,
+	title,
+	subtitle,
+	customSectionId,
+}: Props<T>) {
 	const confirm = useConfirm();
 	const controls = useDragControls();
 	const { openDialog } = useDialogStore();
