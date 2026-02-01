@@ -286,8 +286,6 @@ class S3StorageService implements StorageService {
 				message: "S3 storage is accessible and credentials are valid.",
 			};
 		} catch (error: unknown) {
-			console.error(error);
-
 			return {
 				type: "s3",
 				status: "unhealthy",

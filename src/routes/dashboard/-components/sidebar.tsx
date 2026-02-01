@@ -179,7 +179,7 @@ export function DashboardSidebar() {
 							animate={{ y: 0, height: "auto", opacity: 1 }}
 							exit={{ y: 50, height: 0, opacity: 0 }}
 						>
-							<Copyright className="shrink-0 break-words whitespace-normal p-2" />
+							<Copyright className="wrap-break-word shrink-0 whitespace-normal p-2" />
 						</motion.div>
 					)}
 				</AnimatePresence>

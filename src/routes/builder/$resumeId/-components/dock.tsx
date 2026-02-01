@@ -82,9 +82,8 @@ export function BuilderDock() {
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
 			downloadFromUrl(url, filename);
-		} catch (error) {
+		} catch {
 			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
-			console.error("[Error from printResumeAsPDF]:", error);
 		} finally {
 			toast.dismiss(toastId);
 		}

@@ -1,4 +1,4 @@
-import { createORPCClient, onError } from "@orpc/client";
+import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { BatchLinkPlugin } from "@orpc/client/plugins";
 import { createRouterClient, type InferRouterInputs, type InferRouterOutputs, type RouterClient } from "@orpc/server";
@@ -11,11 +11,11 @@ import { getLocale } from "@/utils/locale";
 export const getORPCClient = createIsomorphicFn()
 	.server((): RouterClient<typeof router> => {
 		return createRouterClient(router, {
-			interceptors: [
-				onError((error) => {
-					console.error(error);
-				}),
-			],
+			// interceptors: [
+			// 	onError((error) => {
+			// 		console.error(error);
+			// 	}),
+			// ],
 			context: async () => {
 				const locale = await getLocale();
 				const reqHeaders = getRequestHeaders();
@@ -33,12 +33,12 @@ export const getORPCClient = createIsomorphicFn()
 			fetch: (request, init) => {
 				return fetch(request, { ...init, credentials: "include" });
 			},
-			interceptors: [
-				onError((error) => {
-					if (error instanceof DOMException) return;
-					console.error(error);
-				}),
-			],
+			// interceptors: [
+			// 	onError((error) => {
+			// 		if (error instanceof DOMException) return;
+			// 		console.error(error);
+			// 	}),
+			// ],
 			plugins: [new BatchLinkPlugin({ groups: [{ condition: () => true, context: {} }] })],
 		});
 

@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import { useIsClient } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
@@ -14,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { type AIProvider, useAIStore } from "@/integrations/ai/store";
-import { client } from "@/integrations/orpc/client";
+import { orpc } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
 import { DashboardHeader } from "../-components/header";
 
@@ -62,19 +63,7 @@ function AIForm() {
 		return providerOptions.find((option) => option.value === provider);
 	}, [provider]);
 
-	const { mutate: testConnection, isPending: isTesting } = useMutation({
-		mutationFn: async () => {
-			if (testStatus === "success") return;
-			const stream = await client.ai.testConnection({ provider, model, apiKey, baseURL });
-			let result = "";
-			for await (const chunk of stream) {
-				result += chunk;
-			}
-			set((draft) => {
-				draft.testStatus = result === "1" ? "success" : "failure";
-			});
-		},
-	});
+	const { mutate: testConnection, isPending: isTesting } = useMutation(orpc.ai.testConnection.mutationOptions());
 
 	const handleProviderChange = (value: AIProvider | null) => {
 		if (!value) return;
@@ -99,6 +88,22 @@ function AIForm() {
 		set((draft) => {
 			draft.baseURL = value;
 		});
+	};
+
+	const handleTestConnection = () => {
+		testConnection(
+			{ provider, model, apiKey, baseURL },
+			{
+				onSuccess: (data) => {
+					set((draft) => {
+						draft.testStatus = data ? "success" : "failure";
+					});
+				},
+				onError: (error) => {
+					toast.error(error.message);
+				},
+			},
+		);
 	};
 
 	return (
@@ -158,7 +163,7 @@ function AIForm() {
 			</div>
 
 			<div>
-				<Button variant="outline" disabled={isTesting || enabled} onClick={() => testConnection()}>
+				<Button variant="outline" disabled={isTesting || enabled} onClick={handleTestConnection}>
 					{isTesting ? (
 						<Spinner />
 					) : testStatus === "success" ? (
