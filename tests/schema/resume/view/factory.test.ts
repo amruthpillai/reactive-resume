@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
+import type { DraftData, DraftResume } from "@/schema/draft/data";
 import { draftFactory } from "@/schema/draft/data";
-import type { DraftData } from "@/schema/resume/data";
 import { resumeStylesFactory } from "@/schema/resume/styles";
 import { resumeViewFactory, resumeViewSchema, unzipResumeView, zipResumeView } from "@/schema/resume/view";
 
-type SectionKey = keyof DraftData["sections"];
+type SectionKey = DraftResume.SectionType;
 
 const sectionTypes = [
 	"profiles",
@@ -33,8 +33,8 @@ const createDraftWithSectionItems = (): DraftData => {
 
 	for (const type of sectionTypes) {
 		data.sections[type].items = [
-			draftFactory.sections.item.empty(type, `${type}-1`) as DraftData["sections"][typeof type]["items"][number],
-		];
+			draftFactory.sections.item.empty(type, `${type}-1`),
+		] as DraftData["sections"][typeof type]["items"];
 	}
 
 	return data;

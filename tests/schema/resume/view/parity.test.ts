@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { draftFactory, type DraftData } from "@/schema/draft/data";
+import { type DraftData, draftFactory } from "@/schema/draft/data";
 import { resumeDataSchema } from "@/schema/resume/data.ts";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { resumeStylesFactory } from "@/schema/resume/styles";
@@ -119,7 +119,10 @@ const createFullDraft = (): DraftData => {
 		const section = draftFactory.customSections.item.empty(`custom-${type}`, type);
 		const item = seedRequiredFields(
 			type,
-			draftFactory.sections.item.empty(type, `custom-${type}-item`) as DraftData["sections"][typeof type]["items"][number],
+			draftFactory.sections.item.empty(
+				type,
+				`custom-${type}-item`,
+			) as DraftData["sections"][typeof type]["items"][number],
 		);
 		section.items = [item];
 		return section;
