@@ -56,7 +56,7 @@ services:
       timeout: 10s
       retries: 3
 
-  seaweedfs-create-bucket:
+  seaweedfs_create_bucket:
     image: quay.io/minio/mc:latest
     restart: on-failure
     entrypoint: >
@@ -70,7 +70,7 @@ services:
       seaweedfs:
         condition: service_healthy
 
-  app:
+  reactive_resume:
     image: amruthpillai/reactive-resume:latest
     # image: ghcr.io/amruthpillai/reactive-resume:latest
     environment:
@@ -78,7 +78,7 @@ services:
       - TZ=Etc/UTC
       - NODE_ENV=production
       - APP_URL=http://localhost:3000
-      - PRINTER_APP_URL=http://app:3000
+      - PRINTER_APP_URL=http://reactive_resume:3000
       # Printer
       - PRINTER_ENDPOINT=ws://browserless:3000?token=1234567890
       # - PRINTER_ENDPOINT=http://chrome:9222 # Or, if you're using chromedp/headless-shell
@@ -101,7 +101,7 @@ services:
         condition: service_healthy
       browserless:
         condition: service_healthy
-      seaweedfs-create-bucket:
+      seaweedfs_create_bucket:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]

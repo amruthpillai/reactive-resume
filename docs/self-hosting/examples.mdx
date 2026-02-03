@@ -92,18 +92,18 @@ services:
       timeout: 10s
       retries: 3
 
-  app:
+  reactive_resume:
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
     environment:
       - APP_URL=https://resume.${DOMAIN}
-      - PRINTER_APP_URL=http://app:3000
+      - PRINTER_APP_URL=http://reactive_resume:3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
       - PRINTER_ENDPOINT=http://printer:3000
       - AUTH_SECRET=${AUTH_SECRET}
       # Add other optional env vars as needed (SMTP, S3, OAuth, etc.)
     volumes:
-      - app_data:/app/data
+      - reactive_resume_data:/app/data
     networks:
       - reactive_resume_network
     depends_on:
@@ -130,7 +130,7 @@ networks:
 volumes:
   traefik_letsencrypt:
   postgres_data:
-  app_data:
+  reactive_resume_data:
 ```
 
 **Environment variables (`.env`):**
@@ -163,8 +163,6 @@ services:
       - ./certs:/etc/nginx/certs:ro
     networks:
       - reactive_resume_network
-    depends_on:
-      - app
 
   postgres:
     image: postgres:latest
@@ -195,18 +193,18 @@ services:
     networks:
       - reactive_resume_network
 
-  app:
+  reactive_resume:
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
     environment:
       - APP_URL=https://resume.${DOMAIN}
-      - PRINTER_APP_URL=http://app:3000
+      - PRINTER_APP_URL=http://reactive_resume:3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
       - PRINTER_ENDPOINT=http://printer:3000
       - AUTH_SECRET=${AUTH_SECRET}
       # Add other optional env vars as needed (SMTP, S3, OAuth, etc.)
     volumes:
-      - app_data:/app/data
+      - reactive_resume_data:/app/data
     networks:
       - reactive_resume_network
     depends_on:
@@ -226,7 +224,7 @@ networks:
 
 volumes:
   postgres_data:
-  app_data:
+  reactive_resume_data:
 ```
 
 **nginx configuration (`nginx.conf`):**
@@ -238,7 +236,7 @@ events {
 
 http {
     upstream reactive_resume {
-        server app:3000;
+        server reactive_resume:3000;
     }
 
     # Redirect HTTP to HTTPS
@@ -384,13 +382,13 @@ services:
       mode: replicated
       replicas: 1
 
-  app:
+  reactive_resume:
     image: ghcr.io/amruthpillai/reactive-resume:latest
     networks:
       - traefik_network
       - reactive_resume_network
     volumes:
-      - reactive_resume_app_data:/app/data
+      - reactive_resume_data:/app/data
     environment:
       - APP_URL=$APP_URL
       # If using browserless with token auth, include the token in the URL:
@@ -447,8 +445,8 @@ volumes:
     name: reactive_resume_postgres_data
   reactive_resume_seaweedfs_data:
     name: reactive_resume_seaweedfs_data
-  reactive_resume_app_data:
-    name: reactive_resume_app_data
+  reactive_resume_data:
+    name: reactive_resume_data
 ```
 
 **Deploy the stack:**

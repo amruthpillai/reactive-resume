@@ -77,7 +77,7 @@ services:
       timeout: 10s
       retries: 3
 
-  seaweedfs-create-bucket:
+  seaweedfs_create_bucket:
     image: quay.io/minio/mc:latest
     restart: on-failure
     entrypoint: >

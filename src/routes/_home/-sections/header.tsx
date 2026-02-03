@@ -16,7 +16,6 @@ export function Header() {
 	const ticking = useRef(false);
 	const springY = useSpring(y, { stiffness: 300, damping: 40 });
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: not required to be exhaustive
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 

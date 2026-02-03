@@ -57,7 +57,6 @@ function composeRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
  * Accepts callback refs and RefObject(s)
  */
 function useComposedRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
-	// biome-ignore lint/correctness/useExhaustiveDependencies: we want to memoize by all values
 	return useCallback(composeRefs(...refs), refs);
 }
 

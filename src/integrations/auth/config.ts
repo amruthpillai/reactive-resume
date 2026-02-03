@@ -143,8 +143,10 @@ const getAuthConfig = () => {
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GOOGLE_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
+					const name = profile.name ?? profile.email.split("@")[0];
+
 					return {
-						name: profile.name,
+						name,
 						email: profile.email,
 						image: profile.picture,
 						username: profile.email.split("@")[0],
@@ -162,8 +164,10 @@ const getAuthConfig = () => {
 				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GITHUB_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
+					const name = profile.name ?? profile.login ?? String(profile.id);
 					const login = profile.login ?? String(profile.id);
 					const normalizedLogin = toUsername(login);
+
 					const [legacyAccount] = await db
 						.select({
 							accountId: schema.account.accountId,
@@ -185,7 +189,7 @@ const getAuthConfig = () => {
 					if (legacyAccount) {
 						return {
 							id: legacyAccount.accountId,
-							name: profile.name,
+							name,
 							email: legacyAccount.email,
 							image: profile.avatar_url,
 							username: legacyAccount.username,
@@ -195,7 +199,7 @@ const getAuthConfig = () => {
 					}
 
 					return {
-						name: profile.name,
+						name,
 						email: profile.email,
 						image: profile.avatar_url,
 						username: normalizedLogin,
