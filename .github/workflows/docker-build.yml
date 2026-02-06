@@ -104,7 +104,7 @@ jobs:
 
       - name: Ensure tag is on main
         run: |
-          git fetch origin main --depth=0
+          git fetch origin main --unshallow || git fetch origin main
           git merge-base --is-ancestor "${GITHUB_SHA}" "origin/main"
 
       - name: Get version from package.json
