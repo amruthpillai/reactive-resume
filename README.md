@@ -145,6 +145,8 @@ docker compose up -d
 open http://localhost:3000
 ```
 
+[![Build with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/amruthpillai/reactive-resume)
+
 For detailed setup instructions, environment configuration, and self-hosting guides, see the [documentation](https://docs.rxresu.me).
 
 ## Tech Stack
