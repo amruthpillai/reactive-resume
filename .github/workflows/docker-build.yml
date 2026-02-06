@@ -1,6 +1,9 @@
 name: Publish GHCR Image
 
 on:
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch:
 
 concurrency:
