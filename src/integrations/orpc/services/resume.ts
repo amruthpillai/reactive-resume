@@ -296,7 +296,16 @@ export const resumeService = {
 						eq(schema.resume.userId, input.userId),
 					),
 				)
-				.returning();
+				.returning({
+					id: schema.resume.id,
+					name: schema.resume.name,
+					slug: schema.resume.slug,
+					tags: schema.resume.tags,
+					data: schema.resume.data,
+					isPublic: schema.resume.isPublic,
+					isLocked: schema.resume.isLocked,
+					hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+				});
 
 			return resume;
 		} catch (error) {
