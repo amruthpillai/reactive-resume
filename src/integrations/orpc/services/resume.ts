@@ -14,7 +14,7 @@ import { hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
 
 const tags = {
-	list: async (input: { userId: string }): Promise<string[]> => {
+	list: async (input: { userId: string }) => {
 		const result = await db
 			.select({ tags: schema.resume.tags })
 			.from(schema.resume)
@@ -50,7 +50,7 @@ const statistics = {
 		};
 	},
 
-	increment: async (input: { id: string; views?: boolean; downloads?: boolean }): Promise<void> => {
+	increment: async (input: { id: string; views?: boolean; downloads?: boolean }) => {
 		const views = input.views ? 1 : 0;
 		const downloads = input.downloads ? 1 : 0;
 		const lastViewedAt = input.views ? sql`now()` : undefined;
@@ -233,7 +233,7 @@ export const resumeService = {
 		tags: string[];
 		locale: Locale;
 		data?: ResumeData;
-	}): Promise<string> => {
+	}) => {
 		const id = generateId();
 
 		input.data = input.data ?? defaultResumeData;
@@ -269,7 +269,7 @@ export const resumeService = {
 		tags?: string[];
 		data?: ResumeData;
 		isPublic?: boolean;
-	}): Promise<void> => {
+	}) => {
 		const [resume] = await db
 			.select({ isLocked: schema.resume.isLocked })
 			.from(schema.resume)
@@ -286,7 +286,7 @@ export const resumeService = {
 		};
 
 		try {
-			await db
+			const [resume] = await db
 				.update(schema.resume)
 				.set(updateData)
 				.where(
@@ -295,7 +295,19 @@ export const resumeService = {
 						eq(schema.resume.isLocked, false),
 						eq(schema.resume.userId, input.userId),
 					),
-				);
+				)
+				.returning({
+					id: schema.resume.id,
+					name: schema.resume.name,
+					slug: schema.resume.slug,
+					tags: schema.resume.tags,
+					data: schema.resume.data,
+					isPublic: schema.resume.isPublic,
+					isLocked: schema.resume.isLocked,
+					hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+				});
+
+			return resume;
 		} catch (error) {
 			if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
 				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
@@ -305,14 +317,14 @@ export const resumeService = {
 		}
 	},
 
-	setLocked: async (input: { id: string; userId: string; isLocked: boolean }): Promise<void> => {
+	setLocked: async (input: { id: string; userId: string; isLocked: boolean }) => {
 		await db
 			.update(schema.resume)
 			.set({ isLocked: input.isLocked })
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 	},
 
-	setPassword: async (input: { id: string; userId: string; password: string }): Promise<void> => {
+	setPassword: async (input: { id: string; userId: string; password: string }) => {
 		const hashedPassword = await hashPassword(input.password);
 
 		await db
@@ -321,14 +333,14 @@ export const resumeService = {
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 	},
 
-	removePassword: async (input: { id: string; userId: string }): Promise<void> => {
+	removePassword: async (input: { id: string; userId: string }) => {
 		await db
 			.update(schema.resume)
 			.set({ password: null })
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 	},
 
-	delete: async (input: { id: string; userId: string }): Promise<void> => {
+	delete: async (input: { id: string; userId: string }) => {
 		const storageService = getStorageService();
 
 		const deleteResumePromise = db

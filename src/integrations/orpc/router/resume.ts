@@ -1,8 +1,8 @@
 import z from "zod";
-import { resumeDataSchema } from "@/schema/resume/data";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { generateRandomName, slugify } from "@/utils/string";
 import { protectedProcedure, publicProcedure, serverOnlyProcedure } from "../context";
+import { resumeDto } from "../dto/resume";
 import { resumeService } from "../services/resume";
 
 const tagsRouter = {
@@ -63,29 +63,8 @@ export const resumeRouter = {
 			summary: "List all resumes",
 			description: "List of all the resumes for the authenticated user.",
 		})
-		.input(
-			z
-				.object({
-					tags: z.array(z.string()).optional().default([]),
-					sort: z.enum(["lastUpdatedAt", "createdAt", "name"]).optional().default("lastUpdatedAt"),
-				})
-				.optional()
-				.default({ tags: [], sort: "lastUpdatedAt" }),
-		)
-		.output(
-			z.array(
-				z.object({
-					id: z.string(),
-					name: z.string(),
-					slug: z.string(),
-					tags: z.array(z.string()),
-					isPublic: z.boolean(),
-					isLocked: z.boolean(),
-					createdAt: z.date(),
-					updatedAt: z.date(),
-				}),
-			),
-		)
+		.input(resumeDto.list.input.optional().default({ tags: [], sort: "lastUpdatedAt" }))
+		.output(resumeDto.list.output)
 		.handler(async ({ input, context }) => {
 			return await resumeService.list({
 				userId: context.user.id,
@@ -102,26 +81,15 @@ export const resumeRouter = {
 			summary: "Get resume by ID",
 			description: "Get a resume, along with its data, by its ID.",
 		})
-		.input(z.object({ id: z.string() }))
-		.output(
-			z.object({
-				id: z.string(),
-				name: z.string(),
-				slug: z.string(),
-				tags: z.array(z.string()),
-				data: resumeDataSchema,
-				isPublic: z.boolean(),
-				isLocked: z.boolean(),
-				hasPassword: z.boolean(),
-			}),
-		)
+		.input(resumeDto.getById.input)
+		.output(resumeDto.getById.output)
 		.handler(async ({ context, input }) => {
 			return await resumeService.getById({ id: input.id, userId: context.user.id });
 		}),
 
 	getByIdForPrinter: serverOnlyProcedure
 		.route({ tags: ["Internal"], summary: "Get resume by ID for printer" })
-		.input(z.object({ id: z.string() }))
+		.input(resumeDto.getById.input)
 		.handler(async ({ input }) => {
 			return await resumeService.getByIdForPrinter({ id: input.id });
 		}),
@@ -134,18 +102,8 @@ export const resumeRouter = {
 			summary: "Get resume by username and slug",
 			description: "Get a resume, along with its data, by its username and slug.",
 		})
-		.input(z.object({ username: z.string(), slug: z.string() }))
-		.output(
-			z.object({
-				id: z.string(),
-				name: z.string(),
-				slug: z.string(),
-				tags: z.array(z.string()),
-				data: resumeDataSchema,
-				isPublic: z.boolean(),
-				isLocked: z.boolean(),
-			}),
-		)
+		.input(resumeDto.getBySlug.input)
+		.output(resumeDto.getBySlug.output)
 		.handler(async ({ input, context }) => {
 			return await resumeService.getBySlug({ ...input, currentUserId: context.user?.id });
 		}),
@@ -158,15 +116,8 @@ export const resumeRouter = {
 			summary: "Create a new resume",
 			description: "Create a new resume, with the ability to initialize it with sample data.",
 		})
-		.input(
-			z.object({
-				name: z.string().min(1).max(64),
-				slug: z.string().min(1).max(64),
-				tags: z.array(z.string()),
-				withSampleData: z.boolean().default(false),
-			}),
-		)
-		.output(z.string().describe("The ID of the created resume."))
+		.input(resumeDto.create.input)
+		.output(resumeDto.create.output)
 		.errors({
 			RESUME_SLUG_ALREADY_EXISTS: {
 				message: "A resume with this slug already exists.",
@@ -192,8 +143,8 @@ export const resumeRouter = {
 			summary: "Import a resume",
 			description: "Import a resume from a file.",
 		})
-		.input(z.object({ data: resumeDataSchema }))
-		.output(z.string().describe("The ID of the imported resume."))
+		.input(resumeDto.import.input)
+		.output(resumeDto.import.output)
 		.errors({
 			RESUME_SLUG_ALREADY_EXISTS: {
 				message: "A resume with this slug already exists.",
@@ -222,17 +173,8 @@ export const resumeRouter = {
 			summary: "Update a resume",
 			description: "Update a resume, along with its data, by its ID.",
 		})
-		.input(
-			z.object({
-				id: z.string(),
-				name: z.string().optional(),
-				slug: z.string().optional(),
-				tags: z.array(z.string()).optional(),
-				data: resumeDataSchema.optional(),
-				isPublic: z.boolean().optional(),
-			}),
-		)
-		.output(z.void())
+		.input(resumeDto.update.input)
+		.output(resumeDto.update.output)
 		.errors({
 			RESUME_SLUG_ALREADY_EXISTS: {
 				message: "A resume with this slug already exists.",
@@ -259,8 +201,8 @@ export const resumeRouter = {
 			summary: "Set resume locked status",
 			description: "Toggle the locked status of a resume, by its ID.",
 		})
-		.input(z.object({ id: z.string(), isLocked: z.boolean() }))
-		.output(z.void())
+		.input(resumeDto.setLocked.input)
+		.output(resumeDto.setLocked.output)
 		.handler(async ({ context, input }) => {
 			return await resumeService.setLocked({
 				id: input.id,
@@ -277,8 +219,8 @@ export const resumeRouter = {
 			summary: "Set password on a resume",
 			description: "Set a password on a resume to protect it from unauthorized access when shared publicly.",
 		})
-		.input(z.object({ id: z.string(), password: z.string().min(6).max(64) }))
-		.output(z.void())
+		.input(resumeDto.setPassword.input)
+		.output(resumeDto.setPassword.output)
 		.handler(async ({ context, input }) => {
 			return await resumeService.setPassword({
 				id: input.id,
@@ -295,8 +237,8 @@ export const resumeRouter = {
 			summary: "Remove password from a resume",
 			description: "Remove password protection from a resume.",
 		})
-		.input(z.object({ id: z.string() }))
-		.output(z.void())
+		.input(resumeDto.removePassword.input)
+		.output(resumeDto.removePassword.output)
 		.handler(async ({ context, input }) => {
 			return await resumeService.removePassword({
 				id: input.id,
@@ -312,15 +254,8 @@ export const resumeRouter = {
 			summary: "Duplicate a resume",
 			description: "Duplicate a resume, by its ID.",
 		})
-		.input(
-			z.object({
-				id: z.string(),
-				name: z.string().optional(),
-				slug: z.string().optional(),
-				tags: z.array(z.string()).optional(),
-			}),
-		)
-		.output(z.string().describe("The ID of the duplicated resume."))
+		.input(resumeDto.duplicate.input)
+		.output(resumeDto.duplicate.output)
 		.handler(async ({ context, input }) => {
 			const original = await resumeService.getById({ id: input.id, userId: context.user.id });
 
@@ -342,8 +277,8 @@ export const resumeRouter = {
 			summary: "Delete a resume",
 			description: "Delete a resume, by its ID.",
 		})
-		.input(z.object({ id: z.string() }))
-		.output(z.void())
+		.input(resumeDto.delete.input)
+		.output(resumeDto.delete.output)
 		.handler(async ({ context, input }) => {
 			return await resumeService.delete({ id: input.id, userId: context.user.id });
 		}),
