@@ -1,3 +1,4 @@
+import type { Operation } from "fast-json-patch";
 import z from "zod";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { generateRandomName, slugify } from "@/utils/string";
@@ -190,6 +191,31 @@ export const resumeRouter = {
 				tags: input.tags,
 				data: input.data,
 				isPublic: input.isPublic,
+			});
+		}),
+
+	patch: protectedProcedure
+		.route({
+			method: "PATCH",
+			path: "/resume/{id}",
+			tags: ["Resume"],
+			summary: "Patch a resume",
+			description:
+				"Apply JSON Patch (RFC 6902) operations to partially update a resume's data. This allows you to make small, targeted changes without sending the entire resume object.",
+		})
+		.input(resumeDto.patch.input)
+		.output(resumeDto.patch.output)
+		.errors({
+			INVALID_PATCH_OPERATIONS: {
+				message: "The patch operations are invalid or produced an invalid resume.",
+				status: 400,
+			},
+		})
+		.handler(async ({ context, input }) => {
+			return await resumeService.patch({
+				id: input.id,
+				userId: context.user.id,
+				operations: input.operations as Operation[],
 			});
 		}),
 

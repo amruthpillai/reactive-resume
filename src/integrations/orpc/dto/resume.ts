@@ -77,6 +77,26 @@ export const resumeDto = {
 		output: z.void(),
 	},
 
+	patch: {
+		input: z.object({
+			id: z.string().describe("The ID of the resume to patch."),
+			operations: z
+				.array(
+					z.object({
+						op: z.enum(["add", "remove", "replace", "move", "copy", "test"]),
+						path: z.string(),
+						value: z.any().optional(),
+						from: z.string().optional(),
+					}),
+				)
+				.min(1)
+				.describe("An array of JSON Patch (RFC 6902) operations to apply to the resume data."),
+		}),
+		output: resumeSchema
+			.omit({ password: true, userId: true, createdAt: true, updatedAt: true })
+			.extend({ hasPassword: z.boolean() }),
+	},
+
 	duplicate: {
 		input: resumeSchema.pick({ id: true, name: true, slug: true, tags: true }),
 		output: z.string().describe("The ID of the duplicated resume."),
