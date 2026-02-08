@@ -34,7 +34,7 @@ pnpm db:studio      # Open Drizzle Studio
 pnpm lingui:extract
 
 # Find unused exports
-pnpm knip
+dotenvx run -- pnpm knip
 ```
 
 ## Local Development Setup
