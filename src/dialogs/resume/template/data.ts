@@ -81,6 +81,13 @@ export const templates = {
 		tags: ["Two-column", "Muted sidebar", "Earthy", "Calm", "Sustainability", "Healthcare", "Nonprofit"],
 		sidebarPosition: "right",
 	},
+	nosepass: {
+		name: "Nosepass",
+		description: msg`Europass-inspired layout with a left-aligned label column and structured right content area; ideal for EU, academic, or government applications.`,
+		imageUrl: "/templates/jpg/nosepass.jpg",
+		tags: ["Single-column", "ATS friendly", "Europass", "EU standard", "Academic", "Government", "Formal"],
+		sidebarPosition: "none",
+	},
 	onyx: {
 		name: "Onyx",
 		description: msg`Single-column with a sidebar and clean grid layout; versatile for any professional or technical role.`,
