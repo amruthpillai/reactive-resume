@@ -1,6 +1,7 @@
 import { ORPCError } from "@orpc/client";
 import { and, arrayContains, asc, desc, eq, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
+import type { Operation } from "fast-json-patch";
 import { match } from "ts-pattern";
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
@@ -9,6 +10,7 @@ import { defaultResumeData } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import type { Locale } from "@/utils/locale";
 import { hashPassword } from "@/utils/password";
+import { applyResumePatches, ResumePatchError } from "@/utils/resume/patch";
 import { generateId } from "@/utils/string";
 import { hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
@@ -315,6 +317,54 @@ export const resumeService = {
 
 			throw error;
 		}
+	},
+
+	patch: async (input: { id: string; userId: string; operations: Operation[] }) => {
+		const [existing] = await db
+			.select({ data: schema.resume.data, isLocked: schema.resume.isLocked })
+			.from(schema.resume)
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+		if (!existing) throw new ORPCError("NOT_FOUND");
+		if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
+
+		let patchedData: ResumeData;
+
+		try {
+			patchedData = applyResumePatches(existing.data, input.operations);
+		} catch (error) {
+			if (error instanceof ResumePatchError) {
+				throw new ORPCError("INVALID_PATCH_OPERATIONS", {
+					status: 400,
+					message: error.message,
+					data: { code: error.code, index: error.index, operation: error.operation },
+				});
+			}
+
+			throw new ORPCError("INVALID_PATCH_OPERATIONS", {
+				status: 400,
+				message: error instanceof Error ? error.message : "Failed to apply patch operations",
+			});
+		}
+
+		const [resume] = await db
+			.update(schema.resume)
+			.set({ data: patchedData })
+			.where(
+				and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
+			)
+			.returning({
+				id: schema.resume.id,
+				name: schema.resume.name,
+				slug: schema.resume.slug,
+				tags: schema.resume.tags,
+				data: schema.resume.data,
+				isPublic: schema.resume.isPublic,
+				isLocked: schema.resume.isLocked,
+				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+			});
+
+		return resume;
 	},
 
 	setLocked: async (input: { id: string; userId: string; isLocked: boolean }) => {

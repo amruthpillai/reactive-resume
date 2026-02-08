@@ -1,0 +1,191 @@
+---
+title: "Using the Patch API"
+description: "Learn how to partially update your resume using JSON Patch (RFC 6902) operations"
+---
+
+The Patch API lets you make small, targeted changes to your resume without sending the entire data object. Instead of replacing the whole resume with a `PUT`, you send a list of **JSON Patch** operations that describe exactly what to change.
+
+This is based on the [JSON Patch (RFC 6902)](https://datatracker.ietf.org/doc/html/rfc6902) standard.
+
+## When to Use PATCH vs PUT
+
+| Use case | Method |
+| --- | --- |
+| Update a single field (e.g., name, headline) | **PATCH** |
+| Add or remove an item in a section | **PATCH** |
+| Change template, colors, or fonts | **PATCH** |
+| Replace the entire resume data at once | **PUT** |
+
+<Info>
+  The PATCH endpoint only modifies the resume `data` (the JSONB column). To update top-level resume properties like `name`, `slug`, `tags`, or `isPublic`, use the existing `PUT /resume/{id}` endpoint.
+</Info>
+
+## Authentication
+
+All requests require your API key in the `x-api-key` header. See [Using the API](/guides/using-the-api) for how to create one.
+
+<Info>
+  If you're self-hosting, replace `https://rxresu.me` with your instance URL. The API is served under `/api/openapi`.
+</Info>
+
+## Endpoint
+
+```
+PATCH /api/openapi/resume/{id}
+```
+
+### Request Body
+
+The resume ID is taken from the URL path, so the request body only requires the `operations` array:
+
+```json
+{
+  "operations": [
+    { "op": "replace", "path": "/basics/name", "value": "Jane Doe" }
+  ]
+}
+```
+
+Each operation is an object with the following properties:
+
+| Property | Required | Description |
+| --- | --- | --- |
+| `op` | Yes | The operation to perform: `add`, `remove`, `replace`, `move`, `copy`, or `test` |
+| `path` | Yes | A JSON Pointer (RFC 6901) to the target location in the resume data |
+| `value` | For `add`, `replace`, `test` | The value to use for the operation |
+| `from` | For `move`, `copy` | A JSON Pointer to the source location |
+
+## Examples
+
+### Replace a Basic Field
+
+Update the resume holder's name and headline:
+
+```bash
+curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operations": [
+      { "op": "replace", "path": "/basics/name", "value": "Jane Doe" },
+      { "op": "replace", "path": "/basics/headline", "value": "Senior Software Engineer" }
+    ]
+  }'
+```
+
+### Add an Experience Entry
+
+Append a new item to the experience section:
+
+```bash
+curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operations": [
+      {
+        "op": "add",
+        "path": "/sections/experience/items/-",
+        "value": {
+          "id": "a1b2c3d4-0000-0000-0000-000000000000",
+          "hidden": false,
+          "company": "Acme Corp",
+          "position": "Staff Engineer",
+          "location": "San Francisco, CA",
+          "period": "Jan 2024 - Present",
+          "website": { "url": "https://acme.example.com", "label": "Acme Corp" },
+          "description": "<p>Leading the platform team.</p>"
+        }
+      }
+    ]
+  }'
+```
+
+<Tip>
+  The path `/sections/experience/items/-` uses the special `-` index, which means "append to the end of the array".
+  To insert at a specific position, use a numeric index like `/sections/experience/items/0` for the beginning.
+</Tip>
+
+### Remove an Item from a Section
+
+Remove the second skill (index `1`) from the skills section:
+
+```bash
+curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operations": [
+      { "op": "remove", "path": "/sections/skills/items/1" }
+    ]
+  }'
+```
+
+### Update Metadata (Template, Colors, Fonts)
+
+Switch the template and update the primary color:
+
+```bash
+curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operations": [
+      { "op": "replace", "path": "/metadata/template", "value": "bronzor" },
+      { "op": "replace", "path": "/metadata/design/colors/primary", "value": "rgba(37, 99, 235, 1)" }
+    ]
+  }'
+```
+
+### Test-Then-Replace (Optimistic Concurrency)
+
+The `test` operation checks that a value matches before proceeding. If the test fails, the entire patch is rejected. This is useful to avoid overwriting changes made by another client:
+
+```bash
+curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operations": [
+      { "op": "test", "path": "/basics/name", "value": "Albert Einstein" },
+      { "op": "replace", "path": "/basics/name", "value": "Jane Doe" }
+    ]
+  }'
+```
+
+If `/basics/name` is not `"Albert Einstein"` at the time of the request, the entire patch will fail with a `400` error and no changes will be applied.
+
+### Move an Item Within a Section
+
+Move the first experience item to the third position:
+
+```bash
+curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operations": [
+      { "op": "move", "from": "/sections/experience/items/0", "path": "/sections/experience/items/2" }
+    ]
+  }'
+```
+
+## Error Handling
+
+| Status | Error Code | Description |
+| --- | --- | --- |
+| `400` | `INVALID_PATCH_OPERATIONS` | The operations are structurally invalid, target a non-existent path, or produce resume data that fails schema validation. |
+| `401` | `UNAUTHORIZED` | Missing or invalid API key. |
+| `404` | `NOT_FOUND` | The resume does not exist or does not belong to the authenticated user. |
+| `403` | `RESUME_LOCKED` | The resume is locked and cannot be modified. Unlock it first. |
+
+<Warning>
+  All operations in a single request are applied atomically. If any operation fails (including a `test`), none of the operations are applied.
+</Warning>
+
+## Tips
+
+- **Fetch first, then patch.** Use `GET /resume/{id}` to inspect the current structure before crafting your operations. This helps you target the correct paths and array indices.
+- **Use `test` for safety.** When updating a value you expect to be a specific value, combine `test` + `replace` to avoid accidentally overwriting concurrent changes.
+- **Batch related changes.** You can send multiple operations in a single request. They are applied in order, so later operations can depend on earlier ones.
+- **The `-` index appends.** When adding items to arrays, use `-` as the index (e.g., `/sections/skills/items/-`) to append to the end.

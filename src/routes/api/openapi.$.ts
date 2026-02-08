@@ -1,6 +1,7 @@
 import { SmartCoercionPlugin } from "@orpc/json-schema";
 import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
+import { onError } from "@orpc/server";
 import { RequestHeadersPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createFileRoute } from "@tanstack/react-router";
@@ -9,11 +10,11 @@ import { env } from "@/utils/env";
 import { getLocale } from "@/utils/locale";
 
 const openAPIHandler = new OpenAPIHandler(router, {
-	// interceptors: [
-	// 	onError((error) => {
-	// 		console.error(error);
-	// 	}),
-	// ],
+	interceptors: [
+		onError((error) => {
+			console.error(`ERROR [OpenAPI]: ${error}`);
+		}),
+	],
 	plugins: [
 		new RequestHeadersPlugin(),
 		new SmartCoercionPlugin({

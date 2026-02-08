@@ -11,11 +11,6 @@ import { getLocale } from "@/utils/locale";
 export const getORPCClient = createIsomorphicFn()
 	.server((): RouterClient<typeof router> => {
 		return createRouterClient(router, {
-			// interceptors: [
-			// 	onError((error) => {
-			// 		console.error(error);
-			// 	}),
-			// ],
 			context: async () => {
 				const locale = await getLocale();
 				const reqHeaders = getRequestHeaders();
@@ -30,16 +25,10 @@ export const getORPCClient = createIsomorphicFn()
 	.client((): RouterClient<typeof router> => {
 		const link = new RPCLink({
 			url: `${window.location.origin}/api/rpc`,
+			plugins: [new BatchLinkPlugin({ groups: [{ condition: () => true, context: {} }] })],
 			fetch: (request, init) => {
 				return fetch(request, { ...init, credentials: "include" });
 			},
-			// interceptors: [
-			// 	onError((error) => {
-			// 		if (error instanceof DOMException) return;
-			// 		console.error(error);
-			// 	}),
-			// ],
-			plugins: [new BatchLinkPlugin({ groups: [{ condition: () => true, context: {} }] })],
 		});
 
 		return createORPCClient(link);

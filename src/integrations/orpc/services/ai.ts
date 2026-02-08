@@ -15,9 +15,9 @@ import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 
 export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
 
-export type AIProvider = z.infer<typeof aiProviderSchema>;
+type AIProvider = z.infer<typeof aiProviderSchema>;
 
-export type GetModelInput = {
+type GetModelInput = {
 	provider: AIProvider;
 	model: string;
 	apiKey: string;
@@ -49,9 +49,9 @@ export const fileInputSchema = z.object({
 	data: z.string(), // base64 encoded
 });
 
-export type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
+type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 
-export async function testConnection(input: TestConnectionInput): Promise<boolean> {
+async function testConnection(input: TestConnectionInput): Promise<boolean> {
 	const RESPONSE_OK = "1";
 
 	const result = await generateText({
@@ -63,11 +63,11 @@ export async function testConnection(input: TestConnectionInput): Promise<boolea
 	return result.output === RESPONSE_OK;
 }
 
-export type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
+type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
 	file: z.infer<typeof fileInputSchema>;
 };
 
-export async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
+async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 	const model = getModel(input);
 
 	const result = await generateText({
@@ -101,12 +101,12 @@ export async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 	});
 }
 
-export type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
+type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
 	file: z.infer<typeof fileInputSchema>;
 	mediaType: "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 };
 
-export async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
+async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 	const model = getModel(input);
 
 	const result = await generateText({

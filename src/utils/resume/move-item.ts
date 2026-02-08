@@ -8,7 +8,7 @@ import { getSectionTitle as getDefaultSectionTitle } from "./section";
 // ============================================================================
 
 /** Target section that an item can be moved to */
-export type MoveTargetSection = {
+type MoveTargetSection = {
 	sectionId: string;
 	sectionTitle: string;
 	/** Whether this is a standard section (true) or custom section (false) */
@@ -16,7 +16,7 @@ export type MoveTargetSection = {
 };
 
 /** Page with its compatible sections for the move menu */
-export type MoveTargetPage = {
+type MoveTargetPage = {
 	pageIndex: number;
 	sections: MoveTargetSection[];
 };

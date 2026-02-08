@@ -2,6 +2,7 @@ import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
 import { schema } from "@/integrations/drizzle";
 import { resumeDataSchema } from "@/schema/resume/data";
+import { jsonPatchOperationSchema } from "@/utils/resume/patch";
 
 const resumeSchema = createSelectSchema(schema.resume, {
 	id: z.string().describe("The ID of the resume."),
@@ -75,6 +76,19 @@ export const resumeDto = {
 	removePassword: {
 		input: resumeSchema.pick({ id: true }),
 		output: z.void(),
+	},
+
+	patch: {
+		input: z.object({
+			id: z.string().describe("The ID of the resume to patch."),
+			operations: z
+				.array(jsonPatchOperationSchema)
+				.min(1)
+				.describe("An array of JSON Patch (RFC 6902) operations to apply to the resume data."),
+		}),
+		output: resumeSchema
+			.omit({ password: true, userId: true, createdAt: true, updatedAt: true })
+			.extend({ hasPassword: z.boolean() }),
 	},
 
 	duplicate: {

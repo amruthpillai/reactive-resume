@@ -4,6 +4,19 @@ description: "List of all notable changes and updates to Reactive Resume"
 rss: true
 ---
 
+<Update label="v5.0.6" description="8th February 2026">
+  - Implement Atomic Resume Patching API for fine-grained resume updates, allowing partial, atomic updates to resumes via a new PATCH endpoint. [#2692](https://github.com/amruthpillai/reactive-resume/pull/2692)
+  - The API endpoint `PUT /resume/{id}` now returns the updated resume object instead of void. Also, resume routing/services now use explicit DTOs for input and output schemas. [#2688](https://github.com/amruthpillai/reactive-resume/pull/2688)
+  - Add error logging for API server errors (server-side only) to improve debugging and reliability.
+  - Refactor and clean up imports/exports for clarity and maintainability.
+  - Added `.devcontainer` configuration for improved contributor development environment.
+  - Update dependencies to the latest versions.
+  - Add build status badge and documentation link to README.
+  - Sync latest translations from Crowdin (notably: French, other languages).
+  - Other minor fixes and improvements.
+</Update>
+
+
 <Update label="v5.0.5" description="31st January 2026">
   - Implement Cover Letter functionality in the resume builder, allowing the user to create cover letters as custom sections. [(link)](/guides/adding-a-cover-letter)
   - Implement full-screen mode for the rich text editor in the resume builder, allowing the user to write in a more focused environment.

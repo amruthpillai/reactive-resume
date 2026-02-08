@@ -193,6 +193,31 @@ export const resumeRouter = {
 			});
 		}),
 
+	patch: protectedProcedure
+		.route({
+			method: "PATCH",
+			path: "/resume/{id}",
+			tags: ["Resume"],
+			summary: "Patch a resume",
+			description:
+				"Apply JSON Patch (RFC 6902) operations to partially update a resume's data. This allows you to make small, targeted changes without sending the entire resume object.",
+		})
+		.input(resumeDto.patch.input)
+		.output(resumeDto.patch.output)
+		.errors({
+			INVALID_PATCH_OPERATIONS: {
+				message: "The patch operations are invalid or produced an invalid resume.",
+				status: 400,
+			},
+		})
+		.handler(async ({ context, input }) => {
+			return await resumeService.patch({
+				id: input.id,
+				userId: context.user.id,
+				operations: input.operations,
+			});
+		}),
+
 	setLocked: protectedProcedure
 		.route({
 			method: "POST",
