@@ -94,35 +94,35 @@ function Header() {
 				>
 					{basics.email && (
 						<div className="basics-item-email">
-							<PageIcon icon="envelope" />
+							<PageIcon icon="envelope" type="header" />
 							<PageLink url={`mailto:${basics.email}`} label={basics.email} />
 						</div>
 					)}
 
 					{basics.phone && (
 						<div className="basics-item-phone">
-							<PageIcon icon="phone" />
+							<PageIcon icon="phone" type="header" />
 							<PageLink url={`tel:${basics.phone}`} label={basics.phone} />
 						</div>
 					)}
 
 					{basics.location && (
 						<div className="basics-item-location">
-							<PageIcon icon="map-pin" />
+							<PageIcon icon="map-pin" type="header" />
 							<span>{basics.location}</span>
 						</div>
 					)}
 
 					{basics.website.url && (
 						<div className="basics-item-website">
-							<PageIcon icon="globe" />
+							<PageIcon icon="globe" type="header" />
 							<PageLink {...basics.website} />
 						</div>
 					)}
 
 					{basics.customFields.map((field) => (
 						<div key={field.id} className="basics-item-custom">
-							<PageIcon icon={field.icon} />
+							<PageIcon icon={field.icon} type="header" />
 							{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
 						</div>
 					))}

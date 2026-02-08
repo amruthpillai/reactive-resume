@@ -239,6 +239,48 @@ function PageSectionForm() {
 						</FormItem>
 					)}
 				/>
+
+				<FormField
+					control={form.control}
+					name="hideHeaderIcons"
+					render={({ field }) => (
+						<FormItem className="col-span-full flex items-center gap-x-3 py-2">
+							<FormControl>
+								<Switch
+									checked={field.value}
+									onCheckedChange={(checked) => {
+										field.onChange(checked);
+										form.handleSubmit(onSubmit)();
+									}}
+								/>
+							</FormControl>
+							<FormLabel>
+								<Trans>Hide header icons</Trans>
+							</FormLabel>
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="hideSectionIcons"
+					render={({ field }) => (
+						<FormItem className="col-span-full flex items-center gap-x-3 py-2">
+							<FormControl>
+								<Switch
+									checked={field.value}
+									onCheckedChange={(checked) => {
+										field.onChange(checked);
+										form.handleSubmit(onSubmit)();
+									}}
+								/>
+							</FormControl>
+							<FormLabel>
+								<Trans>Hide section icons</Trans>
+							</FormLabel>
+						</FormItem>
+					)}
+				/>
 			</form>
 		</Form>
 	);

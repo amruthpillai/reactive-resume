@@ -525,6 +525,8 @@ export const sampleResumeData: ResumeData = {
 			format: "a4",
 			locale: "en-US",
 			hideIcons: false,
+			hideHeaderIcons: false,
+			hideSectionIcons: false,
 		},
 		design: {
 			level: {

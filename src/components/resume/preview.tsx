@@ -30,6 +30,8 @@ import { RhyhornTemplate } from "./templates/rhyhorn";
 
 export type ExtendedIconProps = IconProps & {
 	hidden?: boolean;
+	hideHeader?: boolean;
+	hideSection?: boolean;
 };
 
 const CSS_RULE_SPLIT_PATTERN = /\n(?=\s*[.#a-zA-Z])/;
@@ -69,10 +71,17 @@ export const ResumePreview = ({ showPageNumbers = false, pageClassName, classNam
 		return {
 			weight: "regular",
 			hidden: metadata.page.hideIcons,
+			hideHeader: metadata.page.hideHeaderIcons,
+			hideSection: metadata.page.hideSectionIcons,
 			color: "var(--page-primary-color)",
 			size: metadata.typography.body.fontSize * 1.5,
 		} satisfies ExtendedIconProps;
-	}, [metadata.typography.body.fontSize, metadata.page.hideIcons]);
+	}, [
+		metadata.typography.body.fontSize,
+		metadata.page.hideIcons,
+		metadata.page.hideHeaderIcons,
+		metadata.page.hideSectionIcons,
+	]);
 
 	const scopedCSS = useMemo(() => {
 		if (!metadata.css.enabled || !metadata.css.value.trim()) return null;

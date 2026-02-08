@@ -715,6 +715,8 @@ export class ReactiveResumeV4JSONImporter {
 						format: v4Data.metadata.page?.format ?? "a4",
 						locale: "en-US",
 						hideIcons: v4Data.metadata.typography?.hideIcons ?? false,
+						hideHeaderIcons: v4Data.metadata.typography?.hideIcons ?? false,
+						hideSectionIcons: v4Data.metadata.typography?.hideIcons ?? false,
 					},
 					design: {
 						colors: {

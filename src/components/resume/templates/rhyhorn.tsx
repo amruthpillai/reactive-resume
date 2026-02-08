@@ -1,4 +1,3 @@
-import { EnvelopeIcon, GlobeIcon, MapPinIcon, PhoneIcon } from "@phosphor-icons/react";
 import { cn } from "@/utils/style";
 import { getSectionComponent } from "../shared/get-section-component";
 import { PageIcon } from "../shared/page-icon";
@@ -56,35 +55,35 @@ function Header() {
 				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-(--page-primary-color) *:border-e *:py-0.5 *:pe-2 *:last:border-e-0">
 					{basics.email && (
 						<div className="basics-item-email">
-							<EnvelopeIcon />
+							<PageIcon icon="envelope" type="header" />
 							<PageLink url={`mailto:${basics.email}`} label={basics.email} />
 						</div>
 					)}
 
 					{basics.phone && (
 						<div className="basics-item-phone">
-							<PhoneIcon />
+							<PageIcon icon="phone" type="header" />
 							<PageLink url={`tel:${basics.phone}`} label={basics.phone} />
 						</div>
 					)}
 
 					{basics.location && (
 						<div className="basics-item-location">
-							<MapPinIcon />
+							<PageIcon icon="map-pin" type="header" />
 							<span>{basics.location}</span>
 						</div>
 					)}
 
 					{basics.website.url && (
 						<div className="basics-item-website">
-							<GlobeIcon />
+							<PageIcon icon="globe" type="header" />
 							<PageLink {...basics.website} />
 						</div>
 					)}
 
 					{basics.customFields.map((field) => (
 						<div key={field.id} className="basics-item-custom">
-							<PageIcon icon={field.icon} />
+							<PageIcon icon={field.icon} type="header" />
 							{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
 						</div>
 					))}

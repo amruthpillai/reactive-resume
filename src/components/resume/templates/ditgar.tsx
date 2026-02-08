@@ -86,25 +86,25 @@ function Header() {
 			<div className="flex flex-col items-start gap-y-2 text-sm [&>div>i]:text-(--page-background-color)!">
 				{basics.location && (
 					<div className="flex items-center gap-x-1.5">
-						<PageIcon icon="map-pin" className="ph-bold" />
+						<PageIcon icon="map-pin" type="header" className="ph-bold" />
 						<div>{basics.location}</div>
 					</div>
 				)}
 				{basics.phone && (
 					<div className="flex items-center gap-x-1.5">
-						<PageIcon icon="phone" className="ph-bold" />
+						<PageIcon icon="phone" type="header" className="ph-bold" />
 						<PageLink url={`tel:${basics.phone}`} label={basics.phone} />
 					</div>
 				)}
 				{basics.email && (
 					<div className="flex items-center gap-x-1.5">
-						<PageIcon icon="at" className="ph-bold" />
+						<PageIcon icon="at" type="header" className="ph-bold" />
 						<PageLink url={`mailto:${basics.email}`} label={basics.email} />
 					</div>
 				)}
 				{basics.website.url && (
 					<div className="flex items-center gap-x-1.5">
-						<PageIcon icon="globe" className="ph-bold" />
+						<PageIcon icon="globe" type="header" className="ph-bold" />
 						<PageLink {...basics.website} />
 					</div>
 				)}
