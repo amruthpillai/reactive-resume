@@ -2,7 +2,7 @@
 
 const nextPackages = ["@monaco-editor/react"];
 
-const betaPackages = ["drizzle-orm", "drizzle-kit", "@better-auth/core", "@better-auth/passkey", "better-auth"];
+const betaPackages = ["vite", "drizzle-orm", "drizzle-kit", "@better-auth/core", "@better-auth/passkey", "better-auth"];
 
 /** @type {import('npm-check-updates').RunOptions} */
 module.exports = {

@@ -7,17 +7,26 @@ const storageService = getStorageService();
 
 const fileSchema = z.file().max(10 * 1024 * 1024, "File size must be less than 10MB");
 
-const filenameSchema = z.object({ filename: z.string().min(1) });
+const filenameSchema = z.object({
+	filename: z.string().min(1).describe("The path or filename of the file to delete."),
+});
 
 export const storageRouter = {
 	uploadFile: protectedProcedure
-		.route({ tags: ["Internal"], summary: "Upload a file" })
+		.route({
+			tags: ["Internal"],
+			operationId: "uploadFile",
+			summary: "Upload a file",
+			description:
+				"Uploads a file to storage. Images are automatically resized and converted to WebP format. Maximum file size is 10MB. Requires authentication.",
+			successDescription: "The file was uploaded successfully.",
+		})
 		.input(fileSchema)
 		.output(
 			z.object({
-				url: z.string(),
-				path: z.string(),
-				contentType: z.string(),
+				url: z.string().describe("The public URL to access the uploaded file."),
+				path: z.string().describe("The storage path of the uploaded file."),
+				contentType: z.string().describe("The MIME type of the uploaded file."),
 			}),
 		)
 		.handler(async ({ context, input: file }) => {
@@ -52,9 +61,22 @@ export const storageRouter = {
 		}),
 
 	deleteFile: protectedProcedure
-		.route({ tags: ["Internal"], summary: "Delete a file" })
+		.route({
+			tags: ["Internal"],
+			operationId: "deleteFile",
+			summary: "Delete a file",
+			description:
+				"Deletes a file from storage by its filename or path. If the filename does not start with 'uploads/', the user's picture directory is assumed. Requires authentication.",
+			successDescription: "The file was deleted successfully.",
+		})
 		.input(filenameSchema)
 		.output(z.void())
+		.errors({
+			NOT_FOUND: {
+				message: "The specified file was not found in storage.",
+				status: 404,
+			},
+		})
 		.handler(async ({ context, input }): Promise<void> => {
 			// The filename is now the full path from the URL (e.g., "uploads/userId/pictures/timestamp.webp")
 			// We need to extract just the path portion that matches the storage key

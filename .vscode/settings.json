@@ -10,19 +10,19 @@
 		"*.css": "tailwindcss"
 	},
 	"files.readonlyInclude": {
-		"pnpm-lock.yaml": true,
-		"**/routeTree.gen.ts": true
+		"**/routeTree.gen.ts": true,
+		"pnpm-lock.yaml": true
 	},
 	"files.watcherExclude": {
-		"pnpm-lock.yaml": true,
-		"**/routeTree.gen.ts": true
+		"**/routeTree.gen.ts": true,
+		"pnpm-lock.yaml": true
 	},
 	"i18n-ally.enabledParsers": ["po"],
 	"i18n-ally.localesPaths": ["locales"],
 	"i18n-ally.sourceLanguage": "en-US",
 	"search.exclude": {
-		"pnpm-lock.yaml": true,
-		"**/routeTree.gen.ts": true
+		"**/routeTree.gen.ts": true,
+		"pnpm-lock.yaml": true
 	},
 	"tailwindCSS.classFunctions": ["cn", "cva"],
 	"tailwindCSS.experimental.classRegex": [
@@ -31,5 +31,5 @@
 		["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
 	],
 	"tailwindCSS.experimental.configFile": "src/styles/globals.css",
-	"typescript.tsdk": "node_modules/typescript/lib"
+	"typescript.experimental.useTsgo": true
 }

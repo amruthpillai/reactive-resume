@@ -1,0 +1,165 @@
+---
+title: "Using the MCP Server"
+description: "Connect Reactive Resume to AI tools like Claude Desktop, Cursor, and Codex using the Model Context Protocol"
+---
+
+The Reactive Resume MCP server lets you manage and modify your resumes through any MCP-compatible AI tool — Claude Desktop, Cursor, Codex, and more. It connects to the Reactive Resume API and exposes tools for listing, reading, and patching resumes using natural language.
+
+## What is MCP?
+
+The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is a standard that lets LLM-powered tools connect to external services. Instead of being limited to the built-in chat UI, you can use any MCP client to interact with your resumes.
+
+## Prerequisites
+
+<Steps>
+  <Step title="Create an API key">
+    Follow the [Using the API](/guides/using-the-api) guide to create an API key in your Reactive Resume dashboard.
+  </Step>
+
+  <Step title="Install Node.js">
+    The MCP server requires [Node.js](https://nodejs.org) version 18 or later.
+  </Step>
+
+  <Step title="Install dependencies">
+    From the Reactive Resume repository root, install dependencies (the MCP server uses the main project's dependencies):
+
+    ```bash
+    cd /path/to/reactive-resume
+    pnpm install
+    ```
+  </Step>
+</Steps>
+
+## Running the MCP server
+
+The server is a single TypeScript entry point and is run with **tsx** (no build step). From the repository root:
+
+```bash
+npx tsx /path/to/reactive-resume/mcp/index.ts
+```
+
+The working directory must be the **repository root** so that `node_modules` (and thus `@modelcontextprotocol/sdk`) is resolved. Configure your MCP client with `cwd` set to the repo path.
+
+## Configuration
+
+### Claude Desktop
+
+Add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "reactive-resume": {
+      "command": "npx",
+      "args": ["tsx", "/path/to/reactive-resume/mcp/index.ts"],
+      "cwd": "/path/to/reactive-resume",
+      "env": {
+        "REACTIVE_RESUME_API_KEY": "your-api-key",
+        "REACTIVE_RESUME_URL": "https://rxresu.me"
+      }
+    }
+  }
+}
+```
+
+<Info>
+  Replace `/path/to/reactive-resume` with the actual path to your cloned repository, and `your-api-key` with the API key you created.
+</Info>
+
+### Cursor
+
+Add the following to `.cursor/mcp.json` in your project or home directory:
+
+```json
+{
+  "mcpServers": {
+    "reactive-resume": {
+      "command": "npx",
+      "args": ["tsx", "/path/to/reactive-resume/mcp/index.ts"],
+      "cwd": "/path/to/reactive-resume",
+      "env": {
+        "REACTIVE_RESUME_API_KEY": "your-api-key",
+        "REACTIVE_RESUME_URL": "https://rxresu.me"
+      }
+    }
+  }
+}
+```
+
+## Available Tools
+
+The MCP server exposes three tools:
+
+| Tool | Description |
+| --- | --- |
+| `list_resumes` | List all your resumes with their IDs, names, tags, and status |
+| `get_resume` | Get the full data of a specific resume by ID |
+| `patch_resume` | Apply JSON Patch operations to modify a resume |
+
+## Available Resources
+
+| Resource | Description |
+| --- | --- |
+| `resume://{id}` | The full resume data as a readable JSON resource |
+| `resume://schema` | The ResumeData JSON schema for understanding the data structure |
+
+## Usage Examples
+
+Once your MCP client is connected, you can use natural language to interact with your resumes:
+
+### Browsing
+
+- "List my resumes"
+- "Show me my resume named 'Software Engineer'"
+- "What skills are listed on my resume?"
+
+### Editing
+
+- "Update my name to Jane Doe"
+- "Change my headline to Senior Software Engineer"
+- "Add TypeScript to my skills with an Advanced proficiency level"
+- "Add a new experience entry for my role as Staff Engineer at Acme Corp from Jan 2024 to Present"
+- "Remove the third item from my skills section"
+
+### Styling
+
+- "Change the template to bronzor"
+- "Set the primary color to blue"
+- "Hide the interests section"
+
+<Tip>
+  The AI will use `get_resume` to inspect your current resume before making changes with `patch_resume`. This ensures the correct JSON paths are used.
+</Tip>
+
+## Self-Hosting
+
+If you're running a self-hosted Reactive Resume instance, set `REACTIVE_RESUME_URL` to your instance URL:
+
+```json
+{
+  "env": {
+    "REACTIVE_RESUME_API_KEY": "your-api-key",
+    "REACTIVE_RESUME_URL": "https://resume.example.com"
+  }
+}
+```
+
+## Environment Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `REACTIVE_RESUME_API_KEY` | Yes | — | API key from Reactive Resume settings |
+| `REACTIVE_RESUME_URL` | No | `https://rxresu.me` | Base URL of the Reactive Resume instance |
+| `TRANSPORT` | No | `stdio` | Transport mode: `stdio` or `http` |
+| `PORT` | No | `3100` | Port for streamable HTTP transport |
+
+## Troubleshooting
+
+| Issue | Solution |
+| --- | --- |
+| "REACTIVE_RESUME_API_KEY is required" | Set the `REACTIVE_RESUME_API_KEY` environment variable in your MCP client configuration |
+| "API error (401)" | Your API key is invalid or expired. Create a new one in the dashboard |
+| "API error (404)" | The resume ID doesn't exist. Use `list_resumes` to find valid IDs |
+| "API error (403)" | The resume is locked. Unlock it in the Reactive Resume dashboard |
+| Connection refused | Check that `REACTIVE_RESUME_URL` is correct and the instance is running |
+| Module not found / Cannot find package | Ensure `cwd` is the repository root so the main project's `node_modules` is used |

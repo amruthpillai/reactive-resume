@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/client";
-import { and, arrayContains, asc, desc, eq, sql } from "drizzle-orm";
+import { and, arrayContains, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
 import type { Operation } from "fast-json-patch";
 import { match } from "ts-pattern";
@@ -9,10 +9,10 @@ import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import type { Locale } from "@/utils/locale";
-import { hashPassword } from "@/utils/password";
+import { hashPassword, verifyPassword } from "@/utils/password";
 import { applyResumePatches, ResumePatchError } from "@/utils/resume/patch";
 import { generateId } from "@/utils/string";
-import { hasResumeAccess } from "../helpers/resume-access";
+import { grantResumeAccess, hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
 
 const tags = {
@@ -381,6 +381,31 @@ export const resumeService = {
 			.update(schema.resume)
 			.set({ password: hashedPassword })
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+	},
+
+	verifyPassword: async (input: { slug: string; username: string; password: string }) => {
+		const [resume] = await db
+			.select({ id: schema.resume.id, password: schema.resume.password })
+			.from(schema.resume)
+			.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
+			.where(
+				and(
+					isNotNull(schema.resume.password),
+					eq(schema.resume.slug, input.slug),
+					eq(schema.user.username, input.username),
+				),
+			);
+
+		if (!resume) throw new ORPCError("NOT_FOUND");
+
+		const passwordHash = resume.password as string;
+		const isValid = await verifyPassword(input.password, passwordHash);
+
+		if (!isValid) throw new ORPCError("INVALID_PASSWORD");
+
+		grantResumeAccess(resume.id, passwordHash);
+
+		return true;
 	},
 
 	removePassword: async (input: { id: string; userId: string }) => {

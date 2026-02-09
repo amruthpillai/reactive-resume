@@ -1,6 +1,6 @@
-import { createORPCClient } from "@orpc/client";
+import { createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
-import { BatchLinkPlugin } from "@orpc/client/plugins";
+import { BatchLinkPlugin, SimpleCsrfProtectionLinkPlugin } from "@orpc/client/plugins";
 import { createRouterClient, type InferRouterInputs, type InferRouterOutputs, type RouterClient } from "@orpc/server";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { createIsomorphicFn } from "@tanstack/react-start";
@@ -11,6 +11,11 @@ import { getLocale } from "@/utils/locale";
 export const getORPCClient = createIsomorphicFn()
 	.server((): RouterClient<typeof router> => {
 		return createRouterClient(router, {
+			interceptors: [
+				onError((error) => {
+					console.error(`ERROR [oRPC]: ${error}`);
+				}),
+			],
 			context: async () => {
 				const locale = await getLocale();
 				const reqHeaders = getRequestHeaders();
@@ -25,10 +30,20 @@ export const getORPCClient = createIsomorphicFn()
 	.client((): RouterClient<typeof router> => {
 		const link = new RPCLink({
 			url: `${window.location.origin}/api/rpc`,
-			plugins: [new BatchLinkPlugin({ groups: [{ condition: () => true, context: {} }] })],
-			fetch: (request, init) => {
-				return fetch(request, { ...init, credentials: "include" });
-			},
+			fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
+			plugins: [
+				new SimpleCsrfProtectionLinkPlugin(),
+				new BatchLinkPlugin({
+					mode: typeof window === "undefined" ? "buffered" : "streaming",
+					groups: [{ condition: () => true, context: {} }],
+				}),
+			],
+			interceptors: [
+				onError((error) => {
+					if (error instanceof DOMException && error.name === "AbortError") return;
+					console.error(`ERROR [oRPC]: ${error}`);
+				}),
+			],
 		});
 
 		return createORPCClient(link);
