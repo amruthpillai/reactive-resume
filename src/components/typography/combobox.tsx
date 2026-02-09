@@ -37,11 +37,28 @@ function buildWebFontMap() {
 
 const webFontMap: Map<string, WebFont> = buildWebFontMap();
 
-export function getNextWeight(fontFamily: string): Weight | null {
+export function getNextWeights(fontFamily: string): Weight[] | null {
 	const fontData = webFontMap.get(fontFamily);
 	if (!fontData || !Array.isArray(fontData.weights) || fontData.weights.length === 0) return null;
-	if (fontData.weights.includes("400")) return "400";
-	return fontData.weights[0] as Weight;
+
+	const uniqueWeights = Array.from(new Set(fontData.weights)) as Weight[];
+
+	// Try to pick 400 and 600 if available
+	const weights: Weight[] = [];
+
+	if (uniqueWeights.includes("400")) weights.push("400");
+	if (uniqueWeights.includes("600")) weights.push("600");
+
+	// If we didn't find both, fill in with first/last, ensuring uniqueness
+	while (weights.length < 2 && uniqueWeights.length > 0) {
+		// candidateIndex: 0 (first), 1 (last)
+		const lastIndex = uniqueWeights.length - 1;
+		const candidate = weights.length === 0 ? uniqueWeights[0] : uniqueWeights[lastIndex];
+		if (!weights.includes(candidate)) weights.push(candidate);
+		else break;
+	}
+
+	return weights.length > 0 ? weights : null;
 }
 
 type FontFamilyComboboxProps = Omit<ComboboxProps, "options">;

@@ -1,0 +1,32 @@
+{
+	"name": "Reactive Resume",
+	"service": "reactive_resume",
+	"dockerComposeFile": "docker-compose.yml",
+	"workspaceFolder": "/workspace",
+
+	"forwardPorts": [3000, 4000, 5432, 8333],
+	"portsAttributes": {
+		"3000": { "label": "Reactive Resume", "onAutoForward": "openBrowser" },
+		"4000": { "label": "Browserless (Printer)" },
+		"5432": { "label": "PostgreSQL" },
+		"8333": { "label": "SeaweedFS (S3)" }
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": ["biomejs.biome", "bradlc.vscode-tailwindcss", "lokalise.i18n-ally"],
+			"settings": {
+				"biome.enabled": true,
+				"editor.codeActionsOnSave": {
+					"source.biome": "explicit",
+					"source.fixAll.biome": "explicit",
+					"source.organizeImports.biome": "explicit"
+				},
+				"editor.defaultFormatter": "biomejs.biome",
+				"typescript.tsdk": "node_modules/typescript/lib"
+			}
+		}
+	},
+
+	"postCreateCommand": "corepack enable && pnpm install"
+}

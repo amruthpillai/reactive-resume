@@ -65,7 +65,7 @@ function Header() {
 	return (
 		<div
 			className={cn(
-				"page-header flex items-center gap-x-(--page-gap-x)",
+				"page-header flex items-center gap-x-(--page-margin-x)",
 				"rounded-(--picture-border-radius) border border-(--page-text-color)/10 bg-(--page-background-color) p-4",
 			)}
 		>

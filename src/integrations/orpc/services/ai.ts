@@ -1,23 +1,39 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import { createGateway, generateText, Output } from "ai";
+import { streamToEventIterator } from "@orpc/server";
+import {
+	convertToModelMessages,
+	createGateway,
+	generateText,
+	Output,
+	stepCountIs,
+	streamText,
+	tool,
+	type UIMessage,
+} from "ai";
 import { createOllama } from "ai-sdk-ollama";
 import { match } from "ts-pattern";
 import type { ZodError } from "zod";
 import z, { flattenError } from "zod";
+import chatSystemPromptTemplate from "@/integrations/ai/prompts/chat-system.md?raw";
 import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system.md?raw";
 import docxParserUserPrompt from "@/integrations/ai/prompts/docx-parser-user.md?raw";
 import pdfParserSystemPrompt from "@/integrations/ai/prompts/pdf-parser-system.md?raw";
 import pdfParserUserPrompt from "@/integrations/ai/prompts/pdf-parser-user.md?raw";
+import {
+	executePatchResume,
+	patchResumeDescription,
+	patchResumeInputSchema,
+} from "@/integrations/ai/tools/patch-resume";
 import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 
 export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
 
-export type AIProvider = z.infer<typeof aiProviderSchema>;
+type AIProvider = z.infer<typeof aiProviderSchema>;
 
-export type GetModelInput = {
+type GetModelInput = {
 	provider: AIProvider;
 	model: string;
 	apiKey: string;
@@ -49,9 +65,9 @@ export const fileInputSchema = z.object({
 	data: z.string(), // base64 encoded
 });
 
-export type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
+type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 
-export async function testConnection(input: TestConnectionInput): Promise<boolean> {
+async function testConnection(input: TestConnectionInput): Promise<boolean> {
 	const RESPONSE_OK = "1";
 
 	const result = await generateText({
@@ -63,11 +79,11 @@ export async function testConnection(input: TestConnectionInput): Promise<boolea
 	return result.output === RESPONSE_OK;
 }
 
-export type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
+type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
 	file: z.infer<typeof fileInputSchema>;
 };
 
-export async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
+async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 	const model = getModel(input);
 
 	const result = await generateText({
@@ -101,12 +117,12 @@ export async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 	});
 }
 
-export type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
+type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
 	file: z.infer<typeof fileInputSchema>;
 	mediaType: "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 };
 
-export async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
+async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 	const model = getModel(input);
 
 	const result = await generateText({
@@ -141,8 +157,39 @@ export function formatZodError(error: ZodError): string {
 	return JSON.stringify(flattenError(error));
 }
 
+function buildChatSystemPrompt(resumeData: ResumeData): string {
+	return chatSystemPromptTemplate.replace("{{RESUME_DATA}}", JSON.stringify(resumeData, null, 2));
+}
+
+type ChatInput = z.infer<typeof aiCredentialsSchema> & {
+	messages: UIMessage[];
+	resumeData: ResumeData;
+};
+
+async function chat(input: ChatInput) {
+	const model = getModel(input);
+	const systemPrompt = buildChatSystemPrompt(input.resumeData);
+
+	const result = streamText({
+		model,
+		system: systemPrompt,
+		messages: await convertToModelMessages(input.messages),
+		tools: {
+			patch_resume: tool({
+				description: patchResumeDescription,
+				inputSchema: patchResumeInputSchema,
+				execute: async ({ operations }) => executePatchResume(input.resumeData, operations),
+			}),
+		},
+		stopWhen: stepCountIs(3),
+	});
+
+	return streamToEventIterator(result.toUIMessageStream());
+}
+
 export const aiService = {
 	testConnection,
 	parsePdf,
 	parseDocx,
+	chat,
 };

@@ -82,7 +82,7 @@ export function isImageFile(mimeType: string): boolean {
 	return IMAGE_MIME_TYPES.includes(mimeType);
 }
 
-export interface ProcessedImage {
+interface ProcessedImage {
 	data: Uint8Array;
 	contentType: string;
 }
@@ -316,7 +316,7 @@ export function getStorageService(): StorageService {
 // High-level upload types
 type UploadType = "picture" | "screenshot" | "pdf";
 
-export interface UploadFileInput {
+interface UploadFileInput {
 	userId: string;
 	data: Uint8Array;
 	contentType: string;
@@ -324,7 +324,7 @@ export interface UploadFileInput {
 	resumeId?: string;
 }
 
-export interface UploadFileResult {
+interface UploadFileResult {
 	url: string;
 	key: string;
 }

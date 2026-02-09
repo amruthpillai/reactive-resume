@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
-import { FontFamilyCombobox, FontWeightCombobox, getNextWeight } from "@/components/typography/combobox";
+import { FontFamilyCombobox, FontWeightCombobox, getNextWeights } from "@/components/typography/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
@@ -68,9 +68,9 @@ function TypographySectionForm() {
 									onValueChange={(value) => {
 										if (value === null) return;
 										field.onChange(value);
-										const nextWeight = getNextWeight(value);
-										if (nextWeight !== null) {
-											form.setValue("body.fontWeights", [nextWeight], { shouldDirty: true });
+										const nextWeights = getNextWeights(value);
+										if (nextWeights !== null) {
+											form.setValue("body.fontWeights", nextWeights, { shouldDirty: true });
 										}
 										form.handleSubmit(onSubmit)();
 									}}
@@ -189,9 +189,9 @@ function TypographySectionForm() {
 									onValueChange={(value) => {
 										if (value === null) return;
 										field.onChange(value);
-										const nextWeight = getNextWeight(value);
-										if (nextWeight !== null) {
-											form.setValue("heading.fontWeights", [nextWeight], { shouldDirty: true });
+										const nextWeights = getNextWeights(value);
+										if (nextWeights !== null) {
+											form.setValue("heading.fontWeights", nextWeights, { shouldDirty: true });
 										}
 										form.handleSubmit(onSubmit)();
 									}}

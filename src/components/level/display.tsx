@@ -29,6 +29,7 @@ export function LevelDisplay({ icon, type, level, className, ...props }: Props) 
 					return (
 						<div
 							key={index}
+							data-active={isActive}
 							className={cn(
 								"h-2.5 flex-1 border border-(--page-primary-color) border-x-0 first:border-l last:border-r",
 								isActive && "bg-(--page-primary-color)",
@@ -50,6 +51,7 @@ export function LevelDisplay({ icon, type, level, className, ...props }: Props) 
 				return (
 					<div
 						key={index}
+						data-active={isActive}
 						className={cn(
 							"size-2.5 border border-(--page-primary-color)",
 							isActive && "bg-(--page-primary-color)",

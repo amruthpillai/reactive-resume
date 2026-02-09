@@ -1,6 +1,7 @@
 import { ORPCError } from "@orpc/client";
-import { and, arrayContains, asc, desc, eq, sql } from "drizzle-orm";
+import { and, arrayContains, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
+import type { Operation } from "fast-json-patch";
 import { match } from "ts-pattern";
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
@@ -8,13 +9,14 @@ import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import type { Locale } from "@/utils/locale";
-import { hashPassword } from "@/utils/password";
+import { hashPassword, verifyPassword } from "@/utils/password";
+import { applyResumePatches, ResumePatchError } from "@/utils/resume/patch";
 import { generateId } from "@/utils/string";
-import { hasResumeAccess } from "../helpers/resume-access";
+import { grantResumeAccess, hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
 
 const tags = {
-	list: async (input: { userId: string }): Promise<string[]> => {
+	list: async (input: { userId: string }) => {
 		const result = await db
 			.select({ tags: schema.resume.tags })
 			.from(schema.resume)
@@ -50,7 +52,7 @@ const statistics = {
 		};
 	},
 
-	increment: async (input: { id: string; views?: boolean; downloads?: boolean }): Promise<void> => {
+	increment: async (input: { id: string; views?: boolean; downloads?: boolean }) => {
 		const views = input.views ? 1 : 0;
 		const downloads = input.downloads ? 1 : 0;
 		const lastViewedAt = input.views ? sql`now()` : undefined;
@@ -233,7 +235,7 @@ export const resumeService = {
 		tags: string[];
 		locale: Locale;
 		data?: ResumeData;
-	}): Promise<string> => {
+	}) => {
 		const id = generateId();
 
 		input.data = input.data ?? defaultResumeData;
@@ -269,7 +271,7 @@ export const resumeService = {
 		tags?: string[];
 		data?: ResumeData;
 		isPublic?: boolean;
-	}): Promise<void> => {
+	}) => {
 		const [resume] = await db
 			.select({ isLocked: schema.resume.isLocked })
 			.from(schema.resume)
@@ -286,7 +288,7 @@ export const resumeService = {
 		};
 
 		try {
-			await db
+			const [resume] = await db
 				.update(schema.resume)
 				.set(updateData)
 				.where(
@@ -295,7 +297,19 @@ export const resumeService = {
 						eq(schema.resume.isLocked, false),
 						eq(schema.resume.userId, input.userId),
 					),
-				);
+				)
+				.returning({
+					id: schema.resume.id,
+					name: schema.resume.name,
+					slug: schema.resume.slug,
+					tags: schema.resume.tags,
+					data: schema.resume.data,
+					isPublic: schema.resume.isPublic,
+					isLocked: schema.resume.isLocked,
+					hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+				});
+
+			return resume;
 		} catch (error) {
 			if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
 				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
@@ -305,14 +319,62 @@ export const resumeService = {
 		}
 	},
 
-	setLocked: async (input: { id: string; userId: string; isLocked: boolean }): Promise<void> => {
+	patch: async (input: { id: string; userId: string; operations: Operation[] }) => {
+		const [existing] = await db
+			.select({ data: schema.resume.data, isLocked: schema.resume.isLocked })
+			.from(schema.resume)
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+		if (!existing) throw new ORPCError("NOT_FOUND");
+		if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
+
+		let patchedData: ResumeData;
+
+		try {
+			patchedData = applyResumePatches(existing.data, input.operations);
+		} catch (error) {
+			if (error instanceof ResumePatchError) {
+				throw new ORPCError("INVALID_PATCH_OPERATIONS", {
+					status: 400,
+					message: error.message,
+					data: { code: error.code, index: error.index, operation: error.operation },
+				});
+			}
+
+			throw new ORPCError("INVALID_PATCH_OPERATIONS", {
+				status: 400,
+				message: error instanceof Error ? error.message : "Failed to apply patch operations",
+			});
+		}
+
+		const [resume] = await db
+			.update(schema.resume)
+			.set({ data: patchedData })
+			.where(
+				and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
+			)
+			.returning({
+				id: schema.resume.id,
+				name: schema.resume.name,
+				slug: schema.resume.slug,
+				tags: schema.resume.tags,
+				data: schema.resume.data,
+				isPublic: schema.resume.isPublic,
+				isLocked: schema.resume.isLocked,
+				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+			});
+
+		return resume;
+	},
+
+	setLocked: async (input: { id: string; userId: string; isLocked: boolean }) => {
 		await db
 			.update(schema.resume)
 			.set({ isLocked: input.isLocked })
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 	},
 
-	setPassword: async (input: { id: string; userId: string; password: string }): Promise<void> => {
+	setPassword: async (input: { id: string; userId: string; password: string }) => {
 		const hashedPassword = await hashPassword(input.password);
 
 		await db
@@ -321,14 +383,39 @@ export const resumeService = {
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 	},
 
-	removePassword: async (input: { id: string; userId: string }): Promise<void> => {
+	verifyPassword: async (input: { slug: string; username: string; password: string }) => {
+		const [resume] = await db
+			.select({ id: schema.resume.id, password: schema.resume.password })
+			.from(schema.resume)
+			.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
+			.where(
+				and(
+					isNotNull(schema.resume.password),
+					eq(schema.resume.slug, input.slug),
+					eq(schema.user.username, input.username),
+				),
+			);
+
+		if (!resume) throw new ORPCError("NOT_FOUND");
+
+		const passwordHash = resume.password as string;
+		const isValid = await verifyPassword(input.password, passwordHash);
+
+		if (!isValid) throw new ORPCError("INVALID_PASSWORD");
+
+		grantResumeAccess(resume.id, passwordHash);
+
+		return true;
+	},
+
+	removePassword: async (input: { id: string; userId: string }) => {
 		await db
 			.update(schema.resume)
 			.set({ password: null })
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 	},
 
-	delete: async (input: { id: string; userId: string }): Promise<void> => {
+	delete: async (input: { id: string; userId: string }) => {
 		const storageService = getStorageService();
 
 		const deleteResumePromise = db
