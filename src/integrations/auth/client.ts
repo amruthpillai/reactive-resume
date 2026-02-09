@@ -1,4 +1,3 @@
-import { passkeyClient } from "@better-auth/passkey/client";
 import {
 	apiKeyClient,
 	genericOAuthClient,
@@ -22,7 +21,6 @@ const getAuthClient = () => {
 					}
 				},
 			}),
-			passkeyClient(),
 			genericOAuthClient(),
 			inferAdditionalFields<typeof auth>(),
 		],

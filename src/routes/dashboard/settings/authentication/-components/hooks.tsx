@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 import { GithubLogoIcon, GoogleLogoIcon, PasswordIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import { authClient } from "@/integrations/auth/client";
@@ -103,19 +103,4 @@ export function useEnabledProviders() {
 	const { data: enabledProviders = [] } = useQuery(orpc.auth.providers.list.queryOptions());
 
 	return { enabledProviders };
-}
-
-/**
- * Hook to list the authenticated passkeys for the current user
- */
-export function useAuthPasskeys() {
-	const { data } = useQuery({
-		queryKey: ["auth", "passkeys"],
-		queryFn: () => authClient.passkey.listUserPasskeys(),
-		select: ({ data }) => data ?? [],
-	});
-
-	const passkeys = useMemo(() => data ?? [], [data]);
-
-	return { passkeys };
 }

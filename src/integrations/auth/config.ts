@@ -1,5 +1,4 @@
 import { BetterAuthError } from "@better-auth/core/error";
-import { passkey } from "@better-auth/passkey";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth/minimal";
 import { apiKey, type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
@@ -228,17 +227,8 @@ const getAuthConfig = () => {
 				usernameValidator: (username) => /^[a-z0-9._-]+$/.test(username),
 				validationOrder: { username: "post-normalization", displayUsername: "post-normalization" },
 			}),
-			twoFactor({
-				issuer: "Reactive Resume",
-			}),
-			passkey({
-				origin: env.APP_URL,
-				rpName: "Reactive Resume",
-				rpID: new URL(env.APP_URL).hostname,
-			}),
-			genericOAuth({
-				config: authConfigs,
-			}),
+			twoFactor({ issuer: "Reactive Resume" }),
+			genericOAuth({ config: authConfigs }),
 			tanstackStartCookies(),
 		],
 	});
