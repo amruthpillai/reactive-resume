@@ -2,23 +2,26 @@ import { SmartCoercionPlugin } from "@orpc/json-schema";
 import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { onError } from "@orpc/server";
-import { RequestHeadersPlugin } from "@orpc/server/plugins";
+import { BatchHandlerPlugin, RequestHeadersPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createFileRoute } from "@tanstack/react-router";
 import router from "@/integrations/orpc/router";
+import { resumeDataSchema } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import { getLocale } from "@/utils/locale";
 
 const openAPIHandler = new OpenAPIHandler(router, {
+	plugins: [
+		new BatchHandlerPlugin(),
+		new RequestHeadersPlugin(),
+		new StrictGetMethodPlugin(),
+		new SmartCoercionPlugin({
+			schemaConverters: [new ZodToJsonSchemaConverter()],
+		}),
+	],
 	interceptors: [
 		onError((error) => {
 			console.error(`ERROR [OpenAPI]: ${error}`);
-		}),
-	],
-	plugins: [
-		new RequestHeadersPlugin(),
-		new SmartCoercionPlugin({
-			schemaConverters: [new ZodToJsonSchemaConverter()],
 		}),
 	],
 });
@@ -34,13 +37,16 @@ async function handler({ request }: { request: Request }) {
 		const spec = await openAPIGenerator.generate(router, {
 			info: {
 				title: "Reactive Resume",
-				version: "5.0.0",
+				version: __APP_VERSION__,
 				description: "Reactive Resume API",
 				license: { name: "MIT", url: "https://github.com/amruthpillai/reactive-resume/blob/main/LICENSE" },
 				contact: { name: "Amruth Pillai", email: "hello@amruthpillai.com", url: "https://amruthpillai.com" },
 			},
 			servers: [{ url: `${env.APP_URL}/api/openapi` }],
 			externalDocs: { url: "https://docs.rxresu.me", description: "Reactive Resume Documentation" },
+			commonSchemas: {
+				ResumeData: { schema: resumeDataSchema },
+			},
 			components: {
 				securitySchemes: {
 					apiKey: {

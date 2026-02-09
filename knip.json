@@ -4,6 +4,12 @@
 	"tailwind": { "entry": ["src/styles.css"] },
 	"project": ["src/**/*.{js,jsx,ts,tsx,mdx,css}"],
 	"ignoreBinaries": ["mint"],
-	"ignoreDependencies": ["npm-check-updates", "reflect-metadata", "node-addon-api", "node-gyp"],
+	"ignoreDependencies": [
+		"@modelcontextprotocol/sdk",
+		"npm-check-updates",
+		"reflect-metadata",
+		"node-addon-api",
+		"node-gyp"
+	],
 	"ignore": ["src/schema/**/*.ts", "src/components/**/*.{ts,tsx}", "src/routeTree.gen.ts"]
 }

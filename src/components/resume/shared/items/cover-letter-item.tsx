@@ -12,17 +12,13 @@ export function CoverLetterItem({ className, ...item }: CoverLetterItemProps) {
 
 	return (
 		<div className={cn("cover-letter-item", className)}>
-			{stripHtml(item.recipient) && (
-				<div className="cover-letter-item-recipient mb-4">
-					<TiptapContent content={item.recipient} />
-				</div>
-			)}
+			<div className={cn("cover-letter-item-recipient mb-4", !stripHtml(item.recipient) && "hidden")}>
+				<TiptapContent content={item.recipient} />
+			</div>
 
-			{stripHtml(item.content) && (
-				<div className="cover-letter-item-content">
-					<TiptapContent content={item.content} />
-				</div>
-			)}
+			<div className={cn("cover-letter-item-content", !stripHtml(item.content) && "hidden")}>
+				<TiptapContent content={item.content} />
+			</div>
 		</div>
 	);
 }

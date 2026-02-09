@@ -10,9 +10,9 @@
 		"ignoreUnknown": true,
 		"includes": [
 			"**",
+			"!**/docs/spec.json",
 			"!**/webfontlist.json",
 			"!**/schema/schema.json",
-			"!**/docs/spec.json",
 			"!**/src/routeTree.gen.ts"
 		]
 	},
@@ -24,8 +24,7 @@
 		"actions": {
 			"recommended": true,
 			"source": {
-				"organizeImports": "on",
-				"useSortedProperties": "on"
+				"organizeImports": "on"
 			}
 		}
 	},

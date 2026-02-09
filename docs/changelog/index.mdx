@@ -4,6 +4,19 @@ description: "List of all notable changes and updates to Reactive Resume"
 rss: true
 ---
 
+<Update label="v5.0.7" description="9th February 2026">
+  - Introduce a new **MCP (Model Context Protocol) server** that lets you manage and edit resumes from any MCP-compatible AI tool — Claude Desktop, Cursor, Codex, and more. Supports listing, reading, creating, deleting, locking/unlocking, and patching resumes via natural language. [(guide)](/guides/using-the-mcp-server)
+  - Add an **AI Chat** panel to the resume builder, allowing you to modify your resume through conversational AI directly within the editor. The chat uses tool-calling to apply JSON Patch operations to your resume in real-time, with visual feedback for each change.
+  - Add a system prompt and `patch_resume` tool for the AI chat, enabling structured, minimal-diff resume edits following RFC 6902 JSON Patch operations.
+  - Chat history is now persisted per resume in localStorage, so conversations are preserved across sessions.
+  - Fix rendering issues in the Lapras and Onyx resume templates.
+  - Improvements to the Combobox and ScrollArea UI components.
+  - Fix an issue with skills item rendering in the shared resume components.
+  - Update authentication configuration and auth route handling.
+  - Update the JSON Schema to reflect the latest resume data model.
+  - Update dependencies to the latest versions.
+</Update>
+
 <Update label="v5.0.6" description="8th February 2026">
   - Implement Atomic Resume Patching API for fine-grained resume updates, allowing partial, atomic updates to resumes via a new PATCH endpoint. [#2692](https://github.com/amruthpillai/reactive-resume/pull/2692)
   - The API endpoint `PUT /resume/{id}` now returns the updated resume object instead of void. Also, resume routing/services now use explicit DTOs for input and output schemas. [#2688](https://github.com/amruthpillai/reactive-resume/pull/2688)

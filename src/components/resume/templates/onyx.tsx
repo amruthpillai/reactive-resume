@@ -43,7 +43,7 @@ function Header() {
 	const basics = useResumeStore((state) => state.resume.data.basics);
 
 	return (
-		<div className="page-header flex items-center gap-x-(--page-gap-x) border-(--page-primary-color) border-b pb-(--page-margin-y)">
+		<div className="page-header flex items-center gap-x-(--page-margin-x) border-(--page-primary-color) border-b pb-(--page-margin-y)">
 			<PagePicture />
 
 			<div className="page-basics space-y-(--page-gap-y)">
