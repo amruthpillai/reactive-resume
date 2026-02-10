@@ -13,95 +13,113 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is a standar
 
 <Steps>
   <Step title="Create an API key">
-    Follow the [Using the API](/guides/using-the-api) guide to create an API key in your Reactive Resume dashboard.
-  </Step>
+    Head over to [https://rxresu.me](https://rxresu.me) (or your self-hosted instance), sign in, and navigate to **Settings → API Keys**. Click **Create a new API key**, give it a name, and copy the secret — it's only shown once.
 
-  <Step title="Install Node.js">
-    The MCP server requires [Node.js](https://nodejs.org) version 18 or later.
-  </Step>
-
-  <Step title="Install dependencies">
-    From the Reactive Resume repository root, install dependencies (the MCP server uses the main project's dependencies):
-
-    ```bash
-    cd /path/to/reactive-resume
-    pnpm install
-    ```
+    For the full walkthrough, see [Using the API](/guides/using-the-api).
   </Step>
 </Steps>
 
-## Running the MCP server
-
-The server is a single TypeScript entry point and is run with **tsx** (no build step). From the repository root:
-
-```bash
-npx tsx /path/to/reactive-resume/mcp/index.ts
-```
-
-The working directory must be the **repository root** so that `node_modules` (and thus `@modelcontextprotocol/sdk`) is resolved. Configure your MCP client with `cwd` set to the repo path.
-
 ## Configuration
 
-### Claude Desktop
+There are two ways to connect, depending on whether your MCP client supports the Streamable HTTP transport natively.
 
-Add the following to your `claude_desktop_config.json`:
+### Method 1: Streamable HTTP (recommended)
+
+If your client supports the `url` field (e.g. **Cursor**), use this — no extra dependencies required:
+
+```json
+{
+  "mcpServers": {
+    "reactive-resume": {
+      "url": "https://rxresu.me/mcp",
+      "headers": {
+        "x-api-key": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Method 2: mcp-remote
+
+If your client only supports `command` / `args` (e.g. **Claude Desktop**), use [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) as a bridge. This requires [Node.js](https://nodejs.org) **20 or later**.
 
 ```json
 {
   "mcpServers": {
     "reactive-resume": {
       "command": "npx",
-      "args": ["tsx", "/path/to/reactive-resume/mcp/index.ts"],
-      "cwd": "/path/to/reactive-resume",
-      "env": {
-        "REACTIVE_RESUME_API_KEY": "your-api-key",
-        "REACTIVE_RESUME_URL": "https://rxresu.me"
-      }
+      "args": [
+        "mcp-remote",
+        "https://rxresu.me/mcp",
+        "--header",
+        "x-api-key:your-api-key"
+      ]
     }
   }
 }
 ```
 
 <Info>
-  Replace `/path/to/reactive-resume` with the actual path to your cloned repository, and `your-api-key` with the API key you created.
+  Replace `your-api-key` with the API key you created in the prerequisites step.
 </Info>
 
-### Cursor
+### Where to put the config
 
-Add the following to `.cursor/mcp.json` in your project or home directory:
+| Client | Config file |
+| --- | --- |
+| Cursor | `.cursor/mcp.json` in your project or home directory |
+| Claude Desktop | `claude_desktop_config.json` ([docs](https://modelcontextprotocol.io/docs/tools/claude-desktop)) |
+| Other MCP clients | Refer to the client's documentation |
+
+## Self-Hosting
+
+If you're running a self-hosted Reactive Resume instance, replace `https://rxresu.me/mcp` with your instance URL:
 
 ```json
 {
-  "mcpServers": {
-    "reactive-resume": {
-      "command": "npx",
-      "args": ["tsx", "/path/to/reactive-resume/mcp/index.ts"],
-      "cwd": "/path/to/reactive-resume",
-      "env": {
-        "REACTIVE_RESUME_API_KEY": "your-api-key",
-        "REACTIVE_RESUME_URL": "https://rxresu.me"
-      }
-    }
+  "url": "https://resume.example.com/mcp",
+  "headers": {
+    "x-api-key": "your-api-key"
   }
 }
 ```
 
 ## Available Tools
 
-The MCP server exposes three tools:
+The MCP server exposes the following tools:
 
 | Tool | Description |
 | --- | --- |
-| `list_resumes` | List all your resumes with their IDs, names, tags, and status |
+| `list_resumes` | List all resumes with IDs, names, tags, and status. Supports filtering by tags and sorting by last updated, creation date, or name |
 | `get_resume` | Get the full data of a specific resume by ID |
-| `patch_resume` | Apply JSON Patch operations to modify a resume |
+| `create_resume` | Create a new, empty resume with a name and slug. Optionally pre-fill with sample data |
+| `duplicate_resume` | Create a copy of an existing resume with a new name and slug |
+| `patch_resume` | Apply JSON Patch (RFC 6902) operations to modify a resume's data |
+| `delete_resume` | Permanently delete a resume and all associated files. **Irreversible** |
+| `lock_resume` | Lock a resume to prevent edits, patches, and deletion |
+| `unlock_resume` | Unlock a previously locked resume to re-enable editing |
+| `export_resume_pdf` | Generate a PDF from the resume and return a download URL |
+| `get_resume_screenshot` | Get a visual preview of the resume's first page as a WebP image URL |
+| `get_resume_statistics` | Get view and download statistics for a resume |
 
 ## Available Resources
 
 | Resource | Description |
 | --- | --- |
-| `resume://{id}` | The full resume data as a readable JSON resource |
-| `resume://schema` | The ResumeData JSON schema for understanding the data structure |
+| `resume://{id}` | The full resume data as a readable JSON resource. Lists all resumes and supports reading individual ones by ID |
+| `resume://schema` | The ResumeData JSON Schema — reference this to understand valid paths and value types for JSON Patch operations |
+
+## Available Prompts
+
+Prompts are pre-built workflows that provide the AI with structured instructions and context. Each prompt embeds the resume data and schema automatically.
+
+| Prompt | Description |
+| --- | --- |
+| `build_resume` | Guide you step-by-step through building a resume from scratch — basics, summary, experience, education, skills, and design |
+| `improve_resume` | Review your resume and suggest concrete improvements to wording, impact, metrics, and structure |
+| `tailor_resume` | Adapt your resume to match a specific job description with keyword optimization and ATS targeting. Requires the job description as input |
+| `review_resume` | Get a structured, professional critique with a scorecard (1–10 across seven dimensions) and prioritized recommendations. **Read-only** — no changes are made |
 
 ## Usage Examples
 
@@ -112,6 +130,14 @@ Once your MCP client is connected, you can use natural language to interact with
 - "List my resumes"
 - "Show me my resume named 'Software Engineer'"
 - "What skills are listed on my resume?"
+- "Show me the stats for my resume"
+
+### Creating & Managing
+
+- "Create a new resume called 'Frontend Engineer 2026'"
+- "Duplicate my 'Software Engineer' resume for a product manager role"
+- "Lock my finalized resume so it can't be accidentally edited"
+- "Delete my old draft resume"
 
 ### Editing
 
@@ -127,39 +153,28 @@ Once your MCP client is connected, you can use natural language to interact with
 - "Set the primary color to blue"
 - "Hide the interests section"
 
+### Exporting
+
+- "Export my resume as a PDF"
+- "Show me a screenshot of my resume"
+
+### Using Prompts
+
+- "Help me build my resume from scratch" (uses `build_resume`)
+- "Review my resume and give me a score" (uses `review_resume`)
+- "Improve the wording on my resume" (uses `improve_resume`)
+- "Tailor my resume for this job description: ..." (uses `tailor_resume`)
+
 <Tip>
   The AI will use `get_resume` to inspect your current resume before making changes with `patch_resume`. This ensures the correct JSON paths are used.
 </Tip>
-
-## Self-Hosting
-
-If you're running a self-hosted Reactive Resume instance, set `REACTIVE_RESUME_URL` to your instance URL:
-
-```json
-{
-  "env": {
-    "REACTIVE_RESUME_API_KEY": "your-api-key",
-    "REACTIVE_RESUME_URL": "https://resume.example.com"
-  }
-}
-```
-
-## Environment Variables
-
-| Variable | Required | Default | Description |
-| --- | --- | --- | --- |
-| `REACTIVE_RESUME_API_KEY` | Yes | — | API key from Reactive Resume settings |
-| `REACTIVE_RESUME_URL` | No | `https://rxresu.me` | Base URL of the Reactive Resume instance |
-| `TRANSPORT` | No | `stdio` | Transport mode: `stdio` or `http` |
-| `PORT` | No | `3100` | Port for streamable HTTP transport |
 
 ## Troubleshooting
 
 | Issue | Solution |
 | --- | --- |
-| "REACTIVE_RESUME_API_KEY is required" | Set the `REACTIVE_RESUME_API_KEY` environment variable in your MCP client configuration |
-| "API error (401)" | Your API key is invalid or expired. Create a new one in the dashboard |
+| "API error (401)" | Your API key is invalid or expired. Create a new one in **Settings → API Keys** |
 | "API error (404)" | The resume ID doesn't exist. Use `list_resumes` to find valid IDs |
 | "API error (403)" | The resume is locked. Unlock it in the Reactive Resume dashboard |
-| Connection refused | Check that `REACTIVE_RESUME_URL` is correct and the instance is running |
-| Module not found / Cannot find package | Ensure `cwd` is the repository root so the main project's `node_modules` is used |
+| Connection refused | Check that the URL is correct and the instance is running |
+| "ReferenceError: File is not defined" when using `mcp-remote` | You're running Node.js 18. `mcp-remote` requires **Node.js 20 or later** — upgrade with `nvm use 20` or `nvm alias default 20` |

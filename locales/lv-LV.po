@@ -8,7 +8,7 @@ msgstr ""
 "Language: lv\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:14\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Latvian\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
@@ -211,15 +211,6 @@ msgstr "Pievienot rindu pirms"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Pievienots {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Tiek pievienota jūsu piekļuves atslēga..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikandu"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Vai tiešām vēlaties dzēst šo API atslēgu?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Vai tiešām vēlaties dzēst šo piekļuves atslēgu?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Tiek dzēsts jūsu konts..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Tiek dzēsta jūsu API atslēga..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Tiek dzēsta jūsu piekļuves atslēga..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "Lapa {pageNumber} no {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Rindkopa"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Piekļuves atslēgas"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Piekļuves atslēgas un 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Atsauksmes"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Atsvaidzināt"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Reģistrēt jaunu ierīci"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "Piesakieties ar GitHub, Google vai pielāgotu OAuth pakalpojumu sniedzē
 msgid "Sign up"
 msgstr "Reģistrēties"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Brīvprātīgais darbs"
 msgid "Website"
 msgstr "Tīmekļa vietne"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Kā vēlaties nosaukt šo piekļuves atslēgu?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Uz kādu nosaukumu vēlaties pārdēvēt šo sadaļu?"
@@ -2791,11 +2761,6 @@ msgstr "Pieteikšanās laikā varat izmantot arī savu lietotājvārdu."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Varat kopīgot savu CV, izmantojot unikālu publisku URL, aizsargāt to ar paroli vai lejupielādēt kā PDF un kopīgot tieši. Izvēle ir jūsu rokās!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Pēc dzēšanas jūs vairs nevarēsiet izmantot piekļuves atslēgu \"{0}\" pieteikšanās veikšanai. Šo darbību nevar atsaukt."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Jūsu dati tiek glabāti lokāli"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Jūsu dati tiek glabāti droši un nekad netiek kopīgoti ar trešajām pusēm. Reactive Resume varat arī pašhostēt uz saviem serveriem, lai pilnībā kontrolētu savus datus."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Jūsu piekļuves atslēga ir veiksmīgi pievienota."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Jūsu piekļuves atslēga ir veiksmīgi dzēsta."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Tālināt"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+

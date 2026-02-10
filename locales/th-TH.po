@@ -8,7 +8,7 @@ msgstr ""
 "Language: th\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:14\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Thai\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -211,15 +211,6 @@ msgstr "เพิ่มแวก่อน"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "เพิ่มเมื่อ {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "กำลังเพิ่มรหัสผ่านคีย์ของคุณ..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "อาฟรีกานส์"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบ API Key นี้?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบรหัสผ่านคีย์นี้?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "กำลังลบบัญชีของคุณ..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "กำลังลบคีย์ API ของคุณ..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "กำลังลบกุญแจผ่านของคุณ..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "หน้า {pageNumber} จาก {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "ย่อหน้า"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "รหัสผ่านผ่านคีย์"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "พาสคีย์ & 2FA"
@@ -1903,10 +1882,6 @@ msgstr "บุคคลอ้างอิง"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "รีเฟรช"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "ลงทะเบียนอุปกรณ์ใหม่"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "ลงชื่อเข้าใช้ด้วย GitHub, Google ห�
 msgid "Sign up"
 msgstr "ลงทะเบียน"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "อาสาสมัคร"
 msgid "Website"
 msgstr "เว็บไซต์"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "คุณต้องการตั้งชื่อกุญแจผ่านนี้ว่าอะไร?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "คุณต้องการเปลี่ยนชื่อส่วนนี้เป็นอะไร?"
@@ -2791,11 +2761,6 @@ msgstr "คุณยังสามารถใช้ชื่อผู้ใช
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "คุณสามารถแบ่งปันประวัติย่อของคุณผ่าน URL สาธารณะเฉพาะ ป้องกันด้วยรหัสผ่าน หรือดาวน์โหลดเป็น PDF เพื่อแชร์โดยตรงก็ได้ ตัวเลือกเป็นของคุณ!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "คุณไม่สามารถใช้กุญแจผ่าน \"{0}\" เพื่อลงชื่อเข้าใช้หลังจากลบแล้ว การกระทำนี้จะไม่สามารถย้อนกลับได้."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "ข้อมูลของคุณถูกจัดเก็บไว
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "ข้อมูลของคุณถูกจัดเก็บไว้อย่างปลอดภัยและจะไม่ถูกแชร์กับบุคคลที่สาม คุณยังสามารถโฮสต์ Reactive Resume ด้วยตัวเองบนเซิร์ฟเวอร์ของคุณเพื่อควบคุมข้อมูลได้อย่างสมบูรณ์."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "กุญแจผ่านของคุณถูกเพิ่มเรียบร้อยแล้ว."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "กุญแจผ่านของคุณถูกลบเรียบร้อยแล้ว."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "ซูมออก"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "ซูลู"
+

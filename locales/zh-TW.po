@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -211,15 +211,6 @@ msgstr "在前方新增列"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "新增於 {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "正在新增您的通行金鑰…"
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "南非荷蘭語"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "確定要刪除此 API Key 嗎？"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "確定要刪除此通行金鑰嗎？"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "正在刪除您的帳戶…"
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "正在刪除您的 API Key…"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "正在刪除您的通行金鑰…"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "第 {pageNumber} / {totalNumberOfPages} 頁"
 msgid "Paragraph"
 msgstr "段落"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "通行金鑰"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "通行金鑰與 2FA"
@@ -1903,10 +1882,6 @@ msgstr "推薦人"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "重新整理"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "註冊新裝置"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "使用 GitHub、Google 或自訂 OAuth 服務登入。"
 msgid "Sign up"
 msgstr "註冊"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "志工服務"
 msgid "Website"
 msgstr "個人網站"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "您想如何稱呼這把通行金鑰？"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "您想將這個段落重新命名為什麼？"
@@ -2791,11 +2761,6 @@ msgstr "您也可以使用使用者名稱登入。"
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "您可以透過唯一的公開 URL 分享履歷、以密碼加以保護，或下載成 PDF 直接分享，一切由您決定！"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "刪除後，您將無法再使用通行金鑰「{0}」登入。此動作無法復原。"
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "您的資料將儲存在本機裝置中"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "您的資料會被安全保存，且絕不會分享給第三方。您也可以在自有伺服器上自行託管 Reactive Resume，完全掌控自己的資料。"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "您的通行金鑰已成功新增。"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "您的通行金鑰已成功刪除。"
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "縮小"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "祖魯語"
+

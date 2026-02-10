@@ -8,7 +8,7 @@ msgstr ""
 "Language: az\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:14\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Azerbaijani\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -211,15 +211,6 @@ msgstr "Əvvəl Sətir əlavə et"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "{0} tarixində əlavə edilib"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Keçid açarınız əlavə olunur..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikaans"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Bu API açarını silmək istədiyinizə əminsiniz?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Bu keçid açarını silmək istədiyinizə əminsiniz?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Hesabınız silinir..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "API açarınız silinir..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Keçid açarınız silinir..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "Cəmi {totalNumberOfPages} səhifədən {pageNumber}‑ci səhifə"
 msgid "Paragraph"
 msgstr "Paraqraf"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Keçid Açarları"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Keçid Açarları və 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Referanslar"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Yenilə"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Yeni Cihaz Qeydiyyatdan Keçir"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "GitHub, Google və ya xüsusi OAuth provayderi ilə daxil olun."
 msgid "Sign up"
 msgstr "Qeydiyyatdan keç"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Könüllü"
 msgid "Website"
 msgstr "Vebsayt"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Bu keçid açarını nə adlandırmaq istəyirsiniz?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Bu bölməni nə ilə yenidən adlandırmaq istəyirsiniz?"
@@ -2791,11 +2761,6 @@ msgstr "Daxil olmaq üçün istifadəçi adınızdan da istifadə edə bilərsin
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Özgeçmişinizi unikal açıq URL vasitəsilə paylaşa, onu parol ilə qoruya və ya birbaşa paylaşmaq üçün PDF kimi endirə bilərsiniz. Seçim sizindir!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Bu keçid açarını \"{0}\" siləndən sonra artıq daxil olmaq üçün istifadə edə bilməyəcəksiniz. Bu əməliyyat geri qaytarıla bilməz."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Məlumatlarınız lokal olaraq saxlanılır"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Məlumatlarınız təhlükəsiz şəkildə saxlanılır və heç vaxt üçüncü tərəflərlə paylaşılmır. Məlumatlarınıza tam nəzarət üçün Reactive Resume‑ni öz serverlərinizdə də host edə bilərsiniz."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Keçid açarınız uğurla əlavə edildi."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Keçid açarınız uğurla silindi."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Uzaqlaşdır"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+

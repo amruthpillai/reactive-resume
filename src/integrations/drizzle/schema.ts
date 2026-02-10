@@ -24,7 +24,7 @@ export const user = pg.pgTable(
 			.defaultNow()
 			.$onUpdate(() => /* @__PURE__ */ new Date()),
 	},
-	(t) => [pg.index().on(t.email), pg.index().on(t.username)],
+	(t) => [pg.index().on(t.createdAt.asc())],
 );
 
 export const session = pg.pgTable(
@@ -84,26 +84,22 @@ export const account = pg.pgTable(
 	(t) => [pg.index().on(t.userId)],
 );
 
-export const verification = pg.pgTable(
-	"verification",
-	{
-		id: pg
-			.uuid("id")
-			.notNull()
-			.primaryKey()
-			.$defaultFn(() => generateId()),
-		identifier: pg.text("identifier").notNull().unique(),
-		value: pg.text("value").notNull(),
-		expiresAt: pg.timestamp("expires_at", { withTimezone: true }).notNull(),
-		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-		updatedAt: pg
-			.timestamp("updated_at", { withTimezone: true })
-			.notNull()
-			.defaultNow()
-			.$onUpdate(() => /* @__PURE__ */ new Date()),
-	},
-	(t) => [pg.index().on(t.identifier)],
-);
+export const verification = pg.pgTable("verification", {
+	id: pg
+		.uuid("id")
+		.notNull()
+		.primaryKey()
+		.$defaultFn(() => generateId()),
+	identifier: pg.text("identifier").notNull().unique(),
+	value: pg.text("value").notNull(),
+	expiresAt: pg.timestamp("expires_at", { withTimezone: true }).notNull(),
+	createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	updatedAt: pg
+		.timestamp("updated_at", { withTimezone: true })
+		.notNull()
+		.defaultNow()
+		.$onUpdate(() => /* @__PURE__ */ new Date()),
+});
 
 export const twoFactor = pg.pgTable(
 	"two_factor",
@@ -192,37 +188,34 @@ export const resume = pg.pgTable(
 	(t) => [
 		pg.unique().on(t.slug, t.userId),
 		pg.index().on(t.userId),
+		pg.index().on(t.createdAt.asc()),
 		pg.index().on(t.userId, t.updatedAt.desc()),
 		pg.index().on(t.isPublic, t.slug, t.userId),
 	],
 );
 
-export const resumeStatistics = pg.pgTable(
-	"resume_statistics",
-	{
-		id: pg
-			.uuid("id")
-			.notNull()
-			.primaryKey()
-			.$defaultFn(() => generateId()),
-		views: pg.integer("views").notNull().default(0),
-		downloads: pg.integer("downloads").notNull().default(0),
-		lastViewedAt: pg.timestamp("last_viewed_at", { withTimezone: true }),
-		lastDownloadedAt: pg.timestamp("last_downloaded_at", { withTimezone: true }),
-		resumeId: pg
-			.uuid("resume_id")
-			.unique()
-			.notNull()
-			.references(() => resume.id, { onDelete: "cascade" }),
-		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-		updatedAt: pg
-			.timestamp("updated_at", { withTimezone: true })
-			.notNull()
-			.defaultNow()
-			.$onUpdate(() => /* @__PURE__ */ new Date()),
-	},
-	(t) => [pg.index().on(t.resumeId)],
-);
+export const resumeStatistics = pg.pgTable("resume_statistics", {
+	id: pg
+		.uuid("id")
+		.notNull()
+		.primaryKey()
+		.$defaultFn(() => generateId()),
+	views: pg.integer("views").notNull().default(0),
+	downloads: pg.integer("downloads").notNull().default(0),
+	lastViewedAt: pg.timestamp("last_viewed_at", { withTimezone: true }),
+	lastDownloadedAt: pg.timestamp("last_downloaded_at", { withTimezone: true }),
+	resumeId: pg
+		.uuid("resume_id")
+		.unique()
+		.notNull()
+		.references(() => resume.id, { onDelete: "cascade" }),
+	createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	updatedAt: pg
+		.timestamp("updated_at", { withTimezone: true })
+		.notNull()
+		.defaultNow()
+		.$onUpdate(() => /* @__PURE__ */ new Date()),
+});
 
 export const apikey = pg.pgTable(
 	"apikey",

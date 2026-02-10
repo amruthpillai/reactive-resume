@@ -8,7 +8,7 @@ msgstr ""
 "Language: ar\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:30\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
@@ -211,15 +211,6 @@ msgstr "إضافة صف قبل"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "أضيف في {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "جاري إضافة مفتاح المرور الخاص بك..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "الأفريقانس"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "هل أنت متأكد من أنك تريد حذف مفتاح واجهة برمجة التطبيقات هذا؟"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "هل أنت متأكد من أنك تريد حذف مفتاح المرور هذا؟"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "جاري حذف حسابك..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "جاري حذف مفتاح واجهة برمجة التطبيقات (API)..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "جاري حذف مفتاح المرور الخاص بك..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "الصفحة {pageNumber} من {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "فقرة"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "مفاتيح المرور"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "مفاتيح المرور والمصادقة الثنائية 2FA"
@@ -1903,10 +1882,6 @@ msgstr "المراجعون"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "تحديث"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "تسجيل جهاز جديد"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "سجّل الدخول باستخدام GitHub أو Google أو مزوّ�
 msgid "Sign up"
 msgstr "إنشاء حساب"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "التطوع"
 msgid "Website"
 msgstr "الموقع الإلكتروني"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "ماذا تريد أن تسمّي مفتاح المرور هذا؟"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "بماذا تريد أن تعيد تسمية هذا القسم؟"
@@ -2791,11 +2761,6 @@ msgstr "يمكنك أيضًا استخدام اسم المستخدم لتسجي�
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "يمكنك مشاركة سيرتك الذاتية عبر عنوان URL عام فريد، أو حمايتها بكلمة مرور، أو تنزيلها كملف PDF لمشاركتها مباشرة. القرار لك!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "لن تتمكن من استخدام مفتاح المرور \"{0}\" لتسجيل الدخول بعد حذفه. لا يمكن التراجع عن هذا الإجراء."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "تُخزَّن بياناتك محليًا"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "تُخزَّن بياناتك بأمان ولا تتم مشاركتها أبدًا مع أطراف ثالثة. يمكنك أيضًا استضافة Reactive Resume ذاتيًا على خوادمك الخاصة للتحكم الكامل في بياناتك."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "تمت إضافة مفتاح المرور الخاص بك بنجاح."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "تم حذف مفتاح المرور الخاص بك بنجاح."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "تصغير"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "الزولو"
+

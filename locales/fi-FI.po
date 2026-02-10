@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -211,15 +211,6 @@ msgstr "Lisää rivi ennen"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Lisätty {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Lisätään avainta..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "afrikaans"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Haluatko varmasti poistaa tämän API-avaimen?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Haluatko varmasti poistaa tämän avaimen?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Poistetaan tiliäsi..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Poistetaan API-avaintasi..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Poistetaan avaintasi..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "Sivu {pageNumber} / {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Kappale"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Avaimet"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Avaimet & 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Suosittelijat"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Päivitä"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Rekisteröi uusi laite"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "Kirjaudu sisään GitHubilla, Googlella tai mukautetulla OAuth-palvelunt
 msgid "Sign up"
 msgstr "Rekisteröidy"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Vapaaehtoistyö"
 msgid "Website"
 msgstr "Verkkosivusto"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Miksi haluat kutsua tätä avainta?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Miksi haluat nimetä tämän osion uudelleen?"
@@ -2791,11 +2761,6 @@ msgstr "Voit myös käyttää käyttäjätunnustasi kirjautumiseen."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Voit jakaa ansioluettelosi yksilöllisen julkisen URL-osoitteen kautta, suojata sen salasanalla tai ladata sen PDF:nä jakaaksesi sen suoraan. Valinta on sinun!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Et voi enää käyttää avainta \"{0}\" kirjautumiseen sen poistamisen jälkeen. Tätä toimintoa ei voi perua."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Tietosi tallennetaan paikallisesti"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Tietosi tallennetaan turvallisesti eikä niitä koskaan jaeta kolmansille osapuolille. Voit myös itseisännöidä Reactive Resumen omilla palvelimillasi täydellisen tietokontrollin takaamiseksi."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Avaimesi on lisätty onnistuneesti."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Avaimesi on poistettu onnistuneesti."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Loitonna"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+

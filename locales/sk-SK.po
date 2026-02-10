@@ -8,7 +8,7 @@ msgstr ""
 "Language: sk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Slovak\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -211,15 +211,6 @@ msgstr "Pridať riadok pred"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Pridané dňa {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Pridávam tvoj prístupový kľúč..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikánčina"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Naozaj chceš tento API kľúč vymazať?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Naozaj chceš tento prístupový kľúč vymazať?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Vymazávam tvoj účet..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Vymazávam tvoj API kľúč..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Vymazávam tvoj prístupový kľúč..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "Strana {pageNumber} z {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Odstavec"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Prístupové kľúče"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Prístupové kľúče a 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Referencie"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Obnoviť"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Zaregistrovať nové zariadenie"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "Prihlás sa cez GitHub, Google alebo vlastného OAuth poskytovateľa."
 msgid "Sign up"
 msgstr "Zaregistrovať sa"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Dobrovoľníctvo"
 msgid "Website"
 msgstr "Webová stránka"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Ako chceš tento prístupový kľúč nazvať?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Ako chceš túto sekciu premenovať?"
@@ -2791,11 +2761,6 @@ msgstr "Na prihlásenie môžeš použiť aj svoje používateľské meno."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Svoj životopis môžeš zdieľať pomocou unikátnej verejnej URL adresy, chrániť ho heslom alebo ho stiahnuť ako PDF a zdieľať priamo. Voľba je na tebe!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Po vymazaní už nebudeš môcť použiť prístupový kľúč \"{0}\" na prihlásenie. Túto akciu nemožno vrátiť späť."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Tvoje dáta sú uložené lokálne"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Tvoje dáta sú bezpečne uložené a nikdy sa nezdieľajú s tretími stranami. Reactive Resume si môžeš tiež hostovať na vlastných serveroch a mať nad dátami úplnú kontrolu."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Tvoj prístupový kľúč bol úspešne pridaný."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Tvoj prístupový kľúč bol úspešne vymazaný."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Oddialiť"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+

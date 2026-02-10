@@ -1,6 +1,6 @@
 import { createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
-import { BatchLinkPlugin, SimpleCsrfProtectionLinkPlugin } from "@orpc/client/plugins";
+import { BatchLinkPlugin } from "@orpc/client/plugins";
 import { createRouterClient, type InferRouterInputs, type InferRouterOutputs, type RouterClient } from "@orpc/server";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { createIsomorphicFn } from "@tanstack/react-start";
@@ -32,7 +32,6 @@ export const getORPCClient = createIsomorphicFn()
 			url: `${window.location.origin}/api/rpc`,
 			fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
 			plugins: [
-				new SimpleCsrfProtectionLinkPlugin(),
 				new BatchLinkPlugin({
 					mode: typeof window === "undefined" ? "buffered" : "streaming",
 					groups: [{ condition: () => true, context: {} }],

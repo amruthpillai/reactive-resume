@@ -65,7 +65,7 @@ type FontFamilyComboboxProps = Omit<ComboboxProps, "options">;
 
 export function FontFamilyCombobox({ className, ...props }: FontFamilyComboboxProps) {
 	const options = useMemo(() => {
-		return [...localFontList, ...webFontList].map((font: LocalFont | WebFont) => ({
+		return [...webFontList, ...localFontList].map((font: LocalFont | WebFont) => ({
 			value: font.family,
 			keywords: [font.family],
 			label: <FontDisplay name={font.family} type={font.type} url={"preview" in font ? font.preview : undefined} />,
@@ -79,15 +79,18 @@ type FontWeightComboboxProps = Omit<MultipleComboboxProps, "options"> & { fontFa
 
 export function FontWeightCombobox({ fontFamily, ...props }: FontWeightComboboxProps) {
 	const options = useMemo(() => {
-		const fontData = webFontMap.get(fontFamily);
+		const webFontData = webFontMap.get(fontFamily);
+		const localFontData = localFontList.find((font) => font.family === fontFamily);
 
 		let weights: string[] = [];
 
-		if (!fontData || !Array.isArray(fontData.weights)) {
-			// Provide all possible options for local fonts or unknown fontFamily
-			weights = ["100", "200", "300", "400", "500", "600", "700", "800", "900"];
+		if (webFontData && Array.isArray(webFontData.weights) && webFontData.weights.length > 0) {
+			weights = webFontData.weights as string[];
+		} else if (localFontData && Array.isArray(localFontData.weights) && localFontData.weights.length > 0) {
+			weights = localFontData.weights as string[];
 		} else {
-			weights = fontData.weights as string[];
+			// Fallback to all possible weights
+			weights = ["100", "200", "300", "400", "500", "600", "700", "800", "900"];
 		}
 
 		return weights.map((variant: string) => ({

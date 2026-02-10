@@ -173,7 +173,7 @@ export const printerService = {
 						? getComputedStyle(container).getPropertyValue("--page-height").trim()
 						: null;
 					const currentHeight = containerHeight || rootHeight;
-					const heightValue = Math.max(Number.parseFloat(currentHeight), minPageHeight);
+					const heightValue = Math.min(Number.parseFloat(currentHeight), minPageHeight);
 
 					if (!Number.isNaN(heightValue)) {
 						// Subtract top + bottom margins from page height

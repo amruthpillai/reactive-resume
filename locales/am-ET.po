@@ -8,7 +8,7 @@ msgstr ""
 "Language: am\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:14\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Amharic\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -211,15 +211,6 @@ msgstr "ከዚህ በፊት ረድፍ ያክሉ"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "በ{0} ታከለ"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "ፓስኪዎን በመጨመር ላይ…"
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "አፍሪካንስ"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "ይህን የ API ቁልፍ ለመሰረዝ እርግጠኛ ነዎት?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "ይህን ፓስኪ ለመሰረዝ እርግጠኛ ነዎት?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "መለያዎን በመሰረዝ ላይ…"
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "API ቁልፎትን በመሰረዝ ላይ…"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "ፓስኪዎን በመሰረዝ ላይ…"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "ገጽ {pageNumber} ከ {totalNumberOfPages} ውስጥ"
 msgid "Paragraph"
 msgstr "አንቀጽ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "ፓስኪዎች"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "ፓስኪዎች እና 2FA"
@@ -1903,10 +1882,6 @@ msgstr "ማመልከቻዎች"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "ዳስ አድርግ"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "አዲስ መሣሪያ መመዝገብ"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "በ GitHub፣ Google ወይም በብጁ OAuth አቅራቢ ግባ።"
 msgid "Sign up"
 msgstr "መመዝገብ"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "በነፃ ፈቃድ"
 msgid "Website"
 msgstr "ድር ገጽ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "ይህን ፓስኪ ምን ልትሉት ትፈልጋለህ?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "ይህን ክፍል ምን ልትሉት ትፈልጋለህ?"
@@ -2791,11 +2761,6 @@ msgstr "በመግባትም ተጠቃሚ ስምዎን መጠቀም ትችላላ�
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "የየታሪክዎን በተለየ የህዝብ አገናኝ ይካፈሉት፣ በይለፍ ቃል ይከላከሉት፣ ወይም በቀጥታ ለመካፈል እንደ PDF ያውርዱት። ምርጫው የእርስዎ ነው!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "ፓስኪ \"{0}\"ን ከሰረዙት በኋላ እንደገና ለመግባት መጠቀም አትችሉም። ይህ ተግባር መቀለብ አይቻልም።"
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "መረጃዎ በአካባቢዎ መሣሪያ ላይ ይቀመጣል"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "መረጃዎ በደህና ይከማቻል እና ከሶስተኛ ወገኖች ጋር አይተካፈልም። ደግሞም በራስዎ ሰርቨር ላይ Reactive Resumeን በመጫን በመረጃዎ ላይ ሙሉ ቁጥጥር ማግኘት ትችላላችሁ።"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "ፓስኪዎ በተሳካ ሁኔታ ታክሏል።"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "ፓስኪዎ በተሳካ ሁኔታ ተሰርዟል።"
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "አጉር"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "ዙሉ"
+

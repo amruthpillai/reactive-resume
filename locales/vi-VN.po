@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -211,15 +211,6 @@ msgstr "Thêm dòng trước"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Đã thêm vào {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Đang thêm passkey của bạn..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "Tiếng Afrikaans"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Bạn có chắc muốn xoá API key này không?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Bạn có chắc muốn xoá passkey này không?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Đang xóa tài khoản của bạn..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Đang xoá khoá API của bạn..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Đang xóa khóa truy cập của bạn..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "Trang {pageNumber} của {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Đoạn văn"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Khóa truy cập"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Passkey & 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Người tham khảo"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Làm mới"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Đăng ký thiết bị mới"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "Đăng nhập bằng GitHub, Google hoặc nhà cung cấp OAuth tùy ch
 msgid "Sign up"
 msgstr "Đăng ký"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Tình nguyện viên"
 msgid "Website"
 msgstr "Trang web"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Bạn muốn đặt tên gì cho passkey này?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Bạn muốn đổi tên phần này thành gì?"
@@ -2791,11 +2761,6 @@ msgstr "Bạn cũng có thể sử dụng tên người dùng của mình để 
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Bạn có thể chia sẻ resume của mình qua một URL công khai duy nhất, bảo vệ bằng mật khẩu hoặc tải về dưới dạng PDF để chia sẻ trực tiếp. Lựa chọn là của bạn!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Bạn không thể sử dụng passkey \"{0}\" để đăng nhập sau khi đã xoá. Hành động này không thể hoàn tác."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Dữ liệu của bạn được lưu trữ cục bộ"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Dữ liệu của bạn được lưu trữ an toàn và không bao giờ chia sẻ với bên thứ ba. Bạn cũng có thể tự host Reactive Resume trên máy chủ của riêng mình để kiểm soát hoàn toàn dữ liệu của mình."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Passkey của bạn đã được thêm thành công."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Passkey của bạn đã được xóa thành công."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Thu nhỏ"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+

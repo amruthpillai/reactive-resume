@@ -15,14 +15,16 @@
 	},
 	"files.watcherExclude": {
 		"**/routeTree.gen.ts": true,
-		"pnpm-lock.yaml": true
+		"pnpm-lock.yaml": true,
+		"locales/**.po": true
 	},
 	"i18n-ally.enabledParsers": ["po"],
 	"i18n-ally.localesPaths": ["locales"],
 	"i18n-ally.sourceLanguage": "en-US",
 	"search.exclude": {
 		"**/routeTree.gen.ts": true,
-		"pnpm-lock.yaml": true
+		"pnpm-lock.yaml": true,
+		"locales/**.po": true
 	},
 	"tailwindCSS.classFunctions": ["cn", "cva"],
 	"tailwindCSS.experimental.classRegex": [

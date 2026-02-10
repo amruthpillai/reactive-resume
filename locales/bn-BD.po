@@ -8,7 +8,7 @@ msgstr ""
 "Language: bn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:14\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -211,15 +211,6 @@ msgstr "আগের দিকে সারি যোগ করুন"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "{0} তারিখে যোগ করা হয়েছে"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "আপনার পাসকি যোগ করা হচ্ছে..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "আফ্রিকান্স"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "আপনি কি নিশ্চিত আপনি এই API কী মুছে ফেলতে চান?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "আপনি কি নিশ্চিত আপনি এই পাসকি মুছে ফেলতে চান?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "আপনার অ্যাকাউন্ট মুছে ফেলা
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "আপনার API কী মুছে ফেলা হচ্ছে..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "আপনার পাসকি মুছে ফেলা হচ্ছে..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "পৃষ্ঠা {totalNumberOfPages}-এর মধ্যে {pageNumb
 msgid "Paragraph"
 msgstr "অনুচ্ছেদ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "পাসকিগুলো"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "পাসকি ও 2FA"
@@ -1903,10 +1882,6 @@ msgstr "রেফারেন্সসমূহ"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "রিফ্রেশ"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "নতুন ডিভাইস নিবন্ধন করুন"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "GitHub, Google বা যেকোনো কাস্টম OAuth প্
 msgid "Sign up"
 msgstr "সাইন আপ"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "স্বেচ্ছাসেবী"
 msgid "Website"
 msgstr "ওয়েবসাইট"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "এই পাসকিটির কী নাম রাখতে চান?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "এই বিভাগটির নাম কী রাখতে চান?"
@@ -2791,11 +2761,6 @@ msgstr "আপনি চাইলে ইউজারনেম দিয়েও
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "আপনি একটি আলাদা সর্বজনীন URL‑এর মাধ্যমে জীবনবৃত্তান্ত শেয়ার করতে পারেন, পাসওয়ার্ড দিয়ে সুরক্ষিত করতে পারেন, অথবা সরাসরি শেয়ার করার জন্য PDF হিসেবে ডাউনলোড করতে পারেন। সিদ্ধান্ত আপনার!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "মুছে ফেলার পর আপনি আর \"{0}\" পাসকি ব্যবহার করে সাইন ইন করতে পারবেন না। এই কাজটি ফিরিয়ে নেওয়া যাবে না।"
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "আপনার ডেটা স্থানীয়ভাবে সং
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "আপনার ডেটা নিরাপদভাবে সংরক্ষিত হয় এবং কখনোই তৃতীয় পক্ষের সঙ্গে শেয়ার করা হয় না। চাইলে আপনি নিজের সার্ভারে Reactive Resume নিজে হোস্ট করেও ডেটার পূর্ণ নিয়ন্ত্রণ রাখতে পারেন।"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "আপনার পাসকি সফলভাবে যোগ করা হয়েছে।"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "আপনার পাসকি সফলভাবে মুছে ফেলা হয়েছে।"
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "জুম আউট"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "জুলু"
+

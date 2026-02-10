@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -211,15 +211,6 @@ msgstr "Sor hozzáadása fölé"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Hozzáadva ekkor: {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Hozzáadjuk a hozzáférési kulcsodat..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "afrikaans"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Biztosan törölni szeretnéd ezt az API kulcsot?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Biztosan törölni szeretnéd ezt a hozzáférési kulcsot?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Fiók törlése..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "API kulcs törlése..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Hozzáférési kulcs törlése..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "{pageNumber}. oldal / {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Bekezdés"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Hozzáférési kulcsok"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Hozzáférési kulcsok és 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Referenciák"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Frissítés"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Új eszköz regisztrálása"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "Jelentkezz be GitHub, Google vagy egy egyéni OAuth szolgáltató segít
 msgid "Sign up"
 msgstr "Regisztráció"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Önkéntesség"
 msgid "Website"
 msgstr "Weboldal"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Hogyan szeretnéd elnevezni ezt a hozzáférési kulcsot?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Mire szeretnéd átnevezni ezt a szekciót?"
@@ -2791,11 +2761,6 @@ msgstr "Be is jelentkezhetsz a felhasználóneveddel."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Az önéletrajzodat megoszthatod egy egyedi nyilvános URL‑lel, jelszóval védheted, vagy PDF‑ként letöltheted és közvetlenül megoszthatod. A döntés a tiéd!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "A(z) \"{0}\" hozzáférési kulcsot törlés után többé nem használhatod bejelentkezéshez. Ez a művelet nem vonható vissza."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Az adataid helyben tárolódnak"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Az adataid biztonságosan tároljuk, és soha nem osztjuk meg harmadik felekkel. A Reactive Resume‑t saját szervereiden is hosztolhatod, hogy teljes kontrollod legyen az adataid felett."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "A hozzáférési kulcsodat sikeresen hozzáadtuk."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "A hozzáférési kulcsodat sikeresen töröltük."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Kicsinyítés"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+

@@ -35,7 +35,7 @@ const getCommunityLinks = (): FooterLinkItem[] => [
 	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: t`Report an issue` },
 	{ url: "https://crowdin.com/project/reactive-resume", label: t`Translations` },
 	{ url: "https://reddit.com/r/reactiveresume", label: t`Subreddit` },
-	{ url: "https://discord.gg/EE8yFqW4", label: t`Discord` },
+	{ url: "https://discord.gg/aSyA5ZSxpb", label: t`Discord` },
 ];
 
 const socialLinks: SocialLink[] = [

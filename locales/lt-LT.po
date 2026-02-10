@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-31 12:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -211,15 +211,6 @@ msgstr "Pridėti eilutę prieš"
 msgid "Added"
 msgstr ""
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Pridėta {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Pridedamas jūsų raktas..."
-
 #: src/utils/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikanso"
@@ -312,10 +303,6 @@ msgstr ""
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Ar tikrai norite ištrinti šį API raktą?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Ar tikrai norite ištrinti šį raktą?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -839,10 +826,6 @@ msgstr "Jūsų paskyra ištrinama..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Ištrinamas jūsų API raktas..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Jūsų raktas ištrinamas..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -1701,10 +1684,6 @@ msgstr "Puslapis {pageNumber} iš {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Pastraipa"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Raktai"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Raktai ir 2FA"
@@ -1903,10 +1882,6 @@ msgstr "Rekomendacijos"
 #: src/components/layout/error-screen.tsx
 msgid "Refresh"
 msgstr "Perkrauti"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Registruoti naują įrenginį"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
@@ -2141,7 +2116,6 @@ msgstr "Prisijunkite naudodami „GitHub“, „Google“ arba pasirinktą OAuth
 msgid "Sign up"
 msgstr "Registruotis"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2741,10 +2715,6 @@ msgstr "Savanorystė"
 msgid "Website"
 msgstr "Tinklalapis"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Kaip norite pavadinti šį raktą?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Kaip norite pervadinti šį skyrių?"
@@ -2791,11 +2761,6 @@ msgstr "Prisijungti taip pat galite naudodami vartotojo vardą."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Gyvenimo aprašymu galite dalintis per unikalų viešą URL, apsaugoti jį slaptažodžiu arba atsisiųsti kaip PDF ir dalintis tiesiogiai. Pasirinkimas – jūsų!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Ištrynę šio rakto „{0}“ daugiau nebegalėsite naudoti prisijungimui. Šio veiksmo anuliuoti neįmanoma."
-
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr ""
@@ -2828,14 +2793,6 @@ msgstr "Jūsų duomenys saugomi vietoje"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Jūsų duomenys saugiai laikomi ir niekada nebendrinami su trečiosiomis šalimis. Taip pat galite savarankiškai talpinti „Reactive Resume“ savo serveriuose ir visiškai kontroliuoti savo duomenis."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Jūsų raktas sėkmingai pridėtas."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Jūsų raktas sėkmingai ištrintas."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2891,3 +2848,4 @@ msgstr "Tolinti"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
+
