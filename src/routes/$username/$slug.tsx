@@ -69,7 +69,7 @@ function RouteComponent() {
 	const handleDownload = useCallback(async () => {
 		if (!resume) return;
 		const { url } = await printResumeAsPDF({ id: resume.id });
-		downloadFromUrl(url, `resume-${resume.name}.pdf`);
+		downloadFromUrl(url, `${resume.name}.pdf`);
 	}, [resume, printResumeAsPDF]);
 
 	if (!isReady) return <LoadingScreen />;
@@ -79,7 +79,7 @@ function RouteComponent() {
 			<div
 				className={cn("mx-auto max-w-[210mm]", "print:m-0 print:block print:max-w-full print:px-0", "md:my-4 md:px-4")}
 			>
-				<ResumePreview pageClassName="print:w-full! w-full max-w-full" />
+				<ResumePreview className="space-y-4" pageClassName="print:w-full! w-full max-w-full" />
 			</div>
 
 			<Button
