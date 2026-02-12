@@ -53,11 +53,11 @@ services:
 
   # As an alternative to browserless, you can also use a lightweight image like chromedp/headless-shell:latest
   # See https://docs.rxresu.me/self-hosting/docker#alternative-printer-options for more information.
-  # chrome:
-  #   image: chromedp/headless-shell:latest
-  #   restart: unless-stopped
-  #   ports:
-  #     - "9222:9222"
+  chrome:
+    image: chromedp/headless-shell:latest
+    restart: unless-stopped
+    ports:
+      - "9222:9222"
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest

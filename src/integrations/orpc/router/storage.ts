@@ -78,7 +78,7 @@ export const storageRouter = {
 			},
 		})
 		.handler(async ({ context, input }): Promise<void> => {
-			// The filename is now the full path from the URL (e.g., "uploads/userId/pictures/timestamp.webp")
+			// The filename is now the full path from the URL (e.g., "uploads/userId/pictures/timestamp.ext")
 			// We need to extract just the path portion that matches the storage key
 			const key = input.filename.startsWith("uploads/")
 				? input.filename

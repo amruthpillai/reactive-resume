@@ -363,6 +363,7 @@ openssl rand -hex 32
     - **`FLAG_DEBUG_PRINTER`**: Bypasses the printer-only access restriction (useful when debugging `/printer/{resumeId}`). Recommended: keep `"false"` in production.
     - **`FLAG_DISABLE_SIGNUPS`**: Disables new signups (web app and server). Useful for private instances.
     - **`FLAG_DISABLE_EMAIL_AUTH`**: Disables email/password login entirely. Also disables email verification, forgot password, and reset password flows. Users can still sign up via social auth (Google/GitHub/Custom OAuth), unless FLAG_DISABLE_SIGNUPS is also set to true. Useful when only SSO is required.
+    - **`FLAG_DISABLE_IMAGE_PROCESSING`**: Disables image processing. This is useful if you are using a machine with limited resources, like a Raspberry Pi.
   </Accordion>
 </AccordionGroup>
 

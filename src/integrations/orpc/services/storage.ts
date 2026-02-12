@@ -7,7 +7,6 @@ import {
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
-import sharp from "sharp";
 import { env } from "@/utils/env";
 
 interface StorageWriteInput {
@@ -89,6 +88,16 @@ interface ProcessedImage {
 
 export async function processImageForUpload(file: File): Promise<ProcessedImage> {
 	const fileBuffer = await file.arrayBuffer();
+
+	console.log("FLAG_DISABLE_IMAGE_PROCESSING", env.FLAG_DISABLE_IMAGE_PROCESSING);
+	if (env.FLAG_DISABLE_IMAGE_PROCESSING) {
+		return {
+			data: new Uint8Array(fileBuffer),
+			contentType: file.type,
+		};
+	}
+
+	const sharp = (await import("sharp")).default;
 
 	const processedBuffer = await sharp(fileBuffer)
 		.resize(800, 800, { fit: "inside", withoutEnlargement: true })

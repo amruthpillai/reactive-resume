@@ -178,6 +178,7 @@ Key variables (see `.env.example` for full list):
 - `FLAG_DEBUG_PRINTER` - Debug PDF printing endpoint
 - `FLAG_DISABLE_SIGNUPS` - Block new account registration
 - `FLAG_DISABLE_EMAIL_AUTH` - Disable email/password login
+- `FLAG_DISABLE_IMAGE_PROCESSING` - Disable image processing
 
 ## Build & Deployment
 

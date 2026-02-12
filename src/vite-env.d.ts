@@ -52,5 +52,6 @@ declare namespace NodeJS {
 		FLAG_DEBUG_PRINTER: string | boolean;
 		FLAG_DISABLE_SIGNUPS: string | boolean;
 		FLAG_DISABLE_EMAIL_AUTH: string | boolean;
+		FLAG_DISABLE_IMAGE_PROCESSING: string | boolean;
 	}
 }
