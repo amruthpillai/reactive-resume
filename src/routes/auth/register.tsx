@@ -110,7 +110,7 @@ function RouteComponent() {
 										<Trans>Name</Trans>
 									</FormLabel>
 									<FormControl>
-										<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />
+										<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -129,7 +129,7 @@ function RouteComponent() {
 										<Input
 											min={3}
 											max={64}
-											autoComplete="username"
+											autoComplete="section-register username"
 											placeholder="john.doe"
 											className="lowercase"
 											{...field}
@@ -151,7 +151,7 @@ function RouteComponent() {
 									<FormControl>
 										<Input
 											type="email"
-											autoComplete="email"
+											autoComplete="section-register email"
 											placeholder="john.doe@example.com"
 											className="lowercase"
 											{...field}
@@ -176,7 +176,7 @@ function RouteComponent() {
 												min={6}
 												max={64}
 												type={showPassword ? "text" : "password"}
-												autoComplete="new-password"
+												autoComplete="section-register new-password"
 												{...field}
 											/>
 										</FormControl>
