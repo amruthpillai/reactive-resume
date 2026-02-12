@@ -151,12 +151,15 @@ function AIForm() {
 				<Input
 					id="api-key"
 					name="ai-api-key"
-					type="password"
+					// Use a non-password input to avoid triggering browser password managers.
+					// Mask the characters via CSS for basic shoulder-surfing protection.
+					type="text"
 					value={apiKey}
 					disabled={enabled}
 					onChange={(e) => handleApiKeyChange(e.target.value)}
+					className="[-webkit-text-security:disc]"
 					// Prevent browsers/password managers from treating this as a login password field.
-					autoComplete="section-ai-settings new-password"
+					autoComplete="section-ai-settings off"
 					autoCapitalize="none"
 					autoCorrect="off"
 					spellCheck={false}
