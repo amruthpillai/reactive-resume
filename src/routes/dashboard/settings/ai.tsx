@@ -131,11 +131,16 @@ function AIForm() {
 				</Label>
 				<Input
 					id="model"
+					name="ai-model"
 					type="text"
 					value={model}
 					disabled={enabled}
 					onChange={(e) => handleModelChange(e.target.value)}
 					placeholder="e.g., gpt-4, claude-3-opus, gemini-pro"
+					autoComplete="section-ai-settings off"
+					autoCapitalize="none"
+					autoCorrect="off"
+					spellCheck={false}
 				/>
 			</div>
 
@@ -145,10 +150,19 @@ function AIForm() {
 				</Label>
 				<Input
 					id="api-key"
+					name="ai-api-key"
 					type="password"
 					value={apiKey}
 					disabled={enabled}
 					onChange={(e) => handleApiKeyChange(e.target.value)}
+					// Prevent browsers/password managers from treating this as a login password field.
+					autoComplete="section-ai-settings new-password"
+					autoCapitalize="none"
+					autoCorrect="off"
+					spellCheck={false}
+					data-1p-ignore="true"
+					data-lpignore="true"
+					data-bwignore="true"
 				/>
 			</div>
 
@@ -158,11 +172,13 @@ function AIForm() {
 				</Label>
 				<Input
 					id="base-url"
+					name="ai-base-url"
 					type="url"
 					value={baseURL}
 					disabled={enabled}
 					placeholder={selectedOption?.defaultBaseURL}
 					onChange={(e) => handleBaseURLChange(e.target.value)}
+					autoComplete="section-ai-settings url"
 				/>
 			</div>
 
