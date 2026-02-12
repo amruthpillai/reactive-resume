@@ -43,6 +43,7 @@ export function LevelDisplay({ icon, type, level, className, ...props }: Props) 
 						<PageIcon
 							key={index}
 							icon={icon}
+							type="section"
 							className={cn("h-3 overflow-visible text-(--page-primary-color)", !isActive && "opacity-40")}
 						/>
 					);

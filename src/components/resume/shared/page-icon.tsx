@@ -3,10 +3,23 @@ import { use } from "react";
 import { cn } from "@/utils/style";
 import type { ExtendedIconProps } from "../preview";
 
-export function PageIcon({ icon, className }: { icon: string; className?: string }) {
+type PageIconProps = {
+	icon: string;
+	className?: string;
+	type?: "header" | "section" | "default";
+};
+
+export function PageIcon({ icon, className, type = "default" }: PageIconProps) {
 	const iconContext = use<ExtendedIconProps>(IconContext);
 
-	if (!icon || iconContext.hidden) return null;
+	if (!icon) return null;
+
+	// Check global hide first
+	if (iconContext.hidden) return null;
+
+	// Check specific hide based on type
+	if (type === "header" && iconContext.hideHeader) return null;
+	if (type === "section" && iconContext.hideSection) return null;
 
 	return (
 		<i

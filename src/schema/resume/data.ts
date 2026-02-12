@@ -432,7 +432,9 @@ export const pageSchema = z.object({
 		.string()
 		.describe("The locale of the page. Used for displaying pre-translated section headings, if not overridden.")
 		.catch("en-US"),
-	hideIcons: z.boolean().describe("Whether to hide the icons of the sections.").catch(false),
+	hideIcons: z.boolean().describe("Whether to hide all icons on the resume.").catch(false),
+	hideHeaderIcons: z.boolean().describe("Whether to hide icons in the header/basics section.").catch(false),
+	hideSectionIcons: z.boolean().describe("Whether to hide icons in body sections.").catch(false),
 });
 
 export const levelDesignSchema = z.object({
@@ -625,7 +627,17 @@ export const defaultResumeData: ResumeData = {
 			],
 		},
 		css: { enabled: false, value: "" },
-		page: { gapX: 4, gapY: 6, marginX: 14, marginY: 12, format: "a4", locale: "en-US", hideIcons: false },
+		page: {
+			gapX: 4,
+			gapY: 6,
+			marginX: 14,
+			marginY: 12,
+			format: "a4",
+			locale: "en-US",
+			hideIcons: false,
+			hideHeaderIcons: false,
+			hideSectionIcons: false,
+		},
 		design: {
 			colors: {
 				primary: "rgba(220, 38, 38, 1)",

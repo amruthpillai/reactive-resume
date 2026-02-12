@@ -13,7 +13,7 @@ export function ProfilesItem({ className, ...item }: ProfilesItemProps) {
 		<div className={cn("profiles-item", className)}>
 			{/* Header */}
 			<div className="section-item-header profiles-item-header flex items-center gap-x-1.5">
-				<PageIcon icon={item.icon} className="section-item-icon profiles-item-icon" />
+				<PageIcon icon={item.icon} type="section" className="section-item-icon profiles-item-icon" />
 				<LinkedTitle
 					title={item.network}
 					website={item.website}

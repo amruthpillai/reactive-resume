@@ -12,7 +12,7 @@ export function SkillsItem({ className, ...item }: SkillsItemProps) {
 		<div className={cn("skills-item", className)}>
 			{/* Header */}
 			<div className="section-item-header flex items-center gap-x-1.5">
-				<PageIcon icon={item.icon} className="section-item-icon skills-item-icon" />
+				<PageIcon icon={item.icon} type="section" className="section-item-icon skills-item-icon" />
 				<strong className="section-item-title skills-item-name">{item.name}</strong>
 			</div>
 
