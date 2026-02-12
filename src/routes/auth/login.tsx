@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
-import type { BetterFetchOption } from "better-auth/client";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
@@ -24,7 +23,7 @@ export const Route = createFileRoute("/auth/login")({
 
 const formSchema = z.object({
 	identifier: z.string().trim().toLowerCase(),
-	password: z.string().trim().min(6).max(64),
+	password: z.string().min(6).max(64),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -45,38 +44,41 @@ function RouteComponent() {
 
 	const onSubmit = async (data: FormValues) => {
 		const toastId = toast.loading(t`Signing in...`);
+		try {
+			const result = data.identifier.includes("@")
+				? await authClient.signIn.email({
+						email: data.identifier,
+						password: data.password,
+					})
+				: await authClient.signIn.username({
+						username: data.identifier,
+						password: data.password,
+					});
 
-		const fetchOptions: BetterFetchOption = {
-			onSuccess: (context) => {
-				// Check if 2FA is required
-				if (context.data && "twoFactorRedirect" in context.data && context.data.twoFactorRedirect) {
-					toast.dismiss(toastId);
-					navigate({ to: "/auth/verify-2fa", replace: true });
-					return;
-				}
+			if (result.error) {
+				toast.error(result.error.message, { id: toastId });
+				return;
+			}
 
-				// Normal login success
-				router.invalidate();
+			const requiresTwoFactor =
+				result.data &&
+				typeof result.data === "object" &&
+				"twoFactorRedirect" in result.data &&
+				result.data.twoFactorRedirect;
+
+			// Credential check passed, but the account still requires a 2FA verification step.
+			if (requiresTwoFactor) {
 				toast.dismiss(toastId);
-				navigate({ to: "/dashboard", replace: true });
-			},
-			onError: ({ error }) => {
-				toast.error(error.message, { id: toastId });
-			},
-		};
+				navigate({ to: "/auth/verify-2fa", replace: true });
+				return;
+			}
 
-		if (data.identifier.includes("@")) {
-			await authClient.signIn.email({
-				email: data.identifier,
-				password: data.password,
-				fetchOptions,
-			});
-		} else {
-			await authClient.signIn.username({
-				username: data.identifier,
-				password: data.password,
-				fetchOptions,
-			});
+			// Refresh route context so protected routes can read the newly established session.
+			await router.invalidate();
+			toast.dismiss(toastId);
+			navigate({ to: "/dashboard", replace: true });
+		} catch {
+			toast.error(t`Failed to sign in. Please try again.`, { id: toastId });
 		}
 	};
 
