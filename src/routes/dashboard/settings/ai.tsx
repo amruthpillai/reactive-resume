@@ -137,7 +137,7 @@ function AIForm() {
 					disabled={enabled}
 					onChange={(e) => handleModelChange(e.target.value)}
 					placeholder="e.g., gpt-4, claude-3-opus, gemini-pro"
-					autoComplete="section-ai-settings off"
+					autoComplete="off"
 					autoCapitalize="none"
 					autoCorrect="off"
 					spellCheck={false}
@@ -158,8 +158,8 @@ function AIForm() {
 					disabled={enabled}
 					onChange={(e) => handleApiKeyChange(e.target.value)}
 					className="[-webkit-text-security:disc]"
-					// Prevent browsers/password managers from treating this as a login password field.
-					autoComplete="section-ai-settings off"
+					// Prevent browsers/password managers and form-history from offering suggestions/saving.
+					autoComplete="off"
 					autoCapitalize="none"
 					autoCorrect="off"
 					spellCheck={false}
