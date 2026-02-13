@@ -3,7 +3,6 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth/minimal";
 import { apiKey, type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
 import { username } from "better-auth/plugins/username";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { and, eq, or } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
 import { env } from "@/utils/env";
@@ -18,6 +17,27 @@ function isCustomOAuthProviderEnabled() {
 		Boolean(env.OAUTH_AUTHORIZATION_URL) && Boolean(env.OAUTH_TOKEN_URL) && Boolean(env.OAUTH_USER_INFO_URL);
 
 	return Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual);
+}
+
+function getTrustedOrigins() {
+	const trustedOrigins = new Set([env.APP_URL]);
+	const appUrl = new URL(env.APP_URL);
+	const originWith = (hostname: string) => {
+		const next = new URL(env.APP_URL);
+		next.hostname = hostname;
+		return next.toString().replace(/\/$/, "");
+	};
+
+	// Allow localhost and 127.0.0.1 to be treated as trusted siblings in local development.
+	if (appUrl.hostname === "localhost") {
+		trustedOrigins.add(originWith("127.0.0.1"));
+	}
+
+	if (appUrl.hostname === "127.0.0.1") {
+		trustedOrigins.add(originWith("localhost"));
+	}
+
+	return [...trustedOrigins];
 }
 
 const getAuthConfig = () => {
@@ -69,7 +89,7 @@ const getAuthConfig = () => {
 		database: drizzleAdapter(db, { schema, provider: "pg" }),
 
 		telemetry: { enabled: false },
-		trustedOrigins: [env.APP_URL],
+		trustedOrigins: getTrustedOrigins(),
 		advanced: {
 			database: { generateId },
 			useSecureCookies: env.APP_URL.startsWith("https://"),
@@ -229,7 +249,6 @@ const getAuthConfig = () => {
 			}),
 			twoFactor({ issuer: "Reactive Resume" }),
 			genericOAuth({ config: authConfigs }),
-			tanstackStartCookies(),
 		],
 	});
 };
