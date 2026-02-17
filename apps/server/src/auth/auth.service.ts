@@ -333,7 +333,7 @@ export class AuthService {
     }
 
     // Remove the used backup code from the database
-    const backupCodes = user.secrets.twoFactorBackupCodes.filter((c) => c !== code);
+    const backupCodes = user.secrets.twoFactorBackupCodes.filter((c: string) => c !== code);
     await this.userService.updateByEmail(email, {
       secrets: { update: { twoFactorBackupCodes: backupCodes } },
     });

@@ -53,7 +53,7 @@ export class GitHubStrategy extends PassportStrategy(Strategy, "github") {
           secrets: { create: {} },
         });
 
-        done(null, user);
+        done(null, user ?? undefined);
       } catch {
         throw new BadRequestException(ErrorMessage.UserAlreadyExists);
       }

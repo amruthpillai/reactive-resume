@@ -53,7 +53,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
           secrets: { create: {} },
         });
 
-        done(null, user);
+        done(null, user ?? undefined);
       } catch {
         throw new BadRequestException(ErrorMessage.UserAlreadyExists);
       }
