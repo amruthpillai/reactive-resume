@@ -28,13 +28,16 @@ function getTrustedOrigins() {
 		return next.toString().replace(/\/$/, "");
 	};
 
-	// Allow localhost and 127.0.0.1 to be treated as trusted siblings in local development.
-	if (appUrl.hostname === "localhost") {
-		trustedOrigins.add(withHostname("127.0.0.1"));
-	}
+	// Local loopback hosts that should trust each other in development.
+	const LOCAL_ORIGINS = ["localhost", "127.0.0.1"];
 
-	if (appUrl.hostname === "127.0.0.1") {
-		trustedOrigins.add(withHostname("localhost"));
+	// When APP_URL uses one loopback host, trust its sibling host too.
+	if (LOCAL_ORIGINS.includes(appUrl.hostname)) {
+		for (const hostname of LOCAL_ORIGINS) {
+			if (hostname !== appUrl.hostname) {
+				trustedOrigins.add(withHostname(hostname));
+			}
+		}
 	}
 
 	return [...trustedOrigins];
