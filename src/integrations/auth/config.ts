@@ -22,7 +22,7 @@ function isCustomOAuthProviderEnabled() {
 function getTrustedOrigins() {
 	const trustedOrigins = new Set([env.APP_URL]);
 	const appUrl = new URL(env.APP_URL);
-	const originWith = (hostname: string) => {
+	const withHostname = (hostname: string) => {
 		const next = new URL(env.APP_URL);
 		next.hostname = hostname;
 		return next.toString().replace(/\/$/, "");
@@ -30,11 +30,11 @@ function getTrustedOrigins() {
 
 	// Allow localhost and 127.0.0.1 to be treated as trusted siblings in local development.
 	if (appUrl.hostname === "localhost") {
-		trustedOrigins.add(originWith("127.0.0.1"));
+		trustedOrigins.add(withHostname("127.0.0.1"));
 	}
 
 	if (appUrl.hostname === "127.0.0.1") {
-		trustedOrigins.add(originWith("localhost"));
+		trustedOrigins.add(withHostname("localhost"));
 	}
 
 	return [...trustedOrigins];
