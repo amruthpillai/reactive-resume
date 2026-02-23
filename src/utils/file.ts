@@ -30,7 +30,7 @@ export function downloadWithAnchor(blob: Blob, filename: string) {
 	a.click();
 	document.body.removeChild(a);
 
-	setTimeout(() => URL.revokeObjectURL(url), 500);
+	setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
 export async function downloadFromUrl(url: string, filename: string) {
