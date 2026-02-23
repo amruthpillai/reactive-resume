@@ -1,10 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
+import { Combobox } from "@/components/ui/combobox";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -18,21 +22,21 @@ const formSchema = customSectionSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: string }[] = [
-	{ value: "summary", label: "Summary" },
-	{ value: "experience", label: "Experience" },
-	{ value: "education", label: "Education" },
-	{ value: "projects", label: "Projects" },
-	{ value: "profiles", label: "Profiles" },
-	{ value: "skills", label: "Skills" },
-	{ value: "languages", label: "Languages" },
-	{ value: "interests", label: "Interests" },
-	{ value: "awards", label: "Awards" },
-	{ value: "certifications", label: "Certifications" },
-	{ value: "publications", label: "Publications" },
-	{ value: "volunteer", label: "Volunteer" },
-	{ value: "references", label: "References" },
-	{ value: "cover-letter", label: "Cover Letter" },
+const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: MessageDescriptor }[] = [
+	{ value: "summary", label: msg`Summary` },
+	{ value: "experience", label: msg`Experience` },
+	{ value: "education", label: msg`Education` },
+	{ value: "projects", label: msg`Projects` },
+	{ value: "profiles", label: msg`Profiles` },
+	{ value: "skills", label: msg`Skills` },
+	{ value: "languages", label: msg`Languages` },
+	{ value: "interests", label: msg`Interests` },
+	{ value: "awards", label: msg`Awards` },
+	{ value: "certifications", label: msg`Certifications` },
+	{ value: "publications", label: msg`Publications` },
+	{ value: "volunteer", label: msg`Volunteer` },
+	{ value: "references", label: msg`References` },
+	{ value: "cover-letter", label: msg`Cover Letter` },
 ];
 
 export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.create">) {
@@ -150,6 +154,7 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 }
 
 function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
+	const { i18n } = useLingui();
 	const form = useFormContext<FormValues>();
 
 	return (
@@ -179,17 +184,16 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 							<Trans>Section Type</Trans>
 						</FormLabel>
 						<FormControl>
-							<select
+							<Combobox
 								{...field}
+								value={field.value}
 								disabled={isUpdate}
-								className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-							>
-								{SECTION_TYPE_OPTIONS.map((option) => (
-									<option key={option.value} value={option.value}>
-										{option.label}
-									</option>
-								))}
-							</select>
+								onValueChange={field.onChange}
+								options={SECTION_TYPE_OPTIONS.map((option) => ({
+									value: option.value,
+									label: i18n.t(option.label),
+								}))}
+							/>
 						</FormControl>
 						<FormMessage />
 					</FormItem>

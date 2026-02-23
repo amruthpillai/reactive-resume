@@ -16,18 +16,14 @@ import { cn } from "@/utils/style";
 export const Route = createFileRoute("/$username/$slug")({
 	component: RouteComponent,
 	loader: async ({ context, params: { username, slug } }) => {
-		try {
-			// Ignore .well-known requests
-			if (username === ".well-known") throw notFound();
+		// Ignore .well-known requests
+		if (username === ".well-known") throw notFound();
 
-			const resume = await context.queryClient.ensureQueryData(
-				orpc.resume.getBySlug.queryOptions({ input: { username, slug } }),
-			);
+		const resume = await context.queryClient.ensureQueryData(
+			orpc.resume.getBySlug.queryOptions({ input: { username, slug } }),
+		);
 
-			return { resume };
-		} catch {
-			throw notFound();
-		}
+		return { resume };
 	},
 	head: ({ loaderData }) => ({
 		meta: [{ title: loaderData ? `${loaderData.resume.name} - Reactive Resume` : "Reactive Resume" }],
@@ -86,7 +82,7 @@ function RouteComponent() {
 				size="lg"
 				variant="secondary"
 				disabled={isPrinting}
-				className="fixed end-4 bottom-4 z-50 hidden rounded-full px-4 md:inline-flex print:hidden"
+				className="fixed inset-e-4 bottom-4 z-50 hidden rounded-full px-4 md:inline-flex print:hidden"
 				onClick={handleDownload}
 			>
 				{isPrinting ? <Spinner /> : <DownloadSimpleIcon />}
