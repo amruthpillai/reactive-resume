@@ -174,7 +174,7 @@ export function getSectionComponent(
 
 				return (
 					<section className={cn(`page-section page-section-custom page-section-${id}`, sectionClassName)}>
-						{customSection.type !== "summary" && customSection.type !== "cover-letter" && (
+						{customSection.type !== "cover-letter" && (
 							<h6 className="mb-1.5 text-(--page-primary-color)">{customSection.title}</h6>
 						)}
 
