@@ -23,7 +23,7 @@ export const Route = createFileRoute("/auth/login")({
 
 const formSchema = z.object({
 	identifier: z.string().trim().toLowerCase(),
-	password: z.string().min(6).max(64),
+	password: z.string().trim().min(6).max(64),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -44,16 +44,13 @@ function RouteComponent() {
 
 	const onSubmit = async (data: FormValues) => {
 		const toastId = toast.loading(t`Signing in...`);
+
 		try {
-			const result = data.identifier.includes("@")
-				? await authClient.signIn.email({
-						email: data.identifier,
-						password: data.password,
-					})
-				: await authClient.signIn.username({
-						username: data.identifier,
-						password: data.password,
-					});
+			const isEmail = data.identifier.includes("@");
+
+			const result = isEmail
+				? await authClient.signIn.email({ email: data.identifier, password: data.password })
+				: await authClient.signIn.username({ username: data.identifier, password: data.password });
 
 			if (result.error) {
 				toast.error(result.error.message, { id: toastId });

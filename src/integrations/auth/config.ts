@@ -19,28 +19,22 @@ function isCustomOAuthProviderEnabled() {
 	return Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual);
 }
 
-function getTrustedOrigins() {
-	const trustedOrigins = new Set([env.APP_URL]);
+function getTrustedOrigins(): string[] {
 	const appUrl = new URL(env.APP_URL);
-	const withHostname = (hostname: string) => {
-		const next = new URL(env.APP_URL);
-		next.hostname = hostname;
-		return next.toString().replace(/\/$/, "");
-	};
-
-	// Local loopback hosts that should trust each other in development.
+	const trustedOrigins = new Set<string>([appUrl.origin.replace(/\/$/, "")]);
 	const LOCAL_ORIGINS = ["localhost", "127.0.0.1"];
 
-	// When APP_URL uses one loopback host, trust its sibling host too.
 	if (LOCAL_ORIGINS.includes(appUrl.hostname)) {
 		for (const hostname of LOCAL_ORIGINS) {
 			if (hostname !== appUrl.hostname) {
-				trustedOrigins.add(withHostname(hostname));
+				const altUrl = new URL(env.APP_URL);
+				altUrl.hostname = hostname;
+				trustedOrigins.add(altUrl.origin.replace(/\/$/, ""));
 			}
 		}
 	}
 
-	return [...trustedOrigins];
+	return Array.from(trustedOrigins);
 }
 
 const getAuthConfig = () => {
