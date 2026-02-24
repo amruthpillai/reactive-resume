@@ -3,7 +3,6 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth/minimal";
 import { apiKey, type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
 import { username } from "better-auth/plugins/username";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { and, eq, or } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
 import { env } from "@/utils/env";
@@ -18,6 +17,24 @@ function isCustomOAuthProviderEnabled() {
 		Boolean(env.OAUTH_AUTHORIZATION_URL) && Boolean(env.OAUTH_TOKEN_URL) && Boolean(env.OAUTH_USER_INFO_URL);
 
 	return Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual);
+}
+
+function getTrustedOrigins(): string[] {
+	const appUrl = new URL(env.APP_URL);
+	const trustedOrigins = new Set<string>([appUrl.origin.replace(/\/$/, "")]);
+	const LOCAL_ORIGINS = ["localhost", "127.0.0.1"];
+
+	if (LOCAL_ORIGINS.includes(appUrl.hostname)) {
+		for (const hostname of LOCAL_ORIGINS) {
+			if (hostname !== appUrl.hostname) {
+				const altUrl = new URL(env.APP_URL);
+				altUrl.hostname = hostname;
+				trustedOrigins.add(altUrl.origin.replace(/\/$/, ""));
+			}
+		}
+	}
+
+	return Array.from(trustedOrigins);
 }
 
 const getAuthConfig = () => {
@@ -69,7 +86,7 @@ const getAuthConfig = () => {
 		database: drizzleAdapter(db, { schema, provider: "pg" }),
 
 		telemetry: { enabled: false },
-		trustedOrigins: [env.APP_URL],
+		trustedOrigins: getTrustedOrigins(),
 		advanced: {
 			database: { generateId },
 			useSecureCookies: env.APP_URL.startsWith("https://"),
@@ -229,7 +246,6 @@ const getAuthConfig = () => {
 			}),
 			twoFactor({ issuer: "Reactive Resume" }),
 			genericOAuth({ config: authConfigs }),
-			tanstackStartCookies(),
 		],
 	});
 };

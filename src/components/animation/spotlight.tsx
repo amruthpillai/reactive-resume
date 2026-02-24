@@ -33,10 +33,10 @@ export const Spotlight = ({
 			<motion.div
 				animate={{ x: [0, xOffset, 0] }}
 				transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-				className="pointer-events-none absolute start-0 top-0 z-40 h-svh w-svw"
+				className="pointer-events-none absolute inset-s-0 top-0 z-40 h-svh w-svw"
 			>
 				<div
-					className="absolute start-0 top-0"
+					className="absolute inset-s-0 top-0"
 					style={{
 						width: `${width}px`,
 						height: `${height}px`,
@@ -46,7 +46,7 @@ export const Spotlight = ({
 				/>
 
 				<div
-					className="absolute start-0 top-0 origin-top-left"
+					className="absolute inset-s-0 top-0 origin-top-left"
 					style={{
 						height: `${height}px`,
 						width: `${smallWidth}px`,
@@ -56,7 +56,7 @@ export const Spotlight = ({
 				/>
 
 				<div
-					className="absolute start-0 top-0 origin-top-left"
+					className="absolute inset-s-0 top-0 origin-top-left"
 					style={{
 						height: `${height}px`,
 						width: `${smallWidth}px`,
@@ -68,7 +68,7 @@ export const Spotlight = ({
 
 			<motion.div
 				animate={{ x: [0, -xOffset, 0] }}
-				className="pointer-events-none absolute end-0 top-0 z-40 h-svh w-svw"
+				className="pointer-events-none absolute inset-e-0 top-0 z-40 h-svh w-svw"
 				transition={{
 					duration,
 					repeat: Infinity,
@@ -77,7 +77,7 @@ export const Spotlight = ({
 				}}
 			>
 				<div
-					className="absolute end-0 top-0"
+					className="absolute inset-e-0 top-0"
 					style={{
 						width: `${width}px`,
 						height: `${height}px`,
@@ -87,7 +87,7 @@ export const Spotlight = ({
 				/>
 
 				<div
-					className="absolute end-0 top-0 origin-top-right"
+					className="absolute inset-e-0 top-0 origin-top-right"
 					style={{
 						height: `${height}px`,
 						width: `${smallWidth}px`,
@@ -97,7 +97,7 @@ export const Spotlight = ({
 				/>
 
 				<div
-					className="absolute end-0 top-0 origin-top-right"
+					className="absolute inset-e-0 top-0 origin-top-right"
 					style={{
 						height: `${height}px`,
 						width: `${smallWidth}px`,

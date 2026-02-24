@@ -131,8 +131,8 @@ export const DonationBanner = () => (
 			<FloatingIcon icon={HeartIcon} className="bottom-[20%] left-[20%]" delay={2.5} />
 
 			{/* Gradient Orbs */}
-			<div className="absolute -start-32 top-1/4 size-64 rounded-full bg-primary/5 blur-3xl" />
-			<div className="absolute -end-32 bottom-1/4 size-64 rounded-full bg-rose-500/5 blur-3xl" />
+			<div className="absolute -inset-s-32 top-1/4 size-64 rounded-full bg-primary/5 blur-3xl" />
+			<div className="absolute -inset-e-32 bottom-1/4 size-64 rounded-full bg-rose-500/5 blur-3xl" />
 		</div>
 
 		<div className="container relative px-8">
@@ -146,8 +146,8 @@ export const DonationBanner = () => (
 			>
 				<div aria-hidden="true" className="relative mb-6">
 					<PulsingHeart />
-					<SparkleEffect className="-end-4 -top-2" />
-					<SparkleEffect className="-start-3 bottom-0" />
+					<SparkleEffect className="-inset-e-4 -top-2" />
+					<SparkleEffect className="-inset-s-3 bottom-0" />
 				</div>
 
 				<motion.h2
