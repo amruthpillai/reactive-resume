@@ -113,11 +113,11 @@ function AIForm() {
 	return (
 		<div className="grid gap-6 sm:grid-cols-2">
 			<div className="flex flex-col gap-y-2">
-				<Label htmlFor="provider">
+				<Label htmlFor="ai-provider">
 					<Trans>Provider</Trans>
 				</Label>
 				<Combobox
-					id="provider"
+					id="ai-provider"
 					value={provider}
 					disabled={enabled}
 					options={providerOptions}
@@ -126,62 +126,62 @@ function AIForm() {
 			</div>
 
 			<div className="flex flex-col gap-y-2">
-				<Label htmlFor="model">
+				<Label htmlFor="ai-model">
 					<Trans>Model</Trans>
 				</Label>
 				<Input
-					id="model"
+					id="ai-model"
 					name="ai-model"
 					type="text"
 					value={model}
 					disabled={enabled}
 					onChange={(e) => handleModelChange(e.target.value)}
 					placeholder="e.g., gpt-4, claude-3-opus, gemini-pro"
-					autoComplete="off"
-					autoCapitalize="none"
 					autoCorrect="off"
-					spellCheck={false}
+					autoComplete="off"
+					spellCheck="false"
+					autoCapitalize="off"
 				/>
 			</div>
 
 			<div className="flex flex-col gap-y-2 sm:col-span-2">
-				<Label htmlFor="api-key">
+				<Label htmlFor="ai-api-key">
 					<Trans>API Key</Trans>
 				</Label>
 				<Input
-					id="api-key"
+					id="ai-api-key"
 					name="ai-api-key"
-					// Use a non-password input to avoid triggering browser password managers.
-					// Mask the characters via CSS for basic shoulder-surfing protection.
-					type="text"
+					type="password"
 					value={apiKey}
 					disabled={enabled}
 					onChange={(e) => handleApiKeyChange(e.target.value)}
-					className="[-webkit-text-security:disc]"
-					// Prevent browsers/password managers and form-history from offering suggestions/saving.
-					autoComplete="off"
-					autoCapitalize="none"
 					autoCorrect="off"
-					spellCheck={false}
-					data-1p-ignore="true"
+					autoComplete="off"
+					spellCheck="false"
+					autoCapitalize="off"
+					// ignore password managers
 					data-lpignore="true"
 					data-bwignore="true"
+					data-1p-ignore="true"
 				/>
 			</div>
 
 			<div className="flex flex-col gap-y-2 sm:col-span-2">
-				<Label htmlFor="base-url">
+				<Label htmlFor="ai-base-url">
 					<Trans>Base URL (Optional)</Trans>
 				</Label>
 				<Input
-					id="base-url"
+					id="ai-base-url"
 					name="ai-base-url"
 					type="url"
 					value={baseURL}
 					disabled={enabled}
 					placeholder={selectedOption?.defaultBaseURL}
 					onChange={(e) => handleBaseURLChange(e.target.value)}
-					autoComplete="section-ai-settings url"
+					autoCorrect="off"
+					autoComplete="off"
+					spellCheck="false"
+					autoCapitalize="off"
 				/>
 			</div>
 
