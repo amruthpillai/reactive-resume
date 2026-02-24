@@ -115,7 +115,12 @@ function RouteComponent() {
 										<Trans>Email Address</Trans>
 									</FormLabel>
 									<FormControl>
-										<Input autoComplete="email" placeholder="john.doe@example.com" className="lowercase" {...field} />
+										<Input
+											autoComplete="section-login username"
+											placeholder="john.doe@example.com"
+											className="lowercase"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 									<FormDescription>
@@ -147,7 +152,7 @@ function RouteComponent() {
 												min={6}
 												max={64}
 												type={showPassword ? "text" : "password"}
-												autoComplete="current-password"
+												autoComplete="section-login current-password"
 												{...field}
 											/>
 										</FormControl>

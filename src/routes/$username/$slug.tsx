@@ -16,18 +16,14 @@ import { cn } from "@/utils/style";
 export const Route = createFileRoute("/$username/$slug")({
 	component: RouteComponent,
 	loader: async ({ context, params: { username, slug } }) => {
-		try {
-			// Ignore .well-known requests
-			if (username === ".well-known") throw notFound();
+		// Ignore .well-known requests
+		if (username === ".well-known") throw notFound();
 
-			const resume = await context.queryClient.ensureQueryData(
-				orpc.resume.getBySlug.queryOptions({ input: { username, slug } }),
-			);
+		const resume = await context.queryClient.ensureQueryData(
+			orpc.resume.getBySlug.queryOptions({ input: { username, slug } }),
+		);
 
-			return { resume };
-		} catch {
-			throw notFound();
-		}
+		return { resume };
 	},
 	head: ({ loaderData }) => ({
 		meta: [{ title: loaderData ? `${loaderData.resume.name} - Reactive Resume` : "Reactive Resume" }],
@@ -69,7 +65,7 @@ function RouteComponent() {
 	const handleDownload = useCallback(async () => {
 		if (!resume) return;
 		const { url } = await printResumeAsPDF({ id: resume.id });
-		downloadFromUrl(url, `resume-${resume.name}.pdf`);
+		downloadFromUrl(url, `${resume.name}.pdf`);
 	}, [resume, printResumeAsPDF]);
 
 	if (!isReady) return <LoadingScreen />;
@@ -79,14 +75,14 @@ function RouteComponent() {
 			<div
 				className={cn("mx-auto max-w-[210mm]", "print:m-0 print:block print:max-w-full print:px-0", "md:my-4 md:px-4")}
 			>
-				<ResumePreview pageClassName="print:w-full! w-full max-w-full" />
+				<ResumePreview className="space-y-4" pageClassName="print:w-full! w-full max-w-full" />
 			</div>
 
 			<Button
 				size="lg"
 				variant="secondary"
 				disabled={isPrinting}
-				className="fixed end-4 bottom-4 z-50 hidden rounded-full px-4 md:inline-flex print:hidden"
+				className="fixed inset-e-4 bottom-4 z-50 hidden rounded-full px-4 md:inline-flex print:hidden"
 				onClick={handleDownload}
 			>
 				{isPrinting ? <Spinner /> : <DownloadSimpleIcon />}
