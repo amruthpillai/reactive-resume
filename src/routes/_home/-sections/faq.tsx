@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -15,22 +13,21 @@ type FAQItemData = {
 
 const getFaqItems = (): FAQItemData[] => [
 	{
-		question: t`Is Reactive Resume really free?`,
-		answer: t`Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free.`,
+		question: "Is Reactive Resume really free?",
+		answer: "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free.",
 	},
 	{
-		question: t`How is my data protected?`,
-		answer: t`Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data.`,
+		question: "How is my data protected?",
+		answer: "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data.",
 	},
 	{
-		question: t`Can I export my resume to PDF?`,
-		answer: t`Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly.`,
+		question: "Can I export my resume to PDF?",
+		answer: "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly.",
 	},
 	{
-		question: t`Is Reactive Resume available in multiple languages?`,
+		question: "Is Reactive Resume available in multiple languages?",
 		answer: (
-			<Trans>
-				Yes, Reactive Resume is available in multiple languages. You can choose your preferred language in the settings
+			Yes, Reactive Resume is available in multiple languages. You can choose your preferred language in the settings
 				page, or using the language switcher in the top right corner. If you don't see your language, or you would like
 				to improve the existing translations, you can{" "}
 				<a
@@ -43,20 +40,19 @@ const getFaqItems = (): FAQItemData[] => [
 					<span className="sr-only"> (opens in new tab)</span>
 				</a>
 				.
-			</Trans>
 		),
 	},
 	{
-		question: t`What makes Reactive Resume different from other resume builders?`,
-		answer: t`Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall.`,
+		question: "What makes Reactive Resume different from other resume builders?",
+		answer: "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall.",
 	},
 	{
-		question: t`Can I customize the templates?`,
-		answer: t`Yes! Every template is fully customizable. You can change colors, fonts, spacing, and even write custom CSS for complete control over your resume's appearance.`,
+		question: "Can I customize the templates?",
+		answer: "Yes! Every template is fully customizable. You can change colors, fonts, spacing, and even write custom CSS for complete control over your resume's appearance.",
 	},
 	{
-		question: t`How do I share my resume?`,
-		answer: t`You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!`,
+		question: "How do I share my resume?",
+		answer: "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!",
 	},
 ];
 
@@ -78,11 +74,9 @@ export function FAQ() {
 				viewport={{ once: true }}
 				transition={{ duration: 0.6 }}
 			>
-				<Trans context="Every word needs to be wrapped in a tag">
-					<span>Frequently</span>
+				<span>Frequently</span>
 					<span>Asked</span>
 					<span>Questions</span>
-				</Trans>
 			</motion.h2>
 
 			<motion.div

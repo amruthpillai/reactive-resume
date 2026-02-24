@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -58,7 +57,7 @@ export function CreateVolunteerDialog({ data }: DialogProps<"resume.sections.vol
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new volunteer experience</Trans>
+					Create a new volunteer experience
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -69,11 +68,11 @@ export function CreateVolunteerDialog({ data }: DialogProps<"resume.sections.vol
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -122,7 +121,7 @@ export function UpdateVolunteerDialog({ data }: DialogProps<"resume.sections.vol
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing volunteer experience</Trans>
+					Update an existing volunteer experience
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -133,11 +132,11 @@ export function UpdateVolunteerDialog({ data }: DialogProps<"resume.sections.vol
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -157,7 +156,7 @@ function VolunteerForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Organization</Trans>
+							Organization
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -173,7 +172,7 @@ function VolunteerForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Location</Trans>
+							Location
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -189,7 +188,7 @@ function VolunteerForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Period</Trans>
+							Period
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -205,7 +204,7 @@ function VolunteerForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Website</Trans>
+							Website
 						</FormLabel>
 						<FormControl>
 							<URLInput
@@ -229,7 +228,7 @@ function VolunteerForm() {
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
 						<FormLabel className="!mt-0">
-							<Trans>Show link in title</Trans>
+							Show link in title
 						</FormLabel>
 					</FormItem>
 				)}
@@ -241,7 +240,7 @@ function VolunteerForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Description</Trans>
+							Description
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />

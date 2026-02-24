@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useTheme } from "@/components/theme/provider";
 import { CommandItem } from "@/components/ui/command";
@@ -15,15 +14,15 @@ export function ThemeCommandPage() {
 	};
 
 	return (
-		<BaseCommandGroup page="theme" heading={<Trans>Theme</Trans>}>
+		<BaseCommandGroup page="theme" heading={Theme}>
 			<CommandItem value="light" onSelect={() => handleThemeChange("light")}>
 				<SunIcon />
-				<Trans>Light theme</Trans>
+				Light theme
 			</CommandItem>
 
 			<CommandItem value="dark" onSelect={() => handleThemeChange("dark")}>
 				<MoonIcon />
-				<Trans>Dark theme</Trans>
+				Dark theme
 			</CommandItem>
 		</BaseCommandGroup>
 	);

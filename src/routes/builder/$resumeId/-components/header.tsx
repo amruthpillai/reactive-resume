@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import {
 	CaretDownIcon,
 	CopySimpleIcon,
@@ -81,8 +79,8 @@ function BuilderHeaderDropdown() {
 
 	const handleToggleLock = async () => {
 		if (!isLocked) {
-			const confirmation = await confirm(t`Are you sure you want to lock this resume?`, {
-				description: t`When locked, the resume cannot be updated or deleted.`,
+			const confirmation = await confirm("Are you sure you want to lock this resume?", {
+				description: "When locked, the resume cannot be updated or deleted.",
 			});
 
 			if (!confirmation) return;
@@ -99,19 +97,19 @@ function BuilderHeaderDropdown() {
 	};
 
 	const handleDelete = async () => {
-		const confirmation = await confirm(t`Are you sure you want to delete this resume?`, {
-			description: t`This action cannot be undone.`,
+		const confirmation = await confirm("Are you sure you want to delete this resume?", {
+			description: "This action cannot be undone.",
 		});
 
 		if (!confirmation) return;
 
-		const toastId = toast.loading(t`Deleting your resume...`);
+		const toastId = toast.loading("Deleting your resume...");
 
 		deleteResume(
 			{ id },
 			{
 				onSuccess: () => {
-					toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
+					toast.success("Your resume has been deleted successfully.", { id: toastId });
 					navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
 				},
 				onError: (error) => {
@@ -132,24 +130,24 @@ function BuilderHeaderDropdown() {
 			<DropdownMenuContent>
 				<DropdownMenuItem disabled={isLocked} onSelect={handleUpdate}>
 					<PencilSimpleLineIcon className="me-2" />
-					<Trans>Update</Trans>
+					Update
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onSelect={handleDuplicate}>
 					<CopySimpleIcon className="me-2" />
-					<Trans>Duplicate</Trans>
+					Duplicate
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onSelect={handleToggleLock}>
 					{isLocked ? <LockSimpleOpenIcon className="me-2" /> : <LockSimpleIcon className="me-2" />}
-					{isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
+					{isLocked ? Unlock : Lock}
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
 				<DropdownMenuItem variant="destructive" disabled={isLocked} onSelect={handleDelete}>
 					<TrashSimpleIcon className="me-2" />
-					<Trans>Delete</Trans>
+					Delete
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

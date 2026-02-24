@@ -1,7 +1,3 @@
-import type { MessageDescriptor } from "@lingui/core";
-import { msg } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react";
-import { Trans } from "@lingui/react/macro";
 import {
 	BrainIcon,
 	GearSixIcon,
@@ -36,14 +32,14 @@ import { getInitials } from "@/utils/string";
 
 type SidebarItem = {
 	icon: React.ReactNode;
-	label: MessageDescriptor;
+	label: string;
 	href: React.ComponentProps<typeof Link>["to"];
 };
 
 const appSidebarItems = [
 	{
 		icon: <ReadCvLogoIcon />,
-		label: msg`Resumes`,
+		label: "Resumes",
 		href: "/dashboard/resumes",
 	},
 ] as const satisfies SidebarItem[];
@@ -51,32 +47,32 @@ const appSidebarItems = [
 const settingsSidebarItems = [
 	{
 		icon: <UserCircleIcon />,
-		label: msg`Profile`,
+		label: "Profile",
 		href: "/dashboard/settings/profile",
 	},
 	{
 		icon: <GearSixIcon />,
-		label: msg`Preferences`,
+		label: "Preferences",
 		href: "/dashboard/settings/preferences",
 	},
 	{
 		icon: <ShieldCheckIcon />,
-		label: msg`Authentication`,
+		label: "Authentication",
 		href: "/dashboard/settings/authentication",
 	},
 	{
 		icon: <KeyIcon />,
-		label: msg`API Keys`,
+		label: "API Keys",
 		href: "/dashboard/settings/api-keys",
 	},
 	{
 		icon: <BrainIcon />,
-		label: msg`Artificial Intelligence`,
+		label: "Artificial Intelligence",
 		href: "/dashboard/settings/ai",
 	},
 	{
 		icon: <WarningIcon />,
-		label: msg`Danger Zone`,
+		label: "Danger Zone",
 		href: "/dashboard/settings/danger-zone",
 	},
 ] as const satisfies SidebarItem[];
@@ -86,17 +82,15 @@ type SidebarItemListProps = {
 };
 
 function SidebarItemList({ items }: SidebarItemListProps) {
-	const { i18n } = useLingui();
-
 	return (
 		<SidebarMenu>
 			{items.map((item) => (
 				<SidebarMenuItem key={item.href}>
-					<SidebarMenuButton asChild title={i18n.t(item.label)}>
+					<SidebarMenuButton asChild title={item.label}>
 						<Link to={item.href} activeProps={{ className: "bg-sidebar-accent" }}>
 							{item.icon}
 							<span className="shrink-0 transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ms-8 group-data-[collapsible=icon]:opacity-0">
-								{i18n.t(item.label)}
+								{item.label}
 							</span>
 						</Link>
 					</SidebarMenuButton>
@@ -129,7 +123,7 @@ export function DashboardSidebar() {
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel>
-						<Trans>App</Trans>
+						App
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarItemList items={appSidebarItems} />
@@ -138,7 +132,7 @@ export function DashboardSidebar() {
 
 				<SidebarGroup>
 					<SidebarGroupLabel>
-						<Trans>Settings</Trans>
+						Settings
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarItemList items={settingsSidebarItems} />

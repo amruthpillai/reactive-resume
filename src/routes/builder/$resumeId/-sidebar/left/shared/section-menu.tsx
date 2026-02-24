@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Plural, Trans } from "@lingui/react/macro";
 import {
 	BroomIcon,
 	ColumnsIcon,
@@ -59,8 +57,8 @@ export function SectionDropdownMenu({ type }: Props) {
 	};
 
 	const onRenameSection = async () => {
-		const newTitle = await prompt(t`What do you want to rename this section to?`, {
-			description: t`Leave empty to reset the title to the original.`,
+		const newTitle = await prompt("What do you want to rename this section to?", {
+			description: "Leave empty to reset the title to the original.",
 			defaultValue: section.title,
 		});
 
@@ -117,7 +115,7 @@ export function SectionDropdownMenu({ type }: Props) {
 						<DropdownMenuGroup>
 							<DropdownMenuItem onSelect={onAddItem}>
 								<PlusIcon />
-								<Trans>Add a new item</Trans>
+								Add a new item
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 
@@ -128,25 +126,25 @@ export function SectionDropdownMenu({ type }: Props) {
 				<DropdownMenuGroup>
 					<DropdownMenuItem onSelect={onToggleVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
-						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
+						{section.hidden ? Show : Hide}
 					</DropdownMenuItem>
 
 					<DropdownMenuItem onSelect={onRenameSection}>
 						<PencilSimpleLineIcon />
-						<Trans>Rename</Trans>
+						Rename
 					</DropdownMenuItem>
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>
 							<ColumnsIcon />
-							<Trans>Columns</Trans>
+							Columns
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
 							<DropdownMenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
 								{[1, 2, 3, 4, 5, 6].map((column) => (
 									<DropdownMenuRadioItem key={column} value={column.toString()}>
-										<Plural value={column} one="# Column" other="# Columns" />
+										{column === 1 ? `${column} Column` : `${column} Columns`}
 									</DropdownMenuRadioItem>
 								))}
 							</DropdownMenuRadioGroup>
@@ -159,7 +157,7 @@ export function SectionDropdownMenu({ type }: Props) {
 				<DropdownMenuGroup>
 					<DropdownMenuItem variant="destructive" onSelect={onReset}>
 						<BroomIcon />
-						<Trans>Reset</Trans>
+						Reset
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>

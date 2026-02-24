@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import type { TemplateMetadata } from "@/dialogs/resume/template/data";
@@ -89,14 +88,12 @@ export function Templates() {
 				transition={{ duration: 0.6 }}
 			>
 				<h2 className="font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl">
-					<Trans>Templates</Trans>
+					Templates
 				</h2>
 
 				<p className="max-w-2xl text-muted-foreground leading-relaxed">
-					<Trans>
-						Explore our diverse selection of templates, each designed to fit different styles, professions, and
+					Explore our diverse selection of templates, each designed to fit different styles, professions, and
 						personalities. Reactive Resume currently offers 12 templates, with more on the way.
-					</Trans>
 				</p>
 			</motion.div>
 

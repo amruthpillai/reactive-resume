@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, Reorder } from "motion/react";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -28,7 +27,7 @@ export function ProfilesSectionBuilder() {
 			</Reorder.Group>
 
 			<SectionAddItemButton type="profiles">
-				<Trans>Add a new profile</Trans>
+				Add a new profile
 			</SectionAddItemButton>
 		</SectionBase>
 	);

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -61,7 +60,7 @@ export function CreateEducationDialog({ data }: DialogProps<"resume.sections.edu
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new education</Trans>
+					Create a new education
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -72,11 +71,11 @@ export function CreateEducationDialog({ data }: DialogProps<"resume.sections.edu
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -128,7 +127,7 @@ export function UpdateEducationDialog({ data }: DialogProps<"resume.sections.edu
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing education</Trans>
+					Update an existing education
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -139,11 +138,11 @@ export function UpdateEducationDialog({ data }: DialogProps<"resume.sections.edu
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -163,7 +162,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>School</Trans>
+							School
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -179,7 +178,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Degree</Trans>
+							Degree
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -195,7 +194,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Area of Study</Trans>
+							Area of Study
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -211,7 +210,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Grade</Trans>
+							Grade
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -227,7 +226,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Location</Trans>
+							Location
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -243,7 +242,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Period</Trans>
+							Period
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -259,7 +258,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Website</Trans>
+							Website
 						</FormLabel>
 						<FormControl>
 							<URLInput
@@ -283,7 +282,7 @@ function EducationForm() {
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
 						<FormLabel className="!mt-0">
-							<Trans>Show link in title</Trans>
+							Show link in title
 						</FormLabel>
 					</FormItem>
 				)}
@@ -295,7 +294,7 @@ function EducationForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Description</Trans>
+							Description
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />

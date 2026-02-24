@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -48,7 +47,7 @@ export function CreateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new summary item</Trans>
+					Create a new summary item
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -59,11 +58,11 @@ export function CreateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 
 					<DialogFooter>
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -104,7 +103,7 @@ export function UpdateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing summary item</Trans>
+					Update an existing summary item
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -115,11 +114,11 @@ export function UpdateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 
 					<DialogFooter>
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -138,7 +137,7 @@ function SummaryItemForm() {
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>
-						<Trans>Content</Trans>
+						Content
 					</FormLabel>
 					<FormControl>
 						<RichInput {...field} value={field.value} onChange={field.onChange} />

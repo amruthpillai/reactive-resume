@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowLeftIcon, CheckIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
@@ -37,7 +35,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Verifying code...`);
+		const toastId = toast.loading("Verifying code...");
 
 		const { error } = await authClient.twoFactor.verifyTotp({
 			code: data.code,
@@ -57,10 +55,10 @@ function RouteComponent() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>Two-Factor Authentication</Trans>
+					Two-Factor Authentication
 				</h1>
 				<div className="text-muted-foreground">
-					<Trans>Enter the verification code from your authenticator app</Trans>
+					Enter the verification code from your authenticator app
 				</div>
 			</div>
 
@@ -102,19 +100,19 @@ function RouteComponent() {
 						<Button type="button" variant="outline" className="flex-1" asChild>
 							<Link to="/auth/login">
 								<ArrowLeftIcon />
-								<Trans>Back to Login</Trans>
+								Back to Login
 							</Link>
 						</Button>
 
 						<Button type="submit" className="flex-1">
 							<CheckIcon />
-							<Trans>Verify</Trans>
+							Verify
 						</Button>
 					</div>
 				</form>
 				<Button type="button" variant="link" className="h-auto justify-self-center p-0 text-sm" asChild>
 					<Link to="/auth/verify-2fa-backup">
-						<Trans>Lost access to your authenticator?</Trans>
+						Lost access to your authenticator?
 					</Link>
 				</Button>
 			</Form>

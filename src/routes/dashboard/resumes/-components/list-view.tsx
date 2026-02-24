@@ -1,5 +1,3 @@
-import { useLingui } from "@lingui/react";
-import { Trans } from "@lingui/react/macro";
 import { DotsThreeIcon, DownloadSimpleIcon, PlusIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
@@ -38,11 +36,11 @@ export function ListView({ resumes }: Props) {
 				>
 					<PlusIcon />
 					<div className="min-w-80 truncate">
-						<Trans>Create a new resume</Trans>
+						Create a new resume
 					</div>
 
 					<p className="text-xs opacity-60">
-						<Trans>Start building your resume from scratch</Trans>
+						Start building your resume from scratch
 					</p>
 				</Button>
 			</motion.div>
@@ -63,11 +61,11 @@ export function ListView({ resumes }: Props) {
 					<DownloadSimpleIcon />
 
 					<div className="min-w-80 truncate">
-						<Trans>Import an existing resume</Trans>
+						Import an existing resume
 					</div>
 
 					<p className="text-xs opacity-60">
-						<Trans>Continue where you left off</Trans>
+						Continue where you left off
 					</p>
 				</Button>
 			</motion.div>
@@ -91,11 +89,9 @@ export function ListView({ resumes }: Props) {
 }
 
 function ResumeListItem({ resume }: { resume: Resume }) {
-	const { i18n } = useLingui();
-
 	const updatedAt = useMemo(() => {
-		return Intl.DateTimeFormat(i18n.locale, { dateStyle: "long", timeStyle: "short" }).format(resume.updatedAt);
-	}, [i18n.locale, resume.updatedAt]);
+		return Intl.DateTimeFormat("en-US", { dateStyle: "long", timeStyle: "short" }).format(resume.updatedAt);
+	}, ["en-US", resume.updatedAt]);
 
 	return (
 		<div className="flex items-center gap-x-2">
@@ -111,7 +107,7 @@ function ResumeListItem({ resume }: { resume: Resume }) {
 					<div className="min-w-80 truncate">{resume.name}</div>
 
 					<p className="text-xs opacity-60">
-						<Trans>Last updated on {updatedAt}</Trans>
+						Last updated on {updatedAt}
 					</p>
 				</Link>
 			</Button>

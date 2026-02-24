@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Reactive Resume is a free, open-source resume builder built with TanStack Start (React 19 + Vite 8), using ORPC for type-safe RPC APIs, Drizzle ORM with PostgreSQL, Nitro as the server runtime, and Better Auth for authentication. It is a PWA with 47 supported locales and 13 resume templates.
+Reactive Resume is a free, open-source resume builder built with TanStack Start (React 19 + Vite 8), using ORPC for type-safe RPC APIs, Drizzle ORM with PostgreSQL, Nitro as the server runtime, and Better Auth for authentication. It is a PWA with 13 resume templates.
 
 ## Development Commands
 
@@ -29,9 +29,6 @@ pnpm db:generate    # Generate migration files
 pnpm db:migrate     # Run migrations
 pnpm db:push        # Push schema changes directly
 pnpm db:studio      # Open Drizzle Studio
-
-# Extract i18n strings for translation
-pnpm lingui:extract
 
 # Find unused exports / dead code
 dotenvx run -- pnpm knip
@@ -68,7 +65,6 @@ Database migrations run automatically on server startup via the Nitro plugin at 
 - `src/hooks/` - Custom React hooks
 - `plugins/` - Nitro server plugins (auto-migration on startup)
 - `migrations/` - Drizzle database migrations
-- `locales/` - i18n translation files (managed by Lingui)
 - `docs/` - Documentation (Mintlify)
 
 ### Key Integrations (`src/integrations/`)
@@ -145,7 +141,7 @@ An MCP (Model Context Protocol) server is available at `/mcp/` for LLM-based res
 ### Global Providers
 
 Defined in `src/routes/__root.tsx`:
-- I18nProvider (Lingui), ThemeProvider, MotionConfig, IconContext (Phosphor Icons)
+- ThemeProvider, MotionConfig, IconContext (Phosphor Icons)
 - ConfirmDialogProvider, PromptDialogProvider, DialogManager, CommandPalette, Toaster
 
 ## Code Style
@@ -159,7 +155,6 @@ Defined in `src/routes/__root.tsx`:
 - Uses `cn()` utility (from `@/utils/style`) for conditional class names
 - Uses `cva()` for component variants
 - Shadcn UI components in `src/components/ui/` (Radix UI + Phosphor icons, zinc base color)
-- i18n strings use Lingui macros: `<Trans>`, `t`, `msg`
 - TypeScript strict mode enabled; `noUnusedLocals` and `noUnusedParameters` enforced
 
 ## Environment Variables

@@ -1,6 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react";
-import { Trans } from "@lingui/react/macro";
 import { GridFourIcon, ListIcon, ReadCvLogoIcon, SortAscendingIcon, TagIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, stripSearchParams, useNavigate, useRouter } from "@tanstack/react-router";
@@ -41,7 +38,6 @@ export const Route = createFileRoute("/dashboard/resumes/")({
 
 function RouteComponent() {
 	const router = useRouter();
-	const { i18n } = useLingui();
 	const { view } = Route.useLoaderData();
 	const { tags, sort } = Route.useSearch();
 	const navigate = useNavigate({ from: Route.fullPath });
@@ -56,11 +52,11 @@ function RouteComponent() {
 
 	const sortOptions = useMemo(() => {
 		return [
-			{ value: "lastUpdatedAt", label: i18n.t("Last Updated") },
-			{ value: "createdAt", label: i18n.t("Created") },
-			{ value: "name", label: i18n.t("Name") },
+			{ value: "lastUpdatedAt", label: "Last Updated" },
+			{ value: "createdAt", label: "Created" },
+			{ value: "name", label: "Name" },
 		];
-	}, [i18n]);
+	}, []);
 
 	const onViewChange = (value: string) => {
 		setViewServerFn({ data: value as "grid" | "list" });
@@ -69,7 +65,7 @@ function RouteComponent() {
 
 	return (
 		<div className="space-y-4">
-			<DashboardHeader icon={ReadCvLogoIcon} title={t`Resumes`} />
+			<DashboardHeader icon={ReadCvLogoIcon} title={"Resumes"} />
 
 			<Separator />
 
@@ -82,7 +78,7 @@ function RouteComponent() {
 						navigate({ search: { tags, sort: value as SortOption } });
 					}}
 					buttonProps={{
-						title: t`Sort by`,
+						title: "Sort by",
 						variant: "ghost",
 						children: (_, option) => (
 							<>
@@ -101,7 +97,7 @@ function RouteComponent() {
 					}}
 					buttonProps={{
 						variant: "ghost",
-						title: t`Filter by`,
+						title: "Filter by",
 						className: cn({ hidden: tagOptions.length === 0 }),
 						children: (_, options) => (
 							<>
@@ -120,12 +116,12 @@ function RouteComponent() {
 					<TabsList>
 						<TabsTrigger value="grid" className="rounded-r-none">
 							<GridFourIcon />
-							<Trans>Grid</Trans>
+							Grid
 						</TabsTrigger>
 
 						<TabsTrigger value="list" className="rounded-l-none">
 							<ListIcon />
-							<Trans>List</Trans>
+							List
 						</TabsTrigger>
 					</TabsList>
 				</Tabs>

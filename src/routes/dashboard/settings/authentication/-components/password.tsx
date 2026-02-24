@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { PasswordIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
@@ -32,20 +31,20 @@ export function PasswordSection() {
 		>
 			<h2 className="flex items-center gap-x-3 font-medium text-base">
 				<PasswordIcon />
-				<Trans>Password</Trans>
+				Password
 			</h2>
 
 			{match(hasPassword)
 				.with(true, () => (
 					<Button variant="outline" onClick={handleUpdatePassword}>
 						<PencilSimpleLineIcon />
-						<Trans>Update Password</Trans>
+						Update Password
 					</Button>
 				))
 				.with(false, () => (
 					<Button variant="outline" asChild>
 						<Link to="/auth/forgot-password">
-							<Trans>Set Password</Trans>
+							Set Password
 						</Link>
 					</Button>
 				))

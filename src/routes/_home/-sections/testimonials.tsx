@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 
@@ -92,12 +91,11 @@ export function Testimonials() {
 				transition={{ duration: 0.6 }}
 			>
 				<h2 className="font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl">
-					<Trans>Testimonials</Trans>
+					Testimonials
 				</h2>
 
 				<p className="max-w-4xl text-balance text-muted-foreground leading-relaxed">
-					<Trans>
-						A lot of people have written to me over the years to share their experiences with Reactive Resume and how it
+					A lot of people have written to me over the years to share their experiences with Reactive Resume and how it
 						has helped them, and I never get tired of reading them. If you have a story to share, let me know by sending
 						me an email at{" "}
 						<a
@@ -109,7 +107,6 @@ export function Testimonials() {
 							{email}
 						</a>
 						.
-					</Trans>
 				</p>
 			</motion.div>
 

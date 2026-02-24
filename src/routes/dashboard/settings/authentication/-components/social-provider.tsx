@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { LinkBreakIcon, LinkIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { useCallback, useMemo } from "react";
@@ -51,13 +50,13 @@ export function SocialProviderSection({ provider, name, animationDelay = 0 }: So
 					.with(true, () => (
 						<Button variant="outline" onClick={handleUnlink}>
 							<LinkBreakIcon />
-							<Trans>Disconnect</Trans>
+							Disconnect
 						</Button>
 					))
 					.with(false, () => (
 						<Button variant="outline" onClick={handleLink}>
 							<LinkIcon />
-							<Trans>Connect</Trans>
+							Connect
 						</Button>
 					))
 					.exhaustive()}

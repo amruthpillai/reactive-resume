@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -48,7 +47,7 @@ function TypographySectionForm() {
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
 					<p className="shrink-0 font-medium text-base">
-						<Trans context="Body Text (paragraphs, lists, etc.)">Body</Trans>
+						Body
 					</p>
 					<Separator className="flex-1" />
 				</div>
@@ -59,7 +58,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans>Font Family</Trans>
+								Font Family
 							</FormLabel>
 							<FormControl>
 								<FontFamilyCombobox
@@ -87,7 +86,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans>Font Weights</Trans>
+								Font Weights
 							</FormLabel>
 							<FormControl>
 								<FontWeightCombobox
@@ -110,7 +109,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Font Size</Trans>
+								Font Size
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -141,7 +140,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Line Height</Trans>
+								Line Height
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -169,7 +168,7 @@ function TypographySectionForm() {
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
 					<p className="shrink-0 font-medium text-base">
-						<Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>
+						Heading
 					</p>
 					<Separator className="flex-1" />
 				</div>
@@ -180,7 +179,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans>Font Family</Trans>
+								Font Family
 							</FormLabel>
 							<FormControl>
 								<FontFamilyCombobox
@@ -208,7 +207,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans>Font Weight</Trans>
+								Font Weight
 							</FormLabel>
 							<FormControl>
 								<FontWeightCombobox
@@ -231,7 +230,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Font Size</Trans>
+								Font Size
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -262,7 +261,7 @@ function TypographySectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Line Height</Trans>
+								Line Height
 							</FormLabel>
 							<InputGroup>
 								<FormControl>

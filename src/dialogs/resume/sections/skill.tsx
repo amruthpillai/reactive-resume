@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
@@ -60,7 +58,7 @@ export function CreateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new skill</Trans>
+					Create a new skill
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -71,11 +69,11 @@ export function CreateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -123,7 +121,7 @@ export function UpdateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing skill</Trans>
+					Update an existing skill
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -134,11 +132,11 @@ export function UpdateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -176,7 +174,7 @@ function SkillForm() {
 					render={({ field }) => (
 						<FormItem className="flex-1">
 							<FormLabel>
-								<Trans>Name</Trans>
+								Name
 							</FormLabel>
 							<FormControl>
 								<Input className="rounded-l-none!" {...field} />
@@ -193,7 +191,7 @@ function SkillForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Proficiency</Trans>
+							Proficiency
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -209,7 +207,7 @@ function SkillForm() {
 				render={({ field }) => (
 					<FormItem className="gap-4 sm:col-span-full">
 						<FormLabel>
-							<Trans>Level</Trans>
+							Level
 						</FormLabel>
 						<FormControl>
 							<Slider
@@ -221,7 +219,7 @@ function SkillForm() {
 							/>
 						</FormControl>
 						<FormMessage />
-						<FormDescription>{Number(field.value) === 0 ? t`Hidden` : `${field.value} / 5`}</FormDescription>
+						<FormDescription>{Number(field.value) === 0 ? "Hidden" : `${field.value} / 5`}</FormDescription>
 					</FormItem>
 				)}
 			/>
@@ -232,7 +230,7 @@ function SkillForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Keywords</Trans>
+							Keywords
 						</FormLabel>
 						<FormControl>
 							<ChipInput {...field} />

@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { InfoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
@@ -24,13 +22,11 @@ export function StatisticsSectionBuilder() {
 						<Alert>
 							<InfoIcon />
 							<AlertTitle>
-								<Trans>Track your resume's views and downloads</Trans>
+								Track your resume's views and downloads
 							</AlertTitle>
 							<AlertDescription>
-								<Trans>
-									Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can
+								Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can
 									see your resume's statistics.
-								</Trans>
 							</AlertDescription>
 						</Alert>
 					</AccordionContent>
@@ -39,16 +35,16 @@ export function StatisticsSectionBuilder() {
 				<AccordionItem value="isPublic">
 					<AccordionContent className="grid @md:grid-cols-2 grid-cols-1 gap-4 pb-0">
 						<StatisticsItem
-							label={t`Views`}
+							label={"Views"}
 							value={statistics.views}
-							timestamp={statistics.lastViewedAt ? t`Last viewed on ${statistics.lastViewedAt.toDateString()}` : null}
+							timestamp={statistics.lastViewedAt ? `Last viewed on ${statistics.lastViewedAt.toDateString()}` : null}
 						/>
 
 						<StatisticsItem
-							label={t`Downloads`}
+							label={"Downloads"}
 							value={statistics.downloads}
 							timestamp={
-								statistics.lastDownloadedAt ? t`Last downloaded on ${statistics.lastDownloadedAt.toDateString()}` : null
+								statistics.lastDownloadedAt ? `Last downloaded on ${statistics.lastDownloadedAt.toDateString()}` : null
 							}
 						/>
 					</AccordionContent>

@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { ProhibitIcon } from "@phosphor-icons/react";
 import Fuse from "fuse.js";
 import { memo, useCallback, useMemo, useState } from "react";
@@ -26,8 +25,8 @@ function _IconSearchInput(props: IconSearchInputProps) {
 			spellCheck={false}
 			inputMode="search"
 			value={props.value}
-			aria-label={t`Search for an icon`}
-			placeholder={t`Search for an icon`}
+			aria-label={"Search for an icon"}
+			placeholder={"Search for an icon"}
 			onChange={(e) => props.onChange(e.currentTarget.value)}
 			className={cn("rounded-none border-0 focus-visible:ring-0", props.className)}
 		/>

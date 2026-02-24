@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import * as React from "react";
 import {
 	AlertDialog,
@@ -49,8 +48,8 @@ export function PromptDialogProvider({ children }: { children: React.ReactNode }
 		inputProps: undefined,
 	});
 
-	const cancelText = state.cancelText ?? t`Cancel`;
-	const confirmText = state.confirmText ?? t`Confirm`;
+	const cancelText = state.cancelText ?? "Cancel";
+	const confirmText = state.confirmText ?? "Confirm";
 
 	React.useEffect(() => {
 		if (!state.open) return;

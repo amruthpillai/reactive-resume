@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { CircleNotchIcon, FileJsIcon, FilePdfIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
@@ -27,15 +25,15 @@ export function ExportSectionBuilder() {
 
 	const onDownloadPDF = useCallback(async () => {
 		const filename = generateFilename(resume.data.basics.name, "pdf");
-		const toastId = toast.loading(t`Please wait while your PDF is being generated...`, {
-			description: t`This may take a while depending on the server capacity. Please do not close the window or refresh the page.`,
+		const toastId = toast.loading("Please wait while your PDF is being generated...", {
+			description: "This may take a while depending on the server capacity. Please do not close the window or refresh the page.",
 		});
 
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
 			downloadFromUrl(url, filename);
 		} catch {
-			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
+			toast.error("There was a problem while generating the PDF, please try again in some time.");
 		} finally {
 			toast.dismiss(toastId);
 		}
@@ -52,10 +50,8 @@ export function ExportSectionBuilder() {
 				<div className="flex flex-1 flex-col gap-y-1">
 					<h6 className="font-medium">JSON</h6>
 					<p className="text-muted-foreground text-xs leading-normal">
-						<Trans>
-							Download a copy of your resume in JSON format. Use this file for backup or to import your resume into
+						Download a copy of your resume in JSON format. Use this file for backup or to import your resume into
 							other applications, including AI assistants.
-						</Trans>
 					</p>
 				</div>
 			</Button>
@@ -75,10 +71,8 @@ export function ExportSectionBuilder() {
 				<div className="flex flex-1 flex-col gap-y-1">
 					<h6 className="font-medium">PDF</h6>
 					<p className="text-muted-foreground text-xs leading-normal">
-						<Trans>
-							Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume
+						Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume
 							with recruiters.
-						</Trans>
 					</p>
 				</div>
 			</Button>

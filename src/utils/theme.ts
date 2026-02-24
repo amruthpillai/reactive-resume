@@ -1,5 +1,3 @@
-import type { MessageDescriptor } from "@lingui/core";
-import { msg } from "@lingui/core/macro";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
 import Cookies from "js-cookie";
@@ -13,9 +11,9 @@ const storageKey = "theme";
 const defaultTheme: Theme = "dark";
 
 export const themeMap = {
-	light: msg`Light`,
-	dark: msg`Dark`,
-} satisfies Record<Theme, MessageDescriptor>;
+	light: "Light",
+	dark: "Dark",
+} satisfies Record<Theme, string>;
 
 export function isTheme(theme: string): theme is Theme {
 	return themeSchema.safeParse(theme).success;

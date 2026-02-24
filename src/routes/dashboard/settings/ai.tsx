@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { BrainIcon, CheckCircleIcon, InfoIcon, XCircleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -114,7 +112,7 @@ function AIForm() {
 		<div className="grid gap-6 sm:grid-cols-2">
 			<div className="flex flex-col gap-y-2">
 				<Label htmlFor="ai-provider">
-					<Trans>Provider</Trans>
+					Provider
 				</Label>
 				<Combobox
 					id="ai-provider"
@@ -127,7 +125,7 @@ function AIForm() {
 
 			<div className="flex flex-col gap-y-2">
 				<Label htmlFor="ai-model">
-					<Trans>Model</Trans>
+					Model
 				</Label>
 				<Input
 					id="ai-model"
@@ -146,7 +144,7 @@ function AIForm() {
 
 			<div className="flex flex-col gap-y-2 sm:col-span-2">
 				<Label htmlFor="ai-api-key">
-					<Trans>API Key</Trans>
+					API Key
 				</Label>
 				<Input
 					id="ai-api-key"
@@ -168,7 +166,7 @@ function AIForm() {
 
 			<div className="flex flex-col gap-y-2 sm:col-span-2">
 				<Label htmlFor="ai-base-url">
-					<Trans>Base URL (Optional)</Trans>
+					Base URL (Optional)
 				</Label>
 				<Input
 					id="ai-base-url"
@@ -194,7 +192,7 @@ function AIForm() {
 					) : testStatus === "failure" ? (
 						<XCircleIcon className="text-destructive" />
 					) : null}
-					<Trans>Test Connection</Trans>
+					Test Connection
 				</Button>
 			</div>
 		</div>
@@ -212,7 +210,7 @@ function RouteComponent() {
 
 	return (
 		<div className="space-y-4">
-			<DashboardHeader icon={BrainIcon} title={t`Artificial Intelligence`} />
+			<DashboardHeader icon={BrainIcon} title={"Artificial Intelligence"} />
 
 			<Separator />
 
@@ -229,14 +227,12 @@ function RouteComponent() {
 
 					<div className="flex-1 space-y-2">
 						<h3 className="font-semibold">
-							<Trans>Your data is stored locally</Trans>
+							Your data is stored locally
 						</h3>
 
 						<p className="text-muted-foreground leading-relaxed">
-							<Trans>
-								Everything entered here is stored locally on your browser. Your data is only sent to the server when
+							Everything entered here is stored locally on your browser. Your data is only sent to the server when
 								making a request to the AI provider, and is never stored or logged on our servers.
-							</Trans>
 						</p>
 					</div>
 				</div>
@@ -245,14 +241,14 @@ function RouteComponent() {
 
 				<div className="flex items-center justify-between">
 					<Label htmlFor="enable-ai">
-						<Trans>Enable AI Features</Trans>
+						Enable AI Features
 					</Label>
 					<Switch id="enable-ai" checked={enabled} disabled={!canEnable} onCheckedChange={setEnabled} />
 				</div>
 
 				<p className={cn("flex items-center gap-x-2", enabled ? "text-success" : "text-destructive")}>
 					{enabled ? <CheckCircleIcon /> : <XCircleIcon />}
-					{enabled ? <Trans>Enabled</Trans> : <Trans>Disabled</Trans>}
+					{enabled ? Enabled : Disabled}
 				</p>
 
 				<AIForm />

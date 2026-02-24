@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -49,7 +48,7 @@ export function CreateCoverLetterDialog({ data }: DialogProps<"resume.sections.c
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new cover letter</Trans>
+					Create a new cover letter
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -60,11 +59,11 @@ export function CreateCoverLetterDialog({ data }: DialogProps<"resume.sections.c
 
 					<DialogFooter>
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -106,7 +105,7 @@ export function UpdateCoverLetterDialog({ data }: DialogProps<"resume.sections.c
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing cover letter</Trans>
+					Update an existing cover letter
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -117,11 +116,11 @@ export function UpdateCoverLetterDialog({ data }: DialogProps<"resume.sections.c
 
 					<DialogFooter>
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -141,7 +140,7 @@ function CoverLetterForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Recipient</Trans>
+							Recipient
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />
@@ -157,7 +156,7 @@ function CoverLetterForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Content</Trans>
+							Content
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />

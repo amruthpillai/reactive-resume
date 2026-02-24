@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -58,7 +57,7 @@ export function CreateCertificationDialog({ data }: DialogProps<"resume.sections
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new certification</Trans>
+					Create a new certification
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -69,11 +68,11 @@ export function CreateCertificationDialog({ data }: DialogProps<"resume.sections
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -122,7 +121,7 @@ export function UpdateCertificationDialog({ data }: DialogProps<"resume.sections
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing certification</Trans>
+					Update an existing certification
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -133,11 +132,11 @@ export function UpdateCertificationDialog({ data }: DialogProps<"resume.sections
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -157,7 +156,7 @@ function CertificationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Title</Trans>
+							Title
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -173,7 +172,7 @@ function CertificationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Issuer</Trans>
+							Issuer
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -189,7 +188,7 @@ function CertificationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Date</Trans>
+							Date
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -205,7 +204,7 @@ function CertificationForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Website</Trans>
+							Website
 						</FormLabel>
 						<FormControl>
 							<URLInput
@@ -229,7 +228,7 @@ function CertificationForm() {
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
 						<FormLabel className="!mt-0">
-							<Trans>Show link in title</Trans>
+							Show link in title
 						</FormLabel>
 					</FormItem>
 				)}
@@ -241,7 +240,7 @@ function CertificationForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Description</Trans>
+							Description
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />

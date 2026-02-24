@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
@@ -36,7 +34,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Sending password reset email...`);
+		const toastId = toast.loading("Sending password reset email...");
 
 		const { error } = await authClient.requestPasswordReset({
 			email: data.email,
@@ -58,18 +56,16 @@ function RouteComponent() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>Forgot your password?</Trans>
+					Forgot your password?
 				</h1>
 
 				<div className="text-muted-foreground">
-					<Trans>
-						Remember your password?{" "}
+					Remember your password?{" "}
 						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
 							<Link to="/auth/login">
 								Sign in now <ArrowRightIcon />
 							</Link>
 						</Button>
-					</Trans>
 				</div>
 			</div>
 
@@ -81,7 +77,7 @@ function RouteComponent() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Email Address</Trans>
+									Email Address
 								</FormLabel>
 								<FormControl>
 									<Input type="email" autoComplete="email" placeholder="john.doe@example.com" {...field} />
@@ -92,7 +88,7 @@ function RouteComponent() {
 					/>
 
 					<Button type="submit" className="w-full">
-						<Trans>Send Password Reset Email</Trans>
+						Send Password Reset Email
 					</Button>
 				</form>
 			</Form>
@@ -105,16 +101,16 @@ function PostForgotPasswordScreen() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>You've got mail!</Trans>
+					You've got mail!
 				</h1>
 				<p className="text-muted-foreground">
-					<Trans>Check your email for a link to reset your password.</Trans>
+					Check your email for a link to reset your password.
 				</p>
 			</div>
 
 			<Button asChild>
 				<a href="mailto:">
-					<Trans>Open Email Client</Trans>
+					Open Email Client
 				</a>
 			</Button>
 		</>

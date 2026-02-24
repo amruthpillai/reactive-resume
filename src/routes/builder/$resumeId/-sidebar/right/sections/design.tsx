@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import type z from "zod";
@@ -70,7 +69,7 @@ function ColorSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Primary Color</Trans>
+								Primary Color
 							</FormLabel>
 							<div className="flex items-center gap-2">
 								<ColorPicker
@@ -95,7 +94,7 @@ function ColorSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Text Color</Trans>
+								Text Color
 							</FormLabel>
 							<div className="flex items-center gap-2">
 								<ColorPicker
@@ -120,7 +119,7 @@ function ColorSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Background Color</Trans>
+								Background Color
 							</FormLabel>
 							<div className="flex items-center gap-2">
 								<ColorPicker
@@ -225,7 +224,7 @@ function LevelSectionForm() {
 		<Form {...form}>
 			<form onChange={form.handleSubmit(onSubmit)} className="space-y-4">
 				<h4 className="font-semibold text-lg leading-none tracking-tight">
-					<Trans>Level</Trans>
+					Level
 				</h4>
 
 				<div
@@ -247,7 +246,7 @@ function LevelSectionForm() {
 						render={({ field }) => (
 							<FormItem className="shrink-0">
 								<FormLabel>
-									<Trans>Icon</Trans>
+									Icon
 								</FormLabel>
 								<FormControl>
 									<IconPicker
@@ -269,7 +268,7 @@ function LevelSectionForm() {
 						render={({ field }) => (
 							<FormItem className="flex-1">
 								<FormLabel>
-									<Trans>Type</Trans>
+									Type
 								</FormLabel>
 								<FormControl>
 									<LevelTypeCombobox

@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, TrashSimpleIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
@@ -72,7 +70,7 @@ function PictureSectionForm() {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		const toastId = toast.loading(t`Uploading picture...`);
+		const toastId = toast.loading("Uploading picture...");
 
 		uploadFile(file, {
 			onSuccess: ({ url }) => {
@@ -116,7 +114,7 @@ function PictureSectionForm() {
 						render={({ field }) => (
 							<FormItem className="flex-1">
 								<FormLabel>
-									<Trans>URL</Trans>
+									URL
 								</FormLabel>
 								<div className="flex items-center gap-x-2">
 									<FormControl>
@@ -146,7 +144,7 @@ function PictureSectionForm() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Size</Trans>
+									Size
 								</FormLabel>
 								<InputGroup>
 									<InputGroupInput
@@ -177,7 +175,7 @@ function PictureSectionForm() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Rotation</Trans>
+									Rotation
 								</FormLabel>
 								<InputGroup>
 									<FormControl>
@@ -208,7 +206,7 @@ function PictureSectionForm() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Aspect Ratio</Trans>
+									Aspect Ratio
 								</FormLabel>
 								<div className="flex items-center gap-x-2">
 									<FormControl>
@@ -230,7 +228,7 @@ function PictureSectionForm() {
 										<Button
 											size="icon"
 											variant="outline"
-											title={t`Square`}
+											title={"Square"}
 											onClick={() => {
 												field.onChange(1);
 												form.handleSubmit(onSubmit)();
@@ -241,7 +239,7 @@ function PictureSectionForm() {
 										<Button
 											size="icon"
 											variant="outline"
-											title={t`Landscape`}
+											title={"Landscape"}
 											onClick={() => {
 												field.onChange(1.5);
 												form.handleSubmit(onSubmit)();
@@ -252,7 +250,7 @@ function PictureSectionForm() {
 										<Button
 											size="icon"
 											variant="outline"
-											title={t`Portrait`}
+											title={"Portrait"}
 											onClick={() => {
 												field.onChange(0.5);
 												form.handleSubmit(onSubmit)();
@@ -272,7 +270,7 @@ function PictureSectionForm() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Border Radius</Trans>
+									Border Radius
 								</FormLabel>
 								<div className="flex items-center gap-x-2">
 									<InputGroup>
@@ -357,7 +355,7 @@ function PictureSectionForm() {
 							render={({ field }) => (
 								<FormItem className="flex-1">
 									<FormLabel>
-										<Trans>Border Width</Trans>
+										Border Width
 									</FormLabel>
 									<InputGroup>
 										<FormControl>
@@ -407,7 +405,7 @@ function PictureSectionForm() {
 							render={({ field }) => (
 								<FormItem className="flex-1">
 									<FormLabel>
-										<Trans>Shadow Width</Trans>
+										Shadow Width
 									</FormLabel>
 									<InputGroup>
 										<FormControl>

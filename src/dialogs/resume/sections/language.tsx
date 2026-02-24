@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -54,7 +52,7 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new language</Trans>
+					Create a new language
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -65,11 +63,11 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -115,7 +113,7 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing language</Trans>
+					Update an existing language
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -126,11 +124,11 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -150,7 +148,7 @@ function LanguageForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Language</Trans>
+							Language
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -166,7 +164,7 @@ function LanguageForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Fluency</Trans>
+							Fluency
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -182,7 +180,7 @@ function LanguageForm() {
 				render={({ field }) => (
 					<FormItem className="gap-4 sm:col-span-full">
 						<FormLabel>
-							<Trans>Level</Trans>
+							Level
 						</FormLabel>
 						<FormControl>
 							<Slider
@@ -194,7 +192,7 @@ function LanguageForm() {
 							/>
 						</FormControl>
 						<FormMessage />
-						<FormDescription>{Number(field.value) === 0 ? t`Hidden` : `${field.value} / 5`}</FormDescription>
+						<FormDescription>{Number(field.value) === 0 ? "Hidden" : `${field.value} / 5`}</FormDescription>
 					</FormItem>
 				)}
 			/>

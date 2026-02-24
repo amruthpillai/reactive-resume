@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowLeftIcon, CheckIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -37,7 +35,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Verifying backup code...`);
+		const toastId = toast.loading("Verifying backup code...");
 		const formattedCode = `${data.code.slice(0, 5)}-${data.code.slice(5)}`;
 
 		const { error } = await authClient.twoFactor.verifyBackupCode({ code: formattedCode });
@@ -56,10 +54,10 @@ function RouteComponent() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>Verify with a Backup Code</Trans>
+					Verify with a Backup Code
 				</h1>
 				<div className="text-muted-foreground">
-					<Trans>Enter one of your saved backup codes to access your account</Trans>
+					Enter one of your saved backup codes to access your account
 				</div>
 			</div>
 
@@ -105,12 +103,12 @@ function RouteComponent() {
 						<Button type="button" variant="outline" className="flex-1" asChild>
 							<Link to="/auth/verify-2fa">
 								<ArrowLeftIcon />
-								<Trans>Go Back</Trans>
+								Go Back
 							</Link>
 						</Button>
 						<Button type="submit" className="flex-1">
 							<CheckIcon />
-							<Trans>Verify</Trans>
+							Verify
 						</Button>
 					</div>
 				</form>

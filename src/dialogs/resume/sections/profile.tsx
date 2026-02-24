@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { AtIcon, PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
@@ -59,7 +58,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new profile</Trans>
+					Create a new profile
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -70,11 +69,11 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -122,7 +121,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing profile</Trans>
+					Update an existing profile
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -133,11 +132,11 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -175,7 +174,7 @@ function ProfileForm() {
 					render={({ field }) => (
 						<FormItem className="flex-1">
 							<FormLabel>
-								<Trans>Network</Trans>
+								Network
 							</FormLabel>
 							<FormControl>
 								<Input className="rounded-l-none!" {...field} />
@@ -192,7 +191,7 @@ function ProfileForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Username</Trans>
+							Username
 						</FormLabel>
 						<InputGroup>
 							<InputGroupAddon align="inline-start">
@@ -216,7 +215,7 @@ function ProfileForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Website</Trans>
+							Website
 						</FormLabel>
 						<FormControl>
 							<URLInput
@@ -240,7 +239,7 @@ function ProfileForm() {
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
 						<FormLabel className="!mt-0">
-							<Trans>Show link in title</Trans>
+							Show link in title
 						</FormLabel>
 					</FormItem>
 				)}

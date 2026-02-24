@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { useCallback } from "react";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 import { useDialogStore } from "@/dialogs/store";
@@ -27,10 +26,10 @@ export function useFormBlocker<T extends FieldValues>(form: UseFormReturn<T>, op
 			return;
 		}
 
-		const confirmed = await confirm(t`Are you sure you want to close this dialog?`, {
-			description: t`You have unsaved changes that will be lost.`,
-			confirmText: t`Leave`,
-			cancelText: t`Stay`,
+		const confirmed = await confirm("Are you sure you want to close this dialog?", {
+			description: "You have unsaved changes that will be lost.",
+			confirmText: "Leave",
+			cancelText: "Stay",
 		});
 
 		if (confirmed) closeDialog();

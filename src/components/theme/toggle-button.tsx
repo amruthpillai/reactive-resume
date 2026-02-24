@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useCallback, useRef } from "react";
 import { flushSync } from "react-dom";
@@ -55,7 +54,7 @@ export function ThemeToggleButton(props: React.ComponentProps<typeof Button>) {
 		);
 	}, [toggleTheme]);
 
-	const ariaLabel = theme === "dark" ? t`Switch to light theme` : t`Switch to dark theme`;
+	const ariaLabel = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
 
 	return (
 		<Button size="icon" variant="ghost" ref={buttonRef} onClick={onToggleTheme} aria-label={ariaLabel} {...props}>

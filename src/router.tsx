@@ -7,7 +7,7 @@ import { getSession } from "./integrations/auth/functions";
 import { client, orpc } from "./integrations/orpc/client";
 import { getQueryClient } from "./integrations/query/client";
 import { routeTree } from "./routeTree.gen";
-import { getLocale, loadLocale } from "./utils/locale";
+import { getLocale } from "./utils/locale";
 import { getTheme } from "./utils/theme";
 
 export const getRouter = async () => {
@@ -19,8 +19,6 @@ export const getRouter = async () => {
 		getSession(),
 		client.flags.get(),
 	]);
-
-	await loadLocale(locale);
 
 	const router = createRouter({
 		routeTree,

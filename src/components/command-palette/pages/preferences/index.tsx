@@ -1,9 +1,7 @@
-import { Trans } from "@lingui/react/macro";
-import { PaletteIcon, TranslateIcon } from "@phosphor-icons/react";
+import { PaletteIcon } from "@phosphor-icons/react";
 import { CommandItem } from "@/components/ui/command";
 import { useCommandPaletteStore } from "../../store";
 import { BaseCommandGroup } from "../base";
-import { LanguageCommandPage } from "./language";
 import { ThemeCommandPage } from "./theme";
 
 export function PreferencesCommandGroup() {
@@ -11,20 +9,14 @@ export function PreferencesCommandGroup() {
 
 	return (
 		<>
-			<BaseCommandGroup heading={<Trans>Preferences</Trans>}>
+			<BaseCommandGroup heading="Preferences">
 				<CommandItem onSelect={() => pushPage("theme")}>
 					<PaletteIcon />
-					<Trans>Change theme to...</Trans>
-				</CommandItem>
-
-				<CommandItem onSelect={() => pushPage("language")}>
-					<TranslateIcon />
-					<Trans>Change language to...</Trans>
+					Change theme to...
 				</CommandItem>
 			</BaseCommandGroup>
 
 			<ThemeCommandPage />
-			<LanguageCommandPage />
 		</>
 	);
 }

@@ -1,5 +1,3 @@
-import { useLingui } from "@lingui/react";
-import { Trans } from "@lingui/react/macro";
 import { SlideshowIcon } from "@phosphor-icons/react";
 import { type RefObject, useRef } from "react";
 import { CometCard } from "@/components/animation/comet-card";
@@ -33,14 +31,12 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 			<DialogHeader className="gap-2">
 				<DialogTitle className="flex items-center gap-3 text-xl">
 					<SlideshowIcon size={20} />
-					<Trans>Template Gallery</Trans>
+					Template Gallery
 				</DialogTitle>
 				<DialogDescription className="leading-relaxed">
-					<Trans>
-						Here's a range of resume templates for different professions and personalities. Whether you prefer modern or
+					Here's a range of resume templates for different professions and personalities. Whether you prefer modern or
 						classic, bold or simple, there is a design to match you. Look through the options below and choose a
 						template that fits your style.
-					</Trans>
 				</DialogDescription>
 			</DialogHeader>
 
@@ -71,8 +67,6 @@ type TemplateCardProps = {
 };
 
 function TemplateCard({ id, metadata, isActive, collisionBoundary, onSelect }: TemplateCardProps) {
-	const { i18n } = useLingui();
-
 	return (
 		<HoverCard openDelay={0} closeDelay={0}>
 			<CometCard translateDepth={3} rotateDepth={6} glareOpacity={0}>
@@ -103,7 +97,7 @@ function TemplateCard({ id, metadata, isActive, collisionBoundary, onSelect }: T
 				>
 					<div className="space-y-1">
 						<h3 className="font-semibold text-lg">{metadata.name}</h3>
-						<p className="text-muted-foreground">{i18n.t(metadata.description)}</p>
+						<p className="text-muted-foreground">{metadata.description}</p>
 					</div>
 
 					{metadata.tags.length > 0 && (

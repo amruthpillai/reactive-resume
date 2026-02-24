@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, BookIcon, SparkleIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
@@ -30,7 +28,7 @@ export function Hero() {
 						// @ts-expect-error - typescript doesn't know about fetchPriority for video elements
 						fetchPriority="high"
 						src="/videos/timelapse.mp4"
-						aria-label={t`Timelapse demonstration of building a resume with Reactive Resume`}
+						aria-label={"Timelapse demonstration of building a resume with Reactive Resume"}
 						className="pointer-events-none size-full rounded-lg border object-cover"
 					/>
 
@@ -53,7 +51,7 @@ export function Hero() {
 				>
 					<Badge variant="secondary" className="h-auto gap-1.5 px-3 py-0.5">
 						<SparkleIcon aria-hidden="true" className="size-3.5" weight="fill" />
-						<Trans>What's new in the latest version?</Trans>
+						What's new in the latest version?
 					</Badge>
 				</motion.a>
 
@@ -63,12 +61,10 @@ export function Hero() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 1 }}
 				>
-					<Trans>
-						<p className="font-medium text-muted-foreground tracking-tight md:text-lg">Finally,</p>
+					<p className="font-medium text-muted-foreground tracking-tight md:text-lg">Finally,</p>
 						<h1 className="mt-1 font-bold text-4xl tracking-tight md:text-5xl lg:text-6xl">
 							A free and open-source resume builder
 						</h1>
-					</Trans>
 				</motion.div>
 
 				{/* Description */}
@@ -78,10 +74,8 @@ export function Hero() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 1.2 }}
 				>
-					<Trans>
-						Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating,
+					Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating,
 						and sharing your resume.
-					</Trans>
 				</motion.p>
 
 				{/* CTA Buttons */}
@@ -94,7 +88,7 @@ export function Hero() {
 					<Button asChild size="lg" className="group relative overflow-hidden px-4">
 						<Link to="/dashboard">
 							<span className="relative z-10 flex items-center gap-2">
-								<Trans>Get Started</Trans>
+								Get Started
 								<ArrowRightIcon
 									aria-hidden="true"
 									className="size-4 transition-transform group-hover:translate-x-0.5"
@@ -106,9 +100,9 @@ export function Hero() {
 					<Button asChild size="lg" variant="ghost" className="gap-2 px-4">
 						<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
 							<BookIcon aria-hidden="true" className="size-4" />
-							<Trans>Learn More</Trans>
+							Learn More
 							<span className="sr-only">
-								<Trans>(opens in new tab)</Trans>
+								(opens in new tab)
 							</span>
 						</a>
 					</Button>

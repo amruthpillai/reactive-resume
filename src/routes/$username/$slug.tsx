@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -86,7 +85,7 @@ function RouteComponent() {
 				onClick={handleDownload}
 			>
 				{isPrinting ? <Spinner /> : <DownloadSimpleIcon />}
-				{isPrinting ? <Trans>Downloading...</Trans> : <Trans>Download</Trans>}
+				{isPrinting ? Downloading... : Download}
 			</Button>
 		</>
 	);

@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import {
 	CloudArrowUpIcon,
 	CodeSimpleIcon,
@@ -37,98 +35,98 @@ const getFeatures = (): Feature[] => [
 	{
 		id: "free",
 		icon: CurrencyDollarIcon,
-		title: t`Free`,
-		description: t`Completely free, forever, no hidden costs.`,
+		title: "Free",
+		description: "Completely free, forever, no hidden costs.",
 	},
 	{
 		id: "open-source",
 		icon: GithubLogoIcon,
-		title: t`Open Source`,
-		description: t`By the community, for the community.`,
+		title: "Open Source",
+		description: "By the community, for the community.",
 	},
 	{
 		id: "no-ads",
 		icon: ProhibitIcon,
-		title: t`No Advertising, No Tracking`,
-		description: t`For a secure and distraction-free experience.`,
+		title: "No Advertising, No Tracking",
+		description: "For a secure and distraction-free experience.",
 	},
 	{
 		id: "data-security",
 		icon: DatabaseIcon,
-		title: t`Data Security`,
-		description: t`Your data is secure, and never shared or sold to anyone.`,
+		title: "Data Security",
+		description: "Your data is secure, and never shared or sold to anyone.",
 	},
 	{
 		id: "self-host",
 		icon: CloudArrowUpIcon,
-		title: t`Self-Host with Docker`,
-		description: t`You also have the option to deploy on your own servers using the Docker image.`,
+		title: "Self-Host with Docker",
+		description: "You also have the option to deploy on your own servers using the Docker image.",
 	},
 	{
 		id: "languages",
 		icon: TranslateIcon,
-		title: t`Multilingual`,
-		description: t`Available in multiple languages. If you would like to contribute, check out Crowdin.`,
+		title: "Multilingual",
+		description: "Available in multiple languages. If you would like to contribute, check out Crowdin.",
 	},
 	{
 		id: "auth",
 		icon: KeyIcon,
-		title: t`One-Click Sign-In`,
-		description: t`Sign in with GitHub, Google or a custom OAuth provider.`,
+		title: "One-Click Sign-In",
+		description: "Sign in with GitHub, Google or a custom OAuth provider.",
 	},
 	{
 		id: "2fa",
 		icon: ShieldCheckIcon,
-		title: t`Passkeys & 2FA`,
-		description: t`Enhance the security of your account with additional layers of protection.`,
+		title: "Passkeys & 2FA",
+		description: "Enhance the security of your account with additional layers of protection.",
 	},
 	{
 		id: "unlimited-resumes",
 		icon: FilesIcon,
-		title: t`Unlimited Resumes`,
-		description: t`Create as many resumes as you want, without limits.`,
+		title: "Unlimited Resumes",
+		description: "Create as many resumes as you want, without limits.",
 	},
 	{
 		id: "design",
 		icon: PaletteIcon,
-		title: t`Flexibility`,
-		description: t`Personalize your resume with any colors, fonts or designs, and make it your own.`,
+		title: "Flexibility",
+		description: "Personalize your resume with any colors, fonts or designs, and make it your own.",
 	},
 	{
 		id: "css",
 		icon: FileCssIcon,
-		title: t`Custom CSS`,
-		description: t`Write your own CSS (or use an AI to generate it for you) to customize your resume to the fullest.`,
+		title: "Custom CSS",
+		description: "Write your own CSS (or use an AI to generate it for you) to customize your resume to the fullest.",
 	},
 	{
 		id: "templates",
 		icon: LayoutIcon,
-		title: t`12+ Templates`,
-		description: t`Beautiful templates to choose from, with more on the way.`,
+		title: "12+ Templates",
+		description: "Beautiful templates to choose from, with more on the way.",
 	},
 	{
 		id: "public",
 		icon: GlobeIcon,
-		title: t`Shareable Links`,
-		description: t`Share your resume with a public URL, and let others view it.`,
+		title: "Shareable Links",
+		description: "Share your resume with a public URL, and let others view it.",
 	},
 	{
 		id: "password-protection",
 		icon: LockSimpleIcon,
-		title: t`Password Protection`,
-		description: t`Protect your resume with a password, and let only people with the password view it.`,
+		title: "Password Protection",
+		description: "Protect your resume with a password, and let only people with the password view it.",
 	},
 	{
 		id: "api-access",
 		icon: CodeSimpleIcon,
-		title: t`API Access`,
-		description: t`Access your resumes and data programmatically using the API.`,
+		title: "API Access",
+		description: "Access your resumes and data programmatically using the API.",
 	},
 	{
 		id: "more",
 		icon: DotsThreeIcon,
-		title: t`And many more...`,
-		description: t`New features are constantly being added and improved, so be sure to check back often.`,
+		title: "And many more...",
+		description: "New features are constantly being added and improved, so be sure to check back often.",
 	},
 ];
 
@@ -179,14 +177,12 @@ export function Features() {
 				transition={{ duration: 0.6 }}
 			>
 				<h2 className="font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl">
-					<Trans>Features</Trans>
+					Features
 				</h2>
 
 				<p className="max-w-2xl text-muted-foreground leading-relaxed">
-					<Trans>
-						Everything you need to create, customize, and share professional resumes. Built with privacy in mind,
+					Everything you need to create, customize, and share professional resumes. Built with privacy in mind,
 						powered by open source, and completely free forever.
-					</Trans>
 				</p>
 			</motion.div>
 

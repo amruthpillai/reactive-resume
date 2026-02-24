@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { PlusIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
@@ -42,22 +40,22 @@ export function ResumesCommandGroup() {
 
 	return (
 		<>
-			<BaseCommandGroup heading={<Trans>Search for...</Trans>}>
-				<CommandItem keywords={[t`Resumes`]} value="search.resumes" onSelect={() => pushPage("resumes")}>
+			<BaseCommandGroup heading={Search for...}>
+				<CommandItem keywords={["Resumes"]} value="search.resumes" onSelect={() => pushPage("resumes")}>
 					<ReadCvLogoIcon />
-					<Trans>Resumes</Trans>
+					Resumes
 				</CommandItem>
 			</BaseCommandGroup>
 
-			<BaseCommandGroup page="resumes" heading={<Trans>Resumes</Trans>}>
+			<BaseCommandGroup page="resumes" heading={Resumes}>
 				<CommandItem onSelect={onCreate}>
 					<PlusIcon />
-					<Trans>Create a new resume</Trans>
+					Create a new resume
 				</CommandItem>
 
 				{isLoading ? (
 					<CommandLoading>
-						<Trans>Loading resumes...</Trans>
+						Loading resumes...
 					</CommandLoading>
 				) : (
 					resumes?.map((resume) => (

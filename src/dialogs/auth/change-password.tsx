@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, PasswordIcon } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -45,7 +43,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Updating your password...`);
+		const toastId = toast.loading("Updating your password...");
 
 		const { error } = await authClient.changePassword({
 			currentPassword: data.currentPassword,
@@ -57,7 +55,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 			return;
 		}
 
-		toast.success(t`Your password has been updated successfully.`, { id: toastId });
+		toast.success("Your password has been updated successfully.", { id: toastId });
 		queryClient.invalidateQueries({ queryKey: ["auth", "accounts"] });
 		closeDialog();
 	};
@@ -67,10 +65,10 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PasswordIcon />
-					<Trans>Update your password</Trans>
+					Update your password
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>Enter your current password and a new password to update your account.</Trans>
+					Enter your current password and a new password to update your account.
 				</DialogDescription>
 			</DialogHeader>
 
@@ -82,7 +80,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Current Password</Trans>
+									Current Password
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
 									<FormControl>
@@ -110,7 +108,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>New Password</Trans>
+									New Password
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
 									<FormControl>
@@ -134,7 +132,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 
 					<DialogFooter>
 						<Button type="submit">
-							<Trans>Update Password</Trans>
+							Update Password
 						</Button>
 					</DialogFooter>
 				</form>

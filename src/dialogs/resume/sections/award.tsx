@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -58,7 +57,7 @@ export function CreateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new award</Trans>
+					Create a new award
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -69,11 +68,11 @@ export function CreateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -122,7 +121,7 @@ export function UpdateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing award</Trans>
+					Update an existing award
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -133,11 +132,11 @@ export function UpdateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -157,7 +156,7 @@ function AwardForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Title</Trans>
+							Title
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -173,7 +172,7 @@ function AwardForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans context="(noun) person, organization, or entity that gives an award">Awarder</Trans>
+							Awarder
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -189,7 +188,7 @@ function AwardForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Date</Trans>
+							Date
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -205,7 +204,7 @@ function AwardForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Website</Trans>
+							Website
 						</FormLabel>
 						<FormControl>
 							<URLInput
@@ -229,7 +228,7 @@ function AwardForm() {
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
 						<FormLabel className="!mt-0">
-							<Trans>Show link in title</Trans>
+							Show link in title
 						</FormLabel>
 					</FormItem>
 				)}
@@ -241,7 +240,7 @@ function AwardForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Description</Trans>
+							Description
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />

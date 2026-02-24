@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
 import { URLInput } from "@/components/input/url-input";
@@ -47,7 +46,7 @@ function BasicsSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Name</Trans>
+								Name
 							</FormLabel>
 							<FormControl>
 								<Input {...field} />
@@ -63,7 +62,7 @@ function BasicsSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Headline</Trans>
+								Headline
 							</FormLabel>
 							<FormControl>
 								<Input {...field} />
@@ -79,7 +78,7 @@ function BasicsSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Email</Trans>
+								Email
 							</FormLabel>
 							<FormControl>
 								<Input type="email" {...field} />
@@ -95,7 +94,7 @@ function BasicsSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Phone</Trans>
+								Phone
 							</FormLabel>
 							<FormControl>
 								<Input {...field} />
@@ -111,7 +110,7 @@ function BasicsSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Location</Trans>
+								Location
 							</FormLabel>
 							<FormControl>
 								<Input {...field} />
@@ -127,7 +126,7 @@ function BasicsSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Website</Trans>
+								Website
 							</FormLabel>
 							<FormControl>
 								<URLInput {...field} value={field.value} onChange={field.onChange} />

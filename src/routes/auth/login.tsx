@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
@@ -43,7 +41,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Signing in...`);
+		const toastId = toast.loading("Signing in...");
 
 		try {
 			const isEmail = data.identifier.includes("@");
@@ -75,7 +73,7 @@ function RouteComponent() {
 			toast.dismiss(toastId);
 			navigate({ to: "/dashboard", replace: true });
 		} catch {
-			toast.error(t`Failed to sign in. Please try again.`, { id: toastId });
+			toast.error("Failed to sign in. Please try again.", { id: toastId });
 		}
 	};
 
@@ -83,19 +81,17 @@ function RouteComponent() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>Sign in to your account</Trans>
+					Sign in to your account
 				</h1>
 
 				{!flags.disableSignups && (
 					<div className="text-muted-foreground">
-						<Trans>
-							Don't have an account?{" "}
+						Don't have an account?{" "}
 							<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
 								<Link to="/auth/register">
 									Create one now <ArrowRightIcon />
 								</Link>
 							</Button>
-						</Trans>
 					</div>
 				)}
 			</div>
@@ -109,7 +105,7 @@ function RouteComponent() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										<Trans>Email Address</Trans>
+										Email Address
 									</FormLabel>
 									<FormControl>
 										<Input
@@ -121,7 +117,7 @@ function RouteComponent() {
 									</FormControl>
 									<FormMessage />
 									<FormDescription>
-										<Trans>You can also use your username to login.</Trans>
+										You can also use your username to login.
 									</FormDescription>
 								</FormItem>
 							)}
@@ -134,12 +130,12 @@ function RouteComponent() {
 								<FormItem>
 									<div className="flex items-center justify-between">
 										<FormLabel>
-											<Trans>Password</Trans>
+											Password
 										</FormLabel>
 
 										<Button asChild tabIndex={-1} variant="link" className="h-auto p-0 text-xs leading-none">
 											<Link to="/auth/forgot-password">
-												<Trans>Forgot Password?</Trans>
+												Forgot Password?
 											</Link>
 										</Button>
 									</div>
@@ -164,7 +160,7 @@ function RouteComponent() {
 						/>
 
 						<Button type="submit" className="w-full">
-							<Trans>Sign in</Trans>
+							Sign in
 						</Button>
 					</form>
 				</Form>

@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { GithubLogoIcon, GoogleLogoIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -14,7 +12,7 @@ export function SocialAuth() {
 	const { data: authProviders = {} } = useQuery(orpc.auth.providers.list.queryOptions());
 
 	const handleSocialLogin = async (provider: string) => {
-		const toastId = toast.loading(t`Signing in...`);
+		const toastId = toast.loading("Signing in...");
 
 		const { error } = await authClient.signIn.social({
 			provider,
@@ -31,7 +29,7 @@ export function SocialAuth() {
 	};
 
 	const handleOAuthLogin = async () => {
-		const toastId = toast.loading(t`Signing in...`);
+		const toastId = toast.loading("Signing in...");
 
 		const { error } = await authClient.signIn.oauth2({
 			providerId: "custom",
@@ -52,9 +50,7 @@ export function SocialAuth() {
 			<div className="flex items-center gap-x-2">
 				<hr className="flex-1" />
 				<span className="font-medium text-xs tracking-wide">
-					<Trans context="Choose to authenticate with a social provider (Google, GitHub, etc.) instead of email and password">
-						or continue with
-					</Trans>
+					or continue with
 				</span>
 				<hr className="flex-1" />
 			</div>

@@ -1,4 +1,3 @@
-import { Plural, Trans } from "@lingui/react/macro";
 import {
 	ColumnsIcon,
 	CopySimpleIcon,
@@ -107,7 +106,7 @@ export function CustomSectionBuilder() {
 
 			{/* Add Custom Section Button */}
 			<SectionAddItemButton type="custom" variant="outline" className="rounded-md">
-				<Trans>Add a new custom section</Trans>
+				Add a new custom section
 			</SectionAddItemButton>
 		</SectionBase>
 	);
@@ -146,7 +145,7 @@ function CustomSectionContainer({ section }: { section: CustomSection }) {
 					</Badge>
 					<span className="line-clamp-1 text-wrap font-medium text-base">{section.title}</span>
 					<span className="text-muted-foreground text-xs">
-						<Plural value={section.items.length} one="# item" other="# items" />
+						{section.items.length === 1 ? `${section.items.length} item` : `${section.items.length} items`}
 					</span>
 				</button>
 
@@ -176,7 +175,7 @@ function CustomSectionContainer({ section }: { section: CustomSection }) {
 			{/* Add Item Button */}
 			<div className="border-t">
 				<SectionAddItemButton type={section.type} customSectionId={section.id}>
-					<Trans>Add a new item</Trans>
+					Add a new item
 				</SectionAddItemButton>
 			</div>
 		</div>
@@ -245,30 +244,30 @@ function CustomSectionDropdownMenu({ section }: { section: CustomSection }) {
 				<DropdownMenuGroup>
 					<DropdownMenuItem onSelect={onToggleSectionVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
-						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
+						{section.hidden ? Show : Hide}
 					</DropdownMenuItem>
 
 					<DropdownMenuItem onSelect={onUpdateSection}>
 						<PencilSimpleLineIcon />
-						<Trans>Update</Trans>
+						Update
 					</DropdownMenuItem>
 
 					<DropdownMenuItem onSelect={onDuplicateSection}>
 						<CopySimpleIcon />
-						<Trans>Duplicate</Trans>
+						Duplicate
 					</DropdownMenuItem>
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>
 							<ColumnsIcon />
-							<Trans>Columns</Trans>
+							Columns
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
 							<DropdownMenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
 								{[1, 2, 3, 4, 5, 6].map((column) => (
 									<DropdownMenuRadioItem key={column} value={column.toString()}>
-										<Plural value={column} one="# Column" other="# Columns" />
+										{column === 1 ? `${column} Column` : `${column} Columns`}
 									</DropdownMenuRadioItem>
 								))}
 							</DropdownMenuRadioGroup>
@@ -281,7 +280,7 @@ function CustomSectionDropdownMenu({ section }: { section: CustomSection }) {
 				<DropdownMenuGroup>
 					<DropdownMenuItem variant="destructive" onSelect={onDeleteSection}>
 						<TrashSimpleIcon />
-						<Trans>Delete</Trans>
+						Delete
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>

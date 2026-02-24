@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, IconContext, type IconProps, WarningIcon } from "@phosphor-icons/react";
 import { type RefObject, useMemo, useRef, useState } from "react";
 import { match } from "ts-pattern";
@@ -149,9 +148,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 			{showPageNumbers && totalNumberOfPages > 1 && (
 				<div className="absolute inset-s-0 -top-6 print:hidden">
 					<span className="font-medium text-foreground text-xs">
-						<Trans>
-							Page {pageNumber} of {totalNumberOfPages}
-						</Trans>
+						Page {pageNumber} of {totalNumberOfPages}
 					</span>
 				</div>
 			)}
@@ -171,12 +168,10 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 						<Alert className="max-w-sm text-yellow-600">
 							<WarningIcon color="currentColor" />
 							<AlertTitle>
-								<Trans>
-									The content is too tall for this page, this may cause undesirable results when exporting to PDF.
-								</Trans>
+								The content is too tall for this page, this may cause undesirable results when exporting to PDF.
 							</AlertTitle>
 							<AlertDescription className="text-xs underline-offset-2 group-hover/link:underline">
-								<Trans>Learn more about how to fit content on a page</Trans>
+								Learn more about how to fit content on a page
 								<ArrowRightIcon color="currentColor" className="ms-1 inline size-3" />
 							</AlertDescription>
 						</Alert>

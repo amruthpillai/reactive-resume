@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { CheckIcon, UserCircleIcon, WarningIcon } from "@phosphor-icons/react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
@@ -68,7 +66,7 @@ function RouteComponent() {
 			return;
 		}
 
-		toast.success(t`Your profile has been updated successfully.`);
+		toast.success("Your profile has been updated successfully.");
 		form.reset({ name: data.name, username: data.username, email: session.user.email });
 		router.invalidate();
 
@@ -84,7 +82,7 @@ function RouteComponent() {
 			}
 
 			toast.success(
-				t`A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.`,
+				"A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.",
 			);
 			form.reset({ name: data.name, username: data.username, email: session.user.email });
 			router.invalidate();
@@ -92,7 +90,7 @@ function RouteComponent() {
 	};
 
 	const handleResendVerificationEmail = async () => {
-		const toastId = toast.loading(t`Resending verification email...`);
+		const toastId = toast.loading("Resending verification email...");
 
 		const { error } = await authClient.sendVerificationEmail({
 			email: session.user.email,
@@ -105,7 +103,7 @@ function RouteComponent() {
 		}
 
 		toast.success(
-			t`A new verification link has been sent to your email address. Please check your inbox to verify your account.`,
+			"A new verification link has been sent to your email address. Please check your inbox to verify your account.",
 			{ id: toastId },
 		);
 		router.invalidate();
@@ -113,7 +111,7 @@ function RouteComponent() {
 
 	return (
 		<div className="space-y-4">
-			<DashboardHeader icon={UserCircleIcon} title={t`Profile`} />
+			<DashboardHeader icon={UserCircleIcon} title={"Profile"} />
 
 			<Separator />
 
@@ -131,7 +129,7 @@ function RouteComponent() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Name</Trans>
+									Name
 								</FormLabel>
 								<FormControl>
 									<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />
@@ -147,7 +145,7 @@ function RouteComponent() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Username</Trans>
+									Username
 								</FormLabel>
 								<FormControl>
 									<Input
@@ -170,7 +168,7 @@ function RouteComponent() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Email Address</Trans>
+									Email Address
 								</FormLabel>
 								<FormControl>
 									<Input
@@ -186,20 +184,20 @@ function RouteComponent() {
 									.with(true, () => (
 										<p className="flex items-center gap-x-1.5 text-green-700 text-xs">
 											<CheckIcon />
-											<Trans>Verified</Trans>
+											Verified
 										</p>
 									))
 									.with(false, () => (
 										<p className="flex items-center gap-x-1.5 text-amber-600 text-xs">
 											<WarningIcon className="size-3.5" />
-											<Trans>Unverified</Trans>
+											Unverified
 											<span>|</span>
 											<Button
 												variant="link"
 												className="h-auto gap-x-1.5 p-0! text-inherit text-xs"
 												onClick={handleResendVerificationEmail}
 											>
-												<Trans>Resend verification email</Trans>
+												Resend verification email
 											</Button>
 										</p>
 									))
@@ -217,11 +215,11 @@ function RouteComponent() {
 								className="flex items-center gap-x-4 justify-self-end"
 							>
 								<Button type="reset" variant="ghost" onClick={onCancel}>
-									<Trans>Cancel</Trans>
+									Cancel
 								</Button>
 
 								<Button type="submit">
-									<Trans>Save Changes</Trans>
+									Save Changes
 								</Button>
 							</motion.div>
 						)}

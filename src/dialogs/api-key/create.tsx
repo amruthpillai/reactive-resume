@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { CopyIcon, PlusIcon } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -49,7 +47,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = async (values: FormValues) => {
-		const toastId = toast.loading(t`Creating your API key...`);
+		const toastId = toast.loading("Creating your API key...");
 
 		const { data, error } = await authClient.apiKey.create({
 			name: values.name,
@@ -70,13 +68,11 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new API key</Trans>
+					Create a new API key
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>
-						This will generate a new API key to access the Reactive Resume API to allow machines to interact with your
+					This will generate a new API key to access the Reactive Resume API to allow machines to interact with your
 						resume data.
-					</Trans>
 				</DialogDescription>
 			</DialogHeader>
 
@@ -88,17 +84,15 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Name</Trans>
+									Name
 								</FormLabel>
 								<FormControl>
 									<Input min={1} max={64} {...field} />
 								</FormControl>
 								<FormMessage />
 								<FormDescription>
-									<Trans>
-										Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it
+									Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it
 										later.
-									</Trans>
 								</FormDescription>
 							</FormItem>
 						)}
@@ -110,7 +104,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Expires in</Trans>
+									Expires in
 								</FormLabel>
 								<FormControl>
 									<Combobox
@@ -120,22 +114,22 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 											{
 												// 1 month = 30 days
 												value: 3600 * 24 * 30,
-												label: t`1 month`,
+												label: "1 month",
 											},
 											{
 												// 3 months = 90 days
 												value: 3600 * 24 * 90,
-												label: t`3 months`,
+												label: "3 months",
 											},
 											{
 												// 6 months = 180 days
 												value: 3600 * 24 * 180,
-												label: t`6 months`,
+												label: "6 months",
 											},
 											{
 												// 1 year = 365 days
 												value: 3600 * 24 * 365,
-												label: t`1 year`,
+												label: "1 year",
 											},
 										]}
 									/>
@@ -147,7 +141,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 
 					<DialogFooter>
 						<Button type="submit">
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -167,7 +161,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 
 	const onCopy = () => {
 		copyToClipboard(apiKey);
-		toast.success(t`Your API key has been copied to the clipboard.`);
+		toast.success("Your API key has been copied to the clipboard.");
 	};
 
 	const onConfirm = () => {
@@ -180,10 +174,10 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<CopyIcon />
-					<Trans>Here's your new API key</Trans>
+					Here's your new API key
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>Copy this secret key and use it in your applications to access your data.</Trans>
+					Copy this secret key and use it in your applications to access your data.
 				</DialogDescription>
 			</DialogHeader>
 
@@ -198,13 +192,13 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 				</InputGroup>
 
 				<span className="font-medium text-muted-foreground text-sm">
-					<Trans>For security reasons, this key will only be displayed once.</Trans>
+					For security reasons, this key will only be displayed once.
 				</span>
 			</div>
 
 			<DialogFooter>
 				<Button onClick={onConfirm}>
-					<Trans>Confirm</Trans>
+					Confirm
 				</Button>
 			</DialogFooter>
 		</DialogContent>

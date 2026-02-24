@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,8 @@ export function GithubStarsButton() {
 
 	const ariaLabel =
 		starCount != null
-			? t`Star us on GitHub, currently ${starCount.toLocaleString()} stars (opens in new tab)`
-			: t`Star us on GitHub (opens in new tab)`;
+			? `Star us on GitHub, currently ${starCount.toLocaleString()} stars (opens in new tab)`
+			: "Star us on GitHub (opens in new tab)";
 
 	return (
 		<Button asChild variant="outline">

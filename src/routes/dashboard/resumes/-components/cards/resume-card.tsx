@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react";
 import { CircleNotchIcon, LockSimpleIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -16,20 +14,18 @@ type ResumeCardProps = {
 };
 
 export function ResumeCard({ resume }: ResumeCardProps) {
-	const { i18n } = useLingui();
-
 	const { data: screenshotData, isLoading } = useQuery(
 		orpc.printer.getResumeScreenshot.queryOptions({ input: { id: resume.id } }),
 	);
 
 	const updatedAt = useMemo(() => {
-		return Intl.DateTimeFormat(i18n.locale, { dateStyle: "long", timeStyle: "short" }).format(resume.updatedAt);
-	}, [i18n.locale, resume.updatedAt]);
+		return Intl.DateTimeFormat("en-US", { dateStyle: "long", timeStyle: "short" }).format(resume.updatedAt);
+	}, ["en-US", resume.updatedAt]);
 
 	return (
 		<ResumeContextMenu resume={resume}>
 			<Link to="/builder/$resumeId" params={{ resumeId: resume.id }} className="cursor-default">
-				<BaseCard title={resume.name} description={t`Last updated on ${updatedAt}`} tags={resume.tags}>
+				<BaseCard title={resume.name} description={`Last updated on ${updatedAt}`} tags={resume.tags}>
 					{match({ isLoading, imageSrc: screenshotData?.url })
 						.with({ isLoading: true }, () => (
 							<div className="flex size-full items-center justify-center">

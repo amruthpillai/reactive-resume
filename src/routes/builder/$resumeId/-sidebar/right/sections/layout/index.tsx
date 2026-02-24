@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -50,7 +49,7 @@ function LayoutSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Sidebar Width</Trans>
+								Sidebar Width
 							</FormLabel>
 							<div className="flex items-center gap-4">
 								<FormControl>

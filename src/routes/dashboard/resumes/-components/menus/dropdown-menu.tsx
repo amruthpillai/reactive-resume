@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import {
 	CopySimpleIcon,
 	FolderOpenIcon,
@@ -44,8 +42,8 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 
 	const handleToggleLock = async () => {
 		if (!resume.isLocked) {
-			const confirmation = await confirm(t`Are you sure you want to lock this resume?`, {
-				description: t`When locked, the resume cannot be updated or deleted.`,
+			const confirmation = await confirm("Are you sure you want to lock this resume?", {
+				description: "When locked, the resume cannot be updated or deleted.",
 			});
 
 			if (!confirmation) return;
@@ -62,19 +60,19 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 	};
 
 	const handleDelete = async () => {
-		const confirmation = await confirm(t`Are you sure you want to delete this resume?`, {
-			description: t`This action cannot be undone.`,
+		const confirmation = await confirm("Are you sure you want to delete this resume?", {
+			description: "This action cannot be undone.",
 		});
 
 		if (!confirmation) return;
 
-		const toastId = toast.loading(t`Deleting your resume...`);
+		const toastId = toast.loading("Deleting your resume...");
 
 		deleteResume(
 			{ id: resume.id },
 			{
 				onSuccess: () => {
-					toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
+					toast.success("Your resume has been deleted successfully.", { id: toastId });
 				},
 				onError: (error) => {
 					toast.error(error.message, { id: toastId });
@@ -91,7 +89,7 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 				<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
 					<DropdownMenuItem>
 						<FolderOpenIcon />
-						<Trans>Open</Trans>
+						Open
 					</DropdownMenuItem>
 				</Link>
 
@@ -99,24 +97,24 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 
 				<DropdownMenuItem disabled={resume.isLocked} onSelect={handleUpdate}>
 					<PencilSimpleLineIcon />
-					<Trans>Update</Trans>
+					Update
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onSelect={handleDuplicate}>
 					<CopySimpleIcon />
-					<Trans>Duplicate</Trans>
+					Duplicate
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onSelect={handleToggleLock}>
 					{resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
-					{resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
+					{resume.isLocked ? Unlock : Lock}
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
 				<DropdownMenuItem variant="destructive" disabled={resume.isLocked} onSelect={handleDelete}>
 					<TrashSimpleIcon />
-					<Trans>Delete</Trans>
+					Delete
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

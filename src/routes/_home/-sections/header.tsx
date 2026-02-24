@@ -1,10 +1,8 @@
-import { t } from "@lingui/core/macro";
-import { ArrowRightIcon, TranslateIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 import { GithubStarsButton } from "@/components/input/github-stars-button";
-import { LocaleCombobox } from "@/components/locale/combobox";
 import { ThemeToggleButton } from "@/components/theme/toggle-button";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { Button } from "@/components/ui/button";
@@ -51,28 +49,18 @@ export function Header() {
 		>
 			<ProductHuntBanner />
 
-			<nav aria-label={t`Main navigation`} className="container mx-auto flex items-center gap-x-4 p-3 lg:px-12">
-				<Link to="/" className="transition-opacity hover:opacity-80" aria-label={t`Reactive Resume - Go to homepage`}>
+			<nav aria-label={"Main navigation"} className="container mx-auto flex items-center gap-x-4 p-3 lg:px-12">
+				<Link to="/" className="transition-opacity hover:opacity-80" aria-label={"Reactive Resume - Go to homepage"}>
 					<BrandIcon className="size-10" />
 				</Link>
 
 				<div className="ml-auto flex items-center gap-x-2">
-					<LocaleCombobox
-						buttonProps={{
-							size: "icon",
-							variant: "ghost",
-							className: "justify-center",
-							"aria-label": t`Change language`,
-							children: () => <TranslateIcon aria-hidden="true" />,
-						}}
-					/>
-
 					<ThemeToggleButton />
 
 					<div className="hidden items-center gap-x-4 sm:flex">
 						<GithubStarsButton />
 
-						<Button asChild size="icon" aria-label={t`Go to dashboard`}>
+						<Button asChild size="icon" aria-label={"Go to dashboard"}>
 							<Link to="/dashboard">
 								<ArrowRightIcon aria-hidden="true" />
 							</Link>

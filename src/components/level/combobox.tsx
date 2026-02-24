@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { useMemo } from "react";
 import { match } from "ts-pattern";
 import type z from "zod";
@@ -11,13 +10,13 @@ type LevelTypeComboboxProps = Omit<ComboboxProps, "options">;
 
 export const getLevelTypeName = (type: LevelType) => {
 	return match(type)
-		.with("hidden", () => t`Hidden`)
-		.with("circle", () => t`Circle`)
-		.with("square", () => t`Square`)
-		.with("rectangle", () => t`Rectangle`)
-		.with("rectangle-full", () => t`Rectangle (Full Width)`)
-		.with("progress-bar", () => t`Progress Bar`)
-		.with("icon", () => t`Icon`)
+		.with("hidden", () => "Hidden")
+		.with("circle", () => "Circle")
+		.with("square", () => "Square")
+		.with("rectangle", () => "Rectangle")
+		.with("rectangle-full", () => "Rectangle (Full Width)")
+		.with("progress-bar", () => "Progress Bar")
+		.with("icon", () => "Icon")
 		.exhaustive();
 };
 

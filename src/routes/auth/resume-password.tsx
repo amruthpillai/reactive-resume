@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { EyeIcon, EyeSlashIcon, LockOpenIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
@@ -60,7 +58,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Verifying password...`);
+		const toastId = toast.loading("Verifying password...");
 
 		verifyPassword(
 			{ username, slug, password: data.password },
@@ -72,7 +70,7 @@ function RouteComponent() {
 				onError: (error) => {
 					if (error instanceof ORPCError && error.code === "INVALID_PASSWORD") {
 						toast.dismiss(toastId);
-						form.setError("password", { message: t`The password you entered is incorrect` });
+						form.setError("password", { message: "The password you entered is incorrect" });
 					} else {
 						toast.error(error.message, { id: toastId });
 					}
@@ -85,11 +83,11 @@ function RouteComponent() {
 		<>
 			<div className="space-y-4 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>The resume you are trying to access is password protected</Trans>
+					The resume you are trying to access is password protected
 				</h1>
 
 				<div className="text-muted-foreground leading-relaxed">
-					<Trans>Please enter the password shared with you by the owner of the resume to continue.</Trans>
+					Please enter the password shared with you by the owner of the resume to continue.
 				</div>
 			</div>
 
@@ -101,7 +99,7 @@ function RouteComponent() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Password</Trans>
+									Password
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
 									<FormControl>
@@ -125,7 +123,7 @@ function RouteComponent() {
 
 					<Button type="submit" className="w-full">
 						<LockOpenIcon />
-						<Trans>Unlock</Trans>
+						Unlock
 					</Button>
 				</form>
 			</Form>

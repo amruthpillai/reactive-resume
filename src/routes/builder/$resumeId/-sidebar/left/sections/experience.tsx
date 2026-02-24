@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, Reorder } from "motion/react";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -28,7 +27,7 @@ export function ExperienceSectionBuilder() {
 			</Reorder.Group>
 
 			<SectionAddItemButton type="experience">
-				<Trans>Add a new experience</Trans>
+				Add a new experience
 			</SectionAddItemButton>
 		</SectionBase>
 	);

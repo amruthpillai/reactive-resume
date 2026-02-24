@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { GithubLogoIcon, GoogleLogoIcon, PasswordIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
@@ -66,7 +65,7 @@ export function useAuthAccounts() {
 export function useAuthProviderActions() {
 	const link = useCallback(async (provider: AuthProvider) => {
 		const providerName = getProviderName(provider);
-		const toastId = toast.loading(t`Linking your ${providerName} account...`);
+		const toastId = toast.loading(`Linking your ${providerName} account...`);
 
 		const { error } = await authClient.linkSocial({ provider, callbackURL: "/dashboard/settings/authentication" });
 
@@ -80,7 +79,7 @@ export function useAuthProviderActions() {
 
 	const unlink = useCallback(async (provider: AuthProvider, accountId: string) => {
 		const providerName = getProviderName(provider);
-		const toastId = toast.loading(t`Unlinking your ${providerName} account...`);
+		const toastId = toast.loading(`Unlinking your ${providerName} account...`);
 
 		const { error } = await authClient.unlinkAccount({ providerId: provider, accountId });
 

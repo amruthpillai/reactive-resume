@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -79,10 +78,10 @@ export function CommandPalette() {
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogHeader className="sr-only print:hidden">
 				<DialogTitle>
-					<Trans>Builder Command Palette</Trans>
+					Builder Command Palette
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>Type a command or search...</Trans>
+					Type a command or search...
 				</DialogDescription>
 			</DialogHeader>
 
@@ -105,7 +104,7 @@ export function CommandPalette() {
 
 					<CommandList>
 						<CommandEmpty>
-							<Trans>The command you're looking for doesn't exist.</Trans>
+							The command you're looking for doesn't exist.
 						</CommandEmpty>
 
 						<ResumesCommandGroup />

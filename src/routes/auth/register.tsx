@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
@@ -57,7 +55,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Signing up...`);
+		const toastId = toast.loading("Signing up...");
 
 		const { error } = await authClient.signUp.email({
 			name: data.name,
@@ -83,18 +81,16 @@ function RouteComponent() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>Create a new account</Trans>
+					Create a new account
 				</h1>
 
 				<div className="text-muted-foreground">
-					<Trans>
-						Already have an account?{" "}
+					Already have an account?{" "}
 						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
 							<Link to="/auth/login">
 								Sign in now <ArrowRightIcon />
 							</Link>
 						</Button>
-					</Trans>
 				</div>
 			</div>
 
@@ -107,7 +103,7 @@ function RouteComponent() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										<Trans>Name</Trans>
+										Name
 									</FormLabel>
 									<FormControl>
 										<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
@@ -123,7 +119,7 @@ function RouteComponent() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										<Trans>Username</Trans>
+										Username
 									</FormLabel>
 									<FormControl>
 										<Input
@@ -146,7 +142,7 @@ function RouteComponent() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										<Trans>Email Address</Trans>
+										Email Address
 									</FormLabel>
 									<FormControl>
 										<Input
@@ -168,7 +164,7 @@ function RouteComponent() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										<Trans>Password</Trans>
+										Password
 									</FormLabel>
 									<div className="flex items-center gap-x-1.5">
 										<FormControl>
@@ -191,7 +187,7 @@ function RouteComponent() {
 						/>
 
 						<Button type="submit" className="w-full">
-							<Trans>Sign up</Trans>
+							Sign up
 						</Button>
 					</form>
 				</Form>
@@ -207,25 +203,25 @@ function PostSignupScreen() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>You've got mail!</Trans>
+					You've got mail!
 				</h1>
 				<p className="text-muted-foreground">
-					<Trans>Check your email for a link to verify your account.</Trans>
+					Check your email for a link to verify your account.
 				</p>
 			</div>
 
 			<Alert>
 				<AlertTitle>
-					<Trans>This step is optional, but recommended.</Trans>
+					This step is optional, but recommended.
 				</AlertTitle>
 				<AlertDescription>
-					<Trans>Verifying your email is required when resetting your password.</Trans>
+					Verifying your email is required when resetting your password.
 				</AlertDescription>
 			</Alert>
 
 			<Button asChild>
 				<Link to="/dashboard">
-					<Trans>Continue</Trans> <ArrowRightIcon />
+					Continue <ArrowRightIcon />
 				</Link>
 			</Button>
 		</>

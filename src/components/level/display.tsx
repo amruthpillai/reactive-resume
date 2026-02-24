@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import type z from "zod";
 import type { levelDesignSchema } from "@/schema/resume/data";
 import { cn } from "@/utils/style";
@@ -13,7 +12,7 @@ export function LevelDisplay({ icon, type, level, className, ...props }: Props) 
 	return (
 		<div
 			role="presentation"
-			aria-label={t`Level ${level} of 5`}
+			aria-label={`Level ${level} of 5`}
 			className={cn(
 				"flex items-center gap-x-1.5",
 				type === "progress-bar" && "gap-x-0",

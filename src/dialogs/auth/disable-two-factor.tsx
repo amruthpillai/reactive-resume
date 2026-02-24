@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, LockOpenIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
@@ -36,7 +34,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Disabling two-factor authentication...`);
+		const toastId = toast.loading("Disabling two-factor authentication...");
 
 		const { error } = await authClient.twoFactor.disable({ password: data.password });
 
@@ -45,7 +43,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 			return;
 		}
 
-		toast.success(t`Two-factor authentication has been disabled successfully.`, { id: toastId });
+		toast.success("Two-factor authentication has been disabled successfully.", { id: toastId });
 		router.invalidate();
 		closeDialog();
 		form.reset();
@@ -56,13 +54,11 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<LockOpenIcon />
-					<Trans>Disable Two-Factor Authentication</Trans>
+					Disable Two-Factor Authentication
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>
-						Enter your password to disable two-factor authentication. Your account will be less secure without 2FA
+					Enter your password to disable two-factor authentication. Your account will be less secure without 2FA
 						enabled.
-					</Trans>
 				</DialogDescription>
 			</DialogHeader>
 
@@ -74,7 +70,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Password</Trans>
+									Password
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
 									<FormControl>
@@ -98,7 +94,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 
 					<DialogFooter>
 						<Button type="submit" variant="destructive">
-							<Trans>Disable 2FA</Trans>
+							Disable 2FA
 						</Button>
 					</DialogFooter>
 				</form>

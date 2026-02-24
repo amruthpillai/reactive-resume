@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { createFileRoute, redirect, SearchParamError, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
@@ -47,7 +45,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Resetting your password...`);
+		const toastId = toast.loading("Resetting your password...");
 
 		const { error } = await authClient.resetPassword({ token, newPassword: data.password });
 
@@ -56,7 +54,7 @@ function RouteComponent() {
 			return;
 		}
 
-		toast.success(t`Your password has been reset successfully. You can now sign in with your new password.`, {
+		toast.success("Your password has been reset successfully. You can now sign in with your new password.", {
 			id: toastId,
 		});
 		navigate({ to: "/auth/login" });
@@ -66,11 +64,11 @@ function RouteComponent() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-bold text-2xl tracking-tight">
-					<Trans>Reset your password</Trans>
+					Reset your password
 				</h1>
 
 				<div className="text-muted-foreground">
-					<Trans>Please enter a new password for your account</Trans>
+					Please enter a new password for your account
 				</div>
 			</div>
 
@@ -82,7 +80,7 @@ function RouteComponent() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>New Password</Trans>
+									New Password
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
 									<FormControl>
@@ -105,7 +103,7 @@ function RouteComponent() {
 					/>
 
 					<Button type="submit" className="w-full">
-						<Trans>Reset Password</Trans>
+						Reset Password
 					</Button>
 				</form>
 			</Form>

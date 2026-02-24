@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { FloppyDiskIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -15,7 +14,7 @@ function RouteComponent() {
 	useHotkeys(
 		["ctrl+s", "meta+s"],
 		() => {
-			toast.info(t`Your changes are saved automatically.`, {
+			toast.info("Your changes are saved automatically.", {
 				id: "auto-save",
 				icon: <FloppyDiskIcon />,
 			});

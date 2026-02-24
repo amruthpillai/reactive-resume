@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { TagIcon } from "@phosphor-icons/react";
 import { useCallback, useMemo } from "react";
 import type z from "zod";
@@ -64,7 +62,7 @@ export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) 
 				<InputGroupAddon align="inline-end">
 					<Popover>
 						<PopoverTrigger asChild>
-							<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
+							<InputGroupButton size="icon-sm" title={"Add a label to the URL"}>
 								<TagIcon />
 							</InputGroupButton>
 						</PopoverTrigger>
@@ -72,7 +70,7 @@ export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) 
 						<PopoverContent className="pt-3">
 							<div className="grid gap-2" onClick={(e) => e.stopPropagation()}>
 								<Label htmlFor="url-label">
-									<Trans>Label</Trans>
+									Label
 								</Label>
 								<Input id="url-label" name="url-label" value={value.label} onChange={handleLabelChange} />
 							</div>

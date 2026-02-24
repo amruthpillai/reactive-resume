@@ -1,6 +1,4 @@
 import { useChat } from "@ai-sdk/react";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { eventIteratorToUnproxiedDataStream } from "@orpc/client";
 import {
 	CheckCircleIcon,
@@ -95,11 +93,11 @@ function formatPath(path: string): string {
 function formatOperationLabel(op: string): string {
 	switch (op) {
 		case "replace":
-			return t`Updated`;
+			return "Updated";
 		case "add":
-			return t`Added`;
+			return "Added";
 		case "remove":
-			return t`Removed`;
+			return "Removed";
 		default:
 			return op;
 	}
@@ -315,13 +313,13 @@ export function AIChat() {
 				{/* Header with clear button */}
 				<div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
 					<p className="font-medium text-muted-foreground text-xs">
-						<Trans>AI Chat</Trans>
+						AI Chat
 					</p>
 					<Button
 						size="icon-sm"
 						variant="ghost"
 						className="size-7"
-						title={t`Clear chat history`}
+						title={"Clear chat history"}
 						onClick={handleClearMessages}
 						disabled={messages.length === 0 || isLoading}
 					>
@@ -335,7 +333,7 @@ export function AIChat() {
 						{messages.length === 0 && (
 							<div className="flex h-full items-center justify-center py-6">
 								<p className="text-center text-muted-foreground text-xs">
-									<Trans>Ask me to update your resume...</Trans>
+									Ask me to update your resume...
 								</p>
 							</div>
 						)}
@@ -370,7 +368,7 @@ export function AIChat() {
 										<div className="flex items-center gap-2 text-[13px] text-muted-foreground">
 											<CircleNotchIcon className="size-3 animate-spin" />
 											<span>
-												<Trans>Thinking...</Trans>
+												Thinking...
 											</span>
 										</div>
 									</div>
@@ -389,7 +387,7 @@ export function AIChat() {
 						value={input}
 						disabled={!enabled || isLoading}
 						onChange={(e) => setInput(e.target.value)}
-						placeholder={t`e.g. Change my name to...`}
+						placeholder={"e.g. Change my name to..."}
 						className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
 					/>
 					{isLoading ? (

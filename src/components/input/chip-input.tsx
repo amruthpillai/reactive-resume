@@ -14,7 +14,6 @@ import {
 	useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleIcon, XIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -292,9 +291,7 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 					onChange={handleInputChange}
 				/>
 				<p className="text-muted-foreground text-xs">
-					<Trans>
-						Press <Kbd>{RETURN_KEY}</Kbd> or <Kbd>{COMMA_KEY}</Kbd> to add or save the current keyword.
-					</Trans>
+					Press <Kbd>{RETURN_KEY}</Kbd> or <Kbd>{COMMA_KEY}</Kbd> to add or save the current keyword.
 				</p>
 			</div>
 		</div>

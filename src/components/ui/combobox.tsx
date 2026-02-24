@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { CaretUpDownIcon, CheckIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -38,9 +37,9 @@ function Combobox<TValue extends string | number = string>({
 	options,
 	value,
 	defaultValue = null,
-	placeholder = t`Select...`,
-	searchPlaceholder = t`Search...`,
-	emptyMessage = t`No results found.`,
+	placeholder = "Select...",
+	searchPlaceholder = "Search...",
+	emptyMessage = "No results found.",
 	className,
 	buttonProps,
 	onValueChange,

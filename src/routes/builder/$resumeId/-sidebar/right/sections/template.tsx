@@ -1,4 +1,3 @@
-import { useLingui } from "@lingui/react";
 import { SwapIcon } from "@phosphor-icons/react";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +15,6 @@ export function TemplateSectionBuilder() {
 }
 
 function TemplateSectionForm() {
-	const { i18n } = useLingui();
 	const openDialog = useDialogStore((state) => state.openDialog);
 	const template = useResumeStore((state) => state.resume.data.metadata.template);
 
@@ -45,7 +43,7 @@ function TemplateSectionForm() {
 			<div className="flex flex-1 flex-col space-y-4 @md:pt-1 @md:pb-3">
 				<div className="space-y-1">
 					<h3 className="font-semibold text-2xl capitalize tracking-tight">{metadata.name}</h3>
-					<p className="text-muted-foreground text-sm">{i18n.t(metadata.description)}</p>
+					<p className="text-muted-foreground text-sm">{metadata.description}</p>
 				</div>
 
 				<div className="flex flex-wrap gap-2.5">

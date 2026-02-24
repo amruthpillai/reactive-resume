@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
@@ -56,7 +55,7 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new interest</Trans>
+					Create a new interest
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -67,11 +66,11 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -117,7 +116,7 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing interest</Trans>
+					Update an existing interest
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -128,11 +127,11 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -170,7 +169,7 @@ function InterestForm() {
 					render={({ field }) => (
 						<FormItem className="flex-1">
 							<FormLabel>
-								<Trans>Name</Trans>
+								Name
 							</FormLabel>
 							<FormControl>
 								<Input className="rounded-l-none!" {...field} />
@@ -187,7 +186,7 @@ function InterestForm() {
 				render={({ field }) => (
 					<FormItem className="col-span-full">
 						<FormLabel>
-							<Trans>Keywords</Trans>
+							Keywords
 						</FormLabel>
 						<FormControl>
 							<ChipInput {...field} />

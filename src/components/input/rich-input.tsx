@@ -1,6 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react";
-import { Trans } from "@lingui/react/macro";
 import {
 	ArrowsInSimpleIcon,
 	ArrowsOutSimpleIcon,
@@ -105,8 +102,7 @@ type Props = UseEditorOptions & {
 };
 
 export function RichInput({ value, onChange, style, className, editorClassName, ...options }: Props) {
-	const { i18n } = useLingui();
-	const textDirection = isRTL(i18n.locale) ? "rtl" : undefined;
+	const textDirection = isRTL("en-US") ? "rtl" : undefined;
 	const [isFullscreen, setIsFullscreen] = useState(false);
 
 	const editor = useEditor({
@@ -152,7 +148,7 @@ export function RichInput({ value, onChange, style, className, editorClassName, 
 				size="icon"
 				variant="secondary"
 				className="absolute right-2 bottom-2 size-7"
-				title={isFullscreen ? t`Exit Fullscreen` : t`Fullscreen`}
+				title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
 				onClick={() => setIsFullscreen(!isFullscreen)}
 			>
 				{isFullscreen ? <ArrowsInSimpleIcon className="size-4" /> : <ArrowsOutSimpleIcon className="size-4" />}
@@ -298,7 +294,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				// Link
 				isLink: ctx.editor.isActive("link") ?? false,
 				setLink: async () => {
-					const url = await prompt(t`Please enter the URL you want to link to:`, {
+					const url = await prompt("Please enter the URL you want to link to:", {
 						defaultValue: "https://",
 					});
 
@@ -308,8 +304,8 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 					}
 
 					if (!z.url({ protocol: /^https?$/ }).safeParse(url).success) {
-						toast.error(t`The URL you entered is not valid.`, {
-							description: t`Valid URLs must start with http:// or https://.`,
+						toast.error("The URL you entered is not valid.", {
+							description: "Valid URLs must start with http:// or https://.",
 						});
 						return;
 					}
@@ -361,7 +357,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Bold`}
+				title={"Bold"}
 				pressed={state.isBold}
 				disabled={!state.canBold}
 				onPressedChange={state.toggleBold}
@@ -373,7 +369,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Italic`}
+				title={"Italic"}
 				pressed={state.isItalic}
 				disabled={!state.canItalic}
 				onPressedChange={state.toggleItalic}
@@ -385,7 +381,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Underline`}
+				title={"Underline"}
 				pressed={state.isUnderline}
 				disabled={!state.canUnderline}
 				onPressedChange={state.toggleUnderline}
@@ -397,7 +393,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Strike`}
+				title={"Strike"}
 				pressed={state.isStrike}
 				disabled={!state.canStrike}
 				onPressedChange={state.toggleStrike}
@@ -409,7 +405,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Highlight`}
+				title={"Highlight"}
 				pressed={state.isHighlight}
 				disabled={!state.canHighlight}
 				onPressedChange={state.toggleHighlight}
@@ -441,7 +437,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 						checked={state.isParagraph}
 						onCheckedChange={state.setParagraph}
 					>
-						<Trans>Paragraph</Trans>
+						Paragraph
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuCheckboxItem
@@ -449,42 +445,42 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 						checked={state.isHeading1}
 						onCheckedChange={state.toggleHeading1}
 					>
-						<Trans>Heading 1</Trans>
+						Heading 1
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canHeading2}
 						checked={state.isHeading2}
 						onCheckedChange={state.toggleHeading2}
 					>
-						<Trans>Heading 2</Trans>
+						Heading 2
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canHeading3}
 						checked={state.isHeading3}
 						onCheckedChange={state.toggleHeading3}
 					>
-						<Trans>Heading 3</Trans>
+						Heading 3
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canHeading4}
 						checked={state.isHeading4}
 						onCheckedChange={state.toggleHeading4}
 					>
-						<Trans>Heading 4</Trans>
+						Heading 4
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canHeading5}
 						checked={state.isHeading5}
 						onCheckedChange={state.toggleHeading5}
 					>
-						<Trans>Heading 5</Trans>
+						Heading 5
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canHeading6}
 						checked={state.isHeading6}
 						onCheckedChange={state.toggleHeading6}
 					>
-						<Trans>Heading 6</Trans>
+						Heading 6
 					</DropdownMenuCheckboxItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
@@ -508,28 +504,28 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 						checked={state.isLeftAlign}
 						onCheckedChange={state.toggleLeftAlign}
 					>
-						<Trans>Left Align</Trans>
+						Left Align
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canCenterAlign}
 						checked={state.isCenterAlign}
 						onCheckedChange={state.toggleCenterAlign}
 					>
-						<Trans>Center Align</Trans>
+						Center Align
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canRightAlign}
 						checked={state.isRightAlign}
 						onCheckedChange={state.toggleRightAlign}
 					>
-						<Trans>Right Align</Trans>
+						Right Align
 					</DropdownMenuCheckboxItem>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canJustifyAlign}
 						checked={state.isJustifyAlign}
 						onCheckedChange={state.toggleJustifyAlign}
 					>
-						<Trans>Justify Align</Trans>
+						Justify Align
 					</DropdownMenuCheckboxItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
@@ -540,7 +536,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Bullet List`}
+				title={"Bullet List"}
 				pressed={state.isBulletList}
 				disabled={!state.canBulletList}
 				onPressedChange={state.toggleBulletList}
@@ -552,7 +548,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Ordered List`}
+				title={"Ordered List"}
 				pressed={state.isOrderedList}
 				disabled={!state.canOrderedList}
 				onPressedChange={state.toggleOrderedList}
@@ -610,7 +606,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Inline Code`}
+				title={"Inline Code"}
 				pressed={state.isInlineCode}
 				disabled={!state.canInlineCode}
 				onPressedChange={state.toggleInlineCode}
@@ -622,7 +618,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				size={isFullscreen ? "lg" : "sm"}
 				tabIndex={-1}
 				className="rounded-none"
-				title={t`Code Block`}
+				title={"Code Block"}
 				pressed={state.isCodeBlock}
 				disabled={!state.canCodeBlock}
 				onPressedChange={state.toggleCodeBlock}
@@ -637,7 +633,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 						tabIndex={-1}
 						variant="ghost"
 						className="rounded-none"
-						title={t`Table`}
+						title={"Table"}
 					>
 						<TableIcon className="size-3.5" />
 					</Button>
@@ -646,39 +642,39 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				<DropdownMenuContent>
 					<DropdownMenuItem disabled={!state.canInsertTable} onSelect={state.insertTable}>
 						<PlusIcon />
-						<Trans>Insert Table</Trans>
+						Insert Table
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem disabled={!state.canAddColumnBefore} onSelect={state.addColumnBefore}>
 						<ColumnsPlusLeftIcon />
-						<Trans>Add Column Before</Trans>
+						Add Column Before
 					</DropdownMenuItem>
 					<DropdownMenuItem disabled={!state.canAddColumnAfter} onSelect={state.addColumnAfter}>
 						<ColumnsPlusRightIcon />
-						<Trans>Add Column After</Trans>
+						Add Column After
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem disabled={!state.canAddRowBefore} onSelect={state.addRowBefore}>
 						<RowsPlusTopIcon />
-						<Trans>Add Row Before</Trans>
+						Add Row Before
 					</DropdownMenuItem>
 					<DropdownMenuItem disabled={!state.canAddRowAfter} onSelect={state.addRowAfter}>
 						<RowsPlusBottomIcon />
-						<Trans>Add Row After</Trans>
+						Add Row After
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem disabled={!state.canDeleteColumn} onSelect={state.deleteColumn}>
 						<TrashSimpleIcon />
-						<Trans>Delete Column</Trans>
+						Delete Column
 					</DropdownMenuItem>
 					<DropdownMenuItem disabled={!state.canDeleteRow} onSelect={state.deleteRow}>
 						<TrashSimpleIcon />
-						<Trans>Delete Row</Trans>
+						Delete Row
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem variant="destructive" disabled={!state.canDeleteTable} onSelect={state.deleteTable}>
 						<TrashSimpleIcon />
-						<Trans>Delete Table</Trans>
+						Delete Table
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
@@ -688,7 +684,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				tabIndex={-1}
 				variant="ghost"
 				className="rounded-none"
-				title={t`New Line`}
+				title={"New Line"}
 				onClick={state.setHardBreak}
 			>
 				<KeyReturnIcon className="size-3.5" />
@@ -699,7 +695,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				tabIndex={-1}
 				variant="ghost"
 				className="rounded-none"
-				title={t`Separator`}
+				title={"Separator"}
 				onClick={state.setHorizontalRule}
 			>
 				<MinusIcon className="size-3.5" />

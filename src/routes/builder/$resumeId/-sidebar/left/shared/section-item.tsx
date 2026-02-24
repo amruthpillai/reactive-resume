@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import {
 	ArrowBendUpRightIcon,
 	CopySimpleIcon,
@@ -110,7 +109,7 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 		<DropdownMenuSub>
 			<DropdownMenuSubTrigger>
 				<ArrowBendUpRightIcon />
-				<Trans>Move to</Trans>
+				Move to
 			</DropdownMenuSubTrigger>
 
 			<DropdownMenuSubContent>
@@ -119,7 +118,7 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 					<DropdownMenuSub key={pageIndex}>
 						<DropdownMenuSubTrigger>
 							<FileIcon />
-							<Trans>Page {pageIndex + 1}</Trans>
+							Page {pageIndex + 1}
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
@@ -136,7 +135,7 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 							{/* Option to create a new section on this page */}
 							<DropdownMenuItem onSelect={() => handleNewSectionOnPage(pageIndex)}>
 								<FolderPlusIcon />
-								<Trans>New Section</Trans>
+								New Section
 							</DropdownMenuItem>
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>
@@ -147,7 +146,7 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 				{/* Option to create a new page with a new section */}
 				<DropdownMenuItem onSelect={handleNewPage}>
 					<PlusCircleIcon />
-					<Trans>New Page</Trans>
+					New Page
 				</DropdownMenuItem>
 			</DropdownMenuSubContent>
 		</DropdownMenuSub>
@@ -276,7 +275,7 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 					<DropdownMenuGroup>
 						<DropdownMenuItem onSelect={onToggleVisibility}>
 							{item.hidden ? <EyeIcon /> : <EyeClosedIcon />}
-							{item.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
+							{item.hidden ? Show : Hide}
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 
@@ -285,12 +284,12 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 					<DropdownMenuGroup>
 						<DropdownMenuItem onSelect={onUpdate}>
 							<PencilSimpleLineIcon />
-							<Trans>Update</Trans>
+							Update
 						</DropdownMenuItem>
 
 						<DropdownMenuItem onSelect={onDuplicate}>
 							<CopySimpleIcon />
-							<Trans>Duplicate</Trans>
+							Duplicate
 						</DropdownMenuItem>
 
 						<MoveItemSubmenu type={type} item={item} customSectionId={customSectionId} />
@@ -301,7 +300,7 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 					<DropdownMenuGroup>
 						<DropdownMenuItem variant="destructive" onSelect={onDelete}>
 							<TrashSimpleIcon />
-							<Trans>Delete</Trans>
+							Delete
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 				</DropdownMenuContent>

@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import {
 	ArrowUUpLeftIcon,
 	ArrowUUpRightIcon,
@@ -60,7 +59,7 @@ export function BuilderDock() {
 
 	const onCopyUrl = useCallback(async () => {
 		await copyToClipboard(publicUrl);
-		toast.success(t`A link to your resume has been copied to clipboard.`);
+		toast.success("A link to your resume has been copied to clipboard.");
 	}, [publicUrl, copyToClipboard]);
 
 	const onDownloadJSON = useCallback(async () => {
@@ -76,15 +75,15 @@ export function BuilderDock() {
 		if (!resume?.id) return;
 
 		const filename = generateFilename(resume.data.basics.name, "pdf");
-		const toastId = toast.loading(t`Please wait while your PDF is being generated...`, {
-			description: t`This may take a while depending on the server capacity. Please do not close the window or refresh the page.`,
+		const toastId = toast.loading("Please wait while your PDF is being generated...", {
+			description: "This may take a while depending on the server capacity. Please do not close the window or refresh the page.",
 		});
 
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
 			downloadFromUrl(url, filename);
 		} catch {
-			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
+			toast.error("There was a problem while generating the PDF, please try again in some time.");
 		} finally {
 			toast.dismiss(toastId);
 		}
@@ -118,15 +117,15 @@ export function BuilderDock() {
 					})}
 				/>
 				<div className="mx-1 h-8 w-px bg-border" />
-				<DockIcon icon={MagnifyingGlassPlusIcon} title={t`Zoom in`} onClick={() => zoomIn(0.1)} />
-				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.1)} />
-				<DockIcon icon={CubeFocusIcon} title={t`Center view`} onClick={() => centerView()} />
+				<DockIcon icon={MagnifyingGlassPlusIcon} title={"Zoom in"} onClick={() => zoomIn(0.1)} />
+				<DockIcon icon={MagnifyingGlassMinusIcon} title={"Zoom out"} onClick={() => zoomOut(0.1)} />
+				<DockIcon icon={CubeFocusIcon} title={"Center view"} onClick={() => centerView()} />
 				<div className="mx-1 h-8 w-px bg-border" />
 				<AIChat />
-				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
-				<DockIcon icon={FileJsIcon} title={t`Download JSON`} onClick={() => onDownloadJSON()} />
+				<DockIcon icon={LinkSimpleIcon} title={"Copy URL"} onClick={() => onCopyUrl()} />
+				<DockIcon icon={FileJsIcon} title={"Download JSON"} onClick={() => onDownloadJSON()} />
 				<DockIcon
-					title={t`Download PDF`}
+					title={"Download PDF"}
 					disabled={isPrinting}
 					onClick={() => onDownloadPDF()}
 					icon={isPrinting ? CircleNotchIcon : FilePdfIcon}

@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { DownloadSimpleIcon, FileIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
@@ -106,8 +104,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 		setIsLoading(true);
 
-		const toastId = toast.loading(t`Importing your resume...`, {
-			description: t`This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page.`,
+		const toastId = toast.loading("Importing your resume...", {
+			description: "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page.",
 		});
 
 		try {
@@ -133,7 +131,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 			if (values.type === "pdf") {
 				if (!isAIEnabled)
-					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
+					throw new Error("This feature requires AI Integration to be enabled. Please enable it in the settings.");
 
 				const arrayBuffer = await values.file.arrayBuffer();
 				const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
@@ -149,7 +147,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 			if (values.type === "docx") {
 				if (!isAIEnabled)
-					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
+					throw new Error("This feature requires AI Integration to be enabled. Please enable it in the settings.");
 
 				const arrayBuffer = await values.file.arrayBuffer();
 				const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
@@ -171,13 +169,13 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 			if (!data) throw new Error("No data was returned from the AI provider.");
 
 			await importResume({ data });
-			toast.success(t`Your resume has been imported successfully.`, { id: toastId, description: null });
+			toast.success("Your resume has been imported successfully.", { id: toastId, description: null });
 			closeDialog();
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				toast.error(error.message, { id: toastId, description: null });
 			} else {
-				toast.error(t`An unknown error occurred while importing your resume.`, { id: toastId, description: null });
+				toast.error("An unknown error occurred while importing your resume.", { id: toastId, description: null });
 			}
 		} finally {
 			setIsLoading(false);
@@ -189,13 +187,11 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<DownloadSimpleIcon />
-					<Trans>Import an existing resume</Trans>
+					Import an existing resume
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>
-						Continue where you left off by importing an existing resume you created using Reactive Resume or any another
+					Continue where you left off by importing an existing resume you created using Reactive Resume or any another
 						resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume.
-					</Trans>
 				</DialogDescription>
 			</DialogHeader>
 
@@ -207,7 +203,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									<Trans>Type</Trans>
+									Type
 								</FormLabel>
 								<FormControl>
 									<Combobox
@@ -222,7 +218,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 												value: "pdf",
 												label: (
 													<div className="flex items-center gap-x-2">
-														PDF <Badge>{t`AI`}</Badge>
+														PDF <Badge>{"AI"}</Badge>
 													</div>
 												),
 											},
@@ -230,7 +226,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 												value: "docx",
 												label: (
 													<div className="flex items-center gap-x-2">
-														Microsoft Word <Badge>{t`AI`}</Badge>
+														Microsoft Word <Badge>{"AI"}</Badge>
 													</div>
 												),
 											},
@@ -265,7 +261,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 											) : (
 												<>
 													<UploadSimpleIcon weight="thin" size={32} />
-													<Trans>Click here to select a file to import</Trans>
+													Click here to select a file to import
 												</>
 											)}
 										</Button>
@@ -279,7 +275,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 					<DialogFooter>
 						<Button type="submit" disabled={!type || isLoading}>
 							{isLoading ? <Spinner /> : null}
-							{isLoading ? t`Importing...` : t`Import`}
+							{isLoading ? "Importing..." : "Import"}
 						</Button>
 					</DialogFooter>
 				</form>

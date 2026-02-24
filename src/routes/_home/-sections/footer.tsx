@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import type { Icon } from "@phosphor-icons/react";
 import { GithubLogoIcon, LinkedinLogoIcon, XLogoIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
@@ -25,17 +23,17 @@ type SocialLink = {
 };
 
 const getResourceLinks = (): FooterLinkItem[] => [
-	{ url: "https://docs.rxresu.me", label: t`Documentation` },
-	{ url: "https://opencollective.com/reactive-resume", label: t`Sponsorships` },
-	{ url: "https://github.com/amruthpillai/reactive-resume", label: t`Source Code` },
-	{ url: "https://docs.rxresu.me/changelog", label: t`Changelog` },
+	{ url: "https://docs.rxresu.me", label: "Documentation" },
+	{ url: "https://opencollective.com/reactive-resume", label: "Sponsorships" },
+	{ url: "https://github.com/amruthpillai/reactive-resume", label: "Source Code" },
+	{ url: "https://docs.rxresu.me/changelog", label: "Changelog" },
 ];
 
 const getCommunityLinks = (): FooterLinkItem[] => [
-	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: t`Report an issue` },
-	{ url: "https://crowdin.com/project/reactive-resume", label: t`Translations` },
-	{ url: "https://reddit.com/r/reactiveresume", label: t`Subreddit` },
-	{ url: "https://discord.gg/aSyA5ZSxpb", label: t`Discord` },
+	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: "Report an issue" },
+	{ url: "https://crowdin.com/project/reactive-resume", label: "Translations" },
+	{ url: "https://reddit.com/r/reactiveresume", label: "Subreddit" },
+	{ url: "https://discord.gg/aSyA5ZSxpb", label: "Discord" },
 ];
 
 const socialLinks: SocialLink[] = [
@@ -62,10 +60,8 @@ export function Footer() {
 					<div className="space-y-2">
 						<h2 className="font-bold text-lg tracking-tight">Reactive Resume</h2>
 						<p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
-							<Trans>
-								A free and open-source resume builder that simplifies the process of creating, updating, and sharing
+							A free and open-source resume builder that simplifies the process of creating, updating, and sharing
 								your resume.
-							</Trans>
 						</p>
 					</div>
 
@@ -77,7 +73,7 @@ export function Footer() {
 									href={social.url}
 									target="_blank"
 									rel="noopener"
-									aria-label={`${social.label} (${t`opens in new tab`})`}
+									aria-label={`${social.label} (${"opens in new tab"})`}
 								>
 									<social.icon aria-hidden="true" size={18} />
 								</a>
@@ -87,10 +83,10 @@ export function Footer() {
 				</div>
 
 				{/* Resources Column */}
-				<FooterLinkGroup title={t`Resources`} links={getResourceLinks()} />
+				<FooterLinkGroup title={"Resources"} links={getResourceLinks()} />
 
 				{/* Community Column */}
-				<FooterLinkGroup title={t`Community`} links={getCommunityLinks()} />
+				<FooterLinkGroup title={"Community"} links={getCommunityLinks()} />
 
 				{/* Copyright Column */}
 				<div className="space-y-4 sm:col-span-2 lg:col-span-1">
@@ -127,7 +123,7 @@ function FooterLink({ url, label }: FooterLinkItem) {
 				className="relative inline-block text-sm transition-colors hover:text-foreground"
 			>
 				{label}
-				<span className="sr-only"> ({t`opens in new tab`})</span>
+				<span className="sr-only"> ({"opens in new tab"})</span>
 
 				<motion.div
 					aria-hidden="true"

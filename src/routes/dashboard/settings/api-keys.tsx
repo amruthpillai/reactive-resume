@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { BookOpenIcon, KeyIcon, LinkSimpleIcon, PlusIcon, TrashSimpleIcon } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -34,15 +32,15 @@ function RouteComponent() {
 	});
 
 	const onDelete = async (id: string) => {
-		const confirmation = await confirm(t`Are you sure you want to delete this API key?`, {
-			description: t`The API key will no longer be able to access your data after deletion. This action cannot be undone.`,
-			confirmText: t`Delete`,
-			cancelText: t`Cancel`,
+		const confirmation = await confirm("Are you sure you want to delete this API key?", {
+			description: "The API key will no longer be able to access your data after deletion. This action cannot be undone.",
+			confirmText: "Delete",
+			cancelText: "Cancel",
 		});
 
 		if (!confirmation) return;
 
-		const toastId = toast.loading(t`Deleting your API key...`);
+		const toastId = toast.loading("Deleting your API key...");
 
 		const { error } = await authClient.apiKey.delete({ keyId: id });
 
@@ -51,13 +49,13 @@ function RouteComponent() {
 			return;
 		}
 
-		toast.success(t`The API key has been deleted successfully.`, { id: toastId });
+		toast.success("The API key has been deleted successfully.", { id: toastId });
 		queryClient.invalidateQueries({ queryKey: ["auth", "api-keys"] });
 	};
 
 	return (
 		<div className="space-y-4">
-			<DashboardHeader icon={KeyIcon} title={t`API Keys`} />
+			<DashboardHeader icon={KeyIcon} title={"API Keys"} />
 
 			<Separator />
 
@@ -74,20 +72,18 @@ function RouteComponent() {
 
 					<div className="flex-1 space-y-2">
 						<h3 className="font-semibold">
-							<Trans>How do I use the API?</Trans>
+							How do I use the API?
 						</h3>
 
 						<p className="text-muted-foreground leading-relaxed">
-							<Trans>
-								Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find
+							Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find
 								detailed endpoints, request examples, and authentication methods.
-							</Trans>
 						</p>
 
 						<Button asChild variant="link">
 							<a href="https://docs.rxresu.me/api-reference" target="_blank" rel="noopener">
 								<LinkSimpleIcon />
-								<Trans>API Reference</Trans>
+								API Reference
 							</a>
 						</Button>
 					</div>
@@ -102,7 +98,7 @@ function RouteComponent() {
 						onClick={() => openDialog("api-key.create", undefined)}
 					>
 						<PlusIcon />
-						<Trans>Create a new API key</Trans>
+						Create a new API key
 					</Button>
 
 					<AnimatePresence>
@@ -120,7 +116,7 @@ function RouteComponent() {
 								<div className="flex-1 space-y-1">
 									<p className="font-mono text-xs">{key.start}...</p>
 									<div className="text-muted-foreground text-xs">
-										<Trans>Expires on {key.expiresAt?.toLocaleDateString()}</Trans>
+										Expires on {key.expiresAt?.toLocaleDateString()}
 									</div>
 								</div>
 

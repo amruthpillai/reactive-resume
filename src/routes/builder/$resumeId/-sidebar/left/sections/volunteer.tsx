@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, Reorder } from "motion/react";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -34,7 +33,7 @@ export function VolunteerSectionBuilder() {
 			</Reorder.Group>
 
 			<SectionAddItemButton type="volunteer">
-				<Trans>Add a new volunteer experience</Trans>
+				Add a new volunteer experience
 			</SectionAddItemButton>
 		</SectionBase>
 	);

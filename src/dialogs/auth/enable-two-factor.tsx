@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { ArrowDownIcon, CopyIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
@@ -68,7 +66,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 	});
 
 	const onEnableSubmit = async (values: EnableFormValues) => {
-		const toastId = toast.loading(t`Enabling two-factor authentication...`);
+		const toastId = toast.loading("Enabling two-factor authentication...");
 
 		const { data, error } = await authClient.twoFactor.enable({
 			password: values.password,
@@ -86,12 +84,12 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 			setStep("verify");
 			toast.dismiss(toastId);
 		} else {
-			toast.error(t`Failed to setup two-factor authentication.`, { id: toastId });
+			toast.error("Failed to setup two-factor authentication.", { id: toastId });
 		}
 	};
 
 	const onVerifySubmit = async (data: VerifyFormValues) => {
-		const toastId = toast.loading(t`Verifying code...`);
+		const toastId = toast.loading("Verifying code...");
 
 		const { error } = await authClient.twoFactor.verifyTotp({ code: data.code });
 
@@ -105,7 +103,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 	};
 
 	const onConfirmBackup = () => {
-		toast.success(t`Two-factor authentication has been setup successfully.`);
+		toast.success("Two-factor authentication has been setup successfully.");
 		router.invalidate();
 		closeDialog();
 		onReset();
@@ -124,13 +122,13 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 		const secret = extractSecretFromTotpUri(totpUri);
 		if (!secret) return;
 		await navigator.clipboard.writeText(secret);
-		toast.success(t`Secret copied to clipboard.`);
+		toast.success("Secret copied to clipboard.");
 	};
 
 	const handleCopyBackupCodes = async () => {
 		if (!backupCodes) return;
 		await navigator.clipboard.writeText(backupCodes.join("\n"));
-		toast.success(t`Backup codes copied to clipboard.`);
+		toast.success("Backup codes copied to clipboard.");
 	};
 
 	const handleDownloadBackupCodes = () => {
@@ -152,26 +150,22 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 			<DialogHeader>
 				<DialogTitle>
 					{match(step)
-						.with("enable", () => <Trans>Enable Two-Factor Authentication</Trans>)
-						.with("verify", () => <Trans>Setup Authenticator App</Trans>)
-						.with("backup", () => <Trans>Copy Backup Codes</Trans>)
+						.with("enable", () => Enable Two-Factor Authentication)
+						.with("verify", () => Setup Authenticator App)
+						.with("backup", () => Copy Backup Codes)
 						.exhaustive()}
 				</DialogTitle>
 				<DialogDescription>
 					{match(step)
 						.with("enable", () => (
-							<Trans>
-								Enter your password to confirm setting up two-factor authentication. When enabled, you'll need to enter
+							Enter your password to confirm setting up two-factor authentication. When enabled, you'll need to enter
 								a code from your authenticator app every time you log in.
-							</Trans>
 						))
 						.with("verify", () => (
-							<Trans>
-								Scan the QR code below with your preferred authenticator app. You can also copy the secret below and
+							Scan the QR code below with your preferred authenticator app. You can also copy the secret below and
 								paste it into your app.
-							</Trans>
 						))
-						.with("backup", () => <Trans>Copy and store these backup codes in case you lose your device.</Trans>)
+						.with("backup", () => Copy and store these backup codes in case you lose your device.)
 						.exhaustive()}
 				</DialogDescription>
 			</DialogHeader>
@@ -186,7 +180,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											<Trans>Password</Trans>
+											Password
 										</FormLabel>
 										<div className="flex items-center gap-x-1.5">
 											<FormControl>
@@ -210,7 +204,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
 							<DialogFooter>
 								<Button type="submit">
-									<Trans>Continue</Trans>
+									Continue
 								</Button>
 							</DialogFooter>
 						</form>
@@ -234,7 +228,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 							)}
 
 							<p>
-								<Trans>Then, enter the 6 digit code that the app provides to continue.</Trans>
+								Then, enter the 6 digit code that the app provides to continue.
 							</p>
 
 							<Form {...verifyForm}>
@@ -270,10 +264,10 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
 									<DialogFooter className="gap-x-2">
 										<Button type="button" variant="outline" onClick={requestClose}>
-											<Trans>Cancel</Trans>
+											Cancel
 										</Button>
 										<Button type="submit">
-											<Trans>Continue</Trans>
+											Continue
 										</Button>
 									</DialogFooter>
 								</form>
@@ -296,11 +290,11 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 								<div className="flex items-center gap-x-2">
 									<Button type="button" variant="outline" onClick={handleDownloadBackupCodes} className="flex-1">
 										<ArrowDownIcon className="me-2 size-4" />
-										<Trans>Download</Trans>
+										Download
 									</Button>
 									<Button type="button" variant="ghost" onClick={handleCopyBackupCodes} className="flex-1">
 										<CopyIcon className="me-2 size-4" />
-										<Trans>Copy</Trans>
+										Copy
 									</Button>
 								</div>
 							</div>
@@ -308,7 +302,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
 						<DialogFooter>
 							<Button type="button" onClick={onConfirmBackup}>
-								<Trans>Continue</Trans>
+								Continue
 							</Button>
 						</DialogFooter>
 					</div>

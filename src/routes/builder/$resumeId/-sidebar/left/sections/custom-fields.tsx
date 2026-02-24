@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, LinkIcon, ListPlusIcon, XIcon } from "@phosphor-icons/react";
 import { Reorder, useDragControls } from "motion/react";
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
@@ -98,7 +97,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 						<PopoverContent align="center">
 							<div className="flex flex-col gap-y-1.5">
 								<span className="text-muted-foreground text-xs">
-									<Trans>Enter the URL to link to</Trans>
+									Enter the URL to link to
 								</span>
 
 								<Controller
@@ -128,7 +127,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 
 			<Button variant="ghost" onClick={handleAdd}>
 				<ListPlusIcon />
-				<Trans>Add a custom field</Trans>
+				Add a custom field
 			</Button>
 		</Reorder.Group>
 	);

@@ -11,8 +11,6 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { type CSSProperties, forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 import { match } from "ts-pattern";
@@ -28,8 +26,8 @@ type ColumnId = "main" | "sidebar";
 
 const getColumnLabel = (columnId: ColumnId): string => {
 	return match(columnId)
-		.with("main", () => t`Main`)
-		.with("sidebar", () => t`Sidebar`)
+		.with("main", () => "Main")
+		.with("sidebar", () => "Sidebar")
 		.exhaustive();
 };
 
@@ -228,7 +226,7 @@ export function LayoutPages() {
 
 				<Button variant="outline" className="self-end" onClick={handleAddPage}>
 					<PlusIcon />
-					<Trans>Add Page</Trans>
+					Add Page
 				</Button>
 			</div>
 
@@ -261,14 +259,14 @@ function PageContainer({
 			<div className="flex items-center justify-between bg-secondary/50 px-4 py-3">
 				<div className="flex w-full items-center gap-4">
 					<span className="font-medium text-xs">
-						<Trans>Page {pageIndex + 1}</Trans>
+						Page {pageIndex + 1}
 					</span>
 
 					<label className="flex cursor-pointer items-center gap-2">
 						<Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
 
 						<span className="font-medium text-muted-foreground text-xs">
-							<Trans>Full Width</Trans>
+							Full Width
 						</span>
 					</label>
 				</div>
@@ -276,7 +274,7 @@ function PageContainer({
 				{canDelete && (
 					<Button variant="ghost" onClick={() => onDelete(pageIndex)} className="h-5 w-auto gap-x-2.5 px-0!">
 						<TrashIcon />
-						<Trans>Delete Page</Trans>
+						Delete Page
 					</Button>
 				)}
 			</div>
@@ -347,7 +345,7 @@ function LayoutColumn({
 
 					{items.length === 0 && (
 						<div className="rounded-md border border-dashed p-4 font-medium text-muted-foreground text-xs">
-							<Trans>Drag and drop sections here to move them between columns</Trans>
+							Drag and drop sections here to move them between columns
 						</div>
 					)}
 				</div>

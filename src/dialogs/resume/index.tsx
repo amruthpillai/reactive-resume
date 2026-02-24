@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { CaretDownIcon, MagicWandIcon, PencilSimpleLineIcon, PlusIcon, TestTubeIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -60,16 +58,16 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (data: FormValues) => {
-		const toastId = toast.loading(t`Creating your resume...`);
+		const toastId = toast.loading("Creating your resume...");
 
 		createResume(data, {
 			onSuccess: () => {
-				toast.success(t`Your resume has been created successfully.`, { id: toastId });
+				toast.success("Your resume has been created successfully.", { id: toastId });
 				closeDialog();
 			},
 			onError: (error) => {
 				if (error.message === "RESUME_SLUG_ALREADY_EXISTS") {
-					toast.error(t`A resume with this slug already exists.`, { id: toastId });
+					toast.error("A resume with this slug already exists.", { id: toastId });
 					return;
 				}
 
@@ -89,11 +87,11 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 			withSampleData: true,
 		} satisfies RouterInput["resume"]["create"];
 
-		const toastId = toast.loading(t`Creating your resume...`);
+		const toastId = toast.loading("Creating your resume...");
 
 		createResume(data, {
 			onSuccess: () => {
-				toast.success(t`Your resume has been created successfully.`, { id: toastId });
+				toast.success("Your resume has been created successfully.", { id: toastId });
 				closeDialog();
 			},
 			onError: (error) => {
@@ -107,10 +105,10 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new resume</Trans>
+					Create a new resume
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>Start building your resume by giving it a name.</Trans>
+					Start building your resume by giving it a name.
 				</DialogDescription>
 			</DialogHeader>
 
@@ -121,7 +119,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 					<DialogFooter>
 						<ButtonGroup aria-label="Create Resume with Options" className="gap-x-px rtl:flex-row-reverse">
 							<Button type="submit" disabled={isPending}>
-								<Trans>Create</Trans>
+								Create
 							</Button>
 
 							<DropdownMenu>
@@ -134,7 +132,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 								<DropdownMenuContent align="end" className="w-fit">
 									<DropdownMenuItem onSelect={onCreateSampleResume}>
 										<TestTubeIcon />
-										<Trans>Create a Sample Resume</Trans>
+										Create a Sample Resume
 									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
@@ -171,16 +169,16 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (data: FormValues) => {
-		const toastId = toast.loading(t`Updating your resume...`);
+		const toastId = toast.loading("Updating your resume...");
 
 		updateResume(data, {
 			onSuccess: () => {
-				toast.success(t`Your resume has been updated successfully.`, { id: toastId });
+				toast.success("Your resume has been updated successfully.", { id: toastId });
 				closeDialog();
 			},
 			onError: (error) => {
 				if (error.message === "RESUME_SLUG_ALREADY_EXISTS") {
-					toast.error(t`A resume with this slug already exists.`, { id: toastId });
+					toast.error("A resume with this slug already exists.", { id: toastId });
 					return;
 				}
 
@@ -194,10 +192,10 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update Resume</Trans>
+					Update Resume
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>Changed your mind? Rename your resume to something more descriptive.</Trans>
+					Changed your mind? Rename your resume to something more descriptive.
 				</DialogDescription>
 			</DialogHeader>
 
@@ -207,7 +205,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 
 					<DialogFooter>
 						<Button type="submit" disabled={isPending}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -242,11 +240,11 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (values: FormValues) => {
-		const toastId = toast.loading(t`Duplicating your resume...`);
+		const toastId = toast.loading("Duplicating your resume...");
 
 		duplicateResume(values, {
 			onSuccess: async (id) => {
-				toast.success(t`Your resume has been duplicated successfully.`, { id: toastId });
+				toast.success("Your resume has been duplicated successfully.", { id: toastId });
 				closeDialog();
 
 				if (data.shouldRedirect) {
@@ -264,10 +262,10 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Duplicate Resume</Trans>
+					Duplicate Resume
 				</DialogTitle>
 				<DialogDescription>
-					<Trans>Duplicate your resume to create a new one, just like the original.</Trans>
+					Duplicate your resume to create a new one, just like the original.
 				</DialogDescription>
 			</DialogHeader>
 
@@ -277,7 +275,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 
 					<DialogFooter>
 						<Button type="submit" disabled={isPending}>
-							<Trans>Duplicate</Trans>
+							Duplicate
 						</Button>
 					</DialogFooter>
 				</form>
@@ -306,20 +304,20 @@ function ResumeForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Name</Trans>
+							Name
 						</FormLabel>
 						<div className="flex items-center gap-x-2">
 							<FormControl>
 								<Input min={1} max={64} {...field} />
 							</FormControl>
 
-							<Button size="icon" variant="outline" title={t`Generate a random name`} onClick={onGenerateName}>
+							<Button size="icon" variant="outline" title={"Generate a random name"} onClick={onGenerateName}>
 								<MagicWandIcon />
 							</Button>
 						</div>
 						<FormMessage />
 						<FormDescription>
-							<Trans>Tip: You can name the resume referring to the position you are applying for.</Trans>
+							Tip: You can name the resume referring to the position you are applying for.
 						</FormDescription>
 					</FormItem>
 				)}
@@ -331,7 +329,7 @@ function ResumeForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Slug</Trans>
+							Slug
 						</FormLabel>
 						<FormControl>
 							<InputGroup>
@@ -343,7 +341,7 @@ function ResumeForm() {
 						</FormControl>
 						<FormMessage />
 						<FormDescription>
-							<Trans>This is a URL-friendly name for your resume.</Trans>
+							This is a URL-friendly name for your resume.
 						</FormDescription>
 					</FormItem>
 				)}
@@ -355,14 +353,14 @@ function ResumeForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Tags</Trans>
+							Tags
 						</FormLabel>
 						<FormControl>
 							<ChipInput {...field} />
 						</FormControl>
 						<FormMessage />
 						<FormDescription>
-							<Trans>Tags can be used to categorize your resume by keywords.</Trans>
+							Tags can be used to categorize your resume by keywords.
 						</FormDescription>
 					</FormItem>
 				)}

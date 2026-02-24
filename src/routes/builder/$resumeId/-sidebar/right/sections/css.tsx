@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { lazy, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import type z from "zod";
@@ -62,7 +61,7 @@ function CSSSectionForm() {
 									/>
 								</FormControl>
 
-								<Trans context="Turn On/Apply Custom CSS">Enable</Trans>
+								Enable
 							</FormLabel>
 						</FormItem>
 					)}

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -57,7 +56,7 @@ export function CreateProjectDialog({ data }: DialogProps<"resume.sections.proje
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new project</Trans>
+					Create a new project
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -68,11 +67,11 @@ export function CreateProjectDialog({ data }: DialogProps<"resume.sections.proje
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -120,7 +119,7 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing project</Trans>
+					Update an existing project
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -131,11 +130,11 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -155,7 +154,7 @@ function ProjectForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Name</Trans>
+							Name
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -171,7 +170,7 @@ function ProjectForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>
-							<Trans>Period</Trans>
+							Period
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -187,7 +186,7 @@ function ProjectForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Website</Trans>
+							Website
 						</FormLabel>
 						<FormControl>
 							<URLInput
@@ -211,7 +210,7 @@ function ProjectForm() {
 							<Switch checked={field.value} onCheckedChange={field.onChange} />
 						</FormControl>
 						<FormLabel className="!mt-0">
-							<Trans>Show link in title</Trans>
+							Show link in title
 						</FormLabel>
 					</FormItem>
 				)}
@@ -223,7 +222,7 @@ function ProjectForm() {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Description</Trans>
+							Description
 						</FormLabel>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />

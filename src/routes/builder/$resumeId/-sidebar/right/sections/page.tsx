@@ -1,9 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
-import { getLocaleOptions } from "@/components/locale/combobox";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Combobox } from "@/components/ui/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -49,11 +46,32 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans>Language</Trans>
+								Language
 							</FormLabel>
 							<FormControl>
 								<Combobox
-									options={getLocaleOptions()}
+									options={[
+										{ value: "en-US", label: "English" },
+										{ value: "es-ES", label: "Spanish" },
+										{ value: "fr-FR", label: "French" },
+										{ value: "de-DE", label: "German" },
+										{ value: "pt-BR", label: "Portuguese (Brazil)" },
+										{ value: "it-IT", label: "Italian" },
+										{ value: "nl-NL", label: "Dutch" },
+										{ value: "ja-JP", label: "Japanese" },
+										{ value: "ko-KR", label: "Korean" },
+										{ value: "zh-CN", label: "Chinese (Simplified)" },
+										{ value: "ar-SA", label: "Arabic" },
+										{ value: "hi-IN", label: "Hindi" },
+										{ value: "ru-RU", label: "Russian" },
+										{ value: "tr-TR", label: "Turkish" },
+										{ value: "pl-PL", label: "Polish" },
+										{ value: "sv-SE", label: "Swedish" },
+										{ value: "da-DK", label: "Danish" },
+										{ value: "fi-FI", label: "Finnish" },
+										{ value: "no-NO", label: "Norwegian" },
+										{ value: "cs-CZ", label: "Czech" },
+									]}
 									value={field.value}
 									onValueChange={(locale) => {
 										field.onChange(locale);
@@ -72,14 +90,14 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem className="col-span-full">
 							<FormLabel>
-								<Trans context="Page Format (A4, Letter or Free-Form)">Format</Trans>
+								Format
 							</FormLabel>
 							<FormControl>
 								<Combobox
 									options={[
-										{ value: "a4", label: t`A4` },
-										{ value: "letter", label: t`Letter` },
-										{ value: "free-form", label: t`Free-Form` },
+										{ value: "a4", label: "A4" },
+										{ value: "letter", label: "Letter" },
+										{ value: "free-form", label: "Free-Form" },
 									]}
 									value={field.value}
 									onValueChange={(value) => {
@@ -99,7 +117,7 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Margin (Horizontal)</Trans>
+								Margin (Horizontal)
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -131,7 +149,7 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Margin (Vertical)</Trans>
+								Margin (Vertical)
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -163,7 +181,7 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Spacing (Horizontal)</Trans>
+								Spacing (Horizontal)
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -194,7 +212,7 @@ function PageSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								<Trans>Spacing (Vertical)</Trans>
+								Spacing (Vertical)
 							</FormLabel>
 							<InputGroup>
 								<FormControl>
@@ -234,7 +252,7 @@ function PageSectionForm() {
 								/>
 							</FormControl>
 							<FormLabel>
-								<Trans>Hide all icons on the resume</Trans>
+								Hide all icons on the resume
 							</FormLabel>
 						</FormItem>
 					)}

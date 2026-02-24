@@ -1,8 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { MessageDescriptor } from "@lingui/core";
-import { msg } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react";
-import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
@@ -22,21 +18,21 @@ const formSchema = customSectionSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: MessageDescriptor }[] = [
-	{ value: "summary", label: msg`Summary` },
-	{ value: "experience", label: msg`Experience` },
-	{ value: "education", label: msg`Education` },
-	{ value: "projects", label: msg`Projects` },
-	{ value: "profiles", label: msg`Profiles` },
-	{ value: "skills", label: msg`Skills` },
-	{ value: "languages", label: msg`Languages` },
-	{ value: "interests", label: msg`Interests` },
-	{ value: "awards", label: msg`Awards` },
-	{ value: "certifications", label: msg`Certifications` },
-	{ value: "publications", label: msg`Publications` },
-	{ value: "volunteer", label: msg`Volunteer` },
-	{ value: "references", label: msg`References` },
-	{ value: "cover-letter", label: msg`Cover Letter` },
+const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: string }[] = [
+	{ value: "summary", label: "Summary" },
+	{ value: "experience", label: "Experience" },
+	{ value: "education", label: "Education" },
+	{ value: "projects", label: "Projects" },
+	{ value: "profiles", label: "Profiles" },
+	{ value: "skills", label: "Skills" },
+	{ value: "languages", label: "Languages" },
+	{ value: "interests", label: "Interests" },
+	{ value: "awards", label: "Awards" },
+	{ value: "certifications", label: "Certifications" },
+	{ value: "publications", label: "Publications" },
+	{ value: "volunteer", label: "Volunteer" },
+	{ value: "references", label: "References" },
+	{ value: "cover-letter", label: "Cover Letter" },
 ];
 
 export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.create">) {
@@ -73,7 +69,7 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
-					<Trans>Create a new custom section</Trans>
+					Create a new custom section
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -84,11 +80,11 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
+							Create
 						</Button>
 					</DialogFooter>
 				</form>
@@ -129,7 +125,7 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
-					<Trans>Update an existing custom section</Trans>
+					Update an existing custom section
 				</DialogTitle>
 				<DialogDescription />
 			</DialogHeader>
@@ -140,11 +136,11 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 
 					<DialogFooter className="sm:col-span-full">
 						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
+							Cancel
 						</Button>
 
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
+							Save Changes
 						</Button>
 					</DialogFooter>
 				</form>
@@ -154,7 +150,6 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 }
 
 function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
-	const { i18n } = useLingui();
 	const form = useFormContext<FormValues>();
 
 	return (
@@ -165,7 +160,7 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Title</Trans>
+							Title
 						</FormLabel>
 						<FormControl>
 							<Input {...field} />
@@ -181,7 +176,7 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
 						<FormLabel>
-							<Trans>Section Type</Trans>
+							Section Type
 						</FormLabel>
 						<FormControl>
 							<Combobox
@@ -191,7 +186,7 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 								onValueChange={field.onChange}
 								options={SECTION_TYPE_OPTIONS.map((option) => ({
 									value: option.value,
-									label: i18n.t(option.label),
+									label: option.label,
 								}))}
 							/>
 						</FormControl>

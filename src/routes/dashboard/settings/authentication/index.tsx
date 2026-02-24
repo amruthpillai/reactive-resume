@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
@@ -18,7 +17,7 @@ function RouteComponent() {
 
 	return (
 		<div className="space-y-4">
-			<DashboardHeader icon={ShieldCheckIcon} title={t`Authentication`} />
+			<DashboardHeader icon={ShieldCheckIcon} title={"Authentication"} />
 
 			<Separator />
 

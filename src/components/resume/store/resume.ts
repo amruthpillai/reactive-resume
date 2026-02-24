@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { debounce } from "es-toolkit";
 import isDeepEqual from "fast-deep-equal";
 import type { WritableDraft } from "immer";
@@ -58,7 +57,7 @@ export const useResumeStore = create<ResumeStore>()(
 					if (!state.resume) return state;
 
 					if (state.resume.isLocked) {
-						errorToastId = toast.error(t`This resume is locked and cannot be updated.`, { id: errorToastId });
+						errorToastId = toast.error("This resume is locked and cannot be updated.", { id: errorToastId });
 						return state;
 					}
 

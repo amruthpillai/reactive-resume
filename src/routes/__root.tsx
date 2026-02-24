@@ -1,8 +1,6 @@
 import "@fontsource-variable/ibm-plex-sans";
 import "@phosphor-icons/web/regular/style.css";
 
-import { i18n } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
 import { IconContext } from "@phosphor-icons/react";
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
@@ -18,7 +16,7 @@ import { getSession } from "@/integrations/auth/functions";
 import type { AuthSession } from "@/integrations/auth/types";
 import { client, type orpc } from "@/integrations/orpc/client";
 import type { FeatureFlags } from "@/integrations/orpc/services/flags";
-import { getLocale, isRTL, type Locale, loadLocale } from "@/utils/locale";
+import { getLocale, type Locale } from "@/utils/locale";
 import { getTheme, type Theme } from "@/utils/theme";
 import appCss from "../styles/globals.css?url";
 
@@ -36,8 +34,6 @@ const tagline = "A free and open-source resume builder";
 const title = `${appName} — ${tagline}`;
 const description =
 	"Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.";
-
-await loadLocale(await getLocale());
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 	shellComponent: RootDocument,
@@ -102,34 +98,31 @@ type Props = {
 };
 
 function RootDocument({ children }: Props) {
-	const { theme, locale } = Route.useRouteContext();
-	const dir = isRTL(locale) ? "rtl" : "ltr";
+	const { theme } = Route.useRouteContext();
 
 	return (
-		<html suppressHydrationWarning dir={dir} lang={locale} className={theme}>
+		<html suppressHydrationWarning dir="ltr" lang="en-US" className={theme}>
 			<head>
 				<HeadContent />
 			</head>
 
 			<body>
 				<MotionConfig reducedMotion="user">
-					<I18nProvider i18n={i18n}>
-						<IconContext.Provider value={{ size: 16, weight: "regular" }}>
-							<ThemeProvider theme={theme}>
-								<ConfirmDialogProvider>
-									<PromptDialogProvider>
-										{children}
+					<IconContext.Provider value={{ size: 16, weight: "regular" }}>
+						<ThemeProvider theme={theme}>
+							<ConfirmDialogProvider>
+								<PromptDialogProvider>
+									{children}
 
-										<DialogManager />
-										<CommandPalette />
-										<Toaster richColors position="bottom-right" />
+									<DialogManager />
+									<CommandPalette />
+									<Toaster richColors position="bottom-right" />
 
-										{import.meta.env.DEV && <BreakpointIndicator />}
-									</PromptDialogProvider>
-								</ConfirmDialogProvider>
-							</ThemeProvider>
-						</IconContext.Provider>
-					</I18nProvider>
+									{import.meta.env.DEV && <BreakpointIndicator />}
+								</PromptDialogProvider>
+							</ConfirmDialogProvider>
+						</ThemeProvider>
+					</IconContext.Provider>
 				</MotionConfig>
 
 				<Scripts />
