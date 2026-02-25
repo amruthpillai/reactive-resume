@@ -51,12 +51,6 @@ export function InformationSectionBuilder() {
 				</Button>
 
 				<Button asChild size="sm" variant="link" className="text-xs">
-					<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
-						Translations
-					</a>
-				</Button>
-
-				<Button asChild size="sm" variant="link" className="text-xs">
 					<a href="https://opencollective.com/reactive-resume" target="_blank" rel="noopener">
 						Sponsors
 					</a>

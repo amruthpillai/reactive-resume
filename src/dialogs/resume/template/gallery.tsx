@@ -1,4 +1,5 @@
-import { SlideshowIcon } from "@phosphor-icons/react";
+import { LockIcon, SlideshowIcon } from "@phosphor-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import { type RefObject, useRef } from "react";
 import { CometCard } from "@/components/animation/comet-card";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -7,6 +8,7 @@ import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/c
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { type DialogProps, useDialogStore } from "@/dialogs/store";
+import { orpc } from "@/integrations/orpc/client";
 import type { Template } from "@/schema/templates";
 import { cn } from "@/utils/style";
 import { type TemplateMetadata, templates } from "./data";
@@ -18,7 +20,17 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 	const selectedTemplate = useResumeStore((state) => state.resume.data.metadata.template);
 	const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
+	const { data: billingStatus } = useQuery(orpc.billing.getStatus.queryOptions());
+	const userPlan = billingStatus?.plan ?? "free";
+
 	function onSelectTemplate(template: Template) {
+		const metadata = templates[template];
+
+		// Block premium templates for free users
+		if (metadata.tier === "pro" && userPlan === "free") {
+			return;
+		}
+
 		updateResumeData((draft) => {
 			draft.metadata.template = template;
 		});
@@ -49,6 +61,7 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 							id={template as Template}
 							collisionBoundary={scrollAreaRef}
 							isActive={template === selectedTemplate}
+							isLocked={metadata.tier === "pro" && userPlan === "free"}
 							onSelect={onSelectTemplate}
 						/>
 					))}
@@ -61,12 +74,13 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 type TemplateCardProps = {
 	id: Template;
 	isActive?: boolean;
+	isLocked?: boolean;
 	metadata: TemplateMetadata;
 	collisionBoundary: RefObject<HTMLDivElement | null>;
 	onSelect: (template: Template) => void;
 };
 
-function TemplateCard({ id, metadata, isActive, collisionBoundary, onSelect }: TemplateCardProps) {
+function TemplateCard({ id, metadata, isActive, isLocked, collisionBoundary, onSelect }: TemplateCardProps) {
 	return (
 		<HoverCard openDelay={0} closeDelay={0}>
 			<CometCard translateDepth={3} rotateDepth={6} glareOpacity={0}>
@@ -77,14 +91,27 @@ function TemplateCard({ id, metadata, isActive, collisionBoundary, onSelect }: T
 						className={cn(
 							"relative block aspect-page size-full cursor-pointer overflow-hidden rounded-md bg-popover outline-none",
 							isActive && "ring-2 ring-ring ring-offset-4 ring-offset-background",
+							isLocked && "cursor-not-allowed opacity-60",
 						)}
 					>
 						<img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
+
+						{isLocked && (
+							<div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/70">
+								<LockIcon size={24} weight="fill" className="text-muted-foreground" />
+								<span className="font-medium text-muted-foreground text-xs">Pro</span>
+							</div>
+						)}
 					</button>
 				</HoverCardTrigger>
 
-				<div className="flex items-center justify-center">
+				<div className="flex items-center justify-center gap-1.5">
 					<span className="font-bold leading-loose tracking-tight">{metadata.name}</span>
+					{metadata.tier === "pro" && (
+						<Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+							Pro
+						</Badge>
+					)}
 				</div>
 
 				<HoverCardContent

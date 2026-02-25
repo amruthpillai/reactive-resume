@@ -15,7 +15,6 @@ import {
 	PaletteIcon,
 	ProhibitIcon,
 	ShieldCheckIcon,
-	TranslateIcon,
 } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { cn } from "@/utils/style";
@@ -63,10 +62,10 @@ const getFeatures = (): Feature[] => [
 		description: "You also have the option to deploy on your own servers using the Docker image.",
 	},
 	{
-		id: "languages",
-		icon: TranslateIcon,
-		title: "Multilingual",
-		description: "Available in multiple languages. If you would like to contribute, check out Crowdin.",
+		id: "ai",
+		icon: CodeSimpleIcon,
+		title: "AI-Powered Writing",
+		description: "Get AI suggestions to improve, shorten, or tailor your resume content.",
 	},
 	{
 		id: "auth",

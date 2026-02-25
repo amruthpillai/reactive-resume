@@ -1,10 +1,7 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/style";
-
-const crowdinUrl = "https://crowdin.com/project/reactive-resume";
 
 type FAQItemData = {
 	question: string;
@@ -13,8 +10,8 @@ type FAQItemData = {
 
 const getFaqItems = (): FAQItemData[] => [
 	{
-		question: "Is Reactive Resume really free?",
-		answer: "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free.",
+		question: "Is Reactive Resume free to use?",
+		answer: "Yes! You can create a resume, use 3 templates, and export to PDF completely free. The Pro plan unlocks unlimited resumes, all 13 templates, and unlimited AI suggestions for $10/month.",
 	},
 	{
 		question: "How is my data protected?",
@@ -25,26 +22,12 @@ const getFaqItems = (): FAQItemData[] => [
 		answer: "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly.",
 	},
 	{
-		question: "Is Reactive Resume available in multiple languages?",
-		answer: (
-			Yes, Reactive Resume is available in multiple languages. You can choose your preferred language in the settings
-				page, or using the language switcher in the top right corner. If you don't see your language, or you would like
-				to improve the existing translations, you can{" "}
-				<a
-					href={crowdinUrl}
-					target="_blank"
-					rel="noopener"
-					className={buttonVariants({ variant: "link", className: "h-auto px-0!" })}
-				>
-					contribute to the translations on Crowdin
-					<span className="sr-only"> (opens in new tab)</span>
-				</a>
-				.
-		),
+		question: "What does the Pro plan include?",
+		answer: "Pro gives you unlimited resumes, access to all 13 premium templates, PDF exports without watermark, unlimited downloads, unlimited AI writing suggestions, and a custom public resume URL.",
 	},
 	{
 		question: "What makes Reactive Resume different from other resume builders?",
-		answer: "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall.",
+		answer: "Reactive Resume is open-source and privacy-focused. Unlike other resume builders, it doesn't show ads or track your data. You can even self-host it on your own servers.",
 	},
 	{
 		question: "Can I customize the templates?",

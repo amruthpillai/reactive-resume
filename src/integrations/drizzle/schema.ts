@@ -17,6 +17,10 @@ export const user = pg.pgTable(
 		username: pg.text("username").notNull().unique(),
 		displayUsername: pg.text("display_username").notNull().unique(),
 		twoFactorEnabled: pg.boolean("two_factor_enabled").notNull().default(false),
+		plan: pg.text("plan").notNull().default("free"),
+		stripeCustomerId: pg.text("stripe_customer_id").unique(),
+		stripeSubscriptionId: pg.text("stripe_subscription_id").unique(),
+		trialEndsAt: pg.timestamp("trial_ends_at", { withTimezone: true }),
 		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 		updatedAt: pg
 			.timestamp("updated_at", { withTimezone: true })
@@ -254,4 +258,29 @@ export const apikey = pg.pgTable(
 		metadata: pg.jsonb("metadata"),
 	},
 	(t) => [pg.index().on(t.userId), pg.index().on(t.key), pg.index().on(t.enabled, t.userId)],
+);
+
+export const usageLog = pg.pgTable(
+	"usage_log",
+	{
+		id: pg
+			.uuid("id")
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => generateId()),
+		userId: pg
+			.uuid("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		type: pg.text("type").notNull(), // 'pdf_download' | 'ai_suggestion'
+		month: pg.text("month").notNull(), // '2026-02' format
+		count: pg.integer("count").notNull().default(0),
+		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+		updatedAt: pg
+			.timestamp("updated_at", { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => /* @__PURE__ */ new Date()),
+	},
+	(t) => [pg.unique().on(t.userId, t.type, t.month), pg.index().on(t.userId)],
 );

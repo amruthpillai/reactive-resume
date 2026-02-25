@@ -1,3 +1,4 @@
+import type { Plan } from "@/utils/plan";
 import type { Template } from "@/schema/templates";
 
 export type TemplateMetadata = {
@@ -6,6 +7,7 @@ export type TemplateMetadata = {
 	imageUrl: string;
 	tags: string[];
 	sidebarPosition: "left" | "right" | "none";
+	tier: Plan;
 };
 
 export const templates = {
@@ -15,6 +17,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/azurill.jpg",
 		tags: ["Two-column", "Creative", "Tech", "Visual flair"],
 		sidebarPosition: "left",
+		tier: "pro",
 	},
 	bronzor: {
 		name: "Bronzor",
@@ -22,6 +25,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/bronzor.jpg",
 		tags: ["Two-column", "Clean", "Professional", "Corporate", "Finance", "Consulting"],
 		sidebarPosition: "none",
+		tier: "free",
 	},
 	chikorita: {
 		name: "Chikorita",
@@ -29,6 +33,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/chikorita.jpg",
 		tags: ["Two-column", "Soft accent", "Marketing", "HR", "Client-facing"],
 		sidebarPosition: "right",
+		tier: "pro",
 	},
 	ditgar: {
 		name: "Ditgar",
@@ -36,6 +41,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/ditgar.jpg",
 		tags: ["Two-column", "Modern", "Developer", "Data science", "Technical PM", "Dark sidebar"],
 		sidebarPosition: "left",
+		tier: "pro",
 	},
 	ditto: {
 		name: "Ditto",
@@ -43,6 +49,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/ditto.jpg",
 		tags: ["Two-column", "ATS friendly", "Minimal", "Text-dense", "Traditional", "No decoration"],
 		sidebarPosition: "left",
+		tier: "free",
 	},
 	gengar: {
 		name: "Gengar",
@@ -50,6 +57,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/gengar.jpg",
 		tags: ["Two-column", "Accent colors", "Clean typography", "Business analyst", "Operations"],
 		sidebarPosition: "left",
+		tier: "pro",
 	},
 	glalie: {
 		name: "Glalie",
@@ -57,6 +65,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/glalie.jpg",
 		tags: ["Two-column", "Minimal", "Professional", "Legal", "Finance", "Executive", "Understated"],
 		sidebarPosition: "left",
+		tier: "pro",
 	},
 	kakuna: {
 		name: "Kakuna",
@@ -64,6 +73,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/kakuna.jpg",
 		tags: ["Single-column", "ATS friendly", "Compact", "Efficient", "Entry level", "Internship", "Magenta accent"],
 		sidebarPosition: "none",
+		tier: "free",
 	},
 	lapras: {
 		name: "Lapras",
@@ -71,6 +81,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/lapras.jpg",
 		tags: ["Single-column", "ATS friendly", "Polished", "Senior", "Enterprise"],
 		sidebarPosition: "none",
+		tier: "pro",
 	},
 	leafish: {
 		name: "Leafish",
@@ -78,6 +89,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/leafish.jpg",
 		tags: ["Two-column", "Muted sidebar", "Earthy", "Calm", "Sustainability", "Healthcare", "Nonprofit"],
 		sidebarPosition: "right",
+		tier: "pro",
 	},
 	onyx: {
 		name: "Onyx",
@@ -85,6 +97,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/onyx.jpg",
 		tags: ["Single-column", "ATS friendly", "Sidebar", "Grid layout", "Versatile", "Professional", "Technical"],
 		sidebarPosition: "none",
+		tier: "pro",
 	},
 	pikachu: {
 		name: "Pikachu",
@@ -92,6 +105,7 @@ export const templates = {
 		imageUrl: "/templates/jpg/pikachu.jpg",
 		tags: ["Two-column", "Simple", "Creative", "Editorial", "Junior", "Accent colors"],
 		sidebarPosition: "left",
+		tier: "pro",
 	},
 	rhyhorn: {
 		name: "Rhyhorn",
@@ -99,5 +113,6 @@ export const templates = {
 		imageUrl: "/templates/jpg/rhyhorn.jpg",
 		tags: ["Single-column", "ATS friendly", "Minimal", "Clean", "Modern", "Designer", "Content creator", "Whitespace"],
 		sidebarPosition: "none",
+		tier: "pro",
 	},
 } as const satisfies Record<Template, TemplateMetadata>;
