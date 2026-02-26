@@ -1,0 +1,96 @@
+services:
+  reactive_resume:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    depends_on:
+      postgres:
+        condition: service_healthy
+      browserless:
+        condition: service_started
+      seaweedfs:
+        condition: service_healthy
+      seaweedfs_create_bucket:
+        condition: service_completed_successfully
+    environment:
+      TZ: Etc/UTC
+      APP_URL: http://localhost:3000
+      PRINTER_APP_URL: http://reactive_resume:3000
+      PRINTER_ENDPOINT: ws://browserless:3000?token=1234567890
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+      AUTH_SECRET: change-me-to-a-secure-secret-key-in-production
+      S3_ACCESS_KEY_ID: seaweedfs
+      S3_SECRET_ACCESS_KEY: seaweedfs
+      S3_REGION: us-east-1
+      S3_ENDPOINT: http://seaweedfs:8333
+      S3_BUCKET: reactive-resume
+      S3_FORCE_PATH_STYLE: "true"
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
+      start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  browserless:
+    image: ghcr.io/browserless/chromium:latest
+    restart: unless-stopped
+    environment:
+      QUEUED: "10"
+      HEALTH: "true"
+      CONCURRENT: "5"
+      TOKEN: "1234567890"
+    healthcheck:
+      test:
+        ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=1234567890"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    restart: unless-stopped
+    command: server -s3 -filer -dir=/data -ip=0.0.0.0
+    environment:
+      AWS_ACCESS_KEY_ID: seaweedfs
+      AWS_SECRET_ACCESS_KEY: seaweedfs
+    volumes:
+      - seaweedfs_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8888"]
+      start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  seaweedfs_create_bucket:
+    image: quay.io/minio/mc:latest
+    restart: on-failure
+    entrypoint: >
+      /bin/sh -c "
+        until mc alias set seaweedfs http://seaweedfs:8333 seaweedfs seaweedfs; do
+          echo 'Waiting for SeaweedFS...';
+          sleep 2;
+        done;
+        mc mb seaweedfs/reactive-resume --ignore-existing;
+      "
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  seaweedfs_data:

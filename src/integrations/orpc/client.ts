@@ -13,7 +13,7 @@ export const getORPCClient = createIsomorphicFn()
 		return createRouterClient(router, {
 			interceptors: [
 				onError((error) => {
-					console.error(error);
+					console.error(`ERROR [oRPC]: ${error}`);
 				}),
 			],
 			context: async () => {
@@ -30,16 +30,19 @@ export const getORPCClient = createIsomorphicFn()
 	.client((): RouterClient<typeof router> => {
 		const link = new RPCLink({
 			url: `${window.location.origin}/api/rpc`,
-			fetch: (request, init) => {
-				return fetch(request, { ...init, credentials: "include" });
-			},
-			interceptors: [
-				onError((error) => {
-					if (error instanceof DOMException) return;
-					console.error(error);
+			fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
+			plugins: [
+				new BatchLinkPlugin({
+					mode: typeof window === "undefined" ? "buffered" : "streaming",
+					groups: [{ condition: () => true, context: {} }],
 				}),
 			],
-			plugins: [new BatchLinkPlugin({ groups: [{ condition: () => true, context: {} }] })],
+			interceptors: [
+				onError((error) => {
+					if (error instanceof DOMException && error.name === "AbortError") return;
+					console.error(`ERROR [oRPC]: ${error}`);
+				}),
+			],
 		});
 
 		return createORPCClient(link);

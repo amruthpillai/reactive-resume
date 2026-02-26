@@ -30,7 +30,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
-import type { SectionItem as SectionItemType, SectionType } from "@/schema/resume/data";
+import type {
+	CustomSectionItem,
+	CustomSectionType,
+	SectionItem as SectionItemType,
+	SectionType,
+} from "@/schema/resume/data";
 import {
 	addItemToSection,
 	createCustomSectionWithItem,
@@ -46,8 +51,8 @@ import { cn } from "@/utils/style";
 // ============================================================================
 
 type MoveItemSubmenuProps = {
-	type: SectionType;
-	item: SectionItemType;
+	type: CustomSectionType;
+	item: CustomSectionItem | SectionItemType;
 	customSectionId?: string;
 };
 
@@ -153,15 +158,21 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 // SectionItem Component
 // ============================================================================
 
-type Props<T extends SectionItemType> = {
-	type: SectionType;
+type Props<T extends CustomSectionItem | SectionItemType> = {
+	type: CustomSectionType;
 	item: T;
 	title: string;
 	subtitle?: string;
 	customSectionId?: string;
 };
 
-export function SectionItem<T extends SectionItemType>({ type, item, title, subtitle, customSectionId }: Props<T>) {
+export function SectionItem<T extends CustomSectionItem | SectionItemType>({
+	type,
+	item,
+	title,
+	subtitle,
+	customSectionId,
+}: Props<T>) {
 	const confirm = useConfirm();
 	const controls = useDragControls();
 	const { openDialog } = useDialogStore();
@@ -176,7 +187,8 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 				if (index === -1) return;
 				section.items[index].hidden = !section.items[index].hidden;
 			} else {
-				const section = draft.sections[type];
+				// Type assertion: when customSectionId is not provided, type is always a built-in SectionType
+				const section = draft.sections[type as SectionType];
 				if (!("items" in section)) return;
 				const index = section.items.findIndex((_item) => _item.id === item.id);
 				if (index === -1) return;
@@ -211,7 +223,8 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 				if (index === -1) return;
 				section.items.splice(index, 1);
 			} else {
-				const section = draft.sections[type];
+				// Type assertion: when customSectionId is not provided, type is always a built-in SectionType
+				const section = draft.sections[type as SectionType];
 				if (!("items" in section)) return;
 				const index = section.items.findIndex((_item) => _item.id === item.id);
 				if (index === -1) return;
@@ -298,7 +311,7 @@ export function SectionItem<T extends SectionItemType>({ type, item, title, subt
 }
 
 type AddButtonProps = Omit<ButtonProps, "type"> & {
-	type: SectionType | "custom";
+	type: CustomSectionType | "custom";
 	customSectionId?: string;
 };
 

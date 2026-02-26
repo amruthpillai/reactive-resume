@@ -1,0 +1,180 @@
+---
+title: "Using the MCP Server"
+description: "Connect Reactive Resume to AI tools like Claude Desktop, Cursor, and Codex using the Model Context Protocol"
+---
+
+The Reactive Resume MCP server lets you manage and modify your resumes through any MCP-compatible AI tool — Claude Desktop, Cursor, Codex, and more. It connects to the Reactive Resume API and exposes tools for listing, reading, and patching resumes using natural language.
+
+## What is MCP?
+
+The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is a standard that lets LLM-powered tools connect to external services. Instead of being limited to the built-in chat UI, you can use any MCP client to interact with your resumes.
+
+## Prerequisites
+
+<Steps>
+  <Step title="Create an API key">
+    Head over to [https://rxresu.me](https://rxresu.me) (or your self-hosted instance), sign in, and navigate to **Settings → API Keys**. Click **Create a new API key**, give it a name, and copy the secret — it's only shown once.
+
+    For the full walkthrough, see [Using the API](/guides/using-the-api).
+  </Step>
+</Steps>
+
+## Configuration
+
+There are two ways to connect, depending on whether your MCP client supports the Streamable HTTP transport natively.
+
+### Method 1: Streamable HTTP (recommended)
+
+If your client supports the `url` field (e.g. **Cursor**), use this — no extra dependencies required:
+
+```json
+{
+  "mcpServers": {
+    "reactive-resume": {
+      "url": "https://rxresu.me/mcp",
+      "headers": {
+        "x-api-key": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Method 2: mcp-remote
+
+If your client only supports `command` / `args` (e.g. **Claude Desktop**), use [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) as a bridge. This requires [Node.js](https://nodejs.org) **20 or later**.
+
+```json
+{
+  "mcpServers": {
+    "reactive-resume": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://rxresu.me/mcp",
+        "--header",
+        "x-api-key:your-api-key"
+      ]
+    }
+  }
+}
+```
+
+<Info>
+  Replace `your-api-key` with the API key you created in the prerequisites step.
+</Info>
+
+### Where to put the config
+
+| Client | Config file |
+| --- | --- |
+| Cursor | `.cursor/mcp.json` in your project or home directory |
+| Claude Desktop | `claude_desktop_config.json` ([docs](https://modelcontextprotocol.io/docs/tools/claude-desktop)) |
+| Other MCP clients | Refer to the client's documentation |
+
+## Self-Hosting
+
+If you're running a self-hosted Reactive Resume instance, replace `https://rxresu.me/mcp` with your instance URL:
+
+```json
+{
+  "url": "https://resume.example.com/mcp",
+  "headers": {
+    "x-api-key": "your-api-key"
+  }
+}
+```
+
+## Available Tools
+
+The MCP server exposes the following tools:
+
+| Tool | Description |
+| --- | --- |
+| `list_resumes` | List all resumes with IDs, names, tags, and status. Supports filtering by tags and sorting by last updated, creation date, or name |
+| `get_resume` | Get the full data of a specific resume by ID |
+| `create_resume` | Create a new, empty resume with a name and slug. Optionally pre-fill with sample data |
+| `duplicate_resume` | Create a copy of an existing resume with a new name and slug |
+| `patch_resume` | Apply JSON Patch (RFC 6902) operations to modify a resume's data |
+| `delete_resume` | Permanently delete a resume and all associated files. **Irreversible** |
+| `lock_resume` | Lock a resume to prevent edits, patches, and deletion |
+| `unlock_resume` | Unlock a previously locked resume to re-enable editing |
+| `export_resume_pdf` | Generate a PDF from the resume and return a download URL |
+| `get_resume_screenshot` | Get a visual preview of the resume's first page as a WebP image URL |
+| `get_resume_statistics` | Get view and download statistics for a resume |
+
+## Available Resources
+
+| Resource | Description |
+| --- | --- |
+| `resume://{id}` | The full resume data as a readable JSON resource. Lists all resumes and supports reading individual ones by ID |
+| `resume://schema` | The ResumeData JSON Schema — reference this to understand valid paths and value types for JSON Patch operations |
+
+## Available Prompts
+
+Prompts are pre-built workflows that provide the AI with structured instructions and context. Each prompt embeds the resume data and schema automatically.
+
+| Prompt | Description |
+| --- | --- |
+| `build_resume` | Guide you step-by-step through building a resume from scratch — basics, summary, experience, education, skills, and design |
+| `improve_resume` | Review your resume and suggest concrete improvements to wording, impact, metrics, and structure |
+| `tailor_resume` | Adapt your resume to match a specific job description with keyword optimization and ATS targeting. Requires the job description as input |
+| `review_resume` | Get a structured, professional critique with a scorecard (1–10 across seven dimensions) and prioritized recommendations. **Read-only** — no changes are made |
+
+## Usage Examples
+
+Once your MCP client is connected, you can use natural language to interact with your resumes:
+
+### Browsing
+
+- "List my resumes"
+- "Show me my resume named 'Software Engineer'"
+- "What skills are listed on my resume?"
+- "Show me the stats for my resume"
+
+### Creating & Managing
+
+- "Create a new resume called 'Frontend Engineer 2026'"
+- "Duplicate my 'Software Engineer' resume for a product manager role"
+- "Lock my finalized resume so it can't be accidentally edited"
+- "Delete my old draft resume"
+
+### Editing
+
+- "Update my name to Jane Doe"
+- "Change my headline to Senior Software Engineer"
+- "Add TypeScript to my skills with an Advanced proficiency level"
+- "Add a new experience entry for my role as Staff Engineer at Acme Corp from Jan 2024 to Present"
+- "Remove the third item from my skills section"
+
+### Styling
+
+- "Change the template to bronzor"
+- "Set the primary color to blue"
+- "Hide the interests section"
+
+### Exporting
+
+- "Export my resume as a PDF"
+- "Show me a screenshot of my resume"
+
+### Using Prompts
+
+- "Help me build my resume from scratch" (uses `build_resume`)
+- "Review my resume and give me a score" (uses `review_resume`)
+- "Improve the wording on my resume" (uses `improve_resume`)
+- "Tailor my resume for this job description: ..." (uses `tailor_resume`)
+
+<Tip>
+  The AI will use `get_resume` to inspect your current resume before making changes with `patch_resume`. This ensures the correct JSON paths are used.
+</Tip>
+
+## Troubleshooting
+
+| Issue | Solution |
+| --- | --- |
+| "API error (401)" | Your API key is invalid or expired. Create a new one in **Settings → API Keys** |
+| "API error (404)" | The resume ID doesn't exist. Use `list_resumes` to find valid IDs |
+| "API error (403)" | The resume is locked. Unlock it in the Reactive Resume dashboard |
+| Connection refused | Check that the URL is correct and the instance is running |
+| "ReferenceError: File is not defined" when using `mcp-remote` | You're running Node.js 18. `mcp-remote` requires **Node.js 20 or later** — upgrade with `nvm use 20` or `nvm alias default 20` |

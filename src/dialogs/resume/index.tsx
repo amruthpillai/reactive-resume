@@ -21,6 +21,7 @@ import {
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { orpc, type RouterInput } from "@/integrations/orpc/client";
 import { generateId, generateRandomName, slugify } from "@/utils/string";
@@ -55,6 +56,8 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 	useEffect(() => {
 		form.setValue("slug", slugify(name), { shouldDirty: true });
 	}, [form, name]);
+
+	const { blockEvents } = useFormBlocker(form);
 
 	const onSubmit = (data: FormValues) => {
 		const toastId = toast.loading(t`Creating your resume...`);
@@ -100,7 +103,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 	};
 
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -165,6 +168,8 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 		form.setValue("slug", slugify(name), { shouldDirty: true });
 	}, [form, name]);
 
+	const { blockEvents } = useFormBlocker(form);
+
 	const onSubmit = (data: FormValues) => {
 		const toastId = toast.loading(t`Updating your resume...`);
 
@@ -185,7 +190,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 	};
 
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -234,6 +239,8 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 		form.setValue("slug", slugify(name), { shouldDirty: true });
 	}, [form, name]);
 
+	const { blockEvents } = useFormBlocker(form);
+
 	const onSubmit = (values: FormValues) => {
 		const toastId = toast.loading(t`Duplicating your resume...`);
 
@@ -253,7 +260,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 	};
 
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />

@@ -14,6 +14,9 @@ const sectionClassName = cn(
 
 	// Section Heading
 	"[&>h6]:-mt-(--heading-negative-margin) [&>h6]:max-w-fit [&>h6]:bg-(--page-background-color) [&>h6]:px-4",
+
+	// Push the first section of a page down, to avoid clipping the header
+	"group-data-[layout=main]:first-of-type:mt-4",
 );
 
 /**
@@ -65,7 +68,7 @@ function Header() {
 	return (
 		<div
 			className={cn(
-				"page-header flex items-center gap-x-(--page-gap-x)",
+				"page-header flex items-center gap-x-(--page-margin-x)",
 				"rounded-(--picture-border-radius) border border-(--page-text-color)/10 bg-(--page-background-color) p-4",
 			)}
 		>

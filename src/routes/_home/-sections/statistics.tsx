@@ -47,7 +47,7 @@ function StatisticCard({ statistic, index }: StatisticCardProps) {
 			{/* Background decoration */}
 			<div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
 				<motion.div
-					className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/2"
+					className="absolute inset-s-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/2"
 					initial={{ scale: 0.8, opacity: 0 }}
 					whileInView={{ scale: 1, opacity: 1 }}
 					viewport={{ once: true }}

@@ -11,8 +11,8 @@ export function BreakpointIndicator({ position = "bottom-right" }: BreakpointInd
 	const isBottom = position.includes("bottom");
 
 	const top = isTop ? "top-0" : "bottom-0";
-	const right = isRight ? "end-0" : "start-0";
-	const left = isLeft ? "start-0" : "end-0";
+	const right = isRight ? "inset-e-0" : "inset-s-0";
+	const left = isLeft ? "inset-s-0" : "inset-e-0";
 	const bottom = isBottom ? "bottom-0" : "top-0";
 
 	return (

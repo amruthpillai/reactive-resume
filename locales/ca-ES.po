@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:12\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -207,14 +207,9 @@ msgstr "Afegeix una fila després"
 msgid "Add Row Before"
 msgstr "Afegeix una fila abans"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Afegit el {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "S’està afegint la clau d’accés..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "Afrikaans"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "IA"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "Estadístiques de l’aplicació"
 msgid "Arabic"
 msgstr "Àrab"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Segur que vols suprimir aquesta clau API?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Segur que vols suprimir aquesta clau d’accés?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "Àrea d’estudi"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "Intel·ligència artificial"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "Puc exportar el meu currículum a PDF?"
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "Puc exportar el meu currículum a PDF?"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "Xinès (tradicional)"
 msgid "Circle"
 msgstr "Cercle"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "Esborra la selecció"
@@ -565,6 +576,11 @@ msgstr "Confirma"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Connecta"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "Copia aquesta clau secreta i utilitza-la a les aplicacions per accedir a
 msgid "Copy URL"
 msgstr "Copia l’URL"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "Copia l’URL"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "Crear"
@@ -640,6 +662,10 @@ msgstr "Crea un premi nou"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "Crea una certificació nova"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "Crea un currículum nou"
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "Crea una habilitat nova"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "S’està suprimint el compte..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "S’està suprimint la clau API..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "S’està suprimint la clau d’accés..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "S’està duplicant el currículum..."
 msgid "Dutch"
 msgstr "Neerlandès"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Educació"
@@ -1005,6 +1035,10 @@ msgstr "Tot el que introdueixis aquí es desa localment al navegador. Les dades 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Tot el que necessites per crear, personalitzar i compartir currículums professionals. Creat amb la privadesa en ment, impulsat per codi obert i completament gratuït per sempre."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "Francès"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "Amplada completa"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "Més informació"
 msgid "Learn more about how to fit content on a page"
 msgstr "Aprèn més sobre com ajustar el contingut en una pàgina"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Deixa-ho buit per restablir el títol original."
@@ -1642,10 +1684,6 @@ msgstr "Pàgina {pageNumber} de {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Paràgraf"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Passkeys"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Claus d’accés i A2F"
@@ -1820,6 +1858,10 @@ msgstr "Reactive Resume es llança avui a Product Hunt, ves-hi i mostra una mica
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Reactive Resume és de codi obert, centrat en la privadesa i completament gratuït. A diferència d’altres creadors de currículums, no mostra anuncis, no rastreja les dades ni limita les funcions darrere d’un mur de pagament."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "Rectangle"
@@ -1841,10 +1883,6 @@ msgstr "Referències"
 msgid "Refresh"
 msgstr "Actualitza"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Registra un dispositiu nou"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Recordes la contrasenya? <0><1>Inicia sessió ara <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "Recordes la contrasenya? <0><1>Inicia sessió ara <2/></1></0>"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Elimina la contrasenya"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "Rus"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "Rus"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,9 +2080,21 @@ msgstr "Compartició"
 msgid "Show"
 msgstr "Mostra"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
-msgstr "Barra lateral<<<<<<< HEAD"
+msgstr "Barra lateral"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/index.tsx
 msgid "Sidebar Width"
@@ -2060,7 +2116,6 @@ msgstr "Inicia sessió amb GitHub, Google o un proveïdor OAuth personalitzat."
 msgid "Sign up"
 msgstr "Registra’t"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "Comença a crear el currículum des de zero"
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "Estadístiques"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "A continuació, introdueix el codi de 6 dígits que proporciona l’apli
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "S’ha produït un problema en generar el PDF, torna-ho a provar més tard."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "Actualitza un premi existent"
 msgid "Update an existing certification"
 msgstr "Actualitza una certificació existent"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "Actualitza una secció personalitzada existent"
@@ -2534,6 +2601,10 @@ msgstr "Actualitza una referència existent"
 msgid "Update an existing skill"
 msgstr "Actualitza una habilitat existent"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "Actualitza una experiència de voluntariat existent"
@@ -2550,6 +2621,10 @@ msgstr "Actualitza el currículum"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "Actualitza la contrasenya"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "Voluntariat"
 msgid "Website"
 msgstr "Lloc web"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Com vols anomenar aquesta clau d’accés?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Com vols canviar el nom d’aquesta secció?"
@@ -2690,10 +2761,9 @@ msgstr "També pots utilitzar el nom d’usuari per iniciar sessió."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Pots compartir el currículum mitjançant un URL públic únic, protegir-lo amb una contrasenya o baixar-lo en PDF per compartir-lo directament. Tu tries!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Després de la supressió ja no podràs utilitzar la clau d’accés \"{0}\" per iniciar sessió. Aquesta acció no es pot desfer."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "Les dades es desen localment"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Les dades s’emmagatzemen de manera segura i mai no es comparteixen amb tercers. També pots autoallotjar Reactive Resume als teus propis servidors per tenir un control total sobre les dades."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "La clau d’accés s’ha afegit correctament."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "La clau d’accés s’ha suprimit correctament."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "Allunya"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulú"
-

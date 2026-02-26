@@ -147,7 +147,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 	return (
 		<div data-page-index={pageIndex} className="relative">
 			{showPageNumbers && totalNumberOfPages > 1 && (
-				<div className="absolute start-0 -top-6 print:hidden">
+				<div className="absolute inset-s-0 -top-6 print:hidden">
 					<span className="font-medium text-foreground text-xs">
 						<Trans>
 							Page {pageNumber} of {totalNumberOfPages}
@@ -161,7 +161,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 			</div>
 
 			{metadata.page.format !== "free-form" && pageHeight > maxPageHeight && (
-				<div className="absolute start-0 top-full mt-4 print:hidden">
+				<div className="absolute inset-s-0 top-full mt-4 print:hidden">
 					<a
 						rel="noopener"
 						target="_blank"

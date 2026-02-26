@@ -44,7 +44,7 @@ function RouteComponent() {
 	const { redirect } = Route.useSearch();
 	const [showPassword, toggleShowPassword] = useToggle(false);
 
-	const { mutate: verifyPassword } = useMutation(orpc.auth.verifyResumePassword.mutationOptions());
+	const { mutate: verifyPassword } = useMutation(orpc.resume.verifyPassword.mutationOptions());
 
 	const [username, slug] = useMemo(() => {
 		const [username, slug] = redirect.split("/").slice(1) as [string, string];

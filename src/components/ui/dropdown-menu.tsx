@@ -102,7 +102,7 @@ function DropdownMenuCheckboxItem({ className, children, checked, disabled, ...p
 			checked={checked}
 			{...props}
 		>
-			<span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
+			<span className="pointer-events-none absolute inset-s-2 flex size-3.5 items-center justify-center">
 				<DropdownMenuItemIndicatorPrimitive initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}>
 					<CheckIcon className="size-4" />
 				</DropdownMenuItemIndicatorPrimitive>
@@ -131,7 +131,7 @@ function DropdownMenuRadioItem({ className, children, disabled, ...props }: Drop
 			)}
 			{...props}
 		>
-			<span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
+			<span className="pointer-events-none absolute inset-s-2 flex size-3.5 items-center justify-center">
 				<DropdownMenuItemIndicatorPrimitive layoutId="dropdown-menu-item-indicator-radio">
 					<CircleIcon className="size-2 fill-current" />
 				</DropdownMenuItemIndicatorPrimitive>

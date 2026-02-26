@@ -2,6 +2,7 @@ import { TiptapContent } from "@/components/input/rich-input";
 import type { SectionItem } from "@/schema/resume/data";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
+import { LinkedTitle } from "../linked-title";
 import { PageLink } from "../page-link";
 
 type VolunteerItemProps = SectionItem<"volunteer"> & {
@@ -15,7 +16,12 @@ export function VolunteerItem({ className, ...item }: VolunteerItemProps) {
 			<div className="section-item-header volunteer-item-header">
 				{/* Row 1 */}
 				<div className="flex items-start justify-between gap-x-2">
-					<strong className="section-item-title volunteer-item-title">{item.organization}</strong>
+					<LinkedTitle
+						title={item.organization}
+						website={item.website}
+						showLinkInTitle={item.options?.showLinkInTitle}
+						className="section-item-title volunteer-item-title"
+					/>
 					<span className="section-item-metadata volunteer-item-period shrink-0 text-end">{item.period}</span>
 				</div>
 
@@ -33,9 +39,11 @@ export function VolunteerItem({ className, ...item }: VolunteerItemProps) {
 			</div>
 
 			{/* Website */}
-			<div className="section-item-website volunteer-item-website">
-				<PageLink {...item.website} label={item.website.label} />
-			</div>
+			{!item.options?.showLinkInTitle && (
+				<div className="section-item-website volunteer-item-website">
+					<PageLink {...item.website} label={item.website.label} />
+				</div>
+			)}
 		</div>
 	);
 }

@@ -8,7 +8,7 @@ msgstr ""
 "Language: no\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:12\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Norwegian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -207,14 +207,9 @@ msgstr "Legg til rad etter"
 msgid "Add Row Before"
 msgstr "Legg til rad før"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Lagt til {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Legger til passnøkkelen din..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "Afrikaans"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "KI"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "Applikasjonsstatistikk"
 msgid "Arabic"
 msgstr "Arabisk"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Er du sikker på at du vil slette denne API-nøkkelen?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Er du sikker på at du vil slette denne passnøkkelen?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "Studiefelt"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "Kunstig intelligens"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "Kan jeg eksportere CV-en min til PDF?"
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "Kan jeg eksportere CV-en min til PDF?"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "Kinesisk (tradisjonell)"
 msgid "Circle"
 msgstr "Sirkel"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "Fjern valg"
@@ -565,6 +576,11 @@ msgstr "Bekreft"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Koble til"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "Kopier denne hemmelige nøkkelen og bruk den i applikasjonene dine for �
 msgid "Copy URL"
 msgstr "Kopier URL"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "Kopier URL"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "Opprett"
@@ -640,6 +662,10 @@ msgstr "Opprett en ny pris"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "Opprett en ny sertifisering"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "Opprett en ny CV"
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "Opprett en ny ferdighet"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "Sletter kontoen din..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Sletter API-nøkkelen din..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Sletter passnøkkelen din..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "Dupliserer CV-en din..."
 msgid "Dutch"
 msgstr "Nederlandsk"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Utdanning"
@@ -1005,6 +1035,10 @@ msgstr "Alt du skriver inn her lagres lokalt i nettleseren din. Dataene dine sen
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Alt du trenger for å opprette, tilpasse og dele profesjonelle CV-er. Bygget med personvern i fokus, drevet av åpen kildekode og helt gratis for alltid."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "Fransk"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "Full bredde"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "Lær mer"
 msgid "Learn more about how to fit content on a page"
 msgstr "Lær mer om hvordan du får innhold til å passe på en side"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "La være tom for å tilbakestille tittelen til originalen."
@@ -1642,10 +1684,6 @@ msgstr "Side {pageNumber} av {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Avsnitt"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Passnøkler"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Passnøkler og 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Reactive Resume lanseres på Product Hunt i dag, ta turen innom og vis l
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Reactive Resume er åpen kildekode, personvernfokusert og helt gratis. I motsetning til andre CV-byggere viser den ikke annonser, sporer ikke dataene dine og begrenser ikke funksjoner bak en betalingsmur."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "Rektangel"
@@ -1841,10 +1883,6 @@ msgstr "Referanser"
 msgid "Refresh"
 msgstr "Oppdater"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Registrer ny enhet"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Husker du passordet ditt? <0><1>Logg inn nå <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "Husker du passordet ditt? <0><1>Logg inn nå <2/></1></0>"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Fjern passord"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "Russisk"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "Russisk"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,9 +2080,21 @@ msgstr "Deling"
 msgid "Show"
 msgstr "Vis"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
-msgstr "Sidepanel<<<<<<< HEAD"
+msgstr "Sidepanel"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/index.tsx
 msgid "Sidebar Width"
@@ -2060,7 +2116,6 @@ msgstr "Logg inn med GitHub, Google eller en egendefinert OAuth-leverandør."
 msgid "Sign up"
 msgstr "Registrer deg"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "Begynn å bygge CV-en din fra bunnen av"
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "Statistikk"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "Skriv deretter inn den 6-sifrede koden som appen gir deg for å fortsett
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "Det oppstod et problem under generering av PDF-en, prøv igjen om en stund."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "Oppdater en eksisterende pris"
 msgid "Update an existing certification"
 msgstr "Oppdater en eksisterende sertifisering"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "Oppdater en eksisterende egendefinert seksjon"
@@ -2534,6 +2601,10 @@ msgstr "Oppdater en eksisterende referanse"
 msgid "Update an existing skill"
 msgstr "Oppdater en eksisterende ferdighet"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "Oppdater en eksisterende frivillig erfaring"
@@ -2550,6 +2621,10 @@ msgstr "Oppdater CV"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "Oppdater passordet ditt"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "Frivillig"
 msgid "Website"
 msgstr "Nettsted"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Hva vil du kalle denne passnøkkelen?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Hva vil du endre navnet på denne seksjonen til?"
@@ -2690,10 +2761,9 @@ msgstr "Du kan også bruke brukernavnet ditt til å logge inn."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Du kan dele CV-en din via en unik offentlig URL, beskytte den med et passord eller laste den ned som PDF for å dele direkte. Valget er ditt!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Du kan ikke lenger bruke passnøkkelen \"{0}\" til å logge inn etter sletting. Denne handlingen kan ikke angres."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "Dataene dine lagres lokalt"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Dataene dine lagres sikkert og deles aldri med tredjeparter. Du kan også selv-hoste Reactive Resume på egne servere for full kontroll over dataene dine."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Passnøkkelen din er lagt til."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Passnøkkelen din er slettet."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "Zoom ut"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

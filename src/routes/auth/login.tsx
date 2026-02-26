@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
-import type { BetterFetchOption } from "better-auth/client";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
@@ -46,37 +45,37 @@ function RouteComponent() {
 	const onSubmit = async (data: FormValues) => {
 		const toastId = toast.loading(t`Signing in...`);
 
-		const fetchOptions: BetterFetchOption = {
-			onSuccess: (context) => {
-				// Check if 2FA is required
-				if (context.data && "twoFactorRedirect" in context.data && context.data.twoFactorRedirect) {
-					toast.dismiss(toastId);
-					navigate({ to: "/auth/verify-2fa", replace: true });
-					return;
-				}
+		try {
+			const isEmail = data.identifier.includes("@");
 
-				// Normal login success
-				router.invalidate();
+			const result = isEmail
+				? await authClient.signIn.email({ email: data.identifier, password: data.password })
+				: await authClient.signIn.username({ username: data.identifier, password: data.password });
+
+			if (result.error) {
+				toast.error(result.error.message, { id: toastId });
+				return;
+			}
+
+			const requiresTwoFactor =
+				result.data &&
+				typeof result.data === "object" &&
+				"twoFactorRedirect" in result.data &&
+				result.data.twoFactorRedirect;
+
+			// Credential check passed, but the account still requires a 2FA verification step.
+			if (requiresTwoFactor) {
 				toast.dismiss(toastId);
-				navigate({ to: "/dashboard", replace: true });
-			},
-			onError: ({ error }) => {
-				toast.error(error.message, { id: toastId });
-			},
-		};
+				navigate({ to: "/auth/verify-2fa", replace: true });
+				return;
+			}
 
-		if (data.identifier.includes("@")) {
-			await authClient.signIn.email({
-				email: data.identifier,
-				password: data.password,
-				fetchOptions,
-			});
-		} else {
-			await authClient.signIn.username({
-				username: data.identifier,
-				password: data.password,
-				fetchOptions,
-			});
+			// Refresh route context so protected routes can read the newly established session.
+			await router.invalidate();
+			toast.dismiss(toastId);
+			navigate({ to: "/dashboard", replace: true });
+		} catch {
+			toast.error(t`Failed to sign in. Please try again.`, { id: toastId });
 		}
 	};
 
@@ -113,7 +112,12 @@ function RouteComponent() {
 										<Trans>Email Address</Trans>
 									</FormLabel>
 									<FormControl>
-										<Input autoComplete="email" placeholder="john.doe@example.com" className="lowercase" {...field} />
+										<Input
+											autoComplete="section-login username"
+											placeholder="john.doe@example.com"
+											className="lowercase"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 									<FormDescription>
@@ -145,7 +149,7 @@ function RouteComponent() {
 												min={6}
 												max={64}
 												type={showPassword ? "text" : "password"}
-												autoComplete="current-password"
+												autoComplete="section-login current-password"
 												{...field}
 											/>
 										</FormControl>

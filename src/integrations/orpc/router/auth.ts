@@ -1,4 +1,3 @@
-import z from "zod";
 import { protectedProcedure, publicProcedure } from "../context";
 import { authService, type ProviderList } from "../services/auth";
 
@@ -7,48 +6,29 @@ export const authRouter = {
 		list: publicProcedure
 			.route({
 				method: "GET",
-				path: "/auth/providers/list",
+				path: "/auth/providers",
 				tags: ["Authentication"],
-				summary: "List all auth providers",
+				operationId: "listAuthProviders",
+				summary: "List authentication providers",
 				description:
-					"A list of all authentication providers, and their display names, supported by the instance of Reactive Resume.",
+					"Returns a list of all authentication providers enabled on this Reactive Resume instance, along with their display names. Possible providers include password-based credentials, Google, GitHub, and custom OAuth. No authentication required.",
+				successDescription: "A map of enabled authentication provider identifiers to their display names.",
 			})
 			.handler((): ProviderList => {
 				return authService.providers.list();
 			}),
 	},
 
-	verifyResumePassword: publicProcedure
-		.route({
-			method: "POST",
-			path: "/auth/verify-resume-password",
-			tags: ["Authentication", "Resume"],
-			summary: "Verify resume password",
-			description: "Verify a resume password, to grant access to the locked resume.",
-		})
-		.input(
-			z.object({
-				slug: z.string().min(1),
-				username: z.string().min(1),
-				password: z.string().min(1),
-			}),
-		)
-		.output(z.boolean())
-		.handler(async ({ input }): Promise<boolean> => {
-			return await authService.verifyResumePassword({
-				slug: input.slug,
-				username: input.username,
-				password: input.password,
-			});
-		}),
-
 	deleteAccount: protectedProcedure
 		.route({
 			method: "DELETE",
-			path: "/auth/delete-account",
+			path: "/auth/account",
 			tags: ["Authentication"],
+			operationId: "deleteAccount",
 			summary: "Delete user account",
-			description: "Delete the authenticated user's account and all associated data.",
+			description:
+				"Permanently deletes the authenticated user's account, including all resumes, uploaded files (profile pictures, screenshots, PDFs), and associated data. This action is irreversible. Requires authentication.",
+			successDescription: "The user account and all associated data have been successfully deleted.",
 		})
 		.handler(async ({ context }): Promise<void> => {
 			return await authService.deleteAccount({ userId: context.user.id });

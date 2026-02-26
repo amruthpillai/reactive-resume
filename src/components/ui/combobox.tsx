@@ -129,7 +129,7 @@ function Combobox<TValue extends string | number = string>({
 						<CommandGroup>
 							{options.map((option) => {
 								const isSelected = selectedValue === option.value;
-								const isDisabled = option.disabled ?? (false || disabled);
+								const isDisabled = option.disabled ?? disabled;
 
 								return (
 									<CommandItem

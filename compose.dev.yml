@@ -20,9 +20,9 @@ services:
     image: postgres:latest
     restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql
     ports:
@@ -40,9 +40,9 @@ services:
     ports:
       - "4000:3000"
     environment:
-      - QUEUED=30
+      - QUEUED=10
       - HEALTH=true
-      - CONCURRENT=20
+      - CONCURRENT=5
       - TOKEN=1234567890
     healthcheck:
       test:
@@ -53,11 +53,11 @@ services:
 
   # As an alternative to browserless, you can also use a lightweight image like chromedp/headless-shell:latest
   # See https://docs.rxresu.me/self-hosting/docker#alternative-printer-options for more information.
-  # chrome:
-  #   image: chromedp/headless-shell:latest
-  #   restart: unless-stopped
-  #   ports:
-  #     - "9222:9222"
+  chrome:
+    image: chromedp/headless-shell:latest
+    restart: unless-stopped
+    ports:
+      - "9222:9222"
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
@@ -77,7 +77,7 @@ services:
       timeout: 10s
       retries: 3
 
-  seaweedfs-create-bucket:
+  seaweedfs_create_bucket:
     image: quay.io/minio/mc:latest
     restart: on-failure
     entrypoint: >

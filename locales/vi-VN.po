@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -207,14 +207,9 @@ msgstr "Thêm dòng sau"
 msgid "Add Row Before"
 msgstr "Thêm dòng trước"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Đã thêm vào {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Đang thêm passkey của bạn..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "Tiếng Afrikaans"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "AI"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "Thống kê ứng dụng"
 msgid "Arabic"
 msgstr "Tiếng Ả Rập"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Bạn có chắc muốn xoá API key này không?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Bạn có chắc muốn xoá passkey này không?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "Lĩnh vực học tập"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "Trí tuệ nhân tạo"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "Tôi có thể xuất sơ yếu lý lịch của mình ra PDF không?"
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "Tôi có thể xuất sơ yếu lý lịch của mình ra PDF không?"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "Tiếng Trung (Phồn thể)"
 msgid "Circle"
 msgstr "Vòng tròn"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "Xóa lựa chọn"
@@ -565,6 +576,11 @@ msgstr "Xác nhận"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Kết nối"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "Sao chép khóa bí mật này và sử dụng trong ứng dụng của 
 msgid "Copy URL"
 msgstr "Sao chép URL"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "Sao chép URL"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "Tạo"
@@ -640,6 +662,10 @@ msgstr "Tạo giải thưởng mới"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "Tạo chứng chỉ mới"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "Tạo sơ yếu lý lịch mới"
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "Tạo kỹ năng mới"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "Đang xóa tài khoản của bạn..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Đang xoá khoá API của bạn..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Đang xóa khóa truy cập của bạn..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "Đang tạo bản sao bản lý lịch của bạn..."
 msgid "Dutch"
 msgstr "Tiếng Hà Lan"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Giáo dục"
@@ -1005,6 +1035,10 @@ msgstr "Tất cả thông tin điền ở đây đều được lưu cục bộ 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Mọi thứ bạn cần để tạo, tùy chỉnh và chia sẻ bản lý lịch chuyên nghiệp. Được xây dựng với tính riêng tư, mã nguồn mở và hoàn toàn miễn phí mãi mãi."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "Tiếng Pháp"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "Chiều rộng đầy đủ"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "Tìm hiểu thêm"
 msgid "Learn more about how to fit content on a page"
 msgstr "Tìm hiểu thêm về cách căn chỉnh nội dung vừa trang"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Để trống để đặt lại tiêu đề về mặc định."
@@ -1642,10 +1684,6 @@ msgstr "Trang {pageNumber} của {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Đoạn văn"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Khóa truy cập"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Passkey & 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Resume Phản Ứng sẽ ra mắt trên Product Hunt hôm nay, hãy ghé
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Resume Phản Ứng là mã nguồn mở, tập trung vào quyền riêng tư và hoàn toàn miễn phí. Khác với các trình tạo hồ sơ khác, nó không hiển thị quảng cáo, không theo dõi dữ liệu của bạn, và không giới hạn tính năng đằng sau tường phí."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "Hình chữ nhật"
@@ -1841,10 +1883,6 @@ msgstr "Người tham khảo"
 msgid "Refresh"
 msgstr "Làm mới"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Đăng ký thiết bị mới"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Bạn nhớ mật khẩu? <0><1>Đăng nhập ngay <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "Bạn nhớ mật khẩu? <0><1>Đăng nhập ngay <2/></1></0>"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Xóa mật khẩu"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "Nga"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "Nga"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,6 +2080,18 @@ msgstr "Chia sẻ"
 msgid "Show"
 msgstr "Hiện"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
 msgstr "<<<<<<< HEAD"
@@ -2060,7 +2116,6 @@ msgstr "Đăng nhập bằng GitHub, Google hoặc nhà cung cấp OAuth tùy ch
 msgid "Sign up"
 msgstr "Đăng ký"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "Bắt đầu xây dựng hồ sơ từ đầu"
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "Thống kê"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "Sau đó, nhập mã 6 chữ số mà ứng dụng cung cấp để ti�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "Đã xảy ra sự cố khi tạo PDF, hãy thử lại sau."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "Cập nhật một giải thưởng hiện có"
 msgid "Update an existing certification"
 msgstr "Cập nhật một chứng nhận hiện có"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "Cập nhật mục tùy chỉnh hiện có"
@@ -2534,6 +2601,10 @@ msgstr "Cập nhật người tham khảo hiện có"
 msgid "Update an existing skill"
 msgstr "Cập nhật kỹ năng hiện có"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "Cập nhật kinh nghiệm tình nguyện hiện có"
@@ -2550,6 +2621,10 @@ msgstr "Cập nhật resume"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "Cập nhật mật khẩu của bạn"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "Tình nguyện viên"
 msgid "Website"
 msgstr "Trang web"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Bạn muốn đặt tên gì cho passkey này?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Bạn muốn đổi tên phần này thành gì?"
@@ -2690,10 +2761,9 @@ msgstr "Bạn cũng có thể sử dụng tên người dùng của mình để 
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Bạn có thể chia sẻ resume của mình qua một URL công khai duy nhất, bảo vệ bằng mật khẩu hoặc tải về dưới dạng PDF để chia sẻ trực tiếp. Lựa chọn là của bạn!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Bạn không thể sử dụng passkey \"{0}\" để đăng nhập sau khi đã xoá. Hành động này không thể hoàn tác."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "Dữ liệu của bạn được lưu trữ cục bộ"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Dữ liệu của bạn được lưu trữ an toàn và không bao giờ chia sẻ với bên thứ ba. Bạn cũng có thể tự host Reactive Resume trên máy chủ của riêng mình để kiểm soát hoàn toàn dữ liệu của mình."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Passkey của bạn đã được thêm thành công."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Passkey của bạn đã được xóa thành công."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "Thu nhỏ"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

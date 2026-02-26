@@ -1,6 +1,22 @@
+import {
+	closestCenter,
+	DndContext,
+	type DragEndEvent,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import {
+	horizontalListSortingStrategy,
+	SortableContext,
+	sortableKeyboardCoordinates,
+	useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleIcon, XIcon } from "@phosphor-icons/react";
-import { motion, Reorder, useDragControls } from "motion/react";
+import { motion } from "motion/react";
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -12,6 +28,7 @@ const RETURN_KEY = "Enter";
 const COMMA_KEY = ",";
 
 type ChipItemProps = {
+	id: string;
 	chip: string;
 	index: number;
 	isEditing: boolean;
@@ -19,35 +36,37 @@ type ChipItemProps = {
 	onRemove: (index: number) => void;
 };
 
-function ChipItem({ chip, index, isEditing, onEdit, onRemove }: ChipItemProps) {
-	const controls = useDragControls();
+function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProps) {
+	const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
 	const [isHovered, setIsHovered] = React.useState(false);
 
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		zIndex: isDragging ? 10 : undefined,
+		opacity: isDragging ? 0.6 : 1,
+	};
+
 	return (
-		<Reorder.Item
-			value={chip}
-			dragListener={false}
-			dragControls={controls}
-			initial={{ opacity: 1, scale: 0.9 }}
-			animate={{ opacity: 1, scale: 1 }}
-			exit={{ opacity: 0, scale: 0.9 }}
-			className="relative"
+		<div
+			style={style}
+			ref={setNodeRef}
+			className="relative touch-none"
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
+			{...attributes}
+			{...listeners}
 		>
 			<Badge
 				variant="outline"
 				className={cn(
 					"flex h-7 cursor-grab select-none items-center gap-0 overflow-hidden px-3 active:cursor-grabbing",
 					isEditing && "border-primary ring-1 ring-primary",
+					isDragging && "opacity-80",
 				)}
-				onPointerDown={(e) => {
-					e.preventDefault();
-					controls.start(e);
-				}}
 			>
 				<span className="max-w-32 truncate">{chip}</span>
-
 				<motion.div
 					initial={false}
 					animate={{ width: isHovered ? 40 : 0, marginInlineStart: isHovered ? 8 : 0, opacity: isHovered ? 1 : 0 }}
@@ -80,7 +99,7 @@ function ChipItem({ chip, index, isEditing, onEdit, onRemove }: ChipItemProps) {
 					</button>
 				</motion.div>
 			</Badge>
-		</Reorder.Item>
+		</div>
 	);
 }
 
@@ -116,7 +135,6 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 			const trimmed = newValue.trim();
 			if (!trimmed || index < 0 || index >= chips.length) return;
 
-			// Check if the new value already exists at a different index
 			const existingIndex = chips.findIndex((c, i) => c === trimmed && i !== index);
 			if (existingIndex !== -1) return;
 
@@ -133,12 +151,10 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 			const newChips = chips.slice(0, index).concat(chips.slice(index + 1));
 			setChips(newChips);
 
-			// If we were editing this chip, clear edit mode
 			if (editingIndex === index) {
 				setEditingIndex(null);
 				setInput("");
 			} else if (editingIndex !== null && editingIndex > index) {
-				// Adjust editing index if we removed a chip before it
 				setEditingIndex(editingIndex - 1);
 			}
 		},
@@ -156,7 +172,6 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 
 	const handleReorder = React.useCallback(
 		(newOrder: string[]) => {
-			// Update editingIndex to follow the chip being edited
 			if (editingIndex !== null) {
 				const editingChip = chips[editingIndex];
 				const newIndex = newOrder.indexOf(editingChip);
@@ -169,14 +184,37 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 		[chips, editingIndex, setChips],
 	);
 
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: { distance: 3 },
+		}),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
+
+	const handleDragEnd = React.useCallback(
+		(event: DragEndEvent) => {
+			const { active, over } = event;
+			if (!over || active.id === over.id) return;
+			const oldIndex = chips.indexOf(active.id as string);
+			const newIndex = chips.indexOf(over.id as string);
+			if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+				const newOrder = Array.from(chips);
+				const [removed] = newOrder.splice(oldIndex, 1);
+				newOrder.splice(newIndex, 0, removed);
+				handleReorder(newOrder);
+			}
+		},
+		[chips, handleReorder],
+	);
+
 	const handleInputChange = React.useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = e.target.value;
 
-			// When editing, don't split on comma - allow full text editing
 			if (editingIndex !== null) {
 				if (newValue.includes(",")) {
-					// Save current edit
 					updateChip(editingIndex, newValue.replace(",", ""));
 					setEditingIndex(null);
 					setInput("");
@@ -186,7 +224,6 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 				return;
 			}
 
-			// When adding new chips, split on comma
 			if (newValue.includes(",")) {
 				const parts = newValue.split(",");
 				parts.slice(0, -1).forEach(addChip);
@@ -204,19 +241,16 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 				e.preventDefault();
 
 				if (editingIndex !== null) {
-					// Save edit
 					if (input.trim()) {
 						updateChip(editingIndex, input);
 					}
 					setEditingIndex(null);
 					setInput("");
 				} else if (input.trim()) {
-					// Add new chip
 					addChip(input);
 					setInput("");
 				}
 			} else if (e.key === "Escape" && editingIndex !== null) {
-				// Cancel edit
 				setEditingIndex(null);
 				setInput("");
 			}
@@ -227,18 +261,23 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 	return (
 		<div className={cn("flex flex-col gap-2", className)} {...props}>
 			{chips.length > 0 && (
-				<Reorder.Group axis="x" values={chips} onReorder={handleReorder} className="flex flex-wrap gap-1.5">
-					{chips.map((chip, idx) => (
-						<ChipItem
-							key={`${chip}-${idx}`}
-							chip={chip}
-							index={idx}
-							isEditing={editingIndex === idx}
-							onEdit={handleEdit}
-							onRemove={removeChip}
-						/>
-					))}
-				</Reorder.Group>
+				<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+					<SortableContext items={chips} strategy={horizontalListSortingStrategy}>
+						<div className="flex flex-wrap gap-1.5">
+							{chips.map((chip, idx) => (
+								<ChipItem
+									key={`${chip}-${idx}`}
+									id={chip}
+									chip={chip}
+									index={idx}
+									isEditing={editingIndex === idx}
+									onEdit={handleEdit}
+									onRemove={removeChip}
+								/>
+							))}
+						</div>
+					</SortableContext>
+				</DndContext>
 			)}
 
 			<div className="flex flex-col gap-2">

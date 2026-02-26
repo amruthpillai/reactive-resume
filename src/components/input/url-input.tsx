@@ -24,9 +24,10 @@ function ensurePrefix(url: string) {
 type Props = Omit<React.ComponentProps<"input">, "value" | "onChange"> & {
 	value: z.infer<typeof urlSchema>;
 	onChange: (value: z.infer<typeof urlSchema>) => void;
+	hideLabelButton?: boolean;
 };
 
-export function URLInput({ value, onChange, ...props }: Props) {
+export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) {
 	const handleUrlChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			onChange({
@@ -59,24 +60,26 @@ export function URLInput({ value, onChange, ...props }: Props) {
 				{...props}
 			/>
 
-			<InputGroupAddon align="inline-end">
-				<Popover>
-					<PopoverTrigger asChild>
-						<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
-							<TagIcon />
-						</InputGroupButton>
-					</PopoverTrigger>
+			{!hideLabelButton && (
+				<InputGroupAddon align="inline-end">
+					<Popover>
+						<PopoverTrigger asChild>
+							<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
+								<TagIcon />
+							</InputGroupButton>
+						</PopoverTrigger>
 
-					<PopoverContent className="pt-3">
-						<div className="grid gap-2" onClick={(e) => e.stopPropagation()}>
-							<Label htmlFor="url-label">
-								<Trans>Label</Trans>
-							</Label>
-							<Input id="url-label" name="url-label" value={value.label} onChange={handleLabelChange} />
-						</div>
-					</PopoverContent>
-				</Popover>
-			</InputGroupAddon>
+						<PopoverContent className="pt-3">
+							<div className="grid gap-2" onClick={(e) => e.stopPropagation()}>
+								<Label htmlFor="url-label">
+									<Trans>Label</Trans>
+								</Label>
+								<Input id="url-label" name="url-label" value={value.label} onChange={handleLabelChange} />
+							</div>
+						</PopoverContent>
+					</Popover>
+				</InputGroupAddon>
+			)}
 		</InputGroup>
 	);
 }

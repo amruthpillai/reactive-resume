@@ -12,7 +12,9 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { Switch } from "@/components/ui/switch";
 import { type DialogProps, useDialogStore } from "@/dialogs/store";
+import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { profileItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 import { cn } from "@/utils/style";
@@ -30,6 +32,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 		defaultValues: {
 			id: generateId(),
 			hidden: data?.item?.hidden ?? false,
+			options: data?.item?.options ?? { showLinkInTitle: false },
 			icon: data?.item?.icon ?? "acorn",
 			network: data?.item?.network ?? "",
 			username: data?.item?.username ?? "",
@@ -49,8 +52,10 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -64,7 +69,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					<ProfileForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 
@@ -87,6 +92,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 		defaultValues: {
 			id: data.item.id,
 			hidden: data.item.hidden,
+			options: data.item.options ?? { showLinkInTitle: false },
 			icon: data.item.icon,
 			network: data.item.network,
 			username: data.item.username,
@@ -109,8 +115,10 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 		closeDialog();
 	};
 
+	const { blockEvents, requestClose } = useFormBlocker(form);
+
 	return (
-		<DialogContent>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -124,7 +132,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					<ProfileForm />
 
 					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={closeDialog}>
+						<Button variant="ghost" onClick={requestClose}>
 							<Trans>Cancel</Trans>
 						</Button>
 
@@ -211,9 +219,29 @@ function ProfileForm() {
 							<Trans>Website</Trans>
 						</FormLabel>
 						<FormControl>
-							<URLInput {...field} value={field.value} onChange={field.onChange} />
+							<URLInput
+								{...field}
+								value={field.value}
+								onChange={field.onChange}
+								hideLabelButton={form.watch("options.showLinkInTitle")}
+							/>
 						</FormControl>
 						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="options.showLinkInTitle"
+				render={({ field }) => (
+					<FormItem className="flex items-center gap-x-2 sm:col-span-full">
+						<FormControl>
+							<Switch checked={field.value} onCheckedChange={field.onChange} />
+						</FormControl>
+						<FormLabel className="!mt-0">
+							<Trans>Show link in title</Trans>
+						</FormLabel>
 					</FormItem>
 				)}
 			/>

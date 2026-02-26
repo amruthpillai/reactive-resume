@@ -7,7 +7,6 @@ import {
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
-import sharp from "sharp";
 import { env } from "@/utils/env";
 
 interface StorageWriteInput {
@@ -82,13 +81,23 @@ export function isImageFile(mimeType: string): boolean {
 	return IMAGE_MIME_TYPES.includes(mimeType);
 }
 
-export interface ProcessedImage {
+interface ProcessedImage {
 	data: Uint8Array;
 	contentType: string;
 }
 
 export async function processImageForUpload(file: File): Promise<ProcessedImage> {
 	const fileBuffer = await file.arrayBuffer();
+
+	console.log("FLAG_DISABLE_IMAGE_PROCESSING", env.FLAG_DISABLE_IMAGE_PROCESSING);
+	if (env.FLAG_DISABLE_IMAGE_PROCESSING) {
+		return {
+			data: new Uint8Array(fileBuffer),
+			contentType: file.type,
+		};
+	}
+
+	const sharp = (await import("sharp")).default;
 
 	const processedBuffer = await sharp(fileBuffer)
 		.resize(800, 800, { fit: "inside", withoutEnlargement: true })
@@ -286,8 +295,6 @@ class S3StorageService implements StorageService {
 				message: "S3 storage is accessible and credentials are valid.",
 			};
 		} catch (error: unknown) {
-			console.error(error);
-
 			return {
 				type: "s3",
 				status: "unhealthy",
@@ -318,7 +325,7 @@ export function getStorageService(): StorageService {
 // High-level upload types
 type UploadType = "picture" | "screenshot" | "pdf";
 
-export interface UploadFileInput {
+interface UploadFileInput {
 	userId: string;
 	data: Uint8Array;
 	contentType: string;
@@ -326,7 +333,7 @@ export interface UploadFileInput {
 	resumeId?: string;
 }
 
-export interface UploadFileResult {
+interface UploadFileResult {
 	url: string;
 	key: string;
 }

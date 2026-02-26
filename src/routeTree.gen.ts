@@ -13,6 +13,7 @@ import { Route as SchemaDotjsonRouteImport } from "./routes/schema[.]json";
 import { Route as DashboardRouteRouteImport } from "./routes/dashboard/route";
 import { Route as AuthRouteRouteImport } from "./routes/auth/route";
 import { Route as HomeRouteRouteImport } from "./routes/_home/route";
+import { Route as McpIndexRouteImport } from "./routes/mcp/index";
 import { Route as DashboardIndexRouteImport } from "./routes/dashboard/index";
 import { Route as AuthIndexRouteImport } from "./routes/auth/index";
 import { Route as HomeIndexRouteImport } from "./routes/_home/index";
@@ -57,6 +58,11 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
 } as any);
 const HomeRouteRoute = HomeRouteRouteImport.update({
   id: "/_home",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const McpIndexRoute = McpIndexRouteImport.update({
+  id: "/mcp/",
+  path: "/mcp/",
   getParentRoute: () => rootRouteImport,
 } as any);
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   "/printer/$resumeId": typeof PrinterResumeIdRoute;
   "/auth/": typeof AuthIndexRoute;
   "/dashboard/": typeof DashboardIndexRoute;
+  "/mcp/": typeof McpIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
   "/api/rpc/$": typeof ApiRpcSplatRoute;
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   "/": typeof HomeIndexRoute;
   "/auth": typeof AuthIndexRoute;
   "/dashboard": typeof DashboardIndexRoute;
+  "/mcp": typeof McpIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
   "/api/rpc/$": typeof ApiRpcSplatRoute;
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   "/_home/": typeof HomeIndexRoute;
   "/auth/": typeof AuthIndexRoute;
   "/dashboard/": typeof DashboardIndexRoute;
+  "/mcp/": typeof McpIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
   "/api/rpc/$": typeof ApiRpcSplatRoute;
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | "/printer/$resumeId"
     | "/auth/"
     | "/dashboard/"
+    | "/mcp/"
     | "/api/auth/$"
     | "/api/openapi/$"
     | "/api/rpc/$"
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | "/"
     | "/auth"
     | "/dashboard"
+    | "/mcp"
     | "/api/auth/$"
     | "/api/openapi/$"
     | "/api/rpc/$"
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | "/_home/"
     | "/auth/"
     | "/dashboard/"
+    | "/mcp/"
     | "/api/auth/$"
     | "/api/openapi/$"
     | "/api/rpc/$"
@@ -390,6 +402,7 @@ export interface RootRouteChildren {
   UsernameSlugRoute: typeof UsernameSlugRoute;
   ApiHealthRoute: typeof ApiHealthRoute;
   PrinterResumeIdRoute: typeof PrinterResumeIdRoute;
+  McpIndexRoute: typeof McpIndexRoute;
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
   ApiOpenapiSplatRoute: typeof ApiOpenapiSplatRoute;
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute;
@@ -424,6 +437,13 @@ declare module "@tanstack/react-router" {
       path: "";
       fullPath: "/";
       preLoaderRoute: typeof HomeRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/mcp/": {
+      id: "/mcp/";
+      path: "/mcp";
+      fullPath: "/mcp/";
+      preLoaderRoute: typeof McpIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/dashboard/": {
@@ -696,6 +716,7 @@ const rootRouteChildren: RootRouteChildren = {
   UsernameSlugRoute: UsernameSlugRoute,
   ApiHealthRoute: ApiHealthRoute,
   PrinterResumeIdRoute: PrinterResumeIdRoute,
+  McpIndexRoute: McpIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiOpenapiSplatRoute: ApiOpenapiSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,

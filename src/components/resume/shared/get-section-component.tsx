@@ -1,9 +1,17 @@
 import { match } from "ts-pattern";
-import type { CustomSectionItem, SectionItem, SectionType } from "@/schema/resume/data";
+import type {
+	CoverLetterItem as CoverLetterItemType,
+	CustomSectionItem,
+	CustomSectionType,
+	SectionItem,
+	SectionType,
+	SummaryItem as SummaryItemType,
+} from "@/schema/resume/data";
 import { cn } from "@/utils/style";
 import { useResumeStore } from "../store/resume";
 import { AwardsItem } from "./items/awards-item";
 import { CertificationsItem } from "./items/certifications-item";
+import { CoverLetterItem } from "./items/cover-letter-item";
 import { EducationItem } from "./items/education-item";
 import { ExperienceItem } from "./items/experience-item";
 import { InterestsItem } from "./items/interests-item";
@@ -13,6 +21,7 @@ import { ProjectsItem } from "./items/projects-item";
 import { PublicationsItem } from "./items/publications-item";
 import { ReferencesItem } from "./items/references-item";
 import { SkillsItem } from "./items/skills-item";
+import { SummaryItem } from "./items/summary-item";
 import { VolunteerItem } from "./items/volunteer-item";
 import { PageSection } from "./page-section";
 import { PageSummary } from "./page-summary";
@@ -23,8 +32,9 @@ type SectionComponentProps = {
 };
 
 // Helper to render item component based on type
-function renderItemByType(type: SectionType, item: CustomSectionItem, itemClassName?: string) {
+function renderItemByType(type: CustomSectionType, item: CustomSectionItem, itemClassName?: string) {
 	return match(type)
+		.with("summary", () => <SummaryItem {...(item as SummaryItemType)} className={itemClassName} />)
 		.with("profiles", () => <ProfilesItem {...(item as SectionItem<"profiles">)} className={itemClassName} />)
 		.with("experience", () => <ExperienceItem {...(item as SectionItem<"experience">)} className={itemClassName} />)
 		.with("education", () => <EducationItem {...(item as SectionItem<"education">)} className={itemClassName} />)
@@ -41,6 +51,7 @@ function renderItemByType(type: SectionType, item: CustomSectionItem, itemClassN
 		))
 		.with("volunteer", () => <VolunteerItem {...(item as SectionItem<"volunteer">)} className={itemClassName} />)
 		.with("references", () => <ReferencesItem {...(item as SectionItem<"references">)} className={itemClassName} />)
+		.with("cover-letter", () => <CoverLetterItem {...(item as CoverLetterItemType)} className={itemClassName} />)
 		.exhaustive();
 }
 
@@ -163,7 +174,9 @@ export function getSectionComponent(
 
 				return (
 					<section className={cn(`page-section page-section-custom page-section-${id}`, sectionClassName)}>
-						<h6 className="mb-1.5 text-(--page-primary-color)">{customSection.title}</h6>
+						{customSection.type !== "cover-letter" && (
+							<h6 className="mb-1.5 text-(--page-primary-color)">{customSection.title}</h6>
+						)}
 
 						<div
 							className="section-content grid gap-x-(--page-gap-x) gap-y-(--page-gap-y)"

@@ -37,18 +37,35 @@ function buildWebFontMap() {
 
 const webFontMap: Map<string, WebFont> = buildWebFontMap();
 
-export function getNextWeight(fontFamily: string): Weight | null {
+export function getNextWeights(fontFamily: string): Weight[] | null {
 	const fontData = webFontMap.get(fontFamily);
 	if (!fontData || !Array.isArray(fontData.weights) || fontData.weights.length === 0) return null;
-	if (fontData.weights.includes("400")) return "400";
-	return fontData.weights[0] as Weight;
+
+	const uniqueWeights = Array.from(new Set(fontData.weights)) as Weight[];
+
+	// Try to pick 400 and 600 if available
+	const weights: Weight[] = [];
+
+	if (uniqueWeights.includes("400")) weights.push("400");
+	if (uniqueWeights.includes("600")) weights.push("600");
+
+	// If we didn't find both, fill in with first/last, ensuring uniqueness
+	while (weights.length < 2 && uniqueWeights.length > 0) {
+		// candidateIndex: 0 (first), 1 (last)
+		const lastIndex = uniqueWeights.length - 1;
+		const candidate = weights.length === 0 ? uniqueWeights[0] : uniqueWeights[lastIndex];
+		if (!weights.includes(candidate)) weights.push(candidate);
+		else break;
+	}
+
+	return weights.length > 0 ? weights : null;
 }
 
 type FontFamilyComboboxProps = Omit<ComboboxProps, "options">;
 
 export function FontFamilyCombobox({ className, ...props }: FontFamilyComboboxProps) {
 	const options = useMemo(() => {
-		return [...localFontList, ...webFontList].map((font: LocalFont | WebFont) => ({
+		return [...webFontList, ...localFontList].map((font: LocalFont | WebFont) => ({
 			value: font.family,
 			keywords: [font.family],
 			label: <FontDisplay name={font.family} type={font.type} url={"preview" in font ? font.preview : undefined} />,
@@ -62,15 +79,18 @@ type FontWeightComboboxProps = Omit<MultipleComboboxProps, "options"> & { fontFa
 
 export function FontWeightCombobox({ fontFamily, ...props }: FontWeightComboboxProps) {
 	const options = useMemo(() => {
-		const fontData = webFontMap.get(fontFamily);
+		const webFontData = webFontMap.get(fontFamily);
+		const localFontData = localFontList.find((font) => font.family === fontFamily);
 
 		let weights: string[] = [];
 
-		if (!fontData || !Array.isArray(fontData.weights)) {
-			// Provide all possible options for local fonts or unknown fontFamily
-			weights = ["100", "200", "300", "400", "500", "600", "700", "800", "900"];
+		if (webFontData && Array.isArray(webFontData.weights) && webFontData.weights.length > 0) {
+			weights = webFontData.weights as string[];
+		} else if (localFontData && Array.isArray(localFontData.weights) && localFontData.weights.length > 0) {
+			weights = localFontData.weights as string[];
 		} else {
-			weights = fontData.weights as string[];
+			// Fallback to all possible weights
+			weights = ["100", "200", "300", "400", "500", "600", "700", "800", "900"];
 		}
 
 		return weights.map((variant: string) => ({

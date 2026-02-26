@@ -7,6 +7,17 @@ export const iconSchema = z
 		"The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available.",
 	);
 
+export const itemOptionsSchema = z
+	.object({
+		showLinkInTitle: z
+			.boolean()
+			.catch(false)
+			.describe(
+				"If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+			),
+	})
+	.catch({ showLinkInTitle: false });
+
 export const urlSchema = z.object({
 	url: z.string().describe("The URL to show as a link. Must be a valid URL with a protocol (http:// or https://)."),
 	label: z.string().describe("The label to display for the URL. Leave blank to display the URL as-is."),
@@ -84,7 +95,14 @@ export const summarySchema = z.object({
 export const baseItemSchema = z.object({
 	id: z.string().describe("The unique identifier for the item. Usually generated as a UUID."),
 	hidden: z.boolean().describe("Whether to hide the item from the resume."),
+	options: itemOptionsSchema.optional().describe("Display options for this item."),
 });
+
+export const summaryItemSchema = baseItemSchema.extend({
+	content: z.string().describe("The rich text content of the summary item. This should be a HTML-formatted string."),
+});
+
+export type SummaryItem = z.infer<typeof summaryItemSchema>;
 
 export const awardItemSchema = baseItemSchema.extend({
 	title: z.string().min(1).describe("The title of the award."),
@@ -214,6 +232,13 @@ export const volunteerItemSchema = baseItemSchema.extend({
 		.describe("The description of the volunteer experience. This should be a HTML-formatted string."),
 });
 
+export const coverLetterItemSchema = baseItemSchema.extend({
+	recipient: z.string().describe("The recipient's address block as HTML (name, title, company, address, email)."),
+	content: z.string().describe("The cover letter body as HTML (salutation, paragraphs, closing, signature)."),
+});
+
+export type CoverLetterItem = z.infer<typeof coverLetterItemSchema>;
+
 export const baseSectionSchema = z.object({
 	title: z.string().describe("The title of the section."),
 	columns: z.number().describe("The number of columns the section should span across."),
@@ -288,6 +313,7 @@ export type SectionData<T extends SectionType = SectionType> = z.infer<typeof se
 export type SectionItem<T extends SectionType = SectionType> = SectionData<T>["items"][number];
 
 export const sectionTypeSchema = z.enum([
+	"summary",
 	"profiles",
 	"experience",
 	"education",
@@ -300,9 +326,17 @@ export const sectionTypeSchema = z.enum([
 	"publications",
 	"volunteer",
 	"references",
+	"cover-letter",
 ]);
 
+export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
+
 export const customSectionItemSchema = z.union([
+	// coverLetterItemSchema must come before summaryItemSchema because both have 'content',
+	// but coverLetterItemSchema also requires 'recipient'. If summaryItemSchema is first,
+	// cover letter items will match it and lose the 'recipient' field.
+	coverLetterItemSchema,
+	summaryItemSchema,
 	profileItemSchema,
 	experienceItemSchema,
 	educationItemSchema,

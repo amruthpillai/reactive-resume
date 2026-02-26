@@ -8,7 +8,7 @@ msgstr ""
 "Language: el\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:12\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -207,14 +207,9 @@ msgstr "Προσθήκη γραμμής μετά"
 msgid "Add Row Before"
 msgstr "Προσθήκη γραμμής πριν"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Προστέθηκε στις {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Προσθήκη κλειδιού πρόσβασης..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "Αφρικάανς"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "ΤΝ"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "Στατιστικά εφαρμογής"
 msgid "Arabic"
 msgstr "Αραβικά"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το κλειδί API;"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το κλειδί πρόσβασης;"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "Τομέας σπουδών"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "Τεχνητή Νοημοσύνη"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "Μπορώ να εξαγάγω το βιογραφικό μου σημε
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "Μπορώ να εξαγάγω το βιογραφικό μου σημε
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "Κινέζικα (Παραδοσιακά)"
 msgid "Circle"
 msgstr "Κύκλος"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "Απαλοιφή επιλογής"
@@ -565,6 +576,11 @@ msgstr "Επιβεβαίωση"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Σύνδεση"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "Αντιγράψτε αυτό το μυστικό κλειδί και χ
 msgid "Copy URL"
 msgstr "Αντιγραφή URL"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "Αντιγραφή URL"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "Δημιουργία"
@@ -640,6 +662,10 @@ msgstr "Δημιουργία νέου βραβείου"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "Δημιουργία νέας πιστοποίησης"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "Δημιουργία νέου βιογραφικού σημειώματ�
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "Δημιουργία νέας δεξιότητας"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "Διαγραφή του λογαριασμού σας..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Διαγραφή του κλειδιού API σας..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Διαγραφή του κλειδιού πρόσβασής σας..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "Δημιουργία αντιγράφου του βιογραφικού 
 msgid "Dutch"
 msgstr "Ολλανδικά"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Εκπαίδευση"
@@ -1005,6 +1035,10 @@ msgstr "Οτιδήποτε εισάγετε εδώ αποθηκεύεται το
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Όλα όσα χρειάζεστε για να δημιουργήσετε, να προσαρμόσετε και να μοιραστείτε επαγγελματικά βιογραφικά σημειώματα. Δημιουργήθηκε με γνώμονα το απόρρητο, βασισμένο σε ανοικτό κώδικα και εντελώς δωρεάν για πάντα."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "Γαλλικά"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "Πλήρες πλάτος"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "Μάθετε περισσότερα"
 msgid "Learn more about how to fit content on a page"
 msgstr "Μάθετε περισσότερα σχετικά με το πώς να προσαρμόσετε το περιεχόμενο σε μια σελίδα"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Αφήστε το κενό για να επαναφέρετε τον τίτλο στο αρχικό."
@@ -1642,10 +1684,6 @@ msgstr "Σελίδα {pageNumber} από {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Παράγραφος"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Κλειδιά πρόσβασης"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Κλειδιά πρόσβασης & 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Το Reactive Resume κάνει σήμερα ντεμπούτο στο P
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Το Reactive Resume είναι ανοικτού κώδικα, με έμφαση στο απόρρητο και εντελώς δωρεάν. Σε αντίθεση με άλλους κατασκευαστές βιογραφικών σημειωμάτων, δεν εμφανίζει διαφημίσεις, δεν παρακολουθεί τα δεδομένα σας και δεν περιορίζει τις λειτουργίες του πίσω από paywall."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "Ορθογώνιο"
@@ -1841,10 +1883,6 @@ msgstr "Συστάσεις"
 msgid "Refresh"
 msgstr "Ανανέωση"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Καταχώριση νέας συσκευής"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Θυμάστε τον κωδικό πρόσβασής σας; <0><1>Συνδεθείτε τώρα <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "Θυμάστε τον κωδικό πρόσβασής σας; <0><1>Συ
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Κατάργηση κωδικού πρόσβασης"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "Ρωσικά"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "Ρωσικά"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,9 +2080,21 @@ msgstr "Κοινοποίηση"
 msgid "Show"
 msgstr "Εμφάνιση"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
-msgstr "Πλαϊνή μπάρα<<<<<<< HEAD"
+msgstr "Πλαϊνή μπάρα"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/index.tsx
 msgid "Sidebar Width"
@@ -2060,7 +2116,6 @@ msgstr "Συνδεθείτε με GitHub, Google ή έναν προσαρμοσ�
 msgid "Sign up"
 msgstr "Εγγραφείτε"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "Ξεκινήστε να φτιάχνετε το βιογραφικό σ�
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "Στατιστικά"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "Στη συνέχεια, εισαγάγετε τον 6ψήφιο κωδ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "Παρουσιάστηκε πρόβλημα κατά τη δημιουργία του PDF, δοκιμάστε ξανά σε λίγο."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "Ενημέρωση υπάρχοντος βραβείου"
 msgid "Update an existing certification"
 msgstr "Ενημέρωση υπάρχουσας πιστοποίησης"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "Ενημέρωση υπάρχουσας προσαρμοσμένης ενότητας"
@@ -2534,6 +2601,10 @@ msgstr "Ενημέρωση υπάρχουσας σύστασης"
 msgid "Update an existing skill"
 msgstr "Ενημέρωση υπάρχουσας δεξιότητας"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "Ενημέρωση υπάρχουσας εθελοντικής εμπειρίας"
@@ -2550,6 +2621,10 @@ msgstr "Ενημέρωση βιογραφικού σημειώματος"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "Ενημερώστε τον κωδικό πρόσβασής σας"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "Εθελοντική εργασία"
 msgid "Website"
 msgstr "Ιστότοπος"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Πώς θέλετε να ονομάσετε αυτό το κλειδί πρόσβασης;"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Πώς θέλετε να μετονομάσετε αυτή την ενότητα;"
@@ -2690,10 +2761,9 @@ msgstr "Μπορείτε επίσης να χρησιμοποιήσετε το �
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Μπορείτε να μοιραστείτε το βιογραφικό σας σημείωμα μέσω ενός μοναδικού δημόσιου URL, να το προστατεύσετε με κωδικό πρόσβασης ή να το κατεβάσετε ως PDF για να το μοιραστείτε απευθείας. Η επιλογή είναι δική σας!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Δεν θα μπορείτε πλέον να χρησιμοποιήσετε το κλειδί πρόσβασης \"{0}\" για σύνδεση μετά τη διαγραφή. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "Τα δεδομένα σας αποθηκεύονται τοπικά"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Τα δεδομένα σας αποθηκεύονται με ασφάλεια και δεν κοινοποιούνται ποτέ σε τρίτους. Μπορείτε επίσης να φιλοξενήσετε μόνοι σας το Reactive Resume στους δικούς σας διακομιστές για πλήρη έλεγχο των δεδομένων σας."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Το κλειδί πρόσβασής σας προστέθηκε με επιτυχία."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Το κλειδί πρόσβασής σας διαγράφηκε με επιτυχία."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "Σμίκρυνση"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Ζουλού"
-

@@ -30,7 +30,7 @@ type Item = {
 	subsets: string[];
 	variants: Variant[];
 	colorCapabilities?: string[];
-	files: Record<Variant, string>;
+	files: Partial<Record<Variant, string>>;
 };
 
 export type APIResponse = {
@@ -47,5 +47,5 @@ export type WebFont = {
 	family: string;
 	weights: Weight[];
 	preview: string;
-	files: Record<FileWeight, string>;
+	files: Partial<Record<FileWeight, string>>;
 };

@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import { useIsClient } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
@@ -14,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { type AIProvider, useAIStore } from "@/integrations/ai/store";
-import { client } from "@/integrations/orpc/client";
+import { orpc } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
 import { DashboardHeader } from "../-components/header";
 
@@ -62,19 +63,7 @@ function AIForm() {
 		return providerOptions.find((option) => option.value === provider);
 	}, [provider]);
 
-	const { mutate: testConnection, isPending: isTesting } = useMutation({
-		mutationFn: async () => {
-			if (testStatus === "success") return;
-			const stream = await client.ai.testConnection({ provider, model, apiKey, baseURL });
-			let result = "";
-			for await (const chunk of stream) {
-				result += chunk;
-			}
-			set((draft) => {
-				draft.testStatus = result === "1" ? "success" : "failure";
-			});
-		},
-	});
+	const { mutate: testConnection, isPending: isTesting } = useMutation(orpc.ai.testConnection.mutationOptions());
 
 	const handleProviderChange = (value: AIProvider | null) => {
 		if (!value) return;
@@ -101,14 +90,34 @@ function AIForm() {
 		});
 	};
 
+	const handleTestConnection = () => {
+		testConnection(
+			{ provider, model, apiKey, baseURL },
+			{
+				onSuccess: (data) => {
+					set((draft) => {
+						draft.testStatus = data ? "success" : "failure";
+					});
+				},
+				onError: (error) => {
+					set((draft) => {
+						draft.testStatus = "failure";
+					});
+
+					toast.error(error.message);
+				},
+			},
+		);
+	};
+
 	return (
 		<div className="grid gap-6 sm:grid-cols-2">
 			<div className="flex flex-col gap-y-2">
-				<Label htmlFor="provider">
+				<Label htmlFor="ai-provider">
 					<Trans>Provider</Trans>
 				</Label>
 				<Combobox
-					id="provider"
+					id="ai-provider"
 					value={provider}
 					disabled={enabled}
 					options={providerOptions}
@@ -117,48 +126,67 @@ function AIForm() {
 			</div>
 
 			<div className="flex flex-col gap-y-2">
-				<Label htmlFor="model">
+				<Label htmlFor="ai-model">
 					<Trans>Model</Trans>
 				</Label>
 				<Input
-					id="model"
+					id="ai-model"
+					name="ai-model"
 					type="text"
 					value={model}
 					disabled={enabled}
 					onChange={(e) => handleModelChange(e.target.value)}
 					placeholder="e.g., gpt-4, claude-3-opus, gemini-pro"
+					autoCorrect="off"
+					autoComplete="off"
+					spellCheck="false"
+					autoCapitalize="off"
 				/>
 			</div>
 
 			<div className="flex flex-col gap-y-2 sm:col-span-2">
-				<Label htmlFor="api-key">
+				<Label htmlFor="ai-api-key">
 					<Trans>API Key</Trans>
 				</Label>
 				<Input
-					id="api-key"
+					id="ai-api-key"
+					name="ai-api-key"
 					type="password"
 					value={apiKey}
 					disabled={enabled}
 					onChange={(e) => handleApiKeyChange(e.target.value)}
+					autoCorrect="off"
+					autoComplete="off"
+					spellCheck="false"
+					autoCapitalize="off"
+					// ignore password managers
+					data-lpignore="true"
+					data-bwignore="true"
+					data-1p-ignore="true"
 				/>
 			</div>
 
 			<div className="flex flex-col gap-y-2 sm:col-span-2">
-				<Label htmlFor="base-url">
+				<Label htmlFor="ai-base-url">
 					<Trans>Base URL (Optional)</Trans>
 				</Label>
 				<Input
-					id="base-url"
+					id="ai-base-url"
+					name="ai-base-url"
 					type="url"
 					value={baseURL}
 					disabled={enabled}
 					placeholder={selectedOption?.defaultBaseURL}
 					onChange={(e) => handleBaseURLChange(e.target.value)}
+					autoCorrect="off"
+					autoComplete="off"
+					spellCheck="false"
+					autoCapitalize="off"
 				/>
 			</div>
 
 			<div>
-				<Button variant="outline" disabled={isTesting || enabled} onClick={() => testConnection()}>
+				<Button variant="outline" disabled={isTesting || enabled} onClick={handleTestConnection}>
 					{isTesting ? (
 						<Spinner />
 					) : testStatus === "success" ? (

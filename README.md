@@ -1,15 +1,3 @@
-<div align="center" markdown="1">
-  <a href="https://go.warp.dev/Reactive-Resume">
-    <img alt="Warp Sponsorship" width="400" src="https://github.com/warpdotdev/brand-assets/blob/main/Github/Sponsor/Warp-Github-LG-03.png?raw=true" />
-  </a>
-
-  ### [Warp, built for coding with multiple AI agents.](https://go.warp.dev/Reactive-Resume)
-
-  [Available for MacOS, Linux, & Windows](https://go.warp.dev/Reactive-Resume)
-</div>
-
----
-
 <div align="center">
   <a href="https://rxresu.me">
     <img src="public/opengraph/banner.jpg" alt="Reactive Resume" />
@@ -26,15 +14,15 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/github/stars/amruthpillai/Reactive-Resume?style=flat-square" alt="Stars" />
+    <img src="https://img.shields.io/github/package-json/v/amruthpillai/reactive-resume?style=flat-square" alt="Reactive Resume version">
+    <img src="https://img.shields.io/github/stars/amruthpillai/Reactive-Resume?style=flat-square" alt="GitHub Stars">
     <img src="https://img.shields.io/github/license/amruthpillai/Reactive-Resume?style=flat-square" alt="License" />
     <img src="https://img.shields.io/docker/pulls/amruthpillai/reactive-resume?style=flat-square" alt="Docker Pulls" />
-    <a href="https://discord.gg/EE8yFqW4"><img src="https://img.shields.io/discord/1173518977851473940?label=Discord&style=flat-square&logo=discord" alt="Discord" /></a>
+    <a href="https://discord.gg/aSyA5ZSxpb"><img src="https://img.shields.io/discord/1173518977851473940?style=flat-square&label=discord" alt="Discord" /></a>
     <a href="https://crowdin.com/project/reactive-resume"><img src="https://badges.crowdin.net/reactive-resume/localized.svg?style=flat-square" alt="Crowdin" /></a>
-    <a href="https://opencollective.com/reactive-resume"><img src="https://img.shields.io/opencollective/all/reactive-resume?style=flat-square" alt="Open Collective" /></a>
+    <a href="https://github.com/sponsors/AmruthPillai"><img src="https://img.shields.io/github/sponsors/AmruthPillai?style=flat-square&label=sponsors" alt="Sponsors" /></a>
+    <a href="https://opencollective.com/reactive-resume"><img src="https://img.shields.io/opencollective/backers/reactive-resume?style=flat-square&label=donations" alt="Donations" /></a>
   </p>
-
-  <a href="https://www.producthunt.com/products/reactive-resume?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-reactive-resume-v5-2" target="_blank" rel="noopener"><img alt="Reactive Resume v5 - A free and open-source resume builder. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065182&amp;theme=light&amp;t=1768850745585"></a>
 </div>
 
 ---
@@ -157,6 +145,8 @@ docker compose up -d
 open http://localhost:3000
 ```
 
+[![Build with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/amruthpillai/reactive-resume)
+
 For detailed setup instructions, environment configuration, and self-hosting guides, see the [documentation](https://docs.rxresu.me).
 
 ## Tech Stack
@@ -203,7 +193,7 @@ docker pull amruthpillai/reactive-resume:latest
 docker pull ghcr.io/amruthpillai/reactive-resume:latest
 ```
 
-See the [self-hosting guide](https://docs.rxresu.me/guides/self-hosting-with-docker) for complete instructions.
+See the [self-hosting guide](https://docs.rxresu.me/self-hosting/docker) for complete instructions.
 
 ## Support
 

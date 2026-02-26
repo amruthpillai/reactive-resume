@@ -122,6 +122,7 @@ export const printerService = {
 			const page = await browser.newPage();
 
 			// Wait for the page to fully load (network idle + custom loaded attribute)
+			await page.emulateMediaType("print");
 			await page.setViewport(pageDimensionsAsPixels[format]);
 			await page.goto(url, { waitUntil: "networkidle0" });
 			await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
@@ -172,7 +173,7 @@ export const printerService = {
 						? getComputedStyle(container).getPropertyValue("--page-height").trim()
 						: null;
 					const currentHeight = containerHeight || rootHeight;
-					const heightValue = Math.max(Number.parseFloat(currentHeight), minPageHeight);
+					const heightValue = Math.min(Number.parseFloat(currentHeight), minPageHeight);
 
 					if (!Number.isNaN(heightValue)) {
 						// Subtract top + bottom margins from page height

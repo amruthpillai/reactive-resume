@@ -19,6 +19,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useControls } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
+import { AIChat } from "@/components/ai/chat";
 import { useTemporalStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -82,9 +83,8 @@ export function BuilderDock() {
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
 			downloadFromUrl(url, filename);
-		} catch (error) {
+		} catch {
 			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
-			console.error("[Error from printResumeAsPDF]:", error);
 		} finally {
 			toast.dismiss(toastId);
 		}
@@ -122,6 +122,7 @@ export function BuilderDock() {
 				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.1)} />
 				<DockIcon icon={CubeFocusIcon} title={t`Center view`} onClick={() => centerView()} />
 				<div className="mx-1 h-8 w-px bg-border" />
+				<AIChat />
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
 				<DockIcon icon={FileJsIcon} title={t`Download JSON`} onClick={() => onDownloadJSON()} />
 				<DockIcon

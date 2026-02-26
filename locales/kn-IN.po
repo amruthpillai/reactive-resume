@@ -8,7 +8,7 @@ msgstr ""
 "Language: kn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Kannada\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -207,14 +207,9 @@ msgstr "ಸಾಲನ್ನು ನಂತರ ಸೇರಿಸಿ"
 msgid "Add Row Before"
 msgstr "ಸಾಲನ್ನು ಮೊದಲು ಸೇರಿಸಿ"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "{0} ರಂದು ಸೇರಿಸಲಾಗಿದೆ"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "ನಿಮ್ಮ ಪಾಸ್‌ಕೀ ಸೇರಿಸಲಾಗುತ್ತಿದೆ..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "ಆಫ್ರಿಕಾನ್ಸ್"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "AI"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "ಅಪ್ಲಿಕೇಶನ್ ಅಂಕಿಅಂಶಗಳು"
 msgid "Arabic"
 msgstr "ಅರೇಬಿಕ್"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "ಈ API ಕೀಲಿಯನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "ಈ ಪಾಸ್‌ಕೀ ಅನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "ಅಧ್ಯಯನದ ಕ್ಷೇತ್ರ"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "ಕೃತಕ ಬುದ್ಧಿವಂತಿಕೆ"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "ನಾನು ನನ್ನ ರೆಸ್ಯೂಮ್ ಅನ್ನು PDF �
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "ನಾನು ನನ್ನ ರೆಸ್ಯೂಮ್ ಅನ್ನು PDF �
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "ಚೈನೀಸ್ (ಸಾಂಪ್ರದಾಯಿಕ)"
 msgid "Circle"
 msgstr "ವೃತ್ತ"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "ಆಯ್ಕೆಯನ್ನು ತೆರವುಗೊಳಿಸಿ"
@@ -565,6 +576,11 @@ msgstr "ದೃಢೀಕರಿಸಿ"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "ಕನೆಕ್ಟ್ ಮಾಡಿ"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "ಈ ಸೀಕ್ರೆಟ್ ಕೀ ಅನ್ನು ನಕಲಿಸಿ �
 msgid "Copy URL"
 msgstr "URL ನಕಲಿಸಿ"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "URL ನಕಲಿಸಿ"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "ರಚಿಸಿ"
@@ -640,6 +662,10 @@ msgstr "ಹೊಸ ಪ್ರಶಸ್ತಿಯನ್ನು ರಚಿಸಿ"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "ಹೊಸ ಪ್ರಮಾಣಪತ್ರವನ್ನು ರಚಿಸಿ"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "ಹೊಸ ರೆಸ್ಯೂಮ್ ಅನ್ನು ರಚಿಸಿ"
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "ಹೊಸ ಕೌಶಲ್ಯವನ್ನು ರಚಿಸಿ"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಅಳಿಸಲಾಗುತ�
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "ನಿಮ್ಮ API ಕೀಲಿಯನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "ನಿಮ್ಮ ಪಾಸ್‌ಕೀ ಅಳಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ನಕಲಿಸಲಾಗುತ�
 msgid "Dutch"
 msgstr "ಡಚ್"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "ಶಿಕ್ಷಣ"
@@ -1005,6 +1035,10 @@ msgstr "ಇಲ್ಲಿ ನಮೂದಿಸಿರುವ ಎಲ್ಲವನ್ನ�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "ವೃತ್ತಿಪರ ರೆಸ್ಯೂಮ್‌ಗಳನ್ನು ರಚಿಸಲು, ಕಸ್ಟಮೈಸ್ ಮಾಡಲು ಮತ್ತು ಹಂಚಿಕೊಳ್ಳಲು ನಿಮಗೆ ಬೇಕಾದ ಎಲ್ಲವೂ ಇಲ್ಲಿ ಇದೆ. ಗೌಪ್ಯತೆಯನ್ನು ಗಮನದಲ್ಲಿಟ್ಟುಕೊಂಡು, ಮುಕ್ತ-ಮೂಲದೊಂದಿಗೆ ನಿರ್ಮಿಸಲ್ಪಟ್ಟಿದೆ ಮತ್ತು ಸಂಪೂರ್ಣವಾಗಿ ಉಚಿತವಾಗಿದೆ."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "ಫ್ರೆಂಚ್"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "ಪೂರ್ಣ ಅಗಲ"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ"
 msgid "Learn more about how to fit content on a page"
 msgstr "ಒಂದು ಪುಟದಲ್ಲಿ ವಿಷಯವನ್ನು ಹೇಗೆ ಹೊಂದಿಸಲು ತಿಳಿಯಿರಿ"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "ಶೀರ್ಷಿಕೆಯನ್ನು ಮೂಲದಂತೆ ಮರುಹೊಂದಿಸಲು ಖಾಲಿ ಬಿಟ್ಟುಬಿಡಿ."
@@ -1642,10 +1684,6 @@ msgstr "ಒಟ್ಟು {totalNumberOfPages} ಪುಟಗಳಲ್ಲಿ ಪು�
 msgid "Paragraph"
 msgstr "ಪ್ಯಾರಾಗ್ರಾಫ್"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "ಪಾಸ್‌ಕೀಗಳು"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "ಪಾಸ್‌ಕೀಗಳು ಹಾಗೂ 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Reactive Resume ಇಂದು Product Hunt ನಲ್ಲಿ ಲಾಂಚ�
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Reactive Resume ಮುಕ್ತ-ಮೂಲ, ಗೌಪ್ಯತಿಗೆ ಪ್ರಾಧಾನ್ಯ ನೀಡುವ ಹಾಗು ಸಂಪೂರ್ಣವಾಗಿ ಉಚಿತವಾಗಿದೆ. ಇತರೆ ರೆಸ್ಯೂಮ್ ನಿರ್ಮಾಪಕರಿಗಿಂತ ವಿಭಿನ್ನವಾಗಿ, ಇದು ಜಾಹೀರಾತುಗಳನ್ನು ತೋರಿಸುವುದಿಲ್ಲ, ನಿಮ್ಮ ಡೇಟಾವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡುವುದಿಲ್ಲ, ಅಥವಾ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಪೇಯ್‌ವಾಲ್ ಹಿಂದೆ ಮಿತಿ ಮಾಡುವುದಿಲ್ಲ."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "ಆಯತ"
@@ -1841,10 +1883,6 @@ msgstr "ಪರಿಚಯಗಳು"
 msgid "Refresh"
 msgstr "ರಿಫ್ರೆಶ್ ಮಾಡಿ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "ಹೊಸ ಸಾಧನವನ್ನು ನೋಂದಾಯಿಸಿ"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನೆನಪಿದೆಯೇ? <0><1>ಈಗಲೇ ಸೈನ್ ಇನ್ ಮಾಡಿ <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನೆನಪಿದೆಯ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "ಪಾಸ್‌ವರ್ಡ್ ತೆಗೆದುಹಾಕಿ"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "ರಷಿಯನ್"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "ರಷಿಯನ್"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,9 +2080,21 @@ msgstr "ಹಂಚಿಕೆ"
 msgid "Show"
 msgstr "ತೋರಿಸು"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
-msgstr "ಪಾರ್ಶ್ವಪಟ್ಟಿ<<<<<<< HEAD"
+msgstr "ಪಾರ್ಶ್ವಪಟ್ಟಿ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/index.tsx
 msgid "Sidebar Width"
@@ -2060,7 +2116,6 @@ msgstr "GitHub, Google ಅಥವಾ ಕಸ್ಟಮ್ OAuth ಪ್ರೊವೈ�
 msgid "Sign up"
 msgstr "ಖಾತೇ ರಚಿಸಿ"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "ಮೊದಲಿನಿಂದ ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ಅ
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "ಅಂಕಿಅಂಶಗಳು"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "ನಂತರ, ಆ್ಯಪ್ ನೀಡುವ 6 ಅಂಕಿಯ ಕೋ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "PDF ರಚಿಸುವಾಗ ಒಂದು ಸಮಸ್ಯೆ ಉಂಟಾಯಿತು, ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ಬಳಿಕ ಮರುಪ್ರಯತ್ನಿಸಿ."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಪ್ರಶಸ್ತ�
 msgid "Update an existing certification"
 msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಪ್ರಮಾಣಪತ್ರವನ್ನು ನವೀಕರಿಸಿ"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಕಸ್ಟಮ್ ವಿಭಾಗವನ್ನು ನವೀಕರಿಸಿ"
@@ -2534,6 +2601,10 @@ msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಪರಿಚಯವನ�
 msgid "Update an existing skill"
 msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಕೌಶಲ್ಯವನ್ನು ನವೀಕರಿಸಿ"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಸ್ವಯಂಸೇವಕ ಅನುಭವವನ್ನು ನವೀಕರಿಸಿ"
@@ -2550,6 +2621,10 @@ msgstr "ರೆಸ್ಯೂಮ್ ನವೀಕರಿಸಿ"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ನವೀಕರಿಸಿ"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "ಸ್ವಯಂಸೇವಕ"
 msgid "Website"
 msgstr "ಜಾಲತಾಣ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "ಈ ಪಾಸ್‌ಕೀಗೆ ನೀವು ಯಾವ ಹೆಸರನ್ನು ಇಡಲು ಬಯಸುತ್ತೀರಿ?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "ಈ ವಿಭಾಗವನ್ನು ನೀವು ಯಾವ ಹೆಸರಿಗೆ ಮರುಹೆಸರಿಸಲು ಬಯಸುತ್ತೀರಿ?"
@@ -2690,10 +2761,9 @@ msgstr "ಲಾಗಿನ್ ಮಾಡಲು ನೀವು ನಿಮ್ಮ ಬಳ�
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "ನೀವು ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ಅನ್ನು ಅನನ್ಯ ಸಾರ್ವಜನಿಕ URL ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಬಹುದು, ಅದನ್ನು ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ರಕ್ಷಿಸಬಹುದು, ಅಥವಾ ನೇರವಾಗಿ ಹಂಚಿಕೊಳ್ಳಲು PDF ಆಗಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಬಹುದು. ಆಯ್ಕೆ ನಿಮ್ಮದು!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "ಅಳಿಸಿದ ನಂತರ ನೀವು ಸೈನ್ ಇನ್ ಮಾಡಲು \"{0}\" ಎಂಬ ಪಾಸ್‌ಕೀ ಅನ್ನು ಇನ್ನೂ ಬಳಸಲಾಗುವುದಿಲ್ಲ. ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತೆಗೆದುಕೊಳ್ಳಲಾಗುವುದಿಲ್ಲ."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "ನಿಮ್ಮ ಡೇಟಾವನ್ನು ಸ್ಥಳೀಯವಾಗ�
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "ನಿಮ್ಮ ಡೇಟಾವನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಎಂದಿಗೂ ತೃತೀಯಪಕ್ಷಗಳೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಡೇಟಾದ ಮೇಲೆ ಸಂಪೂರ್ಣ ನಿಯಂತ್ರಣಕ್ಕಾಗಿ ನಿಮ್ಮದೇ ಸರ್ವರ್‌ಗಳಲ್ಲಿ Reactive Resume ಅನ್ನು ಸ್ವಯಂ-ಹೋಸ್ಟ್ ಮಾಡಬಹುದು."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "ನಿಮ್ಮ ಪಾಸ್‌ಕೀ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "ನಿಮ್ಮ ಪಾಸ್‌ಕೀ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "ಗಾತ್ರ ಕುಗ್ಗಿಸಿ"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "ಜೂಲೂ"
-

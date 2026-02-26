@@ -12,5 +12,5 @@ export const getSession = createIsomorphicFn()
 	})
 	.server(async (): Promise<AuthSession | null> => {
 		const result = await auth.api.getSession({ headers: getRequestHeaders() });
-		return result;
+		return result as AuthSession | null;
 	});

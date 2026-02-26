@@ -8,7 +8,7 @@ msgstr ""
 "Language: km\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Khmer\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -207,14 +207,9 @@ msgstr "បន្ថែម​ជួរដេក​នៅ​ក្រោយ"
 msgid "Add Row Before"
 msgstr "បន្ថែម​ជួរដេក​នៅ​មុខ"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "បាន​បន្ថែម​នៅ​ថ្ងៃទី {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "កំពុង​បន្ថែម​កូនសោ​កំណត់​អត្តសញ្ញាណ​របស់​អ្នក..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "Afrikaans"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "AI"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "ស្ថិតិ​កម្មវិធី"
 msgid "Arabic"
 msgstr "Arabic"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុប​កូនសោ API នេះ​ឬ?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុប​កូនសោ​កំណត់​អត្តសញ្ញាណ​នេះ​ឬ?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "ជំនាញ​រៀន"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "បញ្ញាសិប្បនិម្មិត"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "តើ​ខ្ញុំ​អាច​នាំចេញ​ប្រវ
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "តើ​ខ្ញុំ​អាច​នាំចេញ​ប្រវ
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "Chinese (Traditional)"
 msgid "Circle"
 msgstr "រង្វង់"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "សម្អាត​ការ​ជ្រើសរើស"
@@ -565,6 +576,11 @@ msgstr "អះអាង"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "តភ្ជាប់"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "ចម្លង​កូនសោ​សម្ងាត់​នេះ �
 msgid "Copy URL"
 msgstr "ចម្លង URL"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "ចម្លង URL"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "បង្កើត"
@@ -640,6 +662,10 @@ msgstr "បង្កើតរង្វាន់​ថ្មី"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "បង្កើត​វិញ្ញាបនបត្រ​ថ្មី"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "បង្កើត​ប្រវត្តិរូប​ថ្មី"
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "បង្កើត​ជំនាញ​ថ្មី"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "កំពុង​លុប​គណនី​របស់​អ្នក
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "កំពុង​លុប​កូនសោ API របស់​អ្នក..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "កំពុង​លុប​កូនសោ​កំណត់​អត្តសញ្ញាណ​របស់​អ្នក..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "កំពុង​ស្ទួន​ប្រវត្តិរូប​
 msgid "Dutch"
 msgstr "Dutch"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "ការ​សិក្សា"
@@ -1005,6 +1035,10 @@ msgstr "អ្វី​ដែល​បាន​បញ្ចូល​នៅ​ទ
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "អ្វីៗ​ដែល​អ្នក​ត្រូវការ ដើម្បី​បង្កើត ប្ដូរ​តាមបំណង និង​ចែករំលែក​ប្រវត្តិរូប​វិជ្ជាជីវៈ។ ត្រូវ​បាន​បង្កើត​ឡើង​ដោយ​គិត​ពី​ភាព​ឯកជន ប្រើ​បច្ចេកវិទ្យា​បើក​ប្រភព ហើយ​ឥត​គិតថ្លៃ​ទាំងស្រុង ជារៀងរហូត។"
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "French"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "ទទឹង​ពេញ"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "ស្វែងយល់បន្ថែម"
 msgid "Learn more about how to fit content on a page"
 msgstr "ស្វែងយល់បន្ថែមអំពីរបៀបសម្របខ្លឹមសារឲ្យសមនឹងទំព័រ"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "ទុក​វែងៗ ដើម្បី​កំណត់​ចំណងជើង​ឲ្យ​ត្រឡប់​ទៅ​ដើម​វិញ។"
@@ -1642,10 +1684,6 @@ msgstr "ទំព័រ {pageNumber} ក្នុងចំណោម {totalNumber
 msgid "Paragraph"
 msgstr "កថាខណ្ឌ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "កូនសោ​កំណត់​អត្តសញ្ញាណ"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "កូនសោ​កំណត់​អត្តសញ្ញាណ & 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Reactive Resume កំពុង​ចាប់ផ្តើម​លើ P
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Reactive Resume គឺ​បើក​ប្រភព ផ្តោតលើ​ភាព​ឯកជន និង​ឥតគិតថ្លៃ​ទាំងស្រុង។ ខុស​ពី​កម្មវិធី​បង្កើត​ប្រវត្តិរូប​ផ្សេងៗ វា​មិន​បង្ហាញ​ពាណិជ្ជកម្ម មិន​តាមដាន​ទិន្នន័យ​របស់​អ្នក ហើយ​មិន​កំណត់​មុខងារ​ពីក្រោយ paywall ឡើយ។"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "ចតុកោណ"
@@ -1841,10 +1883,6 @@ msgstr "យោង"
 msgid "Refresh"
 msgstr "ផ្ទៀងផ្ទាត់​ម្ដងទៀត"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "ចុះឈ្មោះ​ឧបករណ៍​ថ្មី"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "ចង់​ចាំ​ពាក្យសម្ងាត់វិញ​ហើយ​ឬ? <0><1>ចូល​ឥឡូវនេះ <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "ចង់​ចាំ​ពាក្យសម្ងាត់វិញ​
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "ដក​ពាក្យសម្ងាត់"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "Russian"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "Russian"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,9 +2080,21 @@ msgstr "ការចែករំលែក"
 msgid "Show"
 msgstr "បង្ហាញ"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
-msgstr "របារ​បាត<<<<<<< HEAD"
+msgstr "របារ​បាត"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/index.tsx
 msgid "Sidebar Width"
@@ -2060,7 +2116,6 @@ msgstr "ចូល​ដោយ​ប្រើ GitHub, Google ឬ​អ្នក�
 msgid "Sign up"
 msgstr "ចុះឈ្មោះ"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "ចាប់ផ្តើម​បង្កើត​ប្រវត្ត
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "ស្ថិតិ"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "បន្ទាប់មក បញ្ចូល​កូដ ៦ ខ្ទ
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "មាន​បញ្ហា​មួយ​កើតឡើង ខណៈពេល​កំពុង​បង្កើត PDF សូម​ព្យាយាម​ម្ដង​ទៀត​ក្រោយ​មក។"
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "បច្ចុប្បន្នភាព​រង្វាន់​ម
 msgid "Update an existing certification"
 msgstr "បច្ចុប្បន្នភាព​វិញ្ញាបនបត្រ​មាន​ស្រាប់"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "បច្ចុប្បន្នភាព​ផ្នែក​ផ្ទាល់ខ្លួន​មាន​ស្រាប់"
@@ -2534,6 +2601,10 @@ msgstr "បច្ចុប្បន្នភាព​យោង​មាន​ស
 msgid "Update an existing skill"
 msgstr "បច្ចុប្បន្នភាព​ជំនាញ​មាន​ស្រាប់"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "បច្ចុប្បន្នភាព​បទពិសោធន៍​ស្ម័គ្រចិត្ត​មាន​ស្រាប់"
@@ -2550,6 +2621,10 @@ msgstr "បច្ចុប្បន្នភាព​ប្រវត្តិរ
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "បច្ចុប្បន្នភាព​ពាក្យសម្ងាត់​របស់​អ្នក"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "ស្ម័គ្រចិត្ត"
 msgid "Website"
 msgstr "គេហទំព័រ"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "តើ​អ្នក​ចង់​ដាក់​ឈ្មោះ​កូនសោ​កំណត់​អត្តសញ្ញាណ​នេះ​យ៉ាង​ដូចម្តេច?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "តើ​អ្នក​ចង់​ប្ដូរ​ឈ្មោះ​ផ្នែក​នេះ​ទៅ​ជា​អ្វី?"
@@ -2690,10 +2761,9 @@ msgstr "អ្នក​ក៏​អាច​ប្រើ​ឈ្មោះ​អ
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "អ្នក​អាច​ចែករំលែក​ប្រវត្តិរូប​របស់​អ្នក​តាមរយៈ URL សាធារណៈ​មួយ​ដែល​មាន​តែ​មួយគត់ ការពារ​ដោយ​ពាក្យសម្ងាត់ ឬ​ទាញយក​ជា PDF ដើម្បី​ចែករំលែក​ដោយ​ផ្ទាល់ក៏​បាន។ ជម្រើស​ស្ថិត​នៅ​លើ​ដៃ​អ្នក!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "បន្ទាប់​ពី​លុប អ្នក​នឹង​មិន​អាច​ប្រើ​កូនសោ​កំណត់​អត្តសញ្ញាណ \"{0}\" នេះ ដើម្បី​ចូល​បាន​ទៀត​ទេ។ សកម្មភាព​នេះ​មិន​អាច​មិនធ្វើវិញ​បានទេ។"
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "ទិន្នន័យ​របស់​អ្នក​ត្រូវ
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "ទិន្នន័យ​របស់​អ្នក​ត្រូវ​បាន​រក្សាទុក​ដោយ​សុវត្ថិភាព ហើយ​មិនដែល​ត្រូវ​បាន​ចែករំលែក​ជាមួយ​ភាគី​ទីបី​ទេ។ អ្នក​ក៏​អាច​ដំឡើង Reactive Resume លើ​ម៉ាស៊ីន​បម្រើ​ផ្ទាល់ខ្លួន​របស់​អ្នក ដើម្បី​មាន​សិទ្ធિ​ត្រួតត្រា​លើ​ទិន្នន័យ​របស់​អ្នក​ដល់​ខ្ពស់​បំផុត​ផង​ដែរ។"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "កូនសោ​កំណត់​អត្តសញ្ញាណ​របស់​អ្នក ត្រូវ​បាន​បន្ថែម​ដោយ​ជោគជ័យ។"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "កូនសោ​កំណត់​អត្តសញ្ញាណ​របស់​អ្នក ត្រូវ​បាន​លុប​ដោយ​ជោគជ័យ។"
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "បង្រួម"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

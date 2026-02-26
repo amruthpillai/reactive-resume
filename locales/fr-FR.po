@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:12\n"
+"PO-Revision-Date: 2026-02-11 19:56\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -207,14 +207,9 @@ msgstr "Ajouter une ligne après"
 msgid "Add Row Before"
 msgstr "Ajouter une ligne avant"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "Ajouté le {0}"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "Ajout de votre clé d'accès..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr "Ajouté"
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "Afrikaans"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "IA"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr "Chat avec l'IA"
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "Statistiques d'application"
 msgid "Arabic"
 msgstr "Arabe"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr "Êtes-vous sûr de vouloir supprimer cet élément ?"
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette clé API ?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "Êtes-vous sûr de vouloir supprimer cette clé d'accès ?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "Domaine d'étude"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "Intelligence artificielle"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr "Demandez-moi de mettre à jour votre CV."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "Puis-je exporter mon CV au format PDF ?"
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "Puis-je exporter mon CV au format PDF ?"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "Chinois (traditionnel)"
 msgid "Circle"
 msgstr "Cercle"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr "Effacer l'historique de chat"
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "Effacer la sélection"
@@ -565,6 +576,11 @@ msgstr "Confirmer"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Se connecter"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr "Contenu"
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "Copiez cette clé secrète et utilisez-la dans vos applications pour acc
 msgid "Copy URL"
 msgstr "Copier l'URL"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr "Lettre de motivation"
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "Copier l'URL"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "Créer"
@@ -640,6 +662,10 @@ msgstr "Créer une nouvelle récompense"
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "Créer une nouvelle certification"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr "Créez une nouvelle lettre de motivation"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "Créer un nouveau CV"
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "Créer une nouvelle compétence"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr "Créer un nouvel élément de synthèse"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "Suppression de votre compte..."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Suppression de votre clé API..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "Suppression de votre clé d'accès..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "Duplication de votre CV..."
 msgid "Dutch"
 msgstr "Néerlandais"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr "Par ex. : Changer mon nom en"
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Formation"
@@ -1005,6 +1035,10 @@ msgstr "Tout ce qui est entré ici est stocké localement dans votre navigateur.
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Tout ce dont vous avez besoin pour créer, personnaliser et partager des CV professionnels. Construit dans le respect de la vie privée, propulsé par l'open source, et entièrement gratuit pour toujours."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr "Quitter le mode plein écran"
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "Français"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "Pleine largeur"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr "Plein écran"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "En savoir plus"
 msgid "Learn more about how to fit content on a page"
 msgstr "En savoir plus sur la manière d'adapter le contenu d'une page"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr "Quitter"
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Laissez le champ vide pour rétablir le titre d'origine."
@@ -1642,10 +1684,6 @@ msgstr "Page {pageNumber} sur {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Paragraphe"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "Clés d'accès"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "Clés d'accès et 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Reactive Resume est lancé sur Product Hunt aujourd'hui, allez-y pour mo
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Reactive Resume est un logiciel libre, respectueux de la vie privée et entièrement gratuit. Contrairement à d'autres outils de création de CV, il n'affiche pas de publicité, ne suit pas vos données et ne limite pas vos fonctionnalités derrière un mur payant."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr "Destinataire"
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "Rectangle"
@@ -1841,10 +1883,6 @@ msgstr "Références"
 msgid "Refresh"
 msgstr "Actualiser"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "Enregistrer un nouvel appareil"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Vous vous souvenez de votre mot de passe ? <0><1>Connectez-vous maintenant <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "Vous vous souvenez de votre mot de passe ? <0><1>Connectez-vous maintena
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Supprimer le mot de passe"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr "Supprimé"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "Russe"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "Russe"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,6 +2080,18 @@ msgstr "Partage"
 msgid "Show"
 msgstr "Afficher"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr "Afficher le lien dans le titre"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
 msgstr "Encart"
@@ -2060,7 +2116,6 @@ msgstr "Connectez-vous avec GitHub, Google ou un fournisseur OAuth personnalisé
 msgid "Sign up"
 msgstr "S'inscrire"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "Commencez à rédiger votre CV en partant de zéro"
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "Statistiques"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr "Rester"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "Ensuite, entrez le code à 6 chiffres fourni par l'application pour cont
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "Un problème est survenu lors de la génération du PDF, veuillez réessayer dans quelque temps."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr "Réflexion..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "Modifier une récompense existante"
 msgid "Update an existing certification"
 msgstr "Modifier une certification existante"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr "Modifier une lettre de motivation existante"
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "Modifier une section personnalisée existante"
@@ -2534,6 +2601,10 @@ msgstr "Modifier une référence existante"
 msgid "Update an existing skill"
 msgstr "Modifier une compétence existante"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr "Mise à jour d'un élément de synthèse existant"
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "Modifier une expérience de bénévolat existante"
@@ -2550,6 +2621,10 @@ msgstr "Modifier le CV"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "Modifier votre mot de passe"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr "Mis à jour"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "Bénévole"
 msgid "Website"
 msgstr "Site web"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "Comment voulez-vous appeler cette clé d'accès ?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "Comment voulez-vous renommer cette section ?"
@@ -2690,10 +2761,9 @@ msgstr "Vous pouvez également utiliser votre nom d'utilisateur pour vous connec
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Vous pouvez partager votre CV via une URL publique unique, le protéger par un mot de passe ou le télécharger au format PDF pour le partager directement. À vous de choisir !"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "Vous ne pouvez plus utiliser la clé d'accès \"{0}\" pour vous connecter après la suppression. Cette action ne peut pas être annulée."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr "Vous avez des modifications non enregistrées qui seront perdues."
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "Vos données sont stockées localement"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Vos données sont stockées en toute sécurité et ne sont jamais partagées avec des tiers. Vous pouvez également héberger Reactive Resume sur vos propres serveurs pour un contrôle total de vos données."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "Votre clé d'accès a été ajoutée avec succès."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "Votre clé d'accès a été supprimée avec succès."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "Zoom arrière"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zoulou"
-

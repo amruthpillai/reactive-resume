@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { DashboardHeader } from "../../-components/header";
 import { useEnabledProviders } from "./-components/hooks";
-import { PasskeysSection } from "./-components/passkeys";
 import { PasswordSection } from "./-components/password";
 import { SocialProviderSection } from "./-components/social-provider";
 import { TwoFactorSection } from "./-components/two-factor";
@@ -33,7 +32,12 @@ function RouteComponent() {
 
 				<TwoFactorSection />
 
-				<PasskeysSection />
+				{/*
+					Passkeys are temporarily disabled due to an upstream issue with the authentication provider.
+					See https://github.com/better-auth/better-auth/issues/7463 for more details.
+
+					<PasskeysSection />
+				*/}
 
 				{"google" in enabledProviders && <SocialProviderSection provider="google" animationDelay={0.4} />}
 

@@ -1,17 +1,17 @@
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
-import { BatchHandlerPlugin, RequestHeadersPlugin } from "@orpc/server/plugins";
+import { BatchHandlerPlugin, RequestHeadersPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import { createFileRoute } from "@tanstack/react-router";
 import router from "@/integrations/orpc/router";
 import { getLocale } from "@/utils/locale";
 
 const rpcHandler = new RPCHandler(router, {
+	plugins: [new BatchHandlerPlugin(), new RequestHeadersPlugin(), new StrictGetMethodPlugin()],
 	interceptors: [
 		onError((error) => {
-			console.error(error);
+			console.error(`ERROR [oRPC]: ${error}`);
 		}),
 	],
-	plugins: [new BatchHandlerPlugin(), new RequestHeadersPlugin()],
 });
 
 async function handler({ request }: { request: Request }) {

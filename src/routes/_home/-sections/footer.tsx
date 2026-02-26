@@ -35,7 +35,7 @@ const getCommunityLinks = (): FooterLinkItem[] => [
 	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: t`Report an issue` },
 	{ url: "https://crowdin.com/project/reactive-resume", label: t`Translations` },
 	{ url: "https://reddit.com/r/reactiveresume", label: t`Subreddit` },
-	{ url: "https://discord.gg/EE8yFqW4", label: t`Discord` },
+	{ url: "https://discord.gg/aSyA5ZSxpb", label: t`Discord` },
 ];
 
 const socialLinks: SocialLink[] = [
@@ -134,7 +134,7 @@ function FooterLink({ url, label }: FooterLinkItem) {
 					initial={{ width: 0, opacity: 0 }}
 					animate={isHovered ? { width: "100%", opacity: 1 } : { width: 0, opacity: 0 }}
 					transition={{ duration: 0.25, ease: "easeOut" }}
-					className="pointer-events-none absolute start-0 -bottom-0.5 h-px rounded bg-primary"
+					className="pointer-events-none absolute inset-s-0 -bottom-0.5 h-px rounded bg-primary"
 				/>
 			</a>
 		</li>

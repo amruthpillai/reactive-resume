@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { FingerprintSimpleIcon, GithubLogoIcon, GoogleLogoIcon, VaultIcon } from "@phosphor-icons/react";
+import { GithubLogoIcon, GoogleLogoIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -12,20 +12,6 @@ import { cn } from "@/utils/style";
 export function SocialAuth() {
 	const router = useRouter();
 	const { data: authProviders = {} } = useQuery(orpc.auth.providers.list.queryOptions());
-
-	const handlePasskeyLogin = async () => {
-		const toastId = toast.loading(t`Signing in...`);
-
-		const { error } = await authClient.signIn.passkey();
-
-		if (error) {
-			toast.error(error.message, { id: toastId });
-			return;
-		}
-
-		toast.dismiss(toastId);
-		router.invalidate();
-	};
 
 	const handleSocialLogin = async (provider: string) => {
 		const toastId = toast.loading(t`Signing in...`);
@@ -75,15 +61,6 @@ export function SocialAuth() {
 
 			<div>
 				<div className="grid grid-cols-2 gap-4">
-					<Button
-						variant="secondary"
-						onClick={handlePasskeyLogin}
-						className={cn("col-span-full", "custom" in authProviders && "col-span-1")}
-					>
-						<FingerprintSimpleIcon />
-						Passkey
-					</Button>
-
 					<Button
 						variant="secondary"
 						onClick={handleOAuthLogin}

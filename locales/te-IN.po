@@ -8,7 +8,7 @@ msgstr ""
 "Language: te\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-29 13:13\n"
+"PO-Revision-Date: 2026-02-09 22:31\n"
 "Last-Translator: \n"
 "Language-Team: Telugu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -207,14 +207,9 @@ msgstr "తరువాత వరుస చేర్చండి"
 msgid "Add Row Before"
 msgstr "ముందు వరుస చేర్చండి"
 
-#. placeholder {0}: passkey.createdAt.toLocaleDateString()
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Added on {0}"
-msgstr "{0} న జోడించబడింది"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Adding your passkey..."
-msgstr "మీ పాస్కీని జోడిస్తున్నాం..."
+#: src/components/ai/chat.tsx
+msgid "Added"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -224,6 +219,10 @@ msgstr "ఆఫ్రికాన్స్"
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "AI"
+
+#: src/components/ai/chat.tsx
+msgid "AI Chat"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -297,13 +296,13 @@ msgstr "యాప్ గణాంకాలు"
 msgid "Arabic"
 msgstr "అరబిక్"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Are you sure you want to close this dialog?"
+msgstr ""
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "మీరు ఖచ్చితంగా ఈ API కీని తొలగించాలనుకుంటున్నారా?"
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Are you sure you want to delete this passkey?"
-msgstr "మీరు ఖచ్చితంగా ఈ పాస్‌కీని తొలగించాలనుకుంటున్నారా?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -335,6 +334,10 @@ msgstr "అధ్యయన విభాగం"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Artificial Intelligence"
 msgstr "ఆర్టిఫిషియల్ ఇంటెలిజెన్స్"
+
+#: src/components/ai/chat.tsx
+msgid "Ask me to update your resume..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -440,6 +443,8 @@ msgstr "నేను నా రిజ్యూమ్‌ని PDFగా ఎగ�
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -460,6 +465,8 @@ msgstr "నేను నా రిజ్యూమ్‌ని PDFగా ఎగ�
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
@@ -526,6 +533,10 @@ msgstr "చైనీస్ (సాంప్రదాయ)"
 msgid "Circle"
 msgstr "వృత్తం"
 
+#: src/components/ai/chat.tsx
+msgid "Clear chat history"
+msgstr ""
+
 #: src/components/ui/multiple-combobox.tsx
 msgid "Clear selection"
 msgstr "ఎంపికను క్లియర్ చేయండి"
@@ -565,6 +576,11 @@ msgstr "నిర్ధారించండి"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "కనెక్ట్ చేయండి"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Content"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -606,10 +622,15 @@ msgstr "ఈ సీక్రెట్ కీని కాపీ చేసి మ�
 msgid "Copy URL"
 msgstr "URLని కాపీ చేయండి"
 
+#: src/utils/resume/section.tsx
+msgid "Cover Letter"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -620,6 +641,7 @@ msgstr "URLని కాపీ చేయండి"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create"
 msgstr "సృష్టించండి"
@@ -640,6 +662,10 @@ msgstr "క్రొత్త బహుమతిని సృష్టించ�
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Create a new certification"
 msgstr "క్రొత్త సర్టిఫికేషన్‌ను సృష్టించండి"
+
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Create a new cover letter"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -687,6 +713,10 @@ msgstr "కొత్త రిజ్యూమ్ సృష్టించండ�
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Create a new skill"
 msgstr "క్రొత్త నైపుణ్యాన్ని సృష్టించండి"
+
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Create a new summary item"
+msgstr ""
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -796,10 +826,6 @@ msgstr "మీ ఖాతాను తొలగిస్తున్నారు.
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "మీ API కీ తొలగించబడుతోంది..."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Deleting your passkey..."
-msgstr "మీ పాస్‌కీను తొలగిస్తున్నారు..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -918,6 +944,10 @@ msgstr "మీ రిజ్యూమ్‌ను నకిలీ చేస్త
 msgid "Dutch"
 msgstr "డచ్"
 
+#: src/components/ai/chat.tsx
+msgid "e.g. Change my name to..."
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "విద్య"
@@ -1005,6 +1035,10 @@ msgstr "ఇక్కడ నమోదు చేసిన ప్రతిదీ �
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "ప్రొఫెషనల్ రిజ్యూమ్‌లు సృష్టించడానికి, అనుకూలీకరించడానికి, మరియు పంచుకోవడానికి మీకు కావాల్సిన ప్రతిదీ. ప్రైవసీని దృష్టిలో పెట్టుకొని, ఓపెన్ సోర్స్‌తో నిర్మించబడింది, ఎప్పటికీ ఉచితం."
+
+#: src/components/input/rich-input.tsx
+msgid "Exit Fullscreen"
+msgstr ""
 
 #: src/utils/resume/section.tsx
 msgid "Experience"
@@ -1113,6 +1147,10 @@ msgstr "ఫ్రెంచ్"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "పూర్తి వెడల్పు"
+
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1392,6 +1430,10 @@ msgstr "మరింత తెలుసుకోండి"
 msgid "Learn more about how to fit content on a page"
 msgstr "పేజీలో కంటెంట్ ని సరిపడేలా ఎలా ఏర్పాటు చేయాలో మరింత తెలుసుకోండి"
 
+#: src/hooks/use-form-blocker.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "ప్రధాన శీర్షికను పునఃస్థాపించడానికి ఖాళీగా వదిలేయండి."
@@ -1642,10 +1684,6 @@ msgstr "పేజ్ {pageNumber} యొక్క {totalNumberOfPages} లో"
 msgid "Paragraph"
 msgstr "పేరాగ్రాఫ్"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Passkeys"
-msgstr "పాస్‌కీస్"
-
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
 msgstr "పాస్‌కీస్ & 2FA"
@@ -1820,6 +1858,10 @@ msgstr "Reactive Resume నేడు Product Hunt లో ప్రారంభ�
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "Reactive Resume ఓపెన్‌సోర్స్‌, గోప్యతపై దృష్టి సారించినది మరియు పూర్తిగా ఉచితం. ఇతర జీవన చరిత్ర తయారీదార్ల వలె ప్రకటనలను చూపించదు, మీ డేటాను ట్రాక్ చేయదు, లేదా ఫీచర్లను వాలుతో పరిమితం చేయదు."
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
 msgstr "ఆయతం"
@@ -1841,10 +1883,6 @@ msgstr "రిఫరెన్స్లు"
 msgid "Refresh"
 msgstr "రిఫ్రెష్ చేయండి"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Register New Device"
-msgstr "కొత్త పరికరాన్ని నమోదు చేయండి"
-
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "మీకు పాస్‌వర్డ్ గుర్తుంది? <0><1>ఇప్పుడే సైన్ ఇన్ అవ్వండి <2/></1></0>"
@@ -1852,6 +1890,10 @@ msgstr "మీకు పాస్‌వర్డ్ గుర్తుంది?
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "పాస్‌వర్డ్‌ను తీసివేయండి"
+
+#: src/components/ai/chat.tsx
+msgid "Removed"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1927,6 +1969,7 @@ msgstr "రష్యన్"
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/custom.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -1937,6 +1980,7 @@ msgstr "రష్యన్"
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
+#: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Save Changes"
@@ -2036,6 +2080,18 @@ msgstr "షేరింగ్"
 msgid "Show"
 msgstr "చూపించండి"
 
+#: src/dialogs/resume/sections/award.tsx
+#: src/dialogs/resume/sections/certification.tsx
+#: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/profile.tsx
+#: src/dialogs/resume/sections/project.tsx
+#: src/dialogs/resume/sections/publication.tsx
+#: src/dialogs/resume/sections/reference.tsx
+#: src/dialogs/resume/sections/volunteer.tsx
+msgid "Show link in title"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
 msgstr "<<<<<<< HEAD"
@@ -2060,7 +2116,6 @@ msgstr "GitHub, Google లేదా కస్టమ్ OAuth ప్రొవై�
 msgid "Sign up"
 msgstr "సైన్ అప్ చేయండి"
 
-#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2172,6 +2227,10 @@ msgstr "స్క్రాచ్ నుండి మీ రెజ్యూమే
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "స్టాటిస్టిక్స్"
+
+#: src/hooks/use-form-blocker.tsx
+msgid "Stay"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2295,6 +2354,10 @@ msgstr "తర్వాత, యాప్ ఇచ్చిన 6 అంకెల �
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "PDF రూపొందించడంలో సమస్య ఏర్పడింది, దయచేసి కొద్దిసేపటి తరువాత మళ్లీ ప్రయత్నించండి."
+
+#: src/components/ai/chat.tsx
+msgid "Thinking..."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2494,6 +2557,10 @@ msgstr "ఉన్న అవార్డును అప్‌డేట్ చే
 msgid "Update an existing certification"
 msgstr "ఉన్న సర్టిఫికేషన్‌ను అప్‌డేట్ చేయండి"
 
+#: src/dialogs/resume/sections/cover-letter.tsx
+msgid "Update an existing cover letter"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
 msgstr "ఉన్న కస్టమ్ సెక్షన్‌ను అప్‌డేట్ చేయండి"
@@ -2534,6 +2601,10 @@ msgstr "ఉన్న రిఫరెన్స్‌ను అప్‌డేట�
 msgid "Update an existing skill"
 msgstr "ఉన్న నైపుణ్యాన్ని అప్‌డేట్ చేయండి"
 
+#: src/dialogs/resume/sections/summary-item.tsx
+msgid "Update an existing summary item"
+msgstr ""
+
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
 msgstr "ఉన్న వాలంటీర్ అనుభవాన్ని అప్‌డేట్ చేయండి"
@@ -2550,6 +2621,10 @@ msgstr "రిజ్యూమ్‌ను నవీకరించండి"
 #: src/dialogs/auth/change-password.tsx
 msgid "Update your password"
 msgstr "మీ పాస్‌వర్డ్‌ను నవీకరించండి"
+
+#: src/components/ai/chat.tsx
+msgid "Updated"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2640,10 +2715,6 @@ msgstr "వాలంటియర్"
 msgid "Website"
 msgstr "వెబ్‌సైట్"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "What do you want to call this passkey?"
-msgstr "ఈ పాస్‌కీకి మీరు ఏమని పేరు పెట్టాలి?"
-
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "What do you want to rename this section to?"
 msgstr "ఈ విభాగాన్ని మీరు కొత్తగా ఏ పేరుతో మార్చదలుచుకున్నారు?"
@@ -2690,10 +2761,9 @@ msgstr "మీరు మీ యూజర్‌నేమ్‌తో కూడా
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "మీ రిజ్యూమ్‌ను ప్రత్యేకమైన పబ్లిక్ URL ద్వారా షేర్ చేయవచ్చు, దానికి పాస్‌వర్డ్ రక్షణ ఇవ్వచ్చు లేదా డైరెక్టుగా షేర్ చేసేందుకు PDFగా డౌన్లోడ్ చేసుకోవచ్చు. ఎంపిక మీదే!"
 
-#. placeholder {0}: passkey.name ?? "(WebAuthn Device)"
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "You cannot use the passkey \"{0}\" anymore to sign in after deletion. This action cannot be undone."
-msgstr "తొలగించిన తరువాత మీరు ఇకపై \"{0}\" పాస్‌కీతో సైన్ ఇన్ చేయలేరు. ఈ చర్య రద్దు చేయలేనిది."
+#: src/hooks/use-form-blocker.tsx
+msgid "You have unsaved changes that will be lost."
+msgstr ""
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -2723,14 +2793,6 @@ msgstr "మీ డేటా లోకల్‌గా నిల్వ చేయ�
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "మీ డేటా భద్రంగా నిల్వ చేయబడుతుంది, మూడవ పక్షాలతో ఎప్పుడూ పంచుకోబడదు. మీ డేటాపై పూర్తి నియంత్రణ కోసం మీరు Reactive Resumeను మీ సొంత సర్వర్లపై హోస్ట్ చేసుకోవచ్చు."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been added successfully."
-msgstr "మీ పాస్‌కీ విజయవంతంగా చేర్చబడింది."
-
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
-msgid "Your passkey has been deleted successfully."
-msgstr "మీ పాస్‌కీ విజయవంతంగా తొలగించబడింది."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -2786,4 +2848,3 @@ msgstr "జూమ్ అవుట్ చేయండి"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "జులు"
-
