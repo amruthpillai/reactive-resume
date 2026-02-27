@@ -9,6 +9,7 @@ import router from "@/integrations/orpc/router";
 import { resumeDataSchema } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import { getLocale } from "@/utils/locale";
+import { logger } from "@/utils/logger";
 
 const openAPIHandler = new OpenAPIHandler(router, {
 	plugins: [
@@ -21,7 +22,10 @@ const openAPIHandler = new OpenAPIHandler(router, {
 	],
 	interceptors: [
 		onError((error) => {
-			console.error(`ERROR [OpenAPI]: ${error}`);
+			logger.error("OpenAPI handler error", {
+				route: "/api/openapi",
+				error,
+			});
 		}),
 	],
 });
@@ -39,7 +43,7 @@ async function handler({ request }: { request: Request }) {
 				title: "Reactive Resume",
 				version: __APP_VERSION__,
 				description: "Reactive Resume API",
-				license: { name: "MIT", url: "https://github.com/amruthpillai/reactive-resume/blob/main/LICENSE" },
+				license: { name: "MIT", url: "https://github.com/amruthpillai/[REDACTED]/blob/main/LICENSE" },
 				contact: { name: "Amruth Pillai", email: "hello@amruthpillai.com", url: "https://amruthpillai.com" },
 			},
 			servers: [{ url: `${env.APP_URL}/api/openapi` }],

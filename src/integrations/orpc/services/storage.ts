@@ -8,6 +8,7 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { env } from "@/utils/env";
+import { logger } from "@/utils/logger";
 
 interface StorageWriteInput {
 	key: string;
@@ -89,7 +90,9 @@ interface ProcessedImage {
 export async function processImageForUpload(file: File): Promise<ProcessedImage> {
 	const fileBuffer = await file.arrayBuffer();
 
-	console.log("FLAG_DISABLE_IMAGE_PROCESSING", env.FLAG_DISABLE_IMAGE_PROCESSING);
+	logger.debug("Image processing feature flag resolved", {
+		flagDisableImageProcessing: env.FLAG_DISABLE_IMAGE_PROCESSING,
+	});
 	if (env.FLAG_DISABLE_IMAGE_PROCESSING) {
 		return {
 			data: new Uint8Array(fileBuffer),
@@ -143,15 +146,23 @@ class LocalStorageService implements StorageService {
 
 	async read(key: string): Promise<StorageReadResult | null> {
 		const fullPath = this.resolvePath(key);
-		const [arrayBuffer, stats] = await Promise.all([fs.readFile(fullPath), fs.stat(fullPath)]);
+		try {
+			const [arrayBuffer, stats] = await Promise.all([fs.readFile(fullPath), fs.stat(fullPath)]);
 
-		return {
-			data: arrayBuffer,
-			size: stats.size,
-			etag: `"${stats.size}-${stats.mtime.getTime()}"`,
-			lastModified: stats.mtime,
-			contentType: inferContentType(key),
-		};
+			return {
+				data: arrayBuffer,
+				size: stats.size,
+				etag: `"${stats.size}-${stats.mtime.getTime()}"`,
+				lastModified: stats.mtime,
+				contentType: inferContentType(key),
+			};
+		} catch (error: unknown) {
+			if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
+				return null;
+			}
+
+			throw error;
+		}
 	}
 
 	async delete(key: string): Promise<boolean> {

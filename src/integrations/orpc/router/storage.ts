@@ -11,6 +11,19 @@ const filenameSchema = z.object({
 	filename: z.string().min(1).describe("The path or filename of the file to delete."),
 });
 
+function normalizeKey(input: string): string {
+	return input
+		.trim()
+		.replace(/^\/+/, "")
+		.split("/")
+		.filter(Boolean)
+		.join("/");
+}
+
+function isUnsafeStorageKey(key: string): boolean {
+	return key.split("/").some((segment) => segment === "." || segment === "..");
+}
+
 export const storageRouter = {
 	uploadFile: protectedProcedure
 		.route({
@@ -76,13 +89,21 @@ export const storageRouter = {
 				message: "The specified file was not found in storage.",
 				status: 404,
 			},
+			FORBIDDEN: {
+				message: "You do not have permission to delete this file.",
+				status: 403,
+			},
 		})
 		.handler(async ({ context, input }): Promise<void> => {
-			// The filename is now the full path from the URL (e.g., "uploads/userId/pictures/timestamp.ext")
-			// We need to extract just the path portion that matches the storage key
-			const key = input.filename.startsWith("uploads/")
-				? input.filename
-				: `uploads/${context.user.id}/pictures/${input.filename}`;
+			const requestedKey = normalizeKey(input.filename);
+			const key = requestedKey.startsWith("uploads/")
+				? requestedKey
+				: normalizeKey(`uploads/${context.user.id}/pictures/${requestedKey}`);
+			const userPrefix = `uploads/${context.user.id}/`;
+
+			if (isUnsafeStorageKey(key) || !key.startsWith(userPrefix)) {
+				throw new ORPCError("FORBIDDEN");
+			}
 
 			const deleted = await storageService.delete(key);
 

@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/server";
 import type { InferSelectModel } from "drizzle-orm";
-import puppeteer, { type Browser, type ConnectOptions } from "puppeteer-core";
+import puppeteer, { type Browser, type ConnectOptions, type Page } from "puppeteer-core";
 import type { schema } from "@/integrations/drizzle";
 import { pageDimensionsAsPixels } from "@/schema/page";
 import { printMarginTemplates } from "@/schema/templates";
@@ -111,6 +111,7 @@ export const printerService = {
 		}
 
 		let browser: Browser | null = null;
+		let page: Page | null = null;
 
 		try {
 			// Step 4: Connect to the browser and navigate to the printer route
@@ -119,7 +120,7 @@ export const printerService = {
 			// Set locale cookie so the resume renders in the correct language
 			await browser.setCookie({ name: "locale", value: locale, domain });
 
-			const page = await browser.newPage();
+			page = await browser.newPage();
 
 			// Wait for the page to fully load (network idle + custom loaded attribute)
 			await page.emulateMediaType("print");
@@ -213,8 +214,6 @@ export const printerService = {
 				},
 			});
 
-			await page.close();
-
 			// Step 7: Upload the generated PDF to storage
 			const result = await uploadFile({
 				userId,
@@ -227,6 +226,8 @@ export const printerService = {
 			return result.url;
 		} catch (error) {
 			throw new ORPCError("INTERNAL_SERVER_ERROR", error as Error);
+		} finally {
+			if (page) await page.close().catch(() => null);
 		}
 	},
 
@@ -280,21 +281,20 @@ export const printerService = {
 		const url = `${baseUrl}/printer/${id}?token=${token}`;
 
 		let browser: Browser | null = null;
+		let page: Page | null = null;
 
 		try {
 			browser = await getBrowser();
 
 			await browser.setCookie({ name: "locale", value: locale, domain });
 
-			const page = await browser.newPage();
+			page = await browser.newPage();
 
 			await page.setViewport(pageDimensionsAsPixels.a4);
 			await page.goto(url, { waitUntil: "networkidle0" });
 			await page.waitForFunction(() => document.body.getAttribute("data-wf-loaded") === "true", { timeout: 5_000 });
 
 			const screenshotBuffer = await page.screenshot({ type: "webp", quality: 80 });
-
-			await page.close();
 
 			const result = await uploadFile({
 				userId,
@@ -307,6 +307,8 @@ export const printerService = {
 			return result.url;
 		} catch (error) {
 			throw new ORPCError("INTERNAL_SERVER_ERROR", error as Error);
+		} finally {
+			if (page) await page.close().catch(() => null);
 		}
 	},
 };

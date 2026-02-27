@@ -4,6 +4,7 @@ import type { AuthProvider } from "@/integrations/auth/types";
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
 import { env } from "@/utils/env";
+import { logger } from "@/utils/logger";
 import { getStorageService } from "./storage";
 
 export type ProviderList = Partial<Record<AuthProvider, string>>;
@@ -39,7 +40,10 @@ export const authService = {
 		try {
 			await db.delete(schema.user).where(eq(schema.user.id, input.userId));
 		} catch (err) {
-			console.error(`Failed to delete user record for userId=${input.userId}:`, err);
+			logger.error("Failed to delete user record", {
+				userId: input.userId,
+				error: err,
+			});
 
 			throw new ORPCError("INTERNAL_SERVER_ERROR");
 		}

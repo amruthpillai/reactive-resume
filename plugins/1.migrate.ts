@@ -20,6 +20,7 @@ async function migrateDatabase() {
 		console.log("✅ Database migrations completed");
 	} catch (error) {
 		console.error("🚨 Database migrations failed:", error);
+		throw error;
 	} finally {
 		await pool.end();
 	}

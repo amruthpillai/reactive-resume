@@ -40,6 +40,9 @@ type GetModelInput = {
 	baseURL: string;
 };
 
+const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
+const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
+
 function getModel(input: GetModelInput) {
 	const { provider, model, apiKey } = input;
 	const baseURL = input.baseURL || undefined;
@@ -62,7 +65,7 @@ export const aiCredentialsSchema = z.object({
 
 export const fileInputSchema = z.object({
 	name: z.string(),
-	data: z.string(), // base64 encoded
+	data: z.string().max(MAX_AI_FILE_BASE64_CHARS, "File is too large. Maximum size is 10MB."), // base64 encoded
 });
 
 type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;

@@ -97,7 +97,6 @@
 		"react-resizable-panels": "^4.6.5",
 		"react-window": "^2.2.7",
 		"react-zoom-pan-pinch": "^3.7.0",
-		"shadcn": "^3.8.5",
 		"sharp": "^0.34.5",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.5.0",
@@ -133,6 +132,7 @@
 		"node-addon-api": "^8.5.0",
 		"node-gyp": "^12.2.0",
 		"npm-check-updates": "^19.6.2",
+		"shadcn": "^3.8.5",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
 		"vite": "^8.0.0-beta.15",
@@ -140,7 +140,16 @@
 	},
 	"pnpm": {
 		"overrides": {
-			"vite": "^8.0.0-beta.15"
+			"vite": "^8.0.0-beta.15",
+			"hono": "^4.11.10",
+			"minimatch": "^10.2.3",
+			"@isaacs/brace-expansion": "^5.0.1",
+			"basic-ftp": "^5.2.0",
+			"lodash": "^4.17.23",
+			"markdown-it": "^14.1.1",
+			"ajv": "^8.18.0",
+			"qs": "^6.14.2",
+			"fast-xml-parser": "^5.3.8"
 		},
 		"onlyBuiltDependencies": [
 			"@prisma/engines",
