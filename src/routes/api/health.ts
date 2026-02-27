@@ -52,7 +52,11 @@ async function runCheck(check: () => Promise<object>): Promise<CheckResult> {
 }
 
 export async function healthHandler() {
-	const [database, printer, storage] = await Promise.all([runCheck(checkDatabase), runCheck(checkPrinter), runCheck(checkStorage)]);
+	const [database, printer, storage] = await Promise.all([
+		runCheck(checkDatabase),
+		runCheck(checkPrinter),
+		runCheck(checkStorage),
+	]);
 	const status = [database, printer, storage].some((check) => check.status === "unhealthy") ? "unhealthy" : "healthy";
 
 	const checks = {

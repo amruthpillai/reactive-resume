@@ -12,12 +12,7 @@ const filenameSchema = z.object({
 });
 
 function normalizeKey(input: string): string {
-	return input
-		.trim()
-		.replace(/^\/+/, "")
-		.split("/")
-		.filter(Boolean)
-		.join("/");
+	return input.trim().replace(/^\/+/, "").split("/").filter(Boolean).join("/");
 }
 
 function isUnsafeStorageKey(key: string): boolean {
