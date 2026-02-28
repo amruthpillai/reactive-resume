@@ -8,7 +8,7 @@ import { registerTools } from "./-helpers/tools";
 
 function createMcpServer() {
 	const server = new McpServer({
-		name: "[REDACTED]",
+		name: "reactive-resume",
 		version: "1.0.0",
 		title: "Reactive Resume",
 		websiteUrl: "https://rxresu.me",

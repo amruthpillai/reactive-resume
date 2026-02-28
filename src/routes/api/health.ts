@@ -60,7 +60,7 @@ export async function healthHandler() {
 	const status = [database, printer, storage].some((check) => check.status === "unhealthy") ? "unhealthy" : "healthy";
 
 	const checks = {
-		service: "[REDACTED]",
+		service: "reactive-resume",
 		version: process.env.npm_package_version,
 		status,
 		timestamp: new Date().toISOString(),
