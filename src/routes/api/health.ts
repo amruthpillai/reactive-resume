@@ -51,7 +51,7 @@ async function runCheck(check: () => Promise<object>): Promise<CheckResult> {
 	}
 }
 
-export async function healthHandler() {
+async function healthHandler() {
 	const [database, printer, storage] = await Promise.all([
 		runCheck(checkDatabase),
 		runCheck(checkPrinter),
