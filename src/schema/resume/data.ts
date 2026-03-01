@@ -131,13 +131,23 @@ export const educationItemSchema = baseItemSchema.extend({
 	description: z.string().describe("The description of the education. This should be a HTML-formatted string."),
 });
 
+export const roleItemSchema = z.object({
+	id: z.string().describe("The unique identifier for the role. Usually generated as a UUID."),
+	position: z.string().describe("The position or job title for this role."),
+	period: z.string().describe("The period of time this role was held."),
+	description: z.string().describe("The description of this specific role. This should be a HTML-formatted string."),
+});
+
+export type RoleItem = z.infer<typeof roleItemSchema>;
+
 export const experienceItemSchema = baseItemSchema.extend({
 	company: z.string().min(1).describe("The name of the company or organization."),
-	position: z.string().describe("The position held at the company or organization."),
+	position: z.string().describe("The position held at the company or organization. Used when there is only a single role. If multiple roles are provided in the 'roles' field, this serves as a summary title or can be left blank."),
 	location: z.string().describe("The location of the company or organization."),
-	period: z.string().describe("The period of time the author was employed at the company or organization."),
+	period: z.string().describe("The overall period of time at the company. When multiple roles are used, this should reflect the total tenure."),
 	website: urlSchema.describe("The website of the company or organization, if any."),
 	description: z.string().describe("The description of the experience. This should be a HTML-formatted string."),
+	roles: z.array(roleItemSchema).catch([]).describe("Optional list of individual roles held at this company to show career progression."),
 });
 
 export const interestItemSchema = baseItemSchema.extend({
