@@ -180,7 +180,10 @@ export const printerService = {
 								pageContent.style.paddingLeft = `${pagePaddingX}pt`;
 								pageContent.style.paddingRight = `${pagePaddingX}pt`;
 							}
-							if (pagePaddingY > 0) pageContent.style.paddingTop = `${pagePaddingY}pt`;
+							if (pagePaddingY > 0) {
+								pageContent.style.paddingTop = `${pagePaddingY}pt`;
+								pageContent.style.paddingBottom = `${pagePaddingY}pt`;
+							}
 						}
 					}
 
