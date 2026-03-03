@@ -135,10 +135,15 @@ export const printerService = {
 			const isFreeForm = format === "free-form";
 
 			const contentHeight = await page.evaluate(
-				(marginY: number, isFreeForm: boolean, minPageHeight: number) => {
+				(marginY: number, isFreeForm: boolean, minPageHeight: number, backgroundColor: string) => {
 					const root = document.documentElement;
+					const body = document.body;
 					const pageElements = document.querySelectorAll("[data-page-index]");
 					const container = document.querySelector(".resume-preview-container") as HTMLElement | null;
+
+					// Ensure PDF margins inherit the resume background color instead of defaulting to white.
+					root.style.backgroundColor = backgroundColor;
+					body.style.backgroundColor = backgroundColor;
 
 					if (isFreeForm) {
 						// For free-form: add visual gaps between pages, then measure total height
@@ -193,6 +198,7 @@ export const printerService = {
 				marginY,
 				isFreeForm,
 				pageDimensionsAsPixels[format].height,
+				data.metadata.design.colors.background,
 			);
 
 			// Step 6: Generate the PDF with the specified dimensions and margins
