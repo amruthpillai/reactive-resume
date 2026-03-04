@@ -409,6 +409,7 @@ export class JSONResumeImporter {
 						location: work.location || "",
 						period: formatPeriod(work.startDate, work.endDate),
 						website: createUrl(work.url),
+						roles: [],
 						description: toHtmlDescription(work.summary, work.highlights),
 					})),
 			};

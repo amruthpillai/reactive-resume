@@ -45,12 +45,14 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 
 			{/* Role Progression */}
 			{hasRoles && (
-				<div className="experience-item-roles mt-1 flex flex-col gap-y-2">
-					{item.roles!.map((role) => (
+				<div className="experience-item-roles mt-(--page-gap-y) flex flex-col gap-y-(--page-gap-y)">
+					{item.roles.map((role) => (
 						<div key={role.id} className="experience-item-role">
 							<div className="flex items-start justify-between gap-x-2">
-								<span className="section-item-metadata experience-item-role-position">{role.position}</span>
-								<span className="section-item-metadata experience-item-role-period shrink-0 text-end">{role.period}</span>
+								<strong className="section-item-metadata experience-item-role-position">{role.position}</strong>
+								<span className="section-item-metadata experience-item-role-period shrink-0 text-end">
+									{role.period}
+								</span>
 							</div>
 
 							{stripHtml(role.description) && (
@@ -66,7 +68,10 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 			{/* Single-role description */}
 			{!hasRoles && (
 				<div
-					className={cn("section-item-description experience-item-description", !stripHtml(item.description) && "hidden")}
+					className={cn(
+						"section-item-description experience-item-description",
+						!stripHtml(item.description) && "hidden",
+					)}
 				>
 					<TiptapContent content={item.description} />
 				</div>

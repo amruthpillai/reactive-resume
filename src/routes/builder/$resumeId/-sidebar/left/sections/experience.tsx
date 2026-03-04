@@ -1,3 +1,4 @@
+import { plural } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, Reorder } from "motion/react";
 import type z from "zod";
@@ -21,9 +22,17 @@ export function ExperienceSectionBuilder() {
 		<SectionBase type="experience" className={cn("rounded-md border", section.items.length === 0 && "border-dashed")}>
 			<Reorder.Group axis="y" values={section.items} onReorder={handleReorder}>
 				<AnimatePresence>
-					{section.items.map((item) => (
-						<SectionItem key={item.id} type="experience" item={item} title={item.company} subtitle={item.position} />
-					))}
+					{section.items.map((item) => {
+						return (
+							<SectionItem
+								key={item.id}
+								type="experience"
+								item={item}
+								title={item.company}
+								subtitle={item.position || plural(item.roles.length, { one: "# role", other: "# roles" })}
+							/>
+						);
+					})}
 				</AnimatePresence>
 			</Reorder.Group>
 
