@@ -28,7 +28,7 @@ async function getUserFromApiKey(apiKey: string): Promise<User | null> {
 		const result = await auth.api.verifyApiKey({ body: { key: apiKey } });
 		if (!result.key || !result.valid) return null;
 
-		const [userResult] = await db.select().from(user).where(eq(user.id, result.key.userId)).limit(1);
+		const [userResult] = await db.select().from(user).where(eq(user.id, result.key.referenceId)).limit(1);
 		if (!userResult) return null;
 
 		return userResult;

@@ -27,7 +27,7 @@ function RouteComponent() {
 		select: ({ data }) => {
 			if (!data) return [];
 
-			return data
+			return data.apiKeys
 				.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 				.filter((key) => !!key.expiresAt && key.expiresAt.getTime() > Date.now());
 		},

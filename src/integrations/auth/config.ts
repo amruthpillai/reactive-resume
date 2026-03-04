@@ -1,7 +1,8 @@
+import { apiKey } from "@better-auth/api-key";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { BetterAuthError } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth/minimal";
-import { apiKey, type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
+import { type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
 import { username } from "better-auth/plugins/username";
 import { and, eq, or } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
