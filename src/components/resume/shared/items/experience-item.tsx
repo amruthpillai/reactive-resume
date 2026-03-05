@@ -45,11 +45,11 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
 
 			{/* Role Progression */}
 			{hasRoles && (
-				<div className="experience-item-roles mt-(--page-gap-y) flex flex-col gap-y-(--page-gap-y)">
+				<div className="experience-item-roles mt-0 flex flex-col gap-y-1">
 					{item.roles.map((role) => (
 						<div key={role.id} className="experience-item-role">
 							<div className="flex items-start justify-between gap-x-2">
-								<strong className="section-item-metadata experience-item-role-position">{role.position}</strong>
+								<span className="section-item-metadata experience-item-role-position">{role.position}</span>
 								<span className="section-item-metadata experience-item-role-period shrink-0 text-end">
 									{role.period}
 								</span>
