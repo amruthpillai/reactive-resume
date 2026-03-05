@@ -8,7 +8,7 @@ msgstr ""
 "Language: sl\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-02-09 22:31\n"
+"PO-Revision-Date: 2026-03-05 10:46\n"
 "Last-Translator: \n"
 "Language-Team: Slovenian\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -41,6 +41,11 @@ msgstr "(odpre se v novem zavihku)"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "{0, plural, one {# item} other {# items}}"
 msgstr "{0, plural, one {# postavka} two {# postavki} few {# postavke} other {# postavk}}"
+
+#. placeholder {0}: item.roles.length
+#: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
+msgid "{0, plural, one {# role} other {# roles}}"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -195,9 +200,17 @@ msgstr "Dodaj stolpec za"
 msgid "Add Column Before"
 msgstr "Dodaj stolpec pred"
 
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Add multiple roles to show career progression at the same company."
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Dodaj stran"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Add Role"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -359,6 +372,7 @@ msgctxt "(noun) person, organization, or entity that gives an award"
 msgid "Awarder"
 msgstr "Podeljevalec"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Awards"
 msgstr "Priznanja"
@@ -489,6 +503,7 @@ msgstr "Poravnava na sredino"
 msgid "Center view"
 msgstr "Poravnaj pogled na sredino"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Certifications"
 msgstr "Certifikati"
@@ -622,6 +637,7 @@ msgstr "Kopirajte to skrivno kodo in jo uporabite v svojih aplikacijah za dostop
 msgid "Copy URL"
 msgstr "Kopiraj URL"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
 msgstr ""
@@ -837,6 +853,7 @@ msgstr "Brišem vaš življenjepis..."
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
@@ -948,6 +965,7 @@ msgstr "Nizozemščina"
 msgid "e.g. Change my name to..."
 msgstr ""
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Izobrazba"
@@ -1040,6 +1058,7 @@ msgstr "Vse, kar potrebujete za ustvarjanje, prilagajanje in deljenje strokovnih
 msgid "Exit Fullscreen"
 msgstr ""
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Experience"
 msgstr "Izkušnje"
@@ -1068,6 +1087,10 @@ msgstr "Izvozi"
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
 msgstr "Ni bilo mogoče nastaviti dvostopenjskega preverjanja pristnosti."
+
+#: src/routes/auth/login.tsx
+msgid "Failed to sign in. Please try again."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1330,6 +1353,7 @@ msgstr "Inline koda"
 msgid "Insert Table"
 msgstr "Vstavi tabelo"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
 msgstr "Interesi"
@@ -1395,6 +1419,7 @@ msgstr "Ležeče (Landscape)"
 msgid "Language"
 msgstr "Jezik"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Languages"
 msgstr "Jeziki"
@@ -1666,6 +1691,14 @@ msgstr "Oštevilčen seznam"
 msgid "Organization"
 msgstr "Organizacija"
 
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Overall Period"
+msgstr ""
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Overall Title (optional)"
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Page"
 msgstr "Stran"
@@ -1714,6 +1747,7 @@ msgid "Password protection has been enabled."
 msgstr "Zaščita z geslom je bila omogočena."
 
 #: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
@@ -1771,6 +1805,7 @@ msgid "Portuguese (Portugal)"
 msgstr "portugalščina (Portugalska)"
 
 #: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Položaj"
@@ -1802,6 +1837,7 @@ msgstr "Znanje"
 msgid "Profile"
 msgstr "Profil"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Profiles"
 msgstr "Profili"
@@ -1810,6 +1846,7 @@ msgstr "Profili"
 msgid "Progress Bar"
 msgstr "Indikator napredka"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Projects"
 msgstr "Projekti"
@@ -1826,6 +1863,7 @@ msgstr "Zaščitite svoj življenjepis z geslom in dovolite ogled le tistim, ki 
 msgid "Provider"
 msgstr "Ponudnik"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Publications"
 msgstr "Publikacije"
@@ -1875,6 +1913,7 @@ msgctxt "'Ctrl' may be replaced with the locale-specific equivalent (e.g. 'Strg'
 msgid "Redo (Ctrl+Y)"
 msgstr "Ponovi (Ctrl+Y)"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "References"
 msgstr "Reference"
@@ -1886,6 +1925,10 @@ msgstr "Osveži"
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Se spomnite gesla? <0><1>Prijavite se zdaj <2/></1></0>"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Remove"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1902,6 +1945,10 @@ msgstr "Odstranjevanje zaščite z geslom..."
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Rename"
 msgstr "Preimenuj"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Reorder"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -1953,6 +2000,10 @@ msgstr "Življenjepisi"
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
 msgstr "Poravnaj desno"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Role Progression"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2150,6 +2201,7 @@ msgstr "Enojen stolpec; izpiljeno in resno za višje ali podjetniške položaje.
 msgid "Size"
 msgstr "Velikost"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Skills"
 msgstr "Spretnosti"
@@ -2240,6 +2292,7 @@ msgstr "Prečrtano"
 msgid "Subreddit"
 msgstr "Podreddit"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Summary"
 msgstr "Povzetek"
@@ -2698,6 +2751,7 @@ msgstr "vietnamščina"
 msgid "Views"
 msgstr "Ogledi"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Volunteer"
 msgstr "Prostovoljec"
