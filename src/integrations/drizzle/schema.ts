@@ -229,10 +229,14 @@ export const apikey = pg.pgTable(
 		start: pg.text("start"),
 		prefix: pg.text("prefix"),
 		key: pg.text("key").notNull(),
-		userId: pg
-			.uuid("user_id")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
+		referenceId: pg
+		  .uuid("user_id")
+		  .notNull()
+		  .references(() => user.id, { onDelete: "cascade" }),
+		configId: pg
+		  .text("configId")
+		  .notNull()
+		  .default("default"),
 		refillInterval: pg.integer("refill_interval"),
 		refillAmount: pg.integer("refill_amount"),
 		lastRefillAt: pg.timestamp("last_refill_at", { withTimezone: true }),
@@ -253,5 +257,5 @@ export const apikey = pg.pgTable(
 		permissions: pg.text("permissions"),
 		metadata: pg.jsonb("metadata"),
 	},
-	(t) => [pg.index().on(t.userId), pg.index().on(t.key), pg.index().on(t.enabled, t.userId)],
+	(t) => [pg.index().on(t.referenceId), pg.index().on(t.key), pg.index().on(t.enabled, t.referenceId)],
 );
