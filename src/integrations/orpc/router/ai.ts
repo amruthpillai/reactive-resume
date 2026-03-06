@@ -3,7 +3,9 @@ import { type } from "@orpc/server";
 import { AISDKError, type UIMessage } from "ai";
 import { OllamaError } from "ai-sdk-ollama";
 import z, { ZodError } from "zod";
+import type { JobResult } from "@/schema/jobs";
 import type { ResumeData } from "@/schema/resume/data";
+import { tailorOutputSchema } from "@/schema/tailor";
 import { protectedProcedure } from "../context";
 import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema, formatZodError } from "../services/ai";
 
@@ -154,6 +156,50 @@ export const aiRouter = {
 			} catch (error) {
 				if (error instanceof AISDKError || error instanceof OllamaError) {
 					throw new ORPCError("BAD_GATEWAY", { message: error.message });
+				}
+
+				throw error;
+			}
+		}),
+
+	tailorResume: protectedProcedure
+		.route({
+			method: "POST",
+			path: "/ai/tailor-resume",
+			tags: ["AI"],
+			operationId: "tailorResume",
+			summary: "Auto-tailor resume for a job posting",
+			description:
+				"Uses AI to automatically tailor a resume for a specific job posting. Rewrites the summary, adjusts experience descriptions, and curates skills for ATS optimization. Returns structured modifications as a simplified output object. Requires authentication and AI credentials.",
+			successDescription: "Structured tailoring output returned successfully.",
+		})
+		.input(
+			type<{
+				provider: AIProvider;
+				model: string;
+				apiKey: string;
+				baseURL: string;
+				resumeData: ResumeData;
+				job: JobResult;
+			}>(),
+		)
+		.output(tailorOutputSchema)
+		.errors({
+			BAD_GATEWAY: {
+				message: "The AI provider returned an error or is unreachable.",
+				status: 502,
+			},
+		})
+		.handler(async ({ input }) => {
+			try {
+				return await aiService.tailorResume(input);
+			} catch (error) {
+				if (error instanceof AISDKError || error instanceof OllamaError) {
+					throw new ORPCError("BAD_GATEWAY", { message: error.message });
+				}
+
+				if (error instanceof ZodError) {
+					throw new Error(formatZodError(error));
 				}
 
 				throw error;

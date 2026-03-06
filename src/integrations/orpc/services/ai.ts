@@ -21,13 +21,16 @@ import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system
 import docxParserUserPrompt from "@/integrations/ai/prompts/docx-parser-user.md?raw";
 import pdfParserSystemPrompt from "@/integrations/ai/prompts/pdf-parser-system.md?raw";
 import pdfParserUserPrompt from "@/integrations/ai/prompts/pdf-parser-user.md?raw";
+import tailorSystemPromptTemplate from "@/integrations/ai/prompts/tailor-system.md?raw";
 import {
 	executePatchResume,
 	patchResumeDescription,
 	patchResumeInputSchema,
 } from "@/integrations/ai/tools/patch-resume";
+import type { JobResult } from "@/schema/jobs";
 import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
+import { type TailorOutput, tailorOutputSchema } from "@/schema/tailor";
 
 export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
 
@@ -190,9 +193,51 @@ async function chat(input: ChatInput) {
 	return streamToEventIterator(result.toUIMessageStream());
 }
 
+function formatJobHighlights(highlights: Record<string, string[]> | null): string {
+	if (!highlights) return "None provided.";
+	return Object.entries(highlights)
+		.map(([key, values]) => `${key}:\n${values.map((v) => `- ${v}`).join("\n")}`)
+		.join("\n\n");
+}
+
+function buildTailorSystemPrompt(resumeData: ResumeData, job: JobResult): string {
+	return tailorSystemPromptTemplate
+		.replace("{{RESUME_DATA}}", JSON.stringify(resumeData, null, 2))
+		.replace("{{JOB_TITLE}}", job.job_title)
+		.replace("{{COMPANY}}", job.employer_name)
+		.replace("{{JOB_DESCRIPTION}}", job.job_description || "No description provided.")
+		.replace("{{JOB_HIGHLIGHTS}}", formatJobHighlights(job.job_highlights))
+		.replace("{{JOB_SKILLS}}", (job.job_required_skills || []).join(", ") || "None specified.");
+}
+
+type TailorResumeInput = z.infer<typeof aiCredentialsSchema> & {
+	resumeData: ResumeData;
+	job: JobResult;
+};
+
+async function tailorResume(input: TailorResumeInput): Promise<TailorOutput> {
+	const model = getModel(input);
+	const systemPrompt = buildTailorSystemPrompt(input.resumeData, input.job);
+
+	const result = await generateText({
+		model,
+		output: Output.object({ schema: tailorOutputSchema }),
+		messages: [
+			{ role: "system", content: systemPrompt },
+			{
+				role: "user",
+				content: `Please tailor this resume for the ${input.job.job_title} position at ${input.job.employer_name}. Optimize for ATS compatibility and relevance.`,
+			},
+		],
+	});
+
+	return tailorOutputSchema.parse(result.output);
+}
+
 export const aiService = {
 	testConnection,
 	parsePdf,
 	parseDocx,
 	chat,
+	tailorResume,
 };
