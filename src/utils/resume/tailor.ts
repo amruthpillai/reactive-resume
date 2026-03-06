@@ -4,6 +4,29 @@ import type { NewSkillInfo, TailorOutput } from "@/schema/tailor";
 import { generateId } from "@/utils/string";
 
 /**
+ * Sanitizes text output from AI to ensure consistent character formatting.
+ * Replaces smart quotes, emdashes, endashes, special whitespace, and
+ * other Unicode characters with their standard ASCII equivalents.
+ */
+export function sanitizeText(text: string): string {
+	return (
+		text
+			// Emdashes and endashes → hyphen
+			.replace(/[\u2013\u2014]/g, "-")
+			// Curly single quotes → straight
+			.replace(/[\u2018\u2019\u201A]/g, "'")
+			// Curly double quotes → straight
+			.replace(/[\u201C\u201D\u201E]/g, '"')
+			// Ellipsis character → three dots
+			.replace(/\u2026/g, "...")
+			// Non-breaking space and other special whitespace → standard space
+			.replace(/[\u00A0\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F]/g, " ")
+			// Unicode bullet → empty (should use HTML <li> instead)
+			.replace(/[\u2022\u2023\u25E6\u2043\u2219]/g, "")
+	);
+}
+
+/**
  * Converts a TailorOutput from the AI into JSON Patch (RFC 6902) operations
  * that can be applied to a resume's data.
  *
@@ -21,7 +44,7 @@ export function tailorOutputToPatches(
 		operations.push({
 			op: "replace",
 			path: "/summary/content",
-			value: output.summary.content,
+			value: sanitizeText(output.summary.content),
 		});
 	}
 
@@ -35,7 +58,7 @@ export function tailorOutputToPatches(
 			operations.push({
 				op: "replace",
 				path: `${basePath}/description`,
-				value: exp.description,
+				value: sanitizeText(exp.description),
 			});
 		}
 
@@ -46,14 +69,27 @@ export function tailorOutputToPatches(
 				operations.push({
 					op: "replace",
 					path: `${basePath}/roles/${role.index}/description`,
-					value: role.description,
+					value: sanitizeText(role.description),
 				});
 			}
 		}
 	}
 
-	// 3. Skills — full replacement approach
-	// The AI provides the complete curated skills list. We replace the entire items array.
+	// 3. Reference descriptions
+	for (const ref of output.references) {
+		if (ref.index < 0 || ref.index >= resumeData.sections.references.items.length) continue;
+
+		if (ref.description) {
+			operations.push({
+				op: "replace",
+				path: `/sections/references/items/${ref.index}/description`,
+				value: sanitizeText(ref.description),
+			});
+		}
+	}
+
+	// 4. Skills — full replacement approach
+	// The AI provides the complete curated skills list.
 	// First, hide ALL existing skills (they remain in the data but won't show).
 	// Then add the curated set as new visible items.
 	const newSkills: NewSkillInfo[] = [];
@@ -79,19 +115,19 @@ export function tailorOutputToPatches(
 					id: generateId(),
 					hidden: false,
 					icon: skill.icon || "",
-					name: skill.name,
-					proficiency: skill.proficiency || "",
+					name: sanitizeText(skill.name),
+					proficiency: sanitizeText(skill.proficiency || ""),
 					level: 0,
-					keywords: skill.keywords,
+					keywords: skill.keywords.map(sanitizeText),
 				},
 			});
 
 			// Track newly inferred skills for sync-back to original resume
 			if (skill.isNew) {
 				newSkills.push({
-					name: skill.name,
-					keywords: skill.keywords,
-					proficiency: skill.proficiency || "",
+					name: sanitizeText(skill.name),
+					keywords: skill.keywords.map(sanitizeText),
+					proficiency: sanitizeText(skill.proficiency || ""),
 				});
 			}
 		}
@@ -108,6 +144,7 @@ export function tailorOutputToPatches(
 export function validateTailorOutput(output: TailorOutput, resumeData: ResumeData): string[] {
 	const errors: string[] = [];
 	const experienceCount = resumeData.sections.experience.items.length;
+	const referencesCount = resumeData.sections.references.items.length;
 
 	for (const exp of output.experiences) {
 		if (exp.index < 0 || exp.index >= experienceCount) {
@@ -122,6 +159,12 @@ export function validateTailorOutput(output: TailorOutput, resumeData: ResumeDat
 					errors.push(`Role index ${role.index} in experience ${exp.index} out of bounds (max: ${rolesCount - 1})`);
 				}
 			}
+		}
+	}
+
+	for (const ref of output.references) {
+		if (ref.index < 0 || ref.index >= referencesCount) {
+			errors.push(`Reference index ${ref.index} out of bounds (max: ${referencesCount - 1})`);
 		}
 	}
 

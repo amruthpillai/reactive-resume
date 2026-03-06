@@ -59,6 +59,23 @@ export const tailorOutputSchema = z.object({
 			"You MUST include ALL experience items that have any relevance to the target job. Rewrite their descriptions to emphasize relevant achievements. Only omit experiences completely unrelated to the job.",
 		),
 
+	references: z
+		.array(
+			z.object({
+				index: z
+					.number()
+					.describe("Zero-based index of the reference item in the resume's sections.references.items array."),
+				description: z
+					.string()
+					.describe(
+						"Rewritten professional reference description tailored to the target job. Should highlight how this reference can speak to relevant skills and experience. Use <p> tags. No emdashes or endashes.",
+					),
+			}),
+		)
+		.describe(
+			"Rewrite ALL reference descriptions to be professional and relevant to the target job. Each description should explain how this reference relates to the candidate's qualifications for the position.",
+		),
+
 	skills: z
 		.array(tailoredSkillSchema)
 		.describe(
