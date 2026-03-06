@@ -1,5 +1,25 @@
 import z from "zod";
 
+const tailoredSkillSchema = z.object({
+	name: z.string().min(1).describe("Skill category name, e.g. 'Frontend Development', 'Cloud Infrastructure'."),
+	keywords: z
+		.array(z.string())
+		.describe("Specific technologies or competencies displayed as tags, e.g. ['React', 'TypeScript', 'Next.js']."),
+	proficiency: z
+		.string()
+		.describe("Proficiency label, e.g. 'Advanced', 'Intermediate', 'Developer', 'Languages'. Use consistent style."),
+	icon: z
+		.string()
+		.describe(
+			"A Phosphor icon name from @phosphor-icons/web matching the skill category, or empty string if unsure. Examples: 'code', 'database', 'cloud', 'wrench', 'paint-brush', 'globe'.",
+		),
+	isNew: z
+		.boolean()
+		.describe(
+			"true if this skill was NOT in the original resume and was inferred from experience + job requirements. false if it existed in the original resume.",
+		),
+});
+
 export const tailorOutputSchema = z.object({
 	summary: z.object({
 		content: z
@@ -35,37 +55,20 @@ export const tailorOutputSchema = z.object({
 					.describe("Only include if the experience has role progression (multiple roles at one company)."),
 			}),
 		)
-		.describe("Only include experiences that should be modified. Omit unchanged experiences."),
+		.describe(
+			"You MUST include ALL experience items that have any relevance to the target job. Rewrite their descriptions to emphasize relevant achievements. Only omit experiences completely unrelated to the job.",
+		),
 
-	skills: z.object({
-		keep: z
-			.array(z.number())
-			.describe("Zero-based indices of existing skills that are relevant to the target job and should remain visible."),
-		hide: z
-			.array(z.number())
-			.describe(
-				"Zero-based indices of existing skills that are not relevant to the target job and should be hidden (not deleted).",
-			),
-		add: z
-			.array(
-				z.object({
-					name: z.string().min(1).describe("Skill category name, e.g. 'Cloud Infrastructure'."),
-					keywords: z
-						.array(z.string())
-						.describe("Related keywords or technologies displayed as tags below the skill name."),
-					proficiency: z
-						.string()
-						.optional()
-						.describe("Proficiency level if inferable from experience, e.g. 'Advanced', 'Intermediate'."),
-				}),
-			)
-			.describe(
-				"New skills inferred from the intersection of job requirements and the candidate's experience descriptions. Only add skills that are evidenced by existing experience.",
-			),
-	}),
+	skills: z
+		.array(tailoredSkillSchema)
+		.describe(
+			"The complete curated skills list for the tailored resume. Include relevant existing skills (rewritten for consistency) and new inferred skills. Aim for 6-10 skills total to avoid overflowing the page. Each skill must have consistent icon, proficiency label, and keywords style.",
+		),
 });
 
 export type TailorOutput = z.infer<typeof tailorOutputSchema>;
+
+export type TailoredSkill = z.infer<typeof tailoredSkillSchema>;
 
 export type NewSkillInfo = {
 	name: string;

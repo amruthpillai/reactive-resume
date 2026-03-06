@@ -27,6 +27,8 @@ export function tailorOutputToPatches(
 
 	// 2. Experience descriptions
 	for (const exp of output.experiences) {
+		if (exp.index < 0 || exp.index >= resumeData.sections.experience.items.length) continue;
+
 		const basePath = `/sections/experience/items/${exp.index}`;
 
 		if (exp.description) {
@@ -38,7 +40,9 @@ export function tailorOutputToPatches(
 		}
 
 		if (exp.roles) {
+			const rolesCount = resumeData.sections.experience.items[exp.index].roles?.length ?? 0;
 			for (const role of exp.roles) {
+				if (role.index < 0 || role.index >= rolesCount) continue;
 				operations.push({
 					op: "replace",
 					path: `${basePath}/roles/${role.index}/description`,
@@ -48,52 +52,49 @@ export function tailorOutputToPatches(
 		}
 	}
 
-	// 3. Skills curation — hide irrelevant
-	for (const hideIndex of output.skills.hide) {
-		if (hideIndex < resumeData.sections.skills.items.length) {
-			operations.push({
-				op: "replace",
-				path: `/sections/skills/items/${hideIndex}/hidden`,
-				value: true,
-			});
-		}
-	}
-
-	// 3b. Skills curation — ensure relevant are visible
-	for (const keepIndex of output.skills.keep) {
-		if (keepIndex < resumeData.sections.skills.items.length && resumeData.sections.skills.items[keepIndex].hidden) {
-			operations.push({
-				op: "replace",
-				path: `/sections/skills/items/${keepIndex}/hidden`,
-				value: false,
-			});
-		}
-	}
-
-	// 3c. Add new skills inferred from job + experience
+	// 3. Skills — full replacement approach
+	// The AI provides the complete curated skills list. We replace the entire items array.
+	// First, hide ALL existing skills (they remain in the data but won't show).
+	// Then add the curated set as new visible items.
 	const newSkills: NewSkillInfo[] = [];
 
-	for (const skill of output.skills.add) {
-		const info: NewSkillInfo = {
-			name: skill.name,
-			keywords: skill.keywords,
-			proficiency: skill.proficiency ?? "",
-		};
-		newSkills.push(info);
+	if (output.skills.length > 0) {
+		// Hide all existing skills on the tailored copy
+		for (let i = 0; i < resumeData.sections.skills.items.length; i++) {
+			if (!resumeData.sections.skills.items[i].hidden) {
+				operations.push({
+					op: "replace",
+					path: `/sections/skills/items/${i}/hidden`,
+					value: true,
+				});
+			}
+		}
 
-		operations.push({
-			op: "add",
-			path: "/sections/skills/items/-",
-			value: {
-				id: generateId(),
-				hidden: false,
-				icon: "",
-				name: skill.name,
-				proficiency: skill.proficiency ?? "",
-				level: 0,
-				keywords: skill.keywords,
-			},
-		});
+		// Add the curated skills as new visible items
+		for (const skill of output.skills) {
+			operations.push({
+				op: "add",
+				path: "/sections/skills/items/-",
+				value: {
+					id: generateId(),
+					hidden: false,
+					icon: skill.icon || "",
+					name: skill.name,
+					proficiency: skill.proficiency || "",
+					level: 0,
+					keywords: skill.keywords,
+				},
+			});
+
+			// Track newly inferred skills for sync-back to original resume
+			if (skill.isNew) {
+				newSkills.push({
+					name: skill.name,
+					keywords: skill.keywords,
+					proficiency: skill.proficiency || "",
+				});
+			}
+		}
 	}
 
 	return { operations, newSkills };
@@ -107,7 +108,6 @@ export function tailorOutputToPatches(
 export function validateTailorOutput(output: TailorOutput, resumeData: ResumeData): string[] {
 	const errors: string[] = [];
 	const experienceCount = resumeData.sections.experience.items.length;
-	const skillsCount = resumeData.sections.skills.items.length;
 
 	for (const exp of output.experiences) {
 		if (exp.index < 0 || exp.index >= experienceCount) {
@@ -122,18 +122,6 @@ export function validateTailorOutput(output: TailorOutput, resumeData: ResumeDat
 					errors.push(`Role index ${role.index} in experience ${exp.index} out of bounds (max: ${rolesCount - 1})`);
 				}
 			}
-		}
-	}
-
-	for (const idx of output.skills.keep) {
-		if (idx < 0 || idx >= skillsCount) {
-			errors.push(`Skill keep index ${idx} out of bounds (max: ${skillsCount - 1})`);
-		}
-	}
-
-	for (const idx of output.skills.hide) {
-		if (idx < 0 || idx >= skillsCount) {
-			errors.push(`Skill hide index ${idx} out of bounds (max: ${skillsCount - 1})`);
 		}
 	}
 

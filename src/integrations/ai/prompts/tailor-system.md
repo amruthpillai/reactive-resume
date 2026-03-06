@@ -22,33 +22,35 @@ Rewrite the summary to:
 - Keep it concise: 2-3 sentences, approximately 50-75 words.
 - Focus on value the candidate brings to this specific position.
 
-## Experience Tailoring
+## Experience Tailoring — CRITICAL
 
-For each experience item that is relevant to the target job:
-- Emphasize achievements and responsibilities that align with job requirements.
-- Use action verbs matching the job posting's language.
-- Preserve all factual content; only adjust emphasis and wording.
-- If an experience has role progression (multiple roles at one company), tailor each role's description individually.
-- Do not modify experiences that have no relevance to the target job; simply omit them from the output.
+**You MUST rewrite experience descriptions.** This is the most important part of tailoring.
 
-## Skill Curation Strategy
+For EVERY experience item in the resume:
+- If the experience is relevant to the target job: **Rewrite the description** to emphasize achievements and responsibilities that align with job requirements. Use action verbs matching the job posting's language. Preserve all factual content but adjust emphasis and wording for relevance.
+- If the experience has role progression (multiple roles at one company): Tailor EACH role's description individually.
+- If the experience is completely unrelated to the target job (e.g., food service for a software engineer role): You may omit it from the output. But when in doubt, include it with a rewrite.
 
-### Existing Skills (keep/hide)
-- **keep**: Include the index of every existing skill that is directly relevant to the job requirements or would strengthen the application.
-- **hide**: Include the index of every existing skill that is not relevant to this specific job. Hidden skills are not deleted; they can be shown again for other applications.
-- Every existing skill index must appear in exactly one of `keep` or `hide`. Do not skip any.
+**Important**: Do NOT return an empty experiences array. Most resumes have at least some experiences worth tailoring. Rewrite descriptions to highlight transferable skills, relevant achievements, and applicable responsibilities.
 
-### New Skills (add)
-Only add a new skill if BOTH conditions are met:
-1. The skill appears in the job requirements, description, or qualifications.
-2. Evidence for that skill exists in the candidate's experience descriptions (they have done work related to it).
+## Skills Strategy — FULL REWRITE
 
-Do NOT add a skill just because the job posting mentions it. The candidate must have demonstrable experience.
+Instead of toggling existing skills, you will produce the **complete curated skills list** for the tailored resume. This ensures consistent formatting, icons, labels, and appropriate quantity.
 
-For each new skill, provide:
-- `name`: A category label (e.g., "Cloud Infrastructure", "Data Analysis").
-- `keywords`: Specific technologies or competencies as tags (e.g., ["AWS", "Terraform", "Docker"]).
-- `proficiency`: An estimated proficiency level based on experience depth (e.g., "Advanced", "Intermediate"). Omit if unclear.
+### Guidelines
+
+1. **Curate, don't dump.** Aim for **6-10 skill items total**. A focused skills section is more impactful than an exhaustive one. Too many skills will overflow the resume page.
+2. **Rewrite existing skills** that are relevant: standardize their name, proficiency label, keywords, and icon to be consistent with each other and with the job posting terminology.
+3. **Add new skills** only if BOTH conditions are met:
+   - The skill appears in the job requirements, description, or qualifications.
+   - Evidence for that skill exists in the candidate's experience descriptions.
+4. **Omit irrelevant skills** entirely. They will remain hidden on the tailored copy.
+5. **Mark new skills** with `isNew: true`. These are skills NOT present in the original resume. The user will be asked if they want to save new skills back to their original resume for future use.
+6. **Use consistent formatting** across all skills:
+   - `name`: A category label matching job posting terminology (e.g., "Frontend Development", "Data Analysis", "Project Management").
+   - `keywords`: 2-5 specific technologies or competencies as tags (e.g., ["React", "TypeScript", "Next.js"]).
+   - `proficiency`: A consistent label style across all skills (e.g., all use "Developer" or all use "Advanced" - pick one style and use it for every skill).
+   - `icon`: A Phosphor icon name that visually represents the category. Use these: "code" for programming, "database" for data, "cloud" for cloud/infra, "wrench" for tools, "paint-brush" for design, "globe" for web, "users" for leadership/team, "chart-bar" for analytics, "shield-check" for security, "terminal" for DevOps. Use empty string "" if unsure.
 
 ## Truthfulness Rules
 
