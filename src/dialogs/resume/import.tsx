@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { DownloadSimpleIcon, FileIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -64,6 +65,7 @@ const formSchema = z.discriminatedUnion("type", [
 type FormValues = z.infer<typeof formSchema>;
 
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
+	const navigate = useNavigate();
 	const { enabled: isAIEnabled, provider, model, apiKey, baseURL } = useAIStore();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 
@@ -135,8 +137,19 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				if (!isAIEnabled)
 					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
 
-				const arrayBuffer = await values.file.arrayBuffer();
-				const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+				// const arrayBuffer = await values.file.arrayBuffer();
+				// const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+
+				const base64 = await new Promise<string>((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = () => {
+						const result = reader.result as string;
+						// remove "data:application/pdf;base64," prefix
+						resolve(result.split(",")[1]);
+					};
+					reader.onerror = reject;
+					reader.readAsDataURL(values.file);
+				});
 
 				data = await client.ai.parsePdf({
 					provider,
@@ -151,8 +164,19 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				if (!isAIEnabled)
 					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
 
-				const arrayBuffer = await values.file.arrayBuffer();
-				const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+				// const arrayBuffer = await values.file.arrayBuffer();
+				// const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+				const base64 = await new Promise<string>((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = () => {
+						const result = reader.result as string;
+						// remove "data:application/pdf;base64," prefix
+						resolve(result.split(",")[1]);
+					};
+					reader.onerror = reject;
+					reader.readAsDataURL(values.file);
+				});
+
 				const mediaType =
 					values.file.type === "application/msword"
 						? ("application/msword" as const)
@@ -170,9 +194,10 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 			if (!data) throw new Error("No data was returned from the AI provider.");
 
-			await importResume({ data });
+			const id = await importResume({ data });
 			toast.success(t`Your resume has been imported successfully.`, { id: toastId, description: null });
 			closeDialog();
+			navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				toast.error(error.message, { id: toastId, description: null });
