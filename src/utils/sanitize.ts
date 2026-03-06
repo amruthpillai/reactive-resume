@@ -109,3 +109,13 @@ export function sanitizeCss(css: string): string {
 
 	return sanitized;
 }
+
+/**
+ * Checks if the given value is a plain JSON object (not null, not array, not other types).
+ *
+ * @param value - The value to check.
+ * @returns True if the value is a plain object, false otherwise.
+ */
+export function isObject(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}

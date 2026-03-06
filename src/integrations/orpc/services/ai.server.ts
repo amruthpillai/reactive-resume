@@ -1,15 +1,14 @@
+import { extractRawText } from "mammoth";
+import { PDFParse } from "pdf-parse";
+
 export async function extractPdfText(base64Data: string): Promise<string> {
-	// @ts-ignore
-	const mod = await import("pdf-parse/lib/pdf-parse.js");
-	const pdfParse = mod.default || mod;
-	const buffer = Buffer.from(base64Data, "base64");
-	const data = await pdfParse(buffer);
+	const pdfParse = new PDFParse({ data: base64Data });
+	const data = await pdfParse.getText();
 	return data.text;
 }
 
 export async function extractDocxText(base64Data: string): Promise<string> {
-	const mammoth = await import("mammoth");
 	const buffer = Buffer.from(base64Data, "base64");
-	const data = await mammoth.extractRawText({ buffer });
+	const data = await extractRawText({ buffer });
 	return data.value;
 }

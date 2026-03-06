@@ -2,10 +2,10 @@ import { ORPCError } from "@orpc/client";
 import { type } from "@orpc/server";
 import { AISDKError, type UIMessage } from "ai";
 import { OllamaError } from "ai-sdk-ollama";
-import z, { ZodError } from "zod";
+import z, { flattenError, ZodError } from "zod";
 import type { ResumeData } from "@/schema/resume/data";
 import { protectedProcedure } from "../context";
-import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema, formatZodError } from "../services/ai";
+import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema } from "../services/ai";
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -79,7 +79,7 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(formatZodError(error));
+					throw new Error(JSON.stringify(flattenError(error), null, 2));
 				}
 				throw error;
 			}
@@ -121,7 +121,7 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(formatZodError(error));
+					throw new Error(JSON.stringify(flattenError(error), null, 2));
 				}
 
 				throw error;
