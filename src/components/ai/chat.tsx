@@ -279,6 +279,25 @@ export function AIChat() {
 		if (status === "ready") inputRef.current?.focus();
 	}, [status]);
 
+	// Auto-tailor: if the URL has a ?tailor= param, open chat and send the prompt
+	const tailorHandled = useRef(false);
+	useEffect(() => {
+		if (tailorHandled.current || status !== "ready") return;
+
+		const url = new URL(window.location.href);
+		const tailorPrompt = url.searchParams.get("tailor");
+		if (!tailorPrompt) return;
+
+		tailorHandled.current = true;
+
+		// Remove the param from URL without navigation
+		url.searchParams.delete("tailor");
+		window.history.replaceState({}, "", url.toString());
+
+		setOpen(true);
+		sendMessage({ text: tailorPrompt });
+	}, [status, sendMessage]);
+
 	const handleOpenChange = useCallback((nextOpen: boolean) => {
 		setOpen(nextOpen);
 	}, []);

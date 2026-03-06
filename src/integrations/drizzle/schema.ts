@@ -255,3 +255,23 @@ export const apikey = pg.pgTable(
 	},
 	(t) => [pg.index().on(t.userId), pg.index().on(t.key), pg.index().on(t.enabled, t.userId)],
 );
+
+export const jobSearchQuota = pg.pgTable("job_search_quota", {
+	id: pg
+		.uuid("id")
+		.notNull()
+		.primaryKey()
+		.$defaultFn(() => generateId()),
+	userId: pg
+		.uuid("user_id")
+		.notNull()
+		.unique()
+		.references(() => user.id, { onDelete: "cascade" }),
+	requestCount: pg.integer("request_count").notNull().default(0),
+	windowStart: pg.timestamp("window_start", { withTimezone: true }).notNull().defaultNow(),
+	updatedAt: pg
+		.timestamp("updated_at", { withTimezone: true })
+		.notNull()
+		.defaultNow()
+		.$onUpdate(() => /* @__PURE__ */ new Date()),
+});

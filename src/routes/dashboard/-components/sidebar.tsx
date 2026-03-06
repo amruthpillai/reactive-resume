@@ -4,8 +4,10 @@ import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import {
 	BrainIcon,
+	BriefcaseIcon,
 	GearSixIcon,
 	KeyIcon,
+	MagnifyingGlassIcon,
 	ReadCvLogoIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
@@ -46,6 +48,11 @@ const appSidebarItems = [
 		label: msg`Resumes`,
 		href: "/dashboard/resumes",
 	},
+	{
+		icon: <BriefcaseIcon />,
+		label: msg`Job Listings`,
+		href: "/dashboard/jobs",
+	},
 ] as const satisfies SidebarItem[];
 
 const settingsSidebarItems = [
@@ -73,6 +80,11 @@ const settingsSidebarItems = [
 		icon: <BrainIcon />,
 		label: msg`Artificial Intelligence`,
 		href: "/dashboard/settings/ai",
+	},
+	{
+		icon: <MagnifyingGlassIcon />,
+		label: msg`Job Search`,
+		href: "/dashboard/settings/jobs",
 	},
 	{
 		icon: <WarningIcon />,
