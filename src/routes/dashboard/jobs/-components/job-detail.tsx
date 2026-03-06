@@ -63,7 +63,7 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
 	return (
 		<>
 			<Sheet open={open} onOpenChange={onOpenChange}>
-				<SheetContent side="right" className="sm:max-w-lg">
+				<SheetContent side="right" className="data-[side=right]:sm:w-[30vw] data-[side=right]:sm:min-w-[400px] data-[side=right]:sm:max-w-none">
 					<SheetHeader>
 						<div className="flex items-start gap-x-3">
 							{job.employer_logo ? (
@@ -84,7 +84,7 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
 						</div>
 					</SheetHeader>
 
-					<ScrollArea className="flex-1 px-4">
+					<ScrollArea className="min-h-0 flex-1 px-4">
 						<div className="flex flex-col gap-y-4 pb-4">
 							<div className="flex flex-wrap items-center gap-2">
 								{location && (
