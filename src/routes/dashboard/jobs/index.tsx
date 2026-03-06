@@ -3,6 +3,8 @@ import { Trans } from "@lingui/react/macro";
 import {
 	BriefcaseIcon,
 	BuildingsIcon,
+	CaretLeftIcon,
+	CaretRightIcon,
 	ClockIcon,
 	GlobeIcon,
 	MagnifyingGlassIcon,
@@ -12,7 +14,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,6 +32,7 @@ import {
 	buildSearchParams,
 	type FilterState,
 	initialFilterState,
+	RESULTS_PER_PAGE,
 	SearchFilters,
 } from "./-components/search-filters";
 
@@ -156,30 +159,48 @@ function RouteComponent() {
 	const [quota, setQuota] = useState<QuotaStatus | null>(null);
 	const [selectedJob, setSelectedJob] = useState<JobResult | null>(null);
 	const [sheetOpen, setSheetOpen] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [hasMore, setHasMore] = useState(false);
+	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const { mutate: searchJobs, isPending } = useMutation(orpc.jobs.search.mutationOptions());
 
 	const isConfigured = rapidApiKey && testStatus === "success";
 
+	const executeSearch = useCallback(
+		(page: number) => {
+			if (!query.trim() || !rapidApiKey) return;
+
+			const params = buildSearchParams(query, filters, page);
+			const postFilters = buildPostFilters(filters);
+
+			searchJobs(
+				{ apiKey: rapidApiKey, params, filters: postFilters },
+				{
+					onSuccess: (data) => {
+						setHasMore(data.data.length > RESULTS_PER_PAGE);
+						setJobs(data.data.slice(0, RESULTS_PER_PAGE));
+						setQuota(data.quota);
+						scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+					},
+					onError: (error) => {
+						toast.error(error.message);
+					},
+				},
+			);
+		},
+		[query, filters, rapidApiKey, searchJobs],
+	);
+
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!query.trim() || !rapidApiKey) return;
+		setCurrentPage(1);
+		executeSearch(1);
+	};
 
-		const params = buildSearchParams(query, filters);
-		const postFilters = buildPostFilters(filters);
-
-		searchJobs(
-			{ apiKey: rapidApiKey, params, filters: postFilters },
-			{
-				onSuccess: (data) => {
-					setJobs(data.data);
-					setQuota(data.quota);
-				},
-				onError: (error) => {
-					toast.error(error.message);
-				},
-			},
-		);
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
+		executeSearch(page);
 	};
 
 	const handleJobClick = (job: JobResult) => {
@@ -238,6 +259,7 @@ function RouteComponent() {
 						</Button>
 					</form>
 
+					<div ref={scrollRef} />
 					<SearchFilters filters={filters} onFiltersChange={setFilters} />
 
 					{quota && (
@@ -249,11 +271,39 @@ function RouteComponent() {
 					)}
 
 					{jobs.length > 0 && (
-						<div className="grid gap-3 sm:grid-cols-2">
-							{jobs.map((job) => (
-								<JobCard key={job.job_id} job={job} onClick={() => handleJobClick(job)} />
-							))}
-						</div>
+						<>
+							<div className="grid gap-3 sm:grid-cols-2">
+								{jobs.map((job) => (
+									<JobCard key={job.job_id} job={job} onClick={() => handleJobClick(job)} />
+								))}
+							</div>
+
+							<div className="flex items-center justify-center gap-x-4">
+								<Button
+									variant="outline"
+									size="sm"
+									disabled={currentPage <= 1 || isPending}
+									onClick={() => handlePageChange(currentPage - 1)}
+								>
+									<CaretLeftIcon className="size-4" />
+									<Trans>Previous</Trans>
+								</Button>
+
+								<span className="text-muted-foreground text-sm">
+									<Trans>Page {currentPage}</Trans>
+								</span>
+
+								<Button
+									variant="outline"
+									size="sm"
+									disabled={!hasMore || isPending}
+									onClick={() => handlePageChange(currentPage + 1)}
+								>
+									<Trans>Next</Trans>
+									<CaretRightIcon className="size-4" />
+								</Button>
+							</div>
+						</>
 					)}
 
 					{!isPending && jobs.length === 0 && query && (

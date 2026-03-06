@@ -14,9 +14,11 @@ import { type FilterState, hasActiveFilters, initialFilterState } from "./filter
 export {
 	buildPostFilters,
 	buildSearchParams,
+	FETCH_NUM_PAGES,
 	type FilterState,
 	hasActiveFilters,
 	initialFilterState,
+	RESULTS_PER_PAGE,
 } from "./filter-helpers";
 
 // --- Combobox option constants ---

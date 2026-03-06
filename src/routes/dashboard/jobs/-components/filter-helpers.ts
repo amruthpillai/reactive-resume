@@ -1,5 +1,10 @@
 import type { PostFilterOptions, SearchParams } from "@/schema/jobs";
 
+// --- Pagination ---
+
+export const RESULTS_PER_PAGE = 30;
+export const FETCH_NUM_PAGES = 4;
+
 // --- Types ---
 
 export type FilterState = {
@@ -32,8 +37,9 @@ export const initialFilterState: FilterState = {
 
 // --- Pure helper functions ---
 
-export function buildSearchParams(query: string, filters: FilterState): SearchParams {
-	const params: SearchParams = { query: query.trim() };
+export function buildSearchParams(query: string, filters: FilterState, page?: number): SearchParams {
+	const params: SearchParams = { query: query.trim(), num_pages: FETCH_NUM_PAGES };
+	if (page && page > 1) params.page = page;
 	if (filters.datePosted) params.date_posted = filters.datePosted as SearchParams["date_posted"];
 	if (filters.remoteOnly) params.remote_jobs_only = true;
 	if (filters.employmentType) params.employment_types = filters.employmentType;
