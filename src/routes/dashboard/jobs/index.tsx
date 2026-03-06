@@ -25,6 +25,13 @@ import { orpc } from "@/integrations/orpc/client";
 import type { JobResult, QuotaStatus } from "@/schema/jobs";
 import { DashboardHeader } from "../-components/header";
 import { JobDetailSheet } from "./-components/job-detail";
+import {
+	buildPostFilters,
+	buildSearchParams,
+	type FilterState,
+	initialFilterState,
+	SearchFilters,
+} from "./-components/search-filters";
 
 export const Route = createFileRoute("/dashboard/jobs/")({
 	component: RouteComponent,
@@ -144,6 +151,7 @@ function RouteComponent() {
 	const rapidApiKey = useJobsStore((s) => s.rapidApiKey);
 	const testStatus = useJobsStore((s) => s.testStatus);
 	const [query, setQuery] = useState("");
+	const [filters, setFilters] = useState<FilterState>(initialFilterState);
 	const [jobs, setJobs] = useState<JobResult[]>([]);
 	const [quota, setQuota] = useState<QuotaStatus | null>(null);
 	const [selectedJob, setSelectedJob] = useState<JobResult | null>(null);
@@ -157,8 +165,11 @@ function RouteComponent() {
 		e.preventDefault();
 		if (!query.trim() || !rapidApiKey) return;
 
+		const params = buildSearchParams(query, filters);
+		const postFilters = buildPostFilters(filters);
+
 		searchJobs(
-			{ apiKey: rapidApiKey, params: { query: query.trim() } },
+			{ apiKey: rapidApiKey, params, filters: postFilters },
 			{
 				onSuccess: (data) => {
 					setJobs(data.data);
@@ -226,6 +237,8 @@ function RouteComponent() {
 							<Trans>Search</Trans>
 						</Button>
 					</form>
+
+					<SearchFilters filters={filters} onFiltersChange={setFilters} />
 
 					{quota && (
 						<p className="text-muted-foreground text-xs">
