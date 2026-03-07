@@ -88,32 +88,34 @@ function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
 
 	return (
 		<BuilderSidebarEdge side="left">
-			<div />
+			<div className="flex min-h-0 w-full flex-1 flex-col items-center gap-y-2 overflow-hidden">
+				<div className="no-scrollbar min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
+					<div className="flex min-h-full flex-col items-center justify-center gap-y-2">
+						{leftSidebarSections.map((section) => (
+							<Button
+								key={section}
+								size="icon"
+								variant="ghost"
+								title={getSectionTitle(section)}
+								onClick={() => scrollToSection(section)}
+							>
+								{getSectionIcon(section)}
+							</Button>
+						))}
+					</div>
+				</div>
 
-			<div className="flex flex-col justify-center gap-y-2">
-				{leftSidebarSections.map((section) => (
-					<Button
-						key={section}
-						size="icon"
-						variant="ghost"
-						title={getSectionTitle(section)}
-						onClick={() => scrollToSection(section)}
-					>
-						{getSectionIcon(section)}
-					</Button>
-				))}
+				<UserDropdownMenu>
+					{({ session }) => (
+						<Button size="icon" variant="ghost">
+							<Avatar className="size-6">
+								<AvatarImage src={session.user.image ?? undefined} />
+								<AvatarFallback className="text-[0.5rem]">{getInitials(session.user.name)}</AvatarFallback>
+							</Avatar>
+						</Button>
+					)}
+				</UserDropdownMenu>
 			</div>
-
-			<UserDropdownMenu>
-				{({ session }) => (
-					<Button size="icon" variant="ghost">
-						<Avatar className="size-6">
-							<AvatarImage src={session.user.image ?? undefined} />
-							<AvatarFallback className="text-[0.5rem]">{getInitials(session.user.name)}</AvatarFallback>
-						</Avatar>
-					</Button>
-				)}
-			</UserDropdownMenu>
 		</BuilderSidebarEdge>
 	);
 }

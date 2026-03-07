@@ -131,6 +131,14 @@
 	aspect-ratio: 1 / 1.4142;
 }
 
+@utility no-scrollbar {
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50 min-w-0;
