@@ -1,6 +1,6 @@
 import * as pg from "drizzle-orm/pg-core";
-import { defaultResumeData, type ResumeData } from "@/schema/resume/data";
-import { generateId } from "@/utils/string";
+import { defaultResumeData, type ResumeData } from "../../schema/resume/data";
+import { generateId } from "../../utils/string";
 
 export const user = pg.pgTable(
 	"user",
@@ -229,8 +229,9 @@ export const apikey = pg.pgTable(
 		start: pg.text("start"),
 		prefix: pg.text("prefix"),
 		key: pg.text("key").notNull(),
-		userId: pg
-			.uuid("user_id")
+		configId: pg.text("config_id").notNull().default("default"),
+		referenceId: pg
+			.uuid("reference_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
 		refillInterval: pg.integer("refill_interval"),
@@ -253,7 +254,7 @@ export const apikey = pg.pgTable(
 		permissions: pg.text("permissions"),
 		metadata: pg.jsonb("metadata"),
 	},
-	(t) => [pg.index().on(t.userId), pg.index().on(t.key), pg.index().on(t.enabled, t.userId)],
+	(t) => [pg.index().on(t.referenceId), pg.index().on(t.key), pg.index().on(t.enabled, t.referenceId)],
 );
 
 export const jobSearchQuota = pg.pgTable("job_search_quota", {

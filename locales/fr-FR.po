@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-02-11 19:56\n"
+"PO-Revision-Date: 2026-03-05 10:45\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -41,6 +41,11 @@ msgstr "(s'ouvre dans un nouvel onglet)"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "{0, plural, one {# item} other {# items}}"
 msgstr "{0, plural, one {# élément} other {# éléments}}"
+
+#. placeholder {0}: item.roles.length
+#: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
+msgid "{0, plural, one {# role} other {# roles}}"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -195,9 +200,17 @@ msgstr "Ajouter une colonne après"
 msgid "Add Column Before"
 msgstr "Ajouter une colonne avant"
 
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Add multiple roles to show career progression at the same company."
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Ajouter une page"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Add Role"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -359,6 +372,7 @@ msgctxt "(noun) person, organization, or entity that gives an award"
 msgid "Awarder"
 msgstr "Remise par"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Awards"
 msgstr "Récompenses"
@@ -489,6 +503,7 @@ msgstr "Alignement centré"
 msgid "Center view"
 msgstr "Centrer la vue"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Certifications"
 msgstr "Certifications"
@@ -622,6 +637,7 @@ msgstr "Copiez cette clé secrète et utilisez-la dans vos applications pour acc
 msgid "Copy URL"
 msgstr "Copier l'URL"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
 msgstr "Lettre de motivation"
@@ -837,6 +853,7 @@ msgstr "Suppression de votre CV en cours..."
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
@@ -948,6 +965,7 @@ msgstr "Néerlandais"
 msgid "e.g. Change my name to..."
 msgstr "Par ex. : Changer mon nom en"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "Formation"
@@ -1040,6 +1058,7 @@ msgstr "Tout ce dont vous avez besoin pour créer, personnaliser et partager des
 msgid "Exit Fullscreen"
 msgstr "Quitter le mode plein écran"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Experience"
 msgstr "Expérience"
@@ -1068,6 +1087,10 @@ msgstr "Exporter"
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
 msgstr "Échec de la configuration de l'authentification à deux facteurs."
+
+#: src/routes/auth/login.tsx
+msgid "Failed to sign in. Please try again."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1330,6 +1353,7 @@ msgstr "Code en ligne"
 msgid "Insert Table"
 msgstr "Insérer un tableau"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
 msgstr "Centres d'intérêt"
@@ -1395,6 +1419,7 @@ msgstr "Paysage"
 msgid "Language"
 msgstr "Langue"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Languages"
 msgstr "Langues"
@@ -1666,6 +1691,14 @@ msgstr "Liste triée"
 msgid "Organization"
 msgstr "Organisation"
 
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Overall Period"
+msgstr ""
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Overall Title (optional)"
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Page"
 msgstr "Page"
@@ -1714,6 +1747,7 @@ msgid "Password protection has been enabled."
 msgstr "La protection par mot de passe a été activée."
 
 #: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
@@ -1771,6 +1805,7 @@ msgid "Portuguese (Portugal)"
 msgstr "Portugais (Portugal)"
 
 #: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Poste"
@@ -1802,6 +1837,7 @@ msgstr "Maîtrise"
 msgid "Profile"
 msgstr "Profil"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Profiles"
 msgstr "Profils"
@@ -1810,6 +1846,7 @@ msgstr "Profils"
 msgid "Progress Bar"
 msgstr "Barre de progression"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Projects"
 msgstr "Projets"
@@ -1826,6 +1863,7 @@ msgstr "Protégez votre CV à l'aide d'un mot de passe et ne laissez que les per
 msgid "Provider"
 msgstr "Fournisseur"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Publications"
 msgstr "Publications"
@@ -1875,6 +1913,7 @@ msgctxt "'Ctrl' may be replaced with the locale-specific equivalent (e.g. 'Strg'
 msgid "Redo (Ctrl+Y)"
 msgstr "Rétablir (Ctrl+Y)"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "References"
 msgstr "Références"
@@ -1886,6 +1925,10 @@ msgstr "Actualiser"
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "Vous vous souvenez de votre mot de passe ? <0><1>Connectez-vous maintenant <2/></1></0>"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Remove"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1902,6 +1945,10 @@ msgstr "Suppression de la protection par mot de passe..."
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Rename"
 msgstr "Renommer"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Reorder"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -1953,6 +2000,10 @@ msgstr "CVs"
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
 msgstr "Alignement à droite"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Role Progression"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2150,6 +2201,7 @@ msgstr "Colonne unique ; soigné et sérieux pour les postes de seniors ou de di
 msgid "Size"
 msgstr "Taille"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Skills"
 msgstr "Compétences"
@@ -2240,6 +2292,7 @@ msgstr "Barré"
 msgid "Subreddit"
 msgstr "Subreddit"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Summary"
 msgstr "Résumé"
@@ -2698,6 +2751,7 @@ msgstr "Vietnamien"
 msgid "Views"
 msgstr "Vues"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Volunteer"
 msgstr "Bénévole"
@@ -2848,3 +2902,4 @@ msgstr "Zoom arrière"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zoulou"
+

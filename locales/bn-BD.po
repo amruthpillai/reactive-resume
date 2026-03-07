@@ -8,7 +8,7 @@ msgstr ""
 "Language: bn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-02-09 22:31\n"
+"PO-Revision-Date: 2026-03-05 10:46\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -41,6 +41,11 @@ msgstr "(নতুন ট্যাবে খুলবে)"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "{0, plural, one {# item} other {# items}}"
 msgstr "{0, plural, one {#টি আইটেম} other {#টি আইটেম}}"
+
+#. placeholder {0}: item.roles.length
+#: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
+msgid "{0, plural, one {# role} other {# roles}}"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -195,9 +200,17 @@ msgstr "পরের দিকে কলাম যোগ করুন"
 msgid "Add Column Before"
 msgstr "আগের দিকে কলাম যোগ করুন"
 
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Add multiple roles to show career progression at the same company."
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "পৃষ্ঠা যোগ করুন"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Add Role"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -359,6 +372,7 @@ msgctxt "(noun) person, organization, or entity that gives an award"
 msgid "Awarder"
 msgstr "পুরস্কারদাতা"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Awards"
 msgstr "পুরস্কার"
@@ -489,6 +503,7 @@ msgstr "মধ্যের দিকে অ্যালাইন"
 msgid "Center view"
 msgstr "ভিউ কেন্দ্র করুন"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Certifications"
 msgstr "সার্টিফিকেশনসমূহ"
@@ -622,6 +637,7 @@ msgstr "এই সিক্রেট কী কপি করে আপনার 
 msgid "Copy URL"
 msgstr "URL কপি করুন"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
 msgstr ""
@@ -837,6 +853,7 @@ msgstr "আপনার জীবনবৃত্তান্ত মুছে ফ
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
@@ -948,6 +965,7 @@ msgstr "ডাচ"
 msgid "e.g. Change my name to..."
 msgstr ""
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Education"
 msgstr "শিক্ষা"
@@ -1040,6 +1058,7 @@ msgstr "পেশাদার জীবনবৃত্তান্ত তৈর�
 msgid "Exit Fullscreen"
 msgstr ""
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Experience"
 msgstr "অভিজ্ঞতা"
@@ -1068,6 +1087,10 @@ msgstr "এক্সপোর্ট"
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
 msgstr "টু‑ফ্যাক্টর প্রমাণীকরণ সেটআপ করতে ব্যর্থ হয়েছে।"
+
+#: src/routes/auth/login.tsx
+msgid "Failed to sign in. Please try again."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1330,6 +1353,7 @@ msgstr "ইনলাইন কোড"
 msgid "Insert Table"
 msgstr "টেবিল যুক্ত করুন"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
 msgstr "আগ্রহসমূহ"
@@ -1395,6 +1419,7 @@ msgstr "ল্যান্ডস্কেপ"
 msgid "Language"
 msgstr "ভাষা"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Languages"
 msgstr "ভাষাসমূহ"
@@ -1666,6 +1691,14 @@ msgstr "ক্রমযুক্ত লিস্ট"
 msgid "Organization"
 msgstr "প্রতিষ্ঠান"
 
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Overall Period"
+msgstr ""
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Overall Title (optional)"
+msgstr ""
+
 #: src/utils/resume/section.tsx
 msgid "Page"
 msgstr "পৃষ্ঠা"
@@ -1714,6 +1747,7 @@ msgid "Password protection has been enabled."
 msgstr "পাসওয়ার্ড সুরক্ষা চালু করা হয়েছে।"
 
 #: src/dialogs/resume/sections/education.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
@@ -1771,6 +1805,7 @@ msgid "Portuguese (Portugal)"
 msgstr "পর্তুগিজ (পর্তুগাল)"
 
 #: src/dialogs/resume/sections/experience.tsx
+#: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "পদবি"
@@ -1802,6 +1837,7 @@ msgstr "দক্ষতা (Proficiency)"
 msgid "Profile"
 msgstr "প্রোফাইল"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Profiles"
 msgstr "প্রোফাইলসমূহ"
@@ -1810,6 +1846,7 @@ msgstr "প্রোফাইলসমূহ"
 msgid "Progress Bar"
 msgstr "প্রগতি নির্দেশক বার"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Projects"
 msgstr "প্রোজেক্টসমূহ"
@@ -1826,6 +1863,7 @@ msgstr "আপনার জীবনবৃত্তান্তকে পাস�
 msgid "Provider"
 msgstr "প্রদানকারী"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Publications"
 msgstr "প্রকাশনাসমূহ"
@@ -1875,6 +1913,7 @@ msgctxt "'Ctrl' may be replaced with the locale-specific equivalent (e.g. 'Strg'
 msgid "Redo (Ctrl+Y)"
 msgstr "রি-ডু (Ctrl+Y)"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "References"
 msgstr "রেফারেন্সসমূহ"
@@ -1886,6 +1925,10 @@ msgstr "রিফ্রেশ"
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
 msgstr "পাসওয়ার্ড মনে আছে? <0><1>এখনই সাইন ইন করুন <2/></1></0>"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Remove"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1902,6 +1945,10 @@ msgstr "পাসওয়ার্ড সুরক্ষা সরানো হ
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Rename"
 msgstr "নাম বদলান"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Reorder"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -1953,6 +2000,10 @@ msgstr "জীবনবৃত্তান্তসমূহ"
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
 msgstr "ডান দিকে অ্যালাইন"
+
+#: src/dialogs/resume/sections/experience.tsx
+msgid "Role Progression"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2150,6 +2201,7 @@ msgstr "এক কলামের লেআউট; প্রাজ্ঞ ও গ
 msgid "Size"
 msgstr "আকার"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Skills"
 msgstr "স্কিলসমূহ"
@@ -2240,6 +2292,7 @@ msgstr "স্ট্রাইক"
 msgid "Subreddit"
 msgstr "সাবরেডিট"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Summary"
 msgstr "সারাংশ"
@@ -2698,6 +2751,7 @@ msgstr "ভিয়েতনামি"
 msgid "Views"
 msgstr "ভিউ"
 
+#: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Volunteer"
 msgstr "স্বেচ্ছাসেবী"
@@ -2848,3 +2902,4 @@ msgstr "জুম আউট"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "জুলু"
+
