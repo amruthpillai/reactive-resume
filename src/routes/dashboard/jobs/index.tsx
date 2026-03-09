@@ -246,7 +246,7 @@ function RouteComponent() {
 								type="text"
 								value={query}
 								onChange={(e) => setQuery(e.target.value)}
-								placeholder={t`e.g. Software Engineer in New York`}
+								placeholder={t`e.g. Software Engineer`}
 								autoCorrect="off"
 								autoComplete="off"
 								spellCheck="false"

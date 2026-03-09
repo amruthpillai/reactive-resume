@@ -116,6 +116,19 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
 					/>
 				</div>
 
+				<div className="flex flex-col gap-y-1">
+					<Label className="text-muted-foreground text-xs">
+						<Trans>Location</Trans>
+					</Label>
+					<Input
+						type="text"
+						value={filters.location}
+						onChange={(e) => update("location", e.target.value)}
+						placeholder={t`e.g. New York, NY`}
+						className="h-9 w-[200px] text-sm"
+					/>
+				</div>
+
 				{hasActiveFilters(filters) && (
 					<Button variant="ghost" size="sm" className="h-9 gap-x-1" onClick={() => onFiltersChange(initialFilterState)}>
 						<XIcon className="size-3.5" />

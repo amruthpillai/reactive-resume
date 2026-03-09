@@ -51,6 +51,29 @@ describe("buildSearchParams", () => {
 		expect(result.job_requirements).toBe("under_3_years_experience");
 	});
 
+	it("appends location to query when location is set", () => {
+		const filters: FilterState = { ...initialFilterState, location: "New York, NY" };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in New York, NY");
+	});
+
+	it("does not append location when location is empty", () => {
+		const result = buildSearchParams("engineer", initialFilterState);
+		expect(result.query).toBe("engineer");
+	});
+
+	it("does not append location when location is only whitespace", () => {
+		const filters: FilterState = { ...initialFilterState, location: "   " };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer");
+	});
+
+	it("trims location before appending", () => {
+		const filters: FilterState = { ...initialFilterState, location: "  NYC  " };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in NYC");
+	});
+
 	it("includes all filter params when all are set", () => {
 		const filters: FilterState = {
 			...initialFilterState,
@@ -58,10 +81,11 @@ describe("buildSearchParams", () => {
 			remoteOnly: true,
 			employmentType: "CONTRACTOR",
 			jobRequirements: "no_experience",
+			location: "US",
 		};
 		const result = buildSearchParams("designer", filters);
 		expect(result).toEqual({
-			query: "designer",
+			query: "designer in US",
 			num_pages: FETCH_NUM_PAGES,
 			date_posted: "today",
 			remote_jobs_only: true,
@@ -226,6 +250,10 @@ describe("hasActiveFilters", () => {
 
 	it("returns true when jobRequirements is set", () => {
 		expect(hasActiveFilters({ ...initialFilterState, jobRequirements: "no_experience" })).toBe(true);
+	});
+
+	it("returns true when location is set", () => {
+		expect(hasActiveFilters({ ...initialFilterState, location: "NYC" })).toBe(true);
 	});
 
 	it("returns true when minSalary is set", () => {
