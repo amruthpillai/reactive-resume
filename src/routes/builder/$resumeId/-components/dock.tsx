@@ -4,6 +4,7 @@ import {
 	ArrowUUpRightIcon,
 	CircleNotchIcon,
 	CubeFocusIcon,
+	FileDocIcon,
 	FileJsIcon,
 	FilePdfIcon,
 	type Icon,
@@ -26,6 +27,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
 import { downloadFromUrl, downloadWithAnchor, generateFilename } from "@/utils/file";
+import { buildDocx } from "@/utils/resume/docx";
 import { cn } from "@/utils/style";
 
 export function BuilderDock() {
@@ -70,6 +72,18 @@ export function BuilderDock() {
 		const blob = new Blob([jsonString], { type: "application/json" });
 
 		downloadWithAnchor(blob, filename);
+	}, [resume?.data]);
+
+	const onDownloadDOCX = useCallback(async () => {
+		if (!resume?.data) return;
+		const filename = generateFilename(resume.data.basics.name, "docx");
+
+		try {
+			const blob = await buildDocx(resume.data);
+			downloadWithAnchor(blob, filename);
+		} catch {
+			toast.error(t`There was a problem while generating the DOCX, please try again.`);
+		}
 	}, [resume?.data]);
 
 	const onDownloadPDF = useCallback(async () => {
@@ -125,6 +139,7 @@ export function BuilderDock() {
 				<AIChat />
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
 				<DockIcon icon={FileJsIcon} title={t`Download JSON`} onClick={() => onDownloadJSON()} />
+				<DockIcon icon={FileDocIcon} title={t`Download DOCX`} onClick={() => onDownloadDOCX()} />
 				<DockIcon
 					title={t`Download PDF`}
 					disabled={isPrinting}
