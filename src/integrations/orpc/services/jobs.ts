@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, lt, sql } from "drizzle-orm";
 import type z from "zod";
 import { db } from "@/integrations/drizzle/client";
 import { jobSearchQuota } from "@/integrations/drizzle/schema";
@@ -18,29 +18,30 @@ const JSEARCH_BASE_URL = "https://jsearch.p.rapidapi.com";
 const JSEARCH_HOST = "jsearch.p.rapidapi.com";
 const MAX_RETRIES = 3;
 const INITIAL_BACKOFF_MS = 1000;
-const MONTHLY_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
-// --- Rate Limiting ---
+// --- Rate Limiting (calendar-month boundaries) ---
+
+function isCurrentMonth(windowStart: Date): boolean {
+	const now = new Date();
+	return now.getUTCFullYear() === windowStart.getUTCFullYear() && now.getUTCMonth() === windowStart.getUTCMonth();
+}
+
+function startOfCurrentMonth(): Date {
+	const now = new Date();
+	return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+}
+
+function startOfNextMonth(): Date {
+	const now = new Date();
+	return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+}
 
 async function getQuota(userId: string): Promise<QuotaStatus> {
 	const monthlyLimit = env.JOB_SEARCH_MONTHLY_LIMIT;
 
 	const [row] = await db.select().from(jobSearchQuota).where(eq(jobSearchQuota.userId, userId)).limit(1);
 
-	if (!row) {
-		return {
-			monthlyUsed: 0,
-			monthlyLimit,
-			monthlyRemaining: monthlyLimit,
-			windowStart: null,
-		};
-	}
-
-	const windowStart = row.windowStart.getTime();
-	const now = Date.now();
-
-	// Reset if window has expired
-	if (now - windowStart > MONTHLY_WINDOW_MS) {
+	if (!row || !isCurrentMonth(row.windowStart)) {
 		return {
 			monthlyUsed: 0,
 			monthlyLimit,
@@ -59,39 +60,39 @@ async function getQuota(userId: string): Promise<QuotaStatus> {
 
 async function checkAndIncrementQuota(userId: string): Promise<void> {
 	const monthlyLimit = env.JOB_SEARCH_MONTHLY_LIMIT;
-	const now = new Date();
+	const monthStart = startOfCurrentMonth();
 
-	const [row] = await db.select().from(jobSearchQuota).where(eq(jobSearchQuota.userId, userId)).limit(1);
+	// Reset quota if windowStart is from a previous month
+	await db
+		.update(jobSearchQuota)
+		.set({ requestCount: 0, windowStart: monthStart })
+		.where(and(eq(jobSearchQuota.userId, userId), lt(jobSearchQuota.windowStart, monthStart)));
 
-	if (!row) {
+	// Atomic increment that only succeeds if requestCount < monthlyLimit
+	const result = await db
+		.update(jobSearchQuota)
+		.set({ requestCount: sql`${jobSearchQuota.requestCount} + 1` })
+		.where(and(eq(jobSearchQuota.userId, userId), lt(jobSearchQuota.requestCount, monthlyLimit)))
+		.returning({ requestCount: jobSearchQuota.requestCount });
+
+	if (result.length > 0) return;
+
+	// No rows updated — either the user has no quota row yet, or the limit was reached
+	const [existing] = await db.select().from(jobSearchQuota).where(eq(jobSearchQuota.userId, userId)).limit(1);
+
+	if (!existing) {
 		await db.insert(jobSearchQuota).values({
 			id: generateId(),
 			userId,
 			requestCount: 1,
-			windowStart: now,
+			windowStart: monthStart,
 		});
 		return;
 	}
 
-	const windowStart = row.windowStart.getTime();
-	const elapsed = now.getTime() - windowStart;
-
-	// Reset window if expired
-	if (elapsed > MONTHLY_WINDOW_MS) {
-		await db.update(jobSearchQuota).set({ requestCount: 1, windowStart: now }).where(eq(jobSearchQuota.userId, userId));
-		return;
-	}
-
-	if (row.requestCount >= monthlyLimit) {
-		throw new Error(
-			`Monthly rate limit reached (${monthlyLimit}/${monthlyLimit} used). Resets at ${new Date(windowStart + MONTHLY_WINDOW_MS).toISOString()}.`,
-		);
-	}
-
-	await db
-		.update(jobSearchQuota)
-		.set({ requestCount: row.requestCount + 1 })
-		.where(eq(jobSearchQuota.userId, userId));
+	// Row exists but update failed — limit reached
+	const resetsAt = startOfNextMonth().toISOString();
+	throw new Error(`Monthly rate limit reached (${monthlyLimit}/${monthlyLimit} used). Resets at ${resetsAt}.`);
 }
 
 // --- JSearch API Proxy ---

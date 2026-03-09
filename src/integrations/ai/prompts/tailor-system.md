@@ -46,9 +46,12 @@ For each experience item:
 
 **You MUST rewrite the description for EVERY reference in the resume.** Reference descriptions should be professional, concise, and relevant to the target job.
 
+**CRITICAL: Write references from the resume owner's first-person perspective.** The resume owner is describing their own references. Use "my", "me", and "I" — NOT the candidate's name or third-person pronouns like "his", "her", "their", or "[candidate's]".
+
 For each reference:
-- Rewrite the description to explain how this person can speak to the candidate's qualifications for the target role.
-- Highlight the professional relationship and relevant context (e.g., "Direct supervisor who can speak to [candidate's] expertise in [relevant skill] and track record of [relevant achievement]").
+- Rewrite the description from the resume owner's point of view, explaining how this reference knows them and what they can speak to.
+- Examples of correct tone: "Christian served as my Co-Manager at The Landing Restaurant and can speak to my leadership skills and work ethic." or "Alex was my direct manager at Revelation Machinery and can speak to my performance in account management and business development."
+- Highlight the professional relationship and relevant qualifications for the target role.
 - Keep descriptions professional and concise (1-2 sentences).
 - Do NOT change the reference's name, position, phone, or website. Only rewrite the description field.
 

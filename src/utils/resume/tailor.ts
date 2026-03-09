@@ -1,7 +1,10 @@
-import type { Operation } from "fast-json-patch";
+import type { z } from "zod";
 import type { ResumeData } from "@/schema/resume/data";
 import type { NewSkillInfo, TailorOutput } from "@/schema/tailor";
+import type { jsonPatchOperationSchema } from "@/utils/resume/patch";
 import { generateId } from "@/utils/string";
+
+export type JsonPatchOperation = z.infer<typeof jsonPatchOperationSchema>;
 
 /**
  * Sanitizes text output from AI to ensure consistent character formatting.
@@ -36,8 +39,8 @@ export function sanitizeText(text: string): string {
 export function tailorOutputToPatches(
 	output: TailorOutput,
 	resumeData: ResumeData,
-): { operations: Operation[]; newSkills: NewSkillInfo[] } {
-	const operations: Operation[] = [];
+): { operations: JsonPatchOperation[]; newSkills: NewSkillInfo[] } {
+	const operations: JsonPatchOperation[] = [];
 
 	// 1. Summary
 	if (output.summary?.content) {
@@ -175,7 +178,7 @@ export function validateTailorOutput(output: TailorOutput, resumeData: ResumeDat
  * Builds JSON Patch add operations for syncing new skills back to
  * the original (source) resume.
  */
-export function buildSkillSyncOperations(skills: NewSkillInfo[]): Operation[] {
+export function buildSkillSyncOperations(skills: NewSkillInfo[]): JsonPatchOperation[] {
 	return skills.map((skill) => ({
 		op: "add" as const,
 		path: "/sections/skills/items/-",

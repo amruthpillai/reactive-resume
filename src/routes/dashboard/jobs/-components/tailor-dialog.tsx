@@ -269,7 +269,8 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
 							<DialogDescription>
 								<Trans>
 									The AI identified new skills from your experience that match this job. Select which ones to save back
-									to your original resume for future applications.
+									to your original resume for future applications. This will permanently modify your original resume and
+									cannot be undone.
 								</Trans>
 							</DialogDescription>
 						</DialogHeader>

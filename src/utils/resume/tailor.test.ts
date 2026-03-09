@@ -2,7 +2,19 @@ import { describe, expect, it } from "vitest";
 import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData } from "@/schema/resume/data";
 import type { TailorOutput } from "@/schema/tailor";
-import { buildSkillSyncOperations, sanitizeText, tailorOutputToPatches, validateTailorOutput } from "./tailor";
+import {
+	buildSkillSyncOperations,
+	type JsonPatchOperation,
+	sanitizeText,
+	tailorOutputToPatches,
+	validateTailorOutput,
+} from "./tailor";
+
+// biome-ignore lint/suspicious/noExplicitAny: test helper needs dynamic access to operation values
+function opValue(op: JsonPatchOperation | undefined): any {
+	if (op && "value" in op) return op.value;
+	return undefined;
+}
 
 // Helper to create resume data with experience, skills, and references
 function makeResumeData(overrides?: {
@@ -170,7 +182,7 @@ describe("tailorOutputToPatches", () => {
 		const { operations } = tailorOutputToPatches(output, makeResumeData());
 
 		const summaryOp = operations.find((op) => op.path === "/summary/content");
-		expect(summaryOp?.value).toBe("<p>Expert - Full Stack Developer</p>");
+		expect(opValue(summaryOp)).toBe("<p>Expert - Full Stack Developer</p>");
 	});
 
 	it("skips summary patch when content is empty", () => {
@@ -204,7 +216,7 @@ describe("tailorOutputToPatches", () => {
 		const { operations } = tailorOutputToPatches(output, makeResumeData());
 
 		const expOp = operations.find((op) => op.path === "/sections/experience/items/0/description");
-		expect(expOp?.value).toBe('<p>Led team - built "great" things</p>');
+		expect(opValue(expOp)).toBe('<p>Led team - built "great" things</p>');
 	});
 
 	it("handles role progression with nested role patches", () => {
@@ -285,7 +297,7 @@ describe("tailorOutputToPatches", () => {
 		const { operations } = tailorOutputToPatches(output, makeResumeData());
 
 		const refOp = operations.find((op) => op.path === "/sections/references/items/0/description");
-		expect(refOp?.value).toBe("<p>Jane's team - excellent work</p>");
+		expect(opValue(refOp)).toBe("<p>Jane's team - excellent work</p>");
 	});
 
 	it("ignores out-of-bounds reference indices", () => {
@@ -326,7 +338,7 @@ describe("tailorOutputToPatches", () => {
 
 		const addOp = operations.find((op) => op.op === "add" && op.path === "/sections/skills/items/-");
 		expect(addOp).toBeDefined();
-		expect(addOp?.value).toMatchObject({
+		expect(opValue(addOp)).toMatchObject({
 			name: "React",
 			keywords: ["Hooks", "JSX"],
 			proficiency: "Developer",
@@ -334,7 +346,7 @@ describe("tailorOutputToPatches", () => {
 			hidden: false,
 			level: 0,
 		});
-		expect(addOp?.value.id).toBeTruthy();
+		expect(opValue(addOp).id).toBeTruthy();
 	});
 
 	it("sanitizes skill names and keywords", () => {
@@ -354,9 +366,9 @@ describe("tailorOutputToPatches", () => {
 		const { operations } = tailorOutputToPatches(output, makeResumeData());
 
 		const addOp = operations.find((op) => op.op === "add" && op.path === "/sections/skills/items/-");
-		expect(addOp?.value.name).toBe("Full-Stack Development");
-		expect(addOp?.value.keywords).toEqual(["React - Frontend", "Node's Server"]);
-		expect(addOp?.value.proficiency).toBe('"Advanced"');
+		expect(opValue(addOp).name).toBe("Full-Stack Development");
+		expect(opValue(addOp).keywords).toEqual(["React - Frontend", "Node's Server"]);
+		expect(opValue(addOp).proficiency).toBe('"Advanced"');
 	});
 
 	it("returns newSkills only for skills marked isNew", () => {
@@ -457,7 +469,7 @@ describe("tailorOutputToPatches", () => {
 		const { operations } = tailorOutputToPatches(output, makeResumeData());
 
 		const addOp = operations.find((op) => op.op === "add" && op.path === "/sections/skills/items/-");
-		expect(addOp?.value.icon).toBe("cloud");
+		expect(opValue(addOp).icon).toBe("cloud");
 	});
 
 	it("defaults empty icon to empty string", () => {
@@ -469,7 +481,7 @@ describe("tailorOutputToPatches", () => {
 		const { operations } = tailorOutputToPatches(output, makeResumeData());
 
 		const addOp = operations.find((op) => op.op === "add" && op.path === "/sections/skills/items/-");
-		expect(addOp?.value.icon).toBe("");
+		expect(opValue(addOp).icon).toBe("");
 	});
 });
 
@@ -570,7 +582,7 @@ describe("buildSkillSyncOperations", () => {
 		expect(operations).toHaveLength(2);
 		expect(operations[0].op).toBe("add");
 		expect(operations[0].path).toBe("/sections/skills/items/-");
-		expect(operations[0].value).toMatchObject({
+		expect(opValue(operations[0])).toMatchObject({
 			name: "React",
 			keywords: ["Hooks", "JSX"],
 			proficiency: "Advanced",
@@ -578,7 +590,7 @@ describe("buildSkillSyncOperations", () => {
 			icon: "",
 			level: 0,
 		});
-		expect(operations[0].value.id).toBeTruthy();
+		expect(opValue(operations[0]).id).toBeTruthy();
 	});
 
 	it("generates unique IDs for each skill", () => {
@@ -589,7 +601,7 @@ describe("buildSkillSyncOperations", () => {
 
 		const operations = buildSkillSyncOperations(skills);
 
-		expect(operations[0].value.id).not.toBe(operations[1].value.id);
+		expect(opValue(operations[0]).id).not.toBe(opValue(operations[1]).id);
 	});
 
 	it("returns empty array for empty input", () => {
