@@ -6,6 +6,7 @@ const BUILT_IN_LAYOUT_SECTION_IDS = sectionTypeSchema.options.filter((section) =
 function normalizeBuiltInSectionsInLayout(data: ResumeData): ResumeData {
 	const pages = data.metadata.layout.pages;
 
+	// Some exported resumes can arrive without any persisted layout pages.
 	if (pages.length === 0) {
 		return {
 			...data,
@@ -27,6 +28,7 @@ function normalizeBuiltInSectionsInLayout(data: ResumeData): ResumeData {
 
 	const existingSectionIds = new Set<string>();
 
+	// Preserve the imported layout and only compute which built-in IDs are missing entirely.
 	for (const page of pages) {
 		for (const sectionId of page.main) existingSectionIds.add(sectionId);
 		for (const sectionId of page.sidebar) existingSectionIds.add(sectionId);
@@ -47,6 +49,7 @@ function normalizeBuiltInSectionsInLayout(data: ResumeData): ResumeData {
 				pages: [
 					{
 						...firstPage,
+						// Recover missing built-in sections without reordering the imported layout.
 						main: [...firstPage.main, ...missingSectionIds],
 					},
 					...restPages,
