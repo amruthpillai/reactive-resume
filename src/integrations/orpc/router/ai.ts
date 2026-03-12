@@ -69,6 +69,10 @@ export const aiRouter = {
 				message: "The AI provider returned an error or is unreachable.",
 				status: 502,
 			},
+			BAD_REQUEST: {
+				message: "The AI returned an improperly formatted structure.",
+				status: 400,
+			},
 		})
 		.handler(async ({ input }): Promise<ResumeData> => {
 			try {
@@ -79,7 +83,10 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(JSON.stringify(flattenError(error), null, 2));
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Invalid resume data structure",
+						cause: flattenError(error),
+					});
 				}
 				throw error;
 			}
@@ -111,6 +118,10 @@ export const aiRouter = {
 				message: "The AI provider returned an error or is unreachable.",
 				status: 502,
 			},
+			BAD_REQUEST: {
+				message: "The AI returned an improperly formatted structure.",
+				status: 400,
+			},
 		})
 		.handler(async ({ input }) => {
 			try {
@@ -121,7 +132,10 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(JSON.stringify(flattenError(error), null, 2));
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Invalid resume data structure",
+						cause: flattenError(error),
+					});
 				}
 
 				throw error;

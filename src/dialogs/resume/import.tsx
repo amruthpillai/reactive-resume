@@ -64,6 +64,19 @@ const formSchema = z.discriminatedUnion("type", [
 
 type FormValues = z.infer<typeof formSchema>;
 
+function fileToBase64(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			const result = reader.result as string;
+			// remove data URL prefix (e.g., "data:application/pdf;base64," or "data:application/vnd...;base64,")
+			resolve(result.split(",")[1]);
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(file);
+	});
+}
+
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const navigate = useNavigate();
 	const { enabled: isAIEnabled, provider, model, apiKey, baseURL } = useAIStore();
@@ -138,18 +151,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
 
 				// const arrayBuffer = await values.file.arrayBuffer();
-				// const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-
-				const base64 = await new Promise<string>((resolve, reject) => {
-					const reader = new FileReader();
-					reader.onload = () => {
-						const result = reader.result as string;
-						// remove "data:application/pdf;base64," prefix
-						resolve(result.split(",")[1]);
-					};
-					reader.onerror = reject;
-					reader.readAsDataURL(values.file);
-				});
+				const base64 = await fileToBase64(values.file);
 
 				data = await client.ai.parsePdf({
 					provider,
@@ -165,17 +167,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
 
 				// const arrayBuffer = await values.file.arrayBuffer();
-				// const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-				const base64 = await new Promise<string>((resolve, reject) => {
-					const reader = new FileReader();
-					reader.onload = () => {
-						const result = reader.result as string;
-						// remove "data:application/pdf;base64," prefix
-						resolve(result.split(",")[1]);
-					};
-					reader.onerror = reject;
-					reader.readAsDataURL(values.file);
-				});
+				const base64 = await fileToBase64(values.file);
 
 				const mediaType =
 					values.file.type === "application/msword"

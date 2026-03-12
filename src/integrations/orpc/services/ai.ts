@@ -177,6 +177,56 @@ function mergeDefaults<T extends Record<string, unknown>, S extends Record<strin
 	return output as T & S;
 }
 
+function logAndRethrow(context: string, error: unknown): never {
+	if (error instanceof Error) {
+		console.error(`${context}:`, error.message);
+		throw error;
+	}
+	console.error(`Unknown error in ${context}:`, error);
+	throw new Error(`An unknown error occurred during ${context}.`);
+}
+
+function parseAndValidateResumeJson(resultText: string): ResumeData {
+	let jsonString = resultText;
+	const firstCurly = jsonString.indexOf("{");
+	const firstSquare = jsonString.indexOf("[");
+	const lastCurly = jsonString.lastIndexOf("}");
+	const lastSquare = jsonString.lastIndexOf("]");
+
+	let firstIndex = -1;
+	if (firstCurly !== -1 && firstSquare !== -1) {
+		firstIndex = Math.min(firstCurly, firstSquare);
+	} else {
+		firstIndex = Math.max(firstCurly, firstSquare);
+	}
+	const lastIndex = Math.max(lastCurly, lastSquare);
+
+	if (firstIndex !== -1 && lastIndex !== -1 && lastIndex >= firstIndex) {
+		jsonString = jsonString.substring(firstIndex, lastIndex + 1);
+	}
+
+	try {
+		const repairedJson = jsonrepair(jsonString);
+		const parsedJson = JSON.parse(repairedJson);
+		const mergedData = mergeDefaults(defaultResumeData, parsedJson);
+
+		return resumeDataSchema.parse({
+			...mergedData,
+			customSections: [],
+			picture: defaultResumeData.picture,
+			metadata: defaultResumeData.metadata,
+		});
+	} catch (error: unknown) {
+		if (error instanceof ZodError) {
+			console.error("Zod Validation Errors:", JSON.stringify(flattenError(error), null, 2));
+			throw error;
+		}
+
+		console.error("Unknown error:", error);
+		throw new Error("An unknown error occurred while validating the merged resume data.");
+	}
+}
+
 export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
@@ -237,15 +287,9 @@ type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
 async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 	const model = getModel(input);
 
-	const pdfText = await extractPdfText(input.file.data).catch((error: unknown) => {
-		if (error instanceof Error) {
-			console.error(`Failed to parse PDF locally:`, error.message);
-			throw error;
-		}
-
-		console.error("Unknown error:", error);
-		throw new Error("An unknown error occurred while extracting the PDF text.");
-	});
+	const pdfText = await extractPdfText(input.file.data).catch((error: unknown) =>
+		logAndRethrow("Failed to parse PDF locally", error),
+	);
 
 	const result = await generateText({
 		model,
@@ -262,41 +306,9 @@ async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 				content: `${pdfParserUserPrompt}\n\n--- EXTRACTED RESUME TEXT ---\n${pdfText}\n--- END OF EXTRACTED TEXT ---`,
 			},
 		],
-	}).catch((error: unknown) => {
-		if (error instanceof Error) {
-			console.error(`Failed to generate the text with the model:`, error.message);
-			throw error;
-		}
+	}).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
 
-		console.error("Unknown error:", error);
-		throw new Error("An unknown error occurred while generating the text.");
-	});
-
-	try {
-		// This line tries to extract a JSON object or array from the model's string response.
-		// It uses a regex to find the first {...} or [...] block of text in the response;
-		// if nothing is matched, it defaults to using the entire response string.
-		const jsonString = result.text.match(/\{[\s\S]*\}|\[[\s\S]*\]/)?.[0] || result.text;
-
-		const repairedJson = jsonrepair(jsonString);
-		const parsedJson = JSON.parse(repairedJson);
-		const mergedData = mergeDefaults(defaultResumeData, parsedJson);
-
-		return resumeDataSchema.parse({
-			...mergedData,
-			customSections: [],
-			picture: defaultResumeData.picture,
-			metadata: defaultResumeData.metadata,
-		});
-	} catch (error: unknown) {
-		if (error instanceof ZodError) {
-			console.error("Zod Validation Errors:", JSON.stringify(flattenError(error), null, 2));
-			throw error;
-		}
-
-		console.error("Unknown error:", error);
-		throw new Error("An unknown error occurred while validating the merged resume data.");
-	}
+	return parseAndValidateResumeJson(result.text);
 }
 
 type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
@@ -307,15 +319,9 @@ type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
 async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 	const model = getModel(input);
 
-	const docxText = await extractDocxText(input.file.data).catch((error: unknown) => {
-		if (error instanceof Error) {
-			console.error(`Failed to parse DOCX locally:`, error.message);
-			throw error;
-		}
-
-		console.error("Unknown error:", error);
-		throw new Error("An unknown error occurred while extracting the DOCX text.");
-	});
+	const docxText = await extractDocxText(input.file.data).catch((error: unknown) =>
+		logAndRethrow("Failed to parse DOCX locally", error),
+	);
 
 	const result = await generateText({
 		model,
@@ -332,41 +338,9 @@ async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 				content: `${docxParserUserPrompt}\n\n--- EXTRACTED RESUME TEXT ---\n${docxText}\n--- END OF EXTRACTED TEXT ---`,
 			},
 		],
-	}).catch((error: unknown) => {
-		if (error instanceof Error) {
-			console.error(`Failed to generate the text with the model:`, error.message);
-			throw error;
-		}
+	}).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
 
-		console.error("Unknown error:", error);
-		throw new Error("An unknown error occurred while generating the text.");
-	});
-
-	try {
-		// This line tries to extract a JSON object or array from the model's string response.
-		// It uses a regex to find the first {...} or [...] block of text in the response;
-		// if nothing is matched, it defaults to using the entire response string.
-		const jsonString = result.text.match(/\{[\s\S]*\}|\[[\s\S]*\]/)?.[0] || result.text;
-
-		const repairedJson = jsonrepair(jsonString);
-		const parsedJson = JSON.parse(repairedJson);
-		const mergedData = mergeDefaults(defaultResumeData, parsedJson);
-
-		return resumeDataSchema.parse({
-			...mergedData,
-			customSections: [],
-			picture: defaultResumeData.picture,
-			metadata: defaultResumeData.metadata,
-		});
-	} catch (error: unknown) {
-		if (error instanceof ZodError) {
-			console.error("Zod Validation Errors:", JSON.stringify(flattenError(error), null, 2));
-			throw error;
-		}
-
-		console.error("Unknown error:", error);
-		throw new Error("An unknown error occurred while validating the merged resume data.");
-	}
+	return parseAndValidateResumeJson(result.text);
 }
 
 function buildChatSystemPrompt(resumeData: ResumeData): string {
