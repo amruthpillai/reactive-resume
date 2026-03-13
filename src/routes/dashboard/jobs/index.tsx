@@ -169,9 +169,10 @@ function RouteComponent() {
 
 	const executeSearch = useCallback(
 		(page: number) => {
-			// Allow search if either query or location is provided
+			// Allow search if either query or any location field is provided
 			const hasQuery = query.trim().length > 0;
-			const hasLocation = filters.location.trim().length > 0;
+			const hasLocation =
+				filters.city.trim().length > 0 || filters.state.trim().length > 0 || filters.country.trim().length > 0;
 
 			if ((!hasQuery && !hasLocation) || !rapidApiKey) return;
 
@@ -259,7 +260,12 @@ function RouteComponent() {
 							/>
 						</div>
 
-						<Button type="submit" disabled={isPending || (!query.trim() && !filters.location.trim())}>
+						<Button
+							type="submit"
+							disabled={
+								isPending || (!query.trim() && !filters.city.trim() && !filters.state.trim() && !filters.country.trim())
+							}
+						>
 							{isPending ? <Spinner /> : <MagnifyingGlassIcon />}
 							<Trans>Search</Trans>
 						</Button>

@@ -51,27 +51,57 @@ describe("buildSearchParams", () => {
 		expect(result.job_requirements).toBe("under_3_years_experience");
 	});
 
-	it("appends location to query when location is set", () => {
-		const filters: FilterState = { ...initialFilterState, location: "New York, NY" };
+	it("appends city to query when only city is set", () => {
+		const filters: FilterState = { ...initialFilterState, city: "New York" };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in New York");
+	});
+
+	it("appends state to query when only state is set", () => {
+		const filters: FilterState = { ...initialFilterState, state: "NY" };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in NY");
+	});
+
+	it("appends country to query when only country is set", () => {
+		const filters: FilterState = { ...initialFilterState, country: "USA" };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in USA");
+	});
+
+	it("appends city and state when both are set", () => {
+		const filters: FilterState = { ...initialFilterState, city: "New York", state: "NY" };
 		const result = buildSearchParams("engineer", filters);
 		expect(result.query).toBe("engineer in New York, NY");
 	});
 
-	it("does not append location when location is empty", () => {
+	it("appends city, state, and country when all are set", () => {
+		const filters: FilterState = { ...initialFilterState, city: "New York", state: "NY", country: "USA" };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in New York, NY, USA");
+	});
+
+	it("does not append location when all location fields are empty", () => {
 		const result = buildSearchParams("engineer", initialFilterState);
 		expect(result.query).toBe("engineer");
 	});
 
-	it("does not append location when location is only whitespace", () => {
-		const filters: FilterState = { ...initialFilterState, location: "   " };
+	it("does not append location when all location fields are only whitespace", () => {
+		const filters: FilterState = { ...initialFilterState, city: "   ", state: "  ", country: "   " };
 		const result = buildSearchParams("engineer", filters);
 		expect(result.query).toBe("engineer");
 	});
 
-	it("trims location before appending", () => {
-		const filters: FilterState = { ...initialFilterState, location: "  NYC  " };
+	it("trims location fields before appending", () => {
+		const filters: FilterState = { ...initialFilterState, city: "  NYC  ", state: "  NY  " };
 		const result = buildSearchParams("engineer", filters);
-		expect(result.query).toBe("engineer in NYC");
+		expect(result.query).toBe("engineer in NYC, NY");
+	});
+
+	it("skips empty fields when building location string", () => {
+		const filters: FilterState = { ...initialFilterState, city: "Seattle", country: "USA" };
+		const result = buildSearchParams("engineer", filters);
+		expect(result.query).toBe("engineer in Seattle, USA");
 	});
 
 	it("includes all filter params when all are set", () => {
@@ -81,11 +111,13 @@ describe("buildSearchParams", () => {
 			remoteOnly: true,
 			employmentType: "CONTRACTOR",
 			jobRequirements: "no_experience",
-			location: "US",
+			city: "Seattle",
+			state: "WA",
+			country: "US",
 		};
 		const result = buildSearchParams("designer", filters);
 		expect(result).toEqual({
-			query: "designer in US",
+			query: "designer in Seattle, WA, US",
 			num_pages: FETCH_NUM_PAGES,
 			date_posted: "today",
 			remote_jobs_only: true,
@@ -252,8 +284,16 @@ describe("hasActiveFilters", () => {
 		expect(hasActiveFilters({ ...initialFilterState, jobRequirements: "no_experience" })).toBe(true);
 	});
 
-	it("returns true when location is set", () => {
-		expect(hasActiveFilters({ ...initialFilterState, location: "NYC" })).toBe(true);
+	it("returns true when city is set", () => {
+		expect(hasActiveFilters({ ...initialFilterState, city: "NYC" })).toBe(true);
+	});
+
+	it("returns true when state is set", () => {
+		expect(hasActiveFilters({ ...initialFilterState, state: "NY" })).toBe(true);
+	});
+
+	it("returns true when country is set", () => {
+		expect(hasActiveFilters({ ...initialFilterState, country: "USA" })).toBe(true);
 	});
 
 	it("returns true when minSalary is set", () => {

@@ -119,20 +119,58 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
 
 				<div className="flex flex-col gap-y-1">
 					<Label className="text-muted-foreground text-xs">
-						<Trans>Location</Trans>
+						<Trans>City</Trans>
 					</Label>
 					<Input
 						type="text"
-						value={filters.location}
-						onChange={(e) => update("location", e.target.value)}
+						value={filters.city}
+						onChange={(e) => update("city", e.target.value)}
 						onKeyDown={(e) => {
 							if (e.key === "Enter" && onSearch) {
 								e.preventDefault();
 								onSearch();
 							}
 						}}
-						placeholder={t`e.g. New York, NY`}
-						className="h-9 w-[200px] text-sm"
+						placeholder={t`e.g. New York`}
+						className="h-9 w-[140px] text-sm"
+					/>
+				</div>
+
+				<div className="flex flex-col gap-y-1">
+					<Label className="text-muted-foreground text-xs">
+						<Trans>State</Trans>
+					</Label>
+					<Input
+						type="text"
+						value={filters.state}
+						onChange={(e) => update("state", e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && onSearch) {
+								e.preventDefault();
+								onSearch();
+							}
+						}}
+						placeholder={t`e.g. NY`}
+						className="h-9 w-[100px] text-sm"
+					/>
+				</div>
+
+				<div className="flex flex-col gap-y-1">
+					<Label className="text-muted-foreground text-xs">
+						<Trans>Country</Trans>
+					</Label>
+					<Input
+						type="text"
+						value={filters.country}
+						onChange={(e) => update("country", e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && onSearch) {
+								e.preventDefault();
+								onSearch();
+							}
+						}}
+						placeholder={t`e.g. United States`}
+						className="h-9 w-[140px] text-sm"
 					/>
 				</div>
 

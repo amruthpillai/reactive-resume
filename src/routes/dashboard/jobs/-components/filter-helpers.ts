@@ -13,7 +13,9 @@ export type FilterState = {
 	remoteOnly: boolean;
 	employmentType: string | null;
 	jobRequirements: string | null;
-	location: string;
+	city: string;
+	state: string;
+	country: string;
 	// Post-filters (PostFilterOptions)
 	minSalary: string;
 	maxSalary: string;
@@ -28,7 +30,9 @@ export const initialFilterState: FilterState = {
 	remoteOnly: false,
 	employmentType: null,
 	jobRequirements: null,
-	location: "",
+	city: "",
+	state: "",
+	country: "",
 	minSalary: "",
 	maxSalary: "",
 	includeKeywords: [],
@@ -41,8 +45,14 @@ export const initialFilterState: FilterState = {
 
 export function buildSearchParams(query: string, filters: FilterState, page?: number): SearchParams {
 	let effectiveQuery = query.trim();
-	if (filters.location.trim()) {
-		effectiveQuery += ` in ${filters.location.trim()}`;
+
+	// Build location string from city, state, country
+	const locationParts = [filters.city.trim(), filters.state.trim(), filters.country.trim()].filter(
+		(part) => part !== "",
+	);
+
+	if (locationParts.length > 0) {
+		effectiveQuery += ` in ${locationParts.join(", ")}`;
 	}
 
 	const params: SearchParams = { query: effectiveQuery, num_pages: FETCH_NUM_PAGES };
@@ -73,7 +83,9 @@ export function hasActiveFilters(filters: FilterState): boolean {
 		filters.remoteOnly ||
 		filters.employmentType !== null ||
 		filters.jobRequirements !== null ||
-		filters.location !== "" ||
+		filters.city !== "" ||
+		filters.state !== "" ||
+		filters.country !== "" ||
 		filters.minSalary !== "" ||
 		filters.maxSalary !== "" ||
 		filters.includeKeywords.length > 0 ||
