@@ -47,7 +47,7 @@ export function BuilderSidebarRight() {
 		<>
 			<SidebarEdge scrollAreaRef={scrollAreaRef} />
 
-			<ScrollArea ref={scrollAreaRef} className="@container h-[calc(100svh-3.5rem)] bg-background sm:me-12">
+			<ScrollArea ref={scrollAreaRef} className="@container h-[calc(100svh-3.5rem)] bg-background overflow-hidden sm:me-12">
 				<div className="space-y-4 p-4">
 					{rightSidebarSections.map((section) => (
 						<Fragment key={section}>
@@ -83,9 +83,8 @@ function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
 
 	return (
 		<BuilderSidebarEdge side="right">
-			<div />
-
-			<div className="flex flex-col justify-center gap-y-2">
+			<div className="no-scrollbar min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
+				<div className="flex min-h-full flex-col items-center justify-center gap-y-2">
 				{rightSidebarSections.map((section) => (
 					<Button
 						key={section}
@@ -98,8 +97,7 @@ function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
 					</Button>
 				))}
 			</div>
-
-			<div />
+			</div>
 		</BuilderSidebarEdge>
 	);
 }

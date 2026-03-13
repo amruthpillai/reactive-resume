@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/client";
-import { and, arrayContains, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, arrayContains, asc, desc, eq, isNotNull, or, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
 import type { Operation } from "fast-json-patch";
 import { match } from "ts-pattern";
@@ -190,7 +190,9 @@ export const resumeService = {
 				and(
 					eq(schema.resume.slug, input.slug),
 					eq(schema.user.username, input.username),
-					input.currentUserId ? eq(schema.resume.userId, input.currentUserId) : eq(schema.resume.isPublic, true),
+					input.currentUserId
+						? or(eq(schema.resume.userId, input.currentUserId), eq(schema.resume.isPublic, true))
+						: eq(schema.resume.isPublic, true),
 				),
 			);
 
