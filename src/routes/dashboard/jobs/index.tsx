@@ -169,9 +169,15 @@ function RouteComponent() {
 
 	const executeSearch = useCallback(
 		(page: number) => {
-			if (!query.trim() || !rapidApiKey) return;
+			// Allow search if either query or location is provided
+			const hasQuery = query.trim().length > 0;
+			const hasLocation = filters.location.trim().length > 0;
 
-			const params = buildSearchParams(query, filters, page);
+			if ((!hasQuery && !hasLocation) || !rapidApiKey) return;
+
+			// Use a default query if only location is provided
+			const effectiveQuery = hasQuery ? query : "jobs";
+			const params = buildSearchParams(effectiveQuery, filters, page);
 			const postFilters = buildPostFilters(filters);
 
 			searchJobs(
@@ -253,14 +259,21 @@ function RouteComponent() {
 							/>
 						</div>
 
-						<Button type="submit" disabled={isPending || !query.trim()}>
+						<Button type="submit" disabled={isPending || (!query.trim() && !filters.location.trim())}>
 							{isPending ? <Spinner /> : <MagnifyingGlassIcon />}
 							<Trans>Search</Trans>
 						</Button>
 					</form>
 
 					<div ref={scrollRef} />
-					<SearchFilters filters={filters} onFiltersChange={setFilters} />
+					<SearchFilters
+						filters={filters}
+						onFiltersChange={setFilters}
+						onSearch={() => {
+							setCurrentPage(1);
+							executeSearch(1);
+						}}
+					/>
 
 					{quota && (
 						<p className="text-muted-foreground text-xs">

@@ -50,9 +50,10 @@ const experienceOptions = [
 type SearchFiltersProps = {
 	filters: FilterState;
 	onFiltersChange: (filters: FilterState) => void;
+	onSearch?: () => void;
 };
 
-export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) {
+export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFiltersProps) {
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
 	const update = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
@@ -124,6 +125,12 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
 						type="text"
 						value={filters.location}
 						onChange={(e) => update("location", e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && onSearch) {
+								e.preventDefault();
+								onSearch();
+							}
+						}}
 						placeholder={t`e.g. New York, NY`}
 						className="h-9 w-[200px] text-sm"
 					/>
