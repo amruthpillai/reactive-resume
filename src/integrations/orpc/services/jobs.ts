@@ -1,23 +1,10 @@
 import { and, eq, lt, sql } from "drizzle-orm";
-import type z from "zod";
 import { db } from "@/integrations/drizzle/client";
 import { jobSearchQuota } from "@/integrations/drizzle/schema";
-import {
-	type JobResult,
-	jobDetailsResponseSchema,
-	type PostFilterOptions,
-	type QuotaStatus,
-	type SearchParams,
-	type SearchResponse,
-	searchResponseSchema,
-} from "@/schema/jobs";
+import { createJobSearchProvider } from "@/integrations/jobs/factory";
+import type { JobResult, PostFilterOptions, QuotaStatus, SearchParams, SearchResponse } from "@/schema/jobs";
 import { env } from "@/utils/env";
 import { generateId } from "@/utils/string";
-
-const JSEARCH_BASE_URL = "https://jsearch.p.rapidapi.com";
-const JSEARCH_HOST = "jsearch.p.rapidapi.com";
-const MAX_RETRIES = 3;
-const INITIAL_BACKOFF_MS = 1000;
 
 // --- Rate Limiting (calendar-month boundaries) ---
 
@@ -95,80 +82,22 @@ async function checkAndIncrementQuota(userId: string): Promise<void> {
 	throw new Error(`Monthly rate limit reached (${monthlyLimit}/${monthlyLimit} used). Resets at ${resetsAt}.`);
 }
 
-// --- JSearch API Proxy ---
-
-function sleep(ms: number): Promise<void> {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function jsearchRequest<T>(apiKey: string, path: string, schema: z.ZodType<T>): Promise<T> {
-	let lastError: Error | null = null;
-
-	for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-		try {
-			const response = await fetch(`${JSEARCH_BASE_URL}${path}`, {
-				headers: {
-					"X-RapidAPI-Key": apiKey,
-					"X-RapidAPI-Host": JSEARCH_HOST,
-				},
-			});
-
-			if (response.status === 429) {
-				const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
-				await sleep(backoff);
-				continue;
-			}
-
-			if (!response.ok) {
-				throw new Error(`JSearch API error: ${response.status} ${response.statusText}`);
-			}
-
-			const data = await response.json();
-			return schema.parse(data);
-		} catch (error) {
-			lastError = error instanceof Error ? error : new Error(String(error));
-			if (attempt < MAX_RETRIES - 1) {
-				const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
-				await sleep(backoff);
-			}
-		}
-	}
-
-	throw lastError ?? new Error("Request failed after retries");
-}
+// --- Provider-Delegated Operations ---
 
 async function search(apiKey: string, userId: string, params: SearchParams): Promise<SearchResponse> {
 	await checkAndIncrementQuota(userId);
-
-	const query = new URLSearchParams();
-	query.set("query", params.query);
-	if (params.page) query.set("page", String(params.page));
-	if (params.num_pages) query.set("num_pages", String(params.num_pages));
-	if (params.date_posted) query.set("date_posted", params.date_posted);
-	if (params.remote_jobs_only) query.set("remote_jobs_only", String(params.remote_jobs_only));
-	if (params.employment_types) query.set("employment_types", params.employment_types);
-	if (params.job_requirements) query.set("job_requirements", params.job_requirements);
-	if (params.radius) query.set("radius", String(params.radius));
-	if (params.exclude_job_publishers) query.set("exclude_job_publishers", params.exclude_job_publishers);
-	if (params.categories) query.set("categories", params.categories);
-
-	return jsearchRequest(apiKey, `/search?${query.toString()}`, searchResponseSchema);
+	const provider = createJobSearchProvider(apiKey);
+	return provider.search(params);
 }
 
 async function getJobDetails(apiKey: string, jobId: string) {
-	const query = new URLSearchParams({ job_id: jobId });
-	const result = await jsearchRequest(apiKey, `/job-details?${query.toString()}`, jobDetailsResponseSchema);
-	return result.data[0] ?? null;
+	const provider = createJobSearchProvider(apiKey);
+	return provider.getJobDetails(jobId);
 }
 
 async function testConnection(apiKey: string): Promise<boolean> {
-	try {
-		const query = new URLSearchParams({ query: "test", num_pages: "1" });
-		await jsearchRequest(apiKey, `/search?${query.toString()}`, searchResponseSchema);
-		return true;
-	} catch {
-		return false;
-	}
+	const provider = createJobSearchProvider(apiKey);
+	return provider.testConnection();
 }
 
 // --- Post-Search Filtering ---

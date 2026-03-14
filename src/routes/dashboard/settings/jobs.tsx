@@ -149,6 +149,57 @@ function RouteComponent() {
 
 				<Separator />
 
+				<div className="flex items-start gap-4 rounded-sm border bg-info/10 p-6">
+					<div className="rounded-sm bg-info/20 p-2.5">
+						<InfoIcon className="text-info" size={24} />
+					</div>
+
+					<div className="flex-1 space-y-3">
+						<h3 className="font-semibold">
+							<Trans>About JSearch API</Trans>
+						</h3>
+
+						<div className="space-y-2 text-muted-foreground text-sm leading-relaxed">
+							<p>
+								<Trans>
+									JSearch is a Google for Jobs aggregator that searches across multiple job boards. Job listings are
+									sourced from various platforms and aggregated by Google's job search service.
+								</Trans>
+							</p>
+
+							<p>
+								<Trans>
+									Location filtering uses Google's natural language processing (NLP). For best results, use full country
+									names instead of ISO codes . The system constructs location queries as natural language text.
+								</Trans>
+							</p>
+
+							<p>
+								<Trans>
+									Supported filters include: date posted, employment types, remote filtering, and experience level
+									requirements.
+								</Trans>
+							</p>
+
+							<p className="text-xs">
+								<Trans>
+									Learn more:{" "}
+									<a
+										href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-primary underline hover:no-underline"
+									>
+										JSearch API Documentation
+									</a>
+								</Trans>
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<Separator />
+
 				<JobsForm />
 
 				<Separator />

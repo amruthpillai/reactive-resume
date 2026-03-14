@@ -1,0 +1,57 @@
+import type { JobResult, SearchParams, SearchResponse } from "@/schema/jobs";
+
+/**
+ * Job search provider configuration
+ */
+export interface ProviderConfig {
+	/** API key for authentication */
+	apiKey: string;
+	/** Optional base URL override (defaults to provider's default) */
+	baseUrl?: string;
+	/** Optional request timeout in milliseconds */
+	timeout?: number;
+}
+
+/**
+ * Abstract interface for job search providers
+ *
+ * This interface enables multiple job search provider implementations (JSearch, LinkedIn, Indeed, etc.)
+ * while maintaining a consistent API surface. All providers must implement these three core methods.
+ *
+ * @example
+ * ```typescript
+ * class LinkedInProvider implements JobSearchProvider {
+ *   async search(params: SearchParams): Promise<SearchResponse> {
+ *     // LinkedIn-specific implementation
+ *   }
+ * }
+ * ```
+ */
+export interface JobSearchProvider {
+	/**
+	 * Search for job listings matching the given parameters
+	 *
+	 * @param params - Search parameters (query, location, filters, etc.)
+	 * @returns Search response with job listings and metadata
+	 * @throws Error if API request fails or rate limit is exceeded
+	 */
+	search(params: SearchParams): Promise<SearchResponse>;
+
+	/**
+	 * Get detailed information about a specific job listing
+	 *
+	 * @param jobId - Unique identifier for the job listing
+	 * @returns Job details or null if not found
+	 * @throws Error if API request fails
+	 */
+	getJobDetails(jobId: string): Promise<JobResult | null>;
+
+	/**
+	 * Test the provider connection with a minimal API request
+	 *
+	 * Used to validate API credentials without consuming significant quota.
+	 *
+	 * @returns true if connection is successful, false otherwise
+	 */
+	testConnection(): Promise<boolean>;
+}
