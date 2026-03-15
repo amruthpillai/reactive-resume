@@ -48,7 +48,7 @@ function getModel(input: GetModelInput) {
 	const baseURL = input.baseURL || undefined;
 
 	return match(provider)
-		.with("openai", () => createOpenAI({ apiKey, baseURL }).languageModel(model))
+		.with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model)) // Use chat() for OpenAI-compatible APIs (supports /chat/completions endpoint)
 		.with("ollama", () => createOllama({ apiKey, baseURL }).languageModel(model))
 		.with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
 		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
@@ -73,13 +73,16 @@ type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 async function testConnection(input: TestConnectionInput): Promise<boolean> {
 	const RESPONSE_OK = "1";
 
+	// Simple text-based connection test that works with all OpenAI-compatible APIs
+	// including reasoning models like GLM-5 that may have non-standard response formats
 	const result = await generateText({
 		model: getModel(input),
-		output: Output.choice({ options: [RESPONSE_OK] }),
-		messages: [{ role: "user", content: `Respond with "${RESPONSE_OK}"` }],
+		messages: [{ role: "user", content: `Respond with exactly this number: ${RESPONSE_OK}` }],
+		maxOutputTokens: 256, // Increased for reasoning models (e.g., GLM-5) that write reasoning before response
 	});
 
-	return result.output === RESPONSE_OK;
+	// Check if the response contains the expected value
+	return result.text.trim() === RESPONSE_OK || result.text.includes(RESPONSE_OK);
 }
 
 type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
