@@ -67,7 +67,7 @@ export function BuilderDock() {
 
 	const onDownloadJSON = useCallback(async () => {
 		if (!resume?.data) return;
-		const filename = generateFilename(resume.data.basics.name, "json");
+		const filename = generateFilename(resume.name, "json");
 		const jsonString = JSON.stringify(resume.data, null, 2);
 		const blob = new Blob([jsonString], { type: "application/json" });
 
@@ -76,7 +76,7 @@ export function BuilderDock() {
 
 	const onDownloadDOCX = useCallback(async () => {
 		if (!resume?.data) return;
-		const filename = generateFilename(resume.data.basics.name, "docx");
+		const filename = generateFilename(resume.name, "docx");
 
 		try {
 			const blob = await buildDocx(resume.data);
@@ -89,7 +89,7 @@ export function BuilderDock() {
 	const onDownloadPDF = useCallback(async () => {
 		if (!resume?.id) return;
 
-		const filename = generateFilename(resume.data.basics.name, "pdf");
+		const filename = generateFilename(resume.name, "pdf");
 		const toastId = toast.loading(t`Please wait while your PDF is being generated...`, {
 			description: t`This may take a while depending on the server capacity. Please do not close the window or refresh the page.`,
 		});
@@ -102,7 +102,7 @@ export function BuilderDock() {
 		} finally {
 			toast.dismiss(toastId);
 		}
-	}, [resume?.id, resume?.data.basics.name, printResumeAsPDF]);
+	}, [resume?.id, resume?.name, printResumeAsPDF]);
 
 	return (
 		<div className="fixed inset-x-0 bottom-4 flex items-center justify-center">

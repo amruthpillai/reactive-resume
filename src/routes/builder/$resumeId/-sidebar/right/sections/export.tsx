@@ -19,7 +19,7 @@ export function ExportSectionBuilder() {
 	);
 
 	const onDownloadJSON = useCallback(() => {
-		const filename = generateFilename(resume.data.basics.name, "json");
+		const filename = generateFilename(resume.name, "json");
 		const jsonString = JSON.stringify(resume.data, null, 2);
 		const blob = new Blob([jsonString], { type: "application/json" });
 
@@ -27,7 +27,7 @@ export function ExportSectionBuilder() {
 	}, [resume]);
 
 	const onDownloadDOCX = useCallback(async () => {
-		const filename = generateFilename(resume.data.basics.name, "docx");
+		const filename = generateFilename(resume.name, "docx");
 
 		try {
 			const blob = await buildDocx(resume.data);
@@ -38,7 +38,7 @@ export function ExportSectionBuilder() {
 	}, [resume]);
 
 	const onDownloadPDF = useCallback(async () => {
-		const filename = generateFilename(resume.data.basics.name, "pdf");
+		const filename = generateFilename(resume.name, "pdf");
 		const toastId = toast.loading(t`Please wait while your PDF is being generated...`, {
 			description: t`This may take a while depending on the server capacity. Please do not close the window or refresh the page.`,
 		});
