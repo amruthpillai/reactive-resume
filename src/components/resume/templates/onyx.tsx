@@ -41,53 +41,74 @@ export function OnyxTemplate({ pageIndex, pageLayout }: TemplateProps) {
 
 function Header() {
 	const basics = useResumeStore((state) => state.resume.data.basics);
+	const profiles = useResumeStore((state) => state.resume.data.sections.profiles);
+
+	const visibleProfiles = profiles.items.filter((item) => !item.hidden);
+	const hasProfiles = !profiles.hidden && visibleProfiles.length > 0;
 
 	return (
 		<div className="page-header flex items-center gap-x-(--page-margin-x) border-(--page-primary-color) border-b pb-(--page-margin-y)">
 			<PagePicture />
 
-			<div className="page-basics space-y-(--page-gap-y)">
-				<div>
-					<h2 className="basics-name">{basics.name}</h2>
-					<p className="basics-headline">{basics.headline}</p>
+			<div className={cn("page-basics flex flex-1 gap-x-(--page-margin-x) space-y-(--page-gap-y)", hasProfiles ? "items-center justify-between" : "")}>
+				<div className="space-y-(--page-gap-y)">
+					<div>
+						<h2 className="basics-name">{basics.name}</h2>
+						<p className="basics-headline">{basics.headline}</p>
+					</div>
+
+					<div className="basics-items flex flex-wrap gap-x-3 gap-y-0.5 *:flex *:items-center *:gap-x-1.5">
+						{basics.email && (
+							<div className="basics-item-email">
+								<EnvelopeIcon />
+								<PageLink url={`mailto:${basics.email}`} label={basics.email} />
+							</div>
+						)}
+
+						{basics.phone && (
+							<div className="basics-item-phone">
+								<PhoneIcon />
+								<PageLink url={`tel:${basics.phone}`} label={basics.phone} />
+							</div>
+						)}
+
+						{basics.location && (
+							<div className="basics-item-location">
+								<MapPinIcon />
+								<span>{basics.location}</span>
+							</div>
+						)}
+
+						{basics.website.url && (
+							<div className="basics-item-website">
+								<GlobeIcon />
+								<PageLink {...basics.website} />
+							</div>
+						)}
+
+						{basics.customFields.map((field) => (
+							<div key={field.id} className="basics-item-custom">
+								<PageIcon icon={field.icon} />
+								{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
+							</div>
+						))}
+					</div>
 				</div>
 
-				<div className="basics-items flex flex-wrap gap-x-3 gap-y-0.5 *:flex *:items-center *:gap-x-1.5">
-					{basics.email && (
-						<div className="basics-item-email">
-							<EnvelopeIcon />
-							<PageLink url={`mailto:${basics.email}`} label={basics.email} />
-						</div>
-					)}
-
-					{basics.phone && (
-						<div className="basics-item-phone">
-							<PhoneIcon />
-							<PageLink url={`tel:${basics.phone}`} label={basics.phone} />
-						</div>
-					)}
-
-					{basics.location && (
-						<div className="basics-item-location">
-							<MapPinIcon />
-							<span>{basics.location}</span>
-						</div>
-					)}
-
-					{basics.website.url && (
-						<div className="basics-item-website">
-							<GlobeIcon />
-							<PageLink {...basics.website} />
-						</div>
-					)}
-
-					{basics.customFields.map((field) => (
-						<div key={field.id} className="basics-item-custom">
-							<PageIcon icon={field.icon} />
-							{field.link ? <PageLink url={field.link} label={field.text} /> : <span>{field.text}</span>}
-						</div>
-					))}
-				</div>
+				{hasProfiles && (
+					<div className="basics-profiles flex flex-col items-end gap-y-0.5 *:flex *:items-center *:gap-x-1.5">
+						{visibleProfiles.map((item) => (
+							<div key={item.id} className="basics-profile-item">
+								<PageIcon icon={item.icon} />
+								{item.website.url ? (
+									<PageLink url={item.website.url} label={item.website.label || item.username} />
+								) : (
+									<span>{item.username}</span>
+								)}
+							</div>
+						))}
+					</div>
+				)}
 			</div>
 		</div>
 	);
