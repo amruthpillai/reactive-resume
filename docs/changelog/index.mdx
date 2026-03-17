@@ -4,6 +4,23 @@ description: "List of all notable changes and updates to Reactive Resume"
 rss: true
 ---
 
+<Update label="v5.0.12" description="17th March 2026">
+  - **Features & Improvements**
+    - Refactor the component system to `@base-ui/react` across the app, replacing older primitive wrappers and standardizing interactive UI behavior (dialogs, menus, accordions, comboboxes, switches, and more).
+    - Improve auth infrastructure with Better Auth dashboard/sentinel integration and expanded IP/header handling for proxied deployments.
+    - Add a dedicated `src/server.ts` server entry using `FastResponse` to improve runtime compatibility for server responses.
+
+  - **Fixes**
+    - Switch OpenAI integration to the `chat/completions` flow for resume import and AI features, reducing provider compatibility issues.
+    - Improve AI PDF/DOCX resume parsing by sending files directly to models (multimodal input), removing fragile local text extraction.
+    - Harden AI resume import normalization: merge section defaults, enforce required fields, and auto-generate missing IDs/flags so parsed resumes validate reliably.
+    - Fix regressions introduced during the UI migration, including accordion behavior and button styling/interaction edge cases.
+
+  - **Other**
+    - Update dependencies and lockfile.
+    - Sync translation strings across locales.
+</Update>
+
 <Update label="v5.0.10" description="24th February 2026">
   - **Fixes**
     - Show section titles for summary-type custom sections in the resume builder. [#2744](https://github.com/amruthpillai/reactive-resume/pull/2744)
