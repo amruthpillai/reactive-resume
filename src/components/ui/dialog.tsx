@@ -1,4 +1,5 @@
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { Trans } from "@lingui/react/macro";
 import { XIcon } from "@phosphor-icons/react";
 import type * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -36,10 +37,10 @@ function DialogOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) 
 function DialogContent({
 	className,
 	children,
-	showCloseButton = true,
+	showClose = false,
 	...props
 }: DialogPrimitive.Popup.Props & {
-	showCloseButton?: boolean;
+	showClose?: boolean;
 }) {
 	return (
 		<DialogPortal>
@@ -53,13 +54,15 @@ function DialogContent({
 				{...props}
 			>
 				{children}
-				{showCloseButton && (
+				{showClose && (
 					<DialogPrimitive.Close
 						data-slot="dialog-close"
 						render={<Button variant="ghost" className="absolute top-4 right-4" size="icon-sm" />}
 					>
 						<XIcon />
-						<span className="sr-only">Close</span>
+						<span className="sr-only">
+							<Trans>Close</Trans>
+						</span>
 					</DialogPrimitive.Close>
 				)}
 			</DialogPrimitive.Popup>
@@ -71,14 +74,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 	return <div data-slot="dialog-header" className={cn("flex flex-col gap-2", className)} {...props} />;
 }
 
-function DialogFooter({
-	className,
-	showCloseButton = false,
-	children,
-	...props
-}: React.ComponentProps<"div"> & {
-	showCloseButton?: boolean;
-}) {
+function DialogFooter({ className, children, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="dialog-footer"
@@ -86,7 +82,6 @@ function DialogFooter({
 			{...props}
 		>
 			{children}
-			{showCloseButton && <DialogPrimitive.Close render={<Button variant="outline" />}>Close</DialogPrimitive.Close>}
 		</div>
 	);
 }

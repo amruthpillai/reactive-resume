@@ -1,9 +1,9 @@
-import { Combobox as ComboboxPrimitive } from "@base-ui/react";
+import { Combobox as ComboboxPrimitive, type ComboboxTriggerState, type UseRenderRenderProp } from "@base-ui/react";
 import { t } from "@lingui/core/macro";
 import { CaretDownIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
 import * as React from "react";
-import { match } from "ts-pattern";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { useControlledState } from "@/hooks/use-controlled-state";
 import { cn } from "@/utils/style";
@@ -18,7 +18,7 @@ function ComboboxTrigger({ className, children, ...props }: ComboboxPrimitive.Tr
 	return (
 		<ComboboxPrimitive.Trigger
 			data-slot="combobox-trigger"
-			className={cn("ms-auto shrink-0 [&_svg:not([class*='size-'])]:size-4", className)}
+			className={cn("shrink-0 [&_svg:not([class*='size-'])]:size-4", className)}
 			{...props}
 		>
 			{children}
@@ -98,7 +98,7 @@ function ComboboxContent({
 					data-slot="combobox-content"
 					data-chips={!!anchor}
 					className={cn(
-						"data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 group/combobox-content relative max-h-(--available-height) w-(--anchor-width) min-w-60 max-w-(--available-width) origin-(--transform-origin) overflow-hidden rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[chips=true]:min-w-(--anchor-width) data-closed:animate-out data-open:animate-in *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none",
+						"data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 group/combobox-content relative max-h-(--available-height) w-(--anchor-width) min-w-60 max-w-(--available-width) origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[chips=true]:min-w-(--anchor-width) data-closed:animate-out data-open:animate-in *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none",
 						className,
 					)}
 					{...props}
@@ -192,7 +192,7 @@ function ComboboxChips({
 		<ComboboxPrimitive.Chips
 			data-slot="combobox-chips"
 			className={cn(
-				"flex min-h-8 flex-wrap items-center gap-1 rounded-lg border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-2 has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40",
+				"flex min-h-8 flex-wrap items-center gap-1 rounded-md border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-2 has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40",
 				className,
 			)}
 			{...props}
@@ -212,7 +212,7 @@ function ComboboxChip({
 		<ComboboxPrimitive.Chip
 			data-slot="combobox-chip"
 			className={cn(
-				"flex h-6 w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 font-medium text-foreground text-xs has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-data-[slot=combobox-chip-remove]:pr-0 has-disabled:opacity-50",
+				"flex h-6 w-fit items-center justify-center gap-1 whitespace-nowrap rounded-md bg-muted px-1.5 font-medium text-foreground text-xs has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-data-[slot=combobox-chip-remove]:pr-0 has-disabled:opacity-50",
 				className,
 			)}
 			{...props}
@@ -263,10 +263,12 @@ type SingleComboboxProps<TValue extends string | number = string> = {
 	disabled?: boolean;
 	showClear?: boolean;
 	placeholder?: string;
+	searchPlaceholder?: string;
 	emptyMessage?: React.ReactNode;
 	className?: string;
 	id?: string;
 	name?: string;
+	render?: UseRenderRenderProp<ComboboxTriggerState>;
 };
 
 type MultiComboboxProps<TValue extends string | number = string> = {
@@ -278,10 +280,12 @@ type MultiComboboxProps<TValue extends string | number = string> = {
 	disabled?: boolean;
 	showClear?: boolean;
 	placeholder?: string;
+	searchPlaceholder?: string;
 	emptyMessage?: React.ReactNode;
 	className?: string;
 	id?: string;
 	name?: string;
+	render?: UseRenderRenderProp<ComboboxTriggerState>;
 };
 
 type ComboboxProps<TValue extends string | number = string> = SingleComboboxProps<TValue> | MultiComboboxProps<TValue>;
@@ -293,10 +297,12 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 		disabled = false,
 		showClear = false,
 		placeholder,
+		searchPlaceholder,
 		emptyMessage,
 		className,
 		id,
 		name,
+		render,
 	} = props;
 
 	const { contains } = ComboboxPrimitive.useFilter();
@@ -381,8 +387,8 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 
 	return (
 		<ComboboxRoot
-			items={options}
 			name={name}
+			items={options}
 			filter={filter}
 			disabled={disabled}
 			value={selectedValue as ComboboxOption<TValue>[] & ComboboxOption<TValue>}
@@ -391,45 +397,33 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 			isItemEqualToValue={isItemEqualToValue}
 			{...(multiple ? { multiple: true } : {})}
 		>
-			{match({ multiple })
-				.with({ multiple: true }, () => (
-					<>
-						<ComboboxChips className={className}>
-							<ComboboxValue>
-								{(val: ComboboxOption<TValue>[]) => (
-									<>
-										{val.map((item) => (
-											<ComboboxChip key={String(item.value)}>{item.label}</ComboboxChip>
-										))}
-										<ComboboxChipsInput id={id} disabled={disabled} placeholder={placeholder} />
-									</>
-								)}
-							</ComboboxValue>
-							{showClear && <ComboboxClear disabled={disabled} />}
-							<ComboboxTrigger disabled={disabled} />
-						</ComboboxChips>
-						<ComboboxContent>
-							<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
-							<ComboboxList>{listContent}</ComboboxList>
-						</ComboboxContent>
-					</>
-				))
-				.otherwise(() => (
-					<>
-						<ComboboxInput
-							id={id}
-							showTrigger
-							showClear={showClear}
-							disabled={disabled}
-							className={className}
-							placeholder={placeholder}
+			<ComboboxTrigger
+				id={id}
+				disabled={disabled}
+				render={
+					render ?? (
+						<Button
+							variant="outline"
+							className={cn("justify-start text-left font-normal hover:bg-muted/20", className)}
 						/>
-						<ComboboxContent>
-							<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
-							<ComboboxList>{listContent}</ComboboxList>
-						</ComboboxContent>
-					</>
-				))}
+					)
+				}
+			>
+				<span className="min-w-0 flex-1 truncate text-left">
+					<ComboboxValue placeholder={placeholder ?? t`Select...`} />
+				</span>
+
+				{showClear && <ComboboxClear disabled={disabled} />}
+			</ComboboxTrigger>
+
+			<ComboboxContent>
+				<ComboboxPrimitive.Input
+					placeholder={searchPlaceholder ?? placeholder ?? t`Search...`}
+					render={<Input disabled={disabled} className="rounded-b-none focus-visible:ring-0" />}
+				/>
+				<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
+				<ComboboxList>{listContent}</ComboboxList>
+			</ComboboxContent>
 		</ComboboxRoot>
 	);
 }

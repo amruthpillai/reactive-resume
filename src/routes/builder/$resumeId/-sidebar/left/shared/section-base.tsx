@@ -38,7 +38,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 						className="me-2 items-center justify-center"
 						render={
 							<Button size="icon" variant="ghost">
-								<CaretDownIcon className="transition-transform duration-200 group-data-closed/accordion-item:rotate-180" />
+								<CaretDownIcon className="transition-transform duration-200 group-data-closed/accordion-item:-rotate-90" />
 							</Button>
 						}
 					/>

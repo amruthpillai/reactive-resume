@@ -16,6 +16,7 @@ export default defineConfig({
 		"de-DE",
 		"el-GR",
 		"en-US",
+		"en-GB",
 		"es-ES",
 		"fa-IR",
 		"fi-FI",

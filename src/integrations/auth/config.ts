@@ -1,7 +1,11 @@
 import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+import { dash } from "@better-auth/infra";
 import { BetterAuthError, betterAuth } from "better-auth";
-import { type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
+import type { GenericOAuthConfig } from "better-auth/plugins";
+import { openAPI } from "better-auth/plugins";
+import { genericOAuth } from "better-auth/plugins/generic-oauth";
+import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
 import { and, eq, or } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
@@ -79,9 +83,8 @@ const getAuthConfig = () => {
 
 	return betterAuth({
 		appName: "Reactive Resume",
-
-		baseURL: env.APP_URL,
-		secret: env.AUTH_SECRET,
+		baseURL: process.env.BETTER_AUTH_URL ?? env.APP_URL,
+		secret: process.env.BETTER_AUTH_SECRET ?? env.AUTH_SECRET,
 
 		database: drizzleAdapter(db, { schema, provider: "pg" }),
 
@@ -227,6 +230,7 @@ const getAuthConfig = () => {
 		},
 
 		plugins: [
+			dash(),
 			openAPI(),
 			apiKey({
 				enableSessionForAPIKeys: true,

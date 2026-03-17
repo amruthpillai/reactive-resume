@@ -1,4 +1,5 @@
 import { apiKeyClient } from "@better-auth/api-key/client";
+import { sentinelClient } from "@better-auth/infra/client";
 import { genericOAuthClient, inferAdditionalFields, twoFactorClient, usernameClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import type { auth } from "./config";
@@ -7,6 +8,7 @@ const getAuthClient = () => {
 	return createAuthClient({
 		plugins: [
 			apiKeyClient(),
+			sentinelClient(),
 			usernameClient(),
 			twoFactorClient({
 				onTwoFactorRedirect() {
