@@ -93,6 +93,7 @@ const getAuthConfig = () => {
 		advanced: {
 			database: { generateId },
 			useSecureCookies: env.APP_URL.startsWith("https://"),
+			ipAddress: { ipAddressHeaders: ["x-forwarded-for", "cf-connecting-ip"] },
 		},
 
 		emailAndPassword: {

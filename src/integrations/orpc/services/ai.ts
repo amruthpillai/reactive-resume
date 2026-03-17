@@ -29,7 +29,6 @@ import {
 import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { isObject } from "@/utils/sanitize";
-import { extractDocxText, extractPdfText } from "./ai.server";
 
 const aiExtractionTemplate = {
 	...defaultResumeData,
@@ -209,9 +208,10 @@ function parseAndValidateResumeJson(resultText: string): ResumeData {
 		const repairedJson = jsonrepair(jsonString);
 		const parsedJson = JSON.parse(repairedJson);
 		const mergedData = mergeDefaults(defaultResumeData, parsedJson);
+		const normalizedData = normalizeResumeDataForSchema(mergedData);
 
 		return resumeDataSchema.parse({
-			...mergedData,
+			...normalizedData,
 			customSections: [],
 			picture: defaultResumeData.picture,
 			metadata: defaultResumeData.metadata,
@@ -225,6 +225,62 @@ function parseAndValidateResumeJson(resultText: string): ResumeData {
 		console.error("Unknown error:", error);
 		throw new Error("An unknown error occurred while validating the merged resume data.");
 	}
+}
+
+const sectionRequiredFieldMap = {
+	profiles: "network",
+	experience: "company",
+	education: "school",
+	projects: "name",
+	skills: "name",
+	languages: "language",
+	interests: "name",
+	awards: "title",
+	certifications: "title",
+	publications: "title",
+	volunteer: "organization",
+	references: "name",
+} as const;
+
+type SectionKey = keyof typeof sectionRequiredFieldMap;
+
+function normalizeResumeDataForSchema(data: Record<string, unknown>) {
+	if (!isObject(data)) return data;
+	if (!isObject(data.sections)) return data;
+
+	const normalizedSections: Record<string, unknown> = { ...data.sections };
+
+	for (const sectionKey of Object.keys(sectionRequiredFieldMap) as SectionKey[]) {
+		const section = normalizedSections[sectionKey];
+		if (!isObject(section)) continue;
+		if (!Array.isArray(section.items)) continue;
+
+		const itemTemplate = aiExtractionTemplate.sections[sectionKey].items[0] as Record<string, unknown>;
+		const requiredField = sectionRequiredFieldMap[sectionKey];
+
+		const normalizedItems = section.items
+			.filter((item): item is Record<string, unknown> => isObject(item))
+			.map((item) => mergeDefaults(itemTemplate, item))
+			.filter((item) => {
+				const requiredValue = item[requiredField];
+				if (typeof requiredValue !== "string") return false;
+				return requiredValue.trim().length > 0;
+			})
+			.map((item) => {
+				const normalizedItem = { ...item };
+				if (typeof normalizedItem.id !== "string" || normalizedItem.id.trim().length === 0) {
+					normalizedItem.id = crypto.randomUUID();
+				}
+				if (typeof normalizedItem.hidden !== "boolean") {
+					normalizedItem.hidden = false;
+				}
+				return normalizedItem;
+			});
+
+		normalizedSections[sectionKey] = { ...section, items: normalizedItems };
+	}
+
+	return { ...data, sections: normalizedSections };
 }
 
 export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
@@ -246,7 +302,7 @@ function getModel(input: GetModelInput) {
 	const baseURL = input.baseURL || undefined;
 
 	return match(provider)
-		.with("openai", () => createOpenAI({ apiKey, baseURL }).languageModel(model))
+		.with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model))
 		.with("ollama", () => createOllama({ apiKey, baseURL }).languageModel(model))
 		.with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
 		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
@@ -284,28 +340,46 @@ type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
 	file: z.infer<typeof fileInputSchema>;
 };
 
+function buildResumeParsingMessages({
+	systemPrompt,
+	userPrompt,
+	file,
+	mediaType,
+}: {
+	systemPrompt: string;
+	userPrompt: string;
+	file: z.infer<typeof fileInputSchema>;
+	mediaType: string;
+}) {
+	return [
+		{
+			role: "system" as const,
+			content:
+				systemPrompt +
+				"\n\nIMPORTANT: You must return ONLY raw valid JSON. Do not return markdown, do not return explanations. Just the JSON object. Use the following JSON as a template and fill in the extracted values. For arrays, you MUST use the exact key names shown in the template (e.g. use 'description' instead of 'summary', 'website' instead of 'url'):\n\n" +
+				JSON.stringify(aiExtractionTemplate, null, 2),
+		},
+		{
+			role: "user" as const,
+			content: [
+				{ type: "text" as const, text: userPrompt },
+				{ type: "file" as const, data: file.data, mediaType, filename: file.name },
+			],
+		},
+	];
+}
+
 async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 	const model = getModel(input);
 
-	const pdfText = await extractPdfText(input.file.data).catch((error: unknown) =>
-		logAndRethrow("Failed to parse PDF locally", error),
-	);
-
 	const result = await generateText({
 		model,
-		messages: [
-			{
-				role: "system",
-				content:
-					pdfParserSystemPrompt +
-					"\n\nIMPORTANT: You must return ONLY raw valid JSON. Do not return markdown, do not return explanations. Just the JSON object. Use the following JSON as a template and fill in the extracted values. For arrays, you MUST use the exact key names shown in the template (e.g. use 'description' instead of 'summary', 'website' instead of 'url'):\n\n" +
-					JSON.stringify(aiExtractionTemplate, null, 2),
-			},
-			{
-				role: "user",
-				content: `${pdfParserUserPrompt}\n\n--- EXTRACTED RESUME TEXT ---\n${pdfText}\n--- END OF EXTRACTED TEXT ---`,
-			},
-		],
+		messages: buildResumeParsingMessages({
+			systemPrompt: pdfParserSystemPrompt,
+			userPrompt: pdfParserUserPrompt,
+			file: input.file,
+			mediaType: "application/pdf",
+		}),
 	}).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
 
 	return parseAndValidateResumeJson(result.text);
@@ -319,25 +393,14 @@ type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
 async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 	const model = getModel(input);
 
-	const docxText = await extractDocxText(input.file.data).catch((error: unknown) =>
-		logAndRethrow("Failed to parse DOCX locally", error),
-	);
-
 	const result = await generateText({
 		model,
-		messages: [
-			{
-				role: "system",
-				content:
-					docxParserSystemPrompt +
-					"\n\nIMPORTANT: You must return ONLY raw valid JSON. Do not return markdown, do not return explanations. Just the JSON object. Use the following JSON as a template and fill in the extracted values. For arrays, you MUST use the exact key names shown in the template (e.g. use 'description' instead of 'summary', 'website' instead of 'url'):\n\n" +
-					JSON.stringify(aiExtractionTemplate, null, 2),
-			},
-			{
-				role: "user",
-				content: `${docxParserUserPrompt}\n\n--- EXTRACTED RESUME TEXT ---\n${docxText}\n--- END OF EXTRACTED TEXT ---`,
-			},
-		],
+		messages: buildResumeParsingMessages({
+			systemPrompt: docxParserSystemPrompt,
+			userPrompt: docxParserUserPrompt,
+			file: input.file,
+			mediaType: input.mediaType,
+		}),
 	}).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
 
 	return parseAndValidateResumeJson(result.text);

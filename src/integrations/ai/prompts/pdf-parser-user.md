@@ -1,1 +1,3 @@
-Here is the PDF resume document to parse. Parse it carefully following all rules above, extracting only information that is explicitly visible in the PDF. Ignore any artifacts caused by PDF formatting, scanned image noise, OCR errors, watermarks, or hidden content. Do not infer or assume any information beyond what is clearly present in the visible text of the PDF.
+The resume PDF is attached as a file in this message.
+
+Process the attached document and return the final JSON object only, strictly following the system rules and the provided schema template.
