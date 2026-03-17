@@ -1,6 +1,6 @@
-import { CaretRightIcon } from "@phosphor-icons/react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 import { useResumeStore } from "@/components/resume/store/resume";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import type { SectionType } from "@/schema/resume/data";
 import { getSectionIcon, getSectionTitle, type LeftSidebarSection } from "@/utils/resume/section";
@@ -8,7 +8,7 @@ import { cn } from "@/utils/style";
 import { useSectionStore } from "../../../-store/section";
 import { SectionDropdownMenu } from "./section-menu";
 
-type Props = React.ComponentProps<typeof AccordionContent> & {
+type Props = React.ComponentProps<typeof AccordionPanel> & {
 	type: LeftSidebarSection;
 };
 
@@ -27,20 +27,21 @@ export function SectionBase({ type, className, ...props }: Props) {
 
 	return (
 		<Accordion
-			collapsible
-			type="single"
 			id={`sidebar-${type}`}
-			value={collapsed ? "" : type}
+			value={collapsed ? [] : [type]}
 			onValueChange={() => toggleCollapsed(type)}
 			className={cn("space-y-4", isHidden && "opacity-50")}
 		>
 			<AccordionItem value={type} className="group/accordion space-y-4">
 				<div className="flex items-center">
-					<AccordionTrigger asChild className="me-2 items-center justify-center">
-						<Button size="icon" variant="ghost">
-							<CaretRightIcon />
-						</Button>
-					</AccordionTrigger>
+					<AccordionTrigger
+						className="me-2 items-center justify-center"
+						render={
+							<Button size="icon" variant="ghost">
+								<CaretDownIcon className="transition-transform duration-200" />
+							</Button>
+						}
+					/>
 
 					<div className="flex flex-1 items-center gap-x-4">
 						{getSectionIcon(type)}
@@ -54,7 +55,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 					)}
 				</div>
 
-				<AccordionContent
+				<AccordionPanel
 					className={cn(
 						"overflow-hidden pb-0 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
 						className,

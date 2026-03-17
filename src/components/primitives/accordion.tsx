@@ -1,5 +1,5 @@
+import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
 import { AnimatePresence, type HTMLMotionProps, motion } from "motion/react";
-import { Accordion as AccordionPrimitive } from "radix-ui";
 import * as React from "react";
 import { useControlledState } from "@/hooks/use-controlled-state";
 import { getStrictContext } from "@/utils/get-strict-context";
@@ -10,7 +10,6 @@ type AccordionContextType = {
 };
 
 type AccordionItemContextType = {
-	value: string;
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
 };
@@ -23,14 +22,14 @@ type AccordionProps = React.ComponentProps<typeof AccordionPrimitive.Root>;
 
 function Accordion(props: AccordionProps) {
 	const [value, setValue] = useControlledState<string | string[] | undefined>({
-		value: props?.value,
-		defaultValue: props?.defaultValue,
+		value: props?.value as string | string[] | undefined,
+		defaultValue: props?.defaultValue as string | string[] | undefined,
 		onChange: props?.onValueChange as (value: string | string[] | undefined) => void,
 	});
 
 	return (
 		<AccordionProvider value={{ value, setValue }}>
-			<AccordionPrimitive.Root data-slot="accordion" {...props} onValueChange={setValue} />
+			<AccordionPrimitive.Root data-slot="accordion" {...props} onValueChange={(val) => setValue(val as string[])} />
 		</AccordionProvider>
 	);
 }
@@ -46,7 +45,7 @@ function AccordionItem(props: AccordionItemProps) {
 	}, [value, props?.value]);
 
 	return (
-		<AccordionItemProvider value={{ isOpen, setIsOpen, value: props.value }}>
+		<AccordionItemProvider value={{ isOpen, setIsOpen }}>
 			<AccordionPrimitive.Item data-slot="accordion-item" {...props} />
 		</AccordionItemProvider>
 	);
@@ -64,54 +63,36 @@ function AccordionTrigger(props: AccordionTriggerProps) {
 	return <AccordionPrimitive.Trigger data-slot="accordion-trigger" {...props} />;
 }
 
-type AccordionContentProps = Omit<React.ComponentProps<typeof AccordionPrimitive.Content>, "asChild" | "forceMount"> &
+type AccordionPanelProps = Omit<React.ComponentProps<typeof AccordionPrimitive.Panel>, "keepMounted" | "render"> &
 	HTMLMotionProps<"div"> & {
 		keepRendered?: boolean;
 	};
 
-function AccordionContent({
-	keepRendered = false,
+function AccordionPanel({
 	transition = { duration: 0.35, ease: "easeInOut" },
+	hiddenUntilFound,
+	keepRendered = false,
 	...props
-}: AccordionContentProps) {
+}: AccordionPanelProps) {
 	const { isOpen } = useAccordionItem();
 
 	return (
 		<AnimatePresence>
 			{keepRendered ? (
-				<AccordionPrimitive.Content asChild forceMount>
-					<motion.div
-						key="accordion-content"
-						data-slot="accordion-content"
-						initial={{ height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }}
-						animate={
-							isOpen
-								? { height: "auto", opacity: 1, "--mask-stop": "100%", y: 0 }
-								: { height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }
-						}
-						transition={transition}
-						style={{
-							maskImage: "linear-gradient(black var(--mask-stop), transparent var(--mask-stop))",
-							WebkitMaskImage: "linear-gradient(black var(--mask-stop), transparent var(--mask-stop))",
-							overflow: "hidden",
-						}}
-						{...props}
-					/>
-				</AccordionPrimitive.Content>
-			) : (
-				isOpen && (
-					<AccordionPrimitive.Content asChild forceMount>
+				<AccordionPrimitive.Panel
+					hidden={false}
+					hiddenUntilFound={hiddenUntilFound}
+					keepMounted
+					render={
 						<motion.div
-							key="accordion-content"
-							data-slot="accordion-content"
+							key="accordion-panel"
+							data-slot="accordion-panel"
 							initial={{ height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }}
-							animate={{
-								height: "auto",
-								opacity: 1,
-								"--mask-stop": "100%",
-								y: 0,
-							}}
-							exit={{ height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }}
+							animate={
+								isOpen
+									? { height: "auto", opacity: 1, "--mask-stop": "100%", y: 0 }
+									: { height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }
+							}
 							transition={transition}
 							style={{
 								maskImage: "linear-gradient(black var(--mask-stop), transparent var(--mask-stop))",
@@ -120,7 +101,36 @@ function AccordionContent({
 							}}
 							{...props}
 						/>
-					</AccordionPrimitive.Content>
+					}
+				/>
+			) : (
+				isOpen && (
+					<AccordionPrimitive.Panel
+						hidden={false}
+						hiddenUntilFound={hiddenUntilFound}
+						keepMounted
+						render={
+							<motion.div
+								key="accordion-panel"
+								data-slot="accordion-panel"
+								initial={{ height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }}
+								animate={{
+									height: "auto",
+									opacity: 1,
+									"--mask-stop": "100%",
+									y: 0,
+								}}
+								exit={{ height: 0, opacity: 0, "--mask-stop": "0%", y: 20 }}
+								transition={transition}
+								style={{
+									maskImage: "linear-gradient(black var(--mask-stop), transparent var(--mask-stop))",
+									WebkitMaskImage: "linear-gradient(black var(--mask-stop), transparent var(--mask-stop))",
+									overflow: "hidden",
+								}}
+								{...props}
+							/>
+						}
+					/>
 				)
 			)}
 		</AnimatePresence>
@@ -129,17 +139,15 @@ function AccordionContent({
 
 export {
 	Accordion,
-	AccordionItem,
 	AccordionHeader,
-	AccordionTrigger,
-	AccordionContent,
-	useAccordion,
-	useAccordionItem,
-	type AccordionProps,
-	type AccordionItemProps,
 	type AccordionHeaderProps,
-	type AccordionTriggerProps,
-	type AccordionContentProps,
-	type AccordionContextType,
+	AccordionItem,
 	type AccordionItemContextType,
+	type AccordionItemProps,
+	AccordionPanel,
+	type AccordionPanelProps,
+	type AccordionProps,
+	AccordionTrigger,
+	type AccordionTriggerProps,
+	useAccordionItem,
 };

@@ -74,6 +74,7 @@ export function VisuallyHiddenInput<T = InputValue>(props: VisuallyHiddenInputPr
 		});
 
 		resizeObserver.observe(control, { box: "border-box" });
+
 		return () => {
 			resizeObserver.disconnect();
 		};

@@ -10,8 +10,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 import z from "zod";
 import { Badge } from "@/components/ui/badge";
-import { Combobox } from "@/components/ui/combobox";
-import { MultipleCombobox } from "@/components/ui/multiple-combobox";
+import { Combobox, type ComboboxOption, ComboboxValue } from "@/components/ui/combobox";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { orpc } from "@/integrations/orpc/client";
@@ -84,33 +83,38 @@ function RouteComponent() {
 					buttonProps={{
 						title: t`Sort by`,
 						variant: "ghost",
-						children: (_, option) => (
+						children: (
 							<>
 								<SortAscendingIcon />
-								{option?.label}
+								<ComboboxValue />
 							</>
 						),
 					}}
 				/>
 
-				<MultipleCombobox
+				<Combobox
+					multiple
 					value={tags}
 					options={tagOptions}
 					onValueChange={(value) => {
-						navigate({ search: { tags: value, sort } });
+						navigate({ search: { tags: value ?? [], sort } });
 					}}
 					buttonProps={{
 						variant: "ghost",
 						title: t`Filter by`,
 						className: cn({ hidden: tagOptions.length === 0 }),
-						children: (_, options) => (
+						children: (
 							<>
 								<TagIcon />
-								{options.map((option) => (
-									<Badge key={option.value} variant="outline">
-										{option.label}
-									</Badge>
-								))}
+								<ComboboxValue>
+									{(options: ComboboxOption[]) =>
+										options.map((option) => (
+											<Badge key={String(option.value)} variant="outline">
+												{option.label}
+											</Badge>
+										))
+									}
+								</ComboboxValue>
 							</>
 						),
 					}}

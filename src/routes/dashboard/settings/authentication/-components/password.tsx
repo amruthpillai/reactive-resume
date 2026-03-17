@@ -43,11 +43,14 @@ export function PasswordSection() {
 					</Button>
 				))
 				.with(false, () => (
-					<Button variant="outline" asChild>
-						<Link to="/auth/forgot-password">
-							<Trans>Set Password</Trans>
-						</Link>
-					</Button>
+					<Button
+						variant="outline"
+						render={
+							<Link to="/auth/forgot-password">
+								<Trans>Set Password</Trans>
+							</Link>
+						}
+					/>
 				))
 				.exhaustive()}
 		</motion.div>

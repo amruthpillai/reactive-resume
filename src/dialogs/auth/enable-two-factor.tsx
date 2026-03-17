@@ -12,7 +12,7 @@ import { match } from "ts-pattern";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -148,7 +148,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 	};
 
 	return (
-		<DialogContent className="max-w-md" {...blockEvents}>
+		<DialogPopup className="max-w-md" {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle>
 					{match(step)
@@ -189,15 +189,17 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 											<Trans>Password</Trans>
 										</FormLabel>
 										<div className="flex items-center gap-x-1.5">
-											<FormControl>
-												<Input
-													min={6}
-													max={64}
-													type={showPassword ? "text" : "password"}
-													autoComplete="current-password"
-													{...field}
-												/>
-											</FormControl>
+											<FormControl
+												render={
+													<Input
+														min={6}
+														max={64}
+														type={showPassword ? "text" : "password"}
+														autoComplete="current-password"
+														{...field}
+													/>
+												}
+											/>
 
 											<Button size="icon" variant="ghost" type="button" onClick={toggleShowPassword}>
 												{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
@@ -244,25 +246,27 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 										name="code"
 										render={({ field }) => (
 											<FormItem>
-												<FormControl>
-													<InputOTP
-														maxLength={6}
-														value={field.value}
-														onChange={field.onChange}
-														pattern={REGEXP_ONLY_DIGITS}
-														onComplete={verifyForm.handleSubmit(onVerifySubmit)}
-														pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
-													>
-														<InputOTPGroup>
-															<InputOTPSlot index={0} className="size-12" />
-															<InputOTPSlot index={1} className="size-12" />
-															<InputOTPSlot index={2} className="size-12" />
-															<InputOTPSlot index={3} className="size-12" />
-															<InputOTPSlot index={4} className="size-12" />
-															<InputOTPSlot index={5} className="size-12" />
-														</InputOTPGroup>
-													</InputOTP>
-												</FormControl>
+												<FormControl
+													render={
+														<InputOTP
+															maxLength={6}
+															value={field.value}
+															onChange={field.onChange}
+															pattern={REGEXP_ONLY_DIGITS}
+															onComplete={verifyForm.handleSubmit(onVerifySubmit)}
+															pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
+														>
+															<InputOTPGroup>
+																<InputOTPSlot index={0} className="size-12" />
+																<InputOTPSlot index={1} className="size-12" />
+																<InputOTPSlot index={2} className="size-12" />
+																<InputOTPSlot index={3} className="size-12" />
+																<InputOTPSlot index={4} className="size-12" />
+																<InputOTPSlot index={5} className="size-12" />
+															</InputOTPGroup>
+														</InputOTP>
+													}
+												/>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -314,7 +318,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 					</div>
 				))
 				.exhaustive()}
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 

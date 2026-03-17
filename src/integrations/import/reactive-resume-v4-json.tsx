@@ -3,11 +3,11 @@
 import z, { flattenError, ZodError } from "zod";
 import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { type Template, templateSchema } from "@/schema/templates";
-import { parseRgbString } from "@/utils/color";
+import { parseColorString } from "@/utils/color";
 import { generateId } from "@/utils/string";
 
 function colorToRgba(color: string): string {
-	const parsed = parseRgbString(color);
+	const parsed = parseColorString(color);
 	if (!parsed) return "rgba(0, 0, 0, 1)";
 	return `rgba(${parsed.r}, ${parsed.g}, ${parsed.b}, ${parsed.a})`;
 }

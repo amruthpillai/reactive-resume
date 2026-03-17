@@ -7,7 +7,7 @@ import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -54,7 +54,7 @@ export function CreateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -78,7 +78,7 @@ export function CreateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -118,7 +118,7 @@ export function UpdateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -142,7 +142,7 @@ export function UpdateAwardDialog({ data }: DialogProps<"resume.sections.awards.
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -159,9 +159,7 @@ function AwardForm() {
 						<FormLabel>
 							<Trans>Title</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -175,9 +173,7 @@ function AwardForm() {
 						<FormLabel>
 							<Trans context="(noun) person, organization, or entity that gives an award">Awarder</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -191,9 +187,7 @@ function AwardForm() {
 						<FormLabel>
 							<Trans>Date</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -207,14 +201,12 @@ function AwardForm() {
 						<FormLabel>
 							<Trans>Website</Trans>
 						</FormLabel>
-						<FormControl>
-							<URLInput
-								{...field}
-								value={field.value}
-								onChange={field.onChange}
-								hideLabelButton={form.watch("options.showLinkInTitle")}
-							/>
-						</FormControl>
+						<URLInput
+							{...field}
+							value={field.value}
+							onChange={field.onChange}
+							hideLabelButton={form.watch("options.showLinkInTitle")}
+						/>
 						<FormMessage />
 					</FormItem>
 				)}
@@ -225,10 +217,8 @@ function AwardForm() {
 				name="options.showLinkInTitle"
 				render={({ field }) => (
 					<FormItem className="flex items-center gap-x-2">
-						<FormControl>
-							<Switch checked={field.value} onCheckedChange={field.onChange} />
-						</FormControl>
-						<FormLabel className="!mt-0">
+						<FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
+						<FormLabel className="mt-0!">
 							<Trans>Show link in title</Trans>
 						</FormLabel>
 					</FormItem>
@@ -243,9 +233,7 @@ function AwardForm() {
 						<FormLabel>
 							<Trans>Description</Trans>
 						</FormLabel>
-						<FormControl>
-							<RichInput {...field} value={field.value} onChange={field.onChange} />
-						</FormControl>
+						<FormControl render={<RichInput {...field} value={field.value} onChange={field.onChange} />} />
 						<FormMessage />
 					</FormItem>
 				)}

@@ -7,7 +7,8 @@ import { IconPicker } from "@/components/input/icon-picker";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverPanel, PopoverTrigger } from "@/components/ui/popover";
 import type { basicsSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -55,16 +56,18 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 						name={`customFields.${index}.icon`}
 						render={({ field }) => (
 							<FormItem className="shrink-0">
-								<FormControl>
-									<IconPicker
-										{...field}
-										className="rounded-r-none! border-e-0!"
-										onChange={(icon) => {
-											field.onChange(icon);
-											form.handleSubmit(onSubmit)();
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<IconPicker
+											{...field}
+											className="rounded-r-none! border-e-0!"
+											onChange={(icon) => {
+												field.onChange(icon);
+												form.handleSubmit(onSubmit)();
+											}}
+										/>
+									}
+								/>
 							</FormItem>
 						)}
 					/>
@@ -74,32 +77,36 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 						name={`customFields.${index}.text`}
 						render={({ field }) => (
 							<FormItem className="flex-1">
-								<FormControl>
-									<Input
-										{...field}
-										className="rounded-l-none!"
-										onChange={(e) => {
-											field.onChange(e.target.value);
-											form.handleSubmit(onSubmit)();
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Input
+											{...field}
+											className="rounded-l-none!"
+											onChange={(e) => {
+												field.onChange(e.target.value);
+												form.handleSubmit(onSubmit)();
+											}}
+										/>
+									}
+								/>
 							</FormItem>
 						)}
 					/>
 
 					<Popover>
-						<PopoverTrigger asChild>
-							<Button size="icon" variant="ghost" className="ms-1">
-								<LinkIcon />
-							</Button>
-						</PopoverTrigger>
+						<PopoverTrigger
+							render={
+								<Button size="icon" variant="ghost" className="ms-1">
+									<LinkIcon />
+								</Button>
+							}
+						/>
 
-						<PopoverContent align="center">
+						<PopoverPanel align="center">
 							<div className="flex flex-col gap-y-1.5">
-								<span className="text-muted-foreground text-xs">
+								<Label htmlFor={`customFields.${index}.link`} className="text-muted-foreground text-xs">
 									<Trans>Enter the URL to link to</Trans>
-								</span>
+								</Label>
 
 								<Controller
 									control={form.control}
@@ -108,6 +115,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 										<Input
 											type="url"
 											value={field.value}
+											id={`customFields.${index}.link`}
 											placeholder="Must start with https://"
 											onChange={(e) => {
 												field.onChange(e.target.value);
@@ -117,7 +125,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 									)}
 								/>
 							</div>
-						</PopoverContent>
+						</PopoverPanel>
 					</Popover>
 
 					<Button size="icon" variant="ghost" onClick={() => handleRemove(index)}>

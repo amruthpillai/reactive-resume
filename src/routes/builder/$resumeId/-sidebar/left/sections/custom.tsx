@@ -13,18 +13,18 @@ import { match } from "ts-pattern";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuRadioGroup,
-	DropdownMenuRadioItem,
-	DropdownMenuSeparator,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+	Menu,
+	MenuGroup,
+	MenuItem,
+	MenuPanel,
+	MenuRadioGroup,
+	MenuRadioItem,
+	MenuSeparator,
+	MenuSubmenu,
+	MenuSubmenuPanel,
+	MenuSubmenuTrigger,
+	MenuTrigger,
+} from "@/components/ui/menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import type {
@@ -231,60 +231,55 @@ function CustomSectionDropdownMenu({ section }: { section: CustomSection }) {
 	};
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<button
-					type="button"
-					className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 focus:outline-none focus-visible:ring-1 group-hover:opacity-100"
-				>
-					<DotsThreeVerticalIcon />
-				</button>
-			</DropdownMenuTrigger>
+		<Menu>
+			<MenuTrigger>
+				<DotsThreeVerticalIcon />
+			</MenuTrigger>
 
-			<DropdownMenuContent align="end">
-				<DropdownMenuGroup>
-					<DropdownMenuItem onSelect={onToggleSectionVisibility}>
+			<MenuPanel align="end">
+				<MenuGroup>
+					<MenuItem onClick={onToggleSectionVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
-					</DropdownMenuItem>
+					</MenuItem>
 
-					<DropdownMenuItem onSelect={onUpdateSection}>
+					<MenuItem onClick={onUpdateSection}>
 						<PencilSimpleLineIcon />
 						<Trans>Update</Trans>
-					</DropdownMenuItem>
+					</MenuItem>
 
-					<DropdownMenuItem onSelect={onDuplicateSection}>
+					<MenuItem onClick={onDuplicateSection}>
 						<CopySimpleIcon />
 						<Trans>Duplicate</Trans>
-					</DropdownMenuItem>
+					</MenuItem>
 
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>
+					<MenuSubmenu>
+						<MenuSubmenuTrigger>
 							<ColumnsIcon />
 							<Trans>Columns</Trans>
-						</DropdownMenuSubTrigger>
+						</MenuSubmenuTrigger>
 
-						<DropdownMenuSubContent>
-							<DropdownMenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
+						<MenuSubmenuPanel>
+							<MenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
 								{[1, 2, 3, 4, 5, 6].map((column) => (
-									<DropdownMenuRadioItem key={column} value={column.toString()}>
+									<MenuRadioItem key={column} value={column.toString()}>
 										<Plural value={column} one="# Column" other="# Columns" />
-									</DropdownMenuRadioItem>
+									</MenuRadioItem>
 								))}
-							</DropdownMenuRadioGroup>
-						</DropdownMenuSubContent>
-					</DropdownMenuSub>
-				</DropdownMenuGroup>
+							</MenuRadioGroup>
+						</MenuSubmenuPanel>
+					</MenuSubmenu>
+				</MenuGroup>
 
-				<DropdownMenuSeparator />
+				<MenuSeparator />
 
-				<DropdownMenuGroup>
-					<DropdownMenuItem variant="destructive" onSelect={onDeleteSection}>
+				<MenuGroup>
+					<MenuItem variant="destructive" onClick={onDeleteSection}>
 						<TrashSimpleIcon />
 						<Trans>Delete</Trans>
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-			</DropdownMenuContent>
-		</DropdownMenu>
+					</MenuItem>
+				</MenuGroup>
+			</MenuPanel>
+		</Menu>
 	);
 }

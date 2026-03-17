@@ -133,9 +133,9 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Name</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />
-								</FormControl>
+								<FormControl
+									render={<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -149,16 +149,18 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Username</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input
-										min={3}
-										max={64}
-										autoComplete="username"
-										placeholder="john.doe"
-										className="lowercase"
-										{...field}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Input
+											min={3}
+											max={64}
+											autoComplete="username"
+											placeholder="john.doe"
+											className="lowercase"
+											{...field}
+										/>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -172,15 +174,17 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Email Address</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input
-										type="email"
-										autoComplete="email"
-										placeholder="john.doe@example.com"
-										className="lowercase"
-										{...field}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Input
+											type="email"
+											autoComplete="email"
+											placeholder="john.doe@example.com"
+											className="lowercase"
+											{...field}
+										/>
+									}
+								/>
 								<FormMessage />
 								{match(session.user.emailVerified)
 									.with(true, () => (

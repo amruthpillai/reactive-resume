@@ -8,7 +8,7 @@ import { IconPicker } from "@/components/input/icon-picker";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
@@ -55,7 +55,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -79,7 +79,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -118,7 +118,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -142,7 +142,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -162,9 +162,11 @@ function ProfileForm() {
 					name={"icon"}
 					render={({ field }) => (
 						<FormItem className="shrink-0">
-							<FormControl>
-								<IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
-							</FormControl>
+							<FormControl
+								render={
+									<IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
+								}
+							/>
 						</FormItem>
 					)}
 				/>
@@ -177,9 +179,7 @@ function ProfileForm() {
 							<FormLabel>
 								<Trans>Network</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input className="rounded-l-none!" {...field} />
-							</FormControl>
+							<FormControl render={<Input className="rounded-l-none!" {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -201,9 +201,7 @@ function ProfileForm() {
 								</InputGroupText>
 							</InputGroupAddon>
 
-							<FormControl>
-								<InputGroupInput {...field} />
-							</FormControl>
+							<FormControl render={<InputGroupInput {...field} />} />
 						</InputGroup>
 						<FormMessage />
 					</FormItem>
@@ -218,14 +216,12 @@ function ProfileForm() {
 						<FormLabel>
 							<Trans>Website</Trans>
 						</FormLabel>
-						<FormControl>
-							<URLInput
-								{...field}
-								value={field.value}
-								onChange={field.onChange}
-								hideLabelButton={form.watch("options.showLinkInTitle")}
-							/>
-						</FormControl>
+						<URLInput
+							{...field}
+							value={field.value}
+							onChange={field.onChange}
+							hideLabelButton={form.watch("options.showLinkInTitle")}
+						/>
 						<FormMessage />
 					</FormItem>
 				)}
@@ -236,10 +232,8 @@ function ProfileForm() {
 				name="options.showLinkInTitle"
 				render={({ field }) => (
 					<FormItem className="flex items-center gap-x-2 sm:col-span-full">
-						<FormControl>
-							<Switch checked={field.value} onCheckedChange={field.onChange} />
-						</FormControl>
-						<FormLabel className="!mt-0">
+						<FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
+						<FormLabel className="mt-0!">
 							<Trans>Show link in title</Trans>
 						</FormLabel>
 					</FormItem>

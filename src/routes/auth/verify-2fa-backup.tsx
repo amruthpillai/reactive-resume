@@ -70,44 +70,52 @@ function RouteComponent() {
 						name="code"
 						render={({ field }) => (
 							<FormItem className="justify-self-center">
-								<FormControl>
-									<InputOTP
-										maxLength={10}
-										value={field.value}
-										pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-										onChange={field.onChange}
-										onComplete={form.handleSubmit(onSubmit)}
-										pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
-									>
-										<InputOTPGroup>
-											<InputOTPSlot index={0} className="size-12" />
-											<InputOTPSlot index={1} className="size-12" />
-											<InputOTPSlot index={2} className="size-12" />
-											<InputOTPSlot index={3} className="size-12" />
-											<InputOTPSlot index={4} className="size-12" />
-										</InputOTPGroup>
-										<InputOTPSeparator />
-										<InputOTPGroup>
-											<InputOTPSlot index={5} className="size-12" />
-											<InputOTPSlot index={6} className="size-12" />
-											<InputOTPSlot index={7} className="size-12" />
-											<InputOTPSlot index={8} className="size-12" />
-											<InputOTPSlot index={9} className="size-12" />
-										</InputOTPGroup>
-									</InputOTP>
-								</FormControl>
+								<FormControl
+									render={
+										<InputOTP
+											maxLength={10}
+											value={field.value}
+											pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+											onChange={field.onChange}
+											onComplete={form.handleSubmit(onSubmit)}
+											pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
+										>
+											<InputOTPGroup>
+												<InputOTPSlot index={0} className="size-12" />
+												<InputOTPSlot index={1} className="size-12" />
+												<InputOTPSlot index={2} className="size-12" />
+												<InputOTPSlot index={3} className="size-12" />
+												<InputOTPSlot index={4} className="size-12" />
+											</InputOTPGroup>
+											<InputOTPSeparator />
+											<InputOTPGroup>
+												<InputOTPSlot index={5} className="size-12" />
+												<InputOTPSlot index={6} className="size-12" />
+												<InputOTPSlot index={7} className="size-12" />
+												<InputOTPSlot index={8} className="size-12" />
+												<InputOTPSlot index={9} className="size-12" />
+											</InputOTPGroup>
+										</InputOTP>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 
 					<div className="flex gap-x-2">
-						<Button type="button" variant="outline" className="flex-1" asChild>
-							<Link to="/auth/verify-2fa">
-								<ArrowLeftIcon />
-								<Trans>Go Back</Trans>
-							</Link>
-						</Button>
+						<Button
+							variant="outline"
+							className="flex-1"
+							nativeButton={false}
+							render={
+								<Link to="/auth/verify-2fa">
+									<ArrowLeftIcon />
+									<Trans>Go Back</Trans>
+								</Link>
+							}
+						/>
+
 						<Button type="submit" className="flex-1">
 							<CheckIcon />
 							<Trans>Verify</Trans>

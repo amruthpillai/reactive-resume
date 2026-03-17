@@ -89,11 +89,16 @@ function RouteComponent() {
 				<div className="text-muted-foreground">
 					<Trans>
 						Already have an account?{" "}
-						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
-							<Link to="/auth/login">
-								Sign in now <ArrowRightIcon />
-							</Link>
-						</Button>
+						<Button
+							variant="link"
+							nativeButton={false}
+							className="h-auto gap-1.5 px-1! py-0"
+							render={
+								<Link to="/auth/login">
+									Sign in now <ArrowRightIcon />
+								</Link>
+							}
+						/>
 					</Trans>
 				</div>
 			</div>
@@ -109,9 +114,11 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Name</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
-									</FormControl>
+									<FormControl
+										render={
+											<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
+										}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -125,16 +132,18 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Username</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input
-											min={3}
-											max={64}
-											autoComplete="section-register username"
-											placeholder="john.doe"
-											className="lowercase"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												min={3}
+												max={64}
+												autoComplete="section-register username"
+												placeholder="john.doe"
+												className="lowercase"
+												{...field}
+											/>
+										}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -148,15 +157,17 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Email Address</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input
-											type="email"
-											autoComplete="section-register email"
-											placeholder="john.doe@example.com"
-											className="lowercase"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												type="email"
+												autoComplete="section-register email"
+												placeholder="john.doe@example.com"
+												className="lowercase"
+												{...field}
+											/>
+										}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -171,15 +182,17 @@ function RouteComponent() {
 										<Trans>Password</Trans>
 									</FormLabel>
 									<div className="flex items-center gap-x-1.5">
-										<FormControl>
-											<Input
-												min={6}
-												max={64}
-												type={showPassword ? "text" : "password"}
-												autoComplete="section-register new-password"
-												{...field}
-											/>
-										</FormControl>
+										<FormControl
+											render={
+												<Input
+													min={6}
+													max={64}
+													type={showPassword ? "text" : "password"}
+													autoComplete="section-register new-password"
+													{...field}
+												/>
+											}
+										/>
 
 										<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
 											{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
@@ -223,11 +236,14 @@ function PostSignupScreen() {
 				</AlertDescription>
 			</Alert>
 
-			<Button asChild>
-				<Link to="/dashboard">
-					<Trans>Continue</Trans> <ArrowRightIcon />
-				</Link>
-			</Button>
+			<Button
+				nativeButton={false}
+				render={
+					<Link to="/dashboard">
+						<Trans>Continue</Trans> <ArrowRightIcon />
+					</Link>
+				}
+			/>
 		</>
 	);
 }

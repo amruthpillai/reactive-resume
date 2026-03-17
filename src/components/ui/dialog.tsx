@@ -1,16 +1,17 @@
+import { XIcon } from "@phosphor-icons/react";
 import {
+	DialogBackdrop as DialogBackdropPrimitive,
+	type DialogBackdropProps as DialogBackdropPrimitiveProps,
 	DialogClose as DialogClosePrimitive,
 	type DialogCloseProps as DialogClosePrimitiveProps,
-	DialogContent as DialogContentPrimitive,
-	type DialogContentProps as DialogContentPrimitiveProps,
 	DialogDescription as DialogDescriptionPrimitive,
 	type DialogDescriptionProps as DialogDescriptionPrimitiveProps,
 	DialogFooter as DialogFooterPrimitive,
 	type DialogFooterProps as DialogFooterPrimitiveProps,
 	DialogHeader as DialogHeaderPrimitive,
 	type DialogHeaderProps as DialogHeaderPrimitiveProps,
-	DialogOverlay as DialogOverlayPrimitive,
-	type DialogOverlayProps as DialogOverlayPrimitiveProps,
+	DialogPopup as DialogPopupPrimitive,
+	type DialogPopupProps as DialogPopupPrimitiveProps,
 	DialogPortal as DialogPortalPrimitive,
 	Dialog as DialogPrimitive,
 	type DialogProps as DialogPrimitiveProps,
@@ -39,27 +40,35 @@ function DialogClose(props: DialogCloseProps) {
 	return <DialogClosePrimitive {...props} />;
 }
 
-type DialogOverlayProps = DialogOverlayPrimitiveProps;
+type DialogBackdropProps = DialogBackdropPrimitiveProps;
 
-function DialogOverlay({ className, ...props }: DialogOverlayProps) {
-	return <DialogOverlayPrimitive className={cn("fixed inset-0 z-50 bg-black/50", className)} {...props} />;
+function DialogBackdrop({ className, ...props }: DialogBackdropProps) {
+	return <DialogBackdropPrimitive className={cn("fixed inset-0 z-50 bg-black/50", className)} {...props} />;
 }
 
-type DialogContentProps = DialogContentPrimitiveProps;
+type DialogPopupProps = DialogPopupPrimitiveProps & {
+	showCloseButton?: boolean;
+};
 
-function DialogContent({ className, children, ...props }: DialogContentProps) {
+function DialogPopup({ className, children, showCloseButton = true, ...props }: DialogPopupProps) {
 	return (
 		<DialogPortalPrimitive>
-			<DialogOverlay />
-			<DialogContentPrimitive
+			<DialogBackdrop />
+			<DialogPopupPrimitive
 				className={cn(
-					"fixed top-[50%] left-[50%] z-50 grid max-h-[calc(100%-2rem)] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-lg sm:max-w-2xl 2xl:max-w-4xl",
+					"fixed top-[50%] left-[50%] z-50 grid max-h-[calc(100%-2rem)] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-lg sm:max-w-2xl",
 					className,
 				)}
 				{...props}
 			>
 				{children}
-			</DialogContentPrimitive>
+				{showCloseButton && (
+					<DialogClosePrimitive className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-open:bg-accent data-open:text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
+						<XIcon />
+						<span className="sr-only">Close</span>
+					</DialogClosePrimitive>
+				)}
+			</DialogPopupPrimitive>
 		</DialogPortalPrimitive>
 	);
 }
@@ -67,9 +76,7 @@ function DialogContent({ className, children, ...props }: DialogContentProps) {
 type DialogHeaderProps = DialogHeaderPrimitiveProps;
 
 function DialogHeader({ className, ...props }: DialogHeaderProps) {
-	return (
-		<DialogHeaderPrimitive className={cn("flex flex-col gap-2 text-center sm:text-start", className)} {...props} />
-	);
+	return <DialogHeaderPrimitive className={cn("flex flex-col gap-2 text-center sm:text-left", className)} {...props} />;
 }
 
 type DialogFooterProps = DialogFooterPrimitiveProps;
@@ -97,19 +104,19 @@ function DialogDescription({ className, ...props }: DialogDescriptionProps) {
 
 export {
 	Dialog,
-	DialogTrigger,
 	DialogClose,
-	DialogContent,
-	DialogHeader,
-	DialogFooter,
-	DialogTitle,
-	DialogDescription,
-	type DialogProps,
-	type DialogTriggerProps,
 	type DialogCloseProps,
-	type DialogContentProps,
-	type DialogHeaderProps,
-	type DialogFooterProps,
-	type DialogTitleProps,
+	DialogDescription,
 	type DialogDescriptionProps,
+	DialogFooter,
+	type DialogFooterProps,
+	DialogHeader,
+	type DialogHeaderProps,
+	DialogPopup,
+	type DialogPopupProps,
+	type DialogProps,
+	DialogTitle,
+	type DialogTitleProps,
+	DialogTrigger,
+	type DialogTriggerProps,
 };

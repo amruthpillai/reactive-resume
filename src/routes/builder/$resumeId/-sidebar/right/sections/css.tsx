@@ -52,15 +52,17 @@ function CSSSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel className="flex items-center gap-4">
-								<FormControl>
-									<Switch
-										checked={field.value}
-										onCheckedChange={(checked) => {
-											field.onChange(checked);
-											form.handleSubmit(onSubmit)();
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Switch
+											checked={field.value}
+											onCheckedChange={(checked) => {
+												field.onChange(checked);
+												form.handleSubmit(onSubmit)();
+											}}
+										/>
+									}
+								/>
 
 								<Trans context="Turn On/Apply Custom CSS">Enable</Trans>
 							</FormLabel>
@@ -74,18 +76,20 @@ function CSSSectionForm() {
 						name="value"
 						render={({ field }) => (
 							<FormItem className="h-48 overflow-hidden rounded-md">
-								<FormControl>
-									<Suspense fallback={<Skeleton className="h-48 w-full" />}>
-										<CSSMonacoEditor
-											theme={theme}
-											defaultValue={field.value}
-											onChange={(value) => {
-												field.onChange(value ?? "");
-												form.handleSubmit(onSubmit)();
-											}}
-										/>
-									</Suspense>
-								</FormControl>
+								<FormControl
+									render={
+										<Suspense fallback={<Skeleton className="h-48 w-full" />}>
+											<CSSMonacoEditor
+												theme={theme}
+												defaultValue={field.value}
+												onChange={(value) => {
+													field.onChange(value ?? "");
+													form.handleSubmit(onSubmit)();
+												}}
+											/>
+										</Suspense>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}

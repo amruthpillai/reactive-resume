@@ -1,18 +1,16 @@
 import {
-	AlertDialogAction as AlertDialogActionPrimitive,
-	type AlertDialogActionProps as AlertDialogActionPrimitiveProps,
-	AlertDialogCancel as AlertDialogCancelPrimitive,
-	type AlertDialogCancelProps as AlertDialogCancelPrimitiveProps,
-	AlertDialogContent as AlertDialogContentPrimitive,
-	type AlertDialogContentProps as AlertDialogContentPrimitiveProps,
+	AlertDialogBackdrop as AlertDialogBackdropPrimitive,
+	type AlertDialogBackdropProps as AlertDialogBackdropPrimitiveProps,
+	AlertDialogClose as AlertDialogClosePrimitive,
+	type AlertDialogCloseProps as AlertDialogClosePrimitiveProps,
 	AlertDialogDescription as AlertDialogDescriptionPrimitive,
 	type AlertDialogDescriptionProps as AlertDialogDescriptionPrimitiveProps,
 	AlertDialogFooter as AlertDialogFooterPrimitive,
 	type AlertDialogFooterProps as AlertDialogFooterPrimitiveProps,
 	AlertDialogHeader as AlertDialogHeaderPrimitive,
 	type AlertDialogHeaderProps as AlertDialogHeaderPrimitiveProps,
-	AlertDialogOverlay as AlertDialogOverlayPrimitive,
-	type AlertDialogOverlayProps as AlertDialogOverlayPrimitiveProps,
+	AlertDialogPopup as AlertDialogPopupPrimitive,
+	type AlertDialogPopupProps as AlertDialogPopupPrimitiveProps,
 	AlertDialogPortal as AlertDialogPortalPrimitive,
 	AlertDialog as AlertDialogPrimitive,
 	type AlertDialogProps as AlertDialogPrimitiveProps,
@@ -36,21 +34,21 @@ function AlertDialogTrigger(props: AlertDialogTriggerProps) {
 	return <AlertDialogTriggerPrimitive {...props} />;
 }
 
-type AlertDialogOverlayProps = AlertDialogOverlayPrimitiveProps;
+type AlertDialogBackdropProps = AlertDialogBackdropPrimitiveProps;
 
-function AlertDialogOverlay({ className, ...props }: AlertDialogOverlayProps) {
-	return <AlertDialogOverlayPrimitive className={cn("fixed inset-0 z-50 bg-black/50", className)} {...props} />;
+function AlertDialogBackdrop({ className, ...props }: AlertDialogBackdropProps) {
+	return <AlertDialogBackdropPrimitive className={cn("fixed inset-0 z-50 bg-black/50", className)} {...props} />;
 }
 
-type AlertDialogContentProps = AlertDialogContentPrimitiveProps;
+type AlertDialogPopupProps = AlertDialogPopupPrimitiveProps;
 
-function AlertDialogContent({ className, ...props }: AlertDialogContentProps) {
+function AlertDialogPopup({ className, ...props }: AlertDialogPopupProps) {
 	return (
 		<AlertDialogPortalPrimitive>
-			<AlertDialogOverlay />
-			<AlertDialogContentPrimitive
+			<AlertDialogBackdrop />
+			<AlertDialogPopupPrimitive
 				className={cn(
-					"fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg sm:max-w-lg",
+					"fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg sm:max-w-2xl",
 					className,
 				)}
 				{...props}
@@ -63,7 +61,7 @@ type AlertDialogHeaderProps = AlertDialogHeaderPrimitiveProps;
 
 function AlertDialogHeader({ className, ...props }: AlertDialogHeaderProps) {
 	return (
-		<AlertDialogHeaderPrimitive className={cn("flex flex-col gap-2 text-center sm:text-start", className)} {...props} />
+		<AlertDialogHeaderPrimitive className={cn("flex flex-col gap-2 text-center sm:text-left", className)} {...props} />
 	);
 }
 
@@ -90,35 +88,35 @@ function AlertDialogDescription({ className, ...props }: AlertDialogDescriptionP
 	return <AlertDialogDescriptionPrimitive className={cn("text-muted-foreground text-sm", className)} {...props} />;
 }
 
-type AlertDialogActionProps = AlertDialogActionPrimitiveProps;
+type AlertDialogActionProps = AlertDialogClosePrimitiveProps;
 
-function AlertDialogAction({ className, ...props }: AlertDialogActionPrimitiveProps) {
-	return <AlertDialogActionPrimitive className={cn(buttonVariants(), className)} {...props} />;
+function AlertDialogAction({ className, ...props }: AlertDialogActionProps) {
+	return <AlertDialogClosePrimitive className={cn(buttonVariants(), className)} {...props} />;
 }
 
-type AlertDialogCancelProps = AlertDialogCancelPrimitiveProps;
+type AlertDialogCancelProps = AlertDialogClosePrimitiveProps;
 
-function AlertDialogCancel({ className, ...props }: AlertDialogCancelPrimitiveProps) {
-	return <AlertDialogCancelPrimitive className={cn(buttonVariants({ variant: "outline" }), className)} {...props} />;
+function AlertDialogCancel({ className, ...props }: AlertDialogCancelProps) {
+	return <AlertDialogClosePrimitive className={cn(buttonVariants({ variant: "outline" }), className)} {...props} />;
 }
 
 export {
 	AlertDialog,
-	AlertDialogTrigger,
-	AlertDialogContent,
-	AlertDialogHeader,
-	AlertDialogFooter,
-	AlertDialogTitle,
-	AlertDialogDescription,
 	AlertDialogAction,
-	AlertDialogCancel,
-	type AlertDialogProps,
-	type AlertDialogTriggerProps,
-	type AlertDialogContentProps,
-	type AlertDialogHeaderProps,
-	type AlertDialogFooterProps,
-	type AlertDialogTitleProps,
-	type AlertDialogDescriptionProps,
 	type AlertDialogActionProps,
+	AlertDialogCancel,
 	type AlertDialogCancelProps,
+	AlertDialogDescription,
+	type AlertDialogDescriptionProps,
+	AlertDialogFooter,
+	type AlertDialogFooterProps,
+	AlertDialogHeader,
+	type AlertDialogHeaderProps,
+	AlertDialogPopup,
+	type AlertDialogPopupProps,
+	type AlertDialogProps,
+	AlertDialogTitle,
+	type AlertDialogTitleProps,
+	AlertDialogTrigger,
+	type AlertDialogTriggerProps,
 };

@@ -15,7 +15,7 @@ import type { Operation } from "fast-json-patch";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverPanel, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAIStore } from "@/integrations/ai/store";
 import { client } from "@/integrations/orpc/client";
@@ -305,13 +305,15 @@ export function AIChat() {
 
 	return (
 		<Popover open={open} onOpenChange={handleOpenChange}>
-			<PopoverTrigger asChild>
-				<Button size="icon" variant="ghost">
-					<SparkleIcon />
-				</Button>
-			</PopoverTrigger>
+			<PopoverTrigger
+				render={
+					<Button size="icon" variant="ghost">
+						<SparkleIcon />
+					</Button>
+				}
+			/>
 
-			<PopoverContent className="flex h-128 w-md flex-col gap-y-0 overflow-hidden p-0" side="top" align="center">
+			<PopoverPanel className="flex h-128 w-md flex-col gap-y-0 overflow-hidden p-0" side="top" align="center">
 				{/* Header with clear button */}
 				<div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
 					<p className="font-medium text-muted-foreground text-xs">
@@ -402,7 +404,7 @@ export function AIChat() {
 						</Button>
 					)}
 				</form>
-			</PopoverContent>
+			</PopoverPanel>
 		</Popover>
 	);
 }

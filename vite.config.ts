@@ -1,4 +1,5 @@
 import { lingui } from "@lingui/vite-plugin";
+import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
@@ -35,8 +36,9 @@ const config = defineConfig({
 		lingui(),
 		tailwindcss(),
 		nitro({ plugins: ["plugins/1.migrate.ts"] }),
+		babel({ plugins: ["@lingui/babel-plugin-lingui-macro"] }),
 		tanstackStart({ router: { semicolons: true, quoteStyle: "double" } }),
-		viteReact({ babel: { plugins: ["@lingui/babel-plugin-lingui-macro"] } }),
+		viteReact(),
 		VitePWA({
 			outDir: "public",
 			useCredentials: true,

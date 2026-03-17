@@ -3,10 +3,10 @@ import {
 	AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
-	AlertDialogContent,
 	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
+	AlertDialogPopup,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/utils/style";
@@ -69,18 +69,19 @@ export function ConfirmDialogProvider({ children }: { children: React.ReactNode 
 			{children}
 
 			<AlertDialog open={state.open} onOpenChange={(open) => !open && handleCancel()}>
-				<AlertDialogContent>
+				<AlertDialogPopup>
 					<AlertDialogHeader>
 						<AlertDialogTitle>{state.title}</AlertDialogTitle>
 						<AlertDialogDescription className={cn(!state.description && "sr-only")}>
 							{state.description}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
+
 					<AlertDialogFooter>
 						<AlertDialogCancel onClick={handleCancel}>{state.cancelText ?? "Cancel"}</AlertDialogCancel>
 						<AlertDialogAction onClick={handleConfirm}>{state.confirmText ?? "Confirm"}</AlertDialogAction>
 					</AlertDialogFooter>
-				</AlertDialogContent>
+				</AlertDialogPopup>
 			</AlertDialog>
 		</ConfirmContext.Provider>
 	);

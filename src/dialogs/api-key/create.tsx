@@ -10,7 +10,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
@@ -66,7 +66,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 	};
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -90,9 +90,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 								<FormLabel>
 									<Trans>Name</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input min={1} max={64} {...field} />
-								</FormControl>
+								<FormControl render={<Input min={1} max={64} {...field} />} />
 								<FormMessage />
 								<FormDescription>
 									<Trans>
@@ -112,34 +110,36 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 								<FormLabel>
 									<Trans>Expires in</Trans>
 								</FormLabel>
-								<FormControl>
-									<Combobox
-										value={field.value}
-										onValueChange={(value) => value && field.onChange(Number(value))}
-										options={[
-											{
-												// 1 month = 30 days
-												value: 3600 * 24 * 30,
-												label: t`1 month`,
-											},
-											{
-												// 3 months = 90 days
-												value: 3600 * 24 * 90,
-												label: t`3 months`,
-											},
-											{
-												// 6 months = 180 days
-												value: 3600 * 24 * 180,
-												label: t`6 months`,
-											},
-											{
-												// 1 year = 365 days
-												value: 3600 * 24 * 365,
-												label: t`1 year`,
-											},
-										]}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Combobox
+											value={field.value}
+											onValueChange={(value) => value && field.onChange(Number(value))}
+											options={[
+												{
+													// 1 month = 30 days
+													value: 3600 * 24 * 30,
+													label: t`1 month`,
+												},
+												{
+													// 3 months = 90 days
+													value: 3600 * 24 * 90,
+													label: t`3 months`,
+												},
+												{
+													// 6 months = 180 days
+													value: 3600 * 24 * 180,
+													label: t`6 months`,
+												},
+												{
+													// 1 year = 365 days
+													value: 3600 * 24 * 365,
+													label: t`1 year`,
+												},
+											]}
+										/>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -152,7 +152,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 };
 
@@ -176,7 +176,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 	};
 
 	return (
-		<DialogContent>
+		<DialogPopup>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<CopyIcon />
@@ -207,6 +207,6 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 					<Trans>Confirm</Trans>
 				</Button>
 			</DialogFooter>
-		</DialogContent>
+		</DialogPopup>
 	);
 };

@@ -1,11 +1,11 @@
-import { CaretRightIcon } from "@phosphor-icons/react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { CaretDownIcon } from "@phosphor-icons/react";
+import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { getSectionIcon, getSectionTitle, type RightSidebarSection } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
 import { useSectionStore } from "../../../-store/section";
 
-type Props = React.ComponentProps<typeof AccordionContent> & {
+type Props = React.ComponentProps<typeof AccordionPanel> & {
 	type: RightSidebarSection;
 };
 
@@ -15,20 +15,21 @@ export function SectionBase({ type, className, ...props }: Props) {
 
 	return (
 		<Accordion
-			collapsible
-			type="single"
 			className="space-y-4"
 			id={`sidebar-${type}`}
-			value={collapsed ? "" : type}
+			value={collapsed ? [] : [type]}
 			onValueChange={() => toggleCollapsed(type)}
 		>
 			<AccordionItem value={type} className="group/accordion space-y-4">
 				<div className="flex items-center">
-					<AccordionTrigger asChild className="me-2 items-center justify-center">
-						<Button size="icon" variant="ghost">
-							<CaretRightIcon />
-						</Button>
-					</AccordionTrigger>
+					<AccordionTrigger
+						className="me-2 items-center justify-center"
+						render={
+							<Button size="icon" variant="ghost">
+								<CaretDownIcon className="transition-transform duration-200" />
+							</Button>
+						}
+					/>
 
 					<div className="flex flex-1 items-center gap-x-4">
 						{getSectionIcon(type)}
@@ -36,7 +37,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 					</div>
 				</div>
 
-				<AccordionContent
+				<AccordionPanel
 					className={cn(
 						"overflow-hidden pb-0 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
 						className,

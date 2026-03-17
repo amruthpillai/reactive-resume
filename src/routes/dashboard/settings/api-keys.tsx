@@ -84,12 +84,15 @@ function RouteComponent() {
 							</Trans>
 						</p>
 
-						<Button asChild variant="link">
-							<a href="https://docs.rxresu.me/api-reference" target="_blank" rel="noopener">
-								<LinkSimpleIcon />
-								<Trans>API Reference</Trans>
-							</a>
-						</Button>
+						<Button
+							variant="link"
+							render={
+								<a href="https://docs.rxresu.me/api-reference" target="_blank" rel="noopener">
+									<LinkSimpleIcon />
+									<Trans>API Reference</Trans>
+								</a>
+							}
+						/>
 					</div>
 				</div>
 

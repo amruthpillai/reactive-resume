@@ -49,9 +49,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Name</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -65,9 +63,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Headline</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -81,9 +77,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Email</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input type="email" {...field} />
-							</FormControl>
+							<FormControl render={<Input type="email" {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -97,9 +91,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Phone</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -113,9 +105,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Location</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -129,9 +119,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Website</Trans>
 							</FormLabel>
-							<FormControl>
-								<URLInput {...field} value={field.value} onChange={field.onChange} />
-							</FormControl>
+							<URLInput {...field} value={field.value} onChange={field.onChange} />
 							<FormMessage />
 						</FormItem>
 					)}

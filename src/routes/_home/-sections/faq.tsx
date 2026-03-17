@@ -1,8 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { CaretRightIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/style";
 
@@ -92,7 +91,7 @@ export function FAQ() {
 				viewport={{ once: true }}
 				transition={{ duration: 0.6, delay: 0.1 }}
 			>
-				<Accordion type="multiple">
+				<Accordion multiple>
 					{faqItems.map((item, index) => (
 						<FAQItemComponent key={item.question} item={item} index={index} />
 					))}
@@ -117,11 +116,8 @@ function FAQItemComponent({ item, index }: FAQItemComponentProps) {
 			transition={{ duration: 0.4, delay: index * 0.05 }}
 		>
 			<AccordionItem value={item.question} className="group border-t">
-				<AccordionTrigger className="py-5">
-					{item.question}
-					<CaretRightIcon aria-hidden="true" className="shrink-0 transition-transform duration-200" />
-				</AccordionTrigger>
-				<AccordionContent className="pb-5 text-muted-foreground leading-relaxed">{item.answer}</AccordionContent>
+				<AccordionTrigger className="py-5">{item.question}</AccordionTrigger>
+				<AccordionPanel className="pb-5 text-muted-foreground leading-relaxed">{item.answer}</AccordionPanel>
 			</AccordionItem>
 		</motion.div>
 	);

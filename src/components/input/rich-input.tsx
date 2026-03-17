@@ -50,25 +50,17 @@ import {
 	useEditorState,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { VisuallyHidden } from "radix-ui";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import z from "zod";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Dialog, DialogDescription, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { usePrompt } from "@/hooks/use-prompt";
 import { isRTL } from "@/utils/locale";
 import { sanitizeHtml } from "@/utils/sanitize";
 import { cn } from "@/utils/style";
+import { Menu, MenuCheckboxItem, MenuItem, MenuPanel, MenuSeparator, MenuTrigger } from "../ui/menu";
 import { Toggle } from "../ui/toggle";
 import styles from "./rich-input.module.css";
 
@@ -169,13 +161,13 @@ export function RichInput({ value, onChange, style, className, editorClassName, 
 				</div>
 
 				<Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
-					<DialogContent className="flex h-[95svh] max-h-none! w-[95svw] max-w-none! flex-col p-4 sm:max-w-none! 2xl:max-w-none!">
-						<VisuallyHidden.Root>
+					<DialogPopup className="flex h-[95svh] max-h-none! w-[95svw] max-w-none! flex-col p-4 sm:max-w-none! 2xl:max-w-none!">
+						<div className="sr-only">
 							<DialogTitle>Fullscreen Editor</DialogTitle>
 							<DialogDescription>Edit content in fullscreen mode</DialogDescription>
-						</VisuallyHidden.Root>
+						</div>
 						{editorElement}
-					</DialogContent>
+					</DialogPopup>
 				</Dialog>
 			</EditorContext>
 		);
@@ -419,120 +411,126 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 
 			<div className="mx-1 h-5 w-px bg-border" />
 
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
-						{match(state)
-							.with({ isParagraph: true }, () => <ParagraphIcon className="size-3.5" />)
-							.with({ isHeading1: true }, () => <TextHOneIcon className="size-3.5" />)
-							.with({ isHeading2: true }, () => <TextHTwoIcon className="size-3.5" />)
-							.with({ isHeading3: true }, () => <TextHThreeIcon className="size-3.5" />)
-							.with({ isHeading4: true }, () => <TextHFourIcon className="size-3.5" />)
-							.with({ isHeading5: true }, () => <TextHFiveIcon className="size-3.5" />)
-							.with({ isHeading6: true }, () => <TextHSixIcon className="size-3.5" />)
-							.otherwise(() => (
-								<ParagraphIcon className="size-3.5" />
-							))}
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<DropdownMenuCheckboxItem
+			<Menu>
+				<MenuTrigger
+					render={
+						<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
+							{match(state)
+								.with({ isParagraph: true }, () => <ParagraphIcon className="size-3.5" />)
+								.with({ isHeading1: true }, () => <TextHOneIcon className="size-3.5" />)
+								.with({ isHeading2: true }, () => <TextHTwoIcon className="size-3.5" />)
+								.with({ isHeading3: true }, () => <TextHThreeIcon className="size-3.5" />)
+								.with({ isHeading4: true }, () => <TextHFourIcon className="size-3.5" />)
+								.with({ isHeading5: true }, () => <TextHFiveIcon className="size-3.5" />)
+								.with({ isHeading6: true }, () => <TextHSixIcon className="size-3.5" />)
+								.otherwise(() => (
+									<ParagraphIcon className="size-3.5" />
+								))}
+						</Button>
+					}
+				/>
+
+				<MenuPanel>
+					<MenuCheckboxItem
 						disabled={!state.canParagraph}
 						checked={state.isParagraph}
 						onCheckedChange={state.setParagraph}
 					>
 						<Trans>Paragraph</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuSeparator />
+					<MenuCheckboxItem
 						disabled={!state.canHeading1}
 						checked={state.isHeading1}
 						onCheckedChange={state.toggleHeading1}
 					>
 						<Trans>Heading 1</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canHeading2}
 						checked={state.isHeading2}
 						onCheckedChange={state.toggleHeading2}
 					>
 						<Trans>Heading 2</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canHeading3}
 						checked={state.isHeading3}
 						onCheckedChange={state.toggleHeading3}
 					>
 						<Trans>Heading 3</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canHeading4}
 						checked={state.isHeading4}
 						onCheckedChange={state.toggleHeading4}
 					>
 						<Trans>Heading 4</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canHeading5}
 						checked={state.isHeading5}
 						onCheckedChange={state.toggleHeading5}
 					>
 						<Trans>Heading 5</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canHeading6}
 						checked={state.isHeading6}
 						onCheckedChange={state.toggleHeading6}
 					>
 						<Trans>Heading 6</Trans>
-					</DropdownMenuCheckboxItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+					</MenuCheckboxItem>
+				</MenuPanel>
+			</Menu>
 
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
-						{match(state)
-							.with({ isLeftAlign: true }, () => <TextAlignLeftIcon className="size-3.5" />)
-							.with({ isCenterAlign: true }, () => <TextAlignCenterIcon className="size-3.5" />)
-							.with({ isRightAlign: true }, () => <TextAlignRightIcon className="size-3.5" />)
-							.with({ isJustifyAlign: true }, () => <TextAlignJustifyIcon className="size-3.5" />)
-							.otherwise(() => (
-								<TextAlignLeftIcon className="size-3.5" />
-							))}
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<DropdownMenuCheckboxItem
+			<Menu>
+				<MenuTrigger
+					render={
+						<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
+							{match(state)
+								.with({ isLeftAlign: true }, () => <TextAlignLeftIcon className="size-3.5" />)
+								.with({ isCenterAlign: true }, () => <TextAlignCenterIcon className="size-3.5" />)
+								.with({ isRightAlign: true }, () => <TextAlignRightIcon className="size-3.5" />)
+								.with({ isJustifyAlign: true }, () => <TextAlignJustifyIcon className="size-3.5" />)
+								.otherwise(() => (
+									<TextAlignLeftIcon className="size-3.5" />
+								))}
+						</Button>
+					}
+				/>
+
+				<MenuPanel>
+					<MenuCheckboxItem
 						disabled={!state.canLeftAlign}
 						checked={state.isLeftAlign}
 						onCheckedChange={state.toggleLeftAlign}
 					>
 						<Trans>Left Align</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canCenterAlign}
 						checked={state.isCenterAlign}
 						onCheckedChange={state.toggleCenterAlign}
 					>
 						<Trans>Center Align</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canRightAlign}
 						checked={state.isRightAlign}
 						onCheckedChange={state.toggleRightAlign}
 					>
 						<Trans>Right Align</Trans>
-					</DropdownMenuCheckboxItem>
-					<DropdownMenuCheckboxItem
+					</MenuCheckboxItem>
+					<MenuCheckboxItem
 						disabled={!state.canJustifyAlign}
 						checked={state.isJustifyAlign}
 						onCheckedChange={state.toggleJustifyAlign}
 					>
 						<Trans>Justify Align</Trans>
-					</DropdownMenuCheckboxItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+					</MenuCheckboxItem>
+				</MenuPanel>
+			</Menu>
 
 			<div className="mx-1 h-5 w-px bg-border" />
 
@@ -630,58 +628,60 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 				<CodeBlockIcon className="size-3.5" />
 			</Toggle>
 
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button
-						size={isFullscreen ? "lg" : "sm"}
-						tabIndex={-1}
-						variant="ghost"
-						className="rounded-none"
-						title={t`Table`}
-					>
-						<TableIcon className="size-3.5" />
-					</Button>
-				</DropdownMenuTrigger>
+			<Menu>
+				<MenuTrigger
+					render={
+						<Button
+							size={isFullscreen ? "lg" : "sm"}
+							tabIndex={-1}
+							variant="ghost"
+							className="rounded-none"
+							title={t`Table`}
+						>
+							<TableIcon className="size-3.5" />
+						</Button>
+					}
+				/>
 
-				<DropdownMenuContent>
-					<DropdownMenuItem disabled={!state.canInsertTable} onSelect={state.insertTable}>
+				<MenuPanel>
+					<MenuItem disabled={!state.canInsertTable} onClick={state.insertTable}>
 						<PlusIcon />
 						<Trans>Insert Table</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem disabled={!state.canAddColumnBefore} onSelect={state.addColumnBefore}>
+					</MenuItem>
+					<MenuSeparator />
+					<MenuItem disabled={!state.canAddColumnBefore} onClick={state.addColumnBefore}>
 						<ColumnsPlusLeftIcon />
 						<Trans>Add Column Before</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuItem disabled={!state.canAddColumnAfter} onSelect={state.addColumnAfter}>
+					</MenuItem>
+					<MenuItem disabled={!state.canAddColumnAfter} onClick={state.addColumnAfter}>
 						<ColumnsPlusRightIcon />
 						<Trans>Add Column After</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem disabled={!state.canAddRowBefore} onSelect={state.addRowBefore}>
+					</MenuItem>
+					<MenuSeparator />
+					<MenuItem disabled={!state.canAddRowBefore} onClick={state.addRowBefore}>
 						<RowsPlusTopIcon />
 						<Trans>Add Row Before</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuItem disabled={!state.canAddRowAfter} onSelect={state.addRowAfter}>
+					</MenuItem>
+					<MenuItem disabled={!state.canAddRowAfter} onClick={state.addRowAfter}>
 						<RowsPlusBottomIcon />
 						<Trans>Add Row After</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem disabled={!state.canDeleteColumn} onSelect={state.deleteColumn}>
+					</MenuItem>
+					<MenuSeparator />
+					<MenuItem disabled={!state.canDeleteColumn} onClick={state.deleteColumn}>
 						<TrashSimpleIcon />
 						<Trans>Delete Column</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuItem disabled={!state.canDeleteRow} onSelect={state.deleteRow}>
+					</MenuItem>
+					<MenuItem disabled={!state.canDeleteRow} onClick={state.deleteRow}>
 						<TrashSimpleIcon />
 						<Trans>Delete Row</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem variant="destructive" disabled={!state.canDeleteTable} onSelect={state.deleteTable}>
+					</MenuItem>
+					<MenuSeparator />
+					<MenuItem variant="destructive" disabled={!state.canDeleteTable} onClick={state.deleteTable}>
 						<TrashSimpleIcon />
 						<Trans>Delete Table</Trans>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+					</MenuItem>
+				</MenuPanel>
+			</Menu>
 
 			<Button
 				size={isFullscreen ? "lg" : "sm"}

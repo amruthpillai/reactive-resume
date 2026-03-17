@@ -8,7 +8,7 @@ import { cn } from "@/utils/style";
 import { Input } from "../ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from "../ui/input-group";
 import { Label } from "../ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Popover, PopoverPanel, PopoverTrigger } from "../ui/popover";
 
 const PREFIX = "https://";
 
@@ -63,20 +63,22 @@ export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) 
 			{!hideLabelButton && (
 				<InputGroupAddon align="inline-end">
 					<Popover>
-						<PopoverTrigger asChild>
-							<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
-								<TagIcon />
-							</InputGroupButton>
-						</PopoverTrigger>
+						<PopoverTrigger
+							render={
+								<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
+									<TagIcon />
+								</InputGroupButton>
+							}
+						/>
 
-						<PopoverContent className="pt-3">
+						<PopoverPanel className="pt-3">
 							<div className="grid gap-2" onClick={(e) => e.stopPropagation()}>
 								<Label htmlFor="url-label">
 									<Trans>Label</Trans>
 								</Label>
 								<Input id="url-label" name="url-label" value={value.label} onChange={handleLabelChange} />
 							</div>
-						</PopoverContent>
+						</PopoverPanel>
 					</Popover>
 				</InputGroupAddon>
 			)}

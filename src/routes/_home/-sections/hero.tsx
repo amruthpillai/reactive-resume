@@ -91,27 +91,38 @@ export function Hero() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 1.4 }}
 				>
-					<Button asChild size="lg" className="group relative overflow-hidden px-4">
-						<Link to="/dashboard">
-							<span className="relative z-10 flex items-center gap-2">
-								<Trans>Get Started</Trans>
-								<ArrowRightIcon
-									aria-hidden="true"
-									className="size-4 transition-transform group-hover:translate-x-0.5"
-								/>
-							</span>
-						</Link>
-					</Button>
+					<Button
+						size="lg"
+						nativeButton={false}
+						className="group relative overflow-hidden px-4"
+						render={
+							<Link to="/dashboard">
+								<span className="relative z-10 flex items-center gap-2">
+									<Trans>Get Started</Trans>
+									<ArrowRightIcon
+										aria-hidden="true"
+										className="size-4 transition-transform group-hover:translate-x-0.5"
+									/>
+								</span>
+							</Link>
+						}
+					/>
 
-					<Button asChild size="lg" variant="ghost" className="gap-2 px-4">
-						<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
-							<BookIcon aria-hidden="true" className="size-4" />
-							<Trans>Learn More</Trans>
-							<span className="sr-only">
-								<Trans>(opens in new tab)</Trans>
-							</span>
-						</a>
-					</Button>
+					<Button
+						size="lg"
+						variant="ghost"
+						className="gap-2 px-4"
+						nativeButton={false}
+						render={
+							<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
+								<BookIcon aria-hidden="true" className="size-4" />
+								<Trans>Learn More</Trans>
+								<span className="sr-only">
+									<Trans>(opens in new tab)</Trans>
+								</span>
+							</a>
+						}
+					/>
 				</motion.div>
 			</div>
 

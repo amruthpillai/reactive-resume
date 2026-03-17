@@ -14,14 +14,18 @@ export function GithubStarsButton() {
 			: t`Star us on GitHub (opens in new tab)`;
 
 	return (
-		<Button asChild variant="outline">
-			<a target="_blank" href="https://github.com/amruthpillai/reactive-resume" aria-label={ariaLabel} rel="noopener">
-				<GithubLogoIcon aria-hidden="true" />
-				{starCount != null ? (
-					<CountUp to={starCount} duration={0.5} separator="," className="font-bold" aria-hidden="true" />
-				) : null}
-				<StarIcon aria-hidden="true" />
-			</a>
-		</Button>
+		<Button
+			nativeButton={false}
+			variant="outline"
+			render={
+				<a target="_blank" href="https://github.com/amruthpillai/reactive-resume" aria-label={ariaLabel} rel="noopener">
+					<GithubLogoIcon aria-hidden="true" />
+					{starCount != null ? (
+						<CountUp to={starCount} duration={0.5} separator="," className="font-bold" aria-hidden="true" />
+					) : null}
+					<StarIcon aria-hidden="true" />
+				</a>
+			}
+		/>
 	);
 }

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { type IconName, icons } from "@/schema/icons";
 import { cn } from "@/utils/style";
 import { Input } from "../ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Popover, PopoverPanel, PopoverTrigger } from "../ui/popover";
 
 const columnCount = 8;
 const columnWidth = 36;
@@ -91,13 +91,15 @@ export function IconPicker({ value, onChange, popoverProps, ...props }: IconPick
 
 	return (
 		<Popover {...popoverProps}>
-			<PopoverTrigger asChild>
-				<Button size="icon" variant="outline" {...props}>
-					<i className={cn("ph size-4 text-base", `ph-${value}`)} />
-				</Button>
-			</PopoverTrigger>
+			<PopoverTrigger
+				render={
+					<Button size="icon" variant="outline" {...props}>
+						<i className={cn("ph size-4 text-base", `ph-${value}`)} />
+					</Button>
+				}
+			/>
 
-			<PopoverContent align="start" className="h-[326px] w-[290px] gap-0 p-0">
+			<PopoverPanel align="start" className="h-[326px] w-[290px] gap-0 p-0">
 				<IconSearchInput value={search} onChange={setSearch} />
 
 				<div className="size-[290px]">
@@ -111,7 +113,7 @@ export function IconPicker({ value, onChange, popoverProps, ...props }: IconPick
 						cellProps={{ icons: searchedIcons, onChange }}
 					/>
 				</div>
-			</PopoverContent>
+			</PopoverPanel>
 		</Popover>
 	);
 }

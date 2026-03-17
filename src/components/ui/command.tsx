@@ -1,7 +1,7 @@
 import { CheckIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { Command as CommandPrimitive } from "cmdk";
 import type * as React from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogDescription, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
 import { cn } from "@/utils/style";
 
@@ -10,7 +10,7 @@ function Command({ className, ...props }: React.ComponentProps<typeof CommandPri
 		<CommandPrimitive
 			data-slot="command"
 			className={cn(
-				"flex size-full flex-col gap-y-1 overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground",
+				"flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground",
 				className,
 			)}
 			{...props}
@@ -23,11 +23,14 @@ function CommandDialog({
 	description = "Search for a command to run...",
 	children,
 	className,
+	showCloseButton = false,
 	...props
-}: React.ComponentProps<typeof Dialog> & {
+}: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
 	title?: string;
 	description?: string;
 	className?: string;
+	showCloseButton?: boolean;
+	children: React.ReactNode;
 }) {
 	return (
 		<Dialog {...props}>
@@ -35,7 +38,12 @@ function CommandDialog({
 				<DialogTitle>{title}</DialogTitle>
 				<DialogDescription>{description}</DialogDescription>
 			</DialogHeader>
-			<DialogContent className={cn("overflow-hidden rounded-xl! p-0", className)}>{children}</DialogContent>
+			<DialogPopup
+				className={cn("top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0", className)}
+				showCloseButton={showCloseButton}
+			>
+				{children}
+			</DialogPopup>
 		</Dialog>
 	);
 }
@@ -43,7 +51,7 @@ function CommandDialog({
 function CommandInput({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) {
 	return (
 		<div data-slot="command-input-wrapper" className="p-1 pb-0">
-			<InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!">
+			<InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
 				<CommandPrimitive.Input
 					data-slot="command-input"
 					className={cn("w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50", className)}
@@ -132,11 +140,11 @@ function CommandShortcut({ className, ...props }: React.ComponentProps<"span">) 
 export {
 	Command,
 	CommandDialog,
-	CommandInput,
-	CommandList,
 	CommandEmpty,
 	CommandGroup,
+	CommandInput,
 	CommandItem,
-	CommandShortcut,
+	CommandList,
 	CommandSeparator,
+	CommandShortcut,
 };

@@ -18,7 +18,7 @@ export function NotFoundScreen({ routeId }: NotFoundRouteProps) {
 				<AlertDescription>{routeId}</AlertDescription>
 			</Alert>
 
-			<Button asChild>
+			<Button>
 				<Link to="..">
 					<ArrowLeftIcon />
 					<Trans>Go Back</Trans>

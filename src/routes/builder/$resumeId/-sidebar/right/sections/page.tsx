@@ -51,16 +51,18 @@ function PageSectionForm() {
 							<FormLabel>
 								<Trans>Language</Trans>
 							</FormLabel>
-							<FormControl>
-								<Combobox
-									options={getLocaleOptions()}
-									value={field.value}
-									onValueChange={(locale) => {
-										field.onChange(locale);
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+							<FormControl
+								render={
+									<Combobox
+										options={getLocaleOptions()}
+										value={field.value}
+										onValueChange={(locale) => {
+											field.onChange(locale);
+											form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -74,20 +76,22 @@ function PageSectionForm() {
 							<FormLabel>
 								<Trans context="Page Format (A4, Letter or Free-Form)">Format</Trans>
 							</FormLabel>
-							<FormControl>
-								<Combobox
-									options={[
-										{ value: "a4", label: t`A4` },
-										{ value: "letter", label: t`Letter` },
-										{ value: "free-form", label: t`Free-Form` },
-									]}
-									value={field.value}
-									onValueChange={(value) => {
-										field.onChange(value);
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+							<FormControl
+								render={
+									<Combobox
+										options={[
+											{ value: "a4", label: t`A4` },
+											{ value: "letter", label: t`Letter` },
+											{ value: "free-form", label: t`Free-Form` },
+										]}
+										value={field.value}
+										onValueChange={(value) => {
+											field.onChange(value);
+											form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -102,20 +106,22 @@ function PageSectionForm() {
 								<Trans>Margin (Horizontal)</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={0}
-										max={100}
-										step={1}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={0}
+											max={100}
+											step={1}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>pt</InputGroupText>
 								</InputGroupAddon>
@@ -134,20 +140,22 @@ function PageSectionForm() {
 								<Trans>Margin (Vertical)</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={0}
-										max={100}
-										step={1}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={0}
+											max={100}
+											step={1}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>pt</InputGroupText>
 								</InputGroupAddon>
@@ -166,19 +174,21 @@ function PageSectionForm() {
 								<Trans>Spacing (Horizontal)</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={0}
-										step={1}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={0}
+											step={1}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>pt</InputGroupText>
 								</InputGroupAddon>
@@ -197,19 +207,21 @@ function PageSectionForm() {
 								<Trans>Spacing (Vertical)</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={0}
-										step={1}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={0}
+											step={1}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>pt</InputGroupText>
 								</InputGroupAddon>
@@ -224,15 +236,17 @@ function PageSectionForm() {
 					name="hideIcons"
 					render={({ field }) => (
 						<FormItem className="col-span-full flex items-center gap-x-3 py-2">
-							<FormControl>
-								<Switch
-									checked={field.value}
-									onCheckedChange={(checked) => {
-										field.onChange(checked);
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+							<FormControl
+								render={
+									<Switch
+										checked={field.value}
+										onCheckedChange={(checked) => {
+											field.onChange(checked);
+											form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormLabel>
 								<Trans>Hide all icons on the resume</Trans>
 							</FormLabel>

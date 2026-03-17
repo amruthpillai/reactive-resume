@@ -9,7 +9,7 @@ import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
@@ -69,7 +69,7 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -93,7 +93,7 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -125,7 +125,7 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -149,7 +149,7 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -167,9 +167,7 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 						<FormLabel>
 							<Trans>Title</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -183,18 +181,20 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 						<FormLabel>
 							<Trans>Section Type</Trans>
 						</FormLabel>
-						<FormControl>
-							<Combobox
-								{...field}
-								value={field.value}
-								disabled={isUpdate}
-								onValueChange={field.onChange}
-								options={SECTION_TYPE_OPTIONS.map((option) => ({
-									value: option.value,
-									label: i18n.t(option.label),
-								}))}
-							/>
-						</FormControl>
+						<FormControl
+							render={
+								<Combobox
+									{...field}
+									value={field.value}
+									disabled={isUpdate}
+									onValueChange={field.onChange}
+									options={SECTION_TYPE_OPTIONS.map((option) => ({
+										value: option.value,
+										label: i18n.t(option.label),
+									}))}
+								/>
+							}
+						/>
 						<FormMessage />
 					</FormItem>
 				)}

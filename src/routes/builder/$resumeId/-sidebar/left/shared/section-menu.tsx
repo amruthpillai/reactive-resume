@@ -12,18 +12,18 @@ import {
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuRadioGroup,
-	DropdownMenuRadioItem,
-	DropdownMenuSeparator,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+	Menu,
+	MenuGroup,
+	MenuItem,
+	MenuPanel,
+	MenuRadioGroup,
+	MenuRadioItem,
+	MenuSeparator,
+	MenuSubmenu,
+	MenuSubmenuPanel,
+	MenuSubmenuTrigger,
+	MenuTrigger,
+} from "@/components/ui/menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
@@ -104,65 +104,67 @@ export function SectionDropdownMenu({ type }: Props) {
 	};
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button size="icon" variant="ghost">
-					<ListIcon />
-				</Button>
-			</DropdownMenuTrigger>
+		<Menu>
+			<MenuTrigger
+				render={
+					<Button size="icon" variant="ghost">
+						<ListIcon />
+					</Button>
+				}
+			/>
 
-			<DropdownMenuContent align="end">
+			<MenuPanel>
 				{type !== "summary" && (
 					<>
-						<DropdownMenuGroup>
-							<DropdownMenuItem onSelect={onAddItem}>
+						<MenuGroup>
+							<MenuItem onClick={onAddItem}>
 								<PlusIcon />
 								<Trans>Add a new item</Trans>
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
+							</MenuItem>
+						</MenuGroup>
 
-						<DropdownMenuSeparator />
+						<MenuSeparator />
 					</>
 				)}
 
-				<DropdownMenuGroup>
-					<DropdownMenuItem onSelect={onToggleVisibility}>
+				<MenuGroup>
+					<MenuItem onClick={onToggleVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
-					</DropdownMenuItem>
+					</MenuItem>
 
-					<DropdownMenuItem onSelect={onRenameSection}>
+					<MenuItem onClick={onRenameSection}>
 						<PencilSimpleLineIcon />
 						<Trans>Rename</Trans>
-					</DropdownMenuItem>
+					</MenuItem>
 
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>
+					<MenuSubmenu>
+						<MenuSubmenuTrigger>
 							<ColumnsIcon />
 							<Trans>Columns</Trans>
-						</DropdownMenuSubTrigger>
+						</MenuSubmenuTrigger>
 
-						<DropdownMenuSubContent>
-							<DropdownMenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
+						<MenuSubmenuPanel>
+							<MenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
 								{[1, 2, 3, 4, 5, 6].map((column) => (
-									<DropdownMenuRadioItem key={column} value={column.toString()}>
+									<MenuRadioItem key={column} value={column.toString()}>
 										<Plural value={column} one="# Column" other="# Columns" />
-									</DropdownMenuRadioItem>
+									</MenuRadioItem>
 								))}
-							</DropdownMenuRadioGroup>
-						</DropdownMenuSubContent>
-					</DropdownMenuSub>
-				</DropdownMenuGroup>
+							</MenuRadioGroup>
+						</MenuSubmenuPanel>
+					</MenuSubmenu>
+				</MenuGroup>
 
-				<DropdownMenuSeparator />
+				<MenuSeparator />
 
-				<DropdownMenuGroup>
-					<DropdownMenuItem variant="destructive" onSelect={onReset}>
+				<MenuGroup>
+					<MenuItem variant="destructive" onClick={onReset}>
 						<BroomIcon />
 						<Trans>Reset</Trans>
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-			</DropdownMenuContent>
-		</DropdownMenu>
+					</MenuItem>
+				</MenuGroup>
+			</MenuPanel>
+		</Menu>
 	);
 }

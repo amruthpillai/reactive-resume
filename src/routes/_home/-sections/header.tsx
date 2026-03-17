@@ -63,7 +63,7 @@ export function Header() {
 							variant: "ghost",
 							className: "justify-center",
 							"aria-label": t`Change language`,
-							children: () => <TranslateIcon aria-hidden="true" />,
+							children: <TranslateIcon aria-hidden="true" />,
 						}}
 					/>
 
@@ -72,11 +72,16 @@ export function Header() {
 					<div className="hidden items-center gap-x-4 sm:flex">
 						<GithubStarsButton />
 
-						<Button asChild size="icon" aria-label={t`Go to dashboard`}>
-							<Link to="/dashboard">
-								<ArrowRightIcon aria-hidden="true" />
-							</Link>
-						</Button>
+						<Button
+							size="icon"
+							nativeButton={false}
+							aria-label={t`Go to dashboard`}
+							render={
+								<Link to="/dashboard">
+									<ArrowRightIcon aria-hidden="true" />
+								</Link>
+							}
+						/>
 					</div>
 				</div>
 			</nav>

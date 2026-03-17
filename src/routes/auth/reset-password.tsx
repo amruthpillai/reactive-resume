@@ -85,15 +85,17 @@ function RouteComponent() {
 									<Trans>New Password</Trans>
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
-									<FormControl>
-										<Input
-											min={6}
-											max={64}
-											type={showPassword ? "text" : "password"}
-											autoComplete="new-password"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												min={6}
+												max={64}
+												type={showPassword ? "text" : "password"}
+												autoComplete="new-password"
+												{...field}
+											/>
+										}
+									/>
 
 									<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
 										{showPassword ? <EyeIcon /> : <EyeSlashIcon />}

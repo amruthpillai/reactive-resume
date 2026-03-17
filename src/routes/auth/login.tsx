@@ -90,11 +90,16 @@ function RouteComponent() {
 					<div className="text-muted-foreground">
 						<Trans>
 							Don't have an account?{" "}
-							<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
-								<Link to="/auth/register">
-									Create one now <ArrowRightIcon />
-								</Link>
-							</Button>
+							<Button
+								variant="link"
+								nativeButton={false}
+								className="h-auto gap-1.5 px-1! py-0"
+								render={
+									<Link to="/auth/register">
+										Create one now <ArrowRightIcon />
+									</Link>
+								}
+							/>
 						</Trans>
 					</div>
 				)}
@@ -111,14 +116,16 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Email Address</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input
-											autoComplete="section-login username"
-											placeholder="john.doe@example.com"
-											className="lowercase"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												autoComplete="section-login username"
+												placeholder="john.doe@example.com"
+												className="lowercase"
+												{...field}
+											/>
+										}
+									/>
 									<FormMessage />
 									<FormDescription>
 										<Trans>You can also use your username to login.</Trans>
@@ -137,22 +144,30 @@ function RouteComponent() {
 											<Trans>Password</Trans>
 										</FormLabel>
 
-										<Button asChild tabIndex={-1} variant="link" className="h-auto p-0 text-xs leading-none">
-											<Link to="/auth/forgot-password">
-												<Trans>Forgot Password?</Trans>
-											</Link>
-										</Button>
+										<Button
+											tabIndex={-1}
+											variant="link"
+											nativeButton={false}
+											className="h-auto p-0 text-xs leading-none"
+											render={
+												<Link to="/auth/forgot-password">
+													<Trans>Forgot Password?</Trans>
+												</Link>
+											}
+										/>
 									</div>
 									<div className="flex items-center gap-x-1.5">
-										<FormControl>
-											<Input
-												min={6}
-												max={64}
-												type={showPassword ? "text" : "password"}
-												autoComplete="section-login current-password"
-												{...field}
-											/>
-										</FormControl>
+										<FormControl
+											render={
+												<Input
+													min={6}
+													max={64}
+													type={showPassword ? "text" : "password"}
+													autoComplete="section-login current-password"
+													{...field}
+												/>
+											}
+										/>
 
 										<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
 											{showPassword ? <EyeIcon /> : <EyeSlashIcon />}

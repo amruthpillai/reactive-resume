@@ -1,24 +1,34 @@
+import { Switch as SwitchPrimitives } from "@base-ui/react/switch";
 import { type HTMLMotionProps, motion, type TargetAndTransition, type VariantLabels } from "motion/react";
-import { Switch as SwitchPrimitives } from "radix-ui";
 import * as React from "react";
 import { useControlledState } from "@/hooks/use-controlled-state";
 import { getStrictContext } from "@/utils/get-strict-context";
 
 type SwitchContextType = {
 	isChecked: boolean;
-	setIsChecked: (isChecked: boolean) => void;
+	setIsChecked: SwitchProps["onCheckedChange"];
 	isPressed: boolean;
 	setIsPressed: (isPressed: boolean) => void;
 };
 
 const [SwitchProvider, useSwitch] = getStrictContext<SwitchContextType>("SwitchContext");
 
-type SwitchProps = Omit<React.ComponentProps<typeof SwitchPrimitives.Root>, "asChild"> & HTMLMotionProps<"button">;
+type SwitchProps = Omit<React.ComponentProps<typeof SwitchPrimitives.Root>, "render"> & HTMLMotionProps<"button">;
 
-function Switch(props: SwitchProps) {
+function Switch({
+	name,
+	defaultChecked,
+	checked,
+	onCheckedChange,
+	nativeButton,
+	disabled,
+	readOnly,
+	required,
+	inputRef,
+	id,
+	...props
+}: SwitchProps) {
 	const [isPressed, setIsPressed] = React.useState(false);
-	const { checked, defaultChecked, onCheckedChange, ...restProps } = props;
-
 	const [isChecked, setIsChecked] = useControlledState({
 		value: checked,
 		defaultValue: defaultChecked,
@@ -28,27 +38,33 @@ function Switch(props: SwitchProps) {
 	return (
 		<SwitchProvider value={{ isChecked, setIsChecked, isPressed, setIsPressed }}>
 			<SwitchPrimitives.Root
-				{...restProps}
-				asChild
-				checked={isChecked}
+				name={name}
 				defaultChecked={defaultChecked}
+				checked={checked}
 				onCheckedChange={setIsChecked}
-			>
-				<motion.button
-					{...restProps}
-					whileTap="tap"
-					initial={false}
-					data-slot="switch"
-					onTap={() => setIsPressed(false)}
-					onTapStart={() => setIsPressed(true)}
-					onTapCancel={() => setIsPressed(false)}
-				/>
-			</SwitchPrimitives.Root>
+				nativeButton={nativeButton}
+				disabled={disabled}
+				readOnly={readOnly}
+				required={required}
+				inputRef={inputRef}
+				id={id}
+				render={
+					<motion.button
+						data-slot="switch"
+						whileTap="tap"
+						initial={false}
+						onTapStart={() => setIsPressed(true)}
+						onTapCancel={() => setIsPressed(false)}
+						onTap={() => setIsPressed(false)}
+						{...props}
+					/>
+				}
+			/>
 		</SwitchProvider>
 	);
 }
 
-type SwitchThumbProps = Omit<React.ComponentProps<typeof SwitchPrimitives.Thumb>, "asChild"> &
+type SwitchThumbProps = Omit<React.ComponentProps<typeof SwitchPrimitives.Thumb>, "render"> &
 	HTMLMotionProps<"div"> & {
 		pressedAnimation?: TargetAndTransition | VariantLabels | boolean;
 	};
@@ -61,16 +77,18 @@ function SwitchThumb({
 	const { isPressed } = useSwitch();
 
 	return (
-		<SwitchPrimitives.Thumb asChild>
-			<motion.div
-				layout
-				whileTap="tab"
-				data-slot="switch-thumb"
-				transition={transition}
-				animate={isPressed ? pressedAnimation : undefined}
-				{...props}
-			/>
-		</SwitchPrimitives.Thumb>
+		<SwitchPrimitives.Thumb
+			render={
+				<motion.div
+					data-slot="switch-thumb"
+					whileTap="tab"
+					layout
+					transition={transition}
+					animate={isPressed ? pressedAnimation : undefined}
+					{...props}
+				/>
+			}
+		/>
 	);
 }
 
@@ -102,12 +120,12 @@ function SwitchIcon({ position, transition = { type: "spring", bounce: 0 }, ...p
 
 export {
 	Switch,
-	SwitchThumb,
-	SwitchIcon,
-	useSwitch,
-	type SwitchProps,
-	type SwitchThumbProps,
-	type SwitchIconProps,
-	type SwitchIconPosition,
 	type SwitchContextType,
+	SwitchIcon,
+	type SwitchIconPosition,
+	type SwitchIconProps,
+	type SwitchProps,
+	SwitchThumb,
+	type SwitchThumbProps,
+	useSwitch,
 };

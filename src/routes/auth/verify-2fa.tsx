@@ -71,40 +71,47 @@ function RouteComponent() {
 						name="code"
 						render={({ field }) => (
 							<FormItem className="justify-self-center">
-								<FormControl>
-									<InputOTP
-										maxLength={6}
-										value={field.value}
-										pattern={REGEXP_ONLY_DIGITS}
-										onChange={field.onChange}
-										onComplete={form.handleSubmit(onSubmit)}
-										pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
-									>
-										<InputOTPGroup>
-											<InputOTPSlot index={0} className="size-12" />
-											<InputOTPSlot index={1} className="size-12" />
-											<InputOTPSlot index={2} className="size-12" />
-										</InputOTPGroup>
-										<InputOTPSeparator />
-										<InputOTPGroup>
-											<InputOTPSlot index={3} className="size-12" />
-											<InputOTPSlot index={4} className="size-12" />
-											<InputOTPSlot index={5} className="size-12" />
-										</InputOTPGroup>
-									</InputOTP>
-								</FormControl>
+								<FormControl
+									render={
+										<InputOTP
+											maxLength={6}
+											value={field.value}
+											pattern={REGEXP_ONLY_DIGITS}
+											onChange={field.onChange}
+											onComplete={form.handleSubmit(onSubmit)}
+											pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
+										>
+											<InputOTPGroup>
+												<InputOTPSlot index={0} className="size-12" />
+												<InputOTPSlot index={1} className="size-12" />
+												<InputOTPSlot index={2} className="size-12" />
+											</InputOTPGroup>
+											<InputOTPSeparator />
+											<InputOTPGroup>
+												<InputOTPSlot index={3} className="size-12" />
+												<InputOTPSlot index={4} className="size-12" />
+												<InputOTPSlot index={5} className="size-12" />
+											</InputOTPGroup>
+										</InputOTP>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 
 					<div className="flex gap-x-2">
-						<Button type="button" variant="outline" className="flex-1" asChild>
-							<Link to="/auth/login">
-								<ArrowLeftIcon />
-								<Trans>Back to Login</Trans>
-							</Link>
-						</Button>
+						<Button
+							variant="outline"
+							className="flex-1"
+							nativeButton={false}
+							render={
+								<Link to="/auth/login">
+									<ArrowLeftIcon />
+									<Trans>Back to Login</Trans>
+								</Link>
+							}
+						/>
 
 						<Button type="submit" className="flex-1">
 							<CheckIcon />
@@ -112,11 +119,17 @@ function RouteComponent() {
 						</Button>
 					</div>
 				</form>
-				<Button type="button" variant="link" className="h-auto justify-self-center p-0 text-sm" asChild>
-					<Link to="/auth/verify-2fa-backup">
-						<Trans>Lost access to your authenticator?</Trans>
-					</Link>
-				</Button>
+
+				<Button
+					variant="link"
+					nativeButton={false}
+					className="h-auto justify-self-center p-0 text-sm"
+					render={
+						<Link to="/auth/verify-2fa-backup">
+							<Trans>Lost access to your authenticator?</Trans>
+						</Link>
+					}
+				/>
 			</Form>
 		</>
 	);

@@ -11,6 +11,7 @@ import { CommandPalette } from "@/components/command-palette";
 import { BreakpointIndicator } from "@/components/layout/breakpoint-indicator";
 import { ThemeProvider } from "@/components/theme/provider";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DialogManager } from "@/dialogs/manager";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
@@ -116,17 +117,19 @@ function RootDocument({ children }: Props) {
 					<I18nProvider i18n={i18n}>
 						<IconContext.Provider value={{ size: 16, weight: "regular" }}>
 							<ThemeProvider theme={theme}>
-								<ConfirmDialogProvider>
-									<PromptDialogProvider>
-										{children}
+								<TooltipProvider>
+									<ConfirmDialogProvider>
+										<PromptDialogProvider>
+											{children}
 
-										<DialogManager />
-										<CommandPalette />
-										<Toaster richColors position="bottom-right" />
+											<DialogManager />
+											<CommandPalette />
+											<Toaster richColors position="bottom-right" />
 
-										{import.meta.env.DEV && <BreakpointIndicator />}
-									</PromptDialogProvider>
-								</ConfirmDialogProvider>
+											{import.meta.env.DEV && <BreakpointIndicator />}
+										</PromptDialogProvider>
+									</ConfirmDialogProvider>
+								</TooltipProvider>
 							</ThemeProvider>
 						</IconContext.Provider>
 					</I18nProvider>

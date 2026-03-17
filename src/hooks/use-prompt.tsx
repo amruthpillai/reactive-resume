@@ -4,10 +4,10 @@ import {
 	AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
-	AlertDialogContent,
 	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
+	AlertDialogPopup,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
@@ -105,7 +105,7 @@ export function PromptDialogProvider({ children }: { children: React.ReactNode }
 			{children}
 
 			<AlertDialog open={state.open} onOpenChange={(open) => !open && handleCancel()}>
-				<AlertDialogContent>
+				<AlertDialogPopup>
 					<AlertDialogHeader>
 						<AlertDialogTitle>{state.title}</AlertDialogTitle>
 						<AlertDialogDescription className={cn(!state.description && "sr-only")}>
@@ -125,7 +125,7 @@ export function PromptDialogProvider({ children }: { children: React.ReactNode }
 						<AlertDialogCancel onClick={handleCancel}>{cancelText}</AlertDialogCancel>
 						<AlertDialogAction onClick={handleConfirm}>{confirmText}</AlertDialogAction>
 					</AlertDialogFooter>
-				</AlertDialogContent>
+				</AlertDialogPopup>
 			</AlertDialog>
 		</PromptContext.Provider>
 	);

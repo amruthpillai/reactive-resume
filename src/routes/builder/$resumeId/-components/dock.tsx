@@ -148,11 +148,14 @@ type DockIconProps = {
 function DockIcon({ icon: Icon, title, disabled, onClick, iconClassName }: DockIconProps) {
 	return (
 		<Tooltip>
-			<TooltipTrigger asChild>
-				<Button size="icon" variant="ghost" disabled={disabled} onClick={onClick}>
-					<Icon className={cn("size-4", iconClassName)} />
-				</Button>
-			</TooltipTrigger>
+			<TooltipTrigger
+				render={
+					<Button size="icon" variant="ghost" disabled={disabled} onClick={onClick}>
+						<Icon className={cn("size-4", iconClassName)} />
+					</Button>
+				}
+			/>
+
 			<TooltipContent side="top" align="center" className="font-medium">
 				{title}
 			</TooltipContent>

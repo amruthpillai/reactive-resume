@@ -11,16 +11,11 @@ import z from "zod";
 import { ChipInput } from "@/components/input/chip-input";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { Menu, MenuItem, MenuPanel, MenuTrigger } from "@/components/ui/menu";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { orpc, type RouterInput } from "@/integrations/orpc/client";
@@ -103,7 +98,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 	};
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -124,25 +119,27 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 								<Trans>Create</Trans>
 							</Button>
 
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button size="icon" disabled={isPending}>
-										<CaretDownIcon />
-									</Button>
-								</DropdownMenuTrigger>
+							<Menu>
+								<MenuTrigger
+									render={
+										<Button size="icon" disabled={isPending}>
+											<CaretDownIcon />
+										</Button>
+									}
+								/>
 
-								<DropdownMenuContent align="end" className="w-fit">
-									<DropdownMenuItem onSelect={onCreateSampleResume}>
+								<MenuPanel align="end" className="w-fit">
+									<MenuItem onClick={onCreateSampleResume}>
 										<TestTubeIcon />
 										<Trans>Create a Sample Resume</Trans>
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+									</MenuItem>
+								</MenuPanel>
+							</Menu>
 						</ButtonGroup>
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -190,7 +187,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 	};
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -212,7 +209,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -260,7 +257,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 	};
 
 	return (
-		<DialogContent {...blockEvents}>
+		<DialogPopup {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -282,7 +279,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogContent>
+		</DialogPopup>
 	);
 }
 
@@ -309,9 +306,7 @@ function ResumeForm() {
 							<Trans>Name</Trans>
 						</FormLabel>
 						<div className="flex items-center gap-x-2">
-							<FormControl>
-								<Input min={1} max={64} {...field} />
-							</FormControl>
+							<FormControl render={<Input min={1} max={64} {...field} />} />
 
 							<Button size="icon" variant="outline" title={t`Generate a random name`} onClick={onGenerateName}>
 								<MagicWandIcon />
@@ -333,14 +328,16 @@ function ResumeForm() {
 						<FormLabel>
 							<Trans>Slug</Trans>
 						</FormLabel>
-						<FormControl>
-							<InputGroup>
-								<InputGroupAddon align="inline-start" className="hidden sm:flex">
-									<InputGroupText>{slugPrefix}</InputGroupText>
-								</InputGroupAddon>
-								<InputGroupInput min={1} max={64} className="ps-0!" {...field} />
-							</InputGroup>
-						</FormControl>
+						<FormControl
+							render={
+								<InputGroup>
+									<InputGroupAddon align="inline-start" className="hidden sm:flex">
+										<InputGroupText>{slugPrefix}</InputGroupText>
+									</InputGroupAddon>
+									<InputGroupInput min={1} max={64} className="ps-0!" {...field} />
+								</InputGroup>
+							}
+						/>
 						<FormMessage />
 						<FormDescription>
 							<Trans>This is a URL-friendly name for your resume.</Trans>
@@ -357,9 +354,7 @@ function ResumeForm() {
 						<FormLabel>
 							<Trans>Tags</Trans>
 						</FormLabel>
-						<FormControl>
-							<ChipInput {...field} />
-						</FormControl>
+						<FormControl render={<ChipInput {...field} />} />
 						<FormMessage />
 						<FormDescription>
 							<Trans>Tags can be used to categorize your resume by keywords.</Trans>

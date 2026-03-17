@@ -6,25 +6,25 @@ import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useTheme } from "@/components/theme/provider";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuRadioGroup,
-	DropdownMenuRadioItem,
-	DropdownMenuSeparator,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+	Menu,
+	MenuGroup,
+	MenuItem,
+	MenuPanel,
+	MenuRadioGroup,
+	MenuRadioItem,
+	MenuSeparator,
+	MenuSubmenu,
+	MenuSubmenuPanel,
+	MenuSubmenuTrigger,
+	MenuTrigger,
+} from "@/components/ui/menu";
 import { authClient } from "@/integrations/auth/client";
 import type { AuthSession } from "@/integrations/auth/types";
 import { isLocale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";
 import { isTheme } from "@/utils/theme";
 
 type Props = {
-	children: ({ session }: { session: AuthSession }) => React.ReactNode;
+	children: ({ session }: { session: AuthSession }) => React.ComponentProps<typeof MenuTrigger>["render"];
 };
 
 export function UserDropdownMenu({ children }: Props) {
@@ -63,52 +63,52 @@ export function UserDropdownMenu({ children }: Props) {
 	if (!session?.user) return null;
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>{children({ session })}</DropdownMenuTrigger>
+		<Menu>
+			<MenuTrigger render={children({ session })} />
 
-			<DropdownMenuContent align="start" side="top">
-				<DropdownMenuGroup>
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>
+			<MenuPanel align="start" side="top">
+				<MenuGroup>
+					<MenuSubmenu>
+						<MenuSubmenuTrigger>
 							<TranslateIcon />
 							<Trans>Language</Trans>
-						</DropdownMenuSubTrigger>
-						<DropdownMenuSubContent className="max-h-[400px] overflow-y-auto">
-							<DropdownMenuRadioGroup value={i18n.locale} onValueChange={handleLocaleChange}>
+						</MenuSubmenuTrigger>
+						<MenuSubmenuPanel className="max-h-[400px] overflow-y-auto">
+							<MenuRadioGroup value={i18n.locale} onValueChange={handleLocaleChange}>
 								{Object.entries(localeMap).map(([value, label]) => (
-									<DropdownMenuRadioItem key={value} value={value}>
+									<MenuRadioItem key={value} value={value}>
 										{i18n.t(label)}
-									</DropdownMenuRadioItem>
+									</MenuRadioItem>
 								))}
-							</DropdownMenuRadioGroup>
-						</DropdownMenuSubContent>
-					</DropdownMenuSub>
+							</MenuRadioGroup>
+						</MenuSubmenuPanel>
+					</MenuSubmenu>
 
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>
+					<MenuSubmenu>
+						<MenuSubmenuTrigger>
 							<PaletteIcon />
 							<Trans>Theme</Trans>
-						</DropdownMenuSubTrigger>
-						<DropdownMenuSubContent>
-							<DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
-								<DropdownMenuRadioItem value="light">
+						</MenuSubmenuTrigger>
+						<MenuSubmenuPanel>
+							<MenuRadioGroup value={theme} onValueChange={handleThemeChange}>
+								<MenuRadioItem value="light">
 									<Trans>Light</Trans>
-								</DropdownMenuRadioItem>
-								<DropdownMenuRadioItem value="dark">
+								</MenuRadioItem>
+								<MenuRadioItem value="dark">
 									<Trans>Dark</Trans>
-								</DropdownMenuRadioItem>
-							</DropdownMenuRadioGroup>
-						</DropdownMenuSubContent>
-					</DropdownMenuSub>
-				</DropdownMenuGroup>
+								</MenuRadioItem>
+							</MenuRadioGroup>
+						</MenuSubmenuPanel>
+					</MenuSubmenu>
+				</MenuGroup>
 
-				<DropdownMenuSeparator />
+				<MenuSeparator />
 
-				<DropdownMenuItem onSelect={handleLogout}>
+				<MenuItem onClick={handleLogout}>
 					<SignOutIcon />
 					<Trans>Logout</Trans>
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+				</MenuItem>
+			</MenuPanel>
+		</Menu>
 	);
 }

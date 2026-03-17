@@ -64,11 +64,16 @@ function RouteComponent() {
 				<div className="text-muted-foreground">
 					<Trans>
 						Remember your password?{" "}
-						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
-							<Link to="/auth/login">
-								Sign in now <ArrowRightIcon />
-							</Link>
-						</Button>
+						<Button
+							variant="link"
+							className="h-auto gap-1.5 px-1! py-0"
+							nativeButton={false}
+							render={
+								<Link to="/auth/login">
+									Sign in now <ArrowRightIcon />
+								</Link>
+							}
+						/>
 					</Trans>
 				</div>
 			</div>
@@ -83,9 +88,9 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Email Address</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input type="email" autoComplete="email" placeholder="john.doe@example.com" {...field} />
-								</FormControl>
+								<FormControl
+									render={<Input type="email" autoComplete="email" placeholder="john.doe@example.com" {...field} />}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -112,11 +117,14 @@ function PostForgotPasswordScreen() {
 				</p>
 			</div>
 
-			<Button asChild>
-				<a href="mailto:">
-					<Trans>Open Email Client</Trans>
-				</a>
-			</Button>
+			<Button
+				nativeButton={false}
+				render={
+					<a href="mailto:">
+						<Trans>Open Email Client</Trans>
+					</a>
+				}
+			/>
 		</>
 	);
 }

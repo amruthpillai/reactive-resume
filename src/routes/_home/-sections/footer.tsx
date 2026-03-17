@@ -72,16 +72,22 @@ export function Footer() {
 					{/* Social Links */}
 					<div className="flex items-center gap-2 pt-2">
 						{socialLinks.map((social) => (
-							<Button key={social.label} size="icon-sm" variant="ghost" asChild>
-								<a
-									href={social.url}
-									target="_blank"
-									rel="noopener"
-									aria-label={`${social.label} (${t`opens in new tab`})`}
-								>
-									<social.icon aria-hidden="true" size={18} />
-								</a>
-							</Button>
+							<Button
+								key={social.label}
+								size="icon-sm"
+								variant="ghost"
+								nativeButton={false}
+								render={
+									<a
+										href={social.url}
+										target="_blank"
+										rel="noopener"
+										aria-label={`${social.label} (${t`opens in new tab`})`}
+									>
+										<social.icon aria-hidden="true" size={18} />
+									</a>
+								}
+							/>
 						))}
 					</div>
 				</div>
