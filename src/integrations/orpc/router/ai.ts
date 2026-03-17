@@ -2,10 +2,10 @@ import { ORPCError } from "@orpc/client";
 import { type } from "@orpc/server";
 import { AISDKError, type UIMessage } from "ai";
 import { OllamaError } from "ai-sdk-ollama";
-import z, { ZodError } from "zod";
+import z, { flattenError, ZodError } from "zod";
 import type { ResumeData } from "@/schema/resume/data";
 import { protectedProcedure } from "../context";
-import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema, formatZodError } from "../services/ai";
+import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema } from "../services/ai";
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -69,6 +69,10 @@ export const aiRouter = {
 				message: "The AI provider returned an error or is unreachable.",
 				status: 502,
 			},
+			BAD_REQUEST: {
+				message: "The AI returned an improperly formatted structure.",
+				status: 400,
+			},
 		})
 		.handler(async ({ input }): Promise<ResumeData> => {
 			try {
@@ -79,7 +83,10 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(formatZodError(error));
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Invalid resume data structure",
+						cause: flattenError(error),
+					});
 				}
 				throw error;
 			}
@@ -111,6 +118,10 @@ export const aiRouter = {
 				message: "The AI provider returned an error or is unreachable.",
 				status: 502,
 			},
+			BAD_REQUEST: {
+				message: "The AI returned an improperly formatted structure.",
+				status: 400,
+			},
 		})
 		.handler(async ({ input }) => {
 			try {
@@ -121,7 +132,10 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(formatZodError(error));
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Invalid resume data structure",
+						cause: flattenError(error),
+					});
 				}
 
 				throw error;
