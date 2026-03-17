@@ -1,3 +1,5 @@
+import * as dns from "dns";
+import { isIP } from "net";
 import { ORPCError } from "@orpc/server";
 import type { InferSelectModel } from "drizzle-orm";
 import puppeteer, { type Browser, type ConnectOptions, type Page } from "puppeteer-core";
@@ -13,13 +15,26 @@ const SCREENSHOT_TTL = 1000 * 60 * 60 * 6; // 6 hours
 // Singleton browser instance for connection reuse
 let browserInstance: Browser | null = null;
 
+async function normalizePrinterEndpoint(printerEndpoint: string): Promise<URL> {
+	// Convert endpoint hostname to IP when using chromedp
+	// SEE ISSUE: https://github.com/amruthpillai/reactive-resume/issues/2681
+	const endpoint = new URL(printerEndpoint);
+
+	if (!isIP(endpoint.hostname) && !endpoint.protocol.startsWith("ws")) {
+		const { address } = await dns.promises.lookup(endpoint.hostname);
+		endpoint.hostname = address;
+	}
+
+	return endpoint;
+}
+
 async function getBrowser(): Promise<Browser> {
 	// Reuse existing connected browser if available
 	if (browserInstance?.connected) return browserInstance;
 
 	const args = ["--disable-dev-shm-usage", "--disable-features=LocalNetworkAccessChecks,site-per-process,FedCm"];
 
-	const endpoint = new URL(env.PRINTER_ENDPOINT);
+	const endpoint = await normalizePrinterEndpoint(env.PRINTER_ENDPOINT);
 	const isWebSocket = endpoint.protocol.startsWith("ws");
 	const connectOptions: ConnectOptions = { acceptInsecureCerts: true };
 
@@ -53,7 +68,7 @@ process.on("SIGTERM", async () => {
 export const printerService = {
 	healthcheck: async (): Promise<object> => {
 		const headers = new Headers({ Accept: "application/json" });
-		const endpoint = new URL(env.PRINTER_ENDPOINT);
+		const endpoint = await normalizePrinterEndpoint(env.PRINTER_ENDPOINT);
 
 		endpoint.protocol = endpoint.protocol.replace("ws", "http");
 		endpoint.pathname = "/json/version";
