@@ -8,7 +8,7 @@ msgstr ""
 "Language: sl\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 10:46\n"
+"PO-Revision-Date: 2026-03-17 23:56\n"
 "Last-Translator: \n"
 "Language-Team: Slovenian\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -246,8 +246,8 @@ msgid "Allow Public Access"
 msgstr "Dovoli javni dostop"
 
 #: src/routes/auth/register.tsx
-msgid "Already have an account? <0><1>Sign in now <2/></1></0>"
-msgstr "Že imate račun? <0><1>Prijavite se zdaj <2/></1></0>"
+msgid "Already have an account? <0/>"
+msgstr ""
 
 #: src/utils/locale.ts
 msgid "Amharic"
@@ -510,7 +510,7 @@ msgstr "Certifikati"
 
 #: src/routes/_home/-sections/header.tsx
 msgid "Change language"
-msgstr "Spremeni jezik"
+msgstr ""
 
 #: src/components/command-palette/pages/preferences/index.tsx
 msgid "Change language to..."
@@ -552,13 +552,14 @@ msgstr "Krog"
 msgid "Clear chat history"
 msgstr ""
 
-#: src/components/ui/multiple-combobox.tsx
-msgid "Clear selection"
-msgstr "Počisti izbiro"
-
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Kliknite tukaj za izbiro datoteke za uvoz"
+
+#: src/components/ui/dialog.tsx
+#: src/components/ui/sheet.tsx
+msgid "Close"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
@@ -896,8 +897,8 @@ msgid "Documentation"
 msgstr "Dokumentacija"
 
 #: src/routes/auth/login.tsx
-msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
-msgstr "Nimate računa? <0><1>Ustvarite ga zdaj <2/></1></0>"
+msgid "Don't have an account? <0/>"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Donate to Reactive Resume"
@@ -1013,6 +1014,10 @@ msgstr "Omogočanje dvostopenjskega preverjanja pristnosti..."
 #: src/utils/locale.ts
 msgid "English"
 msgstr "Angleščina"
+
+#: src/utils/locale.ts
+msgid "English (United Kingdom)"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Enhance the security of your account with additional layers of protection."
@@ -1630,7 +1635,6 @@ msgid "No Advertising, No Tracking"
 msgstr "Brez oglaševanja, brez sledenja"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "No results found."
 msgstr "Ni rezultatov."
 
@@ -1923,8 +1927,8 @@ msgid "Refresh"
 msgstr "Osveži"
 
 #: src/routes/auth/forgot-password.tsx
-msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
-msgstr "Se spomnite gesla? <0><1>Prijavite se zdaj <2/></1></0>"
+msgid "Remember your password? <0/>"
+msgstr ""
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
@@ -2055,7 +2059,6 @@ msgid "Search for..."
 msgstr "Iskanje ..."
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Search..."
 msgstr "Iskanje ..."
 
@@ -2068,7 +2071,6 @@ msgid "Section Type"
 msgstr "Vrsta razdelka"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Select..."
 msgstr "Izberi ..."
 
