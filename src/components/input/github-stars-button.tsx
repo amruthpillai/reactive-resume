@@ -15,8 +15,8 @@ export function GithubStarsButton() {
 
 	return (
 		<Button
-			nativeButton={false}
 			variant="outline"
+			nativeButton={false}
 			render={
 				<a target="_blank" href="https://github.com/amruthpillai/reactive-resume" aria-label={ariaLabel} rel="noopener">
 					<GithubLogoIcon aria-hidden="true" />

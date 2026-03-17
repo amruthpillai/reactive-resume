@@ -8,7 +8,7 @@ import { ChipInput } from "@/components/input/chip-input";
 import { IconPicker } from "@/components/input/icon-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import type { DialogProps } from "@/dialogs/store";
@@ -52,7 +52,7 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -76,7 +76,7 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 
@@ -113,7 +113,7 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -137,7 +137,7 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 

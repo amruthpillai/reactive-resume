@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { motion } from "motion/react";
-import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/style";
 
@@ -117,7 +117,7 @@ function FAQItemComponent({ item, index }: FAQItemComponentProps) {
 		>
 			<AccordionItem value={item.question} className="group border-t">
 				<AccordionTrigger className="py-5">{item.question}</AccordionTrigger>
-				<AccordionPanel className="pb-5 text-muted-foreground leading-relaxed">{item.answer}</AccordionPanel>
+				<AccordionContent className="pb-5 text-muted-foreground leading-relaxed">{item.answer}</AccordionContent>
 			</AccordionItem>
 		</motion.div>
 	);

@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { InfoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
-import { Accordion, AccordionItem, AccordionPanel } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { orpc } from "@/integrations/orpc/client";
 import { SectionBase } from "../shared/section-base";
@@ -20,7 +20,7 @@ export function StatisticsSectionBuilder() {
 		<SectionBase type="statistics">
 			<Accordion value={statistics.isPublic ? ["isPublic"] : ["isPrivate"]}>
 				<AccordionItem value="isPrivate">
-					<AccordionPanel className="pb-0">
+					<AccordionContent className="pb-0">
 						<Alert>
 							<InfoIcon />
 							<AlertTitle>
@@ -33,11 +33,11 @@ export function StatisticsSectionBuilder() {
 								</Trans>
 							</AlertDescription>
 						</Alert>
-					</AccordionPanel>
+					</AccordionContent>
 				</AccordionItem>
 
 				<AccordionItem value="isPublic">
-					<AccordionPanel className="grid @md:grid-cols-2 grid-cols-1 gap-4 pb-0">
+					<AccordionContent className="grid @md:grid-cols-2 grid-cols-1 gap-4 pb-0">
 						<StatisticsItem
 							label={t`Views`}
 							value={statistics.views}
@@ -51,7 +51,7 @@ export function StatisticsSectionBuilder() {
 								statistics.lastDownloadedAt ? t`Last downloaded on ${statistics.lastDownloadedAt.toDateString()}` : null
 							}
 						/>
-					</AccordionPanel>
+					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
 		</SectionBase>

@@ -9,7 +9,7 @@ import { ChipInput } from "@/components/input/chip-input";
 import { IconPicker } from "@/components/input/icon-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -56,7 +56,7 @@ export function CreateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -80,7 +80,7 @@ export function CreateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 
@@ -119,7 +119,7 @@ export function UpdateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -143,7 +143,7 @@ export function UpdateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 

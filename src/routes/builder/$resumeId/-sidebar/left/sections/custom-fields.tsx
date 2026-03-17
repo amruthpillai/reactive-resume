@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverPanel, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { basicsSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -102,7 +102,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 							}
 						/>
 
-						<PopoverPanel align="center">
+						<PopoverContent align="center">
 							<div className="flex flex-col gap-y-1.5">
 								<Label htmlFor={`customFields.${index}.link`} className="text-muted-foreground text-xs">
 									<Trans>Enter the URL to link to</Trans>
@@ -125,7 +125,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 									)}
 								/>
 							</div>
-						</PopoverPanel>
+						</PopoverContent>
 					</Popover>
 
 					<Button size="icon" variant="ghost" onClick={() => handleRemove(index)}>

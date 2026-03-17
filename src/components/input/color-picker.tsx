@@ -2,7 +2,7 @@ import { type ColorResult, hsvaToRgbaString, rgbaStringToHsva } from "@uiw/color
 import ReactColorColorful from "@uiw/react-color-colorful";
 import { useMemo } from "react";
 import { useControlledState } from "@/hooks/use-controlled-state";
-import { Popover, PopoverPanel, PopoverTrigger } from "../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type ColorPickerProps = {
 	value?: string;
@@ -33,9 +33,9 @@ export function ColorPicker({ value, defaultValue, onChange }: ColorPickerProps)
 				/>
 			</PopoverTrigger>
 
-			<PopoverPanel className="max-w-fit rounded-xl p-2">
+			<PopoverContent className="max-w-fit rounded-xl p-2">
 				<ReactColorColorful color={color} onChange={onColorChange} />
-			</PopoverPanel>
+			</PopoverContent>
 		</Popover>
 	);
 }

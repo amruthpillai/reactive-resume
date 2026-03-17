@@ -15,7 +15,13 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { Menu, MenuItem, MenuPanel, MenuSeparator, MenuTrigger } from "@/components/ui/menu";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/integrations/orpc/client";
@@ -121,8 +127,8 @@ function BuilderHeaderDropdown() {
 	};
 
 	return (
-		<Menu>
-			<MenuTrigger
+		<DropdownMenu>
+			<DropdownMenuTrigger
 				render={
 					<Button size="icon" variant="ghost">
 						<CaretDownIcon />
@@ -130,29 +136,29 @@ function BuilderHeaderDropdown() {
 				}
 			/>
 
-			<MenuPanel>
-				<MenuItem disabled={isLocked} onClick={handleUpdate}>
+			<DropdownMenuContent>
+				<DropdownMenuItem disabled={isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon className="me-2" />
 					<Trans>Update</Trans>
-				</MenuItem>
+				</DropdownMenuItem>
 
-				<MenuItem onClick={handleDuplicate}>
+				<DropdownMenuItem onClick={handleDuplicate}>
 					<CopySimpleIcon className="me-2" />
 					<Trans>Duplicate</Trans>
-				</MenuItem>
+				</DropdownMenuItem>
 
-				<MenuItem onClick={handleToggleLock}>
+				<DropdownMenuItem onClick={handleToggleLock}>
 					{isLocked ? <LockSimpleOpenIcon className="me-2" /> : <LockSimpleIcon className="me-2" />}
 					{isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
-				</MenuItem>
+				</DropdownMenuItem>
 
-				<MenuSeparator />
+				<DropdownMenuSeparator />
 
-				<MenuItem variant="destructive" disabled={isLocked} onClick={handleDelete}>
+				<DropdownMenuItem variant="destructive" disabled={isLocked} onClick={handleDelete}>
 					<TrashSimpleIcon className="me-2" />
 					<Trans>Delete</Trans>
-				</MenuItem>
-			</MenuPanel>
-		</Menu>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }

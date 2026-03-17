@@ -6,7 +6,7 @@ import type z from "zod";
 import { RichInput } from "@/components/input/rich-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
@@ -44,7 +44,7 @@ export function CreateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -68,7 +68,7 @@ export function CreateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 
@@ -100,7 +100,7 @@ export function UpdateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -124,7 +124,7 @@ export function UpdateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 

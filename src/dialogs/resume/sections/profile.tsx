@@ -8,7 +8,7 @@ import { IconPicker } from "@/components/input/icon-picker";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
@@ -55,7 +55,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -79,7 +79,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 
@@ -118,7 +118,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -142,7 +142,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 

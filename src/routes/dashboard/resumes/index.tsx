@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
-import { GridFourIcon, ListIcon, ReadCvLogoIcon, SortAscendingIcon, TagIcon } from "@phosphor-icons/react";
+import { GridFourIcon, ListIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, stripSearchParams, useNavigate, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
@@ -9,8 +9,7 @@ import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 import z from "zod";
-import { Badge } from "@/components/ui/badge";
-import { Combobox, type ComboboxOption, ComboboxValue } from "@/components/ui/combobox";
+import { Combobox } from "@/components/ui/combobox";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { orpc } from "@/integrations/orpc/client";
@@ -76,19 +75,10 @@ function RouteComponent() {
 				<Combobox
 					value={sort}
 					options={sortOptions}
+					placeholder={t`Sort by`}
 					onValueChange={(value) => {
 						if (!value) return;
 						navigate({ search: { tags, sort: value as SortOption } });
-					}}
-					buttonProps={{
-						title: t`Sort by`,
-						variant: "ghost",
-						children: (
-							<>
-								<SortAscendingIcon />
-								<ComboboxValue />
-							</>
-						),
 					}}
 				/>
 
@@ -96,27 +86,10 @@ function RouteComponent() {
 					multiple
 					value={tags}
 					options={tagOptions}
+					placeholder={t`Filter by`}
+					className={cn({ hidden: tagOptions.length === 0 })}
 					onValueChange={(value) => {
 						navigate({ search: { tags: value ?? [], sort } });
-					}}
-					buttonProps={{
-						variant: "ghost",
-						title: t`Filter by`,
-						className: cn({ hidden: tagOptions.length === 0 }),
-						children: (
-							<>
-								<TagIcon />
-								<ComboboxValue>
-									{(options: ComboboxOption[]) =>
-										options.map((option) => (
-											<Badge key={String(option.value)} variant="outline">
-												{option.label}
-											</Badge>
-										))
-									}
-								</ComboboxValue>
-							</>
-						),
 					}}
 				/>
 

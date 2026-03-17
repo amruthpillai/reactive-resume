@@ -86,6 +86,7 @@ function RouteComponent() {
 
 						<Button
 							variant="link"
+							nativeButton={false}
 							render={
 								<a href="https://docs.rxresu.me/api-reference" target="_blank" rel="noopener">
 									<LinkSimpleIcon />

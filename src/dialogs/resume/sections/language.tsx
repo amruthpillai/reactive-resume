@@ -6,7 +6,7 @@ import { useForm, useFormContext } from "react-hook-form";
 import type z from "zod";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
-import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -50,7 +50,7 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -74,7 +74,7 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 
@@ -111,7 +111,7 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const { blockEvents, requestClose } = useFormBlocker(form);
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
@@ -135,7 +135,7 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 

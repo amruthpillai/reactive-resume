@@ -1,5 +1,5 @@
 import { t } from "@lingui/core/macro";
-import { ArrowRightIcon, TranslateIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
@@ -57,15 +57,7 @@ export function Header() {
 				</Link>
 
 				<div className="ml-auto flex items-center gap-x-2">
-					<LocaleCombobox
-						buttonProps={{
-							size: "icon",
-							variant: "ghost",
-							className: "justify-center",
-							"aria-label": t`Change language`,
-							children: <TranslateIcon aria-hidden="true" />,
-						}}
-					/>
+					<LocaleCombobox />
 
 					<ThemeToggleButton />
 

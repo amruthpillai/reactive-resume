@@ -18,16 +18,16 @@ import { useMemo } from "react";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import {
-	Menu,
-	MenuGroup,
-	MenuItem,
-	MenuPanel,
-	MenuSeparator,
-	MenuSubmenu,
-	MenuSubmenuPanel,
-	MenuSubmenuTrigger,
-	MenuTrigger,
-} from "@/components/ui/menu";
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import type {
@@ -107,50 +107,50 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 	};
 
 	return (
-		<MenuSubmenu>
-			<MenuSubmenuTrigger>
+		<DropdownMenuSub>
+			<DropdownMenuSubTrigger>
 				<ArrowBendUpRightIcon />
 				<Trans>Move to</Trans>
-			</MenuSubmenuTrigger>
+			</DropdownMenuSubTrigger>
 
-			<MenuSubmenuPanel>
+			<DropdownMenuSubContent>
 				{/* Render each page as a submenu */}
 				{moveTargets.map(({ pageIndex, sections }) => (
-					<MenuSubmenu key={pageIndex}>
-						<MenuSubmenuTrigger>
+					<DropdownMenuSub key={pageIndex}>
+						<DropdownMenuSubTrigger>
 							<FileIcon />
 							<Trans>Page {pageIndex + 1}</Trans>
-						</MenuSubmenuTrigger>
+						</DropdownMenuSubTrigger>
 
-						<MenuSubmenuPanel>
+						<DropdownMenuSubContent>
 							{/* Existing compatible sections on this page */}
 							{sections.map(({ sectionId, sectionTitle }) => (
-								<MenuItem key={sectionId} onClick={() => handleMoveToSection(sectionId)}>
+								<DropdownMenuItem key={sectionId} onClick={() => handleMoveToSection(sectionId)}>
 									{sectionTitle}
-								</MenuItem>
+								</DropdownMenuItem>
 							))}
 
 							{/* Separator if there are existing sections */}
-							{sections.length > 0 && <MenuSeparator />}
+							{sections.length > 0 && <DropdownMenuSeparator />}
 
 							{/* Option to create a new section on this page */}
-							<MenuItem onClick={() => handleNewSectionOnPage(pageIndex)}>
+							<DropdownMenuItem onClick={() => handleNewSectionOnPage(pageIndex)}>
 								<FolderPlusIcon />
 								<Trans>New Section</Trans>
-							</MenuItem>
-						</MenuSubmenuPanel>
-					</MenuSubmenu>
+							</DropdownMenuItem>
+						</DropdownMenuSubContent>
+					</DropdownMenuSub>
 				))}
 
-				<MenuSeparator />
+				<DropdownMenuSeparator />
 
 				{/* Option to create a new page with a new section */}
-				<MenuItem onClick={handleNewPage}>
+				<DropdownMenuItem onClick={handleNewPage}>
 					<PlusCircleIcon />
 					<Trans>New Page</Trans>
-				</MenuItem>
-			</MenuSubmenuPanel>
-		</MenuSubmenu>
+				</DropdownMenuItem>
+			</DropdownMenuSubContent>
+		</DropdownMenuSub>
 	);
 }
 
@@ -265,45 +265,45 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 				{subtitle && <div className="line-clamp-1 text-muted-foreground text-xs">{subtitle}</div>}
 			</button>
 
-			<Menu>
-				<MenuTrigger className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 focus:outline-none focus-visible:ring-1 group-hover:opacity-100">
+			<DropdownMenu>
+				<DropdownMenuTrigger className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 focus:outline-none focus-visible:ring-1 group-hover:opacity-100">
 					<DotsThreeVerticalIcon />
-				</MenuTrigger>
+				</DropdownMenuTrigger>
 
-				<MenuPanel align="end">
-					<MenuGroup>
-						<MenuItem onClick={onToggleVisibility}>
+				<DropdownMenuContent align="end">
+					<DropdownMenuGroup>
+						<DropdownMenuItem onClick={onToggleVisibility}>
 							{item.hidden ? <EyeIcon /> : <EyeClosedIcon />}
 							{item.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
-						</MenuItem>
-					</MenuGroup>
+						</DropdownMenuItem>
+					</DropdownMenuGroup>
 
-					<MenuSeparator />
+					<DropdownMenuSeparator />
 
-					<MenuGroup>
-						<MenuItem onClick={onUpdate}>
+					<DropdownMenuGroup>
+						<DropdownMenuItem onClick={onUpdate}>
 							<PencilSimpleLineIcon />
 							<Trans>Update</Trans>
-						</MenuItem>
+						</DropdownMenuItem>
 
-						<MenuItem onClick={onDuplicate}>
+						<DropdownMenuItem onClick={onDuplicate}>
 							<CopySimpleIcon />
 							<Trans>Duplicate</Trans>
-						</MenuItem>
+						</DropdownMenuItem>
 
 						<MoveItemSubmenu type={type} item={item} customSectionId={customSectionId} />
-					</MenuGroup>
+					</DropdownMenuGroup>
 
-					<MenuSeparator />
+					<DropdownMenuSeparator />
 
-					<MenuGroup>
-						<MenuItem variant="destructive" onClick={onDelete}>
+					<DropdownMenuGroup>
+						<DropdownMenuItem variant="destructive" onClick={onDelete}>
 							<TrashSimpleIcon />
 							<Trans>Delete</Trans>
-						</MenuItem>
-					</MenuGroup>
-				</MenuPanel>
-			</Menu>
+						</DropdownMenuItem>
+					</DropdownMenuGroup>
+				</DropdownMenuContent>
+			</DropdownMenu>
 		</Reorder.Item>
 	);
 }

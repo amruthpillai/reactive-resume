@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/react/macro";
 import { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { Dialog, DialogDescription, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Command, CommandEmpty, CommandInput, CommandList } from "../ui/command";
 import { NavigationCommandGroup } from "./pages/navigation";
 import { PreferencesCommandGroup } from "./pages/preferences";
@@ -86,7 +86,7 @@ export function CommandPalette() {
 				</DialogDescription>
 			</DialogHeader>
 
-			<DialogPopup
+			<DialogContent
 				className="overflow-hidden p-0"
 				aria-label={isFirstPage ? "Command Palette" : `Command Palette - ${currentPage}`}
 			>
@@ -113,7 +113,7 @@ export function CommandPalette() {
 						<NavigationCommandGroup />
 					</CommandList>
 				</Command>
-			</DialogPopup>
+			</DialogContent>
 		</Dialog>
 	);
 }

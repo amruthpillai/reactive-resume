@@ -1,9 +1,11 @@
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { t } from "@lingui/core/macro";
-import { CaretDownIcon, CaretUpDownIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
+import { CaretDownIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
 import * as React from "react";
+import { match } from "ts-pattern";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { useControlledState } from "@/hooks/use-controlled-state";
 import { cn } from "@/utils/style";
 
 const ComboboxRoot = ComboboxPrimitive.Root;
@@ -16,7 +18,7 @@ function ComboboxTrigger({ className, children, ...props }: ComboboxPrimitive.Tr
 	return (
 		<ComboboxPrimitive.Trigger
 			data-slot="combobox-trigger"
-			className={cn("[&_svg:not([class*='size-'])]:size-4", className)}
+			className={cn("ms-auto shrink-0 [&_svg:not([class*='size-'])]:size-4", className)}
 			{...props}
 		>
 			{children}
@@ -190,7 +192,7 @@ function ComboboxChips({
 		<ComboboxPrimitive.Chips
 			data-slot="combobox-chips"
 			className={cn(
-				"flex min-h-8 flex-wrap items-center gap-1 rounded-lg border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-1 has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40",
+				"flex min-h-8 flex-wrap items-center gap-1 rounded-lg border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-2 has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40",
 				className,
 			)}
 			{...props}
@@ -265,7 +267,6 @@ type SingleComboboxProps<TValue extends string | number = string> = {
 	className?: string;
 	id?: string;
 	name?: string;
-	buttonProps?: React.ComponentProps<typeof Button>;
 };
 
 type MultiComboboxProps<TValue extends string | number = string> = {
@@ -281,7 +282,6 @@ type MultiComboboxProps<TValue extends string | number = string> = {
 	className?: string;
 	id?: string;
 	name?: string;
-	buttonProps?: React.ComponentProps<typeof Button>;
 };
 
 type ComboboxProps<TValue extends string | number = string> = SingleComboboxProps<TValue> | MultiComboboxProps<TValue>;
@@ -291,13 +291,12 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 		options,
 		multiple = false,
 		disabled = false,
-		showClear = true,
+		showClear = false,
 		placeholder,
 		emptyMessage,
 		className,
 		id,
 		name,
-		buttonProps,
 	} = props;
 
 	const { contains } = ComboboxPrimitive.useFilter();
@@ -319,7 +318,23 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 		[optionMap, multiple],
 	);
 
-	const handleValueChange = React.useCallback(
+	type OptionValue = ComboboxOption<TValue>[] | ComboboxOption<TValue> | null;
+
+	const rawValueKey = props.value !== undefined ? JSON.stringify(props.value) : undefined;
+	const resolvedValue = React.useMemo(
+		() => (props.value !== undefined ? (findOption(props.value) as OptionValue) : undefined),
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- stable key avoids new-reference loops
+		[rawValueKey, optionMap],
+	);
+
+	const rawDefaultKey = props.defaultValue !== undefined ? JSON.stringify(props.defaultValue) : undefined;
+	const resolvedDefaultValue = React.useMemo(
+		() => (props.defaultValue !== undefined ? (findOption(props.defaultValue) as OptionValue) : undefined),
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- only needed on mount / options change
+		[rawDefaultKey, optionMap],
+	);
+
+	const handleExternalChange = React.useCallback(
 		(option: ComboboxOption<TValue>[] | ComboboxOption<TValue> | null) => {
 			if (multiple) {
 				const arrOpt = Array.isArray(option) ? option : option ? [option] : [];
@@ -332,6 +347,12 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 		},
 		[props, multiple],
 	);
+
+	const [selectedValue, setSelectedValue] = useControlledState({
+		value: resolvedValue,
+		defaultValue: resolvedDefaultValue,
+		onChange: handleExternalChange,
+	});
 
 	const itemToStringLabel = React.useCallback(
 		(item: ComboboxOption<TValue>) => (typeof item.label === "string" ? item.label : String(item.value)),
@@ -352,18 +373,6 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 		[contains],
 	);
 
-	const isButtonMode = !!buttonProps;
-	const { children: buttonChildren, className: buttonClassName, ...buttonRest } = buttonProps ?? {};
-
-	// value & defaultValue props mapping
-	const controlProps: Record<string, unknown> = {};
-
-	if (props.value !== undefined) {
-		controlProps.value = findOption(props.value);
-	} else if (props.defaultValue !== undefined) {
-		controlProps.defaultValue = findOption(props.defaultValue);
-	}
-
 	const listContent = (item: ComboboxOption<TValue>) => (
 		<ComboboxItem key={String(item.value)} value={item} disabled={item.disabled}>
 			{item.label}
@@ -373,84 +382,54 @@ function Combobox<TValue extends string | number = string>(props: ComboboxProps<
 	return (
 		<ComboboxRoot
 			items={options}
-			{...(multiple ? { multiple: true } : {})}
-			{...controlProps}
 			name={name}
 			filter={filter}
 			disabled={disabled}
-			onValueChange={handleValueChange}
+			value={selectedValue as ComboboxOption<TValue>[] & ComboboxOption<TValue>}
+			onValueChange={setSelectedValue as (value: ComboboxOption<TValue>[] | ComboboxOption<TValue> | null) => void}
 			itemToStringLabel={itemToStringLabel}
 			isItemEqualToValue={isItemEqualToValue}
+			{...(multiple ? { multiple: true } : {})}
 		>
-			{isButtonMode ? (
-				<>
-					<ComboboxPrimitive.Trigger
-						disabled={disabled}
-						render={
-							<Button
-								variant="outline"
-								{...buttonRest}
-								className={cn("justify-between gap-2 font-normal active:scale-100", className, buttonClassName)}
-							>
-								{buttonChildren ?? (
+			{match({ multiple })
+				.with({ multiple: true }, () => (
+					<>
+						<ComboboxChips className={className}>
+							<ComboboxValue>
+								{(val: ComboboxOption<TValue>[]) => (
 									<>
-										<ComboboxValue
-											placeholder={<span className="text-muted-foreground">{placeholder ?? t`Select...`}</span>}
-										/>
-										<CaretUpDownIcon className="ms-auto size-4 shrink-0 text-muted-foreground" />
+										{val.map((item) => (
+											<ComboboxChip key={String(item.value)}>{item.label}</ComboboxChip>
+										))}
+										<ComboboxChipsInput id={id} disabled={disabled} placeholder={placeholder} />
 									</>
 								)}
-							</Button>
-						}
-					/>
-					<ComboboxContent>
-						<ComboboxInput showTrigger={false} showClear={false} disabled={disabled} />
-						<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
-						<ComboboxList>{listContent}</ComboboxList>
-					</ComboboxContent>
-				</>
-			) : multiple ? (
-				<>
-					<ComboboxChips className={className}>
-						<ComboboxValue>
-							{(val: ComboboxOption<TValue>[]) => (
-								<>
-									{val.map((item) => (
-										<ComboboxChip key={String(item.value)}>{item.label}</ComboboxChip>
-									))}
-									<ComboboxInput
-										id={id}
-										showTrigger
-										showClear={showClear}
-										disabled={disabled}
-										placeholder={placeholder}
-										className="min-w-16 flex-1 outline-none"
-									/>
-								</>
-							)}
-						</ComboboxValue>
-					</ComboboxChips>
-					<ComboboxContent>
-						<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
-						<ComboboxList>{listContent}</ComboboxList>
-					</ComboboxContent>
-				</>
-			) : (
-				<>
-					<ComboboxInput
-						id={id}
-						showTrigger
-						showClear={showClear}
-						disabled={disabled}
-						className={className}
-						placeholder={placeholder}
-					/>
-					<ComboboxContent>
-						<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
-						<ComboboxList>{listContent}</ComboboxList>
-					</ComboboxContent>
-				</>
-			)}
+							</ComboboxValue>
+							{showClear && <ComboboxClear disabled={disabled} />}
+							<ComboboxTrigger disabled={disabled} />
+						</ComboboxChips>
+						<ComboboxContent>
+							<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
+							<ComboboxList>{listContent}</ComboboxList>
+						</ComboboxContent>
+					</>
+				))
+				.otherwise(() => (
+					<>
+						<ComboboxInput
+							id={id}
+							showTrigger
+							showClear={showClear}
+							disabled={disabled}
+							className={className}
+							placeholder={placeholder}
+						/>
+						<ComboboxContent>
+							<ComboboxEmpty>{emptyMessage ?? t`No results found.`}</ComboboxEmpty>
+							<ComboboxList>{listContent}</ComboboxList>
+						</ComboboxContent>
+					</>
+				))}
 		</ComboboxRoot>
 	);
 }

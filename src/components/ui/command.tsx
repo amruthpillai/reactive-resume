@@ -1,7 +1,7 @@
 import { CheckIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { Command as CommandPrimitive } from "cmdk";
 import type * as React from "react";
-import { Dialog, DialogDescription, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
 import { cn } from "@/utils/style";
 
@@ -38,12 +38,12 @@ function CommandDialog({
 				<DialogTitle>{title}</DialogTitle>
 				<DialogDescription>{description}</DialogDescription>
 			</DialogHeader>
-			<DialogPopup
+			<DialogContent
 				className={cn("top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0", className)}
 				showCloseButton={showCloseButton}
 			>
 				{children}
-			</DialogPopup>
+			</DialogContent>
 		</Dialog>
 	);
 }

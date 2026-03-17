@@ -10,7 +10,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { DialogDescription, DialogFooter, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
@@ -66,7 +66,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 	};
 
 	return (
-		<DialogPopup {...blockEvents}>
+		<DialogContent {...blockEvents}>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
@@ -152,7 +152,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 					</DialogFooter>
 				</form>
 			</Form>
-		</DialogPopup>
+		</DialogContent>
 	);
 };
 
@@ -176,7 +176,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 	};
 
 	return (
-		<DialogPopup>
+		<DialogContent>
 			<DialogHeader>
 				<DialogTitle className="flex items-center gap-x-2">
 					<CopyIcon />
@@ -207,6 +207,6 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 					<Trans>Confirm</Trans>
 				</Button>
 			</DialogFooter>
-		</DialogPopup>
+		</DialogContent>
 	);
 };

@@ -47,9 +47,9 @@ function TypographySectionForm() {
 			<form onChange={form.handleSubmit(onSubmit)} className="grid @md:grid-cols-2 grid-cols-1 gap-4">
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
-					<p className="shrink-0 font-medium text-base">
+					<div className="shrink-0 font-medium text-base leading-none">
 						<Trans context="Body Text (paragraphs, lists, etc.)">Body</Trans>
-					</p>
+					</div>
 					<Separator className="flex-1" />
 				</div>
 
@@ -65,7 +65,7 @@ function TypographySectionForm() {
 								render={
 									<FontFamilyCombobox
 										value={field.value}
-										buttonProps={{ size: "lg", className: "text-base" }}
+										className="text-base"
 										onValueChange={(value) => {
 											if (value === null) return;
 											field.onChange(value);
@@ -176,9 +176,9 @@ function TypographySectionForm() {
 
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
-					<p className="shrink-0 font-medium text-base">
+					<div className="shrink-0 font-medium text-base leading-none">
 						<Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>
-					</p>
+					</div>
 					<Separator className="flex-1" />
 				</div>
 
@@ -194,7 +194,7 @@ function TypographySectionForm() {
 								render={
 									<FontFamilyCombobox
 										value={field.value}
-										buttonProps={{ size: "lg", className: "text-base" }}
+										className="text-base"
 										onValueChange={(value) => {
 											if (value === null) return;
 											field.onChange(value);

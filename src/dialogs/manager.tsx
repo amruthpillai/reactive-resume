@@ -27,7 +27,7 @@ import { useDialogStore } from "./store";
 export function DialogManager() {
 	const { open, activeDialog, onOpenChange } = useDialogStore();
 
-	const DialogPopup = match(activeDialog)
+	const DialogContent = match(activeDialog)
 		.with({ type: "auth.change-password" }, () => <ChangePasswordDialog />)
 		.with({ type: "auth.two-factor.enable" }, () => <EnableTwoFactorDialog />)
 		.with({ type: "auth.two-factor.disable" }, () => <DisableTwoFactorDialog />)
@@ -71,7 +71,7 @@ export function DialogManager() {
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			{DialogPopup}
+			{DialogContent}
 		</Dialog>
 	);
 }

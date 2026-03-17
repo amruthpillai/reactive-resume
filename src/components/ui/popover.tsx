@@ -1,104 +1,62 @@
-import {
-	PopoverBackdrop as PopoverBackdropPrimitive,
-	type PopoverBackdropProps as PopoverBackdropPrimitiveProps,
-	PopoverClose as PopoverClosePrimitive,
-	type PopoverCloseProps as PopoverClosePrimitiveProps,
-	PopoverDescription as PopoverDescriptionPrimitive,
-	type PopoverDescriptionProps as PopoverDescriptionPrimitiveProps,
-	PopoverPopup as PopoverPopupPrimitive,
-	type PopoverPopupProps as PopoverPopupPrimitiveProps,
-	PopoverPortal as PopoverPortalPrimitive,
-	PopoverPositioner as PopoverPositionerPrimitive,
-	type PopoverPositionerProps as PopoverPositionerPrimitiveProps,
-	Popover as PopoverPrimitive,
-	type PopoverProps as PopoverPrimitiveProps,
-	PopoverTitle as PopoverTitlePrimitive,
-	type PopoverTitleProps as PopoverTitlePrimitiveProps,
-	PopoverTrigger as PopoverTriggerPrimitive,
-	type PopoverTriggerProps as PopoverTriggerPrimitiveProps,
-} from "@/components/primitives/popover";
+import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
+import type * as React from "react";
 import { cn } from "@/utils/style";
 
-type PopoverProps = PopoverPrimitiveProps;
-
-function Popover(props: PopoverProps) {
-	return <PopoverPrimitive {...props} />;
+function Popover({ ...props }: PopoverPrimitive.Root.Props) {
+	return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 }
 
-type PopoverTriggerProps = PopoverTriggerPrimitiveProps;
-
-function PopoverTrigger(props: PopoverTriggerProps) {
-	return <PopoverTriggerPrimitive {...props} />;
+function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
+	return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
-type PopoverPanelProps = PopoverPositionerPrimitiveProps & PopoverPopupPrimitiveProps;
-
-function PopoverPanel({
+function PopoverContent({
 	className,
 	align = "center",
+	alignOffset = 0,
+	side = "bottom",
 	sideOffset = 4,
-	initialFocus,
-	finalFocus,
-	style,
-	children,
 	...props
-}: PopoverPanelProps) {
+}: PopoverPrimitive.Popup.Props &
+	Pick<PopoverPrimitive.Positioner.Props, "align" | "alignOffset" | "side" | "sideOffset">) {
 	return (
-		<PopoverPortalPrimitive>
-			<PopoverPositionerPrimitive align={align} sideOffset={sideOffset} className="z-50" {...props}>
-				<PopoverPopupPrimitive
-					initialFocus={initialFocus}
-					finalFocus={finalFocus}
+		<PopoverPrimitive.Portal>
+			<PopoverPrimitive.Positioner
+				align={align}
+				alignOffset={alignOffset}
+				side={side}
+				sideOffset={sideOffset}
+				className="isolate z-50"
+			>
+				<PopoverPrimitive.Popup
+					data-slot="popover-content"
 					className={cn(
-						"w-72 origin-(--transform-origin) rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden",
+						"data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:fade-in-0 data-open:zoom-in-95 data-closed:fade-out-0 data-closed:zoom-out-95 z-50 flex w-72 origin-(--transform-origin) flex-col gap-4 rounded-md bg-popover p-4 text-popover-foreground text-sm shadow-md outline-hidden ring-1 ring-foreground/10 duration-100 data-closed:animate-out data-open:animate-in",
 						className,
 					)}
-					style={style}
-				>
-					{children}
-				</PopoverPopupPrimitive>
-			</PopoverPositionerPrimitive>
-		</PopoverPortalPrimitive>
+					{...props}
+				/>
+			</PopoverPrimitive.Positioner>
+		</PopoverPrimitive.Portal>
 	);
 }
 
-type PopoverCloseProps = PopoverClosePrimitiveProps;
-
-function PopoverClose(props: PopoverCloseProps) {
-	return <PopoverClosePrimitive {...props} />;
+function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
+	return <div data-slot="popover-header" className={cn("flex flex-col gap-1 text-sm", className)} {...props} />;
 }
 
-type PopoverBackdropProps = PopoverBackdropPrimitiveProps;
-
-function PopoverBackdrop(props: PopoverBackdropProps) {
-	return <PopoverBackdropPrimitive {...props} />;
+function PopoverTitle({ className, ...props }: PopoverPrimitive.Title.Props) {
+	return <PopoverPrimitive.Title data-slot="popover-title" className={cn("font-medium", className)} {...props} />;
 }
 
-type PopoverTitleProps = PopoverTitlePrimitiveProps;
-
-function PopoverTitle(props: PopoverTitleProps) {
-	return <PopoverTitlePrimitive {...props} />;
+function PopoverDescription({ className, ...props }: PopoverPrimitive.Description.Props) {
+	return (
+		<PopoverPrimitive.Description
+			data-slot="popover-description"
+			className={cn("text-muted-foreground", className)}
+			{...props}
+		/>
+	);
 }
 
-type PopoverDescriptionProps = PopoverDescriptionPrimitiveProps;
-
-function PopoverDescription(props: PopoverDescriptionProps) {
-	return <PopoverDescriptionPrimitive {...props} />;
-}
-
-export {
-	Popover,
-	PopoverBackdrop,
-	type PopoverBackdropProps,
-	PopoverClose,
-	type PopoverCloseProps,
-	PopoverDescription,
-	type PopoverDescriptionProps,
-	PopoverPanel,
-	type PopoverPanelProps,
-	type PopoverProps,
-	PopoverTitle,
-	type PopoverTitleProps,
-	PopoverTrigger,
-	type PopoverTriggerProps,
-};
+export { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger };

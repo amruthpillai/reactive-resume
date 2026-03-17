@@ -8,7 +8,7 @@ import { cn } from "@/utils/style";
 import { Input } from "../ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from "../ui/input-group";
 import { Label } from "../ui/label";
-import { Popover, PopoverPanel, PopoverTrigger } from "../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const PREFIX = "https://";
 
@@ -71,14 +71,14 @@ export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) 
 							}
 						/>
 
-						<PopoverPanel className="pt-3">
+						<PopoverContent className="pt-3">
 							<div className="grid gap-2" onClick={(e) => e.stopPropagation()}>
 								<Label htmlFor="url-label">
 									<Trans>Label</Trans>
 								</Label>
 								<Input id="url-label" name="url-label" value={value.label} onChange={handleLabelChange} />
 							</div>
-						</PopoverPanel>
+						</PopoverContent>
 					</Popover>
 				</InputGroupAddon>
 			)}

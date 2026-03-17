@@ -11,14 +11,20 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Menu, MenuItem, MenuPanel, MenuSeparator, MenuTrigger } from "@/components/ui/menu";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 
-type Props = Omit<React.ComponentProps<typeof MenuPanel>, "children"> & {
+type Props = Omit<React.ComponentProps<typeof DropdownMenuContent>, "children"> & {
 	resume: RouterOutput["resume"]["list"][number];
-	children: React.ComponentProps<typeof MenuTrigger>["render"];
+	children: React.ComponentProps<typeof DropdownMenuTrigger>["render"];
 };
 
 export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
@@ -78,41 +84,41 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 	};
 
 	return (
-		<Menu>
-			<MenuTrigger render={children} />
+		<DropdownMenu>
+			<DropdownMenuTrigger render={children} />
 
-			<MenuPanel {...props}>
+			<DropdownMenuContent {...props}>
 				<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
-					<MenuItem>
+					<DropdownMenuItem>
 						<FolderOpenIcon />
 						<Trans>Open</Trans>
-					</MenuItem>
+					</DropdownMenuItem>
 				</Link>
 
-				<MenuSeparator />
+				<DropdownMenuSeparator />
 
-				<MenuItem disabled={resume.isLocked} onClick={handleUpdate}>
+				<DropdownMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon />
 					<Trans>Update</Trans>
-				</MenuItem>
+				</DropdownMenuItem>
 
-				<MenuItem onClick={handleDuplicate}>
+				<DropdownMenuItem onClick={handleDuplicate}>
 					<CopySimpleIcon />
 					<Trans>Duplicate</Trans>
-				</MenuItem>
+				</DropdownMenuItem>
 
-				<MenuItem onClick={handleToggleLock}>
+				<DropdownMenuItem onClick={handleToggleLock}>
 					{resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
 					{resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
-				</MenuItem>
+				</DropdownMenuItem>
 
-				<MenuSeparator />
+				<DropdownMenuSeparator />
 
-				<MenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
+				<DropdownMenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
 					<TrashSimpleIcon />
 					<Trans>Delete</Trans>
-				</MenuItem>
-			</MenuPanel>
-		</Menu>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }

@@ -4,7 +4,7 @@ import { SlideshowIcon } from "@phosphor-icons/react";
 import { CometCard } from "@/components/animation/comet-card";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
-import { DialogDescription, DialogHeader, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { type DialogProps, useDialogStore } from "@/dialogs/store";
@@ -26,7 +26,7 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 	}
 
 	return (
-		<DialogPopup className="lg:max-w-5xl">
+		<DialogContent className="lg:max-w-5xl">
 			<DialogHeader className="gap-2">
 				<DialogTitle className="flex items-center gap-3 text-xl">
 					<SlideshowIcon size={20} />
@@ -54,7 +54,7 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 					))}
 				</div>
 			</ScrollArea>
-		</DialogPopup>
+		</DialogContent>
 	);
 }
 

@@ -45,6 +45,7 @@ export function PasswordSection() {
 				.with(false, () => (
 					<Button
 						variant="outline"
+						nativeButton={false}
 						render={
 							<Link to="/auth/forgot-password">
 								<Trans>Set Password</Trans>

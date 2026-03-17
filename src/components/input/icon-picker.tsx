@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { type IconName, icons } from "@/schema/icons";
 import { cn } from "@/utils/style";
 import { Input } from "../ui/input";
-import { Popover, PopoverPanel, PopoverTrigger } from "../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const columnCount = 8;
 const columnWidth = 36;
@@ -99,7 +99,7 @@ export function IconPicker({ value, onChange, popoverProps, ...props }: IconPick
 				}
 			/>
 
-			<PopoverPanel align="start" className="h-[326px] w-[290px] gap-0 p-0">
+			<PopoverContent align="start" className="h-[326px] w-[290px] gap-0 p-0">
 				<IconSearchInput value={search} onChange={setSearch} />
 
 				<div className="size-[290px]">
@@ -113,7 +113,7 @@ export function IconPicker({ value, onChange, popoverProps, ...props }: IconPick
 						cellProps={{ icons: searchedIcons, onChange }}
 					/>
 				</div>
-			</PopoverPanel>
+			</PopoverContent>
 		</Popover>
 	);
 }
