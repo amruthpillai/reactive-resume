@@ -281,10 +281,10 @@ function RouteComponent() {
 						}}
 					/>
 
-					{quota && (
+					{quota?.rapidApi && (
 						<p className="text-muted-foreground text-xs">
 							<Trans>
-								{quota.monthlyUsed} / {quota.monthlyLimit} requests used this month
+								{quota.rapidApi.used} / {quota.rapidApi.limit} requests used this month
 							</Trans>
 						</p>
 					)}

@@ -73,6 +73,10 @@ export const jobsRouter = {
 
 				const quota = await jobsService.getQuota(context.user.id);
 
+				if (response.rapidApiQuota) {
+					quota.rapidApi = response.rapidApiQuota;
+				}
+
 				return { data: jobs, quota };
 			} catch (error) {
 				if (error instanceof Error && error.message.includes("rate limit")) {

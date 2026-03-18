@@ -7,6 +7,7 @@ import {
 	jobResultSchema,
 	postFilterOptionsSchema,
 	quotaStatusSchema,
+	rapidApiQuotaSchema,
 	searchParamsSchema,
 	searchResponseSchema,
 } from "./jobs";
@@ -162,9 +163,7 @@ describe("jobResultSchema", () => {
 					Qualifications: ["3+ years experience", "BS in CS"],
 					Responsibilities: ["Build UI", "Review code"],
 				},
-				apply_options: [
-					{ publisher: "LinkedIn", apply_link: "https://linkedin.com/apply", is_direct: true },
-				],
+				apply_options: [{ publisher: "LinkedIn", apply_link: "https://linkedin.com/apply", is_direct: true }],
 			}),
 		);
 		expect(result.employer_logo).toBe("https://logo.com/img.png");
@@ -301,5 +300,42 @@ describe("quotaStatusSchema", () => {
 	it("rejects missing required fields", () => {
 		expect(() => quotaStatusSchema.parse({})).toThrow();
 		expect(() => quotaStatusSchema.parse({ monthlyUsed: 5 })).toThrow();
+	});
+
+	it("accepts optional rapidApi quota", () => {
+		const result = quotaStatusSchema.parse({
+			monthlyUsed: 10,
+			monthlyLimit: 200,
+			monthlyRemaining: 190,
+			windowStart: null,
+			rapidApi: { limit: 200, remaining: 195, used: 5 },
+		});
+		expect(result.rapidApi).toEqual({ limit: 200, remaining: 195, used: 5 });
+	});
+
+	it("allows omitted rapidApi field", () => {
+		const result = quotaStatusSchema.parse({
+			monthlyUsed: 0,
+			monthlyLimit: 200,
+			monthlyRemaining: 200,
+			windowStart: null,
+		});
+		expect(result.rapidApi).toBeUndefined();
+	});
+});
+
+// --- rapidApiQuotaSchema ---
+
+describe("rapidApiQuotaSchema", () => {
+	it("parses valid RapidAPI quota", () => {
+		const result = rapidApiQuotaSchema.parse({ limit: 200, remaining: 195, used: 5 });
+		expect(result.limit).toBe(200);
+		expect(result.remaining).toBe(195);
+		expect(result.used).toBe(5);
+	});
+
+	it("rejects missing fields", () => {
+		expect(() => rapidApiQuotaSchema.parse({ limit: 200 })).toThrow();
+		expect(() => rapidApiQuotaSchema.parse({})).toThrow();
 	});
 });

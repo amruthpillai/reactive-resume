@@ -1,11 +1,49 @@
-import { describe, expect, it, vi } from "vitest";
-import type { JobResult, PostFilterOptions } from "@/schema/jobs";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { JobResult, PostFilterOptions, RapidApiQuota } from "@/schema/jobs";
 
-// Mock modules with side effects (DB connection, env validation)
-vi.mock("@/integrations/drizzle/client", () => ({ db: {} }));
-vi.mock("@/integrations/drizzle/schema", () => ({ jobSearchQuota: {} }));
+// --- Mock DB (chained query builder) ---
+
+const mockReturning = vi.fn();
+const mockWhere = vi.fn();
+const mockLimit = vi.fn();
+const mockSet = vi.fn();
+const mockFrom = vi.fn();
+const mockValues = vi.fn();
+
+// Build chainable mocks
+function resetDbMocks() {
+	mockReturning.mockReturnValue([{ requestCount: 1 }]);
+	mockWhere.mockReturnValue({ limit: mockLimit, returning: mockReturning });
+	mockLimit.mockReturnValue([]);
+	mockSet.mockReturnValue({ where: mockWhere });
+	mockFrom.mockReturnValue({ where: mockWhere });
+	mockValues.mockResolvedValue(undefined);
+}
+
+const mockDb = {
+	select: vi.fn(() => ({ from: mockFrom })),
+	update: vi.fn(() => ({ set: mockSet })),
+	insert: vi.fn(() => ({ values: mockValues })),
+};
+
+vi.mock("@/integrations/drizzle/client", () => ({ db: mockDb }));
+vi.mock("@/integrations/drizzle/schema", () => ({
+	jobSearchQuota: { userId: "userId", requestCount: "requestCount", windowStart: "windowStart" },
+}));
 vi.mock("@/utils/env", () => ({ env: { JOB_SEARCH_MONTHLY_LIMIT: 200 } }));
 vi.mock("@/utils/string", () => ({ generateId: () => "mock-id" }));
+
+// --- Mock factory ---
+
+const mockProvider = {
+	search: vi.fn(),
+	getJobDetails: vi.fn(),
+	testConnection: vi.fn(),
+};
+
+vi.mock("@/integrations/jobs/factory", () => ({
+	createJobSearchProvider: () => mockProvider,
+}));
 
 const { jobsService } = await import("./jobs");
 
@@ -71,6 +109,111 @@ function makeJob(overrides?: Partial<JobResult>): JobResult {
 		...overrides,
 	};
 }
+
+const mockQuota: RapidApiQuota = { limit: 200, remaining: 195, used: 5 };
+
+// --- Setup ---
+
+beforeEach(() => {
+	vi.clearAllMocks();
+	resetDbMocks();
+});
+
+// --- testConnection ---
+
+describe("testConnection", () => {
+	it("delegates to provider and returns success with quota", async () => {
+		mockProvider.testConnection.mockResolvedValue({ success: true, rapidApiQuota: mockQuota });
+
+		const result = await jobsService.testConnection("test-key");
+
+		expect(result.success).toBe(true);
+		expect(result.rapidApiQuota).toEqual(mockQuota);
+		expect(mockProvider.testConnection).toHaveBeenCalledOnce();
+	});
+
+	it("returns success false when provider fails", async () => {
+		mockProvider.testConnection.mockResolvedValue({ success: false });
+
+		const result = await jobsService.testConnection("bad-key");
+
+		expect(result.success).toBe(false);
+		expect(result.rapidApiQuota).toBeUndefined();
+	});
+});
+
+// --- search ---
+
+describe("search", () => {
+	it("increments quota and delegates to provider", async () => {
+		const searchResponse = {
+			status: "OK",
+			request_id: "req-1",
+			parameters: {},
+			data: [makeJob()],
+			rapidApiQuota: mockQuota,
+		};
+		mockProvider.search.mockResolvedValue(searchResponse);
+
+		const result = await jobsService.search("test-key", "user-1", { query: "react", num_pages: 1 });
+
+		expect(result.data).toHaveLength(1);
+		expect(result.data[0].job_title).toBe("Software Engineer");
+		expect(result.rapidApiQuota).toEqual(mockQuota);
+		expect(mockProvider.search).toHaveBeenCalledWith({ query: "react", num_pages: 1 });
+		// Verify DB was called for quota increment
+		expect(mockDb.update).toHaveBeenCalled();
+	});
+
+	it("returns search results without rapidApiQuota when headers missing", async () => {
+		const searchResponse = {
+			status: "OK",
+			request_id: "req-1",
+			parameters: {},
+			data: [makeJob()],
+		};
+		mockProvider.search.mockResolvedValue(searchResponse);
+
+		const result = await jobsService.search("test-key", "user-1", { query: "react", num_pages: 1 });
+
+		expect(result.data).toHaveLength(1);
+		expect(result.rapidApiQuota).toBeUndefined();
+	});
+
+	it("throws when monthly quota is exceeded", async () => {
+		// Simulate: update returns empty (no rows incremented), and existing row exists
+		mockReturning.mockReturnValue([]);
+		mockLimit.mockReturnValue([{ requestCount: 200, windowStart: new Date() }]);
+
+		await expect(jobsService.search("test-key", "user-1", { query: "react", num_pages: 1 })).rejects.toThrow(
+			"Monthly rate limit reached",
+		);
+
+		expect(mockProvider.search).not.toHaveBeenCalled();
+	});
+});
+
+// --- getJobDetails ---
+
+describe("getJobDetails", () => {
+	it("delegates to provider", async () => {
+		const job = makeJob({ job_id: "detail-1" });
+		mockProvider.getJobDetails.mockResolvedValue(job);
+
+		const result = await jobsService.getJobDetails("test-key", "detail-1");
+
+		expect(result?.job_id).toBe("detail-1");
+		expect(mockProvider.getJobDetails).toHaveBeenCalledWith("detail-1");
+	});
+
+	it("returns null when job not found", async () => {
+		mockProvider.getJobDetails.mockResolvedValue(null);
+
+		const result = await jobsService.getJobDetails("test-key", "nonexistent");
+
+		expect(result).toBeNull();
+	});
+});
 
 // --- deduplicateJobs ---
 

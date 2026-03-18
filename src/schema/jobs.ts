@@ -135,11 +135,20 @@ export type PostFilterOptions = z.infer<typeof postFilterOptionsSchema>;
 
 // --- Rate Limiting Types ---
 
+export const rapidApiQuotaSchema = z.object({
+	limit: z.number(),
+	remaining: z.number(),
+	used: z.number(),
+});
+
+export type RapidApiQuota = z.infer<typeof rapidApiQuotaSchema>;
+
 export const quotaStatusSchema = z.object({
 	monthlyUsed: z.number(),
 	monthlyLimit: z.number(),
 	monthlyRemaining: z.number(),
 	windowStart: z.string().nullable(),
+	rapidApi: rapidApiQuotaSchema.optional(),
 });
 
 export type QuotaStatus = z.infer<typeof quotaStatusSchema>;

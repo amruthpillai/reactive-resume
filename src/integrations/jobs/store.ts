@@ -2,12 +2,14 @@ import type { WritableDraft } from "immer";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
+import type { RapidApiQuota } from "@/schema/jobs";
 
 type TestStatus = "unverified" | "success" | "failure";
 
 type JobsStoreState = {
 	rapidApiKey: string;
 	testStatus: TestStatus;
+	rapidApiQuota: RapidApiQuota | null;
 };
 
 type JobsStoreActions = {
@@ -20,6 +22,7 @@ type JobsStore = JobsStoreState & JobsStoreActions;
 const initialState: JobsStoreState = {
 	rapidApiKey: "",
 	testStatus: "unverified",
+	rapidApiQuota: null,
 };
 
 export const useJobsStore = create<JobsStore>()(

@@ -6,6 +6,33 @@ import { JSearchProvider } from "./jsearch";
 const mockFetch = vi.fn();
 global.fetch = mockFetch as never;
 
+// --- Mock helpers ---
+
+function mockHeaders(limit?: number, remaining?: number) {
+	const headers: Record<string, string> = {};
+	if (limit !== undefined) headers["x-ratelimit-requests-limit"] = String(limit);
+	if (remaining !== undefined) headers["x-ratelimit-requests-remaining"] = String(remaining);
+	return { get: (key: string) => headers[key.toLowerCase()] ?? null };
+}
+
+function mockOkResponse(data: unknown, limit?: number, remaining?: number) {
+	return {
+		ok: true,
+		status: 200,
+		json: async () => data,
+		headers: mockHeaders(limit, remaining),
+	};
+}
+
+function mockErrorResponse(status: number, statusText: string) {
+	return {
+		ok: false,
+		status,
+		statusText,
+		headers: mockHeaders(),
+	};
+}
+
 // --- Mock response data ---
 
 const mockSearchResponse = {
@@ -98,11 +125,7 @@ describe("JSearchProvider", () => {
 
 	describe("search", () => {
 		it("should construct correct query parameters", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => mockSearchResponse,
-			});
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
 
 			await provider.search({
 				query: "engineer in San Francisco, CA, United States",
@@ -122,11 +145,7 @@ describe("JSearchProvider", () => {
 		});
 
 		it("should include correct headers", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => mockSearchResponse,
-			});
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
 
 			await provider.search({ query: "test", num_pages: 1 });
 
@@ -139,11 +158,7 @@ describe("JSearchProvider", () => {
 		});
 
 		it("should return parsed search response", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => mockSearchResponse,
-			});
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
 
 			const result = await provider.search({ query: "engineer", num_pages: 1 });
 
@@ -152,28 +167,38 @@ describe("JSearchProvider", () => {
 			expect(result.data[0].job_title).toBe("Software Engineer");
 		});
 
+		it("should extract RapidAPI quota from response headers", async () => {
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse, 200, 195));
+
+			const result = await provider.search({ query: "test", num_pages: 1 });
+
+			expect(result.rapidApiQuota).toEqual({ limit: 200, remaining: 195, used: 5 });
+		});
+
+		it("should return undefined quota when headers are missing", async () => {
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
+
+			const result = await provider.search({ query: "test", num_pages: 1 });
+
+			expect(result.rapidApiQuota).toBeUndefined();
+		});
+
 		it("should retry on 429 status with exponential backoff", async () => {
 			mockFetch
-				.mockResolvedValueOnce({ ok: false, status: 429, statusText: "Too Many Requests" })
-				.mockResolvedValueOnce({ ok: false, status: 429, statusText: "Too Many Requests" })
-				.mockResolvedValueOnce({
-					ok: true,
-					status: 200,
-					json: async () => mockSearchResponse,
-				});
+				.mockResolvedValueOnce(mockErrorResponse(429, "Too Many Requests"))
+				.mockResolvedValueOnce(mockErrorResponse(429, "Too Many Requests"))
+				.mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
 
 			const startTime = Date.now();
 			await provider.search({ query: "test", num_pages: 1 });
 			const endTime = Date.now();
 
-			// Should retry 3 times (1 initial + 2 retries)
 			expect(mockFetch).toHaveBeenCalledTimes(3);
-			// Should have waited (1000ms + 2000ms = 3000ms total)
 			expect(endTime - startTime).toBeGreaterThanOrEqual(3000);
 		});
 
 		it("should throw error on non-200 response after retries", async () => {
-			mockFetch.mockResolvedValue({ ok: false, status: 500, statusText: "Internal Server Error", text: async () => "Internal Server Error" });
+			mockFetch.mockResolvedValue(mockErrorResponse(500, "Internal Server Error"));
 
 			await expect(provider.search({ query: "test", num_pages: 1 })).rejects.toThrow("JSearch API error: 500");
 		});
@@ -183,11 +208,7 @@ describe("JSearchProvider", () => {
 
 	describe("getJobDetails", () => {
 		it("should fetch job details by ID", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => mockJobDetailsResponse,
-			});
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockJobDetailsResponse));
 
 			const result = await provider.getJobDetails("job-1");
 
@@ -199,11 +220,9 @@ describe("JSearchProvider", () => {
 		});
 
 		it("should return null if no job found", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => ({ status: "OK", request_id: "test-req", parameters: {}, data: [] }),
-			});
+			mockFetch.mockResolvedValueOnce(
+				mockOkResponse({ status: "OK", request_id: "test-req", parameters: {}, data: [] }),
+			);
 
 			const result = await provider.getJobDetails("nonexistent-job");
 
@@ -211,10 +230,8 @@ describe("JSearchProvider", () => {
 		});
 
 		it("should return first job if multiple returned", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => ({
+			mockFetch.mockResolvedValueOnce(
+				mockOkResponse({
 					status: "OK",
 					request_id: "test-req",
 					parameters: {},
@@ -223,7 +240,7 @@ describe("JSearchProvider", () => {
 						{ ...mockSearchResponse.data[0], job_id: "second" },
 					],
 				}),
-			});
+			);
 
 			const result = await provider.getJobDetails("job-1");
 
@@ -234,36 +251,35 @@ describe("JSearchProvider", () => {
 	// --- testConnection() ---
 
 	describe("testConnection", () => {
-		it("should return true on successful connection", async () => {
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				status: 200,
-				json: async () => mockSearchResponse,
-			});
+		it("should return success true on successful connection", async () => {
+			mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse, 200, 198));
 
 			const result = await provider.testConnection();
 
-			expect(result).toBe(true);
+			expect(result.success).toBe(true);
+			expect(result.rapidApiQuota).toEqual({ limit: 200, remaining: 198, used: 2 });
 			expect(mockFetch).toHaveBeenCalledOnce();
 			const callUrl = mockFetch.mock.calls[0][0];
 			expect(callUrl).toContain("query=test");
 			expect(callUrl).toContain("num_pages=1");
 		});
 
-		it("should return false on connection failure", async () => {
-			mockFetch.mockResolvedValueOnce({ ok: false, status: 401, statusText: "Unauthorized", text: async () => "Unauthorized" });
+		it("should return success false on connection failure", async () => {
+			mockFetch.mockResolvedValueOnce(mockErrorResponse(401, "Unauthorized"));
 
 			const result = await provider.testConnection();
 
-			expect(result).toBe(false);
+			expect(result.success).toBe(false);
+			expect(result.rapidApiQuota).toBeUndefined();
 		});
 
-		it("should return false on network error", async () => {
+		it("should return success false on network error", async () => {
 			mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
 			const result = await provider.testConnection();
 
-			expect(result).toBe(false);
+			expect(result.success).toBe(false);
+			expect(result.rapidApiQuota).toBeUndefined();
 		});
 	});
 });

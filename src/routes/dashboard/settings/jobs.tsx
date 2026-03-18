@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { CheckCircleIcon, InfoIcon, MagnifyingGlassIcon, XCircleIcon } from "@phosphor-icons/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -36,12 +36,14 @@ function JobsForm() {
 			{
 				onSuccess: (data) => {
 					set((draft) => {
-						draft.testStatus = data ? "success" : "failure";
+						draft.testStatus = data.success ? "success" : "failure";
+						draft.rapidApiQuota = data.rapidApiQuota ?? null;
 					});
 				},
 				onError: (error) => {
 					set((draft) => {
 						draft.testStatus = "failure";
+						draft.rapidApiQuota = null;
 					});
 
 					toast.error(error.message);
@@ -93,9 +95,9 @@ function JobsForm() {
 }
 
 function QuotaDisplay() {
-	const { data: quota } = useQuery(orpc.jobs.quota.queryOptions());
+	const { rapidApiQuota } = useJobsStore();
 
-	if (!quota) return null;
+	if (!rapidApiQuota) return null;
 
 	return (
 		<div className="flex flex-col gap-y-2">
@@ -104,7 +106,7 @@ function QuotaDisplay() {
 			</Label>
 			<p className="text-muted-foreground text-sm">
 				<Trans>
-					{quota.monthlyUsed} of {quota.monthlyLimit} requests used this month ({quota.monthlyRemaining} remaining)
+					{rapidApiQuota.used} of {rapidApiQuota.limit} requests used this month ({rapidApiQuota.remaining} remaining)
 				</Trans>
 			</p>
 		</div>

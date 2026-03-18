@@ -1,4 +1,4 @@
-import type { JobResult, SearchParams, SearchResponse } from "@/schema/jobs";
+import type { JobResult, RapidApiQuota, SearchParams, SearchResponse } from "@/schema/jobs";
 
 /**
  * Job search provider configuration
@@ -32,10 +32,10 @@ export interface JobSearchProvider {
 	 * Search for job listings matching the given parameters
 	 *
 	 * @param params - Search parameters (query, location, filters, etc.)
-	 * @returns Search response with job listings and metadata
+	 * @returns Search response with job listings, metadata, and optional API quota info
 	 * @throws Error if API request fails or rate limit is exceeded
 	 */
-	search(params: SearchParams): Promise<SearchResponse>;
+	search(params: SearchParams): Promise<SearchResponse & { rapidApiQuota?: RapidApiQuota }>;
 
 	/**
 	 * Get detailed information about a specific job listing
@@ -51,7 +51,7 @@ export interface JobSearchProvider {
 	 *
 	 * Used to validate API credentials without consuming significant quota.
 	 *
-	 * @returns true if connection is successful, false otherwise
+	 * @returns Connection result with success status and optional API quota info
 	 */
-	testConnection(): Promise<boolean>;
+	testConnection(): Promise<{ success: boolean; rapidApiQuota?: RapidApiQuota }>;
 }

@@ -2,7 +2,14 @@ import { and, eq, lt, sql } from "drizzle-orm";
 import { db } from "@/integrations/drizzle/client";
 import { jobSearchQuota } from "@/integrations/drizzle/schema";
 import { createJobSearchProvider } from "@/integrations/jobs/factory";
-import type { JobResult, PostFilterOptions, QuotaStatus, SearchParams, SearchResponse } from "@/schema/jobs";
+import type {
+	JobResult,
+	PostFilterOptions,
+	QuotaStatus,
+	RapidApiQuota,
+	SearchParams,
+	SearchResponse,
+} from "@/schema/jobs";
 import { env } from "@/utils/env";
 import { generateId } from "@/utils/string";
 
@@ -84,7 +91,11 @@ async function checkAndIncrementQuota(userId: string): Promise<void> {
 
 // --- Provider-Delegated Operations ---
 
-async function search(apiKey: string, userId: string, params: SearchParams): Promise<SearchResponse> {
+async function search(
+	apiKey: string,
+	userId: string,
+	params: SearchParams,
+): Promise<SearchResponse & { rapidApiQuota?: RapidApiQuota }> {
 	await checkAndIncrementQuota(userId);
 	const provider = createJobSearchProvider(apiKey);
 	return provider.search(params);
@@ -95,7 +106,7 @@ async function getJobDetails(apiKey: string, jobId: string) {
 	return provider.getJobDetails(jobId);
 }
 
-async function testConnection(apiKey: string): Promise<boolean> {
+async function testConnection(apiKey: string): Promise<{ success: boolean; rapidApiQuota?: RapidApiQuota }> {
 	const provider = createJobSearchProvider(apiKey);
 	return provider.testConnection();
 }

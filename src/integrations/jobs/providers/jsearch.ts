@@ -2,6 +2,7 @@ import type z from "zod";
 import {
 	type JobResult,
 	jobDetailsResponseSchema,
+	type RapidApiQuota,
 	type SearchParams,
 	type SearchResponse,
 	searchResponseSchema,
@@ -42,6 +43,20 @@ export class JSearchProvider implements JobSearchProvider {
 		this.apiKey = apiKey;
 	}
 
+	private extractRapidApiQuota(headers: Headers): RapidApiQuota | undefined {
+		const limitStr = headers.get("x-ratelimit-requests-limit");
+		const remainingStr = headers.get("x-ratelimit-requests-remaining");
+
+		if (!limitStr || !remainingStr) return undefined;
+
+		const limit = Number.parseInt(limitStr, 10);
+		const remaining = Number.parseInt(remainingStr, 10);
+
+		if (Number.isNaN(limit) || Number.isNaN(remaining)) return undefined;
+
+		return { limit, remaining, used: limit - remaining };
+	}
+
 	/**
 	 * Make a request to the JSearch API with retry logic
 	 *
@@ -49,10 +64,13 @@ export class JSearchProvider implements JobSearchProvider {
 	 *
 	 * @param path - API endpoint path (e.g., "/search?query=...")
 	 * @param schema - Zod schema for response validation
-	 * @returns Parsed and validated response data
+	 * @returns Parsed data and optional RapidAPI quota from response headers
 	 * @throws Error if all retries are exhausted or non-retryable error occurs
 	 */
-	private async jsearchRequest<T>(path: string, schema: z.ZodType<T>): Promise<T> {
+	private async jsearchRequest<T>(
+		path: string,
+		schema: z.ZodType<T>,
+	): Promise<{ data: T; rapidApiQuota?: RapidApiQuota }> {
 		let lastError: Error | null = null;
 
 		for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -64,8 +82,6 @@ export class JSearchProvider implements JobSearchProvider {
 					},
 				});
 
-				console.log(`[JSearch] attempt=${attempt} status=${response.status}`);
-
 				// Retry on rate limit with exponential backoff
 				if (response.status === 429) {
 					const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
@@ -74,16 +90,16 @@ export class JSearchProvider implements JobSearchProvider {
 				}
 
 				if (!response.ok) {
-					const body = await response.text();
-					console.error(`[JSearch] Non-OK response body: ${body.substring(0, 500)}`);
 					throw new Error(`JSearch API error: ${response.status} ${response.statusText}`);
 				}
 
-				const data = await response.json();
-				return schema.parse(data);
+				const json = await response.json();
+				const data = schema.parse(json);
+				const rapidApiQuota = this.extractRapidApiQuota(response.headers);
+
+				return { data, rapidApiQuota };
 			} catch (error) {
 				lastError = error instanceof Error ? error : new Error(String(error));
-				console.error(`[JSearch] attempt=${attempt} error:`, lastError.message);
 				if (attempt < MAX_RETRIES - 1) {
 					const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
 					await this.sleep(backoff);
@@ -98,7 +114,7 @@ export class JSearchProvider implements JobSearchProvider {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
-	async search(params: SearchParams): Promise<SearchResponse> {
+	async search(params: SearchParams): Promise<SearchResponse & { rapidApiQuota?: RapidApiQuota }> {
 		const query = new URLSearchParams();
 		query.set("query", params.query);
 		if (params.page) query.set("page", String(params.page));
@@ -111,24 +127,23 @@ export class JSearchProvider implements JobSearchProvider {
 		if (params.exclude_job_publishers) query.set("exclude_job_publishers", params.exclude_job_publishers);
 		if (params.categories) query.set("categories", params.categories);
 
-		return this.jsearchRequest(`/search?${query.toString()}`, searchResponseSchema);
+		const result = await this.jsearchRequest(`/search?${query.toString()}`, searchResponseSchema);
+		return { ...result.data, rapidApiQuota: result.rapidApiQuota };
 	}
 
 	async getJobDetails(jobId: string): Promise<JobResult | null> {
 		const query = new URLSearchParams({ job_id: jobId });
 		const result = await this.jsearchRequest(`/job-details?${query.toString()}`, jobDetailsResponseSchema);
-		return result.data[0] ?? null;
+		return result.data.data[0] ?? null;
 	}
 
-	async testConnection(): Promise<boolean> {
+	async testConnection(): Promise<{ success: boolean; rapidApiQuota?: RapidApiQuota }> {
 		try {
 			const query = new URLSearchParams({ query: "test", num_pages: "1" });
-			await this.jsearchRequest(`/search?${query.toString()}`, searchResponseSchema);
-			return true;
-		} catch (error) {
-			console.error("[JSearch testConnection] Failed:", error instanceof Error ? error.message : error);
-			console.error("[JSearch testConnection] Stack:", error instanceof Error ? error.stack : "N/A");
-			return false;
+			const result = await this.jsearchRequest(`/search?${query.toString()}`, searchResponseSchema);
+			return { success: true, rapidApiQuota: result.rapidApiQuota };
+		} catch {
+			return { success: false };
 		}
 	}
 }
