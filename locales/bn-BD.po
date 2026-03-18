@@ -8,7 +8,7 @@ msgstr ""
 "Language: bn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 10:46\n"
+"PO-Revision-Date: 2026-03-18 10:44\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -45,7 +45,7 @@ msgstr "{0, plural, one {#টি আইটেম} other {#টি আইটেম
 #. placeholder {0}: item.roles.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
 msgid "{0, plural, one {# role} other {# roles}}"
-msgstr ""
+msgstr "{0, plural, one {# ভূমিকা} other {# ভূমিকা}}"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -202,7 +202,7 @@ msgstr "আগের দিকে কলাম যোগ করুন"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
-msgstr ""
+msgstr "একই কোম্পানিতে ক্যারিয়ার অগ্রগতি দেখাতে একাধিক ভূমিকা যোগ করুন।"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
@@ -210,7 +210,7 @@ msgstr "পৃষ্ঠা যোগ করুন"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add Role"
-msgstr ""
+msgstr "ভূমিকা যোগ করুন"
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -222,7 +222,7 @@ msgstr "আগের দিকে সারি যোগ করুন"
 
 #: src/components/ai/chat.tsx
 msgid "Added"
-msgstr ""
+msgstr "যোগ করা হয়েছে"
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -235,7 +235,7 @@ msgstr "এআই"
 
 #: src/components/ai/chat.tsx
 msgid "AI Chat"
-msgstr ""
+msgstr "AI চ্যাট"
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -246,8 +246,8 @@ msgid "Allow Public Access"
 msgstr "সর্বজনীন অ্যাক্সেসের অনুমতি দিন"
 
 #: src/routes/auth/register.tsx
-msgid "Already have an account? <0><1>Sign in now <2/></1></0>"
-msgstr "ইতিমধ্যেই একটি অ্যাকাউন্ট আছে? <0><1>এখনই সাইন ইন করুন <2/></1></0>"
+msgid "Already have an account? <0/>"
+msgstr "ইতিমধ্যে একটি অ্যাকাউন্ট আছে? <0/>"
 
 #: src/utils/locale.ts
 msgid "Amharic"
@@ -311,7 +311,7 @@ msgstr "আরবি"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Are you sure you want to close this dialog?"
-msgstr ""
+msgstr "আপনি কি এই ডায়ালগটি বন্ধ করতে চান?"
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
@@ -350,7 +350,7 @@ msgstr "কৃত্রিম বুদ্ধিমত্তা"
 
 #: src/components/ai/chat.tsx
 msgid "Ask me to update your resume..."
-msgstr ""
+msgstr "আমাকে আপনার রিজিউমে আপডেট করতে বলুন..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -550,15 +550,16 @@ msgstr "বৃত্ত"
 
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
-msgstr ""
-
-#: src/components/ui/multiple-combobox.tsx
-msgid "Clear selection"
-msgstr "নির্বাচন মুছে ফেলুন"
+msgstr "চ্যাট ইতিহাস মুছুন"
 
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "ইমপোর্ট করার জন্য এখান ক্লিক করে একটি ফাইল নির্বাচন করুন"
+
+#: src/components/ui/dialog.tsx
+#: src/components/ui/sheet.tsx
+msgid "Close"
+msgstr "বন্ধ করুন"
 
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
@@ -595,7 +596,7 @@ msgstr "কনেক্ট করুন"
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
-msgstr ""
+msgstr "বিষয়বস্তু"
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -640,7 +641,7 @@ msgstr "URL কপি করুন"
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
-msgstr ""
+msgstr "কভার লেটার"
 
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
@@ -681,7 +682,7 @@ msgstr "একটি নতুন সার্টিফিকেশন তৈর
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Create a new cover letter"
-msgstr ""
+msgstr "নতুন কভার লেটার তৈরি করুন"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -732,7 +733,7 @@ msgstr "একটি নতুন স্কিল তৈরি করুন"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Create a new summary item"
-msgstr ""
+msgstr "নতুন সারাংশ আইটেম তৈরি করুন"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -896,8 +897,8 @@ msgid "Documentation"
 msgstr "ডকুমেন্টেশন"
 
 #: src/routes/auth/login.tsx
-msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
-msgstr "অ্যাকাউন্ট নেই? <0><1>এখনই একটি তৈরি করুন <2/></1></0>"
+msgid "Don't have an account? <0/>"
+msgstr "অ্যাকাউন্ট নেই? <0/>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Donate to Reactive Resume"
@@ -963,7 +964,7 @@ msgstr "ডাচ"
 
 #: src/components/ai/chat.tsx
 msgid "e.g. Change my name to..."
-msgstr ""
+msgstr "যেমন আমার নাম পরিবর্তন করুন..."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1014,6 +1015,10 @@ msgstr "টু‑ফ্যাক্টর প্রমাণীকরণ সক�
 msgid "English"
 msgstr "ইংরেজি"
 
+#: src/utils/locale.ts
+msgid "English (United Kingdom)"
+msgstr "ইংরেজি (যুক্তরাজ্য)"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "অতিরিক্ত সুরক্ষার স্তর যোগ করে আপনার অ্যাকাউন্টের নিরাপত্তা বাড়িয়ে তুলুন।"
@@ -1056,7 +1061,7 @@ msgstr "পেশাদার জীবনবৃত্তান্ত তৈর�
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "পূর্ণ স্ক্রীন থেকে বের হন"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1090,7 +1095,7 @@ msgstr "টু‑ফ্যাক্টর প্রমাণীকরণ সে�
 
 #: src/routes/auth/login.tsx
 msgid "Failed to sign in. Please try again."
-msgstr ""
+msgstr "সাইন ইন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1173,7 +1178,7 @@ msgstr "পূর্ণ প্রস্থ"
 
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen"
-msgstr ""
+msgstr "পূর্ণ স্ক্রীন"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1457,7 +1462,7 @@ msgstr "একটি পৃষ্ঠায় কনটেন্ট কিভা
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
-msgstr ""
+msgstr "ত্যাগ করুন"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
@@ -1630,7 +1635,6 @@ msgid "No Advertising, No Tracking"
 msgstr "কোনো বিজ্ঞাপন নয়, কোনো ট্র্যাকিং নয়"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "No results found."
 msgstr "কোন ফলাফল খুঁজে পাওয়া যায়নি।"
 
@@ -1693,11 +1697,11 @@ msgstr "প্রতিষ্ঠান"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Period"
-msgstr ""
+msgstr "সামগ্রিক সময়কাল"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Title (optional)"
-msgstr ""
+msgstr "সামগ্রিক শিরোনাম (ঐচ্ছিক)"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1898,7 +1902,7 @@ msgstr "Reactive Resume মুক্ত উৎস, গোপনীয়তা-�
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
-msgstr ""
+msgstr "প্রাপক"
 
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
@@ -1923,12 +1927,12 @@ msgid "Refresh"
 msgstr "রিফ্রেশ"
 
 #: src/routes/auth/forgot-password.tsx
-msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
-msgstr "পাসওয়ার্ড মনে আছে? <0><1>এখনই সাইন ইন করুন <2/></1></0>"
+msgid "Remember your password? <0/>"
+msgstr "আপনার পাসওয়ার্ড মনে আছে? <0/>"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
-msgstr ""
+msgstr "সরান"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1936,7 +1940,7 @@ msgstr "পাসওয়ার্ড সরিয়ে ফেলুন"
 
 #: src/components/ai/chat.tsx
 msgid "Removed"
-msgstr ""
+msgstr "সরানো হয়েছে"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1948,7 +1952,7 @@ msgstr "নাম বদলান"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
-msgstr ""
+msgstr "পুনর্বিন্যাস করুন"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -2003,7 +2007,7 @@ msgstr "ডান দিকে অ্যালাইন"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
-msgstr ""
+msgstr "ভূমিকা অগ্রগতি"
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2055,7 +2059,6 @@ msgid "Search for..."
 msgstr "খুঁজুন..."
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Search..."
 msgstr "অনুসন্ধান..."
 
@@ -2068,7 +2071,6 @@ msgid "Section Type"
 msgstr "বিভাগের ধরন"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Select..."
 msgstr "নির্বাচন করুন..."
 
@@ -2141,7 +2143,7 @@ msgstr "দেখান"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Show link in title"
-msgstr ""
+msgstr "শিরোনামে লিঙ্ক দেখান"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
@@ -2214,6 +2216,10 @@ msgstr "মূল কনটেন্টে যান"
 msgid "Slovak"
 msgstr "স্লোভাক"
 
+#: src/utils/locale.ts
+msgid "Slovenian"
+msgstr ""
+
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
 msgstr "স্লাগ"
@@ -2282,7 +2288,7 @@ msgstr "পরিসংখ্যান"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
-msgstr ""
+msgstr "থাকুন"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2410,7 +2416,7 @@ msgstr "PDF তৈরি করার সময় একটি সমস্য�
 
 #: src/components/ai/chat.tsx
 msgid "Thinking..."
-msgstr ""
+msgstr "ভাবছি..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2612,7 +2618,7 @@ msgstr "বিদ্যমান সার্টিফিকেশন আপড�
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Update an existing cover letter"
-msgstr ""
+msgstr "বিদ্যমান কভার লেটার আপডেট করুন"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
@@ -2656,7 +2662,7 @@ msgstr "বিদ্যমান স্কিল আপডেট করুন"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Update an existing summary item"
-msgstr ""
+msgstr "বিদ্যমান সারাংশ আইটেম আপডেট করুন"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
@@ -2677,7 +2683,7 @@ msgstr "আপনার পাসওয়ার্ড আপডেট করু
 
 #: src/components/ai/chat.tsx
 msgid "Updated"
-msgstr ""
+msgstr "আপডেট করা হয়েছে"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2817,7 +2823,7 @@ msgstr "আপনি একটি আলাদা সর্বজনীন URL�
 
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
-msgstr ""
+msgstr "আপনার অসংরক্ষিত পরিবর্তন হারিয়ে যাবে।"
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx

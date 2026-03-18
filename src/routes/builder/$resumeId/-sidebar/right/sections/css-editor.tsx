@@ -1,5 +1,6 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useEffect } from "react";
+
 import type { Theme } from "@/utils/theme";
 
 const CSS_SELECTORS = [

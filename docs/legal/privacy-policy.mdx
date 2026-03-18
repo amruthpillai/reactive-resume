@@ -17,7 +17,9 @@ Reactive Resume is open-source and can be operated in different ways (for exampl
 If you are self-hosting, **you** are the Service Operator and responsible for compliance (including configuring email delivery, storage, and logging appropriately).
 
 <Note>
-  **Note for self-hosted deployments:** If you are using the official hosted service at <code>rxresu.me</code>, the project's published support contact is <code>hello@amruthpillai.com</code>. Replace the placeholders above with the correct operator details for your deployment if you are self-hosting.
+	**Note for self-hosted deployments:** If you are using the official hosted service at <code>rxresu.me</code>, the
+	project's published support contact is <code>hello@amruthpillai.com</code>. Replace the placeholders above with the
+	correct operator details for your deployment if you are self-hosting.
 </Note>
 
 ---
@@ -37,6 +39,7 @@ Reactive Resume is a resume builder that lets you:
 ## Information We Collect
 
 ### Account information
+
 When you create an account or sign in, the Service stores:
 
 - **Identity and profile**: name, email address, username/display username, optional profile image
@@ -45,6 +48,7 @@ When you create an account or sign in, the Service stores:
 If you use social sign-in (e.g., Google, GitHub, or a custom OAuth provider), the Service stores identifiers and tokens needed to link and maintain that login.
 
 ### Authentication and security data
+
 To keep your account secure and keep you signed in, the Service stores:
 
 - **Session data**: session token, session expiry, and (if provided) IP address and user agent
@@ -55,6 +59,7 @@ To keep your account secure and keep you signed in, the Service stores:
 The Service Operator may also send **transactional emails** (for example, password reset or email verification). Depending on deployment, these emails may be delivered via an email provider or (in development/testing) the links may be logged to server output.
 
 ### Resume content
+
 When you create or import a resume, the Service stores the resume data you provide, which may include personal data such as:
 
 - Contact details, location, summary
@@ -64,12 +69,14 @@ When you create or import a resume, the Service stores the resume data you provi
 Resumes may also have metadata such as tags, a slug, visibility (public/private), and an optional resume password (if you lock a resume).
 
 ### Public resume access and statistics
+
 If you publish a resume, other users may access it via its public link. The Service may also maintain simple statistics such as:
 
 - View count and download count
 - Last viewed/downloaded timestamps
 
 ### Uploaded files (e.g., profile pictures)
+
 If you upload files, the Service stores them either:
 
 - On the **local filesystem** of the server (default: under a `data/` directory), or
@@ -78,12 +85,14 @@ If you upload files, the Service stores them either:
 Depending on configuration, uploaded files may be publicly accessible (for example, some S3 configurations may default to public read access for uploaded objects). The Service Operator is responsible for selecting appropriate access controls for uploads.
 
 ### API keys created in the Service
+
 If the Service Operator enables API key functionality, the Service can store:
 
 - API key metadata and rate limit counters
 - The API key value itself (as stored by the Service)
 
 ### Local-only preferences and settings
+
 Some settings are stored on your device:
 
 - **Cookies**: UI preferences such as `theme` and `locale`
@@ -121,6 +130,7 @@ The Service does not include built-in behavioral advertising or third-party anal
 We share information only as needed to provide the Service:
 
 ### PDF generation and screenshots (Printer)
+
 When you export to PDF or request a screenshot, the Service sends a request to a configured printer endpoint (a headless Chromium browser) to render a resume URL.
 
 Depending on your deployment, the printer may be:
@@ -129,12 +139,15 @@ Depending on your deployment, the printer may be:
 - Operated by a third party (in which case the third party will process the resume content for rendering)
 
 ### Storage providers (optional)
+
 If configured, uploaded files may be stored in an S3-compatible provider. In that case, the storage provider processes and stores file data on behalf of the Service Operator.
 
 ### OAuth providers (optional)
+
 If you sign in via OAuth (Google/GitHub/custom), those providers receive authentication requests and return profile information (such as email/name) to the Service, as permitted by your provider settings.
 
 ### AI providers (optional, user-supplied)
+
 If you enable AI features and provide your own API key, prompts and generated content may be sent to your selected AI provider (OpenAI, Google, Anthropic), according to your use of those features and the provider's policies.
 
 ---
@@ -196,4 +209,3 @@ For privacy requests or questions, contact:
 
 - **Service Operator**: Amruth Pillai
 - **Email**: hello@amruthpillai.com
-

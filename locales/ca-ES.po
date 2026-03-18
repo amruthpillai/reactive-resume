@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 10:45\n"
+"PO-Revision-Date: 2026-03-18 10:43\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -45,7 +45,7 @@ msgstr "{0, plural, one {# element} other {# elements}}"
 #. placeholder {0}: item.roles.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
 msgid "{0, plural, one {# role} other {# roles}}"
-msgstr ""
+msgstr "{0, plural, one {# càrrec} other {# càrrecs}}"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -202,7 +202,7 @@ msgstr "Afegeix una columna abans"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
-msgstr ""
+msgstr "Afegiu diversos càrrecs per mostrar la progressió professional a la mateixa empresa."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
@@ -210,7 +210,7 @@ msgstr "Afegeix pàgina"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add Role"
-msgstr ""
+msgstr "Afegir càrrec"
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -222,7 +222,7 @@ msgstr "Afegeix una fila abans"
 
 #: src/components/ai/chat.tsx
 msgid "Added"
-msgstr ""
+msgstr "Afegit"
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -235,7 +235,7 @@ msgstr "IA"
 
 #: src/components/ai/chat.tsx
 msgid "AI Chat"
-msgstr ""
+msgstr "Xat amb IA"
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -246,8 +246,8 @@ msgid "Allow Public Access"
 msgstr "Permet accés públic"
 
 #: src/routes/auth/register.tsx
-msgid "Already have an account? <0><1>Sign in now <2/></1></0>"
-msgstr "Ja tens un compte? <0><1>Inicia sessió ara <2/></1></0>"
+msgid "Already have an account? <0/>"
+msgstr "Ja teniu un compte? <0/>"
 
 #: src/utils/locale.ts
 msgid "Amharic"
@@ -311,7 +311,7 @@ msgstr "Àrab"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Are you sure you want to close this dialog?"
-msgstr ""
+msgstr "Segur que voleu tancar aquest diàleg?"
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
@@ -350,7 +350,7 @@ msgstr "Intel·ligència artificial"
 
 #: src/components/ai/chat.tsx
 msgid "Ask me to update your resume..."
-msgstr ""
+msgstr "Demaneu-me que actualitzi el vostre currículum..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -510,7 +510,7 @@ msgstr "Certificacions"
 
 #: src/routes/_home/-sections/header.tsx
 msgid "Change language"
-msgstr "Canvia l’idioma"
+msgstr "Canvia l'idioma"
 
 #: src/components/command-palette/pages/preferences/index.tsx
 msgid "Change language to..."
@@ -550,15 +550,16 @@ msgstr "Cercle"
 
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
-msgstr ""
-
-#: src/components/ui/multiple-combobox.tsx
-msgid "Clear selection"
-msgstr "Esborra la selecció"
+msgstr "Esborra l'historial del xat"
 
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Fes clic aquí per seleccionar un fitxer per importar"
+
+#: src/components/ui/dialog.tsx
+#: src/components/ui/sheet.tsx
+msgid "Close"
+msgstr "Tanca"
 
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
@@ -595,7 +596,7 @@ msgstr "Connecta"
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
-msgstr ""
+msgstr "Contingut"
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -640,7 +641,7 @@ msgstr "Copia l’URL"
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
-msgstr ""
+msgstr "Carta de presentació"
 
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
@@ -681,7 +682,7 @@ msgstr "Crea una certificació nova"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Create a new cover letter"
-msgstr ""
+msgstr "Crea una carta de presentació nova"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -732,7 +733,7 @@ msgstr "Crea una habilitat nova"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Create a new summary item"
-msgstr ""
+msgstr "Crea un element de resum nou"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -896,8 +897,8 @@ msgid "Documentation"
 msgstr "Documentació"
 
 #: src/routes/auth/login.tsx
-msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
-msgstr "No tens un compte? <0><1>Crea’n un ara <2/></1></0>"
+msgid "Don't have an account? <0/>"
+msgstr "No teniu compte? <0/>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Donate to Reactive Resume"
@@ -963,7 +964,7 @@ msgstr "Neerlandès"
 
 #: src/components/ai/chat.tsx
 msgid "e.g. Change my name to..."
-msgstr ""
+msgstr "p.ex. Canvia el meu nom a..."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1014,6 +1015,10 @@ msgstr "S’està activant l’autenticació en dos passos..."
 msgid "English"
 msgstr "Anglès"
 
+#: src/utils/locale.ts
+msgid "English (United Kingdom)"
+msgstr "Anglès (Regne Unit)"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "Millora la seguretat del compte amb capes addicionals de protecció."
@@ -1056,7 +1061,7 @@ msgstr "Tot el que necessites per crear, personalitzar i compartir currículums 
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "Surt de la pantalla completa"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1090,7 +1095,7 @@ msgstr "No s’ha pogut configurar l’autenticació en dos passos."
 
 #: src/routes/auth/login.tsx
 msgid "Failed to sign in. Please try again."
-msgstr ""
+msgstr "No s'ha pogut iniciar la sessió. Torneu-ho a provar."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1173,7 +1178,7 @@ msgstr "Amplada completa"
 
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen"
-msgstr ""
+msgstr "Pantalla completa"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1457,7 +1462,7 @@ msgstr "Aprèn més sobre com ajustar el contingut en una pàgina"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
-msgstr ""
+msgstr "Surt"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
@@ -1630,7 +1635,6 @@ msgid "No Advertising, No Tracking"
 msgstr "Sense publicitat, sense seguiment"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "No results found."
 msgstr "No s’han trobat resultats."
 
@@ -1693,11 +1697,11 @@ msgstr "Organització"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Period"
-msgstr ""
+msgstr "Període total"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Title (optional)"
-msgstr ""
+msgstr "Títol global (opcional)"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1898,7 +1902,7 @@ msgstr "Reactive Resume és de codi obert, centrat en la privadesa i completamen
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
-msgstr ""
+msgstr "Destinatari"
 
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
@@ -1923,12 +1927,12 @@ msgid "Refresh"
 msgstr "Actualitza"
 
 #: src/routes/auth/forgot-password.tsx
-msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
-msgstr "Recordes la contrasenya? <0><1>Inicia sessió ara <2/></1></0>"
+msgid "Remember your password? <0/>"
+msgstr "Recordeu la contrasenya? <0/>"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
-msgstr ""
+msgstr "Elimina"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1936,7 +1940,7 @@ msgstr "Elimina la contrasenya"
 
 #: src/components/ai/chat.tsx
 msgid "Removed"
-msgstr ""
+msgstr "Eliminat"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1948,11 +1952,11 @@ msgstr "Canvia el nom"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
-msgstr ""
+msgstr "Reordena"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
-msgstr "Informa d’un error"
+msgstr "Informar d’un error"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
@@ -2003,7 +2007,7 @@ msgstr "Alinea a la dreta"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
-msgstr ""
+msgstr "Progressió del càrrec"
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2055,7 +2059,6 @@ msgid "Search for..."
 msgstr "Cerca..."
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Search..."
 msgstr "Cerca..."
 
@@ -2068,13 +2071,12 @@ msgid "Section Type"
 msgstr "Tipus de secció"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Select..."
 msgstr "Selecciona..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
-msgstr "Allotja-ho tu mateix amb Docker"
+msgstr "Allotjament propi amb Docker"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Send Password Reset Email"
@@ -2141,7 +2143,7 @@ msgstr "Mostra"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Show link in title"
-msgstr ""
+msgstr "Mostra l'enllaç al títol"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
@@ -2214,6 +2216,10 @@ msgstr "Vés al contingut principal"
 msgid "Slovak"
 msgstr "Eslovac"
 
+#: src/utils/locale.ts
+msgid "Slovenian"
+msgstr ""
+
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
 msgstr "Identificador llegible (slug)"
@@ -2282,7 +2288,7 @@ msgstr "Estadístiques"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
-msgstr ""
+msgstr "Queda't"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2410,7 +2416,7 @@ msgstr "S’ha produït un problema en generar el PDF, torna-ho a provar més ta
 
 #: src/components/ai/chat.tsx
 msgid "Thinking..."
-msgstr ""
+msgstr "Pensant..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2612,7 +2618,7 @@ msgstr "Actualitza una certificació existent"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Update an existing cover letter"
-msgstr ""
+msgstr "Actualitza una carta de presentació existent"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
@@ -2656,7 +2662,7 @@ msgstr "Actualitza una habilitat existent"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Update an existing summary item"
-msgstr ""
+msgstr "Actualitza un element de resum existent"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
@@ -2677,7 +2683,7 @@ msgstr "Actualitza la contrasenya"
 
 #: src/components/ai/chat.tsx
 msgid "Updated"
-msgstr ""
+msgstr "Actualitzat"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2817,7 +2823,7 @@ msgstr "Pots compartir el currículum mitjançant un URL públic únic, protegir
 
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
-msgstr ""
+msgstr "Tens canvis no desats que es perdran."
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx

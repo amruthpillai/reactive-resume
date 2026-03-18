@@ -11,6 +11,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -24,7 +25,7 @@ import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 
 type Props = Omit<React.ComponentProps<typeof DropdownMenuContent>, "children"> & {
 	resume: RouterOutput["resume"]["list"][number];
-	children: React.ReactNode;
+	children: React.ComponentProps<typeof DropdownMenuTrigger>["render"];
 };
 
 export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
@@ -85,7 +86,7 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+			<DropdownMenuTrigger render={children} />
 
 			<DropdownMenuContent {...props}>
 				<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
@@ -97,24 +98,24 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem disabled={resume.isLocked} onSelect={handleUpdate}>
+				<DropdownMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon />
 					<Trans>Update</Trans>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem onSelect={handleDuplicate}>
+				<DropdownMenuItem onClick={handleDuplicate}>
 					<CopySimpleIcon />
 					<Trans>Duplicate</Trans>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem onSelect={handleToggleLock}>
+				<DropdownMenuItem onClick={handleToggleLock}>
 					{resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
 					{resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem variant="destructive" disabled={resume.isLocked} onSelect={handleDelete}>
+				<DropdownMenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
 					<TrashSimpleIcon />
 					<Trans>Delete</Trans>
 				</DropdownMenuItem>

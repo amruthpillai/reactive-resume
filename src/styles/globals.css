@@ -1,7 +1,6 @@
-/** biome-ignore-all lint/complexity/noImportantStyles: if it's important, it's important */
-
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -141,7 +140,7 @@
 
 @layer base {
 	* {
-		@apply border-border outline-ring/50 min-w-0;
+		@apply min-w-0 border-border outline-ring/50;
 	}
 
 	body {
@@ -150,12 +149,12 @@
 
 	input[type="number"] {
 		margin: 0;
-		@apply [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+		@apply [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none;
 	}
 
 	/* Accessibility: Focus visible styles for links */
 	a:focus-visible {
-		@apply outline-2 outline-offset-2 outline-ring rounded-sm;
+		@apply rounded-sm outline-2 outline-offset-2 outline-ring;
 	}
 }
 

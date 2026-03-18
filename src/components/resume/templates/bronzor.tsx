@@ -1,15 +1,18 @@
 import { EnvelopeIcon, GlobeIcon, MapPinIcon, PhoneIcon } from "@phosphor-icons/react";
+
 import { cn } from "@/utils/style";
+
+import type { TemplateProps } from "./types";
+
 import { getSectionComponent } from "../shared/get-section-component";
 import { PageIcon } from "../shared/page-icon";
 import { PageLink } from "../shared/page-link";
 import { PagePicture } from "../shared/page-picture";
 import { useResumeStore } from "../store/resume";
-import type { TemplateProps } from "./types";
 
 const sectionClassName = cn(
 	// Section Layout
-	"grid grid-cols-5 border-(--page-primary-color) border-t pt-1",
+	"grid grid-cols-5 border-t border-(--page-primary-color) pt-1",
 
 	// Section Content
 	"[&>.section-content]:col-span-4",

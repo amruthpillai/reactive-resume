@@ -1,8 +1,12 @@
-import { ORPCError, os } from "@orpc/server";
 import type { User } from "better-auth";
+
+import { ORPCError, os } from "@orpc/server";
 import { eq } from "drizzle-orm";
-import { env } from "@/utils/env";
+
 import type { Locale } from "@/utils/locale";
+
+import { env } from "@/utils/env";
+
 import { auth } from "../auth/config";
 import { db } from "../drizzle/client";
 import { user } from "../drizzle/schema";

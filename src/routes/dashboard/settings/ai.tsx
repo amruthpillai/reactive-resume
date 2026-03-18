@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { useIsClient } from "usehooks-ts";
+
 import { Button } from "@/components/ui/button";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { type AIProvider, useAIStore } from "@/integrations/ai/store";
 import { orpc } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
+
 import { DashboardHeader } from "../-components/header";
 
 export const Route = createFileRoute("/dashboard/settings/ai")({
@@ -232,7 +234,7 @@ function RouteComponent() {
 							<Trans>Your data is stored locally</Trans>
 						</h3>
 
-						<p className="text-muted-foreground leading-relaxed">
+						<p className="leading-relaxed text-muted-foreground">
 							<Trans>
 								Everything entered here is stored locally on your browser. Your data is only sent to the server when
 								making a request to the AI provider, and is never stored or logged on our servers.

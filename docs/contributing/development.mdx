@@ -4,11 +4,8 @@ description: "Set up a local development environment for Reactive Resume"
 ---
 
 <Info>
-  **Prerequisites**:
-  - [Node.js](https://nodejs.org/) v20 or higher
-  - [pnpm](https://pnpm.io/) v10.28.0 or higher (package manager)
-  - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
-  - [Git](https://git-scm.com/)
+	**Prerequisites**: - [Node.js](https://nodejs.org/) v20 or higher - [pnpm](https://pnpm.io/) v10.28.0 or higher
+	(package manager) - [Docker](https://docs.docker.com/get-docker/) and Docker Compose - [Git](https://git-scm.com/)
 </Info>
 
 This guide walks you through setting up Reactive Resume for local development. Whether you're contributing to the project or customizing it for your needs, these steps will get you up and running.
@@ -87,14 +84,15 @@ This guide walks you through setting up Reactive Resume for local development. W
     SMTP_HOST=localhost
     SMTP_PORT=1025
     ```
-    
+
     <Note>
       **PDF Generation Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while the printer service is running inside Docker (which is the case when using `compose.dev.yml`). The printer needs to reach your local app to render resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to communicate with services running on your host machine.
     </Note>
-    
+
     <Tip>
       **Email Testing**: The development stack includes [Mailpit](https://mailpit.axllent.org/), an email testing tool. All emails sent by the application will be captured and viewable at [http://localhost:8025](http://localhost:8025). No emails will actually be sent to real addresses during development.
     </Tip>
+
   </Step>
   
   <Step title="Run Database Migrations">
@@ -122,32 +120,33 @@ Here are the most commonly used scripts during development:
 
 ### Development
 
-| Command | Description |
-|---------|-------------|
-| `pnpm run dev` | Start the development server with hot reload |
-| `pnpm run build` | Build the application for production |
-| `pnpm run start` | Start the production server |
-| `pnpm run lint` | Run Biome linter and formatter |
-| `pnpm run typecheck` | Run TypeScript type checking |
+| Command              | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `pnpm run dev`       | Start the development server with hot reload |
+| `pnpm run build`     | Build the application for production         |
+| `pnpm run start`     | Start the production server                  |
+| `pnpm run lint`      | Run Oxlint linter and formatter              |
+| `pnpm run fmt`       | Run Oxfmt formatter                          |
+| `pnpm run typecheck` | Run TypeScript type checking                 |
 
 ### Database
 
-| Command | Description |
-|---------|-------------|
+| Command                | Description                                  |
+| ---------------------- | -------------------------------------------- |
 | `pnpm run db:generate` | Generate migration files from schema changes |
-| `pnpm run db:migrate` | Apply pending migrations |
-| `pnpm run db:studio` | Open Drizzle Studio (database GUI) |
+| `pnpm run db:migrate`  | Apply pending migrations                     |
+| `pnpm run db:studio`   | Open Drizzle Studio (database GUI)           |
 
 ### Internationalization
 
-| Command | Description |
-|---------|-------------|
+| Command                   | Description                            |
+| ------------------------- | -------------------------------------- |
 | `pnpm run lingui:extract` | Extract translatable strings from code |
 
 ### Documentation
 
-| Command | Description |
-|---------|-------------|
+| Command             | Description                                |
+| ------------------- | ------------------------------------------ |
 | `pnpm run docs:dev` | Start the Mintlify docs development server |
 
 ---
@@ -210,9 +209,7 @@ This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizz
    pnpm run db:migrate
    ```
 
-<Warning>
-  Always review generated migrations before applying them, especially when working with existing data.
-</Warning>
+<Warning>Always review generated migrations before applying them, especially when working with existing data.</Warning>
 
 ---
 
@@ -232,7 +229,7 @@ import { Trans } from "@lingui/react/macro";
 const message = t`Hello, World!`;
 
 // For JSX content
-<Trans>Welcome to Reactive Resume</Trans>
+<Trans>Welcome to Reactive Resume</Trans>;
 ```
 
 ### Extracting Translations
@@ -251,11 +248,12 @@ Translation files are located in the `locales/` directory in `.po` format.
 
 ### Linting & Formatting
 
-Uses [Biome](https://biomejs.dev/) for linting and formatting:
+Uses [Oxlint](https://oxlint.dev/) for linting and [Oxfmt](https://oxfmt.dev/) for formatting:
 
 ```bash
 # Check and auto-fix issues
 pnpm run lint
+pnpm run fmt
 ```
 
 ### Type Checking
@@ -267,7 +265,9 @@ pnpm run typecheck
 ```
 
 <Tip>
-  Configure your IDE to use Biome for automatic formatting on save. For VS Code, install the [Biome extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome).
+	Configure your IDE to use Oxlint for automatic linting and Oxfmt for automatic formatting on save. For VS Code,
+	install the [Oxlint extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode) and configure the
+	settings in `.vscode/settings.json`.
 </Tip>
 
 ---
@@ -275,53 +275,27 @@ pnpm run typecheck
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Port 3000 is already in use">
-    Another process is using port 3000. Either stop that process or start the dev server on a different port:
-    
-    ```bash
-    PORT=3001 pnpm run dev
-    ```
-  </Accordion>
-  
-  <Accordion title="Database connection refused">
-    Ensure Docker containers are running:
-    
-    ```bash
-    docker compose -f compose.dev.yml ps
-    docker compose -f compose.dev.yml up -d
-    ```
-    
-    Check that PostgreSQL is healthy and accessible on port 5432.
-  </Accordion>
-  
-  <Accordion title="S3/Storage errors">
-    Verify SeaweedFS is running and the bucket exists:
-    
-    ```bash
-    docker compose -f compose.dev.yml logs seaweedfs
-    docker compose -f compose.dev.yml logs seaweedfs_create_bucket
-    ```
-    
-    If the bucket wasn't created, restart the bucket creation service:
-    
-    ```bash
-    docker compose -f compose.dev.yml restart seaweedfs_create_bucket
-    ```
-  </Accordion>
-  
-  <Accordion title="Type errors after pulling changes">
-    The route tree may need regeneration. Run the dev server which auto-generates routes:
-    
-    ```bash
-    pnpm run dev
-    ```
-    
-    Or run type checking to see specific errors:
-    
-    ```bash
-    pnpm run typecheck
-    ```
-  </Accordion>
+	<Accordion title="Port 3000 is already in use">
+		Another process is using port 3000. Either stop that process or start the dev server on a different port: ```bash
+		PORT=3001 pnpm run dev ```
+	</Accordion>
+
+    <Accordion title="Database connection refused">
+    	Ensure Docker containers are running: ```bash docker compose -f compose.dev.yml ps docker compose -f compose.dev.yml
+    	up -d ``` Check that PostgreSQL is healthy and accessible on port 5432.
+    </Accordion>
+
+    <Accordion title="S3/Storage errors">
+    	Verify SeaweedFS is running and the bucket exists: ```bash docker compose -f compose.dev.yml logs seaweedfs docker
+    	compose -f compose.dev.yml logs seaweedfs_create_bucket ``` If the bucket wasn't created, restart the bucket
+    	creation service: ```bash docker compose -f compose.dev.yml restart seaweedfs_create_bucket ```
+    </Accordion>
+
+    <Accordion title="Type errors after pulling changes">
+    	The route tree may need regeneration. Run the dev server which auto-generates routes: ```bash pnpm run dev ``` Or
+    	run type checking to see specific errors: ```bash pnpm run typecheck ```
+    </Accordion>
+
 </AccordionGroup>
 
 ---
@@ -329,18 +303,10 @@ pnpm run typecheck
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card
-    title="Project Architecture"
-    icon="folder-open"
-    href="/contributing/architecture"
-  >
-    Deep dive into the project architecture and codebase structure.
-  </Card>
-  <Card
-    title="GitHub Repository"
-    icon="github"
-    href="https://github.com/amruthpillai/reactive-resume"
-  >
-    View the source code and contribute to the project.
-  </Card>
+	<Card title="Project Architecture" icon="folder-open" href="/contributing/architecture">
+		Deep dive into the project architecture and codebase structure.
+	</Card>
+	<Card title="GitHub Repository" icon="github" href="https://github.com/amruthpillai/reactive-resume">
+		View the source code and contribute to the project.
+	</Card>
 </CardGroup>

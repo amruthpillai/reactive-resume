@@ -1,8 +1,11 @@
+import type z from "zod";
+
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
-import type z from "zod";
-import webfontlist from "@/components/typography/webfontlist.json";
+
 import type { typographySchema } from "@/schema/resume/data";
+
+import webfontlist from "@/components/typography/webfontlist.json";
 
 export function useWebfonts(typography: z.infer<typeof typographySchema>) {
 	const isMounted = useIsMounted();
@@ -41,7 +44,7 @@ export function useWebfonts(typography: z.infer<typeof typographySchema>) {
 		const bodyTypography = typography.body;
 		const headingTypography = typography.heading;
 
-		Promise.all([
+		void Promise.all([
 			loadFont(bodyTypography.fontFamily, bodyTypography.fontWeights),
 			loadFont(headingTypography.fontFamily, headingTypography.fontWeights),
 		]).then(() => {

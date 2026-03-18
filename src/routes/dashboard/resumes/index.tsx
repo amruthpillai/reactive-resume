@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
-import { GridFourIcon, ListIcon, ReadCvLogoIcon, SortAscendingIcon, TagIcon } from "@phosphor-icons/react";
+import { GridFourIcon, ListIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, stripSearchParams, useNavigate, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
@@ -9,13 +9,13 @@ import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 import z from "zod";
-import { Badge } from "@/components/ui/badge";
+
 import { Combobox } from "@/components/ui/combobox";
-import { MultipleCombobox } from "@/components/ui/multiple-combobox";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { orpc } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
+
 import { DashboardHeader } from "../-components/header";
 import { GridView } from "./-components/grid-view";
 import { ListView } from "./-components/list-view";
@@ -62,9 +62,9 @@ function RouteComponent() {
 		];
 	}, [i18n]);
 
-	const onViewChange = (value: string) => {
-		setViewServerFn({ data: value as "grid" | "list" });
-		router.invalidate();
+	const onViewChange = async (value: string) => {
+		await setViewServerFn({ data: value as "grid" | "list" });
+		void router.invalidate();
 	};
 
 	return (
@@ -77,42 +77,21 @@ function RouteComponent() {
 				<Combobox
 					value={sort}
 					options={sortOptions}
+					placeholder={t`Sort by`}
 					onValueChange={(value) => {
 						if (!value) return;
-						navigate({ search: { tags, sort: value as SortOption } });
-					}}
-					buttonProps={{
-						title: t`Sort by`,
-						variant: "ghost",
-						children: (_, option) => (
-							<>
-								<SortAscendingIcon />
-								{option?.label}
-							</>
-						),
+						void navigate({ search: { tags, sort: value as SortOption } });
 					}}
 				/>
 
-				<MultipleCombobox
+				<Combobox
+					multiple
 					value={tags}
 					options={tagOptions}
+					placeholder={t`Filter by`}
+					className={cn({ hidden: tagOptions.length === 0 })}
 					onValueChange={(value) => {
-						navigate({ search: { tags: value, sort } });
-					}}
-					buttonProps={{
-						variant: "ghost",
-						title: t`Filter by`,
-						className: cn({ hidden: tagOptions.length === 0 }),
-						children: (_, options) => (
-							<>
-								<TagIcon />
-								{options.map((option) => (
-									<Badge key={option.value} variant="outline">
-										{option.label}
-									</Badge>
-								))}
-							</>
-						),
+						void navigate({ search: { tags: value ?? [], sort } });
 					}}
 				/>
 

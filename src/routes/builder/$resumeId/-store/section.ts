@@ -1,6 +1,7 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
+
 import { leftSidebarSections, rightSidebarSections, type SidebarSection } from "@/utils/resume/section";
 
 type SectionCollapseState = {

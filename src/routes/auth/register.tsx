@@ -8,11 +8,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/integrations/auth/client";
+
 import { SocialAuth } from "./-components/social-auth";
 
 export const Route = createFileRoute("/auth/register")({
@@ -82,18 +84,23 @@ function RouteComponent() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Create a new account</Trans>
 				</h1>
 
 				<div className="text-muted-foreground">
 					<Trans>
 						Already have an account?{" "}
-						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
-							<Link to="/auth/login">
-								Sign in now <ArrowRightIcon />
-							</Link>
-						</Button>
+						<Button
+							variant="link"
+							nativeButton={false}
+							className="h-auto gap-1.5 px-1! py-0"
+							render={
+								<Link to="/auth/login">
+									Sign in now <ArrowRightIcon />
+								</Link>
+							}
+						/>
 					</Trans>
 				</div>
 			</div>
@@ -109,9 +116,11 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Name</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
-									</FormControl>
+									<FormControl
+										render={
+											<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
+										}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -125,16 +134,18 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Username</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input
-											min={3}
-											max={64}
-											autoComplete="section-register username"
-											placeholder="john.doe"
-											className="lowercase"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												min={3}
+												max={64}
+												autoComplete="section-register username"
+												placeholder="john.doe"
+												className="lowercase"
+												{...field}
+											/>
+										}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -148,15 +159,17 @@ function RouteComponent() {
 									<FormLabel>
 										<Trans>Email Address</Trans>
 									</FormLabel>
-									<FormControl>
-										<Input
-											type="email"
-											autoComplete="section-register email"
-											placeholder="john.doe@example.com"
-											className="lowercase"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												type="email"
+												autoComplete="section-register email"
+												placeholder="john.doe@example.com"
+												className="lowercase"
+												{...field}
+											/>
+										}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -171,15 +184,17 @@ function RouteComponent() {
 										<Trans>Password</Trans>
 									</FormLabel>
 									<div className="flex items-center gap-x-1.5">
-										<FormControl>
-											<Input
-												min={6}
-												max={64}
-												type={showPassword ? "text" : "password"}
-												autoComplete="section-register new-password"
-												{...field}
-											/>
-										</FormControl>
+										<FormControl
+											render={
+												<Input
+													min={6}
+													max={64}
+													type={showPassword ? "text" : "password"}
+													autoComplete="section-register new-password"
+													{...field}
+												/>
+											}
+										/>
 
 										<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
 											{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
@@ -206,7 +221,7 @@ function PostSignupScreen() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>You've got mail!</Trans>
 				</h1>
 				<p className="text-muted-foreground">
@@ -223,11 +238,14 @@ function PostSignupScreen() {
 				</AlertDescription>
 			</Alert>
 
-			<Button asChild>
-				<Link to="/dashboard">
-					<Trans>Continue</Trans> <ArrowRightIcon />
-				</Link>
-			</Button>
+			<Button
+				nativeButton={false}
+				render={
+					<Link to="/dashboard">
+						<Trans>Continue</Trans> <ArrowRightIcon />
+					</Link>
+				}
+			/>
 		</>
 	);
 }

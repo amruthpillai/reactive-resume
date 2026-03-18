@@ -2,6 +2,7 @@ import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { BatchHandlerPlugin, RequestHeadersPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import { createFileRoute } from "@tanstack/react-router";
+
 import router from "@/integrations/orpc/router";
 import { getLocale } from "@/utils/locale";
 import { logger } from "@/utils/logger";

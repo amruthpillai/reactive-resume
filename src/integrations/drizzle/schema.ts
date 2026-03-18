@@ -1,4 +1,6 @@
+import { defineRelations } from "drizzle-orm";
 import * as pg from "drizzle-orm/pg-core";
+
 import { defaultResumeData, type ResumeData } from "../../schema/resume/data";
 import { generateId } from "../../utils/string";
 
@@ -17,6 +19,7 @@ export const user = pg.pgTable(
 		username: pg.text("username").notNull().unique(),
 		displayUsername: pg.text("display_username").notNull().unique(),
 		twoFactorEnabled: pg.boolean("two_factor_enabled").notNull().default(false),
+		lastActiveAt: pg.timestamp("last_active_at", { withTimezone: true }),
 		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 		updatedAt: pg
 			.timestamp("updated_at", { withTimezone: true })
@@ -84,22 +87,26 @@ export const account = pg.pgTable(
 	(t) => [pg.index().on(t.userId)],
 );
 
-export const verification = pg.pgTable("verification", {
-	id: pg
-		.uuid("id")
-		.notNull()
-		.primaryKey()
-		.$defaultFn(() => generateId()),
-	identifier: pg.text("identifier").notNull().unique(),
-	value: pg.text("value").notNull(),
-	expiresAt: pg.timestamp("expires_at", { withTimezone: true }).notNull(),
-	createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-	updatedAt: pg
-		.timestamp("updated_at", { withTimezone: true })
-		.notNull()
-		.defaultNow()
-		.$onUpdate(() => /* @__PURE__ */ new Date()),
-});
+export const verification = pg.pgTable(
+	"verification",
+	{
+		id: pg
+			.uuid("id")
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => generateId()),
+		identifier: pg.text("identifier").notNull().unique(),
+		value: pg.text("value").notNull(),
+		expiresAt: pg.timestamp("expires_at", { withTimezone: true }).notNull(),
+		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+		updatedAt: pg
+			.timestamp("updated_at", { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => /* @__PURE__ */ new Date()),
+	},
+	(t) => [pg.index().on(t.identifier)],
+);
 
 export const twoFactor = pg.pgTable(
 	"two_factor",
@@ -113,8 +120,8 @@ export const twoFactor = pg.pgTable(
 			.uuid("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
-		secret: pg.text("secret"),
-		backupCodes: pg.text("backup_codes"),
+		secret: pg.text("secret").notNull(),
+		backupCodes: pg.text("backup_codes").notNull(),
 		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 		updatedAt: pg
 			.timestamp("updated_at", { withTimezone: true })
@@ -239,8 +246,8 @@ export const apikey = pg.pgTable(
 		lastRefillAt: pg.timestamp("last_refill_at", { withTimezone: true }),
 		enabled: pg.boolean("enabled").notNull().default(true),
 		rateLimitEnabled: pg.boolean("rate_limit_enabled").notNull().default(false),
-		rateLimitTimeWindow: pg.integer("rate_limit_time_window"),
-		rateLimitMax: pg.integer("rate_limit_max"),
+		rateLimitTimeWindow: pg.integer("rate_limit_time_window").default(86400000),
+		rateLimitMax: pg.integer("rate_limit_max").default(10),
 		requestCount: pg.integer("request_count").notNull().default(0),
 		remaining: pg.integer("remaining"),
 		lastRequest: pg.timestamp("last_request", { withTimezone: true }),
@@ -254,5 +261,70 @@ export const apikey = pg.pgTable(
 		permissions: pg.text("permissions"),
 		metadata: pg.jsonb("metadata"),
 	},
-	(t) => [pg.index().on(t.referenceId), pg.index().on(t.key), pg.index().on(t.enabled, t.referenceId)],
+	(t) => [
+		pg.index().on(t.referenceId),
+		pg.index().on(t.key),
+		pg.index().on(t.configId),
+		pg.index().on(t.enabled, t.referenceId),
+	],
+);
+
+export const relations = defineRelations(
+	{ user, session, account, verification, twoFactor, passkey, resume, resumeStatistics, apikey },
+	(r) => ({
+		user: {
+			sessions: r.many.session(),
+			accounts: r.many.account(),
+			twoFactors: r.many.twoFactor(),
+			passkeys: r.many.passkey(),
+			resumes: r.many.resume(),
+			apiKeys: r.many.apikey(),
+		},
+		session: {
+			user: r.one.user({
+				from: r.session.userId,
+				to: r.user.id,
+			}),
+		},
+		account: {
+			user: r.one.user({
+				from: r.account.userId,
+				to: r.user.id,
+			}),
+		},
+		twoFactor: {
+			user: r.one.user({
+				from: r.twoFactor.userId,
+				to: r.user.id,
+			}),
+		},
+		passkey: {
+			user: r.one.user({
+				from: r.passkey.userId,
+				to: r.user.id,
+			}),
+		},
+		resume: {
+			user: r.one.user({
+				from: r.resume.userId,
+				to: r.user.id,
+			}),
+			statistics: r.one.resumeStatistics({
+				from: r.resume.id,
+				to: r.resumeStatistics.resumeId,
+			}),
+		},
+		resumeStatistics: {
+			resume: r.one.resume({
+				from: r.resumeStatistics.resumeId,
+				to: r.resume.id,
+			}),
+		},
+		apikey: {
+			user: r.one.user({
+				from: r.apikey.referenceId,
+				to: r.user.id,
+			}),
+		},
+	}),
 );

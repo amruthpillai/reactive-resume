@@ -8,7 +8,7 @@ msgstr ""
 "Language: am\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 10:46\n"
+"PO-Revision-Date: 2026-03-18 10:44\n"
 "Last-Translator: \n"
 "Language-Team: Amharic\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -45,7 +45,7 @@ msgstr "{0, plural, one {# ንጥል} other {# ንጥሎች}}"
 #. placeholder {0}: item.roles.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
 msgid "{0, plural, one {# role} other {# roles}}"
-msgstr ""
+msgstr "{0, plural, one {# ሚና} other {# ሚናዎች}}"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -202,7 +202,7 @@ msgstr "ከዚህ በፊት አምድ ያክሉ"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
-msgstr ""
+msgstr "በተመሳሳይ ኩባንያ ውስጥ የስራ እድገትን ለማሳየት ብዙ ሚናዎችን ያክሉ።"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
@@ -210,7 +210,7 @@ msgstr "ገጽ ያክሉ"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add Role"
-msgstr ""
+msgstr "ሚና ጨምር"
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -222,7 +222,7 @@ msgstr "ከዚህ በፊት ረድፍ ያክሉ"
 
 #: src/components/ai/chat.tsx
 msgid "Added"
-msgstr ""
+msgstr "ተጨምሯል"
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -235,7 +235,7 @@ msgstr "AI"
 
 #: src/components/ai/chat.tsx
 msgid "AI Chat"
-msgstr ""
+msgstr "AI ውይይት"
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -246,8 +246,8 @@ msgid "Allow Public Access"
 msgstr "ለሁሉም ይገናኛል"
 
 #: src/routes/auth/register.tsx
-msgid "Already have an account? <0><1>Sign in now <2/></1></0>"
-msgstr "መለያ አለዎት? <0><1>አሁን ይግቡ <2/></1></0>"
+msgid "Already have an account? <0/>"
+msgstr "ቀድሞ መለያ አለዎት? <0/>"
 
 #: src/utils/locale.ts
 msgid "Amharic"
@@ -311,7 +311,7 @@ msgstr "ዓረብኛ"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Are you sure you want to close this dialog?"
-msgstr ""
+msgstr "ይህን ውይይት መዝጋት እንደሚፈልጉ እርግጠኛ ነዎት?"
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
@@ -350,7 +350,7 @@ msgstr "አርቲፊሻል ኢንተለጀንስ"
 
 #: src/components/ai/chat.tsx
 msgid "Ask me to update your resume..."
-msgstr ""
+msgstr "የእርስዎን ማስታወሻ እንዲያዘምን ጠይቁኝ..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -550,15 +550,16 @@ msgstr "ክብ"
 
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
-msgstr ""
-
-#: src/components/ui/multiple-combobox.tsx
-msgid "Clear selection"
-msgstr "ምርጫን ሰርዝ"
+msgstr "የውይይት ታሪክ አጽዳ"
 
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "ፋይል ለማምጣት ለመምረጥ እዚህ ጠቅ ያድርጉ"
+
+#: src/components/ui/dialog.tsx
+#: src/components/ui/sheet.tsx
+msgid "Close"
+msgstr "ዝጋ"
 
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
@@ -595,7 +596,7 @@ msgstr "አገናኝ"
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
-msgstr ""
+msgstr "ይዘት"
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -640,7 +641,7 @@ msgstr "URL ቅጂ አድርግ"
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
-msgstr ""
+msgstr "ማመልከቻ ደብዳቤ"
 
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
@@ -681,7 +682,7 @@ msgstr "አዲስ ማረጋገጫ ፍጠር"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Create a new cover letter"
-msgstr ""
+msgstr "አዲስ ማመልከቻ ደብዳቤ ፍጠር"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -732,7 +733,7 @@ msgstr "አዲስ ችሎታ ፍጠር"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Create a new summary item"
-msgstr ""
+msgstr "አዲስ ማጠቃለያ ንጥል ፍጠር"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -896,8 +897,8 @@ msgid "Documentation"
 msgstr "ሰነዶች"
 
 #: src/routes/auth/login.tsx
-msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
-msgstr "መለያ የለዎትም? <0><1>አሁን መለያ ፍጠሩ <2/></1></0>"
+msgid "Don't have an account? <0/>"
+msgstr "መለያ የለዎትም? <0/>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Donate to Reactive Resume"
@@ -963,7 +964,7 @@ msgstr "ደች"
 
 #: src/components/ai/chat.tsx
 msgid "e.g. Change my name to..."
-msgstr ""
+msgstr "ለምሳሌ ስሜን ወደ...ቀይር"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1014,6 +1015,10 @@ msgstr "ሁለት-ደረጃ ማረጋገጫን በመነቃቃት ላይ…"
 msgid "English"
 msgstr "እንግሊዝኛ"
 
+#: src/utils/locale.ts
+msgid "English (United Kingdom)"
+msgstr "እንግሊዝኛ (ዩናይትድ ኪንግደም)"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "የመለያዎን ደህንነት በተጨማሪ ደረጃዎች በመጨመር ያጠናክሩ።"
@@ -1056,7 +1061,7 @@ msgstr "ሙያዊ የየታሪክ ማቅረቢያዎችን ለመፍጠር፣ �
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "ሙሉ ስክሪን ውጣ"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1090,7 +1095,7 @@ msgstr "ሁለት-ደረጃ ማረጋገጫን ማሰናዳት አልተሳካ�
 
 #: src/routes/auth/login.tsx
 msgid "Failed to sign in. Please try again."
-msgstr ""
+msgstr "መግባት አልተሳካም። እባክዎ እንደገና ይሞክሩ።"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1173,7 +1178,7 @@ msgstr "ሙሉ ወፍር "
 
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen"
-msgstr ""
+msgstr "ሙሉ ስክሪን"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1457,7 +1462,7 @@ msgstr "ይህን ገፅ ላይ ይዘቱን እንዴት እንደሚስት ተ
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
-msgstr ""
+msgstr "ውጣ"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
@@ -1630,7 +1635,6 @@ msgid "No Advertising, No Tracking"
 msgstr "ምንም ማስታወቂያ የለም፣ ምንም መከታተያ የለም"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "No results found."
 msgstr "ምንም ውጤት አልተገኘም።"
 
@@ -1693,11 +1697,11 @@ msgstr "ድርጅት"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Period"
-msgstr ""
+msgstr "አጠቃላይ ጊዜ"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Title (optional)"
-msgstr ""
+msgstr "አጠቃላይ ርዕስ (አማራጭ)"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1898,7 +1902,7 @@ msgstr "Reactive Resume ክፍት ምንጭ፣ ግላዊነትን የሚመር�
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
-msgstr ""
+msgstr "ተቀባይ"
 
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
@@ -1923,12 +1927,12 @@ msgid "Refresh"
 msgstr "ዳስ አድርግ"
 
 #: src/routes/auth/forgot-password.tsx
-msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
-msgstr "የይለፍ ቃልዎ አስታውሰዎ? <0><1>አሁን ይግቡ <2/></1></0>"
+msgid "Remember your password? <0/>"
+msgstr "የይለፍ ቃልዎን ያስታውሳሉ? <0/>"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
-msgstr ""
+msgstr "አስወግድ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1936,7 +1940,7 @@ msgstr "የይለፍ ቃል አስወግድ"
 
 #: src/components/ai/chat.tsx
 msgid "Removed"
-msgstr ""
+msgstr "ተወግዷል"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -1948,7 +1952,7 @@ msgstr "ስም ቀይር"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
-msgstr ""
+msgstr "ዳግም አስተካክል"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -2003,7 +2007,7 @@ msgstr "በቀኝ ማሰለፊያ"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
-msgstr ""
+msgstr "የሚና እድገት"
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2055,7 +2059,6 @@ msgid "Search for..."
 msgstr "ፈልግ..."
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Search..."
 msgstr "ፈልግ..."
 
@@ -2068,9 +2071,8 @@ msgid "Section Type"
 msgstr "የክፍል ዓይነት"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Select..."
-msgstr "ይምረጡ..."
+msgstr "ምረጥ..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
@@ -2141,7 +2143,7 @@ msgstr "አሳይ"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Show link in title"
-msgstr ""
+msgstr "ርዕስ ውስጥ ማገናኛ አሳይ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
@@ -2214,6 +2216,10 @@ msgstr "ወደ ዋና ይዘት ዝለል"
 msgid "Slovak"
 msgstr "ስሎቫክኛ"
 
+#: src/utils/locale.ts
+msgid "Slovenian"
+msgstr ""
+
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
 msgstr "Slug"
@@ -2282,7 +2288,7 @@ msgstr "ስታቲስቲክስ"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
-msgstr ""
+msgstr "ቆይ"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2410,7 +2416,7 @@ msgstr "PDF በማመንጨት ጊዜ ችግኝ ተፈጥሯል፣ እባክዎ�
 
 #: src/components/ai/chat.tsx
 msgid "Thinking..."
-msgstr ""
+msgstr "እያሰብኩ ነው..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2612,7 +2618,7 @@ msgstr "ያለ የቀድሞ ማረጋገጫን አዘምን"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Update an existing cover letter"
-msgstr ""
+msgstr "ነባር ማመልከቻ ደብዳቤ አዘምን"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
@@ -2656,7 +2662,7 @@ msgstr "ያለ የቀድሞ ችሎታን አዘምን"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Update an existing summary item"
-msgstr ""
+msgstr "ነባር ማጠቃለያ ንጥል አዘምን"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
@@ -2677,7 +2683,7 @@ msgstr "የይለፍ ቃልዎን አዘምኑ"
 
 #: src/components/ai/chat.tsx
 msgid "Updated"
-msgstr ""
+msgstr "ተዘምኗል"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -2817,7 +2823,7 @@ msgstr "የየታሪክዎን በተለየ የህዝብ አገናኝ ይካፈ�
 
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
-msgstr ""
+msgstr "ያልተቀመጡ ለውጦች አሉዎት።"
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx

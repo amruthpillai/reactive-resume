@@ -1,18 +1,21 @@
+import type React from "react";
+
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
-import type React from "react";
 import { useEffect } from "react";
 import { type Layout, usePanelRef } from "react-resizable-panels";
 import { useDebounceCallback } from "usehooks-ts";
 import z from "zod";
+
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { useCSSVariables } from "@/components/resume/hooks/use-css-variables";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { ResizableGroup, ResizablePanel, ResizableSeparator } from "@/components/ui/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpc } from "@/integrations/orpc/client";
+
 import { BuilderHeader } from "./-components/header";
 import { BuilderSidebarLeft } from "./-sidebar/left";
 import { BuilderSidebarRight } from "./-sidebar/right";
@@ -76,7 +79,7 @@ function BuilderLayout({ initialLayout, ...props }: BuilderLayoutProps) {
 	}));
 
 	const onLayoutChange = useDebounceCallback((layout: Layout) => {
-		setBuilderLayoutServerFn({ data: layout });
+		void setBuilderLayoutServerFn({ data: layout });
 	}, 200);
 
 	useEffect(() => {

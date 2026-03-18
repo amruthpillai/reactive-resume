@@ -1,4 +1,5 @@
 import z from "zod";
+
 import { templateSchema } from "../templates";
 
 export const iconSchema = z

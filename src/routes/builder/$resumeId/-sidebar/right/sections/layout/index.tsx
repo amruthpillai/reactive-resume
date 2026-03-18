@@ -1,12 +1,15 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Slider } from "@/components/ui/slider";
 import { metadataSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../../shared/section-base";
 import { LayoutPages } from "./pages";
 
@@ -53,35 +56,39 @@ function LayoutSectionForm() {
 								<Trans>Sidebar Width</Trans>
 							</FormLabel>
 							<div className="flex items-center gap-4">
-								<FormControl>
-									<Slider
-										min={10}
-										max={50}
-										step={0.01}
-										value={[field.value]}
-										onValueChange={(value) => field.onChange(value[0])}
-									/>
-								</FormControl>
-
-								<FormControl>
-									<InputGroup className="w-auto shrink-0">
-										<InputGroupInput
-											{...field}
-											type="number"
+								<FormControl
+									render={
+										<Slider
 											min={10}
 											max={50}
-											step={0.1}
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
+											step={0.01}
+											value={[field.value]}
+											onValueChange={(value) => field.onChange(Array.isArray(value) ? value[0] : value)}
 										/>
-										<InputGroupAddon align="inline-end">
-											<InputGroupText>%</InputGroupText>
-										</InputGroupAddon>
-									</InputGroup>
-								</FormControl>
+									}
+								/>
+
+								<FormControl
+									render={
+										<InputGroup className="w-auto shrink-0">
+											<InputGroupInput
+												{...field}
+												type="number"
+												min={10}
+												max={50}
+												step={0.1}
+												onChange={(e) => {
+													const value = e.target.value;
+													if (value === "") field.onChange("");
+													else field.onChange(Number(value));
+												}}
+											/>
+											<InputGroupAddon align="inline-end">
+												<InputGroupText>%</InputGroupText>
+											</InputGroupAddon>
+										</InputGroup>
+									}
+								/>
 							</div>
 							<FormMessage />
 						</FormItem>

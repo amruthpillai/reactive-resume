@@ -146,7 +146,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           MAJOR=$(echo "$VERSION" | cut -d. -f1)
           MINOR=$(echo "$VERSION" | cut -d. -f2)
-          
+
           echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
           echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
 
@@ -181,7 +181,7 @@ jobs:
             --annotation "index:org.opencontainers.image.version=${{ steps.version.outputs.version }}" \
             $(printf 'ghcr.io/${{ env.IMAGE }}@sha256:%s ' *) \
             $(printf 'docker.io/${{ env.IMAGE }}@sha256:%s ' *)
-          
+
           # Get the digest of the multi-arch manifest
           GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }} --format '{{json .Manifest.Digest}}' | tr -d '"')
           DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }} --format '{{json .Manifest.Digest}}' | tr -d '"')
@@ -195,7 +195,7 @@ jobs:
         run: |
           # Sign GHCR image
           cosign sign --yes ghcr.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.ghcr_digest }}
-          
+
           # Sign Docker Hub image
           cosign sign --yes docker.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.docker_digest }}
 

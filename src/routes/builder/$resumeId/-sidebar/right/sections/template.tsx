@@ -1,10 +1,12 @@
 import { useLingui } from "@lingui/react";
 import { SwapIcon } from "@phosphor-icons/react";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { templates } from "@/dialogs/resume/template/data";
 import { useDialogStore } from "@/dialogs/store";
+
 import { SectionBase } from "../shared/section-base";
 
 export function TemplateSectionBuilder() {
@@ -27,7 +29,7 @@ function TemplateSectionForm() {
 	};
 
 	return (
-		<div className="flex @md:flex-row flex-col items-stretch gap-x-4 gap-y-2">
+		<div className="flex flex-col items-stretch gap-x-4 gap-y-2 @md:flex-row">
 			<Button
 				variant="ghost"
 				onClick={onOpenTemplateGallery}
@@ -44,8 +46,8 @@ function TemplateSectionForm() {
 
 			<div className="flex flex-1 flex-col space-y-4 @md:pt-1 @md:pb-3">
 				<div className="space-y-1">
-					<h3 className="font-semibold text-2xl capitalize tracking-tight">{metadata.name}</h3>
-					<p className="text-muted-foreground text-sm">{i18n.t(metadata.description)}</p>
+					<h3 className="text-2xl font-semibold tracking-tight capitalize">{metadata.name}</h3>
+					<p className="text-sm text-muted-foreground">{i18n.t(metadata.description)}</p>
 				</div>
 
 				<div className="flex flex-wrap gap-2.5">

@@ -1,14 +1,18 @@
+import type z from "zod";
+
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, IconContext, type IconProps, WarningIcon } from "@phosphor-icons/react";
 import { type RefObject, useMemo, useRef, useState } from "react";
 import { match } from "ts-pattern";
 import { useResizeObserver } from "usehooks-ts";
-import type z from "zod";
-import { pageDimensionsAsPixels } from "@/schema/page";
+
 import type { pageLayoutSchema } from "@/schema/resume/data";
 import type { Template } from "@/schema/templates";
+
+import { pageDimensionsAsPixels } from "@/schema/page";
 import { sanitizeCss } from "@/utils/sanitize";
 import { cn } from "@/utils/style";
+
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useCSSVariables } from "./hooks/use-css-variables";
 import { useWebfonts } from "./hooks/use-webfonts";
@@ -100,7 +104,6 @@ export const ResumePreview = ({ showPageNumbers = false, pageClassName, classNam
 
 	return (
 		<IconContext.Provider value={iconProps}>
-			{/** biome-ignore lint/security/noDangerouslySetInnerHtml: CSS is sanitized with sanitizeCss */}
 			{scopedCSS && <style dangerouslySetInnerHTML={{ __html: scopedCSS }} />}
 
 			<div style={style} className={cn("resume-preview-container", className)} {...props}>
@@ -148,7 +151,7 @@ function PageContainer({ pageIndex, pageLayout, pageClassName, showPageNumbers =
 		<div data-page-index={pageIndex} className="relative">
 			{showPageNumbers && totalNumberOfPages > 1 && (
 				<div className="absolute inset-s-0 -top-6 print:hidden">
-					<span className="font-medium text-foreground text-xs">
+					<span className="text-xs font-medium text-foreground">
 						<Trans>
 							Page {pageNumber} of {totalNumberOfPages}
 						</Trans>

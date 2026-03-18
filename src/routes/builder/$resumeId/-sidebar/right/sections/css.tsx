@@ -1,14 +1,17 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { lazy, Suspense } from "react";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { useTheme } from "@/components/theme/provider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { metadataSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 const CSSMonacoEditor = lazy(() => import("./css-editor"));
@@ -52,15 +55,17 @@ function CSSSectionForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel className="flex items-center gap-4">
-								<FormControl>
-									<Switch
-										checked={field.value}
-										onCheckedChange={(checked) => {
-											field.onChange(checked);
-											form.handleSubmit(onSubmit)();
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Switch
+											checked={field.value}
+											onCheckedChange={(checked) => {
+												field.onChange(checked);
+												void form.handleSubmit(onSubmit)();
+											}}
+										/>
+									}
+								/>
 
 								<Trans context="Turn On/Apply Custom CSS">Enable</Trans>
 							</FormLabel>
@@ -74,18 +79,20 @@ function CSSSectionForm() {
 						name="value"
 						render={({ field }) => (
 							<FormItem className="h-48 overflow-hidden rounded-md">
-								<FormControl>
-									<Suspense fallback={<Skeleton className="h-48 w-full" />}>
-										<CSSMonacoEditor
-											theme={theme}
-											defaultValue={field.value}
-											onChange={(value) => {
-												field.onChange(value ?? "");
-												form.handleSubmit(onSubmit)();
-											}}
-										/>
-									</Suspense>
-								</FormControl>
+								<FormControl
+									render={
+										<Suspense fallback={<Skeleton className="h-48 w-full" />}>
+											<CSSMonacoEditor
+												theme={theme}
+												defaultValue={field.value}
+												onChange={(value) => {
+													field.onChange(value ?? "");
+													void form.handleSubmit(onSubmit)();
+												}}
+											/>
+										</Suspense>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}

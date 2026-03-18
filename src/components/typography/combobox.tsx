@@ -1,9 +1,11 @@
 import { useMemo } from "react";
+
 import { cn } from "@/utils/style";
-import { Combobox, type ComboboxProps } from "../ui/combobox";
-import { MultipleCombobox, type MultipleComboboxProps } from "../ui/multiple-combobox";
-import { FontDisplay } from "./font-display";
+
 import type { LocalFont, WebFont } from "./types";
+
+import { Combobox, type MultiComboboxProps, type SingleComboboxProps } from "../ui/combobox";
+import { FontDisplay } from "./font-display";
 import webFontListJSON from "./webfontlist.json";
 
 type Weight = "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
@@ -61,7 +63,7 @@ export function getNextWeights(fontFamily: string): Weight[] | null {
 	return weights.length > 0 ? weights : null;
 }
 
-type FontFamilyComboboxProps = Omit<ComboboxProps, "options">;
+type FontFamilyComboboxProps = Omit<SingleComboboxProps, "options">;
 
 export function FontFamilyCombobox({ className, ...props }: FontFamilyComboboxProps) {
 	const options = useMemo(() => {
@@ -72,10 +74,10 @@ export function FontFamilyCombobox({ className, ...props }: FontFamilyComboboxPr
 		}));
 	}, []);
 
-	return <Combobox options={options} className={cn("w-full", className)} {...props} />;
+	return <Combobox {...props} options={options} className={cn("w-full", className)} />;
 }
 
-type FontWeightComboboxProps = Omit<MultipleComboboxProps, "options"> & { fontFamily: string };
+type FontWeightComboboxProps = Omit<MultiComboboxProps, "options" | "multiple"> & { fontFamily: string };
 
 export function FontWeightCombobox({ fontFamily, ...props }: FontWeightComboboxProps) {
 	const options = useMemo(() => {
@@ -100,5 +102,5 @@ export function FontWeightCombobox({ fontFamily, ...props }: FontWeightComboboxP
 		}));
 	}, [fontFamily]);
 
-	return <MultipleCombobox options={options} {...props} />;
+	return <Combobox {...props} multiple options={options} />;
 }

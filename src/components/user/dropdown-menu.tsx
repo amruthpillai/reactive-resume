@@ -4,6 +4,9 @@ import { Trans } from "@lingui/react/macro";
 import { PaletteIcon, SignOutIcon, TranslateIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
+
+import type { AuthSession } from "@/integrations/auth/types";
+
 import { useTheme } from "@/components/theme/provider";
 import {
 	DropdownMenu,
@@ -19,12 +22,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/integrations/auth/client";
-import type { AuthSession } from "@/integrations/auth/types";
 import { isLocale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";
 import { isTheme } from "@/utils/theme";
 
 type Props = {
-	children: ({ session }: { session: AuthSession }) => React.ReactNode;
+	children: ({ session }: { session: AuthSession }) => React.ComponentProps<typeof DropdownMenuTrigger>["render"];
 };
 
 export function UserDropdownMenu({ children }: Props) {
@@ -33,38 +35,38 @@ export function UserDropdownMenu({ children }: Props) {
 	const { theme, setTheme } = useTheme();
 	const { data: session } = authClient.useSession();
 
-	function handleThemeChange(value: string) {
+	const handleThemeChange = (value: string) => {
 		if (!isTheme(value)) return;
 		setTheme(value);
-	}
+	};
 
-	async function handleLocaleChange(value: string) {
+	const handleLocaleChange = async (value: string) => {
 		if (!isLocale(value)) return;
 		await Promise.all([loadLocale(value), setLocaleServerFn({ data: value })]);
 		window.location.reload();
-	}
+	};
 
-	function handleLogout() {
+	const handleLogout = async () => {
 		const toastId = toast.loading(t`Signing out...`);
 
-		authClient.signOut({
+		await authClient.signOut({
 			fetchOptions: {
 				onSuccess: () => {
 					toast.dismiss(toastId);
-					router.invalidate();
+					void router.invalidate();
 				},
 				onError: ({ error }) => {
 					toast.error(error.message, { id: toastId });
 				},
 			},
 		});
-	}
+	};
 
 	if (!session?.user) return null;
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>{children({ session })}</DropdownMenuTrigger>
+			<DropdownMenuTrigger render={children({ session: session as AuthSession })} />
 
 			<DropdownMenuContent align="start" side="top">
 				<DropdownMenuGroup>
@@ -104,7 +106,7 @@ export function UserDropdownMenu({ children }: Props) {
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem onSelect={handleLogout}>
+				<DropdownMenuItem onClick={handleLogout}>
 					<SignOutIcon />
 					<Trans>Logout</Trans>
 				</DropdownMenuItem>

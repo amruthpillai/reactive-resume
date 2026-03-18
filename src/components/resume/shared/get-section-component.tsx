@@ -1,4 +1,5 @@
 import { match } from "ts-pattern";
+
 import type {
 	CoverLetterItem as CoverLetterItemType,
 	CustomSectionItem,
@@ -7,7 +8,9 @@ import type {
 	SectionType,
 	SummaryItem as SummaryItemType,
 } from "@/schema/resume/data";
+
 import { cn } from "@/utils/style";
+
 import { useResumeStore } from "../store/resume";
 import { AwardsItem } from "./items/awards-item";
 import { CertificationsItem } from "./items/certifications-item";

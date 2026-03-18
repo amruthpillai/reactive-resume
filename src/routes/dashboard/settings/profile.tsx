@@ -9,11 +9,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/integrations/auth/client";
+
 import { DashboardHeader } from "../-components/header";
 
 export const Route = createFileRoute("/dashboard/settings/profile")({
@@ -70,7 +72,7 @@ function RouteComponent() {
 
 		toast.success(t`Your profile has been updated successfully.`);
 		form.reset({ name: data.name, username: data.username, email: session.user.email });
-		router.invalidate();
+		void router.invalidate();
 
 		if (data.email !== session.user.email) {
 			const { error } = await authClient.changeEmail({
@@ -87,7 +89,7 @@ function RouteComponent() {
 				t`A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.`,
 			);
 			form.reset({ name: data.name, username: data.username, email: session.user.email });
-			router.invalidate();
+			void router.invalidate();
 		}
 	};
 
@@ -108,7 +110,7 @@ function RouteComponent() {
 			t`A new verification link has been sent to your email address. Please check your inbox to verify your account.`,
 			{ id: toastId },
 		);
-		router.invalidate();
+		void router.invalidate();
 	};
 
 	return (
@@ -133,9 +135,9 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Name</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />
-								</FormControl>
+								<FormControl
+									render={<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -149,16 +151,18 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Username</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input
-										min={3}
-										max={64}
-										autoComplete="username"
-										placeholder="john.doe"
-										className="lowercase"
-										{...field}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Input
+											min={3}
+											max={64}
+											autoComplete="username"
+											placeholder="john.doe"
+											className="lowercase"
+											{...field}
+										/>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -172,31 +176,33 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Email Address</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input
-										type="email"
-										autoComplete="email"
-										placeholder="john.doe@example.com"
-										className="lowercase"
-										{...field}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Input
+											type="email"
+											autoComplete="email"
+											placeholder="john.doe@example.com"
+											className="lowercase"
+											{...field}
+										/>
+									}
+								/>
 								<FormMessage />
 								{match(session.user.emailVerified)
 									.with(true, () => (
-										<p className="flex items-center gap-x-1.5 text-green-700 text-xs">
+										<p className="flex items-center gap-x-1.5 text-xs text-green-700">
 											<CheckIcon />
 											<Trans>Verified</Trans>
 										</p>
 									))
 									.with(false, () => (
-										<p className="flex items-center gap-x-1.5 text-amber-600 text-xs">
+										<p className="flex items-center gap-x-1.5 text-xs text-amber-600">
 											<WarningIcon className="size-3.5" />
 											<Trans>Unverified</Trans>
 											<span>|</span>
 											<Button
 												variant="link"
-												className="h-auto gap-x-1.5 p-0! text-inherit text-xs"
+												className="h-auto gap-x-1.5 p-0! text-xs text-inherit"
 												onClick={handleResendVerificationEmail}
 											>
 												<Trans>Resend verification email</Trans>

@@ -11,7 +11,9 @@ import {
 	WarningIcon,
 } from "@phosphor-icons/react";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
+
 import { CommandItem } from "@/components/ui/command";
+
 import { useCommandPaletteStore } from "../store";
 import { BaseCommandGroup } from "./base";
 
@@ -21,10 +23,10 @@ export function NavigationCommandGroup() {
 	const reset = useCommandPaletteStore((state) => state.reset);
 	const pushPage = useCommandPaletteStore((state) => state.pushPage);
 
-	function onNavigate(path: string) {
-		navigate({ to: path });
+	const onNavigate = async (path: string) => {
+		await navigate({ to: path });
 		reset();
-	}
+	};
 
 	return (
 		<>

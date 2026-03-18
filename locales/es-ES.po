@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 10:45\n"
+"PO-Revision-Date: 2026-03-18 10:43\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -45,7 +45,7 @@ msgstr "{0, plural, one {# elemento} other {# elementos}}"
 #. placeholder {0}: item.roles.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
 msgid "{0, plural, one {# role} other {# roles}}"
-msgstr ""
+msgstr "{0, plural, one {# puesto} other {# puestos}}"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -202,7 +202,7 @@ msgstr "Añadir columna antes"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
-msgstr ""
+msgstr "Añade varios puestos para mostrar la progresión profesional en la misma empresa."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
@@ -210,7 +210,7 @@ msgstr "Añadir página"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add Role"
-msgstr ""
+msgstr "Añadir puesto"
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -246,8 +246,8 @@ msgid "Allow Public Access"
 msgstr "Permitir acceso público"
 
 #: src/routes/auth/register.tsx
-msgid "Already have an account? <0><1>Sign in now <2/></1></0>"
-msgstr "¿Ya tienes una cuenta? <0><1>Inicia sesión ahora <2/></1></0>"
+msgid "Already have an account? <0/>"
+msgstr "¿Ya tienes una cuenta? <0/>"
 
 #: src/utils/locale.ts
 msgid "Amharic"
@@ -552,13 +552,14 @@ msgstr "Círculo"
 msgid "Clear chat history"
 msgstr "Limpiar historial del chat"
 
-#: src/components/ui/multiple-combobox.tsx
-msgid "Clear selection"
-msgstr "Borrar selección"
-
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Haz clic aquí para seleccionar un archivo para importar"
+
+#: src/components/ui/dialog.tsx
+#: src/components/ui/sheet.tsx
+msgid "Close"
+msgstr "Cerrar"
 
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
@@ -896,8 +897,8 @@ msgid "Documentation"
 msgstr "Documentación"
 
 #: src/routes/auth/login.tsx
-msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
-msgstr "¿No tienes una cuenta? <0><1>Crea una ahora <2/></1></0>"
+msgid "Don't have an account? <0/>"
+msgstr "¿No tienes una cuenta? <0/>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Donate to Reactive Resume"
@@ -1014,6 +1015,10 @@ msgstr "Habilitando la autenticación de doble factor..."
 msgid "English"
 msgstr "Inglés"
 
+#: src/utils/locale.ts
+msgid "English (United Kingdom)"
+msgstr "Inglés (Reino Unido)"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "Refuerza la seguridad de tu cuenta con capas adicionales de protección."
@@ -1090,7 +1095,7 @@ msgstr "No se pudo configurar la autenticación de doble factor."
 
 #: src/routes/auth/login.tsx
 msgid "Failed to sign in. Please try again."
-msgstr ""
+msgstr "No se pudo iniciar sesión. Inténtalo de nuevo."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1630,7 +1635,6 @@ msgid "No Advertising, No Tracking"
 msgstr "Sin publicidad, sin rastreo"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "No results found."
 msgstr "No se han encontrado resultados."
 
@@ -1693,11 +1697,11 @@ msgstr "Organización"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Period"
-msgstr ""
+msgstr "Periodo general"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Title (optional)"
-msgstr ""
+msgstr "Título general (opcional)"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1923,12 +1927,12 @@ msgid "Refresh"
 msgstr "Actualizar"
 
 #: src/routes/auth/forgot-password.tsx
-msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
-msgstr "¿Recuerdas tu contraseña? <0><1>Inicia sesión ahora <2/></1></0>"
+msgid "Remember your password? <0/>"
+msgstr "¿Recuerdas tu contraseña? <0/>"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -1948,7 +1952,7 @@ msgstr "Renombrar"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
-msgstr ""
+msgstr "Reordenar"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -2003,7 +2007,7 @@ msgstr "Alinear a la derecha"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
-msgstr ""
+msgstr "Progresión de puestos"
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2055,7 +2059,6 @@ msgid "Search for..."
 msgstr "Buscar..."
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Search..."
 msgstr "Buscar..."
 
@@ -2068,7 +2071,6 @@ msgid "Section Type"
 msgstr "Tipo de sección"
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Select..."
 msgstr "Seleccionar..."
 
@@ -2213,6 +2215,10 @@ msgstr "Saltar al contenido principal"
 #: src/utils/locale.ts
 msgid "Slovak"
 msgstr "Eslovaco"
+
+#: src/utils/locale.ts
+msgid "Slovenian"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"

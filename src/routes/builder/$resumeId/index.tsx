@@ -4,7 +4,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useHotkeys } from "react-hotkeys-hook";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
+
 import { ResumePreview } from "@/components/resume/preview";
+
 import { BuilderDock } from "./-components/dock";
 
 export const Route = createFileRoute("/builder/$resumeId/")({
@@ -29,7 +31,7 @@ function RouteComponent() {
 				<TransformComponent wrapperClass="h-full! w-full!">
 					<ResumePreview
 						showPageNumbers
-						className="flex items-start space-x-10 space-y-10"
+						className="flex items-start space-y-10 space-x-10"
 						pageClassName="shadow-xl rounded-md overflow-hidden"
 					/>
 				</TransformComponent>

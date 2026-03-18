@@ -8,6 +8,9 @@ import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
+import type { ResumeData } from "@/schema/resume/data";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
@@ -21,8 +24,8 @@ import { JSONResumeImporter } from "@/integrations/import/json-resume";
 import { ReactiveResumeJSONImporter } from "@/integrations/import/reactive-resume-json";
 import { ReactiveResumeV4JSONImporter } from "@/integrations/import/reactive-resume-v4-json";
 import { client, orpc } from "@/integrations/orpc/client";
-import type { ResumeData } from "@/schema/resume/data";
 import { cn } from "@/utils/style";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.discriminatedUnion("type", [
@@ -189,7 +192,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 			const id = await importResume({ data });
 			toast.success(t`Your resume has been imported successfully.`, { id: toastId, description: null });
 			closeDialog();
-			navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
+			void navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				toast.error(error.message, { id: toastId, description: null });
@@ -226,34 +229,36 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 								<FormLabel>
 									<Trans>Type</Trans>
 								</FormLabel>
-								<FormControl>
-									<Combobox
-										clearable={false}
-										value={field.value}
-										onValueChange={field.onChange}
-										options={[
-											{ value: "reactive-resume-json", label: "Reactive Resume (JSON)" },
-											{ value: "reactive-resume-v4-json", label: "Reactive Resume v4 (JSON)" },
-											{ value: "json-resume-json", label: "JSON Resume" },
-											{
-												value: "pdf",
-												label: (
-													<div className="flex items-center gap-x-2">
-														PDF <Badge>{t`AI`}</Badge>
-													</div>
-												),
-											},
-											{
-												value: "docx",
-												label: (
-													<div className="flex items-center gap-x-2">
-														Microsoft Word <Badge>{t`AI`}</Badge>
-													</div>
-												),
-											},
-										]}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<Combobox
+											showClear={false}
+											value={field.value}
+											onValueChange={field.onChange}
+											options={[
+												{ value: "reactive-resume-json", label: "Reactive Resume (JSON)" },
+												{ value: "reactive-resume-v4-json", label: "Reactive Resume v4 (JSON)" },
+												{ value: "json-resume-json", label: "JSON Resume" },
+												{
+													value: "pdf",
+													label: (
+														<div className="flex items-center gap-x-2">
+															PDF <Badge>{t`AI`}</Badge>
+														</div>
+													),
+												},
+												{
+													value: "docx",
+													label: (
+														<div className="flex items-center gap-x-2">
+															Microsoft Word <Badge>{t`AI`}</Badge>
+														</div>
+													),
+												},
+											]}
+										/>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -266,27 +271,25 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 						render={({ field }) => (
 							<FormItem className={cn(!type && "hidden")}>
 								<FormControl>
-									<div>
-										<Input type="file" className="hidden" ref={inputRef} onChange={onUploadFile} />
+									<Input type="file" className="hidden" ref={inputRef} onChange={onUploadFile} />
 
-										<Button
-											variant="outline"
-											className="h-auto w-full flex-col border-dashed py-8 font-normal"
-											onClick={onSelectFile}
-										>
-											{field.value ? (
-												<>
-													<FileIcon weight="thin" size={32} />
-													<p>{field.value.name}</p>
-												</>
-											) : (
-												<>
-													<UploadSimpleIcon weight="thin" size={32} />
-													<Trans>Click here to select a file to import</Trans>
-												</>
-											)}
-										</Button>
-									</div>
+									<Button
+										variant="outline"
+										className="h-auto w-full flex-col border-dashed py-8 font-normal"
+										onClick={onSelectFile}
+									>
+										{field.value ? (
+											<>
+												<FileIcon weight="thin" size={32} />
+												<p>{field.value.name}</p>
+											</>
+										) : (
+											<>
+												<UploadSimpleIcon weight="thin" size={32} />
+												<Trans>Click here to select a file to import</Trans>
+											</>
+										)}
+									</Button>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

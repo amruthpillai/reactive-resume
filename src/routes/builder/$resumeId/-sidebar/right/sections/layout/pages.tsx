@@ -16,11 +16,13 @@ import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { type CSSProperties, forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 import { match } from "ts-pattern";
+
+import type { SectionType } from "@/schema/resume/data";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { templates } from "@/dialogs/resume/template/data";
-import type { SectionType } from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
 
@@ -260,14 +262,14 @@ function PageContainer({
 		<div className="space-y-3 rounded-md border border-dashed bg-background/40">
 			<div className="flex items-center justify-between bg-secondary/50 px-4 py-3">
 				<div className="flex w-full items-center gap-4">
-					<span className="font-medium text-xs">
+					<span className="text-xs font-medium">
 						<Trans>Page {pageIndex + 1}</Trans>
 					</span>
 
 					<label className="flex cursor-pointer items-center gap-2">
 						<Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
 
-						<span className="font-medium text-muted-foreground text-xs">
+						<span className="text-xs font-medium text-muted-foreground">
 							<Trans>Full Width</Trans>
 						</span>
 					</label>
@@ -283,7 +285,7 @@ function PageContainer({
 
 			<div
 				className={cn(
-					"grid w-full @md:grid-cols-2 gap-x-4 gap-y-2 p-4 pt-0 font-medium",
+					"grid w-full gap-x-4 gap-y-2 p-4 pt-0 font-medium @md:grid-cols-2",
 					sidebarPosition === "none" && "@md:grid-cols-1",
 				)}
 			>
@@ -332,7 +334,7 @@ function LayoutColumn({
 	return (
 		<SortableContext id={droppableId} items={items} strategy={verticalListSortingStrategy}>
 			<div className={cn("space-y-1.5", disabled && "opacity-50", className)}>
-				{!hideLabel && <div className="@md:row-start-1 ps-4 font-medium text-xs">{getColumnLabel(columnId)}</div>}
+				{!hideLabel && <div className="ps-4 text-xs font-medium @md:row-start-1">{getColumnLabel(columnId)}</div>}
 
 				<div
 					ref={setNodeRef}
@@ -346,7 +348,7 @@ function LayoutColumn({
 					))}
 
 					{items.length === 0 && (
-						<div className="rounded-md border border-dashed p-4 font-medium text-muted-foreground text-xs">
+						<div className="rounded-md border border-dashed p-4 text-xs font-medium text-muted-foreground">
 							<Trans>Drag and drop sections here to move them between columns</Trans>
 						</div>
 					)}
@@ -396,7 +398,7 @@ const LayoutItemContent = forwardRef<HTMLDivElement, LayoutItemContentProps>(
 				data-overlay={isOverlay ? "true" : undefined}
 				data-dragging={isDragging ? "true" : undefined}
 				className={cn(
-					"group/item flex cursor-grab touch-none select-none items-center gap-x-2 rounded-md border border-border bg-background px-2 py-1.5 font-medium text-sm transition-all duration-200 ease-out",
+					"group/item flex cursor-grab touch-none items-center gap-x-2 rounded-md border border-border bg-background px-2 py-1.5 text-sm font-medium transition-all duration-200 ease-out select-none",
 					"hover:bg-secondary/40 active:cursor-grabbing active:border-primary/60 active:bg-secondary/40",
 					"data-[overlay=true]:cursor-grabbing data-[overlay=true]:border-primary/60 data-[overlay=true]:bg-background",
 					"data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-primary/60 data-[dragging=true]:bg-background",

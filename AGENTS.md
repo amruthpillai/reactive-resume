@@ -32,12 +32,13 @@ Copy `.env.example` to `.env` if not present. Key notes for local dev:
 
 See `scripts` in `package.json`. Key ones:
 
-| Task | Command |
-|---|---|
-| Dev server | `pnpm dev` (port 3000) |
-| Lint (Biome) | `pnpm lint` |
-| Typecheck | `pnpm typecheck` |
-| DB migrations | `pnpm db:generate` / `pnpm db:migrate` (auto-runs on dev start) |
+| Task           | Command                                                         |
+| -------------- | --------------------------------------------------------------- |
+| Dev server     | `pnpm dev` (port 3000)                                          |
+| Lint (Oxlint)  | `pnpm lint`                                                     |
+| Format (Oxfmt) | `pnpm fmt`                                                      |
+| Typecheck      | `pnpm typecheck`                                                |
+| DB migrations  | `pnpm db:generate` / `pnpm db:migrate` (auto-runs on dev start) |
 
 ### Gotchas
 

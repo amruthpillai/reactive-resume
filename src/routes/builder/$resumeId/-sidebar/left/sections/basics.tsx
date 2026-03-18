@@ -1,12 +1,15 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { basicsSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 import { CustomFieldsSection } from "./custom-fields";
 
@@ -49,9 +52,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Name</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -65,9 +66,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Headline</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -81,9 +80,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Email</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input type="email" {...field} />
-							</FormControl>
+							<FormControl render={<Input type="email" {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -97,9 +94,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Phone</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -113,9 +108,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Location</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -129,9 +122,7 @@ function BasicsSectionForm() {
 							<FormLabel>
 								<Trans>Website</Trans>
 							</FormLabel>
-							<FormControl>
-								<URLInput {...field} value={field.value} onChange={field.onChange} />
-							</FormControl>
+							<URLInput {...field} value={field.value} onChange={field.onChange} />
 							<FormMessage />
 						</FormItem>
 					)}

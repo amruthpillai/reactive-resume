@@ -1,7 +1,9 @@
-import { useCallback, useMemo } from "react";
 import type { usePanelRef } from "react-resizable-panels";
+
+import { useCallback, useMemo } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { create } from "zustand/react";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 
 type PanelImperativeHandle = ReturnType<typeof usePanelRef>;

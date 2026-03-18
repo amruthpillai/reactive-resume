@@ -1,15 +1,18 @@
 import { EnvelopeIcon, GlobeIcon, MapPinIcon, PhoneIcon } from "@phosphor-icons/react";
+
 import { cn } from "@/utils/style";
+
+import type { TemplateProps } from "./types";
+
 import { getSectionComponent } from "../shared/get-section-component";
 import { PageIcon } from "../shared/page-icon";
 import { PageLink } from "../shared/page-link";
 import { PagePicture } from "../shared/page-picture";
 import { useResumeStore } from "../store/resume";
-import type { TemplateProps } from "./types";
 
 const sectionClassName = cn(
 	// Section Heading
-	"[&>h6]:border-(--page-primary-color) [&>h6]:border-b",
+	"[&>h6]:border-b [&>h6]:border-(--page-primary-color)",
 
 	// Section Item Header in Sidebar Layout
 	"group-data-[layout=sidebar]:[&_.section-item-header>div]:flex-col",

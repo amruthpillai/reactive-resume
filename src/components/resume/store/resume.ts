@@ -1,16 +1,19 @@
+import type { WritableDraft } from "immer";
+import type { TemporalState } from "zundo";
+
 import { t } from "@lingui/core/macro";
 import { debounce } from "es-toolkit";
 import isDeepEqual from "fast-deep-equal";
-import type { WritableDraft } from "immer";
 import { current } from "immer";
 import { toast } from "sonner";
-import type { TemporalState } from "zundo";
 import { temporal } from "zundo";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
-import { orpc, type RouterOutput } from "@/integrations/orpc/client";
+
 import type { ResumeData } from "@/schema/resume/data";
+
+import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 
 type Resume = Pick<RouterOutput["resume"]["getByIdForPrinter"], "id" | "name" | "slug" | "tags" | "data" | "isLocked">;
 
@@ -30,7 +33,7 @@ const controller = new AbortController();
 const signal = controller.signal;
 
 const _syncResume = (resume: Resume) => {
-	orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
+	void orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
 };
 
 const syncResume = debounce(_syncResume, 500, { signal });

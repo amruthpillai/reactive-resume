@@ -1,18 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import type { MessageDescriptor } from "@lingui/core";
+import type z from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
-import type z from "zod";
+
+import type { DialogProps } from "@/dialogs/store";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { type CustomSectionType, customSectionSchema } from "@/schema/resume/data";
@@ -167,9 +170,7 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 						<FormLabel>
 							<Trans>Title</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -183,18 +184,20 @@ function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
 						<FormLabel>
 							<Trans>Section Type</Trans>
 						</FormLabel>
-						<FormControl>
-							<Combobox
-								{...field}
-								value={field.value}
-								disabled={isUpdate}
-								onValueChange={field.onChange}
-								options={SECTION_TYPE_OPTIONS.map((option) => ({
-									value: option.value,
-									label: i18n.t(option.label),
-								}))}
-							/>
-						</FormControl>
+						<FormControl
+							render={
+								<Combobox
+									{...field}
+									value={field.value}
+									disabled={isUpdate}
+									onValueChange={field.onChange}
+									options={SECTION_TYPE_OPTIONS.map((option) => ({
+										value: option.value,
+										label: i18n.t(option.label),
+									}))}
+								/>
+							}
+						/>
 						<FormMessage />
 					</FormItem>
 				)}

@@ -1,5 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+
 import { client } from "@/integrations/orpc/client";
 import schemaJSON from "@/schema/schema.json";
 

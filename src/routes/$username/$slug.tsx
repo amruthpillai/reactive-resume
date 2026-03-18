@@ -4,13 +4,15 @@ import { DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
+
+import type { ResumeData } from "@/schema/resume/data";
+
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ResumePreview } from "@/components/resume/preview";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
-import type { ResumeData } from "@/schema/resume/data";
 import { downloadFromUrl } from "@/utils/file";
 import { cn } from "@/utils/style";
 
@@ -68,7 +70,7 @@ function RouteComponent() {
 	const handleDownload = useCallback(async () => {
 		if (!resume) return;
 		const { url } = await printResumeAsPDF({ id: resume.id });
-		downloadFromUrl(url, `${resume.name}.pdf`);
+		await downloadFromUrl(url, `${resume.name}.pdf`);
 	}, [resume, printResumeAsPDF]);
 
 	if (!isReady) return <LoadingScreen />;

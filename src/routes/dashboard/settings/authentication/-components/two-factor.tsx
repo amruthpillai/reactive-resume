@@ -3,10 +3,12 @@ import { KeyIcon, LockOpenIcon, ToggleLeftIcon, ToggleRightIcon } from "@phospho
 import { motion } from "motion/react";
 import { useCallback, useMemo } from "react";
 import { match } from "ts-pattern";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDialogStore } from "@/dialogs/store";
 import { authClient } from "@/integrations/auth/client";
+
 import { useAuthAccounts } from "./hooks";
 
 export function TwoFactorSection() {
@@ -36,7 +38,7 @@ export function TwoFactorSection() {
 			<Separator />
 
 			<div className="mt-4 flex items-center justify-between gap-x-4">
-				<h2 className="flex items-center gap-x-3 font-medium text-base">
+				<h2 className="flex items-center gap-x-3 text-base font-medium">
 					{hasTwoFactor ? <LockOpenIcon /> : <KeyIcon />}
 					<Trans>Two-Factor Authentication</Trans>
 				</h2>

@@ -6,8 +6,10 @@ import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo } from "react";
 import { match, P } from "ts-pattern";
+
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
+
 import { ResumeContextMenu } from "../menus/context-menu";
 import { BaseCard } from "./base-card";
 
