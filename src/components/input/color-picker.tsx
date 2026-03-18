@@ -35,7 +35,7 @@ export function ColorPicker({ value, defaultValue, onChange }: ColorPickerProps)
         />
       </PopoverTrigger>
 
-      <PopoverContent className="max-w-fit rounded-xl p-2">
+      <PopoverContent className="max-w-fit rounded-md p-2">
         <ReactColorColorful color={color} onChange={onColorChange} />
       </PopoverContent>
     </Popover>

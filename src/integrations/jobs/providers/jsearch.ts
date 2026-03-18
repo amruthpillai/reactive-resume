@@ -22,10 +22,9 @@ const INITIAL_BACKOFF_MS = 1000;
  * JSearch is a Google for Jobs aggregator that provides access to job listings from multiple sources.
  *
  * **Important Implementation Details:**
- * - **Location Parsing**: Uses Google's NLP for location understanding
- *   - Requires full country names (e.g., "United States", "Yemen")
- *   - ISO codes (e.g., "US", "YE") are NOT recognized by Google's NLP
- *   - Location is appended to query as natural language: "query in City, State, Country"
+ * - **Country Filtering**: Country can be passed explicitly as ISO 3166-1 alpha-2
+ *   - Use the `country` search parameter (e.g., "US", "DE")
+ *   - Keep `query` focused on role/keywords and optional free-form location text
  * - **Data Source**: Aggregates jobs from multiple platforms via Google for Jobs
  * - **Retry Logic**: Implements exponential backoff for 429 (rate limit) responses
  *
@@ -122,6 +121,7 @@ export class JSearchProvider implements JobSearchProvider {
     if (params.page) query.set("page", String(params.page));
     if (params.num_pages) query.set("num_pages", String(params.num_pages));
     if (params.date_posted) query.set("date_posted", params.date_posted);
+    if (params.country) query.set("country", params.country);
     if (params.remote_jobs_only) query.set("remote_jobs_only", String(params.remote_jobs_only));
     if (params.employment_types) query.set("employment_types", params.employment_types);
     if (params.job_requirements) query.set("job_requirements", params.job_requirements);

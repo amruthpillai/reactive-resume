@@ -32,7 +32,7 @@ export function Hero() {
             fetchPriority="high"
             src="/videos/timelapse.mp4"
             aria-label={t`Timelapse demonstration of building a resume with Reactive Resume`}
-            className="pointer-events-none size-full rounded-lg border object-cover"
+            className="pointer-events-none size-full rounded-md border object-cover"
           />
 
           <div

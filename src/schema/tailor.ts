@@ -51,8 +51,9 @@ export const tailorOutputSchema = z.object({
                 ),
             }),
           )
-          .optional()
-          .describe("Only include if the experience has role progression (multiple roles at one company)."),
+          .describe(
+            "Tailored role-level updates. Use an empty array when the experience does not have role progression.",
+          ),
       }),
     )
     .describe(

@@ -109,7 +109,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }: FeatureCardProps
   >
     <motion.div
       aria-hidden="true"
-      className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20"
+      className="flex size-12 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20"
       whileHover={{ rotate: [0, -10, 10, 0] }}
       transition={{ duration: 0.4 }}
     >

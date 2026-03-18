@@ -154,7 +154,7 @@ function FeatureCard({ icon: Icon, title, description, index }: FeatureCardProps
 
       {/* Icon */}
       <div aria-hidden="true" className="relative">
-        <div className="inline-flex rounded-lg bg-primary/5 p-2.5 text-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+        <div className="inline-flex rounded-md bg-primary/5 p-2.5 text-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
           <Icon size={24} weight="thin" />
         </div>
       </div>

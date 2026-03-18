@@ -129,18 +129,20 @@ describe("JSearchProvider", () => {
       mockFetch.mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
 
       await provider.search({
-        query: "engineer in San Francisco, CA, United States",
+        query: "engineer",
         num_pages: 2,
         date_posted: "week",
+        country: "DE",
         remote_jobs_only: true,
         employment_types: "FULLTIME",
       });
 
       expect(mockFetch).toHaveBeenCalledOnce();
       const callUrl = mockFetch.mock.calls[0][0];
-      expect(callUrl).toContain("query=engineer+in+San+Francisco%2C+CA%2C+United+States");
+      expect(callUrl).toContain("query=engineer");
       expect(callUrl).toContain("num_pages=2");
       expect(callUrl).toContain("date_posted=week");
+      expect(callUrl).toContain("country=DE");
       expect(callUrl).toContain("remote_jobs_only=true");
       expect(callUrl).toContain("employment_types=FULLTIME");
     });

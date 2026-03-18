@@ -37,6 +37,7 @@ describe("searchParamsSchema", () => {
       page: 2,
       num_pages: 3,
       date_posted: "week",
+      country: "DE",
       remote_jobs_only: true,
       employment_types: "FULLTIME",
       job_requirements: "under_3_years_experience",
@@ -45,6 +46,7 @@ describe("searchParamsSchema", () => {
       categories: "it-jobs",
     });
     expect(result.page).toBe(2);
+    expect(result.country).toBe("DE");
     expect(result.remote_jobs_only).toBe(true);
     expect(result.date_posted).toBe("week");
   });
@@ -59,6 +61,11 @@ describe("searchParamsSchema", () => {
 
   it("rejects invalid date_posted value", () => {
     expect(() => searchParamsSchema.parse({ query: "test", date_posted: "yesterday" })).toThrow();
+  });
+
+  it("rejects invalid country values", () => {
+    expect(() => searchParamsSchema.parse({ query: "test", country: "usa" })).toThrow();
+    expect(() => searchParamsSchema.parse({ query: "test", country: "U" })).toThrow();
   });
 
   it("rejects non-positive page numbers", () => {

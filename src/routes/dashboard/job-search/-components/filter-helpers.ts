@@ -13,9 +13,7 @@ export type FilterState = {
   remoteOnly: boolean;
   employmentType: string | null;
   jobRequirements: string | null;
-  city: string;
-  state: string;
-  country: string;
+  countryCode: string;
   // Post-filters (PostFilterOptions)
   minSalary: string;
   maxSalary: string;
@@ -30,9 +28,7 @@ export const initialFilterState: FilterState = {
   remoteOnly: false,
   employmentType: null,
   jobRequirements: null,
-  city: "",
-  state: "",
-  country: "",
+  countryCode: "US",
   minSalary: "",
   maxSalary: "",
   includeKeywords: [],
@@ -44,20 +40,13 @@ export const initialFilterState: FilterState = {
 // --- Pure helper functions ---
 
 export function buildSearchParams(query: string, filters: FilterState, page?: number): SearchParams {
-  let effectiveQuery = query.trim();
-
-  // Build location string from city, state, country
-  const locationParts = [filters.city.trim(), filters.state.trim(), filters.country.trim()].filter(
-    (part) => part !== "",
-  );
-
-  if (locationParts.length > 0) {
-    effectiveQuery += ` in ${locationParts.join(", ")}`;
-  }
+  const effectiveQuery = query.trim();
+  const countryCode = filters.countryCode.trim().toUpperCase() || initialFilterState.countryCode;
 
   const params: SearchParams = { query: effectiveQuery, num_pages: FETCH_NUM_PAGES };
   if (page && page > 1) params.page = page;
   if (filters.datePosted) params.date_posted = filters.datePosted as SearchParams["date_posted"];
+  params.country = countryCode;
   if (filters.remoteOnly) params.remote_jobs_only = true;
   if (filters.employmentType) params.employment_types = filters.employmentType;
   if (filters.jobRequirements) params.job_requirements = filters.jobRequirements;
@@ -83,9 +72,7 @@ export function hasActiveFilters(filters: FilterState): boolean {
     filters.remoteOnly ||
     filters.employmentType !== null ||
     filters.jobRequirements !== null ||
-    filters.city !== "" ||
-    filters.state !== "" ||
-    filters.country !== "" ||
+    filters.countryCode !== initialFilterState.countryCode ||
     filters.minSalary !== "" ||
     filters.maxSalary !== "" ||
     filters.includeKeywords.length > 0 ||

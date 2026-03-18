@@ -83,7 +83,7 @@ function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProp
               e.stopPropagation();
               onEdit(index);
             }}
-            className="rounded-sm p-0.5 hover:bg-secondary hover:text-foreground focus:outline-none"
+            className="rounded-md p-0.5 hover:bg-secondary hover:text-foreground focus:outline-none"
           >
             <PencilSimpleIcon className="size-3.5" />
           </button>
@@ -95,7 +95,7 @@ function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProp
               e.stopPropagation();
               onRemove(index);
             }}
-            className="rounded-sm p-0.5 hover:bg-destructive/10 hover:text-destructive focus:outline-none"
+            className="rounded-md p-0.5 hover:bg-destructive/10 hover:text-destructive focus:outline-none"
           >
             <XIcon className="size-3.5" />
           </button>
@@ -109,9 +109,10 @@ type Props = Omit<React.ComponentProps<"div">, "value" | "onChange"> & {
   value?: string[];
   defaultValue?: string[];
   onChange?: (value: string[]) => void;
+  hideDescription?: boolean;
 };
 
-export function ChipInput({ value, defaultValue = [], onChange, className, ...props }: Props) {
+export function ChipInput({ value, defaultValue = [], onChange, className, hideDescription = false, ...props }: Props) {
   const [chips, setChips] = useControlledState<string[]>({
     value,
     defaultValue,
@@ -293,11 +294,14 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
         />
-        <p className="text-xs text-muted-foreground">
-          <Trans>
-            Press <Kbd>{RETURN_KEY}</Kbd> or <Kbd>{COMMA_KEY}</Kbd> to add or save the current keyword.
-          </Trans>
-        </p>
+
+        {!hideDescription && (
+          <p className="text-xs text-muted-foreground">
+            <Trans>
+              Press <Kbd>{RETURN_KEY}</Kbd> or <Kbd>{COMMA_KEY}</Kbd> to add or save the current keyword.
+            </Trans>
+          </p>
+        )}
       </div>
     </div>
   );

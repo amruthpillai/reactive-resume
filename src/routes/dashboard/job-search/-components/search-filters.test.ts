@@ -15,7 +15,7 @@ import {
 describe("buildSearchParams", () => {
   it("returns query and num_pages when all filters are default", () => {
     const result = buildSearchParams("react developer", initialFilterState);
-    expect(result).toEqual({ query: "react developer", num_pages: FETCH_NUM_PAGES });
+    expect(result).toEqual({ query: "react developer", num_pages: FETCH_NUM_PAGES, country: "US" });
   });
 
   it("trims the query string", () => {
@@ -52,57 +52,33 @@ describe("buildSearchParams", () => {
     expect(result.job_requirements).toBe("under_3_years_experience");
   });
 
-  it("appends city to query when only city is set", () => {
-    const filters: FilterState = { ...initialFilterState, city: "New York" };
-    const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in New York");
-  });
-
-  it("appends state to query when only state is set", () => {
-    const filters: FilterState = { ...initialFilterState, state: "NY" };
-    const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in NY");
-  });
-
-  it("appends country to query when only country is set", () => {
-    const filters: FilterState = { ...initialFilterState, country: "USA" };
-    const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in USA");
-  });
-
-  it("appends city and state when both are set", () => {
-    const filters: FilterState = { ...initialFilterState, city: "New York", state: "NY" };
-    const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in New York, NY");
-  });
-
-  it("appends city, state, and country when all are set", () => {
-    const filters: FilterState = { ...initialFilterState, city: "New York", state: "NY", country: "USA" };
-    const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in New York, NY, USA");
-  });
-
-  it("does not append location when all location fields are empty", () => {
+  it("includes country using the default countryCode", () => {
     const result = buildSearchParams("engineer", initialFilterState);
-    expect(result.query).toBe("engineer");
+    expect(result.country).toBe("US");
   });
 
-  it("does not append location when all location fields are only whitespace", () => {
-    const filters: FilterState = { ...initialFilterState, city: "   ", state: "  ", country: "   " };
+  it("includes country using a custom countryCode", () => {
+    const filters: FilterState = { ...initialFilterState, countryCode: "DE" };
     const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer");
+    expect(result.country).toBe("DE");
   });
 
-  it("trims location fields before appending", () => {
-    const filters: FilterState = { ...initialFilterState, city: "  NYC  ", state: "  NY  " };
+  it("normalizes countryCode to uppercase", () => {
+    const filters: FilterState = { ...initialFilterState, countryCode: "de" };
     const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in NYC, NY");
+    expect(result.country).toBe("DE");
   });
 
-  it("skips empty fields when building location string", () => {
-    const filters: FilterState = { ...initialFilterState, city: "Seattle", country: "USA" };
+  it("falls back to US when countryCode is empty", () => {
+    const filters: FilterState = { ...initialFilterState, countryCode: "" };
     const result = buildSearchParams("engineer", filters);
-    expect(result.query).toBe("engineer in Seattle, USA");
+    expect(result.country).toBe("US");
+  });
+
+  it("keeps query focused on user text", () => {
+    const filters: FilterState = { ...initialFilterState, countryCode: "DE" };
+    const result = buildSearchParams("engineer in berlin", filters);
+    expect(result.query).toBe("engineer in berlin");
   });
 
   it("includes all filter params when all are set", () => {
@@ -112,15 +88,14 @@ describe("buildSearchParams", () => {
       remoteOnly: true,
       employmentType: "CONTRACTOR",
       jobRequirements: "no_experience",
-      city: "Seattle",
-      state: "WA",
-      country: "US",
+      countryCode: "CA",
     };
     const result = buildSearchParams("designer", filters);
     expect(result).toEqual({
-      query: "designer in Seattle, WA, US",
+      query: "designer",
       num_pages: FETCH_NUM_PAGES,
       date_posted: "today",
+      country: "CA",
       remote_jobs_only: true,
       employment_types: "CONTRACTOR",
       job_requirements: "no_experience",
@@ -285,16 +260,8 @@ describe("hasActiveFilters", () => {
     expect(hasActiveFilters({ ...initialFilterState, jobRequirements: "no_experience" })).toBe(true);
   });
 
-  it("returns true when city is set", () => {
-    expect(hasActiveFilters({ ...initialFilterState, city: "NYC" })).toBe(true);
-  });
-
-  it("returns true when state is set", () => {
-    expect(hasActiveFilters({ ...initialFilterState, state: "NY" })).toBe(true);
-  });
-
-  it("returns true when country is set", () => {
-    expect(hasActiveFilters({ ...initialFilterState, country: "USA" })).toBe(true);
+  it("returns true when countryCode differs from default", () => {
+    expect(hasActiveFilters({ ...initialFilterState, countryCode: "DE" })).toBe(true);
   });
 
   it("returns true when minSalary is set", () => {

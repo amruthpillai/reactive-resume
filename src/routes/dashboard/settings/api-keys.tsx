@@ -69,8 +69,8 @@ function RouteComponent() {
         transition={{ duration: 0.3 }}
         className="grid max-w-xl gap-6"
       >
-        <div className="flex items-start gap-4 rounded-sm border bg-popover p-6">
-          <div className="rounded-sm bg-primary/10 p-2.5">
+        <div className="flex items-start gap-4 rounded-md border bg-popover p-6">
+          <div className="rounded-md bg-primary/10 p-2.5">
             <BookOpenIcon className="text-primary" size={24} />
           </div>
 

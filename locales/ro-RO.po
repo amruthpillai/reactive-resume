@@ -49,24 +49,17 @@ msgstr "{0, plural, one {# rol} few {# roluri} other {# de roluri}}"
 
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{0} / {1} requests used this month"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{0} months ago"
 msgstr ""
 
-#. placeholder {0}: rapidApiQuota.used
-#. placeholder {1}: rapidApiQuota.limit
-#. placeholder {2}: rapidApiQuota.remaining
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "{0} of {1} requests used this month ({2} remaining)"
-msgstr ""
-
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{0} weeks ago"
 msgstr ""
 
@@ -75,8 +68,12 @@ msgstr ""
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# coloană} few {# coloane} other {# de coloane}}"
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{diffDays} days ago"
+msgstr ""
+
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "{used} of {limit} requests used this month ({remaining} remaining)"
 msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
@@ -107,10 +104,6 @@ msgstr "Peste 12 șabloane"
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
 msgstr "3 luni"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "3+ years"
-msgstr ""
 
 #: src/dialogs/api-key/create.tsx
 msgid "6 months"
@@ -149,10 +142,6 @@ msgstr "Există deja un CV cu acest slug."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
 msgstr "A4"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "About JSearch API"
-msgstr ""
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
@@ -260,11 +249,11 @@ msgid "Added"
 msgstr "Adăugat"
 
 #. placeholder {0}: skillsToSync.length
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Added {0} new skills to your original resume"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Advanced Filters"
 msgstr ""
 
@@ -281,7 +270,7 @@ msgstr "AI"
 msgid "AI Chat"
 msgstr "Chat AI"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "AI returned some invalid references"
 msgstr ""
 
@@ -314,16 +303,16 @@ msgstr "A apărut o eroare necunoscută la importul CV-ului."
 msgid "And many more..."
 msgstr "Și multe altele..."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any level"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any time"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any type"
 msgstr ""
 
@@ -366,15 +355,15 @@ msgstr "Aplicație"
 msgid "Application Statistics"
 msgstr "Statistici aplicație"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Link"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Via"
 msgstr ""
 
@@ -478,7 +467,7 @@ msgstr "Informații de bază"
 msgid "Beautiful templates to choose from, with more on the way."
 msgstr "Șabloane frumoase din care să alegeți, cu altele pe drum."
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Benefits"
 msgstr ""
 
@@ -562,7 +551,7 @@ msgstr "Pot să-mi export CV-ul în PDF?"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
 #: src/routes/dashboard/settings/danger-zone.tsx
 #: src/routes/dashboard/settings/profile.tsx
@@ -626,10 +615,6 @@ msgstr "Chineză (tradițională)"
 msgid "Circle"
 msgstr "Cerc"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "City"
-msgstr ""
-
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr "Șterge istoricul conversației"
@@ -664,7 +649,7 @@ msgstr "Companie"
 msgid "Completely free, forever, no hidden costs."
 msgstr "Complet gratuit, pentru totdeauna, fără costuri ascunse."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Configure Job Search"
 msgstr ""
 
@@ -700,7 +685,7 @@ msgstr "Continuați de unde ați rămas"
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "Continuați de unde ați rămas importând un CV existent creat cu Reactive Resume sau cu orice alt constructor de CV-uri. Formatele acceptate includ PDF, Microsoft Word, precum și fișiere JSON din Reactive Resume."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Contractor"
 msgstr ""
 
@@ -728,7 +713,7 @@ msgstr "Copiați această cheie secretă și folosiți-o în aplicațiile dvs. p
 msgid "Copy URL"
 msgstr "Copiază URL-ul"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
 msgstr ""
 
@@ -897,7 +882,7 @@ msgstr "Securitatea datelor"
 msgid "Date"
 msgstr "Dată"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Date Posted"
 msgstr ""
 
@@ -957,7 +942,7 @@ msgstr "Se șterge CV-ul..."
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Description"
 msgstr "Descriere"
 
@@ -965,11 +950,11 @@ msgstr "Descriere"
 msgid "Design"
 msgstr "Design"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Direct"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Direct Apply"
 msgstr ""
 
@@ -1077,11 +1062,11 @@ msgstr "Se duplică CV-ul..."
 msgid "Dutch"
 msgstr "Olandeză"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "e.g. 150000"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "e.g. 50000"
 msgstr ""
 
@@ -1089,20 +1074,8 @@ msgstr ""
 msgid "e.g. Change my name to..."
 msgstr "ex.: Schimbă-mi numele în..."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. New York"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. NY"
-msgstr ""
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "e.g. Software Engineer"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. United States"
+#: src/routes/dashboard/job-search/index.tsx
+msgid "e.g. frontend developer jobs in Berlin"
 msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
@@ -1186,7 +1159,7 @@ msgstr "Introduceți parola pentru a confirma configurarea autentificării cu do
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Introduceți parola pentru a dezactiva autentificarea cu doi factori. Contul va fi mai puțin sigur fără 2FA activat."
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Enter your RapidAPI key"
 msgstr ""
 
@@ -1202,11 +1175,11 @@ msgstr "Tot ce introduceți aici este stocat local în browserul dvs. Datele sun
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Tot ce aveți nevoie pentru a crea, personaliza și partaja CV-uri profesionale. Construit având confidențialitatea în minte, bazat pe open source și complet gratuit pentru totdeauna."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Keywords"
 msgstr ""
 
@@ -1215,7 +1188,7 @@ msgid "Exit Fullscreen"
 msgstr "Ieșire din ecran complet"
 
 #: src/dialogs/resume/sections/custom.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 #: src/utils/resume/section.tsx
 msgid "Experience"
 msgstr "Experiență"
@@ -1241,7 +1214,7 @@ msgstr "Explorați documentația API pentru a afla cum să integrați Reactive R
 msgid "Export"
 msgstr "Exportă"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr ""
 
@@ -1253,7 +1226,7 @@ msgstr "Configurarea autentificării cu doi factori a eșuat."
 msgid "Failed to sign in. Please try again."
 msgstr "Autentificarea a eșuat. Vă rugăm să încercați din nou."
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to sync skills"
 msgstr ""
 
@@ -1336,7 +1309,7 @@ msgstr "Franceză"
 msgid "Full Width"
 msgstr "Lățime completă"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Full-time"
 msgstr ""
 
@@ -1356,7 +1329,7 @@ msgstr "Germană"
 msgid "Get Started"
 msgstr "Începeți"
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr ""
 
@@ -1369,7 +1342,7 @@ msgstr "Înapoi"
 msgid "Go to dashboard"
 msgstr "Mergi la panoul de control"
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Go to Settings"
 msgstr ""
 
@@ -1514,7 +1487,7 @@ msgstr "Se importă CV-ul..."
 msgid "Importing..."
 msgstr "Se importă..."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Include Keywords"
 msgstr ""
 
@@ -1539,7 +1512,7 @@ msgstr "Inserează tabel"
 msgid "Interests"
 msgstr "Interese"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Intern"
 msgstr ""
 
@@ -1568,17 +1541,21 @@ msgid "Japanese"
 msgstr "Japoneză"
 
 #: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Job Listings"
-msgstr ""
-
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr ""
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "JSearch is a Google for Jobs aggregator that searches across multiple job boards. Job listings are sourced from various platforms and aggregated by Google's job search service."
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "Job Search API"
+msgstr ""
+
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
+msgstr ""
+
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "JSearch API Documentation"
 msgstr ""
 
 #: src/components/input/rich-input.tsx
@@ -1623,7 +1600,7 @@ msgstr "Limbă"
 msgid "Languages"
 msgstr "Limbi"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Last 3 days"
 msgstr ""
 
@@ -1657,10 +1634,6 @@ msgstr "Aflați mai multe"
 #: src/components/resume/preview.tsx
 msgid "Learn more about how to fit content on a page"
 msgstr "Află mai multe despre cum să potrivești conținutul pe o pagină"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Learn more: <0>JSearch API Documentation</0>"
-msgstr ""
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
@@ -1733,10 +1706,6 @@ msgstr "Se încarcă..."
 msgid "Location"
 msgstr "Locație"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Location filtering uses Google's natural language processing (NLP). For best results, use full country names instead of ISO codes . The system constructs location queries as natural language text."
-msgstr ""
-
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
@@ -1783,20 +1752,24 @@ msgstr "Margine (orizontală)"
 msgid "Margin (Vertical)"
 msgstr "Margine (verticală)"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Max Salary"
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Maximum Salary"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Min Salary"
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Minimum Salary"
 msgstr ""
 
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "Model"
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Monthly Usage"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "More than 3 years"
 msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
@@ -1848,11 +1821,11 @@ msgstr "Parolă nouă"
 msgid "New Section"
 msgstr "Secțiune nouă"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "New Skills Detected"
 msgstr ""
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Next"
 msgstr ""
 
@@ -1860,15 +1833,15 @@ msgstr ""
 msgid "No Advertising, No Tracking"
 msgstr "Fără reclame, fără urmărire"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No degree required"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No experience"
 msgstr ""
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "No jobs found. Try a different search query."
 msgstr ""
 
@@ -1876,7 +1849,7 @@ msgstr ""
 msgid "No results found."
 msgstr "Nu s-a găsit niciun rezultat."
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "No resumes found. Create a resume first."
 msgstr ""
 
@@ -1921,7 +1894,7 @@ msgid "opens in new tab"
 msgstr "se deschide într-o filă nouă"
 
 #. placeholder {0}: job.job_title
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Optimizing summary, experience, and skills for {0}"
 msgstr ""
 
@@ -1960,7 +1933,7 @@ msgstr "Pagină"
 msgid "Page {0}"
 msgstr "Pagina {0}"
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Page {currentPage}"
 msgstr ""
 
@@ -1972,7 +1945,7 @@ msgstr "Pagina {pageNumber} din {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "Paragraf"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr ""
 
@@ -2081,7 +2054,7 @@ msgstr "Preferințe"
 msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the current keyword."
 msgstr "Apăsați <0>{RETURN_KEY}</0> sau <1>{COMMA_KEY}</1> pentru a adăuga sau salva cuvântul cheie curent."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Previous"
 msgstr ""
 
@@ -2135,7 +2108,7 @@ msgstr "Publicații"
 msgid "Publisher"
 msgstr "Editor"
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr ""
 
@@ -2193,9 +2166,9 @@ msgstr "Reîncarcă"
 msgid "Remember your password? <0/>"
 msgstr "Îți amintești parola? <0/>"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
 msgstr ""
 
@@ -2231,7 +2204,7 @@ msgstr "Raportați o eroare"
 msgid "Report an issue"
 msgstr "Raportați o problemă"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Required Skills"
 msgstr ""
 
@@ -2244,7 +2217,7 @@ msgid "Resending verification email..."
 msgstr "Se retrimite e-mailul de verificare..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Reset"
 msgstr "Resetează"
 
@@ -2264,9 +2237,9 @@ msgstr "Se resetează parola..."
 msgid "Resources"
 msgstr "Resurse"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Resume tailored successfully"
 msgstr ""
 
@@ -2302,7 +2275,7 @@ msgid "Russian"
 msgstr "Rusă"
 
 #. placeholder {0}: selectedSkills.size
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Save {0} Skills"
 msgstr ""
 
@@ -2334,9 +2307,13 @@ msgstr "Scanați codul QR de mai jos cu aplicația de autentificare preferată. 
 msgid "School"
 msgstr "Școală"
 
-#: src/routes/dashboard/jobs/index.tsx
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Search"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Search countries"
 msgstr ""
 
 #: src/components/input/icon-picker.tsx
@@ -2363,8 +2340,12 @@ msgstr "Tip secțiune"
 #. placeholder {0}: job.job_title
 #. placeholder {1}: job.employer_name
 #. placeholder {2}: aiEnabled ? " and the AI will optimize it for this position." : "."
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created{2}"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Select country"
 msgstr ""
 
 #: src/components/ui/combobox.tsx
@@ -2505,7 +2486,7 @@ msgstr "Dimensiune"
 msgid "Skills"
 msgstr "Abilități"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Skip"
 msgstr ""
 
@@ -2583,10 +2564,6 @@ msgstr "Începeți să vă creați CV-ul dându-i un nume."
 msgid "Start building your resume from scratch"
 msgstr "Începeți să vă creați CV-ul de la zero"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "State"
-msgstr ""
-
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "Statistici"
@@ -2616,10 +2593,6 @@ msgstr "Sprijiniți Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "Sprijiniți aplicația făcând tot ce puteți!"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Supported filters include: date posted, employment types, remote filtering, and experience level requirements."
-msgstr ""
-
 #: src/utils/locale.ts
 msgid "Swedish"
 msgstr "Suedeză"
@@ -2644,16 +2617,16 @@ msgstr "Etichete"
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Etichetele pot fi folosite pentru a categoriza CV-ul după cuvinte cheie."
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailor Resume"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailoring failed"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailoring your resume..."
 msgstr ""
 
@@ -2678,7 +2651,7 @@ msgid "Templates"
 msgstr "Șabloane"
 
 #: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Test Connection"
 msgstr "Testare conexiune"
 
@@ -2694,7 +2667,7 @@ msgstr "Culoare text"
 msgid "Thai"
 msgstr "Thailandeză"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI identified new skills from your experience that match this job. Select which ones to save back to your original resume for future applications. This will permanently modify your original resume and cannot be undone."
 msgstr ""
 
@@ -2778,7 +2751,7 @@ msgstr "Acest lucru poate dura câteva minute, în funcție de răspunsul furniz
 msgid "This may take a while depending on the server capacity. Please do not close the window or refresh the page."
 msgstr "Acest lucru poate dura ceva timp, în funcție de capacitatea serverului. Vă rugăm să nu închideți fereastra și să nu reîncărcați pagina."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "This month"
 msgstr ""
 
@@ -2794,7 +2767,7 @@ msgstr "Această secțiune este rezervată pentru notele dumneavoastră personal
 msgid "This step is optional, but recommended."
 msgstr "Acest pas este opțional, dar recomandat."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "This week"
 msgstr ""
 
@@ -2825,12 +2798,12 @@ msgstr "Titlu"
 msgid "To delete your account, you need to enter the confirmation text and click the button below."
 msgstr "Pentru a vă șterge contul, trebuie să introduceți textul de confirmare și să faceți clic pe butonul de mai jos."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr ""
 
@@ -2902,7 +2875,7 @@ msgstr "Autentificarea cu doi factori a fost configurată cu succes."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Type"
 msgstr "Tip"
 
@@ -2922,7 +2895,7 @@ msgstr "Tipografie"
 msgid "Ukrainian"
 msgstr "Ucraineană"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Under 3 years"
 msgstr ""
 
@@ -3133,6 +3106,10 @@ msgstr "Website"
 msgid "What do you want to rename this section to?"
 msgstr "La ce doriți să redenumiți această secțiune?"
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "What is JSearch API?"
+msgstr ""
+
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Prin ce este diferit Reactive Resume de alți constructori de CV-uri?"
@@ -3163,7 +3140,7 @@ msgstr "Da! Fiecare șablon este complet personalizabil. Puteți schimba culoril
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "Da! Reactive Resume este complet gratuit de utilizat, fără costuri ascunse, niveluri premium sau abonamente. Este open-source și va rămâne întotdeauna gratuit."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Yesterday"
 msgstr ""
 
@@ -3205,7 +3182,6 @@ msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Datele dvs. sunt în siguranță și nu sunt niciodată partajate sau vândute nimănui."
 
 #: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/jobs.tsx
 msgid "Your data is stored locally"
 msgstr "Datele dvs. sunt stocate local"
 
@@ -3225,7 +3201,7 @@ msgstr "Parola dumneavoastră a fost actualizată cu succes."
 msgid "Your profile has been updated successfully."
 msgstr "Profilul dvs. a fost actualizat cu succes."
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr ""
 

@@ -49,24 +49,17 @@ msgstr "{0, plural, other {# 개 역할}}"
 
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{0} / {1} requests used this month"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{0} months ago"
 msgstr ""
 
-#. placeholder {0}: rapidApiQuota.used
-#. placeholder {1}: rapidApiQuota.limit
-#. placeholder {2}: rapidApiQuota.remaining
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "{0} of {1} requests used this month ({2} remaining)"
-msgstr ""
-
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{0} weeks ago"
 msgstr ""
 
@@ -75,8 +68,12 @@ msgstr ""
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, other {#개 열}}"
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "{diffDays} days ago"
+msgstr ""
+
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "{used} of {limit} requests used this month ({remaining} remaining)"
 msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
@@ -107,10 +104,6 @@ msgstr "템플릿 12개 이상"
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
 msgstr "3개월"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "3+ years"
-msgstr ""
 
 #: src/dialogs/api-key/create.tsx
 msgid "6 months"
@@ -149,10 +142,6 @@ msgstr "이 슬러그를 사용하는 이력서가 이미 존재합니다."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
 msgstr "A4"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "About JSearch API"
-msgstr ""
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
@@ -260,11 +249,11 @@ msgid "Added"
 msgstr "추가됨"
 
 #. placeholder {0}: skillsToSync.length
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Added {0} new skills to your original resume"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Advanced Filters"
 msgstr ""
 
@@ -281,7 +270,7 @@ msgstr "AI"
 msgid "AI Chat"
 msgstr "AI 채팅"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "AI returned some invalid references"
 msgstr ""
 
@@ -314,16 +303,16 @@ msgstr "이력서를 가져오는 동안 알 수 없는 오류가 발생했습�
 msgid "And many more..."
 msgstr "그 외에도 더 많은 기능이 있습니다..."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any level"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any time"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any type"
 msgstr ""
 
@@ -366,15 +355,15 @@ msgstr "앱"
 msgid "Application Statistics"
 msgstr "애플리케이션 통계"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Link"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Via"
 msgstr ""
 
@@ -478,7 +467,7 @@ msgstr "기본 사항"
 msgid "Beautiful templates to choose from, with more on the way."
 msgstr "선택할 수 있는 아름다운 템플릿이 준비되어 있으며, 앞으로 더 추가될 예정입니다."
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Benefits"
 msgstr ""
 
@@ -562,7 +551,7 @@ msgstr "이력서를 PDF로 내보낼 수 있나요?"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
 #: src/routes/dashboard/settings/danger-zone.tsx
 #: src/routes/dashboard/settings/profile.tsx
@@ -626,10 +615,6 @@ msgstr "중국어(번체)"
 msgid "Circle"
 msgstr "원"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "City"
-msgstr ""
-
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr "채팅 기록 지우기"
@@ -664,7 +649,7 @@ msgstr "회사"
 msgid "Completely free, forever, no hidden costs."
 msgstr "완전히 무료이며, 영원히 숨은 비용이 없습니다."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Configure Job Search"
 msgstr ""
 
@@ -700,7 +685,7 @@ msgstr "중단한 곳부터 계속하기"
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "Reactive Resume나 다른 이력서 작성 도구로 이미 만든 이력서를 가져와 중단한 곳부터 계속 진행하세요. PDF, Microsoft Word, Reactive Resume의 JSON 파일 형식을 지원합니다."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Contractor"
 msgstr ""
 
@@ -728,7 +713,7 @@ msgstr "이 비밀 키를 복사해 애플리케이션에 붙여넣어 데이터
 msgid "Copy URL"
 msgstr "URL 복사"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
 msgstr ""
 
@@ -897,7 +882,7 @@ msgstr "데이터 보안"
 msgid "Date"
 msgstr "날짜"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Date Posted"
 msgstr ""
 
@@ -957,7 +942,7 @@ msgstr "이력서를 삭제하는 중입니다..."
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Description"
 msgstr "설명"
 
@@ -965,11 +950,11 @@ msgstr "설명"
 msgid "Design"
 msgstr "디자인"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Direct"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Direct Apply"
 msgstr ""
 
@@ -1077,11 +1062,11 @@ msgstr "이력서를 복제하는 중입니다..."
 msgid "Dutch"
 msgstr "네덜란드어"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "e.g. 150000"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "e.g. 50000"
 msgstr ""
 
@@ -1089,20 +1074,8 @@ msgstr ""
 msgid "e.g. Change my name to..."
 msgstr "예: 내 이름을 ...으로 바꿔줘"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. New York"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. NY"
-msgstr ""
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "e.g. Software Engineer"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. United States"
+#: src/routes/dashboard/job-search/index.tsx
+msgid "e.g. frontend developer jobs in Berlin"
 msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
@@ -1186,7 +1159,7 @@ msgstr "2단계 인증을 설정하려면 비밀번호를 입력해 확인하세
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "2단계 인증을 비활성화하려면 비밀번호를 입력하세요. 2단계 인증을 사용하지 않으면 계정 보안이 낮아집니다."
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Enter your RapidAPI key"
 msgstr ""
 
@@ -1202,11 +1175,11 @@ msgstr "여기에 입력한 모든 내용은 브라우저에 로컬로 저장됩
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "전문적인 이력서를 만들고, 사용자 지정하고, 공유하는 데 필요한 모든 것을 제공합니다. 개인정보 보호를 최우선으로 설계되었으며, 오픈 소스로 구동되고, 완전히 무료입니다."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Keywords"
 msgstr ""
 
@@ -1215,7 +1188,7 @@ msgid "Exit Fullscreen"
 msgstr "전체 화면 종료"
 
 #: src/dialogs/resume/sections/custom.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 #: src/utils/resume/section.tsx
 msgid "Experience"
 msgstr "경력"
@@ -1241,7 +1214,7 @@ msgstr "Reactive Resume API를 애플리케이션과 통합하는 방법을 알�
 msgid "Export"
 msgstr "내보내기"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr ""
 
@@ -1253,7 +1226,7 @@ msgstr "2단계 인증 설정에 실패했습니다."
 msgid "Failed to sign in. Please try again."
 msgstr "로그인에 실패했습니다. 다시 시도해 주세요."
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to sync skills"
 msgstr ""
 
@@ -1336,7 +1309,7 @@ msgstr "프랑스어"
 msgid "Full Width"
 msgstr "전체 너비"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Full-time"
 msgstr ""
 
@@ -1356,7 +1329,7 @@ msgstr "독일어"
 msgid "Get Started"
 msgstr "시작하기"
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr ""
 
@@ -1369,7 +1342,7 @@ msgstr "뒤로 가기"
 msgid "Go to dashboard"
 msgstr "대시보드로 이동"
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Go to Settings"
 msgstr ""
 
@@ -1514,7 +1487,7 @@ msgstr "이력서를 가져오는 중입니다..."
 msgid "Importing..."
 msgstr "가져오는 중..."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Include Keywords"
 msgstr ""
 
@@ -1539,7 +1512,7 @@ msgstr "표 삽입"
 msgid "Interests"
 msgstr "관심사"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Intern"
 msgstr ""
 
@@ -1568,17 +1541,21 @@ msgid "Japanese"
 msgstr "일본어"
 
 #: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Job Listings"
-msgstr ""
-
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr ""
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "JSearch is a Google for Jobs aggregator that searches across multiple job boards. Job listings are sourced from various platforms and aggregated by Google's job search service."
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "Job Search API"
+msgstr ""
+
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
+msgstr ""
+
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "JSearch API Documentation"
 msgstr ""
 
 #: src/components/input/rich-input.tsx
@@ -1623,7 +1600,7 @@ msgstr "언어"
 msgid "Languages"
 msgstr "언어"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Last 3 days"
 msgstr ""
 
@@ -1657,10 +1634,6 @@ msgstr "자세히 알아보기"
 #: src/components/resume/preview.tsx
 msgid "Learn more about how to fit content on a page"
 msgstr "페이지에 콘텐츠를 맞추는 방법에 대해 자세히 알아보세요"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Learn more: <0>JSearch API Documentation</0>"
-msgstr ""
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
@@ -1733,10 +1706,6 @@ msgstr "로딩 중..."
 msgid "Location"
 msgstr "위치"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Location filtering uses Google's natural language processing (NLP). For best results, use full country names instead of ISO codes . The system constructs location queries as natural language text."
-msgstr ""
-
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
@@ -1783,20 +1752,24 @@ msgstr "여백(가로)"
 msgid "Margin (Vertical)"
 msgstr "여백(세로)"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Max Salary"
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Maximum Salary"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Min Salary"
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Minimum Salary"
 msgstr ""
 
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "모델"
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Monthly Usage"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "More than 3 years"
 msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
@@ -1848,11 +1821,11 @@ msgstr "새 비밀번호"
 msgid "New Section"
 msgstr "새 섹션"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "New Skills Detected"
 msgstr ""
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Next"
 msgstr ""
 
@@ -1860,15 +1833,15 @@ msgstr ""
 msgid "No Advertising, No Tracking"
 msgstr "광고 없음, 추적 없음"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No degree required"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No experience"
 msgstr ""
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "No jobs found. Try a different search query."
 msgstr ""
 
@@ -1876,7 +1849,7 @@ msgstr ""
 msgid "No results found."
 msgstr "결과가 없습니다."
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "No resumes found. Create a resume first."
 msgstr ""
 
@@ -1921,7 +1894,7 @@ msgid "opens in new tab"
 msgstr "새 탭에서 열림"
 
 #. placeholder {0}: job.job_title
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Optimizing summary, experience, and skills for {0}"
 msgstr ""
 
@@ -1960,7 +1933,7 @@ msgstr "페이지"
 msgid "Page {0}"
 msgstr "페이지 {0}"
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Page {currentPage}"
 msgstr ""
 
@@ -1972,7 +1945,7 @@ msgstr "페이지 {pageNumber} / {totalNumberOfPages}"
 msgid "Paragraph"
 msgstr "문단"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr ""
 
@@ -2081,7 +2054,7 @@ msgstr "환경 설정"
 msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the current keyword."
 msgstr "현재 키워드를 추가하거나 저장하려면 <0>{RETURN_KEY}</0> 또는 <1>{COMMA_KEY}</1>를 누르세요."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Previous"
 msgstr ""
 
@@ -2135,7 +2108,7 @@ msgstr "출판물"
 msgid "Publisher"
 msgstr "발행인"
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr ""
 
@@ -2193,9 +2166,9 @@ msgstr "새로고침"
 msgid "Remember your password? <0/>"
 msgstr "비밀번호가 기억나시나요? <0/>"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
 msgstr ""
 
@@ -2231,7 +2204,7 @@ msgstr "버그 신고"
 msgid "Report an issue"
 msgstr "문제 신고"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Required Skills"
 msgstr ""
 
@@ -2244,7 +2217,7 @@ msgid "Resending verification email..."
 msgstr "인증 이메일을 다시 보내는 중입니다..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Reset"
 msgstr "초기화"
 
@@ -2264,9 +2237,9 @@ msgstr "비밀번호를 재설정하는 중입니다..."
 msgid "Resources"
 msgstr "리소스"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Resume tailored successfully"
 msgstr ""
 
@@ -2302,7 +2275,7 @@ msgid "Russian"
 msgstr "러시아어"
 
 #. placeholder {0}: selectedSkills.size
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Save {0} Skills"
 msgstr ""
 
@@ -2334,9 +2307,13 @@ msgstr "아래 QR 코드를 선호하는 인증 앱으로 스캔하세요. 아�
 msgid "School"
 msgstr "학교"
 
-#: src/routes/dashboard/jobs/index.tsx
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Search"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Search countries"
 msgstr ""
 
 #: src/components/input/icon-picker.tsx
@@ -2363,8 +2340,12 @@ msgstr "섹션 유형"
 #. placeholder {0}: job.job_title
 #. placeholder {1}: job.employer_name
 #. placeholder {2}: aiEnabled ? " and the AI will optimize it for this position." : "."
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created{2}"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+msgid "Select country"
 msgstr ""
 
 #: src/components/ui/combobox.tsx
@@ -2505,7 +2486,7 @@ msgstr "크기"
 msgid "Skills"
 msgstr "기술"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Skip"
 msgstr ""
 
@@ -2583,10 +2564,6 @@ msgstr "이력서 이름을 정해 작성을 시작해 보세요."
 msgid "Start building your resume from scratch"
 msgstr "처음부터 이력서를 직접 작성하기"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "State"
-msgstr ""
-
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "통계"
@@ -2616,10 +2593,6 @@ msgstr "Reactive Resume 후원하기"
 msgid "Support the app by doing what you can!"
 msgstr "가능한 방식으로 앱을 지원해 주세요!"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Supported filters include: date posted, employment types, remote filtering, and experience level requirements."
-msgstr ""
-
 #: src/utils/locale.ts
 msgid "Swedish"
 msgstr "스웨덴어"
@@ -2644,16 +2617,16 @@ msgstr "태그"
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "태그는 키워드로 이력서를 분류하는 데 사용할 수 있습니다."
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailor Resume"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailoring failed"
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailoring your resume..."
 msgstr ""
 
@@ -2678,7 +2651,7 @@ msgid "Templates"
 msgstr "템플릿"
 
 #: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Test Connection"
 msgstr "연결 테스트"
 
@@ -2694,7 +2667,7 @@ msgstr "텍스트 색상"
 msgid "Thai"
 msgstr "태국어"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI identified new skills from your experience that match this job. Select which ones to save back to your original resume for future applications. This will permanently modify your original resume and cannot be undone."
 msgstr ""
 
@@ -2778,7 +2751,7 @@ msgstr "AI 제공자의 응답 속도에 따라 몇 분 정도 걸릴 수 있습
 msgid "This may take a while depending on the server capacity. Please do not close the window or refresh the page."
 msgstr "서버 용량에 따라 시간이 다소 걸릴 수 있습니다. 창을 닫거나 페이지를 새로 고치지 마세요."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "This month"
 msgstr ""
 
@@ -2794,7 +2767,7 @@ msgstr "이 섹션은 이 이력서에 대한 개인적인 노트 전용 공간�
 msgid "This step is optional, but recommended."
 msgstr "이 단계는 선택 사항이지만 권장됩니다."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "This week"
 msgstr ""
 
@@ -2825,12 +2798,12 @@ msgstr "제목"
 msgid "To delete your account, you need to enter the confirmation text and click the button below."
 msgstr "계정을 삭제하려면 확인 문구를 입력한 뒤 아래 버튼을 클릭해야 합니다."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr ""
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr ""
 
@@ -2902,7 +2875,7 @@ msgstr "2단계 인증이 성공적으로 설정되었습니다."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Type"
 msgstr "유형"
 
@@ -2922,7 +2895,7 @@ msgstr "타이포그래피"
 msgid "Ukrainian"
 msgstr "우크라이나어"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
+#: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Under 3 years"
 msgstr ""
 
@@ -3133,6 +3106,10 @@ msgstr "웹사이트"
 msgid "What do you want to rename this section to?"
 msgstr "이 섹션의 이름을 무엇으로 바꾸고 싶으신가요?"
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "What is JSearch API?"
+msgstr ""
+
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Reactive Resume는 다른 이력서 작성 도구와 무엇이 다른가요?"
@@ -3163,7 +3140,7 @@ msgstr "네! 모든 템플릿은 완전히 사용자 지정할 수 있습니다.
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "네! Reactive Resume는 숨은 비용, 프리미엄 플랜, 구독료 없이 완전히 무료로 사용할 수 있습니다. 오픈 소스이며 앞으로도 계속 무료로 제공됩니다."
 
-#: src/routes/dashboard/jobs/index.tsx
+#: src/routes/dashboard/job-search/index.tsx
 msgid "Yesterday"
 msgstr ""
 
@@ -3205,7 +3182,6 @@ msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "데이터는 안전하게 보호되며, 누구와도 공유하거나 판매하지 않습니다."
 
 #: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/jobs.tsx
 msgid "Your data is stored locally"
 msgstr "데이터는 브라우저에 로컬로 저장됩니다"
 
@@ -3225,7 +3201,7 @@ msgstr "비밀번호가 성공적으로 업데이트되었습니다."
 msgid "Your profile has been updated successfully."
 msgstr "프로필이 성공적으로 업데이트되었습니다."
 
-#: src/routes/dashboard/settings/jobs.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr ""
 

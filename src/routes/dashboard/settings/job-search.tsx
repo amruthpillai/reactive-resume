@@ -1,15 +1,17 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { CheckCircleIcon, InfoIcon, MagnifyingGlassIcon, XCircleIcon } from "@phosphor-icons/react";
+import { BriefcaseIcon, CheckCircleIcon, InfoIcon, LinkSimpleIcon, XCircleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { match } from "ts-pattern";
 import { useIsClient } from "usehooks-ts";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { useJobsStore } from "@/integrations/jobs/store";
@@ -17,11 +19,11 @@ import { orpc } from "@/integrations/orpc/client";
 
 import { DashboardHeader } from "../-components/header";
 
-export const Route = createFileRoute("/dashboard/settings/jobs")({
+export const Route = createFileRoute("/dashboard/settings/job-search")({
   component: RouteComponent,
 });
 
-function JobsForm() {
+function RapidAPIKeyForm() {
   const { set, rapidApiKey, testStatus } = useJobsStore();
 
   const { mutate: testConnection, isPending: isTesting } = useMutation(orpc.jobs.testConnection.mutationOptions());
@@ -60,6 +62,7 @@ function JobsForm() {
         <Label htmlFor="rapidapi-key">
           <Trans>RapidAPI Key</Trans>
         </Label>
+
         <Input
           id="rapidapi-key"
           name="rapidapi-key"
@@ -75,6 +78,7 @@ function JobsForm() {
           data-bwignore="true"
           data-1p-ignore="true"
         />
+
         <p className="text-xs text-muted-foreground">
           <Trans>Get your API key from RapidAPI by subscribing to the JSearch API.</Trans>
         </p>
@@ -82,13 +86,11 @@ function JobsForm() {
 
       <div>
         <Button variant="outline" disabled={isTesting || !rapidApiKey} onClick={handleTestConnection}>
-          {isTesting ? (
-            <Spinner />
-          ) : testStatus === "success" ? (
-            <CheckCircleIcon className="text-success" />
-          ) : testStatus === "failure" ? (
-            <XCircleIcon className="text-destructive" />
-          ) : null}
+          {match({ isTesting, testStatus })
+            .with({ isTesting: true }, () => <Spinner />)
+            .with({ isTesting: false, testStatus: "success" }, () => <CheckCircleIcon className="text-success" />)
+            .with({ isTesting: false, testStatus: "failure" }, () => <XCircleIcon className="text-destructive" />)
+            .otherwise(() => null)}
           <Trans>Test Connection</Trans>
         </Button>
       </div>
@@ -96,19 +98,26 @@ function JobsForm() {
   );
 }
 
-function QuotaDisplay() {
-  const { rapidApiQuota } = useJobsStore();
+function RapidAPIQuotaDisplay() {
+  const { testStatus, rapidApiQuota } = useJobsStore();
 
-  if (!rapidApiQuota) return null;
+  if (!rapidApiQuota || testStatus !== "success") return null;
+
+  const { used, limit, remaining } = rapidApiQuota;
+  const percent = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
 
   return (
-    <div className="flex flex-col gap-y-2">
-      <Label>
-        <Trans>Monthly Usage</Trans>
-      </Label>
-      <p className="text-sm text-muted-foreground">
+    <div className="flex w-full flex-col gap-2">
+      <Progress value={percent} id="jobs-quota-progress" className="w-full max-w-md">
+        <ProgressLabel>
+          <Trans>Monthly Usage</Trans>
+        </ProgressLabel>
+        <ProgressValue />
+      </Progress>
+
+      <p className="text-xs text-muted-foreground">
         <Trans>
-          {rapidApiQuota.used} of {rapidApiQuota.limit} requests used this month ({rapidApiQuota.remaining} remaining)
+          {used} of {limit} requests used this month ({remaining} remaining)
         </Trans>
       </p>
     </div>
@@ -122,7 +131,7 @@ function RouteComponent() {
 
   return (
     <div className="space-y-4">
-      <DashboardHeader icon={MagnifyingGlassIcon} title={t`Job Search`} />
+      <DashboardHeader icon={BriefcaseIcon} title={t`Job Search API`} />
 
       <Separator />
 
@@ -132,15 +141,33 @@ function RouteComponent() {
         transition={{ duration: 0.3 }}
         className="grid max-w-xl gap-6"
       >
-        <div className="flex items-start gap-4 rounded-sm border bg-popover p-6">
-          <div className="rounded-sm bg-primary/10 p-2.5">
+        <div className="flex items-start gap-4 rounded-md border bg-popover p-6">
+          <div className="rounded-md bg-primary/10 p-2.5">
             <InfoIcon className="text-primary" size={24} />
           </div>
 
           <div className="flex-1 space-y-2">
             <h3 className="font-semibold">
-              <Trans>Your data is stored locally</Trans>
+              <Trans>What is JSearch API?</Trans>
             </h3>
+
+            <p className="leading-relaxed text-muted-foreground">
+              <Trans>
+                JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by
+                country (ISO alpha-2 code), date posted, job type, remote options, and experience level.
+              </Trans>
+            </p>
+
+            <Button
+              variant="link"
+              nativeButton={false}
+              render={
+                <a href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch" target="_blank" rel="noopener">
+                  <LinkSimpleIcon />
+                  <Trans>JSearch API Documentation</Trans>
+                </a>
+              }
+            />
 
             <p className="leading-relaxed text-muted-foreground">
               <Trans>
@@ -153,62 +180,8 @@ function RouteComponent() {
 
         <Separator />
 
-        <div className="bg-info/10 flex items-start gap-4 rounded-sm border p-6">
-          <div className="bg-info/20 rounded-sm p-2.5">
-            <InfoIcon className="text-info" size={24} />
-          </div>
-
-          <div className="flex-1 space-y-3">
-            <h3 className="font-semibold">
-              <Trans>About JSearch API</Trans>
-            </h3>
-
-            <div className="space-y-2 text-sm leading-relaxed text-muted-foreground">
-              <p>
-                <Trans>
-                  JSearch is a Google for Jobs aggregator that searches across multiple job boards. Job listings are
-                  sourced from various platforms and aggregated by Google's job search service.
-                </Trans>
-              </p>
-
-              <p>
-                <Trans>
-                  Location filtering uses Google's natural language processing (NLP). For best results, use full country
-                  names instead of ISO codes . The system constructs location queries as natural language text.
-                </Trans>
-              </p>
-
-              <p>
-                <Trans>
-                  Supported filters include: date posted, employment types, remote filtering, and experience level
-                  requirements.
-                </Trans>
-              </p>
-
-              <p className="text-xs">
-                <Trans>
-                  Learn more:{" "}
-                  <a
-                    href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline hover:no-underline"
-                  >
-                    JSearch API Documentation
-                  </a>
-                </Trans>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        <JobsForm />
-
-        <Separator />
-
-        <QuotaDisplay />
+        <RapidAPIKeyForm />
+        <RapidAPIQuotaDisplay />
       </motion.div>
     </div>
   );

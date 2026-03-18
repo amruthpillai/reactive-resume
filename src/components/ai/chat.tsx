@@ -348,7 +348,7 @@ export function AIChat() {
                   <div
                     data-role={message.role}
                     className={cn(
-                      "max-w-[85%] rounded-xl px-3.5 py-2.5",
+                      "max-w-[85%] rounded-md px-3.5 py-2.5",
                       "data-[role=user]:rounded-br-sm data-[role=user]:bg-primary data-[role=user]:text-primary-foreground",
                       "data-[role=assistant]:rounded-bl-sm data-[role=assistant]:bg-muted data-[role=assistant]:text-foreground",
                     )}
@@ -368,7 +368,7 @@ export function AIChat() {
 
               {status === "submitted" && (
                 <div className="flex justify-start">
-                  <div className="rounded-xl rounded-bl-sm bg-muted px-3.5 py-2.5">
+                  <div className="rounded-md rounded-bl-sm bg-muted px-3.5 py-2.5">
                     <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
                       <CircleNotchIcon className="size-3 animate-spin" />
                       <span>

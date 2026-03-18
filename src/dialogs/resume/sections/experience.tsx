@@ -176,7 +176,7 @@ function RoleFields({ role, index, onRemove }: RoleFieldsProps) {
       initial={{ opacity: 1, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="relative grid rounded border sm:col-span-full sm:grid-cols-2"
+      className="relative grid rounded-md border sm:col-span-full sm:grid-cols-2"
     >
       <div className="col-span-full flex items-center justify-between rounded-t bg-border/30 px-2 py-1.5">
         <Button

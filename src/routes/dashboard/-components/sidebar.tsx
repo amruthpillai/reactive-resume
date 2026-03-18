@@ -8,7 +8,6 @@ import {
   BriefcaseIcon,
   GearSixIcon,
   KeyIcon,
-  MagnifyingGlassIcon,
   ReadCvLogoIcon,
   ShieldCheckIcon,
   UserCircleIcon,
@@ -53,7 +52,7 @@ const appSidebarItems = [
   {
     icon: <BriefcaseIcon />,
     label: msg`Job Search`,
-    href: "/dashboard/jobs",
+    href: "/dashboard/job-search",
   },
 ] as const satisfies SidebarItem[];
 
@@ -84,9 +83,9 @@ const settingsSidebarItems = [
     href: "/dashboard/settings/ai",
   },
   {
-    icon: <MagnifyingGlassIcon />,
-    label: msg`Job Search`,
-    href: "/dashboard/settings/jobs",
+    icon: <BriefcaseIcon />,
+    label: msg`Job Search API`,
+    href: "/dashboard/settings/job-search",
   },
   {
     icon: <WarningIcon />,

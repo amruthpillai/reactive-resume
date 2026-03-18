@@ -39,7 +39,7 @@ import {
   SearchFilters,
 } from "./-components/search-filters";
 
-export const Route = createFileRoute("/dashboard/jobs/")({
+export const Route = createFileRoute("/dashboard/job-search/")({
   component: RouteComponent,
 });
 
@@ -92,7 +92,7 @@ function JobCard({ job, onClick }: { job: JobResult; onClick: () => void }) {
   return (
     <motion.button
       type="button"
-      className="flex w-full cursor-pointer flex-col gap-y-3 rounded-sm border bg-card p-4 text-start transition-colors hover:bg-accent/50"
+      className="flex w-full cursor-pointer flex-col gap-y-3 rounded-md border bg-card p-4 text-start transition-colors hover:bg-accent/50"
       onClick={onClick}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -100,9 +100,9 @@ function JobCard({ job, onClick }: { job: JobResult; onClick: () => void }) {
     >
       <div className="flex items-start gap-x-3">
         {job.employer_logo ? (
-          <img src={job.employer_logo} alt={job.employer_name} className="size-10 shrink-0 rounded-sm object-contain" />
+          <img src={job.employer_logo} alt={job.employer_name} className="size-10 shrink-0 rounded-md object-contain" />
         ) : (
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-muted">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted">
             <BuildingsIcon className="size-5 text-muted-foreground" />
           </div>
         )}
@@ -156,6 +156,7 @@ function JobCard({ job, onClick }: { job: JobResult; onClick: () => void }) {
 function RouteComponent() {
   const rapidApiKey = useJobsStore((s) => s.rapidApiKey);
   const testStatus = useJobsStore((s) => s.testStatus);
+
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
   const [jobs, setJobs] = useState<JobResult[]>([]);
@@ -164,6 +165,8 @@ function RouteComponent() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { mutate: searchJobs, isPending } = useMutation(orpc.jobs.search.mutationOptions());
@@ -172,15 +175,8 @@ function RouteComponent() {
 
   const executeSearch = useCallback(
     (page: number) => {
-      // Allow search if either query or any location field is provided
-      const hasQuery = query.trim().length > 0;
-      const hasLocation =
-        filters.city.trim().length > 0 || filters.state.trim().length > 0 || filters.country.trim().length > 0;
-
-      if ((!hasQuery && !hasLocation) || !rapidApiKey) return;
-
-      // Use a default query if only location is provided
-      const effectiveQuery = hasQuery ? query : "jobs";
+      if (!rapidApiKey) return;
+      const effectiveQuery = query.trim() || "jobs";
       const params = buildSearchParams(effectiveQuery, filters, page);
       const postFilters = buildPostFilters(filters);
 
@@ -204,6 +200,7 @@ function RouteComponent() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    setHasSearched(true);
     setCurrentPage(1);
     executeSearch(1);
   };
@@ -220,7 +217,7 @@ function RouteComponent() {
 
   return (
     <div className="space-y-4">
-      <DashboardHeader icon={BriefcaseIcon} title={t`Job Listings`} />
+      <DashboardHeader icon={BriefcaseIcon} title={t`Job Search`} />
 
       <Separator />
 
@@ -237,7 +234,7 @@ function RouteComponent() {
           <p className="text-muted-foreground">
             <Trans>To search for job listings, you need to configure your RapidAPI key in settings.</Trans>
           </p>
-          <Button variant="outline" render={<Link to="/dashboard/settings/jobs" />}>
+          <Button nativeButton={false} variant="outline" render={<Link to="/dashboard/settings/job-search" />}>
             <Trans>Go to Settings</Trans>
           </Button>
         </motion.div>
@@ -254,33 +251,22 @@ function RouteComponent() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={t`e.g. Software Engineer`}
+                placeholder={t`e.g. frontend developer jobs in Berlin`}
                 autoCorrect="off"
                 autoComplete="off"
                 spellCheck="false"
               />
             </div>
 
-            <Button
-              type="submit"
-              disabled={
-                isPending || (!query.trim() && !filters.city.trim() && !filters.state.trim() && !filters.country.trim())
-              }
-            >
+            <Button type="submit" disabled={isPending}>
               {isPending ? <Spinner /> : <MagnifyingGlassIcon />}
               <Trans>Search</Trans>
             </Button>
           </form>
 
           <div ref={scrollRef} />
-          <SearchFilters
-            filters={filters}
-            onFiltersChange={setFilters}
-            onSearch={() => {
-              setCurrentPage(1);
-              executeSearch(1);
-            }}
-          />
+
+          <SearchFilters filters={filters} onFiltersChange={setFilters} />
 
           {quota && (
             <p className="text-xs text-muted-foreground">
@@ -326,7 +312,7 @@ function RouteComponent() {
             </>
           )}
 
-          {!isPending && jobs.length === 0 && query && (
+          {hasSearched && !isPending && jobs.length === 0 && (
             <div className="py-12 text-center">
               <p className="text-muted-foreground">
                 <Trans>No jobs found. Try a different search query.</Trans>

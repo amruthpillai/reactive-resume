@@ -144,7 +144,7 @@ function CustomSectionContainer({ section }: { section: CustomSection }) {
             section.hidden && "opacity-50",
           )}
         >
-          <Badge variant="secondary" className="mb-1.5 rounded-sm">
+          <Badge variant="secondary" className="mb-1.5 rounded-md">
             {getSectionTitle(section.type)}
           </Badge>
           <span className="line-clamp-1 text-base font-medium text-wrap">{section.title}</span>

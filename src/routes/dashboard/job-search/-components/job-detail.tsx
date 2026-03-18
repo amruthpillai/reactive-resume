@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useAIStore } from "@/integrations/ai/store";
 
 import { TailorDialog } from "./tailor-dialog";
 
@@ -56,6 +57,7 @@ function formatSalary(min: number | null, max: number | null, currency: string |
 }
 
 export function JobDetailSheet({ job, open, onOpenChange }: Props) {
+  const isAIEnabled = useAIStore((s) => s.enabled);
   const [tailorOpen, setTailorOpen] = useState(false);
 
   if (!job) return null;
@@ -76,10 +78,10 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
                 <img
                   src={job.employer_logo}
                   alt={job.employer_name}
-                  className="size-12 shrink-0 rounded-sm object-contain"
+                  className="size-12 shrink-0 rounded-md object-contain"
                 />
               ) : (
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-sm bg-muted">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-muted">
                   <BuildingsIcon className="size-6 text-muted-foreground" />
                 </div>
               )}
@@ -132,13 +134,19 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
               <div className="flex gap-x-2">
                 <Button
                   className="flex-1"
+                  nativeButton={false}
                   render={<a href={job.job_apply_link} target="_blank" rel="noopener noreferrer" />}
                 >
                   <ArrowSquareOutIcon />
                   <Trans>Apply</Trans>
                 </Button>
 
-                <Button variant="outline" className="flex-1" onClick={() => setTailorOpen(true)}>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  disabled={!isAIEnabled}
+                  onClick={() => setTailorOpen(true)}
+                >
                   <StarIcon />
                   <Trans>Tailor Resume</Trans>
                 </Button>

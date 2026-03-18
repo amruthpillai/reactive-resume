@@ -18,7 +18,7 @@ function TemplateItem({ metadata }: TemplateItemProps) {
       whileHover={{ scale: 1.08, zIndex: 20 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
-      <div className="relative aspect-page w-48 overflow-hidden rounded-lg border bg-card shadow-lg transition-all duration-300 group-hover:shadow-2xl sm:w-56 md:w-64 lg:w-72">
+      <div className="relative aspect-page w-48 overflow-hidden rounded-md border bg-card shadow-lg transition-all duration-300 group-hover:shadow-2xl sm:w-56 md:w-64 lg:w-72">
         <img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
 
         {/* Subtle overlay on hover */}

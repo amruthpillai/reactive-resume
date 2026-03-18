@@ -48,8 +48,9 @@ export const useJobsStore = create<JobsStore>()(
       name: "jobs-store",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        rapidApiKey: state.rapidApiKey,
         testStatus: state.testStatus,
+        rapidApiKey: state.rapidApiKey,
+        rapidApiQuota: state.rapidApiQuota,
       }),
     },
   ),

@@ -40,7 +40,7 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <div className="relative flex h-full flex-col rounded-xl border bg-card p-5 shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
+      <div className="relative flex h-full flex-col rounded-md border bg-card p-5 shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
         <p className="flex-1 leading-relaxed text-muted-foreground">"{testimonial}"</p>
       </div>
     </motion.div>

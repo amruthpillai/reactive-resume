@@ -214,10 +214,6 @@ const config = defineConfig({
     },
   },
 
-  test: {
-    reporters: ["agent"],
-  },
-
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
   },

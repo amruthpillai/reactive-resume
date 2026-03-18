@@ -112,9 +112,9 @@ export function SharingSectionBuilder() {
         />
 
         <Label htmlFor="sharing-switch" className="my-2 flex flex-col items-start gap-y-1 font-normal">
-          <p className="font-medium">
+          <span className="font-medium">
             <Trans>Allow Public Access</Trans>
-          </p>
+          </span>
 
           <span className="text-xs text-muted-foreground">
             <Trans>Anyone with the link can view and download the resume.</Trans>

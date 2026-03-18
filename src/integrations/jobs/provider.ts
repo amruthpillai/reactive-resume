@@ -1,18 +1,6 @@
 import type { JobResult, RapidApiQuota, SearchParams, SearchResponse } from "@/schema/jobs";
 
 /**
- * Job search provider configuration
- */
-export interface ProviderConfig {
-  /** API key for authentication */
-  apiKey: string;
-  /** Optional base URL override (defaults to provider's default) */
-  baseUrl?: string;
-  /** Optional request timeout in milliseconds */
-  timeout?: number;
-}
-
-/**
  * Abstract interface for job search providers
  *
  * This interface enables multiple job search provider implementations (JSearch, LinkedIn, Indeed, etc.)

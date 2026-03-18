@@ -198,7 +198,7 @@ describe("tailorOutputToPatches", () => {
   it("generates experience description patches", () => {
     const output: TailorOutput = {
       ...emptyTailorOutput,
-      experiences: [{ index: 0, description: "<p>Tailored exp</p>" }],
+      experiences: [{ index: 0, description: "<p>Tailored exp</p>", roles: [] }],
     };
 
     const { operations } = tailorOutputToPatches(output, makeResumeData());
@@ -213,7 +213,7 @@ describe("tailorOutputToPatches", () => {
   it("sanitizes experience descriptions", () => {
     const output: TailorOutput = {
       ...emptyTailorOutput,
-      experiences: [{ index: 0, description: "<p>Led team \u2013 built \u201Cgreat\u201D things</p>" }],
+      experiences: [{ index: 0, description: "<p>Led team \u2013 built \u201Cgreat\u201D things</p>", roles: [] }],
     };
 
     const { operations } = tailorOutputToPatches(output, makeResumeData());
@@ -419,7 +419,7 @@ describe("tailorOutputToPatches", () => {
   it("ignores out-of-bounds experience indices", () => {
     const output: TailorOutput = {
       ...emptyTailorOutput,
-      experiences: [{ index: 99, description: "<p>Bad</p>" }],
+      experiences: [{ index: 99, description: "<p>Bad</p>", roles: [] }],
     };
 
     const { operations } = tailorOutputToPatches(output, makeResumeData());
@@ -444,8 +444,8 @@ describe("tailorOutputToPatches", () => {
     const output: TailorOutput = {
       ...emptyTailorOutput,
       experiences: [
-        { index: 0, description: "<p>First</p>" },
-        { index: 1, description: "<p>Second</p>" },
+        { index: 0, description: "<p>First</p>", roles: [] },
+        { index: 1, description: "<p>Second</p>", roles: [] },
       ],
     };
 
@@ -494,7 +494,7 @@ describe("validateTailorOutput", () => {
   it("returns empty array for valid output", () => {
     const output: TailorOutput = {
       summary: { content: "<p>Summary</p>" },
-      experiences: [{ index: 0, description: "<p>Desc</p>" }],
+      experiences: [{ index: 0, description: "<p>Desc</p>", roles: [] }],
       references: [{ index: 0, description: "<p>Ref desc</p>" }],
       skills: [{ name: "React", keywords: ["Hooks"], proficiency: "Advanced", icon: "code", isNew: false }],
     };
@@ -506,7 +506,7 @@ describe("validateTailorOutput", () => {
   it("detects out-of-bounds experience index", () => {
     const output: TailorOutput = {
       ...emptyTailorOutput,
-      experiences: [{ index: 10, description: "<p>Bad</p>" }],
+      experiences: [{ index: 10, description: "<p>Bad</p>", roles: [] }],
     };
 
     const errors = validateTailorOutput(output, makeResumeData());
@@ -553,7 +553,7 @@ describe("validateTailorOutput", () => {
   it("detects negative indices", () => {
     const output: TailorOutput = {
       ...emptyTailorOutput,
-      experiences: [{ index: -1, description: "<p>Negative</p>" }],
+      experiences: [{ index: -1, description: "<p>Negative</p>", roles: [] }],
     };
 
     const errors = validateTailorOutput(output, makeResumeData());

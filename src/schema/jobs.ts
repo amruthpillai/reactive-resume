@@ -7,6 +7,11 @@ export const searchParamsSchema = z.object({
   page: z.number().int().positive().optional(),
   num_pages: z.number().int().positive().optional(),
   date_posted: z.enum(["all", "today", "3days", "week", "month"]).optional(),
+  country: z
+    .string()
+    .length(2)
+    .regex(/^[A-Z]{2}$/)
+    .optional(),
   remote_jobs_only: z.boolean().optional(),
   employment_types: z.string().optional(),
   job_requirements: z.string().optional(),

@@ -8,9 +8,7 @@ function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
 }
 
 function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
-  return (
-    <AccordionPrimitive.Item data-slot="accordion-item" className={cn("not-last:border-b", className)} {...props} />
-  );
+  return <AccordionPrimitive.Item data-slot="accordion-item" className={cn(className)} {...props} />;
 }
 
 function AccordionTrigger({ className, children, ...props }: AccordionPrimitive.Trigger.Props) {
