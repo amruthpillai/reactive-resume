@@ -213,7 +213,10 @@ export const aiRouter = {
 				}
 
 				if (error instanceof ZodError) {
-					throw new Error(formatZodError(error));
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Invalid resume data structure",
+						cause: flattenError(error),
+					});
 				}
 
 				throw error;

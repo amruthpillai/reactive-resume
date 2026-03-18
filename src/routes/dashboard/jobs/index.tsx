@@ -185,7 +185,7 @@ function RouteComponent() {
 				{ apiKey: rapidApiKey, params, filters: postFilters },
 				{
 					onSuccess: (data) => {
-						setHasMore(data.data.length > RESULTS_PER_PAGE);
+						setHasMore(data.data.length >= RESULTS_PER_PAGE);
 						setJobs(data.data.slice(0, RESULTS_PER_PAGE));
 						setQuota(data.quota);
 						scrollRef.current?.scrollIntoView({ behavior: "smooth" });

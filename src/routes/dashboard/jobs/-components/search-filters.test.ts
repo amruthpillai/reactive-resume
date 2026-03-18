@@ -154,17 +154,17 @@ describe("buildSearchParams", () => {
 // --- Pagination constants ---
 
 describe("pagination constants", () => {
-	it("RESULTS_PER_PAGE is 30", () => {
-		expect(RESULTS_PER_PAGE).toBe(30);
+	it("RESULTS_PER_PAGE is 10", () => {
+		expect(RESULTS_PER_PAGE).toBe(10);
 	});
 
-	it("FETCH_NUM_PAGES is 4", () => {
-		expect(FETCH_NUM_PAGES).toBe(4);
+	it("FETCH_NUM_PAGES is 1", () => {
+		expect(FETCH_NUM_PAGES).toBe(1);
 	});
 
-	it("FETCH_NUM_PAGES fetches more than RESULTS_PER_PAGE worth of results", () => {
-		// Each API page returns ~10 results, so FETCH_NUM_PAGES * 10 should exceed RESULTS_PER_PAGE
-		expect(FETCH_NUM_PAGES * 10).toBeGreaterThan(RESULTS_PER_PAGE);
+	it("FETCH_NUM_PAGES matches RESULTS_PER_PAGE worth of results", () => {
+		// Each API page returns ~10 results, so FETCH_NUM_PAGES * 10 should equal RESULTS_PER_PAGE
+		expect(FETCH_NUM_PAGES * 10).toBe(RESULTS_PER_PAGE);
 	});
 });
 

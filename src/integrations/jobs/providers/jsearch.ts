@@ -64,6 +64,8 @@ export class JSearchProvider implements JobSearchProvider {
 					},
 				});
 
+				console.log(`[JSearch] attempt=${attempt} status=${response.status}`);
+
 				// Retry on rate limit with exponential backoff
 				if (response.status === 429) {
 					const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
@@ -72,6 +74,8 @@ export class JSearchProvider implements JobSearchProvider {
 				}
 
 				if (!response.ok) {
+					const body = await response.text();
+					console.error(`[JSearch] Non-OK response body: ${body.substring(0, 500)}`);
 					throw new Error(`JSearch API error: ${response.status} ${response.statusText}`);
 				}
 
@@ -79,6 +83,7 @@ export class JSearchProvider implements JobSearchProvider {
 				return schema.parse(data);
 			} catch (error) {
 				lastError = error instanceof Error ? error : new Error(String(error));
+				console.error(`[JSearch] attempt=${attempt} error:`, lastError.message);
 				if (attempt < MAX_RETRIES - 1) {
 					const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
 					await this.sleep(backoff);
@@ -120,7 +125,9 @@ export class JSearchProvider implements JobSearchProvider {
 			const query = new URLSearchParams({ query: "test", num_pages: "1" });
 			await this.jsearchRequest(`/search?${query.toString()}`, searchResponseSchema);
 			return true;
-		} catch {
+		} catch (error) {
+			console.error("[JSearch testConnection] Failed:", error instanceof Error ? error.message : error);
+			console.error("[JSearch testConnection] Stack:", error instanceof Error ? error.stack : "N/A");
 			return false;
 		}
 	}

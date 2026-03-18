@@ -2,8 +2,8 @@ import type { PostFilterOptions, SearchParams } from "@/schema/jobs";
 
 // --- Pagination ---
 
-export const RESULTS_PER_PAGE = 30;
-export const FETCH_NUM_PAGES = 4;
+export const RESULTS_PER_PAGE = 10;
+export const FETCH_NUM_PAGES = 1;
 
 // --- Types ---
 

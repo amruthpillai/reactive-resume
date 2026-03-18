@@ -173,7 +173,7 @@ describe("JSearchProvider", () => {
 		});
 
 		it("should throw error on non-200 response after retries", async () => {
-			mockFetch.mockResolvedValue({ ok: false, status: 500, statusText: "Internal Server Error" });
+			mockFetch.mockResolvedValue({ ok: false, status: 500, statusText: "Internal Server Error", text: async () => "Internal Server Error" });
 
 			await expect(provider.search({ query: "test", num_pages: 1 })).rejects.toThrow("JSearch API error: 500");
 		});
@@ -251,7 +251,7 @@ describe("JSearchProvider", () => {
 		});
 
 		it("should return false on connection failure", async () => {
-			mockFetch.mockResolvedValueOnce({ ok: false, status: 401, statusText: "Unauthorized" });
+			mockFetch.mockResolvedValueOnce({ ok: false, status: 401, statusText: "Unauthorized", text: async () => "Unauthorized" });
 
 			const result = await provider.testConnection();
 
