@@ -8,12 +8,12 @@ import { statisticsRouter } from "./statistics";
 import { storageRouter } from "./storage";
 
 export default {
-	ai: aiRouter,
-	auth: authRouter,
-	flags: flagsRouter,
-	jobs: jobsRouter,
-	resume: resumeRouter,
-	storage: storageRouter,
-	printer: printerRouter,
-	statistics: statisticsRouter,
+  ai: aiRouter,
+  auth: authRouter,
+  jobs: jobsRouter,
+  flags: flagsRouter,
+  resume: resumeRouter,
+  storage: storageRouter,
+  printer: printerRouter,
+  statistics: statisticsRouter,
 };

@@ -9,24 +9,24 @@ import { LanguageCommandPage } from "./language";
 import { ThemeCommandPage } from "./theme";
 
 export function PreferencesCommandGroup() {
-	const pushPage = useCommandPaletteStore((state) => state.pushPage);
+  const pushPage = useCommandPaletteStore((state) => state.pushPage);
 
-	return (
-		<>
-			<BaseCommandGroup heading={<Trans>Preferences</Trans>}>
-				<CommandItem onSelect={() => pushPage("theme")}>
-					<PaletteIcon />
-					<Trans>Change theme to...</Trans>
-				</CommandItem>
+  return (
+    <>
+      <BaseCommandGroup heading={<Trans>Preferences</Trans>}>
+        <CommandItem onSelect={() => pushPage("theme")}>
+          <PaletteIcon />
+          <Trans>Change theme to...</Trans>
+        </CommandItem>
 
-				<CommandItem onSelect={() => pushPage("language")}>
-					<TranslateIcon />
-					<Trans>Change language to...</Trans>
-				</CommandItem>
-			</BaseCommandGroup>
+        <CommandItem onSelect={() => pushPage("language")}>
+          <TranslateIcon />
+          <Trans>Change language to...</Trans>
+        </CommandItem>
+      </BaseCommandGroup>
 
-			<ThemeCommandPage />
-			<LanguageCommandPage />
-		</>
-	);
+      <ThemeCommandPage />
+      <LanguageCommandPage />
+    </>
+  );
 }

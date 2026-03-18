@@ -8,12 +8,12 @@ description: "Get started with Reactive Resume in minutes — use our hosted ver
 Reactive Resume offers flexibility in how you want to use it. Choose the option that best fits your needs:
 
 <CardGroup cols={2}>
-	<Card title="Use the Cloud Version" icon="cloud" href="#use-the-cloud-version">
-		The fastest way to get started. **Recommended for most users.**
-	</Card>
-	<Card title="Self-Host with Docker" icon="docker" href="#self-host-with-docker">
-		Deploy your own instance with complete control. **Requires some technical knowledge.**
-	</Card>
+  <Card title="Use the Cloud Version" icon="cloud" href="#use-the-cloud-version">
+    The fastest way to get started. **Recommended for most users.**
+  </Card>
+  <Card title="Self-Host with Docker" icon="docker" href="#self-host-with-docker">
+    Deploy your own instance with complete control. **Requires some technical knowledge.**
+  </Card>
 </CardGroup>
 
 ---
@@ -59,8 +59,8 @@ Before you begin, ensure you have the following installed:
 - [Docker Compose](https://docs.docker.com/compose/install/) (v2.0 or higher)
 
 <Info>
-	There is <strong>no difference in features</strong> between the cloud-hosted version and the self-hosted option. Both
-	provide the same privacy, customization, and functionality. Choose whichever deployment type suits your needs!
+  There is <strong>no difference in features</strong> between the cloud-hosted version and the self-hosted option. Both
+  provide the same privacy, customization, and functionality. Choose whichever deployment type suits your needs!
 </Info>
 
 ### Quick Deployment
@@ -166,17 +166,17 @@ Here's a complete list of environment variables you can configure:
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
 
 <Note>
-	**Hybrid Setup Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while
-	the printer service is running inside Docker. In this scenario, the printer needs to reach your local app to render
-	resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must
-	set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to
-	communicate with services running on your host machine.
+  **Hybrid Setup Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while
+  the printer service is running inside Docker. In this scenario, the printer needs to reach your local app to render
+  resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must
+  set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to
+  communicate with services running on your host machine.
 </Note>
 
 <Note>
-	**Alternative Printer Options**: If you don't want to use browserless, you can use any headless Chrome/Chromium
-	instance with its remote debugging port open. For example, run `chromium --remote-debugging-port=9222` and point
-	`PRINTER_ENDPOINT` to that instance.
+  **Alternative Printer Options**: If you don't want to use browserless, you can use any headless Chrome/Chromium
+  instance with its remote debugging port open. For example, run `chromium --remote-debugging-port=9222` and point
+  `PRINTER_ENDPOINT` to that instance.
 </Note>
 
 ---
@@ -184,15 +184,15 @@ Here's a complete list of environment variables you can configure:
 ## Next Steps
 
 <CardGroup cols={2}>
-	<Card title="Development Setup" icon="code" href="/contributing/development">
-		Set up a development environment to contribute or customize Reactive Resume.
-	</Card>
-	<Card title="Project Architecture" icon="folder-open" href="/contributing/architecture">
-		Learn about the project structure and architecture.
-	</Card>
+  <Card title="Development Setup" icon="code" href="/contributing/development">
+    Set up a development environment to contribute or customize Reactive Resume.
+  </Card>
+  <Card title="Project Architecture" icon="folder-open" href="/contributing/architecture">
+    Learn about the project structure and architecture.
+  </Card>
 </CardGroup>
 
 <Note>
-	**Having trouble?** Check our [GitHub Issues](https://github.com/amruthpillai/reactive-resume/issues) or reach out via
-	[email](mailto:hello@amruthpillai.com).
+  **Having trouble?** Check our [GitHub Issues](https://github.com/amruthpillai/reactive-resume/issues) or reach out via
+  [email](mailto:hello@amruthpillai.com).
 </Note>

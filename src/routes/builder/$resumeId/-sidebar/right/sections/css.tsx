@@ -17,11 +17,11 @@ import { SectionBase } from "../shared/section-base";
 const CSSMonacoEditor = lazy(() => import("./css-editor"));
 
 export function CSSSectionBuilder() {
-	return (
-		<SectionBase type="css" className="pb-4">
-			<CSSSectionForm />
-		</SectionBase>
-	);
+  return (
+    <SectionBase type="css" className="pb-4">
+      <CSSSectionForm />
+    </SectionBase>
+  );
 }
 
 const formSchema = metadataSchema.shape.css;
@@ -29,76 +29,76 @@ const formSchema = metadataSchema.shape.css;
 type FormValues = z.infer<typeof formSchema>;
 
 function CSSSectionForm() {
-	const { theme } = useTheme();
+  const { theme } = useTheme();
 
-	const css = useResumeStore((state) => state.resume.data.metadata.css);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const css = useResumeStore((state) => state.resume.data.metadata.css);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		mode: "onChange",
-		resolver: zodResolver(formSchema),
-		defaultValues: css,
-	});
+  const form = useForm<FormValues>({
+    mode: "onChange",
+    resolver: zodResolver(formSchema),
+    defaultValues: css,
+  });
 
-	const onSubmit = (data: FormValues) => {
-		updateResumeData((draft) => {
-			draft.metadata.css = data;
-		});
-	};
+  const onSubmit = (data: FormValues) => {
+    updateResumeData((draft) => {
+      draft.metadata.css = data;
+    });
+  };
 
-	return (
-		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)} className="mt-2 -mb-2 space-y-4">
-				<FormField
-					control={form.control}
-					name="enabled"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className="flex items-center gap-4">
-								<FormControl
-									render={
-										<Switch
-											checked={field.value}
-											onCheckedChange={(checked) => {
-												field.onChange(checked);
-												void form.handleSubmit(onSubmit)();
-											}}
-										/>
-									}
-								/>
+  return (
+    <Form {...form}>
+      <form onChange={form.handleSubmit(onSubmit)} className="mt-2 -mb-2 space-y-4">
+        <FormField
+          control={form.control}
+          name="enabled"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-4">
+                <FormControl
+                  render={
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        void form.handleSubmit(onSubmit)();
+                      }}
+                    />
+                  }
+                />
 
-								<Trans context="Turn On/Apply Custom CSS">Enable</Trans>
-							</FormLabel>
-						</FormItem>
-					)}
-				/>
+                <Trans context="Turn On/Apply Custom CSS">Enable</Trans>
+              </FormLabel>
+            </FormItem>
+          )}
+        />
 
-				{form.watch("enabled") && (
-					<FormField
-						control={form.control}
-						name="value"
-						render={({ field }) => (
-							<FormItem className="h-48 overflow-hidden rounded-md">
-								<FormControl
-									render={
-										<Suspense fallback={<Skeleton className="h-48 w-full" />}>
-											<CSSMonacoEditor
-												theme={theme}
-												defaultValue={field.value}
-												onChange={(value) => {
-													field.onChange(value ?? "");
-													void form.handleSubmit(onSubmit)();
-												}}
-											/>
-										</Suspense>
-									}
-								/>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				)}
-			</form>
-		</Form>
-	);
+        {form.watch("enabled") && (
+          <FormField
+            control={form.control}
+            name="value"
+            render={({ field }) => (
+              <FormItem className="h-48 overflow-hidden rounded-md">
+                <FormControl
+                  render={
+                    <Suspense fallback={<Skeleton className="h-48 w-full" />}>
+                      <CSSMonacoEditor
+                        theme={theme}
+                        defaultValue={field.value}
+                        onChange={(value) => {
+                          field.onChange(value ?? "");
+                          void form.handleSubmit(onSubmit)();
+                        }}
+                      />
+                    </Suspense>
+                  }
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+      </form>
+    </Form>
+  );
 }

@@ -30,14 +30,14 @@ If your client supports the `url` field (e.g. **Cursor**), use this — no extra
 
 ```json
 {
-	"mcpServers": {
-		"reactive-resume": {
-			"url": "https://rxresu.me/mcp",
-			"headers": {
-				"x-api-key": "your-api-key"
-			}
-		}
-	}
+  "mcpServers": {
+    "reactive-resume": {
+      "url": "https://rxresu.me/mcp",
+      "headers": {
+        "x-api-key": "your-api-key"
+      }
+    }
+  }
 }
 ```
 
@@ -47,12 +47,12 @@ If your client only supports `command` / `args` (e.g. **Claude Desktop**), use [
 
 ```json
 {
-	"mcpServers": {
-		"reactive-resume": {
-			"command": "npx",
-			"args": ["mcp-remote", "https://rxresu.me/mcp", "--header", "x-api-key:your-api-key"]
-		}
-	}
+  "mcpServers": {
+    "reactive-resume": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://rxresu.me/mcp", "--header", "x-api-key:your-api-key"]
+    }
+  }
 }
 ```
 
@@ -72,10 +72,10 @@ If you're running a self-hosted Reactive Resume instance, replace `https://rxres
 
 ```json
 {
-	"url": "https://resume.example.com/mcp",
-	"headers": {
-		"x-api-key": "your-api-key"
-	}
+  "url": "https://resume.example.com/mcp",
+  "headers": {
+    "x-api-key": "your-api-key"
+  }
 }
 ```
 
@@ -160,8 +160,8 @@ Once your MCP client is connected, you can use natural language to interact with
 - "Tailor my resume for this job description: ..." (uses `tailor_resume`)
 
 <Tip>
-	The AI will use `get_resume` to inspect your current resume before making changes with `patch_resume`. This ensures
-	the correct JSON paths are used.
+  The AI will use `get_resume` to inspect your current resume before making changes with `patch_resume`. This ensures
+  the correct JSON paths are used.
 </Tip>
 
 ## Troubleshooting

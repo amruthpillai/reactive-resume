@@ -7,7 +7,7 @@ import { v7 as uuidv7 } from "uuid";
  * @returns The generated ID.
  */
 export function generateId() {
-	return uuidv7();
+  return uuidv7();
 }
 
 /** Slugifies a string, with some pre-defined options.
@@ -16,7 +16,7 @@ export function generateId() {
  * @returns The slugified value.
  */
 export function slugify(value: string) {
-	return _slugify(value, { decamelize: false });
+  return _slugify(value, { decamelize: false });
 }
 
 /**
@@ -25,12 +25,12 @@ export function slugify(value: string) {
  * @returns The initials.
  */
 export function getInitials(name: string) {
-	return name
-		.split(" ")
-		.map((n) => n[0])
-		.slice(0, 2)
-		.join("")
-		.toUpperCase();
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 }
 
 /**
@@ -39,11 +39,11 @@ export function getInitials(name: string) {
  * @returns The transformed username.
  */
 export function toUsername(value: string) {
-	return value
-		.trim()
-		.toLowerCase()
-		.replace(/[^a-z0-9._-]/g, "")
-		.slice(0, 64);
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]/g, "")
+    .slice(0, 64);
 }
 
 /**
@@ -51,12 +51,12 @@ export function toUsername(value: string) {
  * @returns The random name.
  */
 export function generateRandomName() {
-	return uniqueNamesGenerator({
-		dictionaries: [adjectives, colors, animals],
-		style: "capital",
-		separator: " ",
-		length: 3,
-	});
+  return uniqueNamesGenerator({
+    dictionaries: [adjectives, colors, animals],
+    style: "capital",
+    separator: " ",
+    length: 3,
+  });
 }
 
 /**
@@ -65,6 +65,6 @@ export function generateRandomName() {
  * @returns The text content without HTML tags.
  */
 export function stripHtml(html: string | undefined): string {
-	if (!html) return "";
-	return html.replace(/<[^>]*>/g, "").trim();
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, "").trim();
 }

@@ -26,182 +26,182 @@ const formSchema = customSectionSchema;
 type FormValues = z.infer<typeof formSchema>;
 
 const SECTION_TYPE_OPTIONS: { value: CustomSectionType; label: MessageDescriptor }[] = [
-	{ value: "summary", label: msg`Summary` },
-	{ value: "experience", label: msg`Experience` },
-	{ value: "education", label: msg`Education` },
-	{ value: "projects", label: msg`Projects` },
-	{ value: "profiles", label: msg`Profiles` },
-	{ value: "skills", label: msg`Skills` },
-	{ value: "languages", label: msg`Languages` },
-	{ value: "interests", label: msg`Interests` },
-	{ value: "awards", label: msg`Awards` },
-	{ value: "certifications", label: msg`Certifications` },
-	{ value: "publications", label: msg`Publications` },
-	{ value: "volunteer", label: msg`Volunteer` },
-	{ value: "references", label: msg`References` },
-	{ value: "cover-letter", label: msg`Cover Letter` },
+  { value: "summary", label: msg`Summary` },
+  { value: "experience", label: msg`Experience` },
+  { value: "education", label: msg`Education` },
+  { value: "projects", label: msg`Projects` },
+  { value: "profiles", label: msg`Profiles` },
+  { value: "skills", label: msg`Skills` },
+  { value: "languages", label: msg`Languages` },
+  { value: "interests", label: msg`Interests` },
+  { value: "awards", label: msg`Awards` },
+  { value: "certifications", label: msg`Certifications` },
+  { value: "publications", label: msg`Publications` },
+  { value: "volunteer", label: msg`Volunteer` },
+  { value: "references", label: msg`References` },
+  { value: "cover-letter", label: msg`Cover Letter` },
 ];
 
 export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.create">) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			id: generateId(),
-			title: data?.title ?? "",
-			type: data?.type ?? "experience",
-			columns: data?.columns ?? 1,
-			hidden: data?.hidden ?? false,
-			items: data?.items ?? [],
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: generateId(),
+      title: data?.title ?? "",
+      type: data?.type ?? "experience",
+      columns: data?.columns ?? 1,
+      hidden: data?.hidden ?? false,
+      items: data?.items ?? [],
+    },
+  });
 
-	const onSubmit = (formData: FormValues) => {
-		updateResumeData((draft) => {
-			draft.customSections.push(formData);
+  const onSubmit = (formData: FormValues) => {
+    updateResumeData((draft) => {
+      draft.customSections.push(formData);
 
-			const lastPageIndex = draft.metadata.layout.pages.length - 1;
-			if (lastPageIndex < 0) return;
-			draft.metadata.layout.pages[lastPageIndex].main.push(formData.id);
-		});
-		closeDialog();
-	};
+      const lastPageIndex = draft.metadata.layout.pages.length - 1;
+      if (lastPageIndex < 0) return;
+      draft.metadata.layout.pages[lastPageIndex].main.push(formData.id);
+    });
+    closeDialog();
+  };
 
-	const { blockEvents, requestClose } = useFormBlocker(form);
+  const { blockEvents, requestClose } = useFormBlocker(form);
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<PlusIcon />
-					<Trans>Create a new custom section</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <PlusIcon />
+          <Trans>Create a new custom section</Trans>
+        </DialogTitle>
+        <DialogDescription />
+      </DialogHeader>
 
-			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<CustomSectionForm />
+      <Form {...form}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <CustomSectionForm />
 
-					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
-						</Button>
+          <DialogFooter className="sm:col-span-full">
+            <Button variant="ghost" onClick={requestClose}>
+              <Trans>Cancel</Trans>
+            </Button>
 
-						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Trans>Create</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
 
 export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.update">) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			id: data.id,
-			title: data.title,
-			type: data.type,
-			columns: data.columns,
-			hidden: data.hidden,
-			items: data.items,
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: data.id,
+      title: data.title,
+      type: data.type,
+      columns: data.columns,
+      hidden: data.hidden,
+      items: data.items,
+    },
+  });
 
-	const onSubmit = (formData: FormValues) => {
-		updateResumeData((draft) => {
-			const index = draft.customSections.findIndex((item) => item.id === formData.id);
-			if (index === -1) return;
-			draft.customSections[index] = formData;
-		});
-		closeDialog();
-	};
+  const onSubmit = (formData: FormValues) => {
+    updateResumeData((draft) => {
+      const index = draft.customSections.findIndex((item) => item.id === formData.id);
+      if (index === -1) return;
+      draft.customSections[index] = formData;
+    });
+    closeDialog();
+  };
 
-	const { blockEvents, requestClose } = useFormBlocker(form);
+  const { blockEvents, requestClose } = useFormBlocker(form);
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<PencilSimpleLineIcon />
-					<Trans>Update an existing custom section</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <PencilSimpleLineIcon />
+          <Trans>Update an existing custom section</Trans>
+        </DialogTitle>
+        <DialogDescription />
+      </DialogHeader>
 
-			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<CustomSectionForm isUpdate />
+      <Form {...form}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <CustomSectionForm isUpdate />
 
-					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
-						</Button>
+          <DialogFooter className="sm:col-span-full">
+            <Button variant="ghost" onClick={requestClose}>
+              <Trans>Cancel</Trans>
+            </Button>
 
-						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Trans>Save Changes</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
 
 function CustomSectionForm({ isUpdate = false }: { isUpdate?: boolean }) {
-	const { i18n } = useLingui();
-	const form = useFormContext<FormValues>();
+  const { i18n } = useLingui();
+  const form = useFormContext<FormValues>();
 
-	return (
-		<>
-			<FormField
-				control={form.control}
-				name="title"
-				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
-						<FormLabel>
-							<Trans>Title</Trans>
-						</FormLabel>
-						<FormControl render={<Input {...field} />} />
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem className="sm:col-span-full">
+            <FormLabel>
+              <Trans>Title</Trans>
+            </FormLabel>
+            <FormControl render={<Input {...field} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="type"
-				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
-						<FormLabel>
-							<Trans>Section Type</Trans>
-						</FormLabel>
-						<FormControl
-							render={
-								<Combobox
-									{...field}
-									value={field.value}
-									disabled={isUpdate}
-									onValueChange={field.onChange}
-									options={SECTION_TYPE_OPTIONS.map((option) => ({
-										value: option.value,
-										label: i18n.t(option.label),
-									}))}
-								/>
-							}
-						/>
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
-		</>
-	);
+      <FormField
+        control={form.control}
+        name="type"
+        render={({ field }) => (
+          <FormItem className="sm:col-span-full">
+            <FormLabel>
+              <Trans>Section Type</Trans>
+            </FormLabel>
+            <FormControl
+              render={
+                <Combobox
+                  {...field}
+                  value={field.value}
+                  disabled={isUpdate}
+                  onValueChange={field.onChange}
+                  options={SECTION_TYPE_OPTIONS.map((option) => ({
+                    value: option.value,
+                    label: i18n.t(option.label),
+                  }))}
+                />
+              }
+            />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
+  );
 }

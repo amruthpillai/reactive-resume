@@ -13,16 +13,16 @@ const localPool = new Pool({ connectionString: localUrl });
 const localDb = drizzle({ client: localPool });
 
 try {
-	const productionResult = await productionDb.execute(sql`SELECT 1 as connected`);
-	console.log("✅ Production database connection successful", JSON.stringify(productionResult));
+  const productionResult = await productionDb.execute(sql`SELECT 1 as connected`);
+  console.log("✅ Production database connection successful", JSON.stringify(productionResult));
 
-	const localResult = await localDb.execute(sql`SELECT 1 as connected`);
-	console.log("✅ Local database connection successful", JSON.stringify(localResult));
+  const localResult = await localDb.execute(sql`SELECT 1 as connected`);
+  console.log("✅ Local database connection successful", JSON.stringify(localResult));
 } catch (error) {
-	console.error("🚨 Database connection failed:", error);
-	process.exit(1);
+  console.error("🚨 Database connection failed:", error);
+  process.exit(1);
 } finally {
-	await productionPool.end();
-	await localPool.end();
-	process.exit(0);
+  await productionPool.end();
+  await localPool.end();
+  process.exit(0);
 }

@@ -27,119 +27,119 @@ import { getTheme, type Theme } from "@/utils/theme";
 import appCss from "../styles/globals.css?url";
 
 type RouterContext = {
-	theme: Theme;
-	locale: Locale;
-	orpc: typeof orpc;
-	queryClient: QueryClient;
-	session: AuthSession | null;
-	flags: FeatureFlags;
+  theme: Theme;
+  locale: Locale;
+  orpc: typeof orpc;
+  queryClient: QueryClient;
+  session: AuthSession | null;
+  flags: FeatureFlags;
 };
 
 const appName = "Reactive Resume";
 const tagline = "A free and open-source resume builder";
 const title = `${appName} — ${tagline}`;
 const description =
-	"Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.";
+  "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.";
 
 await loadLocale(await getLocale());
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	shellComponent: RootDocument,
-	head: () => {
-		const appUrl = process.env.APP_URL ?? "https://rxresu.me/";
+  shellComponent: RootDocument,
+  head: () => {
+    const appUrl = process.env.APP_URL ?? "https://rxresu.me/";
 
-		return {
-			links: [
-				{ rel: "stylesheet", href: appCss },
-				// Icons
-				{ rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "128x128" },
-				{ rel: "icon", href: "/favicon.svg", type: "image/svg+xml", sizes: "256x256 any" },
-				{ rel: "apple-touch-icon", href: "/apple-touch-icon-180x180.png", type: "image/png", sizes: "180x180 any" },
-				// Manifest
-				{ rel: "manifest", href: "/manifest.webmanifest", crossOrigin: "use-credentials" },
-			],
-			meta: [
-				{ title },
-				{ charSet: "UTF-8" },
-				{ name: "description", content: description },
-				{ name: "viewport", content: "width=device-width, initial-scale=1" },
-				// Twitter Tags
-				{ property: "twitter:image", content: `${appUrl}/opengraph/banner.jpg` },
-				{ property: "twitter:card", content: "summary_large_image" },
-				{ property: "twitter:title", content: title },
-				{ property: "twitter:description", content: description },
-				// OpenGraph Tags
-				{ property: "og:image", content: `${appUrl}/opengraph/banner.jpg` },
-				{ property: "og:site_name", content: appName },
-				{ property: "og:title", content: title },
-				{ property: "og:description", content: description },
-				{ property: "og:url", content: appUrl },
-			],
-			// Register service worker via script tag
-			scripts: [
-				{
-					children: `
+    return {
+      links: [
+        { rel: "stylesheet", href: appCss },
+        // Icons
+        { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "128x128" },
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml", sizes: "256x256 any" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon-180x180.png", type: "image/png", sizes: "180x180 any" },
+        // Manifest
+        { rel: "manifest", href: "/manifest.webmanifest", crossOrigin: "use-credentials" },
+      ],
+      meta: [
+        { title },
+        { charSet: "UTF-8" },
+        { name: "description", content: description },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        // Twitter Tags
+        { property: "twitter:image", content: `${appUrl}/opengraph/banner.jpg` },
+        { property: "twitter:card", content: "summary_large_image" },
+        { property: "twitter:title", content: title },
+        { property: "twitter:description", content: description },
+        // OpenGraph Tags
+        { property: "og:image", content: `${appUrl}/opengraph/banner.jpg` },
+        { property: "og:site_name", content: appName },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: appUrl },
+      ],
+      // Register service worker via script tag
+      scripts: [
+        {
+          children: `
 						if('serviceWorker' in navigator) {
 							window.addEventListener('load', () => {
 								navigator.serviceWorker.register('/sw.js', { scope: '/' })
 							})
 						}
 					`,
-				},
-			],
-		};
-	},
-	beforeLoad: async () => {
-		const [theme, locale, session, flags] = await Promise.all([
-			getTheme(),
-			getLocale(),
-			getSession(),
-			client.flags.get(),
-		]);
+        },
+      ],
+    };
+  },
+  beforeLoad: async () => {
+    const [theme, locale, session, flags] = await Promise.all([
+      getTheme(),
+      getLocale(),
+      getSession(),
+      client.flags.get(),
+    ]);
 
-		return { theme, locale, session, flags };
-	},
+    return { theme, locale, session, flags };
+  },
 });
 
 type Props = {
-	children: React.ReactNode;
+  children: React.ReactNode;
 };
 
 function RootDocument({ children }: Props) {
-	const { theme, locale } = Route.useRouteContext();
-	const dir = isRTL(locale) ? "rtl" : "ltr";
+  const { theme, locale } = Route.useRouteContext();
+  const dir = isRTL(locale) ? "rtl" : "ltr";
 
-	return (
-		<html suppressHydrationWarning dir={dir} lang={locale} className={theme}>
-			<head>
-				<HeadContent />
-			</head>
+  return (
+    <html suppressHydrationWarning dir={dir} lang={locale} className={theme}>
+      <head>
+        <HeadContent />
+      </head>
 
-			<body>
-				<MotionConfig reducedMotion="user">
-					<I18nProvider i18n={i18n}>
-						<IconContext.Provider value={{ size: 16, weight: "regular" }}>
-							<ThemeProvider theme={theme}>
-								<TooltipProvider>
-									<ConfirmDialogProvider>
-										<PromptDialogProvider>
-											{children}
+      <body>
+        <MotionConfig reducedMotion="user">
+          <I18nProvider i18n={i18n}>
+            <IconContext.Provider value={{ size: 16, weight: "regular" }}>
+              <ThemeProvider theme={theme}>
+                <TooltipProvider>
+                  <ConfirmDialogProvider>
+                    <PromptDialogProvider>
+                      {children}
 
-											<DialogManager />
-											<CommandPalette />
-											<Toaster richColors position="bottom-right" />
+                      <DialogManager />
+                      <CommandPalette />
+                      <Toaster richColors position="bottom-right" />
 
-											{import.meta.env.DEV && <BreakpointIndicator />}
-										</PromptDialogProvider>
-									</ConfirmDialogProvider>
-								</TooltipProvider>
-							</ThemeProvider>
-						</IconContext.Provider>
-					</I18nProvider>
-				</MotionConfig>
+                      {import.meta.env.DEV && <BreakpointIndicator />}
+                    </PromptDialogProvider>
+                  </ConfirmDialogProvider>
+                </TooltipProvider>
+              </ThemeProvider>
+            </IconContext.Provider>
+          </I18nProvider>
+        </MotionConfig>
 
-				<Scripts />
-			</body>
-		</html>
-	);
+        <Scripts />
+      </body>
+    </html>
+  );
 }

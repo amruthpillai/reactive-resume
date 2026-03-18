@@ -10,27 +10,27 @@ import * as schema from "./schema";
 // This prevents exhausting connection limits due to re-creation on every reload.
 
 declare global {
-	var __pool: Pool | undefined;
-	var __drizzle: NodePgDatabase<typeof schema> | undefined;
+  var __pool: Pool | undefined;
+  var __drizzle: NodePgDatabase<typeof schema> | undefined;
 }
 
 function getPool() {
-	if (!globalThis.__pool) {
-		globalThis.__pool = new Pool({ connectionString: env.DATABASE_URL });
-	}
-	return globalThis.__pool;
+  if (!globalThis.__pool) {
+    globalThis.__pool = new Pool({ connectionString: env.DATABASE_URL });
+  }
+  return globalThis.__pool;
 }
 
 function makeDrizzleClient() {
-	const pool = getPool();
-	return drizzle({ client: pool, schema });
+  const pool = getPool();
+  return drizzle({ client: pool, schema });
 }
 
 const getDatabaseServerFn = createServerOnlyFn(() => {
-	if (!globalThis.__drizzle) {
-		globalThis.__drizzle = makeDrizzleClient();
-	}
-	return globalThis.__drizzle;
+  if (!globalThis.__drizzle) {
+    globalThis.__drizzle = makeDrizzleClient();
+  }
+  return globalThis.__drizzle;
 });
 
 export const db = getDatabaseServerFn();

@@ -23,96 +23,96 @@ import { ListView } from "./-components/list-view";
 type SortOption = "lastUpdatedAt" | "createdAt" | "name";
 
 const searchSchema = z.object({
-	tags: z.array(z.string()).default([]),
-	sort: z.enum(["lastUpdatedAt", "createdAt", "name"]).default("lastUpdatedAt"),
+  tags: z.array(z.string()).default([]),
+  sort: z.enum(["lastUpdatedAt", "createdAt", "name"]).default("lastUpdatedAt"),
 });
 
 export const Route = createFileRoute("/dashboard/resumes/")({
-	component: RouteComponent,
-	validateSearch: zodValidator(searchSchema),
-	search: {
-		middlewares: [stripSearchParams({ tags: [], sort: "lastUpdatedAt" })],
-	},
-	loader: async () => {
-		const view = await getViewServerFn();
-		return { view };
-	},
+  component: RouteComponent,
+  validateSearch: zodValidator(searchSchema),
+  search: {
+    middlewares: [stripSearchParams({ tags: [], sort: "lastUpdatedAt" })],
+  },
+  loader: async () => {
+    const view = await getViewServerFn();
+    return { view };
+  },
 });
 
 function RouteComponent() {
-	const router = useRouter();
-	const { i18n } = useLingui();
-	const { view } = Route.useLoaderData();
-	const { tags, sort } = Route.useSearch();
-	const navigate = useNavigate({ from: Route.fullPath });
+  const router = useRouter();
+  const { i18n } = useLingui();
+  const { view } = Route.useLoaderData();
+  const { tags, sort } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
 
-	const { data: allTags } = useQuery(orpc.resume.tags.list.queryOptions());
-	const { data: resumes } = useQuery(orpc.resume.list.queryOptions({ input: { tags, sort } }));
+  const { data: allTags } = useQuery(orpc.resume.tags.list.queryOptions());
+  const { data: resumes } = useQuery(orpc.resume.list.queryOptions({ input: { tags, sort } }));
 
-	const tagOptions = useMemo(() => {
-		if (!allTags) return [];
-		return allTags.map((tag) => ({ value: tag, label: tag }));
-	}, [allTags]);
+  const tagOptions = useMemo(() => {
+    if (!allTags) return [];
+    return allTags.map((tag) => ({ value: tag, label: tag }));
+  }, [allTags]);
 
-	const sortOptions = useMemo(() => {
-		return [
-			{ value: "lastUpdatedAt", label: i18n.t("Last Updated") },
-			{ value: "createdAt", label: i18n.t("Created") },
-			{ value: "name", label: i18n.t("Name") },
-		];
-	}, [i18n]);
+  const sortOptions = useMemo(() => {
+    return [
+      { value: "lastUpdatedAt", label: i18n.t("Last Updated") },
+      { value: "createdAt", label: i18n.t("Created") },
+      { value: "name", label: i18n.t("Name") },
+    ];
+  }, [i18n]);
 
-	const onViewChange = async (value: string) => {
-		await setViewServerFn({ data: value as "grid" | "list" });
-		void router.invalidate();
-	};
+  const onViewChange = async (value: string) => {
+    await setViewServerFn({ data: value as "grid" | "list" });
+    void router.invalidate();
+  };
 
-	return (
-		<div className="space-y-4">
-			<DashboardHeader icon={ReadCvLogoIcon} title={t`Resumes`} />
+  return (
+    <div className="space-y-4">
+      <DashboardHeader icon={ReadCvLogoIcon} title={t`Resumes`} />
 
-			<Separator />
+      <Separator />
 
-			<div className="flex items-center gap-x-4">
-				<Combobox
-					value={sort}
-					options={sortOptions}
-					placeholder={t`Sort by`}
-					onValueChange={(value) => {
-						if (!value) return;
-						void navigate({ search: { tags, sort: value as SortOption } });
-					}}
-				/>
+      <div className="flex items-center gap-x-4">
+        <Combobox
+          value={sort}
+          options={sortOptions}
+          placeholder={t`Sort by`}
+          onValueChange={(value) => {
+            if (!value) return;
+            void navigate({ search: { tags, sort: value as SortOption } });
+          }}
+        />
 
-				<Combobox
-					multiple
-					value={tags}
-					options={tagOptions}
-					placeholder={t`Filter by`}
-					className={cn({ hidden: tagOptions.length === 0 })}
-					onValueChange={(value) => {
-						void navigate({ search: { tags: value ?? [], sort } });
-					}}
-				/>
+        <Combobox
+          multiple
+          value={tags}
+          options={tagOptions}
+          placeholder={t`Filter by`}
+          className={cn({ hidden: tagOptions.length === 0 })}
+          onValueChange={(value) => {
+            void navigate({ search: { tags: value ?? [], sort } });
+          }}
+        />
 
-				<Tabs className="ltr:ms-auto rtl:me-auto" value={view} onValueChange={onViewChange}>
-					<TabsList>
-						<TabsTrigger value="grid" className="rounded-r-none">
-							<GridFourIcon />
-							<Trans>Grid</Trans>
-						</TabsTrigger>
+        <Tabs className="ltr:ms-auto rtl:me-auto" value={view} onValueChange={onViewChange}>
+          <TabsList>
+            <TabsTrigger value="grid" className="rounded-r-none">
+              <GridFourIcon />
+              <Trans>Grid</Trans>
+            </TabsTrigger>
 
-						<TabsTrigger value="list" className="rounded-l-none">
-							<ListIcon />
-							<Trans>List</Trans>
-						</TabsTrigger>
-					</TabsList>
-				</Tabs>
-			</div>
+            <TabsTrigger value="list" className="rounded-l-none">
+              <ListIcon />
+              <Trans>List</Trans>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
 
-			{view === "list" ? <ListView resumes={resumes ?? []} /> : <GridView resumes={resumes ?? []} />}
-		</div>
-	);
+      {view === "list" ? <ListView resumes={resumes ?? []} /> : <GridView resumes={resumes ?? []} />}
+    </div>
+  );
 }
 
 const RESUMES_VIEW_COOKIE_NAME = "resumes_view";
@@ -120,13 +120,13 @@ const RESUMES_VIEW_COOKIE_NAME = "resumes_view";
 const viewSchema = z.enum(["grid", "list"]).catch("grid");
 
 const setViewServerFn = createServerFn({ method: "POST" })
-	.inputValidator(viewSchema)
-	.handler(async ({ data }) => {
-		setCookie(RESUMES_VIEW_COOKIE_NAME, JSON.stringify(data));
-	});
+  .inputValidator(viewSchema)
+  .handler(async ({ data }) => {
+    setCookie(RESUMES_VIEW_COOKIE_NAME, JSON.stringify(data));
+  });
 
 const getViewServerFn = createServerFn({ method: "GET" }).handler(async () => {
-	const view = getCookie(RESUMES_VIEW_COOKIE_NAME);
-	if (!view) return "grid";
-	return viewSchema.parse(JSON.parse(view));
+  const view = getCookie(RESUMES_VIEW_COOKIE_NAME);
+  if (!view) return "grid";
+  return viewSchema.parse(JSON.parse(view));
 });

@@ -18,120 +18,120 @@ import { Input } from "@/components/ui/input";
 import { orpc } from "@/integrations/orpc/client";
 
 const searchSchema = z.object({
-	redirect: z
-		.string()
-		.min(1)
-		.regex(/^\/[^/]+\/[^/]+$/),
+  redirect: z
+    .string()
+    .min(1)
+    .regex(/^\/[^/]+\/[^/]+$/),
 });
 
 export const Route = createFileRoute("/auth/resume-password")({
-	component: RouteComponent,
-	validateSearch: zodValidator(searchSchema),
-	onError: (error) => {
-		if (error instanceof SearchParamError) {
-			throw redirect({ to: "/" });
-		}
-	},
+  component: RouteComponent,
+  validateSearch: zodValidator(searchSchema),
+  onError: (error) => {
+    if (error instanceof SearchParamError) {
+      throw redirect({ to: "/" });
+    }
+  },
 });
 
 const formSchema = z.object({
-	password: z.string().min(6).max(64),
+  password: z.string().min(6).max(64),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 function RouteComponent() {
-	const navigate = useNavigate();
-	const { redirect } = Route.useSearch();
-	const [showPassword, toggleShowPassword] = useToggle(false);
+  const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
+  const [showPassword, toggleShowPassword] = useToggle(false);
 
-	const { mutate: verifyPassword } = useMutation(orpc.resume.verifyPassword.mutationOptions());
+  const { mutate: verifyPassword } = useMutation(orpc.resume.verifyPassword.mutationOptions());
 
-	const [username, slug] = useMemo(() => {
-		const [username, slug] = redirect.split("/").slice(1) as [string, string];
-		if (!username || !slug) throw navigate({ to: "/" });
-		return [username, slug];
-	}, [redirect, navigate]);
+  const [username, slug] = useMemo(() => {
+    const [username, slug] = redirect.split("/").slice(1) as [string, string];
+    if (!username || !slug) throw navigate({ to: "/" });
+    return [username, slug];
+  }, [redirect, navigate]);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			password: "",
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      password: "",
+    },
+  });
 
-	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Verifying password...`);
+  const onSubmit = async (data: FormValues) => {
+    const toastId = toast.loading(t`Verifying password...`);
 
-		verifyPassword(
-			{ username, slug, password: data.password },
-			{
-				onSuccess: () => {
-					toast.dismiss(toastId);
-					void navigate({ to: redirect, replace: true });
-				},
-				onError: (error) => {
-					if (error instanceof ORPCError && error.code === "INVALID_PASSWORD") {
-						toast.dismiss(toastId);
-						form.setError("password", { message: t`The password you entered is incorrect` });
-					} else {
-						toast.error(error.message, { id: toastId });
-					}
-				},
-			},
-		);
-	};
+    verifyPassword(
+      { username, slug, password: data.password },
+      {
+        onSuccess: () => {
+          toast.dismiss(toastId);
+          void navigate({ to: redirect, replace: true });
+        },
+        onError: (error) => {
+          if (error instanceof ORPCError && error.code === "INVALID_PASSWORD") {
+            toast.dismiss(toastId);
+            form.setError("password", { message: t`The password you entered is incorrect` });
+          } else {
+            toast.error(error.message, { id: toastId });
+          }
+        },
+      },
+    );
+  };
 
-	return (
-		<>
-			<div className="space-y-4 text-center">
-				<h1 className="text-2xl font-bold tracking-tight">
-					<Trans>The resume you are trying to access is password protected</Trans>
-				</h1>
+  return (
+    <>
+      <div className="space-y-4 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">
+          <Trans>The resume you are trying to access is password protected</Trans>
+        </h1>
 
-				<div className="leading-relaxed text-muted-foreground">
-					<Trans>Please enter the password shared with you by the owner of the resume to continue.</Trans>
-				</div>
-			</div>
+        <div className="leading-relaxed text-muted-foreground">
+          <Trans>Please enter the password shared with you by the owner of the resume to continue.</Trans>
+        </div>
+      </div>
 
-			<Form {...form}>
-				<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-					<FormField
-						control={form.control}
-						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Password</Trans>
-								</FormLabel>
-								<div className="flex items-center gap-x-1.5">
-									<FormControl
-										render={
-											<Input
-												min={6}
-												max={64}
-												type={showPassword ? "text" : "password"}
-												autoComplete="new-password"
-												{...field}
-											/>
-										}
-									/>
+      <Form {...form}>
+        <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans>Password</Trans>
+                </FormLabel>
+                <div className="flex items-center gap-x-1.5">
+                  <FormControl
+                    render={
+                      <Input
+                        min={6}
+                        max={64}
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        {...field}
+                      />
+                    }
+                  />
 
-									<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
-										{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-									</Button>
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+                  <Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+                    {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+                  </Button>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-					<Button type="submit" className="w-full">
-						<LockOpenIcon />
-						<Trans>Unlock</Trans>
-					</Button>
-				</form>
-			</Form>
-		</>
-	);
+          <Button type="submit" className="w-full">
+            <LockOpenIcon />
+            <Trans>Unlock</Trans>
+          </Button>
+        </form>
+      </Form>
+    </>
+  );
 }

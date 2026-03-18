@@ -12,28 +12,28 @@ import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
 
 export function InterestsSectionBuilder() {
-	const section = useResumeStore((state) => state.resume.data.sections.interests);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const section = useResumeStore((state) => state.resume.data.sections.interests);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const handleReorder = (items: z.infer<typeof interestItemSchema>[]) => {
-		updateResumeData((draft) => {
-			draft.sections.interests.items = items;
-		});
-	};
+  const handleReorder = (items: z.infer<typeof interestItemSchema>[]) => {
+    updateResumeData((draft) => {
+      draft.sections.interests.items = items;
+    });
+  };
 
-	return (
-		<SectionBase type="interests" className={cn("rounded-md border", section.items.length === 0 && "border-dashed")}>
-			<Reorder.Group axis="y" values={section.items} onReorder={handleReorder}>
-				<AnimatePresence>
-					{section.items.map((item) => (
-						<SectionItem key={item.id} type="interests" item={item} title={item.name} />
-					))}
-				</AnimatePresence>
-			</Reorder.Group>
+  return (
+    <SectionBase type="interests" className={cn("rounded-md border", section.items.length === 0 && "border-dashed")}>
+      <Reorder.Group axis="y" values={section.items} onReorder={handleReorder}>
+        <AnimatePresence>
+          {section.items.map((item) => (
+            <SectionItem key={item.id} type="interests" item={item} title={item.name} />
+          ))}
+        </AnimatePresence>
+      </Reorder.Group>
 
-			<SectionAddItemButton type="interests">
-				<Trans>Add a new interest</Trans>
-			</SectionAddItemButton>
-		</SectionBase>
-	);
+      <SectionAddItemButton type="interests">
+        <Trans>Add a new interest</Trans>
+      </SectionAddItemButton>
+    </SectionBase>
+  );
 }

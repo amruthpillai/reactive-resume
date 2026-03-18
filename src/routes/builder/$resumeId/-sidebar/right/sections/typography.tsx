@@ -14,11 +14,11 @@ import { typographySchema } from "@/schema/resume/data";
 import { SectionBase } from "../shared/section-base";
 
 export function TypographySectionBuilder() {
-	return (
-		<SectionBase type="typography">
-			<TypographySectionForm />
-		</SectionBase>
-	);
+  return (
+    <SectionBase type="typography">
+      <TypographySectionForm />
+    </SectionBase>
+  );
 }
 
 const formSchema = typographySchema;
@@ -26,284 +26,284 @@ const formSchema = typographySchema;
 type FormValues = z.infer<typeof formSchema>;
 
 function TypographySectionForm() {
-	const typography = useResumeStore((state) => state.resume.data.metadata.typography);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const typography = useResumeStore((state) => state.resume.data.metadata.typography);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		mode: "onChange",
-		resolver: zodResolver(formSchema),
-		defaultValues: typography,
-	});
+  const form = useForm<FormValues>({
+    mode: "onChange",
+    resolver: zodResolver(formSchema),
+    defaultValues: typography,
+  });
 
-	const bodyFontFamily = form.watch("body.fontFamily");
-	const headingFontFamily = form.watch("heading.fontFamily");
+  const bodyFontFamily = form.watch("body.fontFamily");
+  const headingFontFamily = form.watch("heading.fontFamily");
 
-	const onSubmit = (data: FormValues) => {
-		updateResumeData((draft) => {
-			draft.metadata.typography.body = data.body;
-			draft.metadata.typography.heading = data.heading;
-		});
-	};
+  const onSubmit = (data: FormValues) => {
+    updateResumeData((draft) => {
+      draft.metadata.typography.body = data.body;
+      draft.metadata.typography.heading = data.heading;
+    });
+  };
 
-	return (
-		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 @md:grid-cols-2">
-				<div className="col-span-full flex items-center gap-x-2">
-					<Separator className="basis-[16px]" />
-					<div className="shrink-0 text-base leading-none font-medium">
-						<Trans context="Body Text (paragraphs, lists, etc.)">Body</Trans>
-					</div>
-					<Separator className="flex-1" />
-				</div>
+  return (
+    <Form {...form}>
+      <form onChange={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 @md:grid-cols-2">
+        <div className="col-span-full flex items-center gap-x-2">
+          <Separator className="basis-[16px]" />
+          <div className="shrink-0 text-base leading-none font-medium">
+            <Trans context="Body Text (paragraphs, lists, etc.)">Body</Trans>
+          </div>
+          <Separator className="flex-1" />
+        </div>
 
-				<FormField
-					control={form.control}
-					name="body.fontFamily"
-					render={({ field }) => (
-						<FormItem className="col-span-full">
-							<FormLabel>
-								<Trans>Font Family</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<FontFamilyCombobox
-										value={field.value}
-										className="text-base"
-										onValueChange={(value) => {
-											if (value === null) return;
-											field.onChange(value);
-											const nextWeights = getNextWeights(value);
-											if (!nextWeights) return;
-											form.setValue("body.fontWeights", nextWeights, { shouldDirty: true });
-											void form.handleSubmit(onSubmit)();
-										}}
-									/>
-								}
-							/>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="body.fontFamily"
+          render={({ field }) => (
+            <FormItem className="col-span-full">
+              <FormLabel>
+                <Trans>Font Family</Trans>
+              </FormLabel>
+              <FormControl
+                render={
+                  <FontFamilyCombobox
+                    value={field.value}
+                    className="text-base"
+                    onValueChange={(value) => {
+                      if (value === null) return;
+                      field.onChange(value);
+                      const nextWeights = getNextWeights(value);
+                      if (!nextWeights) return;
+                      form.setValue("body.fontWeights", nextWeights, { shouldDirty: true });
+                      void form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                }
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="body.fontWeights"
-					render={({ field }) => (
-						<FormItem className="col-span-full">
-							<FormLabel>
-								<Trans>Font Weights</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<FontWeightCombobox
-										value={field.value}
-										fontFamily={bodyFontFamily}
-										onValueChange={(value) => {
-											field.onChange(value);
-											void form.handleSubmit(onSubmit)();
-										}}
-									/>
-								}
-							/>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="body.fontWeights"
+          render={({ field }) => (
+            <FormItem className="col-span-full">
+              <FormLabel>
+                <Trans>Font Weights</Trans>
+              </FormLabel>
+              <FormControl
+                render={
+                  <FontWeightCombobox
+                    value={field.value}
+                    fontFamily={bodyFontFamily}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      void form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                }
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="body.fontSize"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Font Size</Trans>
-							</FormLabel>
-							<InputGroup>
-								<FormControl
-									render={
-										<InputGroupInput
-											{...field}
-											min={6}
-											max={24}
-											step={0.1}
-											type="number"
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
-										/>
-									}
-								/>
-								<InputGroupAddon align="inline-end">
-									<InputGroupText>pt</InputGroupText>
-								</InputGroupAddon>
-							</InputGroup>
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="body.fontSize"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Font Size</Trans>
+              </FormLabel>
+              <InputGroup>
+                <FormControl
+                  render={
+                    <InputGroupInput
+                      {...field}
+                      min={6}
+                      max={24}
+                      step={0.1}
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") field.onChange("");
+                        else field.onChange(Number(value));
+                      }}
+                    />
+                  }
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupText>pt</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="body.lineHeight"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Line Height</Trans>
-							</FormLabel>
-							<InputGroup>
-								<FormControl
-									render={
-										<InputGroupInput
-											{...field}
-											min={0.5}
-											max={4}
-											step={0.05}
-											type="number"
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
-										/>
-									}
-								/>
-								<InputGroupAddon align="inline-end">
-									<InputGroupText>x</InputGroupText>
-								</InputGroupAddon>
-							</InputGroup>
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="body.lineHeight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Line Height</Trans>
+              </FormLabel>
+              <InputGroup>
+                <FormControl
+                  render={
+                    <InputGroupInput
+                      {...field}
+                      min={0.5}
+                      max={4}
+                      step={0.05}
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") field.onChange("");
+                        else field.onChange(Number(value));
+                      }}
+                    />
+                  }
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupText>x</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+            </FormItem>
+          )}
+        />
 
-				<div className="col-span-full flex items-center gap-x-2">
-					<Separator className="basis-[16px]" />
-					<div className="shrink-0 text-base leading-none font-medium">
-						<Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>
-					</div>
-					<Separator className="flex-1" />
-				</div>
+        <div className="col-span-full flex items-center gap-x-2">
+          <Separator className="basis-[16px]" />
+          <div className="shrink-0 text-base leading-none font-medium">
+            <Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>
+          </div>
+          <Separator className="flex-1" />
+        </div>
 
-				<FormField
-					control={form.control}
-					name="heading.fontFamily"
-					render={({ field }) => (
-						<FormItem className="col-span-full">
-							<FormLabel>
-								<Trans>Font Family</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<FontFamilyCombobox
-										value={field.value}
-										className="text-base"
-										onValueChange={(value) => {
-											if (value === null) return;
-											field.onChange(value);
-											const nextWeights = getNextWeights(value);
-											if (!nextWeights) return;
-											form.setValue("heading.fontWeights", nextWeights, { shouldDirty: true });
-											void form.handleSubmit(onSubmit)();
-										}}
-									/>
-								}
-							/>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="heading.fontFamily"
+          render={({ field }) => (
+            <FormItem className="col-span-full">
+              <FormLabel>
+                <Trans>Font Family</Trans>
+              </FormLabel>
+              <FormControl
+                render={
+                  <FontFamilyCombobox
+                    value={field.value}
+                    className="text-base"
+                    onValueChange={(value) => {
+                      if (value === null) return;
+                      field.onChange(value);
+                      const nextWeights = getNextWeights(value);
+                      if (!nextWeights) return;
+                      form.setValue("heading.fontWeights", nextWeights, { shouldDirty: true });
+                      void form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                }
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="heading.fontWeights"
-					render={({ field }) => (
-						<FormItem className="col-span-full">
-							<FormLabel>
-								<Trans>Font Weight</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<FontWeightCombobox
-										value={field.value}
-										fontFamily={headingFontFamily}
-										onValueChange={(value) => {
-											field.onChange(value);
-											void form.handleSubmit(onSubmit)();
-										}}
-									/>
-								}
-							/>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="heading.fontWeights"
+          render={({ field }) => (
+            <FormItem className="col-span-full">
+              <FormLabel>
+                <Trans>Font Weight</Trans>
+              </FormLabel>
+              <FormControl
+                render={
+                  <FontWeightCombobox
+                    value={field.value}
+                    fontFamily={headingFontFamily}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      void form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                }
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="heading.fontSize"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Font Size</Trans>
-							</FormLabel>
-							<InputGroup>
-								<FormControl
-									render={
-										<InputGroupInput
-											{...field}
-											min={6}
-											max={24}
-											step={0.1}
-											type="number"
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
-										/>
-									}
-								/>
-								<InputGroupAddon align="inline-end">
-									<InputGroupText>pt</InputGroupText>
-								</InputGroupAddon>
-							</InputGroup>
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="heading.fontSize"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Font Size</Trans>
+              </FormLabel>
+              <InputGroup>
+                <FormControl
+                  render={
+                    <InputGroupInput
+                      {...field}
+                      min={6}
+                      max={24}
+                      step={0.1}
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") field.onChange("");
+                        else field.onChange(Number(value));
+                      }}
+                    />
+                  }
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupText>pt</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="heading.lineHeight"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Line Height</Trans>
-							</FormLabel>
-							<InputGroup>
-								<FormControl
-									render={
-										<InputGroupInput
-											{...field}
-											min={0.5}
-											max={4}
-											step={0.05}
-											type="number"
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
-										/>
-									}
-								/>
-								<InputGroupAddon align="inline-end">
-									<InputGroupText>x</InputGroupText>
-								</InputGroupAddon>
-							</InputGroup>
-						</FormItem>
-					)}
-				/>
-			</form>
-		</Form>
-	);
+        <FormField
+          control={form.control}
+          name="heading.lineHeight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Line Height</Trans>
+              </FormLabel>
+              <InputGroup>
+                <FormControl
+                  render={
+                    <InputGroupInput
+                      {...field}
+                      min={0.5}
+                      max={4}
+                      step={0.05}
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") field.onChange("");
+                        else field.onChange(Number(value));
+                      }}
+                    />
+                  }
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupText>x</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
 }

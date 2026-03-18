@@ -1,39 +1,42 @@
 {
-	"[typescript]": {
-		"editor.defaultFormatter": "oxc.oxc-vscode"
-	},
-	"editor.codeActionsOnSave": {
-		"source.fixAll.oxc": "always"
-	},
-	"editor.defaultFormatter": "oxc.oxc-vscode",
-	"editor.formatOnSave": true,
-	"files.associations": {
-		"*.css": "tailwindcss"
-	},
-	"files.readonlyInclude": {
-		"**/routeTree.gen.ts": true,
-		"pnpm-lock.yaml": true
-	},
-	"files.watcherExclude": {
-		"**/routeTree.gen.ts": true,
-		"locales/**.po": true,
-		"pnpm-lock.yaml": true
-	},
-	"i18n-ally.enabledParsers": ["po"],
-	"i18n-ally.localesPaths": ["locales"],
-	"i18n-ally.sourceLanguage": "en-US",
-	"oxc.fmt.configPath": ".oxfmtrc.json",
-	"search.exclude": {
-		"**/routeTree.gen.ts": true,
-		"locales/**.po": true,
-		"pnpm-lock.yaml": true
-	},
-	"tailwindCSS.classFunctions": ["cn", "cva"],
-	"tailwindCSS.experimental.classRegex": [
-		["class:\\s*?[\"'`]([^\"'`]*).*?,"],
-		["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-		["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-	],
-	"tailwindCSS.experimental.configFile": "src/styles/globals.css",
-	"typescript.experimental.useTsgo": true
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true,
+    "pnpm-lock.yaml": true
+  },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true,
+    "locales/**.po": true,
+    "pnpm-lock.yaml": true
+  },
+  "i18n-ally.enabledParsers": ["po"],
+  "i18n-ally.localesPaths": ["locales"],
+  "i18n-ally.sourceLanguage": "en-US",
+  "oxc.enable.oxfmt": true,
+  "oxc.enable.oxlint": true,
+  "oxc.fmt.configPath": "./vite.config.ts",
+  "search.exclude": {
+    "**/routeTree.gen.ts": true,
+    "locales/**.po": true,
+    "pnpm-lock.yaml": true
+  },
+  "tailwindCSS.classFunctions": ["cn", "cva"],
+  "tailwindCSS.experimental.classRegex": [
+    ["class:\\s*?[\"'`]([^\"'`]*).*?,"],
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindCSS.experimental.configFile": "src/styles/globals.css",
+  "typescript.experimental.useTsgo": true
 }

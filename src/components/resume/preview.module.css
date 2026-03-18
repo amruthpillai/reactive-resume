@@ -1,118 +1,118 @@
 .page {
-	width: var(--page-width);
-	min-height: var(--page-height);
-	font-family: var(--page-body-font-family);
-	font-size: calc(var(--page-body-font-size) * 1pt);
-	font-weight: var(--page-body-font-weight);
-	line-height: var(--page-body-line-height);
-	color: var(--page-text-color);
-	background-color: var(--page-background-color);
+  width: var(--page-width);
+  min-height: var(--page-height);
+  font-family: var(--page-body-font-family);
+  font-size: calc(var(--page-body-font-size) * 1pt);
+  font-weight: var(--page-body-font-weight);
+  line-height: var(--page-body-line-height);
+  color: var(--page-text-color);
+  background-color: var(--page-background-color);
 
-	&:not(:first-child) {
-		content-visibility: auto;
-		contain-intrinsic-size: var(--page-width) var(--page-height);
-	}
+  &:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: var(--page-width) var(--page-height);
+  }
 
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		font-family: var(--page-heading-font-family);
-		font-weight: var(--page-heading-font-weight);
-		line-height: var(--page-heading-line-height);
-	}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--page-heading-font-family);
+    font-weight: var(--page-heading-font-weight);
+    line-height: var(--page-heading-line-height);
+  }
 
-	h1 {
-		font-size: calc(var(--page-heading-font-size) * 1.5pt);
-	}
+  h1 {
+    font-size: calc(var(--page-heading-font-size) * 1.5pt);
+  }
 
-	h2 {
-		font-size: calc(var(--page-heading-font-size) * 1.25pt);
-	}
+  h2 {
+    font-size: calc(var(--page-heading-font-size) * 1.25pt);
+  }
 
-	h3 {
-		font-size: calc(var(--page-heading-font-size) * 1.125pt);
-	}
+  h3 {
+    font-size: calc(var(--page-heading-font-size) * 1.125pt);
+  }
 
-	h4 {
-		font-size: calc(var(--page-heading-font-size) * 1pt);
-	}
+  h4 {
+    font-size: calc(var(--page-heading-font-size) * 1pt);
+  }
 
-	h5 {
-		font-size: calc(var(--page-heading-font-size) * 0.875pt);
-	}
+  h5 {
+    font-size: calc(var(--page-heading-font-size) * 0.875pt);
+  }
 
-	h6 {
-		font-size: calc(var(--page-heading-font-size) * 0.75pt);
-	}
+  h6 {
+    font-size: calc(var(--page-heading-font-size) * 0.75pt);
+  }
 
-	a {
-		text-decoration: underline;
-		text-underline-offset: 0.15rem;
-	}
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.15rem;
+  }
 
-	hr {
-		margin: 1rem 0;
-		border-color: var(--page-text-color);
-	}
+  hr {
+    margin: 1rem 0;
+    border-color: var(--page-text-color);
+  }
 
-	strong {
-		font-weight: var(--page-body-font-weight-bold);
-	}
+  strong {
+    font-weight: var(--page-body-font-weight-bold);
+  }
 
-	small {
-		font-size: calc(var(--page-body-font-size) * 0.9pt);
-	}
+  small {
+    font-size: calc(var(--page-body-font-size) * 0.9pt);
+  }
 
-	/* RTL Support: Apply RTL direction when text is right-aligned */
-	p[style*="text-align: right"],
-	h1[style*="text-align: right"],
-	h2[style*="text-align: right"],
-	h3[style*="text-align: right"],
-	h4[style*="text-align: right"],
-	h5[style*="text-align: right"],
-	h6[style*="text-align: right"],
-	li[style*="text-align: right"],
-	ul[style*="text-align: right"],
-	ol[style*="text-align: right"] {
-		direction: rtl;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-		white-space: normal;
-	}
+  /* RTL Support: Apply RTL direction when text is right-aligned */
+  p[style*="text-align: right"],
+  h1[style*="text-align: right"],
+  h2[style*="text-align: right"],
+  h3[style*="text-align: right"],
+  h4[style*="text-align: right"],
+  h5[style*="text-align: right"],
+  h6[style*="text-align: right"],
+  li[style*="text-align: right"],
+  ul[style*="text-align: right"],
+  ol[style*="text-align: right"] {
+    direction: rtl;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
 
-	/* LTR Support: Apply LTR direction when text is left-aligned */
-	p[style*="text-align: left"],
-	h1[style*="text-align: left"],
-	h2[style*="text-align: left"],
-	h3[style*="text-align: left"],
-	h4[style*="text-align: left"],
-	h5[style*="text-align: left"],
-	h6[style*="text-align: left"],
-	li[style*="text-align: left"],
-	ul[style*="text-align: left"],
-	ol[style*="text-align: left"] {
-		direction: ltr;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-		white-space: normal;
-	}
+  /* LTR Support: Apply LTR direction when text is left-aligned */
+  p[style*="text-align: left"],
+  h1[style*="text-align: left"],
+  h2[style*="text-align: left"],
+  h3[style*="text-align: left"],
+  h4[style*="text-align: left"],
+  h5[style*="text-align: left"],
+  h6[style*="text-align: left"],
+  li[style*="text-align: left"],
+  ul[style*="text-align: left"],
+  ol[style*="text-align: left"] {
+    direction: ltr;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
 
-	/* When list items are RTL, make bullets/numbers appear on the right */
-	li[style*="text-align: right"] {
-		text-align: right;
-	}
+  /* When list items are RTL, make bullets/numbers appear on the right */
+  li[style*="text-align: right"] {
+    text-align: right;
+  }
 
-	/* Parent list inherits direction from its items */
-	ul:has(li[style*="text-align: right"]),
-	ol:has(li[style*="text-align: right"]) {
-		direction: rtl;
-	}
+  /* Parent list inherits direction from its items */
+  ul:has(li[style*="text-align: right"]),
+  ol:has(li[style*="text-align: right"]) {
+    direction: rtl;
+  }
 
-	ul:has(li[style*="text-align: left"]),
-	ol:has(li[style*="text-align: left"]) {
-		direction: ltr;
-	}
+  ul:has(li[style*="text-align: left"]),
+  ol:has(li[style*="text-align: left"]) {
+    direction: ltr;
+  }
 }

@@ -12,28 +12,28 @@ import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
 
 export function LanguagesSectionBuilder() {
-	const section = useResumeStore((state) => state.resume.data.sections.languages);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const section = useResumeStore((state) => state.resume.data.sections.languages);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const handleReorder = (items: z.infer<typeof languageItemSchema>[]) => {
-		updateResumeData((draft) => {
-			draft.sections.languages.items = items;
-		});
-	};
+  const handleReorder = (items: z.infer<typeof languageItemSchema>[]) => {
+    updateResumeData((draft) => {
+      draft.sections.languages.items = items;
+    });
+  };
 
-	return (
-		<SectionBase type="languages" className={cn("rounded-md border", section.items.length === 0 && "border-dashed")}>
-			<Reorder.Group axis="y" values={section.items} onReorder={handleReorder}>
-				<AnimatePresence>
-					{section.items.map((item) => (
-						<SectionItem key={item.id} type="languages" item={item} title={item.language} subtitle={item.fluency} />
-					))}
-				</AnimatePresence>
-			</Reorder.Group>
+  return (
+    <SectionBase type="languages" className={cn("rounded-md border", section.items.length === 0 && "border-dashed")}>
+      <Reorder.Group axis="y" values={section.items} onReorder={handleReorder}>
+        <AnimatePresence>
+          {section.items.map((item) => (
+            <SectionItem key={item.id} type="languages" item={item} title={item.language} subtitle={item.fluency} />
+          ))}
+        </AnimatePresence>
+      </Reorder.Group>
 
-			<SectionAddItemButton type="languages">
-				<Trans>Add a new language</Trans>
-			</SectionAddItemButton>
-		</SectionBase>
-	);
+      <SectionAddItemButton type="languages">
+        <Trans>Add a new language</Trans>
+      </SectionAddItemButton>
+    </SectionBase>
+  );
 }

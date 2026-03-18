@@ -9,8 +9,8 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
   </Step>
 
 <Step title="Navigate to Artificial Intelligence settings">
-	Once you're in the dashboard, look for the sidebar navigation on the left. Under the <Badge>Settings</Badge> section,
-	click on <Badge>Artificial Intelligence</Badge>.
+  Once you're in the dashboard, look for the sidebar navigation on the left. Under the <Badge>Settings</Badge> section,
+  click on <Badge>Artificial Intelligence</Badge>.
 </Step>
 
   <Step title="How your data is stored and sent">
@@ -35,8 +35,8 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
   </Step>
 
 <Step title="Enter a model name">
-	In the <Badge>Model</Badge> field, enter the model you want to use (for example, <code>gpt-5.2</code>,{" "}
-	<code>claude-4.5-opus</code>, or <code>gemini-3-flash</code>).
+  In the <Badge>Model</Badge> field, enter the model you want to use (for example, <code>gpt-5.2</code>,{" "}
+  <code>claude-4.5-opus</code>, or <code>gemini-3-flash</code>).
 </Step>
 
   <Step title="Paste your API key">
@@ -68,8 +68,8 @@ CORS is a browser feature that prevents web pages from making requests to a diff
 Because of this restriction, the app has to **forward your AI requests (along with your credentials) through our server**, which then contacts the AI provider and returns the response to your browser. **Your credentials are not stored on our server; they are only used to make the request you initiated, and are not logged or retained.**
 
 <Info>
-	If you're curious or would like to audit how your AI requests are forwarded, you can review the code yourself. See the
-	relevant implementation in <code>src/integrations/orpc/router/ai.ts</code> within the codebase.
+  If you're curious or would like to audit how your AI requests are forwarded, you can review the code yourself. See the
+  relevant implementation in <code>src/integrations/orpc/router/ai.ts</code> within the codebase.
 </Info>
 
 ---

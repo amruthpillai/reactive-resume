@@ -18,13 +18,13 @@ import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 type Resume = Pick<RouterOutput["resume"]["getByIdForPrinter"], "id" | "name" | "slug" | "tags" | "data" | "isLocked">;
 
 type ResumeStoreState = {
-	resume: Resume;
-	isReady: boolean;
+  resume: Resume;
+  isReady: boolean;
 };
 
 type ResumeStoreActions = {
-	initialize: (resume: Resume | null) => void;
-	updateResumeData: (fn: (draft: WritableDraft<ResumeData>) => void) => void;
+  initialize: (resume: Resume | null) => void;
+  updateResumeData: (fn: (draft: WritableDraft<ResumeData>) => void) => void;
 };
 
 type ResumeStore = ResumeStoreState & ResumeStoreActions;
@@ -33,7 +33,7 @@ const controller = new AbortController();
 const signal = controller.signal;
 
 const _syncResume = (resume: Resume) => {
-	void orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
+  void orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
 };
 
 const syncResume = debounce(_syncResume, 500, { signal });
@@ -43,41 +43,41 @@ let errorToastId: string | number | undefined;
 type PartializedState = { resume: Resume | null };
 
 export const useResumeStore = create<ResumeStore>()(
-	temporal(
-		immer((set) => ({
-			resume: null as unknown as Resume,
-			isReady: false,
+  temporal(
+    immer((set) => ({
+      resume: null as unknown as Resume,
+      isReady: false,
 
-			initialize: (resume) => {
-				set((state) => {
-					state.resume = resume as Resume;
-					state.isReady = resume !== null;
-					useResumeStore.temporal.getState().clear();
-				});
-			},
+      initialize: (resume) => {
+        set((state) => {
+          state.resume = resume as Resume;
+          state.isReady = resume !== null;
+          useResumeStore.temporal.getState().clear();
+        });
+      },
 
-			updateResumeData: (fn) => {
-				set((state) => {
-					if (!state.resume) return state;
+      updateResumeData: (fn) => {
+        set((state) => {
+          if (!state.resume) return state;
 
-					if (state.resume.isLocked) {
-						errorToastId = toast.error(t`This resume is locked and cannot be updated.`, { id: errorToastId });
-						return state;
-					}
+          if (state.resume.isLocked) {
+            errorToastId = toast.error(t`This resume is locked and cannot be updated.`, { id: errorToastId });
+            return state;
+          }
 
-					fn(state.resume.data);
-					syncResume(current(state.resume));
-				});
-			},
-		})),
-		{
-			partialize: (state) => ({ resume: state.resume }),
-			equality: (pastState, currentState) => isDeepEqual(pastState, currentState),
-			limit: 100,
-		},
-	),
+          fn(state.resume.data);
+          syncResume(current(state.resume));
+        });
+      },
+    })),
+    {
+      partialize: (state) => ({ resume: state.resume }),
+      equality: (pastState, currentState) => isDeepEqual(pastState, currentState),
+      limit: 100,
+    },
+  ),
 );
 
 export function useTemporalStore<T>(selector: (state: TemporalState<PartializedState>) => T): T {
-	return useStoreWithEqualityFn(useResumeStore.temporal, selector);
+  return useStoreWithEqualityFn(useResumeStore.temporal, selector);
 }

@@ -10,34 +10,34 @@ import { ResumePreview } from "@/components/resume/preview";
 import { BuilderDock } from "./-components/dock";
 
 export const Route = createFileRoute("/builder/$resumeId/")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 function RouteComponent() {
-	useHotkeys(
-		["ctrl+s", "meta+s"],
-		() => {
-			toast.info(t`Your changes are saved automatically.`, {
-				id: "auto-save",
-				icon: <FloppyDiskIcon />,
-			});
-		},
-		{ preventDefault: true, enableOnFormTags: true },
-	);
+  useHotkeys(
+    ["ctrl+s", "meta+s"],
+    () => {
+      toast.info(t`Your changes are saved automatically.`, {
+        id: "auto-save",
+        icon: <FloppyDiskIcon />,
+      });
+    },
+    { preventDefault: true, enableOnFormTags: true },
+  );
 
-	return (
-		<div className="fixed inset-0">
-			<TransformWrapper centerOnInit limitToBounds={false} minScale={0.3} initialScale={0.6} maxScale={6}>
-				<TransformComponent wrapperClass="h-full! w-full!">
-					<ResumePreview
-						showPageNumbers
-						className="flex items-start space-y-10 space-x-10"
-						pageClassName="shadow-xl rounded-md overflow-hidden"
-					/>
-				</TransformComponent>
+  return (
+    <div className="fixed inset-0">
+      <TransformWrapper centerOnInit limitToBounds={false} minScale={0.3} initialScale={0.6} maxScale={6}>
+        <TransformComponent wrapperClass="h-full! w-full!">
+          <ResumePreview
+            showPageNumbers
+            className="flex items-start space-y-10 space-x-10"
+            pageClassName="shadow-xl rounded-md overflow-hidden"
+          />
+        </TransformComponent>
 
-				<BuilderDock />
-			</TransformWrapper>
-		</div>
-	);
+        <BuilderDock />
+      </TransformWrapper>
+    </div>
+  );
 }

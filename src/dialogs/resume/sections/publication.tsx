@@ -25,222 +25,222 @@ const formSchema = publicationItemSchema;
 type FormValues = z.infer<typeof formSchema>;
 
 export function CreatePublicationDialog({ data }: DialogProps<"resume.sections.publications.create">) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			id: generateId(),
-			hidden: data?.item?.hidden ?? false,
-			options: data?.item?.options ?? { showLinkInTitle: false },
-			title: data?.item?.title ?? "",
-			publisher: data?.item?.publisher ?? "",
-			date: data?.item?.date ?? "",
-			website: data?.item?.website ?? { url: "", label: "" },
-			description: data?.item?.description ?? "",
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: generateId(),
+      hidden: data?.item?.hidden ?? false,
+      options: data?.item?.options ?? { showLinkInTitle: false },
+      title: data?.item?.title ?? "",
+      publisher: data?.item?.publisher ?? "",
+      date: data?.item?.date ?? "",
+      website: data?.item?.website ?? { url: "", label: "" },
+      description: data?.item?.description ?? "",
+    },
+  });
 
-	const onSubmit = (formData: FormValues) => {
-		updateResumeData((draft) => {
-			if (data?.customSectionId) {
-				const section = draft.customSections.find((s) => s.id === data.customSectionId);
-				if (section) section.items.push(formData);
-			} else {
-				draft.sections.publications.items.push(formData);
-			}
-		});
-		closeDialog();
-	};
+  const onSubmit = (formData: FormValues) => {
+    updateResumeData((draft) => {
+      if (data?.customSectionId) {
+        const section = draft.customSections.find((s) => s.id === data.customSectionId);
+        if (section) section.items.push(formData);
+      } else {
+        draft.sections.publications.items.push(formData);
+      }
+    });
+    closeDialog();
+  };
 
-	const { blockEvents, requestClose } = useFormBlocker(form);
+  const { blockEvents, requestClose } = useFormBlocker(form);
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<PlusIcon />
-					<Trans>Create a new publication</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <PlusIcon />
+          <Trans>Create a new publication</Trans>
+        </DialogTitle>
+        <DialogDescription />
+      </DialogHeader>
 
-			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<PublicationForm />
+      <Form {...form}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <PublicationForm />
 
-					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
-						</Button>
+          <DialogFooter className="sm:col-span-full">
+            <Button variant="ghost" onClick={requestClose}>
+              <Trans>Cancel</Trans>
+            </Button>
 
-						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Trans>Create</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
 
 export function UpdatePublicationDialog({ data }: DialogProps<"resume.sections.publications.update">) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			id: data.item.id,
-			hidden: data.item.hidden,
-			options: data.item.options ?? { showLinkInTitle: false },
-			title: data.item.title,
-			publisher: data.item.publisher,
-			date: data.item.date,
-			website: data.item.website,
-			description: data.item.description,
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: data.item.id,
+      hidden: data.item.hidden,
+      options: data.item.options ?? { showLinkInTitle: false },
+      title: data.item.title,
+      publisher: data.item.publisher,
+      date: data.item.date,
+      website: data.item.website,
+      description: data.item.description,
+    },
+  });
 
-	const onSubmit = (formData: FormValues) => {
-		updateResumeData((draft) => {
-			if (data?.customSectionId) {
-				const section = draft.customSections.find((s) => s.id === data.customSectionId);
-				if (!section) return;
-				const index = section.items.findIndex((item) => item.id === formData.id);
-				if (index !== -1) section.items[index] = formData;
-			} else {
-				const index = draft.sections.publications.items.findIndex((item) => item.id === formData.id);
-				if (index !== -1) draft.sections.publications.items[index] = formData;
-			}
-		});
-		closeDialog();
-	};
+  const onSubmit = (formData: FormValues) => {
+    updateResumeData((draft) => {
+      if (data?.customSectionId) {
+        const section = draft.customSections.find((s) => s.id === data.customSectionId);
+        if (!section) return;
+        const index = section.items.findIndex((item) => item.id === formData.id);
+        if (index !== -1) section.items[index] = formData;
+      } else {
+        const index = draft.sections.publications.items.findIndex((item) => item.id === formData.id);
+        if (index !== -1) draft.sections.publications.items[index] = formData;
+      }
+    });
+    closeDialog();
+  };
 
-	const { blockEvents, requestClose } = useFormBlocker(form);
+  const { blockEvents, requestClose } = useFormBlocker(form);
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<PencilSimpleLineIcon />
-					<Trans>Update an existing publication</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <PencilSimpleLineIcon />
+          <Trans>Update an existing publication</Trans>
+        </DialogTitle>
+        <DialogDescription />
+      </DialogHeader>
 
-			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<PublicationForm />
+      <Form {...form}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <PublicationForm />
 
-					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
-						</Button>
+          <DialogFooter className="sm:col-span-full">
+            <Button variant="ghost" onClick={requestClose}>
+              <Trans>Cancel</Trans>
+            </Button>
 
-						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Trans>Save Changes</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
 
 function PublicationForm() {
-	const form = useFormContext<FormValues>();
+  const form = useFormContext<FormValues>();
 
-	return (
-		<>
-			<FormField
-				control={form.control}
-				name="title"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>
-							<Trans>Title</Trans>
-						</FormLabel>
-						<FormControl render={<Input {...field} />} />
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              <Trans>Title</Trans>
+            </FormLabel>
+            <FormControl render={<Input {...field} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="publisher"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>
-							<Trans>Publisher</Trans>
-						</FormLabel>
-						<FormControl render={<Input {...field} />} />
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+      <FormField
+        control={form.control}
+        name="publisher"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              <Trans>Publisher</Trans>
+            </FormLabel>
+            <FormControl render={<Input {...field} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="date"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>
-							<Trans>Date</Trans>
-						</FormLabel>
-						<FormControl render={<Input {...field} />} />
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+      <FormField
+        control={form.control}
+        name="date"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              <Trans>Date</Trans>
+            </FormLabel>
+            <FormControl render={<Input {...field} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="website"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>
-							<Trans>Website</Trans>
-						</FormLabel>
-						<URLInput
-							{...field}
-							value={field.value}
-							onChange={field.onChange}
-							hideLabelButton={form.watch("options.showLinkInTitle")}
-						/>
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+      <FormField
+        control={form.control}
+        name="website"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              <Trans>Website</Trans>
+            </FormLabel>
+            <URLInput
+              {...field}
+              value={field.value}
+              onChange={field.onChange}
+              hideLabelButton={form.watch("options.showLinkInTitle")}
+            />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="options.showLinkInTitle"
-				render={({ field }) => (
-					<FormItem className="flex items-center gap-x-2">
-						<FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
-						<FormLabel className="mt-0!">
-							<Trans>Show link in title</Trans>
-						</FormLabel>
-					</FormItem>
-				)}
-			/>
+      <FormField
+        control={form.control}
+        name="options.showLinkInTitle"
+        render={({ field }) => (
+          <FormItem className="flex items-center gap-x-2">
+            <FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
+            <FormLabel className="mt-0!">
+              <Trans>Show link in title</Trans>
+            </FormLabel>
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="description"
-				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
-						<FormLabel>
-							<Trans>Description</Trans>
-						</FormLabel>
-						<FormControl render={<RichInput {...field} value={field.value} onChange={field.onChange} />} />
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
-		</>
-	);
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem className="sm:col-span-full">
+            <FormLabel>
+              <Trans>Description</Trans>
+            </FormLabel>
+            <FormControl render={<RichInput {...field} value={field.value} onChange={field.onChange} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
+  );
 }

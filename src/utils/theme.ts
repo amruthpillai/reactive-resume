@@ -14,28 +14,28 @@ const storageKey = "theme";
 const defaultTheme: Theme = "dark";
 
 export const themeMap = {
-	light: msg`Light`,
-	dark: msg`Dark`,
+  light: msg`Light`,
+  dark: msg`Dark`,
 } satisfies Record<Theme, MessageDescriptor>;
 
 export function isTheme(theme: string): theme is Theme {
-	return themeSchema.safeParse(theme).success;
+  return themeSchema.safeParse(theme).success;
 }
 
 export const getTheme = createIsomorphicFn()
-	.client(() => {
-		const theme = Cookies.get(storageKey);
-		if (!theme || !isTheme(theme)) return defaultTheme;
-		return theme;
-	})
-	.server(async () => {
-		const cookieTheme = getCookie(storageKey);
-		if (!cookieTheme || !isTheme(cookieTheme)) return defaultTheme;
-		return cookieTheme;
-	});
+  .client(() => {
+    const theme = Cookies.get(storageKey);
+    if (!theme || !isTheme(theme)) return defaultTheme;
+    return theme;
+  })
+  .server(async () => {
+    const cookieTheme = getCookie(storageKey);
+    if (!cookieTheme || !isTheme(cookieTheme)) return defaultTheme;
+    return cookieTheme;
+  });
 
 export const setThemeServerFn = createServerFn({ method: "POST" })
-	.inputValidator(themeSchema)
-	.handler(async ({ data }) => {
-		setCookie(storageKey, data);
-	});
+  .inputValidator(themeSchema)
+  .handler(async ({ data }) => {
+    setCookie(storageKey, data);
+  });

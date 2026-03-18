@@ -10,9 +10,9 @@ Every self-hosted setup is unique. You might be running on a single VPS, a Kuber
 These examples go beyond the basic setup in the [Self-Hosting with Docker](/self-hosting/docker) guide, showing production-ready configurations with reverse proxies, SSL termination, and other common patterns.
 
 <Info>
-	**Help others by sharing your setup!** If you have a working configuration that isn't covered here, I'd love to
-	include it. Simply [open a pull request](https://github.com/amruthpillai/reactive-resume) with your example added to
-	this page. Your contribution helps the community and makes self-hosting easier for everyone.
+  **Help others by sharing your setup!** If you have a working configuration that isn't covered here, I'd love to
+  include it. Simply [open a pull request](https://github.com/amruthpillai/reactive-resume) with your example added to
+  this page. Your contribution helps the community and makes self-hosting easier for everyone.
 </Info>
 
 ---
@@ -22,8 +22,8 @@ These examples go beyond the basic setup in the [Self-Hosting with Docker](/self
 This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik—Postgres and the printer remain on an internal network.
 
 <Tip>
-	Traefik automatically discovers services via Docker labels and handles SSL certificates, making it ideal for setups
-	where you want minimal configuration.
+  Traefik automatically discovers services via Docker labels and handles SSL certificates, making it ideal for setups
+  where you want minimal configuration.
 </Tip>
 
 ```yaml compose-traefik.yml lines expandable
@@ -294,8 +294,8 @@ http {
 ```
 
 <Tip>
-	For automatic SSL certificates with nginx, consider using [certbot](https://certbot.eff.org/) with the `--nginx`
-	plugin, or a companion container like [nginx-proxy-acme](https://github.com/nginx-proxy/acme-companion).
+  For automatic SSL certificates with nginx, consider using [certbot](https://certbot.eff.org/) with the `--nginx`
+  plugin, or a companion container like [nginx-proxy-acme](https://github.com/nginx-proxy/acme-companion).
 </Tip>
 
 ---
@@ -305,8 +305,8 @@ http {
 This example demonstrates a production-grade Docker Swarm deployment with multiple replicas, health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
 
 <Tip>
-	Docker Swarm is great for multi-node deployments where you need high availability and easy scaling. The app service is
-	configured with 2 replicas and rolling update strategy.
+  Docker Swarm is great for multi-node deployments where you need high availability and easy scaling. The app service is
+  configured with 2 replicas and rolling update strategy.
 </Tip>
 
 ```yaml compose-swarm.yml lines expandable
@@ -477,8 +477,8 @@ docker stack rm reactive_resume
 ```
 
 <Note>
-	This example assumes you have an external Traefik network already set up. Adjust the `traefik_network` reference and
-	labels based on your Traefik configuration.
+  This example assumes you have an external Traefik network already set up. Adjust the `traefik_network` reference and
+  labels based on your Traefik configuration.
 </Note>
 
 ---

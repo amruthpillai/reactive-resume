@@ -13,78 +13,78 @@ import { Button } from "@/components/ui/button";
 import { ProductHuntBanner } from "./product-hunt-banner";
 
 export function Header() {
-	const y = useMotionValue(0);
-	const lastScroll = useRef(0);
-	const ticking = useRef(false);
-	const springY = useSpring(y, { stiffness: 300, damping: 40 });
+  const y = useMotionValue(0);
+  const lastScroll = useRef(0);
+  const ticking = useRef(false);
+  const springY = useSpring(y, { stiffness: 300, damping: 40 });
 
-	useEffect(() => {
-		if (typeof window === "undefined") return;
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-		function onScroll() {
-			const current = window.scrollY ?? 0;
-			if (!ticking.current) {
-				window.requestAnimationFrame(() => {
-					if (current > 32 && current > lastScroll.current) {
-						// Scrolling down, hide
-						y.set(-100);
-					} else {
-						// Scrolling up, show
-						y.set(0);
-					}
-					lastScroll.current = current;
-					ticking.current = false;
-				});
-				ticking.current = true;
-			}
-		}
+    function onScroll() {
+      const current = window.scrollY ?? 0;
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          if (current > 32 && current > lastScroll.current) {
+            // Scrolling down, hide
+            y.set(-100);
+          } else {
+            // Scrolling up, show
+            y.set(0);
+          }
+          lastScroll.current = current;
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
+    }
 
-		window.addEventListener("scroll", onScroll, { passive: true });
-		return () => window.removeEventListener("scroll", onScroll);
-	}, []);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-	return (
-		<motion.header
-			style={{ y: springY }}
-			className="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-background/80 backdrop-blur-lg transition-colors"
-			initial={{ y: -100, opacity: 0 }}
-			animate={{ y: 0, opacity: 1 }}
-			transition={{ duration: 0.5, ease: "easeOut" }}
-		>
-			<ProductHuntBanner />
+  return (
+    <motion.header
+      style={{ y: springY }}
+      className="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-background/80 backdrop-blur-lg transition-colors"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <ProductHuntBanner />
 
-			<nav aria-label={t`Main navigation`} className="container mx-auto flex items-center gap-x-4 p-3 lg:px-12">
-				<Link to="/" className="transition-opacity hover:opacity-80" aria-label={t`Reactive Resume - Go to homepage`}>
-					<BrandIcon className="size-10" />
-				</Link>
+      <nav aria-label={t`Main navigation`} className="container mx-auto flex items-center gap-x-4 p-3 lg:px-12">
+        <Link to="/" className="transition-opacity hover:opacity-80" aria-label={t`Reactive Resume - Go to homepage`}>
+          <BrandIcon className="size-10" />
+        </Link>
 
-				<div className="ml-auto flex items-center gap-x-2">
-					<LocaleCombobox
-						render={
-							<Button size="icon" variant="ghost" aria-label={t`Change language`}>
-								<TranslateIcon />
-							</Button>
-						}
-					/>
+        <div className="ml-auto flex items-center gap-x-2">
+          <LocaleCombobox
+            render={
+              <Button size="icon" variant="ghost" aria-label={t`Change language`}>
+                <TranslateIcon />
+              </Button>
+            }
+          />
 
-					<ThemeToggleButton />
+          <ThemeToggleButton />
 
-					<div className="hidden items-center gap-x-4 sm:flex">
-						<GithubStarsButton />
+          <div className="hidden items-center gap-x-4 sm:flex">
+            <GithubStarsButton />
 
-						<Button
-							size="icon"
-							nativeButton={false}
-							aria-label={t`Go to dashboard`}
-							render={
-								<Link to="/dashboard">
-									<ArrowRightIcon aria-hidden="true" />
-								</Link>
-							}
-						/>
-					</div>
-				</div>
-			</nav>
-		</motion.header>
-	);
+            <Button
+              size="icon"
+              nativeButton={false}
+              aria-label={t`Go to dashboard`}
+              render={
+                <Link to="/dashboard">
+                  <ArrowRightIcon aria-hidden="true" />
+                </Link>
+              }
+            />
+          </div>
+        </div>
+      </nav>
+    </motion.header>
+  );
 }

@@ -12,14 +12,14 @@ This guide provides a comprehensive overview of Reactive Resume's architecture a
 Reactive Resume is built with a modern, type-safe stack:
 
 <CardGroup cols={2}>
-	<Card title="Frontend" icon="browser">
-		- **React 19** with TanStack Start - **TypeScript** for type safety - **Tailwind CSS** for styling - **Radix UI**
-		for accessible components
-	</Card>
-	<Card title="Backend" icon="server">
-		- **ORPC** for type-safe RPC - **Drizzle ORM** with PostgreSQL - **Better Auth** for authentication - **Sharp** for
-		image processing
-	</Card>
+  <Card title="Frontend" icon="browser">
+    - **React 19** with TanStack Start - **TypeScript** for type safety - **Tailwind CSS** for styling - **Radix UI**
+    for accessible components
+  </Card>
+  <Card title="Backend" icon="server">
+    - **ORPC** for type-safe RPC - **Drizzle ORM** with PostgreSQL - **Better Auth** for authentication - **Sharp** for
+    image processing
+  </Card>
 </CardGroup>
 
 ---
@@ -183,10 +183,10 @@ The database schema is defined using Drizzle ORM in `src/integrations/drizzle/sc
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const resume = pgTable("resume", {
-	id: uuid("id").primaryKey().defaultRandom(),
-	title: text("title").notNull(),
-	slug: text("slug").notNull(),
-	// ... more fields
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull(),
+  // ... more fields
 });
 ```
 
@@ -206,12 +206,12 @@ export const resume = pgTable("resume", {
 import { cn } from "@/utils/style";
 
 interface MyComponentProps {
-	title: string;
-	className?: string;
+  title: string;
+  className?: string;
 }
 
 export const MyComponent = ({ title, className }: MyComponentProps) => {
-	return <div className={cn("p-4", className)}>{title}</div>;
+  return <div className={cn("p-4", className)}>{title}</div>;
 };
 ```
 
@@ -226,11 +226,11 @@ export const MyComponent = ({ title, className }: MyComponentProps) => {
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/my-page")({
-	component: MyPage,
+  component: MyPage,
 });
 
 function MyPage() {
-	return <div>My Page Content</div>;
+  return <div>My Page Content</div>;
 }
 ```
 
@@ -246,9 +246,9 @@ import { z } from "zod";
 import { publicProcedure, router } from "../server";
 
 export const myRouter = router({
-	hello: publicProcedure.input(z.object({ name: z.string() })).handler(async ({ input }) => {
-		return { message: `Hello, ${input.name}!` };
-	}),
+  hello: publicProcedure.input(z.object({ name: z.string() })).handler(async ({ input }) => {
+    return { message: `Hello, ${input.name}!` };
+  }),
 });
 ```
 
@@ -313,10 +313,10 @@ const title = t`Welcome`;
 ## Need Help?
 
 <CardGroup cols={2}>
-	<Card title="GitHub Discussions" icon="comments" href="https://github.com/amruthpillai/reactive-resume/discussions">
-		Ask questions and discuss ideas with the community.
-	</Card>
-	<Card title="GitHub Issues" icon="bug" href="https://github.com/amruthpillai/reactive-resume/issues">
-		Report bugs or request features.
-	</Card>
+  <Card title="GitHub Discussions" icon="comments" href="https://github.com/amruthpillai/reactive-resume/discussions">
+    Ask questions and discuss ideas with the community.
+  </Card>
+  <Card title="GitHub Issues" icon="bug" href="https://github.com/amruthpillai/reactive-resume/issues">
+    Report bugs or request features.
+  </Card>
 </CardGroup>

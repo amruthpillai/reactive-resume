@@ -19,163 +19,163 @@ type FormValues = z.infer<typeof basicsSchema>;
 type CustomField = FormValues["customFields"][number];
 
 type Props = {
-	onSubmit: (data: FormValues) => void;
+  onSubmit: (data: FormValues) => void;
 };
 
 export function CustomFieldsSection({ onSubmit }: Props) {
-	const form = useFormContext<FormValues>();
+  const form = useFormContext<FormValues>();
 
-	const customFields = useWatch({ control: form.control, name: "customFields" });
+  const customFields = useWatch({ control: form.control, name: "customFields" });
 
-	const customFieldsArray = useFieldArray({
-		control: form.control,
-		keyName: "key",
-		name: "customFields",
-	});
+  const customFieldsArray = useFieldArray({
+    control: form.control,
+    keyName: "key",
+    name: "customFields",
+  });
 
-	function handleReorder(newFields: CustomField[]) {
-		const currentFieldsMap = Object.fromEntries(customFields.map((f) => [f.id, f]));
-		const reordered = newFields.map((field) => currentFieldsMap[field.id] ?? field);
-		form.setValue("customFields", reordered);
-		void form.handleSubmit(onSubmit)();
-	}
+  function handleReorder(newFields: CustomField[]) {
+    const currentFieldsMap = Object.fromEntries(customFields.map((f) => [f.id, f]));
+    const reordered = newFields.map((field) => currentFieldsMap[field.id] ?? field);
+    form.setValue("customFields", reordered);
+    void form.handleSubmit(onSubmit)();
+  }
 
-	function handleRemove(index: number) {
-		customFieldsArray.remove(index);
-		void form.handleSubmit(onSubmit)();
-	}
+  function handleRemove(index: number) {
+    customFieldsArray.remove(index);
+    void form.handleSubmit(onSubmit)();
+  }
 
-	function handleAdd() {
-		customFieldsArray.append({ id: generateId(), icon: "acorn", text: "", link: "" });
-		void form.handleSubmit(onSubmit)();
-	}
+  function handleAdd() {
+    customFieldsArray.append({ id: generateId(), icon: "acorn", text: "", link: "" });
+    void form.handleSubmit(onSubmit)();
+  }
 
-	return (
-		<Reorder.Group className="touch-none space-y-4" values={customFieldsArray.fields} onReorder={handleReorder}>
-			{customFieldsArray.fields.map((field, index) => (
-				<CustomFieldItem key={field.id} field={field}>
-					<FormField
-						control={form.control}
-						name={`customFields.${index}.icon`}
-						render={({ field }) => (
-							<FormItem className="shrink-0">
-								<FormControl
-									render={
-										<IconPicker
-											{...field}
-											className="rounded-r-none! border-e-0!"
-											onChange={(icon) => {
-												field.onChange(icon);
-												void form.handleSubmit(onSubmit)();
-											}}
-										/>
-									}
-								/>
-							</FormItem>
-						)}
-					/>
+  return (
+    <Reorder.Group className="touch-none space-y-4" values={customFieldsArray.fields} onReorder={handleReorder}>
+      {customFieldsArray.fields.map((field, index) => (
+        <CustomFieldItem key={field.id} field={field}>
+          <FormField
+            control={form.control}
+            name={`customFields.${index}.icon`}
+            render={({ field }) => (
+              <FormItem className="shrink-0">
+                <FormControl
+                  render={
+                    <IconPicker
+                      {...field}
+                      className="rounded-r-none! border-e-0!"
+                      onChange={(icon) => {
+                        field.onChange(icon);
+                        void form.handleSubmit(onSubmit)();
+                      }}
+                    />
+                  }
+                />
+              </FormItem>
+            )}
+          />
 
-					<FormField
-						control={form.control}
-						name={`customFields.${index}.text`}
-						render={({ field }) => (
-							<FormItem className="flex-1">
-								<FormControl
-									render={
-										<Input
-											{...field}
-											className="rounded-l-none!"
-											onChange={(e) => {
-												field.onChange(e.target.value);
-												void form.handleSubmit(onSubmit)();
-											}}
-										/>
-									}
-								/>
-							</FormItem>
-						)}
-					/>
+          <FormField
+            control={form.control}
+            name={`customFields.${index}.text`}
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormControl
+                  render={
+                    <Input
+                      {...field}
+                      className="rounded-l-none!"
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        void form.handleSubmit(onSubmit)();
+                      }}
+                    />
+                  }
+                />
+              </FormItem>
+            )}
+          />
 
-					<Popover>
-						<PopoverTrigger
-							render={
-								<Button size="icon" variant="ghost" className="ms-1">
-									<LinkIcon />
-								</Button>
-							}
-						/>
+          <Popover>
+            <PopoverTrigger
+              render={
+                <Button size="icon" variant="ghost" className="ms-1">
+                  <LinkIcon />
+                </Button>
+              }
+            />
 
-						<PopoverContent align="center">
-							<div className="flex flex-col gap-y-1.5">
-								<Label htmlFor={`customFields.${index}.link`} className="text-xs text-muted-foreground">
-									<Trans>Enter the URL to link to</Trans>
-								</Label>
+            <PopoverContent align="center">
+              <div className="flex flex-col gap-y-1.5">
+                <Label htmlFor={`customFields.${index}.link`} className="text-xs text-muted-foreground">
+                  <Trans>Enter the URL to link to</Trans>
+                </Label>
 
-								<Controller
-									control={form.control}
-									name={`customFields.${index}.link`}
-									render={({ field }) => (
-										<Input
-											type="url"
-											value={field.value}
-											id={`customFields.${index}.link`}
-											placeholder="Must start with https://"
-											onChange={(e) => {
-												field.onChange(e.target.value);
-												void form.handleSubmit(onSubmit)();
-											}}
-										/>
-									)}
-								/>
-							</div>
-						</PopoverContent>
-					</Popover>
+                <Controller
+                  control={form.control}
+                  name={`customFields.${index}.link`}
+                  render={({ field }) => (
+                    <Input
+                      type="url"
+                      value={field.value}
+                      id={`customFields.${index}.link`}
+                      placeholder="Must start with https://"
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        void form.handleSubmit(onSubmit)();
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            </PopoverContent>
+          </Popover>
 
-					<Button size="icon" variant="ghost" onClick={() => handleRemove(index)}>
-						<XIcon />
-					</Button>
-				</CustomFieldItem>
-			))}
+          <Button size="icon" variant="ghost" onClick={() => handleRemove(index)}>
+            <XIcon />
+          </Button>
+        </CustomFieldItem>
+      ))}
 
-			<Button variant="ghost" onClick={handleAdd}>
-				<ListPlusIcon />
-				<Trans>Add a custom field</Trans>
-			</Button>
-		</Reorder.Group>
-	);
+      <Button variant="ghost" onClick={handleAdd}>
+        <ListPlusIcon />
+        <Trans>Add a custom field</Trans>
+      </Button>
+    </Reorder.Group>
+  );
 }
 
 type CustomFieldItemProps = {
-	field: CustomField;
-	children: React.ReactNode;
+  field: CustomField;
+  children: React.ReactNode;
 };
 
 function CustomFieldItem({ field, children }: CustomFieldItemProps) {
-	const controls = useDragControls();
+  const controls = useDragControls();
 
-	return (
-		<Reorder.Item
-			key={field.id}
-			value={field}
-			dragListener={false}
-			dragControls={controls}
-			initial={{ opacity: 0, y: -10 }}
-			animate={{ opacity: 1, y: 0 }}
-			className="flex touch-none items-center"
-		>
-			<Button
-				size="icon"
-				variant="ghost"
-				className="me-2 touch-none"
-				onPointerDown={(e) => {
-					e.preventDefault();
-					controls.start(e);
-				}}
-			>
-				<DotsSixVerticalIcon />
-			</Button>
+  return (
+    <Reorder.Item
+      key={field.id}
+      value={field}
+      dragListener={false}
+      dragControls={controls}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex touch-none items-center"
+    >
+      <Button
+        size="icon"
+        variant="ghost"
+        className="me-2 touch-none"
+        onPointerDown={(e) => {
+          e.preventDefault();
+          controls.start(e);
+        }}
+      >
+        <DotsSixVerticalIcon />
+      </Button>
 
-			{children}
-		</Reorder.Item>
-	);
+      {children}
+    </Reorder.Item>
+  );
 }

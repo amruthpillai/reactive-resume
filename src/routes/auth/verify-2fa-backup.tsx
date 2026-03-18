@@ -14,116 +14,116 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/comp
 import { authClient } from "@/integrations/auth/client";
 
 export const Route = createFileRoute("/auth/verify-2fa-backup")({
-	component: RouteComponent,
-	beforeLoad: async ({ context }) => {
-		if (context.session) throw redirect({ to: "/dashboard", replace: true });
-	},
+  component: RouteComponent,
+  beforeLoad: async ({ context }) => {
+    if (context.session) throw redirect({ to: "/dashboard", replace: true });
+  },
 });
 
 const formSchema = z.object({
-	code: z.string().trim(),
+  code: z.string().trim(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 function RouteComponent() {
-	const router = useRouter();
-	const navigate = useNavigate();
+  const router = useRouter();
+  const navigate = useNavigate();
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			code: "",
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      code: "",
+    },
+  });
 
-	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Verifying backup code...`);
-		const formattedCode = `${data.code.slice(0, 5)}-${data.code.slice(5)}`;
+  const onSubmit = async (data: FormValues) => {
+    const toastId = toast.loading(t`Verifying backup code...`);
+    const formattedCode = `${data.code.slice(0, 5)}-${data.code.slice(5)}`;
 
-		const { error } = await authClient.twoFactor.verifyBackupCode({ code: formattedCode });
+    const { error } = await authClient.twoFactor.verifyBackupCode({ code: formattedCode });
 
-		if (error) {
-			toast.error(error.message, { id: toastId });
-			return;
-		}
+    if (error) {
+      toast.error(error.message, { id: toastId });
+      return;
+    }
 
-		toast.dismiss(toastId);
-		await router.invalidate();
-		void navigate({ to: "/dashboard", replace: true });
-	};
+    toast.dismiss(toastId);
+    await router.invalidate();
+    void navigate({ to: "/dashboard", replace: true });
+  };
 
-	return (
-		<>
-			<div className="space-y-1 text-center">
-				<h1 className="text-2xl font-bold tracking-tight">
-					<Trans>Verify with a Backup Code</Trans>
-				</h1>
-				<div className="text-muted-foreground">
-					<Trans>Enter one of your saved backup codes to access your account</Trans>
-				</div>
-			</div>
+  return (
+    <>
+      <div className="space-y-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">
+          <Trans>Verify with a Backup Code</Trans>
+        </h1>
+        <div className="text-muted-foreground">
+          <Trans>Enter one of your saved backup codes to access your account</Trans>
+        </div>
+      </div>
 
-			<Form {...form}>
-				<form className="grid gap-6" onSubmit={form.handleSubmit(onSubmit)}>
-					<FormField
-						control={form.control}
-						name="code"
-						render={({ field }) => (
-							<FormItem className="justify-self-center">
-								<FormControl
-									render={
-										<InputOTP
-											maxLength={10}
-											value={field.value}
-											pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-											onChange={field.onChange}
-											onComplete={form.handleSubmit(onSubmit)}
-											pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
-										>
-											<InputOTPGroup>
-												<InputOTPSlot index={0} className="size-12" />
-												<InputOTPSlot index={1} className="size-12" />
-												<InputOTPSlot index={2} className="size-12" />
-												<InputOTPSlot index={3} className="size-12" />
-												<InputOTPSlot index={4} className="size-12" />
-											</InputOTPGroup>
-											<InputOTPSeparator />
-											<InputOTPGroup>
-												<InputOTPSlot index={5} className="size-12" />
-												<InputOTPSlot index={6} className="size-12" />
-												<InputOTPSlot index={7} className="size-12" />
-												<InputOTPSlot index={8} className="size-12" />
-												<InputOTPSlot index={9} className="size-12" />
-											</InputOTPGroup>
-										</InputOTP>
-									}
-								/>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+      <Form {...form}>
+        <form className="grid gap-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="code"
+            render={({ field }) => (
+              <FormItem className="justify-self-center">
+                <FormControl
+                  render={
+                    <InputOTP
+                      maxLength={10}
+                      value={field.value}
+                      pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                      onChange={field.onChange}
+                      onComplete={form.handleSubmit(onSubmit)}
+                      pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} className="size-12" />
+                        <InputOTPSlot index={1} className="size-12" />
+                        <InputOTPSlot index={2} className="size-12" />
+                        <InputOTPSlot index={3} className="size-12" />
+                        <InputOTPSlot index={4} className="size-12" />
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        <InputOTPSlot index={5} className="size-12" />
+                        <InputOTPSlot index={6} className="size-12" />
+                        <InputOTPSlot index={7} className="size-12" />
+                        <InputOTPSlot index={8} className="size-12" />
+                        <InputOTPSlot index={9} className="size-12" />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  }
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-					<div className="flex gap-x-2">
-						<Button
-							variant="outline"
-							className="flex-1"
-							nativeButton={false}
-							render={
-								<Link to="/auth/verify-2fa">
-									<ArrowLeftIcon />
-									<Trans>Go Back</Trans>
-								</Link>
-							}
-						/>
+          <div className="flex gap-x-2">
+            <Button
+              variant="outline"
+              className="flex-1"
+              nativeButton={false}
+              render={
+                <Link to="/auth/verify-2fa">
+                  <ArrowLeftIcon />
+                  <Trans>Go Back</Trans>
+                </Link>
+              }
+            />
 
-						<Button type="submit" className="flex-1">
-							<CheckIcon />
-							<Trans>Verify</Trans>
-						</Button>
-					</div>
-				</form>
-			</Form>
-		</>
-	);
+            <Button type="submit" className="flex-1">
+              <CheckIcon />
+              <Trans>Verify</Trans>
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </>
+  );
 }

@@ -8,14 +8,14 @@ description: "A comprehensive guide to self-host Reactive Resume with Docker (Po
 Reactive Resume can be self-hosted using Docker in a matter of minutes, and this guide will walk you through the process. Here are some of the services you'll need to get started:
 
 <CardGroup cols={2}>
-	<Card title="PostgreSQL">Stores accounts, resumes, and application data.</Card>
-	<Card title="Printer">Generates PDFs and screenshots using a headless Chromium browser.</Card>
-	<Card title="Email (optional)">
-		SMTP for verification emails, password reset, etc. If not configured, emails are logged to the server console.
-	</Card>
-	<Card title="Storage (optional)">
-		Use S3-compatible storage, or local persistent storage via <code>/app/data</code>.
-	</Card>
+  <Card title="PostgreSQL">Stores accounts, resumes, and application data.</Card>
+  <Card title="Printer">Generates PDFs and screenshots using a headless Chromium browser.</Card>
+  <Card title="Email (optional)">
+    SMTP for verification emails, password reset, etc. If not configured, emails are logged to the server console.
+  </Card>
+  <Card title="Storage (optional)">
+    Use S3-compatible storage, or local persistent storage via <code>/app/data</code>.
+  </Card>
 </CardGroup>
 
 You can pull the latest app image from:
@@ -26,9 +26,9 @@ You can pull the latest app image from:
 ## Minimum requirements
 
 <CardGroup cols={1}>
-	<Card title="Docker + Docker Compose">Docker Engine + Docker Compose plugin (or Docker Desktop).</Card>
-	<Card title="Compute">2 vCPU / 2 GB RAM minimum (4 GB recommended if Postgres + Printer run on the same host).</Card>
-	<Card title="Storage">Enough for Postgres + uploads (start with 10-20 GB and scale as needed).</Card>
+  <Card title="Docker + Docker Compose">Docker Engine + Docker Compose plugin (or Docker Desktop).</Card>
+  <Card title="Compute">2 vCPU / 2 GB RAM minimum (4 GB recommended if Postgres + Printer run on the same host).</Card>
+  <Card title="Storage">Enough for Postgres + uploads (start with 10-20 GB and scale as needed).</Card>
 </CardGroup>
 
 ## Quickstart using Docker Compose
@@ -249,45 +249,45 @@ docker compose logs -f reactive-resume
 ## How startup works (database migrations)
 
 <Info>
-	On every start, the server <b>automatically runs database migrations</b> before serving traffic. If migrations fail
-	(usually due to a DB connection issue), the container will exit with an error.
+  On every start, the server <b>automatically runs database migrations</b> before serving traffic. If migrations fail
+  (usually due to a DB connection issue), the container will exit with an error.
 </Info>
 
 ## Environment variables
 
 <CardGroup cols={2}>
-	<Card title="Required">
-		<ul>
-			<li>
-				<code>APP_URL</code>
-			</li>
-			<li>
-				<code>DATABASE_URL</code>
-			</li>
-			<li>
-				<code>PRINTER_ENDPOINT</code>
-			</li>
-			<li>
-				<code>AUTH_SECRET</code>
-			</li>
-		</ul>
-	</Card>
-	<Card title="Optional">
-		<ul>
-			<li>
-				SMTP (<code>SMTP_&#42;</code>)
-			</li>
-			<li>
-				Social auth (<code>GOOGLE_&#42;</code>, <code>GITHUB_&#42;</code>)
-			</li>
-			<li>
-				S3 storage (<code>S3_&#42;</code>)
-			</li>
-			<li>
-				Feature flags (<code>FLAG_&#42;</code>)
-			</li>
-		</ul>
-	</Card>
+  <Card title="Required">
+    <ul>
+      <li>
+        <code>APP_URL</code>
+      </li>
+      <li>
+        <code>DATABASE_URL</code>
+      </li>
+      <li>
+        <code>PRINTER_ENDPOINT</code>
+      </li>
+      <li>
+        <code>AUTH_SECRET</code>
+      </li>
+    </ul>
+  </Card>
+  <Card title="Optional">
+    <ul>
+      <li>
+        SMTP (<code>SMTP_&#42;</code>)
+      </li>
+      <li>
+        Social auth (<code>GOOGLE_&#42;</code>, <code>GITHUB_&#42;</code>)
+      </li>
+      <li>
+        S3 storage (<code>S3_&#42;</code>)
+      </li>
+      <li>
+        Feature flags (<code>FLAG_&#42;</code>)
+      </li>
+    </ul>
+  </Card>
 </CardGroup>
 
 <AccordionGroup>
@@ -317,8 +317,8 @@ docker compose logs -f reactive-resume
   </Accordion>
 
 <Accordion title="Database (PostgreSQL)">
-	- **`DATABASE_URL`**: Postgres connection string in the format `postgresql://USER:PASSWORD@HOST:PORT/DATABASE`. - In
-	Docker Compose, set `HOST` to the Postgres service name (e.g. `postgres`), not `localhost`.
+  - **`DATABASE_URL`**: Postgres connection string in the format `postgresql://USER:PASSWORD@HOST:PORT/DATABASE`. - In
+  Docker Compose, set `HOST` to the Postgres service name (e.g. `postgres`), not `localhost`.
 </Accordion>
 
   <Accordion title="Authentication">
@@ -361,15 +361,15 @@ openssl rand -hex 32
   </Accordion>
 
 <Accordion title="Storage (S3 or local)">
-	- **Default (local)**: If all `S3_*` values are empty, uploads are stored under `/app/data`. Mount it to persistent
-	storage (for example `./data:/app/data`) or uploads can be lost on container recreation. - **S3/S3-compatible**:
-	Configure these to store uploads in an S3-compatible service (SeaweedFS, MinIO, AWS S3, etc.): -
-	**`S3_ACCESS_KEY_ID`** - **`S3_SECRET_ACCESS_KEY`** - **`S3_REGION`** - **`S3_ENDPOINT`** (for S3-compatible
-	providers; may be blank for AWS depending on your setup) - **`S3_BUCKET`** - **`S3_FORCE_PATH_STYLE`**: Controls how
-	the bucket is addressed in URLs. Defaults to `"false"`. - Set to `"true"` for **path-style** URLs
-	(`https://s3-server.com/bucket`). Common with **MinIO**, **SeaweedFS**, and other self-hosted S3-compatible services.
-	- Set to `"false"` for **virtual-hosted-style** URLs (`https://bucket.s3-server.com`). Common with **AWS S3**,
-	**Cloudflare R2**, and most cloud providers.
+  - **Default (local)**: If all `S3_*` values are empty, uploads are stored under `/app/data`. Mount it to persistent
+  storage (for example `./data:/app/data`) or uploads can be lost on container recreation. - **S3/S3-compatible**:
+  Configure these to store uploads in an S3-compatible service (SeaweedFS, MinIO, AWS S3, etc.): -
+  **`S3_ACCESS_KEY_ID`** - **`S3_SECRET_ACCESS_KEY`** - **`S3_REGION`** - **`S3_ENDPOINT`** (for S3-compatible
+  providers; may be blank for AWS depending on your setup) - **`S3_BUCKET`** - **`S3_FORCE_PATH_STYLE`**: Controls how
+  the bucket is addressed in URLs. Defaults to `"false"`. - Set to `"true"` for **path-style** URLs
+  (`https://s3-server.com/bucket`). Common with **MinIO**, **SeaweedFS**, and other self-hosted S3-compatible services.
+  - Set to `"false"` for **virtual-hosted-style** URLs (`https://bucket.s3-server.com`). Common with **AWS S3**,
+  **Cloudflare R2**, and most cloud providers.
 </Accordion>
 
   <Accordion title="Feature Flags">
@@ -445,8 +445,8 @@ Most reverse proxies (such as **Traefik**, **Caddy**, or **nginx** with upstream
 This is particularly useful in high-availability setups where you have multiple instances of Reactive Resume. If one instance becomes unhealthy (for example, it loses its database connection), the reverse proxy will stop routing traffic to it until it recovers.
 
 <Tip>
-	If you're using **Traefik**, it automatically respects Docker health checks when using the Docker provider. Unhealthy
-	containers are excluded from routing without any additional configuration.
+  If you're using **Traefik**, it automatically respects Docker health checks when using the Docker provider. Unhealthy
+  containers are excluded from routing without any additional configuration.
 </Tip>
 
 ### Manually checking health
@@ -476,25 +476,25 @@ A healthy response returns HTTP 200. Any other response (or a connection failure
   </Accordion>
 
 <Accordion title="Can't sign in / redirects loop / cookies don't stick">
-	- **Common cause**: `APP_URL` doesn't match the URL you're actually using (especially behind a reverse proxy). -
-	**Fix**: set `APP_URL` to the public URL (preferably HTTPS) and restart the container.
+  - **Common cause**: `APP_URL` doesn't match the URL you're actually using (especially behind a reverse proxy). -
+  **Fix**: set `APP_URL` to the public URL (preferably HTTPS) and restart the container.
 </Accordion>
 
 <Accordion title="PDF export fails / printing is stuck">
-	- **Common cause**: Reactive Resume can't reach the printer or the printer can't reach your app. - **Checks**: -
-	`PRINTER_ENDPOINT` should usually be `http://printer:3000` in Compose. - If you use
-	`PRINTER_APP_URL="http://host.docker.internal:3000"`, ensure `extra_hosts: host-gateway` is present for the printer
-	service.
+  - **Common cause**: Reactive Resume can't reach the printer or the printer can't reach your app. - **Checks**: -
+  `PRINTER_ENDPOINT` should usually be `http://printer:3000` in Compose. - If you use
+  `PRINTER_APP_URL="http://host.docker.internal:3000"`, ensure `extra_hosts: host-gateway` is present for the printer
+  service.
 </Accordion>
 
 <Accordion title="Uploads disappear after restart">
-	- **Cause**: you didn't mount persistent storage for `/app/data` (when not using S3). - **Fix**: add a volume mount
-	like `./data:/app/data` and redeploy.
+  - **Cause**: you didn't mount persistent storage for `/app/data` (when not using S3). - **Fix**: add a volume mount
+  like `./data:/app/data` and redeploy.
 </Accordion>
 
 <Accordion title="Emails aren't being delivered">
-	- **Expected behavior**: if SMTP vars are empty, the app logs emails to the console instead. - **Fix**: configure SMTP
-	and verify your provider's TLS/port settings.
+  - **Expected behavior**: if SMTP vars are empty, the app logs emails to the console instead. - **Fix**: configure SMTP
+  and verify your provider's TLS/port settings.
 </Accordion>
 
   <Accordion title="S3 storage error: ENOTFOUND bucket.endpoint">

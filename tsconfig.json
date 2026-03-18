@@ -1,32 +1,32 @@
 {
-	"include": ["**/*.ts", "**/*.tsx"],
-	"compilerOptions": {
-		"target": "ES2022",
-		"jsx": "react-jsx",
-		"module": "ESNext",
-		"types": ["vite/client"],
-		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
-		/* Bundler mode */
-		"noEmit": true,
-		"moduleResolution": "bundler",
-		"esModuleInterop": true,
-		"verbatimModuleSyntax": false,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"allowImportingTsExtensions": true,
+    /* Bundler mode */
+    "noEmit": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowImportingTsExtensions": true,
 
-		/* Linting */
-		"strict": true,
-		"skipLibCheck": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUncheckedSideEffectImports": false,
+    /* Linting */
+    "strict": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": false,
 
-		/* Paths */
-		"paths": {
-			"@/*": ["./src/*"]
-		}
-	}
+    /* Paths */
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
 }

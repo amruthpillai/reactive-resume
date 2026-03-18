@@ -14,11 +14,11 @@ import { SectionBase } from "../shared/section-base";
 import { CustomFieldsSection } from "./custom-fields";
 
 export function BasicsSectionBuilder() {
-	return (
-		<SectionBase type="basics">
-			<BasicsSectionForm />
-		</SectionBase>
-	);
+  return (
+    <SectionBase type="basics">
+      <BasicsSectionForm />
+    </SectionBase>
+  );
 }
 
 const formSchema = basicsSchema;
@@ -26,110 +26,110 @@ const formSchema = basicsSchema;
 type FormValues = z.infer<typeof formSchema>;
 
 function BasicsSectionForm() {
-	const basics = useResumeStore((state) => state.resume.data.basics);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const basics = useResumeStore((state) => state.resume.data.basics);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm({
-		resolver: zodResolver(formSchema),
-		defaultValues: basics,
-		mode: "onChange",
-	});
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: basics,
+    mode: "onChange",
+  });
 
-	const onSubmit = (data: FormValues) => {
-		updateResumeData((draft) => {
-			draft.basics = data;
-		});
-	};
+  const onSubmit = (data: FormValues) => {
+    updateResumeData((draft) => {
+      draft.basics = data;
+    });
+  };
 
-	return (
-		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)} className="space-y-4">
-				<FormField
-					control={form.control}
-					name="name"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Name</Trans>
-							</FormLabel>
-							<FormControl render={<Input {...field} />} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+  return (
+    <Form {...form}>
+      <form onChange={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Name</Trans>
+              </FormLabel>
+              <FormControl render={<Input {...field} />} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="headline"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Headline</Trans>
-							</FormLabel>
-							<FormControl render={<Input {...field} />} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="headline"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Headline</Trans>
+              </FormLabel>
+              <FormControl render={<Input {...field} />} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="email"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Email</Trans>
-							</FormLabel>
-							<FormControl render={<Input type="email" {...field} />} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Email</Trans>
+              </FormLabel>
+              <FormControl render={<Input type="email" {...field} />} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="phone"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Phone</Trans>
-							</FormLabel>
-							<FormControl render={<Input {...field} />} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Phone</Trans>
+              </FormLabel>
+              <FormControl render={<Input {...field} />} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="location"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Location</Trans>
-							</FormLabel>
-							<FormControl render={<Input {...field} />} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Location</Trans>
+              </FormLabel>
+              <FormControl render={<Input {...field} />} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="website"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>
-								<Trans>Website</Trans>
-							</FormLabel>
-							<URLInput {...field} value={field.value} onChange={field.onChange} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans>Website</Trans>
+              </FormLabel>
+              <URLInput {...field} value={field.value} onChange={field.onChange} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-				<CustomFieldsSection onSubmit={onSubmit} />
-			</form>
-		</Form>
-	);
+        <CustomFieldsSection onSubmit={onSubmit} />
+      </form>
+    </Form>
+  );
 }

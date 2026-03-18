@@ -17,8 +17,8 @@ This is based on the [JSON Patch (RFC 6902)](https://datatracker.ietf.org/doc/ht
 | Replace the entire resume data at once       | **PUT**   |
 
 <Info>
-	The PATCH endpoint only modifies the resume `data` (the JSONB column). To update top-level resume properties like
-	`name`, `slug`, `tags`, or `isPublic`, use the existing `PUT /resume/{id}` endpoint.
+  The PATCH endpoint only modifies the resume `data` (the JSONB column). To update top-level resume properties like
+  `name`, `slug`, `tags`, or `isPublic`, use the existing `PUT /resume/{id}` endpoint.
 </Info>
 
 ## Authentication
@@ -26,7 +26,7 @@ This is based on the [JSON Patch (RFC 6902)](https://datatracker.ietf.org/doc/ht
 All requests require your API key in the `x-api-key` header. See [Using the API](/guides/using-the-api) for how to create one.
 
 <Info>
-	If you're self-hosting, replace `https://rxresu.me` with your instance URL. The API is served under `/api/openapi`.
+  If you're self-hosting, replace `https://rxresu.me` with your instance URL. The API is served under `/api/openapi`.
 </Info>
 
 ## Endpoint
@@ -41,7 +41,7 @@ The resume ID is taken from the URL path, so the request body only requires the 
 
 ```json
 {
-	"operations": [{ "op": "replace", "path": "/basics/name", "value": "Jane Doe" }]
+  "operations": [{ "op": "replace", "path": "/basics/name", "value": "Jane Doe" }]
 }
 ```
 
@@ -101,8 +101,8 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
 ```
 
 <Tip>
-	The path `/sections/experience/items/-` uses the special `-` index, which means "append to the end of the array". To
-	insert at a specific position, use a numeric index like `/sections/experience/items/0` for the beginning.
+  The path `/sections/experience/items/-` uses the special `-` index, which means "append to the end of the array". To
+  insert at a specific position, use a numeric index like `/sections/experience/items/0` for the beginning.
 </Tip>
 
 ### Remove an Item from a Section
@@ -179,8 +179,8 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
 | `403`  | `RESUME_LOCKED`            | The resume is locked and cannot be modified. Unlock it first.                                                             |
 
 <Warning>
-	All operations in a single request are applied atomically. If any operation fails (including a `test`), none of the
-	operations are applied.
+  All operations in a single request are applied atomically. If any operation fails (including a `test`), none of the
+  operations are applied.
 </Warning>
 
 ## Tips

@@ -4,7 +4,7 @@ import { FastResponse } from "srvx";
 globalThis.Response = FastResponse;
 
 export default createServerEntry({
-	fetch(request) {
-		return handler.fetch(request);
-	},
+  fetch(request) {
+    return handler.fetch(request);
+  },
 });

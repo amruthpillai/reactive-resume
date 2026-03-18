@@ -19,221 +19,221 @@ import { authClient } from "@/integrations/auth/client";
 import { DashboardHeader } from "../-components/header";
 
 export const Route = createFileRoute("/dashboard/settings/profile")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 const formSchema = z.object({
-	name: z.string().trim().min(1).max(64),
-	username: z
-		.string()
-		.trim()
-		.min(1)
-		.max(64)
-		.regex(/^[a-z0-9._-]+$/, {
-			message: "Username can only contain lowercase letters, numbers, dots, hyphens and underscores.",
-		}),
-	email: z.email().trim(),
+  name: z.string().trim().min(1).max(64),
+  username: z
+    .string()
+    .trim()
+    .min(1)
+    .max(64)
+    .regex(/^[a-z0-9._-]+$/, {
+      message: "Username can only contain lowercase letters, numbers, dots, hyphens and underscores.",
+    }),
+  email: z.email().trim(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 function RouteComponent() {
-	const router = useRouter();
-	const { session } = Route.useRouteContext();
+  const router = useRouter();
+  const { session } = Route.useRouteContext();
 
-	const defaultValues = useMemo(() => {
-		return {
-			name: session.user.name,
-			username: session.user.username,
-			email: session.user.email,
-		};
-	}, [session.user]);
+  const defaultValues = useMemo(() => {
+    return {
+      name: session.user.name,
+      username: session.user.username,
+      email: session.user.email,
+    };
+  }, [session.user]);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues,
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues,
+  });
 
-	const onCancel = () => {
-		form.reset(defaultValues);
-	};
+  const onCancel = () => {
+    form.reset(defaultValues);
+  };
 
-	const onSubmit = async (data: FormValues) => {
-		const { error } = await authClient.updateUser({
-			name: data.name,
-			username: data.username,
-			displayUsername: data.username,
-		});
+  const onSubmit = async (data: FormValues) => {
+    const { error } = await authClient.updateUser({
+      name: data.name,
+      username: data.username,
+      displayUsername: data.username,
+    });
 
-		if (error) {
-			toast.error(error.message);
-			return;
-		}
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
 
-		toast.success(t`Your profile has been updated successfully.`);
-		form.reset({ name: data.name, username: data.username, email: session.user.email });
-		void router.invalidate();
+    toast.success(t`Your profile has been updated successfully.`);
+    form.reset({ name: data.name, username: data.username, email: session.user.email });
+    void router.invalidate();
 
-		if (data.email !== session.user.email) {
-			const { error } = await authClient.changeEmail({
-				newEmail: data.email,
-				callbackURL: "/dashboard/settings/profile",
-			});
+    if (data.email !== session.user.email) {
+      const { error } = await authClient.changeEmail({
+        newEmail: data.email,
+        callbackURL: "/dashboard/settings/profile",
+      });
 
-			if (error) {
-				toast.error(error.message);
-				return;
-			}
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
-			toast.success(
-				t`A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.`,
-			);
-			form.reset({ name: data.name, username: data.username, email: session.user.email });
-			void router.invalidate();
-		}
-	};
+      toast.success(
+        t`A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.`,
+      );
+      form.reset({ name: data.name, username: data.username, email: session.user.email });
+      void router.invalidate();
+    }
+  };
 
-	const handleResendVerificationEmail = async () => {
-		const toastId = toast.loading(t`Resending verification email...`);
+  const handleResendVerificationEmail = async () => {
+    const toastId = toast.loading(t`Resending verification email...`);
 
-		const { error } = await authClient.sendVerificationEmail({
-			email: session.user.email,
-			callbackURL: "/dashboard/settings/profile",
-		});
+    const { error } = await authClient.sendVerificationEmail({
+      email: session.user.email,
+      callbackURL: "/dashboard/settings/profile",
+    });
 
-		if (error) {
-			toast.error(error.message, { id: toastId });
-			return;
-		}
+    if (error) {
+      toast.error(error.message, { id: toastId });
+      return;
+    }
 
-		toast.success(
-			t`A new verification link has been sent to your email address. Please check your inbox to verify your account.`,
-			{ id: toastId },
-		);
-		void router.invalidate();
-	};
+    toast.success(
+      t`A new verification link has been sent to your email address. Please check your inbox to verify your account.`,
+      { id: toastId },
+    );
+    void router.invalidate();
+  };
 
-	return (
-		<div className="space-y-4">
-			<DashboardHeader icon={UserCircleIcon} title={t`Profile`} />
+  return (
+    <div className="space-y-4">
+      <DashboardHeader icon={UserCircleIcon} title={t`Profile`} />
 
-			<Separator />
+      <Separator />
 
-			<Form {...form}>
-				<motion.form
-					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.3 }}
-					className="grid max-w-xl gap-6"
-					onSubmit={form.handleSubmit(onSubmit)}
-				>
-					<FormField
-						control={form.control}
-						name="name"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Name</Trans>
-								</FormLabel>
-								<FormControl
-									render={<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />}
-								/>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+      <Form {...form}>
+        <motion.form
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="grid max-w-xl gap-6"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans>Name</Trans>
+                </FormLabel>
+                <FormControl
+                  render={<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-					<FormField
-						control={form.control}
-						name="username"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Username</Trans>
-								</FormLabel>
-								<FormControl
-									render={
-										<Input
-											min={3}
-											max={64}
-											autoComplete="username"
-											placeholder="john.doe"
-											className="lowercase"
-											{...field}
-										/>
-									}
-								/>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans>Username</Trans>
+                </FormLabel>
+                <FormControl
+                  render={
+                    <Input
+                      min={3}
+                      max={64}
+                      autoComplete="username"
+                      placeholder="john.doe"
+                      className="lowercase"
+                      {...field}
+                    />
+                  }
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-					<FormField
-						control={form.control}
-						name="email"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Email Address</Trans>
-								</FormLabel>
-								<FormControl
-									render={
-										<Input
-											type="email"
-											autoComplete="email"
-											placeholder="john.doe@example.com"
-											className="lowercase"
-											{...field}
-										/>
-									}
-								/>
-								<FormMessage />
-								{match(session.user.emailVerified)
-									.with(true, () => (
-										<p className="flex items-center gap-x-1.5 text-xs text-green-700">
-											<CheckIcon />
-											<Trans>Verified</Trans>
-										</p>
-									))
-									.with(false, () => (
-										<p className="flex items-center gap-x-1.5 text-xs text-amber-600">
-											<WarningIcon className="size-3.5" />
-											<Trans>Unverified</Trans>
-											<span>|</span>
-											<Button
-												variant="link"
-												className="h-auto gap-x-1.5 p-0! text-xs text-inherit"
-												onClick={handleResendVerificationEmail}
-											>
-												<Trans>Resend verification email</Trans>
-											</Button>
-										</p>
-									))
-									.exhaustive()}
-							</FormItem>
-						)}
-					/>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans>Email Address</Trans>
+                </FormLabel>
+                <FormControl
+                  render={
+                    <Input
+                      type="email"
+                      autoComplete="email"
+                      placeholder="john.doe@example.com"
+                      className="lowercase"
+                      {...field}
+                    />
+                  }
+                />
+                <FormMessage />
+                {match(session.user.emailVerified)
+                  .with(true, () => (
+                    <p className="flex items-center gap-x-1.5 text-xs text-green-700">
+                      <CheckIcon />
+                      <Trans>Verified</Trans>
+                    </p>
+                  ))
+                  .with(false, () => (
+                    <p className="flex items-center gap-x-1.5 text-xs text-amber-600">
+                      <WarningIcon className="size-3.5" />
+                      <Trans>Unverified</Trans>
+                      <span>|</span>
+                      <Button
+                        variant="link"
+                        className="h-auto gap-x-1.5 p-0! text-xs text-inherit"
+                        onClick={handleResendVerificationEmail}
+                      >
+                        <Trans>Resend verification email</Trans>
+                      </Button>
+                    </p>
+                  ))
+                  .exhaustive()}
+              </FormItem>
+            )}
+          />
 
-					<AnimatePresence>
-						{form.formState.isDirty && (
-							<motion.div
-								initial={{ opacity: 0, x: -20 }}
-								animate={{ opacity: 1, x: 0 }}
-								exit={{ opacity: 0, x: -20 }}
-								className="flex items-center gap-x-4 justify-self-end"
-							>
-								<Button type="reset" variant="ghost" onClick={onCancel}>
-									<Trans>Cancel</Trans>
-								</Button>
+          <AnimatePresence>
+            {form.formState.isDirty && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="flex items-center gap-x-4 justify-self-end"
+              >
+                <Button type="reset" variant="ghost" onClick={onCancel}>
+                  <Trans>Cancel</Trans>
+                </Button>
 
-								<Button type="submit">
-									<Trans>Save Changes</Trans>
-								</Button>
-							</motion.div>
-						)}
-					</AnimatePresence>
-				</motion.form>
-			</Form>
-		</div>
-	);
+                <Button type="submit">
+                  <Trans>Save Changes</Trans>
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.form>
+      </Form>
+    </div>
+  );
 }

@@ -4,17 +4,17 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/utils/style";
 
 type Props = {
-	title: string;
-	icon: IconType;
-	className?: string;
+  title: string;
+  icon: IconType;
+  className?: string;
 };
 
 export function DashboardHeader({ title, icon: IconComponent, className }: Props) {
-	return (
-		<div className={cn("relative flex items-center justify-center gap-x-2.5 md:justify-start", className)}>
-			<SidebarTrigger className="absolute inset-s-0 md:hidden" />
-			<IconComponent weight="light" className="size-5" />
-			<h1 className="text-xl font-medium tracking-tight">{title}</h1>
-		</div>
-	);
+  return (
+    <div className={cn("relative flex items-center justify-center gap-x-2.5 md:justify-start", className)}>
+      <SidebarTrigger className="absolute inset-s-0 md:hidden" />
+      <IconComponent weight="light" className="size-5" />
+      <h1 className="text-xl font-medium tracking-tight">{title}</h1>
+    </div>
+  );
 }

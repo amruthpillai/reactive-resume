@@ -12,35 +12,35 @@ import { getLocale, loadLocale } from "./utils/locale";
 import { getTheme } from "./utils/theme";
 
 export const getRouter = async () => {
-	const queryClient = getQueryClient();
+  const queryClient = getQueryClient();
 
-	const [theme, locale, session, flags] = await Promise.all([
-		getTheme(),
-		getLocale(),
-		getSession(),
-		client.flags.get(),
-	]);
+  const [theme, locale, session, flags] = await Promise.all([
+    getTheme(),
+    getLocale(),
+    getSession(),
+    client.flags.get(),
+  ]);
 
-	await loadLocale(locale);
+  await loadLocale(locale);
 
-	const router = createRouter({
-		routeTree,
-		scrollRestoration: true,
-		defaultPreload: "intent",
-		defaultViewTransition: true,
-		defaultStructuralSharing: true,
-		defaultErrorComponent: ErrorScreen,
-		defaultPendingComponent: LoadingScreen,
-		defaultNotFoundComponent: NotFoundScreen,
-		context: { orpc, queryClient, theme, locale, session, flags },
-	});
+  const router = createRouter({
+    routeTree,
+    scrollRestoration: true,
+    defaultPreload: "intent",
+    defaultViewTransition: true,
+    defaultStructuralSharing: true,
+    defaultErrorComponent: ErrorScreen,
+    defaultPendingComponent: LoadingScreen,
+    defaultNotFoundComponent: NotFoundScreen,
+    context: { orpc, queryClient, theme, locale, session, flags },
+  });
 
-	setupRouterSsrQueryIntegration({
-		router,
-		queryClient,
-		handleRedirects: true,
-		wrapQueryClient: true,
-	});
+  setupRouterSsrQueryIntegration({
+    router,
+    queryClient,
+    handleRedirects: true,
+    wrapQueryClient: true,
+  });
 
-	return router;
+  return router;
 };

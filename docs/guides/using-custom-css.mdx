@@ -12,10 +12,10 @@ The **Custom CSS** panel lets you write your own CSS rules to change how your re
 - **Scoped styling (mostly)**: to avoid affecting the rest of the app, your CSS is _usually_ scoped to the resume preview.
 
 <Frame caption="Screenshot of the Custom CSS section in the right sidebar">
-	<img
-		src="/images/guides/using-custom-css/screenshot-1.webp"
-		alt="Screenshot of the Custom CSS section in the right sidebar"
-	/>
+  <img
+    src="/images/guides/using-custom-css/screenshot-1.webp"
+    alt="Screenshot of the Custom CSS section in the right sidebar"
+  />
 </Frame>
 
 ## Where to find it
@@ -48,14 +48,14 @@ Example:
 ```css
 /* Normal rules: rely on auto-scoping */
 .page a {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 /* At-rules: manually scope selectors */
 @media print {
-	.resume-preview-container .page a {
-		text-decoration: none;
-	}
+  .resume-preview-container .page a {
+    text-decoration: none;
+  }
 }
 ```
 
@@ -65,7 +65,7 @@ Keep each rule's selector on **one line**, for example:
 
 ```css
 .page-section-experience .section-item-title {
-	font-weight: 700;
+  font-weight: 700;
 }
 ```
 
@@ -99,7 +99,7 @@ To apply styles only on one template, prefix with the template wrapper:
 
 ```css
 .template-azurill .page-header {
-	gap: 12pt;
+  gap: 12pt;
 }
 ```
 
@@ -109,7 +109,7 @@ Each page has a class like `.page-0`, `.page-1`, etc.
 
 ```css
 .page-0 .page-header {
-	margin-bottom: 6pt;
+  margin-bottom: 6pt;
 }
 ```
 
@@ -119,8 +119,8 @@ Custom sections include a dynamic class: `.page-section-<sectionId>`.
 
 ```css
 .page-section-custom {
-	border-top: 1pt solid color-mix(in srgb, var(--page-text-color) 15%, transparent);
-	padding-top: 6pt;
+  border-top: 1pt solid color-mix(in srgb, var(--page-text-color) 15%, transparent);
+  padding-top: 6pt;
 }
 ```
 
@@ -142,9 +142,9 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .page {
-	--page-margin-x: 10pt;
-	--page-margin-y: 10pt;
-	--page-gap-y: 6pt;
+  --page-margin-x: 10pt;
+  --page-margin-y: 10pt;
+  --page-gap-y: 6pt;
 }
 ```
 
@@ -154,10 +154,10 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .page-section > h6 {
-	margin-bottom: 2pt;
-	font-weight: 800;
-	letter-spacing: 0.02em;
-	text-transform: uppercase;
+  margin-bottom: 2pt;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 ```
 
@@ -165,12 +165,12 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .page-section {
-	padding-bottom: 8pt;
-	border-bottom: 1pt solid color-mix(in srgb, var(--page-text-color) 12%, transparent);
+  padding-bottom: 8pt;
+  border-bottom: 1pt solid color-mix(in srgb, var(--page-text-color) 12%, transparent);
 }
 
 .page-section:last-child {
-	border-bottom: none;
+  border-bottom: none;
 }
 ```
 
@@ -178,8 +178,8 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .section-item-metadata {
-	font-size: calc(var(--page-body-font-size) * 0.9pt);
-	opacity: 0.75;
+  font-size: calc(var(--page-body-font-size) * 0.9pt);
+  opacity: 0.75;
 }
 ```
 
@@ -187,16 +187,16 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .section-item-description {
-	opacity: 0.95;
+  opacity: 0.95;
 }
 
 .section-item-description ul {
-	margin-left: 12pt;
-	padding-left: 0;
+  margin-left: 12pt;
+  padding-left: 0;
 }
 
 .section-item-description li {
-	margin: 2pt 0;
+  margin: 2pt 0;
 }
 ```
 
@@ -204,11 +204,11 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .section-item-website a {
-	display: inline-block;
-	padding: 3pt 9pt;
-	border-radius: 999pt;
-	border: 2pt solid color-mix(in srgb, var(--page-primary-color) 45%, transparent);
-	text-decoration: none;
+  display: inline-block;
+  padding: 3pt 9pt;
+  border-radius: 999pt;
+  border: 2pt solid color-mix(in srgb, var(--page-primary-color) 45%, transparent);
+  text-decoration: none;
 }
 ```
 
@@ -216,7 +216,7 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .page-picture {
-	display: none;
+  display: none;
 }
 ```
 
@@ -224,12 +224,12 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .page-header {
-	gap: 6pt;
-	padding-bottom: 6pt;
+  gap: 6pt;
+  padding-bottom: 6pt;
 }
 
 .basics-headline {
-	opacity: 0.8;
+  opacity: 0.8;
 }
 ```
 
@@ -237,16 +237,16 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .skills-item-name {
-	font-weight: 700;
+  font-weight: 700;
 }
 
 .skills-item-proficiency {
-	margin-top: 1pt;
+  margin-top: 1pt;
 }
 
 .skills-item-keywords {
-	display: block;
-	opacity: 0.85;
+  display: block;
+  opacity: 0.85;
 }
 ```
 
@@ -254,9 +254,9 @@ Example (tighten spacing without changing your layout settings):
 
 ```css
 .page-section-profiles {
-	background: color-mix(in srgb, var(--page-primary-color) 10%, transparent);
-	border-radius: 8pt;
-	padding: 8pt 12pt;
+  background: color-mix(in srgb, var(--page-primary-color) 10%, transparent);
+  border-radius: 8pt;
+  padding: 8pt 12pt;
 }
 ```
 

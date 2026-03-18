@@ -26,221 +26,221 @@ const formSchema = profileItemSchema;
 type FormValues = z.infer<typeof formSchema>;
 
 export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profiles.create">) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			id: generateId(),
-			hidden: data?.item?.hidden ?? false,
-			options: data?.item?.options ?? { showLinkInTitle: false },
-			icon: data?.item?.icon ?? "acorn",
-			network: data?.item?.network ?? "",
-			username: data?.item?.username ?? "",
-			website: data?.item?.website ?? { url: "", label: "" },
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: generateId(),
+      hidden: data?.item?.hidden ?? false,
+      options: data?.item?.options ?? { showLinkInTitle: false },
+      icon: data?.item?.icon ?? "acorn",
+      network: data?.item?.network ?? "",
+      username: data?.item?.username ?? "",
+      website: data?.item?.website ?? { url: "", label: "" },
+    },
+  });
 
-	const onSubmit = (formData: FormValues) => {
-		updateResumeData((draft) => {
-			if (data?.customSectionId) {
-				const section = draft.customSections.find((s) => s.id === data.customSectionId);
-				if (section) section.items.push(formData);
-			} else {
-				draft.sections.profiles.items.push(formData);
-			}
-		});
-		closeDialog();
-	};
+  const onSubmit = (formData: FormValues) => {
+    updateResumeData((draft) => {
+      if (data?.customSectionId) {
+        const section = draft.customSections.find((s) => s.id === data.customSectionId);
+        if (section) section.items.push(formData);
+      } else {
+        draft.sections.profiles.items.push(formData);
+      }
+    });
+    closeDialog();
+  };
 
-	const { blockEvents, requestClose } = useFormBlocker(form);
+  const { blockEvents, requestClose } = useFormBlocker(form);
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<PlusIcon />
-					<Trans>Create a new profile</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <PlusIcon />
+          <Trans>Create a new profile</Trans>
+        </DialogTitle>
+        <DialogDescription />
+      </DialogHeader>
 
-			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<ProfileForm />
+      <Form {...form}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <ProfileForm />
 
-					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
-						</Button>
+          <DialogFooter className="sm:col-span-full">
+            <Button variant="ghost" onClick={requestClose}>
+              <Trans>Cancel</Trans>
+            </Button>
 
-						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Create</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Trans>Create</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
 
 export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profiles.update">) {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
-	const updateResumeData = useResumeStore((state) => state.updateResumeData);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const updateResumeData = useResumeStore((state) => state.updateResumeData);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			id: data.item.id,
-			hidden: data.item.hidden,
-			options: data.item.options ?? { showLinkInTitle: false },
-			icon: data.item.icon,
-			network: data.item.network,
-			username: data.item.username,
-			website: data.item.website,
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: data.item.id,
+      hidden: data.item.hidden,
+      options: data.item.options ?? { showLinkInTitle: false },
+      icon: data.item.icon,
+      network: data.item.network,
+      username: data.item.username,
+      website: data.item.website,
+    },
+  });
 
-	const onSubmit = (formData: FormValues) => {
-		updateResumeData((draft) => {
-			if (data?.customSectionId) {
-				const section = draft.customSections.find((s) => s.id === data.customSectionId);
-				if (!section) return;
-				const index = section.items.findIndex((item) => item.id === formData.id);
-				if (index !== -1) section.items[index] = formData;
-			} else {
-				const index = draft.sections.profiles.items.findIndex((item) => item.id === formData.id);
-				if (index !== -1) draft.sections.profiles.items[index] = formData;
-			}
-		});
-		closeDialog();
-	};
+  const onSubmit = (formData: FormValues) => {
+    updateResumeData((draft) => {
+      if (data?.customSectionId) {
+        const section = draft.customSections.find((s) => s.id === data.customSectionId);
+        if (!section) return;
+        const index = section.items.findIndex((item) => item.id === formData.id);
+        if (index !== -1) section.items[index] = formData;
+      } else {
+        const index = draft.sections.profiles.items.findIndex((item) => item.id === formData.id);
+        if (index !== -1) draft.sections.profiles.items[index] = formData;
+      }
+    });
+    closeDialog();
+  };
 
-	const { blockEvents, requestClose } = useFormBlocker(form);
+  const { blockEvents, requestClose } = useFormBlocker(form);
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<PencilSimpleLineIcon />
-					<Trans>Update an existing profile</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <PencilSimpleLineIcon />
+          <Trans>Update an existing profile</Trans>
+        </DialogTitle>
+        <DialogDescription />
+      </DialogHeader>
 
-			<Form {...form}>
-				<form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-					<ProfileForm />
+      <Form {...form}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <ProfileForm />
 
-					<DialogFooter className="sm:col-span-full">
-						<Button variant="ghost" onClick={requestClose}>
-							<Trans>Cancel</Trans>
-						</Button>
+          <DialogFooter className="sm:col-span-full">
+            <Button variant="ghost" onClick={requestClose}>
+              <Trans>Cancel</Trans>
+            </Button>
 
-						<Button type="submit" disabled={form.formState.isSubmitting}>
-							<Trans>Save Changes</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Trans>Save Changes</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
 
 function ProfileForm() {
-	const form = useFormContext<FormValues>();
-	const networkState = useFormState({ control: form.control, name: "network" });
+  const form = useFormContext<FormValues>();
+  const networkState = useFormState({ control: form.control, name: "network" });
 
-	const isNetworkInvalid = useMemo(() => {
-		return networkState.errors && Object.keys(networkState.errors).length > 0;
-	}, [networkState]);
+  const isNetworkInvalid = useMemo(() => {
+    return networkState.errors && Object.keys(networkState.errors).length > 0;
+  }, [networkState]);
 
-	return (
-		<>
-			<div className={cn("flex items-end", isNetworkInvalid && "items-center")}>
-				<FormField
-					control={form.control}
-					name={"icon"}
-					render={({ field }) => (
-						<FormItem className="shrink-0">
-							<FormControl
-								render={
-									<IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
-								}
-							/>
-						</FormItem>
-					)}
-				/>
+  return (
+    <>
+      <div className={cn("flex items-end", isNetworkInvalid && "items-center")}>
+        <FormField
+          control={form.control}
+          name={"icon"}
+          render={({ field }) => (
+            <FormItem className="shrink-0">
+              <FormControl
+                render={
+                  <IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
+                }
+              />
+            </FormItem>
+          )}
+        />
 
-				<FormField
-					control={form.control}
-					name="network"
-					render={({ field }) => (
-						<FormItem className="flex-1">
-							<FormLabel>
-								<Trans>Network</Trans>
-							</FormLabel>
-							<FormControl render={<Input className="rounded-l-none!" {...field} />} />
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			</div>
+        <FormField
+          control={form.control}
+          name="network"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>
+                <Trans>Network</Trans>
+              </FormLabel>
+              <FormControl render={<Input className="rounded-l-none!" {...field} />} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
 
-			<FormField
-				control={form.control}
-				name="username"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>
-							<Trans>Username</Trans>
-						</FormLabel>
-						<InputGroup>
-							<InputGroupAddon align="inline-start">
-								<InputGroupText>
-									<AtIcon />
-								</InputGroupText>
-							</InputGroupAddon>
+      <FormField
+        control={form.control}
+        name="username"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              <Trans>Username</Trans>
+            </FormLabel>
+            <InputGroup>
+              <InputGroupAddon align="inline-start">
+                <InputGroupText>
+                  <AtIcon />
+                </InputGroupText>
+              </InputGroupAddon>
 
-							<FormControl render={<InputGroupInput {...field} />} />
-						</InputGroup>
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+              <FormControl render={<InputGroupInput {...field} />} />
+            </InputGroup>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="website"
-				render={({ field }) => (
-					<FormItem className="sm:col-span-full">
-						<FormLabel>
-							<Trans>Website</Trans>
-						</FormLabel>
-						<URLInput
-							{...field}
-							value={field.value}
-							onChange={field.onChange}
-							hideLabelButton={form.watch("options.showLinkInTitle")}
-						/>
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+      <FormField
+        control={form.control}
+        name="website"
+        render={({ field }) => (
+          <FormItem className="sm:col-span-full">
+            <FormLabel>
+              <Trans>Website</Trans>
+            </FormLabel>
+            <URLInput
+              {...field}
+              value={field.value}
+              onChange={field.onChange}
+              hideLabelButton={form.watch("options.showLinkInTitle")}
+            />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-			<FormField
-				control={form.control}
-				name="options.showLinkInTitle"
-				render={({ field }) => (
-					<FormItem className="flex items-center gap-x-2 sm:col-span-full">
-						<FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
-						<FormLabel className="mt-0!">
-							<Trans>Show link in title</Trans>
-						</FormLabel>
-					</FormItem>
-				)}
-			/>
-		</>
-	);
+      <FormField
+        control={form.control}
+        name="options.showLinkInTitle"
+        render={({ field }) => (
+          <FormItem className="flex items-center gap-x-2 sm:col-span-full">
+            <FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
+            <FormLabel className="mt-0!">
+              <Trans>Show link in title</Trans>
+            </FormLabel>
+          </FormItem>
+        )}
+      />
+    </>
+  );
 }

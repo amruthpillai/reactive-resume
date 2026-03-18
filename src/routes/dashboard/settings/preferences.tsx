@@ -13,48 +13,48 @@ import { Separator } from "@/components/ui/separator";
 import { DashboardHeader } from "../-components/header";
 
 export const Route = createFileRoute("/dashboard/settings/preferences")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 function RouteComponent() {
-	return (
-		<div className="space-y-4">
-			<DashboardHeader icon={GearSixIcon} title={t`Preferences`} />
+  return (
+    <div className="space-y-4">
+      <DashboardHeader icon={GearSixIcon} title={t`Preferences`} />
 
-			<Separator />
+      <Separator />
 
-			<motion.div
-				initial={{ opacity: 0, y: -20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.3 }}
-				className="grid max-w-xl gap-6"
-			>
-				<div className="grid gap-1.5">
-					<Label className="mb-0.5">
-						<Trans>Theme</Trans>
-					</Label>
-					<ThemeCombobox />
-				</div>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="grid max-w-xl gap-6"
+      >
+        <div className="grid gap-1.5">
+          <Label className="mb-0.5">
+            <Trans>Theme</Trans>
+          </Label>
+          <ThemeCombobox />
+        </div>
 
-				<div className="grid gap-1.5">
-					<Label className="mb-0.5">
-						<Trans>Language</Trans>
-					</Label>
-					<LocaleCombobox />
-					<Button
-						size="sm"
-						variant="link"
-						nativeButton={false}
-						className="h-5 justify-start text-xs text-muted-foreground active:scale-100"
-						render={
-							<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
-								<Trans>Help translate the app to your language</Trans>
-								<ArrowRightIcon className="size-3" />
-							</a>
-						}
-					/>
-				</div>
-			</motion.div>
-		</div>
-	);
+        <div className="grid gap-1.5">
+          <Label className="mb-0.5">
+            <Trans>Language</Trans>
+          </Label>
+          <LocaleCombobox />
+          <Button
+            size="sm"
+            variant="link"
+            nativeButton={false}
+            className="h-5 justify-start text-xs text-muted-foreground active:scale-100"
+            render={
+              <a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
+                <Trans>Help translate the app to your language</Trans>
+                <ArrowRightIcon className="size-3" />
+              </a>
+            }
+          />
+        </div>
+      </motion.div>
+    </div>
+  );
 }

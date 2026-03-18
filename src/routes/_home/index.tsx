@@ -11,26 +11,26 @@ import { Templates } from "./-sections/templates";
 import { Testimonials } from "./-sections/testimonials";
 
 export const Route = createFileRoute("/_home/")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 function RouteComponent() {
-	return (
-		<main id="main-content" className="relative">
-			<Hero />
+  return (
+    <main id="main-content" className="relative">
+      <Hero />
 
-			<div className="container mx-auto px-4 sm:px-6 lg:px-12">
-				<div className="border-x border-border [&>section]:border-t [&>section]:border-border [&>section:first-child]:border-t-0">
-					<Statistics />
-					<Features />
-					<Templates />
-					<Testimonials />
-					<DonationBanner />
-					<FAQ />
-					<Prefooter />
-					<Footer />
-				</div>
-			</div>
-		</main>
-	);
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="border-x border-border [&>section]:border-t [&>section]:border-border [&>section:first-child]:border-t-0">
+          <Statistics />
+          <Features />
+          <Templates />
+          <Testimonials />
+          <DonationBanner />
+          <FAQ />
+          <Prefooter />
+          <Footer />
+        </div>
+      </div>
+    </main>
+  );
 }

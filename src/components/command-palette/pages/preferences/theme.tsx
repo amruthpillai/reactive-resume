@@ -8,25 +8,25 @@ import { useCommandPaletteStore } from "../../store";
 import { BaseCommandGroup } from "../base";
 
 export function ThemeCommandPage() {
-	const { setTheme } = useTheme();
-	const setOpen = useCommandPaletteStore((state) => state.setOpen);
+  const { setTheme } = useTheme();
+  const setOpen = useCommandPaletteStore((state) => state.setOpen);
 
-	const handleThemeChange = (theme: "light" | "dark") => {
-		setTheme(theme, { playSound: false });
-		setOpen(false);
-	};
+  const handleThemeChange = (theme: "light" | "dark") => {
+    setTheme(theme, { playSound: false });
+    setOpen(false);
+  };
 
-	return (
-		<BaseCommandGroup page="theme" heading={<Trans>Theme</Trans>}>
-			<CommandItem value="light" onSelect={() => handleThemeChange("light")}>
-				<SunIcon />
-				<Trans>Light theme</Trans>
-			</CommandItem>
+  return (
+    <BaseCommandGroup page="theme" heading={<Trans>Theme</Trans>}>
+      <CommandItem value="light" onSelect={() => handleThemeChange("light")}>
+        <SunIcon />
+        <Trans>Light theme</Trans>
+      </CommandItem>
 
-			<CommandItem value="dark" onSelect={() => handleThemeChange("dark")}>
-				<MoonIcon />
-				<Trans>Dark theme</Trans>
-			</CommandItem>
-		</BaseCommandGroup>
-	);
+      <CommandItem value="dark" onSelect={() => handleThemeChange("dark")}>
+        <MoonIcon />
+        <Trans>Dark theme</Trans>
+      </CommandItem>
+    </BaseCommandGroup>
+  );
 }

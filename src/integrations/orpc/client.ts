@@ -11,50 +11,50 @@ import { getLocale } from "@/utils/locale";
 import { logger } from "@/utils/logger";
 
 export const getORPCClient = createIsomorphicFn()
-	.server((): RouterClient<typeof router> => {
-		return createRouterClient(router, {
-			interceptors: [
-				onError((error) => {
-					logger.error("oRPC server client error", {
-						scope: "server",
-						error,
-					});
-				}),
-			],
-			context: async () => {
-				const locale = await getLocale();
-				const reqHeaders = getRequestHeaders();
+  .server((): RouterClient<typeof router> => {
+    return createRouterClient(router, {
+      interceptors: [
+        onError((error) => {
+          logger.error("oRPC server client error", {
+            scope: "server",
+            error,
+          });
+        }),
+      ],
+      context: async () => {
+        const locale = await getLocale();
+        const reqHeaders = getRequestHeaders();
 
-				// Add a custom header to identify server-side calls
-				reqHeaders.set("x-server-side-call", "true");
+        // Add a custom header to identify server-side calls
+        reqHeaders.set("x-server-side-call", "true");
 
-				return { locale, reqHeaders };
-			},
-		});
-	})
-	.client((): RouterClient<typeof router> => {
-		const link = new RPCLink({
-			url: `${window.location.origin}/api/rpc`,
-			fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
-			plugins: [
-				new BatchLinkPlugin({
-					mode: typeof window === "undefined" ? "buffered" : "streaming",
-					groups: [{ condition: () => true, context: {} }],
-				}),
-			],
-			interceptors: [
-				onError((error) => {
-					if (error instanceof DOMException && error.name === "AbortError") return;
-					logger.error("oRPC browser client error", {
-						scope: "client",
-						error,
-					});
-				}),
-			],
-		});
+        return { locale, reqHeaders };
+      },
+    });
+  })
+  .client((): RouterClient<typeof router> => {
+    const link = new RPCLink({
+      url: `${window.location.origin}/api/rpc`,
+      fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
+      plugins: [
+        new BatchLinkPlugin({
+          mode: typeof window === "undefined" ? "buffered" : "streaming",
+          groups: [{ condition: () => true, context: {} }],
+        }),
+      ],
+      interceptors: [
+        onError((error) => {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+          logger.error("oRPC browser client error", {
+            scope: "client",
+            error,
+          });
+        }),
+      ],
+    });
 
-		return createORPCClient(link);
-	});
+    return createORPCClient(link);
+  });
 
 export const client = getORPCClient();
 

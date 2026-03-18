@@ -15,16 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
+      - uses: voidzero-dev/setup-vp@v1
         with:
-          node-version: lts/*
-          cache: pnpm
+          node-version: "24"
+          cache: true
 
-      - run: pnpm install --frozen-lockfile
+      - run: vp install
 
-      - run: pnpm run lint:fix
-      - run: pnpm run fmt:fix
+      - run: vp fmt --fix
+      - run: vp lint --fix
 
       - uses: autofix-ci/action@7a166d7532b277f34e16238930461bf77f9d7ed8

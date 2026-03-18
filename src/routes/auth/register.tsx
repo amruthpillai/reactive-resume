@@ -18,234 +18,234 @@ import { authClient } from "@/integrations/auth/client";
 import { SocialAuth } from "./-components/social-auth";
 
 export const Route = createFileRoute("/auth/register")({
-	component: RouteComponent,
-	beforeLoad: async ({ context }) => {
-		if (context.session) throw redirect({ to: "/dashboard", replace: true });
-		if (context.flags.disableSignups) throw redirect({ to: "/auth/login", replace: true });
-		return { session: null };
-	},
+  component: RouteComponent,
+  beforeLoad: async ({ context }) => {
+    if (context.session) throw redirect({ to: "/dashboard", replace: true });
+    if (context.flags.disableSignups) throw redirect({ to: "/auth/login", replace: true });
+    return { session: null };
+  },
 });
 
 const formSchema = z.object({
-	name: z.string().min(3).max(64),
-	username: z
-		.string()
-		.min(3)
-		.max(64)
-		.trim()
-		.toLowerCase()
-		.regex(/^[a-z0-9._-]+$/, {
-			message: "Username can only contain lowercase letters, numbers, dots, hyphens and underscores.",
-		}),
-	email: z.email().toLowerCase(),
-	password: z.string().min(6).max(64),
+  name: z.string().min(3).max(64),
+  username: z
+    .string()
+    .min(3)
+    .max(64)
+    .trim()
+    .toLowerCase()
+    .regex(/^[a-z0-9._-]+$/, {
+      message: "Username can only contain lowercase letters, numbers, dots, hyphens and underscores.",
+    }),
+  email: z.email().toLowerCase(),
+  password: z.string().min(6).max(64),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 function RouteComponent() {
-	const [submitted, setSubmitted] = useState(false);
-	const [showPassword, toggleShowPassword] = useToggle(false);
-	const { flags } = Route.useRouteContext();
+  const [submitted, setSubmitted] = useState(false);
+  const [showPassword, toggleShowPassword] = useToggle(false);
+  const { flags } = Route.useRouteContext();
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: "",
-			username: "",
-			email: "",
-			password: "",
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+    },
+  });
 
-	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Signing up...`);
+  const onSubmit = async (data: FormValues) => {
+    const toastId = toast.loading(t`Signing up...`);
 
-		const { error } = await authClient.signUp.email({
-			name: data.name,
-			email: data.email,
-			password: data.password,
-			username: data.username,
-			displayUsername: data.username,
-			callbackURL: "/dashboard",
-		});
+    const { error } = await authClient.signUp.email({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      username: data.username,
+      displayUsername: data.username,
+      callbackURL: "/dashboard",
+    });
 
-		if (error) {
-			toast.error(error.message, { id: toastId });
-			return;
-		}
+    if (error) {
+      toast.error(error.message, { id: toastId });
+      return;
+    }
 
-		setSubmitted(true);
-		toast.dismiss(toastId);
-	};
+    setSubmitted(true);
+    toast.dismiss(toastId);
+  };
 
-	if (submitted) return <PostSignupScreen />;
+  if (submitted) return <PostSignupScreen />;
 
-	return (
-		<>
-			<div className="space-y-1 text-center">
-				<h1 className="text-2xl font-bold tracking-tight">
-					<Trans>Create a new account</Trans>
-				</h1>
+  return (
+    <>
+      <div className="space-y-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">
+          <Trans>Create a new account</Trans>
+        </h1>
 
-				<div className="text-muted-foreground">
-					<Trans>
-						Already have an account?{" "}
-						<Button
-							variant="link"
-							nativeButton={false}
-							className="h-auto gap-1.5 px-1! py-0"
-							render={
-								<Link to="/auth/login">
-									Sign in now <ArrowRightIcon />
-								</Link>
-							}
-						/>
-					</Trans>
-				</div>
-			</div>
+        <div className="text-muted-foreground">
+          <Trans>
+            Already have an account?{" "}
+            <Button
+              variant="link"
+              nativeButton={false}
+              className="h-auto gap-1.5 px-1! py-0"
+              render={
+                <Link to="/auth/login">
+                  Sign in now <ArrowRightIcon />
+                </Link>
+              }
+            />
+          </Trans>
+        </div>
+      </div>
 
-			{!flags.disableEmailAuth && (
-				<Form {...form}>
-					<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>
-										<Trans>Name</Trans>
-									</FormLabel>
-									<FormControl
-										render={
-											<Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
-										}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+      {!flags.disableEmailAuth && (
+        <Form {...form}>
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Name</Trans>
+                  </FormLabel>
+                  <FormControl
+                    render={
+                      <Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
+                    }
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-						<FormField
-							control={form.control}
-							name="username"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>
-										<Trans>Username</Trans>
-									</FormLabel>
-									<FormControl
-										render={
-											<Input
-												min={3}
-												max={64}
-												autoComplete="section-register username"
-												placeholder="john.doe"
-												className="lowercase"
-												{...field}
-											/>
-										}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Username</Trans>
+                  </FormLabel>
+                  <FormControl
+                    render={
+                      <Input
+                        min={3}
+                        max={64}
+                        autoComplete="section-register username"
+                        placeholder="john.doe"
+                        className="lowercase"
+                        {...field}
+                      />
+                    }
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-						<FormField
-							control={form.control}
-							name="email"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>
-										<Trans>Email Address</Trans>
-									</FormLabel>
-									<FormControl
-										render={
-											<Input
-												type="email"
-												autoComplete="section-register email"
-												placeholder="john.doe@example.com"
-												className="lowercase"
-												{...field}
-											/>
-										}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Email Address</Trans>
+                  </FormLabel>
+                  <FormControl
+                    render={
+                      <Input
+                        type="email"
+                        autoComplete="section-register email"
+                        placeholder="john.doe@example.com"
+                        className="lowercase"
+                        {...field}
+                      />
+                    }
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-						<FormField
-							control={form.control}
-							name="password"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>
-										<Trans>Password</Trans>
-									</FormLabel>
-									<div className="flex items-center gap-x-1.5">
-										<FormControl
-											render={
-												<Input
-													min={6}
-													max={64}
-													type={showPassword ? "text" : "password"}
-													autoComplete="section-register new-password"
-													{...field}
-												/>
-											}
-										/>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Password</Trans>
+                  </FormLabel>
+                  <div className="flex items-center gap-x-1.5">
+                    <FormControl
+                      render={
+                        <Input
+                          min={6}
+                          max={64}
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="section-register new-password"
+                          {...field}
+                        />
+                      }
+                    />
 
-										<Button size="icon" variant="ghost" onClick={toggleShowPassword}>
-											{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-										</Button>
-									</div>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+                    <Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+                      {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-						<Button type="submit" className="w-full">
-							<Trans>Sign up</Trans>
-						</Button>
-					</form>
-				</Form>
-			)}
+            <Button type="submit" className="w-full">
+              <Trans>Sign up</Trans>
+            </Button>
+          </form>
+        </Form>
+      )}
 
-			<SocialAuth />
-		</>
-	);
+      <SocialAuth />
+    </>
+  );
 }
 
 function PostSignupScreen() {
-	return (
-		<>
-			<div className="space-y-1 text-center">
-				<h1 className="text-2xl font-bold tracking-tight">
-					<Trans>You've got mail!</Trans>
-				</h1>
-				<p className="text-muted-foreground">
-					<Trans>Check your email for a link to verify your account.</Trans>
-				</p>
-			</div>
+  return (
+    <>
+      <div className="space-y-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">
+          <Trans>You've got mail!</Trans>
+        </h1>
+        <p className="text-muted-foreground">
+          <Trans>Check your email for a link to verify your account.</Trans>
+        </p>
+      </div>
 
-			<Alert>
-				<AlertTitle>
-					<Trans>This step is optional, but recommended.</Trans>
-				</AlertTitle>
-				<AlertDescription>
-					<Trans>Verifying your email is required when resetting your password.</Trans>
-				</AlertDescription>
-			</Alert>
+      <Alert>
+        <AlertTitle>
+          <Trans>This step is optional, but recommended.</Trans>
+        </AlertTitle>
+        <AlertDescription>
+          <Trans>Verifying your email is required when resetting your password.</Trans>
+        </AlertDescription>
+      </Alert>
 
-			<Button
-				nativeButton={false}
-				render={
-					<Link to="/dashboard">
-						<Trans>Continue</Trans> <ArrowRightIcon />
-					</Link>
-				}
-			/>
-		</>
-	);
+      <Button
+        nativeButton={false}
+        render={
+          <Link to="/dashboard">
+            <Trans>Continue</Trans> <ArrowRightIcon />
+          </Link>
+        }
+      />
+    </>
+  );
 }

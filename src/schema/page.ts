@@ -1,29 +1,29 @@
 export const pageDimensionsAsPixels = {
-	a4: {
-		width: 794,
-		height: 1123,
-	},
-	letter: {
-		width: 816,
-		height: 1056,
-	},
-	"free-form": {
-		width: 794,
-		height: 1123, // used as minimum height
-	},
+  a4: {
+    width: 794,
+    height: 1123,
+  },
+  letter: {
+    width: 816,
+    height: 1056,
+  },
+  "free-form": {
+    width: 794,
+    height: 1123, // used as minimum height
+  },
 } as const;
 
 export const pageDimensionsAsMillimeters = {
-	a4: {
-		width: "210mm",
-		height: "297mm",
-	},
-	letter: {
-		width: "216mm",
-		height: "279mm",
-	},
-	"free-form": {
-		width: "210mm",
-		height: "297mm", // used as minimum height
-	},
+  a4: {
+    width: "210mm",
+    height: "297mm",
+  },
+  letter: {
+    width: "216mm",
+    height: "279mm",
+  },
+  "free-form": {
+    width: "210mm",
+    height: "297mm", // used as minimum height
+  },
 } as const;

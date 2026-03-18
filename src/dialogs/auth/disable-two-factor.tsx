@@ -18,95 +18,95 @@ import { authClient } from "@/integrations/auth/client";
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.object({
-	password: z.string().min(6).max(64),
+  password: z.string().min(6).max(64),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">) {
-	const router = useRouter();
-	const [showPassword, toggleShowPassword] = useToggle(false);
-	const closeDialog = useDialogStore((state) => state.closeDialog);
+  const router = useRouter();
+  const [showPassword, toggleShowPassword] = useToggle(false);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			password: "",
-		},
-	});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      password: "",
+    },
+  });
 
-	const { blockEvents } = useFormBlocker(form);
+  const { blockEvents } = useFormBlocker(form);
 
-	const onSubmit = async (data: FormValues) => {
-		const toastId = toast.loading(t`Disabling two-factor authentication...`);
+  const onSubmit = async (data: FormValues) => {
+    const toastId = toast.loading(t`Disabling two-factor authentication...`);
 
-		const { error } = await authClient.twoFactor.disable({ password: data.password });
+    const { error } = await authClient.twoFactor.disable({ password: data.password });
 
-		if (error) {
-			toast.error(error.message, { id: toastId });
-			return;
-		}
+    if (error) {
+      toast.error(error.message, { id: toastId });
+      return;
+    }
 
-		toast.success(t`Two-factor authentication has been disabled successfully.`, { id: toastId });
-		void router.invalidate();
-		closeDialog();
-		form.reset();
-	};
+    toast.success(t`Two-factor authentication has been disabled successfully.`, { id: toastId });
+    void router.invalidate();
+    closeDialog();
+    form.reset();
+  };
 
-	return (
-		<DialogContent {...blockEvents}>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
-					<LockOpenIcon />
-					<Trans>Disable Two-Factor Authentication</Trans>
-				</DialogTitle>
-				<DialogDescription>
-					<Trans>
-						Enter your password to disable two-factor authentication. Your account will be less secure without 2FA
-						enabled.
-					</Trans>
-				</DialogDescription>
-			</DialogHeader>
+  return (
+    <DialogContent {...blockEvents}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-x-2">
+          <LockOpenIcon />
+          <Trans>Disable Two-Factor Authentication</Trans>
+        </DialogTitle>
+        <DialogDescription>
+          <Trans>
+            Enter your password to disable two-factor authentication. Your account will be less secure without 2FA
+            enabled.
+          </Trans>
+        </DialogDescription>
+      </DialogHeader>
 
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-					<FormField
-						control={form.control}
-						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									<Trans>Password</Trans>
-								</FormLabel>
-								<div className="flex items-center gap-x-1.5">
-									<FormControl
-										render={
-											<Input
-												min={6}
-												max={64}
-												type={showPassword ? "text" : "password"}
-												autoComplete="current-password"
-												{...field}
-											/>
-										}
-									/>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans>Password</Trans>
+                </FormLabel>
+                <div className="flex items-center gap-x-1.5">
+                  <FormControl
+                    render={
+                      <Input
+                        min={6}
+                        max={64}
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
+                        {...field}
+                      />
+                    }
+                  />
 
-									<Button size="icon" variant="ghost" type="button" onClick={toggleShowPassword}>
-										{showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-									</Button>
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+                  <Button size="icon" variant="ghost" type="button" onClick={toggleShowPassword}>
+                    {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+                  </Button>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-					<DialogFooter>
-						<Button type="submit" variant="destructive">
-							<Trans>Disable 2FA</Trans>
-						</Button>
-					</DialogFooter>
-				</form>
-			</Form>
-		</DialogContent>
-	);
+          <DialogFooter>
+            <Button type="submit" variant="destructive">
+              <Trans>Disable 2FA</Trans>
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  );
 }
