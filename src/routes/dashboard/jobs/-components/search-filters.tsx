@@ -64,18 +64,22 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
 		<div className="space-y-3">
 			{/* Quick Filters */}
 			<div className="flex flex-wrap items-end gap-3">
-				<div className="flex items-center gap-x-2">
-					<Switch checked={filters.remoteOnly} onCheckedChange={(v) => update("remoteOnly", v)} />
-					<Label className="text-sm">
+				<div className="flex flex-col gap-y-1">
+					<Label className="text-muted-foreground text-xs">
 						<Trans>Remote</Trans>
 					</Label>
+					<div className="flex h-9 items-center">
+						<Switch checked={filters.remoteOnly} onCheckedChange={(v) => update("remoteOnly", v)} />
+					</div>
 				</div>
 
-				<div className="flex items-center gap-x-2">
-					<Switch checked={filters.directApplyOnly} onCheckedChange={(v) => update("directApplyOnly", v)} />
-					<Label className="text-sm">
+				<div className="flex flex-col gap-y-1">
+					<Label className="text-muted-foreground text-xs">
 						<Trans>Direct Apply</Trans>
 					</Label>
+					<div className="flex h-9 items-center">
+						<Switch checked={filters.directApplyOnly} onCheckedChange={(v) => update("directApplyOnly", v)} />
+					</div>
 				</div>
 
 				<div className="flex flex-col gap-y-1">
