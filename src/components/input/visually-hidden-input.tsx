@@ -2,8 +2,10 @@ import * as React from "react";
 
 type InputValue = string[] | string;
 
-interface VisuallyHiddenInputProps<T = InputValue>
-	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "checked" | "onReset"> {
+interface VisuallyHiddenInputProps<T = InputValue> extends Omit<
+	React.InputHTMLAttributes<HTMLInputElement>,
+	"value" | "checked" | "onReset"
+> {
 	value?: T;
 	checked?: boolean;
 	control: HTMLElement | null;
@@ -96,8 +98,7 @@ export function VisuallyHiddenInput<T = InputValue>(props: VisuallyHiddenInputPr
 				: value;
 
 		const descriptor = Object.getOwnPropertyDescriptor(inputProto, propertyKey);
-
-		const setter = descriptor?.set;
+		const setter = descriptor?.set?.bind(input);
 
 		if (prevValue !== currentValue && setter) {
 			const event = new Event(eventType, { bubbles });

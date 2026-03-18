@@ -9,6 +9,9 @@ import {
 	PencilSimpleLineIcon,
 	PlusIcon,
 } from "@phosphor-icons/react";
+
+import type { SectionType } from "@/schema/resume/data";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +30,6 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
-import type { SectionType } from "@/schema/resume/data";
 
 type Props = {
 	type: "summary" | SectionType;

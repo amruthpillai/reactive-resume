@@ -1,4 +1,5 @@
 import z from "zod";
+
 import { protectedProcedure, publicProcedure } from "../context";
 import { printerService } from "../services/printer";
 import { resumeService } from "../services/resume";

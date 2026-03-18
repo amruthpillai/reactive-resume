@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -67,7 +68,7 @@ function RouteComponent() {
 			{
 				onSuccess: () => {
 					toast.dismiss(toastId);
-					navigate({ to: redirect, replace: true });
+					void navigate({ to: redirect, replace: true });
 				},
 				onError: (error) => {
 					if (error instanceof ORPCError && error.code === "INVALID_PASSWORD") {
@@ -84,11 +85,11 @@ function RouteComponent() {
 	return (
 		<>
 			<div className="space-y-4 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>The resume you are trying to access is password protected</Trans>
 				</h1>
 
-				<div className="text-muted-foreground leading-relaxed">
+				<div className="leading-relaxed text-muted-foreground">
 					<Trans>Please enter the password shared with you by the owner of the resume to continue.</Trans>
 				</div>
 			</div>

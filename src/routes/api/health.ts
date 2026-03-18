@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { sql } from "drizzle-orm";
+
 import { db } from "@/integrations/drizzle/client";
 import { printerService } from "@/integrations/orpc/services/printer";
 import { getStorageService } from "@/integrations/orpc/services/storage";

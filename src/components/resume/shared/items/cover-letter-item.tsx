@@ -1,5 +1,6 @@
-import { TiptapContent } from "@/components/input/rich-input";
 import type { CoverLetterItem as CoverLetterItemType } from "@/schema/resume/data";
+
+import { TiptapContent } from "@/components/input/rich-input";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
 

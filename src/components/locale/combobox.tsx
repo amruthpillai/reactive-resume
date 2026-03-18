@@ -1,6 +1,8 @@
 import { i18n } from "@lingui/core";
 import { useLingui } from "@lingui/react";
+
 import { isLocale, type Locale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";
+
 import { Combobox, type SingleComboboxProps } from "../ui/combobox";
 
 type Props = Omit<SingleComboboxProps, "options" | "value" | "onValueChange">;

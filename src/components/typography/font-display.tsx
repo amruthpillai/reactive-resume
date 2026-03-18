@@ -1,5 +1,6 @@
 import { useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+
 import { cn } from "@/utils/style";
 
 interface FontDisplayProps {
@@ -22,9 +23,8 @@ export function FontDisplay({ name, url, type = "web" }: FontDisplayProps) {
 
 		const fontFace = new FontFace(previewName, `url(${url})`, { display: "swap" });
 
-		fontFace.load().then((loadedFace) => {
+		void fontFace.load().then((loadedFace) => {
 			if (!document.fonts.has(loadedFace)) document.fonts.add(loadedFace);
-
 			loadedFonts.add(previewName);
 			setIsLoaded(true);
 		});

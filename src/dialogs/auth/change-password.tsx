@@ -7,12 +7,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z
@@ -58,7 +60,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 		}
 
 		toast.success(t`Your password has been updated successfully.`, { id: toastId });
-		queryClient.invalidateQueries({ queryKey: ["auth", "accounts"] });
+		void queryClient.invalidateQueries({ queryKey: ["auth", "accounts"] });
 		closeDialog();
 	};
 

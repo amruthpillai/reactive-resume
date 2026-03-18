@@ -1,7 +1,9 @@
 import { type ColorResult, hsvaToRgbaString, rgbaStringToHsva } from "@uiw/color-convert";
 import ReactColorColorful from "@uiw/react-color-colorful";
 import { useMemo } from "react";
+
 import { useControlledState } from "@/hooks/use-controlled-state";
+
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type ColorPickerProps = {

@@ -1,10 +1,14 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
-import type z from "zod";
+
+import type { DialogProps } from "@/dialogs/store";
+
 import { ChipInput } from "@/components/input/chip-input";
 import { IconPicker } from "@/components/input/icon-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -13,7 +17,6 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { skillItemSchema } from "@/schema/resume/data";

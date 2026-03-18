@@ -1,11 +1,14 @@
 import { EnvelopeIcon, GlobeIcon, MapPinIcon, PhoneIcon } from "@phosphor-icons/react";
+
 import { cn } from "@/utils/style";
+
+import type { TemplateProps } from "./types";
+
 import { getSectionComponent } from "../shared/get-section-component";
 import { PageIcon } from "../shared/page-icon";
 import { PageLink } from "../shared/page-link";
 import { PagePicture } from "../shared/page-picture";
 import { useResumeStore } from "../store/resume";
-import type { TemplateProps } from "./types";
 
 const sectionClassName = cn();
 
@@ -43,7 +46,7 @@ function Header() {
 	const basics = useResumeStore((state) => state.resume.data.basics);
 
 	return (
-		<div className="page-header flex items-center gap-x-(--page-margin-x) border-(--page-primary-color) border-b pb-(--page-margin-y)">
+		<div className="page-header flex items-center gap-x-(--page-margin-x) border-b border-(--page-primary-color) pb-(--page-margin-y)">
 			<PagePicture />
 
 			<div className="page-basics space-y-(--page-gap-y)">

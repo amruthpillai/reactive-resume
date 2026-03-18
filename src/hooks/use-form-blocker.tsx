@@ -1,6 +1,8 @@
-import { t } from "@lingui/core/macro";
-import { useCallback } from "react";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
+
+import { t } from "@lingui/core/macro";
+import React, { useCallback } from "react";
+
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 
@@ -37,21 +39,22 @@ export function useFormBlocker<T extends FieldValues>(form: UseFormReturn<T>, op
 	}, [shouldBlock, closeDialog, confirm]);
 
 	const blockEvents = {
-		onEscapeKeyDown: (event: KeyboardEvent) => {
+		onEscapeKeyDown: (event: React.KeyboardEvent) => {
 			if (shouldBlock()) {
 				event.preventDefault();
-				requestClose();
+				void requestClose();
 			}
 		},
-		onPointerDownOutside: (event: Event) => {
+		onPointerDownOutside: (event: React.MouseEvent) => {
 			if (shouldBlock()) {
 				event.preventDefault();
-				requestClose();
+				void requestClose();
 			}
 		},
-		onInteractOutside: (event: Event) => {
+		onInteractOutside: (event: React.MouseEvent) => {
 			if (shouldBlock()) {
 				event.preventDefault();
+				void requestClose();
 			}
 		},
 	};

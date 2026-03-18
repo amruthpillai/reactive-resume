@@ -1,5 +1,7 @@
 import type { SectionItem } from "@/schema/resume/data";
+
 import { cn } from "@/utils/style";
+
 import { PageIcon } from "../page-icon";
 import { PageLevel } from "../page-level";
 

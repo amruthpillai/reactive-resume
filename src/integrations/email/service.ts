@@ -1,4 +1,5 @@
 import nodemailer, { type Transporter } from "nodemailer";
+
 import { env } from "@/utils/env";
 import { logger } from "@/utils/logger";
 
@@ -24,9 +25,7 @@ const getTransport = () => {
 		port: env.SMTP_PORT,
 		secure: env.SMTP_SECURE,
 		auth: {
-			// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 			user: env.SMTP_USER!,
-			// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 			pass: env.SMTP_PASS!,
 		},
 	});

@@ -4,9 +4,12 @@ import { DotsThreeIcon, DownloadSimpleIcon, PlusIcon } from "@phosphor-icons/rea
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo } from "react";
+
+import type { RouterOutput } from "@/integrations/orpc/client";
+
 import { Button } from "@/components/ui/button";
 import { useDialogStore } from "@/dialogs/store";
-import type { RouterOutput } from "@/integrations/orpc/client";
+
 import { ResumeDropdownMenu } from "./menus/dropdown-menu";
 
 type Resume = RouterOutput["resume"]["list"][number];

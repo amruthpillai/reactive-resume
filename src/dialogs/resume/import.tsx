@@ -8,6 +8,9 @@ import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
+import type { ResumeData } from "@/schema/resume/data";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
@@ -21,8 +24,8 @@ import { JSONResumeImporter } from "@/integrations/import/json-resume";
 import { ReactiveResumeJSONImporter } from "@/integrations/import/reactive-resume-json";
 import { ReactiveResumeV4JSONImporter } from "@/integrations/import/reactive-resume-v4-json";
 import { client, orpc } from "@/integrations/orpc/client";
-import type { ResumeData } from "@/schema/resume/data";
 import { cn } from "@/utils/style";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.discriminatedUnion("type", [
@@ -189,7 +192,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 			const id = await importResume({ data });
 			toast.success(t`Your resume has been imported successfully.`, { id: toastId, description: null });
 			closeDialog();
-			navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
+			void navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				toast.error(error.message, { id: toastId, description: null });

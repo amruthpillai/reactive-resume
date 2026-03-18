@@ -1,13 +1,16 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { FontFamilyCombobox, FontWeightCombobox, getNextWeights } from "@/components/typography/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
 import { typographySchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 export function TypographySectionBuilder() {
@@ -44,10 +47,10 @@ function TypographySectionForm() {
 
 	return (
 		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)} className="grid @md:grid-cols-2 grid-cols-1 gap-4">
+			<form onChange={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 @md:grid-cols-2">
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
-					<div className="shrink-0 font-medium text-base leading-none">
+					<div className="shrink-0 text-base leading-none font-medium">
 						<Trans context="Body Text (paragraphs, lists, etc.)">Body</Trans>
 					</div>
 					<Separator className="flex-1" />
@@ -70,10 +73,9 @@ function TypographySectionForm() {
 											if (value === null) return;
 											field.onChange(value);
 											const nextWeights = getNextWeights(value);
-											if (nextWeights !== null) {
-												form.setValue("body.fontWeights", nextWeights, { shouldDirty: true });
-											}
-											form.handleSubmit(onSubmit)();
+											if (!nextWeights) return;
+											form.setValue("body.fontWeights", nextWeights, { shouldDirty: true });
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}
@@ -98,7 +100,7 @@ function TypographySectionForm() {
 										fontFamily={bodyFontFamily}
 										onValueChange={(value) => {
 											field.onChange(value);
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}
@@ -176,7 +178,7 @@ function TypographySectionForm() {
 
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
-					<div className="shrink-0 font-medium text-base leading-none">
+					<div className="shrink-0 text-base leading-none font-medium">
 						<Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>
 					</div>
 					<Separator className="flex-1" />
@@ -199,10 +201,9 @@ function TypographySectionForm() {
 											if (value === null) return;
 											field.onChange(value);
 											const nextWeights = getNextWeights(value);
-											if (nextWeights !== null) {
-												form.setValue("heading.fontWeights", nextWeights, { shouldDirty: true });
-											}
-											form.handleSubmit(onSubmit)();
+											if (!nextWeights) return;
+											form.setValue("heading.fontWeights", nextWeights, { shouldDirty: true });
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}
@@ -227,7 +228,7 @@ function TypographySectionForm() {
 										fontFamily={headingFontFamily}
 										onValueChange={(value) => {
 											field.onChange(value);
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}

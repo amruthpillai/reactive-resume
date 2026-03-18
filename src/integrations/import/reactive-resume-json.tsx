@@ -1,4 +1,5 @@
 import { flattenError, ZodError } from "zod";
+
 import { type ResumeData, resumeDataSchema, sectionTypeSchema } from "@/schema/resume/data";
 
 const BUILT_IN_LAYOUT_SECTION_IDS = sectionTypeSchema.options.filter((section) => section !== "cover-letter");

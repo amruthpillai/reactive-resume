@@ -13,6 +13,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/integrations/orpc/client";
+
 import { useBuilderSidebar } from "../-store/sidebar";
 
 export function BuilderHeader() {
@@ -117,7 +119,7 @@ function BuilderHeaderDropdown() {
 			{
 				onSuccess: () => {
 					toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
-					navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
+					void navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
 				},
 				onError: (error) => {
 					toast.error(error.message, { id: toastId });

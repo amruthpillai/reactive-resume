@@ -1,6 +1,8 @@
 import { Trans } from "@lingui/react/macro";
 import { HandHeartIcon } from "@phosphor-icons/react";
+
 import { Button } from "@/components/ui/button";
+
 import { SectionBase } from "../shared/section-base";
 
 export function InformationSectionBuilder() {
@@ -28,7 +30,7 @@ export function InformationSectionBuilder() {
 					size="sm"
 					variant="default"
 					nativeButton={false}
-					className="mt-2 whitespace-normal px-4! text-xs"
+					className="mt-2 px-4! text-xs whitespace-normal"
 					render={
 						<a href="http://opencollective.com/reactive-resume" target="_blank" rel="noopener">
 							<HandHeartIcon />

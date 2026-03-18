@@ -15,6 +15,14 @@ import {
 } from "@phosphor-icons/react";
 import { Reorder, useDragControls } from "motion/react";
 import { useMemo } from "react";
+
+import type {
+	CustomSectionItem,
+	CustomSectionType,
+	SectionItem as SectionItemType,
+	SectionType,
+} from "@/schema/resume/data";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import {
@@ -30,12 +38,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
-import type {
-	CustomSectionItem,
-	CustomSectionType,
-	SectionItem as SectionItemType,
-	SectionType,
-} from "@/schema/resume/data";
 import {
 	addItemToSection,
 	createCustomSectionWithItem,
@@ -242,10 +244,10 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 			initial={{ opacity: 1, y: -10 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: -10 }}
-			className="group relative flex h-18 select-none border-b"
+			className="group relative flex h-18 border-b select-none"
 		>
 			<div
-				className="flex cursor-ns-resize touch-none items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 group-hover:opacity-100"
+				className="flex cursor-ns-resize touch-none items-center px-1.5 opacity-40 transition-[background-color,opacity] group-hover:opacity-100 hover:bg-secondary/40"
 				onPointerDown={(e) => {
 					e.preventDefault();
 					controls.start(e);
@@ -262,11 +264,11 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 				)}
 			>
 				<div className="line-clamp-1 font-medium">{title}</div>
-				{subtitle && <div className="line-clamp-1 text-muted-foreground text-xs">{subtitle}</div>}
+				{subtitle && <div className="line-clamp-1 text-xs text-muted-foreground">{subtitle}</div>}
 			</button>
 
 			<DropdownMenu>
-				<DropdownMenuTrigger className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] hover:bg-secondary/40 focus:outline-none focus-visible:ring-1 group-hover:opacity-100">
+				<DropdownMenuTrigger className="flex cursor-context-menu items-center px-1.5 opacity-40 transition-[background-color,opacity] group-hover:opacity-100 hover:bg-secondary/40 focus:outline-none focus-visible:ring-1">
 					<DotsThreeVerticalIcon />
 				</DropdownMenuTrigger>
 

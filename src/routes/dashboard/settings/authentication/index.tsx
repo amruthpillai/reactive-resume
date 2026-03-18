@@ -2,7 +2,9 @@ import { t } from "@lingui/core/macro";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
+
 import { Separator } from "@/components/ui/separator";
+
 import { DashboardHeader } from "../../-components/header";
 import { useEnabledProviders } from "./-components/hooks";
 import { PasswordSection } from "./-components/password";

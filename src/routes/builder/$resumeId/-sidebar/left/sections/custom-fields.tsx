@@ -1,15 +1,18 @@
+import type z from "zod";
+
 import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, LinkIcon, ListPlusIcon, XIcon } from "@phosphor-icons/react";
 import { Reorder, useDragControls } from "motion/react";
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
-import type z from "zod";
+
+import type { basicsSchema } from "@/schema/resume/data";
+
 import { IconPicker } from "@/components/input/icon-picker";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import type { basicsSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
 type FormValues = z.infer<typeof basicsSchema>;
@@ -34,17 +37,17 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 		const currentFieldsMap = Object.fromEntries(customFields.map((f) => [f.id, f]));
 		const reordered = newFields.map((field) => currentFieldsMap[field.id] ?? field);
 		form.setValue("customFields", reordered);
-		form.handleSubmit(onSubmit)();
+		void form.handleSubmit(onSubmit)();
 	}
 
 	function handleRemove(index: number) {
 		customFieldsArray.remove(index);
-		form.handleSubmit(onSubmit)();
+		void form.handleSubmit(onSubmit)();
 	}
 
 	function handleAdd() {
 		customFieldsArray.append({ id: generateId(), icon: "acorn", text: "", link: "" });
-		form.handleSubmit(onSubmit)();
+		void form.handleSubmit(onSubmit)();
 	}
 
 	return (
@@ -63,7 +66,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 											className="rounded-r-none! border-e-0!"
 											onChange={(icon) => {
 												field.onChange(icon);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										/>
 									}
@@ -84,7 +87,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 											className="rounded-l-none!"
 											onChange={(e) => {
 												field.onChange(e.target.value);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										/>
 									}
@@ -104,7 +107,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 
 						<PopoverContent align="center">
 							<div className="flex flex-col gap-y-1.5">
-								<Label htmlFor={`customFields.${index}.link`} className="text-muted-foreground text-xs">
+								<Label htmlFor={`customFields.${index}.link`} className="text-xs text-muted-foreground">
 									<Trans>Enter the URL to link to</Trans>
 								</Label>
 
@@ -119,7 +122,7 @@ export function CustomFieldsSection({ onSubmit }: Props) {
 											placeholder="Must start with https://"
 											onChange={(e) => {
 												field.onChange(e.target.value);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										/>
 									)}

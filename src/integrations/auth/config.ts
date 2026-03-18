@@ -1,16 +1,19 @@
+import type { GenericOAuthConfig } from "better-auth/plugins";
+
 import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { dash } from "@better-auth/infra";
 import { BetterAuthError, betterAuth } from "better-auth";
-import type { GenericOAuthConfig } from "better-auth/plugins";
 import { openAPI } from "better-auth/plugins";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
 import { and, eq, or } from "drizzle-orm";
+
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
 import { generateId, toUsername } from "@/utils/string";
+
 import { schema } from "../drizzle";
 import { db } from "../drizzle/client";
 import { sendEmail } from "../email/service";
@@ -159,9 +162,7 @@ const getAuthConfig = () => {
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GOOGLE_CLIENT_ID!,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GOOGLE_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
 					const name = profile.name ?? profile.email.split("@")[0];
@@ -180,9 +181,7 @@ const getAuthConfig = () => {
 			github: {
 				enabled: !!env.GITHUB_CLIENT_ID && !!env.GITHUB_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GITHUB_CLIENT_ID!,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GITHUB_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
 					const name = profile.name ?? profile.login ?? String(profile.id);

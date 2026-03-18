@@ -1,5 +1,6 @@
 import { useRouter } from "@tanstack/react-router";
 import { createContext, type PropsWithChildren, use } from "react";
+
 import { setThemeServerFn, type Theme } from "@/utils/theme";
 
 type ThemeContextValue = {
@@ -20,7 +21,7 @@ export function ThemeProvider({ children, theme }: Props) {
 
 		document.documentElement.classList.toggle("dark", value === "dark");
 		await setThemeServerFn({ data: value });
-		router.invalidate();
+		void router.invalidate();
 
 		if (!playSound) return;
 
@@ -34,7 +35,7 @@ export function ThemeProvider({ children, theme }: Props) {
 	}
 
 	function toggleTheme(options: { playSound?: boolean } = {}) {
-		setTheme(theme === "dark" ? "light" : "dark", options);
+		void setTheme(theme === "dark" ? "light" : "dark", options);
 	}
 
 	return <ThemeContext value={{ theme, setTheme, toggleTheme }}>{children}</ThemeContext>;

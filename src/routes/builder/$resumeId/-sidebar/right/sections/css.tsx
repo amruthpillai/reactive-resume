@@ -1,14 +1,17 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { lazy, Suspense } from "react";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { useTheme } from "@/components/theme/provider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { metadataSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 const CSSMonacoEditor = lazy(() => import("./css-editor"));
@@ -58,7 +61,7 @@ function CSSSectionForm() {
 											checked={field.value}
 											onCheckedChange={(checked) => {
 												field.onChange(checked);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										/>
 									}
@@ -84,7 +87,7 @@ function CSSSectionForm() {
 												defaultValue={field.value}
 												onChange={(value) => {
 													field.onChange(value ?? "");
-													form.handleSubmit(onSubmit)();
+													void form.handleSubmit(onSubmit)();
 												}}
 											/>
 										</Suspense>

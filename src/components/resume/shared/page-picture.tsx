@@ -1,4 +1,5 @@
 import { cn } from "@/utils/style";
+
 import { useResumeStore } from "../store/resume";
 
 export function PagePicture({ className, style }: { className?: string; style?: React.CSSProperties }) {

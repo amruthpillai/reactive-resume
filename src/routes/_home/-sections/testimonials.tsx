@@ -41,7 +41,7 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
 			transition={{ type: "spring", stiffness: 300, damping: 20 }}
 		>
 			<div className="relative flex h-full flex-col rounded-xl border bg-card p-5 shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
-				<p className="flex-1 text-muted-foreground leading-relaxed">"{testimonial}"</p>
+				<p className="flex-1 leading-relaxed text-muted-foreground">"{testimonial}"</p>
 			</div>
 		</motion.div>
 	);
@@ -91,11 +91,11 @@ export function Testimonials() {
 				viewport={{ once: true }}
 				transition={{ duration: 0.6 }}
 			>
-				<h2 className="font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl">
+				<h2 className="text-2xl font-semibold tracking-tight md:text-4xl xl:text-5xl">
 					<Trans>Testimonials</Trans>
 				</h2>
 
-				<p className="max-w-4xl text-balance text-muted-foreground leading-relaxed">
+				<p className="max-w-4xl leading-relaxed text-balance text-muted-foreground">
 					<Trans>
 						A lot of people have written to me over the years to share their experiences with Reactive Resume and how it
 						has helped them, and I never get tired of reading them. If you have a story to share, let me know by sending

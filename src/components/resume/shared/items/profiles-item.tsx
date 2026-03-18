@@ -1,5 +1,7 @@
 import type { SectionItem } from "@/schema/resume/data";
+
 import { cn } from "@/utils/style";
+
 import { LinkedTitle } from "../linked-title";
 import { PageIcon } from "../page-icon";
 import { PageLink } from "../page-link";

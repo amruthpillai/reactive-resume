@@ -8,11 +8,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/integrations/auth/client";
+
 import { SocialAuth } from "./-components/social-auth";
 
 export const Route = createFileRoute("/auth/register")({
@@ -82,7 +84,7 @@ function RouteComponent() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Create a new account</Trans>
 				</h1>
 
@@ -219,7 +221,7 @@ function PostSignupScreen() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>You've got mail!</Trans>
 				</h1>
 				<p className="text-muted-foreground">

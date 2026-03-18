@@ -1,3 +1,6 @@
+import type { UIMessage } from "ai";
+import type { Operation } from "fast-json-patch";
+
 import { useChat } from "@ai-sdk/react";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -10,10 +13,9 @@ import {
 	StopIcon,
 	TrashSimpleIcon,
 } from "@phosphor-icons/react";
-import type { UIMessage } from "ai";
-import type { Operation } from "fast-json-patch";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,6 +23,7 @@ import { useAIStore } from "@/integrations/ai/store";
 import { client } from "@/integrations/orpc/client";
 import { applyResumePatches } from "@/utils/resume/patch";
 import { cn } from "@/utils/style";
+
 import { useResumeStore } from "../resume/store/resume";
 
 /**
@@ -39,7 +42,6 @@ function extractNewPatchOperations(
 		for (const part of message.parts) {
 			if (part.type !== "tool-patch_resume") continue;
 
-			// biome-ignore lint/suspicious/noExplicitAny: AI SDK tool parts have dynamic shapes
 			const toolPart = part as any;
 			if (toolPart.state !== "output-available") continue;
 
@@ -113,7 +115,7 @@ function ToolBadge({ state, operations }: { state: string; operations?: { op: st
 			<span
 				data-state={state}
 				className={cn(
-					"inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 font-medium text-[11px]",
+					"inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium",
 					"data-[state=output-available]:border-emerald-500/30 data-[state=output-available]:bg-emerald-500/10 data-[state=output-available]:text-emerald-600 dark:data-[state=output-available]:text-emerald-400",
 				)}
 			>
@@ -154,7 +156,7 @@ function MessageParts({ message }: { message: UIMessage }) {
 
 				if (part.type === "text" && part.text.trim()) {
 					return (
-						<p key={i} className="whitespace-pre-wrap text-[13px] leading-relaxed">
+						<p key={i} className="text-[13px] leading-relaxed whitespace-pre-wrap">
 							{part.text}
 						</p>
 					);
@@ -162,14 +164,13 @@ function MessageParts({ message }: { message: UIMessage }) {
 
 				if (part.type === "reasoning" && part.text.trim()) {
 					return (
-						<p key={i} className="whitespace-pre-wrap text-[11px] text-muted-foreground italic leading-relaxed">
+						<p key={i} className="text-[11px] leading-relaxed whitespace-pre-wrap text-muted-foreground italic">
 							{part.text}
 						</p>
 					);
 				}
 
 				if (part.type === "tool-patch_resume") {
-					// biome-ignore lint/suspicious/noExplicitAny: AI SDK tool parts have dynamic shapes
 					const toolPart = part as any;
 					const state = toolPart.state as string;
 					const operations = toolPart.input?.operations as { op: string; path: string }[] | undefined;
@@ -208,7 +209,6 @@ export function AIChat() {
 			if (msg.role !== "assistant") continue;
 			for (const part of msg.parts) {
 				if (part.type !== "tool-patch_resume") continue;
-				// biome-ignore lint/suspicious/noExplicitAny: AI SDK tool parts have dynamic shapes
 				const toolPart = part as any;
 				if (toolPart.state === "output-available") {
 					processedToolCallIds.current.add(toolPart.toolCallId as string);
@@ -290,10 +290,10 @@ export function AIChat() {
 	}, [resumeId, setMessages]);
 
 	const handleSubmit = useCallback(
-		(e: React.SubmitEvent) => {
+		async (e: React.SubmitEvent) => {
 			e.preventDefault();
 			if (!input.trim() || status !== "ready") return;
-			sendMessage({ text: input });
+			await sendMessage({ text: input });
 			setInput("");
 		},
 		[input, status, sendMessage],
@@ -316,7 +316,7 @@ export function AIChat() {
 			<PopoverContent className="flex h-128 w-md flex-col gap-y-0 overflow-hidden p-0" side="top" align="center">
 				{/* Header with clear button */}
 				<div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
-					<p className="font-medium text-muted-foreground text-xs">
+					<p className="text-xs font-medium text-muted-foreground">
 						<Trans>AI Chat</Trans>
 					</p>
 					<Button
@@ -336,7 +336,7 @@ export function AIChat() {
 					<div className="flex flex-col gap-y-4 pt-4">
 						{messages.length === 0 && (
 							<div className="flex h-full items-center justify-center py-6">
-								<p className="text-center text-muted-foreground text-xs">
+								<p className="text-center text-xs text-muted-foreground">
 									<Trans>Ask me to update your resume...</Trans>
 								</p>
 							</div>

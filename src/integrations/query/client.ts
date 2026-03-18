@@ -29,7 +29,7 @@ export const getQueryClient = () => {
 		mutationCache: new MutationCache({
 			onSettled: (_1, _2, _3, _4, _5, context) => {
 				if (context?.meta?.noInvalidate) return;
-				queryClient.invalidateQueries();
+				void queryClient.invalidateQueries();
 			},
 		}),
 	});

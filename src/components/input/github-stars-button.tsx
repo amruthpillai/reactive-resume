@@ -1,8 +1,10 @@
 import { t } from "@lingui/core/macro";
 import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
+
 import { Button } from "@/components/ui/button";
 import { orpc } from "@/integrations/orpc/client";
+
 import { CountUp } from "../animation/count-up";
 
 export function GithubStarsButton() {

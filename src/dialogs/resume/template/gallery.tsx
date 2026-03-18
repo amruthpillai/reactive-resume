@@ -1,6 +1,9 @@
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { SlideshowIcon } from "@phosphor-icons/react";
+
+import type { Template } from "@/schema/templates";
+
 import { CometCard } from "@/components/animation/comet-card";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
@@ -8,8 +11,8 @@ import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/c
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { type DialogProps, useDialogStore } from "@/dialogs/store";
-import type { Template } from "@/schema/templates";
 import { cn } from "@/utils/style";
+
 import { type TemplateMetadata, templates } from "./data";
 
 export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">) {
@@ -87,7 +90,7 @@ function TemplateCard({ id, metadata, isActive, onSelect }: TemplateCardProps) {
 				/>
 
 				<div className="flex items-center justify-center">
-					<span className="font-bold leading-loose tracking-tight">{metadata.name}</span>
+					<span className="leading-loose font-bold tracking-tight">{metadata.name}</span>
 				</div>
 
 				<HoverCardContent
@@ -98,7 +101,7 @@ function TemplateCard({ id, metadata, isActive, onSelect }: TemplateCardProps) {
 					className="pointer-events-none! flex w-80 flex-col justify-between space-y-6 rounded-md bg-background/80 p-4 pb-6"
 				>
 					<div className="space-y-1">
-						<h3 className="font-semibold text-lg">{metadata.name}</h3>
+						<h3 className="text-lg font-semibold">{metadata.name}</h3>
 						<p className="text-muted-foreground">{i18n.t(metadata.description)}</p>
 					</div>
 

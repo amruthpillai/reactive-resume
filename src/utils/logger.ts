@@ -12,6 +12,7 @@ type SerializedError = {
 
 function serializeError(error: unknown): SerializedError | undefined {
 	if (!error) return undefined;
+
 	if (error instanceof Error) {
 		return {
 			name: error.name,
@@ -19,21 +20,24 @@ function serializeError(error: unknown): SerializedError | undefined {
 			stack: error.stack,
 		};
 	}
+
 	if (typeof error === "string") {
 		return {
 			name: "Error",
 			message: error,
 		};
 	}
+
 	if (typeof error === "object") {
 		return {
 			name: "Error",
 			message: JSON.stringify(error),
 		};
 	}
+
 	return {
 		name: "Error",
-		message: String(error),
+		message: String(error as string),
 	};
 }
 

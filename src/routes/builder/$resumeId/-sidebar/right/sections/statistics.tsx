@@ -3,9 +3,11 @@ import { Trans } from "@lingui/react/macro";
 import { InfoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
+
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { orpc } from "@/integrations/orpc/client";
+
 import { SectionBase } from "../shared/section-base";
 
 export function StatisticsSectionBuilder() {
@@ -37,7 +39,7 @@ export function StatisticsSectionBuilder() {
 				</AccordionItem>
 
 				<AccordionItem value="isPublic">
-					<AccordionContent className="grid @md:grid-cols-2 grid-cols-1 gap-4 pb-0">
+					<AccordionContent className="grid grid-cols-1 gap-4 pb-0 @md:grid-cols-2">
 						<StatisticsItem
 							label={t`Views`}
 							value={statistics.views}
@@ -67,9 +69,9 @@ type StatisticsItemProps = {
 function StatisticsItem({ label, value, timestamp }: StatisticsItemProps) {
 	return (
 		<div>
-			<h4 className="mb-1 font-bold font-mono text-4xl">{value}</h4>
-			<p className="font-medium text-muted-foreground leading-none">{label}</p>
-			{timestamp && <span className="text-muted-foreground text-xs">{timestamp}</span>}
+			<h4 className="mb-1 font-mono text-4xl font-bold">{value}</h4>
+			<p className="leading-none font-medium text-muted-foreground">{label}</p>
+			{timestamp && <span className="text-xs text-muted-foreground">{timestamp}</span>}
 		</div>
 	);
 }

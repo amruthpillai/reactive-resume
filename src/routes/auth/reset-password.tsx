@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -59,13 +60,14 @@ function RouteComponent() {
 		toast.success(t`Your password has been reset successfully. You can now sign in with your new password.`, {
 			id: toastId,
 		});
-		navigate({ to: "/auth/login" });
+
+		void navigate({ to: "/auth/login" });
 	};
 
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Reset your password</Trans>
 				</h1>
 

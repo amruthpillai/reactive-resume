@@ -3,6 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, BookIcon, SparkleIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
+
 import { CometCard } from "@/components/animation/comet-card";
 import { Spotlight } from "@/components/animation/spotlight";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +22,7 @@ export function Hero() {
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 1.5, ease: "easeOut" }}
 			>
-				<CometCard glareOpacity={0} className="relative -mb-12 3xl:max-w-7xl max-w-4xl px-8 md:-mb-24 md:px-12 lg:px-0">
+				<CometCard glareOpacity={0} className="3xl:max-w-7xl relative -mb-12 max-w-4xl px-8 md:-mb-24 md:px-12 lg:px-0">
 					<video
 						loop
 						muted
@@ -36,12 +37,12 @@ export function Hero() {
 
 					<div
 						aria-hidden="true"
-						className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-40% via-transparent to-background"
+						className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent via-40% to-background"
 					/>
 				</CometCard>
 			</motion.div>
 
-			<div className="relative z-10 flex max-w-2xl flex-col items-center gap-y-6 px-4 xs:px-0 text-center">
+			<div className="xs:px-0 relative z-10 flex max-w-2xl flex-col items-center gap-y-6 px-4 text-center">
 				{/* Badge */}
 				<motion.a
 					initial={{ opacity: 0, y: 20 }}
@@ -64,8 +65,8 @@ export function Hero() {
 					transition={{ duration: 0.6, delay: 1 }}
 				>
 					<Trans>
-						<p className="font-medium text-muted-foreground tracking-tight md:text-lg">Finally,</p>
-						<h1 className="mt-1 font-bold text-4xl tracking-tight md:text-5xl lg:text-6xl">
+						<p className="font-medium tracking-tight text-muted-foreground md:text-lg">Finally,</p>
+						<h1 className="mt-1 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
 							A free and open-source resume builder
 						</h1>
 					</Trans>
@@ -73,7 +74,7 @@ export function Hero() {
 
 				{/* Description */}
 				<motion.p
-					className="max-w-xl text-base text-muted-foreground leading-relaxed md:text-lg"
+					className="max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 1.2 }}

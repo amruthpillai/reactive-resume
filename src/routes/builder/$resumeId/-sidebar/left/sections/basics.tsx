@@ -1,12 +1,15 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { basicsSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 import { CustomFieldsSection } from "./custom-fields";
 

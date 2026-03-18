@@ -10,6 +10,7 @@ import {
 	WrenchIcon,
 } from "@phosphor-icons/react";
 import { motion } from "motion/react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/style";
 
@@ -115,7 +116,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }: FeatureCardProps
 			<Icon size={24} weight="light" />
 		</motion.div>
 		<h3 className="font-semibold tracking-tight">{title}</h3>
-		<p className="text-muted-foreground leading-relaxed">{description}</p>
+		<p className="leading-relaxed text-muted-foreground">{description}</p>
 	</motion.div>
 );
 
@@ -135,7 +136,7 @@ export const DonationBanner = () => (
 			<div className="absolute -inset-e-32 bottom-1/4 size-64 rounded-full bg-rose-500/5 blur-3xl" />
 		</div>
 
-		<div className="container relative px-8">
+		<div className="relative container px-8">
 			{/* Header */}
 			<motion.div
 				className="flex flex-col items-center text-center"
@@ -151,7 +152,7 @@ export const DonationBanner = () => (
 				</div>
 
 				<motion.h2
-					className="mb-6 font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl"
+					className="mb-6 text-2xl font-semibold tracking-tight md:text-4xl xl:text-5xl"
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true }}
@@ -161,7 +162,7 @@ export const DonationBanner = () => (
 				</motion.h2>
 
 				<motion.p
-					className="max-w-3xl text-base text-muted-foreground leading-relaxed"
+					className="max-w-3xl text-base leading-relaxed text-muted-foreground"
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true }}
@@ -233,7 +234,7 @@ export const DonationBanner = () => (
 
 			{/* Footer note */}
 			<motion.p
-				className="mt-8 text-center text-muted-foreground leading-relaxed"
+				className="mt-8 text-center leading-relaxed text-muted-foreground"
 				initial={{ opacity: 0 }}
 				whileInView={{ opacity: 1 }}
 				viewport={{ once: true }}

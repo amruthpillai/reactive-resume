@@ -1,6 +1,8 @@
 import { t } from "@lingui/core/macro";
 import { DownloadSimpleIcon } from "@phosphor-icons/react";
+
 import { useDialogStore } from "@/dialogs/store";
+
 import { BaseCard } from "./base-card";
 
 export function ImportResumeCard() {

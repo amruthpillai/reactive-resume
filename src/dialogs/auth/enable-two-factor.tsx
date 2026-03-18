@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { match } from "ts-pattern";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -18,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const enableFormSchema = z.object({
@@ -106,7 +108,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
 	const onConfirmBackup = () => {
 		toast.success(t`Two-factor authentication has been setup successfully.`);
-		router.invalidate();
+		void router.invalidate();
 		closeDialog();
 		onReset();
 	};

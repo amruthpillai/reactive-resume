@@ -1,3 +1,5 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -6,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type z from "zod";
+
 import { ColorPicker } from "@/components/input/color-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { orpc } from "@/integrations/orpc/client";
 import { pictureSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 export function PictureSectionBuilder() {
@@ -65,7 +68,7 @@ function PictureSectionForm() {
 		if (pictureOrigin === appOrigin) deleteFile({ filename });
 
 		form.setValue("url", "", { shouldDirty: true });
-		form.handleSubmit(onSubmit)();
+		void form.handleSubmit(onSubmit)();
 	};
 
 	const onUploadPicture = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +80,7 @@ function PictureSectionForm() {
 		uploadFile(file, {
 			onSuccess: ({ url }) => {
 				form.setValue("url", url, { shouldDirty: true });
-				form.handleSubmit(onSubmit)();
+				void form.handleSubmit(onSubmit)();
 				toast.dismiss(toastId);
 				if (fileInputRef.current) fileInputRef.current.value = "";
 			},
@@ -101,7 +104,7 @@ function PictureSectionForm() {
 							<img
 								alt=""
 								src={picture.url}
-								className="fade-in relative z-10 size-full animate-in rounded-md object-cover transition-opacity group-hover/picture:opacity-20"
+								className="relative z-10 size-full animate-in rounded-md object-cover transition-opacity fade-in group-hover/picture:opacity-20"
 							/>
 						)}
 
@@ -126,7 +129,7 @@ function PictureSectionForm() {
 										variant="ghost"
 										onClick={() => {
 											form.setValue("hidden", !picture.hidden, { shouldDirty: true });
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									>
 										{picture.hidden ? <EyeSlashIcon /> : <EyeIcon />}
@@ -137,7 +140,7 @@ function PictureSectionForm() {
 					/>
 				</div>
 
-				<div className="grid @md:grid-cols-2 grid-cols-1 gap-4">
+				<div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
 					<FormField
 						control={form.control}
 						name="size"
@@ -235,7 +238,7 @@ function PictureSectionForm() {
 											title={t`Square`}
 											onClick={() => {
 												field.onChange(1);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="aspect-square min-h-3 min-w-3 border border-primary" />
@@ -246,7 +249,7 @@ function PictureSectionForm() {
 											title={t`Landscape`}
 											onClick={() => {
 												field.onChange(1.5);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="aspect-1.5/1 min-h-3 min-w-3 border border-primary" />
@@ -257,7 +260,7 @@ function PictureSectionForm() {
 											title={t`Portrait`}
 											onClick={() => {
 												field.onChange(0.5);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="aspect-1/1.5 min-h-3 min-w-3 border border-primary" />
@@ -303,7 +306,7 @@ function PictureSectionForm() {
 											title="0pt"
 											onClick={() => {
 												field.onChange(0);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="size-3 rounded-none border border-primary" />
@@ -314,7 +317,7 @@ function PictureSectionForm() {
 											title="10pt"
 											onClick={() => {
 												field.onChange(10);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="size-3 rounded-[10%] border border-primary" />
@@ -325,7 +328,7 @@ function PictureSectionForm() {
 											title="100pt"
 											onClick={() => {
 												field.onChange(100);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="size-3 rounded-full border border-primary" />
@@ -348,7 +351,7 @@ function PictureSectionForm() {
 												defaultValue={field.value}
 												onChange={(color) => {
 													field.onChange(color);
-													form.handleSubmit(onSubmit)();
+													void form.handleSubmit(onSubmit)();
 												}}
 											/>
 										}
@@ -402,7 +405,7 @@ function PictureSectionForm() {
 												defaultValue={field.value}
 												onChange={(color) => {
 													field.onChange(color);
-													form.handleSubmit(onSubmit)();
+													void form.handleSubmit(onSubmit)();
 												}}
 											/>
 										}

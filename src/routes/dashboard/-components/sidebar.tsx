@@ -1,4 +1,5 @@
 import type { MessageDescriptor } from "@lingui/core";
+
 import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
@@ -13,6 +14,7 @@ import {
 } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { Copyright } from "@/components/ui/copyright";
@@ -169,7 +171,7 @@ export function DashboardSidebar() {
 
 									<div className="transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ms-8 group-data-[collapsible=icon]:opacity-0">
 										<p className="font-medium">{session.user.name}</p>
-										<p className="text-muted-foreground text-xs">{session.user.email}</p>
+										<p className="text-xs text-muted-foreground">{session.user.email}</p>
 									</div>
 								</SidebarMenuButton>
 							)}
@@ -185,7 +187,7 @@ export function DashboardSidebar() {
 							animate={{ y: 0, height: "auto", opacity: 1 }}
 							exit={{ y: 50, height: 0, opacity: 0 }}
 						>
-							<Copyright className="wrap-break-word shrink-0 whitespace-normal p-2" />
+							<Copyright className="shrink-0 p-2 wrap-break-word whitespace-normal" />
 						</motion.div>
 					)}
 				</AnimatePresence>

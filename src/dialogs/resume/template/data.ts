@@ -1,5 +1,7 @@
 import type { MessageDescriptor } from "@lingui/core";
+
 import { msg } from "@lingui/core/macro";
+
 import type { Template } from "@/schema/templates";
 
 export type TemplateMetadata = {

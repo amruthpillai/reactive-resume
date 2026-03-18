@@ -10,6 +10,13 @@ import {
 } from "@phosphor-icons/react";
 import { AnimatePresence, Reorder } from "motion/react";
 import { match } from "ts-pattern";
+
+import type {
+	CustomSection,
+	CustomSectionItem as CustomSectionItemType,
+	CustomSectionType,
+} from "@/schema/resume/data";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,14 +34,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
-import type {
-	CustomSection,
-	CustomSectionItem as CustomSectionItemType,
-	CustomSectionType,
-} from "@/schema/resume/data";
 import { getSectionTitle } from "@/utils/resume/section";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
+
 import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
 
@@ -144,8 +147,8 @@ function CustomSectionContainer({ section }: { section: CustomSection }) {
 					<Badge variant="secondary" className="mb-1.5 rounded-sm">
 						{getSectionTitle(section.type)}
 					</Badge>
-					<span className="line-clamp-1 text-wrap font-medium text-base">{section.title}</span>
-					<span className="text-muted-foreground text-xs">
+					<span className="line-clamp-1 text-base font-medium text-wrap">{section.title}</span>
+					<span className="text-xs text-muted-foreground">
 						<Plural value={section.items.length} one="# item" other="# items" />
 					</span>
 				</button>

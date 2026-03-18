@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { motion } from "motion/react";
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/style";
@@ -69,7 +70,7 @@ export function FAQ() {
 		>
 			<motion.h2
 				className={cn(
-					"flex-1 font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl",
+					"flex-1 text-2xl font-semibold tracking-tight md:text-4xl xl:text-5xl",
 					"flex shrink-0 flex-wrap items-center gap-x-1.5 lg:flex-col lg:items-start",
 				)}
 				initial={{ opacity: 0, x: -20 }}
@@ -117,7 +118,7 @@ function FAQItemComponent({ item, index }: FAQItemComponentProps) {
 		>
 			<AccordionItem value={item.question} className="group border-t">
 				<AccordionTrigger className="py-5">{item.question}</AccordionTrigger>
-				<AccordionContent className="pb-5 text-muted-foreground leading-relaxed">{item.answer}</AccordionContent>
+				<AccordionContent className="pb-5 leading-relaxed text-muted-foreground">{item.answer}</AccordionContent>
 			</AccordionItem>
 		</motion.div>
 	);

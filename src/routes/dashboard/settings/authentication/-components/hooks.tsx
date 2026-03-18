@@ -1,12 +1,15 @@
+import type { ReactNode } from "react";
+
 import { t } from "@lingui/core/macro";
 import { GithubLogoIcon, GoogleLogoIcon, PasswordIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import type { ReactNode } from "react";
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
-import { authClient } from "@/integrations/auth/client";
+
 import type { AuthProvider } from "@/integrations/auth/types";
+
+import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
 
 /**

@@ -7,10 +7,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/integrations/auth/client";
+
 import { SocialAuth } from "./-components/social-auth";
 
 export const Route = createFileRoute("/auth/login")({
@@ -66,14 +68,14 @@ function RouteComponent() {
 			// Credential check passed, but the account still requires a 2FA verification step.
 			if (requiresTwoFactor) {
 				toast.dismiss(toastId);
-				navigate({ to: "/auth/verify-2fa", replace: true });
+				void navigate({ to: "/auth/verify-2fa", replace: true });
 				return;
 			}
 
 			// Refresh route context so protected routes can read the newly established session.
-			await router.invalidate();
 			toast.dismiss(toastId);
-			navigate({ to: "/dashboard", replace: true });
+			await router.invalidate();
+			void navigate({ to: "/dashboard", replace: true });
 		} catch {
 			toast.error(t`Failed to sign in. Please try again.`, { id: toastId });
 		}
@@ -82,7 +84,7 @@ function RouteComponent() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Sign in to your account</Trans>
 				</h1>
 

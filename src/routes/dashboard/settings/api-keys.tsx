@@ -5,11 +5,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { authClient } from "@/integrations/auth/client";
+
 import { DashboardHeader } from "../-components/header";
 
 export const Route = createFileRoute("/dashboard/settings/api-keys")({
@@ -52,7 +54,7 @@ function RouteComponent() {
 		}
 
 		toast.success(t`The API key has been deleted successfully.`, { id: toastId });
-		queryClient.invalidateQueries({ queryKey: ["auth", "api-keys"] });
+		void queryClient.invalidateQueries({ queryKey: ["auth", "api-keys"] });
 	};
 
 	return (
@@ -77,7 +79,7 @@ function RouteComponent() {
 							<Trans>How do I use the API?</Trans>
 						</h3>
 
-						<p className="text-muted-foreground leading-relaxed">
+						<p className="leading-relaxed text-muted-foreground">
 							<Trans>
 								Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find
 								detailed endpoints, request examples, and authentication methods.
@@ -123,7 +125,7 @@ function RouteComponent() {
 
 								<div className="flex-1 space-y-1">
 									<p className="font-mono text-xs">{key.start}...</p>
-									<div className="text-muted-foreground text-xs">
+									<div className="text-xs text-muted-foreground">
 										<Trans>Expires on {key.expiresAt?.toLocaleDateString()}</Trans>
 									</div>
 								</div>

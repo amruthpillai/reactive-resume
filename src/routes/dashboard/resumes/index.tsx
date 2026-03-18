@@ -9,11 +9,13 @@ import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 import z from "zod";
+
 import { Combobox } from "@/components/ui/combobox";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { orpc } from "@/integrations/orpc/client";
 import { cn } from "@/utils/style";
+
 import { DashboardHeader } from "../-components/header";
 import { GridView } from "./-components/grid-view";
 import { ListView } from "./-components/list-view";
@@ -60,9 +62,9 @@ function RouteComponent() {
 		];
 	}, [i18n]);
 
-	const onViewChange = (value: string) => {
-		setViewServerFn({ data: value as "grid" | "list" });
-		router.invalidate();
+	const onViewChange = async (value: string) => {
+		await setViewServerFn({ data: value as "grid" | "list" });
+		void router.invalidate();
 	};
 
 	return (
@@ -78,7 +80,7 @@ function RouteComponent() {
 					placeholder={t`Sort by`}
 					onValueChange={(value) => {
 						if (!value) return;
-						navigate({ search: { tags, sort: value as SortOption } });
+						void navigate({ search: { tags, sort: value as SortOption } });
 					}}
 				/>
 
@@ -89,7 +91,7 @@ function RouteComponent() {
 					placeholder={t`Filter by`}
 					className={cn({ hidden: tagOptions.length === 0 })}
 					onValueChange={(value) => {
-						navigate({ search: { tags: value ?? [], sort } });
+						void navigate({ search: { tags: value ?? [], sort } });
 					}}
 				/>
 

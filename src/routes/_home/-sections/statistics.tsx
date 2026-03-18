@@ -1,8 +1,10 @@
-import { t } from "@lingui/core/macro";
 import type { Icon } from "@phosphor-icons/react";
+
+import { t } from "@lingui/core/macro";
 import { FileTextIcon, UsersIcon } from "@phosphor-icons/react";
 import { useQueries } from "@tanstack/react-query";
 import { motion } from "motion/react";
+
 import { CountUp } from "@/components/animation/count-up";
 import { orpc } from "@/integrations/orpc/client";
 
@@ -73,11 +75,11 @@ function StatisticCard({ statistic, index }: StatisticCardProps) {
 				separator=","
 				duration={0.8}
 				to={statistic.value}
-				className="font-bold text-5xl tracking-tight md:text-6xl"
+				className="text-5xl font-bold tracking-tight md:text-6xl"
 			/>
 
 			{/* Label */}
-			<p className="relative font-medium text-base text-muted-foreground tracking-tight">{statistic.label}</p>
+			<p className="relative text-base font-medium tracking-tight text-muted-foreground">{statistic.label}</p>
 		</motion.div>
 	);
 }

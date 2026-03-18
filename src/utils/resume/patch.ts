@@ -1,6 +1,8 @@
 import type { JsonPatchError, Operation } from "fast-json-patch";
+
 import jsonpatch from "fast-json-patch";
 import z from "zod";
+
 import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 
 /**

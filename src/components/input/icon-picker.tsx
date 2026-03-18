@@ -3,9 +3,11 @@ import { ProhibitIcon } from "@phosphor-icons/react";
 import Fuse from "fuse.js";
 import { memo, useCallback, useMemo, useState } from "react";
 import { type CellComponentProps, Grid } from "react-window";
+
 import { Button } from "@/components/ui/button";
 import { type IconName, icons } from "@/schema/icons";
 import { cn } from "@/utils/style";
+
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 

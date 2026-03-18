@@ -1,8 +1,11 @@
 import { useMemo } from "react";
+
 import { cn } from "@/utils/style";
+
+import type { LocalFont, WebFont } from "./types";
+
 import { Combobox, type MultiComboboxProps, type SingleComboboxProps } from "../ui/combobox";
 import { FontDisplay } from "./font-display";
-import type { LocalFont, WebFont } from "./types";
 import webFontListJSON from "./webfontlist.json";
 
 type Weight = "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";

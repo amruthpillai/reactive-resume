@@ -7,6 +7,7 @@ import { useParams } from "@tanstack/react-router";
 import { useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
+
 import { SectionBase } from "../shared/section-base";
 
 export function SharingSectionBuilder() {
@@ -114,7 +116,7 @@ export function SharingSectionBuilder() {
 						<Trans>Allow Public Access</Trans>
 					</p>
 
-					<span className="text-muted-foreground text-xs">
+					<span className="text-xs text-muted-foreground">
 						<Trans>Anyone with the link can view and download the resume.</Trans>
 					</span>
 				</Label>

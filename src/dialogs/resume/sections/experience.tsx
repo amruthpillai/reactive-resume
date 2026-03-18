@@ -1,10 +1,15 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon, RowsIcon, TrashSimpleIcon } from "@phosphor-icons/react";
 import { AnimatePresence, Reorder, useDragControls } from "motion/react";
 import { useMemo } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
-import type z from "zod";
+
+import type { DialogProps } from "@/dialogs/store";
+import type { RoleItem } from "@/schema/resume/data";
+
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -13,10 +18,8 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
-import type { RoleItem } from "@/schema/resume/data";
 import { experienceItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -351,7 +354,7 @@ function ExperienceForm() {
 					<p className="font-medium text-foreground">
 						<Trans>Role Progression</Trans>
 					</p>
-					<p className="text-muted-foreground text-xs">
+					<p className="text-xs text-muted-foreground">
 						<Trans>Add multiple roles to show career progression at the same company.</Trans>
 					</p>
 				</div>

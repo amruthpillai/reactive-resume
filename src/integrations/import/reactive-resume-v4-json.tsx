@@ -1,6 +1,5 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: only used in places where we know the value is not null */
-
 import z, { flattenError, ZodError } from "zod";
+
 import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { type Template, templateSchema } from "@/schema/templates";
 import { parseColorString } from "@/utils/color";

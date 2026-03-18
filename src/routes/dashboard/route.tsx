@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
+
 import { SidebarProvider } from "@/components/ui/sidebar";
+
 import { getDashboardSidebarServerFn, setDashboardSidebarServerFn } from "./-components/functions";
 import { DashboardSidebar } from "./-components/sidebar";
 
@@ -19,10 +21,9 @@ function RouteComponent() {
 	const router = useRouter();
 	const { sidebarState } = Route.useLoaderData();
 
-	const handleSidebarOpenChange = (open: boolean) => {
-		setDashboardSidebarServerFn({ data: open }).then(() => {
-			router.invalidate();
-		});
+	const handleSidebarOpenChange = async (open: boolean) => {
+		await setDashboardSidebarServerFn({ data: open });
+		void router.invalidate();
 	};
 
 	return (

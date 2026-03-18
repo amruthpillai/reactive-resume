@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.object({
@@ -165,14 +167,14 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 
-	const onCopy = () => {
-		copyToClipboard(apiKey);
+	const onCopy = async () => {
+		await copyToClipboard(apiKey);
 		toast.success(t`Your API key has been copied to the clipboard.`);
 	};
 
 	const onConfirm = () => {
 		closeDialog();
-		queryClient.invalidateQueries({ queryKey: ["auth", "api-keys"] });
+		void queryClient.invalidateQueries({ queryKey: ["auth", "api-keys"] });
 	};
 
 	return (
@@ -197,7 +199,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 					</InputGroupAddon>
 				</InputGroup>
 
-				<span className="font-medium text-muted-foreground text-sm">
+				<span className="text-sm font-medium text-muted-foreground">
 					<Trans>For security reasons, this key will only be displayed once.</Trans>
 				</span>
 			</div>

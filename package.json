@@ -1,19 +1,18 @@
 {
 	"name": "reactive-resume",
-	"description": "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
 	"version": "5.0.12",
+	"description": "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
 	"license": "MIT",
-	"type": "module",
-	"packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/amruthpillai/reactive-resume.git"
-	},
 	"author": {
 		"name": "Amruth Pillai",
 		"email": "hello@amruthpillai.com",
 		"url": "https://amruthpillai.com"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/amruthpillai/reactive-resume.git"
+	},
+	"type": "module",
 	"scripts": {
 		"build": "vite build",
 		"db:generate": "drizzle-kit generate",
@@ -23,9 +22,12 @@
 		"db:studio": "drizzle-kit studio",
 		"dev": "vite dev",
 		"docs:dev": "cd docs && npx mint dev",
+		"fmt": "oxfmt --check",
+		"fmt:fix": "oxfmt",
 		"knip": "knip",
 		"lingui:extract": "lingui extract --clean --overwrite",
-		"lint": "biome check --write",
+		"lint": "oxlint --type-aware",
+		"lint:fix": "oxlint --type-aware --fix",
 		"preview": "vite preview",
 		"start": "node .output/server/index.mjs",
 		"typecheck": "tsgo --noEmit"
@@ -49,12 +51,12 @@
 		"@lingui/react": "^5.9.3",
 		"@modelcontextprotocol/sdk": "^1.27.1",
 		"@monaco-editor/react": "4.8.0-rc.3",
-		"@orpc/client": "^1.13.7",
-		"@orpc/json-schema": "^1.13.7",
-		"@orpc/openapi": "^1.13.7",
-		"@orpc/server": "^1.13.7",
-		"@orpc/tanstack-query": "^1.13.7",
-		"@orpc/zod": "^1.13.7",
+		"@orpc/client": "^1.13.8",
+		"@orpc/json-schema": "^1.13.8",
+		"@orpc/openapi": "^1.13.8",
+		"@orpc/server": "^1.13.8",
+		"@orpc/tanstack-query": "^1.13.8",
+		"@orpc/zod": "^1.13.8",
 		"@phosphor-icons/react": "^2.1.10",
 		"@phosphor-icons/web": "^2.1.2",
 		"@sindresorhus/slugify": "^3.0.0",
@@ -92,7 +94,7 @@
 		"jsonrepair": "^3.13.3",
 		"monaco-editor": "^0.55.1",
 		"motion": "^12.38.0",
-		"nodemailer": "^8.0.2",
+		"nodemailer": "^8.0.3",
 		"pg": "^8.20.0",
 		"puppeteer-core": "^24.39.1",
 		"qrcode.react": "^4.2.0",
@@ -121,7 +123,6 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.29.0",
-		"@biomejs/biome": "^2.4.7",
 		"@lingui/babel-plugin-lingui-macro": "^5.9.3",
 		"@lingui/cli": "^5.9.3",
 		"@lingui/vite-plugin": "^5.9.3",
@@ -143,10 +144,14 @@
 		"node-addon-api": "^8.6.0",
 		"node-gyp": "^12.2.0",
 		"npm-check-updates": "^19.6.5",
+		"oxfmt": "^0.41.0",
+		"oxlint": "^1.56.0",
+		"oxlint-tsgolint": "^0.17.0",
 		"tsx": "^4.21.0",
 		"vite": "^8.0.0",
 		"vite-plugin-pwa": "^1.2.0"
 	},
+	"packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be",
 	"pnpm": {
 		"overrides": {
 			"@isaacs/brace-expansion": "^5.0.1",

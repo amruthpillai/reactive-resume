@@ -8,9 +8,10 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
     Head over to [https://rxresu.me](https://rxresu.me) and sign in with your account credentials.
   </Step>
 
-  <Step title="Navigate to Artificial Intelligence settings">
-    Once you're in the dashboard, look for the sidebar navigation on the left. Under the <Badge>Settings</Badge> section, click on <Badge>Artificial Intelligence</Badge>.
-  </Step>
+<Step title="Navigate to Artificial Intelligence settings">
+	Once you're in the dashboard, look for the sidebar navigation on the left. Under the <Badge>Settings</Badge> section,
+	click on <Badge>Artificial Intelligence</Badge>.
+</Step>
 
   <Step title="How your data is stored and sent">
     When you configure your AI provider settings on this page, all information (such as the API key and model) is stored locally in your browser and **not** in our database.
@@ -20,6 +21,7 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
     </Info>
 
     However, whenever you use an AI-assisted feature (such as text generation), these credentials need to be sent to the server **temporarily and only for the duration of your request**. This is required to connect with the AI provider on your behalf. See below for a deeper explanation.
+
   </Step>
 
   <Step title="Choose a provider">
@@ -29,11 +31,13 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
     - **Google Gemini**
     - **Anthropic Claude**
     - **Ollama** (coming soon)
+
   </Step>
 
-  <Step title="Enter a model name">
-    In the <Badge>Model</Badge> field, enter the model you want to use (for example, <code>gpt-5.2</code>, <code>claude-4.5-opus</code>, or <code>gemini-3-flash</code>).
-  </Step>
+<Step title="Enter a model name">
+	In the <Badge>Model</Badge> field, enter the model you want to use (for example, <code>gpt-5.2</code>,{" "}
+	<code>claude-4.5-opus</code>, or <code>gemini-3-flash</code>).
+</Step>
 
   <Step title="Paste your API key">
     In the <Badge>API Key</Badge> field, paste your provider API key.
@@ -41,6 +45,7 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
     <Warning>
       Treat this key like a password. Anyone with it can use your provider account and may incur costs.
     </Warning>
+
   </Step>
 
   <Step title="Verify it's enabled">
@@ -49,12 +54,13 @@ description: "Learn how to configure an AI provider and API key for AI-assisted 
     <Tip>
       If the status shows <Badge>Disabled</Badge>, double-check that all three fields are filled in.
     </Tip>
+
   </Step>
 </Steps>
 
 ## Why AI requests are sent through our server
 
-Most AI providers (like OpenAI, Gemini, or Anthropic) block requests that come directly from the browser due to something called **CORS** ("Cross-Origin Resource Sharing"), a security mechanism built into web browsers.  
+Most AI providers (like OpenAI, Gemini, or Anthropic) block requests that come directly from the browser due to something called **CORS** ("Cross-Origin Resource Sharing"), a security mechanism built into web browsers.
 
 **What is CORS?**  
 CORS is a browser feature that prevents web pages from making requests to a different domain than the one that served the web page, unless that domain explicitly allows it. Most AI providers do not allow browser-based requests from random websites, primarily for security and abuse prevention.
@@ -62,10 +68,9 @@ CORS is a browser feature that prevents web pages from making requests to a diff
 Because of this restriction, the app has to **forward your AI requests (along with your credentials) through our server**, which then contacts the AI provider and returns the response to your browser. **Your credentials are not stored on our server; they are only used to make the request you initiated, and are not logged or retained.**
 
 <Info>
-  If you're curious or would like to audit how your AI requests are forwarded, you can review the code yourself.
-  See the relevant implementation in <code>src/integrations/orpc/router/ai.ts</code> within the codebase.
+	If you're curious or would like to audit how your AI requests are forwarded, you can review the code yourself. See the
+	relevant implementation in <code>src/integrations/orpc/router/ai.ts</code> within the codebase.
 </Info>
-
 
 ---
 

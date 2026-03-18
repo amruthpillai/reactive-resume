@@ -54,6 +54,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -68,6 +69,7 @@ import { usePrompt } from "@/hooks/use-prompt";
 import { isRTL } from "@/utils/locale";
 import { sanitizeHtml } from "@/utils/sanitize";
 import { cn } from "@/utils/style";
+
 import { Toggle } from "../ui/toggle";
 import styles from "./rich-input.module.css";
 
@@ -724,7 +726,6 @@ export function TiptapContent({ content, className, ...props }: TiptapContentPro
 
 	return (
 		<div
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: Content is sanitized with DOMPurify
 			dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 			className={cn(styles.tiptap_content, className)}
 			{...props}

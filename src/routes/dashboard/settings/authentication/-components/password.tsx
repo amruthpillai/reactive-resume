@@ -4,8 +4,10 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useCallback, useMemo } from "react";
 import { match } from "ts-pattern";
+
 import { Button } from "@/components/ui/button";
 import { useDialogStore } from "@/dialogs/store";
+
 import { useAuthAccounts } from "./hooks";
 
 export function PasswordSection() {
@@ -19,7 +21,7 @@ export function PasswordSection() {
 		if (hasPassword) {
 			openDialog("auth.change-password", undefined);
 		} else {
-			navigate({ to: "/auth/forgot-password" });
+			void navigate({ to: "/auth/forgot-password" });
 		}
 	}, [hasPassword, navigate, openDialog]);
 
@@ -30,7 +32,7 @@ export function PasswordSection() {
 			transition={{ duration: 0.3, delay: 0.1 }}
 			className="flex items-center justify-between gap-x-4"
 		>
-			<h2 className="flex items-center gap-x-3 font-medium text-base">
+			<h2 className="flex items-center gap-x-3 text-base font-medium">
 				<PasswordIcon />
 				<Trans>Password</Trans>
 			</h2>

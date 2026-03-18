@@ -1,8 +1,10 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { getSectionIcon, getSectionTitle, type RightSidebarSection } from "@/utils/resume/section";
 import { cn } from "@/utils/style";
+
 import { useSectionStore } from "../../../-store/section";
 
 type Props = React.ComponentProps<typeof AccordionContent> & {
@@ -33,7 +35,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 
 					<div className="flex flex-1 items-center gap-x-4">
 						{getSectionIcon(type)}
-						<h2 className="line-clamp-1 font-bold text-2xl tracking-tight">{getSectionTitle(type)}</h2>
+						<h2 className="line-clamp-1 text-2xl font-bold tracking-tight">{getSectionTitle(type)}</h2>
 					</div>
 				</div>
 

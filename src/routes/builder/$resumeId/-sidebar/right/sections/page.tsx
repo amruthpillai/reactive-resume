@@ -1,8 +1,10 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { getLocaleOptions } from "@/components/locale/combobox";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Combobox } from "@/components/ui/combobox";
@@ -10,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Switch } from "@/components/ui/switch";
 import { pageSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 export function PageSectionBuilder() {
@@ -42,7 +45,7 @@ function PageSectionForm() {
 
 	return (
 		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)} className="grid @md:grid-cols-2 grid-cols-1 gap-4">
+			<form onChange={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 @md:grid-cols-2">
 				<FormField
 					control={form.control}
 					name="locale"
@@ -58,7 +61,7 @@ function PageSectionForm() {
 										value={field.value}
 										onValueChange={(locale) => {
 											field.onChange(locale);
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}
@@ -87,7 +90,7 @@ function PageSectionForm() {
 										value={field.value}
 										onValueChange={(value) => {
 											field.onChange(value);
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}
@@ -242,7 +245,7 @@ function PageSectionForm() {
 										checked={field.value}
 										onCheckedChange={(checked) => {
 											field.onChange(checked);
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									/>
 								}

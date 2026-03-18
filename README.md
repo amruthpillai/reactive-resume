@@ -151,29 +151,29 @@ For detailed setup instructions, environment configuration, and self-hosting gui
 
 ## Tech Stack
 
-| Category         | Technology                           |
-| ---------------- | ------------------------------------ |
-| Framework        | TanStack Start (React 19, Vite)      |
-| Runtime          | Node.js                              |
-| Language         | TypeScript                           |
-| Database         | PostgreSQL with Drizzle ORM          |
-| API              | ORPC (Type-safe RPC)                 |
-| Auth             | Better Auth                          |
-| Styling          | Tailwind CSS                         |
-| UI Components    | Radix UI                             |
-| State Management | Zustand + TanStack Query             |
+| Category         | Technology                      |
+| ---------------- | ------------------------------- |
+| Framework        | TanStack Start (React 19, Vite) |
+| Runtime          | Node.js                         |
+| Language         | TypeScript                      |
+| Database         | PostgreSQL with Drizzle ORM     |
+| API              | ORPC (Type-safe RPC)            |
+| Auth             | Better Auth                     |
+| Styling          | Tailwind CSS                    |
+| UI Components    | Radix UI                        |
+| State Management | Zustand + TanStack Query        |
 
 ## Documentation
 
 Comprehensive guides are available at [docs.rxresu.me](https://docs.rxresu.me):
 
-| Guide                                                                       | Description                       |
-| --------------------------------------------------------------------------- | --------------------------------- |
-| [Getting Started](https://docs.rxresu.me/getting-started)                   | First-time setup and basic usage  |
-| [Self-Hosting](https://docs.rxresu.me/self-hosting/docker)                  | Deploy on your own server         |
-| [Development Setup](https://docs.rxresu.me/contributing/development)        | Local development environment     |
-| [Project Architecture](https://docs.rxresu.me/contributing/architecture)    | Codebase structure and patterns   |
-| [Exporting Your Resume](https://docs.rxresu.me/guides/exporting-your-resume)| PDF and JSON export options       |
+| Guide                                                                        | Description                      |
+| ---------------------------------------------------------------------------- | -------------------------------- |
+| [Getting Started](https://docs.rxresu.me/getting-started)                    | First-time setup and basic usage |
+| [Self-Hosting](https://docs.rxresu.me/self-hosting/docker)                   | Deploy on your own server        |
+| [Development Setup](https://docs.rxresu.me/contributing/development)         | Local development environment    |
+| [Project Architecture](https://docs.rxresu.me/contributing/architecture)     | Codebase structure and patterns  |
+| [Exporting Your Resume](https://docs.rxresu.me/guides/exporting-your-resume) | PDF and JSON export options      |
 
 ## Self-Hosting
 

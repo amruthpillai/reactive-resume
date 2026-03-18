@@ -1,7 +1,11 @@
-import { t } from "@lingui/core/macro";
 import type z from "zod";
+
+import { t } from "@lingui/core/macro";
+
 import type { levelDesignSchema } from "@/schema/resume/data";
+
 import { cn } from "@/utils/style";
+
 import { PageIcon } from "../resume/shared/page-icon";
 
 type Props = z.infer<typeof levelDesignSchema> & React.ComponentProps<"div"> & { level: number };
@@ -31,7 +35,7 @@ export function LevelDisplay({ icon, type, level, className, ...props }: Props) 
 							key={index}
 							data-active={isActive}
 							className={cn(
-								"h-2.5 flex-1 border border-(--page-primary-color) border-x-0 first:border-l last:border-r",
+								"h-2.5 flex-1 border border-x-0 border-(--page-primary-color) first:border-l last:border-r",
 								isActive && "bg-(--page-primary-color)",
 							)}
 						/>

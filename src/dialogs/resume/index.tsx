@@ -8,6 +8,7 @@ import { useEffect, useMemo } from "react";
 import { useForm, useFormContext, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
 import { ChipInput } from "@/components/input/chip-input";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -25,6 +26,7 @@ import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { orpc, type RouterInput } from "@/integrations/orpc/client";
 import { generateId, generateRandomName, slugify } from "@/utils/string";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.object({
@@ -251,9 +253,8 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 				toast.success(t`Your resume has been duplicated successfully.`, { id: toastId });
 				closeDialog();
 
-				if (data.shouldRedirect) {
-					navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
-				}
+				if (!data.shouldRedirect) return;
+				void navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
 			},
 			onError: (error) => {
 				toast.error(error.message, { id: toastId });

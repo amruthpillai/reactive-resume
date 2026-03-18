@@ -11,6 +11,7 @@ import {
 	useFormContext,
 	useFormState,
 } from "react-hook-form";
+
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/style";
 
@@ -113,7 +114,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 		<p
 			data-slot="form-description"
 			id={formDescriptionId}
-			className={cn("text-muted-foreground text-xs leading-normal", className)}
+			className={cn("text-xs leading-normal text-muted-foreground", className)}
 			{...props}
 		/>
 	);

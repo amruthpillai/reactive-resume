@@ -7,6 +7,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
@@ -48,15 +49,15 @@ function RouteComponent() {
 			return;
 		}
 
-		router.invalidate();
 		toast.dismiss(toastId);
-		navigate({ to: "/dashboard", replace: true });
+		await router.invalidate();
+		void navigate({ to: "/dashboard", replace: true });
 	};
 
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Two-Factor Authentication</Trans>
 				</h1>
 				<div className="text-muted-foreground">

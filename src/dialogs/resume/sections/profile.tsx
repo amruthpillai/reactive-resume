@@ -1,9 +1,11 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { AtIcon, PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
-import type z from "zod";
+
 import { IconPicker } from "@/components/input/icon-picker";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";

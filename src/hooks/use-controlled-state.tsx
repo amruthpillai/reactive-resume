@@ -5,12 +5,10 @@ interface CommonControlledStateProps<T> {
 	defaultValue?: T;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type of the rest of the arguments
 type UseControlledStateProps<T, Rest extends any[] = []> = CommonControlledStateProps<T> & {
 	onChange?: (value: T, ...args: Rest) => void;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type of the rest of the arguments
 export function useControlledState<T, Rest extends any[] = []>(
 	props: UseControlledStateProps<T, Rest>,
 ): readonly [T, (next: T, ...args: Rest) => void] {

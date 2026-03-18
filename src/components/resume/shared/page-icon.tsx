@@ -1,6 +1,8 @@
 import { IconContext } from "@phosphor-icons/react";
 import { use } from "react";
+
 import { cn } from "@/utils/style";
+
 import type { ExtendedIconProps } from "../preview";
 
 export function PageIcon({ icon, className }: { icon: string; className?: string }) {
