@@ -13,7 +13,7 @@ import {
 	WidthType,
 } from "docx";
 import type { ResumeData, SectionType } from "@/schema/resume/data";
-import { parseRgbString } from "@/utils/color";
+import { parseColorString } from "@/utils/color";
 import { renderBuiltInSection, renderCustomSection, renderSummary, setRenderConfig } from "./section-renderers";
 
 // --- Color helpers ---
@@ -23,7 +23,7 @@ function rgbToHex(r: number, g: number, b: number): string {
 }
 
 function getColorHex(rgba: string, fallback: string): string {
-	const parsed = parseRgbString(rgba);
+	const parsed = parseColorString(rgba);
 	if (!parsed) return fallback;
 	return rgbToHex(parsed.r, parsed.g, parsed.b);
 }

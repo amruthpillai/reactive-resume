@@ -17,8 +17,6 @@ import { jsonrepair } from "jsonrepair";
 import { match } from "ts-pattern";
 import z, { flattenError, ZodError } from "zod";
 
-import type { ResumeData } from "@/schema/resume/data";
-
 import chatSystemPromptTemplate from "@/integrations/ai/prompts/chat-system.md?raw";
 import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system.md?raw";
 import docxParserUserPrompt from "@/integrations/ai/prompts/docx-parser-user.md?raw";

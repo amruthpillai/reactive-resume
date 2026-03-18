@@ -237,10 +237,8 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
 						</ScrollArea>
 
 						<DialogFooter>
-							<DialogClose asChild>
-								<Button variant="outline">
-									<Trans>Cancel</Trans>
-								</Button>
+							<DialogClose render={<Button variant="outline" />}>
+								<Trans>Cancel</Trans>
 							</DialogClose>
 						</DialogFooter>
 					</>

@@ -91,7 +91,7 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
 						value={filters.employmentType}
 						onValueChange={(v) => update("employmentType", v)}
 						placeholder={t`Any type`}
-						buttonProps={{ className: "h-9 w-[140px] text-sm" }}
+						className="h-9 w-[140px] text-sm"
 					/>
 				</div>
 
@@ -104,7 +104,7 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
 						value={filters.datePosted}
 						onValueChange={(v) => update("datePosted", v)}
 						placeholder={t`Any time`}
-						buttonProps={{ className: "h-9 w-[140px] text-sm" }}
+						className="h-9 w-[140px] text-sm"
 					/>
 				</div>
 
@@ -117,7 +117,7 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
 						value={filters.jobRequirements}
 						onValueChange={(v) => update("jobRequirements", v)}
 						placeholder={t`Any level`}
-						buttonProps={{ className: "h-9 w-[160px] text-sm" }}
+						className="h-9 w-[160px] text-sm"
 					/>
 				</div>
 

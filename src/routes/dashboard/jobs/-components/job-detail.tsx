@@ -124,11 +124,12 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
 							</div>
 
 							<div className="flex gap-x-2">
-								<Button asChild className="flex-1">
-									<a href={job.job_apply_link} target="_blank" rel="noopener noreferrer">
-										<ArrowSquareOutIcon />
-										<Trans>Apply</Trans>
-									</a>
+								<Button
+									className="flex-1"
+									render={<a href={job.job_apply_link} target="_blank" rel="noopener noreferrer" />}
+								>
+									<ArrowSquareOutIcon />
+									<Trans>Apply</Trans>
 								</Button>
 
 								<Button variant="outline" className="flex-1" onClick={() => setTailorOpen(true)}>
