@@ -1,4 +1,5 @@
 import type { JobSearchProvider } from "./provider";
+
 import { JSearchProvider } from "./providers/jsearch";
 
 /**
@@ -30,7 +31,7 @@ import { JSearchProvider } from "./providers/jsearch";
  * @returns Job search provider instance (currently JSearch)
  */
 export function createJobSearchProvider(apiKey: string): JobSearchProvider {
-	// Currently only JSearch is supported
-	// Future: Add provider type parameter to support multiple providers
-	return new JSearchProvider(apiKey);
+  // Currently only JSearch is supported
+  // Future: Add provider type parameter to support multiple providers
+  return new JSearchProvider(apiKey);
 }

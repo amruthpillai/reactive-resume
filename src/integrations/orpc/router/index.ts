@@ -10,10 +10,10 @@ import { storageRouter } from "./storage";
 export default {
   ai: aiRouter,
   auth: authRouter,
-  jobs: jobsRouter,
   flags: flagsRouter,
-  resume: resumeRouter,
-  storage: storageRouter,
+  jobs: jobsRouter,
   printer: printerRouter,
+  resume: resumeRouter,
   statistics: statisticsRouter,
+  storage: storageRouter,
 };

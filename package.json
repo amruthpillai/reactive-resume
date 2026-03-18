@@ -31,6 +31,7 @@
     "prepare": "vp config",
     "preview": "vp preview",
     "start": "node .output/server/index.mjs",
+    "test": "vp test",
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
@@ -82,6 +83,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "docx": "^9.6.1",
     "dompurify": "^3.3.3",
     "drizzle-orm": "1.0.0-beta.18-7eb39f0",
     "drizzle-zod": "^1.0.0-beta.14-a36c63d",
@@ -148,7 +150,8 @@
     "tsx": "^4.21.0",
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
     "vite-plugin-pwa": "^1.2.0",
-    "vite-plus": "latest"
+    "vite-plus": "^0.1.12",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@^0.1.12"
   },
   "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be",
   "pnpm": {

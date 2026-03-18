@@ -7,8 +7,8 @@ import type { ResumeData } from "@/schema/resume/data";
  * so it's only downloaded when the user actually clicks the DOCX export button.
  */
 export async function buildDocx(data: ResumeData): Promise<Blob> {
-	const { buildDocument } = await import("./builder");
-	const { Packer } = await import("docx");
-	const doc = buildDocument(data);
-	return Packer.toBlob(doc);
+  const { buildDocument } = await import("./builder");
+  const { Packer } = await import("docx");
+  const doc = buildDocument(data);
+  return Packer.toBlob(doc);
 }
