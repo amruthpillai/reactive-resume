@@ -8,9 +8,9 @@ import {
 	PencilSimpleLineIcon,
 	TrashSimpleIcon,
 } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 
 import {
 	DropdownMenu,
