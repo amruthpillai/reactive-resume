@@ -1,17 +1,21 @@
+import type { Operation } from "fast-json-patch";
+
 import { ORPCError } from "@orpc/client";
 import { and, arrayContains, asc, desc, eq, isNotNull, or, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
-import type { Operation } from "fast-json-patch";
 import { match } from "ts-pattern";
+
+import type { ResumeData } from "@/schema/resume/data";
+import type { Locale } from "@/utils/locale";
+
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
-import type { ResumeData } from "@/schema/resume/data";
 import { defaultResumeData } from "@/schema/resume/data";
 import { env } from "@/utils/env";
-import type { Locale } from "@/utils/locale";
 import { hashPassword, verifyPassword } from "@/utils/password";
 import { applyResumePatches, ResumePatchError } from "@/utils/resume/patch";
 import { generateId } from "@/utils/string";
+
 import { grantResumeAccess, hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
 

@@ -1,10 +1,15 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon, RowsIcon, TrashSimpleIcon } from "@phosphor-icons/react";
 import { AnimatePresence, Reorder, useDragControls } from "motion/react";
 import { useMemo } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
-import type z from "zod";
+
+import type { DialogProps } from "@/dialogs/store";
+import type { RoleItem } from "@/schema/resume/data";
+
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
@@ -13,10 +18,8 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
-import type { RoleItem } from "@/schema/resume/data";
 import { experienceItemSchema } from "@/schema/resume/data";
 import { generateId } from "@/utils/string";
 
@@ -204,9 +207,7 @@ function RoleFields({ role, index, onRemove }: RoleFieldsProps) {
 							<FormLabel>
 								<Trans>Position</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -220,9 +221,7 @@ function RoleFields({ role, index, onRemove }: RoleFieldsProps) {
 							<FormLabel>
 								<Trans>Period</Trans>
 							</FormLabel>
-							<FormControl>
-								<Input {...field} />
-							</FormControl>
+							<FormControl render={<Input {...field} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -236,9 +235,7 @@ function RoleFields({ role, index, onRemove }: RoleFieldsProps) {
 							<FormLabel>
 								<Trans>Description</Trans>
 							</FormLabel>
-							<FormControl>
-								<RichInput {...field} value={field.value} onChange={field.onChange} />
-							</FormControl>
+							<FormControl render={<RichInput {...field} value={field.value} onChange={field.onChange} />} />
 							<FormMessage />
 						</FormItem>
 					)}
@@ -273,9 +270,7 @@ function ExperienceForm() {
 						<FormLabel>
 							<Trans>Company</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -287,9 +282,9 @@ function ExperienceForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>{hasRoles ? <Trans>Overall Title (optional)</Trans> : <Trans>Position</Trans>}</FormLabel>
-						<FormControl>
-							<Input {...field} placeholder={hasRoles ? "e.g. Software Engineer → Senior Engineer" : ""} />
-						</FormControl>
+						<FormControl
+							render={<Input {...field} placeholder={hasRoles ? "e.g. Software Engineer → Senior Engineer" : ""} />}
+						/>
 						<FormMessage />
 					</FormItem>
 				)}
@@ -303,9 +298,7 @@ function ExperienceForm() {
 						<FormLabel>
 							<Trans>Location</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -317,9 +310,7 @@ function ExperienceForm() {
 				render={({ field }) => (
 					<FormItem>
 						<FormLabel>{hasRoles ? <Trans>Overall Period</Trans> : <Trans>Period</Trans>}</FormLabel>
-						<FormControl>
-							<Input {...field} placeholder={hasRoles ? "e.g. 2018 – Present" : ""} />
-						</FormControl>
+						<FormControl render={<Input {...field} placeholder={hasRoles ? "e.g. 2018 – Present" : ""} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -333,14 +324,12 @@ function ExperienceForm() {
 						<FormLabel>
 							<Trans>Website</Trans>
 						</FormLabel>
-						<FormControl>
-							<URLInput
-								{...field}
-								value={field.value}
-								onChange={field.onChange}
-								hideLabelButton={form.watch("options.showLinkInTitle")}
-							/>
-						</FormControl>
+						<URLInput
+							{...field}
+							value={field.value}
+							onChange={field.onChange}
+							hideLabelButton={form.watch("options.showLinkInTitle")}
+						/>
 						<FormMessage />
 					</FormItem>
 				)}
@@ -351,9 +340,7 @@ function ExperienceForm() {
 				name="options.showLinkInTitle"
 				render={({ field }) => (
 					<FormItem className="flex items-center gap-x-2 sm:col-span-full">
-						<FormControl>
-							<Switch checked={field.value} onCheckedChange={field.onChange} />
-						</FormControl>
+						<FormControl render={<Switch checked={field.value} onCheckedChange={field.onChange} />} />
 						<FormLabel>
 							<Trans>Show link in title</Trans>
 						</FormLabel>
@@ -367,7 +354,7 @@ function ExperienceForm() {
 					<p className="font-medium text-foreground">
 						<Trans>Role Progression</Trans>
 					</p>
-					<p className="text-muted-foreground text-xs">
+					<p className="text-xs text-muted-foreground">
 						<Trans>Add multiple roles to show career progression at the same company.</Trans>
 					</p>
 				</div>
@@ -408,9 +395,7 @@ function ExperienceForm() {
 							<FormLabel>
 								<Trans>Description</Trans>
 							</FormLabel>
-							<FormControl>
-								<RichInput {...field} value={field.value} onChange={field.onChange} />
-							</FormControl>
+							<FormControl render={<RichInput {...field} value={field.value} onChange={field.onChange} />} />
 							<FormMessage />
 						</FormItem>
 					)}

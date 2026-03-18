@@ -4,11 +4,13 @@ import { CircleNotchIcon, FileDocIcon, FileJsIcon, FilePdfIcon } from "@phosphor
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { toast } from "sonner";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { orpc } from "@/integrations/orpc/client";
 import { downloadFromUrl, downloadWithAnchor, generateFilename } from "@/utils/file";
 import { buildDocx } from "@/utils/resume/docx";
+
 import { SectionBase } from "../shared/section-base";
 
 export function ExportSectionBuilder() {
@@ -45,7 +47,7 @@ export function ExportSectionBuilder() {
 
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
-			downloadFromUrl(url, filename);
+			await downloadFromUrl(url, filename);
 		} catch {
 			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
 		} finally {
@@ -58,12 +60,12 @@ export function ExportSectionBuilder() {
 			<Button
 				variant="outline"
 				onClick={onDownloadJSON}
-				className="h-auto gap-x-4 whitespace-normal p-4! text-start font-normal active:scale-98"
+				className="h-auto gap-x-4 p-4! text-start font-normal whitespace-normal active:scale-98"
 			>
 				<FileJsIcon className="size-6 shrink-0" />
 				<div className="flex flex-1 flex-col gap-y-1">
 					<h6 className="font-medium">JSON</h6>
-					<p className="text-muted-foreground text-xs leading-normal">
+					<p className="text-xs leading-normal text-muted-foreground">
 						<Trans>
 							Download a copy of your resume in JSON format. Use this file for backup or to import your resume into
 							other applications, including AI assistants.
@@ -93,7 +95,7 @@ export function ExportSectionBuilder() {
 				variant="outline"
 				disabled={isPrinting}
 				onClick={onDownloadPDF}
-				className="h-auto gap-x-4 whitespace-normal p-4! text-start font-normal active:scale-98"
+				className="h-auto gap-x-4 p-4! text-start font-normal whitespace-normal active:scale-98"
 			>
 				{isPrinting ? (
 					<CircleNotchIcon className="size-6 shrink-0 animate-spin" />
@@ -103,7 +105,7 @@ export function ExportSectionBuilder() {
 
 				<div className="flex flex-1 flex-col gap-y-1">
 					<h6 className="font-medium">PDF</h6>
-					<p className="text-muted-foreground text-xs leading-normal">
+					<p className="text-xs leading-normal text-muted-foreground">
 						<Trans>
 							Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume
 							with recruiters.

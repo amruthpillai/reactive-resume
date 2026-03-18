@@ -1,0 +1,54 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"categories": {},
+	"env": {
+		"builtin": true
+	},
+	"globals": {},
+	"ignorePatterns": [],
+	"options": {
+		"typeAware": true
+	},
+	"plugins": [
+		"eslint",
+		"typescript",
+		"unicorn",
+		"oxc",
+		"react",
+		"react-perf",
+		"import",
+		"jsdoc",
+		"node",
+		"promise",
+		"vitest"
+	],
+	"rules": {
+		"react/exhaustive-deps": "off"
+	},
+	"settings": {
+		"jsdoc": {
+			"augmentsExtendsReplacesDocs": false,
+			"exemptDestructuredRootsFromChecks": false,
+			"ignoreInternal": false,
+			"ignorePrivate": false,
+			"ignoreReplacesDocs": true,
+			"implementsReplacesDocs": false,
+			"overrideReplacesDocs": true,
+			"tagNamePreference": {}
+		},
+		"jsx-a11y": {
+			"attributes": {},
+			"components": {},
+			"polymorphicPropName": ""
+		},
+		"react": {
+			"version": "19.2.4",
+			"formComponents": [],
+			"linkComponents": ["Link"],
+			"componentWrapperFunctions": []
+		},
+		"vitest": {
+			"typecheck": true
+		}
+	}
+}

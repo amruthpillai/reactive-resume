@@ -1,7 +1,10 @@
+import type { ErrorComponentProps } from "@tanstack/react-router";
+
 import { Trans } from "@lingui/react/macro";
 import { ArrowClockwiseIcon, WarningIcon } from "@phosphor-icons/react";
-import type { ErrorComponentProps } from "@tanstack/react-router";
+
 import { Button } from "@/components/ui/button";
+
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { BrandIcon } from "../ui/brand-icon";
 

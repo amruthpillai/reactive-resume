@@ -18,10 +18,12 @@ import { Trans } from "@lingui/react/macro";
 import { PencilSimpleIcon, XIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import * as React from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useControlledState } from "@/hooks/use-controlled-state";
 import { cn } from "@/utils/style";
+
 import { Kbd } from "../ui/kbd";
 
 const RETURN_KEY = "Enter";
@@ -61,7 +63,7 @@ function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProp
 			<Badge
 				variant="outline"
 				className={cn(
-					"flex h-7 cursor-grab select-none items-center gap-0 overflow-hidden px-3 active:cursor-grabbing",
+					"flex h-7 cursor-grab items-center gap-0 overflow-hidden px-3 select-none active:cursor-grabbing",
 					isEditing && "border-primary ring-1 ring-primary",
 					isDragging && "opacity-80",
 				)}
@@ -291,7 +293,7 @@ export function ChipInput({ value, defaultValue = [], onChange, className, ...pr
 					onKeyDown={handleKeyDown}
 					onChange={handleInputChange}
 				/>
-				<p className="text-muted-foreground text-xs">
+				<p className="text-xs text-muted-foreground">
 					<Trans>
 						Press <Kbd>{RETURN_KEY}</Kbd> or <Kbd>{COMMA_KEY}</Kbd> to add or save the current keyword.
 					</Trans>

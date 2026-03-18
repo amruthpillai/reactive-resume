@@ -13,6 +13,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/integrations/orpc/client";
+
 import { useBuilderSidebar } from "../-store/sidebar";
 
 export function BuilderHeader() {
@@ -39,11 +41,16 @@ export function BuilderHeader() {
 			</Button>
 
 			<div className="flex items-center gap-x-1">
-				<Button asChild size="icon" variant="ghost">
-					<Link to="/dashboard/resumes" search={{ sort: "lastUpdatedAt", tags: [] }}>
-						<HouseSimpleIcon />
-					</Link>
-				</Button>
+				<Button
+					size="icon"
+					variant="ghost"
+					nativeButton={false}
+					render={
+						<Link to="/dashboard/resumes" search={{ sort: "lastUpdatedAt", tags: [] }}>
+							<HouseSimpleIcon />
+						</Link>
+					}
+				/>
 				<span className="me-2.5 text-muted-foreground">/</span>
 				<h2 className="flex-1 truncate font-medium">{name}</h2>
 				{isLocked && <LockSimpleIcon className="ms-2 text-muted-foreground" />}
@@ -112,7 +119,7 @@ function BuilderHeaderDropdown() {
 			{
 				onSuccess: () => {
 					toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
-					navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
+					void navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
 				},
 				onError: (error) => {
 					toast.error(error.message, { id: toastId });
@@ -123,31 +130,33 @@ function BuilderHeaderDropdown() {
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button size="icon" variant="ghost">
-					<CaretDownIcon />
-				</Button>
-			</DropdownMenuTrigger>
+			<DropdownMenuTrigger
+				render={
+					<Button size="icon" variant="ghost">
+						<CaretDownIcon />
+					</Button>
+				}
+			/>
 
 			<DropdownMenuContent>
-				<DropdownMenuItem disabled={isLocked} onSelect={handleUpdate}>
+				<DropdownMenuItem disabled={isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon className="me-2" />
 					<Trans>Update</Trans>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem onSelect={handleDuplicate}>
+				<DropdownMenuItem onClick={handleDuplicate}>
 					<CopySimpleIcon className="me-2" />
 					<Trans>Duplicate</Trans>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem onSelect={handleToggleLock}>
+				<DropdownMenuItem onClick={handleToggleLock}>
 					{isLocked ? <LockSimpleOpenIcon className="me-2" /> : <LockSimpleIcon className="me-2" />}
 					{isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem variant="destructive" disabled={isLocked} onSelect={handleDelete}>
+				<DropdownMenuItem variant="destructive" disabled={isLocked} onClick={handleDelete}>
 					<TrashSimpleIcon className="me-2" />
 					<Trans>Delete</Trans>
 				</DropdownMenuItem>

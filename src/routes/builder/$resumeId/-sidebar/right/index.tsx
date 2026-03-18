@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useRef } from "react";
 import { match } from "ts-pattern";
+
 import { Button } from "@/components/ui/button";
 import { Copyright } from "@/components/ui/copyright";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,6 +11,7 @@ import {
 	type RightSidebarSection,
 	rightSidebarSections,
 } from "@/utils/resume/section";
+
 import { BuilderSidebarEdge } from "../../-components/edge";
 import { useBuilderSidebar } from "../../-store/sidebar";
 import { CSSSectionBuilder } from "./sections/css";
@@ -86,7 +88,7 @@ function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
 
 	return (
 		<BuilderSidebarEdge side="right">
-			<div className="no-scrollbar min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
+			<div className="no-scrollbar min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto">
 				<div className="flex min-h-full flex-col items-center justify-center gap-y-2">
 					{rightSidebarSections.map((section) => (
 						<Button

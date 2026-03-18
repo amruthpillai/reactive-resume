@@ -1,8 +1,10 @@
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { schema } from "@/integrations/drizzle";
+
 import { env } from "@/utils/env";
+
+import * as schema from "./schema";
 
 // During hot reload (i.e., in development), global assignment ensures the pool/client persist across reloads.
 // This prevents exhausting connection limits due to re-creation on every reload.

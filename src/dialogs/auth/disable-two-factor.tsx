@@ -7,12 +7,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.object({
@@ -46,7 +48,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 		}
 
 		toast.success(t`Two-factor authentication has been disabled successfully.`, { id: toastId });
-		router.invalidate();
+		void router.invalidate();
 		closeDialog();
 		form.reset();
 	};
@@ -77,15 +79,17 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 									<Trans>Password</Trans>
 								</FormLabel>
 								<div className="flex items-center gap-x-1.5">
-									<FormControl>
-										<Input
-											min={6}
-											max={64}
-											type={showPassword ? "text" : "password"}
-											autoComplete="current-password"
-											{...field}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												min={6}
+												max={64}
+												type={showPassword ? "text" : "password"}
+												autoComplete="current-password"
+												{...field}
+											/>
+										}
+									/>
 
 									<Button size="icon" variant="ghost" type="button" onClick={toggleShowPassword}>
 										{showPassword ? <EyeIcon /> : <EyeSlashIcon />}

@@ -1,10 +1,14 @@
+import type z from "zod";
+
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { TagIcon } from "@phosphor-icons/react";
 import { useCallback, useMemo } from "react";
-import type z from "zod";
+
 import type { urlSchema } from "@/schema/resume/data";
+
 import { cn } from "@/utils/style";
+
 import { Input } from "../ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from "../ui/input-group";
 import { Label } from "../ui/label";
@@ -63,11 +67,13 @@ export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) 
 			{!hideLabelButton && (
 				<InputGroupAddon align="inline-end">
 					<Popover>
-						<PopoverTrigger asChild>
-							<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
-								<TagIcon />
-							</InputGroupButton>
-						</PopoverTrigger>
+						<PopoverTrigger
+							render={
+								<InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
+									<TagIcon />
+								</InputGroupButton>
+							}
+						/>
 
 						<PopoverContent className="pt-3">
 							<div className="grid gap-2" onClick={(e) => e.stopPropagation()}>

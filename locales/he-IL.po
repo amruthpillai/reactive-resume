@@ -8,7 +8,7 @@ msgstr ""
 "Language: he\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-02-09 22:31\n"
+"PO-Revision-Date: 2026-03-18 10:43\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -45,39 +45,12 @@ msgstr "{0, plural, one {# פריט} two {# פריטים} many {# פריטים} 
 #. placeholder {0}: item.roles.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/experience.tsx
 msgid "{0, plural, one {# role} other {# roles}}"
-msgstr ""
-
-#. placeholder {0}: quota.monthlyUsed
-#. placeholder {1}: quota.monthlyLimit
-#: src/routes/dashboard/jobs/index.tsx
-msgid "{0} / {1} requests used this month"
-msgstr ""
-
-#. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/jobs/index.tsx
-msgid "{0} months ago"
-msgstr ""
-
-#. placeholder {0}: quota.monthlyUsed
-#. placeholder {1}: quota.monthlyLimit
-#. placeholder {2}: quota.monthlyRemaining
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "{0} of {1} requests used this month ({2} remaining)"
-msgstr ""
-
-#. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/jobs/index.tsx
-msgid "{0} weeks ago"
-msgstr ""
+msgstr "{0, plural, one {# תפקיד} other {# תפקידים}}"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# עמודה} two {# עמודות} many {# עמודות} other {# עמודות}}"
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "{diffDays} days ago"
-msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -107,10 +80,6 @@ msgstr "יותר מ־12 תבניות"
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
 msgstr "3 חודשים"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "3+ years"
-msgstr ""
 
 #: src/dialogs/api-key/create.tsx
 msgid "6 months"
@@ -149,10 +118,6 @@ msgstr "קיימים כבר קורות חיים עם שם ייצוגי זה."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
 msgstr "A4"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "About JSearch API"
-msgstr ""
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
@@ -237,7 +202,7 @@ msgstr "הוספת עמודה לפני"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
-msgstr ""
+msgstr "הוסף מספר תפקידים כדי להציג את ההתקדמות הקריירתית באותה חברה."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
@@ -245,7 +210,7 @@ msgstr "הוספת עמוד"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add Role"
-msgstr ""
+msgstr "הוסף תפקיד"
 
 #: src/components/input/rich-input.tsx
 msgid "Add Row After"
@@ -257,16 +222,7 @@ msgstr "הוספת שורה לפני"
 
 #: src/components/ai/chat.tsx
 msgid "Added"
-msgstr ""
-
-#. placeholder {0}: skillsToSync.length
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Added {0} new skills to your original resume"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Advanced Filters"
-msgstr ""
+msgstr "נוסף"
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -279,11 +235,7 @@ msgstr "בינה מלאכותית"
 
 #: src/components/ai/chat.tsx
 msgid "AI Chat"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "AI returned some invalid references"
-msgstr ""
+msgstr "צ'אט AI"
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -294,8 +246,8 @@ msgid "Allow Public Access"
 msgstr "לאפשר גישה ציבורית"
 
 #: src/routes/auth/register.tsx
-msgid "Already have an account? <0><1>Sign in now <2/></1></0>"
-msgstr "כבר יש לך חשבון? <0><1>התחברות עכשיו <2/></1></0>"
+msgid "Already have an account? <0/>"
+msgstr "כבר יש לך חשבון? <0/>"
 
 #: src/utils/locale.ts
 msgid "Amharic"
@@ -313,19 +265,6 @@ msgstr "אירעה שגיאה לא ידועה בעת ייבוא קורות הח�
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
 msgstr "ועוד שלל יכולות…"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Any level"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Any time"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Any type"
-msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Anyone visiting the resume's public URL must enter this password to access it."
@@ -366,25 +305,13 @@ msgstr "יישום"
 msgid "Application Statistics"
 msgstr "סטטיסטיקת היישום"
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-msgid "Apply"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-msgid "Apply Link"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-msgid "Apply Via"
-msgstr ""
-
 #: src/utils/locale.ts
 msgid "Arabic"
 msgstr "ערבית"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Are you sure you want to close this dialog?"
-msgstr ""
+msgstr "האם אתה בטוח שברצונך לסגור את תיבת הדו-שיח הזו?"
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
@@ -423,7 +350,7 @@ msgstr "בינה מלאכותית"
 
 #: src/components/ai/chat.tsx
 msgid "Ask me to update your resume..."
-msgstr ""
+msgstr "בקש ממני לעדכן את קורות החיים שלך..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
@@ -477,10 +404,6 @@ msgstr "פרטים בסיסיים"
 #: src/routes/_home/-sections/features.tsx
 msgid "Beautiful templates to choose from, with more on the way."
 msgstr "תבניות יפות לבחירה, ועוד תבניות בדרך."
-
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-msgid "Benefits"
-msgstr ""
 
 #: src/utils/locale.ts
 msgid "Bengali"
@@ -562,7 +485,6 @@ msgstr "האם אפשר לייצא את קורות החיים שלי ל־PDF?"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
 #: src/routes/dashboard/settings/danger-zone.tsx
 #: src/routes/dashboard/settings/profile.tsx
@@ -626,21 +548,18 @@ msgstr "סינית (מסורתית)"
 msgid "Circle"
 msgstr "עיגול"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "City"
-msgstr ""
-
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
-msgstr ""
-
-#: src/components/ui/multiple-combobox.tsx
-msgid "Clear selection"
-msgstr "ניקוי הבחירה"
+msgstr "נקה היסטוריית צ'אט"
 
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "לחץ כאן כדי לבחור קובץ לייבוא"
+
+#: src/components/ui/dialog.tsx
+#: src/components/ui/sheet.tsx
+msgid "Close"
+msgstr "סגור"
 
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
@@ -663,10 +582,6 @@ msgstr "חברה"
 msgid "Completely free, forever, no hidden costs."
 msgstr "חינמי לחלוטין, לנצח, בלי עלויות נסתרות."
 
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Configure Job Search"
-msgstr ""
-
 #: src/dialogs/api-key/create.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -681,7 +596,7 @@ msgstr "חיבור"
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
-msgstr ""
+msgstr "תוכן"
 
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -698,10 +613,6 @@ msgstr "להמשיך מאיפה שהפסקת"
 #: src/dialogs/resume/import.tsx
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "המשיכי מאיפה שהפסקת על ידי ייבוא קורות חיים קיימים שיצרת באמצעות Reactive Resume או כל בונה קורות חיים אחר. התבניות הנתמכות כוללות PDF, Microsoft Word וכן קובצי JSON מ־Reactive Resume."
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Contractor"
-msgstr ""
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
@@ -727,14 +638,10 @@ msgstr "העתק את המפתח הסודי הזה והשתמש בו ביישו�
 msgid "Copy URL"
 msgstr "העתקת כתובת"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Country"
-msgstr ""
-
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
-msgstr ""
+msgstr "מכתב מקדים"
 
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
@@ -775,7 +682,7 @@ msgstr "יצירת הסמכה חדשה"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Create a new cover letter"
-msgstr ""
+msgstr "יצירת מכתב מקדים חדש"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Create a new custom section"
@@ -826,7 +733,7 @@ msgstr "יצירת מיומנות חדשה"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Create a new summary item"
-msgstr ""
+msgstr "יצירת פריט סיכום חדש"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Create a new volunteer experience"
@@ -896,10 +803,6 @@ msgstr "אבטחת נתונים"
 msgid "Date"
 msgstr "תאריך"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Date Posted"
-msgstr ""
-
 #: src/dialogs/resume/sections/education.tsx
 msgid "Degree"
 msgstr "תואר"
@@ -956,21 +859,12 @@ msgstr "מוחק את קורות החיים שלך..."
 #: src/dialogs/resume/sections/publication.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
 msgid "Description"
 msgstr "תיאור"
 
 #: src/utils/resume/section.tsx
 msgid "Design"
 msgstr "עיצוב"
-
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-msgid "Direct"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Direct Apply"
-msgstr ""
 
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
@@ -1003,8 +897,8 @@ msgid "Documentation"
 msgstr "תיעוד"
 
 #: src/routes/auth/login.tsx
-msgid "Don't have an account? <0><1>Create one now <2/></1></0>"
-msgstr "אין לך חשבון? <0><1>יצירת חשבון עכשיו <2/></1></0>"
+msgid "Don't have an account? <0/>"
+msgstr "אין לך חשבון? <0/>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Donate to Reactive Resume"
@@ -1016,20 +910,12 @@ msgid "Download"
 msgstr "הורדה"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr ""
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
 msgstr "הורד עותק של קורות החיים שלך בפורמט JSON. אפשר להשתמש בקובץ הזה לגיבוי או לייבוא קורות החיים ליישומים אחרים, כולל עוזרי בינה מלאכותית."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
 msgstr "הורד עותק של קורות החיים שלך בפורמט PDF. השתמש בקובץ זה להדפסה או לשיתוף קל של קורות החיים עם מגייסים."
-
-#: src/routes/builder/$resumeId/-components/dock.tsx
-msgid "Download DOCX"
-msgstr ""
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Download JSON"
@@ -1076,33 +962,9 @@ msgstr "משכפל את קורות החיים שלך..."
 msgid "Dutch"
 msgstr "הולנדית"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. 150000"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. 50000"
-msgstr ""
-
 #: src/components/ai/chat.tsx
 msgid "e.g. Change my name to..."
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. New York"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. NY"
-msgstr ""
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "e.g. Software Engineer"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "e.g. United States"
-msgstr ""
+msgstr "לדוגמה: שנה את שמי ל..."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1153,6 +1015,10 @@ msgstr "הגנה עם אימות דו־שלבי..."
 msgid "English"
 msgstr "אנגלית"
 
+#: src/utils/locale.ts
+msgid "English (United Kingdom)"
+msgstr "אנגלית (בריטניה)"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "חזק את האבטחה של החשבון שלך עם שכבות הגנה נוספות."
@@ -1181,10 +1047,6 @@ msgstr "הזן את הסיסמה שלך כדי לאשר הגדרת אימות ד
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "הזן את הסיסמה שלך כדי להשבית אימות דו־שלבי. החשבון שלך יהיה פחות מאובטח ללא אימות דו־שלבי."
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Enter your RapidAPI key"
-msgstr ""
-
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "כל תרומה, קטנה כגדולה, עושה הבדל גדול למיזם.<0/>תודה על התמיכה!"
@@ -1197,20 +1059,11 @@ msgstr "הכול שאתה מזין כאן נשמר מקומית בדפדפן ש�
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "כל מה שצריך כדי ליצור, להתאים אישית ולשתף קורות חיים מקצועיים. נבנה עם דגש על פרטיות, מונע בקוד פתוח וחינמי לחלוטין לנצח."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Exclude Companies"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Exclude Keywords"
-msgstr ""
-
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "יציאה ממסך מלא"
 
 #: src/dialogs/resume/sections/custom.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
 #: src/utils/resume/section.tsx
 msgid "Experience"
 msgstr "ניסיון"
@@ -1236,21 +1089,13 @@ msgstr "עיין בתיעוד ה־API כדי ללמוד כיצד לשלב את R
 msgid "Export"
 msgstr "ייצוא"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Failed to duplicate resume"
-msgstr ""
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
 msgstr "ההגנה עם אימות דו־שלבי נכשלה."
 
 #: src/routes/auth/login.tsx
 msgid "Failed to sign in. Please try again."
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Failed to sync skills"
-msgstr ""
+msgstr "ההתחברות נכשלה. נסה שוב."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1331,13 +1176,9 @@ msgstr "צרפתית"
 msgid "Full Width"
 msgstr "רוחב מלא"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Full-time"
-msgstr ""
-
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen"
-msgstr ""
+msgstr "מסך מלא"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1351,10 +1192,6 @@ msgstr "גרמנית"
 msgid "Get Started"
 msgstr "יוצאים לדרך"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
-msgstr ""
-
 #: src/components/layout/not-found-screen.tsx
 #: src/routes/auth/verify-2fa-backup.tsx
 msgid "Go Back"
@@ -1363,10 +1200,6 @@ msgstr "חזרה"
 #: src/routes/_home/-sections/header.tsx
 msgid "Go to dashboard"
 msgstr "מעבר ללוח בקרה"
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Go to Settings"
-msgstr ""
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1509,10 +1342,6 @@ msgstr "מייבא את קורות החיים שלך..."
 msgid "Importing..."
 msgstr "ייבוא..."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Include Keywords"
-msgstr ""
-
 #: src/utils/locale.ts
 msgid "Indonesian"
 msgstr "אינדונזית"
@@ -1533,10 +1362,6 @@ msgstr "הוספת טבלה"
 #: src/utils/resume/section.tsx
 msgid "Interests"
 msgstr "תחביבים"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Intern"
-msgstr ""
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Is Reactive Resume available in multiple languages?"
@@ -1561,20 +1386,6 @@ msgstr "נטוי"
 #: src/utils/locale.ts
 msgid "Japanese"
 msgstr "יפנית"
-
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Job Listings"
-msgstr ""
-
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Job Search"
-msgstr ""
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "JSearch is a Google for Jobs aggregator that searches across multiple job boards. Job listings are sourced from various platforms and aggregated by Google's job search service."
-msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Justify Align"
@@ -1618,10 +1429,6 @@ msgstr "שפה"
 msgid "Languages"
 msgstr "שפות"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Last 3 days"
-msgstr ""
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1653,13 +1460,9 @@ msgstr "מידע נוסף"
 msgid "Learn more about how to fit content on a page"
 msgstr "למד עוד על איך להתאים תוכן לעמוד"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Learn more: <0>JSearch API Documentation</0>"
-msgstr ""
-
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
-msgstr ""
+msgstr "עזוב"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
@@ -1728,10 +1531,6 @@ msgstr "טוען..."
 msgid "Location"
 msgstr "מקום"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Location filtering uses Google's natural language processing (NLP). For best results, use full country names instead of ISO codes . The system constructs location queries as natural language text."
-msgstr ""
-
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
@@ -1778,21 +1577,9 @@ msgstr "שוליים (אופקיים)"
 msgid "Margin (Vertical)"
 msgstr "שוליים (אנכיים)"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Max Salary"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Min Salary"
-msgstr ""
-
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "מודל"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Monthly Usage"
-msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Move to"
@@ -1843,38 +1630,13 @@ msgstr "סיסמה חדשה"
 msgid "New Section"
 msgstr "סעיף חדש"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "New Skills Detected"
-msgstr ""
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Next"
-msgstr ""
-
 #: src/routes/_home/-sections/features.tsx
 msgid "No Advertising, No Tracking"
 msgstr "בלי פרסום, בלי מעקב"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "No degree required"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "No experience"
-msgstr ""
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "No jobs found. Try a different search query."
-msgstr ""
-
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "No results found."
 msgstr "לא נמצאו תוצאות."
-
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "No resumes found. Create a resume first."
-msgstr ""
 
 #: src/utils/locale.ts
 msgid "Norwegian"
@@ -1916,11 +1678,6 @@ msgstr "קוד פתוח"
 msgid "opens in new tab"
 msgstr "נפתח בלשונית חדשה"
 
-#. placeholder {0}: job.job_title
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Optimizing summary, experience, and skills for {0}"
-msgstr ""
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "רשותך להגדיר סיסמה כך שרק מי שמכיר אותה יוכל לצפות בקורות החיים דרך הקישור."
@@ -1940,11 +1697,11 @@ msgstr "ארגון"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Period"
-msgstr ""
+msgstr "תקופה כוללת"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Overall Title (optional)"
-msgstr ""
+msgstr "כותרת כוללת (רשות)"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1956,10 +1713,6 @@ msgstr "עמוד"
 msgid "Page {0}"
 msgstr "עמוד {0}"
 
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Page {currentPage}"
-msgstr ""
-
 #: src/components/resume/preview.tsx
 msgid "Page {pageNumber} of {totalNumberOfPages}"
 msgstr "עמוד {pageNumber} מתוך {totalNumberOfPages}"
@@ -1967,10 +1720,6 @@ msgstr "עמוד {pageNumber} מתוך {totalNumberOfPages}"
 #: src/components/input/rich-input.tsx
 msgid "Paragraph"
 msgstr "פסקה"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Part-time"
-msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2077,10 +1826,6 @@ msgstr "העדפות"
 msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the current keyword."
 msgstr "לחץ על <0>{RETURN_KEY}</0> או <1>{COMMA_KEY}</1> כדי להוסיף או לשמור את מילות המפתח הנוכחית."
 
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Previous"
-msgstr ""
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "צבע עיקרי"
@@ -2131,10 +1876,6 @@ msgstr "פרסומים"
 msgid "Publisher"
 msgstr "מוציא לאור"
 
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "RapidAPI Key"
-msgstr ""
-
 #: src/routes/_home/-sections/header.tsx
 msgid "Reactive Resume - Go to homepage"
 msgstr "Reactive Resume - מעבר לדף הבית"
@@ -2161,7 +1902,7 @@ msgstr "Reactive Resume הוא בקוד פתוח, ממוקד פרטיות וחי
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
-msgstr ""
+msgstr "נמען"
 
 #: src/components/level/combobox.tsx
 msgid "Rectangle"
@@ -2186,18 +1927,12 @@ msgid "Refresh"
 msgstr "רענון"
 
 #: src/routes/auth/forgot-password.tsx
-msgid "Remember your password? <0><1>Sign in now <2/></1></0>"
-msgstr "נזכרת בסיסמה? <0><1>התחברות עכשיו <2/></1></0>"
-
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Remote"
-msgstr ""
+msgid "Remember your password? <0/>"
+msgstr "זוכר את הסיסמה? <0/>"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
-msgstr ""
+msgstr "הסר"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -2205,7 +1940,7 @@ msgstr "הסרת סיסמה"
 
 #: src/components/ai/chat.tsx
 msgid "Removed"
-msgstr ""
+msgstr "הוסר"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Removing password protection..."
@@ -2217,7 +1952,7 @@ msgstr "שינוי שם"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
-msgstr ""
+msgstr "סידור מחדש"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -2226,10 +1961,6 @@ msgstr "דיווח על באג"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "דיווח על בעיה"
-
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-msgid "Required Skills"
-msgstr ""
 
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Resend verification email"
@@ -2240,7 +1971,6 @@ msgid "Resending verification email..."
 msgstr "שולח מחדש דוא\"ל אימות..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
 msgid "Reset"
 msgstr "איפוס"
 
@@ -2260,12 +1990,6 @@ msgstr "איפוס הסיסמה שלך..."
 msgid "Resources"
 msgstr "משאבים"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Resume tailored successfully"
-msgstr ""
-
 #: src/components/command-palette/pages/navigation.tsx
 #: src/components/command-palette/pages/navigation.tsx
 #: src/components/command-palette/pages/resumes.tsx
@@ -2283,7 +2007,7 @@ msgstr "יישור לימין"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
-msgstr ""
+msgstr "התקדמות בתפקיד"
 
 #: src/utils/locale.ts
 msgid "Romanian"
@@ -2296,11 +2020,6 @@ msgstr "סיבוב"
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "רוסית"
-
-#. placeholder {0}: selectedSkills.size
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Save {0} Skills"
-msgstr ""
 
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
@@ -2330,11 +2049,6 @@ msgstr "סרוק את קוד ה־QR הבא באמצעות אפליקציית ה�
 msgid "School"
 msgstr "בית ספר"
 
-#: src/routes/dashboard/jobs/index.tsx
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Search"
-msgstr ""
-
 #: src/components/input/icon-picker.tsx
 #: src/components/input/icon-picker.tsx
 msgid "Search for an icon"
@@ -2345,7 +2059,6 @@ msgid "Search for..."
 msgstr "חיפוש..."
 
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Search..."
 msgstr "חיפוש..."
 
@@ -2357,17 +2070,9 @@ msgstr "הסוד הועתק ללוח הגזירים."
 msgid "Section Type"
 msgstr "סוג סעיף"
 
-#. placeholder {0}: job.job_title
-#. placeholder {1}: job.employer_name
-#. placeholder {2}: aiEnabled ? " and the AI will optimize it for this position." : "."
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created{2}"
-msgstr ""
-
 #: src/components/ui/combobox.tsx
-#: src/components/ui/multiple-combobox.tsx
 msgid "Select..."
-msgstr "בחירה..."
+msgstr "בחר..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
@@ -2438,7 +2143,7 @@ msgstr "הצגה"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Show link in title"
-msgstr ""
+msgstr "הצג קישור בכותרת"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
@@ -2503,10 +2208,6 @@ msgstr "גודל"
 msgid "Skills"
 msgstr "מיומנויות"
 
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Skip"
-msgstr ""
-
 #: src/routes/_home/route.tsx
 msgid "Skip to main content"
 msgstr "דלג לתוכן העיקרי"
@@ -2514,6 +2215,10 @@ msgstr "דלג לתוכן העיקרי"
 #: src/utils/locale.ts
 msgid "Slovak"
 msgstr "סלובקית"
+
+#: src/utils/locale.ts
+msgid "Slovenian"
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -2577,17 +2282,13 @@ msgstr "אפשר להתחיל לבנות את קורות החיים שלך על 
 msgid "Start building your resume from scratch"
 msgstr "התחלת בנייה מאפס של קורות החיים שלך"
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "State"
-msgstr ""
-
 #: src/utils/resume/section.tsx
 msgid "Statistics"
 msgstr "סטטיסטיקה"
 
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
-msgstr ""
+msgstr "הישאר"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2609,10 +2310,6 @@ msgstr "תמיכה ב־Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "אפשר לתמוך ביישום על ידי עשייה בכל דרך שאפשרית לך!"
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Supported filters include: date posted, employment types, remote filtering, and experience level requirements."
-msgstr ""
 
 #: src/utils/locale.ts
 msgid "Swedish"
@@ -2638,19 +2335,6 @@ msgstr "תגיות"
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "אפשר להשתמש בתגיות כדי לסווג את קורות החיים שלך לפי מילות מפתח."
 
-#: src/routes/dashboard/jobs/-components/job-detail.tsx
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Tailor Resume"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Tailoring failed"
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "Tailoring your resume..."
-msgstr ""
-
 #: src/utils/locale.ts
 msgid "Tamil"
 msgstr "טמילית"
@@ -2672,7 +2356,6 @@ msgid "Templates"
 msgstr "תבניות"
 
 #: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/jobs.tsx
 msgid "Test Connection"
 msgstr "בדיקת חיבור"
 
@@ -2687,10 +2370,6 @@ msgstr "צבע כתב"
 #: src/utils/locale.ts
 msgid "Thai"
 msgstr "תאית"
-
-#: src/routes/dashboard/jobs/-components/tailor-dialog.tsx
-msgid "The AI identified new skills from your experience that match this job. Select which ones to save back to your original resume for future applications. This will permanently modify your original resume and cannot be undone."
-msgstr ""
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "The API key has been deleted successfully."
@@ -2732,17 +2411,12 @@ msgstr "לאחר מכן, הזן את הקוד בן 6 הספרות שהאפליק
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "There was a problem while generating the DOCX, please try again."
-msgstr ""
-
-#: src/routes/builder/$resumeId/-components/dock.tsx
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again in some time."
 msgstr "אירעה בעיה בעת יצירת קובץ ה־PDF, נא לנסות שוב מאוחר יותר."
 
 #: src/components/ai/chat.tsx
 msgid "Thinking..."
-msgstr ""
+msgstr "חושב..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2772,10 +2446,6 @@ msgstr "זה עלול לקחת כמה דקות, בהתאם לזמן התגובה
 msgid "This may take a while depending on the server capacity. Please do not close the window or refresh the page."
 msgstr "זה עשוי לקחת זמן בהתאם לעומס על השרת. נא לא לסגור את החלון או לרענן את העמוד."
 
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "This month"
-msgstr ""
-
 #: src/components/resume/store/resume.ts
 msgid "This resume is locked and cannot be updated."
 msgstr "קורות חיים אלה נעולים ולא ניתן לעדכן אותם."
@@ -2787,10 +2457,6 @@ msgstr "סעיף זה שמור להערות האישיות שלך שנוגעות
 #: src/routes/auth/register.tsx
 msgid "This step is optional, but recommended."
 msgstr "שלב זה הוא רשות בלבד, אך מומלץ."
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "This week"
-msgstr ""
 
 #: src/dialogs/api-key/create.tsx
 msgid "This will generate a new API key to access the Reactive Resume API to allow machines to interact with your resume data."
@@ -2818,15 +2484,6 @@ msgstr "כותרת"
 #: src/routes/dashboard/settings/danger-zone.tsx
 msgid "To delete your account, you need to enter the confirmation text and click the button below."
 msgstr "כדי למחוק את החשבון שלך, עליך להזין את טקסט האישור וללחוץ על הכפתור שלמטה."
-
-#: src/routes/dashboard/jobs/index.tsx
-msgid "To search for job listings, you need to configure your RapidAPI key in settings."
-msgstr ""
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Today"
-msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Track your resume's views and downloads"
@@ -2896,7 +2553,6 @@ msgstr "אימות דו־שלבי הוגדר בהצלחה."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
 msgid "Type"
 msgstr "סוג"
 
@@ -2915,10 +2571,6 @@ msgstr "טיפוגרפיה"
 #: src/utils/locale.ts
 msgid "Ukrainian"
 msgstr "אוקראינית"
-
-#: src/routes/dashboard/jobs/-components/search-filters.tsx
-msgid "Under 3 years"
-msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Underline"
@@ -2966,7 +2618,7 @@ msgstr "עדכון הסמכה קיימת"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Update an existing cover letter"
-msgstr ""
+msgstr "עדכון מכתב מקדים קיים"
 
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Update an existing custom section"
@@ -3010,7 +2662,7 @@ msgstr "עדכון מיומנות קיימת"
 
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Update an existing summary item"
-msgstr ""
+msgstr "עדכון פריט סיכום קיים"
 
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Update an existing volunteer experience"
@@ -3031,7 +2683,7 @@ msgstr "עדכון הסיסמה שלך"
 
 #: src/components/ai/chat.tsx
 msgid "Updated"
-msgstr ""
+msgstr "עודכן"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -3157,10 +2809,6 @@ msgstr "כן! כל תבנית ניתנת להתאמה מלאה. אפשר לשנ�
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "כן! Reactive Resume חינמי לחלוטין לשימוש, בלי עלויות נסתרות, מדרגות פרימיום או דמי מנוי. הוא בקוד פתוח ותמיד יישאר חינמי."
 
-#: src/routes/dashboard/jobs/index.tsx
-msgid "Yesterday"
-msgstr ""
-
 #: src/routes/_home/-sections/features.tsx
 msgid "You also have the option to deploy on your own servers using the Docker image."
 msgstr "אפשר גם לפרוס על השרתים שלך באמצעות דמות Docker."
@@ -3175,7 +2823,7 @@ msgstr "אפשר לשתף את קורות החיים שלך באמצעות כת�
 
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
-msgstr ""
+msgstr "יש לך שינויים שלא נשמרו ויאבדו."
 
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
@@ -3199,7 +2847,6 @@ msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "הנתונים שלך מאובטחים, ולעולם אינם נמסרים או נמכרים לאף אחד."
 
 #: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/jobs.tsx
 msgid "Your data is stored locally"
 msgstr "הנתונים שלך מאוחסנים באופן מקומי"
 
@@ -3218,10 +2865,6 @@ msgstr "הסיסמה שלך עודכנה בהצלחה."
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Your profile has been updated successfully."
 msgstr "הפרופיל שלך עודכן בהצלחה."
-
-#: src/routes/dashboard/settings/jobs.tsx
-msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
-msgstr ""
 
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/index.tsx
@@ -3265,3 +2908,4 @@ msgstr "התרחקות"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "זולו"
+

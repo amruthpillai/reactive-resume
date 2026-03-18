@@ -1,12 +1,15 @@
 import { EnvelopeIcon, GlobeIcon, MapPinIcon, PhoneIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
+
 import { cn } from "@/utils/style";
+
+import type { TemplateProps } from "./types";
+
 import { getSectionComponent } from "../shared/get-section-component";
 import { PageIcon } from "../shared/page-icon";
 import { PageLink } from "../shared/page-link";
 import { PagePicture } from "../shared/page-picture";
 import { useResumeStore } from "../store/resume";
-import type { TemplateProps } from "./types";
 
 const sectionClassName = cn(
 	// Container
@@ -80,7 +83,7 @@ function Header() {
 					<p className="basics-headline">{basics.headline}</p>
 				</div>
 
-				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-(--page-primary-color) *:border-e *:py-0.5 *:pe-2 *:last:border-e-0">
+				<div className="basics-items flex flex-wrap gap-x-2 gap-y-0.5 *:flex *:items-center *:gap-x-1.5 *:border-e *:border-(--page-primary-color) *:py-0.5 *:pe-2 *:last:border-e-0">
 					{basics.email && (
 						<div className="basics-item-email">
 							<EnvelopeIcon />

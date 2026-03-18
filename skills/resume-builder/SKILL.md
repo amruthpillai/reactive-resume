@@ -54,6 +54,7 @@ Ask about preferences:
 Output must conform to the Reactive Resume schema. See [references/schema.md](references/schema.md) for the complete schema structure.
 
 Key requirements:
+
 - All item `id` fields must be valid UUIDs
 - Description fields accept HTML-formatted strings
 - Website fields require both `url` and `label` properties
@@ -75,6 +76,7 @@ Share these tips when helping users craft their resume content:
 ### Section Order Recommendations
 
 For most professionals:
+
 1. Summary (if experienced)
 2. Experience
 3. Education
@@ -83,6 +85,7 @@ For most professionals:
 6. Certifications/Awards
 
 For students/recent graduates:
+
 1. Education
 2. Projects
 3. Skills

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://ui.shadcn.com/schema.json",
-	"style": "radix-vega",
+	"style": "base-vega",
 	"rsc": false,
 	"tsx": true,
 	"tailwind": {
@@ -12,12 +12,15 @@
 	},
 	"iconLibrary": "phosphor",
 	"menuColor": "default",
-	"menuAccent": "subtle",
+	"menuAccent": "bold",
 	"aliases": {
 		"components": "@/components",
 		"utils": "@/utils/style",
 		"ui": "@/components/ui",
 		"lib": "@/utils",
 		"hooks": "@/hooks"
+	},
+	"registries": {
+		"@animate-ui": "https://animate-ui.com/r/{name}.json"
 	}
 }

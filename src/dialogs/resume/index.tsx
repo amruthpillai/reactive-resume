@@ -8,6 +8,7 @@ import { useEffect, useMemo } from "react";
 import { useForm, useFormContext, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
 import { ChipInput } from "@/components/input/chip-input";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -25,6 +26,7 @@ import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { orpc, type RouterInput } from "@/integrations/orpc/client";
 import { generateId, generateRandomName, slugify } from "@/utils/string";
+
 import { type DialogProps, useDialogStore } from "../store";
 
 const formSchema = z.object({
@@ -125,14 +127,16 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 							</Button>
 
 							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button size="icon" disabled={isPending}>
-										<CaretDownIcon />
-									</Button>
-								</DropdownMenuTrigger>
+								<DropdownMenuTrigger
+									render={
+										<Button size="icon" disabled={isPending}>
+											<CaretDownIcon />
+										</Button>
+									}
+								/>
 
 								<DropdownMenuContent align="end" className="w-fit">
-									<DropdownMenuItem onSelect={onCreateSampleResume}>
+									<DropdownMenuItem onClick={onCreateSampleResume}>
 										<TestTubeIcon />
 										<Trans>Create a Sample Resume</Trans>
 									</DropdownMenuItem>
@@ -249,9 +253,8 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 				toast.success(t`Your resume has been duplicated successfully.`, { id: toastId });
 				closeDialog();
 
-				if (data.shouldRedirect) {
-					navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
-				}
+				if (!data.shouldRedirect) return;
+				void navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
 			},
 			onError: (error) => {
 				toast.error(error.message, { id: toastId });
@@ -309,9 +312,7 @@ function ResumeForm() {
 							<Trans>Name</Trans>
 						</FormLabel>
 						<div className="flex items-center gap-x-2">
-							<FormControl>
-								<Input min={1} max={64} {...field} />
-							</FormControl>
+							<FormControl render={<Input min={1} max={64} {...field} />} />
 
 							<Button size="icon" variant="outline" title={t`Generate a random name`} onClick={onGenerateName}>
 								<MagicWandIcon />
@@ -333,14 +334,16 @@ function ResumeForm() {
 						<FormLabel>
 							<Trans>Slug</Trans>
 						</FormLabel>
-						<FormControl>
-							<InputGroup>
-								<InputGroupAddon align="inline-start" className="hidden sm:flex">
-									<InputGroupText>{slugPrefix}</InputGroupText>
-								</InputGroupAddon>
-								<InputGroupInput min={1} max={64} className="ps-0!" {...field} />
-							</InputGroup>
-						</FormControl>
+						<FormControl
+							render={
+								<InputGroup>
+									<InputGroupAddon align="inline-start" className="hidden sm:flex">
+										<InputGroupText>{slugPrefix}</InputGroupText>
+									</InputGroupAddon>
+									<InputGroupInput min={1} max={64} className="ps-0!" {...field} />
+								</InputGroup>
+							}
+						/>
 						<FormMessage />
 						<FormDescription>
 							<Trans>This is a URL-friendly name for your resume.</Trans>
@@ -357,9 +360,7 @@ function ResumeForm() {
 						<FormLabel>
 							<Trans>Tags</Trans>
 						</FormLabel>
-						<FormControl>
-							<ChipInput {...field} />
-						</FormControl>
+						<FormControl render={<ChipInput {...field} />} />
 						<FormMessage />
 						<FormDescription>
 							<Trans>Tags can be used to categorize your resume by keywords.</Trans>

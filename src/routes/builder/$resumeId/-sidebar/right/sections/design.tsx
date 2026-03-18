@@ -1,8 +1,10 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { ColorPicker } from "@/components/input/color-picker";
 import { IconPicker } from "@/components/input/icon-picker";
 import { LevelTypeCombobox } from "@/components/level/combobox";
@@ -13,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { colorDesignSchema, levelDesignSchema } from "@/schema/resume/data";
 import { cn } from "@/utils/style";
+
 import { SectionBase } from "../shared/section-base";
 
 export function DesignSectionBuilder() {
@@ -56,7 +59,7 @@ function ColorSectionForm() {
 									active={color === field.value}
 									onSelect={(color) => {
 										field.onChange(color);
-										form.handleSubmit(onSubmit)();
+										void form.handleSubmit(onSubmit)();
 									}}
 								/>
 							))}
@@ -72,17 +75,15 @@ function ColorSectionForm() {
 							<FormLabel>
 								<Trans>Primary Color</Trans>
 							</FormLabel>
-							<div className="flex items-center gap-2">
+							<div className="flex items-center gap-3">
 								<ColorPicker
 									value={field.value}
-									onValueChange={(color) => {
+									onChange={(color) => {
 										field.onChange(color);
-										form.handleSubmit(onSubmit)();
+										void form.handleSubmit(onSubmit)();
 									}}
 								/>
-								<FormControl>
-									<Input {...field} />
-								</FormControl>
+								<FormControl render={<Input {...field} />} />
 							</div>
 							<FormMessage />
 						</FormItem>
@@ -97,17 +98,15 @@ function ColorSectionForm() {
 							<FormLabel>
 								<Trans>Text Color</Trans>
 							</FormLabel>
-							<div className="flex items-center gap-2">
+							<div className="flex items-center gap-3">
 								<ColorPicker
 									defaultValue={field.value}
-									onValueChange={(color) => {
+									onChange={(color) => {
 										field.onChange(color);
-										form.handleSubmit(onSubmit)();
+										void form.handleSubmit(onSubmit)();
 									}}
 								/>
-								<FormControl>
-									<Input {...field} />
-								</FormControl>
+								<FormControl render={<Input {...field} />} />
 							</div>
 							<FormMessage />
 						</FormItem>
@@ -122,17 +121,15 @@ function ColorSectionForm() {
 							<FormLabel>
 								<Trans>Background Color</Trans>
 							</FormLabel>
-							<div className="flex items-center gap-2">
+							<div className="flex items-center gap-3">
 								<ColorPicker
 									defaultValue={field.value}
-									onValueChange={(color) => {
+									onChange={(color) => {
 										field.onChange(color);
-										form.handleSubmit(onSubmit)();
+										void form.handleSubmit(onSubmit)();
 									}}
 								/>
-								<FormControl>
-									<Input {...field} />
-								</FormControl>
+								<FormControl render={<Input {...field} />} />
 							</div>
 							<FormMessage />
 						</FormItem>
@@ -224,7 +221,7 @@ function LevelSectionForm() {
 	return (
 		<Form {...form}>
 			<form onChange={form.handleSubmit(onSubmit)} className="space-y-4">
-				<h4 className="font-semibold text-lg leading-none tracking-tight">
+				<h4 className="text-lg leading-none font-semibold tracking-tight">
 					<Trans>Level</Trans>
 				</h4>
 
@@ -240,7 +237,7 @@ function LevelSectionForm() {
 					/>
 				</div>
 
-				<div className="flex items-center gap-4">
+				<div className="flex items-center gap-3">
 					<FormField
 						control={form.control}
 						name="icon"
@@ -249,16 +246,18 @@ function LevelSectionForm() {
 								<FormLabel>
 									<Trans>Icon</Trans>
 								</FormLabel>
-								<FormControl>
-									<IconPicker
-										size="default"
-										value={field.value}
-										onChange={(value) => {
-											field.onChange(value);
-											form.handleSubmit(onSubmit)();
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<IconPicker
+											size="icon"
+											value={field.value}
+											onChange={(value) => {
+												field.onChange(value);
+												void form.handleSubmit(onSubmit)();
+											}}
+										/>
+									}
+								/>
 							</FormItem>
 						)}
 					/>
@@ -271,16 +270,18 @@ function LevelSectionForm() {
 								<FormLabel>
 									<Trans>Type</Trans>
 								</FormLabel>
-								<FormControl>
-									<LevelTypeCombobox
-										value={field.value}
-										onValueChange={(value) => {
-											if (!value) return;
-											field.onChange(value);
-											form.handleSubmit(onSubmit)();
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<LevelTypeCombobox
+											value={field.value}
+											onValueChange={(value) => {
+												if (!value) return;
+												field.onChange(value);
+												void form.handleSubmit(onSubmit)();
+											}}
+										/>
+									}
+								/>
 							</FormItem>
 						)}
 					/>

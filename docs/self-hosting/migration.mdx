@@ -8,7 +8,8 @@ description: "A step-by-step guide to migrate your Reactive Resume instance from
 This guide walks you through migrating your Reactive Resume installation from **v4 to v5**. The migration process involves setting up a new v5 instance alongside your existing v4 instance, then transferring your users and resumes to the new system.
 
 <Warning>
-  **Keep your v4 instance running** until you have successfully migrated all data to v5 and verified everything works correctly. This ensures you have a fallback in case anything goes wrong during the migration.
+	**Keep your v4 instance running** until you have successfully migrated all data to v5 and verified everything works
+	correctly. This ensures you have a fallback in case anything goes wrong during the migration.
 </Warning>
 
 ## Prerequisites
@@ -16,18 +17,15 @@ This guide walks you through migrating your Reactive Resume installation from **
 Before starting the migration, ensure you have:
 
 <CardGroup cols={2}>
-  <Card title="Running v4 Instance">
-    Your existing Reactive Resume v4 instance should be running and accessible.
-  </Card>
-  <Card title="New v5 Instance">
-    A fresh Reactive Resume v5 instance set up and running. Follow the [Self-Hosting with Docker](/self-hosting/docker) guide if you haven't done this yet.
-  </Card>
-  <Card title="Database Access">
-    Access to both your v4 PostgreSQL database (source) and v5 PostgreSQL database (target).
-  </Card>
-  <Card title="Backup">
-    A recent backup of your v4 database. Always backup before any migration.
-  </Card>
+	<Card title="Running v4 Instance">Your existing Reactive Resume v4 instance should be running and accessible.</Card>
+	<Card title="New v5 Instance">
+		A fresh Reactive Resume v5 instance set up and running. Follow the [Self-Hosting with Docker](/self-hosting/docker)
+		guide if you haven't done this yet.
+	</Card>
+	<Card title="Database Access">
+		Access to both your v4 PostgreSQL database (source) and v5 PostgreSQL database (target).
+	</Card>
+	<Card title="Backup">A recent backup of your v4 database. Always backup before any migration.</Card>
 </CardGroup>
 
 ## Choosing a Migration Method
@@ -35,16 +33,14 @@ Before starting the migration, ensure you have:
 The best migration approach depends on the size of your instance:
 
 <CardGroup cols={2}>
-  <Card title="Manual Migration" icon="hand">
-    **Best for**: Small instances with a handful of resumes.
-    
-    Uses the built-in Import Dialog to manually convert resumes one at a time.
-  </Card>
-  <Card title="Automated Migration" icon="robot">
-    **Best for**: Large instances with many users and resumes.
-    
-    Uses migration scripts to batch-process all users and resumes automatically.
-  </Card>
+	<Card title="Manual Migration" icon="hand">
+		**Best for**: Small instances with a handful of resumes. Uses the built-in Import Dialog to manually convert resumes
+		one at a time.
+	</Card>
+	<Card title="Automated Migration" icon="robot">
+		**Best for**: Large instances with many users and resumes. Uses migration scripts to batch-process all users and
+		resumes automatically.
+	</Card>
 </CardGroup>
 
 ## Manual Migration (Small Instances)
@@ -56,15 +52,11 @@ If you have only a few resumes to migrate, the simplest approach is to use the *
     In your v4 instance, go to each resume and export it as JSON. This creates a portable file containing all your resume data.
   </Step>
 
-  <Step title="Import into v5">
-    In your new v5 instance:
-    1. Log in or create a new account
-    2. Click **Create Resume** or use the **Import** option
-    3. Select the **Reactive Resume v4** format
-    4. Upload your exported JSON file
-    
-    The import process automatically converts the v4 format to v5.
-  </Step>
+<Step title="Import into v5">
+	In your new v5 instance: 1. Log in or create a new account 2. Click **Create Resume** or use the **Import** option 3.
+	Select the **Reactive Resume v4** format 4. Upload your exported JSON file The import process automatically converts
+	the v4 format to v5.
+</Step>
 
   <Step title="Verify and repeat">
     Review the imported resume to ensure all data transferred correctly. Repeat for each resume you need to migrate.
@@ -72,7 +64,8 @@ If you have only a few resumes to migrate, the simplest approach is to use the *
 </Steps>
 
 <Tip>
-  The Import Dialog handles the schema conversion automatically, so you don't need to worry about format differences between v4 and v5.
+	The Import Dialog handles the schema conversion automatically, so you don't need to worry about format differences
+	between v4 and v5.
 </Tip>
 
 ## Automated Migration (Large Instances)
@@ -84,27 +77,17 @@ For instances with many users and resumes, use the migration scripts to automate
 To run the migration scripts, you need the following installed on your host machine:
 
 <CardGroup cols={1}>
-  <Card title="Node.js Runtime">
-    **tsx** - TypeScript execution environment. Install globally with:
-    ```bash
-    npm install -g tsx
-    ```
-  </Card>
-  <Card title="Environment Loader">
-    **dotenvx** (or any tool to load `.env` files). Install globally with:
-    ```bash
-    npm install -g @dotenvx/dotenvx
-    ```
-    Alternatively, you can use `dotenv`, `direnv`, or export the variables manually.
-  </Card>
-  <Card title="Reactive Resume Source Code">
-    Clone the Reactive Resume repository to access the migration scripts:
-    ```bash
-    git clone https://github.com/amruthpillai/reactive-resume.git
-    cd reactive-resume
-    pnpm install
-    ```
-  </Card>
+	<Card title="Node.js Runtime">
+		**tsx** - TypeScript execution environment. Install globally with: ```bash npm install -g tsx ```
+	</Card>
+	<Card title="Environment Loader">
+		**dotenvx** (or any tool to load `.env` files). Install globally with: ```bash npm install -g @dotenvx/dotenvx ```
+		Alternatively, you can use `dotenv`, `direnv`, or export the variables manually.
+	</Card>
+	<Card title="Reactive Resume Source Code">
+		Clone the Reactive Resume repository to access the migration scripts: ```bash git clone
+		https://github.com/amruthpillai/reactive-resume.git cd reactive-resume pnpm install ```
+	</Card>
 </CardGroup>
 
 ### Environment Setup
@@ -120,7 +103,8 @@ PRODUCTION_DATABASE_URL="postgresql://user:password@localhost:5432/reactive_resu
 ```
 
 <Warning>
-  Double-check your connection strings! `DATABASE_URL` should point to your **new v5 database** and `PRODUCTION_DATABASE_URL` should point to your **old v4 database**. Mixing these up could cause data loss.
+	Double-check your connection strings! `DATABASE_URL` should point to your **new v5 database** and
+	`PRODUCTION_DATABASE_URL` should point to your **old v4 database**. Mixing these up could cause data loss.
 </Warning>
 
 ### Step 1: Migrate Users
@@ -140,7 +124,8 @@ dotenvx run -- tsx scripts/migration/user.ts
 - Creates a mapping file (`scripts/migration/user-id-map.json`) that links old user IDs to new ones
 
 <Info>
-  The script saves progress automatically. If interrupted (Ctrl+C), you can run it again and it will resume from where it left off.
+	The script saves progress automatically. If interrupted (Ctrl+C), you can run it again and it will resume from where
+	it left off.
 </Info>
 
 **Expected output:**
@@ -179,9 +164,7 @@ dotenvx run -- tsx scripts/migration/resume.ts
 - Migrates resume statistics (views, downloads)
 - Preserves visibility settings (public/private) and lock status
 
-<Info>
-  Like the user script, the resume migration also saves progress and can be resumed if interrupted.
-</Info>
+<Info>Like the user script, the resume migration also saves progress and can be resumed if interrupted.</Info>
 
 **Expected output:**
 
@@ -213,7 +196,8 @@ Both migration scripts support graceful shutdown and resume:
 - **Resume migration**: Run the script again to continue from where you left off
 
 <Tip>
-  If you need to restart the migration from scratch, delete the progress files and the user ID mapping file before running the scripts again.
+	If you need to restart the migration from scratch, delete the progress files and the user ID mapping file before
+	running the scripts again.
 </Tip>
 
 ## Post-Migration Steps
@@ -225,15 +209,14 @@ After completing the migration:
     Log into your v5 instance and spot-check several user accounts and resumes to ensure data transferred correctly.
   </Step>
 
-  <Step title="Test functionality">
-    - Create a test resume and export it as PDF
-    - Verify social logins work (if configured)
-    - Check that two-factor authentication works for migrated users
-  </Step>
+<Step title="Test functionality">
+	- Create a test resume and export it as PDF - Verify social logins work (if configured) - Check that two-factor
+	authentication works for migrated users
+</Step>
 
-  <Step title="Update DNS/Proxy">
-    Once verified, update your DNS records or reverse proxy to point to the new v5 instance.
-  </Step>
+<Step title="Update DNS/Proxy">
+	Once verified, update your DNS records or reverse proxy to point to the new v5 instance.
+</Step>
 
   <Step title="Decommission v4">
     After confirming everything works and allowing a grace period, you can safely shut down your v4 instance.
@@ -247,17 +230,20 @@ After completing the migration:
     Users who signed up with email/password can continue using their existing passwords. No password reset is required after migration.
   </Accordion>
 
-  <Accordion title="Profile pictures are not migrated">
-    User profile pictures (avatars) are stored as references in the database. If you were using S3 storage, ensure your v5 instance has access to the same bucket, or users may need to re-upload their avatars.
-  </Accordion>
+<Accordion title="Profile pictures are not migrated">
+	User profile pictures (avatars) are stored as references in the database. If you were using S3 storage, ensure your v5
+	instance has access to the same bucket, or users may need to re-upload their avatars.
+</Accordion>
 
-  <Accordion title="Resume images and uploads">
-    Similar to profile pictures, any images embedded in resumes need to be accessible from your v5 instance. Consider migrating your storage bucket or updating references as needed.
-  </Accordion>
+<Accordion title="Resume images and uploads">
+	Similar to profile pictures, any images embedded in resumes need to be accessible from your v5 instance. Consider
+	migrating your storage bucket or updating references as needed.
+</Accordion>
 
-  <Accordion title="OAuth provider changes">
-    If you're using custom OAuth providers, ensure the same providers are configured in v5 with matching client IDs. Users authenticate with the same provider ID, so mismatched configurations will cause login failures.
-  </Accordion>
+<Accordion title="OAuth provider changes">
+	If you're using custom OAuth providers, ensure the same providers are configured in v5 with matching client IDs. Users
+	authenticate with the same provider ID, so mismatched configurations will cause login failures.
+</Accordion>
 
   <Accordion title="Schema differences">
     The v5 schema has some changes from v4:
@@ -276,25 +262,20 @@ After completing the migration:
     Ensure your `.env` file contains both `DATABASE_URL` and `PRODUCTION_DATABASE_URL`, and that you're using a tool like `dotenvx` to load them before running the script.
   </Accordion>
 
-  <Accordion title="Users are skipped during migration">
-    Users are skipped if:
-    - Their email already exists in the v5 database
-    - Their username already exists in the v5 database
-    - They were already migrated in a previous run
-    
-    Check the console output for skip reasons.
-  </Accordion>
+<Accordion title="Users are skipped during migration">
+	Users are skipped if: - Their email already exists in the v5 database - Their username already exists in the v5
+	database - They were already migrated in a previous run Check the console output for skip reasons.
+</Accordion>
 
-  <Accordion title="Resumes are skipped during migration">
-    Resumes are skipped if:
-    - The associated user wasn't migrated (user ID not in mapping file)
-    - A resume with the same slug already exists for that user
-    - They were already migrated in a previous run
-  </Accordion>
+<Accordion title="Resumes are skipped during migration">
+	Resumes are skipped if: - The associated user wasn't migrated (user ID not in mapping file) - A resume with the same
+	slug already exists for that user - They were already migrated in a previous run
+</Accordion>
 
-  <Accordion title="Resume data parsing fails">
-    If a resume can't be parsed from v4 format, it will be created with default empty data. Check the console output for warnings about specific resumes, and consider manually importing those using the Import Dialog.
-  </Accordion>
+<Accordion title="Resume data parsing fails">
+	If a resume can't be parsed from v4 format, it will be created with default empty data. Check the console output for
+	warnings about specific resumes, and consider manually importing those using the Import Dialog.
+</Accordion>
 
   <Accordion title="Migration is slow">
     The scripts process data in batches to avoid overwhelming the database. For very large instances:

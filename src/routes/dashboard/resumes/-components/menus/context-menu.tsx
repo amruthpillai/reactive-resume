@@ -11,6 +11,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
+
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -24,7 +25,7 @@ import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 
 type Props = {
 	resume: RouterOutput["resume"]["list"][number];
-	children: React.ReactNode;
+	children: React.ComponentProps<typeof ContextMenuTrigger>["render"];
 };
 
 export function ResumeContextMenu({ resume, children }: Props) {
@@ -85,36 +86,38 @@ export function ResumeContextMenu({ resume, children }: Props) {
 
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
+			<ContextMenuTrigger render={children} />
 
 			<ContextMenuContent>
-				<ContextMenuItem asChild>
-					<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
-						<FolderOpenIcon />
-						<Trans>Open</Trans>
-					</Link>
-				</ContextMenuItem>
+				<ContextMenuItem
+					render={
+						<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
+							<FolderOpenIcon />
+							<Trans>Open</Trans>
+						</Link>
+					}
+				/>
 
 				<ContextMenuSeparator />
 
-				<ContextMenuItem disabled={resume.isLocked} onSelect={handleUpdate}>
+				<ContextMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon />
 					<Trans>Update</Trans>
 				</ContextMenuItem>
 
-				<ContextMenuItem onSelect={handleDuplicate}>
+				<ContextMenuItem onClick={handleDuplicate}>
 					<CopySimpleIcon />
 					<Trans>Duplicate</Trans>
 				</ContextMenuItem>
 
-				<ContextMenuItem onSelect={handleToggleLock}>
+				<ContextMenuItem onClick={handleToggleLock}>
 					{resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
 					{resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
 				</ContextMenuItem>
 
 				<ContextMenuSeparator />
 
-				<ContextMenuItem variant="destructive" disabled={resume.isLocked} onSelect={handleDelete}>
+				<ContextMenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
 					<TrashSimpleIcon />
 					<Trans>Delete</Trans>
 				</ContextMenuItem>

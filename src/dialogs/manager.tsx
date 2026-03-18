@@ -1,5 +1,7 @@
 import { match } from "ts-pattern";
+
 import { Dialog } from "@/components/ui/dialog";
+
 import { CreateApiKeyDialog } from "./api-key/create";
 import { ChangePasswordDialog } from "./auth/change-password";
 import { DisableTwoFactorDialog } from "./auth/disable-two-factor";
@@ -27,7 +29,7 @@ import { useDialogStore } from "./store";
 export function DialogManager() {
 	const { open, activeDialog, onOpenChange } = useDialogStore();
 
-	const dialogContent = match(activeDialog)
+	const DialogContent = match(activeDialog)
 		.with({ type: "auth.change-password" }, () => <ChangePasswordDialog />)
 		.with({ type: "auth.two-factor.enable" }, () => <EnableTwoFactorDialog />)
 		.with({ type: "auth.two-factor.disable" }, () => <DisableTwoFactorDialog />)
@@ -71,7 +73,7 @@ export function DialogManager() {
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			{dialogContent}
+			{DialogContent}
 		</Dialog>
 	);
 }

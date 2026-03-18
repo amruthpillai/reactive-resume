@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -57,18 +58,23 @@ function RouteComponent() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Forgot your password?</Trans>
 				</h1>
 
 				<div className="text-muted-foreground">
 					<Trans>
 						Remember your password?{" "}
-						<Button asChild variant="link" className="h-auto gap-1.5 px-1! py-0">
-							<Link to="/auth/login">
-								Sign in now <ArrowRightIcon />
-							</Link>
-						</Button>
+						<Button
+							variant="link"
+							className="h-auto gap-1.5 px-1! py-0"
+							nativeButton={false}
+							render={
+								<Link to="/auth/login">
+									Sign in now <ArrowRightIcon />
+								</Link>
+							}
+						/>
 					</Trans>
 				</div>
 			</div>
@@ -83,9 +89,9 @@ function RouteComponent() {
 								<FormLabel>
 									<Trans>Email Address</Trans>
 								</FormLabel>
-								<FormControl>
-									<Input type="email" autoComplete="email" placeholder="john.doe@example.com" {...field} />
-								</FormControl>
+								<FormControl
+									render={<Input type="email" autoComplete="email" placeholder="john.doe@example.com" {...field} />}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -104,7 +110,7 @@ function PostForgotPasswordScreen() {
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>You've got mail!</Trans>
 				</h1>
 				<p className="text-muted-foreground">
@@ -112,11 +118,14 @@ function PostForgotPasswordScreen() {
 				</p>
 			</div>
 
-			<Button asChild>
-				<a href="mailto:">
-					<Trans>Open Email Client</Trans>
-				</a>
-			</Button>
+			<Button
+				nativeButton={false}
+				render={
+					<a href="mailto:">
+						<Trans>Open Email Client</Trans>
+					</a>
+				}
+			/>
 		</>
 	);
 }

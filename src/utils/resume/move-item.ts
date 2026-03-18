@@ -1,6 +1,9 @@
 import type { WritableDraft } from "immer";
+
 import type { CustomSection, CustomSectionType, ResumeData, SectionItem, SectionType } from "@/schema/resume/data";
+
 import { generateId } from "@/utils/string";
+
 import { getSectionTitle as getDefaultSectionTitle } from "./section";
 
 // ============================================================================

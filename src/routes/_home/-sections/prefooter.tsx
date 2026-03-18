@@ -1,5 +1,6 @@
 import { Trans } from "@lingui/react/macro";
 import { motion } from "motion/react";
+
 import { TextMaskEffect } from "@/components/animation/text-mask";
 
 export function Prefooter() {
@@ -21,11 +22,11 @@ export function Prefooter() {
 					viewport={{ once: true }}
 					transition={{ duration: 0.6 }}
 				>
-					<h2 className="font-bold text-2xl tracking-tight md:text-4xl">
+					<h2 className="text-2xl font-bold tracking-tight md:text-4xl">
 						<Trans>By the community, for the community.</Trans>
 					</h2>
 
-					<p className="text-muted-foreground leading-relaxed">
+					<p className="leading-relaxed text-muted-foreground">
 						<Trans>
 							Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to
 							numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders

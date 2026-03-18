@@ -4,9 +4,12 @@ import { DotsThreeIcon, DownloadSimpleIcon, PlusIcon } from "@phosphor-icons/rea
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo } from "react";
+
+import type { RouterOutput } from "@/integrations/orpc/client";
+
 import { Button } from "@/components/ui/button";
 import { useDialogStore } from "@/dialogs/store";
-import type { RouterOutput } from "@/integrations/orpc/client";
+
 import { ResumeDropdownMenu } from "./menus/dropdown-menu";
 
 type Resume = RouterOutput["resume"]["list"][number];
@@ -32,7 +35,6 @@ export function ListView({ resumes }: Props) {
 				<Button
 					size="lg"
 					variant="ghost"
-					tapScale={0.99}
 					className="h-12 w-full justify-start gap-x-4 text-start"
 					onClick={handleCreateResume}
 				>
@@ -56,7 +58,6 @@ export function ListView({ resumes }: Props) {
 				<Button
 					size="lg"
 					variant="ghost"
-					tapScale={0.99}
 					className="h-12 w-full justify-start gap-x-4 text-start"
 					onClick={handleImportResume}
 				>
@@ -100,21 +101,21 @@ function ResumeListItem({ resume }: { resume: Resume }) {
 	return (
 		<div className="flex items-center gap-x-2">
 			<Button
-				asChild
 				size="lg"
 				variant="ghost"
-				tapScale={0.99}
+				nativeButton={false}
 				className="h-12 w-full flex-1 justify-start gap-x-4 text-start"
-			>
-				<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
-					<div className="size-3" />
-					<div className="min-w-80 truncate">{resume.name}</div>
+				render={
+					<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
+						<div className="size-3" />
+						<div className="min-w-80 truncate">{resume.name}</div>
 
-					<p className="text-xs opacity-60">
-						<Trans>Last updated on {updatedAt}</Trans>
-					</p>
-				</Link>
-			</Button>
+						<p className="text-xs opacity-60">
+							<Trans>Last updated on {updatedAt}</Trans>
+						</p>
+					</Link>
+				}
+			/>
 
 			<ResumeDropdownMenu resume={resume} align="end">
 				<Button size="icon" variant="ghost" className="size-12">

@@ -2,6 +2,7 @@ import { TiptapContent } from "@/components/input/rich-input";
 import { getSectionTitle } from "@/utils/resume/section";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
+
 import { useResumeStore } from "../store/resume";
 
 type PageSummaryProps = {

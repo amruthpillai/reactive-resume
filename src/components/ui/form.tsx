@@ -1,6 +1,5 @@
+import { useRender } from "@base-ui/react";
 import { isPlainObject } from "es-toolkit";
-import type { Label as LabelPrimitive } from "radix-ui";
-import { Slot as SlotPrimitive } from "radix-ui";
 import * as React from "react";
 import {
 	Controller,
@@ -12,6 +11,7 @@ import {
 	useFormContext,
 	useFormState,
 } from "react-hook-form";
+
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/style";
 
@@ -76,7 +76,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 	);
 }
 
-function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {
+function FormLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
 	const { error, formItemId } = useFormField();
 
 	return (
@@ -90,18 +90,21 @@ function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPri
 	);
 }
 
-function FormControl({ ...props }: React.ComponentProps<typeof SlotPrimitive.Slot>) {
+function FormControl(props: useRender.ComponentProps<"div">) {
 	const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
-	return (
-		<SlotPrimitive.Slot
-			data-slot="form-control"
-			id={formItemId}
-			aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
-			aria-invalid={!!error}
-			{...props}
-		/>
-	);
+	return useRender({
+		...props,
+		defaultTagName: "div",
+		state: { slot: "form-control" },
+		props: {
+			id: formItemId,
+			"data-slot": "form-control",
+			"aria-describedby": !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`,
+			"aria-invalid": !!error,
+			...props,
+		},
+	});
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
@@ -111,7 +114,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 		<p
 			data-slot="form-description"
 			id={formDescriptionId}
-			className={cn("text-muted-foreground text-xs leading-normal", className)}
+			className={cn("text-xs leading-normal text-muted-foreground", className)}
 			{...props}
 		/>
 	);
@@ -152,4 +155,4 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
 	);
 }
 
-export { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage };

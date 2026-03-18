@@ -1,9 +1,11 @@
 import { i18n } from "@lingui/core";
 import { useLingui } from "@lingui/react";
-import { isLocale, type Locale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";
-import { Combobox, type ComboboxProps } from "../ui/combobox";
 
-type Props = Omit<ComboboxProps, "options" | "value" | "onValueChange">;
+import { isLocale, type Locale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";
+
+import { Combobox, type SingleComboboxProps } from "../ui/combobox";
+
+type Props = Omit<SingleComboboxProps, "options" | "value" | "onValueChange">;
 
 export const getLocaleOptions = () => {
 	return Object.entries(localeMap).map(([value, label]) => ({
@@ -22,5 +24,13 @@ export function LocaleCombobox(props: Props) {
 		window.location.reload();
 	};
 
-	return <Combobox options={getLocaleOptions()} defaultValue={i18n.locale} onValueChange={onLocaleChange} {...props} />;
+	return (
+		<Combobox
+			showClear={false}
+			defaultValue={i18n.locale}
+			options={getLocaleOptions()}
+			onValueChange={onLocaleChange}
+			{...props}
+		/>
+	);
 }

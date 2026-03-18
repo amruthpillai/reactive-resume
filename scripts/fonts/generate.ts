@@ -9,6 +9,7 @@
  */
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+
 import type { APIResponse, Variant, WebFont, Weight } from "./types";
 
 const args = process.argv.slice(2);

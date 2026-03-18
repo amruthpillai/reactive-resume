@@ -3,9 +3,11 @@ import { ProhibitIcon } from "@phosphor-icons/react";
 import Fuse from "fuse.js";
 import { memo, useCallback, useMemo, useState } from "react";
 import { type CellComponentProps, Grid } from "react-window";
+
 import { Button } from "@/components/ui/button";
 import { type IconName, icons } from "@/schema/icons";
 import { cn } from "@/utils/style";
+
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
@@ -91,11 +93,13 @@ export function IconPicker({ value, onChange, popoverProps, ...props }: IconPick
 
 	return (
 		<Popover {...popoverProps}>
-			<PopoverTrigger asChild>
-				<Button size="icon" variant="outline" {...props}>
-					<i className={cn("ph size-4 text-base", `ph-${value}`)} />
-				</Button>
-			</PopoverTrigger>
+			<PopoverTrigger
+				render={
+					<Button size="icon" variant="outline" {...props}>
+						<i className={cn("ph size-4 text-base", `ph-${value}`)} />
+					</Button>
+				}
+			/>
 
 			<PopoverContent align="start" className="h-[326px] w-[290px] gap-0 p-0">
 				<IconSearchInput value={search} onChange={setSearch} />

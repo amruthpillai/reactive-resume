@@ -4,6 +4,7 @@ import { GithubLogoIcon, GoogleLogoIcon, VaultIcon } from "@phosphor-icons/react
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
@@ -27,7 +28,7 @@ export function SocialAuth() {
 		}
 
 		toast.dismiss(toastId);
-		router.invalidate();
+		await router.invalidate();
 	};
 
 	const handleOAuthLogin = async () => {
@@ -44,14 +45,14 @@ export function SocialAuth() {
 		}
 
 		toast.dismiss(toastId);
-		router.invalidate();
+		await router.invalidate();
 	};
 
 	return (
 		<>
 			<div className="flex items-center gap-x-2">
 				<hr className="flex-1" />
-				<span className="font-medium text-xs tracking-wide">
+				<span className="text-xs font-medium tracking-wide">
 					<Trans context="Choose to authenticate with a social provider (Google, GitHub, etc.) instead of email and password">
 						or continue with
 					</Trans>

@@ -1,14 +1,21 @@
+import type { GenericOAuthConfig } from "better-auth/plugins";
+
 import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+import { dash } from "@better-auth/infra";
 import { BetterAuthError, betterAuth } from "better-auth";
-import { type GenericOAuthConfig, genericOAuth, openAPI, twoFactor } from "better-auth/plugins";
+import { openAPI } from "better-auth/plugins";
+import { genericOAuth } from "better-auth/plugins/generic-oauth";
+import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
 import { and, eq, or } from "drizzle-orm";
-import { db } from "@/integrations/drizzle/client";
+
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
 import { generateId, toUsername } from "@/utils/string";
+
 import { schema } from "../drizzle";
+import { db } from "../drizzle/client";
 import { sendEmail } from "../email/service";
 
 function isCustomOAuthProviderEnabled() {
@@ -79,17 +86,18 @@ const getAuthConfig = () => {
 
 	return betterAuth({
 		appName: "Reactive Resume",
-
-		baseURL: env.APP_URL,
-		secret: env.AUTH_SECRET,
+		baseURL: process.env.BETTER_AUTH_URL ?? env.APP_URL,
+		secret: process.env.BETTER_AUTH_SECRET ?? env.AUTH_SECRET,
 
 		database: drizzleAdapter(db, { schema, provider: "pg" }),
 
 		telemetry: { enabled: false },
 		trustedOrigins: getTrustedOrigins(),
+
 		advanced: {
 			database: { generateId },
 			useSecureCookies: env.APP_URL.startsWith("https://"),
+			ipAddress: { ipAddressHeaders: ["x-forwarded-for", "cf-connecting-ip"] },
 		},
 
 		emailAndPassword: {
@@ -154,9 +162,7 @@ const getAuthConfig = () => {
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GOOGLE_CLIENT_ID!,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GOOGLE_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
 					const name = profile.name ?? profile.email.split("@")[0];
@@ -175,9 +181,7 @@ const getAuthConfig = () => {
 			github: {
 				enabled: !!env.GITHUB_CLIENT_ID && !!env.GITHUB_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientId: env.GITHUB_CLIENT_ID!,
-				// biome-ignore lint/style/noNonNullAssertion: enabled check ensures these are not null
 				clientSecret: env.GITHUB_CLIENT_SECRET!,
 				mapProfileToUser: async (profile) => {
 					const name = profile.name ?? profile.login ?? String(profile.id);
@@ -228,14 +232,10 @@ const getAuthConfig = () => {
 
 		plugins: [
 			openAPI(),
-			apiKey({
-				enableSessionForAPIKeys: true,
-				rateLimit: {
-					enabled: true,
-					timeWindow: 1000 * 60 * 60 * 24, // 1 day
-					maxRequests: 500, // 500 requests per day
-				},
-			}),
+			genericOAuth({ config: authConfigs }),
+			twoFactor({ issuer: "Reactive Resume" }),
+			apiKey({ enableSessionForAPIKeys: true, rateLimit: { enabled: false } }),
+			dash({ apiKey: env.BETTER_AUTH_API_KEY, activityTracking: { enabled: true } }),
 			username({
 				minUsernameLength: 3,
 				maxUsernameLength: 64,
@@ -244,8 +244,6 @@ const getAuthConfig = () => {
 				usernameValidator: (username) => /^[a-z0-9._-]+$/.test(username),
 				validationOrder: { username: "post-normalization", displayUsername: "post-normalization" },
 			}),
-			twoFactor({ issuer: "Reactive Resume" }),
-			genericOAuth({ config: authConfigs }),
 		],
 	});
 };

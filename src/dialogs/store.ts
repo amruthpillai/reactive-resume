@@ -1,5 +1,6 @@
 import z from "zod";
 import { create } from "zustand/react";
+
 import {
 	awardItemSchema,
 	certificationItemSchema,
@@ -161,7 +162,6 @@ type DialogType = DialogSchema["type"];
 
 type DialogData<T extends DialogType> = Extract<DialogSchema, { type: T }>["data"];
 
-// biome-ignore lint/complexity/noBannedTypes: {} is the appropriate type for this case
 type DialogPropsData<T extends DialogType> = DialogData<T> extends undefined ? {} : { data: DialogData<T> };
 
 export type DialogProps<T extends DialogType> = DialogPropsData<T>;

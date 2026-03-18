@@ -14,16 +14,17 @@
 
 	"customizations": {
 		"vscode": {
-			"extensions": ["biomejs.biome", "bradlc.vscode-tailwindcss", "lokalise.i18n-ally"],
+			"extensions": [
+				"oxc.oxc-vscode",
+				"bradlc.vscode-tailwindcss",
+				"lokalise.i18n-ally",
+				"typescriptteam.native-preview"
+			],
 			"settings": {
-				"biome.enabled": true,
+				"editor.defaultFormatter": "oxc.oxc-vscode",
 				"editor.codeActionsOnSave": {
-					"source.biome": "explicit",
-					"source.fixAll.biome": "explicit",
-					"source.organizeImports.biome": "explicit"
-				},
-				"editor.defaultFormatter": "biomejs.biome",
-				"typescript.tsdk": "node_modules/typescript/lib"
+					"source.fixAll.oxc": "always"
+				}
 			}
 		}
 	},

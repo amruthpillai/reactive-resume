@@ -4,10 +4,12 @@ import { PlusIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { CommandLoading } from "cmdk";
+
 import { CommandItem, CommandShortcut } from "@/components/ui/command";
 import { Kbd } from "@/components/ui/kbd";
 import { useDialogStore } from "@/dialogs/store";
 import { orpc } from "@/integrations/orpc/client";
+
 import { useCommandPaletteStore } from "../store";
 import { BaseCommandGroup } from "./base";
 
@@ -27,14 +29,14 @@ export function ResumesCommandGroup() {
 		}),
 	);
 
-	const onCreate = () => {
-		navigate({ to: "/dashboard/resumes" });
+	const onCreate = async () => {
+		await navigate({ to: "/dashboard/resumes" });
 		openDialog("resume.create", undefined);
 		reset();
 	};
 
-	const onNavigate = (path: string) => {
-		navigate({ to: path });
+	const onNavigate = async (path: string) => {
+		await navigate({ to: path });
 		reset();
 	};
 

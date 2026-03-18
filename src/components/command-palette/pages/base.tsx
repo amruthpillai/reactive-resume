@@ -1,5 +1,7 @@
 import { useMemo } from "react";
+
 import { CommandGroup } from "@/components/ui/command";
+
 import { useCommandPaletteStore } from "../store";
 
 type Props = {

@@ -20,6 +20,7 @@ import {
 	TranslateIcon,
 } from "@phosphor-icons/react";
 import { motion } from "motion/react";
+
 import { cn } from "@/utils/style";
 
 type Feature = {
@@ -160,8 +161,8 @@ function FeatureCard({ icon: Icon, title, description, index }: FeatureCardProps
 
 			{/* Content */}
 			<div className="relative flex flex-col gap-y-1.5">
-				<h3 className="font-semibold text-base tracking-tight transition-colors group-hover:text-primary">{title}</h3>
-				<p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
+				<h3 className="text-base font-semibold tracking-tight transition-colors group-hover:text-primary">{title}</h3>
+				<p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
 			</div>
 		</motion.div>
 	);
@@ -178,11 +179,11 @@ export function Features() {
 				viewport={{ once: true }}
 				transition={{ duration: 0.6 }}
 			>
-				<h2 className="font-semibold text-2xl tracking-tight md:text-4xl xl:text-5xl">
+				<h2 className="text-2xl font-semibold tracking-tight md:text-4xl xl:text-5xl">
 					<Trans>Features</Trans>
 				</h2>
 
-				<p className="max-w-2xl text-muted-foreground leading-relaxed">
+				<p className="max-w-2xl leading-relaxed text-muted-foreground">
 					<Trans>
 						Everything you need to create, customize, and share professional resumes. Built with privacy in mind,
 						powered by open source, and completely free forever.
@@ -191,7 +192,7 @@ export function Features() {
 			</motion.div>
 
 			{/* Features Grid */}
-			<div className="grid grid-cols-1 xs:grid-cols-2 border-t xl:grid-cols-4">
+			<div className="xs:grid-cols-2 grid grid-cols-1 border-t xl:grid-cols-4">
 				{getFeatures().map((feature, index) => (
 					<FeatureCard key={feature.id} {...feature} index={index} />
 				))}

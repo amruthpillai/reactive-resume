@@ -6,12 +6,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useConfirm } from "@/hooks/use-confirm";
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
+
 import { DashboardHeader } from "../-components/header";
 
 export const Route = createFileRoute("/dashboard/settings/danger-zone")({
@@ -43,7 +45,7 @@ function RouteComponent() {
 			onSuccess: async () => {
 				toast.success(t`Your account has been deleted successfully.`, { id: toastId });
 				await authClient.signOut();
-				navigate({ to: "/" });
+				void navigate({ to: "/" });
 			},
 			onError: (error) => {
 				toast.error(error.message, { id: toastId });

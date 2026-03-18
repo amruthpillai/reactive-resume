@@ -1,5 +1,6 @@
 import { CheckCircleIcon, InfoIcon, SpinnerIcon, WarningIcon, XCircleIcon } from "@phosphor-icons/react";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
+
 import { useTheme } from "../theme/provider";
 
 const Toaster = ({ ...props }: ToasterProps) => {

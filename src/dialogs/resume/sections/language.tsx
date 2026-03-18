@@ -1,16 +1,19 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useForm, useFormContext } from "react-hook-form";
-import type z from "zod";
+
+import type { DialogProps } from "@/dialogs/store";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import type { DialogProps } from "@/dialogs/store";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { languageItemSchema } from "@/schema/resume/data";
@@ -152,9 +155,7 @@ function LanguageForm() {
 						<FormLabel>
 							<Trans>Language</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -168,9 +169,7 @@ function LanguageForm() {
 						<FormLabel>
 							<Trans>Fluency</Trans>
 						</FormLabel>
-						<FormControl>
-							<Input {...field} />
-						</FormControl>
+						<FormControl render={<Input {...field} />} />
 						<FormMessage />
 					</FormItem>
 				)}
@@ -184,15 +183,17 @@ function LanguageForm() {
 						<FormLabel>
 							<Trans>Level</Trans>
 						</FormLabel>
-						<FormControl>
-							<Slider
-								min={0}
-								max={5}
-								step={1}
-								value={[field.value]}
-								onValueChange={(value) => field.onChange(value[0])}
-							/>
-						</FormControl>
+						<FormControl
+							render={
+								<Slider
+									min={0}
+									max={5}
+									step={1}
+									value={[field.value]}
+									onValueChange={(value) => field.onChange(Array.isArray(value) ? value[0] : value)}
+								/>
+							}
+						/>
 						<FormMessage />
 						<FormDescription>{Number(field.value) === 0 ? t`Hidden` : `${field.value} / 5`}</FormDescription>
 					</FormItem>

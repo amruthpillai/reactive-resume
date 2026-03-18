@@ -9,6 +9,9 @@ import {
 	PencilSimpleLineIcon,
 	PlusIcon,
 } from "@phosphor-icons/react";
+
+import type { SectionType } from "@/schema/resume/data";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +30,6 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
-import type { SectionType } from "@/schema/resume/data";
 
 type Props = {
 	type: "summary" | SectionType;
@@ -105,17 +107,19 @@ export function SectionDropdownMenu({ type }: Props) {
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button size="icon" variant="ghost">
-					<ListIcon />
-				</Button>
-			</DropdownMenuTrigger>
+			<DropdownMenuTrigger
+				render={
+					<Button size="icon" variant="ghost">
+						<ListIcon />
+					</Button>
+				}
+			/>
 
-			<DropdownMenuContent align="end">
+			<DropdownMenuContent>
 				{type !== "summary" && (
 					<>
 						<DropdownMenuGroup>
-							<DropdownMenuItem onSelect={onAddItem}>
+							<DropdownMenuItem onClick={onAddItem}>
 								<PlusIcon />
 								<Trans>Add a new item</Trans>
 							</DropdownMenuItem>
@@ -126,12 +130,12 @@ export function SectionDropdownMenu({ type }: Props) {
 				)}
 
 				<DropdownMenuGroup>
-					<DropdownMenuItem onSelect={onToggleVisibility}>
+					<DropdownMenuItem onClick={onToggleVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
 					</DropdownMenuItem>
 
-					<DropdownMenuItem onSelect={onRenameSection}>
+					<DropdownMenuItem onClick={onRenameSection}>
 						<PencilSimpleLineIcon />
 						<Trans>Rename</Trans>
 					</DropdownMenuItem>
@@ -157,7 +161,7 @@ export function SectionDropdownMenu({ type }: Props) {
 				<DropdownMenuSeparator />
 
 				<DropdownMenuGroup>
-					<DropdownMenuItem variant="destructive" onSelect={onReset}>
+					<DropdownMenuItem variant="destructive" onClick={onReset}>
 						<BroomIcon />
 						<Trans>Reset</Trans>
 					</DropdownMenuItem>

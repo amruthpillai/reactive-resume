@@ -20,6 +20,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useControls } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
+
 import { AIChat } from "@/components/ai/chat";
 import { useTemporalStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
@@ -96,7 +97,7 @@ export function BuilderDock() {
 
 		try {
 			const { url } = await printResumeAsPDF({ id: resume.id });
-			downloadFromUrl(url, filename);
+			await downloadFromUrl(url, filename);
 		} catch {
 			toast.error(t`There was a problem while generating the PDF, please try again in some time.`);
 		} finally {
@@ -111,7 +112,7 @@ export function BuilderDock() {
 				animate={{ opacity: 0.5, y: 0 }}
 				whileHover={{ opacity: 1 }}
 				transition={{ duration: 0.2 }}
-				className="flex items-center rounded-r-full rounded-l-full bg-popover px-2 shadow-xl"
+				className="flex items-center rounded-l-full rounded-r-full bg-popover px-2 shadow-xl"
 			>
 				<DockIcon
 					disabled={!canUndo}
@@ -163,11 +164,14 @@ type DockIconProps = {
 function DockIcon({ icon: Icon, title, disabled, onClick, iconClassName }: DockIconProps) {
 	return (
 		<Tooltip>
-			<TooltipTrigger asChild>
-				<Button size="icon" variant="ghost" disabled={disabled} onClick={onClick}>
-					<Icon className={cn("size-4", iconClassName)} />
-				</Button>
-			</TooltipTrigger>
+			<TooltipTrigger
+				render={
+					<Button size="icon" variant="ghost" disabled={disabled} onClick={onClick}>
+						<Icon className={cn("size-4", iconClassName)} />
+					</Button>
+				}
+			/>
+
 			<TooltipContent side="top" align="center" className="font-medium">
 				{title}
 			</TooltipContent>

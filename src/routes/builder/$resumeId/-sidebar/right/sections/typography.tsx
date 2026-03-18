@@ -1,13 +1,16 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
-import type z from "zod";
+
 import { useResumeStore } from "@/components/resume/store/resume";
 import { FontFamilyCombobox, FontWeightCombobox, getNextWeights } from "@/components/typography/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
 import { typographySchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 export function TypographySectionBuilder() {
@@ -44,12 +47,12 @@ function TypographySectionForm() {
 
 	return (
 		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)} className="grid @md:grid-cols-2 grid-cols-1 gap-4">
+			<form onChange={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 @md:grid-cols-2">
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
-					<p className="shrink-0 font-medium text-base">
+					<div className="shrink-0 text-base leading-none font-medium">
 						<Trans context="Body Text (paragraphs, lists, etc.)">Body</Trans>
-					</p>
+					</div>
 					<Separator className="flex-1" />
 				</div>
 
@@ -61,21 +64,22 @@ function TypographySectionForm() {
 							<FormLabel>
 								<Trans>Font Family</Trans>
 							</FormLabel>
-							<FormControl>
-								<FontFamilyCombobox
-									value={field.value}
-									buttonProps={{ size: "lg", className: "text-base" }}
-									onValueChange={(value) => {
-										if (value === null) return;
-										field.onChange(value);
-										const nextWeights = getNextWeights(value);
-										if (nextWeights !== null) {
+							<FormControl
+								render={
+									<FontFamilyCombobox
+										value={field.value}
+										className="text-base"
+										onValueChange={(value) => {
+											if (value === null) return;
+											field.onChange(value);
+											const nextWeights = getNextWeights(value);
+											if (!nextWeights) return;
 											form.setValue("body.fontWeights", nextWeights, { shouldDirty: true });
-										}
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+											void form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -89,16 +93,18 @@ function TypographySectionForm() {
 							<FormLabel>
 								<Trans>Font Weights</Trans>
 							</FormLabel>
-							<FormControl>
-								<FontWeightCombobox
-									value={field.value}
-									fontFamily={bodyFontFamily}
-									onValueChange={(value) => {
-										field.onChange(value);
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+							<FormControl
+								render={
+									<FontWeightCombobox
+										value={field.value}
+										fontFamily={bodyFontFamily}
+										onValueChange={(value) => {
+											field.onChange(value);
+											void form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -113,20 +119,22 @@ function TypographySectionForm() {
 								<Trans>Font Size</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={6}
-										max={24}
-										step={0.1}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={6}
+											max={24}
+											step={0.1}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>pt</InputGroupText>
 								</InputGroupAddon>
@@ -144,20 +152,22 @@ function TypographySectionForm() {
 								<Trans>Line Height</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={0.5}
-										max={4}
-										step={0.05}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={0.5}
+											max={4}
+											step={0.05}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>x</InputGroupText>
 								</InputGroupAddon>
@@ -168,9 +178,9 @@ function TypographySectionForm() {
 
 				<div className="col-span-full flex items-center gap-x-2">
 					<Separator className="basis-[16px]" />
-					<p className="shrink-0 font-medium text-base">
+					<div className="shrink-0 text-base leading-none font-medium">
 						<Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>
-					</p>
+					</div>
 					<Separator className="flex-1" />
 				</div>
 
@@ -182,21 +192,22 @@ function TypographySectionForm() {
 							<FormLabel>
 								<Trans>Font Family</Trans>
 							</FormLabel>
-							<FormControl>
-								<FontFamilyCombobox
-									value={field.value}
-									buttonProps={{ size: "lg", className: "text-base" }}
-									onValueChange={(value) => {
-										if (value === null) return;
-										field.onChange(value);
-										const nextWeights = getNextWeights(value);
-										if (nextWeights !== null) {
+							<FormControl
+								render={
+									<FontFamilyCombobox
+										value={field.value}
+										className="text-base"
+										onValueChange={(value) => {
+											if (value === null) return;
+											field.onChange(value);
+											const nextWeights = getNextWeights(value);
+											if (!nextWeights) return;
 											form.setValue("heading.fontWeights", nextWeights, { shouldDirty: true });
-										}
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+											void form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -210,16 +221,18 @@ function TypographySectionForm() {
 							<FormLabel>
 								<Trans>Font Weight</Trans>
 							</FormLabel>
-							<FormControl>
-								<FontWeightCombobox
-									value={field.value}
-									fontFamily={headingFontFamily}
-									onValueChange={(value) => {
-										field.onChange(value);
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
+							<FormControl
+								render={
+									<FontWeightCombobox
+										value={field.value}
+										fontFamily={headingFontFamily}
+										onValueChange={(value) => {
+											field.onChange(value);
+											void form.handleSubmit(onSubmit)();
+										}}
+									/>
+								}
+							/>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -234,20 +247,22 @@ function TypographySectionForm() {
 								<Trans>Font Size</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={6}
-										max={24}
-										step={0.1}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={6}
+											max={24}
+											step={0.1}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>pt</InputGroupText>
 								</InputGroupAddon>
@@ -265,20 +280,22 @@ function TypographySectionForm() {
 								<Trans>Line Height</Trans>
 							</FormLabel>
 							<InputGroup>
-								<FormControl>
-									<InputGroupInput
-										{...field}
-										min={0.5}
-										max={4}
-										step={0.05}
-										type="number"
-										onChange={(e) => {
-											const value = e.target.value;
-											if (value === "") field.onChange("");
-											else field.onChange(Number(value));
-										}}
-									/>
-								</FormControl>
+								<FormControl
+									render={
+										<InputGroupInput
+											{...field}
+											min={0.5}
+											max={4}
+											step={0.05}
+											type="number"
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value === "") field.onChange("");
+												else field.onChange(Number(value));
+											}}
+										/>
+									}
+								/>
 								<InputGroupAddon align="inline-end">
 									<InputGroupText>x</InputGroupText>
 								</InputGroupAddon>

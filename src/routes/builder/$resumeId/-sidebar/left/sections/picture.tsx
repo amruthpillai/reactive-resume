@@ -1,3 +1,5 @@
+import type z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -6,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type z from "zod";
+
 import { ColorPicker } from "@/components/input/color-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { orpc } from "@/integrations/orpc/client";
 import { pictureSchema } from "@/schema/resume/data";
+
 import { SectionBase } from "../shared/section-base";
 
 export function PictureSectionBuilder() {
@@ -65,7 +68,7 @@ function PictureSectionForm() {
 		if (pictureOrigin === appOrigin) deleteFile({ filename });
 
 		form.setValue("url", "", { shouldDirty: true });
-		form.handleSubmit(onSubmit)();
+		void form.handleSubmit(onSubmit)();
 	};
 
 	const onUploadPicture = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +80,7 @@ function PictureSectionForm() {
 		uploadFile(file, {
 			onSuccess: ({ url }) => {
 				form.setValue("url", url, { shouldDirty: true });
-				form.handleSubmit(onSubmit)();
+				void form.handleSubmit(onSubmit)();
 				toast.dismiss(toastId);
 				if (fileInputRef.current) fileInputRef.current.value = "";
 			},
@@ -101,7 +104,7 @@ function PictureSectionForm() {
 							<img
 								alt=""
 								src={picture.url}
-								className="fade-in relative z-10 size-full animate-in rounded-md object-cover transition-opacity group-hover/picture:opacity-20"
+								className="relative z-10 size-full animate-in rounded-md object-cover transition-opacity fade-in group-hover/picture:opacity-20"
 							/>
 						)}
 
@@ -119,16 +122,14 @@ function PictureSectionForm() {
 									<Trans>URL</Trans>
 								</FormLabel>
 								<div className="flex items-center gap-x-2">
-									<FormControl>
-										<Input {...field} />
-									</FormControl>
+									<FormControl render={<Input {...field} />} />
 
 									<Button
 										size="icon"
 										variant="ghost"
 										onClick={() => {
 											form.setValue("hidden", !picture.hidden, { shouldDirty: true });
-											form.handleSubmit(onSubmit)();
+											void form.handleSubmit(onSubmit)();
 										}}
 									>
 										{picture.hidden ? <EyeSlashIcon /> : <EyeIcon />}
@@ -139,7 +140,7 @@ function PictureSectionForm() {
 					/>
 				</div>
 
-				<div className="grid @md:grid-cols-2 grid-cols-1 gap-4">
+				<div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
 					<FormField
 						control={form.control}
 						name="size"
@@ -180,20 +181,22 @@ function PictureSectionForm() {
 									<Trans>Rotation</Trans>
 								</FormLabel>
 								<InputGroup>
-									<FormControl>
-										<InputGroupInput
-											{...field}
-											type="number"
-											min={0}
-											max={360}
-											step={5}
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<InputGroupInput
+												{...field}
+												type="number"
+												min={0}
+												max={360}
+												step={5}
+												onChange={(e) => {
+													const value = e.target.value;
+													if (value === "") field.onChange("");
+													else field.onChange(Number(value));
+												}}
+											/>
+										}
+									/>
 									<InputGroupAddon align="inline-end">
 										<InputGroupText>°</InputGroupText>
 									</InputGroupAddon>
@@ -211,20 +214,22 @@ function PictureSectionForm() {
 									<Trans>Aspect Ratio</Trans>
 								</FormLabel>
 								<div className="flex items-center gap-x-2">
-									<FormControl>
-										<Input
-											{...field}
-											type="number"
-											min={0.5}
-											max={2.5}
-											step={0.1}
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value === "") field.onChange("");
-												else field.onChange(Number(value));
-											}}
-										/>
-									</FormControl>
+									<FormControl
+										render={
+											<Input
+												{...field}
+												type="number"
+												min={0.5}
+												max={2.5}
+												step={0.1}
+												onChange={(e) => {
+													const value = e.target.value;
+													if (value === "") field.onChange("");
+													else field.onChange(Number(value));
+												}}
+											/>
+										}
+									/>
 
 									<ButtonGroup className="shrink-0">
 										<Button
@@ -233,7 +238,7 @@ function PictureSectionForm() {
 											title={t`Square`}
 											onClick={() => {
 												field.onChange(1);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="aspect-square min-h-3 min-w-3 border border-primary" />
@@ -244,10 +249,10 @@ function PictureSectionForm() {
 											title={t`Landscape`}
 											onClick={() => {
 												field.onChange(1.5);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
-											<div className="aspect-[1.5/1] min-h-3 min-w-3 border border-primary" />
+											<div className="aspect-1.5/1 min-h-3 min-w-3 border border-primary" />
 										</Button>
 										<Button
 											size="icon"
@@ -255,10 +260,10 @@ function PictureSectionForm() {
 											title={t`Portrait`}
 											onClick={() => {
 												field.onChange(0.5);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
-											<div className="aspect-[1/1.5] min-h-3 min-w-3 border border-primary" />
+											<div className="aspect-1/1.5 min-h-3 min-w-3 border border-primary" />
 										</Button>
 									</ButtonGroup>
 								</div>
@@ -276,19 +281,21 @@ function PictureSectionForm() {
 								</FormLabel>
 								<div className="flex items-center gap-x-2">
 									<InputGroup>
-										<FormControl>
-											<InputGroupInput
-												{...field}
-												type="number"
-												min={0}
-												max={100}
-												step={1}
-												onChange={(e) => {
-													const value = Number(e.target.value);
-													field.onChange(value);
-												}}
-											/>
-										</FormControl>
+										<FormControl
+											render={
+												<InputGroupInput
+													{...field}
+													type="number"
+													min={0}
+													max={100}
+													step={1}
+													onChange={(e) => {
+														const value = Number(e.target.value);
+														field.onChange(value);
+													}}
+												/>
+											}
+										/>
 										<InputGroupAddon align="inline-end">pt</InputGroupAddon>
 									</InputGroup>
 
@@ -299,7 +306,7 @@ function PictureSectionForm() {
 											title="0pt"
 											onClick={() => {
 												field.onChange(0);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="size-3 rounded-none border border-primary" />
@@ -310,7 +317,7 @@ function PictureSectionForm() {
 											title="10pt"
 											onClick={() => {
 												field.onChange(10);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="size-3 rounded-[10%] border border-primary" />
@@ -321,7 +328,7 @@ function PictureSectionForm() {
 											title="100pt"
 											onClick={() => {
 												field.onChange(100);
-												form.handleSubmit(onSubmit)();
+												void form.handleSubmit(onSubmit)();
 											}}
 										>
 											<div className="size-3 rounded-full border border-primary" />
@@ -332,21 +339,23 @@ function PictureSectionForm() {
 						)}
 					/>
 
-					<div className="flex items-center gap-x-2">
+					<div className="flex items-end gap-x-3">
 						<FormField
 							control={form.control}
 							name="borderColor"
 							render={({ field }) => (
-								<FormItem className="shrink-0 self-end">
-									<FormControl>
-										<ColorPicker
-											defaultValue={field.value}
-											onValueChange={(color) => {
-												field.onChange(color);
-												form.handleSubmit(onSubmit)();
-											}}
-										/>
-									</FormControl>
+								<FormItem className="mb-1.5 shrink-0">
+									<FormControl
+										render={
+											<ColorPicker
+												defaultValue={field.value}
+												onChange={(color) => {
+													field.onChange(color);
+													void form.handleSubmit(onSubmit)();
+												}}
+											/>
+										}
+									/>
 								</FormItem>
 							)}
 						/>
@@ -360,19 +369,21 @@ function PictureSectionForm() {
 										<Trans>Border Width</Trans>
 									</FormLabel>
 									<InputGroup>
-										<FormControl>
-											<InputGroupInput
-												{...field}
-												type="number"
-												min={0}
-												step={1}
-												onChange={(e) => {
-													const value = e.target.value;
-													if (value === "") field.onChange("");
-													else field.onChange(Number(value));
-												}}
-											/>
-										</FormControl>
+										<FormControl
+											render={
+												<InputGroupInput
+													{...field}
+													type="number"
+													min={0}
+													step={1}
+													onChange={(e) => {
+														const value = e.target.value;
+														if (value === "") field.onChange("");
+														else field.onChange(Number(value));
+													}}
+												/>
+											}
+										/>
 										<InputGroupAddon align="inline-end">
 											<InputGroupText>pt</InputGroupText>
 										</InputGroupAddon>
@@ -382,21 +393,23 @@ function PictureSectionForm() {
 						/>
 					</div>
 
-					<div className="flex items-center gap-x-2">
+					<div className="flex items-end gap-x-3">
 						<FormField
 							control={form.control}
 							name="shadowColor"
 							render={({ field }) => (
-								<FormItem className="shrink-0 self-end">
-									<FormControl>
-										<ColorPicker
-											defaultValue={field.value}
-											onValueChange={(color) => {
-												field.onChange(color);
-												form.handleSubmit(onSubmit)();
-											}}
-										/>
-									</FormControl>
+								<FormItem className="mb-1.5 shrink-0">
+									<FormControl
+										render={
+											<ColorPicker
+												defaultValue={field.value}
+												onChange={(color) => {
+													field.onChange(color);
+													void form.handleSubmit(onSubmit)();
+												}}
+											/>
+										}
+									/>
 								</FormItem>
 							)}
 						/>
@@ -410,19 +423,21 @@ function PictureSectionForm() {
 										<Trans>Shadow Width</Trans>
 									</FormLabel>
 									<InputGroup>
-										<FormControl>
-											<InputGroupInput
-												{...field}
-												type="number"
-												min={0}
-												step={0.5}
-												onChange={(e) => {
-													const value = e.target.value;
-													if (value === "") field.onChange("");
-													else field.onChange(Number(value));
-												}}
-											/>
-										</FormControl>
+										<FormControl
+											render={
+												<InputGroupInput
+													{...field}
+													type="number"
+													min={0}
+													step={0.5}
+													onChange={(e) => {
+														const value = e.target.value;
+														if (value === "") field.onChange("");
+														else field.onChange(Number(value));
+													}}
+												/>
+											}
+										/>
 										<InputGroupAddon align="inline-end">
 											<InputGroupText>pt</InputGroupText>
 										</InputGroupAddon>

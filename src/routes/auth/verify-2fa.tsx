@@ -7,6 +7,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
@@ -48,15 +49,15 @@ function RouteComponent() {
 			return;
 		}
 
-		router.invalidate();
 		toast.dismiss(toastId);
-		navigate({ to: "/dashboard", replace: true });
+		await router.invalidate();
+		void navigate({ to: "/dashboard", replace: true });
 	};
 
 	return (
 		<>
 			<div className="space-y-1 text-center">
-				<h1 className="font-bold text-2xl tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight">
 					<Trans>Two-Factor Authentication</Trans>
 				</h1>
 				<div className="text-muted-foreground">
@@ -71,40 +72,47 @@ function RouteComponent() {
 						name="code"
 						render={({ field }) => (
 							<FormItem className="justify-self-center">
-								<FormControl>
-									<InputOTP
-										maxLength={6}
-										value={field.value}
-										pattern={REGEXP_ONLY_DIGITS}
-										onChange={field.onChange}
-										onComplete={form.handleSubmit(onSubmit)}
-										pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
-									>
-										<InputOTPGroup>
-											<InputOTPSlot index={0} className="size-12" />
-											<InputOTPSlot index={1} className="size-12" />
-											<InputOTPSlot index={2} className="size-12" />
-										</InputOTPGroup>
-										<InputOTPSeparator />
-										<InputOTPGroup>
-											<InputOTPSlot index={3} className="size-12" />
-											<InputOTPSlot index={4} className="size-12" />
-											<InputOTPSlot index={5} className="size-12" />
-										</InputOTPGroup>
-									</InputOTP>
-								</FormControl>
+								<FormControl
+									render={
+										<InputOTP
+											maxLength={6}
+											value={field.value}
+											pattern={REGEXP_ONLY_DIGITS}
+											onChange={field.onChange}
+											onComplete={form.handleSubmit(onSubmit)}
+											pasteTransformer={(pasted) => pasted.replaceAll("-", "")}
+										>
+											<InputOTPGroup>
+												<InputOTPSlot index={0} className="size-12" />
+												<InputOTPSlot index={1} className="size-12" />
+												<InputOTPSlot index={2} className="size-12" />
+											</InputOTPGroup>
+											<InputOTPSeparator />
+											<InputOTPGroup>
+												<InputOTPSlot index={3} className="size-12" />
+												<InputOTPSlot index={4} className="size-12" />
+												<InputOTPSlot index={5} className="size-12" />
+											</InputOTPGroup>
+										</InputOTP>
+									}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 
 					<div className="flex gap-x-2">
-						<Button type="button" variant="outline" className="flex-1" asChild>
-							<Link to="/auth/login">
-								<ArrowLeftIcon />
-								<Trans>Back to Login</Trans>
-							</Link>
-						</Button>
+						<Button
+							variant="outline"
+							className="flex-1"
+							nativeButton={false}
+							render={
+								<Link to="/auth/login">
+									<ArrowLeftIcon />
+									<Trans>Back to Login</Trans>
+								</Link>
+							}
+						/>
 
 						<Button type="submit" className="flex-1">
 							<CheckIcon />
@@ -112,11 +120,17 @@ function RouteComponent() {
 						</Button>
 					</div>
 				</form>
-				<Button type="button" variant="link" className="h-auto justify-self-center p-0 text-sm" asChild>
-					<Link to="/auth/verify-2fa-backup">
-						<Trans>Lost access to your authenticator?</Trans>
-					</Link>
-				</Button>
+
+				<Button
+					variant="link"
+					nativeButton={false}
+					className="h-auto justify-self-center p-0 text-sm"
+					render={
+						<Link to="/auth/verify-2fa-backup">
+							<Trans>Lost access to your authenticator?</Trans>
+						</Link>
+					}
+				/>
 			</Form>
 		</>
 	);

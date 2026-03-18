@@ -1,9 +1,11 @@
+import type { Icon } from "@phosphor-icons/react";
+
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import type { Icon } from "@phosphor-icons/react";
 import { GithubLogoIcon, LinkedinLogoIcon, XLogoIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { useState } from "react";
+
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { Button } from "@/components/ui/button";
 import { Copyright } from "@/components/ui/copyright";
@@ -60,8 +62,8 @@ export function Footer() {
 					<BrandIcon variant="logo" className="size-10" />
 
 					<div className="space-y-2">
-						<h2 className="font-bold text-lg tracking-tight">Reactive Resume</h2>
-						<p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
+						<h2 className="text-lg font-bold tracking-tight">Reactive Resume</h2>
+						<p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
 							<Trans>
 								A free and open-source resume builder that simplifies the process of creating, updating, and sharing
 								your resume.
@@ -72,16 +74,22 @@ export function Footer() {
 					{/* Social Links */}
 					<div className="flex items-center gap-2 pt-2">
 						{socialLinks.map((social) => (
-							<Button key={social.label} size="icon-sm" variant="ghost" asChild>
-								<a
-									href={social.url}
-									target="_blank"
-									rel="noopener"
-									aria-label={`${social.label} (${t`opens in new tab`})`}
-								>
-									<social.icon aria-hidden="true" size={18} />
-								</a>
-							</Button>
+							<Button
+								key={social.label}
+								size="icon-sm"
+								variant="ghost"
+								nativeButton={false}
+								render={
+									<a
+										href={social.url}
+										target="_blank"
+										rel="noopener"
+										aria-label={`${social.label} (${t`opens in new tab`})`}
+									>
+										<social.icon aria-hidden="true" size={18} />
+									</a>
+								}
+							/>
 						))}
 					</div>
 				</div>
@@ -104,7 +112,7 @@ export function Footer() {
 function FooterLinkGroup({ title, links }: FooterLinkGroupProps) {
 	return (
 		<div className="space-y-4">
-			<h2 className="font-medium text-muted-foreground text-sm tracking-tight">{title}</h2>
+			<h2 className="text-sm font-medium tracking-tight text-muted-foreground">{title}</h2>
 
 			<ul className="space-y-3">
 				{links.map((link) => (

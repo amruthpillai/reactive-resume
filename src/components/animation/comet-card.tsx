@@ -1,6 +1,8 @@
-import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "motion/react";
 import type React from "react";
+
+import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
+
 import { cn } from "@/utils/style";
 
 type Props = {

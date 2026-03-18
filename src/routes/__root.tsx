@@ -1,25 +1,29 @@
 import "@fontsource-variable/ibm-plex-sans";
 import "@phosphor-icons/web/regular/style.css";
+import type { QueryClient } from "@tanstack/react-query";
 
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { IconContext } from "@phosphor-icons/react";
-import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
 import { MotionConfig } from "motion/react";
+
+import type { AuthSession } from "@/integrations/auth/types";
+import type { FeatureFlags } from "@/integrations/orpc/services/flags";
+
 import { CommandPalette } from "@/components/command-palette";
 import { BreakpointIndicator } from "@/components/layout/breakpoint-indicator";
 import { ThemeProvider } from "@/components/theme/provider";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DialogManager } from "@/dialogs/manager";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { getSession } from "@/integrations/auth/functions";
-import type { AuthSession } from "@/integrations/auth/types";
 import { client, type orpc } from "@/integrations/orpc/client";
-import type { FeatureFlags } from "@/integrations/orpc/services/flags";
 import { getLocale, isRTL, type Locale, loadLocale } from "@/utils/locale";
 import { getTheme, type Theme } from "@/utils/theme";
+
 import appCss from "../styles/globals.css?url";
 
 type RouterContext = {
@@ -116,17 +120,19 @@ function RootDocument({ children }: Props) {
 					<I18nProvider i18n={i18n}>
 						<IconContext.Provider value={{ size: 16, weight: "regular" }}>
 							<ThemeProvider theme={theme}>
-								<ConfirmDialogProvider>
-									<PromptDialogProvider>
-										{children}
+								<TooltipProvider>
+									<ConfirmDialogProvider>
+										<PromptDialogProvider>
+											{children}
 
-										<DialogManager />
-										<CommandPalette />
-										<Toaster richColors position="bottom-right" />
+											<DialogManager />
+											<CommandPalette />
+											<Toaster richColors position="bottom-right" />
 
-										{import.meta.env.DEV && <BreakpointIndicator />}
-									</PromptDialogProvider>
-								</ConfirmDialogProvider>
+											{import.meta.env.DEV && <BreakpointIndicator />}
+										</PromptDialogProvider>
+									</ConfirmDialogProvider>
+								</TooltipProvider>
 							</ThemeProvider>
 						</IconContext.Provider>
 					</I18nProvider>

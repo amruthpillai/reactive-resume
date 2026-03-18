@@ -1,5 +1,6 @@
 import { RichInput } from "@/components/input/rich-input";
 import { useResumeStore } from "@/components/resume/store/resume";
+
 import { SectionBase } from "../shared/section-base";
 
 export function SummarySectionBuilder() {

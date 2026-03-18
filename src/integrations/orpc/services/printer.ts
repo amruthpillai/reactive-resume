@@ -1,11 +1,17 @@
-import { ORPCError } from "@orpc/server";
 import type { InferSelectModel } from "drizzle-orm";
+
+import { ORPCError } from "@orpc/server";
+import dns from "node:dns/promises";
+import { isIP } from "node:net";
 import puppeteer, { type Browser, type ConnectOptions, type Page } from "puppeteer-core";
+
 import type { schema } from "@/integrations/drizzle";
+
 import { pageDimensionsAsPixels } from "@/schema/page";
 import { printMarginTemplates } from "@/schema/templates";
 import { env } from "@/utils/env";
 import { generatePrinterToken } from "@/utils/printer-token";
+
 import { getStorageService, uploadFile } from "./storage";
 
 const SCREENSHOT_TTL = 1000 * 60 * 60 * 6; // 6 hours
@@ -13,13 +19,26 @@ const SCREENSHOT_TTL = 1000 * 60 * 60 * 6; // 6 hours
 // Singleton browser instance for connection reuse
 let browserInstance: Browser | null = null;
 
+async function normalizePrinterEndpoint(printerEndpoint: string): Promise<URL> {
+	// Convert endpoint hostname to IP when using chromedp
+	// https://github.com/amruthpillai/reactive-resume/issues/2681
+	const endpoint = new URL(printerEndpoint);
+
+	if (!isIP(endpoint.hostname) && !endpoint.protocol.startsWith("ws")) {
+		const { address } = await dns.lookup(endpoint.hostname);
+		endpoint.hostname = address;
+	}
+
+	return endpoint;
+}
+
 async function getBrowser(): Promise<Browser> {
 	// Reuse existing connected browser if available
 	if (browserInstance?.connected) return browserInstance;
 
 	const args = ["--disable-dev-shm-usage", "--disable-features=LocalNetworkAccessChecks,site-per-process,FedCm"];
 
-	const endpoint = new URL(env.PRINTER_ENDPOINT);
+	const endpoint = await normalizePrinterEndpoint(env.PRINTER_ENDPOINT);
 	const isWebSocket = endpoint.protocol.startsWith("ws");
 	const connectOptions: ConnectOptions = { acceptInsecureCerts: true };
 
@@ -53,7 +72,7 @@ process.on("SIGTERM", async () => {
 export const printerService = {
 	healthcheck: async (): Promise<object> => {
 		const headers = new Headers({ Accept: "application/json" });
-		const endpoint = new URL(env.PRINTER_ENDPOINT);
+		const endpoint = await normalizePrinterEndpoint(env.PRINTER_ENDPOINT);
 
 		endpoint.protocol = endpoint.protocol.replace("ws", "http");
 		endpoint.pathname = "/json/version";

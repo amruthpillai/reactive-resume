@@ -1,17 +1,19 @@
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Slot } from "radix-ui";
+
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/utils/style";
 
 const buttonGroupVariants = cva(
-	"flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
+	"flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-e-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
 	{
 		variants: {
 			orientation: {
 				horizontal:
-					"[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-s-0 [&>*:not(:last-child)]:rounded-r-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-r-md!",
+					"*:data-slot:rounded-e-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-e-md! [&>[data-slot]~[data-slot]]:rounded-s-none [&>[data-slot]~[data-slot]]:border-s-0",
 				vertical:
-					"flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-b-md!",
+					"flex-col *:data-slot:rounded-b-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-b-md! [&>[data-slot]~[data-slot]]:rounded-t-none [&>[data-slot]~[data-slot]]:border-t-0",
 			},
 		},
 		defaultVariants: {
@@ -36,24 +38,21 @@ function ButtonGroup({
 	);
 }
 
-function ButtonGroupText({
-	className,
-	asChild = false,
-	...props
-}: React.ComponentProps<"div"> & {
-	asChild?: boolean;
-}) {
-	const Comp = asChild ? Slot.Root : "div";
-
-	return (
-		<Comp
-			className={cn(
-				"flex items-center gap-2 rounded-md border bg-muted px-2.5 font-medium text-sm shadow-xs [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
-				className,
-			)}
-			{...props}
-		/>
-	);
+function ButtonGroupText({ className, render, ...props }: useRender.ComponentProps<"div">) {
+	return useRender({
+		render,
+		defaultTagName: "div",
+		state: { slot: "button-group-text" },
+		props: mergeProps<"div">(
+			{
+				className: cn(
+					"flex items-center gap-2 rounded-md border bg-muted px-2.5 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+					className,
+				),
+			},
+			props,
+		),
+	});
 }
 
 function ButtonGroupSeparator({
@@ -66,7 +65,7 @@ function ButtonGroupSeparator({
 			data-slot="button-group-separator"
 			orientation={orientation}
 			className={cn(
-				"relative self-stretch bg-input data-[orientation=horizontal]:mx-px data-[orientation=vertical]:my-px data-[orientation=vertical]:h-auto data-[orientation=horizontal]:w-auto",
+				"relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto",
 				className,
 			)}
 			{...props}
@@ -74,4 +73,4 @@ function ButtonGroupSeparator({
 	);
 }
 
-export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText };
+export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants };

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { auth } from "@/integrations/auth/config";
 
 async function handler({ request }: { request: Request }) {

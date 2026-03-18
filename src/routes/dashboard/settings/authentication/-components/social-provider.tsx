@@ -3,9 +3,12 @@ import { LinkBreakIcon, LinkIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { useCallback, useMemo } from "react";
 import { match } from "ts-pattern";
+
+import type { AuthProvider } from "@/integrations/auth/types";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { AuthProvider } from "@/integrations/auth/types";
+
 import { getProviderIcon, getProviderName, useAuthAccounts, useAuthProviderActions } from "./hooks";
 
 type SocialProviderSectionProps = {
@@ -24,13 +27,13 @@ export function SocialProviderSection({ provider, name, animationDelay = 0 }: So
 	const account = useMemo(() => getAccountByProviderId(provider), [getAccountByProviderId, provider]);
 	const isConnected = useMemo(() => hasAccount(provider), [hasAccount, provider]);
 
-	const handleLink = useCallback(() => {
-		link(provider);
+	const handleLink = useCallback(async () => {
+		await link(provider);
 	}, [link, provider]);
 
-	const handleUnlink = useCallback(() => {
+	const handleUnlink = useCallback(async () => {
 		if (!account?.accountId) return;
-		unlink(provider, account.accountId);
+		await unlink(provider, account.accountId);
 	}, [account, unlink, provider]);
 
 	return (
@@ -42,7 +45,7 @@ export function SocialProviderSection({ provider, name, animationDelay = 0 }: So
 			<Separator />
 
 			<div className="mt-4 flex items-center justify-between gap-x-4">
-				<h2 className="flex items-center gap-x-3 font-medium text-base">
+				<h2 className="flex items-center gap-x-3 text-base font-medium">
 					{providerIcon}
 					{providerName}
 				</h2>

@@ -50,11 +50,11 @@ import {
 	useEditorState,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { VisuallyHidden } from "radix-ui";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -69,6 +69,7 @@ import { usePrompt } from "@/hooks/use-prompt";
 import { isRTL } from "@/utils/locale";
 import { sanitizeHtml } from "@/utils/sanitize";
 import { cn } from "@/utils/style";
+
 import { Toggle } from "../ui/toggle";
 import styles from "./rich-input.module.css";
 
@@ -170,10 +171,10 @@ export function RichInput({ value, onChange, style, className, editorClassName, 
 
 				<Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
 					<DialogContent className="flex h-[95svh] max-h-none! w-[95svw] max-w-none! flex-col p-4 sm:max-w-none! 2xl:max-w-none!">
-						<VisuallyHidden.Root>
+						<div className="sr-only">
 							<DialogTitle>Fullscreen Editor</DialogTitle>
 							<DialogDescription>Edit content in fullscreen mode</DialogDescription>
-						</VisuallyHidden.Root>
+						</div>
 						{editorElement}
 					</DialogContent>
 				</Dialog>
@@ -420,21 +421,24 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 			<div className="mx-1 h-5 w-px bg-border" />
 
 			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
-						{match(state)
-							.with({ isParagraph: true }, () => <ParagraphIcon className="size-3.5" />)
-							.with({ isHeading1: true }, () => <TextHOneIcon className="size-3.5" />)
-							.with({ isHeading2: true }, () => <TextHTwoIcon className="size-3.5" />)
-							.with({ isHeading3: true }, () => <TextHThreeIcon className="size-3.5" />)
-							.with({ isHeading4: true }, () => <TextHFourIcon className="size-3.5" />)
-							.with({ isHeading5: true }, () => <TextHFiveIcon className="size-3.5" />)
-							.with({ isHeading6: true }, () => <TextHSixIcon className="size-3.5" />)
-							.otherwise(() => (
-								<ParagraphIcon className="size-3.5" />
-							))}
-					</Button>
-				</DropdownMenuTrigger>
+				<DropdownMenuTrigger
+					render={
+						<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
+							{match(state)
+								.with({ isParagraph: true }, () => <ParagraphIcon className="size-3.5" />)
+								.with({ isHeading1: true }, () => <TextHOneIcon className="size-3.5" />)
+								.with({ isHeading2: true }, () => <TextHTwoIcon className="size-3.5" />)
+								.with({ isHeading3: true }, () => <TextHThreeIcon className="size-3.5" />)
+								.with({ isHeading4: true }, () => <TextHFourIcon className="size-3.5" />)
+								.with({ isHeading5: true }, () => <TextHFiveIcon className="size-3.5" />)
+								.with({ isHeading6: true }, () => <TextHSixIcon className="size-3.5" />)
+								.otherwise(() => (
+									<ParagraphIcon className="size-3.5" />
+								))}
+						</Button>
+					}
+				/>
+
 				<DropdownMenuContent>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canParagraph}
@@ -490,18 +494,21 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 			</DropdownMenu>
 
 			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
-						{match(state)
-							.with({ isLeftAlign: true }, () => <TextAlignLeftIcon className="size-3.5" />)
-							.with({ isCenterAlign: true }, () => <TextAlignCenterIcon className="size-3.5" />)
-							.with({ isRightAlign: true }, () => <TextAlignRightIcon className="size-3.5" />)
-							.with({ isJustifyAlign: true }, () => <TextAlignJustifyIcon className="size-3.5" />)
-							.otherwise(() => (
-								<TextAlignLeftIcon className="size-3.5" />
-							))}
-					</Button>
-				</DropdownMenuTrigger>
+				<DropdownMenuTrigger
+					render={
+						<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
+							{match(state)
+								.with({ isLeftAlign: true }, () => <TextAlignLeftIcon className="size-3.5" />)
+								.with({ isCenterAlign: true }, () => <TextAlignCenterIcon className="size-3.5" />)
+								.with({ isRightAlign: true }, () => <TextAlignRightIcon className="size-3.5" />)
+								.with({ isJustifyAlign: true }, () => <TextAlignJustifyIcon className="size-3.5" />)
+								.otherwise(() => (
+									<TextAlignLeftIcon className="size-3.5" />
+								))}
+						</Button>
+					}
+				/>
+
 				<DropdownMenuContent>
 					<DropdownMenuCheckboxItem
 						disabled={!state.canLeftAlign}
@@ -631,52 +638,54 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
 			</Toggle>
 
 			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button
-						size={isFullscreen ? "lg" : "sm"}
-						tabIndex={-1}
-						variant="ghost"
-						className="rounded-none"
-						title={t`Table`}
-					>
-						<TableIcon className="size-3.5" />
-					</Button>
-				</DropdownMenuTrigger>
+				<DropdownMenuTrigger
+					render={
+						<Button
+							size={isFullscreen ? "lg" : "sm"}
+							tabIndex={-1}
+							variant="ghost"
+							className="rounded-none"
+							title={t`Table`}
+						>
+							<TableIcon className="size-3.5" />
+						</Button>
+					}
+				/>
 
 				<DropdownMenuContent>
-					<DropdownMenuItem disabled={!state.canInsertTable} onSelect={state.insertTable}>
+					<DropdownMenuItem disabled={!state.canInsertTable} onClick={state.insertTable}>
 						<PlusIcon />
 						<Trans>Insert Table</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem disabled={!state.canAddColumnBefore} onSelect={state.addColumnBefore}>
+					<DropdownMenuItem disabled={!state.canAddColumnBefore} onClick={state.addColumnBefore}>
 						<ColumnsPlusLeftIcon />
 						<Trans>Add Column Before</Trans>
 					</DropdownMenuItem>
-					<DropdownMenuItem disabled={!state.canAddColumnAfter} onSelect={state.addColumnAfter}>
+					<DropdownMenuItem disabled={!state.canAddColumnAfter} onClick={state.addColumnAfter}>
 						<ColumnsPlusRightIcon />
 						<Trans>Add Column After</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem disabled={!state.canAddRowBefore} onSelect={state.addRowBefore}>
+					<DropdownMenuItem disabled={!state.canAddRowBefore} onClick={state.addRowBefore}>
 						<RowsPlusTopIcon />
 						<Trans>Add Row Before</Trans>
 					</DropdownMenuItem>
-					<DropdownMenuItem disabled={!state.canAddRowAfter} onSelect={state.addRowAfter}>
+					<DropdownMenuItem disabled={!state.canAddRowAfter} onClick={state.addRowAfter}>
 						<RowsPlusBottomIcon />
 						<Trans>Add Row After</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem disabled={!state.canDeleteColumn} onSelect={state.deleteColumn}>
+					<DropdownMenuItem disabled={!state.canDeleteColumn} onClick={state.deleteColumn}>
 						<TrashSimpleIcon />
 						<Trans>Delete Column</Trans>
 					</DropdownMenuItem>
-					<DropdownMenuItem disabled={!state.canDeleteRow} onSelect={state.deleteRow}>
+					<DropdownMenuItem disabled={!state.canDeleteRow} onClick={state.deleteRow}>
 						<TrashSimpleIcon />
 						<Trans>Delete Row</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem variant="destructive" disabled={!state.canDeleteTable} onSelect={state.deleteTable}>
+					<DropdownMenuItem variant="destructive" disabled={!state.canDeleteTable} onClick={state.deleteTable}>
 						<TrashSimpleIcon />
 						<Trans>Delete Table</Trans>
 					</DropdownMenuItem>
@@ -717,7 +726,6 @@ export function TiptapContent({ content, className, ...props }: TiptapContentPro
 
 	return (
 		<div
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: Content is sanitized with DOMPurify
 			dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 			className={cn(styles.tiptap_content, className)}
 			{...props}

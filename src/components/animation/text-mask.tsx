@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+
 import { cn } from "@/utils/style";
 
-const textClassName = cn("fill-transparent font-bold text-3xl leading-none tracking-tight");
+const textClassName = cn("fill-transparent text-3xl leading-none font-bold tracking-tight");
 
 type TextMaskEffectProps = {
 	text: string;

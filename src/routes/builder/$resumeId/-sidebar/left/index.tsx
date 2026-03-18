@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useRef } from "react";
 import { match } from "ts-pattern";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -7,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { UserDropdownMenu } from "@/components/user/dropdown-menu";
 import { getSectionIcon, getSectionTitle, type LeftSidebarSection, leftSidebarSections } from "@/utils/resume/section";
 import { getInitials } from "@/utils/string";
+
 import { BuilderSidebarEdge } from "../../-components/edge";
 import { useBuilderSidebar } from "../../-store/sidebar";
 import { AwardsSectionBuilder } from "./sections/awards";
@@ -89,7 +91,7 @@ function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
 	return (
 		<BuilderSidebarEdge side="left">
 			<div className="flex min-h-0 w-full flex-1 flex-col items-center gap-y-2 overflow-hidden">
-				<div className="no-scrollbar min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
+				<div className="no-scrollbar min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto">
 					<div className="flex min-h-full flex-col items-center justify-center gap-y-2">
 						{leftSidebarSections.map((section) => (
 							<Button

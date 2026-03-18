@@ -1,6 +1,8 @@
 import { Trans } from "@lingui/react/macro";
 import { HandHeartIcon } from "@phosphor-icons/react";
+
 import { Button } from "@/components/ui/button";
+
 import { SectionBase } from "../shared/section-base";
 
 export function InformationSectionBuilder() {
@@ -24,46 +26,82 @@ export function InformationSectionBuilder() {
 					</Trans>
 				</div>
 
-				<Button asChild size="sm" variant="default" className="mt-2 whitespace-normal px-4! text-xs">
-					<a href="http://opencollective.com/reactive-resume" target="_blank" rel="noopener">
-						<HandHeartIcon />
-						<span className="truncate">
-							<Trans>Donate to Reactive Resume</Trans>
-						</span>
-					</a>
-				</Button>
+				<Button
+					size="sm"
+					variant="default"
+					nativeButton={false}
+					className="mt-2 px-4! text-xs whitespace-normal"
+					render={
+						<a href="http://opencollective.com/reactive-resume" target="_blank" rel="noopener">
+							<HandHeartIcon />
+							<span className="truncate">
+								<Trans>Donate to Reactive Resume</Trans>
+							</span>
+						</a>
+					}
+				/>
 			</div>
 
 			<div className="flex flex-wrap gap-0.5">
-				<Button asChild size="sm" variant="link" className="text-xs">
-					<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
-						<Trans>Documentation</Trans>
-					</a>
-				</Button>
+				<Button
+					size="sm"
+					variant="link"
+					className="text-xs"
+					nativeButton={false}
+					render={
+						<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
+							<Trans>Documentation</Trans>
+						</a>
+					}
+				/>
 
-				<Button asChild size="sm" variant="link" className="text-xs">
-					<a href="https://github.com/amruthpillai/reactive-resume" target="_blank" rel="noopener">
-						<Trans>Source Code</Trans>
-					</a>
-				</Button>
+				<Button
+					size="sm"
+					variant="link"
+					className="text-xs"
+					nativeButton={false}
+					render={
+						<a href="https://github.com/amruthpillai/reactive-resume" target="_blank" rel="noopener">
+							<Trans>Source Code</Trans>
+						</a>
+					}
+				/>
 
-				<Button asChild size="sm" variant="link" className="text-xs">
-					<a href="https://github.com/amruthpillai/reactive-resume/issues" target="_blank" rel="noopener">
-						<Trans>Report a Bug</Trans>
-					</a>
-				</Button>
+				<Button
+					size="sm"
+					variant="link"
+					className="text-xs"
+					nativeButton={false}
+					render={
+						<a href="https://github.com/amruthpillai/reactive-resume/issues" target="_blank" rel="noopener">
+							<Trans>Report a Bug</Trans>
+						</a>
+					}
+				/>
 
-				<Button asChild size="sm" variant="link" className="text-xs">
-					<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
-						<Trans>Translations</Trans>
-					</a>
-				</Button>
+				<Button
+					size="sm"
+					variant="link"
+					className="text-xs"
+					nativeButton={false}
+					render={
+						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
+							<Trans>Translations</Trans>
+						</a>
+					}
+				/>
 
-				<Button asChild size="sm" variant="link" className="text-xs">
-					<a href="https://opencollective.com/reactive-resume" target="_blank" rel="noopener">
-						<Trans>Sponsors</Trans>
-					</a>
-				</Button>
+				<Button
+					size="sm"
+					variant="link"
+					className="text-xs"
+					nativeButton={false}
+					render={
+						<a href="https://opencollective.com/reactive-resume" target="_blank" rel="noopener">
+							<Trans>Sponsors</Trans>
+						</a>
+					}
+				/>
 			</div>
 		</SectionBase>
 	);

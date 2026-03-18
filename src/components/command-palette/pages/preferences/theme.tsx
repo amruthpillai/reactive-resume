@@ -1,7 +1,9 @@
 import { Trans } from "@lingui/react/macro";
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
+
 import { useTheme } from "@/components/theme/provider";
 import { CommandItem } from "@/components/ui/command";
+
 import { useCommandPaletteStore } from "../../store";
 import { BaseCommandGroup } from "../base";
 

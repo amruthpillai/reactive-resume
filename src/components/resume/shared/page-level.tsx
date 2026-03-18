@@ -1,5 +1,6 @@
 import { LevelDisplay } from "@/components/level/display";
 import { cn } from "@/utils/style";
+
 import { useResumeStore } from "../store/resume";
 
 type Props = React.ComponentProps<"div"> & {
