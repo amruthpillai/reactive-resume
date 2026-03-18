@@ -39,19 +39,19 @@ export function useFormBlocker<T extends FieldValues>(form: UseFormReturn<T>, op
 	}, [shouldBlock, closeDialog, confirm]);
 
 	const blockEvents = {
-		onEscapeKeyDown: (event: React.KeyboardEvent) => {
+		onEscapeKeyDown: (event: KeyboardEvent) => {
 			if (shouldBlock()) {
 				event.preventDefault();
 				void requestClose();
 			}
 		},
-		onPointerDownOutside: (event: React.MouseEvent) => {
+		onPointerDownOutside: (event: Event) => {
 			if (shouldBlock()) {
 				event.preventDefault();
 				void requestClose();
 			}
 		},
-		onInteractOutside: (event: React.MouseEvent) => {
+		onInteractOutside: (event: Event) => {
 			if (shouldBlock()) {
 				event.preventDefault();
 				void requestClose();
