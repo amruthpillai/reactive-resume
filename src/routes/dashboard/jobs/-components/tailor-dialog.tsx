@@ -63,8 +63,11 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
 	};
 
 	const navigateToBuilder = (resumeId: string) => {
+		if (job.job_apply_link) {
+			window.open(job.job_apply_link, "_blank", "noopener,noreferrer");
+		}
 		handleOpenChange(false);
-		navigate({ to: "/builder/$resumeId", params: { resumeId } });
+		void navigate({ to: "/builder/$resumeId", params: { resumeId } });
 	};
 
 	const handleSelectResume = async (resumeId: string, resumeName: string) => {
@@ -222,6 +225,15 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
 												<p className="truncate text-muted-foreground text-xs">
 													{new Date(resume.updatedAt).toLocaleDateString()}
 												</p>
+												{resume.tags.length > 0 && (
+													<div className="mt-1 flex flex-wrap gap-1">
+														{resume.tags.map((tag) => (
+															<Badge key={tag} variant="secondary" className="text-[10px]">
+																{tag}
+															</Badge>
+														))}
+													</div>
+												)}
 											</div>
 											{isDuplicating && <Spinner className="ms-auto" />}
 										</Button>

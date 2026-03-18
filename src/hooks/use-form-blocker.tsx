@@ -1,7 +1,7 @@
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 
 import { t } from "@lingui/core/macro";
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
