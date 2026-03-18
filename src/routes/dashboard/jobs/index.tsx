@@ -24,7 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { useJobsStore } from "@/integrations/jobs/store";
 import { orpc } from "@/integrations/orpc/client";
-import type { JobResult, QuotaStatus } from "@/schema/jobs";
+import type { JobResult, RapidApiQuota } from "@/schema/jobs";
 import { DashboardHeader } from "../-components/header";
 import { JobDetailSheet } from "./-components/job-detail";
 import {
@@ -156,7 +156,7 @@ function RouteComponent() {
 	const [query, setQuery] = useState("");
 	const [filters, setFilters] = useState<FilterState>(initialFilterState);
 	const [jobs, setJobs] = useState<JobResult[]>([]);
-	const [quota, setQuota] = useState<QuotaStatus | null>(null);
+	const [quota, setQuota] = useState<RapidApiQuota | null>(null);
 	const [selectedJob, setSelectedJob] = useState<JobResult | null>(null);
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -187,7 +187,7 @@ function RouteComponent() {
 					onSuccess: (data) => {
 						setHasMore(data.data.length >= RESULTS_PER_PAGE);
 						setJobs(data.data.slice(0, RESULTS_PER_PAGE));
-						setQuota(data.quota);
+						setQuota(data.rapidApiQuota ?? null);
 						scrollRef.current?.scrollIntoView({ behavior: "smooth" });
 					},
 					onError: (error) => {
@@ -281,10 +281,10 @@ function RouteComponent() {
 						}}
 					/>
 
-					{quota?.rapidApi && (
+					{quota && (
 						<p className="text-muted-foreground text-xs">
 							<Trans>
-								{quota.rapidApi.used} / {quota.rapidApi.limit} requests used this month
+								{quota.used} / {quota.limit} requests used this month
 							</Trans>
 						</p>
 					)}

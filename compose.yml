@@ -92,8 +92,6 @@ services:
       - S3_ENDPOINT=http://seaweedfs:8333
       - S3_BUCKET=reactive-resume
       - S3_FORCE_PATH_STYLE=true
-      # JSearch Rate Limit
-      - JOB_SEARCH_MONTHLY_LIMIT=200
     volumes:
       - reactive_resume_data:/app/data
     ports:

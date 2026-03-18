@@ -6,7 +6,6 @@ import {
 	jobRequiredExperienceSchema,
 	jobResultSchema,
 	postFilterOptionsSchema,
-	quotaStatusSchema,
 	rapidApiQuotaSchema,
 	searchParamsSchema,
 	searchResponseSchema,
@@ -270,57 +269,6 @@ describe("postFilterOptionsSchema", () => {
 		const result = postFilterOptionsSchema.parse({});
 		expect(result.minSalary).toBeUndefined();
 		expect(result.directApplyOnly).toBeUndefined();
-	});
-});
-
-// --- quotaStatusSchema ---
-
-describe("quotaStatusSchema", () => {
-	it("parses valid quota status", () => {
-		const result = quotaStatusSchema.parse({
-			monthlyUsed: 15,
-			monthlyLimit: 200,
-			monthlyRemaining: 185,
-			windowStart: "2026-03-01T00:00:00.000Z",
-		});
-		expect(result.monthlyUsed).toBe(15);
-		expect(result.monthlyRemaining).toBe(185);
-	});
-
-	it("allows null windowStart", () => {
-		const result = quotaStatusSchema.parse({
-			monthlyUsed: 0,
-			monthlyLimit: 200,
-			monthlyRemaining: 200,
-			windowStart: null,
-		});
-		expect(result.windowStart).toBeNull();
-	});
-
-	it("rejects missing required fields", () => {
-		expect(() => quotaStatusSchema.parse({})).toThrow();
-		expect(() => quotaStatusSchema.parse({ monthlyUsed: 5 })).toThrow();
-	});
-
-	it("accepts optional rapidApi quota", () => {
-		const result = quotaStatusSchema.parse({
-			monthlyUsed: 10,
-			monthlyLimit: 200,
-			monthlyRemaining: 190,
-			windowStart: null,
-			rapidApi: { limit: 200, remaining: 195, used: 5 },
-		});
-		expect(result.rapidApi).toEqual({ limit: 200, remaining: 195, used: 5 });
-	});
-
-	it("allows omitted rapidApi field", () => {
-		const result = quotaStatusSchema.parse({
-			monthlyUsed: 0,
-			monthlyLimit: 200,
-			monthlyRemaining: 200,
-			windowStart: null,
-		});
-		expect(result.rapidApi).toBeUndefined();
 	});
 });
 

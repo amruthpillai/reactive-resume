@@ -142,13 +142,3 @@ export const rapidApiQuotaSchema = z.object({
 });
 
 export type RapidApiQuota = z.infer<typeof rapidApiQuotaSchema>;
-
-export const quotaStatusSchema = z.object({
-	monthlyUsed: z.number(),
-	monthlyLimit: z.number(),
-	monthlyRemaining: z.number(),
-	windowStart: z.string().nullable(),
-	rapidApi: rapidApiQuotaSchema.optional(),
-});
-
-export type QuotaStatus = z.infer<typeof quotaStatusSchema>;
