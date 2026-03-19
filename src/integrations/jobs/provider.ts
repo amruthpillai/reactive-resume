@@ -1,4 +1,4 @@
-import type { JobResult, RapidApiQuota, SearchParams, SearchResponse } from "@/schema/jobs";
+import type { RapidApiQuota, SearchParams, SearchResponse } from "@/schema/jobs";
 
 /**
  * Abstract interface for job search providers
@@ -24,15 +24,6 @@ export interface JobSearchProvider {
    * @throws Error if API request fails or rate limit is exceeded
    */
   search(params: SearchParams): Promise<SearchResponse & { rapidApiQuota?: RapidApiQuota }>;
-
-  /**
-   * Get detailed information about a specific job listing
-   *
-   * @param jobId - Unique identifier for the job listing
-   * @returns Job details or null if not found
-   * @throws Error if API request fails
-   */
-  getJobDetails(jobId: string): Promise<JobResult | null>;
 
   /**
    * Test the provider connection with a minimal API request

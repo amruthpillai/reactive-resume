@@ -39,7 +39,9 @@ export const TextMaskEffect = ({ text, duration = 6, className, "aria-hidden": a
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
+      onMouseMove={(e) => {
+        setCursor({ x: e.clientX, y: e.clientY });
+      }}
     >
       <defs>
         <linearGradient id="textGradient" gradientUnits="userSpaceOnUse" cx="50%" cy="50%" r="25%">

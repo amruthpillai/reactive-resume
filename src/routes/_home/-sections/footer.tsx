@@ -54,7 +54,8 @@ export function Footer() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.45 }}
+      style={{ willChange: "opacity" }}
     >
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {/* Brand Column */}
@@ -83,7 +84,7 @@ export function Footer() {
                   <a
                     href={social.url}
                     target="_blank"
-                    rel="noopener"
+                    rel="noopener noreferrer"
                     aria-label={`${social.label} (${t`opens in new tab`})`}
                   >
                     <social.icon aria-hidden="true" size={18} />
@@ -141,8 +142,9 @@ function FooterLink({ url, label }: FooterLinkItem) {
           aria-hidden="true"
           initial={{ width: 0, opacity: 0 }}
           animate={isHovered ? { width: "100%", opacity: 1 } : { width: 0, opacity: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           className="pointer-events-none absolute inset-s-0 -bottom-0.5 h-px rounded-md bg-primary"
+          style={{ willChange: "width, opacity" }}
         />
       </a>
     </li>

@@ -86,7 +86,6 @@ export function CountUp({
       if (typeof onStart === "function") {
         onStart();
       }
-
       const timeoutId = setTimeout(() => {
         motionValue.set(direction === "down" ? from : to);
       }, delay * 1000);
@@ -105,7 +104,7 @@ export function CountUp({
         clearTimeout(durationTimeoutId);
       };
     }
-  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration]);
+  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration, formatValue]);
 
   useEffect(() => {
     const unsubscribe = springValue.on("change", (latest: number) => {

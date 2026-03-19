@@ -37,8 +37,10 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
     <motion.div
       className="group relative w-[320px] shrink-0 sm:w-[360px] md:w-[400px]"
       initial={{ scale: 1 }}
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      whileHover={{ y: -3, scale: 1.02 }}
+      whileTap={{ scale: 0.995 }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      style={{ willChange: "transform" }}
     >
       <div className="relative flex h-full flex-col rounded-md border bg-card p-5 shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
         <p className="flex-1 leading-relaxed text-muted-foreground">"{testimonial}"</p>
@@ -103,7 +105,7 @@ export function Testimonials() {
             <a
               href={`mailto:${email}`}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="font-medium text-foreground underline underline-offset-2 transition-colors hover:text-primary"
             >
               {email}

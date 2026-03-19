@@ -4,24 +4,14 @@ import { AISDKError, type UIMessage } from "ai";
 import { OllamaError } from "ai-sdk-ollama";
 import z, { flattenError, ZodError } from "zod";
 
-import type { JobResult } from "@/schema/jobs";
-import type { ResumeData } from "@/schema/resume/data";
-
+import { jobResultSchema } from "@/schema/jobs";
+import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { tailorOutputSchema } from "@/schema/tailor";
 
 import { protectedProcedure } from "../context";
 import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema } from "../services/ai";
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
-
-type TailorResumeInput = {
-  provider: AIProvider;
-  model: string;
-  apiKey: string;
-  baseURL: string;
-  resumeData: ResumeData;
-  job: JobResult;
-};
 
 export const aiRouter = {
   testConnection: protectedProcedure
@@ -199,12 +189,22 @@ export const aiRouter = {
         "Uses AI to automatically tailor a resume for a specific job posting. Rewrites the summary, adjusts experience descriptions, and curates skills for ATS optimization. Returns structured modifications as a simplified output object. Requires authentication and AI credentials.",
       successDescription: "Structured tailoring output returned successfully.",
     })
-    .input(type<TailorResumeInput>())
+    .input(
+      z.object({
+        ...aiCredentialsSchema.shape,
+        resumeData: resumeDataSchema,
+        job: jobResultSchema,
+      }),
+    )
     .output(tailorOutputSchema)
     .errors({
       BAD_GATEWAY: {
         message: "The AI provider returned an error or is unreachable.",
         status: 502,
+      },
+      BAD_REQUEST: {
+        message: "The AI returned an improperly formatted structure.",
+        status: 400,
       },
     })
     .handler(async ({ input }) => {

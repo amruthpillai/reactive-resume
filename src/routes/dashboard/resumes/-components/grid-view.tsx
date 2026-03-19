@@ -15,28 +15,40 @@ type Props = {
 export function GridView({ resumes }: Props) {
   return (
     <div className="3xl:grid-cols-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-      <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        style={{ willChange: "transform, opacity" }}
+      >
         <CreateResumeCard />
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -50 }}
-        transition={{ delay: 0.05 }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
+        style={{ willChange: "transform, opacity" }}
       >
         <ImportResumeCard />
       </motion.div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false} mode="popLayout">
         {resumes?.map((resume, index) => (
           <motion.div
             layout
             key={resume.id}
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, y: -50, filter: "blur(12px)" }}
-            transition={{ delay: (index + 2) * 0.05 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{
+              opacity: 0,
+              y: -20,
+              filter: "blur(8px)",
+            }}
+            transition={{ duration: 0.2, delay: Math.min(0.12, (index + 2) * 0.02), ease: "easeOut" }}
+            style={{ willChange: "transform, opacity" }}
           >
             <ResumeCard resume={resume} />
           </motion.div>

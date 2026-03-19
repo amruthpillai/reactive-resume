@@ -191,6 +191,8 @@ function QuickColorCircle({ color, active, onSelect, className, ...props }: Quic
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            style={{ willChange: "transform" }}
             className="absolute inset-0 flex size-8 items-center justify-center"
           >
             <div className="size-4 rounded-md bg-foreground" />

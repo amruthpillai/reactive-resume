@@ -241,9 +241,11 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
       value={item}
       dragListener={false}
       dragControls={controls}
-      initial={{ opacity: 1, y: -10 }}
+      initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.16, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
       className="group relative flex h-18 border-b select-none"
     >
       <div

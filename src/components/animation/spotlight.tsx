@@ -34,6 +34,7 @@ export const Spotlight = ({
         animate={{ x: [0, xOffset, 0] }}
         transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
         className="pointer-events-none absolute inset-s-0 top-0 z-40 h-svh w-svw"
+        style={{ willChange: "transform" }}
       >
         <div
           className="absolute inset-s-0 top-0"
@@ -75,6 +76,7 @@ export const Spotlight = ({
           ease: "easeInOut",
           repeatType: "reverse",
         }}
+        style={{ willChange: "transform" }}
       >
         <div
           className="absolute inset-e-0 top-0"

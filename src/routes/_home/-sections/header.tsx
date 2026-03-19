@@ -41,7 +41,7 @@ export function Header() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [y]);
 
   return (
     <motion.header
@@ -49,7 +49,7 @@ export function Header() {
       className="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-background/80 backdrop-blur-lg transition-colors"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
     >
       <ProductHuntBanner />
 

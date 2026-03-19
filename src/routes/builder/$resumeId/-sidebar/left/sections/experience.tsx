@@ -25,7 +25,7 @@ export function ExperienceSectionBuilder() {
   return (
     <SectionBase type="experience" className={cn("rounded-md border", section.items.length === 0 && "border-dashed")}>
       <Reorder.Group axis="y" values={section.items} onReorder={handleReorder}>
-        <AnimatePresence>
+        <AnimatePresence initial={false} mode="popLayout">
           {section.items.map((item) => {
             return (
               <SectionItem

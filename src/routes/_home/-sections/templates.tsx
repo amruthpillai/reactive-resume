@@ -15,8 +15,10 @@ function TemplateItem({ metadata }: TemplateItemProps) {
     <motion.div
       className="group relative shrink-0"
       initial={{ scale: 1, zIndex: 10 }}
-      whileHover={{ scale: 1.08, zIndex: 20 }}
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      whileHover={{ scale: 1.06, zIndex: 20 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 320, damping: 26 }}
+      style={{ willChange: "transform" }}
     >
       <div className="relative aspect-page w-48 overflow-hidden rounded-md border bg-card shadow-lg transition-all duration-300 group-hover:shadow-2xl sm:w-56 md:w-64 lg:w-72">
         <img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
@@ -88,7 +90,8 @@ export function Templates() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.35 }}
+        style={{ willChange: "transform, opacity" }}
       >
         <h2 className="text-2xl font-semibold tracking-tight md:text-4xl xl:text-5xl">
           <Trans>Templates</Trans>

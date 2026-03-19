@@ -10,14 +10,14 @@ import {
   MagnifyingGlassIcon,
   MapPinIcon,
   MoneyIcon,
+  WarningCircleIcon,
+  XIcon,
 } from "@phosphor-icons/react";
-import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { useCallback, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useMemo } from "react";
 
-import type { JobResult, RapidApiQuota } from "@/schema/jobs";
+import type { JobResult } from "@/schema/jobs";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,64 +25,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { useJobsStore } from "@/integrations/jobs/store";
-import { orpc } from "@/integrations/orpc/client";
+import { cn } from "@/utils/style";
 
 import { DashboardHeader } from "../-components/header";
 import { JobDetailSheet } from "./-components/job-detail";
-import {
-  buildPostFilters,
-  buildSearchParams,
-  type FilterState,
-  initialFilterState,
-  RESULTS_PER_PAGE,
-  SearchFilters,
-} from "./-components/search-filters";
+import { formatPostedDate, formatSalary, getQuotaStatus } from "./-components/job-utils";
+import { hasActiveFilters, initialFilterState, SearchFilters } from "./-components/search-filters";
+import { useJobSearch } from "./-components/use-job-search";
 
 export const Route = createFileRoute("/dashboard/job-search/")({
   component: RouteComponent,
 });
-
-function formatSalary(min: number | null, max: number | null, currency: string | null, period: string | null): string {
-  if (!min && !max) return "";
-
-  const fmt = (n: number) => {
-    const c = currency ?? "USD";
-    try {
-      return new Intl.NumberFormat("en-US", { style: "currency", currency: c, maximumFractionDigits: 0 }).format(n);
-    } catch {
-      return `${c} ${n.toLocaleString()}`;
-    }
-  };
-
-  const parts: string[] = [];
-
-  if (min && max) {
-    parts.push(`${fmt(min)} - ${fmt(max)}`);
-  } else if (min) {
-    parts.push(`${fmt(min)}+`);
-  } else if (max) {
-    parts.push(`Up to ${fmt(max)}`);
-  }
-
-  if (period) parts.push(`/ ${period}`);
-
-  return parts.join(" ");
-}
-
-function formatPostedDate(timestamp: number | null): string {
-  if (!timestamp) return "";
-  const date = new Date(timestamp * 1000);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return t`Today`;
-  if (diffDays === 1) return t`Yesterday`;
-  if (diffDays < 7) return t`${diffDays} days ago`;
-  if (diffDays < 30) return t`${Math.floor(diffDays / 7)} weeks ago`;
-  return t`${Math.floor(diffDays / 30)} months ago`;
-}
 
 function JobCard({ job, onClick }: { job: JobResult; onClick: () => void }) {
   const salary = formatSalary(job.job_min_salary, job.job_max_salary, job.job_salary_currency, job.job_salary_period);
@@ -154,66 +107,32 @@ function JobCard({ job, onClick }: { job: JobResult; onClick: () => void }) {
 }
 
 function RouteComponent() {
-  const rapidApiKey = useJobsStore((s) => s.rapidApiKey);
-  const testStatus = useJobsStore((s) => s.testStatus);
+  const {
+    activeFilterChips,
+    currentPage,
+    error,
+    executeSearch,
+    filters,
+    handleJobClick,
+    handlePageChange,
+    handleSearch,
+    hasMore,
+    hasSearched,
+    isConfigured,
+    isPending,
+    jobs,
+    query,
+    quota,
+    removeFilter,
+    scrollRef,
+    selectedJob,
+    setFilters,
+    setQuery,
+    setSheetOpen,
+    sheetOpen,
+  } = useJobSearch();
 
-  const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState<FilterState>(initialFilterState);
-  const [jobs, setJobs] = useState<JobResult[]>([]);
-  const [quota, setQuota] = useState<RapidApiQuota | null>(null);
-  const [selectedJob, setSelectedJob] = useState<JobResult | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const { mutate: searchJobs, isPending } = useMutation(orpc.jobs.search.mutationOptions());
-
-  const isConfigured = rapidApiKey && testStatus === "success";
-
-  const executeSearch = useCallback(
-    (page: number) => {
-      if (!rapidApiKey) return;
-      const effectiveQuery = query.trim() || "jobs";
-      const params = buildSearchParams(effectiveQuery, filters, page);
-      const postFilters = buildPostFilters(filters);
-
-      searchJobs(
-        { apiKey: rapidApiKey, params, filters: postFilters },
-        {
-          onSuccess: (data) => {
-            setHasMore(data.data.length >= RESULTS_PER_PAGE);
-            setJobs(data.data.slice(0, RESULTS_PER_PAGE));
-            setQuota(data.rapidApiQuota ?? null);
-            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-          },
-          onError: (error) => {
-            toast.error(error.message);
-          },
-        },
-      );
-    },
-    [query, filters, rapidApiKey, searchJobs],
-  );
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setHasSearched(true);
-    setCurrentPage(1);
-    executeSearch(1);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    executeSearch(page);
-  };
-
-  const handleJobClick = (job: JobResult) => {
-    setSelectedJob(job);
-    setSheetOpen(true);
-  };
+  const showFilterChips = useMemo(() => hasActiveFilters(filters), [filters]);
 
   return (
     <div className="space-y-4">
@@ -255,6 +174,7 @@ function RouteComponent() {
                 autoCorrect="off"
                 autoComplete="off"
                 spellCheck="false"
+                autoFocus
               />
             </div>
 
@@ -268,12 +188,72 @@ function RouteComponent() {
 
           <SearchFilters filters={filters} onFiltersChange={setFilters} />
 
+          {showFilterChips && (
+            <div className="flex flex-wrap items-center gap-2">
+              {activeFilterChips.map((chip) => (
+                <button
+                  key={`${chip.key}-${chip.value ?? chip.label}`}
+                  type="button"
+                  className="inline-flex items-center gap-1 rounded-full border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => removeFilter(chip.key, chip.value)}
+                >
+                  {chip.label}
+                  <XIcon className="size-3" />
+                </button>
+              ))}
+              <Button size="sm" variant="ghost" onClick={() => setFilters(initialFilterState)}>
+                <Trans>Clear all</Trans>
+              </Button>
+            </div>
+          )}
+
           {quota && (
-            <p className="text-xs text-muted-foreground">
-              <Trans>
-                {quota.used} / {quota.limit} requests used this month
-              </Trans>
-            </p>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={cn(
+                  getQuotaStatus(quota) === "healthy" && "text-emerald-600",
+                  getQuotaStatus(quota) === "warning" && "text-amber-600",
+                  getQuotaStatus(quota) === "critical" && "text-red-600",
+                )}
+              >
+                <Trans>Quota: {quota.remaining} remaining</Trans>
+              </Badge>
+              <p className="text-xs text-muted-foreground">
+                <Trans>
+                  {quota.used} / {quota.limit} requests used
+                </Trans>
+              </p>
+            </div>
+          )}
+
+          {isPending && jobs.length === 0 && (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="flex animate-pulse flex-col gap-y-3 rounded-md border bg-card p-4">
+                  <div className="h-4 w-3/4 rounded bg-muted" />
+                  <div className="h-3 w-1/2 rounded bg-muted" />
+                  <div className="h-3 w-5/6 rounded bg-muted" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {error && !isPending && (
+            <div className="rounded-md border border-destructive/40 bg-destructive/5 p-4">
+              <div className="flex items-start gap-2">
+                <WarningCircleIcon className="mt-0.5 size-4 text-destructive" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-destructive">
+                    <Trans>Could not fetch jobs</Trans>
+                  </p>
+                  <p className="text-sm text-muted-foreground">{error}</p>
+                  <Button size="sm" variant="outline" onClick={() => executeSearch(currentPage)}>
+                    <Trans>Retry</Trans>
+                  </Button>
+                </div>
+              </div>
+            </div>
           )}
 
           {jobs.length > 0 && (

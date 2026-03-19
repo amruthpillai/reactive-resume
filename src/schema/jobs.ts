@@ -5,7 +5,7 @@ import z from "zod";
 export const searchParamsSchema = z.object({
   query: z.string().min(1),
   page: z.number().int().positive().optional(),
-  num_pages: z.number().int().positive().optional(),
+  num_pages: z.number().int().positive().max(10).optional(),
   date_posted: z.enum(["all", "today", "3days", "week", "month"]).optional(),
   country: z
     .string()
@@ -127,14 +127,19 @@ export type JobDetailsResponse = z.infer<typeof jobDetailsResponseSchema>;
 
 // --- Client-side Filter Types ---
 
-export const postFilterOptionsSchema = z.object({
-  minSalary: z.number().optional(),
-  maxSalary: z.number().optional(),
-  includeKeywords: z.array(z.string()).optional(),
-  excludeKeywords: z.array(z.string()).optional(),
-  excludeCompanies: z.array(z.string()).optional(),
-  directApplyOnly: z.boolean().optional(),
-});
+export const postFilterOptionsSchema = z
+  .object({
+    minSalary: z.number().nonnegative().optional(),
+    maxSalary: z.number().nonnegative().optional(),
+    includeKeywords: z.array(z.string()).optional(),
+    excludeKeywords: z.array(z.string()).optional(),
+    excludeCompanies: z.array(z.string()).optional(),
+    directApplyOnly: z.boolean().optional(),
+  })
+  .refine((value) => value.minSalary == null || value.maxSalary == null || value.minSalary <= value.maxSalary, {
+    message: "minSalary must be less than or equal to maxSalary",
+    path: ["minSalary"],
+  });
 
 export type PostFilterOptions = z.infer<typeof postFilterOptionsSchema>;
 

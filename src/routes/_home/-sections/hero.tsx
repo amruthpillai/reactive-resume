@@ -20,7 +20,8 @@ export function Hero() {
       <motion.div
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 1.1, ease: "easeOut" }}
+        style={{ willChange: "transform, opacity" }}
       >
         <CometCard glareOpacity={0} className="3xl:max-w-7xl relative -mb-12 max-w-4xl px-8 md:-mb-24 md:px-12 lg:px-0">
           <video
@@ -47,9 +48,12 @@ export function Hero() {
         <motion.a
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.45, delay: 0.55 }}
+          whileHover={{ y: -2, scale: 1.01 }}
+          whileTap={{ scale: 0.985 }}
+          style={{ willChange: "transform, opacity" }}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           href="https://docs.rxresu.me/getting-started"
         >
           <Badge variant="secondary" className="h-auto gap-1.5 px-3 py-0.5">
@@ -62,7 +66,8 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
+          transition={{ duration: 0.45, delay: 0.7 }}
+          style={{ willChange: "transform, opacity" }}
         >
           <Trans>
             <p className="font-medium tracking-tight text-muted-foreground md:text-lg">Finally,</p>
@@ -77,7 +82,8 @@ export function Hero() {
           className="max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
+          transition={{ duration: 0.45, delay: 0.82 }}
+          style={{ willChange: "transform, opacity" }}
         >
           <Trans>
             Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating,
@@ -90,7 +96,8 @@ export function Hero() {
           className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.4 }}
+          transition={{ duration: 0.45, delay: 0.95 }}
+          style={{ willChange: "transform, opacity" }}
         >
           <Button
             size="lg"
@@ -115,7 +122,7 @@ export function Hero() {
             className="gap-2 px-4"
             nativeButton={false}
             render={
-              <a href="https://docs.rxresu.me" target="_blank" rel="noopener">
+              <a href="https://docs.rxresu.me" target="_blank" rel="noopener noreferrer">
                 <BookIcon aria-hidden="true" className="size-4" />
                 <Trans>Learn More</Trans>
                 <span className="sr-only">
@@ -134,12 +141,13 @@ export function Hero() {
         className="absolute inset-s-1/2 bottom-8 -translate-x-1/2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
+        transition={{ delay: 1.25, duration: 0.7 }}
       >
         <motion.div
           className="flex h-8 w-5 items-start justify-center rounded-full border border-muted-foreground/30 p-1.5"
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: "transform" }}
         >
           <motion.div className="h-1.5 w-1 rounded-full bg-muted-foreground/50" />
         </motion.div>

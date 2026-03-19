@@ -76,49 +76,4 @@ export const jobsRouter = {
         });
       }
     }),
-
-  details: protectedProcedure
-    .route({
-      method: "POST",
-      path: "/jobs/details",
-      tags: ["Jobs"],
-      operationId: "getJobDetails",
-      summary: "Get detailed information about a job listing",
-      description:
-        "Fetches full details for a specific job listing by ID from the JSearch API. Requires authentication.",
-      successDescription: "Job details returned successfully.",
-    })
-    .input(
-      z.object({
-        apiKey: z.string().min(1),
-        jobId: z.string().min(1),
-      }),
-    )
-    .errors({
-      BAD_GATEWAY: {
-        message: "The JSearch API returned an error or is unreachable.",
-        status: 502,
-      },
-      NOT_FOUND: {
-        message: "Job listing not found.",
-        status: 404,
-      },
-    })
-    .handler(async ({ input }) => {
-      try {
-        const job = await jobsService.getJobDetails(input.apiKey, input.jobId);
-
-        if (!job) {
-          throw new ORPCError("NOT_FOUND", { message: "Job listing not found" });
-        }
-
-        return job;
-      } catch (error) {
-        if (error instanceof ORPCError) throw error;
-
-        throw new ORPCError("BAD_GATEWAY", {
-          message: error instanceof Error ? error.message : "Failed to fetch job details",
-        });
-      }
-    }),
 };

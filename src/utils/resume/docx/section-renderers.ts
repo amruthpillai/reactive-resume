@@ -3,6 +3,7 @@ import { BorderStyle, ExternalHyperlink, HeadingLevel, Paragraph, TabStopPositio
 import type { CustomSection, CustomSectionType, ResumeData, SectionType } from "@/schema/resume/data";
 
 import { type HtmlStyleConfig, htmlToParagraphs } from "./html-to-docx";
+import { toSafeDocxLink } from "./link-utils";
 
 type Sections = ResumeData["sections"];
 
@@ -47,7 +48,7 @@ function getHtmlStyle(): HtmlStyleConfig {
  * Creates a section heading paragraph with primary color and bottom border.
  * Uses the heading typography set via `setRenderConfig`.
  */
-export function sectionHeading(title: string, colorHex: string): Paragraph {
+function sectionHeading(title: string, colorHex: string): Paragraph {
   // Section headings use <h6> in templates: calc(var(--page-heading-font-size) * 0.75pt)
   const h6Size = headingSize ? Math.round(headingSize * 0.75) : 16;
 
@@ -111,15 +112,16 @@ function locationAndPeriod(location: string, period: string): Paragraph | null {
 }
 
 function websiteParagraph(url: string, label: string): Paragraph | null {
-  if (!url) return null;
+  const safeUrl = toSafeDocxLink(url);
+  if (!safeUrl) return null;
 
   return new Paragraph({
     children: [
       new ExternalHyperlink({
-        link: url,
+        link: safeUrl,
         children: [
           new TextRun({
-            text: label || url,
+            text: label || safeUrl,
             color: primaryColor ?? "0563C1",
             underline: {},
             ...(bodyFont ? { font: bodyFont } : {}),
@@ -145,7 +147,7 @@ export function renderSummary(summary: ResumeData["summary"], colorHex: string):
   return paragraphs;
 }
 
-export function renderExperience(section: Sections["experience"], colorHex: string): Paragraph[] {
+function renderExperience(section: Sections["experience"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -196,7 +198,7 @@ export function renderExperience(section: Sections["experience"], colorHex: stri
   return paragraphs;
 }
 
-export function renderEducation(section: Sections["education"], colorHex: string): Paragraph[] {
+function renderEducation(section: Sections["education"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -233,7 +235,7 @@ export function renderEducation(section: Sections["education"], colorHex: string
   return paragraphs;
 }
 
-export function renderProjects(section: Sections["projects"], colorHex: string): Paragraph[] {
+function renderProjects(section: Sections["projects"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -253,7 +255,7 @@ export function renderProjects(section: Sections["projects"], colorHex: string):
   return paragraphs;
 }
 
-export function renderSkills(section: Sections["skills"], colorHex: string): Paragraph[] {
+function renderSkills(section: Sections["skills"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -281,7 +283,7 @@ export function renderSkills(section: Sections["skills"], colorHex: string): Par
   return paragraphs;
 }
 
-export function renderLanguages(section: Sections["languages"], colorHex: string): Paragraph[] {
+function renderLanguages(section: Sections["languages"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -305,7 +307,7 @@ export function renderLanguages(section: Sections["languages"], colorHex: string
   return paragraphs;
 }
 
-export function renderInterests(section: Sections["interests"], colorHex: string): Paragraph[] {
+function renderInterests(section: Sections["interests"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -329,7 +331,7 @@ export function renderInterests(section: Sections["interests"], colorHex: string
   return paragraphs;
 }
 
-export function renderAwards(section: Sections["awards"], colorHex: string): Paragraph[] {
+function renderAwards(section: Sections["awards"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -349,7 +351,7 @@ export function renderAwards(section: Sections["awards"], colorHex: string): Par
   return paragraphs;
 }
 
-export function renderCertifications(section: Sections["certifications"], colorHex: string): Paragraph[] {
+function renderCertifications(section: Sections["certifications"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -369,7 +371,7 @@ export function renderCertifications(section: Sections["certifications"], colorH
   return paragraphs;
 }
 
-export function renderPublications(section: Sections["publications"], colorHex: string): Paragraph[] {
+function renderPublications(section: Sections["publications"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -389,7 +391,7 @@ export function renderPublications(section: Sections["publications"], colorHex: 
   return paragraphs;
 }
 
-export function renderVolunteer(section: Sections["volunteer"], colorHex: string): Paragraph[] {
+function renderVolunteer(section: Sections["volunteer"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -412,7 +414,7 @@ export function renderVolunteer(section: Sections["volunteer"], colorHex: string
   return paragraphs;
 }
 
-export function renderReferences(section: Sections["references"], colorHex: string): Paragraph[] {
+function renderReferences(section: Sections["references"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 
@@ -451,7 +453,7 @@ export function renderReferences(section: Sections["references"], colorHex: stri
   return paragraphs;
 }
 
-export function renderProfiles(section: Sections["profiles"], colorHex: string): Paragraph[] {
+function renderProfiles(section: Sections["profiles"], colorHex: string): Paragraph[] {
   const items = section.items.filter((item) => !item.hidden);
   if (section.hidden || items.length === 0) return [];
 

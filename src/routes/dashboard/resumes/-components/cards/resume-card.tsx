@@ -31,24 +31,31 @@ export function ResumeCard({ resume }: ResumeCardProps) {
   return (
     <ResumeContextMenu resume={resume}>
       <Link to="/builder/$resumeId" params={{ resumeId: resume.id }} className="cursor-default">
-        <BaseCard title={resume.name} description={t`Last updated on ${updatedAt}`} tags={resume.tags}>
-          {match({ isLoading, imageSrc: screenshotData?.url })
-            .with({ isLoading: true }, () => (
-              <div className="flex size-full items-center justify-center">
-                <CircleNotchIcon weight="thin" className="size-12 animate-spin" />
-              </div>
-            ))
-            .with({ imageSrc: P.string }, ({ imageSrc }) => (
-              <img
-                src={imageSrc}
-                alt={resume.name}
-                className={cn("size-full object-cover transition-all", resume.isLocked && "blur-xs")}
-              />
-            ))
-            .otherwise(() => null)}
+        <motion.div
+          whileHover={{ y: -2, scale: 1.005 }}
+          whileTap={{ scale: 0.998 }}
+          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+          style={{ willChange: "transform" }}
+        >
+          <BaseCard title={resume.name} description={t`Last updated on ${updatedAt}`} tags={resume.tags}>
+            {match({ isLoading, imageSrc: screenshotData?.url })
+              .with({ isLoading: true }, () => (
+                <div className="flex size-full items-center justify-center">
+                  <CircleNotchIcon weight="thin" className="size-12 animate-spin" />
+                </div>
+              ))
+              .with({ imageSrc: P.string }, ({ imageSrc }) => (
+                <img
+                  src={imageSrc}
+                  alt={resume.name}
+                  className={cn("size-full object-cover transition-all", resume.isLocked && "blur-xs")}
+                />
+              ))
+              .otherwise(() => null)}
 
-          <ResumeLockOverlay isLocked={resume.isLocked} />
-        </BaseCard>
+            <ResumeLockOverlay isLocked={resume.isLocked} />
+          </BaseCard>
+        </motion.div>
       </Link>
     </ResumeContextMenu>
   );
@@ -63,6 +70,8 @@ function ResumeLockOverlay({ isLocked }: { isLocked: boolean }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          style={{ willChange: "opacity" }}
           className="absolute inset-0 flex items-center justify-center"
         >
           <div className="flex items-center justify-center rounded-full bg-popover p-6">

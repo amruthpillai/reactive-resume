@@ -62,7 +62,8 @@ function RouteComponent() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        style={{ willChange: "transform, opacity" }}
         className="grid max-w-xl gap-6"
       >
         <p className="leading-relaxed">
@@ -76,15 +77,18 @@ function RouteComponent() {
           placeholder={t`Type "${CONFIRMATION_TEXT}" to confirm`}
         />
 
-        <Button
+        <motion.div
           className="justify-self-end"
-          variant="destructive"
-          onClick={handleDeleteAccount}
-          disabled={!isConfirmationValid}
+          whileHover={!isConfirmationValid ? undefined : { y: -1, scale: 1.01 }}
+          whileTap={!isConfirmationValid ? undefined : { scale: 0.98 }}
+          transition={{ duration: 0.14, ease: "easeOut" }}
+          style={{ willChange: "transform" }}
         >
-          <TrashSimpleIcon />
-          <Trans>Delete Account</Trans>
-        </Button>
+          <Button variant="destructive" onClick={handleDeleteAccount} disabled={!isConfirmationValid}>
+            <TrashSimpleIcon />
+            <Trans>Delete Account</Trans>
+          </Button>
+        </motion.div>
       </motion.div>
     </div>
   );

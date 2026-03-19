@@ -36,7 +36,7 @@ const getFaqItems = (): FAQItemData[] => [
         <a
           href={crowdinUrl}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           className={buttonVariants({ variant: "link", className: "h-auto px-0!" })}
         >
           contribute to the translations on Crowdin
@@ -76,7 +76,8 @@ export function FAQ() {
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.45 }}
+        style={{ willChange: "transform, opacity" }}
       >
         <Trans context="Every word needs to be wrapped in a tag">
           <span>Frequently</span>
@@ -90,7 +91,8 @@ export function FAQ() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+        transition={{ duration: 0.45, delay: 0.08 }}
+        style={{ willChange: "transform, opacity" }}
       >
         <Accordion multiple>
           {faqItems.map((item, index) => (
@@ -114,7 +116,8 @@ function FAQItemComponent({ item, index }: FAQItemComponentProps) {
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+      transition={{ duration: 0.24, delay: Math.min(0.16, index * 0.03) }}
+      style={{ willChange: "transform, opacity" }}
     >
       <AccordionItem value={item.question} className="group border-t">
         <AccordionTrigger className="py-5">{item.question}</AccordionTrigger>

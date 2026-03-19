@@ -70,7 +70,13 @@ export const CometCard = ({
         ref={ref}
         initial={{ scale: 1, z: 0 }}
         className="relative rounded-md"
-        style={{ rotateX, rotateY, translateX, translateY }}
+        style={{
+          rotateX: rotateX,
+          rotateY: rotateY,
+          translateX: translateX,
+          translateY: translateY,
+          willChange: "transform",
+        }}
         whileHover={{ z: 50, scale: scaleFactor, transition: { duration: 0.2 } }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -79,7 +85,11 @@ export const CometCard = ({
 
         <motion.div
           transition={{ duration: 0.2 }}
-          style={{ background: glareBackground, opacity: glareOpacity }}
+          style={{
+            background: glareBackground,
+            opacity: glareOpacity,
+            willChange: "opacity",
+          }}
           className="pointer-events-none absolute inset-0 z-50 h-full w-full rounded-md mix-blend-overlay"
         />
       </motion.div>

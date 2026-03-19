@@ -37,7 +37,7 @@ export const initialFilterState: FilterState = {
   directApplyOnly: false,
 };
 
-// --- Pure helper functions ---
+// --- Helper functions ---
 
 export function buildSearchParams(query: string, filters: FilterState, page?: number): SearchParams {
   const effectiveQuery = query.trim();
@@ -45,7 +45,9 @@ export function buildSearchParams(query: string, filters: FilterState, page?: nu
 
   const params: SearchParams = { query: effectiveQuery, num_pages: FETCH_NUM_PAGES };
   if (page && page > 1) params.page = page;
-  if (filters.datePosted) params.date_posted = filters.datePosted as SearchParams["date_posted"];
+  if (filters.datePosted && filters.datePosted !== "all") {
+    params.date_posted = filters.datePosted as SearchParams["date_posted"];
+  }
   params.country = countryCode;
   if (filters.remoteOnly) params.remote_jobs_only = true;
   if (filters.employmentType) params.employment_types = filters.employmentType;
@@ -55,20 +57,28 @@ export function buildSearchParams(query: string, filters: FilterState, page?: nu
 
 export function buildPostFilters(filters: FilterState): PostFilterOptions {
   const result: PostFilterOptions = {};
-  const minSal = Number(filters.minSalary);
-  const maxSal = Number(filters.maxSalary);
-  if (Number.isFinite(minSal) && minSal > 0) result.minSalary = minSal;
-  if (Number.isFinite(maxSal) && maxSal > 0) result.maxSalary = maxSal;
+  const minSalaryInput = filters.minSalary.trim();
+  const maxSalaryInput = filters.maxSalary.trim();
+  const minSal = Number(minSalaryInput);
+  const maxSal = Number(maxSalaryInput);
+
+  if (minSalaryInput !== "" && Number.isFinite(minSal) && minSal >= 0) result.minSalary = minSal;
+  if (maxSalaryInput !== "" && Number.isFinite(maxSal) && maxSal >= 0) result.maxSalary = maxSal;
+  if (result.minSalary != null && result.maxSalary != null && result.minSalary > result.maxSalary) {
+    [result.minSalary, result.maxSalary] = [result.maxSalary, result.minSalary];
+  }
+
   if (filters.includeKeywords.length > 0) result.includeKeywords = filters.includeKeywords;
   if (filters.excludeKeywords.length > 0) result.excludeKeywords = filters.excludeKeywords;
   if (filters.excludeCompanies.length > 0) result.excludeCompanies = filters.excludeCompanies;
   if (filters.directApplyOnly) result.directApplyOnly = true;
+
   return result;
 }
 
 export function hasActiveFilters(filters: FilterState): boolean {
   return (
-    filters.datePosted !== null ||
+    (filters.datePosted !== null && filters.datePosted !== "all") ||
     filters.remoteOnly ||
     filters.employmentType !== null ||
     filters.jobRequirements !== null ||

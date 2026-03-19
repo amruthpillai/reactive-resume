@@ -21,11 +21,9 @@ describe("createJobSearchProvider", () => {
     const provider = createJobSearchProvider("test-api-key");
 
     expect(provider).toHaveProperty("search");
-    expect(provider).toHaveProperty("getJobDetails");
     expect(provider).toHaveProperty("testConnection");
 
     expect(typeof provider.search).toBe("function");
-    expect(typeof provider.getJobDetails).toBe("function");
     expect(typeof provider.testConnection).toBe("function");
   });
 });

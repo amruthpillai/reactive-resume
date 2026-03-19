@@ -164,6 +164,7 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown error";
         toast.error(t`Failed to sync skills`, { description: message });
+        return;
       }
     }
 
@@ -292,7 +293,7 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
                 {phase.newSkills.map((skill, index) => (
                   <button
                     type="button"
-                    key={index}
+                    key={`${skill.name}-${index}`}
                     className="flex items-center gap-x-3 rounded-md border p-3 text-start hover:bg-muted/50"
                     onClick={() => toggleSkill(index)}
                   >

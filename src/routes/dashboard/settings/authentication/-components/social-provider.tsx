@@ -40,7 +40,8 @@ export function SocialProviderSection({ provider, name, animationDelay = 0 }: So
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: animationDelay }}
+      transition={{ duration: 0.2, delay: animationDelay, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
     >
       <Separator />
 
@@ -52,16 +53,30 @@ export function SocialProviderSection({ provider, name, animationDelay = 0 }: So
 
         {match(isConnected)
           .with(true, () => (
-            <Button variant="outline" onClick={handleUnlink}>
-              <LinkBreakIcon />
-              <Trans>Disconnect</Trans>
-            </Button>
+            <motion.div
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+              style={{ willChange: "transform" }}
+            >
+              <Button variant="outline" onClick={handleUnlink}>
+                <LinkBreakIcon />
+                <Trans>Disconnect</Trans>
+              </Button>
+            </motion.div>
           ))
           .with(false, () => (
-            <Button variant="outline" onClick={handleLink}>
-              <LinkIcon />
-              <Trans>Connect</Trans>
-            </Button>
+            <motion.div
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+              style={{ willChange: "transform" }}
+            >
+              <Button variant="outline" onClick={handleLink}>
+                <LinkIcon />
+                <Trans>Connect</Trans>
+              </Button>
+            </motion.div>
           ))
           .exhaustive()}
       </div>

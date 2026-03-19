@@ -72,6 +72,10 @@ describe("searchParamsSchema", () => {
     expect(() => searchParamsSchema.parse({ query: "test", page: 0 })).toThrow();
     expect(() => searchParamsSchema.parse({ query: "test", page: -1 })).toThrow();
   });
+
+  it("rejects num_pages greater than allowed cap", () => {
+    expect(() => searchParamsSchema.parse({ query: "test", num_pages: 11 })).toThrow();
+  });
 });
 
 // --- jobRequiredExperienceSchema ---
@@ -277,6 +281,15 @@ describe("postFilterOptionsSchema", () => {
     const result = postFilterOptionsSchema.parse({});
     expect(result.minSalary).toBeUndefined();
     expect(result.directApplyOnly).toBeUndefined();
+  });
+
+  it("rejects negative salary filters", () => {
+    expect(() => postFilterOptionsSchema.parse({ minSalary: -1 })).toThrow();
+    expect(() => postFilterOptionsSchema.parse({ maxSalary: -1 })).toThrow();
+  });
+
+  it("rejects minSalary greater than maxSalary", () => {
+    expect(() => postFilterOptionsSchema.parse({ minSalary: 200000, maxSalary: 100000 })).toThrow();
   });
 });
 

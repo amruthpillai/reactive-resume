@@ -12,11 +12,6 @@ async function search(
   return provider.search(params);
 }
 
-async function getJobDetails(apiKey: string, jobId: string) {
-  const provider = createJobSearchProvider(apiKey);
-  return provider.getJobDetails(jobId);
-}
-
 async function testConnection(apiKey: string): Promise<{ success: boolean; rapidApiQuota?: RapidApiQuota }> {
   const provider = createJobSearchProvider(apiKey);
   return provider.testConnection();
@@ -26,6 +21,8 @@ async function testConnection(apiKey: string): Promise<{ success: boolean; rapid
 
 function applyPostFilters(jobs: JobResult[], options: PostFilterOptions): JobResult[] {
   let filtered = jobs;
+
+  const normalizeKeywords = (values: string[]) => values.map((value) => value.trim().toLowerCase()).filter(Boolean);
 
   if (options.minSalary != null || options.maxSalary != null) {
     filtered = filtered.filter((job) => {
@@ -39,24 +36,33 @@ function applyPostFilters(jobs: JobResult[], options: PostFilterOptions): JobRes
   }
 
   if (options.includeKeywords?.length) {
-    const lower = options.includeKeywords.map((k) => k.toLowerCase());
-    filtered = filtered.filter((job) => {
-      const text = `${job.job_title} ${job.job_description}`.toLowerCase();
-      return lower.some((kw) => text.includes(kw));
-    });
+    const keywords = normalizeKeywords(options.includeKeywords);
+
+    if (keywords.length > 0) {
+      filtered = filtered.filter((job) => {
+        const text = `${job.job_title} ${job.job_description}`.toLowerCase();
+        return keywords.some((keyword) => text.includes(keyword));
+      });
+    }
   }
 
   if (options.excludeKeywords?.length) {
-    const lower = options.excludeKeywords.map((k) => k.toLowerCase());
-    filtered = filtered.filter((job) => {
-      const text = `${job.job_title} ${job.job_description}`.toLowerCase();
-      return !lower.some((kw) => text.includes(kw));
-    });
+    const keywords = normalizeKeywords(options.excludeKeywords);
+
+    if (keywords.length > 0) {
+      filtered = filtered.filter((job) => {
+        const text = `${job.job_title} ${job.job_description}`.toLowerCase();
+        return !keywords.some((keyword) => text.includes(keyword));
+      });
+    }
   }
 
   if (options.excludeCompanies?.length) {
-    const lower = options.excludeCompanies.map((c) => c.toLowerCase());
-    filtered = filtered.filter((job) => !lower.includes(job.employer_name.toLowerCase()));
+    const companies = normalizeKeywords(options.excludeCompanies);
+
+    if (companies.length > 0) {
+      filtered = filtered.filter((job) => !companies.includes(job.employer_name.toLowerCase()));
+    }
   }
 
   if (options.directApplyOnly) {
@@ -78,7 +84,6 @@ function deduplicateJobs(jobs: JobResult[]): JobResult[] {
 
 export const jobsService = {
   search,
-  getJobDetails,
   testConnection,
   applyPostFilters,
   deduplicateJobs,

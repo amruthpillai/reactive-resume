@@ -77,6 +77,28 @@ describe("htmlToParagraphs", () => {
     expect(hyperlinks.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("does not create hyperlink for unsafe javascript links", () => {
+    const result = htmlToParagraphs('<p><a href="javascript:alert(1)">Click me</a></p>');
+    expect(result).toHaveLength(1);
+
+    const paragraph = result[0];
+    expect(paragraph).toBeDefined();
+    const children = getChildren(paragraph as Paragraph);
+    const hyperlinks = children.filter((c) => c instanceof ExternalHyperlink);
+    expect(hyperlinks).toHaveLength(0);
+  });
+
+  it("does not create hyperlink for unsafe data links", () => {
+    const result = htmlToParagraphs('<p><a href="data:text/html;base64,PHNjcmlwdD4=">Click me</a></p>');
+    expect(result).toHaveLength(1);
+
+    const paragraph = result[0];
+    expect(paragraph).toBeDefined();
+    const children = getChildren(paragraph as Paragraph);
+    const hyperlinks = children.filter((c) => c instanceof ExternalHyperlink);
+    expect(hyperlinks).toHaveLength(0);
+  });
+
   it("parses mixed inline formatting", () => {
     const result = htmlToParagraphs("<p>Normal <strong>bold</strong> end</p>");
     expect(result).toHaveLength(1);

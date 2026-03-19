@@ -30,6 +30,7 @@ function mockErrorResponse(status: number, statusText: string) {
     ok: false,
     status,
     statusText,
+    text: async () => "",
     headers: mockHeaders(),
   };
 }
@@ -99,13 +100,6 @@ const mockSearchResponse = {
       apply_options: [],
     },
   ],
-};
-
-const mockJobDetailsResponse = {
-  status: "OK",
-  request_id: "test-request-id",
-  parameters: {},
-  data: [mockSearchResponse.data[0]],
 };
 
 // --- Tests ---
@@ -205,65 +199,30 @@ describe("JSearchProvider", () => {
       }
     });
 
-    it("should throw error on non-200 response after retries", async () => {
+    it("should throw error on non-200 response without retrying", async () => {
+      mockFetch.mockResolvedValue(mockErrorResponse(500, "Internal Server Error"));
+
+      await expect(provider.search({ query: "test", num_pages: 1 })).rejects.toThrow("JSearch API error: 500");
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("retries network failures and succeeds", async () => {
       vi.useFakeTimers();
       try {
-        mockFetch.mockResolvedValue(mockErrorResponse(500, "Internal Server Error"));
+        mockFetch
+          .mockRejectedValueOnce(new TypeError("Network down"))
+          .mockRejectedValueOnce(new TypeError("Network still down"))
+          .mockResolvedValueOnce(mockOkResponse(mockSearchResponse));
+
         const pending = provider.search({ query: "test", num_pages: 1 });
-        // Register .rejects before advancing timers (otherwise rejection is unhandled).
-        // eslint-disable-next-line jest/valid-expect -- await follows after fake timer advances
-        const assertion = expect(pending).rejects.toThrow("JSearch API error: 500");
         await vi.advanceTimersByTimeAsync(1000);
         await vi.advanceTimersByTimeAsync(2000);
-        await assertion;
+        await pending;
+
         expect(mockFetch).toHaveBeenCalledTimes(3);
       } finally {
         vi.useRealTimers();
       }
-    });
-  });
-
-  // --- getJobDetails() ---
-
-  describe("getJobDetails", () => {
-    it("should fetch job details by ID", async () => {
-      mockFetch.mockResolvedValueOnce(mockOkResponse(mockJobDetailsResponse));
-
-      const result = await provider.getJobDetails("job-1");
-
-      expect(mockFetch).toHaveBeenCalledOnce();
-      const callUrl = mockFetch.mock.calls[0][0];
-      expect(callUrl).toContain("/job-details");
-      expect(callUrl).toContain("job_id=job-1");
-      expect(result?.job_id).toBe("job-1");
-    });
-
-    it("should return null if no job found", async () => {
-      mockFetch.mockResolvedValueOnce(
-        mockOkResponse({ status: "OK", request_id: "test-req", parameters: {}, data: [] }),
-      );
-
-      const result = await provider.getJobDetails("nonexistent-job");
-
-      expect(result).toBeNull();
-    });
-
-    it("should return first job if multiple returned", async () => {
-      mockFetch.mockResolvedValueOnce(
-        mockOkResponse({
-          status: "OK",
-          request_id: "test-req",
-          parameters: {},
-          data: [
-            { ...mockSearchResponse.data[0], job_id: "first" },
-            { ...mockSearchResponse.data[0], job_id: "second" },
-          ],
-        }),
-      );
-
-      const result = await provider.getJobDetails("job-1");
-
-      expect(result?.job_id).toBe("first");
     });
   });
 
@@ -284,26 +243,18 @@ describe("JSearchProvider", () => {
     });
 
     it("should return success false on connection failure", async () => {
-      vi.useFakeTimers();
-      try {
-        mockFetch.mockResolvedValue(mockErrorResponse(401, "Unauthorized"));
-        const promise = provider.testConnection();
-        await vi.advanceTimersByTimeAsync(1000);
-        await vi.advanceTimersByTimeAsync(2000);
-        const result = await promise;
+      mockFetch.mockResolvedValue(mockErrorResponse(401, "Unauthorized"));
 
-        expect(result.success).toBe(false);
-        expect(result.rapidApiQuota).toBeUndefined();
-        expect(mockFetch).toHaveBeenCalledTimes(3);
-      } finally {
-        vi.useRealTimers();
-      }
+      const result = await provider.testConnection();
+      expect(result.success).toBe(false);
+      expect(result.rapidApiQuota).toBeUndefined();
+      expect(mockFetch).toHaveBeenCalledTimes(1);
     });
 
     it("should return success false on network error", async () => {
       vi.useFakeTimers();
       try {
-        mockFetch.mockRejectedValue(new Error("Network error"));
+        mockFetch.mockRejectedValue(new TypeError("Network error"));
         const promise = provider.testConnection();
         await vi.advanceTimersByTimeAsync(1000);
         await vi.advanceTimersByTimeAsync(2000);

@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useAIStore } from "@/integrations/ai/store";
 
+import { formatSalary, isValidExternalUrl } from "./job-utils";
 import { TailorDialog } from "./tailor-dialog";
 
 type Props = {
@@ -28,33 +29,6 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
-
-function formatSalary(min: number | null, max: number | null, currency: string | null, period: string | null): string {
-  if (!min && !max) return "";
-
-  const fmt = (n: number) => {
-    const c = currency ?? "USD";
-    try {
-      return new Intl.NumberFormat("en-US", { style: "currency", currency: c, maximumFractionDigits: 0 }).format(n);
-    } catch {
-      return `${c} ${n.toLocaleString()}`;
-    }
-  };
-
-  const parts: string[] = [];
-
-  if (min && max) {
-    parts.push(`${fmt(min)} - ${fmt(max)}`);
-  } else if (min) {
-    parts.push(`${fmt(min)}+`);
-  } else if (max) {
-    parts.push(`Up to ${fmt(max)}`);
-  }
-
-  if (period) parts.push(`/ ${period}`);
-
-  return parts.join(" ");
-}
 
 export function JobDetailSheet({ job, open, onOpenChange }: Props) {
   const isAIEnabled = useAIStore((s) => s.enabled);
@@ -64,6 +38,7 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
 
   const salary = formatSalary(job.job_min_salary, job.job_max_salary, job.job_salary_currency, job.job_salary_period);
   const location = [job.job_city, job.job_state, job.job_country].filter(Boolean).join(", ");
+  const hasApplyLink = isValidExternalUrl(job.job_apply_link);
 
   return (
     <>
@@ -135,7 +110,10 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
                 <Button
                   className="flex-1"
                   nativeButton={false}
-                  render={<a href={job.job_apply_link} target="_blank" rel="noopener noreferrer" />}
+                  disabled={!hasApplyLink}
+                  render={
+                    <a href={hasApplyLink ? job.job_apply_link : "#"} target="_blank" rel="noopener noreferrer" />
+                  }
                 >
                   <ArrowSquareOutIcon />
                   <Trans>Apply</Trans>

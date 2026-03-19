@@ -6,7 +6,6 @@ import type { JobResult, PostFilterOptions, RapidApiQuota } from "@/schema/jobs"
 
 const mockProvider = {
   search: vi.fn(),
-  getJobDetails: vi.fn(),
   testConnection: vi.fn(),
 };
 
@@ -144,28 +143,6 @@ describe("search", () => {
 
     expect(result.data).toHaveLength(1);
     expect(result.rapidApiQuota).toBeUndefined();
-  });
-});
-
-// --- getJobDetails ---
-
-describe("getJobDetails", () => {
-  it("delegates to provider", async () => {
-    const job = makeJob({ job_id: "detail-1" });
-    mockProvider.getJobDetails.mockResolvedValue(job);
-
-    const result = await jobsService.getJobDetails("test-key", "detail-1");
-
-    expect(result?.job_id).toBe("detail-1");
-    expect(mockProvider.getJobDetails).toHaveBeenCalledWith("detail-1");
-  });
-
-  it("returns null when job not found", async () => {
-    mockProvider.getJobDetails.mockResolvedValue(null);
-
-    const result = await jobsService.getJobDetails("test-key", "nonexistent");
-
-    expect(result).toBeNull();
   });
 });
 
@@ -311,6 +288,11 @@ describe("applyPostFilters", () => {
     expect(result).toHaveLength(2);
   });
 
+  it("ignores empty includeKeywords values", () => {
+    const result = jobsService.applyPostFilters(baseJobs, { includeKeywords: ["", "react", "  "] });
+    expect(result.map((job) => job.job_id)).toEqual(["1", "3"]);
+  });
+
   it("filters by excludeKeywords", () => {
     const result = jobsService.applyPostFilters(baseJobs, { excludeKeywords: ["java"] });
     expect(result).toHaveLength(2);
@@ -322,11 +304,17 @@ describe("applyPostFilters", () => {
     expect(result).toHaveLength(2);
   });
 
+  it("ignores empty excludeKeywords values", () => {
+    const result = jobsService.applyPostFilters(baseJobs, { excludeKeywords: ["", "java", "  "] });
+    expect(result.map((job) => job.job_id)).toEqual(["1", "3"]);
+  });
+
   it("combines include and exclude keywords", () => {
     const result = jobsService.applyPostFilters(baseJobs, {
       includeKeywords: ["React"],
       excludeKeywords: ["Junior"],
     });
+
     // Include: jobs 1, 3. Exclude "Junior": removes job 3
     expect(result).toHaveLength(1);
     expect(result[0].job_id).toBe("1");
@@ -343,6 +331,11 @@ describe("applyPostFilters", () => {
   it("excludeCompanies is case-insensitive", () => {
     const result = jobsService.applyPostFilters(baseJobs, { excludeCompanies: ["bigcorp"] });
     expect(result).toHaveLength(2);
+  });
+
+  it("ignores empty excludeCompanies values", () => {
+    const result = jobsService.applyPostFilters(baseJobs, { excludeCompanies: ["", "BigCorp", "   "] });
+    expect(result.map((job) => job.job_id)).toEqual(["1", "3"]);
   });
 
   // -- Direct apply filter --

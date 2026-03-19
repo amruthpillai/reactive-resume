@@ -18,7 +18,6 @@ import { type FilterState, hasActiveFilters, initialFilterState } from "./filter
 export {
   buildPostFilters,
   buildSearchParams,
-  FETCH_NUM_PAGES,
   type FilterState,
   hasActiveFilters,
   initialFilterState,
@@ -98,20 +97,28 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
       {/* Quick Filters */}
       <div className="flex flex-wrap items-end gap-3">
         <div className="grid gap-1.5">
-          <Label className="text-xs text-muted-foreground">
+          <Label htmlFor="filter-remote" className="text-xs text-muted-foreground">
             <Trans>Remote</Trans>
           </Label>
           <div className="flex h-9 items-center">
-            <Switch checked={filters.remoteOnly} onCheckedChange={(v) => updateFilter("remoteOnly", v)} />
+            <Switch
+              id="filter-remote"
+              checked={filters.remoteOnly}
+              onCheckedChange={(v) => updateFilter("remoteOnly", v)}
+            />
           </div>
         </div>
 
         <div className="grid gap-1.5">
-          <Label className="text-xs text-muted-foreground">
+          <Label htmlFor="filter-direct-apply" className="text-xs text-muted-foreground">
             <Trans>Direct Apply</Trans>
           </Label>
           <div className="flex h-9 items-center">
-            <Switch checked={filters.directApplyOnly} onCheckedChange={(v) => updateFilter("directApplyOnly", v)} />
+            <Switch
+              id="filter-direct-apply"
+              checked={filters.directApplyOnly}
+              onCheckedChange={(v) => updateFilter("directApplyOnly", v)}
+            />
           </div>
         </div>
 

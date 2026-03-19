@@ -110,14 +110,14 @@ function RapidAPIQuotaDisplay() {
     <div className="flex w-full flex-col gap-2">
       <Progress value={percent} id="jobs-quota-progress" className="w-full max-w-md">
         <ProgressLabel>
-          <Trans>Monthly Usage</Trans>
+          <Trans>API Usage</Trans>
         </ProgressLabel>
         <ProgressValue />
       </Progress>
 
       <p className="text-xs text-muted-foreground">
         <Trans>
-          {used} of {limit} requests used this month ({remaining} remaining)
+          {used} of {limit} requests used ({remaining} remaining)
         </Trans>
       </p>
     </div>
@@ -162,7 +162,11 @@ function RouteComponent() {
               variant="link"
               nativeButton={false}
               render={
-                <a href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch" target="_blank" rel="noopener">
+                <a
+                  href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <LinkSimpleIcon />
                   <Trans>JSearch API Documentation</Trans>
                 </a>

@@ -7,6 +7,8 @@ import {
   TextRun,
 } from "docx";
 
+import { toSafeDocxLink } from "./link-utils";
+
 export interface HtmlStyleConfig {
   font?: string;
   size?: number;
@@ -92,7 +94,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
     }
 
     if (tag === "A") {
-      const href = el.getAttribute("href") ?? "";
+      const href = toSafeDocxLink(el.getAttribute("href") ?? "");
       const linkChildren = collectInlineChildren(el, { ...style, color: currentLinkColor, underline: {} });
       if (linkChildren.length > 0 && href) {
         children.push(new ExternalHyperlink({ link: href, children: linkChildren as TextRun[] }));

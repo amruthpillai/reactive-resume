@@ -17,6 +17,7 @@ import type { ResumeData, SectionType } from "@/schema/resume/data";
 
 import { parseColorString } from "@/utils/color";
 
+import { toSafeDocxLink } from "./link-utils";
 import { renderBuiltInSection, renderCustomSection, renderSummary, setRenderConfig } from "./section-renderers";
 
 // --- Color helpers ---
@@ -196,13 +197,18 @@ function buildHeader(data: ResumeData, colorHex: string, textColorHex: string): 
   };
 
   if (basics.email) {
-    addSeparator();
-    contactParts.push(
-      new ExternalHyperlink({
-        link: `mailto:${basics.email}`,
-        children: [new TextRun({ text: basics.email, color: colorHex, underline: {}, size: bodySize, font: bodyFont })],
-      }),
-    );
+    const mailtoLink = toSafeDocxLink(`mailto:${basics.email}`);
+    if (mailtoLink) {
+      addSeparator();
+      contactParts.push(
+        new ExternalHyperlink({
+          link: mailtoLink,
+          children: [
+            new TextRun({ text: basics.email, color: colorHex, underline: {}, size: bodySize, font: bodyFont }),
+          ],
+        }),
+      );
+    }
   }
 
   if (basics.phone) {
@@ -216,33 +222,15 @@ function buildHeader(data: ResumeData, colorHex: string, textColorHex: string): 
   }
 
   if (basics.website.url) {
-    addSeparator();
-    contactParts.push(
-      new ExternalHyperlink({
-        link: basics.website.url,
-        children: [
-          new TextRun({
-            text: basics.website.label || basics.website.url,
-            color: colorHex,
-            underline: {},
-            size: bodySize,
-            font: bodyFont,
-          }),
-        ],
-      }),
-    );
-  }
-
-  for (const field of basics.customFields) {
-    if (!field.text) continue;
-    addSeparator();
-    if (field.link) {
+    const websiteLink = toSafeDocxLink(basics.website.url);
+    if (websiteLink) {
+      addSeparator();
       contactParts.push(
         new ExternalHyperlink({
-          link: field.link,
+          link: websiteLink,
           children: [
             new TextRun({
-              text: field.text,
+              text: basics.website.label || websiteLink,
               color: colorHex,
               underline: {},
               size: bodySize,
@@ -251,6 +239,32 @@ function buildHeader(data: ResumeData, colorHex: string, textColorHex: string): 
           ],
         }),
       );
+    }
+  }
+
+  for (const field of basics.customFields) {
+    if (!field.text) continue;
+    addSeparator();
+    if (field.link) {
+      const customLink = toSafeDocxLink(field.link);
+      if (customLink) {
+        contactParts.push(
+          new ExternalHyperlink({
+            link: customLink,
+            children: [
+              new TextRun({
+                text: field.text,
+                color: colorHex,
+                underline: {},
+                size: bodySize,
+                font: bodyFont,
+              }),
+            ],
+          }),
+        );
+      } else {
+        contactParts.push(new TextRun({ text: field.text, size: bodySize, font: bodyFont, color: textColorHex }));
+      }
     } else {
       contactParts.push(new TextRun({ text: field.text, size: bodySize, font: bodyFont, color: textColorHex }));
     }

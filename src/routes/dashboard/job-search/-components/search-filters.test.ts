@@ -29,6 +29,12 @@ describe("buildSearchParams", () => {
     expect(result.date_posted).toBe("week");
   });
 
+  it("omits date_posted when datePosted is all", () => {
+    const filters: FilterState = { ...initialFilterState, datePosted: "all" };
+    const result = buildSearchParams("engineer", filters);
+    expect(result.date_posted).toBeUndefined();
+  });
+
   it("includes remote_jobs_only when remoteOnly is true", () => {
     const filters: FilterState = { ...initialFilterState, remoteOnly: true };
     const result = buildSearchParams("engineer", filters);
@@ -158,6 +164,12 @@ describe("buildPostFilters", () => {
     expect(result.minSalary).toBe(50000);
   });
 
+  it("includes minSalary when value is zero", () => {
+    const filters: FilterState = { ...initialFilterState, minSalary: "0" };
+    const result = buildPostFilters(filters);
+    expect(result.minSalary).toBe(0);
+  });
+
   it("includes maxSalary when valid positive number", () => {
     const filters: FilterState = { ...initialFilterState, maxSalary: "150000" };
     const result = buildPostFilters(filters);
@@ -171,12 +183,6 @@ describe("buildPostFilters", () => {
 
   it("omits minSalary for non-numeric string", () => {
     const filters: FilterState = { ...initialFilterState, minSalary: "abc" };
-    const result = buildPostFilters(filters);
-    expect(result.minSalary).toBeUndefined();
-  });
-
-  it("omits minSalary for zero", () => {
-    const filters: FilterState = { ...initialFilterState, minSalary: "0" };
     const result = buildPostFilters(filters);
     expect(result.minSalary).toBeUndefined();
   });
@@ -235,6 +241,13 @@ describe("buildPostFilters", () => {
       directApplyOnly: true,
     });
   });
+
+  it("normalizes salary range when min is greater than max", () => {
+    const filters: FilterState = { ...initialFilterState, minSalary: "150000", maxSalary: "80000" };
+    const result = buildPostFilters(filters);
+    expect(result.minSalary).toBe(80000);
+    expect(result.maxSalary).toBe(150000);
+  });
 });
 
 // --- hasActiveFilters ---
@@ -246,6 +259,10 @@ describe("hasActiveFilters", () => {
 
   it("returns true when datePosted is set", () => {
     expect(hasActiveFilters({ ...initialFilterState, datePosted: "week" })).toBe(true);
+  });
+
+  it("returns false when datePosted is all", () => {
+    expect(hasActiveFilters({ ...initialFilterState, datePosted: "all" })).toBe(false);
   });
 
   it("returns true when remoteOnly is true", () => {

@@ -29,7 +29,8 @@ export function PasswordSection() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.1 }}
+      transition={{ duration: 0.2, delay: 0.1, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
       className="flex items-center justify-between gap-x-4"
     >
       <h2 className="flex items-center gap-x-3 text-base font-medium">
@@ -39,21 +40,35 @@ export function PasswordSection() {
 
       {match(hasPassword)
         .with(true, () => (
-          <Button variant="outline" onClick={handleUpdatePassword}>
-            <PencilSimpleLineIcon />
-            <Trans>Update Password</Trans>
-          </Button>
+          <motion.div
+            whileHover={{ y: -1, scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: 0.14, ease: "easeOut" }}
+            style={{ willChange: "transform" }}
+          >
+            <Button variant="outline" onClick={handleUpdatePassword}>
+              <PencilSimpleLineIcon />
+              <Trans>Update Password</Trans>
+            </Button>
+          </motion.div>
         ))
         .with(false, () => (
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={
-              <Link to="/auth/forgot-password">
-                <Trans>Set Password</Trans>
-              </Link>
-            }
-          />
+          <motion.div
+            whileHover={{ y: -1, scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: 0.14, ease: "easeOut" }}
+            style={{ willChange: "transform" }}
+          >
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={
+                <Link to="/auth/forgot-password">
+                  <Trans>Set Password</Trans>
+                </Link>
+              }
+            />
+          </motion.div>
         ))
         .exhaustive()}
     </motion.div>

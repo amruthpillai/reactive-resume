@@ -20,6 +20,7 @@ import {
   TranslateIcon,
 } from "@phosphor-icons/react";
 import { motion } from "motion/react";
+import { useMemo } from "react";
 
 import { cn } from "@/utils/style";
 
@@ -30,9 +31,7 @@ type Feature = {
   description: string;
 };
 
-type FeatureCardProps = Feature & {
-  index: number;
-};
+type FeatureCardProps = Feature;
 
 const getFeatures = (): Feature[] => [
   {
@@ -133,7 +132,7 @@ const getFeatures = (): Feature[] => [
   },
 ];
 
-function FeatureCard({ icon: Icon, title, description, index }: FeatureCardProps) {
+function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
   return (
     <motion.div
       className={cn(
@@ -141,10 +140,13 @@ function FeatureCard({ icon: Icon, title, description, index }: FeatureCardProps
         "not-nth-[2n]:border-r xl:not-nth-[4n]:border-r",
         "hover:bg-secondary/30",
       )}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.4, delay: index * 0.03, ease: "easeOut" }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      whileHover={{ y: -3, scale: 1.01 }}
+      whileTap={{ scale: 0.995 }}
+      style={{ willChange: "transform, opacity" }}
     >
       {/* Hover gradient overlay */}
       <div
@@ -169,6 +171,8 @@ function FeatureCard({ icon: Icon, title, description, index }: FeatureCardProps
 }
 
 export function Features() {
+  const features = useMemo(() => getFeatures(), []);
+
   return (
     <section id="features">
       {/* Header */}
@@ -177,7 +181,8 @@ export function Features() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.45 }}
+        style={{ willChange: "transform, opacity" }}
       >
         <h2 className="text-2xl font-semibold tracking-tight md:text-4xl xl:text-5xl">
           <Trans>Features</Trans>
@@ -193,8 +198,8 @@ export function Features() {
 
       {/* Features Grid */}
       <div className="xs:grid-cols-2 grid grid-cols-1 border-t xl:grid-cols-4">
-        {getFeatures().map((feature, index) => (
-          <FeatureCard key={feature.id} {...feature} index={index} />
+        {features.map((feature) => (
+          <FeatureCard key={feature.id} {...feature} />
         ))}
       </div>
     </section>

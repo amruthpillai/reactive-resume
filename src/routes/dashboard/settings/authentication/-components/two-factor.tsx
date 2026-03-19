@@ -33,7 +33,8 @@ export function TwoFactorSection() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.2 }}
+      transition={{ duration: 0.2, delay: 0.2, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
     >
       <Separator />
 
@@ -45,16 +46,30 @@ export function TwoFactorSection() {
 
         {match(hasTwoFactor)
           .with(true, () => (
-            <Button variant="outline" onClick={handleTwoFactorAction}>
-              <ToggleLeftIcon />
-              <Trans>Disable 2FA</Trans>
-            </Button>
+            <motion.div
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+              style={{ willChange: "transform" }}
+            >
+              <Button variant="outline" onClick={handleTwoFactorAction}>
+                <ToggleLeftIcon />
+                <Trans>Disable 2FA</Trans>
+              </Button>
+            </motion.div>
           ))
           .with(false, () => (
-            <Button variant="outline" onClick={handleTwoFactorAction}>
-              <ToggleRightIcon />
-              <Trans>Enable 2FA</Trans>
-            </Button>
+            <motion.div
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+              style={{ willChange: "transform" }}
+            >
+              <Button variant="outline" onClick={handleTwoFactorAction}>
+                <ToggleRightIcon />
+                <Trans>Enable 2FA</Trans>
+              </Button>
+            </motion.div>
           ))
           .exhaustive()}
       </div>

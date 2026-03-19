@@ -1,13 +1,6 @@
 import type z from "zod";
 
-import {
-  type JobResult,
-  jobDetailsResponseSchema,
-  type RapidApiQuota,
-  type SearchParams,
-  type SearchResponse,
-  searchResponseSchema,
-} from "@/schema/jobs";
+import { type RapidApiQuota, type SearchParams, type SearchResponse, searchResponseSchema } from "@/schema/jobs";
 
 import type { JobSearchProvider } from "../provider";
 
@@ -75,8 +68,10 @@ export class JSearchProvider implements JobSearchProvider {
     let lastError: Error | null = null;
 
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+      let response: Response | null = null;
+
       try {
-        const response = await fetch(`${JSEARCH_BASE_URL}${path}`, {
+        response = await fetch(`${JSEARCH_BASE_URL}${path}`, {
           headers: {
             "X-RapidAPI-Key": this.apiKey,
             "X-RapidAPI-Host": JSEARCH_HOST,
@@ -85,6 +80,7 @@ export class JSearchProvider implements JobSearchProvider {
 
         // Retry on rate limit with exponential backoff
         if (response.status === 429) {
+          await response.text();
           const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
           await this.sleep(backoff);
           continue;
@@ -101,10 +97,13 @@ export class JSearchProvider implements JobSearchProvider {
         return { data, rapidApiQuota };
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        if (attempt < MAX_RETRIES - 1) {
-          const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
-          await this.sleep(backoff);
-        }
+
+        const isRetryableNetworkError = error instanceof TypeError;
+        const shouldRetry = response === null && isRetryableNetworkError && attempt < MAX_RETRIES - 1;
+        if (!shouldRetry) throw lastError;
+
+        const backoff = INITIAL_BACKOFF_MS * 2 ** attempt;
+        await this.sleep(backoff);
       }
     }
 
@@ -131,12 +130,6 @@ export class JSearchProvider implements JobSearchProvider {
 
     const result = await this.jsearchRequest(`/search?${query.toString()}`, searchResponseSchema);
     return { ...result.data, rapidApiQuota: result.rapidApiQuota };
-  }
-
-  async getJobDetails(jobId: string): Promise<JobResult | null> {
-    const query = new URLSearchParams({ job_id: jobId });
-    const result = await this.jsearchRequest(`/job-details?${query.toString()}`, jobDetailsResponseSchema);
-    return result.data.data[0] ?? null;
   }
 
   async testConnection(): Promise<{ success: boolean; rapidApiQuota?: RapidApiQuota }> {

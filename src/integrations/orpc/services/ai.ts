@@ -479,6 +479,10 @@ async function tailorResume(input: TailorResumeInput): Promise<TailorOutput> {
     ],
   });
 
+  if (result.output == null) {
+    throw new Error("AI returned no structured tailoring output.");
+  }
+
   return tailorOutputSchema.parse(result.output);
 }
 

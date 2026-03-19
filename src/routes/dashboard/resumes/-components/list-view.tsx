@@ -31,7 +31,13 @@ export function ListView({ resumes }: Props) {
 
   return (
     <div className="flex flex-col gap-y-1">
-      <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        style={{ willChange: "transform, opacity" }}
+      >
         <Button
           size="lg"
           variant="ghost"
@@ -50,10 +56,11 @@ export function ListView({ resumes }: Props) {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -50 }}
-        transition={{ delay: 0.05 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
+        style={{ willChange: "transform, opacity" }}
       >
         <Button
           size="lg"
@@ -73,15 +80,16 @@ export function ListView({ resumes }: Props) {
         </Button>
       </motion.div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false} mode="popLayout">
         {resumes?.map((resume, index) => (
           <motion.div
             layout
             key={resume.id}
-            initial={{ opacity: 0, y: -50 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -50, filter: "blur(12px)" }}
-            transition={{ delay: (index + 2) * 0.05 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.18, delay: Math.min(0.12, (index + 2) * 0.02), ease: "easeOut" }}
+            style={{ willChange: "transform, opacity" }}
           >
             <ResumeListItem resume={resume} />
           </motion.div>

@@ -123,7 +123,8 @@ function RouteComponent() {
         <motion.form
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          style={{ willChange: "transform, opacity" }}
           className="grid max-w-xl gap-6"
           onSubmit={form.handleSubmit(onSubmit)}
         >
@@ -214,12 +215,14 @@ function RouteComponent() {
             )}
           />
 
-          <AnimatePresence>
+          <AnimatePresence initial={false} mode="popLayout">
             {form.formState.isDirty && (
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.16, ease: "easeOut" }}
+                style={{ willChange: "transform, opacity" }}
                 className="flex items-center gap-x-4 justify-self-end"
               >
                 <Button type="reset" variant="ghost" onClick={onCancel}>

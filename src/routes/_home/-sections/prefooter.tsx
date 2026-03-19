@@ -20,7 +20,8 @@ export function Prefooter() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.45 }}
+          style={{ willChange: "transform, opacity" }}
         >
           <h2 className="text-2xl font-bold tracking-tight md:text-4xl">
             <Trans>By the community, for the community.</Trans>
