@@ -50,16 +50,16 @@ msgstr "{0, plural, other {# 个职位}}"
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
 #: src/routes/dashboard/job-search/index.tsx
-msgid "{0} / {1} requests used this month"
+msgid "{0} / {1} requests used"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} months ago"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} weeks ago"
 msgstr ""
 
@@ -68,12 +68,12 @@ msgstr ""
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, other {# 栏}}"
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{diffDays} days ago"
 msgstr ""
 
 #: src/routes/dashboard/settings/job-search.tsx
-msgid "{used} of {limit} requests used this month ({remaining} remaining)"
+msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
@@ -347,6 +347,10 @@ msgstr "API Keys"
 msgid "API Reference"
 msgstr "API 参考"
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "API Usage"
+msgstr ""
+
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
 msgstr "应用"
@@ -615,6 +619,10 @@ msgstr "中文（繁体）"
 msgid "Circle"
 msgstr "圆形"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Clear all"
+msgstr ""
+
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr "清除聊天记录"
@@ -712,6 +720,10 @@ msgstr "复制此密钥，并在你的应用程序中使用它来访问你的数
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
 msgstr "复制 URL"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Could not fetch jobs"
+msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
@@ -958,6 +970,10 @@ msgstr ""
 msgid "Direct Apply"
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Direct apply only"
+msgstr ""
+
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
 msgid "Disable 2FA"
@@ -1174,6 +1190,10 @@ msgstr "你在此处输入的所有内容都会本地存储在浏览器中。只
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "你创建、定制和分享专业简历所需的一切。以隐私为核心设计，由开源驱动，并且永久免费。"
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Exclude {value}"
+msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
@@ -1542,11 +1562,11 @@ msgstr "日语"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
-#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr ""
 
 #: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search API"
 msgstr ""
 
@@ -1763,10 +1783,6 @@ msgstr ""
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "模型"
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "Monthly Usage"
-msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "More than 3 years"
@@ -2108,6 +2124,11 @@ msgstr "出版物"
 msgid "Publisher"
 msgstr "发布者"
 
+#. placeholder {0}: quota.remaining
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Quota: {0} remaining"
+msgstr ""
+
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr ""
@@ -2170,6 +2191,10 @@ msgstr "记得密码？<0/>"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Remote only"
 msgstr ""
 
 #: src/dialogs/resume/sections/experience.tsx
@@ -2253,6 +2278,10 @@ msgstr ""
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
 msgstr "简历"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Retry"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2802,8 +2831,8 @@ msgstr "要删除你的账号，你需要输入确认文本，然后点击下方
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
-#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr ""
 
@@ -3140,7 +3169,7 @@ msgstr "当然！每个模板都完全可定制。你可以更改颜色、字体
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "当然！Reactive Resume 完全免费使用，没有任何隐藏费用、高级套餐或订阅费。它是开源项目，并将永远保持免费。"
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Yesterday"
 msgstr ""
 

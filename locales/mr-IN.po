@@ -50,16 +50,16 @@ msgstr "{0, plural, one {# भूमिका} other {# भूमिका}}"
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
 #: src/routes/dashboard/job-search/index.tsx
-msgid "{0} / {1} requests used this month"
+msgid "{0} / {1} requests used"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} months ago"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} weeks ago"
 msgstr ""
 
@@ -68,12 +68,12 @@ msgstr ""
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# स्तंभ} other {# स्तंभ}}"
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{diffDays} days ago"
 msgstr ""
 
 #: src/routes/dashboard/settings/job-search.tsx
-msgid "{used} of {limit} requests used this month ({remaining} remaining)"
+msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
@@ -347,6 +347,10 @@ msgstr "API Keys"
 msgid "API Reference"
 msgstr "API संदर्भ"
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "API Usage"
+msgstr ""
+
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
 msgstr "अ‍ॅप"
@@ -615,6 +619,10 @@ msgstr "चीनी (परंपरागत)"
 msgid "Circle"
 msgstr "गोलाकार"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Clear all"
+msgstr ""
+
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr "चॅट इतिहास साफ करा"
@@ -712,6 +720,10 @@ msgstr "ही गुप्त key कॉपी करा आणि तुमच
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
 msgstr "URL कॉपी करा"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Could not fetch jobs"
+msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
@@ -958,6 +970,10 @@ msgstr ""
 msgid "Direct Apply"
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Direct apply only"
+msgstr ""
+
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
 msgid "Disable 2FA"
@@ -1174,6 +1190,10 @@ msgstr "इथे टाकलेली सर्व माहिती तु�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "व्यावसायिक रेझ्युमे तयार, सानुकूलित आणि शेअर करण्यासाठी लागणारे सर्व काही येथेच आहे. गोपनीयतेचा विचार करून तयार केलेले, मुक्त स्रोतावर चालणारे आणि कायमस्वरूपी पूर्णपणे मोफत."
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Exclude {value}"
+msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
@@ -1542,11 +1562,11 @@ msgstr "जपानी"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
-#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr ""
 
 #: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search API"
 msgstr ""
 
@@ -1763,10 +1783,6 @@ msgstr ""
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "मॉडेल"
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "Monthly Usage"
-msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "More than 3 years"
@@ -2108,6 +2124,11 @@ msgstr "प्रकाशने"
 msgid "Publisher"
 msgstr "प्रकाशक"
 
+#. placeholder {0}: quota.remaining
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Quota: {0} remaining"
+msgstr ""
+
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr ""
@@ -2170,6 +2191,10 @@ msgstr "तुमचा पासवर्ड आठवतो? <0/>"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Remote only"
 msgstr ""
 
 #: src/dialogs/resume/sections/experience.tsx
@@ -2253,6 +2278,10 @@ msgstr ""
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
 msgstr "रेझ्युमे"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Retry"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2802,8 +2831,8 @@ msgstr "तुमचे खाते हटवण्यासाठी तुम
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
-#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr ""
 
@@ -3140,7 +3169,7 @@ msgstr "होय! प्रत्येक साचा पूर्णपण�
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "होय! Reactive Resume पूर्णपणे मोफत आहे, कोणतेही लपलेले खर्च, प्रीमियम टियर किंवा सब्सक्रिप्शन फी नाही. हे मुक्त-स्रोत आहे आणि नेहमी मोफतच राहिल."
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Yesterday"
 msgstr ""
 

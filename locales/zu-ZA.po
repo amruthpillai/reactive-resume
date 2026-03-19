@@ -45,16 +45,16 @@ msgstr ""
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
 #: src/routes/dashboard/job-search/index.tsx
-msgid "{0} / {1} requests used this month"
+msgid "{0} / {1} requests used"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} months ago"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} weeks ago"
 msgstr ""
 
@@ -63,12 +63,12 @@ msgstr ""
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr ""
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{diffDays} days ago"
 msgstr ""
 
 #: src/routes/dashboard/settings/job-search.tsx
-msgid "{used} of {limit} requests used this month ({remaining} remaining)"
+msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
@@ -342,6 +342,10 @@ msgstr ""
 msgid "API Reference"
 msgstr ""
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "API Usage"
+msgstr ""
+
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
 msgstr ""
@@ -610,6 +614,10 @@ msgstr ""
 msgid "Circle"
 msgstr ""
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Clear all"
+msgstr ""
+
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr ""
@@ -706,6 +714,10 @@ msgstr ""
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
+msgstr ""
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Could not fetch jobs"
 msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
@@ -953,6 +965,10 @@ msgstr ""
 msgid "Direct Apply"
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Direct apply only"
+msgstr ""
+
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
 msgid "Disable 2FA"
@@ -1168,6 +1184,10 @@ msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Exclude {value}"
 msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
@@ -1537,11 +1557,11 @@ msgstr ""
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
-#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr ""
 
 #: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search API"
 msgstr ""
 
@@ -1757,10 +1777,6 @@ msgstr ""
 
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
-msgstr ""
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "Monthly Usage"
 msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
@@ -2103,6 +2119,11 @@ msgstr ""
 msgid "Publisher"
 msgstr ""
 
+#. placeholder {0}: quota.remaining
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Quota: {0} remaining"
+msgstr ""
+
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr ""
@@ -2165,6 +2186,10 @@ msgstr ""
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Remote only"
 msgstr ""
 
 #: src/dialogs/resume/sections/experience.tsx
@@ -2247,6 +2272,10 @@ msgstr ""
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
+msgstr ""
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Retry"
 msgstr ""
 
 #: src/components/input/rich-input.tsx
@@ -2797,8 +2826,8 @@ msgstr ""
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
-#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr ""
 
@@ -3135,7 +3164,7 @@ msgstr ""
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr ""
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Yesterday"
 msgstr ""
 

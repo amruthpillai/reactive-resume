@@ -45,16 +45,16 @@ msgstr "{0, plural, one {# role} other {# roles}}"
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
 #: src/routes/dashboard/job-search/index.tsx
-msgid "{0} / {1} requests used this month"
-msgstr "{0} / {1} requests used this month"
+msgid "{0} / {1} requests used"
+msgstr "{0} / {1} requests used"
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} months ago"
 msgstr "{0} months ago"
 
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} weeks ago"
 msgstr "{0} weeks ago"
 
@@ -63,13 +63,13 @@ msgstr "{0} weeks ago"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# Column} other {# Columns}}"
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{diffDays} days ago"
 msgstr "{diffDays} days ago"
 
 #: src/routes/dashboard/settings/job-search.tsx
-msgid "{used} of {limit} requests used this month ({remaining} remaining)"
-msgstr "{used} of {limit} requests used this month ({remaining} remaining)"
+msgid "{used} of {limit} requests used ({remaining} remaining)"
+msgstr "{used} of {limit} requests used ({remaining} remaining)"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -342,6 +342,10 @@ msgstr "API Keys"
 msgid "API Reference"
 msgstr "API Reference"
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "API Usage"
+msgstr "API Usage"
+
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
 msgstr "App"
@@ -610,6 +614,10 @@ msgstr "Chinese (Traditional)"
 msgid "Circle"
 msgstr "Circle"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Clear all"
+msgstr "Clear all"
+
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr "Clear chat history"
@@ -707,6 +715,10 @@ msgstr "Copy this secret key and use it in your applications to access your data
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
 msgstr "Copy URL"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Could not fetch jobs"
+msgstr "Could not fetch jobs"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
@@ -953,6 +965,10 @@ msgstr "Direct"
 msgid "Direct Apply"
 msgstr "Direct Apply"
 
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Direct apply only"
+msgstr "Direct apply only"
+
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
 msgid "Disable 2FA"
@@ -1169,6 +1185,10 @@ msgstr "Everything entered here is stored locally on your browser. Your data is 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Exclude {value}"
+msgstr "Exclude {value}"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
@@ -1537,11 +1557,11 @@ msgstr "Japanese"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
-#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr "Job Search"
 
 #: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search API"
 msgstr "Job Search API"
 
@@ -1758,10 +1778,6 @@ msgstr "Minimum Salary"
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "Model"
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "Monthly Usage"
-msgstr "Monthly Usage"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "More than 3 years"
@@ -2103,6 +2119,11 @@ msgstr "Publications"
 msgid "Publisher"
 msgstr "Publisher"
 
+#. placeholder {0}: quota.remaining
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Quota: {0} remaining"
+msgstr "Quota: {0} remaining"
+
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI Key"
@@ -2166,6 +2187,10 @@ msgstr "Remember your password? <0/>"
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
 msgstr "Remote"
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Remote only"
+msgstr "Remote only"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
@@ -2248,6 +2273,10 @@ msgstr "Resume tailored successfully"
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
 msgstr "Resumes"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Retry"
+msgstr "Retry"
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2797,8 +2826,8 @@ msgstr "To delete your account, you need to enter the confirmation text and clic
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr "To search for job listings, you need to configure your RapidAPI key in settings."
 
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
-#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr "Today"
 
@@ -3135,7 +3164,7 @@ msgstr "Yes! Every template is fully customizable. You can change colors, fonts,
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Yesterday"
 msgstr "Yesterday"
 

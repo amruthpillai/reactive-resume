@@ -50,16 +50,16 @@ msgstr "{0, plural, one {# பங்கு} other {# பங்குகள்}}"
 #. placeholder {0}: quota.used
 #. placeholder {1}: quota.limit
 #: src/routes/dashboard/job-search/index.tsx
-msgid "{0} / {1} requests used this month"
+msgid "{0} / {1} requests used"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} months ago"
 msgstr ""
 
 #. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{0} weeks ago"
 msgstr ""
 
@@ -68,12 +68,12 @@ msgstr ""
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# நெடுவரிசை} other {# நெடுவரிசைகள்}}"
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{diffDays} days ago"
 msgstr ""
 
 #: src/routes/dashboard/settings/job-search.tsx
-msgid "{used} of {limit} requests used this month ({remaining} remaining)"
+msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
@@ -347,6 +347,10 @@ msgstr "API விசைகள்"
 msgid "API Reference"
 msgstr "API குறிப்பு"
 
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "API Usage"
+msgstr ""
+
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
 msgstr "செயலி"
@@ -615,6 +619,10 @@ msgstr "சீனம் (சம்பிரதாய)"
 msgid "Circle"
 msgstr "வட்டம்"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Clear all"
+msgstr ""
+
 #: src/components/ai/chat.tsx
 msgid "Clear chat history"
 msgstr "அரட்டை வரலாற்றை அழி"
@@ -712,6 +720,10 @@ msgstr "இந்த ரகசிய விசையை நகலெடுத்
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
 msgstr "URL-ஐ நகலெடு"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Could not fetch jobs"
+msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
@@ -958,6 +970,10 @@ msgstr ""
 msgid "Direct Apply"
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Direct apply only"
+msgstr ""
+
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
 msgid "Disable 2FA"
@@ -1174,6 +1190,10 @@ msgstr "இங்கே நீங்கள் உள்ளிடும் அன
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "தொழில்முறை ரெஸ்யூமிகளை உருவாக்க, விருப்பத்துக்கு உருப்பெற்றி, பகிர்வதற்குத் தேவையான அனைத்தும் இங்கே. தனியுரிமையை கருத்தில் கொண்டு உருவாக்கப்பட்டதால், திறந்த மூலத்தால் இயக்கப்படுகிறது மற்றும் எப்போதும் முழுவதுமாக இலவசம்."
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Exclude {value}"
+msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
@@ -1542,11 +1562,11 @@ msgstr "ஜப்பானியம்"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
-#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search"
 msgstr ""
 
 #: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/job-search.tsx
 msgid "Job Search API"
 msgstr ""
 
@@ -1763,10 +1783,6 @@ msgstr ""
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Model"
 msgstr "மாதிரி"
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "Monthly Usage"
-msgstr ""
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "More than 3 years"
@@ -2108,6 +2124,11 @@ msgstr "வெளியீடுகள்"
 msgid "Publisher"
 msgstr "பதிப்பாளர்"
 
+#. placeholder {0}: quota.remaining
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Quota: {0} remaining"
+msgstr ""
+
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "RapidAPI Key"
 msgstr ""
@@ -2170,6 +2191,10 @@ msgstr "உங்கள் கடவுச்சொல் நினைவிர�
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Remote"
+msgstr ""
+
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Remote only"
 msgstr ""
 
 #: src/dialogs/resume/sections/experience.tsx
@@ -2253,6 +2278,10 @@ msgstr ""
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
 msgstr "ரெஸ்யூமிகள்"
+
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Retry"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2802,8 +2831,8 @@ msgstr "உங்கள் கணக்கை நீக்க, கீழே உ�
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
 msgstr ""
 
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
-#: src/routes/dashboard/job-search/index.tsx
 msgid "Today"
 msgstr ""
 
@@ -3140,7 +3169,7 @@ msgstr "ஆம்! ஒவ்வொரு டெம்ப்ளேட்டும
 msgid "Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free."
 msgstr "ஆம்! Reactive Resume-ஐ எவ்வித மறைந்த செலவுகளும், பிரீமியம் அடுக்கு கட்டணங்களும், சந்தா கட்டணங்களும் இன்றி முற்றிலும் இலவசமாக பயன்படுத்தலாம். இது திறந்த மூலமாகும் மற்றும் எப்போதும் இலவசமாகவே இருக்கும்."
 
-#: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Yesterday"
 msgstr ""
 
