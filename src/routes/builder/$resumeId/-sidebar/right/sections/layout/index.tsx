@@ -63,7 +63,10 @@ function LayoutSectionForm() {
                       max={50}
                       step={0.01}
                       value={[field.value]}
-                      onValueChange={(value) => field.onChange(Array.isArray(value) ? value[0] : value)}
+                      onValueChange={(value) => {
+                        field.onChange(Array.isArray(value) ? value[0] : value);
+                        void form.handleSubmit(onSubmit)();
+                      }}
                     />
                   }
                 />
