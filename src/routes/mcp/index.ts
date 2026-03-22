@@ -82,17 +82,15 @@ export const Route = createFileRoute("/mcp/")({
           return await transport.handleRequest(request);
         } catch (error) {
           if (error instanceof AuthError) {
-            return new Response(JSON.stringify({
-              id: null,
-              jsonrpc: "2.0",
-              error: { code: -32603, message: "Unauthorized" },
-            }), {
-              status: 401,
-              headers: {
-                "Content-Type": "application/json",
-                "WWW-Authenticate": `Bearer resource_metadata="${authBaseUrl}/.well-known/oauth-protected-resource"`,
+            return Response.json(
+              { id: null, jsonrpc: "2.0", error: { code: -32603, message: "Unauthorized" } },
+              {
+                status: 401,
+                headers: {
+                  "WWW-Authenticate": `Bearer resource_metadata="${authBaseUrl}/.well-known/oauth-protected-resource"`,
+                },
               },
-            });
+            );
           }
 
           console.error("[MCP]", error);

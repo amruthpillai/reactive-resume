@@ -426,6 +426,14 @@ export const resumeService = {
   },
 
   delete: async (input: { id: string; userId: string }) => {
+    const [resume] = await db
+      .select({ isLocked: schema.resume.isLocked })
+      .from(schema.resume)
+      .where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+    if (!resume) throw new ORPCError("NOT_FOUND");
+    if (resume.isLocked) throw new ORPCError("RESUME_LOCKED");
+
     const storageService = getStorageService();
 
     const deleteResumePromise = db

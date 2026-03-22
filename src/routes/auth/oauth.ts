@@ -9,16 +9,11 @@ import { oauthClient, verification } from "@/integrations/drizzle/schema";
 import { generateId } from "@/utils/string";
 
 function generateCode() {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  return Array.from(crypto.getRandomValues(new Uint8Array(32)))
-    .map((b) => chars[b % chars.length])
-    .join("");
+  return crypto.randomBytes(32).toString("base64url");
 }
 
-async function hashCode(code: string) {
-  const hash = crypto.createHash("sha256").update(code).digest();
-  // base64url without padding
-  return hash.toString("base64url");
+function hashCode(code: string) {
+  return crypto.createHash("sha256").update(code).digest("base64url");
 }
 
 export const Route = createFileRoute("/auth/oauth")({
@@ -40,7 +35,6 @@ export const Route = createFileRoute("/auth/oauth")({
             return Response.json({ error: "missing client_id or redirect_uri" }, { status: 400 });
           }
 
-          // Verify client exists
           const [client] = await db
             .select()
             .from(oauthClient)
@@ -51,13 +45,15 @@ export const Route = createFileRoute("/auth/oauth")({
             return Response.json({ error: "invalid client" }, { status: 400 });
           }
 
-          // Generate authorization code
+          if (!client.redirectUris.includes(redirectUri)) {
+            return Response.json({ error: "invalid redirect_uri" }, { status: 400 });
+          }
+
           const code = generateCode();
-          const hashedCode = await hashCode(code);
+          const hashedCode = hashCode(code);
           const now = new Date();
           const expiresAt = new Date(now.getTime() + 600_000); // 10 min
 
-          // Store the code with all OAuth query params (needed for token exchange)
           await db.insert(verification).values({
             id: generateId(),
             identifier: hashedCode,
@@ -81,7 +77,6 @@ export const Route = createFileRoute("/auth/oauth")({
             updatedAt: now,
           });
 
-          // Redirect to callback with code
           const callbackUrl = new URL(redirectUri);
           callbackUrl.searchParams.set("code", code);
           if (state) callbackUrl.searchParams.set("state", state);

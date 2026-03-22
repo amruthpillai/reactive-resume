@@ -109,7 +109,6 @@ const getAuthConfig = () => {
     advanced: {
       database: { generateId },
       useSecureCookies: env.APP_URL.startsWith("https://"),
-      disableCSRFCheck: true,
       ipAddress: { ipAddressHeaders: ["x-forwarded-for", "cf-connecting-ip"] },
     },
 
@@ -256,14 +255,18 @@ const getAuthConfig = () => {
       {
         id: "mcp-registration-defaults",
         onRequest: async (request) => {
+          const { pathname } = new URL(request.url);
+          if (!pathname.includes("/oauth2/")) return;
+
           // Default to public client for unauthenticated registration (MCP clients)
-          if (request.method === "POST" && request.url.includes("/oauth2/register")) {
+          if (request.method === "POST" && pathname.endsWith("/oauth2/register")) {
             const body = await request.clone().json().catch(() => null);
             if (body) {
               body.token_endpoint_auth_method = "none";
               const headers = new Headers(request.headers);
               headers.delete("content-length");
               return {
+                disableCSRFCheck: true,
                 request: new Request(request.url, {
                   method: "POST",
                   headers,
@@ -275,13 +278,16 @@ const getAuthConfig = () => {
 
           // Strip prompt=consent from authorize requests so skipConsent on
           // the client takes effect (prompt=consent overrides skipConsent)
-          if (request.method === "GET" && request.url.includes("/oauth2/authorize")) {
+          if (request.method === "GET" && pathname.endsWith("/oauth2/authorize")) {
             const url = new URL(request.url);
             if (url.searchParams.get("prompt") === "consent") {
               url.searchParams.delete("prompt");
-              return { request: new Request(url.toString(), request) };
+              return { disableCSRFCheck: true, request: new Request(url.toString(), request) };
             }
           }
+
+          // Disable CSRF for all other OAuth2 endpoints (called by external MCP clients without cookies)
+          return { disableCSRFCheck: true };
         },
         databaseHooks: {
           oauthClient: {

@@ -23,6 +23,7 @@ import { Route as AuthVerify2faRouteImport } from "./routes/auth/verify-2fa";
 import { Route as AuthResumePasswordRouteImport } from "./routes/auth/resume-password";
 import { Route as AuthResetPasswordRouteImport } from "./routes/auth/reset-password";
 import { Route as AuthRegisterRouteImport } from "./routes/auth/register";
+import { Route as AuthOauthRouteImport } from "./routes/auth/oauth";
 import { Route as AuthLoginRouteImport } from "./routes/auth/login";
 import { Route as AuthForgotPasswordRouteImport } from "./routes/auth/forgot-password";
 import { Route as ApiHealthRouteImport } from "./routes/api/health";
@@ -44,6 +45,7 @@ import { Route as ApiRpcSplatRouteImport } from "./routes/api/rpc.$";
 import { Route as ApiOpenapiSplatRouteImport } from "./routes/api/openapi.$";
 import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth.$";
 import { Route as DashboardSettingsAuthenticationIndexRouteImport } from "./routes/dashboard/settings/authentication/index";
+import { Route as DotwellKnownOauthAuthorizationServerApiAuthRouteImport } from "./routes/[.]well-known/oauth-authorization-server.api.auth";
 
 const SchemaDotjsonRoute = SchemaDotjsonRouteImport.update({
   id: "/schema.json",
@@ -112,6 +114,11 @@ const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: "/register",
   path: "/register",
+  getParentRoute: () => AuthRouteRoute,
+} as any);
+const AuthOauthRoute = AuthOauthRouteImport.update({
+  id: "/oauth",
+  path: "/oauth",
   getParentRoute: () => AuthRouteRoute,
 } as any);
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -227,6 +234,12 @@ const DashboardSettingsAuthenticationIndexRoute =
     path: "/settings/authentication/",
     getParentRoute: () => DashboardRouteRoute,
   } as any);
+const DotwellKnownOauthAuthorizationServerApiAuthRoute =
+  DotwellKnownOauthAuthorizationServerApiAuthRouteImport.update({
+    id: "/api/auth",
+    path: "/api/auth",
+    getParentRoute: () => DotwellKnownOauthAuthorizationServerRoute,
+  } as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof HomeIndexRoute;
@@ -235,11 +248,12 @@ export interface FileRoutesByFullPath {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
-  "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRoute;
+  "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   "/.well-known/oauth-protected-resource": typeof DotwellKnownOauthProtectedResourceRoute;
   "/api/health": typeof ApiHealthRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
+  "/auth/oauth": typeof AuthOauthRoute;
   "/auth/register": typeof AuthRegisterRoute;
   "/auth/reset-password": typeof AuthResetPasswordRoute;
   "/auth/resume-password": typeof AuthResumePasswordRoute;
@@ -262,16 +276,18 @@ export interface FileRoutesByFullPath {
   "/builder/$resumeId/": typeof BuilderResumeIdIndexRoute;
   "/dashboard/job-search/": typeof DashboardJobSearchIndexRoute;
   "/dashboard/resumes/": typeof DashboardResumesIndexRoute;
+  "/.well-known/oauth-authorization-server/api/auth": typeof DotwellKnownOauthAuthorizationServerApiAuthRoute;
   "/dashboard/settings/authentication/": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRoutesByTo {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/$username/$slug": typeof UsernameSlugRoute;
-  "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRoute;
+  "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   "/.well-known/oauth-protected-resource": typeof DotwellKnownOauthProtectedResourceRoute;
   "/api/health": typeof ApiHealthRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
+  "/auth/oauth": typeof AuthOauthRoute;
   "/auth/register": typeof AuthRegisterRoute;
   "/auth/reset-password": typeof AuthResetPasswordRoute;
   "/auth/resume-password": typeof AuthResumePasswordRoute;
@@ -295,6 +311,7 @@ export interface FileRoutesByTo {
   "/builder/$resumeId": typeof BuilderResumeIdIndexRoute;
   "/dashboard/job-search": typeof DashboardJobSearchIndexRoute;
   "/dashboard/resumes": typeof DashboardResumesIndexRoute;
+  "/.well-known/oauth-authorization-server/api/auth": typeof DotwellKnownOauthAuthorizationServerApiAuthRoute;
   "/dashboard/settings/authentication": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRoutesById {
@@ -305,11 +322,12 @@ export interface FileRoutesById {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
-  "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRoute;
+  "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   "/.well-known/oauth-protected-resource": typeof DotwellKnownOauthProtectedResourceRoute;
   "/api/health": typeof ApiHealthRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
+  "/auth/oauth": typeof AuthOauthRoute;
   "/auth/register": typeof AuthRegisterRoute;
   "/auth/reset-password": typeof AuthResetPasswordRoute;
   "/auth/resume-password": typeof AuthResumePasswordRoute;
@@ -333,6 +351,7 @@ export interface FileRoutesById {
   "/builder/$resumeId/": typeof BuilderResumeIdIndexRoute;
   "/dashboard/job-search/": typeof DashboardJobSearchIndexRoute;
   "/dashboard/resumes/": typeof DashboardResumesIndexRoute;
+  "/.well-known/oauth-authorization-server/api/auth": typeof DotwellKnownOauthAuthorizationServerApiAuthRoute;
   "/dashboard/settings/authentication/": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRouteTypes {
@@ -349,6 +368,7 @@ export interface FileRouteTypes {
     | "/api/health"
     | "/auth/forgot-password"
     | "/auth/login"
+    | "/auth/oauth"
     | "/auth/register"
     | "/auth/reset-password"
     | "/auth/resume-password"
@@ -371,6 +391,7 @@ export interface FileRouteTypes {
     | "/builder/$resumeId/"
     | "/dashboard/job-search/"
     | "/dashboard/resumes/"
+    | "/.well-known/oauth-authorization-server/api/auth"
     | "/dashboard/settings/authentication/";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -381,6 +402,7 @@ export interface FileRouteTypes {
     | "/api/health"
     | "/auth/forgot-password"
     | "/auth/login"
+    | "/auth/oauth"
     | "/auth/register"
     | "/auth/reset-password"
     | "/auth/resume-password"
@@ -404,6 +426,7 @@ export interface FileRouteTypes {
     | "/builder/$resumeId"
     | "/dashboard/job-search"
     | "/dashboard/resumes"
+    | "/.well-known/oauth-authorization-server/api/auth"
     | "/dashboard/settings/authentication";
   id:
     | "__root__"
@@ -418,6 +441,7 @@ export interface FileRouteTypes {
     | "/api/health"
     | "/auth/forgot-password"
     | "/auth/login"
+    | "/auth/oauth"
     | "/auth/register"
     | "/auth/reset-password"
     | "/auth/resume-password"
@@ -441,6 +465,7 @@ export interface FileRouteTypes {
     | "/builder/$resumeId/"
     | "/dashboard/job-search/"
     | "/dashboard/resumes/"
+    | "/.well-known/oauth-authorization-server/api/auth"
     | "/dashboard/settings/authentication/";
   fileRoutesById: FileRoutesById;
 }
@@ -451,7 +476,7 @@ export interface RootRouteChildren {
   SchemaDotjsonRoute: typeof SchemaDotjsonRoute;
   BuilderResumeIdRouteRoute: typeof BuilderResumeIdRouteRouteWithChildren;
   UsernameSlugRoute: typeof UsernameSlugRoute;
-  DotwellKnownOauthAuthorizationServerRoute: typeof DotwellKnownOauthAuthorizationServerRoute;
+  DotwellKnownOauthAuthorizationServerRoute: typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   DotwellKnownOauthProtectedResourceRoute: typeof DotwellKnownOauthProtectedResourceRoute;
   ApiHealthRoute: typeof ApiHealthRoute;
   PrinterResumeIdRoute: typeof PrinterResumeIdRoute;
@@ -560,6 +585,13 @@ declare module "@tanstack/react-router" {
       path: "/register";
       fullPath: "/auth/register";
       preLoaderRoute: typeof AuthRegisterRouteImport;
+      parentRoute: typeof AuthRouteRoute;
+    };
+    "/auth/oauth": {
+      id: "/auth/oauth";
+      path: "/oauth";
+      fullPath: "/auth/oauth";
+      preLoaderRoute: typeof AuthOauthRouteImport;
       parentRoute: typeof AuthRouteRoute;
     };
     "/auth/login": {
@@ -709,6 +741,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardSettingsAuthenticationIndexRouteImport;
       parentRoute: typeof DashboardRouteRoute;
     };
+    "/.well-known/oauth-authorization-server/api/auth": {
+      id: "/.well-known/oauth-authorization-server/api/auth";
+      path: "/api/auth";
+      fullPath: "/.well-known/oauth-authorization-server/api/auth";
+      preLoaderRoute: typeof DotwellKnownOauthAuthorizationServerApiAuthRouteImport;
+      parentRoute: typeof DotwellKnownOauthAuthorizationServerRoute;
+    };
   }
 }
 
@@ -727,6 +766,7 @@ const HomeRouteRouteWithChildren = HomeRouteRoute._addFileChildren(
 interface AuthRouteRouteChildren {
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute;
   AuthLoginRoute: typeof AuthLoginRoute;
+  AuthOauthRoute: typeof AuthOauthRoute;
   AuthRegisterRoute: typeof AuthRegisterRoute;
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute;
   AuthResumePasswordRoute: typeof AuthResumePasswordRoute;
@@ -738,6 +778,7 @@ interface AuthRouteRouteChildren {
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthOauthRoute: AuthOauthRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthResumePasswordRoute: AuthResumePasswordRoute,
@@ -792,6 +833,21 @@ const BuilderResumeIdRouteRouteChildren: BuilderResumeIdRouteRouteChildren = {
 const BuilderResumeIdRouteRouteWithChildren =
   BuilderResumeIdRouteRoute._addFileChildren(BuilderResumeIdRouteRouteChildren);
 
+interface DotwellKnownOauthAuthorizationServerRouteChildren {
+  DotwellKnownOauthAuthorizationServerApiAuthRoute: typeof DotwellKnownOauthAuthorizationServerApiAuthRoute;
+}
+
+const DotwellKnownOauthAuthorizationServerRouteChildren: DotwellKnownOauthAuthorizationServerRouteChildren =
+  {
+    DotwellKnownOauthAuthorizationServerApiAuthRoute:
+      DotwellKnownOauthAuthorizationServerApiAuthRoute,
+  };
+
+const DotwellKnownOauthAuthorizationServerRouteWithChildren =
+  DotwellKnownOauthAuthorizationServerRoute._addFileChildren(
+    DotwellKnownOauthAuthorizationServerRouteChildren,
+  );
+
 const rootRouteChildren: RootRouteChildren = {
   HomeRouteRoute: HomeRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
@@ -800,7 +856,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderResumeIdRouteRoute: BuilderResumeIdRouteRouteWithChildren,
   UsernameSlugRoute: UsernameSlugRoute,
   DotwellKnownOauthAuthorizationServerRoute:
-    DotwellKnownOauthAuthorizationServerRoute,
+    DotwellKnownOauthAuthorizationServerRouteWithChildren,
   DotwellKnownOauthProtectedResourceRoute:
     DotwellKnownOauthProtectedResourceRoute,
   ApiHealthRoute: ApiHealthRoute,

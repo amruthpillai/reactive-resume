@@ -9,15 +9,7 @@ async function handler({ request }: { request: Request }) {
     return Response.json(spec);
   }
 
-  const response = await auth.handler(request);
-
-  // Log token endpoint errors for debugging
-  if (request.url.includes("/oauth2/token") && response.status >= 400) {
-    const body = await response.clone().text();
-    console.error("[OAuth Token Error]", response.status, body);
-  }
-
-  return response;
+  return auth.handler(request);
 }
 
 export const Route = createFileRoute("/api/auth/$")({
