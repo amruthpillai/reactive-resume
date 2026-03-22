@@ -7,7 +7,7 @@ import type { Locale } from "@/utils/locale";
 
 import { env } from "@/utils/env";
 
-import { auth } from "../auth/config";
+import { auth, verifyOAuthToken } from "../auth/config";
 import { db } from "../drizzle/client";
 import { user } from "../drizzle/schema";
 
@@ -21,10 +21,10 @@ async function getUserFromBearerToken(headers: Headers): Promise<User | null> {
     const authHeader = headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) return null;
 
-    const token = await auth.api.getMcpSession({ headers });
-    if (!token?.userId) return null;
+    const payload = await verifyOAuthToken(authHeader.slice(7));
+    if (!payload?.sub) return null;
 
-    const [userResult] = await db.select().from(user).where(eq(user.id, token.userId)).limit(1);
+    const [userResult] = await db.select().from(user).where(eq(user.id, payload.sub)).limit(1);
     return userResult ?? null;
   } catch {
     return null;

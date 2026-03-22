@@ -2,40 +2,36 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { auth } from "@/integrations/auth/config";
+import { auth, verifyOAuthToken } from "@/integrations/auth/config";
 
 import { registerPrompts } from "./-helpers/prompts";
 import { registerResources } from "./-helpers/resources";
 import { registerTools } from "./-helpers/tools";
 
-function createMcpServer() {
-  const server = new McpServer({
-    name: "reactive-resume",
-    version: "1.0.0",
-    title: "Reactive Resume",
-    websiteUrl: "https://rxresu.me",
-    description:
-      "Reactive Resume is a free and open-source resume builder. Use this MCP server to interact with your resume using an LLM of your choice.",
-    icons: [
-      {
-        src: "https://rxresu.me/icon/light.svg",
-        mimeType: "image/svg+xml",
-        theme: "light",
-      },
-      {
-        src: "https://rxresu.me/icon/dark.svg",
-        mimeType: "image/svg+xml",
-        theme: "dark",
-      },
-    ],
-  });
+const mcpServer = new McpServer({
+  name: "reactive-resume",
+  version: "1.0.0",
+  title: "Reactive Resume",
+  websiteUrl: "https://rxresu.me",
+  description:
+    "Reactive Resume is a free and open-source resume builder. Use this MCP server to interact with your resume using an LLM of your choice.",
+  icons: [
+    {
+      src: "https://rxresu.me/icon/light.svg",
+      mimeType: "image/svg+xml",
+      theme: "light",
+    },
+    {
+      src: "https://rxresu.me/icon/dark.svg",
+      mimeType: "image/svg+xml",
+      theme: "dark",
+    },
+  ],
+});
 
-  registerResources(server);
-  registerTools(server);
-  registerPrompts(server);
-
-  return server;
-}
+registerResources(mcpServer);
+registerTools(mcpServer);
+registerPrompts(mcpServer);
 
 class AuthError extends Error {
   constructor() {
@@ -47,8 +43,8 @@ async function authenticateRequest(request: Request): Promise<void> {
   // Try OAuth Bearer token first (for claude.ai and other MCP OAuth clients)
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
-    const session = await auth.api.getMcpSession({ headers: request.headers });
-    if (session) return;
+    const payload = await verifyOAuthToken(authHeader.slice(7));
+    if (payload?.sub) return;
   }
 
   // Fall back to API key authentication
@@ -72,12 +68,11 @@ export const Route = createFileRoute("/mcp/")({
         try {
           await authenticateRequest(request);
 
-          const server = createMcpServer();
           const transport = new WebStandardStreamableHTTPServerTransport({
             enableJsonResponse: true,
           });
 
-          await server.connect(transport);
+          await mcpServer.connect(transport);
 
           return await transport.handleRequest(request);
         } catch (error) {

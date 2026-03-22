@@ -1,14 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { oAuthProtectedResourceMetadata } from "better-auth/plugins";
 
-import { auth } from "@/integrations/auth/config";
-
-const handler = oAuthProtectedResourceMetadata(auth);
+import { authBaseUrl } from "@/integrations/auth/config";
 
 export const Route = createFileRoute("/.well-known/oauth-protected-resource")({
   server: {
     handlers: {
-      GET: ({ request }) => handler(request),
+      GET: () =>
+        Response.json({
+          resource: `${authBaseUrl}/mcp/`,
+          authorization_servers: [`${authBaseUrl}/api/auth`],
+          bearer_methods_supported: ["header"],
+        }),
     },
   },
 });

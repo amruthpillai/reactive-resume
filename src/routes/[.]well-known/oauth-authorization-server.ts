@@ -1,9 +1,9 @@
+import { oauthProviderAuthServerMetadata } from "@better-auth/oauth-provider";
 import { createFileRoute } from "@tanstack/react-router";
-import { oAuthDiscoveryMetadata } from "better-auth/plugins";
 
 import { auth } from "@/integrations/auth/config";
 
-const handler = oAuthDiscoveryMetadata(auth);
+const handler = oauthProviderAuthServerMetadata(auth);
 
 export const Route = createFileRoute("/.well-known/oauth-authorization-server")({
   server: {

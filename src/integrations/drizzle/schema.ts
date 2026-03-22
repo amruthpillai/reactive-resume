@@ -269,8 +269,20 @@ export const apikey = pg.pgTable(
   ],
 );
 
-export const oauthApplication = pg.pgTable(
-  "oauth_application",
+export const jwks = pg.pgTable("jwks", {
+  id: pg
+    .uuid("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => generateId()),
+  publicKey: pg.text("public_key").notNull(),
+  privateKey: pg.text("private_key").notNull(),
+  createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  expiresAt: pg.timestamp("expires_at", { withTimezone: true }),
+});
+
+export const oauthClient = pg.pgTable(
+  "oauth_client",
   {
     id: pg
       .uuid("id")
@@ -279,21 +291,63 @@ export const oauthApplication = pg.pgTable(
       .$defaultFn(() => generateId()),
     clientId: pg.text("client_id").notNull().unique(),
     clientSecret: pg.text("client_secret"),
-    name: pg.text("name").notNull(),
-    icon: pg.text("icon"),
-    redirectUrls: pg.text("redirect_urls").notNull(),
-    metadata: pg.text("metadata"),
-    type: pg.text("type").notNull().default("web"),
-    disabled: pg.boolean("disabled").notNull().default(false),
+    disabled: pg.boolean("disabled").default(false),
+    skipConsent: pg.boolean("skip_consent"),
+    enableEndSession: pg.boolean("enable_end_session"),
+    subjectType: pg.text("subject_type"),
+    scopes: pg.text("scopes").array(),
     userId: pg.uuid("user_id").references(() => user.id, { onDelete: "cascade" }),
-    createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).defaultNow(),
     updatedAt: pg
       .timestamp("updated_at", { withTimezone: true })
-      .notNull()
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date()),
+    name: pg.text("name"),
+    uri: pg.text("uri"),
+    icon: pg.text("icon"),
+    contacts: pg.text("contacts").array(),
+    tos: pg.text("tos"),
+    policy: pg.text("policy"),
+    softwareId: pg.text("software_id"),
+    softwareVersion: pg.text("software_version"),
+    softwareStatement: pg.text("software_statement"),
+    redirectUris: pg.text("redirect_uris").array().notNull(),
+    postLogoutRedirectUris: pg.text("post_logout_redirect_uris").array(),
+    tokenEndpointAuthMethod: pg.text("token_endpoint_auth_method"),
+    grantTypes: pg.text("grant_types").array(),
+    responseTypes: pg.text("response_types").array(),
+    public: pg.boolean("public"),
+    type: pg.text("type"),
+    requirePKCE: pg.boolean("require_pkce"),
+    referenceId: pg.text("reference_id"),
+    metadata: pg.jsonb("metadata"),
   },
   (t) => [pg.index().on(t.clientId)],
+);
+
+export const oauthRefreshToken = pg.pgTable(
+  "oauth_refresh_token",
+  {
+    id: pg
+      .uuid("id")
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => generateId()),
+    token: pg.text("token").notNull(),
+    clientId: pg.text("client_id").notNull(),
+    sessionId: pg.uuid("session_id").references(() => session.id, { onDelete: "set null" }),
+    userId: pg
+      .uuid("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    referenceId: pg.text("reference_id"),
+    expiresAt: pg.timestamp("expires_at", { withTimezone: true }),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).defaultNow(),
+    revoked: pg.timestamp("revoked", { withTimezone: true }),
+    authTime: pg.timestamp("auth_time", { withTimezone: true }),
+    scopes: pg.text("scopes").array().notNull(),
+  },
+  (t) => [pg.index().on(t.token)],
 );
 
 export const oauthAccessToken = pg.pgTable(
@@ -304,21 +358,17 @@ export const oauthAccessToken = pg.pgTable(
       .notNull()
       .primaryKey()
       .$defaultFn(() => generateId()),
-    accessToken: pg.text("access_token").notNull(),
-    refreshToken: pg.text("refresh_token"),
-    accessTokenExpiresAt: pg.timestamp("access_token_expires_at", { withTimezone: true }).notNull(),
-    refreshTokenExpiresAt: pg.timestamp("refresh_token_expires_at", { withTimezone: true }),
+    token: pg.text("token").notNull().unique(),
     clientId: pg.text("client_id").notNull(),
+    sessionId: pg.uuid("session_id").references(() => session.id, { onDelete: "set null" }),
     userId: pg.uuid("user_id").references(() => user.id, { onDelete: "cascade" }),
-    scopes: pg.text("scopes"),
-    createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: pg
-      .timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date()),
+    referenceId: pg.text("reference_id"),
+    refreshId: pg.uuid("refresh_id").references(() => oauthRefreshToken.id),
+    expiresAt: pg.timestamp("expires_at", { withTimezone: true }),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).defaultNow(),
+    scopes: pg.text("scopes").array().notNull(),
   },
-  (t) => [pg.index().on(t.accessToken), pg.index().on(t.refreshToken)],
+  (t) => [pg.index().on(t.token)],
 );
 
 export const oauthConsent = pg.pgTable(
@@ -329,17 +379,13 @@ export const oauthConsent = pg.pgTable(
       .notNull()
       .primaryKey()
       .$defaultFn(() => generateId()),
-    userId: pg
-      .uuid("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
     clientId: pg.text("client_id").notNull(),
-    scopes: pg.text("scopes"),
-    consentGiven: pg.boolean("consent_given").notNull().default(false),
-    createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    userId: pg.uuid("user_id").references(() => user.id, { onDelete: "cascade" }),
+    referenceId: pg.text("reference_id"),
+    scopes: pg.text("scopes").array().notNull(),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).defaultNow(),
     updatedAt: pg
       .timestamp("updated_at", { withTimezone: true })
-      .notNull()
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date()),
   },
@@ -357,7 +403,9 @@ export const relations = defineRelations(
     resume,
     resumeStatistics,
     apikey,
-    oauthApplication,
+    jwks,
+    oauthClient,
+    oauthRefreshToken,
     oauthAccessToken,
     oauthConsent,
   },
@@ -369,7 +417,8 @@ export const relations = defineRelations(
       passkeys: r.many.passkey(),
       resumes: r.many.resume(),
       apiKeys: r.many.apikey(),
-      oauthApplications: r.many.oauthApplication(),
+      oauthClients: r.many.oauthClient(),
+      oauthRefreshTokens: r.many.oauthRefreshToken(),
       oauthAccessTokens: r.many.oauthAccessToken(),
       oauthConsents: r.many.oauthConsent(),
     },
@@ -419,16 +468,34 @@ export const relations = defineRelations(
         to: r.user.id,
       }),
     },
-    oauthApplication: {
+    oauthClient: {
       user: r.one.user({
-        from: r.oauthApplication.userId,
+        from: r.oauthClient.userId,
         to: r.user.id,
+      }),
+    },
+    oauthRefreshToken: {
+      user: r.one.user({
+        from: r.oauthRefreshToken.userId,
+        to: r.user.id,
+      }),
+      session: r.one.session({
+        from: r.oauthRefreshToken.sessionId,
+        to: r.session.id,
       }),
     },
     oauthAccessToken: {
       user: r.one.user({
         from: r.oauthAccessToken.userId,
         to: r.user.id,
+      }),
+      session: r.one.session({
+        from: r.oauthAccessToken.sessionId,
+        to: r.session.id,
+      }),
+      refreshToken: r.one.oauthRefreshToken({
+        from: r.oauthAccessToken.refreshId,
+        to: r.oauthRefreshToken.id,
       }),
     },
     oauthConsent: {
