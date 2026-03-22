@@ -26,7 +26,7 @@ export const authBaseUrl = process.env.BETTER_AUTH_URL ?? env.APP_URL;
 export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
   return verifyAccessToken(token, {
     jwksUrl: `${authBaseUrl}/api/auth/jwks`,
-    verifyOptions: { issuer: `${authBaseUrl}/api/auth`, audience: authBaseUrl },
+    verifyOptions: { issuer: `${authBaseUrl}/api/auth`, audience: [authBaseUrl, `${authBaseUrl}/mcp`, `${authBaseUrl}/mcp/`] },
   });
 }
 
@@ -109,6 +109,7 @@ const getAuthConfig = () => {
     advanced: {
       database: { generateId },
       useSecureCookies: env.APP_URL.startsWith("https://"),
+      disableCSRFCheck: true,
       ipAddress: { ipAddressHeaders: ["x-forwarded-for", "cf-connecting-ip"] },
     },
 
@@ -246,10 +247,52 @@ const getAuthConfig = () => {
       openAPI(),
       jwt(),
       oauthProvider({
-        loginPage: "/auth/login",
-        consentPage: "/auth/login",
+        loginPage: "/auth/oauth",
+        consentPage: "/auth/oauth",
         allowDynamicClientRegistration: true,
+        allowUnauthenticatedClientRegistration: true,
+        validAudiences: [authBaseUrl, `${authBaseUrl}/mcp`, `${authBaseUrl}/mcp/`],
       }),
+      {
+        id: "mcp-registration-defaults",
+        onRequest: async (request) => {
+          // Default to public client for unauthenticated registration (MCP clients)
+          if (request.method === "POST" && request.url.includes("/oauth2/register")) {
+            const body = await request.clone().json().catch(() => null);
+            if (body) {
+              body.token_endpoint_auth_method = "none";
+              const headers = new Headers(request.headers);
+              headers.delete("content-length");
+              return {
+                request: new Request(request.url, {
+                  method: "POST",
+                  headers,
+                  body: JSON.stringify(body),
+                }),
+              };
+            }
+          }
+
+          // Strip prompt=consent from authorize requests so skipConsent on
+          // the client takes effect (prompt=consent overrides skipConsent)
+          if (request.method === "GET" && request.url.includes("/oauth2/authorize")) {
+            const url = new URL(request.url);
+            if (url.searchParams.get("prompt") === "consent") {
+              url.searchParams.delete("prompt");
+              return { request: new Request(url.toString(), request) };
+            }
+          }
+        },
+        databaseHooks: {
+          oauthClient: {
+            create: {
+              before: async (client) => {
+                return { data: { ...client, skipConsent: true } };
+              },
+            },
+          },
+        },
+      },
       genericOAuth({ config: authConfigs }),
       twoFactor({ issuer: "Reactive Resume" }),
       apiKey({ enableSessionForAPIKeys: true, rateLimit: { enabled: false } }),

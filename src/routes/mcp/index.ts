@@ -2,36 +2,40 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { auth, verifyOAuthToken } from "@/integrations/auth/config";
+import { auth, authBaseUrl, verifyOAuthToken } from "@/integrations/auth/config";
 
 import { registerPrompts } from "./-helpers/prompts";
 import { registerResources } from "./-helpers/resources";
 import { registerTools } from "./-helpers/tools";
 
-const mcpServer = new McpServer({
-  name: "reactive-resume",
-  version: "1.0.0",
-  title: "Reactive Resume",
-  websiteUrl: "https://rxresu.me",
-  description:
-    "Reactive Resume is a free and open-source resume builder. Use this MCP server to interact with your resume using an LLM of your choice.",
-  icons: [
-    {
-      src: "https://rxresu.me/icon/light.svg",
-      mimeType: "image/svg+xml",
-      theme: "light",
-    },
-    {
-      src: "https://rxresu.me/icon/dark.svg",
-      mimeType: "image/svg+xml",
-      theme: "dark",
-    },
-  ],
-});
+function createMcpServer() {
+  const server = new McpServer({
+    name: "reactive-resume",
+    version: "1.0.0",
+    title: "Reactive Resume",
+    websiteUrl: "https://rxresu.me",
+    description:
+      "Reactive Resume is a free and open-source resume builder. Use this MCP server to interact with your resume using an LLM of your choice.",
+    icons: [
+      {
+        src: "https://rxresu.me/icon/light.svg",
+        mimeType: "image/svg+xml",
+        theme: "light",
+      },
+      {
+        src: "https://rxresu.me/icon/dark.svg",
+        mimeType: "image/svg+xml",
+        theme: "dark",
+      },
+    ],
+  });
 
-registerResources(mcpServer);
-registerTools(mcpServer);
-registerPrompts(mcpServer);
+  registerResources(server);
+  registerTools(server);
+  registerPrompts(server);
+
+  return server;
+}
 
 class AuthError extends Error {
   constructor() {
@@ -68,11 +72,12 @@ export const Route = createFileRoute("/mcp/")({
         try {
           await authenticateRequest(request);
 
+          const server = createMcpServer();
           const transport = new WebStandardStreamableHTTPServerTransport({
             enableJsonResponse: true,
           });
 
-          await mcpServer.connect(transport);
+          await server.connect(transport);
 
           return await transport.handleRequest(request);
         } catch (error) {
@@ -85,7 +90,7 @@ export const Route = createFileRoute("/mcp/")({
               status: 401,
               headers: {
                 "Content-Type": "application/json",
-                "WWW-Authenticate": "Bearer",
+                "WWW-Authenticate": `Bearer resource_metadata="${authBaseUrl}/.well-known/oauth-protected-resource"`,
               },
             });
           }
