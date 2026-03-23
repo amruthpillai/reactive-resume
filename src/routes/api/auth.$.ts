@@ -45,8 +45,38 @@ function sanitizeOAuthAuthorizeRequest(request: Request): Request {
   return new Request(url, request);
 }
 
+async function defaultPublicClientRegistration(request: Request): Promise<Request> {
+  if (request.method !== "POST") return request;
+
+  const url = new URL(request.url);
+  if (!url.pathname.endsWith("/oauth2/register")) return request;
+
+  const cloned = request.clone();
+  let body: Record<string, unknown>;
+
+  try {
+    body = await cloned.json();
+  } catch {
+    return request;
+  }
+
+  // Claude.ai sends token_endpoint_auth_method: "client_secret_post" without a
+  // client_secret, causing Better Auth to require authentication for what is
+  // effectively a public client. Force to "none" for unauthenticated registrations.
+  if (!request.headers.get("authorization")) {
+    body.token_endpoint_auth_method = "none";
+  }
+
+  return new Request(url, {
+    method: request.method,
+    headers: request.headers,
+    body: JSON.stringify(body),
+  });
+}
+
 async function handler({ request }: { request: Request }) {
   const sanitizedRequest = sanitizeOAuthAuthorizeRequest(request);
+  const finalRequest = await defaultPublicClientRegistration(sanitizedRequest);
 
   if (request.method === "GET" && request.url.endsWith("/spec.json")) {
     const spec = await auth.api.generateOpenAPISchema();
@@ -54,7 +84,7 @@ async function handler({ request }: { request: Request }) {
     return Response.json(spec);
   }
 
-  return auth.handler(sanitizedRequest);
+  return auth.handler(finalRequest);
 }
 
 export const Route = createFileRoute("/api/auth/$")({

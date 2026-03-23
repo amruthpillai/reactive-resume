@@ -48,8 +48,12 @@ async function authenticateRequest(request: Request): Promise<void> {
   const authHeader = request.headers.get("authorization");
 
   if (authHeader?.startsWith("Bearer ")) {
-    const payload = await verifyOAuthToken(authHeader.slice(7));
-    if (payload?.sub) return;
+    try {
+      const payload = await verifyOAuthToken(authHeader.slice(7));
+      if (payload?.sub) return;
+    } catch {
+      // Invalid or expired token (e.g. JWKS key mismatch) — fall through to AuthError
+    }
   }
 
   // Fall back to API key authentication
