@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 import type { ResumeData } from "@/schema/resume/data";
 import type { TailorOutput } from "@/schema/tailor";

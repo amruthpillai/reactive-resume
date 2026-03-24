@@ -261,10 +261,10 @@ const getAuthConfig = () => {
       oauthProvider({
         loginPage: "/auth/oauth",
         consentPage: "/auth/oauth",
+        validAudiences: getOAuthAudiences(),
         allowDynamicClientRegistration: true,
         allowUnauthenticatedClientRegistration: true,
         silenceWarnings: { oauthAuthServerConfig: true },
-        validAudiences: getOAuthAudiences(),
       }),
       username({
         minUsernameLength: 3,

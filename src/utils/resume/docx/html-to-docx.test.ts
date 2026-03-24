@@ -1,7 +1,5 @@
-// @vitest-environment jsdom
-
 import { ExternalHyperlink, Paragraph, TextRun } from "docx";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 import { htmlToParagraphs } from "./html-to-docx";
 

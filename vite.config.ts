@@ -222,6 +222,11 @@ const config = defineConfig({
     tsconfigPaths: true,
   },
 
+  test: {
+    environment: "jsdom",
+    reporters: process.env.GITHUB_ACTIONS ? ["github-actions"] : ["dot"],
+  },
+
   build: {
     sourcemap: true,
     chunkSizeWarningLimit: 10 * 1024, // 10mb

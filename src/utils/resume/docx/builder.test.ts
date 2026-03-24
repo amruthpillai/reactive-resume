@@ -1,7 +1,5 @@
-// @vitest-environment jsdom
-
 import { Document } from "docx";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 import type { ResumeData } from "@/schema/resume/data";
 
