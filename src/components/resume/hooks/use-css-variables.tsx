@@ -13,10 +13,19 @@ export const useCSSVariables = ({ picture, metadata }: UseCssVariablesProps) => 
     const lowestBodyFontWeight = Math.min(...metadata.typography.body.fontWeights.map(Number));
     const lowestHeadingFontWeight = Math.min(...metadata.typography.heading.fontWeights.map(Number));
 
-    const highestBodyFontWeight = Math.max(...metadata.typography.body.fontWeights.map(Number));
-    const highestHeadingFontWeight = Math.max(...metadata.typography.heading.fontWeights.map(Number));
+    const rawHighestBodyFontWeight = Math.max(...metadata.typography.body.fontWeights.map(Number));
+    const rawHighestHeadingFontWeight = Math.max(...metadata.typography.heading.fontWeights.map(Number));
 
-    return { lowestBodyFontWeight, lowestHeadingFontWeight, highestBodyFontWeight, highestHeadingFontWeight };
+    const highestBodyFontWeight = rawHighestBodyFontWeight <= lowestBodyFontWeight ? 700 : rawHighestBodyFontWeight;
+    const highestHeadingFontWeight =
+      rawHighestHeadingFontWeight <= lowestHeadingFontWeight ? 700 : rawHighestHeadingFontWeight;
+
+    return {
+      lowestBodyFontWeight,
+      lowestHeadingFontWeight,
+      highestBodyFontWeight,
+      highestHeadingFontWeight,
+    };
   }, [metadata.typography.body.fontWeights, metadata.typography.heading.fontWeights]);
 
   return {
