@@ -157,6 +157,7 @@ export const printerService = {
         (
           pagePaddingX: number,
           pagePaddingY: number,
+          marginY: number,
           isFreeForm: boolean,
           minPageHeight: number,
           backgroundColor: string,
@@ -185,14 +186,13 @@ export const printerService = {
             if (pageSurface) pageSurface.style.backgroundColor = backgroundColor;
           }
 
-          // Apply print-only margins as padding inside each page's content surface.
+          // Apply print-only horizontal margins as padding inside each page's content surface.
+          // This is only needed for printMarginTemplates which use print:p-0 to remove CSS padding.
           if (pagePaddingX > 0 || pagePaddingY > 0) {
             for (const el of pageContentElements) {
               const pageContent = el as HTMLElement;
 
               pageContent.style.boxSizing = "border-box";
-              // Ensure padding is repeated on every printed fragment when content
-              // flows across physical PDF pages (not just the first fragment).
               pageContent.style.boxDecorationBreak = "clone";
               pageContent.style.setProperty("-webkit-box-decoration-break", "clone");
               if (pagePaddingX > 0) {
@@ -204,6 +204,20 @@ export const printerService = {
                 pageContent.style.paddingBottom = `${pagePaddingY}pt`;
               }
             }
+          }
+
+          // Add top margin to PDF pages 2+ so content doesn't start flush at the top.
+          // @page :first keeps page 1 unchanged (templates provide their own spacing).
+          // The html/body background-color set above ensures the margin area is colored.
+          // Per Puppeteer docs, CSS @page rules override the margin option in page.pdf().
+          const effectivePaddingY = pagePaddingY > 0 ? pagePaddingY : marginY;
+          if (effectivePaddingY > 0) {
+            const style = document.createElement("style");
+            style.textContent = `
+              @page { margin-top: ${effectivePaddingY}pt; }
+              @page :first { margin-top: 0; }
+            `;
+            document.head.appendChild(style);
           }
 
           if (isFreeForm) {
@@ -258,6 +272,7 @@ export const printerService = {
         },
         pagePaddingX,
         pagePaddingY,
+        data.metadata.page.marginY,
         isFreeForm,
         pageDimensionsAsPixels[format].height,
         data.metadata.design.colors.background,
@@ -293,6 +308,7 @@ export const printerService = {
 
       return result.url;
     } catch (error) {
+      console.error("[Printer] PDF generation failed:", error);
       throw new ORPCError("INTERNAL_SERVER_ERROR", error as Error);
     } finally {
       if (page) await page.close().catch(() => null);
