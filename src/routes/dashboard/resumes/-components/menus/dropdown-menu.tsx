@@ -1,13 +1,5 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import {
-  CopySimpleIcon,
-  FolderOpenIcon,
-  LockSimpleIcon,
-  LockSimpleOpenIcon,
-  PencilSimpleLineIcon,
-  TrashSimpleIcon,
-} from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -22,6 +14,8 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
+
+import { ResumeDropdownExportActions } from "./export-actions";
 
 type Props = Omit<React.ComponentProps<typeof DropdownMenuContent>, "children"> & {
   resume: RouterOutput["resume"]["list"][number];
@@ -91,32 +85,29 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
       <DropdownMenuContent {...props}>
         <Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
           <DropdownMenuItem>
-            <FolderOpenIcon />
             <Trans>Open</Trans>
           </DropdownMenuItem>
         </Link>
 
+        <ResumeDropdownExportActions resume={resume} />
+
         <DropdownMenuSeparator />
 
         <DropdownMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
-          <PencilSimpleLineIcon />
           <Trans>Update</Trans>
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleDuplicate}>
-          <CopySimpleIcon />
           <Trans>Duplicate</Trans>
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleToggleLock}>
-          {resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
           {resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
-          <TrashSimpleIcon />
           <Trans>Delete</Trans>
         </DropdownMenuItem>
       </DropdownMenuContent>

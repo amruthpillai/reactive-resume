@@ -23,6 +23,8 @@ import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 
+import { ResumeContextExportActions } from "./export-actions";
+
 type Props = {
   resume: RouterOutput["resume"]["list"][number];
   children: React.ComponentProps<typeof ContextMenuTrigger>["render"];
@@ -97,6 +99,8 @@ export function ResumeContextMenu({ resume, children }: Props) {
             </Link>
           }
         />
+
+        <ResumeContextExportActions resume={resume} />
 
         <ContextMenuSeparator />
 
