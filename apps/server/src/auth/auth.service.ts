@@ -70,20 +70,21 @@ export class AuthService {
   }
 
   async setLastSignedIn(email: string) {
-    await this.userService.updateByEmail(email, {
-      secrets: { update: { lastSignedIn: new Date() } },
+    await this.userService.updateSecretsByEmail(email, {
+      lastSignedIn: new Date(),
     });
   }
 
   async setRefreshToken(email: string, token: string | null) {
-    await this.userService.updateByEmail(email, {
-      secrets: {
-        update: {
-          refreshToken: token,
-          lastSignedIn: token ? new Date() : undefined,
-        },
-      },
-    });
+    const updateData: any = {
+      refreshToken: token,
+    };
+
+    if (token) {
+      updateData.lastSignedIn = new Date();
+    }
+
+    await this.userService.updateSecretsByEmail(email, updateData);
   }
 
   async validateRefreshToken(payload: Payload, token: string) {
@@ -146,8 +147,8 @@ export class AuthService {
   async forgotPassword(email: string) {
     const token = this.generateToken("reset");
 
-    await this.userService.updateByEmail(email, {
-      secrets: { update: { resetToken: token } },
+    await this.userService.updateSecretsByEmail(email, {
+      resetToken: token,
     });
 
     const baseUrl = this.configService.get("PUBLIC_URL");
@@ -169,8 +170,8 @@ export class AuthService {
 
     const newHashedPassword = await this.hash(newPassword);
 
-    await this.userService.updateByEmail(email, {
-      secrets: { update: { password: newHashedPassword } },
+    await this.userService.updateSecretsByEmail(email, {
+      password: newHashedPassword,
     });
   }
 
@@ -228,8 +229,8 @@ export class AuthService {
       const token = this.generateToken("verification");
 
       // Set the verification token in the database
-      await this.userService.updateByEmail(email, {
-        secrets: { update: { verificationToken: token } },
+      await this.userService.updateSecretsByEmail(email, {
+        verificationToken: token,
       });
 
       const baseUrl = this.configService.get("PUBLIC_URL");
@@ -253,10 +254,14 @@ export class AuthService {
       throw new BadRequestException(ErrorMessage.InvalidVerificationToken);
     }
 
-    await this.userService.updateByEmail(user.email, {
-      emailVerified: true,
-      secrets: { update: { verificationToken: null } },
-    });
+    await Promise.all([
+      this.userService.updateByEmail(user.email, {
+        emailVerified: true,
+      }),
+      this.userService.updateSecretsByEmail(user.email, {
+        verificationToken: null,
+      }),
+    ]);
   }
 
   // Two-Factor Authentication Flows
@@ -271,8 +276,8 @@ export class AuthService {
     const secret = authenticator.generateSecret();
     const uri = authenticator.keyuri(email, "Reactive Resume", secret);
 
-    await this.userService.updateByEmail(email, {
-      secrets: { update: { twoFactorSecret: secret } },
+    await this.userService.updateSecretsByEmail(email, {
+      twoFactorSecret: secret,
     });
 
     return { message: uri };
@@ -303,10 +308,14 @@ export class AuthService {
     // Create backup codes and store them in the database
     const backupCodes = Array.from({ length: 8 }, () => randomBytes(5).toString("hex"));
 
-    await this.userService.updateByEmail(email, {
-      twoFactorEnabled: true,
-      secrets: { update: { twoFactorBackupCodes: backupCodes } },
-    });
+    await Promise.all([
+      this.userService.updateByEmail(email, {
+        twoFactorEnabled: true,
+      }),
+      this.userService.updateSecretsByEmail(email, {
+        twoFactorBackupCodes: backupCodes,
+      }),
+    ]);
 
     return { backupCodes };
   }
@@ -319,10 +328,15 @@ export class AuthService {
       throw new BadRequestException(ErrorMessage.TwoFactorNotEnabled);
     }
 
-    await this.userService.updateByEmail(email, {
-      twoFactorEnabled: false,
-      secrets: { update: { twoFactorSecret: null, twoFactorBackupCodes: [] } },
-    });
+    await Promise.all([
+      this.userService.updateByEmail(email, {
+        twoFactorEnabled: false,
+      }),
+      this.userService.updateSecretsByEmail(email, {
+        twoFactorSecret: null,
+        twoFactorBackupCodes: [],
+      }),
+    ]);
   }
 
   async verify2FACode(email: string, code: string) {
@@ -361,8 +375,8 @@ export class AuthService {
 
     // Remove the used backup code from the database
     const backupCodes = user.secrets.twoFactorBackupCodes.filter((c) => c !== code);
-    await this.userService.updateByEmail(email, {
-      secrets: { update: { twoFactorBackupCodes: backupCodes } },
+    await this.userService.updateSecretsByEmail(email, {
+      twoFactorBackupCodes: backupCodes,
     });
 
     return user;

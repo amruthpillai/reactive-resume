@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { User } from "@prisma/client";
 import { ErrorMessage, generateRandomName, processUsername } from "@reactive-resume/utils";
 import { Profile, Strategy, StrategyOptions } from "passport-openidconnect";
 
-import { UserService } from "@/server/user/user.service";
+import { User } from "../../types/express";
+import { UserService } from "../../user/user.service";
 
 @Injectable()
 export class OpenIDStrategy extends PassportStrategy(Strategy, "openid") {

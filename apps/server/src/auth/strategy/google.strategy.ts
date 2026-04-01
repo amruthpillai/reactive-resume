@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { createId } from "@paralleldrive/cuid2";
-import { User } from "@prisma/client";
 import { ErrorMessage, processUsername } from "@reactive-resume/utils";
 import { Profile, Strategy, StrategyOptions, VerifyCallback } from "passport-google-oauth20";
 
-import { UserService } from "@/server/user/user.service";
+import { User } from "../../types/express";
+import { UserService } from "../../user/user.service";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {

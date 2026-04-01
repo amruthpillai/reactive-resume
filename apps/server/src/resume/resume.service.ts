@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from "@nestjs/common";
 import { CreateResumeDto, ImportResumeDto, ResumeDto, UpdateResumeDto } from "@reactive-resume/dto";
 import { defaultResumeData, ResumeData } from "@reactive-resume/schema";
@@ -14,6 +15,7 @@ import deepmerge from "deepmerge";
 import { DatabaseService } from "../database/database.service";
 import { PrinterService } from "../printer/printer.service";
 import { StorageService } from "../storage/storage.service";
+import { Resume } from "../types/express";
 
 @Injectable()
 export class ResumeService {
@@ -24,76 +26,175 @@ export class ResumeService {
   ) {}
 
   async create(userId: string, createResumeDto: CreateResumeDto) {
-    const { name, email, picture } = await this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { name: true, email: true, picture: true },
-    });
+    const db = this.database.getFirestore();
+    const userDoc = await db.collection("users").doc(userId).get();
+
+    if (!userDoc.exists || !userDoc.data()) {
+      throw new NotFoundException("User not found");
+    }
+
+    const userData = userDoc.data()!;
+    const { name, email, picture } = userData;
 
     const data = deepmerge(defaultResumeData, {
       basics: { name, email, picture: { url: picture ?? "" } },
     } satisfies DeepPartial<ResumeData>);
 
-    return this.prisma.resume.create({
-      data: {
-        data,
-        userId,
-        title: createResumeDto.title,
-        visibility: createResumeDto.visibility,
-        slug: createResumeDto.slug ?? slugify(createResumeDto.title),
-      },
-    });
-  }
+    const resumeId = db.collection("resumes").doc().id;
+    const resumeData = {
+      userId,
+      title: createResumeDto.title,
+      slug: createResumeDto.slug ?? slugify(createResumeDto.title),
+      visibility: createResumeDto.visibility,
+      data,
+      locked: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
-  import(userId: string, importResumeDto: ImportResumeDto) {
-    const randomTitle = generateRandomName();
-
-    return this.prisma.resume.create({
-      data: {
-        userId,
-        visibility: "private",
-        data: importResumeDto.data,
-        title: importResumeDto.title ?? randomTitle,
-        slug: importResumeDto.slug ?? slugify(randomTitle),
-      },
-    });
-  }
-
-  findAll(userId: string) {
-    return this.prisma.resume.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } });
-  }
-
-  findOne(id: string, userId?: string) {
-    if (userId) {
-      return this.prisma.resume.findUniqueOrThrow({ where: { userId_id: { userId, id } } });
-    }
-
-    return this.prisma.resume.findUniqueOrThrow({ where: { id } });
-  }
-
-  async findOneStatistics(id: string) {
-    const result = await this.prisma.statistics.findFirst({
-      select: { views: true, downloads: true },
-      where: { resumeId: id },
-    });
+    await db.collection("resumes").doc(resumeId).set(resumeData);
 
     return {
-      views: result?.views ?? 0,
-      downloads: result?.downloads ?? 0,
+      id: resumeId,
+      ...resumeData,
     };
   }
 
-  async findOneByUsernameSlug(username: string, slug: string, userId?: string) {
-    const resume = await this.prisma.resume.findFirstOrThrow({
-      where: { user: { username }, slug, visibility: "public" },
-    });
+  async import(userId: string, importResumeDto: ImportResumeDto) {
+    const db = this.database.getFirestore();
+    const randomTitle = generateRandomName();
 
-    // Update statistics: increment the number of views by 1
+    const resumeId = db.collection("resumes").doc().id;
+    const resumeData = {
+      userId,
+      visibility: "private",
+      data: importResumeDto.data,
+      title: importResumeDto.title ?? randomTitle,
+      slug: importResumeDto.slug ?? slugify(randomTitle),
+      locked: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await db.collection("resumes").doc(resumeId).set(resumeData);
+
+    return {
+      id: resumeId,
+      ...resumeData,
+    };
+  }
+
+  async findAll(userId: string) {
+    const db = this.database.getFirestore();
+    const snapshot = await db
+      .collection("resumes")
+      .where("userId", "==", userId)
+      .orderBy("updatedAt", "desc")
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
+
+  async findOne(id: string, userId?: string) {
+    const db = this.database.getFirestore();
+    const resumeDoc = await db.collection("resumes").doc(id).get();
+
+    if (!resumeDoc.exists || !resumeDoc.data()) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    const resumeData = resumeDoc.data()!;
+
+    if (userId && resumeData.userId !== userId) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    return {
+      id: resumeDoc.id,
+      ...resumeData,
+    } as Resume;
+  }
+
+  async findOneStatistics(id: string) {
+    const db = this.database.getFirestore();
+    const statsSnapshot = await db
+      .collection("statistics")
+      .where("resumeId", "==", id)
+      .limit(1)
+      .get();
+
+    if (statsSnapshot.empty) {
+      return {
+        views: 0,
+        downloads: 0,
+      };
+    }
+
+    const stats = statsSnapshot.docs[0].data();
+    return {
+      views: stats.views ?? 0,
+      downloads: stats.downloads ?? 0,
+    };
+  }
+
+  async findOneByUsernameSlug(username: string, slug: string, userId?: string): Promise<Resume> {
+    const db = this.database.getFirestore();
+
+    const userSnapshot = await db
+      .collection("users")
+      .where("username", "==", username)
+      .limit(1)
+      .get();
+
+    if (userSnapshot.empty) {
+      throw new NotFoundException("User not found");
+    }
+
+    const user = userSnapshot.docs[0];
+    const resumeSnapshot = await db
+      .collection("resumes")
+      .where("userId", "==", user.id)
+      .where("slug", "==", slug)
+      .where("visibility", "==", "public")
+      .limit(1)
+      .get();
+
+    if (resumeSnapshot.empty) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    const resumeDoc = resumeSnapshot.docs[0];
+    const resume = {
+      id: resumeDoc.id,
+      ...resumeDoc.data(),
+    } as Resume;
+
     if (!userId) {
-      await this.prisma.statistics.upsert({
-        where: { resumeId: resume.id },
-        create: { views: 1, downloads: 0, resumeId: resume.id },
-        update: { views: { increment: 1 } },
-      });
+      const statsSnapshot = await db
+        .collection("statistics")
+        .where("resumeId", "==", resume.id)
+        .limit(1)
+        .get();
+
+      if (statsSnapshot.empty) {
+        await db.collection("statistics").add({
+          resumeId: resume.id,
+          views: 1,
+          downloads: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      } else {
+        const statsDoc = statsSnapshot.docs[0];
+        const currentViews = statsDoc.data().views || 0;
+        await statsDoc.ref.update({
+          views: currentViews + 1,
+          updatedAt: new Date(),
+        });
+      }
     }
 
     return resume;
@@ -101,57 +202,125 @@ export class ResumeService {
 
   async update(userId: string, id: string, updateResumeDto: UpdateResumeDto) {
     try {
-      const { locked } = await this.prisma.resume.findUniqueOrThrow({
-        where: { id },
-        select: { locked: true },
-      });
+      const db = this.database.getFirestore();
+      const resumeDoc = await db.collection("resumes").doc(id).get();
 
-      if (locked) throw new BadRequestException(ErrorMessage.ResumeLocked);
-
-      return await this.prisma.resume.update({
-        data: {
-          title: updateResumeDto.title,
-          slug: updateResumeDto.slug,
-          visibility: updateResumeDto.visibility,
-          data: updateResumeDto.data as Prisma.JsonObject,
-        },
-        where: { userId_id: { userId, id } },
-      });
-    } catch (error) {
-      if (error.code === "P2025") {
-        Logger.error(error);
-        throw new InternalServerErrorException(error);
+      if (!resumeDoc.exists || !resumeDoc.data()) {
+        throw new NotFoundException("Resume not found");
       }
+
+      const resumeData = resumeDoc.data()!;
+
+      if (resumeData.userId !== userId) {
+        throw new NotFoundException("Resume not found");
+      }
+
+      if (resumeData.locked) {
+        throw new BadRequestException(ErrorMessage.ResumeLocked);
+      }
+
+      const updateData = {
+        title: updateResumeDto.title,
+        slug: updateResumeDto.slug,
+        visibility: updateResumeDto.visibility,
+        data: updateResumeDto.data,
+        updatedAt: new Date(),
+      };
+
+      await resumeDoc.ref.update(updateData);
+
+      const updatedDoc = await resumeDoc.ref.get();
+      return {
+        id: updatedDoc.id,
+        ...updatedDoc.data(),
+      };
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
-  lock(userId: string, id: string, set: boolean) {
-    return this.prisma.resume.update({
-      data: { locked: set },
-      where: { userId_id: { userId, id } },
+  async lock(userId: string, id: string, set: boolean) {
+    const db = this.database.getFirestore();
+    const resumeDoc = await db.collection("resumes").doc(id).get();
+
+    if (!resumeDoc.exists || !resumeDoc.data()) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    const resumeData = resumeDoc.data()!;
+
+    if (resumeData.userId !== userId) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    await resumeDoc.ref.update({
+      locked: set,
+      updatedAt: new Date(),
     });
+
+    const updatedDoc = await resumeDoc.ref.get();
+    return {
+      id: updatedDoc.id,
+      ...updatedDoc.data(),
+    };
   }
 
   async remove(userId: string, id: string) {
+    const db = this.database.getFirestore();
+
     await Promise.all([
-      // Remove files in storage, and their cached keys
       this.storageService.deleteObject(userId, "resumes", id),
       this.storageService.deleteObject(userId, "previews", id),
     ]);
 
-    return this.prisma.resume.delete({ where: { userId_id: { userId, id } } });
+    const resumeDoc = await db.collection("resumes").doc(id).get();
+
+    if (!resumeDoc.exists || !resumeDoc.data()) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    const resumeData = resumeDoc.data()!;
+
+    if (resumeData.userId !== userId) {
+      throw new NotFoundException("Resume not found");
+    }
+
+    await resumeDoc.ref.delete();
+
+    return {
+      id: resumeDoc.id,
+      ...resumeData,
+    };
   }
 
   async printResume(resume: ResumeDto, userId?: string) {
     const url = await this.printerService.printResume(resume);
 
-    // Update statistics: increment the number of downloads by 1
     if (!userId) {
-      await this.prisma.statistics.upsert({
-        where: { resumeId: resume.id },
-        create: { views: 0, downloads: 1, resumeId: resume.id },
-        update: { downloads: { increment: 1 } },
-      });
+      const db = this.database.getFirestore();
+      const statsSnapshot = await db
+        .collection("statistics")
+        .where("resumeId", "==", resume.id)
+        .limit(1)
+        .get();
+
+      if (statsSnapshot.empty) {
+        await db.collection("statistics").add({
+          resumeId: resume.id,
+          views: 0,
+          downloads: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      } else {
+        const statsDoc = statsSnapshot.docs[0];
+        const currentDownloads = statsDoc.data().downloads || 0;
+        await statsDoc.ref.update({
+          downloads: currentDownloads + 1,
+          updatedAt: new Date(),
+        });
+      }
     }
 
     return url;
