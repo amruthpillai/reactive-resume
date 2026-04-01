@@ -13,7 +13,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-svh w-svw flex-col items-center justify-center overflow-hidden border-b py-24"
+      className="relative flex min-h-svh w-full flex-col items-center justify-center overflow-hidden border-b py-24"
     >
       <Spotlight />
 
