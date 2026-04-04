@@ -168,6 +168,8 @@ if (!isVitest) {
 const config = defineConfig({
   plugins,
 
+  run: { cache: true },
+
   staged: {
     "*": "vp check --fix",
   },

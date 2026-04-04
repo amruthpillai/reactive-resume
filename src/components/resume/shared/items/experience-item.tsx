@@ -1,6 +1,7 @@
 import type { SectionItem } from "@/schema/resume/data";
 
 import { TiptapContent } from "@/components/input/rich-input";
+import { filterFieldValues } from "@/utils/field";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
 
@@ -13,36 +14,50 @@ type ExperienceItemProps = SectionItem<"experience"> & {
 
 export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
   const hasRoles = Array.isArray(item.roles) && item.roles.length > 0;
+  const headerValues = {
+    company: item.company,
+    location: item.location,
+    position: item.position,
+    period: item.period,
+  };
+  const headerFields = filterFieldValues(
+    headerValues,
+    {
+      key: "company",
+      content: (
+        <LinkedTitle
+          title={item.company}
+          website={item.website}
+          showLinkInTitle={item.options?.showLinkInTitle}
+          className="section-item-title experience-item-title"
+        />
+      ),
+    },
+    {
+      key: "location",
+      content: <span className="section-item-metadata experience-item-location">{item.location}</span>,
+    },
+    {
+      key: "position",
+      content: <span className="section-item-metadata experience-item-position">{item.position}</span>,
+    },
+    {
+      key: "period",
+      content: <span className="section-item-metadata experience-item-period">{item.period}</span>,
+    },
+  );
 
   return (
     <div className={cn("experience-item", className)}>
       {/* Header */}
       <div className="section-item-header experience-item-header">
-        {/* Row 1: Company + Location */}
-        <div className="flex items-start justify-between gap-x-2">
-          <LinkedTitle
-            title={item.company}
-            website={item.website}
-            showLinkInTitle={item.options?.showLinkInTitle}
-            className="section-item-title experience-item-title"
-          />
-          <span className="section-item-metadata experience-item-location shrink-0 text-end">{item.location}</span>
+        <div className="grid grid-cols-2 items-start gap-x-2">
+          {headerFields.map((field, index) => (
+            <div key={field.key} className={cn(index % 2 === 1 && "shrink-0 justify-self-end text-end")}>
+              {field.content}
+            </div>
+          ))}
         </div>
-
-        {/* Row 2: Position + Period */}
-        {(!hasRoles || item.position) && (
-          <div className="flex items-start justify-between gap-x-2">
-            <span className="section-item-metadata experience-item-position">{item.position}</span>
-            <span className="section-item-metadata experience-item-period shrink-0 text-end">{item.period}</span>
-          </div>
-        )}
-
-        {/* Overall period when hasRoles and no summary position */}
-        {hasRoles && !item.position && item.period && (
-          <div className="flex items-start justify-end gap-x-2">
-            <span className="section-item-metadata experience-item-period shrink-0 text-end">{item.period}</span>
-          </div>
-        )}
       </div>
 
       {/* Role Progression */}
@@ -52,7 +67,7 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
             <div key={role.id} className="experience-item-role">
               <div className="flex items-start justify-between gap-x-2">
                 <span className="section-item-metadata experience-item-role-position">{role.position}</span>
-                <span className="section-item-metadata experience-item-role-period shrink-0 text-end">
+                <span className="section-item-metadata experience-item-role-period shrink-0 justify-self-end text-end">
                   {role.period}
                 </span>
               </div>

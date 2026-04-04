@@ -164,11 +164,11 @@ function EducationForm() {
 
       <FormField
         control={form.control}
-        name="degree"
+        name="area"
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              <Trans>Degree</Trans>
+              <Trans>Area of Study</Trans>
             </FormLabel>
             <FormControl render={<Input {...field} />} />
             <FormMessage />
@@ -178,11 +178,11 @@ function EducationForm() {
 
       <FormField
         control={form.control}
-        name="area"
+        name="degree"
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              <Trans>Area of Study</Trans>
+              <Trans>Degree</Trans>
             </FormLabel>
             <FormControl render={<Input {...field} />} />
             <FormMessage />

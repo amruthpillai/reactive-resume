@@ -1,6 +1,7 @@
 import type { SectionItem } from "@/schema/resume/data";
 
 import { TiptapContent } from "@/components/input/rich-input";
+import { filterFieldValues } from "@/utils/field";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
 
@@ -12,23 +13,39 @@ type ReferencesItemProps = SectionItem<"references"> & {
 };
 
 export function ReferencesItem({ className, ...item }: ReferencesItemProps) {
+  const headerValues = {
+    name: item.name,
+    position: item.position,
+  };
+  const headerFields = filterFieldValues(
+    headerValues,
+    {
+      key: "name",
+      content: (
+        <LinkedTitle
+          title={item.name}
+          website={item.website}
+          showLinkInTitle={item.options?.showLinkInTitle}
+          className="section-item-title references-item-name"
+        />
+      ),
+    },
+    {
+      key: "position",
+      content: <span className="section-item-metadata references-item-position">{item.position}</span>,
+    },
+  );
+
   return (
     <div className={cn("references-item", className)}>
       {/* Header */}
       <div className="section-item-header references-item-header">
-        {/* Row 1 */}
-        <div className="flex items-start justify-between gap-x-2">
-          <LinkedTitle
-            title={item.name}
-            website={item.website}
-            showLinkInTitle={item.options?.showLinkInTitle}
-            className="section-item-title references-item-name"
-          />
-        </div>
-
-        {/* Row 2 */}
-        <div className="flex items-start justify-between gap-x-2">
-          <span className="section-item-metadata references-item-position">{item.position}</span>
+        <div className="grid grid-cols-2 items-start gap-x-2">
+          {headerFields.map((field, index) => (
+            <div key={field.key} className={cn(index % 2 === 1 && "shrink-0 justify-self-end text-end")}>
+              {field.content}
+            </div>
+          ))}
         </div>
       </div>
 

@@ -264,20 +264,6 @@ function ExperienceForm() {
 
       <FormField
         control={form.control}
-        name="position"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>{hasRoles ? <Trans>Overall Title (optional)</Trans> : <Trans>Position</Trans>}</FormLabel>
-            <FormControl
-              render={<Input {...field} placeholder={hasRoles ? "e.g. Software Engineer → Senior Engineer" : ""} />}
-            />
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
         name="location"
         render={({ field }) => (
           <FormItem>
@@ -292,11 +278,27 @@ function ExperienceForm() {
 
       <FormField
         control={form.control}
+        name="position"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              <Trans>Position</Trans>
+            </FormLabel>
+            <FormControl render={<Input {...field} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
         name="period"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{hasRoles ? <Trans>Overall Period</Trans> : <Trans>Period</Trans>}</FormLabel>
-            <FormControl render={<Input {...field} placeholder={hasRoles ? "e.g. 2018 – Present" : ""} />} />
+            <FormLabel>
+              <Trans>Period</Trans>
+            </FormLabel>
+            <FormControl render={<Input {...field} />} />
             <FormMessage />
           </FormItem>
         )}
