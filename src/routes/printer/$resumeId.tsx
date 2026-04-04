@@ -35,6 +35,9 @@ export const Route = createFileRoute("/printer/$resumeId")({
 
     return { resume };
   },
+  head: ({ loaderData }) => ({
+    meta: [{ title: loaderData ? `${loaderData.resume.data.basics.name} - Resume` : "Resume" }],
+  }),
 });
 
 function RouteComponent() {
