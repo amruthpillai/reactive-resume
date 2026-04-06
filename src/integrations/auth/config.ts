@@ -10,7 +10,7 @@ import { admin, jwt, openAPI, type GenericOAuthConfig } from "better-auth/plugin
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, or, sql } from "drizzle-orm";
 
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
@@ -41,9 +41,13 @@ export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
 function isCustomOAuthProviderEnabled() {
   const hasDiscovery = Boolean(env.OAUTH_DISCOVERY_URL);
   const hasManual =
-    Boolean(env.OAUTH_AUTHORIZATION_URL) && Boolean(env.OAUTH_TOKEN_URL) && Boolean(env.OAUTH_USER_INFO_URL);
+    Boolean(env.OAUTH_AUTHORIZATION_URL) &&
+    Boolean(env.OAUTH_TOKEN_URL) &&
+    Boolean(env.OAUTH_USER_INFO_URL);
 
-  return Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual);
+  return (
+    Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual)
+  );
 }
 
 function getTrustedOrigins(): string[] {
@@ -62,6 +66,26 @@ function getTrustedOrigins(): string[] {
   }
 
   return Array.from(trustedOrigins);
+}
+
+async function findExistingUserByEmail(email: string) {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const [existingUser] = await db
+    .select({
+      id: schema.user.id,
+      email: schema.user.email,
+      emailVerified: schema.user.emailVerified,
+      username: schema.user.username,
+      displayUsername: schema.user.displayUsername,
+      name: schema.user.name,
+      image: schema.user.image,
+    })
+    .from(schema.user)
+    .where(sql`lower(${schema.user.email}) = ${normalizedEmail}`)
+    .limit(1);
+
+  return existingUser;
 }
 
 const getAuthConfig = () => {
@@ -87,10 +111,22 @@ const getAuthConfig = () => {
           );
         }
 
-        const email = profile.email;
+        const email = profile.email.trim().toLowerCase();
+        const existingUser = await findExistingUserByEmail(email);
         const name = profile.name ?? profile.preferred_username ?? email.split("@")[0];
         const username = profile.preferred_username ?? email.split("@")[0];
         const image = profile.image ?? profile.picture ?? profile.avatar_url;
+
+        if (existingUser) {
+          return {
+            name: existingUser.name,
+            email: existingUser.email,
+            image: image ?? existingUser.image,
+            username: existingUser.username,
+            displayUsername: existingUser.displayUsername,
+            emailVerified: existingUser.emailVerified,
+          };
+        }
 
         return {
           name,
@@ -185,14 +221,36 @@ const getAuthConfig = () => {
         clientId: env.GOOGLE_CLIENT_ID!,
         clientSecret: env.GOOGLE_CLIENT_SECRET!,
         mapProfileToUser: async (profile) => {
-          const name = profile.name ?? profile.email.split("@")[0];
+          if (!profile.email) {
+            throw new BetterAuthError(
+              "Google provider did not return an email address. This is required for user creation.",
+              {
+                cause: "EMAIL_REQUIRED",
+              },
+            );
+          }
+
+          const email = profile.email.trim().toLowerCase();
+          const existingUser = await findExistingUserByEmail(email);
+          const name = profile.name ?? email.split("@")[0];
+
+          if (existingUser) {
+            return {
+              name: existingUser.name,
+              email: existingUser.email,
+              image: profile.picture ?? existingUser.image,
+              username: existingUser.username,
+              displayUsername: existingUser.displayUsername,
+              emailVerified: existingUser.emailVerified,
+            };
+          }
 
           return {
             name,
-            email: profile.email,
+            email,
             image: profile.picture,
-            username: profile.email.split("@")[0],
-            displayUsername: profile.email.split("@")[0],
+            username: email.split("@")[0],
+            displayUsername: email.split("@")[0],
             emailVerified: true,
           };
         },
@@ -221,7 +279,10 @@ const getAuthConfig = () => {
             .where(
               and(
                 eq(schema.account.providerId, "github"),
-                or(eq(schema.user.username, normalizedLogin), eq(schema.user.displayUsername, login)),
+                or(
+                  eq(schema.user.username, normalizedLogin),
+                  eq(schema.user.displayUsername, login),
+                ),
               ),
             )
             .limit(1);
@@ -262,12 +323,25 @@ const getAuthConfig = () => {
             );
           }
 
-          const username = profile.email.split("@")[0];
+          const email = profile.email.trim().toLowerCase();
+          const existingUser = await findExistingUserByEmail(email);
+          const username = email.split("@")[0];
           const name = profile.name ?? username;
+
+          if (existingUser) {
+            return {
+              name: existingUser.name,
+              email: existingUser.email,
+              image: profile.picture ?? existingUser.image,
+              username: existingUser.username,
+              displayUsername: existingUser.displayUsername,
+              emailVerified: existingUser.emailVerified,
+            };
+          }
 
           return {
             name,
-            email: profile.email,
+            email,
             image: profile.picture,
             username,
             displayUsername: username,
