@@ -176,7 +176,7 @@ const config = defineConfig({
 
   fmt: {
     printWidth: 120,
-    ignorePatterns: ["routeTree.gen.ts", "docs/changelog/index.mdx"],
+    ignorePatterns: ["webfontlist.json", "routeTree.gen.ts", "docs/changelog/index.mdx"],
     sortPackageJson: {
       sortScripts: true,
     },
@@ -199,7 +199,7 @@ const config = defineConfig({
 
   lint: {
     env: { builtin: true },
-    ignorePatterns: ["routeTree.gen.ts"],
+    ignorePatterns: ["webfontlist.json", "routeTree.gen.ts"],
     options: { typeAware: true, typeCheck: true },
     settings: {
       react: {
