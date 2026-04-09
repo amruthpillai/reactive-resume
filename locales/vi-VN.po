@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -290,6 +290,14 @@ msgstr "Đã xảy ra lỗi khi tải trang."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Đã xảy ra lỗi không xác định khi nhập sơ yếu lý lịch của bạn."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Phân tích sơ yếu lý lịch"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Đang phân tích..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Khám phá tài liệu API để tìm hiểu cách tích hợp Reactive 
 msgid "Export"
 msgstr "Xuất"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Không thể phân tích sơ yếu lý lịch."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Không thể sao chép sơ yếu lý lịch"
@@ -1325,6 +1337,14 @@ msgstr "Tạo tên ngẫu nhiên"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Tiếng Đức"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Nhận đánh giá về CV của bạn kèm theo điểm tổng thể, những điểm mạnh và các đề xuất cụ thể."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Nhận bản đánh giá chi tiết về CV của bạn nhờ công nghệ AI, bao gồm điểm tổng thể, những điểm mạnh chính và các gợi ý thiết thực. Để kích hoạt tính năng này, vui lòng cập nhật cài đặt AI của bạn."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Ngôn ngữ"
 msgid "Last 3 days"
 msgstr "3 ngày qua"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Lần phân tích gần nhất vào ngày {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Bảo trì liên tục"
 msgid "Open"
 msgstr "Mở"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Mở Cài đặt AI"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Mở ứng dụng Email"
@@ -1911,6 +1940,10 @@ msgstr "Danh sách có thứ tự"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Tổ chức"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Điểm tổng thể"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Đang đặt lại mật khẩu..."
 msgid "Resources"
 msgstr "Tài nguyên"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Phân tích sơ yếu lý lịch"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Việc phân tích sơ yếu lý lịch đã hoàn tất."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Rumani"
 msgid "Rotation"
 msgstr "Xoay"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Hãy thực hiện phân tích đầu tiên để nhận được bảng điểm, điểm mạnh và các đề xuất được sắp xếp theo mức độ ưu tiên."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Nga"
@@ -2304,6 +2349,10 @@ msgstr "Quét mã QR bên dưới bằng ứng dụng xác thực bạn ưa thí
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Trường"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Bảng điểm"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Thống kê"
 msgid "Stay"
 msgstr "Ở lại"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Điểm mạnh"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Gạch ngang"
@@ -2578,6 +2631,10 @@ msgstr "Gạch ngang"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Gợi ý"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
