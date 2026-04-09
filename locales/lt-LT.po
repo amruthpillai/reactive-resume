@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:10\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -290,6 +290,14 @@ msgstr "Įkeliant puslapį įvyko klaida."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Importuojant jūsų gyvenimo aprašymą įvyko nežinoma klaida."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Analizuoti CV"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Analizuojant..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Peržiūrėkite API dokumentaciją, kad sužinotumėte, kaip integruoti 
 msgid "Export"
 msgstr "Eksportuoti"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Nepavyko išanalizuoti atnaujinimo."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Nepavyko dubliuoti gyvenimo aprašymo"
@@ -1325,6 +1337,14 @@ msgstr "Sugeneruoti atsitiktinį pavadinimą"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Vokiečių"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Gaukite savo gyvenimo aprašymo apžvalgą su bendru įvertinimu, stipriosiomis pusėmis ir naudingais pasiūlymais."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Gaukite išsamią dirbtinio intelekto valdomą savo gyvenimo aprašymo peržiūrą su bendru įvertinimu, pagrindiniais privalumais ir praktiniais pasiūlymais. Jei norite įjungti šią funkciją, atnaujinkite dirbtinio intelekto nustatymus."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Kalbos"
 msgid "Last 3 days"
 msgstr "Paskutinės 3 dienos"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Paskutinį kartą analizuota {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Nuolatinė priežiūra"
 msgid "Open"
 msgstr "Atidaryti"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Atidaryti AI nustatymus"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Atidaryti el. pašto programą"
@@ -1911,6 +1940,10 @@ msgstr "Sunumeruotas sąrašas"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Organizacija"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Bendras rezultatas"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Atstatomas slaptažodis..."
 msgid "Resources"
 msgstr "Ištekliai"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Gyvenimo aprašymo analizė"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Baigta gyvenimo aprašymo analizė."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Rumunų"
 msgid "Rotation"
 msgstr "Sukimas"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Atlikite pirmąją analizę, kad gautumėte rezultatų lentelę, stipriąsias puses ir prioritetinius pasiūlymus."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Rusų"
@@ -2304,6 +2349,10 @@ msgstr "Nuskenuokite žemiau esantį QR kodą pasirinkta autentifikavimo program
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Mokykla"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Rezultatų kortelė"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Statistika"
 msgid "Stay"
 msgstr "Likti"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Stipriosios pusės"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Perbraukti"
@@ -2578,6 +2631,10 @@ msgstr "Perbraukti"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreditas"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Pasiūlymai"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
