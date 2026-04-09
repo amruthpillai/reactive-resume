@@ -5,11 +5,13 @@ import { OllamaError } from "ai-sdk-ollama";
 import z, { flattenError, ZodError } from "zod";
 
 import { jobResultSchema } from "@/schema/jobs";
+import { resumeAnalysisSchema, storedResumeAnalysisSchema } from "@/schema/resume/analysis";
 import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { tailorOutputSchema } from "@/schema/tailor";
 
 import { protectedProcedure } from "../context";
 import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema } from "../services/ai";
+import { resumeService } from "../services/resume";
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -218,6 +220,75 @@ export const aiRouter = {
         if (error instanceof ZodError) {
           throw new ORPCError("BAD_REQUEST", {
             message: "Invalid resume data structure",
+            cause: flattenError(error),
+          });
+        }
+
+        throw error;
+      }
+    }),
+
+  analyzeResume: protectedProcedure
+    .route({
+      method: "POST",
+      path: "/ai/analyze-resume",
+      tags: ["AI"],
+      operationId: "analyzeResume",
+      summary: "Analyze resume and persist latest analysis",
+      description:
+        "Uses AI to analyze the current resume and returns a structured analysis with scorecard, strengths, and improvement suggestions. The latest analysis is persisted and can be fetched later. Requires authentication and AI credentials.",
+      successDescription: "Structured resume analysis returned and persisted successfully.",
+    })
+    .input(
+      z.object({
+        ...aiCredentialsSchema.shape,
+        resumeId: z.string(),
+        resumeData: resumeDataSchema,
+      }),
+    )
+    .output(storedResumeAnalysisSchema)
+    .errors({
+      BAD_GATEWAY: {
+        message: "The AI provider returned an error or is unreachable.",
+        status: 502,
+      },
+      BAD_REQUEST: {
+        message: "The AI returned an improperly formatted structure.",
+        status: 400,
+      },
+    })
+    .handler(async ({ context, input }) => {
+      try {
+        const analysis = resumeAnalysisSchema.parse(
+          await aiService.analyzeResume({
+            provider: input.provider,
+            model: input.model,
+            apiKey: input.apiKey,
+            baseURL: input.baseURL,
+            resumeData: input.resumeData,
+          }),
+        );
+
+        return await resumeService.analysis.upsert({
+          id: input.resumeId,
+          userId: context.user.id,
+          analysis: {
+            ...analysis,
+            updatedAt: new Date(),
+            modelMeta: {
+              provider: input.provider,
+              model: input.model,
+            },
+          },
+        });
+      } catch (error) {
+        if (error instanceof AISDKError || error instanceof OllamaError) {
+          throw new ORPCError("BAD_GATEWAY", { message: error.message });
+        }
+
+        if (error instanceof ZodError) {
+          throw new ORPCError("BAD_REQUEST", {
+            message: "Invalid resume analysis structure",
             cause: flattenError(error),
           });
         }

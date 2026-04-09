@@ -22,6 +22,7 @@ import z, { flattenError, ZodError } from "zod";
 import type { JobResult } from "@/schema/jobs";
 import type { ResumeData } from "@/schema/resume/data";
 
+import analyzeResumeSystemPromptTemplate from "@/integrations/ai/prompts/analyze-resume-system.md?raw";
 import chatSystemPromptTemplate from "@/integrations/ai/prompts/chat-system.md?raw";
 import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system.md?raw";
 import docxParserUserPrompt from "@/integrations/ai/prompts/docx-parser-user.md?raw";
@@ -33,6 +34,7 @@ import {
   patchResumeDescription,
   patchResumeInputSchema,
 } from "@/integrations/ai/tools/patch-resume";
+import { resumeAnalysisSchema, type ResumeAnalysis } from "@/schema/resume/analysis";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { type TailorOutput, tailorOutputSchema } from "@/schema/tailor";
 import { buildAiExtractionTemplate } from "@/utils/ai-template";
@@ -370,6 +372,38 @@ type TailorResumeInput = z.infer<typeof aiCredentialsSchema> & {
   job: JobResult;
 };
 
+type AnalyzeResumeInput = z.infer<typeof aiCredentialsSchema> & {
+  resumeData: ResumeData;
+};
+
+function buildAnalyzeResumeSystemPrompt(resumeData: ResumeData): string {
+  return analyzeResumeSystemPromptTemplate + `\n\n## Resume Data\n\n${JSON.stringify(resumeData, null, 2)}`;
+}
+
+async function analyzeResume(input: AnalyzeResumeInput): Promise<ResumeAnalysis> {
+  const model = getModel(input);
+  const systemPrompt = buildAnalyzeResumeSystemPrompt(input.resumeData);
+
+  const result = await generateText({
+    model,
+    output: Output.object({ schema: resumeAnalysisSchema }),
+    messages: [
+      { role: "system", content: systemPrompt },
+      {
+        role: "user",
+        content:
+          "Analyze this resume and return a structured report with scorecard, overall score, strengths, and actionable suggestions.",
+      },
+    ],
+  });
+
+  if (result.output == null) {
+    throw new Error("AI returned no structured analysis output.");
+  }
+
+  return resumeAnalysisSchema.parse(result.output);
+}
+
 async function tailorResume(input: TailorResumeInput): Promise<TailorOutput> {
   const model = getModel(input);
   const systemPrompt = buildTailorSystemPrompt(input.resumeData, input.job);
@@ -394,6 +428,7 @@ async function tailorResume(input: TailorResumeInput): Promise<TailorOutput> {
 }
 
 export const aiService = {
+  analyzeResume,
   chat,
   parseDocx,
   parsePdf,

@@ -10,6 +10,7 @@ import type { Locale } from "@/utils/locale";
 
 import { schema } from "@/integrations/drizzle";
 import { db } from "@/integrations/drizzle/client";
+import { type StoredResumeAnalysis } from "@/schema/resume/analysis";
 import { defaultResumeData } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
@@ -83,9 +84,47 @@ const statistics = {
   },
 };
 
+const analysis = {
+  getById: async (input: { id: string; userId: string }) => {
+    const [result] = await db
+      .select({ analysis: schema.resumeAnalysis.analysis })
+      .from(schema.resume)
+      .leftJoin(schema.resumeAnalysis, eq(schema.resumeAnalysis.resumeId, schema.resume.id))
+      .where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+    if (!result) throw new ORPCError("NOT_FOUND");
+    return result.analysis ?? null;
+  },
+
+  upsert: async (input: { id: string; userId: string; analysis: StoredResumeAnalysis }) => {
+    const [resume] = await db
+      .select({ id: schema.resume.id })
+      .from(schema.resume)
+      .where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+    if (!resume) throw new ORPCError("NOT_FOUND");
+
+    await db
+      .insert(schema.resumeAnalysis)
+      .values({
+        resumeId: input.id,
+        analysis: input.analysis,
+      })
+      .onConflictDoUpdate({
+        target: [schema.resumeAnalysis.resumeId],
+        set: {
+          analysis: input.analysis,
+        },
+      });
+
+    return input.analysis;
+  },
+};
+
 export const resumeService = {
   tags,
   statistics,
+  analysis,
 
   list: async (input: { userId: string; tags: string[]; sort: "lastUpdatedAt" | "createdAt" | "name" }) => {
     return await db
