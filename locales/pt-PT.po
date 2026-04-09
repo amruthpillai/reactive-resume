@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:10\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -290,6 +290,14 @@ msgstr "Ocorreu um erro ao carregar a página."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Ocorreu um erro desconhecido ao importar o seu currículo."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Analisar o currículo"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Analisar..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Explore a documentação da API para saber como integrar o Reactive Resu
 msgid "Export"
 msgstr "Exportar"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Falha na análise do currículo."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Falha ao duplicar o currículo"
@@ -1325,6 +1337,14 @@ msgstr "Gerar um nome aleatório"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Alemão"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Obtenha uma análise do seu currículo com uma pontuação geral, pontos fortes e sugestões práticas."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Obtenha uma análise aprofundada do seu currículo com tecnologia de IA, com uma pontuação geral, pontos fortes e sugestões práticas. Para ativar esta funcionalidade, actualize as suas definições de IA."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Idiomas"
 msgid "Last 3 days"
 msgstr "Últimos 3 dias"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Última análise em {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Manutenção contínua"
 msgid "Open"
 msgstr "Abrir"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Abra as definições de IA"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Abrir cliente de email"
@@ -1911,6 +1940,10 @@ msgstr "Lista ordenada"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Organização"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Pontuação global"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "A repor a sua senha..."
 msgid "Resources"
 msgstr "Recursos"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Análise de currículos"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Análise do currículo concluída."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Romeno"
 msgid "Rotation"
 msgstr "Rotação"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Execute a sua primeira análise para obter um quadro de pontuação, pontos fortes e sugestões prioritárias."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Russo"
@@ -2304,6 +2349,10 @@ msgstr "Digitalize o código QR abaixo com a sua aplicação de autenticação p
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Escola"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Quadro de resultados"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Estatísticas"
 msgid "Stay"
 msgstr "Ficar"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Pontos fortes"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Rasurar"
@@ -2578,6 +2631,10 @@ msgstr "Rasurar"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Sugestões"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
