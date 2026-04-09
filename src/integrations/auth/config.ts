@@ -10,7 +10,7 @@ import { admin, jwt, openAPI, type GenericOAuthConfig } from "better-auth/plugin
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
-import { and, eq, or, sql } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
@@ -18,6 +18,7 @@ import { generateId, toUsername } from "@/utils/string";
 
 import { schema } from "../drizzle";
 import { db } from "../drizzle/client";
+import { lower } from "../drizzle/helpers";
 import { sendEmail } from "../email/service";
 
 export const authBaseUrl = process.env.BETTER_AUTH_URL ?? env.APP_URL;
@@ -28,12 +29,14 @@ function getOAuthAudiences(): string[] {
   return [base, `${base}/`, `${base}/mcp`, `${base}/mcp/`];
 }
 
+const OAUTH_AUDIENCES = getOAuthAudiences();
+
 export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
   return await verifyAccessToken(token, {
     jwksUrl: `${authBaseUrl}/api/auth/jwks`,
     verifyOptions: {
       issuer: `${authBaseUrl}/api/auth`,
-      audience: getOAuthAudiences(),
+      audience: OAUTH_AUDIENCES,
     },
   });
 }
@@ -41,13 +44,9 @@ export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
 function isCustomOAuthProviderEnabled() {
   const hasDiscovery = Boolean(env.OAUTH_DISCOVERY_URL);
   const hasManual =
-    Boolean(env.OAUTH_AUTHORIZATION_URL) &&
-    Boolean(env.OAUTH_TOKEN_URL) &&
-    Boolean(env.OAUTH_USER_INFO_URL);
+    Boolean(env.OAUTH_AUTHORIZATION_URL) && Boolean(env.OAUTH_TOKEN_URL) && Boolean(env.OAUTH_USER_INFO_URL);
 
-  return (
-    Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual)
-  );
+  return Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual);
 }
 
 function getTrustedOrigins(): string[] {
@@ -68,6 +67,8 @@ function getTrustedOrigins(): string[] {
   return Array.from(trustedOrigins);
 }
 
+const TRUSTED_ORIGINS = getTrustedOrigins();
+
 async function findExistingUserByEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -82,10 +83,121 @@ async function findExistingUserByEmail(email: string) {
       image: schema.user.image,
     })
     .from(schema.user)
-    .where(sql`lower(${schema.user.email}) = ${normalizedEmail}`)
+    .where(eq(lower(schema.user.email), normalizedEmail))
     .limit(1);
 
   return existingUser;
+}
+
+function getEmailLocalPart(email: string): string {
+  return email.split("@", 1)[0] ?? "";
+}
+
+function appendUsernameSuffix(base: string, suffix: string): string {
+  const maxBaseLength = 64 - suffix.length;
+  return `${base.slice(0, maxBaseLength)}${suffix}`;
+}
+
+async function isUsernameTaken(candidate: string): Promise<boolean> {
+  const normalizedCandidate = candidate.trim().toLowerCase();
+
+  const [existingUser] = await db
+    .select({ id: schema.user.id })
+    .from(schema.user)
+    .where(
+      or(
+        eq(lower(schema.user.username), normalizedCandidate),
+        eq(lower(schema.user.displayUsername), normalizedCandidate),
+      ),
+    )
+    .limit(1);
+
+  return Boolean(existingUser);
+}
+
+async function allocateUniqueUsername(email: string, preferredUsername?: string | null): Promise<string> {
+  const emailLocalPart = getEmailLocalPart(email);
+  const preferred = preferredUsername ? toUsername(preferredUsername) : "";
+  const normalizedEmailLocalPart = toUsername(emailLocalPart);
+  const baseUsername = preferred || normalizedEmailLocalPart || "user";
+
+  if (!(await isUsernameTaken(baseUsername))) return baseUsername;
+
+  for (let index = 1; index <= 999; index += 1) {
+    const candidate = appendUsernameSuffix(baseUsername, `-${index}`);
+    if (await isUsernameTaken(candidate)) continue;
+    return candidate;
+  }
+
+  return appendUsernameSuffix(baseUsername, `-${generateId().slice(0, 8).toLowerCase()}`);
+}
+
+interface OAuthProfile {
+  email?: string | null;
+  name?: string | null;
+  picture?: string | null;
+  image?: string | null;
+  avatar_url?: string | null;
+  login?: string | null;
+  preferred_username?: string | null;
+}
+
+interface OAuthMapperContext {
+  email: string;
+  emailLocalPart: string;
+}
+
+interface OAuthMapperOptions<TProfile extends OAuthProfile> {
+  providerName: string;
+  getPreferredUsername?: (profile: TProfile, context: OAuthMapperContext) => string | undefined | null;
+  getName?: (profile: TProfile, context: OAuthMapperContext) => string | undefined | null;
+  getImage?: (profile: TProfile) => string | undefined | null;
+}
+
+function createProfileMapper<TProfile extends OAuthProfile>({
+  providerName,
+  getPreferredUsername,
+  getName,
+  getImage,
+}: OAuthMapperOptions<TProfile>) {
+  return async (profile: TProfile) => {
+    if (!profile.email) {
+      throw new BetterAuthError(
+        `${providerName} provider did not return an email address. This is required for user creation.`,
+        { cause: "EMAIL_REQUIRED" },
+      );
+    }
+
+    const email = profile.email.trim().toLowerCase();
+    const emailLocalPart = getEmailLocalPart(email);
+    const context = { email, emailLocalPart };
+    const existingUser = await findExistingUserByEmail(email);
+    const image = getImage?.(profile) ?? undefined;
+
+    if (existingUser) {
+      return {
+        name: existingUser.name,
+        email: existingUser.email,
+        image: image ?? existingUser.image,
+        username: existingUser.username,
+        displayUsername: existingUser.displayUsername,
+        emailVerified: existingUser.emailVerified,
+      };
+    }
+
+    const preferredUsername = getPreferredUsername?.(profile, context);
+    const username = await allocateUniqueUsername(email, preferredUsername);
+    const mappedName = getName?.(profile, context)?.trim();
+
+    return {
+      name: mappedName || username || emailLocalPart,
+      email,
+      image,
+      username,
+      displayUsername: username,
+      emailVerified: true,
+    };
+  };
 }
 
 const getAuthConfig = () => {
@@ -103,40 +215,12 @@ const getAuthConfig = () => {
       userInfoUrl: env.OAUTH_USER_INFO_URL,
       scopes: env.OAUTH_SCOPES,
       redirectURI: `${env.APP_URL}/api/auth/oauth2/callback/custom`,
-      mapProfileToUser: async (profile) => {
-        if (!profile.email) {
-          throw new BetterAuthError(
-            "OAuth Provider did not return an email address. This is required for user creation.",
-            { cause: "EMAIL_REQUIRED" },
-          );
-        }
-
-        const email = profile.email.trim().toLowerCase();
-        const existingUser = await findExistingUserByEmail(email);
-        const name = profile.name ?? profile.preferred_username ?? email.split("@")[0];
-        const username = profile.preferred_username ?? email.split("@")[0];
-        const image = profile.image ?? profile.picture ?? profile.avatar_url;
-
-        if (existingUser) {
-          return {
-            name: existingUser.name,
-            email: existingUser.email,
-            image: image ?? existingUser.image,
-            username: existingUser.username,
-            displayUsername: existingUser.displayUsername,
-            emailVerified: existingUser.emailVerified,
-          };
-        }
-
-        return {
-          name,
-          email,
-          image,
-          username,
-          displayUsername: username,
-          emailVerified: true,
-        };
-      },
+      mapProfileToUser: createProfileMapper({
+        providerName: "OAuth Provider",
+        getPreferredUsername: (profile, context) => profile.preferred_username ?? context.emailLocalPart,
+        getName: (profile, context) => profile.name ?? profile.preferred_username ?? context.emailLocalPart,
+        getImage: (profile) => profile.image ?? profile.picture ?? profile.avatar_url,
+      }),
     } satisfies GenericOAuthConfig);
   }
 
@@ -148,7 +232,7 @@ const getAuthConfig = () => {
     database: drizzleAdapter(db, { schema, provider: "pg" }),
 
     telemetry: { enabled: false },
-    trustedOrigins: getTrustedOrigins(),
+    trustedOrigins: TRUSTED_ORIGINS,
 
     advanced: {
       database: { generateId },
@@ -220,40 +304,11 @@ const getAuthConfig = () => {
         disableSignUp: env.FLAG_DISABLE_SIGNUPS,
         clientId: env.GOOGLE_CLIENT_ID!,
         clientSecret: env.GOOGLE_CLIENT_SECRET!,
-        mapProfileToUser: async (profile) => {
-          if (!profile.email) {
-            throw new BetterAuthError(
-              "Google provider did not return an email address. This is required for user creation.",
-              {
-                cause: "EMAIL_REQUIRED",
-              },
-            );
-          }
-
-          const email = profile.email.trim().toLowerCase();
-          const existingUser = await findExistingUserByEmail(email);
-          const name = profile.name ?? email.split("@")[0];
-
-          if (existingUser) {
-            return {
-              name: existingUser.name,
-              email: existingUser.email,
-              image: profile.picture ?? existingUser.image,
-              username: existingUser.username,
-              displayUsername: existingUser.displayUsername,
-              emailVerified: existingUser.emailVerified,
-            };
-          }
-
-          return {
-            name,
-            email,
-            image: profile.picture,
-            username: email.split("@")[0],
-            displayUsername: email.split("@")[0],
-            emailVerified: true,
-          };
-        },
+        mapProfileToUser: createProfileMapper({
+          providerName: "Google",
+          getName: (profile, context) => profile.name ?? context.emailLocalPart,
+          getImage: (profile) => profile.picture,
+        }),
       },
 
       github: {
@@ -261,53 +316,12 @@ const getAuthConfig = () => {
         disableSignUp: env.FLAG_DISABLE_SIGNUPS,
         clientId: env.GITHUB_CLIENT_ID!,
         clientSecret: env.GITHUB_CLIENT_SECRET!,
-        mapProfileToUser: async (profile) => {
-          const name = profile.name ?? profile.login ?? String(profile.id);
-          const login = profile.login ?? String(profile.id);
-          const normalizedLogin = toUsername(login);
-
-          const [legacyAccount] = await db
-            .select({
-              accountId: schema.account.accountId,
-              email: schema.user.email,
-              emailVerified: schema.user.emailVerified,
-              username: schema.user.username,
-              displayUsername: schema.user.displayUsername,
-            })
-            .from(schema.account)
-            .innerJoin(schema.user, eq(schema.account.userId, schema.user.id))
-            .where(
-              and(
-                eq(schema.account.providerId, "github"),
-                or(
-                  eq(schema.user.username, normalizedLogin),
-                  eq(schema.user.displayUsername, login),
-                ),
-              ),
-            )
-            .limit(1);
-
-          if (legacyAccount) {
-            return {
-              id: legacyAccount.accountId,
-              name,
-              email: legacyAccount.email,
-              image: profile.avatar_url,
-              username: legacyAccount.username,
-              displayUsername: legacyAccount.displayUsername,
-              emailVerified: legacyAccount.emailVerified,
-            };
-          }
-
-          return {
-            name,
-            email: profile.email,
-            image: profile.avatar_url,
-            username: normalizedLogin,
-            displayUsername: login,
-            emailVerified: true,
-          };
-        },
+        mapProfileToUser: createProfileMapper({
+          providerName: "GitHub",
+          getPreferredUsername: (profile, context) => profile.login ?? context.emailLocalPart,
+          getName: (profile, context) => profile.name ?? profile.login ?? context.emailLocalPart,
+          getImage: (profile) => profile.avatar_url,
+        }),
       },
 
       linkedin: {
@@ -315,39 +329,11 @@ const getAuthConfig = () => {
         disableSignUp: env.FLAG_DISABLE_SIGNUPS,
         clientId: env.LINKEDIN_CLIENT_ID!,
         clientSecret: env.LINKEDIN_CLIENT_SECRET!,
-        mapProfileToUser: async (profile) => {
-          if (!profile.email) {
-            throw new BetterAuthError(
-              "LinkedIn provider did not return an email address. This is required for user creation.",
-              { cause: "EMAIL_REQUIRED" },
-            );
-          }
-
-          const email = profile.email.trim().toLowerCase();
-          const existingUser = await findExistingUserByEmail(email);
-          const username = email.split("@")[0];
-          const name = profile.name ?? username;
-
-          if (existingUser) {
-            return {
-              name: existingUser.name,
-              email: existingUser.email,
-              image: profile.picture ?? existingUser.image,
-              username: existingUser.username,
-              displayUsername: existingUser.displayUsername,
-              emailVerified: existingUser.emailVerified,
-            };
-          }
-
-          return {
-            name,
-            email,
-            image: profile.picture,
-            username,
-            displayUsername: username,
-            emailVerified: true,
-          };
-        },
+        mapProfileToUser: createProfileMapper({
+          providerName: "LinkedIn",
+          getName: (profile, context) => profile.name ?? context.emailLocalPart,
+          getImage: (profile) => profile.picture,
+        }),
       },
     },
 
@@ -362,7 +348,7 @@ const getAuthConfig = () => {
       oauthProvider({
         loginPage: "/auth/oauth",
         consentPage: "/auth/oauth",
-        validAudiences: getOAuthAudiences(),
+        validAudiences: OAUTH_AUDIENCES,
         allowDynamicClientRegistration: true,
         allowUnauthenticatedClientRegistration: true,
         silenceWarnings: { oauthAuthServerConfig: true },

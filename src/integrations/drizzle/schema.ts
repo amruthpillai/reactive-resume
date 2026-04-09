@@ -4,6 +4,7 @@ import * as pg from "drizzle-orm/pg-core";
 import { type StoredResumeAnalysis } from "../../schema/resume/analysis";
 import { defaultResumeData, type ResumeData } from "../../schema/resume/data";
 import { generateId } from "../../utils/string";
+import { lower } from "./helpers";
 
 export const user = pg.pgTable(
   "user",
@@ -32,7 +33,7 @@ export const user = pg.pgTable(
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date()),
   },
-  (t) => [pg.index().on(t.createdAt.asc())],
+  (t) => [pg.index().on(t.createdAt.asc()), pg.uniqueIndex("user_email_lower_unique_idx").on(lower(t.email))],
 );
 
 export const session = pg.pgTable(
