@@ -61,7 +61,9 @@ export const resumeDto = {
       .pick({ name: true, slug: true, tags: true, data: true, isPublic: true })
       .partial()
       .extend({ id: z.string() }),
-    output: resumeSchema.omit({ password: true, userId: true, createdAt: true, updatedAt: true }),
+    output: resumeSchema
+      .omit({ password: true, userId: true, createdAt: true, updatedAt: true })
+      .extend({ hasPassword: z.boolean() }),
   },
 
   setLocked: {

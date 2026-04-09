@@ -59,6 +59,27 @@ async function getUserFromApiKey(apiKey: string): Promise<User | null> {
   }
 }
 
+/**
+ * Resolve the authenticated user from the same headers oRPC uses (`x-api-key`, `Authorization: Bearer`, or session cookies).
+ * For callers outside oRPC handlers (e.g. MCP tools) where `context.user` is not in scope.
+ */
+export async function resolveUserFromRequestHeaders(headers: Headers): Promise<User | null> {
+  // Try API key authentication first
+  const apiKey = headers.get("x-api-key");
+  if (apiKey) {
+    const user = await getUserFromApiKey(apiKey);
+    if (user) return user;
+  } else {
+    // Fall back to Bearer token authentication
+    const user = await getUserFromBearerToken(headers);
+    if (user) return user;
+  }
+
+  // Finally, try session authentication (cookies)
+  const user = await getUserFromHeaders(headers);
+  return user ?? null;
+}
+
 const base = os.$context<ORPCContext>();
 
 export const publicProcedure = base.use(async ({ context, next }) => {

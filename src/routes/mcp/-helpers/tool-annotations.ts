@@ -12,13 +12,31 @@ export const TOOL_ANNOTATIONS: Record<McpRegisteredToolName, ToolAnnotations> = 
     idempotentHint: true,
     openWorldHint: false,
   },
+  [MCP_TOOL_NAME.listResumeTags]: {
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   [MCP_TOOL_NAME.getResume]: {
     readOnlyHint: true,
     destructiveHint: false,
     idempotentHint: true,
     openWorldHint: false,
   },
+  [MCP_TOOL_NAME.getResumeAnalysis]: {
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   [MCP_TOOL_NAME.createResume]: {
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
+  },
+  [MCP_TOOL_NAME.importResume]: {
     readOnlyHint: false,
     destructiveHint: false,
     idempotentHint: false,
@@ -31,6 +49,12 @@ export const TOOL_ANNOTATIONS: Record<McpRegisteredToolName, ToolAnnotations> = 
     openWorldHint: false,
   },
   [MCP_TOOL_NAME.patchResume]: {
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
+  },
+  [MCP_TOOL_NAME.updateResume]: {
     readOnlyHint: false,
     destructiveHint: false,
     idempotentHint: false,

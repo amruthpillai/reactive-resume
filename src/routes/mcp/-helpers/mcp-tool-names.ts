@@ -1,14 +1,20 @@
-/** Hierarchical MCP tool names (SEP-986-style namespacing). */
+/**
+ * Prefixed MCP tool names for multi-server clients.
+ */
 export const MCP_TOOL_NAME = {
-  listResumes: "reactive_resume.list_resumes",
-  getResume: "reactive_resume.get_resume",
-  createResume: "reactive_resume.create_resume",
-  duplicateResume: "reactive_resume.duplicate_resume",
-  patchResume: "reactive_resume.patch_resume",
-  deleteResume: "reactive_resume.delete_resume",
-  lockResume: "reactive_resume.lock_resume",
-  unlockResume: "reactive_resume.unlock_resume",
-  exportResumePdf: "reactive_resume.export_resume_pdf",
-  getResumeScreenshot: "reactive_resume.get_resume_screenshot",
-  getResumeStatistics: "reactive_resume.get_resume_statistics",
+  listResumes: "reactive_resume_list_resumes",
+  listResumeTags: "reactive_resume_list_resume_tags",
+  getResume: "reactive_resume_get_resume",
+  getResumeAnalysis: "reactive_resume_get_resume_analysis",
+  createResume: "reactive_resume_create_resume",
+  importResume: "reactive_resume_import_resume",
+  duplicateResume: "reactive_resume_duplicate_resume",
+  patchResume: "reactive_resume_patch_resume",
+  updateResume: "reactive_resume_update_resume",
+  deleteResume: "reactive_resume_delete_resume",
+  lockResume: "reactive_resume_lock_resume",
+  unlockResume: "reactive_resume_unlock_resume",
+  exportResumePdf: "reactive_resume_export_resume_pdf",
+  getResumeScreenshot: "reactive_resume_get_resume_screenshot",
+  getResumeStatistics: "reactive_resume_get_resume_statistics",
 } as const;

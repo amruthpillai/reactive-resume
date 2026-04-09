@@ -1,9 +1,13 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import z from "zod";
 
 import { client } from "@/integrations/orpc/client";
+import { resolveUserFromRequestHeaders } from "@/integrations/orpc/context";
+import { resumeDataSchema } from "@/schema/resume/data";
+import { env } from "@/utils/env";
 import { jsonPatchOperationSchema } from "@/utils/resume/patch";
 
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
@@ -53,6 +57,25 @@ function withErrorHandling<T>(label: string, handler: (params: T) => Promise<Cal
 
 function text(value: string): CallToolResult {
   return { content: [{ type: "text", text: value }] };
+}
+
+function buildResumeShareUrl(username: string, slug: string): string {
+  const base = env.APP_URL.replace(/\/$/, "");
+  return `${base}/${encodeURIComponent(username)}/${encodeURIComponent(slug)}`;
+}
+
+function resumeShareUrlNotes(input: { isPublic: boolean; hasPassword: boolean }): string {
+  const lines = [
+    "Anyone can open this link without signing in only when the resume is public (`isPublic: true`).",
+    input.isPublic
+      ? "This resume is currently public."
+      : "This resume is currently private; the URL is still your canonical share link if you make it public later.",
+  ];
+  if (input.hasPassword)
+    lines.push(
+      "Password protection is enabled in the web app; visitors may need that password before content is shown.",
+    );
+  return lines.join("\n");
 }
 
 // ── Shared Zod Fragments ────────────────────────────────────────
@@ -107,6 +130,27 @@ export function registerTools(server: McpServer) {
     ),
   );
 
+  // ── List Resume Tags ──────────────────────────────────────────
+  server.registerTool(
+    T.listResumeTags,
+    {
+      title: "List Resume Tags",
+      description: [
+        "Returns a sorted list of every distinct tag used across your resumes.",
+        "Useful for choosing tag filters when calling list tools or keeping naming consistent.",
+      ].join("\n"),
+      inputSchema: z.object({}),
+      annotations: TOOL_ANNOTATIONS[T.listResumeTags],
+    },
+    withErrorHandling("listing resume tags", async () => {
+      const tags = await client.resume.tags.list();
+
+      if (tags.length === 0) return text("No tags in use yet. Add tags when creating or updating a resume.");
+
+      return text(JSON.stringify(tags, null, 2));
+    }),
+  );
+
   // ── Get Resume ────────────────────────────────────────────────
   server.registerTool(
     T.getResume,
@@ -129,6 +173,28 @@ export function registerTools(server: McpServer) {
       const resume = await client.resume.getById({ id });
 
       return text(JSON.stringify(resume.data, null, 2));
+    }),
+  );
+
+  // ── Get Resume Analysis ───────────────────────────────────────
+  server.registerTool(
+    T.getResumeAnalysis,
+    {
+      title: "Get Resume Analysis",
+      description: [
+        "Returns the latest saved AI analysis for a resume (scorecard, strengths, suggestions), if any.",
+        "Analyses are created from the Reactive Resume web app AI flow, not from MCP.",
+        `Returns JSON or a short message if none exists. Use \`${T.listResumes}\` to find resume IDs.`,
+      ].join("\n"),
+      inputSchema: z.object({ id: resumeIdSchema }),
+      annotations: TOOL_ANNOTATIONS[T.getResumeAnalysis],
+    },
+    withErrorHandling("getting resume analysis", async ({ id }: { id: string }) => {
+      const analysis = await client.resume.analysis.getById({ id });
+
+      if (!analysis) return text("No saved analysis for this resume yet.");
+
+      return text(JSON.stringify(analysis, null, 2));
     }),
   );
 
@@ -180,6 +246,47 @@ export function registerTools(server: McpServer) {
         );
       },
     ),
+  );
+
+  // ── Import Resume ─────────────────────────────────────────────
+  server.registerTool(
+    T.importResume,
+    {
+      title: "Import Resume",
+      description: [
+        "Create a new resume from a full ResumeData JSON object (e.g. an exported file from Reactive Resume).",
+        "A random name and slug are assigned automatically, like the web importer.",
+        `For small edits to an existing resume, prefer \`${T.patchResume}\` instead of re-importing.`,
+        "Large payloads may exceed MCP client message limits — in that case, use the web UI or the HTTP API.",
+      ].join("\n"),
+      inputSchema: z.object({
+        data: z
+          .unknown()
+          .describe(
+            "Complete ResumeData JSON (same shape as `reactive_resume_get_resume` body or `resume://_meta/schema`).",
+          ),
+      }),
+      annotations: TOOL_ANNOTATIONS[T.importResume],
+    },
+    withErrorHandling("importing resume", async ({ data }: { data: unknown }) => {
+      const parsed = resumeDataSchema.safeParse(data);
+      if (!parsed.success)
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text: `Invalid ResumeData: ${parsed.error.message}\n\nHint: Ensure the JSON matches the schema at resume://_meta/schema`,
+            },
+          ],
+        };
+
+      const id = await client.resume.import({ data: parsed.data });
+
+      return text(
+        `Imported resume (ID: ${id}).\n\nNext steps: Use \`${T.getResume}\` to inspect metadata (name/slug were auto-generated), or \`${T.updateResume}\` / \`${T.patchResume}\` to adjust.`,
+      );
+    }),
   );
 
   // ── Duplicate Resume ──────────────────────────────────────────
@@ -259,6 +366,80 @@ export function registerTools(server: McpServer) {
     }),
   );
 
+  // ── Update Resume (metadata) ─────────────────────────────────
+  server.registerTool(
+    T.updateResume,
+    {
+      title: "Update Resume (metadata)",
+      description: [
+        "Update resume metadata only: display name, URL slug, tags, and/or public visibility.",
+        "Does not change section content — use JSON Patch via the patch tool for body edits.",
+        `Locked resumes cannot be updated; use \`${T.unlockResume}\` first.`,
+        "Password protection cannot be set or removed via MCP; use the web app for that.",
+        "",
+        "Always returns your canonical share URL (`{app}/{username}/{slug}`). Anonymous viewers can use it only when `isPublic` is true; password protection from the web app still applies.",
+      ].join("\n"),
+      inputSchema: z.object({
+        id: resumeIdSchema,
+        name: z.string().min(1).max(64).optional().describe("Display name for the resume."),
+        slug: z.string().min(1).max(64).optional().describe("URL-friendly slug; must stay unique among your resumes."),
+        tags: z.array(z.string()).optional().describe("Replace the resume's tags (omit to leave unchanged)."),
+        isPublic: z
+          .boolean()
+          .optional()
+          .describe(
+            "When true, anyone with the link can view the public resume (subject to password if set in the app).",
+          ),
+      }),
+      annotations: TOOL_ANNOTATIONS[T.updateResume],
+    },
+    withErrorHandling(
+      "updating resume",
+      async (params: { id: string; name?: string; slug?: string; tags?: string[]; isPublic?: boolean }) => {
+        const { id, name, slug, tags, isPublic } = params;
+        if (name === undefined && slug === undefined && tags === undefined && isPublic === undefined)
+          throw new Error("Provide at least one of: name, slug, tags, isPublic.");
+
+        const resume = await client.resume.update({
+          id,
+          ...(name !== undefined ? { name } : {}),
+          ...(slug !== undefined ? { slug } : {}),
+          ...(tags !== undefined ? { tags } : {}),
+          ...(isPublic !== undefined ? { isPublic } : {}),
+        });
+
+        const headers = getRequestHeaders();
+        const user = await resolveUserFromRequestHeaders(headers);
+        const username =
+          user && "username" in user && typeof (user as { username: unknown }).username === "string"
+            ? (user as { username: string }).username
+            : "";
+        const shareUrl =
+          username !== ""
+            ? buildResumeShareUrl(username, resume.slug)
+            : "(could not build share URL — missing username on account)";
+
+        const payload = {
+          id: resume.id,
+          name: resume.name,
+          slug: resume.slug,
+          tags: resume.tags,
+          isPublic: resume.isPublic,
+          hasPassword: resume.hasPassword,
+          shareUrl,
+        };
+
+        return text(
+          [
+            JSON.stringify(payload, null, 2),
+            "",
+            resumeShareUrlNotes({ isPublic: resume.isPublic, hasPassword: resume.hasPassword }),
+          ].join("\n"),
+        );
+      },
+    ),
+  );
+
   // ── Delete Resume ─────────────────────────────────────────────
   server.registerTool(
     T.deleteResume,
@@ -288,7 +469,7 @@ export function registerTools(server: McpServer) {
       description: [
         "Lock a resume to prevent any modifications.",
         "",
-        `When locked, a resume cannot be edited (${T.patchResume}), updated, or deleted.`,
+        `When locked, a resume cannot be edited (${T.patchResume}, ${T.updateResume}), or deleted.`,
         "Useful for protecting finalized resumes from accidental changes.",
         `Use \`${T.unlockResume}\` to re-enable editing.`,
       ].join("\n"),
