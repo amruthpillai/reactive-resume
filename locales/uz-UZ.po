@@ -8,7 +8,7 @@ msgstr ""
 "Language: uz\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Uzbek\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -290,6 +290,14 @@ msgstr "Sahifani yuklashda xatolik yuz berdi."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Tarjimai holingizni import qilishda noma'lum xatolik yuz berdi."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Rezyumeni tahlil qiling"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Tahlil qilinmoqda..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Reactive Resume'ni ilovalaringiz bilan birlashtirish uchun API hujjatlar
 msgid "Export"
 msgstr "Eksport"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Rezyumeni tahlil qilish muvaffaqiyatsiz bo'ldi."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Rezyumeni nusxalashda xato yuz berdi"
@@ -1325,6 +1337,14 @@ msgstr "Tasodifiy ism yaratish"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Nemischa"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Rezyumeingizni umumiy ball, kuchli tomonlar va amaliy tavsiyalar bilan ko'rib chiqishni oling."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Rezyumeingizni sun'iy intellekt yordamida chuqur tahlil qiling: umumiy ball, asosiy kuchli tomonlar va amaliy tavsiyalar bilan. Ushbu funksiyani yoqish uchun iltimos, sun'iy intellekt sozlamalaringizni yangilang."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Tillar"
 msgid "Last 3 days"
 msgstr "Oxirgi 3 kun"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Oxirgi marta tahlil qilingan {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Doimiy texnik xizmat ko‘rsatish"
 msgid "Open"
 msgstr "Ochiq"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "AI sozlamalarini oching"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Pochta dasturini ochish"
@@ -1911,6 +1940,10 @@ msgstr "Tartibli roʻyxat"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Tashkilot"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Umumiy ball"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Parolingiz tiklanmoqda..."
 msgid "Resources"
 msgstr "Resurslar"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Rezyume tahlili"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Rezyume tahlili yakunlandi."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Rumin tili"
 msgid "Rotation"
 msgstr "Aylantirish"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Birinchi tahlilingizni ishga tushiring va ballar jadvali, kuchli tomonlar hamda ustuvor tavsiyalarni oling."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Rus tili"
@@ -2304,6 +2349,10 @@ msgstr "Quyidagi QR kodni o'zingiz yoqtirgan autentifikatsiya ilovasi bilan skan
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Maktab"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Ballari"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Statistika"
 msgid "Stay"
 msgstr "Qolish"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Kuchli tomonlari"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Ustiga chizish"
@@ -2578,6 +2631,10 @@ msgstr "Ustiga chizish"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Takliflar"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
