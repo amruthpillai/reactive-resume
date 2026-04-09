@@ -8,7 +8,7 @@ msgstr ""
 "Language: sr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -290,6 +290,14 @@ msgstr "Дошло је до грешке при учитавању страни
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Дошло је до непознате грешке приликом увоза вашег резимеа."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Анализирај резиме"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Анализирање..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Истражите API документацију да бисте саз
 msgid "Export"
 msgstr "Извоз"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Није успело да анализира резиме."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Није успело да се дуплира резиме"
@@ -1325,6 +1337,14 @@ msgstr "Генериши насумично име"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Немачки"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Добијте преглед вашег резимеа са укупном оценом, снажним странама и конкретним предлозима за побољшање."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Добијте детаљну рецензију вашег резимеа покренуту вештачком интелигенцијом, са укупном оценом, кључним предностима и практичним предлозима. Да бисте активирали ову функцију, ажурирајте подешавања вештачке интелигенције."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Језици"
 msgid "Last 3 days"
 msgstr "Последња 3 дана"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Последњи пут анализирано {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Континуирано одржавање"
 msgid "Open"
 msgstr "Отвори"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Отвори подешавања AI"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Отвори клијент за е-пошту"
@@ -1911,6 +1940,10 @@ msgstr "Нумерисана листа"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Организација"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Укупна оцена"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Ресетовање ваше лозинке..."
 msgid "Resources"
 msgstr "Ресурси"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Анализа резимеа"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Анализа резимеа је завршена."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Румунски"
 msgid "Rotation"
 msgstr "Ротација"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Покрените прву анализу да бисте добили контролну таблу, снаге и приоритезоване предлоге."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Руски"
@@ -2304,6 +2349,10 @@ msgstr "Скенирајте QR код испод својом омиљеном 
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Школа"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Картица са резултатима"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Статистика"
 msgid "Stay"
 msgstr "Остани"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Снаге"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Прецртано"
@@ -2578,6 +2631,10 @@ msgstr "Прецртано"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Субредит"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Предлози"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
