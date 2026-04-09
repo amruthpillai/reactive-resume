@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:19\n"
+"PO-Revision-Date: 2026-04-09 07:10\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -290,6 +290,14 @@ msgstr "A apărut o eroare la încărcarea paginii."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "A apărut o eroare necunoscută la importul CV-ului."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Analizați CV-ul"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Analizând..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Explorați documentația API pentru a afla cum să integrați Reactive R
 msgid "Export"
 msgstr "Exportă"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "A eșuat analiza CV-ului."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "A eșuat duplicarea CV-ului"
@@ -1325,6 +1337,14 @@ msgstr "Generați un nume aleatoriu"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Germană"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Obțineți o analiză a CV-ului dvs. cu un scor general, puncte forte și sugestii utile."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Obțineți o analiză detaliată a CV-ului dvs. cu ajutorul inteligenței artificiale, cu un scor general, puncte forte și sugestii practice. Pentru a activa această funcție, vă rugăm să vă actualizați setările AI."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Limbi"
 msgid "Last 3 days"
 msgstr "Ultimele 3 zile"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Ultima analiză pe {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Mentenanță continuă"
 msgid "Open"
 msgstr "Deschis"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Deschideți setările AI"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Deschide clientul de e-mail"
@@ -1911,6 +1940,10 @@ msgstr "Listă ordonată"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Organizație"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Punctaj general"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Se resetează parola..."
 msgid "Resources"
 msgstr "Resurse"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Analiza CV-ului"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Analiza CV-ului este completă."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Română"
 msgid "Rotation"
 msgstr "Rotire"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Efectuați prima analiză pentru a obține o fișă de evaluare, puncte forte și sugestii prioritizate."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Rusă"
@@ -2304,6 +2349,10 @@ msgstr "Scanați codul QR de mai jos cu aplicația de autentificare preferată. 
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Școală"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Fișă de scor"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Statistici"
 msgid "Stay"
 msgstr "Rămâi"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Puncte forte"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Tăiat"
@@ -2578,6 +2631,10 @@ msgstr "Tăiat"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Sugestii"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
