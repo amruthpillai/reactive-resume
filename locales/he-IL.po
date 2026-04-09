@@ -8,7 +8,7 @@ msgstr ""
 "Language: he\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:19\n"
+"PO-Revision-Date: 2026-04-09 07:10\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -290,6 +290,14 @@ msgstr "אירעה שגיאה בטעינת העמוד."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "אירעה שגיאה לא ידועה בעת ייבוא קורות החיים שלך."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "ניתוח קורות חיים"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "מנתח..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "עיין בתיעוד ה־API כדי ללמוד כיצד לשלב את R
 msgid "Export"
 msgstr "ייצוא"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "לא ניתן לנתח את קורות החיים."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "לא הצליח לשכפל את קורות החיים"
@@ -1325,6 +1337,14 @@ msgstr "יצירת שם אקראי"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "גרמנית"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "קבל סקירה של קורות החיים שלך, הכוללת ציון כולל, נקודות חוזק והצעות מעשיות."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "קבל ניתוח מעמיק של קורות החיים שלך, המונע על ידי בינה מלאכותית, הכולל ציון כולל, נקודות חוזק עיקריות והצעות מעשיות. כדי להפעיל תכונה זו, אנא עדכן את הגדרות ה-AI שלך."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "שפות"
 msgid "Last 3 days"
 msgstr "3 הימים האחרונים"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "נבדק לאחרונה ב- {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "תחזוקה מתמשכת"
 msgid "Open"
 msgstr "פתיחה"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "פתח את הגדרות ה-AI"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "פתיחת תוכנת הדוא\"ל"
@@ -1911,6 +1940,10 @@ msgstr "רשימה ממוספרת"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "ארגון"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "ציון כולל"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "איפוס הסיסמה שלך..."
 msgid "Resources"
 msgstr "משאבים"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "ניתוח קורות חיים"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "ניתוח קורות החיים הושלם."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "רומנית"
 msgid "Rotation"
 msgstr "סיבוב"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "בצע את הניתוח הראשון שלך כדי לקבל דוח ביצועים, נקודות חוזק והצעות מסודרות לפי סדר עדיפויות."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "רוסית"
@@ -2304,6 +2349,10 @@ msgstr "סרוק את קוד ה־QR הבא באמצעות אפליקציית ה�
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "בית ספר"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "כרטיס ביצועים"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "סטטיסטיקה"
 msgid "Stay"
 msgstr "הישאר"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "נקודות חוזק"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "קו חוצה"
@@ -2578,6 +2631,10 @@ msgstr "קו חוצה"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "סברדיט"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "הצעות"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
