@@ -8,7 +8,7 @@ msgstr ""
 "Language: id\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -290,6 +290,14 @@ msgstr "Terjadi kesalahan saat memuat halaman."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Terjadi kesalahan yang tidak diketahui saat mengimpor resume Anda."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Menganalisis Lanjutkan"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Menganalisis..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Jelajahi dokumentasi API untuk mempelajari cara mengintegrasikan Reactiv
 msgid "Export"
 msgstr "Ekspor"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Gagal menganalisis resume."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Gagal menduplikasi resume"
@@ -1325,6 +1337,14 @@ msgstr "Hasilkan nama acak"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Jerman"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Dapatkan ulasan tentang resume Anda dengan skor keseluruhan, kekuatan, dan saran yang dapat ditindaklanjuti."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Dapatkan tinjauan mendalam yang didukung oleh AI atas resume Anda dengan skor keseluruhan, kekuatan utama, dan saran praktis. Untuk mengaktifkan fitur ini, perbarui pengaturan AI Anda."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Bahasa"
 msgid "Last 3 days"
 msgstr "3 hari terakhir"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Terakhir dianalisis di {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Pemeliharaan Berkelanjutan"
 msgid "Open"
 msgstr "Buka"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Buka Pengaturan AI"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Buka Klien Email"
@@ -1911,6 +1940,10 @@ msgstr "Daftar Bernomor"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Organisasi"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Skor Keseluruhan"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Mengatur ulang kata sandi Anda..."
 msgid "Resources"
 msgstr "Sumber Daya"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "Melanjutkan Analisis"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "Lanjutkan analisis hingga selesai."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Rumania"
 msgid "Rotation"
 msgstr "Rotasi"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Jalankan analisis pertama Anda untuk mendapatkan kartu skor, kekuatan, dan saran yang diprioritaskan."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Rusia"
@@ -2304,6 +2349,10 @@ msgstr "Pindai kode QR di bawah ini dengan aplikasi autentikator pilihan Anda. A
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Sekolah"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Kartu penilaian"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Statistik"
 msgid "Stay"
 msgstr "Tetap"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Kekuatan"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Coret"
@@ -2578,6 +2631,10 @@ msgstr "Coret"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Saran"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
