@@ -8,7 +8,7 @@ msgstr ""
 "Language: fa\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Persian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -290,6 +290,14 @@ msgstr "هنگام بارگیری صفحه خطایی رخ داد."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "هنگام وارد کردن رزومه شما یک خطای ناشناخته رخ داد."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "تحلیل رزومه"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "در حال تجزیه و تحلیل..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "مستندات API را بررسی کنید تا بیاموزید چگو
 msgid "Export"
 msgstr "خروجی گرفتن"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "در تحلیل رزومه شکست خورد."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "در کپی‌برداری از رزومه خطا رخ داد"
@@ -1325,6 +1337,14 @@ msgstr "تولید یک نام تصادفی"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "آلمانی"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "رزومه خود را با دریافت نمره کلی، نقاط قوت و پیشنهادهای عملی بازبینی کنید."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "یک بررسی عمیق از رزومهٔ خود با هوش مصنوعی دریافت کنید که شامل نمرهٔ کلی، نقاط قوت کلیدی و پیشنهادهای عملی است. برای فعال‌سازی این ویژگی، لطفاً تنظیمات هوش مصنوعی خود را به‌روزرسانی کنید."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "زبان‌ها"
 msgid "Last 3 days"
 msgstr "۳ روز گذشته"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "آخرین تحلیل در {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "نگه‌داری مداوم"
 msgid "Open"
 msgstr "باز کردن"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "تنظیمات را باز کنید"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "باز کردن کلاینت ایمیل"
@@ -1911,6 +1940,10 @@ msgstr "فهرست شماره‌دار"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "سازمان"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "امتیاز کلی"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "در حال تنظیم مجدد گذرواژه شما..."
 msgid "Resources"
 msgstr "منابع"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "تحلیل رزومه"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "تحلیل رزومه کامل شد."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "رومانیایی"
 msgid "Rotation"
 msgstr "چرخش"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "اولین تحلیل خود را اجرا کنید تا کارت امتیاز، نقاط قوت و پیشنهادهای اولویت‌بندی‌شده را دریافت کنید."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "روسی"
@@ -2304,6 +2349,10 @@ msgstr "کد QR زیر را با اپلیکیشن احراز هویت دلخوا
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "مدرسه"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "کارت نمره‌دهی"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "آمارها"
 msgid "Stay"
 msgstr "ماندن"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "نقاط قوت"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "خط‌خورده"
@@ -2578,6 +2631,10 @@ msgstr "خط‌خورده"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "ردیت"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "پیشنهادها"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
