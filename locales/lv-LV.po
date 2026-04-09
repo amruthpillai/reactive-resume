@@ -8,7 +8,7 @@ msgstr ""
 "Language: lv\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-09 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Latvian\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
@@ -290,6 +290,14 @@ msgstr "Ielādējot lapu, radās kļūda."
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Importējot jūsu CV, radās nezināma kļūda."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyze Resume"
+msgstr "Analizēt CV"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Analyzing..."
+msgstr "Analizējot..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -1214,6 +1222,10 @@ msgstr "Izpētiet API dokumentāciju, lai uzzinātu, kā integrēt Reactive Resu
 msgid "Export"
 msgstr "Eksports"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Failed to analyze resume."
+msgstr "Neizdevās analizēt atsākšanu."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Neizdevās dublēt CV"
@@ -1325,6 +1337,14 @@ msgstr "Ģenerēt nejaušu nosaukumu"
 #: src/utils/locale.ts
 msgid "German"
 msgstr "Vācu"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
+msgstr "Saņemiet savu CV pārskatu ar vispārēju novērtējumu, norādot stiprās puses un ieteikumus, ko var izmantot."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
+msgstr "Saņemiet padziļinātu ar mākslīgo intelektu aprīkotu CV pārskatu ar kopējo novērtējumu, galvenajām stiprajām pusēm un praktiskiem ieteikumiem. Lai aktivizētu šo funkciju, atjauniniet AI iestatījumus."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1605,6 +1625,11 @@ msgstr "Valodas"
 msgid "Last 3 days"
 msgstr "Pēdējās 3 dienas"
 
+#. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Last analyzed on {0}"
+msgstr "Pēdējo reizi analizēts vietnē {0}"
+
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -1875,6 +1900,10 @@ msgstr "Nepārtraukta uzturēšana"
 msgid "Open"
 msgstr "Atvērt"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open AI Settings"
+msgstr "Atvērt AI iestatījumus"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Atvērt e-pasta klientu"
@@ -1911,6 +1940,10 @@ msgstr "Numurēts saraksts"
 #: src/dialogs/resume/sections/volunteer.tsx
 msgid "Organization"
 msgstr "Organizācija"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Overall Score"
+msgstr "Kopējais rezultāts"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2231,6 +2264,14 @@ msgstr "Tiek atiestatīta jūsu parole..."
 msgid "Resources"
 msgstr "Resursi"
 
+#: src/utils/resume/section.tsx
+msgid "Resume Analysis"
+msgstr "CV analīze"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Resume analysis complete."
+msgstr "CV analīze pabeigta."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2268,6 +2309,10 @@ msgstr "Rumāņu"
 msgid "Rotation"
 msgstr "Rotācija"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
+msgstr "Veiciet pirmo analīzi, lai iegūtu rezultātu tabulu, stiprās puses un prioritizētus ieteikumus."
+
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Krievu"
@@ -2304,6 +2349,10 @@ msgstr "Skenējiet zemāk redzamo QR kodu ar savu izvēlēto autentifikatora lie
 #: src/dialogs/resume/sections/education.tsx
 msgid "School"
 msgstr "Skola"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Scorecard"
+msgstr "Rezultātu tabula"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2571,6 +2620,10 @@ msgstr "Statistika"
 msgid "Stay"
 msgstr "Palikt"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Strengths"
+msgstr "Stiprās puses"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Pārsvītrot"
@@ -2578,6 +2631,10 @@ msgstr "Pārsvītrot"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddits"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Suggestions"
+msgstr "Ieteikumi"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
