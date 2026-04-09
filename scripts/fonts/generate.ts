@@ -99,9 +99,9 @@ function getComputerModernWebFonts(): WebFont[] {
       preview: `${CDN}/Sans/cmunss.woff`,
       files: {
         "400": `${CDN}/Sans/cmunss.woff`,
-        "400italic": `${CDN}/Sans/cmunsl.woff`,
+        "400italic": `${CDN}/Sans/cmunsi.woff`,
         "700": `${CDN}/Sans/cmunsx.woff`,
-        "700italic": `${CDN}/Sans/cmunsi.woff`,
+        "700italic": `${CDN}/Sans/cmunso.woff`,
       },
     },
     {
