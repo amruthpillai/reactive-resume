@@ -1,5 +1,6 @@
 import z from "zod";
 
+import { storedResumeAnalysisSchema } from "@/schema/resume/analysis";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { generateRandomName, slugify } from "@/utils/string";
 
@@ -59,9 +60,29 @@ const statisticsRouter = {
     }),
 };
 
+const analysisRouter = {
+  getById: protectedProcedure
+    .route({
+      method: "GET",
+      path: "/resumes/{id}/analysis",
+      tags: ["Resume Analysis"],
+      operationId: "getResumeAnalysis",
+      summary: "Get latest resume analysis",
+      description:
+        "Returns the latest persisted AI analysis for the specified resume, if one exists. Requires authentication.",
+      successDescription: "The latest persisted resume analysis, or null if no analysis has been saved yet.",
+    })
+    .input(z.object({ id: z.string().describe("The unique identifier of the resume.") }))
+    .output(storedResumeAnalysisSchema.nullable())
+    .handler(async ({ context, input }) => {
+      return await resumeService.analysis.getById({ id: input.id, userId: context.user.id });
+    }),
+};
+
 export const resumeRouter = {
   tags: tagsRouter,
   statistics: statisticsRouter,
+  analysis: analysisRouter,
 
   list: protectedProcedure
     .route({

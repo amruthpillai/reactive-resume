@@ -1,6 +1,7 @@
 import { defineRelations } from "drizzle-orm";
 import * as pg from "drizzle-orm/pg-core";
 
+import { type StoredResumeAnalysis } from "../../schema/resume/analysis";
 import { defaultResumeData, type ResumeData } from "../../schema/resume/data";
 import { generateId } from "../../utils/string";
 
@@ -229,6 +230,30 @@ export const resumeStatistics = pg.pgTable("resume_statistics", {
     .$onUpdate(() => /* @__PURE__ */ new Date()),
 });
 
+export const resumeAnalysis = pg.pgTable(
+  "resume_analysis",
+  {
+    id: pg
+      .uuid("id")
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => generateId()),
+    analysis: pg.jsonb("analysis").notNull().$type<StoredResumeAnalysis>(),
+    resumeId: pg
+      .uuid("resume_id")
+      .unique()
+      .notNull()
+      .references(() => resume.id, { onDelete: "cascade" }),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: pg
+      .timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date()),
+  },
+  (t) => [pg.index().on(t.resumeId)],
+);
+
 export const apikey = pg.pgTable(
   "apikey",
   {
@@ -416,6 +441,7 @@ export const relations = defineRelations(
     passkey,
     resume,
     resumeStatistics,
+    resumeAnalysis,
     apikey,
     jwks,
     oauthClient,
@@ -477,10 +503,20 @@ export const relations = defineRelations(
         from: r.resume.id,
         to: r.resumeStatistics.resumeId,
       }),
+      analysis: r.one.resumeAnalysis({
+        from: r.resume.id,
+        to: r.resumeAnalysis.resumeId,
+      }),
     },
     resumeStatistics: {
       resume: r.one.resume({
         from: r.resumeStatistics.resumeId,
+        to: r.resume.id,
+      }),
+    },
+    resumeAnalysis: {
+      resume: r.one.resume({
+        from: r.resumeAnalysis.resumeId,
         to: r.resume.id,
       }),
     },

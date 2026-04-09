@@ -3,13 +3,17 @@ import z from "zod";
 
 import { jsonPatchOperationSchema } from "@/utils/resume/patch";
 
-import { MCP_TOOL_NAME as T } from "./tools";
+import { MCP_TOOL_NAME as T } from "./mcp-tool-names";
+import { TOOL_ANNOTATIONS } from "./tool-annotations";
 
 const resumeId = z.string().min(1).describe("Resume ID.");
 
 /**
  * Static MCP server card (SEP-1649 / well-known `mcp/server-card.json`).
  * Kept in sync with `registerTools`, `registerResources`, and `registerPrompts`.
+ *
+ * Some registries only surface the `resources` array in their UI, not `resourceTemplates`.
+ * The parameterized resume URI is therefore duplicated here so discovery matches the live template.
  */
 export function buildMcpServerCard(appVersion: string) {
   const tools = [
@@ -42,6 +46,17 @@ export function buildMcpServerCard(appVersion: string) {
             .describe("Sort order for results. Default: lastUpdatedAt."),
         }),
       ),
+      annotations: TOOL_ANNOTATIONS[T.listResumes],
+    },
+    {
+      name: T.listResumeTags,
+      title: "List Resume Tags",
+      description: [
+        "Returns a sorted list of every distinct tag used across your resumes.",
+        "Useful for choosing tag filters when calling list tools or keeping naming consistent.",
+      ].join("\n"),
+      inputSchema: toJsonSchemaCompat(z.object({})),
+      annotations: TOOL_ANNOTATIONS[T.listResumeTags],
     },
     {
       name: T.getResume,
@@ -57,6 +72,18 @@ export function buildMcpServerCard(appVersion: string) {
         "The `resume://_meta/schema` resource describes the full data structure for JSON Patch paths.",
       ].join("\n"),
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.getResume],
+    },
+    {
+      name: T.getResumeAnalysis,
+      title: "Get Resume Analysis",
+      description: [
+        "Returns the latest saved AI analysis for a resume (scorecard, strengths, suggestions), if any.",
+        "Analyses are created from the Reactive Resume web app AI flow, not from MCP.",
+        `Returns JSON or a short message if none exists. Use \`${T.listResumes}\` to find resume IDs.`,
+      ].join("\n"),
+      inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.getResumeAnalysis],
     },
     {
       name: T.createResume,
@@ -84,6 +111,25 @@ export function buildMcpServerCard(appVersion: string) {
           withSampleData: z.boolean().optional().default(false).describe("Pre-fill with sample data. Default: false."),
         }),
       ),
+      annotations: TOOL_ANNOTATIONS[T.createResume],
+    },
+    {
+      name: T.importResume,
+      title: "Import Resume",
+      description: [
+        "Create a new resume from a full ResumeData JSON object (e.g. an exported file from Reactive Resume).",
+        "A random name and slug are assigned automatically, like the web importer.",
+        `For small edits to an existing resume, prefer \`${T.patchResume}\` instead of re-importing.`,
+        "Large payloads may exceed MCP client message limits — in that case, use the web UI or the HTTP API.",
+      ].join("\n"),
+      inputSchema: toJsonSchemaCompat(
+        z.object({
+          data: z
+            .unknown()
+            .describe("Complete ResumeData JSON (same shape as get_resume output or `resume://_meta/schema`)."),
+        }),
+      ),
+      annotations: TOOL_ANNOTATIONS[T.importResume],
     },
     {
       name: T.duplicateResume,
@@ -103,6 +149,7 @@ export function buildMcpServerCard(appVersion: string) {
           tags: z.array(z.string()).optional().default([]).describe("Tags for the duplicate"),
         }),
       ),
+      annotations: TOOL_ANNOTATIONS[T.duplicateResume],
     },
     {
       name: T.patchResume,
@@ -124,6 +171,39 @@ export function buildMcpServerCard(appVersion: string) {
             .describe("Array of JSON Patch (RFC 6902) operations to apply"),
         }),
       ),
+      annotations: TOOL_ANNOTATIONS[T.patchResume],
+    },
+    {
+      name: T.updateResume,
+      title: "Update Resume (metadata)",
+      description: [
+        "Update resume metadata only: display name, URL slug, tags, and/or public visibility.",
+        "Does not change section content — use JSON Patch via the patch tool for body edits.",
+        `Locked resumes cannot be updated; use \`${T.unlockResume}\` first.`,
+        "Password protection cannot be set or removed via MCP; use the web app for that.",
+        "",
+        "Always returns your canonical share URL (`{app}/{username}/{slug}`). Anonymous viewers can use it only when `isPublic` is true; password protection from the web app still applies.",
+      ].join("\n"),
+      inputSchema: toJsonSchemaCompat(
+        z.object({
+          id: resumeId,
+          name: z.string().min(1).max(64).optional().describe("Display name for the resume."),
+          slug: z
+            .string()
+            .min(1)
+            .max(64)
+            .optional()
+            .describe("URL-friendly slug; must stay unique among your resumes."),
+          tags: z.array(z.string()).optional().describe("Replace the resume's tags (omit to leave unchanged)."),
+          isPublic: z
+            .boolean()
+            .optional()
+            .describe(
+              "When true, anyone with the link can view the public resume (subject to password if set in the app).",
+            ),
+        }),
+      ),
+      annotations: TOOL_ANNOTATIONS[T.updateResume],
     },
     {
       name: T.deleteResume,
@@ -135,6 +215,7 @@ export function buildMcpServerCard(appVersion: string) {
         `Consider using \`${T.duplicateResume}\` to create a backup before deleting.`,
       ].join("\n"),
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.deleteResume],
     },
     {
       name: T.lockResume,
@@ -142,16 +223,18 @@ export function buildMcpServerCard(appVersion: string) {
       description: [
         "Lock a resume to prevent any modifications.",
         "",
-        `When locked, a resume cannot be edited (${T.patchResume}), updated, or deleted.`,
+        `When locked, a resume cannot be edited (${T.patchResume}, ${T.updateResume}), or deleted.`,
         `Use \`${T.unlockResume}\` to re-enable editing.`,
       ].join("\n"),
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.lockResume],
     },
     {
       name: T.unlockResume,
       title: "Unlock Resume",
       description: "Unlock a previously locked resume, re-enabling edits, patches, and deletion.",
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.unlockResume],
     },
     {
       name: T.exportResumePdf,
@@ -163,6 +246,7 @@ export function buildMcpServerCard(appVersion: string) {
         "then uploaded to storage. The returned URL can be shared or downloaded directly.",
       ].join("\n"),
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.exportResumePdf],
     },
     {
       name: T.getResumeScreenshot,
@@ -174,6 +258,7 @@ export function buildMcpServerCard(appVersion: string) {
         "is updated. Returns null if the printer service is unavailable.",
       ].join("\n"),
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.getResumeScreenshot],
     },
     {
       name: T.getResumeStatistics,
@@ -185,6 +270,7 @@ export function buildMcpServerCard(appVersion: string) {
         "lastViewedAt (timestamp or null), lastDownloadedAt (timestamp or null).",
       ].join("\n"),
       inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+      annotations: TOOL_ANNOTATIONS[T.getResumeStatistics],
     },
   ];
 
@@ -235,6 +321,17 @@ export function buildMcpServerCard(appVersion: string) {
       ].join(" "),
       mimeType: "application/json",
     },
+    {
+      name: "resume",
+      title: "Resume Data",
+      uri: "resume://{id}",
+      description: [
+        "Full resume JSON for one resume. Substitute a real ID for `{id}` (UUID from your account).",
+        "On the wire this is a resource template (`resources/templates/list`), not a row in `resources/list`.",
+        `Discover IDs with \`${T.listResumes}\`; read via \`resources/read\` on e.g. \`resume://<id>\` or use \`${T.getResume}\`.`,
+      ].join(" "),
+      mimeType: "application/json",
+    },
   ];
 
   const resourceTemplates = [
@@ -248,6 +345,21 @@ export function buildMcpServerCard(appVersion: string) {
   ];
 
   return {
+    /**
+     * Optional session fields for gateways. OAuth is primary; API key is optional for clients that support custom headers.
+     */
+    configurationSchema: {
+      type: "object",
+      properties: {
+        apiKey: {
+          type: "string",
+          title: "API key",
+          description:
+            "Optional. Create a key under Account → API Keys. Forwarded as the x-api-key header when not using OAuth.",
+          "x-from": { header: "x-api-key" },
+        },
+      },
+    },
     serverInfo: {
       name: "reactive-resume",
       version: appVersion,

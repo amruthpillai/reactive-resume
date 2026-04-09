@@ -34,9 +34,12 @@ function createMcpServer() {
       instructions: [
         "You are connected to Reactive Resume over MCP.",
         "Authenticate with OAuth (recommended) or an API key (`x-api-key`).",
-        "Discover resume IDs with `reactive_resume.list_resumes` (not `resources/list`).",
-        "Read schema at `resume://_meta/schema`; read resume JSON via `resume://{id}` or `reactive_resume.get_resume`.",
-        "Apply edits with JSON Patch through `reactive_resume.patch_resume`.",
+        "Discover resume IDs with `reactive_resume_list_resumes` (not `resources/list`).",
+        "List distinct tags with `reactive_resume_list_resume_tags`.",
+        "Read schema at `resume://_meta/schema`; read resume JSON via `resume://{id}` or `reactive_resume_get_resume`.",
+        "Apply body edits with JSON Patch through `reactive_resume_patch_resume`.",
+        "Change name, slug, tags, or public visibility with `reactive_resume_update_resume` (returns canonical share URL; anonymous access only when `isPublic` is true; passwords are managed in the web app only).",
+        "Import full ResumeData JSON with `reactive_resume_import_resume`; read saved AI analysis with `reactive_resume_get_resume_analysis`.",
       ].join(" "),
     },
   );

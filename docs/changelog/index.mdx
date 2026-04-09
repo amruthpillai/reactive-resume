@@ -4,6 +4,22 @@ description: "List of all notable changes and updates to Reactive Resume"
 rss: true
 ---
 
+<Update label="v5.0.17" description="9th April 2026">
+## Features & Improvements
+- Added **Resume Analysis** in the resume builder right sidebar: run an on-demand AI review for an overall score (0 to 100), a dimension scorecard, strengths, and prioritized suggestions. Results are saved per resume and reload after refresh.
+- When AI features are disabled, the analysis section shows a short notice with a link to **AI Settings** so you can enable your provider and model first.
+- Improved the **MCP server** experience: updated tools, resources, and prompts; added an MCP server card at `/.well-known/mcp/server-card.json` for compatible clients; refreshed the **Using the MCP server** guide.
+
+## Fixes
+- Fixed [#2865](https://github.com/amruthpillai/reactive-resume/issues/2865), incorrect spacing between resume section items in shared layouts.
+- Fixed [#2868](https://github.com/amruthpillai/reactive-resume/issues/2868) affecting resume item presentation and linked titles in shared item components.
+
+## Maintenance & CI
+- Downgraded the Cosign installer action to v3 in the Docker build workflow for more reliable image signing.
+- Synced translation catalogs from Crowdin. [#2864](https://github.com/amruthpillai/reactive-resume/pull/2864)
+- Dependency and lockfile updates (including changes bundled with MCP and analysis work).
+</Update>
+
 <Update label="v5.0.16" description="4th April 2026">
 ## Features & Improvements
 - Updated shared resume item layouts (Experience, Education, Awards, Certifications, Publications, References, Volunteer) for better alignment and spacing consistency.
