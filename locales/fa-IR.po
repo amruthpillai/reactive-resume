@@ -8,7 +8,7 @@ msgstr ""
 "Language: fa\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-14 08:57\n"
 "Last-Translator: \n"
 "Language-Team: Persian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -293,11 +293,11 @@ msgstr "هنگام وارد کردن رزومه شما یک خطای ناشنا�
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "تحلیل رزومه"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "در حال تجزیه و تحلیل..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -900,6 +900,7 @@ msgstr "مدرک"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "حذف"
 
@@ -1224,11 +1225,19 @@ msgstr "خروجی گرفتن"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "در تحلیل رزومه شکست خورد."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "حذف passkey ناموفق بود. لطفاً دوباره تلاش کنید."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "در کپی‌برداری از رزومه خطا رخ داد"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "ثبت گذرواژه ناموفق بود. لطفاً دوباره تلاش کنید."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1340,11 +1349,11 @@ msgstr "آلمانی"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "رزومه خود را با دریافت نمره کلی، نقاط قوت و پیشنهادهای عملی بازبینی کنید."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "یک بررسی عمیق از رزومهٔ خود با هوش مصنوعی دریافت کنید که شامل نمرهٔ کلی، نقاط قوت کلیدی و پیشنهادهای عملی است. برای فعال‌سازی این ویژگی، لطفاً تنظیمات هوش مصنوعی خود را به‌روزرسانی کنید."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1628,7 +1637,7 @@ msgstr "۳ روز گذشته"
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "آخرین تحلیل در {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -1750,6 +1759,10 @@ msgstr "پایداری بلندمدت"
 msgid "Lost access to your authenticator?"
 msgstr "به اپلیکیشن احراز هویت خود دسترسی را از دست داده‌اید؟"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "تچ آی‌دی مک‌بوک"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "اصلی"
@@ -1814,6 +1827,10 @@ msgstr "چندزبانه"
 msgid "Name"
 msgstr "نام"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "کلید عبور خود را نام ببرید"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "نپالی"
@@ -1867,6 +1884,10 @@ msgstr "بدون تجربه"
 msgid "No jobs found. Try a different search query."
 msgstr "هیچ شغلی یافت نشد. عبارت جستجوی دیگری را امتحان کنید."
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "هنوز هیچ کلید عبوری ثبت نشده است."
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "موردی یافت نشد."
@@ -1902,7 +1923,7 @@ msgstr "باز کردن"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open AI Settings"
-msgstr ""
+msgstr "تنظیمات را باز کنید"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
@@ -1943,7 +1964,7 @@ msgstr "سازمان"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "امتیاز کلی"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1970,6 +1991,18 @@ msgstr "پاراگراف"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "نیمه‌وقت"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "کلید عبور با موفقیت حذف شد."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "کلمه عبور با موفقیت ثبت شد."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "کلیدهای عبور"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "معرف‌ها"
 msgid "Refresh"
 msgstr "تازه‌سازی"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "ثبت دستگاه جدید"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "رمز عبور را به خاطر دارید؟ <0/>"
@@ -2266,11 +2303,11 @@ msgstr "منابع"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "تحلیل رزومه"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "تحلیل رزومه کامل شد."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2311,11 +2348,15 @@ msgstr "چرخش"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "اولین تحلیل خود را اجرا کنید تا کارت امتیاز، نقاط قوت و پیشنهادهای اولویت‌بندی‌شده را دریافت کنید."
 
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "روسی"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "ذخیره"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2352,7 +2393,7 @@ msgstr "مدرسه"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "کارت نمره‌دهی"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2496,6 +2537,7 @@ msgstr "عضویت"
 
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Signing in..."
 msgstr "در حال ورود..."
@@ -2622,7 +2664,7 @@ msgstr "ماندن"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "نقاط قوت"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2634,7 +2676,7 @@ msgstr "ردیت"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "پیشنهادها"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -2975,6 +3017,10 @@ msgstr "در حال قطع پیوند حساب {providerName} شما..."
 msgid "Unlock"
 msgstr "باز کردن قفل"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "کلید عبور نام‌گذاری‌نشده"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "تأیید نشده"
@@ -3204,6 +3250,10 @@ msgstr "برای ورود می‌توانید از نام کاربری خود ن
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "می‌توانید رزومه خود را از طریق یک URL عمومی منحصربه‌فرد به اشتراک بگذارید، آن را با گذرواژه محافظت کنید، یا برای اشتراک‌گذاری مستقیم آن را به صورت PDF دانلود کنید. انتخاب با شماست!"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "می‌توانید این را نادیده بگیرید و نام پیش‌فرض را حفظ کنید."
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "تغییرات ذخیره‌نشده‌ای دارید که از دست خواهند رفت."
@@ -3299,3 +3349,4 @@ msgstr "کوچک‌نمایی"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "زولو"
+
