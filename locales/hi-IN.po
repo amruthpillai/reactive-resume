@@ -8,7 +8,7 @@ msgstr ""
 "Language: hi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-14 08:58\n"
 "Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -293,11 +293,11 @@ msgstr "आपका रेज़्यूमे इम्पोर्ट कर
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "रिज़्यूमे का विश्लेषण करें"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "विश्लेषण..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -900,6 +900,7 @@ msgstr "डिग्री"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "हटाएँ"
 
@@ -1224,11 +1225,19 @@ msgstr "निर्यात"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "रिज़्यूमे का विश्लेषण करने में असफल।"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "पासकी हटाने में असफल रहा। कृपया फिर से प्रयास करें।"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "रिज़्यूमे की नकल करने में असफल"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "पासकी पंजीकृत करने में असफल। कृपया फिर से प्रयास करें।"
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1340,11 +1349,11 @@ msgstr "जर्मन"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "अपने रिज्यूमे की समीक्षा प्राप्त करें जिसमें एक समग्र स्कोर, ताकतें, और क्रियान्वित करने योग्य सुझाव शामिल हों।"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "अपने रिज़्यूमे की गहन एआई-संचालित समीक्षा प्राप्त करें, जिसमें एक समग्र स्कोर, प्रमुख ताकतें और व्यावहारिक सुझाव शामिल हैं। इस सुविधा को सक्रिय करने के लिए कृपया अपनी एआई सेटिंग्स अपडेट करें।"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1628,7 +1637,7 @@ msgstr "पिछले 3 दिन"
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "अंतिम विश्लेषण किया गया {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -1750,6 +1759,10 @@ msgstr "दीर्घकालिक स्थिरता"
 msgid "Lost access to your authenticator?"
 msgstr "अपने ऑथेंटिकेटर तक पहुँच खो दी?"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "MacBook टच आईडी"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "मुख्‍य"
@@ -1814,6 +1827,10 @@ msgstr "बहुभाषी"
 msgid "Name"
 msgstr "नाम"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "अपनी पासकी का नाम बताएं"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "नेपाली"
@@ -1867,6 +1884,10 @@ msgstr "कोई अनुभव नहीं"
 msgid "No jobs found. Try a different search query."
 msgstr "कोई नौकरी नहीं मिली। एक अलग खोज क्वेरी आज़माएँ।"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "अभी तक कोई पासकी पंजीकृत नहीं हुई है।"
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "कोई परिणाम नहीं मिला।"
@@ -1902,7 +1923,7 @@ msgstr "खोलें"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open AI Settings"
-msgstr ""
+msgstr "ओपन एआई सेटिंग्स"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
@@ -1943,7 +1964,7 @@ msgstr "संगठन"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "कुल स्कोर"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1970,6 +1991,18 @@ msgstr "अनुच्छेद"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "अंशकालिक"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "पासकी सफलतापूर्वक हटा दी गई।"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "पासकी सफलतापूर्वक पंजीकृत हो गई।"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "पासकीज़"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "रेफ़रेंस"
 msgid "Refresh"
 msgstr "रिफ़्रेश"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "नया डिवाइस पंजीकृत करें"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "अपना पासवर्ड याद है? <0/>"
@@ -2266,11 +2303,11 @@ msgstr "संसाधन"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "रिज़्यूमे विश्लेषण"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "रिज़्यूमे विश्लेषण पूरा हो गया।"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2311,11 +2348,15 @@ msgstr "रोटेशन"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "अपना पहला विश्लेषण चलाएँ ताकि आपको एक स्कोरकार्ड, ताकतें और प्राथमिकता-आधारित सुझाव मिल सकें।"
 
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "रूसी"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "बचाएँ"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2352,7 +2393,7 @@ msgstr "स्कूल"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "स्कोरकार्ड"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2496,6 +2537,7 @@ msgstr "रजिस्ट्रेशन"
 
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Signing in..."
 msgstr "साइन इन..."
@@ -2622,7 +2664,7 @@ msgstr "रहें"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "ताकतें"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2634,7 +2676,7 @@ msgstr "सबरेडिट"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "सुझाव"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -2975,6 +3017,10 @@ msgstr "आपका {providerName} खाता अनलिंक किया
 msgid "Unlock"
 msgstr "खोले"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "अनाम पासकी"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "असत्यापित"
@@ -3204,6 +3250,10 @@ msgstr "आप लॉगिन करने के लिए अपना उप
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "आप अपना रेज़्यूमे एक यूनिक सार्वजनिक URL के माध्यम से साझा कर सकते हैं, इसे पासवर्ड से सुरक्षित कर सकते हैं, या सीधे साझा करने के लिए इसे PDF के रूप में डाउनलोड कर सकते हैं। चुनाव आपका है!"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "आप इसे छोड़ सकते हैं और डिफ़ॉल्ट नाम रख सकते हैं।"
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "आपके सहेजे न गए परिवर्तन खो जाएंगे।"
@@ -3299,3 +3349,4 @@ msgstr "ज़ूम आउट"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "ज़ुलु"
+
