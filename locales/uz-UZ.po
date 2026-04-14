@@ -8,7 +8,7 @@ msgstr ""
 "Language: uz\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-14 08:58\n"
 "Last-Translator: \n"
 "Language-Team: Uzbek\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -293,11 +293,11 @@ msgstr "Tarjimai holingizni import qilishda noma'lum xatolik yuz berdi."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "Rezyumeni tahlil qiling"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "Tahlil qilinmoqda..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -900,6 +900,7 @@ msgstr "Daraja"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "O'chirish"
 
@@ -1224,11 +1225,19 @@ msgstr "Eksport"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "Rezyumeni tahlil qilish muvaffaqiyatsiz bo'ldi."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "Parol kalitini o'chirib tashlash muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ring."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Rezyumeni nusxalashda xato yuz berdi"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "Parol kalitini ro'yxatdan o'tkazish muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ring."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1340,11 +1349,11 @@ msgstr "Nemischa"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "Rezyumeingizni umumiy ball, kuchli tomonlar va amaliy tavsiyalar bilan ko'rib chiqishni oling."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "Rezyumeingizni sun'iy intellekt yordamida chuqur tahlil qiling: umumiy ball, asosiy kuchli tomonlar va amaliy tavsiyalar bilan. Ushbu funksiyani yoqish uchun iltimos, sun'iy intellekt sozlamalaringizni yangilang."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1628,7 +1637,7 @@ msgstr "Oxirgi 3 kun"
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "Oxirgi marta tahlil qilingan {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -1750,6 +1759,10 @@ msgstr "Uzoq muddatli barqarorlik"
 msgid "Lost access to your authenticator?"
 msgstr "Autentifikatorga kirish yoʻqoldimi?"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "MacBook Touch ID"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "Asosiy"
@@ -1814,6 +1827,10 @@ msgstr "Ko‘p tilli"
 msgid "Name"
 msgstr "Ism"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "Parolingizni belgilang"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "Nepal tili"
@@ -1867,6 +1884,10 @@ msgstr "Tajriba yo'q"
 msgid "No jobs found. Try a different search query."
 msgstr "Ish topilmadi. Boshqa qidiruv so'rovini sinab ko'ring."
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "Hali hech qanday kirish kalitlari ro'yxatdan o'tmagan."
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Hech qanday natija topilmadi."
@@ -1902,7 +1923,7 @@ msgstr "Ochiq"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open AI Settings"
-msgstr ""
+msgstr "AI sozlamalarini oching"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
@@ -1943,7 +1964,7 @@ msgstr "Tashkilot"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "Umumiy ball"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1970,6 +1991,18 @@ msgstr "Paragraf"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "Yarim stavka"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "Passkey muvaffaqiyatli o'chirildi."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "Passkey muvaffaqiyatli ro'yxatdan o'tdi."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "Parol kalitlari"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "Tavsiyalar"
 msgid "Refresh"
 msgstr "Yangilash"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "Yangi qurilmani ro'yxatdan o'tkazish"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "Parolingizni eslaysizmi? <0/>"
@@ -2266,11 +2303,11 @@ msgstr "Resurslar"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "Rezyume tahlili"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "Rezyume tahlili yakunlandi."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2311,11 +2348,15 @@ msgstr "Aylantirish"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "Birinchi tahlilingizni ishga tushiring va ballar jadvali, kuchli tomonlar hamda ustuvor tavsiyalarni oling."
 
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Rus tili"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "Saqlash"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2352,7 +2393,7 @@ msgstr "Maktab"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "Ballari"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2496,6 +2537,7 @@ msgstr "Roʻyxatdan oʻtish"
 
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Signing in..."
 msgstr "Kirish jarayoni..."
@@ -2622,7 +2664,7 @@ msgstr "Qolish"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "Kuchli tomonlari"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2634,7 +2676,7 @@ msgstr "Subreddit"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "Takliflar"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -2975,6 +3017,10 @@ msgstr "{providerName} hisobingizni ajratib qoʻyilmoqda..."
 msgid "Unlock"
 msgstr "Blokdan chiqarish"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "Noma nomaqotirish kaliti"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "Tasdiqlanmagan"
@@ -3204,6 +3250,10 @@ msgstr "Login uchun foydalanuvchi nomingizdan ham foydalanishingiz mumkin."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Rezyumeni noyob ommaviy URL orqali ulashishingiz, parol bilan himoyalashingiz yoki to‘g‘ridan-to‘g‘ri ulashish uchun PDF sifatida yuklab olishingiz mumkin. Tanlov sizda!"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "Buni o'tkazib yuborishingiz va standart nomni saqlashingiz mumkin."
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "Saqlanmagan oʻzgarishlar yoʻqoladi."
@@ -3299,3 +3349,4 @@ msgstr "Kichraytirish"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+
