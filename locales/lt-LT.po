@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-14 08:57\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -293,11 +293,11 @@ msgstr "Importuojant jūsų gyvenimo aprašymą įvyko nežinoma klaida."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "Analizuoti CV"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "Analizuojant..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -900,6 +900,7 @@ msgstr "Laipsnis"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "Ištrinti"
 
@@ -1224,11 +1225,19 @@ msgstr "Eksportuoti"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "Nepavyko išanalizuoti atnaujinimo."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "Nepavyko ištrinti passkey. Bandykite dar kartą."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Nepavyko dubliuoti gyvenimo aprašymo"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "Nepavyko užregistruoti passkey. Bandykite dar kartą."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1340,11 +1349,11 @@ msgstr "Vokiečių"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "Gaukite savo gyvenimo aprašymo apžvalgą su bendru įvertinimu, stipriosiomis pusėmis ir naudingais pasiūlymais."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "Gaukite išsamią dirbtinio intelekto valdomą savo gyvenimo aprašymo peržiūrą su bendru įvertinimu, pagrindiniais privalumais ir praktiniais pasiūlymais. Jei norite įjungti šią funkciją, atnaujinkite dirbtinio intelekto nustatymus."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1628,7 +1637,7 @@ msgstr "Paskutinės 3 dienos"
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "Paskutinį kartą analizuota {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -1750,6 +1759,10 @@ msgstr "Ilgalaikis tvarumas"
 msgid "Lost access to your authenticator?"
 msgstr "Nebeturite prieigos prie autentifikavimo programos?"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "\"MacBook Touch ID"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "Pagrindinis"
@@ -1814,6 +1827,10 @@ msgstr "Daugiakalbė"
 msgid "Name"
 msgstr "Pavadinimas"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "Pavadinkite savo prieigos raktą"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "Nepalų"
@@ -1867,6 +1884,10 @@ msgstr "Nėra patirties"
 msgid "No jobs found. Try a different search query."
 msgstr "Darbo vietų nerasta. Išbandykite kitą paieškos užklausą."
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "Kol kas neužregistruota jokių passkeys."
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Rezultatų nerasta."
@@ -1902,7 +1923,7 @@ msgstr "Atidaryti"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open AI Settings"
-msgstr ""
+msgstr "Atidaryti AI nustatymus"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
@@ -1943,7 +1964,7 @@ msgstr "Organizacija"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "Bendras rezultatas"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1970,6 +1991,18 @@ msgstr "Pastraipa"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "Ne visą darbo dieną"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "Passkey sėkmingai ištrintas."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "Passkey sėkmingai užregistruotas."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "Passkeys"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "Rekomendacijos"
 msgid "Refresh"
 msgstr "Perkrauti"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "Naujo įrenginio registravimas"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "Prisimenate slaptažodį? <0/>"
@@ -2266,11 +2303,11 @@ msgstr "Ištekliai"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "Gyvenimo aprašymo analizė"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "Baigta gyvenimo aprašymo analizė."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2311,11 +2348,15 @@ msgstr "Sukimas"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "Atlikite pirmąją analizę, kad gautumėte rezultatų lentelę, stipriąsias puses ir prioritetinius pasiūlymus."
 
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Rusų"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "Išsaugoti"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2352,7 +2393,7 @@ msgstr "Mokykla"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "Rezultatų kortelė"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2496,6 +2537,7 @@ msgstr "Registruotis"
 
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Signing in..."
 msgstr "Jungiamasi..."
@@ -2622,7 +2664,7 @@ msgstr "Likti"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "Stipriosios pusės"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2634,7 +2676,7 @@ msgstr "Subreditas"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "Pasiūlymai"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -2975,6 +3017,10 @@ msgstr "Atsiejamas jūsų {providerName} profilis..."
 msgid "Unlock"
 msgstr "Atrakinti"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "Neįvardytas prieigos raktas"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "Nepatikrintas"
@@ -3204,6 +3250,10 @@ msgstr "Prisijungti taip pat galite naudodami vartotojo vardą."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Gyvenimo aprašymu galite dalintis per unikalų viešą URL, apsaugoti jį slaptažodžiu arba atsisiųsti kaip PDF ir dalintis tiesiogiai. Pasirinkimas – jūsų!"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "Galite to nedaryti ir palikti numatytąjį pavadinimą."
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "Turite neišsaugotų pakeitimų, kurie bus prarasti."
@@ -3299,3 +3349,4 @@ msgstr "Tolinti"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
+
