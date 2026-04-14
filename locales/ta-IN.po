@@ -8,7 +8,7 @@ msgstr ""
 "Language: ta\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-14 08:57\n"
 "Last-Translator: \n"
 "Language-Team: Tamil\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -293,11 +293,11 @@ msgstr "உங்கள் ரெஸ்யூமியை இறக்கும�
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "வாழ்க்கை வரலாற்றைப் பகுப்பாய்வு செய்யுங்கள்"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "பகுப்பாய்வு..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -900,6 +900,7 @@ msgstr "பட்டம்"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "நீக்கு"
 
@@ -1224,11 +1225,19 @@ msgstr "ஏற்றுமதி"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "வாழ்க்கை வரலாற்றை பகுப்பாய்வு செய்யத் தவறியது."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "பாஸ் கீ-ஐ நீக்கத் தவறிவிட்டது. மீண்டும் முயற்சிக்கவும்."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "வாழ்க்கை வரலாற்றை நகலெடுக்கத் தவறியது"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "பாஸ் கீ பதிவு செய்யத் தவறியது. மீண்டும் முயற்சிக்கவும்."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1340,11 +1349,11 @@ msgstr "ஜெர்மன்"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "உங்கள் ரெஸ்யூமிற்கு ஒட்டுமொத்த மதிப்பெண், பலம் மற்றும் செயல்படுத்தக்கூடிய பரிந்துரைகளுடன் ஒரு மதிப்பாய்வைப் பெறுங்கள்."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "உங்கள் ரெஸ்யூமிற்கான ஆழமான AI-ஆற்றல் பெற்ற மதிப்பாய்வை, ஒட்டுமொத்த மதிப்பெண், முக்கிய பலங்கள் மற்றும் நடைமுறை பரிந்துரைகளுடன் பெறுங்கள். இந்த அம்சத்தைச் செயல்படுத்த, தயவுசெய்து உங்கள் AI அமைப்புகளைப் புதுப்பிக்கவும்."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1628,7 +1637,7 @@ msgstr "கடைசி 3 நாட்கள்"
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "கடைசியாகப் பகுப்பாய்வு செய்யப்பட்ட நாள் {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -1750,6 +1759,10 @@ msgstr "நீண்டகால நிலைத்தன்மை"
 msgid "Lost access to your authenticator?"
 msgstr "உங்கள் அங்கீகார செயலியை அணுக முடியவில்லையா?"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "மெக்புக் டச் ஐடி"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "முதன்மை"
@@ -1814,6 +1827,10 @@ msgstr "பல்மொழி"
 msgid "Name"
 msgstr "பெயர்"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "உங்கள் கடவுச்சொல்லைப் பெயரிடுங்கள்"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "நேபாளி"
@@ -1867,6 +1884,10 @@ msgstr "அனுபவம் இல்லை"
 msgid "No jobs found. Try a different search query."
 msgstr "வேலைகள் எதுவும் காணப்படவில்லை. வேறு தேடல் வினவலை முயற்சிக்கவும்."
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "இன்னும் கடவுச்சொற்கள் எதுவும் பதிவு செய்யப்படவில்லை."
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "எந்த முடிவுகளும் கிடைக்கவில்லை."
@@ -1902,7 +1923,7 @@ msgstr "திற"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open AI Settings"
-msgstr ""
+msgstr "AI அமைப்புகளைத் திற"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
@@ -1943,7 +1964,7 @@ msgstr "நிறுவனம் / அமைப்பு"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "ஒட்டுமொத்த மதிப்பெண்"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1970,6 +1991,18 @@ msgstr "பத்தியம்"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "அரைநேர"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "பாஸ்கீ வெற்றிகரமாக நீக்கப்பட்டது."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "பாஸ் கீ வெற்றிகரமாகப் பதிவு செய்யப்பட்டது."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "கடவுச்சொற்கள்"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "பரிந்துரைகள்"
 msgid "Refresh"
 msgstr "மீண்டும் ஏற்று"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "புதிய சாதனத்தைப் பதிவு செய்யவும்"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "உங்கள் கடவுச்சொல் நினைவிருக்கிறதா? <0/>"
@@ -2266,11 +2303,11 @@ msgstr "வளங்கள்"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "விண்ணப்பப் பகுப்பாய்வு"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "விண்ணப்பப் பகுப்பாய்வு நிறைவடைந்தது."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2311,11 +2348,15 @@ msgstr "சுழற்சி"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "மதிப்பெண் அட்டை, பலங்கள் மற்றும் முன்னுரிமைப்படுத்தப்பட்ட பரிந்துரைகளைப் பெற உங்கள் முதல் பகுப்பாய்வை இயக்கவும்."
 
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "ரஷ்யன்"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "சேமி"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2352,7 +2393,7 @@ msgstr "பள்ளி"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "மதிப்பெண் அட்டை"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2496,6 +2537,7 @@ msgstr "பதிவு செய்யவும்"
 
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Signing in..."
 msgstr "உள்நுழைகிறது..."
@@ -2622,7 +2664,7 @@ msgstr "தங்கு"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "வலிமைகள்"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2634,7 +2676,7 @@ msgstr "சப்ரெட்டிட்"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "முன்மொழிவுகள்"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -2975,6 +3017,10 @@ msgstr "உங்கள் {providerName} கணக்கை இணைப்ப�
 msgid "Unlock"
 msgstr "பூட்டை திற"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "பெயரிடப்படாத கடவுச்சொல்"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "சரிபார்க்கப்படவில்லை"
@@ -3204,6 +3250,10 @@ msgstr "உள்நுழைய நீங்கள் உங்கள் பய
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "உங்கள் ரெஸ்யூமியை தனித்துவமான பொது URL மூலம் பகிரலாம், அதை கடவுச்சொல்லால் பாதுகாக்கலாம், அல்லது நேரடியாக பகிர்வதற்காக PDF ஆக பதிவிறக்கலாம். விருப்பம் உங்களுடையது!"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "இதை நீங்கள் தவிர்த்து, இயல்புநிலைப் பெயரை வைத்திருக்கலாம்."
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "சேமிக்கப்படாத மாற்றங்கள் இழக்கப்படும்."
@@ -3299,3 +3349,4 @@ msgstr "சிறிதாக்கு"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "ஜூலு"
+
