@@ -8,7 +8,7 @@ msgstr ""
 "Language: te\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-04 11:20\n"
+"PO-Revision-Date: 2026-04-14 08:58\n"
 "Last-Translator: \n"
 "Language-Team: Telugu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -293,11 +293,11 @@ msgstr "మీ రిజ్యూమ్‌ను దిగుమతి చేస
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "రిజ్యూమ్‌ను విశ్లేషించండి"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "విశ్లేషిస్తున్నాను..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -900,6 +900,7 @@ msgstr "డిగ్రీ"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "తొలగించు"
 
@@ -1224,11 +1225,19 @@ msgstr "ఎగుమతి"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "రిజ్యూమ్‌ను విశ్లేషించడంలో విఫలమయ్యాము."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "పాస్‌కీని తొలగించడంలో విఫలమైంది. దయచేసి మళ్ళీ ప్రయత్నించండి."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "రిజ్యూమ్‌ను డూప్లికేట్ చేయడంలో విఫలమైంది"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "పాస్‌కీని నమోదు చేయడంలో విఫలమైంది. దయచేసి మళ్ళీ ప్రయత్నించండి."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1340,11 +1349,11 @@ msgstr "జర్మన్"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "మీ రెజ్యూమెను సమీక్షించుకుని, దాని మొత్తం స్కోరు, బలాలు మరియు ఆచరణాత్మక సూచనలను పొందండి."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "మీ రెజ్యూమె యొక్క సమగ్ర స్కోరు, ముఖ్యమైన బలాలు మరియు ఆచరణాత్మక సూచనలతో కూడిన AI-ఆధారిత లోతైన సమీక్షను పొందండి. ఈ ఫీచర్‌ను యాక్టివేట్ చేయడానికి, దయచేసి మీ AI సెట్టింగ్‌లను అప్‌డేట్ చేయండి."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
@@ -1628,7 +1637,7 @@ msgstr "గత 3 రోజులు"
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "చివరిగా విశ్లేషించినది {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -1750,6 +1759,10 @@ msgstr "దీర్ఘకాలిక స్థిరత్వం"
 msgid "Lost access to your authenticator?"
 msgstr "మీరు మీ ఆథెంటికేటర్‌ను కోల్పోయారా?"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "మ్యాక్‌బుక్ టచ్ ఐడి"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "ప్రధానం"
@@ -1814,6 +1827,10 @@ msgstr "బహుభాషాక"
 msgid "Name"
 msgstr "పేరు"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "మీ పాస్‌కీకి పేరు పెట్టండి"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "నేపాళీ"
@@ -1867,6 +1884,10 @@ msgstr "అనుభవం లేదు"
 msgid "No jobs found. Try a different search query."
 msgstr "ఉద్యోగాలు కనుగొనబడలేదు. వేరే శోధన పదాన్ని ప్రయత్నించండి."
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "ఇంకా పాస్‌కీలు నమోదు కాలేదు."
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "ఏ ఫలితాలు లభించలేదు."
@@ -1902,7 +1923,7 @@ msgstr "ఓపెన్"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open AI Settings"
-msgstr ""
+msgstr "AI సెట్టింగ్‌లను తెరవండి"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
@@ -1943,7 +1964,7 @@ msgstr "ఆర్గనైజేషన్"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "మొత్తం స్కోరు"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -1970,6 +1991,18 @@ msgstr "పేరాగ్రాఫ్"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "అరకొర"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "పాస్‌కీ విజయవంతంగా తొలగించబడింది."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "పాస్‌కీ విజయవంతంగా నమోదైంది."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "పాస్‌కీలు"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "రిఫరెన్స్లు"
 msgid "Refresh"
 msgstr "రిఫ్రెష్ చేయండి"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "కొత్త పరికరాన్ని నమోదు చేయండి"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "మీ పాస్‌వర్డ్ గుర్తుందా? <0/>"
@@ -2266,11 +2303,11 @@ msgstr "వనరులు"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "రిజ్యూమ్ విశ్లేషణ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "రిజ్యూమ్ విశ్లేషణ పూర్తయింది."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2311,11 +2348,15 @@ msgstr "రోటేషన్"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "స్కోర్‌కార్డ్, బలాలు మరియు ప్రాధాన్యతా సూచనలను పొందడానికి మీ మొదటి విశ్లేషణను అమలు చేయండి."
 
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "రష్యన్"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "పొదుపు చేయండి"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2352,7 +2393,7 @@ msgstr "పాఠశాల"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "స్కోర్‌కార్డ్"
 
 #: src/routes/dashboard/job-search/index.tsx
 #: src/routes/dashboard/job-search/index.tsx
@@ -2496,6 +2537,7 @@ msgstr "సైన్ అప్ చేయండి"
 
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Signing in..."
 msgstr "సైన్ ఇన్ చేస్తున్నారు..."
@@ -2622,7 +2664,7 @@ msgstr "ఉండు"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "బలాలు"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -2634,7 +2676,7 @@ msgstr "సబ్రెడిట్"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "సూచనలు"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -2975,6 +3017,10 @@ msgstr "మీ {providerName} ఖాతా అన్లింక్ చేస్
 msgid "Unlock"
 msgstr "అన్‌లాక్"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "పేరులేని పాస్‌కీ"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "అన్‌వెరిఫైడ్"
@@ -3204,6 +3250,10 @@ msgstr "మీరు మీ యూజర్‌నేమ్‌తో కూడా
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "మీ రిజ్యూమ్‌ను ప్రత్యేకమైన పబ్లిక్ URL ద్వారా షేర్ చేయవచ్చు, దానికి పాస్‌వర్డ్ రక్షణ ఇవ్వచ్చు లేదా డైరెక్టుగా షేర్ చేసేందుకు PDFగా డౌన్లోడ్ చేసుకోవచ్చు. ఎంపిక మీదే!"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "మీరు దీన్ని వదిలివేసి, డిఫాల్ట్ పేరును ఉంచుకోవచ్చు."
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "మీ సేవ్ చేయని మార్పులు పోతాయి."
@@ -3299,3 +3349,4 @@ msgstr "జూమ్ అవుట్ చేయండి"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "జులు"
+
