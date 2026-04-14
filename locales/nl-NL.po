@@ -8,7 +8,7 @@ msgstr ""
 "Language: nl\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 18:32\n"
+"PO-Revision-Date: 2026-04-14 08:57\n"
 "Last-Translator: \n"
 "Language-Team: Dutch\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -900,6 +900,7 @@ msgstr "Graad"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "Verwijderen"
 
@@ -1226,9 +1227,17 @@ msgstr "Exporteren"
 msgid "Failed to analyze resume."
 msgstr "Kan cv niet analyseren."
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to delete passkey. Please try again."
+msgstr "Het verwijderen van de passkey is mislukt. Probeer het opnieuw."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Duplicaat van cv mislukt"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to register passkey. Please try again."
+msgstr "Het registreren van de passkey is mislukt. Probeer het opnieuw."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1750,6 +1759,10 @@ msgstr "Langdurige duurzaamheid"
 msgid "Lost access to your authenticator?"
 msgstr "Geen toegang meer tot uw authenticator?"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "MacBook Touch ID"
+msgstr "MacBook Touch ID"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "Algemeen"
@@ -1814,6 +1827,10 @@ msgstr "Meertalig"
 msgid "Name"
 msgstr "Naam"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Name your passkey"
+msgstr "Geef uw passkey een naam"
+
 #: src/utils/locale.ts
 msgid "Nepali"
 msgstr "Nepalees"
@@ -1866,6 +1883,10 @@ msgstr "Geen ervaring"
 #: src/routes/dashboard/job-search/index.tsx
 msgid "No jobs found. Try a different search query."
 msgstr "Geen vacatures gevonden. Probeer een andere zoekopdracht."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "No passkeys registered yet."
+msgstr "Er zijn nog geen paskeys geregistreerd."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -1970,6 +1991,18 @@ msgstr "Paragraaf"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "Deeltijd"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey deleted successfully."
+msgstr "Passkey succesvol verwijderd."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkey registered successfully."
+msgstr "Passkey succesvol geregistreerd."
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Passkeys"
+msgstr "Passleutels"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2189,6 +2222,10 @@ msgstr "Referenties"
 msgid "Refresh"
 msgstr "Vernieuwen"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Register New Device"
+msgstr "Nieuw apparaat registreren"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "Wachtwoord nog weten? <0/>"
@@ -2316,6 +2353,10 @@ msgstr "Voer uw eerste analyse uit om een scorekaart, sterke punten en gepriorit
 #: src/utils/locale.ts
 msgid "Russian"
 msgstr "Russisch"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Save"
+msgstr "Sla"
 
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
@@ -2494,6 +2535,7 @@ msgstr "Log in met GitHub, Google of een aangepaste OAuth-provider."
 msgid "Sign up"
 msgstr "Registreren"
 
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
@@ -2975,6 +3017,10 @@ msgstr "Uw {providerName}-account wordt ontkoppeld..."
 msgid "Unlock"
 msgstr "Ontgrendelen"
 
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Unnamed passkey"
+msgstr "Naamloze sleutel"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
 msgstr "Niet geverifiëerd"
@@ -3203,6 +3249,10 @@ msgstr "U kunt ook uw gebruikersnaam gebruiken om in te loggen."
 #: src/routes/_home/-sections/faq.tsx
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "U kunt uw cv delen via een unieke openbare URL, het met een wachtwoord beveiligen of het downloaden als PDF om direct te delen. De keuze is aan u!"
+
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "You can skip this and keep the default name."
+msgstr "U kunt dit overslaan en de standaardnaam behouden."
 
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
