@@ -23,6 +23,15 @@ export function InterestsItem({ className, ...item }: InterestsItemProps) {
           {item.keywords.join(", ")}
         </span>
       )}
+
+      {/* Description */}
+      {item.description && (
+        <div
+          className="section-item-description interests-item-description opacity-80"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: item.description }}
+        />
+      )}
     </div>
   );
 }
