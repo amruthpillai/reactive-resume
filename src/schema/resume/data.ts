@@ -169,6 +169,10 @@ export const interestItemSchema = baseItemSchema.extend({
     .array(z.string())
     .catch([])
     .describe("The keywords associated with the interest/hobby, if any. These are displayed as tags below the name."),
+  description: z
+    .string()
+    .catch("")
+    .describe("A free-text description of the interest/hobby. Supports HTML formatting."),
 });
 
 export const languageItemSchema = baseItemSchema.extend({

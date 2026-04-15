@@ -10,6 +10,7 @@ import type { DialogProps } from "@/dialogs/store";
 
 import { ChipInput } from "@/components/input/chip-input";
 import { IconPicker } from "@/components/input/icon-picker";
+import { RichInput } from "@/components/input/rich-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -38,6 +39,7 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
       icon: data?.item?.icon ?? "acorn",
       name: data?.item?.name ?? "",
       keywords: data?.item?.keywords ?? [],
+      description: data?.item?.description ?? "",
     },
   });
 
@@ -91,6 +93,7 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
       icon: data.item.icon,
       name: data.item.name,
       keywords: data.item.keywords,
+      description: data.item.description ?? "",
     },
   });
 
@@ -181,6 +184,20 @@ function InterestForm() {
               <Trans>Keywords</Trans>
             </FormLabel>
             <FormControl render={<ChipInput {...field} />} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem className="col-span-full">
+            <FormLabel>
+              <Trans>Description</Trans>
+            </FormLabel>
+            <FormControl render={<RichInput {...field} value={field.value} onChange={field.onChange} />} />
             <FormMessage />
           </FormItem>
         )}
