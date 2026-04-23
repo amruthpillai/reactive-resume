@@ -1,4 +1,5 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
+import { t } from "@lingui/core/macro";
+import { CaretDownIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 
 import type { SectionType } from "@/schema/resume/data";
 
@@ -24,16 +25,17 @@ export function SectionBase({ type, className, ...props }: Props) {
     return state.resume.data.sections[type];
   });
 
-  const isHidden = "hidden" in section && section.hidden;
   const collapsed = useSectionStore((state) => state.sections[type]?.collapsed ?? false);
+  const isSidebarHidden = useSectionStore((state) => state.sections[type]?.hidden ?? false);
   const toggleCollapsed = useSectionStore((state) => state.toggleCollapsed);
+  const toggleHidden = useSectionStore((state) => state.toggleHidden);
 
   return (
     <Accordion
       id={`sidebar-${type}`}
       value={collapsed ? [] : [type]}
       onValueChange={() => toggleCollapsed(type)}
-      className={cn("space-y-4", isHidden && "opacity-50")}
+      className="space-y-4"
     >
       <AccordionItem value={type} className="group/accordion-item space-y-4">
         <div className="flex items-center">
@@ -52,6 +54,17 @@ export function SectionBase({ type, className, ...props }: Props) {
               {("title" in section && section.title) || getSectionTitle(type)}
             </h2>
           </div>
+
+          <Button
+            size="icon"
+            variant="ghost"
+            type="button"
+            title={isSidebarHidden ? t`Show in sidebar` : t`Hide from sidebar`}
+            aria-label={isSidebarHidden ? t`Show in sidebar` : t`Hide from sidebar`}
+            onClick={() => toggleHidden(type)}
+          >
+            {isSidebarHidden ? <EyeIcon /> : <EyeSlashIcon />}
+          </Button>
 
           {!["picture", "basics", "custom"].includes(type) && (
             <SectionDropdownMenu type={type as "summary" | SectionType} />

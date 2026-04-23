@@ -3,8 +3,6 @@ import { Plural, Trans } from "@lingui/react/macro";
 import {
   BroomIcon,
   ColumnsIcon,
-  EyeClosedIcon,
-  EyeIcon,
   ListIcon,
   PencilSimpleLineIcon,
   PlusIcon,
@@ -48,16 +46,6 @@ export function SectionDropdownMenu({ type }: Props) {
   const onAddItem = () => {
     if (type === "summary") return;
     openDialog(`resume.sections.${type}.create`, undefined);
-  };
-
-  const onToggleVisibility = () => {
-    updateResumeData((draft) => {
-      if (type === "summary") {
-        draft.summary.hidden = !draft.summary.hidden;
-      } else {
-        draft.sections[type].hidden = !draft.sections[type].hidden;
-      }
-    });
   };
 
   const onRenameSection = async () => {
@@ -130,11 +118,6 @@ export function SectionDropdownMenu({ type }: Props) {
         )}
 
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={onToggleVisibility}>
-            {section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
-            {section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
-          </DropdownMenuItem>
-
           <DropdownMenuItem onClick={onRenameSection}>
             <PencilSimpleLineIcon />
             <Trans>Rename</Trans>
