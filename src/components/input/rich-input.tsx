@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
+import { type ColorResult, hsvaToRgbaString, rgbaStringToHsva } from "@uiw/color-convert";
 import {
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,
@@ -38,9 +39,12 @@ import {
   TextUnderlineIcon,
   TrashSimpleIcon,
 } from "@phosphor-icons/react";
+import ReactColorColorful from "@uiw/react-color-colorful";
+import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import { TableKit } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
 import {
   type Editor,
   EditorContent,
@@ -65,6 +69,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
 import { usePrompt } from "@/hooks/use-prompt";
 import { isRTL } from "@/utils/locale";
 import { sanitizeHtml } from "@/utils/sanitize";
@@ -72,6 +77,27 @@ import { cn } from "@/utils/style";
 
 import { Toggle } from "../ui/toggle";
 import styles from "./rich-input.module.css";
+
+const defaultTextColor = "rgba(0, 0, 0, 1)";
+
+const richTextColorOptions = [
+  "rgba(0, 0, 0, 1)",
+  "rgba(231, 0, 11, 1)",
+  "rgba(245, 73, 0, 1)",
+  "rgba(225, 113, 0, 1)",
+  "rgba(208, 135, 0, 1)",
+  "rgba(94, 165, 0, 1)",
+  "rgba(0, 166, 62, 1)",
+  "rgba(0, 153, 102, 1)",
+  "rgba(0, 146, 184, 1)",
+  "rgba(0, 132, 209, 1)",
+  "rgba(21, 93, 252, 1)",
+  "rgba(79, 57, 246, 1)",
+  "rgba(127, 34, 254, 1)",
+  "rgba(200, 0, 222, 1)",
+  "rgba(230, 0, 118, 1)",
+  "rgba(69, 85, 108, 1)",
+] as const;
 
 const extensions = [
   StarterKit.configure({
@@ -88,6 +114,8 @@ const extensions = [
       protocols: ["http", "https"],
     },
   }),
+  TextStyle,
+  Color,
   Highlight.configure({
     HTMLAttributes: {
       class: "rounded-md px-0.5 py-px",
@@ -222,6 +250,12 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
         isHighlight: ctx.editor.isActive("highlight") ?? false,
         canHighlight: ctx.editor.can().chain().toggleHighlight().run() ?? false,
         toggleHighlight: () => ctx.editor.chain().focus().toggleHighlight().run(),
+
+        // Text Color
+        textColor: (ctx.editor.getAttributes("textStyle").color as string | undefined) ?? null,
+        canTextColor: ctx.editor.can().chain().setColor(defaultTextColor).run() ?? false,
+        setTextColor: (color: string) => ctx.editor.chain().focus().setColor(color).run(),
+        unsetTextColor: () => ctx.editor.chain().focus().unsetColor().run(),
 
         // Heading 1
         isHeading1: ctx.editor.isActive("heading", { level: 1 }) ?? false,
@@ -417,6 +451,64 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
       >
         <HighlighterCircleIcon className="size-3.5" />
       </Toggle>
+
+      <Popover>
+        <PopoverTrigger
+          render={
+            <Button
+              size={isFullscreen ? "lg" : "sm"}
+              tabIndex={-1}
+              variant="ghost"
+              className={cn("rounded-none px-2", state.textColor && "bg-muted text-foreground")}
+              title={t`Text Color`}
+              disabled={!state.canTextColor}
+            >
+              <span className="flex flex-col items-center leading-none">
+                <span className="text-xs font-semibold">A</span>
+                <span
+                  className="mt-0.5 h-0.5 w-3 rounded-full"
+                  style={{ backgroundColor: state.textColor ?? "currentColor" }}
+                />
+              </span>
+            </Button>
+          }
+        />
+
+        <PopoverContent sideOffset={8} className="w-72 space-y-3 rounded-md p-3">
+          <PopoverHeader className="flex items-center justify-between gap-3">
+            <PopoverTitle>
+              <Trans>Text Color</Trans>
+            </PopoverTitle>
+
+            <Button variant="ghost" size="xs" onClick={state.unsetTextColor} disabled={!state.textColor}>
+              <Trans>Clear</Trans>
+            </Button>
+          </PopoverHeader>
+
+          <div className="grid grid-cols-8 gap-1.5">
+            {richTextColorOptions.map((color) => (
+              <button
+                key={color}
+                type="button"
+                className={cn(
+                  "size-6 rounded-md border border-border transition-transform hover:scale-110",
+                  state.textColor === color && "ring-2 ring-ring ring-offset-2 ring-offset-background",
+                )}
+                style={{ backgroundColor: color }}
+                title={color}
+                onClick={() => state.setTextColor(color)}
+              />
+            ))}
+          </div>
+
+          <ReactColorColorful
+            color={rgbaStringToHsva(state.textColor ?? defaultTextColor)}
+            onChange={(color: ColorResult) => {
+              state.setTextColor(hsvaToRgbaString(color.hsva));
+            }}
+          />
+        </PopoverContent>
+      </Popover>
 
       <div className="mx-1 h-5 w-px bg-border" />
 
