@@ -56,6 +56,12 @@ const providerOptions: (ComboboxOption<AIProvider> & { defaultBaseURL: string })
     keywords: ["gemini", "google", "bard"],
     defaultBaseURL: "https://generativelanguage.googleapis.com/v1beta",
   },
+  {
+    value: "zen",
+    label: "Zen (OpenCode.ai)",
+    keywords: ["zen", "opencode", "gateway"],
+    defaultBaseURL: "https://opencode.ai/zen/v1",
+  },
 ];
 
 function AIForm() {

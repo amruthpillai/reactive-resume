@@ -195,7 +195,7 @@ function normalizeResumeDataForSchema(data: Record<string, unknown>) {
   return { ...data, sections: normalizedSections };
 }
 
-export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
+export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway", "zen"]);
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -209,6 +209,21 @@ type GetModelInput = {
 const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
 
+function getZenModel({ model, apiKey, baseURL }: { model: string; apiKey: string; baseURL: string }) {
+  const lowerModel = model.toLowerCase();
+
+  if (lowerModel.startsWith("claude")) {
+    return createAnthropic({ apiKey, baseURL }).languageModel(model);
+  }
+
+  if (lowerModel.startsWith("gemini")) {
+    return createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model);
+  }
+
+  // GPT, o1, o3, o4 and all other models use the OpenAI-compatible endpoint
+  return createOpenAI({ apiKey, baseURL }).chat(model);
+}
+
 function getModel(input: GetModelInput) {
   const { provider, model, apiKey } = input;
   const baseURL = input.baseURL || undefined;
@@ -219,6 +234,7 @@ function getModel(input: GetModelInput) {
     .with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
     .with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
     .with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
+    .with("zen", () => getZenModel({ model, apiKey, baseURL: baseURL || "https://opencode.ai/zen/v1" }))
     .exhaustive();
 }
 
