@@ -56,6 +56,12 @@ const providerOptions: (ComboboxOption<AIProvider> & { defaultBaseURL: string })
     keywords: ["gemini", "google", "bard"],
     defaultBaseURL: "https://generativelanguage.googleapis.com/v1beta",
   },
+  {
+    value: "openrouter",
+    label: "OpenRouter",
+    keywords: ["openrouter", "router", "multi", "proxy"],
+    defaultBaseURL: "https://openrouter.ai/api/v1",
+  },
 ];
 
 function AIForm() {

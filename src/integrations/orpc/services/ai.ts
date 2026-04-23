@@ -195,7 +195,7 @@ function normalizeResumeDataForSchema(data: Record<string, unknown>) {
   return { ...data, sections: normalizedSections };
 }
 
-export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
+export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway", "openrouter"]);
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -219,6 +219,7 @@ function getModel(input: GetModelInput) {
     .with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
     .with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
     .with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
+    .with("openrouter", () => createOpenAI({ apiKey, baseURL: baseURL || "https://openrouter.ai/api/v1" }).chat(model))
     .exhaustive();
 }
 
