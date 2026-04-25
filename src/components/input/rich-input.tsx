@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
-import { type ColorResult, hsvaToRgbaString, rgbaStringToHsva } from "@uiw/color-convert";
 import {
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,
@@ -39,7 +38,6 @@ import {
   TextUnderlineIcon,
   TrashSimpleIcon,
 } from "@phosphor-icons/react";
-import ReactColorColorful from "@uiw/react-color-colorful";
 import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import { TableKit } from "@tiptap/extension-table";
@@ -54,6 +52,8 @@ import {
   useEditorState,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { type ColorResult, hsvaToRgbaString, rgbaStringToHsva } from "@uiw/color-convert";
+import ReactColorColorful from "@uiw/react-color-colorful";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
@@ -70,6 +70,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { usePrompt } from "@/hooks/use-prompt";
 import { isRTL } from "@/utils/locale";
 import { sanitizeHtml } from "@/utils/sanitize";
@@ -482,39 +483,77 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
           }
         />
 
-        <PopoverContent sideOffset={8} className="w-72 space-y-3 rounded-md p-3">
-          <PopoverHeader className="flex items-center justify-between gap-3">
-            <PopoverTitle>
-              <Trans>Text Color</Trans>
-            </PopoverTitle>
+        <PopoverContent sideOffset={8} className="w-80 gap-3 rounded-xl p-3 shadow-xl">
+          <PopoverHeader className="flex-row items-start justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <span
+                className="grid size-9 place-items-center rounded-lg border border-border bg-muted/60 text-sm font-semibold shadow-xs"
+                style={{ color: state.textColor ?? "currentColor" }}
+              >
+                A
+              </span>
 
-            <Button variant="ghost" size="xs" onClick={state.unsetTextColor} disabled={!state.textColor}>
+              <div className="flex flex-col gap-0.5">
+                <PopoverTitle>
+                  <Trans>Text Color</Trans>
+                </PopoverTitle>
+                <span className="text-xs text-muted-foreground">
+                  <Trans>Choose a preset or custom shade.</Trans>
+                </span>
+              </div>
+            </div>
+
+            <Button
+              size="xs"
+              variant="ghost"
+              className="shrink-0"
+              onClick={state.unsetTextColor}
+              disabled={!state.textColor}
+            >
               <Trans>Clear</Trans>
             </Button>
           </PopoverHeader>
 
-          <div className="grid grid-cols-8 gap-1.5">
-            {richTextColorOptions.map((color) => (
-              <button
-                key={color}
-                type="button"
-                className={cn(
-                  "size-6 rounded-md border border-border transition-transform hover:scale-110",
-                  state.textColor === color && "ring-2 ring-ring ring-offset-2 ring-offset-background",
-                )}
-                style={{ backgroundColor: color }}
-                title={color}
-                onClick={() => state.setTextColor(color)}
-              />
-            ))}
+          <Separator />
+
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-medium text-muted-foreground">
+              <Trans>Presets</Trans>
+            </span>
+
+            <div className="grid grid-cols-8 gap-2 rounded-lg bg-muted/40 p-2">
+              {richTextColorOptions.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className={cn(
+                    "size-7 rounded-full border border-border shadow-xs ring-offset-background transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden",
+                    state.textColor === color && "ring-2 ring-ring ring-offset-2",
+                  )}
+                  style={{ backgroundColor: color }}
+                  title={color}
+                  aria-label={t`Use color ${color}`}
+                  aria-pressed={state.textColor === color}
+                  onClick={() => state.setTextColor(color)}
+                />
+              ))}
+            </div>
           </div>
 
-          <ReactColorColorful
-            color={rgbaStringToHsva(state.textColor ?? defaultTextColor)}
-            onChange={(color: ColorResult) => {
-              state.setTextColor(hsvaToRgbaString(color.hsva));
-            }}
-          />
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-medium text-muted-foreground">
+              <Trans>Custom</Trans>
+            </span>
+
+            <div className={styles.color_picker}>
+              <ReactColorColorful
+                color={rgbaStringToHsva(state.textColor ?? defaultTextColor)}
+                onChange={(color: ColorResult) => {
+                  state.setTextColor(hsvaToRgbaString(color.hsva));
+                }}
+              />
+            </div>
+          </div>
         </PopoverContent>
       </Popover>
 

@@ -5,7 +5,7 @@ interface CommonControlledStateProps<T> {
   defaultValue?: T;
 }
 
-export type UseControlledStateProps<T, Rest extends any[] = []> = CommonControlledStateProps<T> & {
+type UseControlledStateProps<T, Rest extends any[] = []> = CommonControlledStateProps<T> & {
   onChange?: (value: T, ...args: Rest) => void;
 };
 

@@ -47,12 +47,10 @@ function toDocxColorValue(value: string) {
   const rgba = parseColorString(value);
   if (!rgba) return null;
 
-  return [rgba.r, rgba.g, rgba.b]
-    .map((channel) => channel.toString(16).padStart(2, "0").toUpperCase())
-    .join("");
+  return [rgba.r, rgba.g, rgba.b].map((channel) => channel.toString(16).padStart(2, "0").toUpperCase()).join("");
 }
 
-function mergeStyle(parent: InlineStyle, tag: string, element?: Element): InlineStyle {
+function mergeStyle(parent: InlineStyle, tag: string, element?: HTMLElement): InlineStyle {
   const next = { ...parent };
 
   switch (tag) {
@@ -79,7 +77,7 @@ function mergeStyle(parent: InlineStyle, tag: string, element?: Element): Inline
       break;
   }
 
-  const colorValue = element?.style.color;
+  const colorValue = (element as HTMLElement | undefined)?.style.color;
   if (colorValue) {
     const color = toDocxColorValue(colorValue);
     if (color) next.color = color;
@@ -102,7 +100,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 
     if (child.nodeType !== Node.ELEMENT_NODE) continue;
 
-    const el = child as Element;
+    const el = child as HTMLElement;
     const tag = el.tagName;
 
     if (tag === "BR") {
@@ -129,7 +127,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 }
 
 function processBlockElement(
-  el: Element,
+  el: HTMLElement,
   style: InlineStyle,
   paragraphs: Paragraph[],
   listLevel?: number,
@@ -188,7 +186,7 @@ function processBlockElement(
               );
             }
           } else if (liChild.nodeType === Node.ELEMENT_NODE) {
-            processBlockElement(liChild as Element, mergedStyle, paragraphs, level, numberingRef, listIndex);
+            processBlockElement(liChild as HTMLElement, mergedStyle, paragraphs, level, numberingRef, listIndex);
           }
         }
       } else {
@@ -292,7 +290,7 @@ export function htmlToParagraphs(html: string, styleConfig?: HtmlStyleConfig): P
     }
 
     if (child.nodeType === Node.ELEMENT_NODE) {
-      processBlockElement(child as Element, baseStyle, paragraphs);
+      processBlockElement(child as HTMLElement, baseStyle, paragraphs);
     }
   }
 

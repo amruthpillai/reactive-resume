@@ -56,13 +56,7 @@ describe("buildResumeFontFamily", () => {
   it("uses sans-oriented Chinese fallbacks for sans body fonts", () => {
     const fonts = splitFontStack(buildResumeFontFamily("Inter"));
 
-    expect(fonts.slice(0, 5)).toEqual([
-      "Inter",
-      "Noto Sans SC",
-      "PingFang SC",
-      "Hiragino Sans GB",
-      "Microsoft YaHei",
-    ]);
+    expect(fonts.slice(0, 5)).toEqual(["Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei"]);
     expect(fonts.at(-1)).toBe("sans-serif");
   });
 });

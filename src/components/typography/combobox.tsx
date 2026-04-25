@@ -1,13 +1,6 @@
 import { useMemo } from "react";
 
-import {
-  fontList,
-  getFont,
-  getFontDisplayName,
-  getFontSearchKeywords,
-  localFontList,
-  webFontMap,
-} from "@/utils/fonts";
+import { fontList, getFont, getFontDisplayName, getFontSearchKeywords, localFontList, webFontMap } from "@/utils/fonts";
 import { cn } from "@/utils/style";
 
 import { Combobox, type MultiComboboxProps, type SingleComboboxProps } from "../ui/combobox";
