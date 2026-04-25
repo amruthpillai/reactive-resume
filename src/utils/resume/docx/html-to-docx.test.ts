@@ -229,6 +229,17 @@ describe("htmlToParagraphs", () => {
     expect(result).toHaveLength(1);
   });
 
+  it("preserves inline text colors from rich text spans", () => {
+    const result = htmlToParagraphs('<p><span style="color: rgba(21, 93, 252, 1)">Styled</span></p>');
+    expect(result).toHaveLength(1);
+
+    const children = getChildren(result[0] as Paragraph);
+    const textRun = children.find((child) => child instanceof TextRun);
+
+    expect(textRun).toBeDefined();
+    expect(JSON.stringify(textRun)).toContain('"val":"155DFC"');
+  });
+
   it("applies linkColor from styleConfig", () => {
     const result = htmlToParagraphs('<p><a href="https://example.com">link</a></p>', {
       linkColor: "FF0000",

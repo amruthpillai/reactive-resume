@@ -7,6 +7,8 @@ import {
   TextRun,
 } from "docx";
 
+import { parseColorString } from "@/utils/color";
+
 import { toSafeDocxLink } from "./link-utils";
 
 export interface HtmlStyleConfig {
@@ -41,7 +43,14 @@ const HEADING_MAP: Record<string, (typeof HeadingLevel)[keyof typeof HeadingLeve
   H6: HeadingLevel.HEADING_6,
 };
 
-function mergeStyle(parent: InlineStyle, tag: string): InlineStyle {
+function toDocxColorValue(value: string) {
+  const rgba = parseColorString(value);
+  if (!rgba) return null;
+
+  return [rgba.r, rgba.g, rgba.b].map((channel) => channel.toString(16).padStart(2, "0").toUpperCase()).join("");
+}
+
+function mergeStyle(parent: InlineStyle, tag: string, element?: HTMLElement): InlineStyle {
   const next = { ...parent };
 
   switch (tag) {
@@ -68,6 +77,12 @@ function mergeStyle(parent: InlineStyle, tag: string): InlineStyle {
       break;
   }
 
+  const colorValue = (element as HTMLElement | undefined)?.style.color;
+  if (colorValue) {
+    const color = toDocxColorValue(colorValue);
+    if (color) next.color = color;
+  }
+
   return next;
 }
 
@@ -85,7 +100,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 
     if (child.nodeType !== Node.ELEMENT_NODE) continue;
 
-    const el = child as Element;
+    const el = child as HTMLElement;
     const tag = el.tagName;
 
     if (tag === "BR") {
@@ -104,7 +119,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
       continue;
     }
 
-    const merged = mergeStyle(style, tag);
+    const merged = mergeStyle(style, tag, el);
     children.push(...collectInlineChildren(el, merged));
   }
 
@@ -112,7 +127,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 }
 
 function processBlockElement(
-  el: Element,
+  el: HTMLElement,
   style: InlineStyle,
   paragraphs: Paragraph[],
   listLevel?: number,
@@ -120,9 +135,10 @@ function processBlockElement(
   listIndex?: number,
 ): void {
   const tag = el.tagName;
+  const mergedStyle = mergeStyle(style, tag, el);
 
   if (HEADING_MAP[tag]) {
-    const inlineChildren = collectInlineChildren(el, style);
+    const inlineChildren = collectInlineChildren(el, mergedStyle);
     if (inlineChildren.length > 0) {
       paragraphs.push(new Paragraph({ heading: HEADING_MAP[tag], children: inlineChildren }));
     }
@@ -130,7 +146,7 @@ function processBlockElement(
   }
 
   if (tag === "P" || tag === "DIV") {
-    const inlineChildren = collectInlineChildren(el, style);
+    const inlineChildren = collectInlineChildren(el, mergedStyle);
     if (inlineChildren.length > 0) {
       paragraphs.push(
         new Paragraph({
@@ -162,7 +178,7 @@ function processBlockElement(
             if (text) {
               paragraphs.push(
                 new Paragraph({
-                  children: [new TextRun({ text, ...style })],
+                  children: [new TextRun({ text, ...mergedStyle })],
                   ...(isOrdered && numberingRef
                     ? { numbering: { reference: numberingRef, level, instance: listIndex } }
                     : { bullet: { level } }),
@@ -170,11 +186,11 @@ function processBlockElement(
               );
             }
           } else if (liChild.nodeType === Node.ELEMENT_NODE) {
-            processBlockElement(liChild as Element, style, paragraphs, level, numberingRef, listIndex);
+            processBlockElement(liChild as HTMLElement, mergedStyle, paragraphs, level, numberingRef, listIndex);
           }
         }
       } else {
-        const inlineChildren = collectInlineChildren(li, style);
+        const inlineChildren = collectInlineChildren(li, mergedStyle);
         if (inlineChildren.length > 0) {
           paragraphs.push(
             new Paragraph({
@@ -192,7 +208,7 @@ function processBlockElement(
 
   if (tag === "BLOCKQUOTE") {
     const indent: ISpacingProperties = {};
-    const inlineChildren = collectInlineChildren(el, { ...style, italics: true });
+    const inlineChildren = collectInlineChildren(el, { ...mergedStyle, italics: true });
     if (inlineChildren.length > 0) {
       paragraphs.push(
         new Paragraph({
@@ -210,7 +226,7 @@ function processBlockElement(
     if (text) {
       paragraphs.push(
         new Paragraph({
-          children: [new TextRun({ text, font: "Courier New", ...style })],
+          children: [new TextRun({ text, font: "Courier New", ...mergedStyle })],
         }),
       );
     }
@@ -223,7 +239,7 @@ function processBlockElement(
   }
 
   if (tag === "LI") {
-    const inlineChildren = collectInlineChildren(el, style);
+    const inlineChildren = collectInlineChildren(el, mergedStyle);
     if (inlineChildren.length > 0) {
       paragraphs.push(
         new Paragraph({
@@ -236,7 +252,7 @@ function processBlockElement(
   }
 
   // Fallback: treat as inline container
-  const inlineChildren = collectInlineChildren(el, style);
+  const inlineChildren = collectInlineChildren(el, mergedStyle);
   if (inlineChildren.length > 0) {
     paragraphs.push(new Paragraph({ children: inlineChildren }));
   }
@@ -274,7 +290,7 @@ export function htmlToParagraphs(html: string, styleConfig?: HtmlStyleConfig): P
     }
 
     if (child.nodeType === Node.ELEMENT_NODE) {
-      processBlockElement(child as Element, baseStyle, paragraphs);
+      processBlockElement(child as HTMLElement, baseStyle, paragraphs);
     }
   }
 

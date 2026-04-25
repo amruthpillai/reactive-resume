@@ -39,6 +39,15 @@ describe("sanitizeHtml", () => {
     const html = "<table><tr><td>cell</td></tr></table>";
     expect(sanitizeHtml(html)).toContain("<table>");
   });
+
+  it("should preserve safe inline text colors", () => {
+    const html = '<p><span style="color: rgba(21, 93, 252, 1)">colored</span></p>';
+    const result = sanitizeHtml(html);
+
+    expect(result).toContain("<span");
+    expect(result).toContain("color:");
+    expect(result).toContain("colored");
+  });
 });
 
 describe("sanitizeCss", () => {

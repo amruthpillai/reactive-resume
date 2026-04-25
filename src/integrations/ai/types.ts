@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const AI_PROVIDERS = ["openai", "anthropic", "gemini", "vercel-ai-gateway", "openrouter", "ollama"] as const;
+const AI_PROVIDERS = ["openai", "anthropic", "gemini", "vercel-ai-gateway", "openrouter", "ollama"] as const;
 
 export type AIProvider = (typeof AI_PROVIDERS)[number];
 

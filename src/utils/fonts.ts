@@ -4,7 +4,7 @@ import webFontListJSON from "@/components/typography/webfontlist.json";
 
 type FontCategory = LocalFont["category"];
 type FontWeight = LocalFont["weights"][number];
-export type FontRecord = LocalFont | WebFont;
+type FontRecord = LocalFont | WebFont;
 
 const preferredChineseFontFamilies = [
   "Noto Sans SC",
@@ -101,7 +101,7 @@ const genericFontFamilies = new Set([
   "ui-serif",
 ]);
 
-export const webFontList = webFontListJSON as WebFont[];
+const webFontList = webFontListJSON as WebFont[];
 export const webFontMap = new Map<string, WebFont>(webFontList.map((font) => [font.family, font]));
 
 const webFontFamilies = new Set(webFontList.map((font) => font.family));
@@ -138,7 +138,7 @@ export function getFont(family: string) {
   return fontMap.get(family);
 }
 
-export function getFontCategory(family: string): FontCategory | null {
+function getFontCategory(family: string): FontCategory | null {
   return getFont(family)?.category ?? null;
 }
 
@@ -158,7 +158,7 @@ function getCjkFallbacksByCategory(category: FontCategory | null) {
   return category === "serif" ? resumeCjkSerifFontFallbacks : resumeCjkSansFontFallbacks;
 }
 
-export function getPrimaryCjkWebFont(family: string) {
+function getPrimaryCjkWebFont(family: string) {
   const category = getFontCategory(family);
   return category === "serif" ? "Noto Serif SC" : "Noto Sans SC";
 }
