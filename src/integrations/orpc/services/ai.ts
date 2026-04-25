@@ -3,6 +3,7 @@ import type { ModelMessage } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { streamToEventIterator } from "@orpc/server";
 import {
   convertToModelMessages,
@@ -14,8 +15,8 @@ import {
   tool,
   type UIMessage,
 } from "ai";
-import { createOllama } from "ai-sdk-ollama";
 import { jsonrepair } from "jsonrepair";
+import { createOllama } from "ollama-ai-provider-v2";
 import { match } from "ts-pattern";
 import z, { flattenError, ZodError } from "zod";
 
@@ -34,9 +35,10 @@ import {
   patchResumeDescription,
   patchResumeInputSchema,
 } from "@/integrations/ai/tools/patch-resume";
+import { aiProviderSchema, type AIProvider } from "@/integrations/ai/types";
 import { resumeAnalysisSchema, type ResumeAnalysis } from "@/schema/resume/analysis";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
-import { type TailorOutput, tailorOutputSchema } from "@/schema/tailor";
+import { tailorOutputSchema, type TailorOutput } from "@/schema/tailor";
 import { buildAiExtractionTemplate } from "@/utils/ai-template";
 import { env } from "@/utils/env";
 import { isObject } from "@/utils/sanitize";
@@ -201,10 +203,6 @@ function normalizeResumeDataForSchema(data: Record<string, unknown>) {
   return { ...data, sections: normalizedSections };
 }
 
-export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway", "openrouter"]);
-
-type AIProvider = z.infer<typeof aiProviderSchema>;
-
 type GetModelInput = {
   provider: AIProvider;
   model: string;
@@ -220,16 +218,13 @@ const defaultProviderHosts: Record<Exclude<AIProvider, "ollama">, string[]> = {
   anthropic: ["api.anthropic.com"],
   gemini: ["generativelanguage.googleapis.com"],
   "vercel-ai-gateway": ["gateway.ai.vercel.com"],
+  openrouter: ["openrouter.ai"],
 };
 
-function resolveBaseUrl(input: GetModelInput) {
+function resolveBaseUrl(input: GetModelInput): string {
   const baseURL = input.baseURL?.trim();
-  if (!baseURL) {
-    if (input.provider === "ollama") {
-      throw new Error("INVALID_AI_BASE_URL");
-    }
-    return undefined;
-  }
+
+  if (!baseURL) throw new Error("INVALID_AI_BASE_URL");
 
   const providerHosts = input.provider === "ollama" ? [] : defaultProviderHosts[input.provider];
   const allowedHosts = new Set([...providerHosts, ...adminAllowedBaseUrls]);
@@ -246,11 +241,19 @@ function getModel(input: GetModelInput) {
 
   return match(provider)
     .with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model))
-    .with("ollama", () => createOllama({ apiKey, baseURL }).languageModel(model))
     .with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
-    .with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
     .with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
-    .with("openrouter", () => createOpenAI({ apiKey, baseURL: baseURL || "https://openrouter.ai/api/v1" }).chat(model))
+    .with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
+    .with("openrouter", () => createOpenAICompatible({ name: "openrouter", apiKey, baseURL }).languageModel(model))
+    .with("ollama", () => {
+      const ollama = createOllama({
+        name: "ollama",
+        baseURL,
+        headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : undefined,
+      });
+
+      return ollama.languageModel(model);
+    })
     .exhaustive();
 }
 
