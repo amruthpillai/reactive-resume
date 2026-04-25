@@ -21,9 +21,7 @@ export function PageSection<T extends SectionType>({ type, className, children }
 
   return (
     <section className={cn(`page-section page-section-${type}`, className)}>
-      <h6 className="mb-1.5 text-(--page-primary-color) print:break-after-avoid">
-        {section.title || getSectionTitle(type)}
-      </h6>
+      <h6 className="mb-1.5 text-(--page-primary-color)">{section.title || getSectionTitle(type)}</h6>
 
       <div
         className="section-content grid gap-x-(--page-gap-x) gap-y-(--page-gap-y)"
