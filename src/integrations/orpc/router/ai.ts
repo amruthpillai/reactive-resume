@@ -1,7 +1,6 @@
 import { ORPCError } from "@orpc/client";
 import { type } from "@orpc/server";
 import { AISDKError, type UIMessage } from "ai";
-import { OllamaError } from "ai-sdk-ollama";
 import z, { flattenError, ZodError } from "zod";
 
 import { jobResultSchema } from "@/schema/jobs";
@@ -21,7 +20,7 @@ function isInvalidAiBaseUrlError(error: unknown): boolean {
 }
 
 function isAiProviderGatewayError(error: unknown): boolean {
-  return error instanceof AISDKError || error instanceof OllamaError;
+  return error instanceof AISDKError;
 }
 
 function throwAiProviderGatewayError(): never {
@@ -111,7 +110,7 @@ export const aiRouter = {
         return await aiService.parsePdf(input);
       } catch (error) {
         if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
-        if (error instanceof AISDKError) throwAiProviderGatewayError();
+        if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 
         if (error instanceof ZodError) throwResumeStructureError(error);
         throw error;
@@ -155,7 +154,7 @@ export const aiRouter = {
         return await aiService.parseDocx(input);
       } catch (error) {
         if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
-        if (error instanceof AISDKError) throwAiProviderGatewayError();
+        if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 
         if (error instanceof ZodError) throwResumeStructureError(error);
 

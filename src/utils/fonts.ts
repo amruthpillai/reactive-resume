@@ -109,17 +109,15 @@ const chinesePrioritySet = new Set<string>(preferredChineseFontFamilies);
 export const localFontList = baseLocalFontList.filter((font) => !webFontFamilies.has(font.family));
 
 function orderFonts(fonts: FontRecord[]) {
-  const prioritized: FontRecord[] = [];
-  const remaining = new Map(fonts.map((font) => [font.family, font]));
+  return [...fonts].sort((a, b) => {
+    const aLabel = getFontDisplayName(a.family);
+    const bLabel = getFontDisplayName(b.family);
+    const labelComparison = aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
 
-  for (const family of preferredChineseFontFamilies) {
-    const font = remaining.get(family);
-    if (!font) continue;
-    prioritized.push(font);
-    remaining.delete(family);
-  }
+    if (labelComparison !== 0) return labelComparison;
 
-  return [...prioritized, ...remaining.values()];
+    return a.family.localeCompare(b.family, undefined, { sensitivity: "base" });
+  });
 }
 
 export const fontList = orderFonts([...webFontList, ...localFontList]);

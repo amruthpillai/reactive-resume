@@ -2,7 +2,7 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowLeftIcon, WarningIcon } from "@phosphor-icons/react";
 import { Link, type NotFoundRouteProps } from "@tanstack/react-router";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { BrandIcon } from "../ui/brand-icon";
@@ -20,12 +20,10 @@ export function NotFoundScreen({ routeId }: NotFoundRouteProps) {
         <AlertDescription>{routeId}</AlertDescription>
       </Alert>
 
-      <Button>
-        <Link to="..">
-          <ArrowLeftIcon />
-          <Trans>Go Back</Trans>
-        </Link>
-      </Button>
+      <Link to=".." className={buttonVariants()}>
+        <ArrowLeftIcon />
+        <Trans>Go Back</Trans>
+      </Link>
     </div>
   );
 }

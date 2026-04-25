@@ -1,4 +1,3 @@
-import { t } from "@lingui/core/macro";
 import { ORPCError } from "@orpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
@@ -16,9 +15,7 @@ type LoaderData = Omit<RouterOutput["resume"]["getBySlug"], "data"> & { data: Re
 
 export const Route = createFileRoute("/$username/$slug")({
   component: RouteComponent,
-  loader: async ({ context, params, ...rest }) => {
-    console.log("$username/$slug loader", JSON.stringify({ params, context, rest }, null, 2));
-
+  loader: async ({ context, params }) => {
     const { username, slug } = params;
     const resume = await context.queryClient.ensureQueryData(
       orpc.resume.getBySlug.queryOptions({ input: { username, slug } }),
@@ -27,19 +24,7 @@ export const Route = createFileRoute("/$username/$slug")({
     return { resume: resume as LoaderData };
   },
   head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData
-          ? `${loaderData.resume.name} - ${t({
-              comment: "Brand name suffix in browser tab title for public resume pages",
-              message: "Reactive Resume",
-            })}`
-          : t({
-              comment: "Browser tab title before the public resume finishes loading",
-              message: "Reactive Resume",
-            }),
-      },
-    ],
+    meta: [{ title: loaderData ? `${loaderData.resume.name} - Reactive Resume` : "Reactive Resume" }],
   }),
   onError: (error) => {
     if (error instanceof ORPCError && error.code === "NEED_PASSWORD") {

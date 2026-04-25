@@ -14,14 +14,11 @@ function splitFontStack(fontStack: string) {
 }
 
 describe("fontList", () => {
-  it("surfaces curated Chinese fonts near the top of the font family list", () => {
-    expect(fontList.slice(0, 5).map((font) => font.family)).toEqual([
-      "Noto Sans SC",
-      "Noto Serif SC",
-      "PingFang SC",
-      "Microsoft YaHei",
-      "Source Han Sans SC",
-    ]);
+  it("sorts font families alphabetically by display label", () => {
+    const labels = fontList.map((font) => getFontDisplayName(font.family));
+    const sortedLabels = [...labels].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+
+    expect(labels).toEqual(sortedLabels);
   });
 });
 
