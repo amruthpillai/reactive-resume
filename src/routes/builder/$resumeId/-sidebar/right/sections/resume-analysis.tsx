@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAIStore } from "@/integrations/ai/store";
 import { orpc } from "@/integrations/orpc/client";
+import { getOrpcErrorMessage } from "@/utils/error-message";
 
 import { SectionBase } from "../shared/section-base";
 
@@ -21,6 +22,29 @@ function impactCircleClass(impact: "high" | "medium" | "low") {
     .with("high", () => "bg-rose-600")
     .with("medium", () => "bg-amber-600")
     .with("low", () => "bg-emerald-600")
+    .exhaustive();
+}
+
+function impactLabel(impact: "high" | "medium" | "low") {
+  return match(impact)
+    .with("high", () =>
+      t({
+        comment: "Impact severity label in resume analysis suggestion card",
+        message: "High",
+      }),
+    )
+    .with("medium", () =>
+      t({
+        comment: "Impact severity label in resume analysis suggestion card",
+        message: "Medium",
+      }),
+    )
+    .with("low", () =>
+      t({
+        comment: "Impact severity label in resume analysis suggestion card",
+        message: "Low",
+      }),
+    )
     .exhaustive();
 }
 
@@ -43,7 +67,24 @@ export function ResumeAnalysisSectionBuilder() {
       toast.success(t`Resume analysis complete.`);
     },
     onError: (error) => {
-      toast.error(t`Failed to analyze resume.`, { description: error.message });
+      toast.error(t`Failed to analyze resume.`, {
+        description: getOrpcErrorMessage(error, {
+          byCode: {
+            BAD_REQUEST: t({
+              comment: "Error description when AI returns invalid resume analysis format",
+              message: "The AI returned an invalid analysis format. Please try again.",
+            }),
+            BAD_GATEWAY: t({
+              comment: "Error description when AI provider cannot be reached during resume analysis",
+              message: "Could not reach the AI provider. Please try again.",
+            }),
+          },
+          fallback: t({
+            comment: "Fallback error description when resume analysis request fails",
+            message: "Something went wrong while analyzing your resume.",
+          }),
+        }),
+      });
     },
   });
 
@@ -179,9 +220,10 @@ export function ResumeAnalysisSectionBuilder() {
                         <div key={`${suggestion.title}-${index}`} className="space-y-3 rounded-md border bg-card p-3">
                           <div className="flex items-center gap-2">
                             <span
+                              role="img"
                               className={`size-2.5 shrink-0 rounded-full ring-1 ring-border ${impactCircleClass(suggestion.impact)}`}
-                              title={suggestion.impact}
-                              aria-label={suggestion.impact}
+                              title={impactLabel(suggestion.impact)}
+                              aria-label={impactLabel(suggestion.impact)}
                             />
                             <div className="text-sm font-semibold tracking-tight">{suggestion.title}</div>
                           </div>

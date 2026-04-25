@@ -6,13 +6,13 @@ import { cn } from "@/utils/style";
 interface FontDisplayProps {
   family: string;
   label: string;
-  url?: string;
   type: "local" | "web";
+  url?: string;
 }
 
 const loadedFonts = new Set<string>();
 
-export function FontDisplay({ family, label, url, type = "web" }: FontDisplayProps) {
+export function FontDisplay({ family, label, type, url }: FontDisplayProps) {
   const previewName = type === "local" ? family : `${family} Preview`;
 
   const containerRef = useRef<HTMLDivElement>(null);

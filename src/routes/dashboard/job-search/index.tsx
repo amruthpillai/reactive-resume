@@ -96,11 +96,17 @@ function RouteComponent() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={t`e.g. frontend developer jobs in Berlin`}
+                placeholder={t({
+                  comment: "Example placeholder text in job search input field",
+                  message: "e.g. frontend developer jobs in Berlin",
+                })}
+                aria-label={t({
+                  comment: "Accessible label for free-text job search query field",
+                  message: "Job search query",
+                })}
                 autoCorrect="off"
                 autoComplete="off"
                 spellCheck="false"
-                autoFocus
               />
             </div>
 

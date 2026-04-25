@@ -29,8 +29,9 @@ export const jobsRouter = {
       try {
         return await jobsService.testConnection(input.apiKey);
       } catch (error) {
+        console.error("[jobs.testConnection] Failed to test JSearch connection:", error);
         throw new ORPCError("BAD_GATEWAY", {
-          message: error instanceof Error ? error.message : "Connection test failed",
+          message: "The JSearch API returned an error or is unreachable.",
         });
       }
     }),
@@ -71,8 +72,9 @@ export const jobsRouter = {
 
         return { data: jobs, rapidApiQuota: response.rapidApiQuota };
       } catch (error) {
+        console.error("[jobs.search] Failed to search jobs via JSearch:", error);
         throw new ORPCError("BAD_GATEWAY", {
-          message: error instanceof Error ? error.message : "Search failed",
+          message: "The JSearch API returned an error or is unreachable.",
         });
       }
     }),

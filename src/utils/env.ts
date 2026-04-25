@@ -44,11 +44,15 @@ export const env = createEnv({
     OAUTH_AUTHORIZATION_URL: z.url({ protocol: /https?/ }).optional(),
     OAUTH_TOKEN_URL: z.url({ protocol: /https?/ }).optional(),
     OAUTH_USER_INFO_URL: z.url({ protocol: /https?/ }).optional(),
+    OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS: z.string().optional(),
     OAUTH_SCOPES: z
       .string()
       .min(1)
       .transform((value) => value.split(" "))
       .default(["openid", "profile", "email"]),
+
+    // AI provider URL restrictions
+    AI_ALLOWED_BASE_URLS: z.string().optional(),
 
     // Email (SMTP)
     SMTP_HOST: z.string().min(1).optional(),

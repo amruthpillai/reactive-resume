@@ -4,7 +4,7 @@ import { JSearchProvider } from "./jsearch";
 
 // --- Mock fetch globally ---
 
-const mockFetch = vi.fn();
+const mockFetch = vi.fn<(url: string, init?: RequestInit) => Promise<unknown>>();
 global.fetch = mockFetch as never;
 
 // --- Mock helpers ---

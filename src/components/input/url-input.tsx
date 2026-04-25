@@ -69,16 +69,22 @@ export function URLInput({ value, onChange, hideLabelButton, ...props }: Props) 
           <Popover>
             <PopoverTrigger
               render={
-                <InputGroupButton size="icon-sm" title={t`Add a label to the URL`}>
+                <InputGroupButton
+                  size="icon-sm"
+                  title={t({
+                    comment: "Tooltip for action button that opens URL label editor",
+                    message: "Add a label to the URL",
+                  })}
+                >
                   <TagIcon />
                 </InputGroupButton>
               }
             />
 
             <PopoverContent className="pt-3">
-              <div className="grid gap-2" onClick={(e) => e.stopPropagation()}>
+              <div role="presentation" className="grid gap-2" onMouseDown={(e) => e.stopPropagation()}>
                 <Label htmlFor="url-label">
-                  <Trans>Label</Trans>
+                  <Trans comment="Short field label for custom display text associated with a URL">Label</Trans>
                 </Label>
                 <Input id="url-label" name="url-label" value={value.label} onChange={handleLabelChange} />
               </div>

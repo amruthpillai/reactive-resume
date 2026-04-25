@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { getInitials, slugify, stripHtml, toUsername } from "./string";
+import { generateRandomName, getInitials, slugify, stripHtml, toUsername } from "./string";
 
 describe("slugify", () => {
   it("should lowercase and hyphenate spaces", () => {
@@ -68,5 +68,18 @@ describe("stripHtml", () => {
 
   it("should handle nested tags", () => {
     expect(stripHtml("<div><ul><li>item</li></ul></div>")).toBe("item");
+  });
+});
+
+describe("generateRandomName", () => {
+  it("should generate a 3-word capitalized name", () => {
+    const result = generateRandomName();
+    const parts = result.split(" ");
+
+    expect(parts).toHaveLength(3);
+    for (const part of parts) {
+      expect(part.length).toBeGreaterThan(0);
+      expect(part[0]).toBe(part[0].toUpperCase());
+    }
   });
 });

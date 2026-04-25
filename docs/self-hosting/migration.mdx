@@ -7,6 +7,11 @@ description: "A step-by-step guide to migrate your Reactive Resume instance from
 
 This guide walks you through migrating your Reactive Resume installation from **v4 to v5**. The migration process involves setting up a new v5 instance alongside your existing v4 instance, then transferring your users and resumes to the new system.
 
+<Info>
+  This page is for **v4 → v5 data migration** only. For normal v5 upgrades, use the [Self-Hosting with
+  Docker](/self-hosting/docker) guide. v5 schema migrations run automatically on app startup.
+</Info>
+
 <Warning>
   **Keep your v4 instance running** until you have successfully migrated all data to v5 and verified everything works
   correctly. This ensures you have a fallback in case anything goes wrong during the migration.
@@ -86,7 +91,7 @@ To run the migration scripts, you need the following installed on your host mach
   </Card>
   <Card title="Reactive Resume Source Code">
     Clone the Reactive Resume repository to access the migration scripts: ```bash git clone
-    https://github.com/amruthpillai/reactive-resume.git cd reactive-resume pnpm install ```
+    https://github.com/amruthpillai/reactive-resume.git cd reactive-resume vp install ```
   </Card>
 </CardGroup>
 
@@ -106,6 +111,8 @@ PRODUCTION_DATABASE_URL="postgresql://user:password@localhost:5432/reactive_resu
   Double-check your connection strings! `DATABASE_URL` should point to your **new v5 database** and
   `PRODUCTION_DATABASE_URL` should point to your **old v4 database**. Mixing these up could cause data loss.
 </Warning>
+
+<Warning>`PRODUCTION_DATABASE_URL` is used only by these migration scripts. It is not a runtime app variable.</Warning>
 
 ### Step 1: Migrate Users
 

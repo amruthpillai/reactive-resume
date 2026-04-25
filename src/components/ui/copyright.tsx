@@ -10,7 +10,12 @@ export function Copyright({ className, ...props }: Props) {
       <p>
         <Trans>
           Licensed under{" "}
-          <a href="#" target="_blank" rel="noopener" className="font-medium underline underline-offset-2">
+          <a
+            href="https://github.com/AmruthPillai/Reactive-Resume/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener"
+            className="font-medium underline underline-offset-2"
+          >
             MIT
           </a>
           .
@@ -18,7 +23,7 @@ export function Copyright({ className, ...props }: Props) {
       </p>
 
       <p>
-        <Trans>By the community, for the community.</Trans>
+        <Trans comment="Tagline shown in app footer/about area">By the community, for the community.</Trans>
       </p>
 
       <p>
@@ -36,7 +41,11 @@ export function Copyright({ className, ...props }: Props) {
         </Trans>
       </p>
 
-      <p className="mt-4">Reactive Resume v{__APP_VERSION__}</p>
+      <p className="mt-4">
+        <Trans comment="App version label in footer; includes semantic version variable">
+          Reactive Resume v{__APP_VERSION__}
+        </Trans>
+      </p>
     </div>
   );
 }

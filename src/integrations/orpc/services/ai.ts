@@ -3,6 +3,7 @@ import type { ModelMessage } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { streamToEventIterator } from "@orpc/server";
 import {
   convertToModelMessages,
@@ -14,8 +15,8 @@ import {
   tool,
   type UIMessage,
 } from "ai";
-import { createOllama } from "ai-sdk-ollama";
 import { jsonrepair } from "jsonrepair";
+import { createOllama } from "ollama-ai-provider-v2";
 import { match } from "ts-pattern";
 import z, { flattenError, ZodError } from "zod";
 
@@ -34,11 +35,14 @@ import {
   patchResumeDescription,
   patchResumeInputSchema,
 } from "@/integrations/ai/tools/patch-resume";
+import { aiProviderSchema, type AIProvider } from "@/integrations/ai/types";
 import { resumeAnalysisSchema, type ResumeAnalysis } from "@/schema/resume/analysis";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
-import { type TailorOutput, tailorOutputSchema } from "@/schema/tailor";
+import { tailorOutputSchema, type TailorOutput } from "@/schema/tailor";
 import { buildAiExtractionTemplate } from "@/utils/ai-template";
+import { env } from "@/utils/env";
 import { isObject } from "@/utils/sanitize";
+import { isAllowedExternalUrl, parseAllowedHostList } from "@/utils/url-security";
 
 const aiExtractionTemplate = buildAiExtractionTemplate();
 
@@ -97,23 +101,27 @@ function logAndRethrow(context: string, error: unknown): never {
   throw new Error(`An unknown error occurred during ${context}.`);
 }
 
+function getJsonBoundaryIndices(value: string): { first: number; last: number } {
+  const firstCurly = value.indexOf("{");
+  const firstSquare = value.indexOf("[");
+  const lastCurly = value.lastIndexOf("}");
+  const lastSquare = value.lastIndexOf("]");
+
+  let first = -1;
+  if (firstCurly !== -1 && firstSquare !== -1) {
+    first = Math.min(firstCurly, firstSquare);
+  } else {
+    first = Math.max(firstCurly, firstSquare);
+  }
+
+  return { first, last: Math.max(lastCurly, lastSquare) };
+}
+
 function parseAndValidateResumeJson(resultText: string): ResumeData {
   let jsonString = resultText;
-  const firstCurly = jsonString.indexOf("{");
-  const firstSquare = jsonString.indexOf("[");
-  const lastCurly = jsonString.lastIndexOf("}");
-  const lastSquare = jsonString.lastIndexOf("]");
-
-  let firstIndex = -1;
-  if (firstCurly !== -1 && firstSquare !== -1) {
-    firstIndex = Math.min(firstCurly, firstSquare);
-  } else {
-    firstIndex = Math.max(firstCurly, firstSquare);
-  }
-  const lastIndex = Math.max(lastCurly, lastSquare);
-
-  if (firstIndex !== -1 && lastIndex !== -1 && lastIndex >= firstIndex) {
-    jsonString = jsonString.substring(firstIndex, lastIndex + 1);
+  const { first, last } = getJsonBoundaryIndices(jsonString);
+  if (first !== -1 && last !== -1 && last >= first) {
+    jsonString = jsonString.substring(first, last + 1);
   }
 
   try {
@@ -195,30 +203,57 @@ function normalizeResumeDataForSchema(data: Record<string, unknown>) {
   return { ...data, sections: normalizedSections };
 }
 
-export const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
-
-type AIProvider = z.infer<typeof aiProviderSchema>;
-
 type GetModelInput = {
   provider: AIProvider;
   model: string;
   apiKey: string;
-  baseURL: string;
+  baseURL?: string;
 };
 
 const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
+const adminAllowedBaseUrls = parseAllowedHostList(env.AI_ALLOWED_BASE_URLS);
+const defaultProviderHosts: Record<Exclude<AIProvider, "ollama">, string[]> = {
+  openai: ["api.openai.com"],
+  anthropic: ["api.anthropic.com"],
+  gemini: ["generativelanguage.googleapis.com"],
+  "vercel-ai-gateway": ["gateway.ai.vercel.com"],
+  openrouter: ["openrouter.ai"],
+};
+
+function resolveBaseUrl(input: GetModelInput): string {
+  const baseURL = input.baseURL?.trim();
+
+  if (!baseURL) throw new Error("INVALID_AI_BASE_URL");
+
+  const providerHosts = input.provider === "ollama" ? [] : defaultProviderHosts[input.provider];
+  const allowedHosts = new Set([...providerHosts, ...adminAllowedBaseUrls]);
+  if (!isAllowedExternalUrl(baseURL, allowedHosts)) {
+    throw new Error("INVALID_AI_BASE_URL");
+  }
+
+  return baseURL;
+}
 
 function getModel(input: GetModelInput) {
   const { provider, model, apiKey } = input;
-  const baseURL = input.baseURL || undefined;
+  const baseURL = resolveBaseUrl(input);
 
   return match(provider)
     .with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model))
-    .with("ollama", () => createOllama({ apiKey, baseURL }).languageModel(model))
     .with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
-    .with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
     .with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
+    .with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
+    .with("openrouter", () => createOpenAICompatible({ name: "openrouter", apiKey, baseURL }).languageModel(model))
+    .with("ollama", () => {
+      const ollama = createOllama({
+        name: "ollama",
+        baseURL,
+        headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : undefined,
+      });
+
+      return ollama.languageModel(model);
+    })
     .exhaustive();
 }
 
@@ -226,7 +261,7 @@ export const aiCredentialsSchema = z.object({
   provider: aiProviderSchema,
   model: z.string(),
   apiKey: z.string(),
-  baseURL: z.string(),
+  baseURL: z.string().optional().default(""),
 });
 
 export const fileInputSchema = z.object({

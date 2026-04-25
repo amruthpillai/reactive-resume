@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -43,7 +44,16 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
     const { error } = await authClient.twoFactor.disable({ password: data.password });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when disabling two-factor authentication fails",
+            message: "Failed to disable two-factor authentication. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -92,6 +102,19 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
                   />
 
                   <Button size="icon" variant="ghost" type="button" onClick={toggleShowPassword}>
+                    <span className="sr-only">
+                      {showPassword
+                        ? t({
+                            comment:
+                              "Accessible label for toggle button that hides the visible password in two-factor disable dialog",
+                            message: "Hide password",
+                          })
+                        : t({
+                            comment:
+                              "Accessible label for toggle button that reveals the masked password in two-factor disable dialog",
+                            message: "Show password",
+                          })}
+                    </span>
                     {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
                   </Button>
                 </div>
@@ -102,7 +125,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 
           <DialogFooter>
             <Button type="submit" variant="destructive">
-              <Trans>Disable 2FA</Trans>
+              <Trans comment="Destructive action button to turn off two-factor authentication">Disable 2FA</Trans>
             </Button>
           </DialogFooter>
         </form>

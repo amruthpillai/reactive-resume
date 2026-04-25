@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -59,7 +60,16 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when creating an API key fails",
+            message: "Failed to create API key. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -149,7 +159,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 
           <DialogFooter>
             <Button type="submit">
-              <Trans>Create</Trans>
+              <Trans comment="Create API key dialog submit action">Create</Trans>
             </Button>
           </DialogFooter>
         </form>
@@ -206,7 +216,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 
       <DialogFooter>
         <Button onClick={onConfirm}>
-          <Trans>Confirm</Trans>
+          <Trans comment="Create API key dialog acknowledgment action after copying">Confirm</Trans>
         </Button>
       </DialogFooter>
     </DialogContent>

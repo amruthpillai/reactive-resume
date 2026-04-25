@@ -43,7 +43,14 @@ function RouteComponent() {
     const { error } = await authClient.twoFactor.verifyBackupCode({ code: formattedCode });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when verifying a backup two-factor authentication code fails",
+            message: "Failed to verify your backup code. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -86,14 +93,14 @@ function RouteComponent() {
               render={
                 <Link to="/auth/verify-2fa">
                   <ArrowLeftIcon />
-                  <Trans>Go Back</Trans>
+                  <Trans comment="Secondary navigation button on backup-code verification screen">Go Back</Trans>
                 </Link>
               }
             />
 
             <Button type="submit" className="flex-1">
               <CheckIcon />
-              <Trans>Verify</Trans>
+              <Trans comment="Primary action button to submit backup code">Verify</Trans>
             </Button>
           </div>
         </form>

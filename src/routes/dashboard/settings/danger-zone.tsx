@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { useConfirm } from "@/hooks/use-confirm";
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { DashboardHeader } from "../-components/header";
 
@@ -33,8 +34,14 @@ function RouteComponent() {
   const handleDeleteAccount = async () => {
     const confirmed = await confirm(t`Are you sure you want to delete your account?`, {
       description: t`This action cannot be undone. All your data will be permanently deleted.`,
-      confirmText: t`Confirm`,
-      cancelText: t`Cancel`,
+      confirmText: t({
+        comment: "Account deletion confirmation dialog confirm action in danger zone",
+        message: "Confirm",
+      }),
+      cancelText: t({
+        comment: "Account deletion confirmation dialog cancel action in danger zone",
+        message: "Cancel",
+      }),
     });
 
     if (!confirmed) return;
@@ -48,7 +55,16 @@ function RouteComponent() {
         void navigate({ to: "/" });
       },
       onError: (error) => {
-        toast.error(error.message, { id: toastId });
+        toast.error(
+          getReadableErrorMessage(
+            error,
+            t({
+              comment: "Fallback toast when account deletion fails",
+              message: "Failed to delete your account. Please try again.",
+            }),
+          ),
+          { id: toastId },
+        );
       },
     });
   };

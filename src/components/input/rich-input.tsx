@@ -172,8 +172,16 @@ export function RichInput({ value, onChange, style, className, editorClassName, 
         <Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
           <DialogContent className="flex h-[95svh] max-h-none! w-[95svw] max-w-none! flex-col p-4 sm:max-w-none! 2xl:max-w-none!">
             <div className="sr-only">
-              <DialogTitle>Fullscreen Editor</DialogTitle>
-              <DialogDescription>Edit content in fullscreen mode</DialogDescription>
+              <DialogTitle>
+                <Trans comment="Screen reader title for the fullscreen rich-text editor dialog">
+                  Fullscreen Editor
+                </Trans>
+              </DialogTitle>
+              <DialogDescription>
+                <Trans comment="Screen reader description for the fullscreen rich-text editor dialog">
+                  Edit content in fullscreen mode
+                </Trans>
+              </DialogDescription>
             </div>
             {editorElement}
           </DialogContent>

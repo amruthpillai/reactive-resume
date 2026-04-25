@@ -26,7 +26,7 @@ jobs:
           cache: true
 
       - name: Install Dependencies
-        run: vp install
+        run: vp install --frozen-lockfile
 
       - name: Run Tests
         run: vp test

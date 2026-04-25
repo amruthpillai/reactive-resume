@@ -25,6 +25,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
 import { orpc, type RouterInput } from "@/integrations/orpc/client";
+import { getResumeErrorMessage } from "@/utils/error-message";
 import { generateId, generateRandomName, slugify } from "@/utils/string";
 
 import { type DialogProps, useDialogStore } from "../store";
@@ -70,12 +71,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
         closeDialog();
       },
       onError: (error) => {
-        if (error.message === "RESUME_SLUG_ALREADY_EXISTS") {
-          toast.error(t`A resume with this slug already exists.`, { id: toastId });
-          return;
-        }
-
-        toast.error(error.message, { id: toastId });
+        toast.error(getResumeErrorMessage(error), { id: toastId });
       },
     });
   };
@@ -99,7 +95,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
         closeDialog();
       },
       onError: (error) => {
-        toast.error(error.message, { id: toastId });
+        toast.error(getResumeErrorMessage(error), { id: toastId });
       },
     });
   };
@@ -121,7 +117,13 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
           <ResumeForm />
 
           <DialogFooter>
-            <ButtonGroup aria-label="Create Resume with Options" className="gap-x-px rtl:flex-row-reverse">
+            <ButtonGroup
+              aria-label={t({
+                comment: "Accessible label for create-resume split button group",
+                message: "Create resume with options",
+              })}
+              className="gap-x-px rtl:flex-row-reverse"
+            >
               <Button type="submit" disabled={isPending}>
                 <Trans>Create</Trans>
               </Button>
@@ -183,12 +185,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
         closeDialog();
       },
       onError: (error) => {
-        if (error.message === "RESUME_SLUG_ALREADY_EXISTS") {
-          toast.error(t`A resume with this slug already exists.`, { id: toastId });
-          return;
-        }
-
-        toast.error(error.message, { id: toastId });
+        toast.error(getResumeErrorMessage(error), { id: toastId });
       },
     });
   };
@@ -257,7 +254,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
         void navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
       },
       onError: (error) => {
-        toast.error(error.message, { id: toastId });
+        toast.error(getResumeErrorMessage(error), { id: toastId });
       },
     });
   };

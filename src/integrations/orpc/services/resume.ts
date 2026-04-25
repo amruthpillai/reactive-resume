@@ -14,8 +14,10 @@ import { type StoredResumeAnalysis } from "@/schema/resume/analysis";
 import { defaultResumeData } from "@/schema/resume/data";
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
+import { verifyPrinterToken } from "@/utils/printer-token";
 import { applyResumePatches, ResumePatchError } from "@/utils/resume/patch";
 import { generateId } from "@/utils/string";
+import { sanitizeResumePictureUrl } from "@/utils/url-security";
 
 import { grantResumeAccess, hasResumeAccess } from "../helpers/resume-access";
 import { getStorageService } from "./storage";
@@ -121,6 +123,50 @@ const analysis = {
   },
 };
 
+function hasValidPrinterToken(printerToken: string | undefined, resumeId: string): boolean {
+  if (!printerToken) return false;
+
+  try {
+    return verifyPrinterToken(printerToken) === resumeId;
+  } catch {
+    return false;
+  }
+}
+
+function toSharedResumeResponse<TPassword extends boolean>(
+  resume: {
+    id: string;
+    name: string;
+    slug: string;
+    tags: string[];
+    data: ResumeData;
+    isPublic: boolean;
+    isLocked: boolean;
+  },
+  hasPassword: TPassword,
+) {
+  return {
+    id: resume.id,
+    name: resume.name,
+    slug: resume.slug,
+    tags: resume.tags,
+    data: resume.data,
+    isPublic: resume.isPublic,
+    isLocked: resume.isLocked,
+    hasPassword,
+  };
+}
+
+function sanitizeResumeDataPictureUrl(data: ResumeData): ResumeData {
+  return {
+    ...data,
+    picture: {
+      ...data.picture,
+      url: sanitizeResumePictureUrl(data.picture.url, env.APP_URL),
+    },
+  };
+}
+
 export const resumeService = {
   tags,
   statistics,
@@ -176,7 +222,7 @@ export const resumeService = {
     return resume;
   },
 
-  getByIdForPrinter: async (input: { id: string; userId?: string }) => {
+  getByIdForPrinter: async (input: { id: string; currentUserId?: string; printerToken?: string }) => {
     const [resume] = await db
       .select({
         id: schema.resume.id,
@@ -189,27 +235,15 @@ export const resumeService = {
         updatedAt: schema.resume.updatedAt,
       })
       .from(schema.resume)
-      .where(
-        input.userId
-          ? and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId))
-          : eq(schema.resume.id, input.id),
-      );
+      .where(eq(schema.resume.id, input.id));
 
     if (!resume) throw new ORPCError("NOT_FOUND");
 
-    try {
-      if (!resume.data.picture.url) throw new Error("Picture is not available");
+    const isOwner = !!input.currentUserId && resume.userId === input.currentUserId;
 
-      // Convert picture URL to base64 data, so there's no fetching required on the client.
-      const url = resume.data.picture.url.replace(env.APP_URL, "http://localhost:3000");
-      const base64 = await fetch(url)
-        .then((res) => res.arrayBuffer())
-        .then((buffer) => Buffer.from(buffer).toString("base64"));
+    const hasValidToken = hasValidPrinterToken(input.printerToken, input.id);
 
-      resume.data.picture.url = `data:image/jpeg;base64,${base64}`;
-    } catch {
-      // Ignore errors, as the picture is not always available
-    }
+    if (!isOwner && !hasValidToken) throw new ORPCError("NOT_FOUND");
 
     return resume;
   },
@@ -243,32 +277,12 @@ export const resumeService = {
 
     if (!resume.hasPassword) {
       await resumeService.statistics.increment({ id: resume.id, views: true });
-
-      return {
-        id: resume.id,
-        name: resume.name,
-        slug: resume.slug,
-        tags: resume.tags,
-        data: resume.data,
-        isPublic: resume.isPublic,
-        isLocked: resume.isLocked,
-        hasPassword: false as const,
-      };
+      return toSharedResumeResponse(resume, false);
     }
 
     if (hasResumeAccess(resume.id, resume.passwordHash)) {
       await resumeService.statistics.increment({ id: resume.id, views: true });
-
-      return {
-        id: resume.id,
-        name: resume.name,
-        slug: resume.slug,
-        tags: resume.tags,
-        data: resume.data,
-        isPublic: resume.isPublic,
-        isLocked: resume.isLocked,
-        hasPassword: true as const,
-      };
+      return toSharedResumeResponse(resume, true);
     }
 
     throw new ORPCError("NEED_PASSWORD", {
@@ -288,6 +302,7 @@ export const resumeService = {
     const id = generateId();
 
     input.data = input.data ?? defaultResumeData;
+    input.data = sanitizeResumeDataPictureUrl(input.data);
     input.data.metadata.page.locale = input.locale;
 
     try {
@@ -333,7 +348,7 @@ export const resumeService = {
       name: input.name,
       slug: input.slug,
       tags: input.tags,
-      data: input.data,
+      data: input.data ? sanitizeResumeDataPictureUrl(input.data) : undefined,
       isPublic: input.isPublic,
     };
 
@@ -383,6 +398,7 @@ export const resumeService = {
 
     try {
       patchedData = applyResumePatches(existing.data, input.operations);
+      patchedData = sanitizeResumeDataPictureUrl(patchedData);
     } catch (error) {
       if (error instanceof ResumePatchError) {
         throw new ORPCError("INVALID_PATCH_OPERATIONS", {
@@ -447,12 +463,12 @@ export const resumeService = {
         ),
       );
 
-    if (!resume) throw new ORPCError("NOT_FOUND");
+    if (!resume) throw new ORPCError("INVALID_PASSWORD", { status: 401 });
 
     const passwordHash = resume.password as string;
     const isValid = await verifyPassword(input.password, passwordHash);
 
-    if (!isValid) throw new ORPCError("INVALID_PASSWORD");
+    if (!isValid) throw new ORPCError("INVALID_PASSWORD", { status: 401 });
 
     grantResumeAccess(resume.id, passwordHash);
 

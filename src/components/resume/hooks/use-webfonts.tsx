@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 
 import type { typographySchema } from "@/schema/resume/data";
+
 import { getFallbackWebFontFamilies, getLoadableWebFontWeights, webFontMap } from "@/utils/fonts";
 
 export function useWebfonts(typography: z.infer<typeof typographySchema>) {
@@ -36,7 +37,13 @@ export function useWebfonts(typography: z.infer<typeof typographySchema>) {
 
       for (const { url, weight, style } of fontUrls) {
         const fontFace = new FontFace(family, `url("${url}")`, { style, weight, display: "swap" });
-        if (!document.fonts.has(fontFace)) document.fonts.add(await fontFace.load());
+        if (!document.fonts.has(fontFace)) {
+          try {
+            document.fonts.add(await fontFace.load());
+          } catch {
+            // Fail open for printer/headless environments where remote fonts may be blocked by CSP.
+          }
+        }
       }
     }
 

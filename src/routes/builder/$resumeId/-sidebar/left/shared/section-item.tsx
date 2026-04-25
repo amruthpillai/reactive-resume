@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
   ArrowBendUpRightIcon,
@@ -210,9 +211,15 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
   };
 
   const onDelete = async () => {
-    const confirmed = await confirm("Are you sure you want to delete this item?", {
-      confirmText: "Delete",
-      cancelText: "Cancel",
+    const confirmed = await confirm(t`Are you sure you want to delete this item?`, {
+      confirmText: t({
+        comment: "Destructive confirmation button label when deleting a section item in resume builder",
+        message: "Delete",
+      }),
+      cancelText: t({
+        comment: "Confirmation dialog button label to abort deleting a section item in resume builder",
+        message: "Cancel",
+      }),
     });
 
     if (!confirmed) return;

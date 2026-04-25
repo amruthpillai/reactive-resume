@@ -10,10 +10,34 @@ import { type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { tailorOutputSchema } from "@/schema/tailor";
 
 import { protectedProcedure } from "../context";
-import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema } from "../services/ai";
+import { aiRequestRateLimit } from "../rate-limit";
+import { aiCredentialsSchema, aiService, fileInputSchema } from "../services/ai";
 import { resumeService } from "../services/resume";
 
-type AIProvider = z.infer<typeof aiProviderSchema>;
+type AIProvider = z.infer<typeof aiCredentialsSchema.shape.provider>;
+
+function isInvalidAiBaseUrlError(error: unknown): boolean {
+  return error instanceof Error && error.message === "INVALID_AI_BASE_URL";
+}
+
+function isAiProviderGatewayError(error: unknown): boolean {
+  return error instanceof AISDKError || error instanceof OllamaError;
+}
+
+function throwAiProviderGatewayError(): never {
+  throw new ORPCError("BAD_GATEWAY", { message: "Could not reach the AI provider." });
+}
+
+function throwAiProviderConfigError(): never {
+  throw new ORPCError("BAD_REQUEST", { message: "Invalid AI provider configuration." });
+}
+
+function throwResumeStructureError(error: ZodError): never {
+  throw new ORPCError("BAD_REQUEST", {
+    message: "Invalid resume data structure",
+    cause: flattenError(error),
+  });
+}
 
 export const aiRouter = {
   testConnection: protectedProcedure
@@ -29,25 +53,26 @@ export const aiRouter = {
     })
     .input(
       z.object({
-        provider: aiProviderSchema,
-        model: z.string(),
-        apiKey: z.string(),
-        baseURL: z.string(),
+        ...aiCredentialsSchema.shape,
       }),
     )
+    .use(aiRequestRateLimit)
     .errors({
       BAD_GATEWAY: {
         message: "The AI provider returned an error or is unreachable.",
         status: 502,
+      },
+      BAD_REQUEST: {
+        message: "Invalid AI provider configuration.",
+        status: 400,
       },
     })
     .handler(async ({ input }) => {
       try {
         return await aiService.testConnection(input);
       } catch (error) {
-        if (error instanceof AISDKError || error instanceof OllamaError) {
-          throw new ORPCError("BAD_GATEWAY", { message: error.message });
-        }
+        if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+        if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 
         throw error;
       }
@@ -70,6 +95,7 @@ export const aiRouter = {
         file: fileInputSchema,
       }),
     )
+    .use(aiRequestRateLimit)
     .errors({
       BAD_GATEWAY: {
         message: "The AI provider returned an error or is unreachable.",
@@ -84,16 +110,10 @@ export const aiRouter = {
       try {
         return await aiService.parsePdf(input);
       } catch (error) {
-        if (error instanceof AISDKError) {
-          throw new ORPCError("BAD_GATEWAY", { message: error.message });
-        }
+        if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+        if (error instanceof AISDKError) throwAiProviderGatewayError();
 
-        if (error instanceof ZodError) {
-          throw new ORPCError("BAD_REQUEST", {
-            message: "Invalid resume data structure",
-            cause: flattenError(error),
-          });
-        }
+        if (error instanceof ZodError) throwResumeStructureError(error);
         throw error;
       }
     }),
@@ -119,6 +139,7 @@ export const aiRouter = {
         ]),
       }),
     )
+    .use(aiRequestRateLimit)
     .errors({
       BAD_GATEWAY: {
         message: "The AI provider returned an error or is unreachable.",
@@ -133,16 +154,10 @@ export const aiRouter = {
       try {
         return await aiService.parseDocx(input);
       } catch (error) {
-        if (error instanceof AISDKError) {
-          throw new ORPCError("BAD_GATEWAY", { message: error.message });
-        }
+        if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+        if (error instanceof AISDKError) throwAiProviderGatewayError();
 
-        if (error instanceof ZodError) {
-          throw new ORPCError("BAD_REQUEST", {
-            message: "Invalid resume data structure",
-            cause: flattenError(error),
-          });
-        }
+        if (error instanceof ZodError) throwResumeStructureError(error);
 
         throw error;
       }
@@ -168,13 +183,13 @@ export const aiRouter = {
         resumeData: ResumeData;
       }>(),
     )
+    .use(aiRequestRateLimit)
     .handler(async ({ input }) => {
       try {
         return await aiService.chat(input);
       } catch (error) {
-        if (error instanceof AISDKError || error instanceof OllamaError) {
-          throw new ORPCError("BAD_GATEWAY", { message: error.message });
-        }
+        if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+        if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 
         throw error;
       }
@@ -198,6 +213,7 @@ export const aiRouter = {
         job: jobResultSchema,
       }),
     )
+    .use(aiRequestRateLimit)
     .output(tailorOutputSchema)
     .errors({
       BAD_GATEWAY: {
@@ -213,9 +229,8 @@ export const aiRouter = {
       try {
         return await aiService.tailorResume(input);
       } catch (error) {
-        if (error instanceof AISDKError || error instanceof OllamaError) {
-          throw new ORPCError("BAD_GATEWAY", { message: error.message });
-        }
+        if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+        if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 
         if (error instanceof ZodError) {
           throw new ORPCError("BAD_REQUEST", {
@@ -246,6 +261,7 @@ export const aiRouter = {
         resumeData: resumeDataSchema,
       }),
     )
+    .use(aiRequestRateLimit)
     .output(storedResumeAnalysisSchema)
     .errors({
       BAD_GATEWAY: {
@@ -282,9 +298,8 @@ export const aiRouter = {
           },
         });
       } catch (error) {
-        if (error instanceof AISDKError || error instanceof OllamaError) {
-          throw new ORPCError("BAD_GATEWAY", { message: error.message });
-        }
+        if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+        if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 
         if (error instanceof ZodError) {
           throw new ORPCError("BAD_REQUEST", {

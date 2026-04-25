@@ -24,6 +24,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { useAIStore } from "@/integrations/ai/store";
 import { client, orpc } from "@/integrations/orpc/client";
+import { getOrpcErrorMessage } from "@/utils/error-message";
 import { buildSkillSyncOperations, tailorOutputToPatches, validateTailorOutput } from "@/utils/resume/tailor";
 import { slugify } from "@/utils/string";
 
@@ -77,7 +78,20 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
         {
           onSuccess: (newResumeId) => navigateToBuilder(newResumeId),
           onError: (error) => {
-            toast.error(t`Failed to duplicate resume`, { description: error.message });
+            toast.error(t`Failed to duplicate resume`, {
+              description: getOrpcErrorMessage(error, {
+                byCode: {
+                  RESUME_SLUG_ALREADY_EXISTS: t({
+                    comment: "Error description when generated slug for duplicated tailored resume already exists",
+                    message: "A resume with this slug already exists. Please try again.",
+                  }),
+                },
+                fallback: t({
+                  comment: "Fallback error description when duplicating a resume for tailoring fails",
+                  message: "Could not duplicate your resume.",
+                }),
+              }),
+            });
           },
         },
       );
@@ -138,8 +152,28 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
         navigateToBuilder(newResumeId);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error(t`Tailoring failed`, { description: message });
+      toast.error(t`Tailoring failed`, {
+        description: getOrpcErrorMessage(error, {
+          byCode: {
+            BAD_REQUEST: t({
+              comment: "Error description when AI tailoring output is invalid",
+              message: "The AI returned invalid tailoring data. Please try again.",
+            }),
+            BAD_GATEWAY: t({
+              comment: "Error description when AI provider is unreachable during resume tailoring",
+              message: "Could not reach the AI provider. Please try again.",
+            }),
+            INVALID_PATCH_OPERATIONS: t({
+              comment: "Error description when generated patch operations cannot be applied to tailored resume",
+              message: "Generated resume changes were invalid. Please try again.",
+            }),
+          },
+          fallback: t({
+            comment: "Fallback error description when tailoring pipeline fails",
+            message: "Something went wrong while tailoring your resume.",
+          }),
+        }),
+      });
       setPhase({ step: "select" });
     }
   };
@@ -156,8 +190,21 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
         await client.resume.patch({ id: sourceResumeId, operations });
         toast.success(t`Added ${skillsToSync.length} new skills to your original resume`);
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
-        toast.error(t`Failed to sync skills`, { description: message });
+        toast.error(t`Failed to sync skills`, {
+          description: getOrpcErrorMessage(error, {
+            byCode: {
+              INVALID_PATCH_OPERATIONS: t({
+                comment:
+                  "Error description when syncing newly detected skills to source resume fails due to invalid patch",
+                message: "Could not apply skill updates to your original resume.",
+              }),
+            },
+            fallback: t({
+              comment: "Fallback error description when syncing newly detected skills fails",
+              message: "Something went wrong while syncing skills.",
+            }),
+          }),
+        });
         return;
       }
     }
@@ -195,9 +242,9 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
               </DialogTitle>
               <DialogDescription>
                 <Trans>
-                  Select a resume to tailor for "{job.job_title}" at {job.employer_name}. A copy will be created
-                  {aiEnabled ? " and the AI will optimize it for this position." : "."}
+                  Select a resume to tailor for "{job.job_title}" at {job.employer_name}. A copy will be created.
                 </Trans>
+                {aiEnabled && <Trans>The AI will optimize it for this position.</Trans>}
               </DialogDescription>
             </DialogHeader>
 
@@ -315,7 +362,9 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
                 <Trans>Skip</Trans>
               </Button>
               <Button onClick={handleSkillSync}>
-                <Trans>Save {selectedSkills.size} Skills</Trans>
+                <Trans comment="Button label to save the selected number of detected skills to the original resume">
+                  Save {selectedSkills.size} Skills
+                </Trans>
               </Button>
             </DialogFooter>
           </>

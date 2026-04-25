@@ -88,10 +88,16 @@ export function SectionDropdownMenu({ type }: Props) {
   };
 
   const onReset = async () => {
-    const confirmed = await confirm("Are you sure you want to reset this section?", {
-      description: "This will remove all items from this section.",
-      confirmText: "Reset",
-      cancelText: "Cancel",
+    const confirmed = await confirm(t`Are you sure you want to reset this section?`, {
+      description: t`This will remove all items from this section.`,
+      confirmText: t({
+        comment: "Destructive confirmation button label when resetting a resume section",
+        message: "Reset",
+      }),
+      cancelText: t({
+        comment: "Confirmation dialog button label to abort resetting a resume section",
+        message: "Cancel",
+      }),
     });
 
     if (!confirmed) return;
