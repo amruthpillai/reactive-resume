@@ -15,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { DashboardHeader } from "../-components/header";
 
@@ -66,7 +67,15 @@ function RouteComponent() {
     });
 
     if (error) {
-      toast.error(error.message);
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when updating profile details fails",
+            message: "Failed to update your profile. Please try again.",
+          }),
+        ),
+      );
       return;
     }
 
@@ -81,7 +90,15 @@ function RouteComponent() {
       });
 
       if (error) {
-        toast.error(error.message);
+        toast.error(
+          getReadableErrorMessage(
+            error,
+            t({
+              comment: "Fallback toast when requesting email change confirmation fails",
+              message: "Failed to request email change. Please try again.",
+            }),
+          ),
+        );
         return;
       }
 
@@ -102,7 +119,16 @@ function RouteComponent() {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when resending account verification email fails",
+            message: "Failed to resend verification email. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -136,7 +162,18 @@ function RouteComponent() {
                   <Trans>Name</Trans>
                 </FormLabel>
                 <FormControl
-                  render={<Input min={3} max={64} autoComplete="name" placeholder="John Doe" {...field} />}
+                  render={
+                    <Input
+                      min={3}
+                      max={64}
+                      autoComplete="name"
+                      placeholder={t({
+                        comment: "Example full name placeholder on profile settings form",
+                        message: "John Doe",
+                      })}
+                      {...field}
+                    />
+                  }
                 />
                 <FormMessage />
               </FormItem>
@@ -157,7 +194,10 @@ function RouteComponent() {
                       min={3}
                       max={64}
                       autoComplete="username"
-                      placeholder="john.doe"
+                      placeholder={t({
+                        comment: "Example username placeholder on profile settings form",
+                        message: "john.doe",
+                      })}
                       className="lowercase"
                       {...field}
                     />
@@ -181,7 +221,10 @@ function RouteComponent() {
                     <Input
                       type="email"
                       autoComplete="email"
-                      placeholder="john.doe@example.com"
+                      placeholder={t({
+                        comment: "Example email placeholder on profile settings form",
+                        message: "john.doe@example.com",
+                      })}
                       className="lowercase"
                       {...field}
                     />
@@ -224,7 +267,7 @@ function RouteComponent() {
                 className="flex items-center gap-x-4 justify-self-end will-change-[transform,opacity]"
               >
                 <Button type="reset" variant="ghost" onClick={onCancel}>
-                  <Trans>Cancel</Trans>
+                  <Trans comment="Profile settings form action to discard unsaved edits">Cancel</Trans>
                 </Button>
 
                 <Button type="submit">

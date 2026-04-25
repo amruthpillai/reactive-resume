@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -81,33 +82,65 @@ export function CommandPalette() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogHeader className="sr-only print:hidden">
         <DialogTitle>
-          <Trans>Builder Command Palette</Trans>
+          <Trans comment="Screen-reader dialog title for the command palette in the resume builder">
+            Builder Command Palette
+          </Trans>
         </DialogTitle>
         <DialogDescription>
-          <Trans>Type a command or search...</Trans>
+          <Trans comment="Screen-reader dialog description instructing users how to use the command palette">
+            Type a command or search...
+          </Trans>
         </DialogDescription>
       </DialogHeader>
 
       <DialogContent
         className="overflow-hidden p-0"
-        aria-label={isFirstPage ? "Command Palette" : `Command Palette - ${currentPage}`}
+        aria-label={
+          isFirstPage
+            ? t({
+                comment: "Accessible label for the command palette dialog",
+                message: "Command Palette",
+              })
+            : t({
+                comment: "Accessible label for command palette dialog when browsing a nested command page",
+                message: `Command Palette - ${currentPage}`,
+              })
+        }
       >
         <Command
           loop
-          aria-label="Command Palette"
+          aria-label={t({
+            comment: "Accessible label for command list region inside command palette",
+            message: "Command Palette",
+          })}
           className="[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground **:[[cmdk-group]]:px-2 **:[[cmdk-input]]:h-12 **:[[cmdk-item]]:px-2 **:[[cmdk-item]]:py-3"
         >
           <CommandInput
             ref={inputRef}
             value={search}
             onValueChange={handleSearchChange}
-            placeholder={isFirstPage ? "Type a command or search..." : "Search..."}
-            aria-label="Search commands"
+            placeholder={
+              isFirstPage
+                ? t({
+                    comment: "Placeholder in command palette input on root page",
+                    message: "Type a command or search...",
+                  })
+                : t({
+                    comment: "Placeholder in command palette input on nested pages",
+                    message: "Search...",
+                  })
+            }
+            aria-label={t({
+              comment: "Accessible label for command palette search input",
+              message: "Search commands",
+            })}
           />
 
           <CommandList>
             <CommandEmpty>
-              <Trans>The command you're looking for doesn't exist.</Trans>
+              <Trans comment="Empty-state message when no command palette results match the search query">
+                The command you're looking for doesn't exist.
+              </Trans>
             </CommandEmpty>
 
             <ResumesCommandGroup />

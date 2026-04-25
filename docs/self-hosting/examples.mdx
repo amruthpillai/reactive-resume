@@ -85,12 +85,11 @@ services:
       - QUEUED=10
       - HEALTH=true
       - CONCURRENT=5
-      # Optional: Set a token for authentication
-      # - TOKEN=your-secret-token
+      - TOKEN=${BROWSERLESS_TOKEN}
     networks:
       - reactive_resume_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=your-secret-token"]
+      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN}" > /dev/null']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -102,7 +101,7 @@ services:
       - APP_URL=https://resume.${DOMAIN}
       - PRINTER_APP_URL=http://reactive_resume:3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
-      - PRINTER_ENDPOINT=http://printer:3000
+      - PRINTER_ENDPOINT=ws://printer:3000?token=${BROWSERLESS_TOKEN}
       - AUTH_SECRET=${AUTH_SECRET}
       # Add other optional env vars as needed (SMTP, S3, OAuth, etc.)
     volumes:
@@ -143,6 +142,7 @@ DOMAIN="example.com"
 ACME_EMAIL="admin@example.com"
 POSTGRES_PASSWORD="your-secure-postgres-password"
 AUTH_SECRET="your-auth-secret-from-openssl-rand-hex-32"
+BROWSERLESS_TOKEN="your-browserless-token"
 # Optional: Traefik dashboard auth (generate with: htpasswd -nb admin password)
 TRAEFIK_DASHBOARD_AUTH="admin:$$apr1$$..."
 ```
@@ -191,10 +191,14 @@ services:
       - QUEUED=10
       - HEALTH=true
       - CONCURRENT=5
-      # Optional: Set a token for authentication
-      # - TOKEN=your-secret-token
+      - TOKEN=${BROWSERLESS_TOKEN}
     networks:
       - reactive_resume_network
+    healthcheck:
+      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN}" > /dev/null']
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   reactive_resume:
     image: amruthpillai/reactive-resume:latest
@@ -203,7 +207,7 @@ services:
       - APP_URL=https://resume.${DOMAIN}
       - PRINTER_APP_URL=http://reactive_resume:3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
-      - PRINTER_ENDPOINT=http://printer:3000
+      - PRINTER_ENDPOINT=ws://printer:3000?token=${BROWSERLESS_TOKEN}
       - AUTH_SECRET=${AUTH_SECRET}
       # Add other optional env vars as needed (SMTP, S3, OAuth, etc.)
     volumes:
@@ -339,10 +343,9 @@ services:
       - QUEUED=10
       - HEALTH=true
       - CONCURRENT=5
-      # Optional: Set a token for authentication
-      # - TOKEN=your-secret-token
+      - TOKEN=$BROWSERLESS_TOKEN
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=your-secret-token"]
+      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=$BROWSERLESS_TOKEN" > /dev/null']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -469,10 +472,10 @@ docker stack deploy -c compose-swarm.yml reactive_resume
 docker stack services reactive_resume
 
 # View logs for the app
-docker service logs -f reactive_resume_app
+docker service logs -f reactive_resume_reactive_resume
 
 # Scale the app
-docker service scale reactive_resume_app=3
+docker service scale reactive_resume_reactive_resume=3
 
 # Remove the stack
 docker stack rm reactive_resume

@@ -71,7 +71,14 @@ function RouteComponent() {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when account registration fails without a server error message",
+            message: "Failed to create your account. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -97,7 +104,8 @@ function RouteComponent() {
               className="h-auto gap-1.5 px-1! py-0"
               render={
                 <Link to="/auth/login">
-                  Sign in now <ArrowRightIcon />
+                  <Trans comment="Call-to-action link from registration page to login page">Sign in now</Trans>{" "}
+                  <ArrowRightIcon />
                 </Link>
               }
             />
@@ -114,11 +122,20 @@ function RouteComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Trans>Name</Trans>
+                    <Trans comment="Label for full name input on registration form">Name</Trans>
                   </FormLabel>
                   <FormControl
                     render={
-                      <Input min={3} max={64} autoComplete="section-register name" placeholder="John Doe" {...field} />
+                      <Input
+                        min={3}
+                        max={64}
+                        autoComplete="section-register name"
+                        placeholder={t({
+                          comment: "Example full name placeholder on registration form",
+                          message: "John Doe",
+                        })}
+                        {...field}
+                      />
                     }
                   />
                   <FormMessage />
@@ -132,7 +149,7 @@ function RouteComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Trans>Username</Trans>
+                    <Trans comment="Label for username input on registration form">Username</Trans>
                   </FormLabel>
                   <FormControl
                     render={
@@ -140,7 +157,10 @@ function RouteComponent() {
                         min={3}
                         max={64}
                         autoComplete="section-register username"
-                        placeholder="john.doe"
+                        placeholder={t({
+                          comment: "Example username placeholder on registration form",
+                          message: "john.doe",
+                        })}
                         className="lowercase"
                         {...field}
                       />
@@ -157,14 +177,17 @@ function RouteComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Trans>Email Address</Trans>
+                    <Trans comment="Label for email input on registration form">Email Address</Trans>
                   </FormLabel>
                   <FormControl
                     render={
                       <Input
                         type="email"
                         autoComplete="section-register email"
-                        placeholder="john.doe@example.com"
+                        placeholder={t({
+                          comment: "Example email placeholder on registration form",
+                          message: "john.doe@example.com",
+                        })}
                         className="lowercase"
                         {...field}
                       />
@@ -181,7 +204,7 @@ function RouteComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Trans>Password</Trans>
+                    <Trans comment="Label for password input on registration form">Password</Trans>
                   </FormLabel>
                   <div className="flex items-center gap-x-1.5">
                     <FormControl
@@ -196,7 +219,22 @@ function RouteComponent() {
                       }
                     />
 
-                    <Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={toggleShowPassword}
+                      aria-label={
+                        showPassword
+                          ? t({
+                              comment: "Accessible label for button that hides password in registration form",
+                              message: "Hide password",
+                            })
+                          : t({
+                              comment: "Accessible label for button that reveals password in registration form",
+                              message: "Show password",
+                            })
+                      }
+                    >
                       {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
                     </Button>
                   </div>
@@ -206,7 +244,7 @@ function RouteComponent() {
             />
 
             <Button type="submit" className="w-full">
-              <Trans>Sign up</Trans>
+              <Trans comment="Primary action button label on registration form">Sign up</Trans>
             </Button>
           </form>
         </Form>
@@ -242,7 +280,8 @@ function PostSignupScreen() {
         nativeButton={false}
         render={
           <Link to="/dashboard">
-            <Trans>Continue</Trans> <ArrowRightIcon />
+            <Trans comment="Button label to continue to dashboard after successful registration">Continue</Trans>{" "}
+            <ArrowRightIcon />
           </Link>
         }
       />

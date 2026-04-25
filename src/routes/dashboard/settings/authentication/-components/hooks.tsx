@@ -18,18 +18,49 @@ import type { AuthProvider } from "@/integrations/auth/types";
 
 import { authClient } from "@/integrations/auth/client";
 import { orpc } from "@/integrations/orpc/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 /**
  * Get the display name for a social provider
  */
 export function getProviderName(providerId: AuthProvider): string {
   return match(providerId)
-    .with("credential", () => "Password")
-    .with("passkey", () => "Passkey")
-    .with("google", () => "Google")
-    .with("github", () => "GitHub")
-    .with("linkedin", () => "LinkedIn")
-    .with("custom", () => "Custom OAuth")
+    .with("credential", () =>
+      t({
+        comment: "Authentication provider display name in account settings",
+        message: "Password",
+      }),
+    )
+    .with("passkey", () =>
+      t({
+        comment: "Authentication provider display name in account settings",
+        message: "Passkey",
+      }),
+    )
+    .with("google", () =>
+      t({
+        comment: "Authentication provider display name in account settings",
+        message: "Google",
+      }),
+    )
+    .with("github", () =>
+      t({
+        comment: "Authentication provider display name in account settings",
+        message: "GitHub",
+      }),
+    )
+    .with("linkedin", () =>
+      t({
+        comment: "Authentication provider display name in account settings",
+        message: "LinkedIn",
+      }),
+    )
+    .with("custom", () =>
+      t({
+        comment: "Authentication provider display name in account settings",
+        message: "Custom OAuth",
+      }),
+    )
     .exhaustive();
 }
 
@@ -85,7 +116,16 @@ export function useAuthProviderActions() {
     const { error } = await authClient.linkSocial({ provider, callbackURL: "/dashboard/settings/authentication" });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when linking a social authentication provider fails",
+            message: "Failed to link provider. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -99,7 +139,16 @@ export function useAuthProviderActions() {
     const { error } = await authClient.unlinkAccount({ providerId: provider, accountId });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when unlinking a social authentication provider fails",
+            message: "Failed to unlink provider. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 

@@ -125,7 +125,9 @@ export function SharingSectionBuilder() {
       {resume.isPublic && (
         <div className="space-y-4 rounded-md border p-4">
           <div className="grid gap-2">
-            <Label htmlFor="sharing-url">URL</Label>
+            <Label htmlFor="sharing-url">
+              <Trans comment="Form field label for the generated public resume link in sharing settings">URL</Trans>
+            </Label>
 
             <div className="flex items-center gap-x-2">
               <Input readOnly id="sharing-url" value={publicUrl} />

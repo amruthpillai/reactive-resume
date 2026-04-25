@@ -4,15 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/utils/style";
 
 interface FontDisplayProps {
-  name: string;
-  url?: string;
+  family: string;
+  label: string;
   type: "local" | "web";
+  url?: string;
 }
 
 const loadedFonts = new Set<string>();
 
-export function FontDisplay({ name, url, type = "web" }: FontDisplayProps) {
-  const previewName = type === "local" ? name : `${name} Preview`;
+export function FontDisplay({ family, label, type, url }: FontDisplayProps) {
+  const previewName = type === "local" ? family : `${family} Preview`;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(() => type === "local" || loadedFonts.has(previewName));
@@ -31,13 +32,14 @@ export function FontDisplay({ name, url, type = "web" }: FontDisplayProps) {
   }, [isInView, isLoaded, previewName, url]);
 
   return (
-    <div ref={containerRef} className="inline">
+    <div ref={containerRef} className="inline-flex items-baseline gap-2">
       <span
         style={{ fontFamily: isLoaded ? `'${previewName}', sans-serif` : "sans-serif" }}
         className={cn(isLoaded ? "opacity-100" : "opacity-50", "transition-opacity duration-200 ease-in")}
       >
-        {name}
+        {label}
       </span>
+      {label !== family && <span className="text-xs text-muted-foreground">{family}</span>}
     </div>
   );
 }

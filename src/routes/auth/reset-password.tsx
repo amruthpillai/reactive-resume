@@ -53,7 +53,14 @@ function RouteComponent() {
     const { error } = await authClient.resetPassword({ token, newPassword: data.password });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when resetting password fails and no backend message is available",
+            message: "Failed to reset your password. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -84,7 +91,7 @@ function RouteComponent() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  <Trans>New Password</Trans>
+                  <Trans comment="Label for new password input on reset-password form">New Password</Trans>
                 </FormLabel>
                 <div className="flex items-center gap-x-1.5">
                   <FormControl
@@ -99,7 +106,22 @@ function RouteComponent() {
                     }
                   />
 
-                  <Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={toggleShowPassword}
+                    aria-label={
+                      showPassword
+                        ? t({
+                            comment: "Accessible label for button that hides password in reset-password form",
+                            message: "Hide password",
+                          })
+                        : t({
+                            comment: "Accessible label for button that reveals password in reset-password form",
+                            message: "Show password",
+                          })
+                    }
+                  >
                     {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
                   </Button>
                 </div>
@@ -109,7 +131,7 @@ function RouteComponent() {
           />
 
           <Button type="submit" className="w-full">
-            <Trans>Reset Password</Trans>
+            <Trans comment="Primary action button label on reset-password form">Reset Password</Trans>
           </Button>
         </form>
       </Form>

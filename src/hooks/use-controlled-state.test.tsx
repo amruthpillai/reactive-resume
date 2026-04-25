@@ -21,7 +21,7 @@ describe("useControlledState", () => {
     });
 
     it("calls onChange when setter is called", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<(value: string) => void>();
       const { result } = renderHook(() => useControlledState({ defaultValue: "a", onChange }));
 
       act(() => {
@@ -32,7 +32,7 @@ describe("useControlledState", () => {
     });
 
     it("passes extra args to onChange", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<(value: string, arg: number) => void>();
       const { result } = renderHook(() => useControlledState<string, [number]>({ defaultValue: "a", onChange }));
 
       act(() => {
@@ -62,7 +62,7 @@ describe("useControlledState", () => {
     });
 
     it("still calls onChange when setter is called in controlled mode", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<(value: string) => void>();
       const { result } = renderHook(() => useControlledState({ value: "x", onChange }));
 
       act(() => {

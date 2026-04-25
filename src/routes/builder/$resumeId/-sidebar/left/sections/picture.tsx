@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { orpc } from "@/integrations/orpc/client";
 import { pictureSchema } from "@/schema/resume/data";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { SectionBase } from "../shared/section-base";
 
@@ -59,9 +60,10 @@ function PictureSectionForm() {
     if (!picture.url) return;
 
     const appOrigin = window.location.origin;
-    const pictureOrigin = new URL(picture.url).origin;
+    const pictureUrl = new URL(picture.url, appOrigin);
+    const pictureOrigin = pictureUrl.origin;
 
-    const filename = picture.url.split("/").pop();
+    const filename = pictureUrl.pathname.split("/").pop();
     if (!filename) return;
 
     // If the picture is from the same origin, attempt to delete it
@@ -85,7 +87,16 @@ function PictureSectionForm() {
         if (fileInputRef.current) fileInputRef.current.value = "";
       },
       onError: (error) => {
-        toast.error(error.message, { id: toastId });
+        toast.error(
+          getReadableErrorMessage(
+            error,
+            t({
+              comment: "Fallback toast when uploading profile picture for resume fails",
+              message: "Failed to upload picture. Please try again.",
+            }),
+          ),
+          { id: toastId },
+        );
       },
     });
   };
@@ -96,8 +107,10 @@ function PictureSectionForm() {
         <div className="flex items-center gap-x-4">
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={onUploadPicture} />
 
-          <div
+          <button
+            type="button"
             onClick={picture.url ? onDeletePicture : onSelectPicture}
+            aria-label={picture.url ? t`Delete picture` : t`Upload picture`}
             className="group/picture relative size-18 cursor-pointer overflow-hidden rounded-md bg-secondary transition-colors hover:bg-secondary/50"
           >
             {picture.url && (
@@ -111,7 +124,7 @@ function PictureSectionForm() {
             <div className="absolute inset-0 z-0 flex size-full items-center justify-center">
               {picture.url ? <TrashSimpleIcon className="size-6" /> : <UploadSimpleIcon className="size-6" />}
             </div>
-          </div>
+          </button>
 
           <FormField
             control={form.control}
@@ -122,7 +135,7 @@ function PictureSectionForm() {
                   <Trans>URL</Trans>
                 </FormLabel>
                 <div className="flex items-center gap-x-2">
-                  <FormControl render={<Input {...field} />} />
+                  <FormControl render={<Input {...field} readOnly />} />
 
                   <Button
                     size="icon"
@@ -235,7 +248,10 @@ function PictureSectionForm() {
                     <Button
                       size="icon"
                       variant="outline"
-                      title={t`Square`}
+                      title={t({
+                        comment: "Preset button for setting picture aspect ratio to square",
+                        message: "Square",
+                      })}
                       onClick={() => {
                         field.onChange(1);
                         void form.handleSubmit(onSubmit)();
@@ -246,7 +262,10 @@ function PictureSectionForm() {
                     <Button
                       size="icon"
                       variant="outline"
-                      title={t`Landscape`}
+                      title={t({
+                        comment: "Preset button for setting picture aspect ratio to landscape orientation",
+                        message: "Landscape",
+                      })}
                       onClick={() => {
                         field.onChange(1.5);
                         void form.handleSubmit(onSubmit)();
@@ -257,7 +276,10 @@ function PictureSectionForm() {
                     <Button
                       size="icon"
                       variant="outline"
-                      title={t`Portrait`}
+                      title={t({
+                        comment: "Preset button for setting picture aspect ratio to portrait orientation",
+                        message: "Portrait",
+                      })}
                       onClick={() => {
                         field.onChange(0.5);
                         void form.handleSubmit(onSubmit)();

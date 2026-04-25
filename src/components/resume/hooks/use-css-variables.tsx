@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import type { resumeDataSchema } from "@/schema/resume/data";
 
 import { pageDimensionsAsMillimeters } from "@/schema/page";
+import { buildResumeFontFamily } from "@/utils/fonts";
 
 type UseCssVariablesProps = Pick<z.infer<typeof resumeDataSchema>, "picture" | "metadata">;
 
@@ -36,12 +37,12 @@ export const useCSSVariables = ({ picture, metadata }: UseCssVariablesProps) => 
     "--page-text-color": metadata.design.colors.text,
     "--page-primary-color": metadata.design.colors.primary,
     "--page-background-color": metadata.design.colors.background,
-    "--page-body-font-family": `'${metadata.typography.body.fontFamily}', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`,
+    "--page-body-font-family": buildResumeFontFamily(metadata.typography.body.fontFamily),
     "--page-body-font-weight": fontWeightStyles.lowestBodyFontWeight,
     "--page-body-font-weight-bold": fontWeightStyles.highestBodyFontWeight,
     "--page-body-font-size": metadata.typography.body.fontSize,
     "--page-body-line-height": metadata.typography.body.lineHeight,
-    "--page-heading-font-family": `'${metadata.typography.heading.fontFamily}', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`,
+    "--page-heading-font-family": buildResumeFontFamily(metadata.typography.heading.fontFamily),
     "--page-heading-font-weight": fontWeightStyles.lowestHeadingFontWeight,
     "--page-heading-font-weight-bold": fontWeightStyles.highestHeadingFontWeight,
     "--page-heading-font-size": metadata.typography.heading.fontSize,

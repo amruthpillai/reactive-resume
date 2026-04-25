@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useEffect } from "react";
@@ -14,6 +15,12 @@ const searchSchema = z.object({
   token: z.string().catch(""),
 });
 
+function assertValidPrinterToken(token: string, resumeId: string): void {
+  const tokenResumeId = verifyPrinterToken(token);
+  if (tokenResumeId === resumeId) return;
+  throw new Error("Printer token does not match resume ID");
+}
+
 export const Route = createFileRoute("/printer/$resumeId")({
   component: RouteComponent,
   validateSearch: zodValidator(searchSchema),
@@ -21,22 +28,32 @@ export const Route = createFileRoute("/printer/$resumeId")({
     if (env.FLAG_DEBUG_PRINTER) return;
 
     try {
-      // Verify the token and ensure it matches the resume ID
-      const tokenResumeId = verifyPrinterToken(search.token);
-      if (tokenResumeId !== params.resumeId) throw new Error();
+      assertValidPrinterToken(search.token, params.resumeId);
     } catch {
-      // Invalid or missing token - throw error to be caught by error handler
       throw redirect({ to: "/", search: {}, throw: true });
     }
   },
-  loader: async ({ params }) => {
+  loaderDeps: ({ search }) => ({ token: search.token }),
+  loader: async ({ params, deps }) => {
     const client = getORPCClient();
-    const resume = await client.resume.getByIdForPrinter({ id: params.resumeId });
+    const resume = await client.resume.getByIdForPrinter({ id: params.resumeId, token: deps.token });
 
     return { resume };
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: loaderData ? `${loaderData.resume.data.basics.name} - Resume` : "Resume" }],
+    meta: [
+      {
+        title: loaderData
+          ? `${loaderData.resume.data.basics.name} - ${t({
+              comment: "Browser tab suffix for printable resume pages",
+              message: "Resume",
+            })}`
+          : t({
+              comment: "Browser tab title before printable resume data finishes loading",
+              message: "Resume",
+            }),
+      },
+    ],
   }),
 });
 

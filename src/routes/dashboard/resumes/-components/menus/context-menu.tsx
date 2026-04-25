@@ -22,6 +22,7 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
+import { getResumeErrorMessage } from "@/utils/error-message";
 
 type Props = {
   resume: RouterOutput["resume"]["list"][number];
@@ -56,7 +57,7 @@ export function ResumeContextMenu({ resume, children }: Props) {
       { id: resume.id, isLocked: !resume.isLocked },
       {
         onError: (error) => {
-          toast.error(error.message);
+          toast.error(getResumeErrorMessage(error));
         },
       },
     );
@@ -78,7 +79,7 @@ export function ResumeContextMenu({ resume, children }: Props) {
           toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
         },
         onError: (error) => {
-          toast.error(error.message, { id: toastId });
+          toast.error(getResumeErrorMessage(error), { id: toastId });
         },
       },
     );
@@ -93,7 +94,7 @@ export function ResumeContextMenu({ resume, children }: Props) {
           render={
             <Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
               <FolderOpenIcon />
-              <Trans>Open</Trans>
+              <Trans comment="Resume card context menu action to open the resume editor">Open</Trans>
             </Link>
           }
         />
@@ -102,24 +103,28 @@ export function ResumeContextMenu({ resume, children }: Props) {
 
         <ContextMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
           <PencilSimpleLineIcon />
-          <Trans>Update</Trans>
+          <Trans comment="Resume card context menu action to edit resume metadata">Update</Trans>
         </ContextMenuItem>
 
         <ContextMenuItem onClick={handleDuplicate}>
           <CopySimpleIcon />
-          <Trans>Duplicate</Trans>
+          <Trans comment="Resume card context menu action to create a copy">Duplicate</Trans>
         </ContextMenuItem>
 
         <ContextMenuItem onClick={handleToggleLock}>
           {resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
-          {resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
+          {resume.isLocked ? (
+            <Trans comment="Resume card context menu action to remove edit lock">Unlock</Trans>
+          ) : (
+            <Trans comment="Resume card context menu action to prevent edits">Lock</Trans>
+          )}
         </ContextMenuItem>
 
         <ContextMenuSeparator />
 
         <ContextMenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
           <TrashSimpleIcon />
-          <Trans>Delete</Trans>
+          <Trans comment="Resume card context menu destructive action to remove a resume">Delete</Trans>
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

@@ -1,26 +1,22 @@
-import { Trans } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
-import { DownloadSimpleIcon } from "@phosphor-icons/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 import type { ResumeData } from "@/schema/resume/data";
 
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ResumePreview } from "@/components/resume/preview";
 import { useResumeStore } from "@/components/resume/store/resume";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
-import { downloadFromUrl } from "@/utils/file";
 import { cn } from "@/utils/style";
 
 type LoaderData = Omit<RouterOutput["resume"]["getBySlug"], "data"> & { data: ResumeData };
 
 export const Route = createFileRoute("/$username/$slug")({
   component: RouteComponent,
-  loader: async ({ context, params: { username, slug } }) => {
+  loader: async ({ context, params }) => {
+    const { username, slug } = params;
     const resume = await context.queryClient.ensureQueryData(
       orpc.resume.getBySlug.queryOptions({ input: { username, slug } }),
     );
@@ -54,21 +50,12 @@ function RouteComponent() {
   const initialize = useResumeStore((state) => state.initialize);
 
   const { data: resume } = useQuery(orpc.resume.getBySlug.queryOptions({ input: { username, slug } }));
-  const { mutateAsync: printResumeAsPDF, isPending: isPrinting } = useMutation(
-    orpc.printer.printResumeAsPDF.mutationOptions(),
-  );
 
   useEffect(() => {
     if (!resume) return;
     initialize(resume);
     return () => initialize(null);
   }, [resume, initialize]);
-
-  const handleDownload = useCallback(async () => {
-    if (!resume) return;
-    const { url } = await printResumeAsPDF({ id: resume.id });
-    await downloadFromUrl(url, `${resume.name}.pdf`);
-  }, [resume, printResumeAsPDF]);
 
   if (!isReady) return <LoadingScreen />;
 
@@ -79,17 +66,6 @@ function RouteComponent() {
       >
         <ResumePreview className="space-y-4" pageClassName="print:w-full! w-full max-w-full" />
       </div>
-
-      <Button
-        size="lg"
-        variant="secondary"
-        disabled={isPrinting}
-        className="fixed inset-e-4 bottom-4 z-50 hidden rounded-full px-4 md:inline-flex print:hidden"
-        onClick={handleDownload}
-      >
-        {isPrinting ? <Spinner /> : <DownloadSimpleIcon />}
-        {isPrinting ? <Trans>Downloading...</Trans> : <Trans>Download</Trans>}
-      </Button>
     </>
   );
 }

@@ -21,9 +21,6 @@ export const getORPCClient = createIsomorphicFn()
         const locale = await getLocale();
         const reqHeaders = getRequestHeaders();
 
-        // Add a custom header to identify server-side calls
-        reqHeaders.set("x-server-side-call", "true");
-
         return { locale, reqHeaders };
       },
     });

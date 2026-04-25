@@ -26,6 +26,7 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/integrations/orpc/client";
+import { getResumeErrorMessage } from "@/utils/error-message";
 
 import { useBuilderSidebar } from "../-store/sidebar";
 
@@ -38,12 +39,21 @@ export function BuilderHeader() {
     <div className="absolute inset-x-0 top-0 z-10 flex h-14 items-center justify-between border-b bg-popover px-1.5">
       <Button size="icon" variant="ghost" onClick={() => toggleSidebar("left")}>
         <SidebarSimpleIcon />
+        <span className="sr-only">
+          <Trans comment="Screen-reader label for opening or closing the left sidebar in resume builder">
+            Toggle left sidebar
+          </Trans>
+        </span>
       </Button>
 
       <div className="flex items-center gap-x-1">
         <Button
           size="icon"
           variant="ghost"
+          aria-label={t({
+            comment: "Accessible label for button navigating from builder to resumes dashboard",
+            message: "Go to resumes dashboard",
+          })}
           nativeButton={false}
           render={
             <Link to="/dashboard/resumes" search={{ sort: "lastUpdatedAt", tags: [] }}>
@@ -59,6 +69,11 @@ export function BuilderHeader() {
 
       <Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
         <SidebarSimpleIcon className="-scale-x-100" />
+        <span className="sr-only">
+          <Trans comment="Screen-reader label for opening or closing the right sidebar in resume builder">
+            Toggle right sidebar
+          </Trans>
+        </span>
       </Button>
     </div>
   );
@@ -99,7 +114,7 @@ function BuilderHeaderDropdown() {
       { id, isLocked: !isLocked },
       {
         onError: (error) => {
-          toast.error(error.message);
+          toast.error(getResumeErrorMessage(error));
         },
       },
     );
@@ -122,7 +137,7 @@ function BuilderHeaderDropdown() {
           void navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
         },
         onError: (error) => {
-          toast.error(error.message, { id: toastId });
+          toast.error(getResumeErrorMessage(error), { id: toastId });
         },
       },
     );

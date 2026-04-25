@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
 
-export type AIProvider = "vercel-ai-gateway" | "openai" | "gemini" | "anthropic" | "ollama";
+import type { AIProvider } from "./types";
 
 type TestStatus = "unverified" | "success" | "failure";
 

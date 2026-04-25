@@ -17,6 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -76,7 +77,16 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when enabling two-factor authentication fails",
+            message: "Failed to enable two-factor authentication. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -96,7 +106,16 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
     const { error } = await authClient.twoFactor.verifyTotp({ code: data.code });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when verifying two-factor setup code fails",
+            message: "Failed to verify your code. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -202,6 +221,19 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
                       />
 
                       <Button size="icon" variant="ghost" type="button" onClick={toggleShowPassword}>
+                        <span className="sr-only">
+                          {showPassword
+                            ? t({
+                                comment:
+                                  "Accessible label for toggle button that hides the visible password in two-factor setup",
+                                message: "Hide password",
+                              })
+                            : t({
+                                comment:
+                                  "Accessible label for toggle button that reveals the masked password in two-factor setup",
+                                message: "Show password",
+                              })}
+                        </span>
                         {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
                       </Button>
                     </div>
@@ -264,10 +296,12 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
                   <DialogFooter className="gap-x-2">
                     <Button type="button" variant="outline" onClick={requestClose}>
-                      <Trans>Cancel</Trans>
+                      <Trans comment="Secondary action button to close two-factor setup dialog">Cancel</Trans>
                     </Button>
                     <Button type="submit">
-                      <Trans>Continue</Trans>
+                      <Trans comment="Primary action button to proceed to next step in two-factor setup">
+                        Continue
+                      </Trans>
                     </Button>
                   </DialogFooter>
                 </form>
@@ -290,11 +324,11 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
                 <div className="flex items-center gap-x-2">
                   <Button type="button" variant="outline" onClick={handleDownloadBackupCodes} className="flex-1">
                     <ArrowDownIcon className="me-2 size-4" />
-                    <Trans>Download</Trans>
+                    <Trans comment="Action button to download two-factor backup codes as a text file">Download</Trans>
                   </Button>
                   <Button type="button" variant="ghost" onClick={handleCopyBackupCodes} className="flex-1">
                     <CopyIcon className="me-2 size-4" />
-                    <Trans>Copy</Trans>
+                    <Trans comment="Action button to copy two-factor backup codes to clipboard">Copy</Trans>
                   </Button>
                 </div>
               </div>
@@ -302,7 +336,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 
             <DialogFooter>
               <Button type="button" onClick={onConfirmBackup}>
-                <Trans>Continue</Trans>
+                <Trans comment="Final action button after saving backup codes">Continue</Trans>
               </Button>
             </DialogFooter>
           </div>
@@ -328,7 +362,10 @@ function TwoFactorQRCode({ totpUri }: { totpUri: string }) {
       size={256}
       marginSize={2}
       className="rounded-md"
-      title="Two-Factor Authentication QR Code"
+      title={t({
+        comment: "Accessible title for QR code image shown during two-factor setup",
+        message: "Two-Factor Authentication QR Code",
+      })}
     />
   );
 }

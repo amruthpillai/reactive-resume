@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@lingui/react/macro";
 import {
   ColumnsIcon,
@@ -46,9 +47,18 @@ function getItemTitle(type: CustomSectionType, item: CustomSectionItemType): str
     .with("summary", () => {
       if ("content" in item) {
         const stripped = stripHtml(item.content);
-        return stripped.length > 50 ? `${stripped.slice(0, 50)}...` : stripped || "Summary";
+        return stripped.length > 50
+          ? `${stripped.slice(0, 50)}...`
+          : stripped ||
+              t({
+                comment: "Fallback title for a custom summary item in resume builder when content is empty",
+                message: "Summary",
+              });
       }
-      return "Summary";
+      return t({
+        comment: "Fallback title for a custom summary item in resume builder when content is unavailable",
+        message: "Summary",
+      });
     })
     .with("profiles", () => ("network" in item ? item.network : ""))
     .with("experience", () => ("company" in item ? item.company : ""))
@@ -65,9 +75,18 @@ function getItemTitle(type: CustomSectionType, item: CustomSectionItemType): str
     .with("cover-letter", () => {
       if ("recipient" in item) {
         const stripped = stripHtml(item.recipient);
-        return stripped.length > 50 ? `${stripped.slice(0, 50)}...` : stripped || "Cover Letter";
+        return stripped.length > 50
+          ? `${stripped.slice(0, 50)}...`
+          : stripped ||
+              t({
+                comment: "Fallback title for a custom cover letter item in resume builder when recipient is empty",
+                message: "Cover Letter",
+              });
       }
-      return "Cover Letter";
+      return t({
+        comment: "Fallback title for a custom cover letter item in resume builder when recipient is unavailable",
+        message: "Cover Letter",
+      });
     })
     .exhaustive();
 }
@@ -216,9 +235,15 @@ function CustomSectionDropdownMenu({ section }: { section: CustomSection }) {
   };
 
   const onDeleteSection = async () => {
-    const confirmed = await confirm("Are you sure you want to delete this custom section?", {
-      confirmText: "Delete",
-      cancelText: "Cancel",
+    const confirmed = await confirm(t`Are you sure you want to delete this custom section?`, {
+      confirmText: t({
+        comment: "Destructive confirmation button label when deleting a custom section in resume builder",
+        message: "Delete",
+      }),
+      cancelText: t({
+        comment: "Confirmation dialog button label to abort deleting a custom section in resume builder",
+        message: "Cancel",
+      }),
     });
 
     if (!confirmed) return;

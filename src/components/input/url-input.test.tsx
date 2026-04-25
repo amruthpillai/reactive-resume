@@ -16,12 +16,14 @@ vi.mock("@phosphor-icons/react", () => ({
   TagIcon: () => <span data-testid="tag-icon" />,
 }));
 
+import React from "react";
+
 import { URLInput } from "./url-input";
 
 describe("URLInput", () => {
   describe("URL prefix handling", () => {
     it("displays URL without https:// prefix", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "https://example.com", label: "" }} onChange={onChange} />);
 
       const input = screen.getByDisplayValue("example.com");
@@ -29,7 +31,7 @@ describe("URLInput", () => {
     });
 
     it("displays empty string when URL is empty", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "", label: "" }} onChange={onChange} />);
 
       const inputs = screen.getAllByRole("textbox");
@@ -38,7 +40,7 @@ describe("URLInput", () => {
     });
 
     it("adds https:// prefix when user types", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "", label: "" }} onChange={onChange} />);
 
       const inputs = screen.getAllByRole("textbox");
@@ -51,7 +53,7 @@ describe("URLInput", () => {
     });
 
     it("does not double-prefix when user types https://", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "", label: "" }} onChange={onChange} />);
 
       const inputs = screen.getAllByRole("textbox");
@@ -64,7 +66,7 @@ describe("URLInput", () => {
     });
 
     it("sends empty URL when input is cleared", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "https://example.com", label: "" }} onChange={onChange} />);
 
       const inputs = screen.getAllByRole("textbox");
@@ -79,7 +81,7 @@ describe("URLInput", () => {
 
   describe("label preservation", () => {
     it("preserves label when URL changes", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "https://old.com", label: "My Site" }} onChange={onChange} />);
 
       const inputs = screen.getAllByRole("textbox");
@@ -94,14 +96,14 @@ describe("URLInput", () => {
 
   describe("hideLabelButton prop", () => {
     it("hides the label button when hideLabelButton is true", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "", label: "" }} onChange={onChange} hideLabelButton={true} />);
 
       expect(screen.queryByTestId("tag-icon")).toBeNull();
     });
 
     it("shows the label button by default", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "", label: "" }} onChange={onChange} />);
 
       expect(screen.getByTestId("tag-icon")).toBeDefined();
@@ -110,7 +112,7 @@ describe("URLInput", () => {
 
   describe("displays the https:// prefix text", () => {
     it("shows https:// as static text", () => {
-      const onChange = vi.fn();
+      const onChange = vi.fn<React.ComponentProps<typeof URLInput>["onChange"]>();
       render(<URLInput value={{ url: "", label: "" }} onChange={onChange} />);
 
       expect(screen.getByText("https://")).toBeDefined();

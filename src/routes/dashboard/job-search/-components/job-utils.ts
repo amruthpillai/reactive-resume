@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 
 import type { RapidApiQuota } from "@/schema/jobs";
 
@@ -13,7 +13,7 @@ export function formatSalary(
   const formatCurrency = (amount: number) => {
     const resolvedCurrency = currency ?? "USD";
     try {
-      return new Intl.NumberFormat("en-US", {
+      return new Intl.NumberFormat(undefined, {
         style: "currency",
         currency: resolvedCurrency,
         maximumFractionDigits: 0,
@@ -23,10 +23,15 @@ export function formatSalary(
     }
   };
 
-  if (min && max) return `${formatCurrency(min)} - ${formatCurrency(max)}${period ? ` / ${period}` : ""}`;
-  if (min) return `${formatCurrency(min)}+${period ? ` / ${period}` : ""}`;
+  const periodSuffix = period ? ` / ${period}` : "";
+
+  if (min && max) return `${formatCurrency(min)} - ${formatCurrency(max)}${periodSuffix}`;
+  if (min) return `${formatCurrency(min)}+${periodSuffix}`;
   if (!max) return "";
-  return `Up to ${formatCurrency(max)}${period ? ` / ${period}` : ""}`;
+  return t({
+    comment: "Salary label when only an upper salary bound is available",
+    message: `Up to ${formatCurrency(max)}${periodSuffix}`,
+  });
 }
 
 export function formatPostedDate(timestamp: number | null): string {
@@ -38,9 +43,26 @@ export function formatPostedDate(timestamp: number | null): string {
 
   if (diffDays <= 0) return t`Today`;
   if (diffDays === 1) return t`Yesterday`;
-  if (diffDays < 7) return t`${diffDays} days ago`;
-  if (diffDays < 30) return t`${Math.floor(diffDays / 7)} weeks ago`;
-  return t`${Math.floor(diffDays / 30)} months ago`;
+  if (diffDays < 7) {
+    return plural(diffDays, {
+      one: "# day ago",
+      other: "# days ago",
+    });
+  }
+
+  if (diffDays < 30) {
+    const weeks = Math.floor(diffDays / 7);
+    return plural(weeks, {
+      one: "# week ago",
+      other: "# weeks ago",
+    });
+  }
+
+  const months = Math.floor(diffDays / 30);
+  return plural(months, {
+    one: "# month ago",
+    other: "# months ago",
+  });
 }
 
 export function getQuotaStatus(quota: RapidApiQuota): "healthy" | "warning" | "critical" {

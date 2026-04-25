@@ -1,4 +1,10 @@
+import type { toast } from "sonner";
+
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+
+import { defaultResumeData } from "@/schema/resume/data";
+
+import { useResumeStore } from "./resume";
 
 // Mock dependencies before importing the store
 vi.mock("@lingui/core/macro", () => ({
@@ -7,8 +13,8 @@ vi.mock("@lingui/core/macro", () => ({
 
 vi.mock("sonner", () => ({
   toast: {
-    error: vi.fn(() => "toast-id"),
-    dismiss: vi.fn(),
+    error: vi.fn<typeof toast.error>(() => "toast-id"),
+    dismiss: vi.fn<typeof toast.dismiss>(),
   },
 }));
 
@@ -16,15 +22,11 @@ vi.mock("@/integrations/orpc/client", () => ({
   orpc: {
     resume: {
       update: {
-        call: vi.fn(() => Promise.resolve()),
+        call: vi.fn<() => Promise<void>>(() => Promise.resolve()),
       },
     },
   },
 }));
-
-import { defaultResumeData } from "@/schema/resume/data";
-
-import { useResumeStore } from "./resume";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -128,10 +130,13 @@ describe("useResumeStore — updateResumeData", () => {
     // Store starts with null resume
     useResumeStore.getState().initialize(null);
 
-    // Should not throw
-    useResumeStore.getState().updateResumeData((draft) => {
-      draft.basics.name = "Should not apply";
-    });
+    expect(() =>
+      useResumeStore.getState().updateResumeData((draft) => {
+        draft.basics.name = "Should not apply";
+      }),
+    ).not.toThrow();
+
+    expect(useResumeStore.getState().isReady).toBe(false);
   });
 
   it("blocks updates when resume is locked", async () => {

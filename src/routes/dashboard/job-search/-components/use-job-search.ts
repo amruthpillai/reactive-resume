@@ -7,6 +7,7 @@ import type { JobResult, RapidApiQuota } from "@/schema/jobs";
 
 import { useJobsStore } from "@/integrations/jobs/store";
 import { orpc } from "@/integrations/orpc/client";
+import { getOrpcErrorMessage } from "@/utils/error-message";
 
 import {
   buildPostFilters,
@@ -71,8 +72,21 @@ export function useJobSearch() {
           },
           onError: (error) => {
             if (requestId !== requestIdRef.current) return;
-            setError(error.message);
-            toast.error(error.message);
+            const message = getOrpcErrorMessage(error, {
+              byCode: {
+                BAD_GATEWAY: t({
+                  comment: "Error shown when job search API is unavailable while searching jobs",
+                  message: "Could not fetch jobs from JSearch API. Please try again.",
+                }),
+              },
+              fallback: t({
+                comment: "Fallback error shown when job search request fails",
+                message: "Failed to search jobs. Please try again.",
+              }),
+            });
+
+            setError(message);
+            toast.error(message);
           },
         },
       );

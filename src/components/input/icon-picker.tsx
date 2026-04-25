@@ -24,12 +24,17 @@ type IconSearchInputProps = {
 function _IconSearchInput(props: IconSearchInputProps) {
   return (
     <Input
-      autoFocus
       spellCheck={false}
       inputMode="search"
       value={props.value}
-      aria-label={t`Search for an icon`}
-      placeholder={t`Search for an icon`}
+      aria-label={t({
+        comment: "Accessible label for icon picker search input",
+        message: "Search for an icon",
+      })}
+      placeholder={t({
+        comment: "Placeholder text in icon picker search input",
+        message: "Search for an icon",
+      })}
       onChange={(e) => props.onChange(e.currentTarget.value)}
       className={cn("rounded-none border-0 focus-visible:ring-0", props.className)}
     />
