@@ -498,7 +498,9 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
                   <Trans>Text Color</Trans>
                 </PopoverTitle>
                 <span className="text-xs text-muted-foreground">
-                  <Trans>Choose a preset or custom shade.</Trans>
+                  <Trans comment="Preset or custom shade refer to the color picker">
+                    Choose a preset or custom shade.
+                  </Trans>
                 </span>
               </div>
             </div>
@@ -510,7 +512,7 @@ function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen:
               onClick={state.unsetTextColor}
               disabled={!state.textColor}
             >
-              <Trans>Clear</Trans>
+              <Trans comment="Clear the text color">Clear</Trans>
             </Button>
           </PopoverHeader>
 
