@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { usePrompt } from "@/hooks/use-prompt";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 export function PasskeysSection() {
   const queryClient = useQueryClient();
@@ -26,7 +27,15 @@ export function PasskeysSection() {
     },
     onSuccess: async ({ data, error }) => {
       if (error) {
-        toast.error(error.message);
+        toast.error(
+          getReadableErrorMessage(
+            error,
+            t({
+              comment: "Fallback toast when passkey registration fails",
+              message: "Failed to register passkey. Please try again.",
+            }),
+          ),
+        );
         return;
       }
 
@@ -36,7 +45,10 @@ export function PasskeysSection() {
       const name = await prompt(t`Enter a name for your passkey.`, {
         description: t`This will help you identify it later, if you plan to have multiple passkeys.`,
         defaultValue: "",
-        confirmText: t`Save`,
+        confirmText: t({
+          comment: "Passkey rename prompt confirm action in authentication settings",
+          message: "Save",
+        }),
       });
       if (name === null) return;
 
@@ -46,7 +58,15 @@ export function PasskeysSection() {
 
       const { error: renameError } = await authClient.passkey.updatePasskey({ id: passkeyId, name: passkeyName });
       if (renameError) {
-        toast.error(renameError.message);
+        toast.error(
+          getReadableErrorMessage(
+            renameError,
+            t({
+              comment: "Fallback toast when renaming a passkey fails",
+              message: "Failed to rename passkey. Please try again.",
+            }),
+          ),
+        );
         return;
       }
 
@@ -63,7 +83,15 @@ export function PasskeysSection() {
     },
     onSuccess: async ({ error }) => {
       if (error) {
-        toast.error(error.message);
+        toast.error(
+          getReadableErrorMessage(
+            error,
+            t({
+              comment: "Fallback toast when deleting a passkey fails",
+              message: "Failed to delete passkey. Please try again.",
+            }),
+          ),
+        );
         return;
       }
 
@@ -131,7 +159,7 @@ export function PasskeysSection() {
                       disabled={deletePasskeyMutation.isPending}
                     >
                       <TrashIcon />
-                      <Trans>Delete</Trans>
+                      <Trans comment="Passkey row action to remove the selected passkey">Delete</Trans>
                     </Button>
                   </div>
                 </div>

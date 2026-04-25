@@ -40,7 +40,12 @@ const getFaqItems = (): FAQItemData[] => [
           className={buttonVariants({ variant: "link", className: "h-auto px-0!" })}
         >
           contribute to the translations on Crowdin
-          <span className="sr-only"> (opens in new tab)</span>
+          <span className="sr-only">
+            <Trans comment="Screen reader hint indicating the FAQ translation contribution link opens in a new browser tab">
+              {" "}
+              (opens in new tab)
+            </Trans>
+          </span>
         </a>
         .
       </Trans>
@@ -78,7 +83,7 @@ export function FAQ() {
         viewport={{ once: true }}
         transition={{ duration: 0.45 }}
       >
-        <Trans context="Every word needs to be wrapped in a tag">
+        <Trans context="Home page FAQ section heading with each word visually separated into individual spans">
           <span>Frequently</span>
           <span>Asked</span>
           <span>Questions</span>

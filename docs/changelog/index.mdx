@@ -4,12 +4,19 @@ description: "List of all notable changes and updates to Reactive Resume"
 rss: true
 ---
 
-<Update label="v5.0.19" description="22nd April 2026">
+<Update label="v5.0.19" description="25th April 2026">
 ## Security
-- Pinned some packages to specific versions to avoid potential security vulnerabilities through transitive dependencies. (through running `pnpm audit`)
+- Hardened resume export and printer access controls to prevent unauthorized data access.
+- PDF export is now owner-only; the public share-page download action has been removed.
+- Strengthened protections for password verification, OAuth client registration, and redirect URI validation, including tighter rate limits.
+- Blocked network-loading custom CSS patterns and improved CSS sanitization/scoping safeguards.
+- Reduced SSRF risk by tightening URL validation for AI provider base URLs and user picture URLs.
+- Disabled public auth API reference/schema exposure in production-facing auth routes.
 
 ## Maintenance
-- Updated dependencies and lockfile.
+- Updated dependencies and lockfile (including security-focused packages and typings).
+- Added targeted tests for auth, printer/export, URL validation, and CSS sanitization hardening.
+- Improved Docker Compose security defaults (safer Browserless token/image/network configuration).
 - Synced translation catalogs from Crowdin.
 </Update>
 

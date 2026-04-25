@@ -1,11 +1,22 @@
 import z from "zod";
 
-import { protectedProcedure, publicProcedure } from "../context";
+import { protectedProcedure } from "../context";
+import { pdfExportRateLimit } from "../rate-limit";
 import { printerService } from "../services/printer";
 import { resumeService } from "../services/resume";
 
+async function getResumeScreenshotUrl(input: { id: string; currentUserId: string }): Promise<string | null> {
+  try {
+    const { id, data, userId, updatedAt } = await resumeService.getByIdForPrinter(input);
+    return await printerService.getResumeScreenshot({ id, data, userId, updatedAt });
+  } catch {
+    // ignore errors, as the screenshot is not critical
+    return null;
+  }
+}
+
 export const printerRouter = {
-  printResumeAsPDF: publicProcedure
+  printResumeAsPDF: protectedProcedure
     .route({
       method: "GET",
       path: "/resumes/{id}/pdf",
@@ -13,18 +24,18 @@ export const printerRouter = {
       operationId: "exportResumePdf",
       summary: "Export resume as PDF",
       description:
-        "Generates a PDF from the specified resume and uploads it to storage. Returns a URL to download the generated PDF file. If the request is made by an unauthenticated user (e.g. via a public share link), the resume's download count is incremented. Authentication is optional.",
+        "Generates a PDF from the specified resume and uploads it to storage. Returns a URL to download the generated PDF file. Requires authentication.",
       successDescription: "The PDF was generated successfully. Returns a URL to download the file.",
     })
     .input(z.object({ id: z.string().describe("The unique identifier of the resume to export.") }))
+    .use(pdfExportRateLimit)
     .output(z.object({ url: z.string().describe("The URL to download the generated PDF file.") }))
     .handler(async ({ input, context }) => {
-      const { id, data, userId } = await resumeService.getByIdForPrinter({ id: input.id, userId: context.user?.id });
+      const { id, data, userId } = await resumeService.getByIdForPrinter({
+        id: input.id,
+        currentUserId: context.user.id,
+      });
       const url = await printerService.printResumeAsPDF({ id, data, userId });
-
-      if (!context.user) {
-        await resumeService.statistics.increment({ id: input.id, downloads: true });
-      }
 
       return { url };
     }),
@@ -43,19 +54,7 @@ export const printerRouter = {
     .input(z.object({ id: z.string().describe("The unique identifier of the resume.") }))
     .output(z.object({ url: z.string().nullable().describe("The URL to the screenshot image, or null.") }))
     .handler(async ({ context, input }) => {
-      try {
-        const { id, data, userId, updatedAt } = await resumeService.getByIdForPrinter({
-          id: input.id,
-          userId: context.user.id,
-        });
-
-        const url = await printerService.getResumeScreenshot({ id, data, userId, updatedAt });
-
-        return { url };
-      } catch {
-        // ignore errors, as the screenshot is not critical
-      }
-
-      return { url: null };
+      const url = await getResumeScreenshotUrl({ id: input.id, currentUserId: context.user.id });
+      return { url };
     }),
 };

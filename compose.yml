@@ -4,6 +4,8 @@ services:
   postgres:
     image: postgres:latest
     restart: unless-stopped
+    networks:
+      - data_network
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -18,15 +20,17 @@ services:
       retries: 3
 
   browserless:
-    image: ghcr.io/browserless/chromium:latest
+    image: ${BROWSERLESS_IMAGE:-ghcr.io/browserless/chromium:latest}
     restart: unless-stopped
+    networks:
+      - printer_network
     environment:
       - QUEUED=10
       - HEALTH=true
       - CONCURRENT=5
-      - TOKEN=1234567890
+      - TOKEN=${BROWSERLESS_TOKEN:-change-me}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=1234567890"]
+      test: ["CMD-SHELL", 'curl -f "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN:-change-me}"']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -36,6 +40,8 @@ services:
   # chrome:
   #   image: chromedp/headless-shell:latest
   #   restart: unless-stopped
+  #   networks:
+  #     - printer_network
   #   ports:
   #     - "9222:9222"
 
@@ -43,6 +49,8 @@ services:
     image: chrislusf/seaweedfs:latest
     restart: unless-stopped
     command: server -s3 -filer -dir=/data -ip=0.0.0.0
+    networks:
+      - storage_network
     environment:
       - AWS_ACCESS_KEY_ID=seaweedfs
       - AWS_SECRET_ACCESS_KEY=seaweedfs
@@ -65,21 +73,32 @@ services:
         mc mb seaweedfs/reactive-resume;
         exit 0;
       "
+    networks:
+      - storage_network
     depends_on:
       seaweedfs:
         condition: service_healthy
 
   reactive_resume:
-    image: amruthpillai/reactive-resume:latest
+    # image: amruthpillai/reactive-resume:latest
     # image: ghcr.io/amruthpillai/reactive-resume:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - data_network
+      - printer_network
+      - storage_network
+    ports:
+      - "3000:3000"
     environment:
       # Server
       - TZ=Etc/UTC
       - NODE_ENV=production
       - APP_URL=http://localhost:3000
-      - PRINTER_APP_URL=http://reactive_resume:3000
+      - PRINTER_APP_URL=http://host.docker.internal:3000
       # Printer
-      - PRINTER_ENDPOINT=ws://browserless:3000?token=1234567890
+      - PRINTER_ENDPOINT=ws://browserless:3000?token=${BROWSERLESS_TOKEN:-change-me}
       # - PRINTER_ENDPOINT=http://chrome:9222 # Or, if you're using chromedp/headless-shell
       # Database
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
@@ -93,8 +112,6 @@ services:
       - S3_FORCE_PATH_STYLE=true
     volumes:
       - reactive_resume_data:/app/data
-    ports:
-      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -102,6 +119,8 @@ services:
         condition: service_healthy
       seaweedfs_create_bucket:
         condition: service_completed_successfully
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       start_period: 10s
@@ -113,3 +132,8 @@ volumes:
   postgres_data:
   seaweedfs_data:
   reactive_resume_data:
+
+networks:
+  data_network:
+  printer_network:
+  storage_network:

@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { DashboardHeader } from "../-components/header";
 
@@ -38,8 +39,14 @@ function RouteComponent() {
   const onDelete = async (id: string) => {
     const confirmation = await confirm(t`Are you sure you want to delete this API key?`, {
       description: t`The API key will no longer be able to access your data after deletion. This action cannot be undone.`,
-      confirmText: t`Delete`,
-      cancelText: t`Cancel`,
+      confirmText: t({
+        comment: "API key deletion confirmation dialog confirm action in settings",
+        message: "Delete",
+      }),
+      cancelText: t({
+        comment: "API key deletion confirmation dialog cancel action in settings",
+        message: "Cancel",
+      }),
     });
 
     if (!confirmation) return;
@@ -49,7 +56,16 @@ function RouteComponent() {
     const { error } = await authClient.apiKey.delete({ keyId: id });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when deleting an API key fails",
+            message: "Failed to delete the API key. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 

@@ -73,7 +73,9 @@ export function ResumesCommandGroup() {
               {resume.name}
 
               <CommandShortcut className="opacity-0 transition-opacity group-data-[selected=true]/command-item:opacity-100">
-                Press <Kbd>Enter</Kbd> to open
+                <Trans comment="Command palette hint that pressing Enter opens the selected resume">
+                  Press <Kbd>Enter</Kbd> to open
+                </Trans>
               </CommandShortcut>
             </CommandItem>
           ))

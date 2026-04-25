@@ -11,7 +11,7 @@ interface FontDisplayProps {
 
 const loadedFonts = new Set<string>();
 
-export function FontDisplay({ name, url, type = "web" }: FontDisplayProps) {
+export function FontDisplay({ name, url, type }: FontDisplayProps) {
   const previewName = type === "local" ? name : `${name} Preview`;
 
   const containerRef = useRef<HTMLDivElement>(null);

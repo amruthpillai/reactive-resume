@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 13:15\n"
+"PO-Revision-Date: 2026-04-25 13:47\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -53,37 +53,35 @@ msgstr "{0, plural, one {# szerepkör} other {# szerepkör}}"
 msgid "{0} / {1} requests used"
 msgstr "{0} / {1} felhasznált kérelmek"
 
-#. placeholder {0}: Math.floor(diffDays / 30)
-#: src/routes/dashboard/job-search/-components/job-utils.ts
-msgid "{0} months ago"
-msgstr "{0} hónapokkal ezelőtt"
-
-#. placeholder {0}: Math.floor(diffDays / 7)
-#: src/routes/dashboard/job-search/-components/job-utils.ts
-msgid "{0} weeks ago"
-msgstr "{0} hetekkel ezelőtt"
-
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# oszlop} other {# oszlop}}"
 
 #: src/routes/dashboard/job-search/-components/job-utils.ts
-msgid "{diffDays} days ago"
-msgstr "{diffDays} napokkal ezelőtt"
+msgid "{diffDays, plural, one {# day ago} other {# days ago}}"
+msgstr "{diffDays, plural, one {# day ago} other {# days ago}}"
+
+#: src/routes/dashboard/job-search/-components/job-utils.ts
+msgid "{months, plural, one {# month ago} other {# months ago}}"
+msgstr "{months, plural, one {# hónappal ezelőtt} other {# hónappal ezelőtt}}"
 
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} a felhasznált {limit} kérések ({remaining} fennmaradó)"
+
+#: src/routes/dashboard/job-search/-components/job-utils.ts
+msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
+msgstr "{weeks, plural, one {# week ago} other {# weeks ago}}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Végre</0><1>egy ingyenes és nyílt forráskódú önéletrajz‑készítő</1>"
 
 #: src/routes/_home/-sections/faq.tsx
-msgctxt "Every word needs to be wrapped in a tag"
+msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Gyakran</0><1>Ismételt</1><2>Kérdések</2>"
+msgstr "<0>Gyakran</0><1>Kérdések</1><2>Kérdések</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -134,9 +132,10 @@ msgstr "Új megerősítő linket küldtünk az e‑mail‑címedre. Kérjük, el
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Egy szenvedélyprojekt <0>Amruth Pillai</0> tollából."
 
-#: src/dialogs/resume/index.tsx
-msgid "A resume with this slug already exists."
-msgstr "Ezzel az azonosítóval már létezik önéletrajz."
+#. Error description when generated slug for duplicated tailored resume already exists
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "A resume with this slug already exists. Please try again."
+msgstr "Ezzel a sluggal már létezik egy önéletrajz. Kérjük, próbálja újra."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -154,6 +153,11 @@ msgstr "Férj hozzá az önéletrajzaidhoz és adataidhoz programozottan az API 
 msgid "Add a custom field"
 msgstr "Egyéni mező hozzáadása"
 
+#: src/components/input/chip-input.tsx
+msgid "Add a keyword..."
+msgstr "Adj hozzá egy kulcsszót..."
+
+#. Tooltip for action button that opens URL label editor
 #: src/components/input/url-input.tsx
 msgid "Add a label to the URL"
 msgstr "Adj címkét az URL‑hez"
@@ -223,6 +227,10 @@ msgstr "Oszlop hozzáadása utána"
 msgid "Add Column Before"
 msgstr "Oszlop hozzáadása elé"
 
+#: src/components/input/chip-input.tsx
+msgid "Add keyword"
+msgstr "Kulcsszó hozzáadása"
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Adjon hozzá több szerepkört az azonos vállalatnál való karrierút bemutatásához."
@@ -285,6 +293,7 @@ msgstr "amhara"
 msgid "An error occurred while loading the page."
 msgstr "Hiba történt az oldal betöltése közben."
 
+#. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Ismeretlen hiba történt az önéletrajz importálása közben."
@@ -300,6 +309,11 @@ msgstr "Elemzés..."
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
 msgstr "– És még sok más..."
+
+#. AI provider option label in dashboard AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Anthropic Claude"
+msgstr "Antropikus Claude"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any level"
@@ -360,6 +374,11 @@ msgid "Apply"
 msgstr "Alkalmazás"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
+msgid "Apply for this job"
+msgstr "Jelentkezzen erre az állásra"
+
+#. Fallback publisher name for a third-party job application link
+#: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Link"
 msgstr "Link alkalmazása"
 
@@ -378,6 +397,14 @@ msgstr "Biztosan be szeretné zárni ezt a párbeszédpanelt?"
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Biztosan törölni szeretnéd ezt az API kulcsot?"
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
+msgid "Are you sure you want to delete this custom section?"
+msgstr "Biztos, hogy törölni szeretné ezt az egyéni részt?"
+
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
+msgid "Are you sure you want to delete this item?"
+msgstr "Biztos, hogy törölni szeretné ezt az elemet?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -398,6 +425,10 @@ msgstr "Biztosan zárolni szeretnéd ezt az önéletrajzot?"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Are you sure you want to remove password protection?"
 msgstr "Biztosan el akarod távolítani a jelszóvédelmet?"
+
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
+msgid "Are you sure you want to reset this section?"
+msgstr "Biztos, hogy vissza akarja állítani ezt a részt?"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Area of Study"
@@ -437,6 +468,7 @@ msgstr "Díjak"
 msgid "Azerbaijani"
 msgstr "azerbajdzsáni"
 
+#. Secondary navigation button on 2FA verification screen
 #: src/routes/auth/verify-2fa.tsx
 msgid "Back to Login"
 msgstr "Vissza a bejelentkezéshez"
@@ -486,6 +518,7 @@ msgstr "Szegély lekerekítése"
 msgid "Border Width"
 msgstr "Szegély vastagsága"
 
+#. Screen-reader dialog title for the command palette in the resume builder
 #: src/components/command-palette/index.tsx
 msgid "Builder Command Palette"
 msgstr "Szerkesztő parancskereső"
@@ -498,6 +531,7 @@ msgstr "bolgár"
 msgid "Bullet List"
 msgstr "Felsorolásjelezett lista"
 
+#. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
 #: src/routes/_home/-sections/features.tsx
 #: src/routes/_home/-sections/prefooter.tsx
@@ -512,6 +546,13 @@ msgstr "Testreszabhatom a sablonokat?"
 msgid "Can I export my resume to PDF?"
 msgstr "Exportálhatom az önéletrajzomat PDF‑be?"
 
+#. API key deletion confirmation dialog cancel action in settings
+#. Account deletion confirmation dialog cancel action in danger zone
+#. Confirmation dialog button label to abort deleting a custom section in resume builder
+#. Confirmation dialog button label to abort deleting a section item in resume builder
+#. Confirmation dialog button label to abort resetting a resume section
+#. Profile settings form action to discard unsaved edits
+#. Secondary action button to close two-factor setup dialog
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
@@ -529,6 +570,9 @@ msgstr "Exportálhatom az önéletrajzomat PDF‑be?"
 #: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/hooks/use-prompt.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
@@ -616,6 +660,17 @@ msgstr "Kódblokk"
 msgid "Columns"
 msgstr "Oszlopok"
 
+#. Accessible label for command list region inside command palette
+#. Accessible label for the command palette dialog
+#: src/components/command-palette/index.tsx
+msgid "Command Palette"
+msgstr "Parancspaletta"
+
+#. Accessible label for command palette dialog when browsing a nested command page
+#: src/components/command-palette/index.tsx
+msgid "Command Palette - {currentPage}"
+msgstr "Parancspaletta - {currentPage}"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Közösség"
@@ -632,6 +687,8 @@ msgstr "Teljesen ingyenes, örökké, rejtett költségek nélkül."
 msgid "Configure Job Search"
 msgstr "Álláskeresés konfigurálása"
 
+#. Account deletion confirmation dialog confirm action in danger zone
+#. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -639,6 +696,7 @@ msgstr "Álláskeresés konfigurálása"
 msgid "Confirm"
 msgstr "Megerősítés"
 
+#. Authentication settings action to link a social login provider
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Csatlakozás"
@@ -648,6 +706,9 @@ msgstr "Csatlakozás"
 msgid "Content"
 msgstr "Tartalom"
 
+#. Button label to continue to dashboard after successful registration
+#. Final action button after saving backup codes
+#. Primary action button to proceed to next step in two-factor setup
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/routes/auth/register.tsx
 msgid "Continue"
@@ -670,6 +731,7 @@ msgstr "Vállalkozó"
 msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
 msgstr "A hozzájárulások biztosítják a hibajavításokat, a biztonsági frissítéseket és a folyamatos fejlesztéseket, hogy az alkalmazás zökkenőmentesen működjön."
 
+#. Action button to copy two-factor backup codes to clipboard
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Copy"
 msgstr "Másolás"
@@ -690,19 +752,54 @@ msgstr "Másold ki ezt a titkos kulcsot, és használd az alkalmazásaidban az a
 msgid "Copy URL"
 msgstr "URL másolása"
 
+#. Error description when syncing newly detected skills to source resume fails due to invalid patch
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "Could not apply skill updates to your original resume."
+msgstr "Nem tudott készségfrissítéseket alkalmazni az eredeti önéletrajzához."
+
+#. Fallback error description when duplicating a resume for tailoring fails
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "Could not duplicate your resume."
+msgstr "Nem tudtam megismételni az önéletrajzát."
+
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Could not fetch jobs"
 msgstr "Nem tudta lekérni a munkákat"
+
+#. Error shown when job search API is unavailable while searching jobs
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Could not fetch jobs from JSearch API. Please try again."
+msgstr "Nem sikerült lekérni a JSearch API-ból a munkákat. Kérjük, próbálja újra."
+
+#. Error shown when JSearch API connection test fails in job search settings
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "Could not reach JSearch API. Check your API key and try again."
+msgstr "Nem sikerült elérni a JSearch API-t. Ellenőrizze az API-kulcsát, és próbálja újra."
+
+#. Error description when AI provider cannot be reached during resume analysis
+#. Error description when AI provider is unreachable during resume tailoring
+#. Error shown when AI provider is unreachable during PDF/DOCX resume import
+#. Error shown when the configured AI provider cannot be reached during connection test
+#: src/dialogs/resume/import.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Could not reach the AI provider. Please try again."
+msgstr "Nem sikerült elérni az AI szolgáltatót. Kérjük, próbálja meg újra."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
 msgstr "Ország"
 
+#. Fallback title for a custom cover letter item in resume builder when recipient is empty
+#. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
 #: src/dialogs/resume/sections/custom.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Cover Letter"
 msgstr "Motivációs levél"
 
+#. Create API key dialog submit action
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
@@ -807,6 +904,16 @@ msgstr "Minta önéletrajz létrehozása"
 msgid "Create as many resumes as you want, without limits."
 msgstr "Hozz létre annyi önéletrajzot, amennyit csak szeretnél, korlátozások nélkül."
 
+#. Call-to-action link from login page to account registration page
+#: src/routes/auth/login.tsx
+msgid "Create one now"
+msgstr "Hozzon létre egyet most"
+
+#. Accessible label for create-resume split button group
+#: src/dialogs/resume/index.tsx
+msgid "Create resume with options"
+msgstr "Önéletrajz létrehozása opciókkal"
+
 #: src/dialogs/api-key/create.tsx
 msgid "Creating your API key..."
 msgstr "API kulcs létrehozása..."
@@ -823,6 +930,11 @@ msgstr "Jelenlegi jelszó"
 #: src/utils/resume/section.tsx
 msgid "Custom CSS"
 msgstr "Egyéni CSS"
+
+#. Authentication provider display name in account settings
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "Custom OAuth"
+msgstr "Egyéni OAuth"
 
 #: src/utils/resume/section.tsx
 msgid "Custom Sections"
@@ -842,6 +954,7 @@ msgstr "Veszélyes terület"
 msgid "Danish"
 msgstr "dán"
 
+#. Appearance theme option for dark mode
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -869,6 +982,12 @@ msgstr "Kibocsátás dátuma"
 msgid "Degree"
 msgstr "Fokozat"
 
+#. API key deletion confirmation dialog confirm action in settings
+#. Destructive confirmation button label when deleting a custom section in resume builder
+#. Destructive confirmation button label when deleting a section item in resume builder
+#. Passkey row action to remove the selected passkey
+#. Resume card context menu destructive action to remove a resume
+#. Resume card dropdown destructive action to remove a resume
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
@@ -890,6 +1009,10 @@ msgstr "Oszlop törlése"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
 msgstr "Oldal törlése"
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Delete picture"
+msgstr "Kép törlése"
 
 #: src/components/input/rich-input.tsx
 msgid "Delete Row"
@@ -941,6 +1064,7 @@ msgstr "Közvetlen alkalmazás"
 msgid "Direct apply only"
 msgstr "Csak közvetlen alkalmazás"
 
+#. Destructive action button to turn off two-factor authentication
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
 msgid "Disable 2FA"
@@ -958,6 +1082,7 @@ msgstr "Letiltva"
 msgid "Disabling two-factor authentication..."
 msgstr "Kétlépcsős hitelesítés kikapcsolása..."
 
+#. Authentication settings action to unlink a connected social login provider
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Disconnect"
 msgstr "Leválasztás"
@@ -965,6 +1090,11 @@ msgstr "Leválasztás"
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
+
+#. Dialog description for the mobile sidebar panel
+#: src/components/ui/sidebar.tsx
+msgid "Displays the mobile sidebar."
+msgstr "Megjeleníti a mobil oldalsávot."
 
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
@@ -979,8 +1109,8 @@ msgstr "Nincs fiókja? <0/>"
 msgid "Donate to Reactive Resume"
 msgstr "Adományozzon a Reactive Resume-nak"
 
+#. Action button to download two-factor backup codes as a text file
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/$username/$slug.tsx
 msgid "Download"
 msgstr "Letöltés"
 
@@ -1008,10 +1138,6 @@ msgstr "JSON letöltése"
 msgid "Download PDF"
 msgstr "PDF letöltése"
 
-#: src/routes/$username/$slug.tsx
-msgid "Downloading..."
-msgstr "Letöltés..."
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Downloads"
 msgstr "Letöltések"
@@ -1020,6 +1146,8 @@ msgstr "Letöltések"
 msgid "Drag and drop sections here to move them between columns"
 msgstr "Húzd ide a szekciókat, hogy áthelyezd őket az oszlopok között"
 
+#. Resume card context menu action to create a copy
+#. Resume card dropdown action to create a copy
 #: src/dialogs/resume/index.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -1053,9 +1181,33 @@ msgstr "pl. 150000"
 msgid "e.g. 50000"
 msgstr "pl. 50000"
 
+#. Example placeholder text in job search input field
 #: src/routes/dashboard/job-search/index.tsx
 msgid "e.g. frontend developer jobs in Berlin"
 msgstr "pl. frontend developer állások ebben Berlin"
+
+#. Example model-name placeholder in AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
+msgstr "pl.: gpt-4, claude-3-opus, gemini-pro"
+
+#. Screen reader label for button that edits a keyword chip. Variable is the current keyword text.
+#: src/components/input/chip-input.tsx
+msgid "Edit {chip}"
+msgstr "Szerkesztés {chip}"
+
+#. Screen reader description for the fullscreen rich-text editor dialog
+#: src/components/input/rich-input.tsx
+msgid "Edit content in fullscreen mode"
+msgstr "Tartalom szerkesztése teljes képernyős módban"
+
+#: src/components/input/chip-input.tsx
+msgid "Edit keyword"
+msgstr "Kulcsszó szerkesztése"
+
+#: src/components/input/chip-input.tsx
+msgid "Editing keyword..."
+msgstr "Kulcsszó szerkesztése..."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1066,6 +1218,9 @@ msgstr "Tanulmányok"
 msgid "Email"
 msgstr "E‑mail"
 
+#. Label for email input on forgot-password form
+#. Label for email input on registration form
+#. Label for login identifier input that accepts email or username
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/login.tsx
 #: src/routes/auth/register.tsx
@@ -1205,29 +1360,153 @@ msgstr "Exportálás"
 msgid "Failed to analyze resume."
 msgstr "Nem sikerült elemezni az önéletrajzot."
 
+#. Fallback toast when creating an API key fails
+#: src/dialogs/api-key/create.tsx
+msgid "Failed to create API key. Please try again."
+msgstr "Sikertelen API-kulcs létrehozása. Kérjük, próbálja újra."
+
+#. Fallback toast when account registration fails without a server error message
+#: src/routes/auth/register.tsx
+msgid "Failed to create your account. Please try again."
+msgstr "Nem sikerült létrehozni a fiókját. Kérjük, próbálja újra."
+
+#. Fallback toast when deleting a passkey fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Failed to delete passkey. Please try again."
 msgstr "Sikertelenül törölték a jelszókulcsot. Kérjük, próbálja újra."
+
+#. Fallback toast when deleting an API key fails
+#: src/routes/dashboard/settings/api-keys.tsx
+msgid "Failed to delete the API key. Please try again."
+msgstr "Az API-kulcs törlése nem sikerült. Kérjük, próbálja újra."
+
+#. Fallback toast when account deletion fails
+#: src/routes/dashboard/settings/danger-zone.tsx
+msgid "Failed to delete your account. Please try again."
+msgstr "Nem sikerült törölni a fiókját. Kérjük, próbálja meg újra."
+
+#. Fallback toast when disabling two-factor authentication fails
+#: src/dialogs/auth/disable-two-factor.tsx
+msgid "Failed to disable two-factor authentication. Please try again."
+msgstr "Nem sikerült letiltani a kétfaktoros hitelesítést. Kérjük, próbálja újra."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
 msgstr "Nem sikerült duplikálni az önéletrajzot"
 
+#. Fallback toast when enabling two-factor authentication fails
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Failed to enable two-factor authentication. Please try again."
+msgstr "Nem sikerült engedélyezni a kétfaktoros hitelesítést. Kérjük, próbálja újra."
+
+#. Fallback toast when linking a social authentication provider fails
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "Failed to link provider. Please try again."
+msgstr "Nem sikerült összekapcsolni a szolgáltatót. Kérjük, próbálja újra."
+
+#. Fallback toast when passkey registration fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Failed to register passkey. Please try again."
 msgstr "Nem sikerült regisztrálni a jelszót. Kérjük, próbálja újra."
+
+#. Fallback toast when renaming a passkey fails
+#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+msgid "Failed to rename passkey. Please try again."
+msgstr "Nem sikerült átnevezni a jelszókulcsot. Kérjük, próbálja újra."
+
+#. Fallback toast when requesting email change confirmation fails
+#: src/routes/dashboard/settings/profile.tsx
+msgid "Failed to request email change. Please try again."
+msgstr "Nem sikerült e-mail módosítást kérni. Kérjük, próbálja meg újra."
+
+#. Fallback toast when resending account verification email fails
+#: src/routes/dashboard/settings/profile.tsx
+msgid "Failed to resend verification email. Please try again."
+msgstr "Nem sikerült újraküldeni az ellenőrző e-mailt. Kérjük, próbálja meg újra."
+
+#. Fallback toast when resetting password fails and no backend message is available
+#: src/routes/auth/reset-password.tsx
+msgid "Failed to reset your password. Please try again."
+msgstr "Nem sikerült visszaállítani a jelszavát. Kérjük, próbálja újra."
+
+#. Fallback error shown when job search request fails
+#: src/routes/dashboard/job-search/-components/use-job-search.ts
+msgid "Failed to search jobs. Please try again."
+msgstr "Nem sikerült munkahelyeket keresni. Kérjük, próbálja újra."
+
+#. Fallback toast when requesting password reset email fails without backend message
+#: src/routes/auth/forgot-password.tsx
+msgid "Failed to send password reset email. Please try again."
+msgstr "Nem sikerült elküldeni a jelszó-visszaállítási e-mailt. Kérjük, próbálja meg újra."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
 msgstr "Nem sikerült beállítani a kétlépcsős hitelesítést."
 
+#. Fallback toast when custom OAuth sign-in fails without a provider error message
+#. Fallback toast when passkey sign-in fails without an error message
+#. Fallback toast when sign-in fails and no server error message is available
+#. Fallback toast when social sign-in fails without a provider error message
+#: src/routes/auth/-components/social-auth.tsx
 #: src/routes/auth/login.tsx
 msgid "Failed to sign in. Please try again."
 msgstr "A bejelentkezés sikertelen. Kérjük, próbálja újra."
 
+#. Fallback toast when signing out fails
+#: src/components/user/dropdown-menu.tsx
+msgid "Failed to sign out. Please try again."
+msgstr "Nem sikerült kijelentkezni. Kérjük, próbálja meg újra."
+
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to sync skills"
 msgstr "Nem sikerült szinkronizálni a készségeket"
+
+#. Fallback toast when testing AI provider connection fails
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Failed to test AI provider connection. Please try again."
+msgstr "Nem sikerült tesztelni az AI szolgáltatói kapcsolatot. Kérjük, próbálja újra."
+
+#. Fallback toast when testing RapidAPI job search connection fails
+#: src/routes/dashboard/settings/job-search.tsx
+msgid "Failed to test RapidAPI connection. Please try again."
+msgstr "A RapidAPI kapcsolat tesztelése sikertelen. Kérjük, próbálja újra."
+
+#. Fallback toast when unlinking a social authentication provider fails
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "Failed to unlink provider. Please try again."
+msgstr "Sikertelen a szolgáltató függetlenítése. Kérjük, próbálja újra."
+
+#. Fallback toast when changing account password fails
+#: src/dialogs/auth/change-password.tsx
+msgid "Failed to update your password. Please try again."
+msgstr "Nem sikerült frissíteni a jelszavát. Kérjük, próbálja meg újra."
+
+#. Fallback toast when updating profile details fails
+#: src/routes/dashboard/settings/profile.tsx
+msgid "Failed to update your profile. Please try again."
+msgstr "Nem sikerült frissíteni a profilját. Kérjük, próbálja meg újra."
+
+#. Fallback toast when uploading profile picture for resume fails
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Failed to upload picture. Please try again."
+msgstr "Nem sikerült feltölteni a képet. Kérjük, próbálja újra."
+
+#. Fallback toast when resume password verification fails unexpectedly
+#: src/routes/auth/resume-password.tsx
+msgid "Failed to verify the password. Please try again."
+msgstr "Nem sikerült ellenőrizni a jelszót. Kérjük, próbálja meg újra."
+
+#. Fallback toast when verifying a backup two-factor authentication code fails
+#: src/routes/auth/verify-2fa-backup.tsx
+msgid "Failed to verify your backup code. Please try again."
+msgstr "Nem sikerült ellenőrizni a biztonsági mentés kódját. Kérjük, próbálja meg újra."
+
+#. Fallback toast when verifying a two-factor authentication code fails
+#. Fallback toast when verifying two-factor setup code fails
+#: src/dialogs/auth/enable-two-factor.tsx
+#: src/routes/auth/verify-2fa.tsx
+msgid "Failed to verify your code. Please try again."
+msgstr "Nem sikerült ellenőrizni a kódot. Kérjük, próbálja meg újra."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1277,6 +1556,7 @@ msgstr "Ide feljegyezheted például, hogy mely cégeknek küldted el ezt az ön
 msgid "For security reasons, this key will only be displayed once."
 msgstr "Biztonsági okokból ezt a kulcsot csak egyszer jelenítjük meg."
 
+#. Link label to password reset page from login form
 #: src/routes/auth/login.tsx
 msgid "Forgot Password?"
 msgstr "Elfelejtette jelszavát?"
@@ -1302,6 +1582,7 @@ msgstr "Szabad forma"
 msgid "French"
 msgstr "francia"
 
+#. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Full Width"
 msgstr "Teljes szélesség"
@@ -1314,9 +1595,19 @@ msgstr "Teljes munkaidőben"
 msgid "Fullscreen"
 msgstr "Teljes képernyő"
 
+#. Screen reader title for the fullscreen rich-text editor dialog
+#: src/components/input/rich-input.tsx
+msgid "Fullscreen Editor"
+msgstr "Teljes képernyős szerkesztő"
+
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
 msgstr "Véletlenszerű név generálása"
+
+#. Error description when generated patch operations cannot be applied to tailored resume
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "Generated resume changes were invalid. Please try again."
+msgstr "A generált önéletrajz változások érvénytelenek voltak. Kérjük, próbálja meg újra."
 
 #: src/utils/locale.ts
 msgid "German"
@@ -1338,6 +1629,14 @@ msgstr "Kezdjük"
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "A JSearch API-ra való feliratkozással szerezze meg API-kulcsát a RapidAPI-tól."
 
+#. Authentication provider display name in account settings
+#. Brand name label for GitHub social sign-in button
+#: src/routes/auth/-components/social-auth.tsx
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "GitHub"
+msgstr "GitHub"
+
+#. Secondary navigation button on backup-code verification screen
 #: src/components/layout/not-found-screen.tsx
 #: src/routes/auth/verify-2fa-backup.tsx
 msgid "Go Back"
@@ -1347,6 +1646,11 @@ msgstr "Vissza"
 msgid "Go to dashboard"
 msgstr "Tovább az irányítópultra"
 
+#. Accessible label for button navigating from builder to resumes dashboard
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Go to resumes dashboard"
+msgstr "Menjen az önéletrajzok műszerfalára"
+
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Go to Settings"
 msgstr "Menjen a Beállítások menüpontba"
@@ -1354,6 +1658,18 @@ msgstr "Menjen a Beállítások menüpontba"
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
 msgstr "Ugrás ide..."
+
+#. Authentication provider display name in account settings
+#. Brand name label for Google social sign-in button
+#: src/routes/auth/-components/social-auth.tsx
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "Google"
+msgstr "Google"
+
+#. AI provider option label in dashboard AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Google Gemini"
+msgstr "Google Gemini"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Grade"
@@ -1440,6 +1756,29 @@ msgstr "Elrejtés"
 msgid "Hide all icons on the resume"
 msgstr "Az önéletrajz összes ikonjának elrejtése"
 
+#. Accessible label for button that hides password in registration form
+#. Accessible label for button that hides password in reset-password form
+#. Accessible label for button that hides password on protected resume screen
+#. Accessible label for button that hides the password in login form
+#. Accessible label for toggle button that hides the visible current password
+#. Accessible label for toggle button that hides the visible new password
+#. Accessible label for toggle button that hides the visible password in two-factor disable dialog
+#. Accessible label for toggle button that hides the visible password in two-factor setup
+#: src/dialogs/auth/change-password.tsx
+#: src/dialogs/auth/disable-two-factor.tsx
+#: src/dialogs/auth/enable-two-factor.tsx
+#: src/routes/auth/login.tsx
+#: src/routes/auth/register.tsx
+#: src/routes/auth/reset-password.tsx
+#: src/routes/auth/resume-password.tsx
+msgid "Hide password"
+msgstr "Jelszó elrejtése"
+
+#. Impact severity label in resume analysis suggestion card
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "High"
+msgstr "Magas"
+
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
 msgstr "Kiemelés"
@@ -1520,6 +1859,11 @@ msgstr "Érdeklődési körök"
 msgid "Intern"
 msgstr "Gyakornok"
 
+#. Error shown when AI provider credentials or base URL are invalid in AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Invalid AI provider configuration. Please check your settings."
+msgstr "Érvénytelen AI szolgáltató konfiguráció. Kérjük, ellenőrizze a beállításokat."
+
 #: src/routes/_home/-sections/faq.tsx
 msgid "Is Reactive Resume available in multiple languages?"
 msgstr "Elérhető‑e a Reactive Resume több nyelven?"
@@ -1554,6 +1898,36 @@ msgstr "Álláskeresés"
 msgid "Job Search API"
 msgstr "Álláskereső API"
 
+#. Accessible label for free-text job search query field
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Job search query"
+msgstr "Álláskeresési lekérdezés"
+
+#. Example full name placeholder on profile settings form
+#. Example full name placeholder on registration form
+#: src/routes/auth/register.tsx
+#: src/routes/dashboard/settings/profile.tsx
+msgid "John Doe"
+msgstr "John Doe"
+
+#. Example username placeholder on profile settings form
+#. Example username placeholder on registration form
+#: src/routes/auth/register.tsx
+#: src/routes/dashboard/settings/profile.tsx
+msgid "john.doe"
+msgstr "John.Doe"
+
+#. Example email placeholder for login identifier field
+#. Example email placeholder on forgot-password form
+#. Example email placeholder on profile settings form
+#. Example email placeholder on registration form
+#: src/routes/auth/forgot-password.tsx
+#: src/routes/auth/login.tsx
+#: src/routes/auth/register.tsx
+#: src/routes/dashboard/settings/profile.tsx
+msgid "john.doe@example.com"
+msgstr "john.doe@example.com"
+
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
 msgstr "A JSearch a Google for Jobs segítségével több állásbörzéről összesíti az álláshirdetéseket. Szűrhet ország (ISO alfa-2 kód), a meghirdetés dátuma, az állás típusa, távoli lehetőségek és tapasztalati szint szerint."
@@ -1561,6 +1935,11 @@ msgstr "A JSearch a Google for Jobs segítségével több állásbörzéről ös
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "JSearch API Documentation"
 msgstr "JSearch API dokumentáció"
+
+#. Import source option for standard JSON Resume format
+#: src/dialogs/resume/import.tsx
+msgid "JSON Resume"
+msgstr "JSON önéletrajz"
 
 #: src/components/input/rich-input.tsx
 msgid "Justify Align"
@@ -1583,14 +1962,17 @@ msgstr "khmer"
 msgid "Korean"
 msgstr "koreai"
 
+#. Short field label for custom display text associated with a URL
 #: src/components/input/url-input.tsx
 msgid "Label"
 msgstr "Címke"
 
+#. Preset button for setting picture aspect ratio to landscape orientation
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Landscape"
 msgstr "Fekvő"
 
+#. Menu item that opens language selection submenu
 #: src/components/command-palette/pages/preferences/language.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/dialogs/resume/sections/language.tsx
@@ -1640,6 +2022,7 @@ msgstr "Elrendezés"
 msgid "Learn More"
 msgstr "Tudj meg többet"
 
+#. Help link text to documentation about fitting resume content onto a page
 #: src/components/resume/preview.tsx
 msgid "Learn more about how to fit content on a page"
 msgstr "Tudjon meg többet arról, hogyan illesztheti a tartalmat egy oldalra"
@@ -1666,6 +2049,7 @@ msgstr "Levél"
 msgid "Level"
 msgstr "Szint"
 
+#. Accessible label for skill/proficiency level indicator, where level is current value out of 5
 #: src/components/level/display.tsx
 msgid "Level {level} of 5"
 msgstr "Szint: {level} / 5"
@@ -1674,6 +2058,7 @@ msgstr "Szint: {level} / 5"
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT</0> licenc alatt."
 
+#. Appearance theme option for light mode
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -1687,6 +2072,13 @@ msgstr "Világos téma"
 msgid "Line Height"
 msgstr "Sorköz"
 
+#. Authentication provider display name in account settings
+#. Brand name label for LinkedIn social sign-in button
+#: src/routes/auth/-components/social-auth.tsx
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Linking your {providerName} account..."
 msgstr "{providerName} fiókod összekapcsolása..."
@@ -1698,6 +2090,11 @@ msgstr "Lista"
 #: src/utils/locale.ts
 msgid "Lithuanian"
 msgstr "litván"
+
+#. Accessible label for loading spinner icon
+#: src/components/ui/spinner.tsx
+msgid "Loading"
+msgstr "Betöltés"
 
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Loading resumes..."
@@ -1714,12 +2111,15 @@ msgstr "Betöltés..."
 msgid "Location"
 msgstr "Helyszín"
 
+#. Resume card context menu action to prevent edits
+#. Resume card dropdown action to prevent edits
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "Lock"
 msgstr "Zárolás"
 
+#. User menu action to sign out of current account
 #: src/components/user/dropdown-menu.tsx
 msgid "Logout"
 msgstr "Kijelentkezés"
@@ -1728,10 +2128,17 @@ msgstr "Kijelentkezés"
 msgid "Long-term Sustainability"
 msgstr "Hosszú távú fenntarthatóság"
 
+#. Link to backup-code verification flow when authenticator app is unavailable
 #: src/routes/auth/verify-2fa.tsx
 msgid "Lost access to your authenticator?"
 msgstr "Elveszítetted a hozzáférést a hitelesítő alkalmazásodhoz?"
 
+#. Impact severity label in resume analysis suggestion card
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Low"
+msgstr "Alacsony"
+
+#. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "Fő"
@@ -1764,6 +2171,16 @@ msgstr "Margó (függőleges)"
 msgid "Maximum Salary"
 msgstr "Maximális fizetés"
 
+#. Impact severity label in resume analysis suggestion card
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Medium"
+msgstr "Közepes"
+
+#. File format label in import source selector
+#: src/dialogs/resume/import.tsx
+msgid "Microsoft Word"
+msgstr "Microsoft Word"
+
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Minimum Salary"
 msgstr "Minimális fizetés"
@@ -1784,6 +2201,12 @@ msgstr "Áthelyezés ide"
 msgid "Multilingual"
 msgstr "Többnyelvű"
 
+#. Placeholder text for custom link URL field in resume builder
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
+msgid "Must start with https://"
+msgstr "A https:// címmel kell kezdeni."
+
+#. Label for full name input on registration form
 #: src/dialogs/api-key/create.tsx
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/interest.tsx
@@ -1816,6 +2239,7 @@ msgstr "Új sor"
 msgid "New Page"
 msgstr "Új oldal"
 
+#. Label for new password input on reset-password form
 #: src/dialogs/auth/change-password.tsx
 #: src/routes/auth/reset-password.tsx
 msgid "New Password"
@@ -1836,6 +2260,11 @@ msgstr "Következő"
 #: src/routes/_home/-sections/features.tsx
 msgid "No Advertising, No Tracking"
 msgstr "Nincs reklám, nincs követés"
+
+#. Error shown when AI import endpoint returns no parsed resume data
+#: src/dialogs/resume/import.tsx
+msgid "No data was returned from the AI provider."
+msgstr "A mesterséges intelligencia szolgáltatótól nem érkezett vissza adat."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No degree required"
@@ -1873,6 +2302,11 @@ msgstr "Jegyzetek"
 msgid "Odia"
 msgstr "odija"
 
+#. AI provider option label in dashboard AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Ollama"
+msgstr "Ollama"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "One-Click Sign-In"
 msgstr "Egykattintásos bejelentkezés"
@@ -1881,6 +2315,8 @@ msgstr "Egykattintásos bejelentkezés"
 msgid "Ongoing Maintenance"
 msgstr "Folyamatos karbantartás"
 
+#. Resume card context menu action to open the resume editor
+#. Resume card dropdown action to open the resume editor
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "Open"
@@ -1890,6 +2326,7 @@ msgstr "Megnyitás"
 msgid "Open AI Settings"
 msgstr "AI beállítások megnyitása"
 
+#. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "E‑mail kliens megnyitása"
@@ -1897,6 +2334,11 @@ msgstr "E‑mail kliens megnyitása"
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Nyílt forráskódú"
+
+#. AI provider option label in dashboard AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "OpenAI"
+msgstr "OpenAI"
 
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
@@ -1933,6 +2375,7 @@ msgstr "Általános pontszám"
 msgid "Page"
 msgstr "Oldal"
 
+#. Layout editor page label with 1-based page number
 #. placeholder {0}: pageIndex + 1
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -1943,6 +2386,7 @@ msgstr "{0}. oldal"
 msgid "Page {currentPage}"
 msgstr "Oldal {currentPage}"
 
+#. Page counter label shown above resume preview pages
 #: src/components/resume/preview.tsx
 msgid "Page {pageNumber} of {totalNumberOfPages}"
 msgstr "{pageNumber}. oldal / {totalNumberOfPages}"
@@ -1954,6 +2398,13 @@ msgstr "Bekezdés"
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
 msgstr "Részmunkaidős"
+
+#. Authentication provider display name in account settings
+#. Label for passkey sign-in button
+#: src/routes/auth/-components/social-auth.tsx
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+msgid "Passkey"
+msgstr "Passkey"
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Passkey deleted successfully."
@@ -1971,11 +2422,16 @@ msgstr "Passkeys"
 msgid "Passkeys & 2FA"
 msgstr "Hozzáférési kulcsok és 2FA"
 
+#. Authentication provider display name in account settings
+#. Label for password input on login form
+#. Label for password input on protected resume access form
+#. Label for password input on registration form
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/routes/auth/login.tsx
 #: src/routes/auth/register.tsx
 #: src/routes/auth/resume-password.tsx
+#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 #: src/routes/dashboard/settings/authentication/-components/password.tsx
 msgid "Password"
 msgstr "Jelszó"
@@ -1995,6 +2451,11 @@ msgstr "A jelszóvédelem ki lett kapcsolva."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "A jelszóvédelem be lett kapcsolva."
+
+#. File format label in import source selector
+#: src/dialogs/resume/import.tsx
+msgid "PDF"
+msgstr "PDF"
 
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -2041,6 +2502,7 @@ msgstr "Kérjük, várj, amíg a PDF elkészül..."
 msgid "Polish"
 msgstr "lengyel"
 
+#. Preset button for setting picture aspect ratio to portrait orientation
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Portrait"
 msgstr "Álló"
@@ -2068,6 +2530,11 @@ msgstr "Beállítások"
 #: src/components/input/chip-input.tsx
 msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the current keyword."
 msgstr "Nyomja meg a <0>{RETURN_KEY}</0> vagy a <1>{COMMA_KEY}</1> gombot a jelenlegi kulcsszó hozzáadásához vagy mentéséhez."
+
+#. Command palette hint that pressing Enter opens the selected resume
+#: src/components/command-palette/pages/resumes.tsx
+msgid "Press <0>Enter</0> to open"
+msgstr "Nyomja meg az <0>Entert</0> a megnyitáshoz"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Previous"
@@ -2131,9 +2598,20 @@ msgstr "Kvóta: {0} fennmaradó"
 msgid "RapidAPI Key"
 msgstr "RapidAPI kulcs"
 
+#. Brand name suffix in browser tab title for public resume pages
+#. Browser tab title before the public resume finishes loading
+#: src/routes/$username/$slug.tsx
+msgid "Reactive Resume"
+msgstr "Reaktív önéletrajz"
+
 #: src/routes/_home/-sections/header.tsx
 msgid "Reactive Resume - Go to homepage"
 msgstr "Reactive Resume – Ugrás a kezdőlapra"
+
+#. Import source option for current Reactive Resume JSON format
+#: src/dialogs/resume/import.tsx
+msgid "Reactive Resume (JSON)"
+msgstr "Reaktív önéletrajz (JSON)"
 
 #: src/routes/_home/-sections/prefooter.tsx
 msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've donated to support its continued development."
@@ -2154,6 +2632,16 @@ msgstr "A Reactive Resume ma indul a Product Hunton, ugorj át, és mutasd ki a 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
 msgstr "A Reactive Resume nyílt forráskódú, adatvédelem‑központú és teljesen ingyenes. Más önéletrajz‑készítőkkel ellentétben nem jelenít meg hirdetéseket, nem követi az adataidat, és nem zár funkciókat fizetős fal mögé."
+
+#. App version label in footer; includes semantic version variable
+#: src/components/ui/copyright.tsx
+msgid "Reactive Resume v{__APP_VERSION__}"
+msgstr "Reaktív önéletrajz v{__APP_VERSION__}"
+
+#. Import source option for legacy Reactive Resume v4 JSON format
+#: src/dialogs/resume/import.tsx
+msgid "Reactive Resume v4 (JSON)"
+msgstr "Reaktív önéletrajz v4 (JSON)"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -2203,6 +2691,11 @@ msgstr "Csak távirányítóval"
 msgid "Remove"
 msgstr "Eltávolítás"
 
+#. Screen reader label for button that removes a keyword chip. Variable is the current keyword text.
+#: src/components/input/chip-input.tsx
+msgid "Remove {chip}"
+msgstr "Távolítsa el a {chip}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Jelszó eltávolítása"
@@ -2239,11 +2732,13 @@ msgstr "Megerősítő e‑mail újraküldése"
 msgid "Resending verification email..."
 msgstr "Megerősítő e‑mail újraküldése..."
 
+#. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Reset"
 msgstr "Visszaállítás"
 
+#. Primary action button label on reset-password form
 #: src/routes/auth/reset-password.tsx
 msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
@@ -2259,6 +2754,12 @@ msgstr "Jelszó visszaállítása..."
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Erőforrások"
+
+#. Browser tab suffix for printable resume pages
+#. Browser tab title before printable resume data finishes loading
+#: src/routes/printer/$resumeId.tsx
+msgid "Resume"
+msgstr "Önéletrajz"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
@@ -2308,10 +2809,12 @@ msgstr "Futtassa le az első elemzést, hogy kapjon egy értékelőlapot, erőss
 msgid "Russian"
 msgstr "orosz"
 
+#. Passkey rename prompt confirm action in authentication settings
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Save"
 msgstr "Mentés"
 
+#. Button label to save the selected number of detected skills to the original resume
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Save {0} Skills"
@@ -2353,10 +2856,17 @@ msgstr "Eredményjegyzék"
 msgid "Search"
 msgstr "Keresés"
 
+#. Accessible label for command palette search input
+#: src/components/command-palette/index.tsx
+msgid "Search commands"
+msgstr "Keresési parancsok"
+
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Search countries"
 msgstr "Országok keresése"
 
+#. Accessible label for icon picker search input
+#. Placeholder text in icon picker search input
 #: src/components/input/icon-picker.tsx
 msgid "Search for an icon"
 msgstr "Ikon keresése"
@@ -2365,6 +2875,8 @@ msgstr "Ikon keresése"
 msgid "Search for..."
 msgstr "Keresés önéletrajzra..."
 
+#. Placeholder in command palette input on nested pages
+#: src/components/command-palette/index.tsx
 #: src/components/ui/combobox.tsx
 msgid "Search..."
 msgstr "Keresés..."
@@ -2379,10 +2891,9 @@ msgstr "Szekció típusa"
 
 #. placeholder {0}: job.job_title
 #. placeholder {1}: job.employer_name
-#. placeholder {2}: aiEnabled ? " and the AI will optimize it for this position." : "."
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created{2}"
-msgstr "Válasszon egy önéletrajzot a \"{0}\" személyre szabásához a {1}oldalon. A másolat elkészül{2}"
+msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
+msgstr "Válasszon egy önéletrajzot a \"{0}\" személyre szabásához a {1}oldalon. Egy másolatot fogunk készíteni."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -2396,6 +2907,7 @@ msgstr "Kiválasztás..."
 msgid "Self-Host with Docker"
 msgstr "Önálló hosztolás Dockerrel"
 
+#. Primary action button label on forgot-password form
 #: src/routes/auth/forgot-password.tsx
 msgid "Send Password Reset Email"
 msgstr "Jelszó‑visszaállító e‑mail küldése"
@@ -2460,6 +2972,27 @@ msgstr "Megjelenítés"
 msgid "Show link in title"
 msgstr "Link megjelenítése a címben"
 
+#. Accessible label for button that reveals password in registration form
+#. Accessible label for button that reveals password in reset-password form
+#. Accessible label for button that reveals password on protected resume screen
+#. Accessible label for button that reveals the password in login form
+#. Accessible label for toggle button that reveals the masked current password
+#. Accessible label for toggle button that reveals the masked new password
+#. Accessible label for toggle button that reveals the masked password in two-factor disable dialog
+#. Accessible label for toggle button that reveals the masked password in two-factor setup
+#: src/dialogs/auth/change-password.tsx
+#: src/dialogs/auth/disable-two-factor.tsx
+#: src/dialogs/auth/enable-two-factor.tsx
+#: src/routes/auth/login.tsx
+#: src/routes/auth/register.tsx
+#: src/routes/auth/reset-password.tsx
+#: src/routes/auth/resume-password.tsx
+msgid "Show password"
+msgstr "Jelszó megjelenítése"
+
+#. Dialog title for the mobile navigation sidebar panel
+#. Layout editor column label for the secondary sidebar area
+#: src/components/ui/sidebar.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
 msgstr "Oldalsáv"
@@ -2468,10 +3001,19 @@ msgstr "Oldalsáv"
 msgid "Sidebar Width"
 msgstr "Oldalsáv szélessége"
 
+#. Primary action button label on login form
 #: src/routes/auth/login.tsx
 msgid "Sign in"
 msgstr "Bejelentkezés"
 
+#. Call-to-action link from forgot-password page to login page
+#. Call-to-action link from registration page to login page
+#: src/routes/auth/forgot-password.tsx
+#: src/routes/auth/register.tsx
+msgid "Sign in now"
+msgstr "Jelentkezzen be most"
+
+#. Title on the login page
 #: src/routes/auth/login.tsx
 msgid "Sign in to your account"
 msgstr "Jelentkezz be a fiókodba"
@@ -2480,6 +3022,7 @@ msgstr "Jelentkezz be a fiókodba"
 msgid "Sign in with GitHub, Google or a custom OAuth provider."
 msgstr "Jelentkezz be GitHub, Google vagy egy egyéni OAuth szolgáltató segítségével."
 
+#. Primary action button label on registration form
 #: src/routes/auth/register.tsx
 msgid "Sign up"
 msgstr "Regisztráció"
@@ -2542,6 +3085,21 @@ msgstr ""
 msgid "Slug"
 msgstr "Keresőbarát azonosító"
 
+#. Fallback error description when resume analysis request fails
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Something went wrong while analyzing your resume."
+msgstr "Valami rosszul sült el az önéletrajzának elemzése során."
+
+#. Fallback error description when syncing newly detected skills fails
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "Something went wrong while syncing skills."
+msgstr "Valami baj történt a készségek szinkronizálása közben."
+
+#. Fallback error description when tailoring pipeline fails
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "Something went wrong while tailoring your resume."
+msgstr "Valami rosszul sült el az önéletrajzod testreszabása során."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Valami hiba történt. Kérjük, próbáld újra."
@@ -2575,6 +3133,7 @@ msgstr "Támogatók"
 msgid "Sponsorships"
 msgstr "Szponzorációk"
 
+#. Preset button for setting picture aspect ratio to square
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Square"
@@ -2622,7 +3181,10 @@ msgstr "Subreddit"
 msgid "Suggestions"
 msgstr "Javaslatok"
 
+#. Fallback title for a custom summary item in resume builder when content is empty
+#. Fallback title for a custom summary item in resume builder when content is unavailable
 #: src/dialogs/resume/sections/custom.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Summary"
 msgstr "Összegzés"
@@ -2713,6 +3275,20 @@ msgstr "thai"
 msgid "The AI identified new skills from your experience that match this job. Select which ones to save back to your original resume for future applications. This will permanently modify your original resume and cannot be undone."
 msgstr "A mesterséges intelligencia olyan új készségeket azonosított az Ön tapasztalataiból, amelyek megfelelnek ennek a munkakörnek. Válassza ki, hogy melyiket mentse vissza az eredeti önéletrajzába a későbbi jelentkezésekhez. Ez véglegesen módosítja az eredeti önéletrajzát, és nem vonható vissza."
 
+#. Error description when AI returns invalid resume analysis format
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "The AI returned an invalid analysis format. Please try again."
+msgstr "Az AI érvénytelen elemzési formátumot küldött vissza. Kérjük, próbálja meg újra."
+
+#. Error description when AI tailoring output is invalid
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "The AI returned invalid tailoring data. Please try again."
+msgstr "A mesterséges intelligencia érvénytelen testreszabási adatokat küldött vissza. Kérjük, próbálja meg újra."
+
+#: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
+msgid "The AI will optimize it for this position."
+msgstr "Az AI optimalizálni fogja erre a pozícióra."
+
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "Az API kulcsot sikeresen töröltük."
@@ -2721,13 +3297,20 @@ msgstr "Az API kulcsot sikeresen töröltük."
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "Az API kulcs törlése után többé nem fér hozzá az adataidhoz. Ez a művelet nem vonható vissza."
 
+#. Empty-state message when no command palette results match the search query
 #: src/components/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "A keresett parancs nem létezik."
 
+#. Warning shown when resume content exceeds printable page height
 #: src/components/resume/preview.tsx
 msgid "The content is too tall for this page, this may cause undesirable results when exporting to PDF."
 msgstr "A tartalom túl magas ehhez az oldalhoz, ami nem kívánt eredményeket okozhat PDF-be való exportáláskor."
+
+#. Error shown when AI parsing returns invalid resume structure during import
+#: src/dialogs/resume/import.tsx
+msgid "The imported file could not be parsed into a valid resume."
+msgstr "Az importált fájlt nem sikerült érvényes folytatássá elemezni."
 
 #: src/routes/auth/resume-password.tsx
 msgid "The password you entered is incorrect"
@@ -2741,6 +3324,7 @@ msgstr "A megnyitni kívánt önéletrajz jelszóval védett"
 msgid "The URL you entered is not valid."
 msgstr "A megadott URL érvénytelen."
 
+#. Menu item that opens appearance theme selection submenu
 #: src/components/command-palette/pages/preferences/theme.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/routes/dashboard/settings/preferences.tsx
@@ -2816,6 +3400,10 @@ msgstr "Ez egy új API kulcsot hoz létre a Reactive Resume API eléréséhez, l
 msgid "This will help you identify it later, if you plan to have multiple passkeys."
 msgstr "Ez segít a későbbi azonosításban, ha több jelszókulcsot tervez."
 
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
+msgid "This will remove all items from this section."
+msgstr "Ezzel az összes elemet eltávolítja ebből a szakaszból."
+
 #: src/routes/_home/-sections/hero.tsx
 msgid "Timelapse demonstration of building a resume with Reactive Resume"
 msgstr "Gyorsított felvétel az önéletrajz Reactive Resume‑zal történő elkészítéséről"
@@ -2847,6 +3435,23 @@ msgstr "Az álláshirdetések kereséséhez a RapidAPI-kulcsot a beállítások 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Today"
 msgstr "Ma"
+
+#. Screen-reader label for opening or closing the left sidebar in resume builder
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Toggle left sidebar"
+msgstr "Bal oldalsáv átkapcsolása"
+
+#. Screen-reader label for opening or closing the right sidebar in resume builder
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Toggle right sidebar"
+msgstr "Jobb oldalsáv bekapcsolása"
+
+#. Accessible label for draggable/clickable sidebar rail that toggles sidebar visibility
+#. Screen-reader-only label for button that opens or closes the app sidebar
+#. Tooltip text for sidebar rail toggle action
+#: src/components/ui/sidebar.tsx
+msgid "Toggle Sidebar"
+msgstr "Oldalsáv átkapcsolása"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Track your resume's views and downloads"
@@ -2914,6 +3519,11 @@ msgstr "A kétlépcsős hitelesítés sikeresen ki lett kapcsolva."
 msgid "Two-factor authentication has been setup successfully."
 msgstr "A kétlépcsős hitelesítés beállítása sikeresen megtörtént."
 
+#. Accessible title for QR code image shown during two-factor setup
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Two-Factor Authentication QR Code"
+msgstr "Kétfaktoros hitelesítés QR-kód"
+
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
@@ -2924,6 +3534,8 @@ msgstr "Típus"
 msgid "Type \"{CONFIRMATION_TEXT}\" to confirm"
 msgstr "Írd be a(z) \"{CONFIRMATION_TEXT}\" szöveget a megerősítéshez"
 
+#. Placeholder in command palette input on root page
+#. Screen-reader dialog description instructing users how to use the command palette
 #: src/components/command-palette/index.tsx
 msgid "Type a command or search..."
 msgstr "Írj be egy parancsot vagy keress..."
@@ -2957,6 +3569,9 @@ msgstr "Korlátlan önéletrajz"
 msgid "Unlinking your {providerName} account..."
 msgstr "{providerName} fiókod leválasztása..."
 
+#. Primary action button label to unlock a password-protected resume
+#. Resume card context menu action to remove edit lock
+#. Resume card dropdown action to remove edit lock
 #: src/routes/auth/resume-password.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2972,6 +3587,14 @@ msgstr "Névtelen jelszó"
 msgid "Unverified"
 msgstr "Nem hitelesített"
 
+#. Salary label when only an upper salary bound is available
+#. placeholder {0}: formatCurrency(max)
+#: src/routes/dashboard/job-search/-components/job-utils.ts
+msgid "Up to {0}{periodSuffix}"
+msgstr "Akár a {0}{periodSuffix} címen."
+
+#. Resume card context menu action to edit resume metadata
+#. Resume card dropdown action to edit resume metadata
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
@@ -3040,6 +3663,7 @@ msgstr "Meglévő összefoglaló elem frissítése"
 msgid "Update an existing volunteer experience"
 msgstr "Meglévő önkéntes tapasztalat frissítése"
 
+#. Primary action button to submit changed password
 #: src/dialogs/auth/change-password.tsx
 #: src/routes/dashboard/settings/authentication/-components/password.tsx
 msgid "Update Password"
@@ -3062,13 +3686,20 @@ msgid "Updating your resume..."
 msgstr "Önéletrajz frissítése..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Upload picture"
+msgstr "Kép feltöltése"
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Uploading picture..."
 msgstr "Kép feltöltése..."
 
+#. Form field label for the generated public resume link in sharing settings
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "URL"
 msgstr "URL"
 
+#. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
@@ -3087,10 +3718,17 @@ msgstr "üzbég"
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Az érvényes URL http:// vagy https:// előtaggal kezdődik."
 
+#. AI provider option label in dashboard AI settings
+#: src/routes/dashboard/settings/ai.tsx
+msgid "Vercel AI Gateway"
+msgstr "Vercel AI Gateway"
+
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Verified"
 msgstr "Hitelesített"
 
+#. Primary action button to submit 2FA code
+#. Primary action button to submit backup code
 #: src/routes/auth/verify-2fa-backup.tsx
 #: src/routes/auth/verify-2fa.tsx
 msgid "Verify"

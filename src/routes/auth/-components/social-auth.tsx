@@ -3,7 +3,6 @@ import { Trans } from "@lingui/react/macro";
 import { FingerprintIcon, GithubLogoIcon, GoogleLogoIcon, LinkedinLogoIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 import type { RouterOutput } from "@/integrations/orpc/client";
@@ -51,7 +50,6 @@ type SocialAuthButtonsProps = {
 
 function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
   const router = useRouter();
-  const hasStartedConditionalPasskeyRef = useRef(false);
 
   const handleSocialLogin = async (provider: string) => {
     const toastId = toast.loading(t`Signing in...`);
@@ -62,7 +60,14 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when social sign-in fails without a provider error message",
+            message: "Failed to sign in. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -79,7 +84,14 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when custom OAuth sign-in fails without a provider error message",
+            message: "Failed to sign in. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -93,32 +105,20 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
     const { error } = await authClient.signIn.passkey({ autoFill: false });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when passkey sign-in fails without an error message",
+            message: "Failed to sign in. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
     toast.dismiss(toastId);
     await router.invalidate();
   };
-
-  useEffect(() => {
-    if (!("passkey" in providers)) return;
-    if (typeof window === "undefined") return;
-    if (!("PublicKeyCredential" in window)) return;
-    if (!PublicKeyCredential.isConditionalMediationAvailable) return;
-    if (hasStartedConditionalPasskeyRef.current) return;
-
-    hasStartedConditionalPasskeyRef.current = true;
-
-    void PublicKeyCredential.isConditionalMediationAvailable().then(async (isAvailable) => {
-      if (!isAvailable) return;
-
-      const { error } = await authClient.signIn.passkey({ autoFill: true });
-      if (error) return;
-
-      await router.invalidate();
-    });
-  }, [providers, router]);
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -137,7 +137,7 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
         className={cn("hidden", "passkey" in providers && "inline-flex")}
       >
         <FingerprintIcon />
-        Passkey
+        <Trans comment="Label for passkey sign-in button">Passkey</Trans>
       </Button>
 
       <Button
@@ -148,7 +148,7 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
         )}
       >
         <GoogleLogoIcon />
-        Google
+        <Trans comment="Brand name label for Google social sign-in button">Google</Trans>
       </Button>
 
       <Button
@@ -159,7 +159,7 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
         )}
       >
         <GithubLogoIcon />
-        GitHub
+        <Trans comment="Brand name label for GitHub social sign-in button">GitHub</Trans>
       </Button>
 
       <Button
@@ -170,7 +170,7 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
         )}
       >
         <LinkedinLogoIcon />
-        LinkedIn
+        <Trans comment="Brand name label for LinkedIn social sign-in button">LinkedIn</Trans>
       </Button>
     </div>
   );

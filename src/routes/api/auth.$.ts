@@ -1,6 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { auth } from "@/integrations/auth/config";
+import { env } from "@/utils/env";
+import { isPrivateOrLoopbackHost, parseAllowedHostList, parseUrl } from "@/utils/url-security";
+
+const oauthDynamicClientRedirectHosts = parseAllowedHostList(env.OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS);
+const oauthAuthorizeSanitizedParams = [
+  "prompt",
+  "redirect_uri",
+  "client_id",
+  "code_challenge",
+  "code_challenge_method",
+  "response_type",
+  "scope",
+  "state",
+  "resource",
+] as const;
+
+function isAllowedDynamicClientRedirectUri(value: string) {
+  const parsed = parseUrl(value);
+  if (!parsed) return false;
+  if (parsed.protocol !== "https:") return false;
+  if (parsed.username || parsed.password) return false;
+  if (parsed.hash) return false;
+  if (isPrivateOrLoopbackHost(parsed.hostname)) return false;
+
+  const appOrigin = new URL(env.APP_URL).origin.toLowerCase();
+  const origin = parsed.origin.toLowerCase();
+  const hostname = parsed.hostname.toLowerCase();
+
+  if (origin === appOrigin) return true;
+  if (oauthDynamicClientRedirectHosts.has(origin)) return true;
+  if (oauthDynamicClientRedirectHosts.has(hostname)) return true;
+
+  return false;
+}
 
 function sanitizeOAuthAuthorizeRequest(request: Request): Request {
   if (request.method !== "GET") return request;
@@ -19,15 +53,7 @@ function sanitizeOAuthAuthorizeRequest(request: Request): Request {
     url.searchParams.set(key, sanitizeValue(value));
   };
 
-  sanitizeParam("prompt");
-  sanitizeParam("redirect_uri");
-  sanitizeParam("client_id");
-  sanitizeParam("code_challenge");
-  sanitizeParam("code_challenge_method");
-  sanitizeParam("response_type");
-  sanitizeParam("scope");
-  sanitizeParam("state");
-  sanitizeParam("resource");
+  for (const key of oauthAuthorizeSanitizedParams) sanitizeParam(key);
 
   const redirectUri = url.searchParams.get("redirect_uri");
   if (redirectUri && !URL.canParse(redirectUri)) {
@@ -74,15 +100,35 @@ async function defaultPublicClientRegistration(request: Request): Promise<Reques
   });
 }
 
+async function validateDynamicClientRegistrationRequest(request: Request): Promise<Response | undefined> {
+  if (request.method !== "POST") return;
+
+  const url = new URL(request.url);
+  if (!url.pathname.endsWith("/oauth2/register")) return;
+
+  const cloned = request.clone();
+  let body: Record<string, unknown>;
+
+  try {
+    body = await cloned.json();
+  } catch {
+    return Response.json({ message: "Invalid registration payload" }, { status: 400 });
+  }
+
+  const redirectUris = Array.isArray(body.redirect_uris) ? body.redirect_uris : [];
+  for (const redirectUri of redirectUris) {
+    if (typeof redirectUri !== "string" || !isAllowedDynamicClientRedirectUri(redirectUri)) {
+      return Response.json({ message: "redirect_uri is not allowed" }, { status: 400 });
+    }
+  }
+}
+
 async function handler({ request }: { request: Request }) {
+  const registrationValidationError = await validateDynamicClientRegistrationRequest(request);
+  if (registrationValidationError) return registrationValidationError;
+
   const sanitizedRequest = sanitizeOAuthAuthorizeRequest(request);
   const finalRequest = await defaultPublicClientRegistration(sanitizedRequest);
-
-  if (request.method === "GET" && request.url.endsWith("/spec.json")) {
-    const spec = await auth.api.generateOpenAPISchema();
-
-    return Response.json(spec);
-  }
 
   return auth.handler(finalRequest);
 }

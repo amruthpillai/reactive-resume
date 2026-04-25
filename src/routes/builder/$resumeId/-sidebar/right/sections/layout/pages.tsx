@@ -14,7 +14,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
-import { type CSSProperties, forwardRef, type HTMLAttributes, useCallback, useState } from "react";
+import { type CSSProperties, forwardRef, type HTMLAttributes, useCallback, useId, useState } from "react";
 import { match } from "ts-pattern";
 
 import type { SectionType } from "@/schema/resume/data";
@@ -30,8 +30,18 @@ type ColumnId = "main" | "sidebar";
 
 const getColumnLabel = (columnId: ColumnId): string => {
   return match(columnId)
-    .with("main", () => t`Main`)
-    .with("sidebar", () => t`Sidebar`)
+    .with("main", () =>
+      t({
+        comment: "Layout editor column label for the primary content area",
+        message: "Main",
+      }),
+    )
+    .with("sidebar", () =>
+      t({
+        comment: "Layout editor column label for the secondary sidebar area",
+        message: "Sidebar",
+      }),
+    )
     .exhaustive();
 };
 
@@ -257,20 +267,25 @@ function PageContainer({
   onToggleFullWidth,
 }: PageContainerProps) {
   const isFullWidth = page.fullWidth;
+  const fullWidthSwitchId = useId();
 
   return (
     <div className="space-y-3 rounded-md border border-dashed bg-background/40">
       <div className="flex items-center justify-between bg-secondary/50 px-4 py-3">
         <div className="flex w-full items-center gap-4">
           <span className="text-xs font-medium">
-            <Trans>Page {pageIndex + 1}</Trans>
+            <Trans comment="Layout editor page label with 1-based page number">Page {pageIndex + 1}</Trans>
           </span>
 
-          <label className="flex cursor-pointer items-center gap-2">
-            <Switch checked={page.fullWidth} onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)} />
+          <label htmlFor={fullWidthSwitchId} className="flex cursor-pointer items-center gap-2">
+            <Switch
+              id={fullWidthSwitchId}
+              checked={page.fullWidth}
+              onCheckedChange={(checked) => onToggleFullWidth(pageIndex, checked)}
+            />
 
             <span className="text-xs font-medium text-muted-foreground">
-              <Trans>Full Width</Trans>
+              <Trans comment="Layout editor toggle label that makes a page single-column">Full Width</Trans>
             </span>
           </label>
         </div>

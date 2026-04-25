@@ -54,9 +54,9 @@ APP_URL="http://localhost:3000"
 PRINTER_APP_URL="http://host.docker.internal:3000"
 
 # --- Printer ---
-# If using browserless with token authentication, include the token as a query parameter:
-# PRINTER_ENDPOINT="ws://printer:3000?token=your-secret-token"
-PRINTER_ENDPOINT="ws://printer:3000"
+# Keep this token in sync with the Browserless TOKEN value.
+BROWSERLESS_TOKEN="change-me"
+PRINTER_ENDPOINT="ws://printer:3000?token=change-me"
 
 # --- Database (PostgreSQL) ---
 DATABASE_URL="postgresql://postgres:postgres@postgres:5432/postgres"
@@ -64,6 +64,8 @@ DATABASE_URL="postgresql://postgres:postgres@postgres:5432/postgres"
 # --- Authentication ---
 # Generated using `openssl rand -hex 32`
 AUTH_SECRET=""
+# Better Auth dashboard API key (optional)
+BETTER_AUTH_API_KEY=""
 
 # Social Auth (Google, optional)
 GOOGLE_CLIENT_ID=""
@@ -87,20 +89,30 @@ OAUTH_DISCOVERY_URL=""
 OAUTH_AUTHORIZATION_URL=""
 OAUTH_TOKEN_URL=""
 OAUTH_USER_INFO_URL=""
+OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS=""
 # Custom scopes (space-separated, defaults to "openid profile email")
 OAUTH_SCOPES=""
+
+# Optional Better Auth runtime overrides for advanced deployments:
+# BETTER_AUTH_URL="https://auth.example.com"
+# BETTER_AUTH_SECRET=""
+
+# --- AI (optional) ---
+# Comma-separated hostnames/origins for custom AI base URLs
+# Example: api.openai.com,https://gateway.ai.vercel.com
+AI_ALLOWED_BASE_URLS=""
 
 # --- Email (optional) ---
 # If all keys are disabled, the app logs the email to be sent to the console instead.
 SMTP_HOST=""
-SMTP_PORT="465"
+SMTP_PORT="587"
 SMTP_USER=""
 SMTP_PASS=""
 SMTP_FROM="Reactive Resume <noreply@rxresu.me>"
 SMTP_SECURE="false"
 
 # --- Storage (optional) ---
-# If all keys are disabled, the app uses local filesystem (/data) to store uploads instead.
+# If all keys are disabled, the app uses local filesystem (usually /app/data) to store uploads instead.
 # Make sure to mount this directory to a volume or the host filesystem to ensure data integrity.
 S3_ACCESS_KEY_ID=""
 S3_SECRET_ACCESS_KEY=""
@@ -115,6 +127,7 @@ S3_FORCE_PATH_STYLE="false"
 FLAG_DEBUG_PRINTER="false"
 FLAG_DISABLE_SIGNUPS="false"
 FLAG_DISABLE_EMAIL_AUTH="false"
+FLAG_DISABLE_IMAGE_PROCESSING="false"
 ```
 
   </Step>
@@ -134,9 +147,6 @@ FLAG_DISABLE_EMAIL_AUTH="false"
         [byte[]]$bytes = New-Object byte[] 32; (New-Object System.Security.Cryptography.RNGCryptoServiceProvider).GetBytes($bytes); $bytes | ForEach-Object { "{0:x2}" -f $_ } | Out-String -Stream | ForEach-Object { $_.Trim() } | Write-Host -NoNewline
         ```
 
-        ```cmd Windows (alternative)
-        certutil -generateSRS 32 | findstr /r /v "^$" | findstr /v ":" | findstr /v " " | findstr /v "-" | findstr /v "certutil"
-        ```
     </CodeGroup>
 
   </Step>
@@ -172,10 +182,9 @@ services:
       - HEALTH=true
       - CONCURRENT=20
       - QUEUED=10
-      # Optional: Set a token for authentication
-      # - TOKEN=your-secret-token
+      - TOKEN=${BROWSERLESS_TOKEN}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure?token=your-secret-token"]
+      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN}" > /dev/null']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -282,10 +291,14 @@ docker compose logs -f reactive-resume
         SMTP (<code>SMTP_&#42;</code>)
       </li>
       <li>
-        Social auth (<code>GOOGLE_&#42;</code>, <code>GITHUB_&#42;</code>)
+        Social auth (<code>GOOGLE_&#42;</code>, <code>GITHUB_&#42;</code>, <code>LINKEDIN_&#42;</code>,{" "}
+        <code>OAUTH_&#42;</code>)
       </li>
       <li>
         S3 storage (<code>S3_&#42;</code>)
+      </li>
+      <li>
+        AI URL allowlist (<code>AI_ALLOWED_BASE_URLS</code>)
       </li>
       <li>
         Feature flags (<code>FLAG_&#42;</code>)
@@ -302,7 +315,9 @@ docker compose logs -f reactive-resume
   </Accordion>
 
   <Accordion title="Printer">
-    - **`PRINTER_ENDPOINT`**: Base URL where Reactive Resume reaches the printer service. In Compose: `http://printer:3000`. If using browserless with token authentication, include the token as a query parameter: `ws://printer:3000?token=your-secret-token`.
+    - **`PRINTER_ENDPOINT`**: Endpoint where Reactive Resume connects to the printer browser.
+    - **Recommended (Browserless)**: `ws://printer:3000?token=...` and keep the token value in sync with Browserless `TOKEN`.
+    - **Also supported**: `http://chrome:9222` for Chrome DevTools Protocol endpoints.
     
     <Note>
       **Alternative to browserless**: You can use a lightweight headless Chrome Docker image like `chromedp/headless-shell`:
@@ -322,7 +337,9 @@ docker compose logs -f reactive-resume
 
 <Accordion title="Database (PostgreSQL)">
   - **`DATABASE_URL`**: Postgres connection string in the format `postgresql://USER:PASSWORD@HOST:PORT/DATABASE`. - In
-  Docker Compose, set `HOST` to the Postgres service name (e.g. `postgres`), not `localhost`.
+  Docker Compose, set `HOST` to the Postgres service name (e.g. `postgres`), not `localhost`. - If your password
+  contains special characters (`@`, `#`, `:`), URL-encode it. - For managed Postgres, add provider-specific params (for
+  example `?sslmode=require`) when needed.
 </Accordion>
 
   <Accordion title="Authentication">
@@ -344,9 +361,16 @@ openssl rand -hex 32
 
     **`LINKEDIN_CLIENT_ID`** / **`LINKEDIN_CLIENT_SECRET`** (optional): Enables LinkedIn sign-in.
 
+    **`BETTER_AUTH_API_KEY`** (optional): Enables Better Auth dashboard integrations.
+
+    **`BETTER_AUTH_URL`** (optional, advanced): Overrides auth base URL if it must differ from `APP_URL` (for split-host deployments).
+
+    **`BETTER_AUTH_SECRET`** (optional, advanced): Overrides `AUTH_SECRET` for Better Auth internals.
+
     **Custom OAuth provider** (optional):
     - **`OAUTH_PROVIDER_NAME`**: Display name in the UI
     - **`OAUTH_CLIENT_ID`** / **`OAUTH_CLIENT_SECRET`**: Required for any custom OAuth provider
+    - **`OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS`**: Comma-separated allowlist for extra dynamic OAuth redirect hosts/origins (HTTPS only, non-private hosts).
     - **`OAUTH_SCOPES`**: Space-separated scopes (defaults to `openid profile email`)
 
     Configure endpoints using **one** of these methods:
@@ -358,8 +382,9 @@ openssl rand -hex 32
   <Accordion title="Email (SMTP, optional)">
     If SMTP is not configured, the app logs emails to the server console instead of sending them.
 
+    - Email delivery is enabled only when **all** of `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM` are set.
     - **`SMTP_HOST`**: SMTP host (if empty, email sending is disabled).
-    - **`SMTP_PORT`**: Usually `465` (implicit TLS) or `587` (STARTTLS).
+    - **`SMTP_PORT`**: Defaults to `587` in the app.
     - **`SMTP_USER`** / **`SMTP_PASS`**: SMTP credentials.
     - **`SMTP_FROM`**: Default from address (for example, `Reactive Resume <noreply@rxresu.me>`).
     - **`SMTP_SECURE`**: `"true"` or `"false"` (string). Match your provider settings.
@@ -367,15 +392,17 @@ openssl rand -hex 32
   </Accordion>
 
 <Accordion title="Storage (S3 or local)">
-  - **Default (local)**: If all `S3_*` values are empty, uploads are stored under `/app/data`. Mount it to persistent
-  storage (for example `./data:/app/data`) or uploads can be lost on container recreation. - **S3/S3-compatible**:
-  Configure these to store uploads in an S3-compatible service (SeaweedFS, MinIO, AWS S3, etc.): -
-  **`S3_ACCESS_KEY_ID`** - **`S3_SECRET_ACCESS_KEY`** - **`S3_REGION`** - **`S3_ENDPOINT`** (for S3-compatible
-  providers; may be blank for AWS depending on your setup) - **`S3_BUCKET`** - **`S3_FORCE_PATH_STYLE`**: Controls how
-  the bucket is addressed in URLs. Defaults to `"false"`. - Set to `"true"` for **path-style** URLs
-  (`https://s3-server.com/bucket`). Common with **MinIO**, **SeaweedFS**, and other self-hosted S3-compatible services.
-  - Set to `"false"` for **virtual-hosted-style** URLs (`https://bucket.s3-server.com`). Common with **AWS S3**,
-  **Cloudflare R2**, and most cloud providers.
+  - **Default (local)**: If all `S3_*` values are empty, uploads are stored under `<cwd>/data` (usually `/app/data` in the official image).
+  - Mount local uploads to persistent storage (for example `./data:/app/data`) or uploads can be lost on container recreation.
+  - **S3/S3-compatible**: Configure `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_ENDPOINT`, and `S3_BUCKET`.
+  - **`S3_FORCE_PATH_STYLE`** controls bucket addressing (defaults to `"false"`):
+    - `"true"` for path-style URLs (`https://endpoint/bucket`) common with MinIO/SeaweedFS.
+    - `"false"` for virtual-hosted-style URLs (`https://bucket.endpoint`) common with AWS S3 / Cloudflare R2.
+</Accordion>
+
+<Accordion title="AI (optional)">
+  - **`AI_ALLOWED_BASE_URLS`**: Comma-separated hosts or origins allowed as custom AI API base URLs. - Use this when
+  routing AI requests through your own gateway/proxy. - Example: `api.openai.com,https://gateway.ai.vercel.com`
 </Accordion>
 
   <Accordion title="Feature Flags">
@@ -390,24 +417,32 @@ openssl rand -hex 32
 
 To update your Reactive Resume installation to the latest available version, follow these steps:
 
-1. **Pull the latest images** for all services defined in your Docker Compose file.
+1. **Back up your database and uploads first** (highly recommended before every update).
+
+2. **Pull the latest images** for all services defined in your Docker Compose file.
 
    ```bash
    docker compose pull
    ```
 
-2. **Restart the containers** to run the new images.
+3. **Restart the containers** to run the new images.
 
    ```bash
    docker compose up -d
    ```
 
-3. **(Optional) Remove old, unused Docker images** to free up disk space.
+4. **Check migration/startup logs** after deploy.
+
+   ```bash
+   docker compose logs -f reactive-resume
+   ```
+
+5. **(Optional) Remove old, unused Docker images** to free up disk space.
    ```bash
    docker image prune -f
    ```
 
-This process ensures your app, database, and printer are all up-to-date while keeping your data and configuration intact.
+This process updates app services and automatically runs DB migrations on startup. If migration fails, restore from backup and fix configuration before retrying.
 
 ## Backups (recommended)
 
@@ -425,7 +460,7 @@ If you're using S3-compatible storage, consider enabling versioning on your buck
 
 ## Health Checks
 
-Reactive Resume exposes a health check endpoint at `/api/health` that verifies the application and its dependencies are functioning correctly. If any critical service (such as the database connection) fails, the health check will return an unhealthy status.
+Reactive Resume exposes a health check endpoint at `/api/health` that verifies the application and its dependencies. It checks **database**, **printer**, and **storage**; if any one is unhealthy, the endpoint returns HTTP `503`.
 
 ### How it works
 
@@ -448,7 +483,7 @@ Most reverse proxies (such as **Traefik**, **Caddy**, or **nginx** with upstream
 - **Healthy containers** receive traffic as normal
 - **Unhealthy containers** are automatically removed from the load balancer pool
 
-This is particularly useful in high-availability setups where you have multiple instances of Reactive Resume. If one instance becomes unhealthy (for example, it loses its database connection), the reverse proxy will stop routing traffic to it until it recovers.
+This is particularly useful in high-availability setups where you have multiple instances of Reactive Resume. If one instance becomes unhealthy (for example, it loses database, printer, or storage connectivity), the reverse proxy will stop routing traffic to it until it recovers.
 
 <Tip>
   If you're using **Traefik**, it automatically respects Docker health checks when using the Docker provider. Unhealthy
@@ -467,40 +502,51 @@ curl -f http://localhost:3000/api/health
 docker compose ps
 ```
 
-A healthy response returns HTTP 200. Any other response (or a connection failure) indicates a problem that should be investigated in the container logs.
+A healthy response returns HTTP 200. Any other response (or a connection failure) indicates a problem that should be investigated in the JSON response body and container logs.
 
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="The app container exits immediately">
     - **Common cause**: database migrations failed (often a bad `DATABASE_URL`).
-    - **What to do**:  
-      When the app container exits right away, you'll want to check the logs for more information about the error. Run the following command to view real-time logs from the Reactive Resume container:
+    - **What to do**:
+      Check logs for migration errors and database connectivity details:
       ```bash
       docker compose logs -f reactive-resume
       ```
   </Accordion>
 
 <Accordion title="Can't sign in / redirects loop / cookies don't stick">
-  - **Common cause**: `APP_URL` doesn't match the URL you're actually using (especially behind a reverse proxy). -
-  **Fix**: set `APP_URL` to the public URL (preferably HTTPS) and restart the container.
+  - **Common cause**: `APP_URL` doesn't match the URL you're actually using (especially behind a reverse proxy), or
+  you're serving HTTPS while `APP_URL` is `http://...`. - **Fix**: set `APP_URL` to your canonical public HTTPS URL and
+  restart the container.
 </Accordion>
 
 <Accordion title="PDF export fails / printing is stuck">
-  - **Common cause**: Reactive Resume can't reach the printer or the printer can't reach your app. - **Checks**: -
-  `PRINTER_ENDPOINT` should usually be `http://printer:3000` in Compose. - If you use
-  `PRINTER_APP_URL="http://host.docker.internal:3000"`, ensure `extra_hosts: host-gateway` is present for the printer
-  service.
+  - **Common cause**: Reactive Resume can't reach the printer, token mismatch, or the printer can't reach your app. -
+  **Checks**: - `PRINTER_ENDPOINT` should usually be `ws://printer:3000?token=...` in Compose. - Browserless `TOKEN` and
+  the token in `PRINTER_ENDPOINT` must match. - If you use `PRINTER_APP_URL="http://host.docker.internal:3000"` on
+  Linux, set `extra_hosts: ["host.docker.internal:host-gateway"]` for the printer service.
+</Accordion>
+
+<Accordion title="/api/health returns 503 even though Postgres is up">
+  - **Common cause**: printer or storage health failed (not only database). - **Fix**: inspect the endpoint response
+  payload and check `printer` / `storage` fields: ```bash curl -s http://localhost:3000/api/health ```
 </Accordion>
 
 <Accordion title="Uploads disappear after restart">
-  - **Cause**: you didn't mount persistent storage for `/app/data` (when not using S3). - **Fix**: add a volume mount
-  like `./data:/app/data` and redeploy.
+  - **Cause**: local upload storage wasn't mounted to a persistent volume. - **Fix**: add a volume mount like
+  `./data:/app/data` and redeploy.
 </Accordion>
 
 <Accordion title="Emails aren't being delivered">
-  - **Expected behavior**: if SMTP vars are empty, the app logs emails to the console instead. - **Fix**: configure SMTP
-  and verify your provider's TLS/port settings.
+  - **Expected behavior**: if SMTP isn't fully configured, the app logs emails to the console. - **Fix**: set
+  `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`, then verify `SMTP_PORT` and `SMTP_SECURE`.
+</Accordion>
+
+<Accordion title="Dynamic OAuth redirect URI is rejected">
+  - **Common cause**: redirect host is not trusted for dynamic client registration. - **Fix**: add trusted HTTPS
+  hosts/origins to `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS`.
 </Accordion>
 
   <Accordion title="S3 storage error: ENOTFOUND bucket.endpoint">

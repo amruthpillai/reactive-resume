@@ -1,5 +1,6 @@
 import type z from "zod";
 
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { DotsSixVerticalIcon, LinkIcon, ListPlusIcon, XIcon } from "@phosphor-icons/react";
 import { Reorder, useDragControls } from "motion/react";
@@ -119,7 +120,10 @@ export function CustomFieldsSection({ onSubmit }: Props) {
                       type="url"
                       value={field.value}
                       id={`customFields.${index}.link`}
-                      placeholder="Must start with https://"
+                      placeholder={t({
+                        comment: "Placeholder text for custom link URL field in resume builder",
+                        message: "Must start with https://",
+                      })}
                       onChange={(e) => {
                         field.onChange(e.target.value);
                         void form.handleSubmit(onSubmit)();

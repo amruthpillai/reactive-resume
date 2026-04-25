@@ -24,6 +24,7 @@ import { JSONResumeImporter } from "@/integrations/import/json-resume";
 import { ReactiveResumeJSONImporter } from "@/integrations/import/reactive-resume-json";
 import { ReactiveResumeV4JSONImporter } from "@/integrations/import/reactive-resume-v4-json";
 import { client, orpc } from "@/integrations/orpc/client";
+import { getOrpcErrorMessage } from "@/utils/error-message";
 import { cn } from "@/utils/style";
 
 import { type DialogProps, useDialogStore } from "../store";
@@ -186,18 +187,39 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
         });
       }
 
-      if (!data) throw new Error("No data was returned from the AI provider.");
+      if (!data) {
+        throw new Error(
+          t({
+            comment: "Error shown when AI import endpoint returns no parsed resume data",
+            message: "No data was returned from the AI provider.",
+          }),
+        );
+      }
 
       const id = await importResume({ data });
       toast.success(t`Your resume has been imported successfully.`, { id: toastId, description: null });
       closeDialog();
       void navigate({ to: `/builder/$resumeId`, params: { resumeId: id } });
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message, { id: toastId, description: null });
-      } else {
-        toast.error(t`An unknown error occurred while importing your resume.`, { id: toastId, description: null });
-      }
+      toast.error(
+        getOrpcErrorMessage(error, {
+          byCode: {
+            BAD_REQUEST: t({
+              comment: "Error shown when AI parsing returns invalid resume structure during import",
+              message: "The imported file could not be parsed into a valid resume.",
+            }),
+            BAD_GATEWAY: t({
+              comment: "Error shown when AI provider is unreachable during PDF/DOCX resume import",
+              message: "Could not reach the AI provider. Please try again.",
+            }),
+          },
+          fallback: t({
+            comment: "Fallback toast when importing a resume fails for an unknown reason",
+            message: "An unknown error occurred while importing your resume.",
+          }),
+        }),
+        { id: toastId, description: null },
+      );
     } finally {
       setIsLoading(false);
     }
@@ -235,14 +257,36 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
                       value={field.value}
                       onValueChange={field.onChange}
                       options={[
-                        { value: "reactive-resume-json", label: "Reactive Resume (JSON)" },
-                        { value: "reactive-resume-v4-json", label: "Reactive Resume v4 (JSON)" },
-                        { value: "json-resume-json", label: "JSON Resume" },
+                        {
+                          value: "reactive-resume-json",
+                          label: t({
+                            comment: "Import source option for current Reactive Resume JSON format",
+                            message: "Reactive Resume (JSON)",
+                          }),
+                        },
+                        {
+                          value: "reactive-resume-v4-json",
+                          label: t({
+                            comment: "Import source option for legacy Reactive Resume v4 JSON format",
+                            message: "Reactive Resume v4 (JSON)",
+                          }),
+                        },
+                        {
+                          value: "json-resume-json",
+                          label: t({
+                            comment: "Import source option for standard JSON Resume format",
+                            message: "JSON Resume",
+                          }),
+                        },
                         {
                           value: "pdf",
                           label: (
                             <div className="flex items-center gap-x-2">
-                              PDF <Badge>{t`AI`}</Badge>
+                              {t({
+                                comment: "File format label in import source selector",
+                                message: "PDF",
+                              })}{" "}
+                              <Badge>{t`AI`}</Badge>
                             </div>
                           ),
                         },
@@ -250,7 +294,11 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
                           value: "docx",
                           label: (
                             <div className="flex items-center gap-x-2">
-                              Microsoft Word <Badge>{t`AI`}</Badge>
+                              {t({
+                                comment: "File format label in import source selector",
+                                message: "Microsoft Word",
+                              })}{" "}
+                              <Badge>{t`AI`}</Badge>
                             </div>
                           ),
                         },

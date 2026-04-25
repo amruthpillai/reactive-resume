@@ -14,6 +14,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleIcon, XIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
@@ -78,7 +79,11 @@ function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProp
           <button
             type="button"
             tabIndex={-1}
-            aria-label={`Edit ${chip}`}
+            aria-label={t({
+              comment:
+                "Screen reader label for button that edits a keyword chip. Variable is the current keyword text.",
+              message: `Edit ${chip}`,
+            })}
             onClick={(e) => {
               e.stopPropagation();
               onEdit(index);
@@ -90,7 +95,11 @@ function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProp
           <button
             type="button"
             tabIndex={-1}
-            aria-label={`Remove ${chip}`}
+            aria-label={t({
+              comment:
+                "Screen reader label for button that removes a keyword chip. Variable is the current keyword text.",
+              message: `Remove ${chip}`,
+            })}
             onClick={(e) => {
               e.stopPropagation();
               onRemove(index);
@@ -122,6 +131,7 @@ export function ChipInput({ value, defaultValue = [], onChange, className, hideD
   const [input, setInput] = React.useState("");
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const isEditingKeyword = editingIndex !== null;
 
   const addChip = React.useCallback(
     (chip: string) => {
@@ -289,8 +299,8 @@ export function ChipInput({ value, defaultValue = [], onChange, className, hideD
           type="text"
           value={input}
           autoComplete="off"
-          aria-label={editingIndex !== null ? "Edit keyword" : "Add keyword"}
-          placeholder={editingIndex !== null ? "Editing keyword..." : "Add a keyword..."}
+          aria-label={isEditingKeyword ? t`Edit keyword` : t`Add keyword`}
+          placeholder={isEditingKeyword ? t`Editing keyword...` : t`Add a keyword...`}
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
         />

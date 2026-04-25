@@ -29,7 +29,7 @@ export const pictureSchema = z.object({
   url: z
     .string()
     .describe(
-      "The URL to the picture to display on the resume. Must be a valid URL with a protocol (http:// or https://).",
+      "The URL to the picture to display on the resume. Prefer local app-served paths (for example /uploads/...) populated via upload.",
     ),
   size: z
     .number()

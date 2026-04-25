@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { useJobsStore } from "@/integrations/jobs/store";
 import { orpc } from "@/integrations/orpc/client";
+import { getOrpcErrorMessage } from "@/utils/error-message";
 
 import { DashboardHeader } from "../-components/header";
 
@@ -50,7 +51,20 @@ function RapidAPIKeyForm() {
             draft.rapidApiQuota = null;
           });
 
-          toast.error(error.message);
+          toast.error(
+            getOrpcErrorMessage(error, {
+              byCode: {
+                BAD_GATEWAY: t({
+                  comment: "Error shown when JSearch API connection test fails in job search settings",
+                  message: "Could not reach JSearch API. Check your API key and try again.",
+                }),
+              },
+              fallback: t({
+                comment: "Fallback toast when testing RapidAPI job search connection fails",
+                message: "Failed to test RapidAPI connection. Please try again.",
+              }),
+            }),
+          );
         },
       },
     );

@@ -17,6 +17,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { type AIProvider, useAIStore } from "@/integrations/ai/store";
 import { orpc } from "@/integrations/orpc/client";
+import { getOrpcErrorMessage } from "@/utils/error-message";
 import { cn } from "@/utils/style";
 
 import { DashboardHeader } from "../-components/header";
@@ -28,31 +29,46 @@ export const Route = createFileRoute("/dashboard/settings/ai")({
 const providerOptions: (ComboboxOption<AIProvider> & { defaultBaseURL: string })[] = [
   {
     value: "openai",
-    label: "OpenAI",
+    label: t({
+      comment: "AI provider option label in dashboard AI settings",
+      message: "OpenAI",
+    }),
     keywords: ["openai", "gpt", "chatgpt"],
     defaultBaseURL: "https://api.openai.com/v1",
   },
   {
     value: "ollama",
-    label: "Ollama",
+    label: t({
+      comment: "AI provider option label in dashboard AI settings",
+      message: "Ollama",
+    }),
     keywords: ["ollama", "ai", "local"],
     defaultBaseURL: "http://localhost:11434",
   },
   {
     value: "anthropic",
-    label: "Anthropic Claude",
+    label: t({
+      comment: "AI provider option label in dashboard AI settings",
+      message: "Anthropic Claude",
+    }),
     keywords: ["anthropic", "claude", "ai"],
     defaultBaseURL: "https://api.anthropic.com/v1",
   },
   {
     value: "vercel-ai-gateway",
-    label: "Vercel AI Gateway",
+    label: t({
+      comment: "AI provider option label in dashboard AI settings",
+      message: "Vercel AI Gateway",
+    }),
     keywords: ["vercel", "gateway", "ai"],
     defaultBaseURL: "https://ai-gateway.vercel.sh/v1/ai",
   },
   {
     value: "gemini",
-    label: "Google Gemini",
+    label: t({
+      comment: "AI provider option label in dashboard AI settings",
+      message: "Google Gemini",
+    }),
     keywords: ["gemini", "google", "bard"],
     defaultBaseURL: "https://generativelanguage.googleapis.com/v1beta",
   },
@@ -112,7 +128,24 @@ function AIForm() {
             draft.testStatus = "failure";
           });
 
-          toast.error(error.message);
+          toast.error(
+            getOrpcErrorMessage(error, {
+              byCode: {
+                BAD_REQUEST: t({
+                  comment: "Error shown when AI provider credentials or base URL are invalid in AI settings",
+                  message: "Invalid AI provider configuration. Please check your settings.",
+                }),
+                BAD_GATEWAY: t({
+                  comment: "Error shown when the configured AI provider cannot be reached during connection test",
+                  message: "Could not reach the AI provider. Please try again.",
+                }),
+              },
+              fallback: t({
+                comment: "Fallback toast when testing AI provider connection fails",
+                message: "Failed to test AI provider connection. Please try again.",
+              }),
+            }),
+          );
         },
       },
     );
@@ -144,7 +177,10 @@ function AIForm() {
           value={model}
           disabled={enabled}
           onChange={(e) => handleModelChange(e.target.value)}
-          placeholder="e.g., gpt-4, claude-3-opus, gemini-pro"
+          placeholder={t({
+            comment: "Example model-name placeholder in AI settings",
+            message: "e.g., gpt-4, claude-3-opus, gemini-pro",
+          })}
           autoCorrect="off"
           autoComplete="off"
           spellCheck="false"

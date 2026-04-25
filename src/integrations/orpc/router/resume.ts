@@ -4,8 +4,9 @@ import { storedResumeAnalysisSchema } from "@/schema/resume/analysis";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { generateRandomName, slugify } from "@/utils/string";
 
-import { protectedProcedure, publicProcedure, serverOnlyProcedure } from "../context";
+import { protectedProcedure, publicProcedure } from "../context";
 import { resumeDto } from "../dto/resume";
+import { resumePasswordRateLimit } from "../rate-limit";
 import { resumeService } from "../services/resume";
 
 const tagsRouter = {
@@ -22,7 +23,7 @@ const tagsRouter = {
     })
     .output(z.array(z.string()))
     .handler(async ({ context }) => {
-      return await resumeService.tags.list({ userId: context.user.id });
+      return resumeService.tags.list({ userId: context.user.id });
     }),
 };
 
@@ -49,14 +50,7 @@ const statisticsRouter = {
       }),
     )
     .handler(async ({ context, input }) => {
-      return await resumeService.statistics.getById({ id: input.id, userId: context.user.id });
-    }),
-
-  increment: publicProcedure
-    .route({ tags: ["Internal"], operationId: "incrementResumeStatistics", summary: "Increment resume statistics" })
-    .input(z.object({ id: z.string(), views: z.boolean().default(false), downloads: z.boolean().default(false) }))
-    .handler(async ({ input }) => {
-      return await resumeService.statistics.increment(input);
+      return resumeService.statistics.getById({ id: input.id, userId: context.user.id });
     }),
 };
 
@@ -75,7 +69,7 @@ const analysisRouter = {
     .input(z.object({ id: z.string().describe("The unique identifier of the resume.") }))
     .output(storedResumeAnalysisSchema.nullable())
     .handler(async ({ context, input }) => {
-      return await resumeService.analysis.getById({ id: input.id, userId: context.user.id });
+      return resumeService.analysis.getById({ id: input.id, userId: context.user.id });
     }),
 };
 
@@ -98,7 +92,7 @@ export const resumeRouter = {
     .input(resumeDto.list.input.optional().default({ tags: [], sort: "lastUpdatedAt" }))
     .output(resumeDto.list.output)
     .handler(async ({ input, context }) => {
-      return await resumeService.list({
+      return resumeService.list({
         userId: context.user.id,
         tags: input.tags,
         sort: input.sort,
@@ -119,14 +113,22 @@ export const resumeRouter = {
     .input(resumeDto.getById.input)
     .output(resumeDto.getById.output)
     .handler(async ({ context, input }) => {
-      return await resumeService.getById({ id: input.id, userId: context.user.id });
+      return resumeService.getById({ id: input.id, userId: context.user.id });
     }),
 
-  getByIdForPrinter: serverOnlyProcedure
+  getByIdForPrinter: publicProcedure
     .route({ tags: ["Internal"], operationId: "getResumeForPrinter", summary: "Get resume by ID for printer" })
-    .input(resumeDto.getById.input)
-    .handler(async ({ input }) => {
-      return await resumeService.getByIdForPrinter({ id: input.id });
+    .input(
+      resumeDto.getById.input.extend({
+        token: z.string().optional(),
+      }),
+    )
+    .handler(async ({ input, context }) => {
+      return resumeService.getByIdForPrinter({
+        id: input.id,
+        currentUserId: context.user?.id,
+        printerToken: input.token,
+      });
     }),
 
   getBySlug: publicProcedure
@@ -143,7 +145,7 @@ export const resumeRouter = {
     .input(resumeDto.getBySlug.input)
     .output(resumeDto.getBySlug.output)
     .handler(async ({ input, context }) => {
-      return await resumeService.getBySlug({ ...input, currentUserId: context.user?.id });
+      return resumeService.getBySlug({ ...input, currentUserId: context.user?.id });
     }),
 
   create: protectedProcedure
@@ -166,7 +168,7 @@ export const resumeRouter = {
       },
     })
     .handler(async ({ context, input }) => {
-      return await resumeService.create({
+      return resumeService.create({
         name: input.name,
         slug: input.slug,
         tags: input.tags,
@@ -199,7 +201,7 @@ export const resumeRouter = {
       const name = generateRandomName();
       const slug = slugify(name);
 
-      return await resumeService.create({
+      return resumeService.create({
         name,
         slug,
         tags: [],
@@ -229,7 +231,7 @@ export const resumeRouter = {
       },
     })
     .handler(async ({ context, input }) => {
-      return await resumeService.update({
+      return resumeService.update({
         id: input.id,
         userId: context.user.id,
         name: input.name,
@@ -260,7 +262,7 @@ export const resumeRouter = {
       },
     })
     .handler(async ({ context, input }) => {
-      return await resumeService.patch({
+      return resumeService.patch({
         id: input.id,
         userId: context.user.id,
         operations: input.operations,
@@ -281,7 +283,7 @@ export const resumeRouter = {
     .input(resumeDto.setLocked.input)
     .output(resumeDto.setLocked.output)
     .handler(async ({ context, input }) => {
-      return await resumeService.setLocked({
+      return resumeService.setLocked({
         id: input.id,
         userId: context.user.id,
         isLocked: input.isLocked,
@@ -302,7 +304,7 @@ export const resumeRouter = {
     .input(resumeDto.setPassword.input)
     .output(resumeDto.setPassword.output)
     .handler(async ({ context, input }) => {
-      return await resumeService.setPassword({
+      return resumeService.setPassword({
         id: input.id,
         userId: context.user.id,
         password: input.password,
@@ -327,9 +329,10 @@ export const resumeRouter = {
         password: z.string().min(1).describe("The password to verify."),
       }),
     )
+    .use(resumePasswordRateLimit)
     .output(z.boolean())
     .handler(async ({ input }): Promise<boolean> => {
-      return await resumeService.verifyPassword({
+      return resumeService.verifyPassword({
         username: input.username,
         slug: input.slug,
         password: input.password,
@@ -350,7 +353,7 @@ export const resumeRouter = {
     .input(resumeDto.removePassword.input)
     .output(resumeDto.removePassword.output)
     .handler(async ({ context, input }) => {
-      return await resumeService.removePassword({
+      return resumeService.removePassword({
         id: input.id,
         userId: context.user.id,
       });
@@ -372,7 +375,7 @@ export const resumeRouter = {
     .handler(async ({ context, input }) => {
       const original = await resumeService.getById({ id: input.id, userId: context.user.id });
 
-      return await resumeService.create({
+      return resumeService.create({
         userId: context.user.id,
         name: input.name ?? original.name,
         slug: input.slug ?? original.slug,
@@ -396,6 +399,6 @@ export const resumeRouter = {
     .input(resumeDto.delete.input)
     .output(resumeDto.delete.output)
     .handler(async ({ context, input }) => {
-      return await resumeService.delete({ id: input.id, userId: context.user.id });
+      return resumeService.delete({ id: input.id, userId: context.user.id });
     }),
 };

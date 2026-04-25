@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
-import type { JobResult, PostFilterOptions, RapidApiQuota } from "@/schema/jobs";
+import type { JobResult, PostFilterOptions, RapidApiQuota, SearchResponse } from "@/schema/jobs";
 
 // --- Mock factory ---
 
 const mockProvider = {
-  search: vi.fn(),
-  testConnection: vi.fn(),
+  search: vi.fn<() => Promise<SearchResponse>>(),
+  testConnection: vi.fn<() => Promise<{ success: boolean; rapidApiQuota?: RapidApiQuota }>>(),
 };
 
 vi.mock("@/integrations/jobs/factory", () => ({

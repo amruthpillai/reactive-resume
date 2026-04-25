@@ -106,17 +106,27 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
               </div>
 
               <div className="flex gap-x-2">
-                <Button
-                  className="flex-1"
-                  nativeButton={false}
-                  disabled={!hasApplyLink}
-                  render={
-                    <a href={hasApplyLink ? job.job_apply_link : "#"} target="_blank" rel="noopener noreferrer" />
-                  }
-                >
-                  <ArrowSquareOutIcon />
-                  <Trans>Apply</Trans>
-                </Button>
+                {hasApplyLink ? (
+                  <Button
+                    className="flex-1"
+                    nativeButton={false}
+                    render={
+                      <a href={job.job_apply_link} target="_blank" rel="noopener noreferrer">
+                        <span className="sr-only">
+                          <Trans>Apply for this job</Trans>
+                        </span>
+                      </a>
+                    }
+                  >
+                    <ArrowSquareOutIcon />
+                    <Trans>Apply</Trans>
+                  </Button>
+                ) : (
+                  <Button className="flex-1" disabled>
+                    <ArrowSquareOutIcon />
+                    <Trans>Apply</Trans>
+                  </Button>
+                )}
 
                 <Button variant="outline" className="flex-1" onClick={() => setTailorOpen(true)}>
                   <StarIcon />
@@ -211,7 +221,11 @@ export function JobDetailSheet({ job, open, onOpenChange }: Props) {
                             className="flex items-center gap-x-2 text-sm text-primary hover:underline"
                           >
                             <ArrowSquareOutIcon className="size-3.5 shrink-0" />
-                            {option.publisher || t`Apply Link`}
+                            {option.publisher ||
+                              t({
+                                comment: "Fallback publisher name for a third-party job application link",
+                                message: "Apply Link",
+                              })}
                             {option.is_direct && (
                               <Badge variant="outline" className="text-[10px]">
                                 <Trans>Direct</Trans>

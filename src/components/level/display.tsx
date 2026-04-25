@@ -16,8 +16,11 @@ export function LevelDisplay({ icon, type, level, className, ...props }: Props) 
 
   return (
     <div
-      role="presentation"
-      aria-label={t`Level ${level} of 5`}
+      role="img"
+      aria-label={t({
+        comment: "Accessible label for skill/proficiency level indicator, where level is current value out of 5",
+        message: `Level ${level} of 5`,
+      })}
       className={cn(
         "flex items-center gap-x-1.5",
         type === "progress-bar" && "gap-x-0",

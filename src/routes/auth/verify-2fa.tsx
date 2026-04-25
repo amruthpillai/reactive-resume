@@ -44,7 +44,14 @@ function RouteComponent() {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when verifying a two-factor authentication code fails",
+            message: "Failed to verify your code. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -95,14 +102,14 @@ function RouteComponent() {
               render={
                 <Link to="/auth/login">
                   <ArrowLeftIcon />
-                  <Trans>Back to Login</Trans>
+                  <Trans comment="Secondary navigation button on 2FA verification screen">Back to Login</Trans>
                 </Link>
               }
             />
 
             <Button type="submit" className="flex-1">
               <CheckIcon />
-              <Trans>Verify</Trans>
+              <Trans comment="Primary action button to submit 2FA code">Verify</Trans>
             </Button>
           </div>
         </form>
@@ -113,7 +120,9 @@ function RouteComponent() {
           className="h-auto justify-self-center p-0 text-sm"
           render={
             <Link to="/auth/verify-2fa-backup">
-              <Trans>Lost access to your authenticator?</Trans>
+              <Trans comment="Link to backup-code verification flow when authenticator app is unavailable">
+                Lost access to your authenticator?
+              </Trans>
             </Link>
           }
         />

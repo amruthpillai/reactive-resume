@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { orpc } from "@/integrations/orpc/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 const searchSchema = z.object({
   redirect: z
@@ -75,7 +76,16 @@ function RouteComponent() {
             toast.dismiss(toastId);
             form.setError("password", { message: t`The password you entered is incorrect` });
           } else {
-            toast.error(error.message, { id: toastId });
+            toast.error(
+              getReadableErrorMessage(
+                error,
+                t({
+                  comment: "Fallback toast when resume password verification fails unexpectedly",
+                  message: "Failed to verify the password. Please try again.",
+                }),
+              ),
+              { id: toastId },
+            );
           }
         },
       },
@@ -102,7 +112,7 @@ function RouteComponent() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  <Trans>Password</Trans>
+                  <Trans comment="Label for password input on protected resume access form">Password</Trans>
                 </FormLabel>
                 <div className="flex items-center gap-x-1.5">
                   <FormControl
@@ -117,7 +127,22 @@ function RouteComponent() {
                     }
                   />
 
-                  <Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={toggleShowPassword}
+                    aria-label={
+                      showPassword
+                        ? t({
+                            comment: "Accessible label for button that hides password on protected resume screen",
+                            message: "Hide password",
+                          })
+                        : t({
+                            comment: "Accessible label for button that reveals password on protected resume screen",
+                            message: "Show password",
+                          })
+                    }
+                  >
                     {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
                   </Button>
                 </div>
@@ -128,7 +153,7 @@ function RouteComponent() {
 
           <Button type="submit" className="w-full">
             <LockOpenIcon />
-            <Trans>Unlock</Trans>
+            <Trans comment="Primary action button label to unlock a password-protected resume">Unlock</Trans>
           </Button>
         </form>
       </Form>

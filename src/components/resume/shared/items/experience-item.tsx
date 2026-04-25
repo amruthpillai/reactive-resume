@@ -70,7 +70,7 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
             <div key={role.id} className="experience-item-role">
               <div className="grid grid-cols-2 items-start justify-between gap-x-2">
                 <div className="section-item-metadata experience-item-role-position">{role.position}</div>
-                <div className="section-item-metadata experience-item-role-period">{role.period}</div>
+                <div className="section-item-metadata experience-item-role-period text-end">{role.period}</div>
               </div>
 
               {stripHtml(role.description) && (

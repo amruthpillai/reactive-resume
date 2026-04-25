@@ -1,5 +1,7 @@
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
+import { t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 import { SidebarIcon } from "@phosphor-icons/react";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -176,8 +178,12 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+            <SheetTitle>
+              <Trans comment="Dialog title for the mobile navigation sidebar panel">Sidebar</Trans>
+            </SheetTitle>
+            <SheetDescription>
+              <Trans comment="Dialog description for the mobile sidebar panel">Displays the mobile sidebar.</Trans>
+            </SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -210,7 +216,7 @@ function Sidebar({
         data-slot="sidebar-container"
         data-side={side}
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] md:flex",
+          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:-left-(--sidebar-width) data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:-right-(--sidebar-width) md:flex",
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2px)]"
@@ -248,7 +254,9 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       {...props}
     >
       <SidebarIcon />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">
+        <Trans comment="Screen-reader-only label for button that opens or closes the app sidebar">Toggle Sidebar</Trans>
+      </span>
     </Button>
   );
 }
@@ -260,10 +268,16 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
+      aria-label={t({
+        comment: "Accessible label for draggable/clickable sidebar rail that toggles sidebar visibility",
+        message: "Toggle Sidebar",
+      })}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={t({
+        comment: "Tooltip text for sidebar rail toggle action",
+        message: "Toggle Sidebar",
+      })}
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:inset-s-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",

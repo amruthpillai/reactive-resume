@@ -5,9 +5,10 @@ import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { dash } from "@better-auth/infra";
 import { oauthProvider } from "@better-auth/oauth-provider";
 import { passkey } from "@better-auth/passkey";
-import { BetterAuthError, betterAuth } from "better-auth";
+import { APIError, BetterAuthError, betterAuth } from "better-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { verifyAccessToken } from "better-auth/oauth2";
-import { admin, jwt, openAPI, type GenericOAuthConfig } from "better-auth/plugins";
+import { admin, jwt, type GenericOAuthConfig } from "better-auth/plugins";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
@@ -16,6 +17,7 @@ import { eq, or } from "drizzle-orm";
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
 import { generateId, toUsername } from "@/utils/string";
+import { isPrivateOrLoopbackHost, parseAllowedHostList, parseUrl } from "@/utils/url-security";
 
 import { schema } from "../drizzle";
 import { db } from "../drizzle/client";
@@ -51,8 +53,9 @@ function isCustomOAuthProviderEnabled() {
 }
 
 function getTrustedOrigins(): string[] {
+  const normalizeOrigin = (origin: string): string => origin.replace(/\/$/, "");
   const appUrl = new URL(env.APP_URL);
-  const trustedOrigins = new Set<string>([appUrl.origin.replace(/\/$/, "")]);
+  const trustedOrigins = new Set<string>([normalizeOrigin(appUrl.origin)]);
   const LOCAL_ORIGINS = ["localhost", "127.0.0.1"];
 
   if (LOCAL_ORIGINS.includes(appUrl.hostname)) {
@@ -60,7 +63,7 @@ function getTrustedOrigins(): string[] {
       if (hostname !== appUrl.hostname) {
         const altUrl = new URL(env.APP_URL);
         altUrl.hostname = hostname;
-        trustedOrigins.add(altUrl.origin.replace(/\/$/, ""));
+        trustedOrigins.add(normalizeOrigin(altUrl.origin));
       }
     }
   }
@@ -69,6 +72,26 @@ function getTrustedOrigins(): string[] {
 }
 
 const TRUSTED_ORIGINS = getTrustedOrigins();
+const OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS = parseAllowedHostList(env.OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS);
+
+function isAllowedDynamicClientRedirectHost(origin: string, hostname: string): boolean {
+  if (TRUSTED_ORIGINS.includes(origin)) return true;
+  if (OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS.has(origin)) return true;
+  return OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS.has(hostname);
+}
+
+function isAllowedDynamicClientRedirectUri(value: string) {
+  const parsed = parseUrl(value);
+  if (!parsed) return false;
+  if (parsed.username || parsed.password) return false;
+  if (parsed.hash) return false;
+  if (parsed.protocol !== "https:") return false;
+  if (isPrivateOrLoopbackHost(parsed.hostname)) return false;
+
+  const origin = parsed.origin.toLowerCase();
+  const hostname = parsed.hostname.toLowerCase();
+  return isAllowedDynamicClientRedirectHost(origin, hostname);
+}
 
 async function findExistingUserByEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
@@ -234,6 +257,41 @@ const getAuthConfig = () => {
 
     telemetry: { enabled: false },
     trustedOrigins: TRUSTED_ORIGINS,
+    rateLimit: {
+      enabled: true,
+      window: 60,
+      max: 60,
+      customRules: {
+        "/sign-in/email": { window: 60, max: 5 },
+        "/sign-up/email": { window: 60, max: 3 },
+        "/request-password-reset": { window: 600, max: 3 },
+        "/send-verification-email": { window: 600, max: 3 },
+        "/two-factor/verify-otp": { window: 600, max: 5 },
+        "/two-factor/verify-totp": { window: 600, max: 5 },
+        "/two-factor/verify-backup-code": { window: 600, max: 5 },
+        "/is-username-available": { window: 60, max: 20 },
+      },
+    },
+
+    hooks: {
+      before: createAuthMiddleware(async (ctx) => {
+        if (!ctx.path.includes("/oauth2/register")) return;
+
+        const body = ctx.body as { redirect_uris?: unknown } | undefined;
+        const redirectUris = Array.isArray(body?.redirect_uris) ? body.redirect_uris : [];
+
+        for (const uri of redirectUris) {
+          if (typeof uri !== "string") {
+            throw new APIError("BAD_REQUEST", { message: "redirect_uris entries must be strings" });
+          }
+          if (!isAllowedDynamicClientRedirectUri(uri)) {
+            throw new APIError("BAD_REQUEST", {
+              message: "redirect_uri is not allowed for dynamic client registration",
+            });
+          }
+        }
+      }),
+    },
 
     advanced: {
       database: { generateId },
@@ -341,11 +399,10 @@ const getAuthConfig = () => {
     plugins: [
       jwt(),
       admin(),
-      openAPI(),
       passkey(),
       genericOAuth({ config: authConfigs }),
       twoFactor({ issuer: "Reactive Resume" }),
-      apiKey({ enableSessionForAPIKeys: true, rateLimit: { enabled: false } }),
+      apiKey({ enableSessionForAPIKeys: true, rateLimit: { enabled: true } }),
       dash({ apiKey: env.BETTER_AUTH_API_KEY, activityTracking: { enabled: true } }),
       oauthProvider({
         loginPage: "/auth/oauth",
@@ -353,6 +410,14 @@ const getAuthConfig = () => {
         validAudiences: OAUTH_AUDIENCES,
         allowDynamicClientRegistration: true,
         allowUnauthenticatedClientRegistration: true,
+        rateLimit: {
+          register: { window: 60, max: 5 },
+          authorize: { window: 60, max: 30 },
+          token: { window: 60, max: 20 },
+          introspect: { window: 60, max: 60 },
+          revoke: { window: 60, max: 30 },
+          userinfo: { window: 60, max: 60 },
+        },
         silenceWarnings: { oauthAuthServerConfig: true },
       }),
       username({

@@ -22,6 +22,7 @@ import {
 import { useDialogStore } from "@/dialogs/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc, type RouterOutput } from "@/integrations/orpc/client";
+import { getResumeErrorMessage } from "@/utils/error-message";
 
 type Props = Omit<React.ComponentProps<typeof DropdownMenuContent>, "children"> & {
   resume: RouterOutput["resume"]["list"][number];
@@ -56,7 +57,7 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
       { id: resume.id, isLocked: !resume.isLocked },
       {
         onError: (error) => {
-          toast.error(error.message);
+          toast.error(getResumeErrorMessage(error));
         },
       },
     );
@@ -78,7 +79,7 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
           toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
         },
         onError: (error) => {
-          toast.error(error.message, { id: toastId });
+          toast.error(getResumeErrorMessage(error), { id: toastId });
         },
       },
     );
@@ -92,7 +93,7 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
         <Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
           <DropdownMenuItem>
             <FolderOpenIcon />
-            <Trans>Open</Trans>
+            <Trans comment="Resume card dropdown action to open the resume editor">Open</Trans>
           </DropdownMenuItem>
         </Link>
 
@@ -100,24 +101,28 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 
         <DropdownMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
           <PencilSimpleLineIcon />
-          <Trans>Update</Trans>
+          <Trans comment="Resume card dropdown action to edit resume metadata">Update</Trans>
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleDuplicate}>
           <CopySimpleIcon />
-          <Trans>Duplicate</Trans>
+          <Trans comment="Resume card dropdown action to create a copy">Duplicate</Trans>
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleToggleLock}>
           {resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
-          {resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
+          {resume.isLocked ? (
+            <Trans comment="Resume card dropdown action to remove edit lock">Unlock</Trans>
+          ) : (
+            <Trans comment="Resume card dropdown action to prevent edits">Lock</Trans>
+          )}
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive" disabled={resume.isLocked} onClick={handleDelete}>
           <TrashSimpleIcon />
-          <Trans>Delete</Trans>
+          <Trans comment="Resume card dropdown destructive action to remove a resume">Delete</Trans>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

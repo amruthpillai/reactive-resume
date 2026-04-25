@@ -2,7 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
@@ -12,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/integrations/auth/client";
+import { orpc } from "@/integrations/orpc/client";
 
 import { SocialAuth } from "./-components/social-auth";
 
@@ -33,8 +36,12 @@ type FormValues = z.infer<typeof formSchema>;
 function RouteComponent() {
   const router = useRouter();
   const navigate = useNavigate();
-  const [showPassword, toggleShowPassword] = useToggle(false);
   const { flags } = Route.useRouteContext();
+
+  const hasStartedConditionalPasskeyRef = useRef(false);
+  const [showPassword, toggleShowPassword] = useToggle(false);
+
+  const { data: providers = {} } = useQuery(orpc.auth.providers.list.queryOptions());
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -55,7 +62,14 @@ function RouteComponent() {
         : await authClient.signIn.username({ username: data.identifier, password: data.password });
 
       if (result.error) {
-        toast.error(result.error.message, { id: toastId });
+        toast.error(
+          result.error.message ||
+            t({
+              comment: "Fallback toast when sign-in fails and no server error message is available",
+              message: "Failed to sign in. Please try again.",
+            }),
+          { id: toastId },
+        );
         return;
       }
 
@@ -81,11 +95,30 @@ function RouteComponent() {
     }
   };
 
+  useEffect(() => {
+    if (!("passkey" in providers)) return;
+    if (typeof window === "undefined") return;
+    if (!("PublicKeyCredential" in window)) return;
+    if (!PublicKeyCredential.isConditionalMediationAvailable) return;
+    if (hasStartedConditionalPasskeyRef.current) return;
+
+    hasStartedConditionalPasskeyRef.current = true;
+
+    void PublicKeyCredential.isConditionalMediationAvailable().then(async (isAvailable) => {
+      if (!isAvailable) return;
+
+      const { error } = await authClient.signIn.passkey({ autoFill: true });
+      if (error) return;
+
+      await router.invalidate();
+    });
+  }, [providers, router]);
+
   return (
     <>
       <div className="space-y-1 text-center">
         <h1 className="text-2xl font-bold tracking-tight">
-          <Trans>Sign in to your account</Trans>
+          <Trans comment="Title on the login page">Sign in to your account</Trans>
         </h1>
 
         {!flags.disableSignups && (
@@ -98,7 +131,10 @@ function RouteComponent() {
                 className="h-auto gap-1.5 px-1! py-0"
                 render={
                   <Link to="/auth/register">
-                    Create one now <ArrowRightIcon />
+                    <Trans comment="Call-to-action link from login page to account registration page">
+                      Create one now
+                    </Trans>{" "}
+                    <ArrowRightIcon />
                   </Link>
                 }
               />
@@ -116,14 +152,18 @@ function RouteComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Trans>Email Address</Trans>
+                    <Trans comment="Label for login identifier input that accepts email or username">
+                      Email Address
+                    </Trans>
                   </FormLabel>
                   <FormControl
                     render={
                       <Input
-                        autoFocus
                         autoComplete="section-login username webauthn"
-                        placeholder="john.doe@example.com"
+                        placeholder={t({
+                          comment: "Example email placeholder for login identifier field",
+                          message: "john.doe@example.com",
+                        })}
                         className="lowercase"
                         {...field}
                       />
@@ -144,7 +184,7 @@ function RouteComponent() {
                 <FormItem>
                   <div className="flex items-center justify-between">
                     <FormLabel>
-                      <Trans>Password</Trans>
+                      <Trans comment="Label for password input on login form">Password</Trans>
                     </FormLabel>
 
                     <Button
@@ -154,7 +194,7 @@ function RouteComponent() {
                       className="h-auto p-0 text-xs leading-none"
                       render={
                         <Link to="/auth/forgot-password">
-                          <Trans>Forgot Password?</Trans>
+                          <Trans comment="Link label to password reset page from login form">Forgot Password?</Trans>
                         </Link>
                       }
                     />
@@ -172,7 +212,22 @@ function RouteComponent() {
                       }
                     />
 
-                    <Button size="icon" variant="ghost" onClick={toggleShowPassword}>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={toggleShowPassword}
+                      aria-label={
+                        showPassword
+                          ? t({
+                              comment: "Accessible label for button that hides the password in login form",
+                              message: "Hide password",
+                            })
+                          : t({
+                              comment: "Accessible label for button that reveals the password in login form",
+                              message: "Show password",
+                            })
+                      }
+                    >
                       {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
                     </Button>
                   </div>
@@ -182,7 +237,7 @@ function RouteComponent() {
             />
 
             <Button type="submit" className="w-full">
-              <Trans>Sign in</Trans>
+              <Trans comment="Primary action button label on login form">Sign in</Trans>
             </Button>
           </form>
         </Form>

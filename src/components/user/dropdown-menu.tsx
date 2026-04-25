@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 import { isLocale, loadLocale, localeMap, setLocaleServerFn } from "@/utils/locale";
 import { isTheme } from "@/utils/theme";
 
@@ -56,7 +57,16 @@ export function UserDropdownMenu({ children }: Props) {
           void router.invalidate();
         },
         onError: ({ error }) => {
-          toast.error(error.message, { id: toastId });
+          toast.error(
+            getReadableErrorMessage(
+              error,
+              t({
+                comment: "Fallback toast when signing out fails",
+                message: "Failed to sign out. Please try again.",
+              }),
+            ),
+            { id: toastId },
+          );
         },
       },
     });
@@ -73,7 +83,7 @@ export function UserDropdownMenu({ children }: Props) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <TranslateIcon />
-              <Trans>Language</Trans>
+              <Trans comment="Menu item that opens language selection submenu">Language</Trans>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="max-h-[400px] overflow-y-auto">
               <DropdownMenuRadioGroup value={i18n.locale} onValueChange={handleLocaleChange}>
@@ -89,15 +99,15 @@ export function UserDropdownMenu({ children }: Props) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <PaletteIcon />
-              <Trans>Theme</Trans>
+              <Trans comment="Menu item that opens appearance theme selection submenu">Theme</Trans>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
                 <DropdownMenuRadioItem value="light">
-                  <Trans>Light</Trans>
+                  <Trans comment="Appearance theme option for light mode">Light</Trans>
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="dark">
-                  <Trans>Dark</Trans>
+                  <Trans comment="Appearance theme option for dark mode">Dark</Trans>
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
@@ -108,7 +118,7 @@ export function UserDropdownMenu({ children }: Props) {
 
         <DropdownMenuItem onClick={handleLogout}>
           <SignOutIcon />
-          <Trans>Logout</Trans>
+          <Trans comment="User menu action to sign out of current account">Logout</Trans>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

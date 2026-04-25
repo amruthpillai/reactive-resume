@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/integrations/auth/client";
+import { getReadableErrorMessage } from "@/utils/error-message";
 
 import { type DialogProps, useDialogStore } from "../store";
 
@@ -55,7 +56,16 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        getReadableErrorMessage(
+          error,
+          t({
+            comment: "Fallback toast when changing account password fails",
+            message: "Failed to update your password. Please try again.",
+          }),
+        ),
+        { id: toastId },
+      );
       return;
     }
 
@@ -100,6 +110,17 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
                   />
 
                   <Button size="icon" variant="ghost" type="button" onClick={toggleShowCurrentPassword}>
+                    <span className="sr-only">
+                      {showCurrentPassword
+                        ? t({
+                            comment: "Accessible label for toggle button that hides the visible current password",
+                            message: "Hide password",
+                          })
+                        : t({
+                            comment: "Accessible label for toggle button that reveals the masked current password",
+                            message: "Show password",
+                          })}
+                    </span>
                     {showCurrentPassword ? <EyeIcon /> : <EyeSlashIcon />}
                   </Button>
                 </div>
@@ -130,6 +151,17 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
                   />
 
                   <Button size="icon" variant="ghost" type="button" onClick={toggleShowNewPassword}>
+                    <span className="sr-only">
+                      {showNewPassword
+                        ? t({
+                            comment: "Accessible label for toggle button that hides the visible new password",
+                            message: "Hide password",
+                          })
+                        : t({
+                            comment: "Accessible label for toggle button that reveals the masked new password",
+                            message: "Show password",
+                          })}
+                    </span>
                     {showNewPassword ? <EyeIcon /> : <EyeSlashIcon />}
                   </Button>
                 </div>
@@ -140,7 +172,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 
           <DialogFooter>
             <Button type="submit">
-              <Trans>Update Password</Trans>
+              <Trans comment="Primary action button to submit changed password">Update Password</Trans>
             </Button>
           </DialogFooter>
         </form>

@@ -37,14 +37,20 @@ export function useWebfonts(typography: z.infer<typeof typographySchema>) {
 
       for (const { url, weight, style } of fontUrls) {
         const fontFace = new FontFace(family, `url("${url}")`, { style, weight, display: "swap" });
-        if (!document.fonts.has(fontFace)) document.fonts.add(await fontFace.load());
+        if (!document.fonts.has(fontFace)) {
+          try {
+            document.fonts.add(await fontFace.load());
+          } catch {
+            // Fail open for printer/headless environments where remote fonts may be blocked by CSP.
+          }
+        }
       }
     }
 
     const bodyTypography = typography.body;
     const headingTypography = typography.heading;
 
-    void Promise.all([
+    void Promise.allSettled([
       loadFont(bodyTypography.fontFamily, bodyTypography.fontWeights),
       loadFont(headingTypography.fontFamily, headingTypography.fontWeights),
     ]).then(() => {

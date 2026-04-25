@@ -62,10 +62,13 @@ You must configure endpoints using **one** of these two methods:
 
 ### Optional Variables
 
-| Variable              | Description                              | Default                |
-| --------------------- | ---------------------------------------- | ---------------------- |
-| `OAUTH_PROVIDER_NAME` | Display name shown on the sign-in button | `Custom OAuth`         |
-| `OAUTH_SCOPES`        | Space-separated list of OAuth scopes     | `openid profile email` |
+| Variable                              | Description                                                                            | Default                |
+| ------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------- |
+| `OAUTH_PROVIDER_NAME`                 | Display name shown on the sign-in button                                               | `Custom OAuth`         |
+| `OAUTH_SCOPES`                        | Space-separated list of OAuth scopes                                                   | `openid profile email` |
+| `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` | Comma-separated allowlist for dynamic OAuth client redirect hosts/origins (HTTPS only) | _empty_                |
+| `BETTER_AUTH_URL`                     | Optional auth base URL override for split-host setups                                  | `APP_URL`              |
+| `BETTER_AUTH_SECRET`                  | Optional Better Auth secret override                                                   | `AUTH_SECRET`          |
 
 ## Callback URL
 
@@ -85,6 +88,18 @@ https://resume.example.com/api/auth/oauth2/callback/custom
   Make sure the callback URL exactly matches what you configure in your OAuth provider. A mismatch will cause
   authentication to fail.
 </Warning>
+
+<Info>
+  Built-in providers (Google, GitHub, LinkedIn) use callback URLs in this format: `{APP_URL}/api/auth/callback/
+  {provider}` (for example `.../google`, `.../github`, `.../linkedin`).
+</Info>
+
+## URL and Proxy Requirements
+
+- Set `APP_URL` to the exact public URL users access (prefer HTTPS in production).
+- If auth metadata/JWKS must be served from a different public host, set `BETTER_AUTH_URL`.
+- Behind a reverse proxy, forward `Host` and `X-Forwarded-Proto` correctly, or cookie/session behavior may break.
+- `trustedOrigins` are derived from `APP_URL`, so alternate domains are not automatically trusted.
 
 ## Profile Mapping
 
@@ -280,6 +295,11 @@ OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.wel
   number differences - Path case sensitivity
 </Accordion>
 
+<Accordion title="Session/cookie issues after successful OAuth login">
+  Common cause: `APP_URL` does not match the real HTTPS public origin (for example, app is behind TLS but `APP_URL` is
+  `http://...`). Fix: set `APP_URL` to the canonical HTTPS URL and restart the app.
+</Accordion>
+
   <Accordion title="Custom OAuth button not appearing">
     The custom OAuth option only appears if both `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` are set, **and** either:
     - `OAUTH_DISCOVERY_URL` is set, **or**
@@ -293,6 +313,11 @@ OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.wel
   If running behind a reverse proxy: - Ensure `APP_URL` matches your public URL - Verify the proxy passes the correct
   headers (`X-Forwarded-Proto`, `X-Forwarded-Host`) - Check that your OAuth provider allows the redirect URI from your
   domain
+</Accordion>
+
+<Accordion title="Dynamic client redirect URI is rejected">
+  Dynamic OAuth client registration only allows HTTPS redirect URIs on trusted hosts. Add allowed hosts/origins to
+  `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` (comma-separated).
 </Accordion>
 
   <Accordion title="User profile data is missing or incorrect">
@@ -318,6 +343,9 @@ OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.wel
   </Card>
   <Card title="Verify redirect URIs" icon="shield-check">
     Configure your OAuth provider to only allow the exact redirect URI. Avoid wildcards in redirect URI configurations.
+  </Card>
+  <Card title="Protect auth internals" icon="shield">
+    Keep `BETTER_AUTH_SECRET` and `BETTER_AUTH_API_KEY` private. Rotating these values may invalidate active sessions.
   </Card>
   <Card title="Review scopes" icon="list-check">
     Only request the scopes you need. The default (`openid profile email`) is sufficient for Reactive Resume.

@@ -67,28 +67,60 @@ Before you begin, ensure you have the following installed:
 
 <Steps>
 	<Step title="Clone the Repository">
-		```bash git clone https://github.com/amruthpillai/reactive-resume.git cd Reactive-Resume ```
+		```bash
+		git clone https://github.com/amruthpillai/reactive-resume.git
+		cd Reactive-Resume
+		```
 	</Step>
 
     <Step title="Configure Environment Variables">
-    	Create a `.env` file in the root directory with the following variables: ```bash # Application
-    	APP_URL=http://localhost:3000 # Database DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres #
-    	Authentication (generate a secure secret) AUTH_SECRET=your-secure-secret-key-here # Storage (S3-compatible)
-    	S3_ACCESS_KEY_ID=seaweedfs S3_SECRET_ACCESS_KEY=seaweedfs S3_ENDPOINT=http://seaweedfs:8333
-    	S3_BUCKET=reactive-resume S3_FORCE_PATH_STYLE=true ```
+    	Create a `.env` file in the root directory with the following variables:
+
+```bash .env
+# Application
+APP_URL=http://localhost:3000
+
+# Printer (Browserless)
+BROWSERLESS_TOKEN=change-me
+PRINTER_ENDPOINT=ws://browserless:3000?token=change-me
+
+# Database
+DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
+
+# Authentication (generate a secure secret)
+AUTH_SECRET=your-secure-secret-key-here
+
+# Storage (S3-compatible via SeaweedFS)
+S3_ACCESS_KEY_ID=seaweedfs
+S3_SECRET_ACCESS_KEY=seaweedfs
+S3_ENDPOINT=http://seaweedfs:8333
+S3_BUCKET=reactive-resume
+S3_FORCE_PATH_STYLE=true
+```
+
     	<Warning>
-    		For production deployments, always use strong, unique values for `AUTH_SECRET` and database credentials.
+    		For production deployments, always use strong, unique values for `AUTH_SECRET`, `BROWSERLESS_TOKEN`, and database credentials.
     	</Warning>
     </Step>
 
     <Step title="Start the Services">
-    	```bash docker compose up -d ``` This will start: - **PostgreSQL** — Database for storing user data and resumes -
-    	**SeaweedFS** — S3-compatible storage for file uploads - **Printer** — PDF and screenshot generation service
-    	(browserless/chromium) - **Reactive Resume** — The main application
+    	```bash
+    	docker compose up -d
+    	```
+
+    	This starts:
+    	- **PostgreSQL** — Database for storing user data and resumes
+    	- **SeaweedFS** — S3-compatible storage for file uploads
+    	- **Browserless** — Headless Chromium service for PDF/screenshot generation
+    	- **Reactive Resume** — The main application
     </Step>
 
     <Step title="Access Your Instance">
-    	Once all services are running, access your Reactive Resume instance at: ``` http://localhost:3000 ```
+    	Once all services are running, access your Reactive Resume instance at:
+
+    	```text
+    	http://localhost:3000
+    	```
     </Step>
 
 </Steps>
@@ -97,12 +129,12 @@ Before you begin, ensure you have the following installed:
 
 Here's what each service in the stack does:
 
-| Service     | Port | Description                                                 |
-| ----------- | ---- | ----------------------------------------------------------- |
-| `postgres`  | 5432 | PostgreSQL database for storing all application data        |
-| `seaweedfs` | 8333 | S3-compatible object storage for file uploads               |
-| `printer`   | 4000 | Headless Chromium service for PDF and screenshot generation |
-| `app`       | 3000 | The main Reactive Resume application                        |
+| Service           | Port                               | Description                                                 |
+| ----------------- | ---------------------------------- | ----------------------------------------------------------- |
+| `postgres`        | 5432                               | PostgreSQL database for storing all application data        |
+| `seaweedfs`       | 8333                               | S3-compatible object storage for file uploads               |
+| `browserless`     | 3000 (internal) / 4000 (published) | Headless Chromium service for PDF and screenshot generation |
+| `reactive_resume` | 3000                               | The main Reactive Resume application                        |
 
 ### Health Checks
 
@@ -122,50 +154,57 @@ Here's a complete list of environment variables you can configure:
 
 ### Required Variables
 
-| Variable           | Description                    | Example                                 |
-| ------------------ | ------------------------------ | --------------------------------------- |
-| `DATABASE_URL`     | PostgreSQL connection string   | `postgresql://user:pass@host:5432/db`   |
-| `AUTH_SECRET`      | Secret key for authentication  | Generate with `openssl rand -base64 32` |
-| `APP_URL`          | Public URL of your Application | `https://rxresu.me`                     |
-| `PRINTER_ENDPOINT` | URL of the printer service     | `http://printer:3000`                   |
+| Variable           | Description                    | Example                               |
+| ------------------ | ------------------------------ | ------------------------------------- |
+| `DATABASE_URL`     | PostgreSQL connection string   | `postgresql://user:pass@host:5432/db` |
+| `AUTH_SECRET`      | Secret key for authentication  | Generate with `openssl rand -hex 32`  |
+| `APP_URL`          | Public URL of your Application | `https://rxresu.me`                   |
+| `PRINTER_ENDPOINT` | URL of the printer service     | `ws://browserless:3000?token=...`     |
 
 ### Optional Variables
 
-| Variable                        | Description                                                 | Default                |
-| ------------------------------- | ----------------------------------------------------------- | ---------------------- |
-| `PRINTER_APP_URL`               | Public URL for the printer to access the Application        | —                      |
-| `GOOGLE_CLIENT_ID`              | Google OAuth Client ID                                      | —                      |
-| `GOOGLE_CLIENT_SECRET`          | Google OAuth Client Secret                                  | —                      |
-| `GITHUB_CLIENT_ID`              | GitHub OAuth Client ID                                      | —                      |
-| `GITHUB_CLIENT_SECRET`          | GitHub OAuth Client Secret                                  | —                      |
-| `LINKEDIN_CLIENT_ID`            | LinkedIn OAuth Client ID                                    | —                      |
-| `LINKEDIN_CLIENT_SECRET`        | LinkedIn OAuth Client Secret                                | —                      |
-| `OAUTH_PROVIDER_NAME`           | Custom OAuth Provider Name                                  | —                      |
-| `OAUTH_CLIENT_ID`               | Custom OAuth Client ID                                      | —                      |
-| `OAUTH_CLIENT_SECRET`           | Custom OAuth Client Secret                                  | —                      |
-| `OAUTH_DISCOVERY_URL`           | OIDC Discovery URL (use this OR manual URLs below)          | —                      |
-| `OAUTH_AUTHORIZATION_URL`       | OAuth Authorization URL (manual config)                     | —                      |
-| `OAUTH_TOKEN_URL`               | OAuth Token URL (manual config)                             | —                      |
-| `OAUTH_USER_INFO_URL`           | OAuth User Info URL (manual config)                         | —                      |
-| `OAUTH_SCOPES`                  | OAuth Scopes (space-separated)                              | `openid profile email` |
-| `SMTP_HOST`                     | SMTP Server Host (for email features)                       | —                      |
-| `SMTP_PORT`                     | SMTP Server Port                                            | `587`                  |
-| `SMTP_USER`                     | SMTP Username                                               | —                      |
-| `SMTP_PASS`                     | SMTP Password                                               | —                      |
-| `SMTP_FROM`                     | Default FROM address for emails                             | —                      |
-| `SMTP_SECURE`                   | Use secure SMTP connection (`true` or `false`)              | `false`                |
-| `S3_ACCESS_KEY_ID`              | S3 Access Key                                               | —                      |
-| `S3_SECRET_ACCESS_KEY`          | S3 Secret Key                                               | —                      |
-| `S3_REGION`                     | S3 Region                                                   | `us-east-1`            |
-| `S3_ENDPOINT`                   | S3-compatible Endpoint URL                                  | —                      |
-| `S3_BUCKET`                     | S3 Bucket Name                                              | —                      |
-| `S3_FORCE_PATH_STYLE`           | Use path-style URLs for S3 (set `true` for MinIO/SeaweedFS) | `false`                |
-| `FLAG_DEBUG_PRINTER`            | Used for debugging the printer route                        | `false`                |
-| `FLAG_DISABLE_SIGNUPS`          | Disables new user signups                                   | `false`                |
-| `FLAG_DISABLE_EMAIL_AUTH`       | Disables email/password login (SSO only)                    | `false`                |
-| `FLAG_DISABLE_IMAGE_PROCESSING` | Disables image processing                                   | `false`                |
+| Variable                              | Description                                                 | Default                |
+| ------------------------------------- | ----------------------------------------------------------- | ---------------------- |
+| `PRINTER_APP_URL`                     | Public URL for the printer to access the Application        | —                      |
+| `GOOGLE_CLIENT_ID`                    | Google OAuth Client ID                                      | —                      |
+| `GOOGLE_CLIENT_SECRET`                | Google OAuth Client Secret                                  | —                      |
+| `GITHUB_CLIENT_ID`                    | GitHub OAuth Client ID                                      | —                      |
+| `GITHUB_CLIENT_SECRET`                | GitHub OAuth Client Secret                                  | —                      |
+| `LINKEDIN_CLIENT_ID`                  | LinkedIn OAuth Client ID                                    | —                      |
+| `LINKEDIN_CLIENT_SECRET`              | LinkedIn OAuth Client Secret                                | —                      |
+| `OAUTH_PROVIDER_NAME`                 | Custom OAuth Provider Name                                  | —                      |
+| `OAUTH_CLIENT_ID`                     | Custom OAuth Client ID                                      | —                      |
+| `OAUTH_CLIENT_SECRET`                 | Custom OAuth Client Secret                                  | —                      |
+| `OAUTH_DISCOVERY_URL`                 | OIDC Discovery URL (use this OR manual URLs below)          | —                      |
+| `OAUTH_AUTHORIZATION_URL`             | OAuth Authorization URL (manual config)                     | —                      |
+| `OAUTH_TOKEN_URL`                     | OAuth Token URL (manual config)                             | —                      |
+| `OAUTH_USER_INFO_URL`                 | OAuth User Info URL (manual config)                         | —                      |
+| `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` | Trusted HTTPS hosts/origins for dynamic OAuth redirects     | —                      |
+| `OAUTH_SCOPES`                        | OAuth Scopes (space-separated)                              | `openid profile email` |
+| `BETTER_AUTH_API_KEY`                 | Better Auth dashboard API key                               | —                      |
+| `BETTER_AUTH_URL`                     | Better Auth base URL override (advanced)                    | `APP_URL`              |
+| `BETTER_AUTH_SECRET`                  | Better Auth secret override (advanced)                      | `AUTH_SECRET`          |
+| `AI_ALLOWED_BASE_URLS`                | Allowlist for custom AI provider base URLs                  | —                      |
+| `SMTP_HOST`                           | SMTP Server Host (for email features)                       | —                      |
+| `SMTP_PORT`                           | SMTP Server Port                                            | `587`                  |
+| `SMTP_USER`                           | SMTP Username                                               | —                      |
+| `SMTP_PASS`                           | SMTP Password                                               | —                      |
+| `SMTP_FROM`                           | Default FROM address for emails                             | —                      |
+| `SMTP_SECURE`                         | Use secure SMTP connection (`true` or `false`)              | `false`                |
+| `S3_ACCESS_KEY_ID`                    | S3 Access Key                                               | —                      |
+| `S3_SECRET_ACCESS_KEY`                | S3 Secret Key                                               | —                      |
+| `S3_REGION`                           | S3 Region                                                   | `us-east-1`            |
+| `S3_ENDPOINT`                         | S3-compatible Endpoint URL                                  | —                      |
+| `S3_BUCKET`                           | S3 Bucket Name                                              | —                      |
+| `S3_FORCE_PATH_STYLE`                 | Use path-style URLs for S3 (set `true` for MinIO/SeaweedFS) | `false`                |
+| `FLAG_DEBUG_PRINTER`                  | Used for debugging the printer route                        | `false`                |
+| `FLAG_DISABLE_SIGNUPS`                | Disables new user signups                                   | `false`                |
+| `FLAG_DISABLE_EMAIL_AUTH`             | Disables email/password login (SSO only)                    | `false`                |
+| `FLAG_DISABLE_IMAGE_PROCESSING`       | Disables image processing                                   | `false`                |
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
+
+> **Health check behavior:** `/api/health` reports status for database, printer, and storage. A failure in any dependency returns HTTP `503`.
 
 <Note>
   **Hybrid Setup Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while

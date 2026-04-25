@@ -45,7 +45,14 @@ function RouteComponent() {
     });
 
     if (error) {
-      toast.error(error.message, { id: toastId });
+      toast.error(
+        error.message ||
+          t({
+            comment: "Fallback toast when requesting password reset email fails without backend message",
+            message: "Failed to send password reset email. Please try again.",
+          }),
+        { id: toastId },
+      );
       return;
     }
 
@@ -71,7 +78,8 @@ function RouteComponent() {
               nativeButton={false}
               render={
                 <Link to="/auth/login">
-                  Sign in now <ArrowRightIcon />
+                  <Trans comment="Call-to-action link from forgot-password page to login page">Sign in now</Trans>{" "}
+                  <ArrowRightIcon />
                 </Link>
               }
             />
@@ -87,10 +95,20 @@ function RouteComponent() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  <Trans>Email Address</Trans>
+                  <Trans comment="Label for email input on forgot-password form">Email Address</Trans>
                 </FormLabel>
                 <FormControl
-                  render={<Input type="email" autoComplete="email" placeholder="john.doe@example.com" {...field} />}
+                  render={
+                    <Input
+                      type="email"
+                      autoComplete="email"
+                      placeholder={t({
+                        comment: "Example email placeholder on forgot-password form",
+                        message: "john.doe@example.com",
+                      })}
+                      {...field}
+                    />
+                  }
                 />
                 <FormMessage />
               </FormItem>
@@ -98,7 +116,7 @@ function RouteComponent() {
           />
 
           <Button type="submit" className="w-full">
-            <Trans>Send Password Reset Email</Trans>
+            <Trans comment="Primary action button label on forgot-password form">Send Password Reset Email</Trans>
           </Button>
         </form>
       </Form>
@@ -122,7 +140,7 @@ function PostForgotPasswordScreen() {
         nativeButton={false}
         render={
           <a href="mailto:">
-            <Trans>Open Email Client</Trans>
+            <Trans comment="Button label to open the user's default email app">Open Email Client</Trans>
           </a>
         }
       />

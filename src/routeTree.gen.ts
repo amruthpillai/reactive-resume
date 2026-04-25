@@ -30,6 +30,7 @@ import { Route as ApiHealthRouteImport } from "./routes/api/health";
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from "./routes/[.]well-known/openid-configuration";
 import { Route as DotwellKnownOauthProtectedResourceRouteImport } from "./routes/[.]well-known/oauth-protected-resource";
 import { Route as DotwellKnownOauthAuthorizationServerRouteImport } from "./routes/[.]well-known/oauth-authorization-server";
+import { Route as DotwellKnownSplatRouteImport } from "./routes/[.]well-known/$";
 import { Route as UsernameSlugRouteImport } from "./routes/$username/$slug";
 import { Route as BuilderResumeIdRouteRouteImport } from "./routes/builder/$resumeId/route";
 import { Route as DashboardResumesIndexRouteImport } from "./routes/dashboard/resumes/index";
@@ -157,6 +158,11 @@ const DotwellKnownOauthAuthorizationServerRoute =
     path: "/.well-known/oauth-authorization-server",
     getParentRoute: () => rootRouteImport,
   } as any);
+const DotwellKnownSplatRoute = DotwellKnownSplatRouteImport.update({
+  id: "/.well-known/$",
+  path: "/.well-known/$",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const UsernameSlugRoute = UsernameSlugRouteImport.update({
   id: "/$username/$slug",
   path: "/$username/$slug",
@@ -269,6 +275,7 @@ export interface FileRoutesByFullPath {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
+  "/.well-known/$": typeof DotwellKnownSplatRoute;
   "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   "/.well-known/oauth-protected-resource": typeof DotwellKnownOauthProtectedResourceRouteWithChildren;
   "/.well-known/openid-configuration": typeof DotwellKnownOpenidConfigurationRoute;
@@ -306,6 +313,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/$username/$slug": typeof UsernameSlugRoute;
+  "/.well-known/$": typeof DotwellKnownSplatRoute;
   "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   "/.well-known/oauth-protected-resource": typeof DotwellKnownOauthProtectedResourceRouteWithChildren;
   "/.well-known/openid-configuration": typeof DotwellKnownOpenidConfigurationRoute;
@@ -349,6 +357,7 @@ export interface FileRoutesById {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
+  "/.well-known/$": typeof DotwellKnownSplatRoute;
   "/.well-known/oauth-authorization-server": typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   "/.well-known/oauth-protected-resource": typeof DotwellKnownOauthProtectedResourceRouteWithChildren;
   "/.well-known/openid-configuration": typeof DotwellKnownOpenidConfigurationRoute;
@@ -393,6 +402,7 @@ export interface FileRouteTypes {
     | "/schema.json"
     | "/builder/$resumeId"
     | "/$username/$slug"
+    | "/.well-known/$"
     | "/.well-known/oauth-authorization-server"
     | "/.well-known/oauth-protected-resource"
     | "/.well-known/openid-configuration"
@@ -430,6 +440,7 @@ export interface FileRouteTypes {
   to:
     | "/schema.json"
     | "/$username/$slug"
+    | "/.well-known/$"
     | "/.well-known/oauth-authorization-server"
     | "/.well-known/oauth-protected-resource"
     | "/.well-known/openid-configuration"
@@ -472,6 +483,7 @@ export interface FileRouteTypes {
     | "/schema.json"
     | "/builder/$resumeId"
     | "/$username/$slug"
+    | "/.well-known/$"
     | "/.well-known/oauth-authorization-server"
     | "/.well-known/oauth-protected-resource"
     | "/.well-known/openid-configuration"
@@ -515,6 +527,7 @@ export interface RootRouteChildren {
   SchemaDotjsonRoute: typeof SchemaDotjsonRoute;
   BuilderResumeIdRouteRoute: typeof BuilderResumeIdRouteRouteWithChildren;
   UsernameSlugRoute: typeof UsernameSlugRoute;
+  DotwellKnownSplatRoute: typeof DotwellKnownSplatRoute;
   DotwellKnownOauthAuthorizationServerRoute: typeof DotwellKnownOauthAuthorizationServerRouteWithChildren;
   DotwellKnownOauthProtectedResourceRoute: typeof DotwellKnownOauthProtectedResourceRouteWithChildren;
   DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute;
@@ -675,6 +688,13 @@ declare module "@tanstack/react-router" {
       path: "/.well-known/oauth-authorization-server";
       fullPath: "/.well-known/oauth-authorization-server";
       preLoaderRoute: typeof DotwellKnownOauthAuthorizationServerRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/.well-known/$": {
+      id: "/.well-known/$";
+      path: "/.well-known/$";
+      fullPath: "/.well-known/$";
+      preLoaderRoute: typeof DotwellKnownSplatRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/$username/$slug": {
@@ -932,6 +952,7 @@ const rootRouteChildren: RootRouteChildren = {
   SchemaDotjsonRoute: SchemaDotjsonRoute,
   BuilderResumeIdRouteRoute: BuilderResumeIdRouteRouteWithChildren,
   UsernameSlugRoute: UsernameSlugRoute,
+  DotwellKnownSplatRoute: DotwellKnownSplatRoute,
   DotwellKnownOauthAuthorizationServerRoute:
     DotwellKnownOauthAuthorizationServerRouteWithChildren,
   DotwellKnownOauthProtectedResourceRoute:

@@ -5,7 +5,16 @@ afterEach(cleanup);
 
 // Mock @lingui/core/macro
 vi.mock("@lingui/core/macro", () => ({
-  t: (strings: TemplateStringsArray, ...values: unknown[]) => {
+  t: (stringsOrDescriptor: TemplateStringsArray | { message: string }, ...values: unknown[]) => {
+    if (
+      typeof stringsOrDescriptor === "object" &&
+      "message" in stringsOrDescriptor &&
+      typeof stringsOrDescriptor.message === "string"
+    ) {
+      return stringsOrDescriptor.message;
+    }
+
+    const strings = stringsOrDescriptor as TemplateStringsArray;
     let result = strings[0];
     for (let i = 0; i < values.length; i++) {
       result += String(values[i]) + strings[i + 1];
@@ -127,7 +136,7 @@ describe("LevelDisplay", () => {
   describe("aria attributes", () => {
     it("has aria-label showing level out of 5", () => {
       render(<LevelDisplay icon="star" type="circle" level={3} />);
-      const el = screen.getByRole("presentation");
+      const el = screen.getByRole("img");
       expect(el.getAttribute("aria-label")).toContain("3");
       expect(el.getAttribute("aria-label")).toContain("5");
     });
