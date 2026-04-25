@@ -67,7 +67,10 @@ const providerOptions: (ComboboxOption<AIProvider> & { defaultBaseURL: string })
   },
   {
     value: "openrouter",
-    label: "OpenRouter",
+    label: t({
+      comment: "AI provider option label in dashboard AI settings",
+      message: "OpenRouter",
+    }),
     keywords: ["openrouter", "router", "multi", "proxy"],
     defaultBaseURL: "https://openrouter.ai/api/v1",
   },
