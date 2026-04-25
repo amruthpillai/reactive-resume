@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-25 13:33\n"
+"PO-Revision-Date: 2026-04-25 13:48\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -81,7 +81,7 @@ msgstr "<0>Нарешті,</0><1>безкоштовний конструктор
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr ""
+msgstr "<0>Часто</0><1>Запитують</1><2>Питання</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -135,7 +135,7 @@ msgstr "Зроблено з любовʼю від <0>Amruth Pillai</0>."
 #. Error description when generated slug for duplicated tailored resume already exists
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "A resume with this slug already exists. Please try again."
-msgstr ""
+msgstr "Резюме з таким резюме вже існує. Будь ласка, спробуйте ще раз."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -155,7 +155,7 @@ msgstr "Додати користувацьке поле"
 
 #: src/components/input/chip-input.tsx
 msgid "Add a keyword..."
-msgstr ""
+msgstr "Додайте ключове слово..."
 
 #. Tooltip for action button that opens URL label editor
 #: src/components/input/url-input.tsx
@@ -229,7 +229,7 @@ msgstr "Додати Колонку Зліва"
 
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
-msgstr ""
+msgstr "Додати ключове слово"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
@@ -313,7 +313,7 @@ msgstr "Та багато іншого..."
 #. AI provider option label in dashboard AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Anthropic Claude"
-msgstr ""
+msgstr "Антропік Клод"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any level"
@@ -375,7 +375,7 @@ msgstr "Подати заявку"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply for this job"
-msgstr ""
+msgstr "Подати заявку на цю вакансію"
 
 #. Fallback publisher name for a third-party job application link
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
@@ -400,11 +400,11 @@ msgstr "Ви впевнені, що хочете видалити цей API к�
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Are you sure you want to delete this custom section?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цей користувацький розділ?"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Are you sure you want to delete this item?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цей елемент?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -428,7 +428,7 @@ msgstr "Ви впевнені, що хочете зняти захист пар�
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Are you sure you want to reset this section?"
-msgstr ""
+msgstr "Ви впевнені, що хочете скинути цей розділ?"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Area of Study"
@@ -664,12 +664,12 @@ msgstr "Стовпці"
 #. Accessible label for the command palette dialog
 #: src/components/command-palette/index.tsx
 msgid "Command Palette"
-msgstr ""
+msgstr "Командна палітра"
 
 #. Accessible label for command palette dialog when browsing a nested command page
 #: src/components/command-palette/index.tsx
 msgid "Command Palette - {currentPage}"
-msgstr ""
+msgstr "Палітра команд - {currentPage}"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
@@ -755,12 +755,12 @@ msgstr "Скопіювати URL"
 #. Error description when syncing newly detected skills to source resume fails due to invalid patch
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Could not apply skill updates to your original resume."
-msgstr ""
+msgstr "Не вдалося застосувати оновлення навичок до оригінального резюме."
 
 #. Fallback error description when duplicating a resume for tailoring fails
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Could not duplicate your resume."
-msgstr ""
+msgstr "Не вдалося продублювати ваше резюме."
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Could not fetch jobs"
@@ -769,12 +769,12 @@ msgstr "Не вдалося знайти вакансії"
 #. Error shown when job search API is unavailable while searching jobs
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Could not fetch jobs from JSearch API. Please try again."
-msgstr ""
+msgstr "Не вдалося отримати вакансії з JSearch API. Спробуйте ще раз."
 
 #. Error shown when JSearch API connection test fails in job search settings
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
-msgstr ""
+msgstr "Не вдалося отримати доступ до API JSearch. Перевірте свій ключ API та спробуйте ще раз."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error description when AI provider is unreachable during resume tailoring
@@ -785,7 +785,7 @@ msgstr ""
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Could not reach the AI provider. Please try again."
-msgstr ""
+msgstr "Не вдалося зв'язатися з постачальником ШІ. Спробуйте ще раз."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
@@ -907,12 +907,12 @@ msgstr "Створюйте стільки резюме, скільки заба�
 #. Call-to-action link from login page to account registration page
 #: src/routes/auth/login.tsx
 msgid "Create one now"
-msgstr ""
+msgstr "Створіть його зараз"
 
 #. Accessible label for create-resume split button group
 #: src/dialogs/resume/index.tsx
 msgid "Create resume with options"
-msgstr ""
+msgstr "Створити резюме з опціями"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Creating your API key..."
@@ -934,7 +934,7 @@ msgstr "Власний CSS"
 #. Authentication provider display name in account settings
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Custom OAuth"
-msgstr ""
+msgstr "Користувацький OAuth"
 
 #: src/utils/resume/section.tsx
 msgid "Custom Sections"
@@ -1012,7 +1012,7 @@ msgstr "Видалити сторінку"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Delete picture"
-msgstr ""
+msgstr "Видалити зображення"
 
 #: src/components/input/rich-input.tsx
 msgid "Delete Row"
@@ -1094,7 +1094,7 @@ msgstr "Discord"
 #. Dialog description for the mobile sidebar panel
 #: src/components/ui/sidebar.tsx
 msgid "Displays the mobile sidebar."
-msgstr ""
+msgstr "Відображає мобільну бічну панель."
 
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
@@ -1189,25 +1189,25 @@ msgstr "наприклад, вакансії фронтенд-розробник
 #. Example model-name placeholder in AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
-msgstr ""
+msgstr "наприклад, gpt-4, claude-3-opus, gemini-pro"
 
 #. Screen reader label for button that edits a keyword chip. Variable is the current keyword text.
 #: src/components/input/chip-input.tsx
 msgid "Edit {chip}"
-msgstr ""
+msgstr "Редагувати {chip}"
 
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
-msgstr ""
+msgstr "Редагувати вміст у повноекранному режимі"
 
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
-msgstr ""
+msgstr "Редагувати ключове слово"
 
 #: src/components/input/chip-input.tsx
 msgid "Editing keyword..."
-msgstr ""
+msgstr "Редагування ключового слова..."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1363,12 +1363,12 @@ msgstr "Не вдалося проаналізувати резюме."
 #. Fallback toast when creating an API key fails
 #: src/dialogs/api-key/create.tsx
 msgid "Failed to create API key. Please try again."
-msgstr ""
+msgstr "Не вдалося створити ключ API. Будь ласка, спробуйте ще раз."
 
 #. Fallback toast when account registration fails without a server error message
 #: src/routes/auth/register.tsx
 msgid "Failed to create your account. Please try again."
-msgstr ""
+msgstr "Не вдалося створити обліковий запис. Спробуйте ще раз."
 
 #. Fallback toast when deleting a passkey fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
@@ -1378,17 +1378,17 @@ msgstr "Не вдалося видалити пароль. Спробуйте щ
 #. Fallback toast when deleting an API key fails
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Failed to delete the API key. Please try again."
-msgstr ""
+msgstr "Не вдалося видалити ключ API. Будь ласка, спробуйте ще раз."
 
 #. Fallback toast when account deletion fails
 #: src/routes/dashboard/settings/danger-zone.tsx
 msgid "Failed to delete your account. Please try again."
-msgstr ""
+msgstr "Не вдалося видалити ваш обліковий запис. Спробуйте ще раз."
 
 #. Fallback toast when disabling two-factor authentication fails
 #: src/dialogs/auth/disable-two-factor.tsx
 msgid "Failed to disable two-factor authentication. Please try again."
-msgstr ""
+msgstr "Не вдалося вимкнути двофакторну автентифікацію. Спробуйте ще раз."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
@@ -1397,12 +1397,12 @@ msgstr "Не вдалося продублювати резюме"
 #. Fallback toast when enabling two-factor authentication fails
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to enable two-factor authentication. Please try again."
-msgstr ""
+msgstr "Не вдалося увімкнути двофакторну автентифікацію. Спробуйте ще раз."
 
 #. Fallback toast when linking a social authentication provider fails
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Failed to link provider. Please try again."
-msgstr ""
+msgstr "Не вдалося встановити зв'язок з провайдером. Спробуйте ще раз."
 
 #. Fallback toast when passkey registration fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
@@ -1412,32 +1412,32 @@ msgstr "Не вдалося зареєструвати пароль. Спроб�
 #. Fallback toast when renaming a passkey fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Failed to rename passkey. Please try again."
-msgstr ""
+msgstr "Не вдалося перейменувати пароль. Спробуйте ще раз."
 
 #. Fallback toast when requesting email change confirmation fails
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Failed to request email change. Please try again."
-msgstr ""
+msgstr "Не вдалося надіслати запит на зміну адреси електронної пошти. Спробуйте ще раз."
 
 #. Fallback toast when resending account verification email fails
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Failed to resend verification email. Please try again."
-msgstr ""
+msgstr "Не вдалося повторно надіслати лист з підтвердженням. Будь ласка, спробуйте ще раз."
 
 #. Fallback toast when resetting password fails and no backend message is available
 #: src/routes/auth/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
-msgstr ""
+msgstr "Не вдалося скинути пароль. Спробуйте ще раз."
 
 #. Fallback error shown when job search request fails
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Failed to search jobs. Please try again."
-msgstr ""
+msgstr "Не вдалося знайти вакансії. Будь ласка, спробуйте ще раз."
 
 #. Fallback toast when requesting password reset email fails without backend message
 #: src/routes/auth/forgot-password.tsx
 msgid "Failed to send password reset email. Please try again."
-msgstr ""
+msgstr "Не вдалося надіслати лист зі зміною пароля. Будь ласка, спробуйте ще раз."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1455,7 +1455,7 @@ msgstr "Не вдалося увійти. Будь ласка, спробуйт�
 #. Fallback toast when signing out fails
 #: src/components/user/dropdown-menu.tsx
 msgid "Failed to sign out. Please try again."
-msgstr ""
+msgstr "Не вдалося вийти. Спробуйте ще раз."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to sync skills"
@@ -1464,49 +1464,49 @@ msgstr "Не вдалося синхронізувати навички"
 #. Fallback toast when testing AI provider connection fails
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Failed to test AI provider connection. Please try again."
-msgstr ""
+msgstr "Не вдалося перевірити з'єднання з провайдером ШІ. Спробуйте ще раз."
 
 #. Fallback toast when testing RapidAPI job search connection fails
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
-msgstr ""
+msgstr "Не вдалося протестувати з'єднання RapidAPI. Спробуйте ще раз."
 
 #. Fallback toast when unlinking a social authentication provider fails
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Failed to unlink provider. Please try again."
-msgstr ""
+msgstr "Не вдалося від'єднати провайдера. Спробуйте ще раз."
 
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
-msgstr ""
+msgstr "Не вдалося оновити пароль. Спробуйте ще раз."
 
 #. Fallback toast when updating profile details fails
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Failed to update your profile. Please try again."
-msgstr ""
+msgstr "Не вдалося оновити ваш профіль. Будь ласка, спробуйте ще раз."
 
 #. Fallback toast when uploading profile picture for resume fails
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Failed to upload picture. Please try again."
-msgstr ""
+msgstr "Не вдалося завантажити зображення. Будь ласка, спробуйте ще раз."
 
 #. Fallback toast when resume password verification fails unexpectedly
 #: src/routes/auth/resume-password.tsx
 msgid "Failed to verify the password. Please try again."
-msgstr ""
+msgstr "Не вдалося підтвердити пароль. Спробуйте ще раз."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
 #: src/routes/auth/verify-2fa-backup.tsx
 msgid "Failed to verify your backup code. Please try again."
-msgstr ""
+msgstr "Не вдалося підтвердити код резервної копії. Спробуйте ще раз."
 
 #. Fallback toast when verifying a two-factor authentication code fails
 #. Fallback toast when verifying two-factor setup code fails
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/routes/auth/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
-msgstr ""
+msgstr "Не вдалося підтвердити ваш код. Спробуйте ще раз."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1598,7 +1598,7 @@ msgstr "Повноекранний режим"
 #. Screen reader title for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen Editor"
-msgstr ""
+msgstr "Повноекранний редактор"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1607,7 +1607,7 @@ msgstr "Згенерувати випадкове ім'я"
 #. Error description when generated patch operations cannot be applied to tailored resume
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Generated resume changes were invalid. Please try again."
-msgstr ""
+msgstr "Згенеровані зміни в резюме були недійсними. Будь ласка, спробуйте ще раз."
 
 #: src/utils/locale.ts
 msgid "German"
@@ -1634,7 +1634,7 @@ msgstr "Отримайте ключ API від RapidAPI, підписавшис�
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
 #: src/components/layout/not-found-screen.tsx
@@ -1649,7 +1649,7 @@ msgstr "Перейти до дашборду"
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
-msgstr ""
+msgstr "Перейти до панелі резюме"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Go to Settings"
@@ -1664,12 +1664,12 @@ msgstr "Перейти до..."
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Google Gemini"
-msgstr ""
+msgstr "Google Близнюки"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Grade"
@@ -1772,12 +1772,12 @@ msgstr "Сховати всі іконки на резюме"
 #: src/routes/auth/reset-password.tsx
 #: src/routes/auth/resume-password.tsx
 msgid "Hide password"
-msgstr ""
+msgstr "Приховати пароль"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "High"
-msgstr ""
+msgstr "Високий"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -1862,7 +1862,7 @@ msgstr "Стажер"
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
-msgstr ""
+msgstr "Неправильна конфігурація постачальника ШІ. Будь ласка, перевірте свої налаштування."
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Is Reactive Resume available in multiple languages?"
@@ -1901,21 +1901,21 @@ msgstr "API для пошуку роботи"
 #. Accessible label for free-text job search query field
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Job search query"
-msgstr ""
+msgstr "Запит на пошук роботи"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "John Doe"
-msgstr ""
+msgstr "Невідомий."
 
 #. Example username placeholder on profile settings form
 #. Example username placeholder on registration form
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "john.doe"
-msgstr ""
+msgstr "john.doe"
 
 #. Example email placeholder for login identifier field
 #. Example email placeholder on forgot-password form
@@ -1926,7 +1926,7 @@ msgstr ""
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "john.doe@example.com"
-msgstr ""
+msgstr "john.doe@example.com"
 
 #: src/routes/dashboard/settings/job-search.tsx
 msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
@@ -1939,7 +1939,7 @@ msgstr "Документація API JSearch"
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
 msgid "JSON Resume"
-msgstr ""
+msgstr "JSON Резюме"
 
 #: src/components/input/rich-input.tsx
 msgid "Justify Align"
@@ -2077,7 +2077,7 @@ msgstr "Інтервал між рядками"
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Linking your {providerName} account..."
@@ -2094,7 +2094,7 @@ msgstr "Литовська"
 #. Accessible label for loading spinner icon
 #: src/components/ui/spinner.tsx
 msgid "Loading"
-msgstr ""
+msgstr "Завантаження"
 
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Loading resumes..."
@@ -2136,7 +2136,7 @@ msgstr "Втрачене доступ до вашого автентифікат
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Low"
-msgstr ""
+msgstr "Низький"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2174,12 +2174,12 @@ msgstr "Максимальна заробітна плата"
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Medium"
-msgstr ""
+msgstr "Середній"
 
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
 msgid "Microsoft Word"
-msgstr ""
+msgstr "Microsoft Word"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Minimum Salary"
@@ -2204,7 +2204,7 @@ msgstr "Багатомовний"
 #. Placeholder text for custom link URL field in resume builder
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Must start with https://"
-msgstr ""
+msgstr "Почніть з https://"
 
 #. Label for full name input on registration form
 #: src/dialogs/api-key/create.tsx
@@ -2264,7 +2264,7 @@ msgstr "Без реклами, без відстеження"
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
-msgstr ""
+msgstr "Від постачальника ШІ не було отримано жодних даних."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No degree required"
@@ -2305,7 +2305,7 @@ msgstr "Одія"
 #. AI provider option label in dashboard AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Ollama"
-msgstr ""
+msgstr "Оллама."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "One-Click Sign-In"
@@ -2338,7 +2338,7 @@ msgstr "Опен-сорс"
 #. AI provider option label in dashboard AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "OpenAI"
-msgstr ""
+msgstr "OpenAI"
 
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
@@ -2404,7 +2404,7 @@ msgstr "Неповний робочий день"
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Passkey"
-msgstr ""
+msgstr "Пароль"
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Passkey deleted successfully."
@@ -2455,7 +2455,7 @@ msgstr "Захист паролем увімкнено."
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -2534,7 +2534,7 @@ msgstr "Натисніть <0>{RETURN_KEY}</0> або <1>{COMMA_KEY}</1>, щоб
 #. Command palette hint that pressing Enter opens the selected resume
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Press <0>Enter</0> to open"
-msgstr ""
+msgstr "Натисніть <0>Enter</0>, щоб відкрити"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Previous"
@@ -2602,7 +2602,7 @@ msgstr "Ключ RapidAPI"
 #. Browser tab title before the public resume finishes loading
 #: src/routes/$username/$slug.tsx
 msgid "Reactive Resume"
-msgstr ""
+msgstr "Реактивне резюме"
 
 #: src/routes/_home/-sections/header.tsx
 msgid "Reactive Resume - Go to homepage"
@@ -2611,7 +2611,7 @@ msgstr "Reactive Resume – перейти на головну сторінку"
 #. Import source option for current Reactive Resume JSON format
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume (JSON)"
-msgstr ""
+msgstr "Реактивне резюме (JSON)"
 
 #: src/routes/_home/-sections/prefooter.tsx
 msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've donated to support its continued development."
@@ -2636,12 +2636,12 @@ msgstr "Reactive Resume є open-source, орієнтована на приват
 #. App version label in footer; includes semantic version variable
 #: src/components/ui/copyright.tsx
 msgid "Reactive Resume v{__APP_VERSION__}"
-msgstr ""
+msgstr "Реактивне резюме v{__APP_VERSION__}"
 
 #. Import source option for legacy Reactive Resume v4 JSON format
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume v4 (JSON)"
-msgstr ""
+msgstr "Реактивне резюме v4 (JSON)"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -2694,7 +2694,7 @@ msgstr "Видалити"
 #. Screen reader label for button that removes a keyword chip. Variable is the current keyword text.
 #: src/components/input/chip-input.tsx
 msgid "Remove {chip}"
-msgstr ""
+msgstr "Видаліть {chip}"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -2759,7 +2759,7 @@ msgstr "Ресурси"
 #. Browser tab title before printable resume data finishes loading
 #: src/routes/printer/$resumeId.tsx
 msgid "Resume"
-msgstr ""
+msgstr "Резюме"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
@@ -2859,7 +2859,7 @@ msgstr "Пошук"
 #. Accessible label for command palette search input
 #: src/components/command-palette/index.tsx
 msgid "Search commands"
-msgstr ""
+msgstr "Команди пошуку"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Search countries"
@@ -2893,7 +2893,7 @@ msgstr "Тип секції"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr ""
+msgstr "Виберіть резюме, яке потрібно адаптувати для \"{0}\" на сайті {1}. Буде створена копія."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -2988,7 +2988,7 @@ msgstr "Показати посилання в заголовку"
 #: src/routes/auth/reset-password.tsx
 #: src/routes/auth/resume-password.tsx
 msgid "Show password"
-msgstr ""
+msgstr "Показати пароль"
 
 #. Dialog title for the mobile navigation sidebar panel
 #. Layout editor column label for the secondary sidebar area
@@ -3011,7 +3011,7 @@ msgstr "Увійти"
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
 msgid "Sign in now"
-msgstr ""
+msgstr "Увійдіть зараз"
 
 #. Title on the login page
 #: src/routes/auth/login.tsx
@@ -3088,17 +3088,17 @@ msgstr "Посилання"
 #. Fallback error description when resume analysis request fails
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Something went wrong while analyzing your resume."
-msgstr ""
+msgstr "Щось пішло не так під час аналізу вашого резюме."
 
 #. Fallback error description when syncing newly detected skills fails
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Something went wrong while syncing skills."
-msgstr ""
+msgstr "Щось пішло не так під час синхронізації навичок."
 
 #. Fallback error description when tailoring pipeline fails
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Something went wrong while tailoring your resume."
-msgstr ""
+msgstr "Щось пішло не так при складанні резюме."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
@@ -3278,16 +3278,16 @@ msgstr "ШІ визначив нові навички з вашого досві
 #. Error description when AI returns invalid resume analysis format
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "The AI returned an invalid analysis format. Please try again."
-msgstr ""
+msgstr "ШІ повернув невірний формат аналізу. Спробуйте ще раз."
 
 #. Error description when AI tailoring output is invalid
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI returned invalid tailoring data. Please try again."
-msgstr ""
+msgstr "ШІ повернув невірні дані для пошиття. Спробуйте ще раз."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI will optimize it for this position."
-msgstr ""
+msgstr "ШІ оптимізує його для цієї посади."
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "The API key has been deleted successfully."
@@ -3310,7 +3310,7 @@ msgstr "Вміст цієї сторінки занадто великий, що
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
-msgstr ""
+msgstr "Імпортований файл не вдалося перетворити на коректне резюме."
 
 #: src/routes/auth/resume-password.tsx
 msgid "The password you entered is incorrect"
@@ -3402,7 +3402,7 @@ msgstr "Це допоможе вам ідентифікувати його пі�
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "This will remove all items from this section."
-msgstr ""
+msgstr "Це призведе до видалення всіх елементів з цього розділу."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Timelapse demonstration of building a resume with Reactive Resume"
@@ -3439,19 +3439,19 @@ msgstr "Сьогодні"
 #. Screen-reader label for opening or closing the left sidebar in resume builder
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Toggle left sidebar"
-msgstr ""
+msgstr "Перемикання лівої бічної панелі"
 
 #. Screen-reader label for opening or closing the right sidebar in resume builder
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Toggle right sidebar"
-msgstr ""
+msgstr "Перемикання правої бічної панелі"
 
 #. Accessible label for draggable/clickable sidebar rail that toggles sidebar visibility
 #. Screen-reader-only label for button that opens or closes the app sidebar
 #. Tooltip text for sidebar rail toggle action
 #: src/components/ui/sidebar.tsx
 msgid "Toggle Sidebar"
-msgstr ""
+msgstr "Бічна панель перемикання"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Track your resume's views and downloads"
@@ -3522,7 +3522,7 @@ msgstr "Двофакторну автентифікацію успішно на�
 #. Accessible title for QR code image shown during two-factor setup
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Two-Factor Authentication QR Code"
-msgstr ""
+msgstr "QR-код з двофакторною автентифікацією"
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3591,7 +3591,7 @@ msgstr "Непідтверджена"
 #. placeholder {0}: formatCurrency(max)
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Up to {0}{periodSuffix}"
-msgstr ""
+msgstr "До {0}{periodSuffix}"
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -3687,7 +3687,7 @@ msgstr "Оновлення резюме..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"
-msgstr ""
+msgstr "Завантажити зображення"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Uploading picture..."
@@ -3721,7 +3721,7 @@ msgstr "Дійсні URL-адреси мають починатися з http://
 #. AI provider option label in dashboard AI settings
 #: src/routes/dashboard/settings/ai.tsx
 msgid "Vercel AI Gateway"
-msgstr ""
+msgstr "Шлюз штучного інтелекту Vercel"
 
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Verified"
