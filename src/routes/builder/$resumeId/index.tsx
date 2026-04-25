@@ -27,7 +27,7 @@ function RouteComponent() {
 
   return (
     <div className="fixed inset-0">
-      <TransformWrapper centerOnInit limitToBounds={false} minScale={0.3} initialScale={0.6} maxScale={6}>
+      <TransformWrapper centerOnInit limitToBounds={false} minScale={0.3} initialScale={0.6} maxScale={6} wheel={{ step: 0.001 }}>
         <TransformComponent wrapperClass="h-full! w-full!">
           <ResumePreview
             showPageNumbers
