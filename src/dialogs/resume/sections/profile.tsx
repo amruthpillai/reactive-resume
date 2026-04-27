@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useForm, useFormContext, useFormState } from "react-hook-form";
 
 import { IconPicker } from "@/components/input/icon-picker";
+import { IconColorInput } from "@/components/input/icon-color-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
       hidden: data?.item?.hidden ?? false,
       options: data?.item?.options ?? { showLinkInTitle: false },
       icon: data?.item?.icon ?? "acorn",
+      iconColor: data?.item?.iconColor ?? "",
       network: data?.item?.network ?? "",
       username: data?.item?.username ?? "",
       website: data?.item?.website ?? { url: "", label: "" },
@@ -92,6 +94,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
       hidden: data.item.hidden,
       options: data.item.options ?? { showLinkInTitle: false },
       icon: data.item.icon,
+      iconColor: data.item.iconColor,
       network: data.item.network,
       username: data.item.username,
       website: data.item.website,
@@ -157,6 +160,16 @@ function ProfileForm() {
                   <IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
                 }
               />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="iconColor"
+          render={({ field }) => (
+            <FormItem className="shrink-0">
+              <FormControl render={<IconColorInput {...field} value={field.value} onChange={field.onChange} />} />
             </FormItem>
           )}
         />

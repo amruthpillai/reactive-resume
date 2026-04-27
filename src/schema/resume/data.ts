@@ -8,6 +8,14 @@ export const iconSchema = z
     "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available.",
   );
 
+export const iconColorSchema = z
+  .string()
+  .optional()
+  .catch("")
+  .describe(
+    "Optional custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+  );
+
 export const itemOptionsSchema = z
   .object({
     showLinkInTitle: z
@@ -164,6 +172,7 @@ export const experienceItemSchema = baseItemSchema.extend({
 
 export const interestItemSchema = baseItemSchema.extend({
   icon: iconSchema,
+  iconColor: iconColorSchema,
   name: z.string().min(1).describe("The name of the interest/hobby."),
   keywords: z
     .array(z.string())
@@ -190,6 +199,7 @@ export const languageItemSchema = baseItemSchema.extend({
 
 export const profileItemSchema = baseItemSchema.extend({
   icon: iconSchema,
+  iconColor: iconColorSchema,
   network: z.string().min(1).describe("The name of the network or platform."),
   username: z.string().describe("The username of the author on the network or platform."),
   website: urlSchema.describe("The link to the profile of the author on the network or platform, if any."),
@@ -224,6 +234,7 @@ export const referenceItemSchema = baseItemSchema.extend({
 
 export const skillItemSchema = baseItemSchema.extend({
   icon: iconSchema,
+  iconColor: iconColorSchema,
   name: z.string().min(1).describe("The name of the skill."),
   proficiency: z
     .string()
