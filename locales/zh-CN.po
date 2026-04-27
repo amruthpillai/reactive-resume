@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# 天前} other {# 天前}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# 月前} other {# 月前}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} 已使用的 {limit} 请求数（剩余{remaining}）"
 
@@ -81,7 +81,7 @@ msgstr "<0>终于，</0><1>一款免费、开源的简历生成器</1>"
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>常见问题</0><1>常见问题</1><2>常见问题</2>"
+msgstr "<0>常见</0><1>问题</1><2>解答</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "还有更多…"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "克劳德人类学"
 
@@ -343,7 +343,7 @@ msgstr "访问此链接的任何人均可查看并下载简历。"
 msgid "API Access"
 msgstr "API 访问"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API Key"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API Keys"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API 参考"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "应用程序接口的使用"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "学习领域"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "人工智能"
 
@@ -481,7 +481,7 @@ msgstr "背景色"
 msgid "Backup codes copied to clipboard."
 msgstr "备份码已复制到剪贴板。"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "基础 URL（可选）"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "无法从 JSearch API 抓取任务。请重试。"
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "无法连接 JSearch API。请检查您的 API 密钥并重试。"
 
@@ -793,7 +793,7 @@ msgstr "无法连接 JSearch API。请检查您的 API 密钥并重试。"
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "无法联系人工智能提供商。请重试。"
 
@@ -1088,7 +1088,7 @@ msgstr "禁用 2FA 双重身份验证"
 msgid "Disable Two-Factor Authentication"
 msgstr "禁用双重身份认证"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "已禁用"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "例如：柏林前端开发员职位"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "例如，GPT-4、CLAUDE-3-OPUS、GEMINI-PRO"
 
@@ -1251,7 +1251,7 @@ msgstr "启用"
 msgid "Enable 2FA"
 msgstr "启用 2FA 双重身份验证"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "启用 AI 功能"
 
@@ -1259,7 +1259,7 @@ msgstr "启用 AI 功能"
 msgid "Enable Two-Factor Authentication"
 msgstr "启用双重身份认证"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "已启用"
 
@@ -1311,7 +1311,7 @@ msgstr "请输入你的密码以确认设置双重身份验证。启用后，你
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "请输入你的密码以禁用双重身份验证。关闭 2FA 后，你的账号将不再那么安全。"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "输入 RapidAPI 密钥"
 
@@ -1319,7 +1319,7 @@ msgstr "输入 RapidAPI 密钥"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "每一笔捐助，无论多少，都会对项目产生巨大的积极影响。<0/>感谢你的支持！"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "你在此处输入的所有内容都会本地存储在浏览器中。只有在向 AI 服务提供商发起请求时，相关数据才会发送到服务器，且从不会在我们的服务器上存储或记录。"
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "同步技能失败"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "测试 AI 提供商连接失败。请重试。"
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "测试 RapidAPI 连接失败。请重试。"
 
@@ -1639,7 +1639,7 @@ msgstr "人工智能将对您的简历进行深入审核，并给出总分、主
 msgid "Get Started"
 msgstr "开始"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "通过订阅 JSearch API，从 RapidAPI 获取 API 密钥。"
 
@@ -1660,14 +1660,14 @@ msgstr "返回"
 msgid "Go to dashboard"
 msgstr "转到控制面板"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "转到简历仪表板"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "转到设置"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "谷歌"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "谷歌双子座"
 
@@ -1864,6 +1864,12 @@ msgstr "行内代码"
 msgid "Insert Table"
 msgstr "插入表格"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "实习生"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "AI 提供商配置无效。请检查您的设置。"
 
@@ -1904,11 +1910,11 @@ msgstr "日语"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "职位搜索"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "工作搜索 API"
 
@@ -1942,13 +1948,9 @@ msgstr "john.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch 利用 Google for Jobs 从多个招聘网站汇总职位列表。您可以根据国家（ISO alpha-2 代码）、发布日期、职位类型、远程选项和经验水平进行筛选。"
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API 文档"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "最低工资"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "模型"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "奥里亚语"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "奥拉玛"
 
@@ -2336,26 +2338,26 @@ msgstr "持续维护"
 msgid "Open"
 msgstr "打开"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "打开人工智能设置"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "打开邮件客户端"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "开源"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "开放路由器"
 
@@ -2599,7 +2601,7 @@ msgstr "使用密码保护你的简历，防止未经授权的访问"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "用密码保护你的简历，只允许拥有密码的人查看。"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "服务提供商"
 
@@ -2617,7 +2619,7 @@ msgstr "发布者"
 msgid "Quota: {0} remaining"
 msgstr "配额： {0} 剩余"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI 密钥"
 
@@ -2904,7 +2906,7 @@ msgstr "章节类型"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr "请在 {1}上选择一份简历，为 \"{0}\" 量身定制。将创建一份副本。"
+msgstr "在 {1}上选择一份简历，为 \"{0}\" 量身定制。将创建一份副本."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "单栏布局，带侧边栏和干净的网格排版；用途广泛，适合任何专业或技术岗位。"
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "单栏，内嵌三栏条目标题（职位--组织--句号）；结构紧凑，便于 ATS 使用，非常适合亚洲简历惯例（CN/JP/KR）。"
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "单栏布局；风格精致严肃，适合高级或企业级职位。"
 
@@ -3074,7 +3080,7 @@ msgstr "大小"
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Skills"
-msgstr "Skills"
+msgstr "技能"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Skip"
@@ -3090,7 +3096,7 @@ msgstr "斯洛伐克语"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "斯洛文尼亚语"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "模板库"
 msgid "Templates"
 msgstr "模板"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "测试连接"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "有效的 URL 必须以 http:// 或 https:// 开头。"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel 人工智能网关"
 
@@ -3801,7 +3807,7 @@ msgstr "网站"
 msgid "What do you want to rename this section to?"
 msgstr "你想把这个章节重命名为什么？"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "什么是 JSearch API？"
 
@@ -3876,7 +3882,7 @@ msgstr "你的更改会自动保存。"
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "你的数据是安全的，且绝不会与任何人共享或出售。"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "你的数据将存储在本地"
 
@@ -3900,7 +3906,7 @@ msgstr "你的密码已成功更新。"
 msgid "Your profile has been updated successfully."
 msgstr "你的个人资料已成功更新。"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "您的 RapidAPI 密钥存储在浏览器本地。只有在请求搜索工作时才会将其发送到服务器，我们的服务器上绝不会存储或记录该密钥。"
 
@@ -3945,4 +3951,3 @@ msgstr "缩小"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "祖鲁语"
-

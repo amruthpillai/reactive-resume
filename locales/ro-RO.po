@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# zi în urmă} other {# zile în urmă}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# lună în urmă} other {# luni în urmă}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} de cereri {limit} utilizate ({remaining} rămase)"
 
@@ -81,7 +81,7 @@ msgstr "<0>În sfârșit,</0><1>Un constructor de CV-uri gratuit și open-source
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Întrebări frecvente</0><1>frecvente</1><2>Întrebări frecvente</2>"
+msgstr "<0>Întrebări</0><1>Frecvent</1><2>Adresate</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "Și multe altele..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropicul Claude"
 
@@ -343,7 +343,7 @@ msgstr "Oricine are linkul poate vizualiza și descărca CV-ul."
 msgid "API Access"
 msgstr "Acces API"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "Cheie API"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "Chei API"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "Referință API"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "Utilizare API"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Domeniu de studiu"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Inteligență artificială"
 
@@ -481,7 +481,7 @@ msgstr "Culoarea de fundal"
 msgid "Backup codes copied to clipboard."
 msgstr "Codurile de rezervă au fost copiate în clipboard."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "URL de bază (opțional)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "Nu s-a putut prelua lucrări din API JSearch. Vă rugăm să încercați din nou."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "Nu s-a putut ajunge la JSearch API. Verificați cheia API și încercați din nou."
 
@@ -793,7 +793,7 @@ msgstr "Nu s-a putut ajunge la JSearch API. Verificați cheia API și încercaț
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Nu s-a putut ajunge la furnizorul AI. Vă rugăm să încercați din nou."
 
@@ -1088,7 +1088,7 @@ msgstr "Dezactivează 2FA"
 msgid "Disable Two-Factor Authentication"
 msgstr "Dezactivează autentificarea cu doi factori"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Dezactivat"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "de exemplu, frontend developer locuri de muncă în Berlin"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "de exemplu, gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Activează"
 msgid "Enable 2FA"
 msgstr "Activează 2FA"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Activează funcționalitățile AI"
 
@@ -1259,7 +1259,7 @@ msgstr "Activează funcționalitățile AI"
 msgid "Enable Two-Factor Authentication"
 msgstr "Activează autentificarea cu doi factori"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Activat"
 
@@ -1311,7 +1311,7 @@ msgstr "Introduceți parola pentru a confirma configurarea autentificării cu do
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Introduceți parola pentru a dezactiva autentificarea cu doi factori. Contul va fi mai puțin sigur fără 2FA activat."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Introduceți cheia dumneavoastră RapidAPI"
 
@@ -1319,7 +1319,7 @@ msgstr "Introduceți cheia dumneavoastră RapidAPI"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Fiecare contribuție, mare sau mică, face o diferență uriașă pentru proiect.<0/>Vă mulțumim pentru sprijin!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Tot ce introduceți aici este stocat local în browserul dvs. Datele sunt trimise către server doar atunci când faceți o cerere către furnizorul AI și nu sunt niciodată stocate sau jurnalizate pe serverele noastre."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "A eșuat sincronizarea competențelor"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "Nu s-a reușit testarea conexiunii furnizorului AI. Vă rugăm să încercați din nou."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "Nu a reușit să testeze conexiunea RapidAPI. Vă rugăm să încercați din nou."
 
@@ -1639,7 +1639,7 @@ msgstr "Obțineți o analiză detaliată a CV-ului dvs. cu ajutorul inteligențe
 msgid "Get Started"
 msgstr "Începeți"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "Obțineți cheia API de la RapidAPI prin abonarea la JSearch API."
 
@@ -1660,14 +1660,14 @@ msgstr "Înapoi"
 msgid "Go to dashboard"
 msgstr "Mergi la panoul de control"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Mergeți la tabloul de bord al CV-urilor"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Mergeți la Setări"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Cod în linie"
 msgid "Insert Table"
 msgstr "Inserează tabel"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Intern"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Configurație invalidă a furnizorului AI. Vă rugăm să verificați setările."
 
@@ -1904,11 +1910,11 @@ msgstr "Japoneză"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Căutarea unui loc de muncă"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "API pentru căutarea unui loc de muncă"
 
@@ -1942,13 +1948,9 @@ msgstr "john.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch agregă listele de locuri de muncă de la mai multe site-uri de locuri de muncă utilizând Google for Jobs. Puteți filtra în funcție de țară (cod ISO alfa-2), data publicării, tipul postului, opțiunile la distanță și nivelul de experiență."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "Documentație API JSearch"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Salariu minim"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Model"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Odia"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Mentenanță continuă"
 msgid "Open"
 msgstr "Deschis"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "Deschideți setările AI"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Deschide clientul de e-mail"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Sursă publică"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Protejați CV-ul de acces neautorizat cu o parolă"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Protejați CV-ul cu o parolă și permiteți doar persoanelor care o cunosc să îl vadă."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Furnizor"
 
@@ -2617,7 +2619,7 @@ msgstr "Editor"
 msgid "Quota: {0} remaining"
 msgstr "Cota: {0} rămasă"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "Cheia RapidAPI"
 
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "O singură coloană cu bară laterală și layout tip grid curat; versatil pentru orice rol profesional sau tehnic."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "O singură coloană cu un antet de intrare în linie pe trei coloane (poziție - organizație - punct); compact și prietenos pentru ATS, bine adaptat pentru convențiile CV-urilor asiatice (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "O singură coloană; finisat și serios pentru poziții de nivel senior sau enterprise."
 
@@ -3090,7 +3096,7 @@ msgstr "Slovacă"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Slovenă"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Galerie de șabloane"
 msgid "Templates"
 msgstr "Șabloane"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Testare conexiune"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "URL-urile valide trebuie să înceapă cu http:// sau https://."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "Website"
 msgid "What do you want to rename this section to?"
 msgstr "La ce doriți să redenumiți această secțiune?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Ce este JSearch API?"
 
@@ -3876,7 +3882,7 @@ msgstr "Modificările sunt salvate automat."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Datele dvs. sunt în siguranță și nu sunt niciodată partajate sau vândute nimănui."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Datele dvs. sunt stocate local"
 
@@ -3900,7 +3906,7 @@ msgstr "Parola dumneavoastră a fost actualizată cu succes."
 msgid "Your profile has been updated successfully."
 msgstr "Profilul dvs. a fost actualizat cu succes."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "Cheia dumneavoastră RapidAPI este stocată local în browserul dumneavoastră. Aceasta este trimisă către server numai atunci când se face o cerere de căutare a locurilor de muncă și nu este niciodată stocată sau înregistrată pe serverele noastre."
 
@@ -3945,4 +3951,3 @@ msgstr "Micșorează"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

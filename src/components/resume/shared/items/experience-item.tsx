@@ -5,14 +5,25 @@ import { filterFieldValues } from "@/utils/field";
 import { stripHtml } from "@/utils/string";
 import { cn } from "@/utils/style";
 
+import { InlineHeader } from "../inline-header";
 import { LinkedTitle } from "../linked-title";
 import { PageLink } from "../page-link";
 
 type ExperienceItemProps = SectionItem<"experience"> & {
   className?: string;
+  /**
+   * Controls the header layout of each entry.
+   * - `"split"` (default): two-column layout — company/position on the start side,
+   *   location/period on the end side. This preserves the behavior used by all
+   *   existing templates.
+   * - `"inline"`: single-row, three-column layout — `[position (location)]`,
+   *   `[company]`, `[period]`. Used by templates targeting compact single-line
+   *   entry headers (e.g., Asian resume conventions).
+   */
+  headerLayout?: "split" | "inline";
 };
 
-export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
+export function ExperienceItem({ className, headerLayout = "split", ...item }: ExperienceItemProps) {
   const hasRoles = Array.isArray(item.roles) && item.roles.length > 0;
   const headerValues = {
     company: item.company,
@@ -46,21 +57,57 @@ export function ExperienceItem({ className, ...item }: ExperienceItemProps) {
       content: <span className="section-item-metadata experience-item-period">{item.period}</span>,
     },
   );
+
+  const renderInlineHeader = () => {
+    // Combine position and location into a single leading cell so the header
+    // stays on one line, e.g. "Frontend Engineer (Guangzhou)".
+    const hasPosition = Boolean(item.position?.trim());
+    const hasLocation = Boolean(item.location?.trim());
+
+    const leading =
+      hasPosition || hasLocation ? (
+        <span className="section-item-metadata experience-item-position-location">
+          {hasPosition && <span className="experience-item-position">{item.position}</span>}
+          {hasPosition && hasLocation && " "}
+          {hasLocation && <span className="experience-item-location opacity-80">({item.location})</span>}
+        </span>
+      ) : null;
+
+    const middle = (
+      <LinkedTitle
+        title={item.company}
+        website={item.website}
+        showLinkInTitle={item.options?.showLinkInTitle}
+        className="section-item-title experience-item-title"
+      />
+    );
+
+    const trailing = item.period ? (
+      <span className="section-item-metadata experience-item-period whitespace-nowrap">{item.period}</span>
+    ) : null;
+
+    return <InlineHeader leading={leading} middle={middle} trailing={trailing} />;
+  };
+
+  const renderSplitHeader = () => (
+    <div className="flex items-start justify-between gap-x-2">
+      <div className="flex min-w-0 flex-1 flex-col items-start">
+        {headerFields.get("company")?.content}
+        {headerFields.get("position")?.content}
+      </div>
+
+      <div className="flex min-w-0 shrink-0 flex-col items-end text-end">
+        {headerFields.get("location")?.content}
+        {headerFields.get("period")?.content}
+      </div>
+    </div>
+  );
+
   return (
     <div className={cn("experience-item", className)}>
       {/* Header */}
       <div className="section-item-header experience-item-header">
-        <div className="flex items-start justify-between gap-x-2">
-          <div className="flex min-w-0 flex-1 flex-col items-start">
-            {headerFields.get("company")?.content}
-            {headerFields.get("position")?.content}
-          </div>
-
-          <div className="flex min-w-0 shrink-0 flex-col items-end text-end">
-            {headerFields.get("location")?.content}
-            {headerFields.get("period")?.content}
-          </div>
-        </div>
+        {headerLayout === "inline" ? renderInlineHeader() : renderSplitHeader()}
       </div>
 
       {/* Role Progression */}

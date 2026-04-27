@@ -28,6 +28,7 @@ import { GlalieTemplate } from "./templates/glalie";
 import { KakunaTemplate } from "./templates/kakuna";
 import { LaprasTemplate } from "./templates/lapras";
 import { LeafishTemplate } from "./templates/leafish";
+import { MeowthTemplate } from "./templates/meowth";
 import { OnyxTemplate } from "./templates/onyx";
 import { PikachuTemplate } from "./templates/pikachu";
 import { RhyhornTemplate } from "./templates/rhyhorn";
@@ -72,6 +73,7 @@ function getTemplateComponent(template: Template) {
     .with("kakuna", () => KakunaTemplate)
     .with("lapras", () => LaprasTemplate)
     .with("leafish", () => LeafishTemplate)
+    .with("meowth", () => MeowthTemplate)
     .with("onyx", () => OnyxTemplate)
     .with("pikachu", () => PikachuTemplate)
     .with("rhyhorn", () => RhyhornTemplate)

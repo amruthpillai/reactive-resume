@@ -8,7 +8,7 @@ msgstr ""
 "Language: af\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Afrikaans\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# dae gelede} other {# dae gelede}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# maand gelede} other {# maande gelede}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} {limit} -versoeke gebruik ({remaining} oorblywend)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Uiteindelik,</0><1>'n gratis en oopbron-hervatbouer</1>"
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Dikwels</0><1>Vra</1><2>Vrae</2>"
+msgstr "<0>Gereeld</0><1>Gevraagde</1><2>Vrae</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "En baie meer..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropiese Claude"
 
@@ -343,7 +343,7 @@ msgstr "Enigiemand met die skakel kan die CV bekyk en aflaai."
 msgid "API Access"
 msgstr "API-toegang"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API-sleutel"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API-sleutels"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API-verwysing"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "API-gebruik"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Studierigting"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Kunsmatige Intelligensie"
 
@@ -481,7 +481,7 @@ msgstr "Agtergrondkleur"
 msgid "Backup codes copied to clipboard."
 msgstr "Rugsteunkodes is na die knipbord gekopieer."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Basiese URL (opsioneel)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "Kon nie werksgeleenthede vanaf die JSearch-API ophaal nie. Probeer asseblief weer."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "Kon nie die JSearch-API bereik nie. Kontroleer jou API-sleutel en probeer weer."
 
@@ -793,7 +793,7 @@ msgstr "Kon nie die JSearch-API bereik nie. Kontroleer jou API-sleutel en probee
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Konn nie die KI-verskaffer bereik nie. Probeer asseblief weer."
 
@@ -1088,7 +1088,7 @@ msgstr "Deaktiveer 2FA"
 msgid "Disable Two-Factor Authentication"
 msgstr "Deaktiveer twee-faktor-magtiging"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Gedeaktiveer"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "bv. frontend-ontwikkelaar-werk in Berlyn"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "bv., gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Aktiveer"
 msgid "Enable 2FA"
 msgstr "Aktiveer 2FA"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Aktiveer KI-funksies"
 
@@ -1259,7 +1259,7 @@ msgstr "Aktiveer KI-funksies"
 msgid "Enable Two-Factor Authentication"
 msgstr "Aktiveer twee-faktor-magtiging"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Geaktiveer"
 
@@ -1311,7 +1311,7 @@ msgstr "Voer jou wagwoord in om die opstel van twee-faktor-magtiging te bevestig
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Voer jou wagwoord in om twee-faktor-magtiging te deaktiveer. Jou rekening sal minder veilig wees sonder 2FA."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Voer jou RapidAPI-sleutel in"
 
@@ -1319,7 +1319,7 @@ msgstr "Voer jou RapidAPI-sleutel in"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Elke bydrae, groot of klein, maak 'n reuseverskil vir die projek.<0/>Dankie vir jou ondersteuning!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Alles wat hier ingevoer word, word plaaslik in jou blaaier gestoor. Jou data word slegs na die bediener gestuur wanneer 'n versoek aan die KI-verskaffer gemaak word, en word nooit op ons bedieners gestoor of gelog nie."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Vaardighede kon nie gesinchroniseer word nie"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "Die verbinding met die KI-verskaffer kon nie getoets word nie. Probeer asseblief weer."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "Die toets van die RapidAPI-verbinding het misluk. Probeer asseblief weer."
 
@@ -1639,7 +1639,7 @@ msgstr "Kry 'n diepgaande, deur KI aangedrewe oorsig van jou CV met 'n algehele 
 msgid "Get Started"
 msgstr "Begin"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "Kry jou API-sleutel by RapidAPI deur jou in te skryf vir die JSearch API."
 
@@ -1660,14 +1660,14 @@ msgstr "Gaan terug"
 msgid "Go to dashboard"
 msgstr "Gaan na beheerpaneel"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Gaan na die CV-dashboard"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Gaan na Instellings"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Inlynkode"
 msgid "Insert Table"
 msgstr "Voeg tabel in"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Stagiair"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Ongeldige KI-verskafferkonfigurasie. Kontroleer asseblief jou instellings."
 
@@ -1904,11 +1910,11 @@ msgstr "Japanees"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Werkssoektog"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "Werkssoek-API"
 
@@ -1942,13 +1948,9 @@ msgstr "johannes.smit"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch versamel werwingadvertensies van verskeie werfborde deur Google for Jobs te gebruik. Jy kan filter volgens land (ISO-alpha-2-kode), publikasiedatum, werftipe, afstandopsies en ervaringsvlak."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API-dokumentasie"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Minimum salaris"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Model"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Odia"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Deurlopende instandhouding"
 msgid "Open"
 msgstr "Maak oop"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "Open AI-instellings"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Maak e-posklient oop"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Oopbron"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Beskerm jou CV teen ongemagtigde toegang met 'n wagwoord"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Beskerm jou CV met 'n wagwoord, en laat slegs mense met die wagwoord dit bekyk."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Verskaffer"
 
@@ -2617,7 +2619,7 @@ msgstr "Uitgewer"
 msgid "Quota: {0} remaining"
 msgstr "Kwota: {0} oorblywend"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI Sleutel"
 
@@ -2904,7 +2906,7 @@ msgstr "Afdelingstipe"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr "Kies 'n CV om aan te pas vir \"{0}\" by {1}. 'n Kopie sal geskep word."
+msgstr "Kies 'n CV om aan te pas vir \"{0}\" by {1}. 'n Kopie sal geskep word by."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Enkelkolom met 'n sybalk en skoon roostruitleg; veelsydig vir enige professionele of tegniese rol."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Enkelkolom met 'n inlyn drie-kolom-inskrywingsopskrif (posisie · organisasie · tydperk); kompak en ATS-vriendelik, goed geskik vir Asiatiese CV-konvensies (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Enkelkolom; gepoleer en ernstig vir senior- of ondernemingsvlakposte."
 
@@ -3090,7 +3096,7 @@ msgstr "Slowaaks"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Sloweens"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Sjabloongalery"
 msgid "Templates"
 msgstr "Sjablone"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Toets verbinding"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Geldige URL's moet met http:// of https:// begin."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel KI-toegangspoort"
 
@@ -3801,7 +3807,7 @@ msgstr "Webwerf"
 msgid "What do you want to rename this section to?"
 msgstr "Waartoe wil jy hierdie afdeling hernoem?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Wat is die JSearch-API?"
 
@@ -3876,7 +3882,7 @@ msgstr "Jou veranderinge word outomaties gestoor."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Jou data is veilig en word nooit met iemand gedeel of verkoop nie."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Jou data word plaaslik gestoor"
 
@@ -3900,7 +3906,7 @@ msgstr "Jou wagwoord is suksesvol bygewerk."
 msgid "Your profile has been updated successfully."
 msgstr "Jou profiel is suksesvol bygewerk."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "Jou RapidAPI-sleutel word plaaslik in jou blaaier gestoor. Dit word slegs na die bediener gestuur wanneer jy 'n versoek doen om na werksgeleenthede te soek, en dit word nooit op ons bedieners gestoor of aangeteken nie."
 
@@ -3945,4 +3951,3 @@ msgstr "Zoem uit"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zoeloe"
-

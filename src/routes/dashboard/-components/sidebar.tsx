@@ -79,13 +79,8 @@ const settingsSidebarItems = [
   },
   {
     icon: <BrainIcon />,
-    label: msg`Artificial Intelligence`,
-    href: "/dashboard/settings/ai",
-  },
-  {
-    icon: <BriefcaseIcon />,
-    label: msg`Job Search API`,
-    href: "/dashboard/settings/job-search",
+    label: msg`Integrations`,
+    href: "/dashboard/settings/integrations",
   },
   {
     icon: <WarningIcon />,

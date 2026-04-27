@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# den před} other {# dny před}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# před měsícem} other {# před měsíci}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} využitých požadavků na {limit} ({remaining} zbývá)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Konečně</0><1>Bezplatný nástroj pro tvorbu životopisů s otevře
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Často</0><1>.</1><2>Otázky</2>"
+msgstr "<0>Často</0><1>Kladené</1><2>Otázky</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "A mnoho dalších…"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropický Claude"
 
@@ -343,7 +343,7 @@ msgstr "Každý, kdo má k dispozici odkaz, si může životopis prohlédnout a 
 msgid "API Access"
 msgstr "Přístup přes API"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API klíč"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API klíče"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API dokumentace"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "Používání rozhraní API"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Studijní obor"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Umělá inteligence"
 
@@ -481,7 +481,7 @@ msgstr "Barva pozadí"
 msgid "Backup codes copied to clipboard."
 msgstr "Záložní kódy zkopírovány do schránky."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Základní URL (volitelné)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "Nelze načíst úlohy z rozhraní JSearch API. Zkuste to prosím znovu."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "Nelze se spojit s rozhraním JSearch API. Zkontrolujte svůj klíč API a zkuste to znovu."
 
@@ -793,7 +793,7 @@ msgstr "Nelze se spojit s rozhraním JSearch API. Zkontrolujte svůj klíč API 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Nepodařilo se spojit s poskytovatelem UI. Zkuste to prosím znovu."
 
@@ -1088,7 +1088,7 @@ msgstr "Deaktivovat 2FA"
 msgid "Disable Two-Factor Authentication"
 msgstr "Deaktivovat dvoufázové ověření"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Deaktivováno"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "např. frontend developer pracovních míst v Berlíně"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "např. gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Povolit"
 msgid "Enable 2FA"
 msgstr "Aktivovat 2FA"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Povolit funkce AI"
 
@@ -1259,7 +1259,7 @@ msgstr "Povolit funkce AI"
 msgid "Enable Two-Factor Authentication"
 msgstr "Aktivovat dvoufázové ověření"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Aktivováno"
 
@@ -1311,7 +1311,7 @@ msgstr "Zadejte své heslo pro potvrzení nastavení dvoufázového ověření. 
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Zadejte své heslo pro deaktivaci dvoufázového ověření. Bez aktivního 2FA bude váš účet méně zabezpečený."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Zadejte svůj klíč RapidAPI"
 
@@ -1319,7 +1319,7 @@ msgstr "Zadejte svůj klíč RapidAPI"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Každý příspěvek, velký i malý, má pro projekt obrovský význam.<0/>Děkujeme za vaši podporu!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Vše, co zde zadáte, je ukládáno lokálně ve vašem prohlížeči. Vaše data jsou na server odesílána pouze při odeslání požadavku poskytovateli AI a na našich serverech se nikdy neukládají ani nelogují."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Nepodařilo se synchronizovat dovednosti"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "Nepodařilo se otestovat připojení poskytovatele AI. Zkuste to prosím znovu."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "Nepodařilo se otestovat připojení RapidAPI. Zkuste to prosím znovu."
 
@@ -1639,7 +1639,7 @@ msgstr "Získejte hloubkovou recenzi svého životopisu s celkovým hodnocením,
 msgid "Get Started"
 msgstr "Začít"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "Získejte klíč API od RapidAPI přihlášením se k rozhraní JSearch API."
 
@@ -1660,14 +1660,14 @@ msgstr "Zpět"
 msgid "Go to dashboard"
 msgstr "Přejít na nástěnku"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Přejít na palubní desku s životopisy"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Přejděte do Nastavení"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Řádkový kód"
 msgid "Insert Table"
 msgstr "Vložit tabulku"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Stážista"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Neplatná konfigurace zprostředkovatele AI. Zkontrolujte prosím své nastavení."
 
@@ -1904,11 +1910,11 @@ msgstr "Japonština"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Hledání práce"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "Rozhraní API pro vyhledávání pracovních míst"
 
@@ -1942,13 +1948,9 @@ msgstr "john.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "Služba JSearch agreguje nabídky práce z různých pracovních nabídek pomocí služby Google for Jobs. Můžete filtrovat podle země (kód ISO alfa-2), data zveřejnění, typu práce, možností vzdáleného přístupu a úrovně zkušeností."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "Dokumentace rozhraní JSearch API"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Minimální plat"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Model"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Udijština"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Průběžná údržba"
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "Otevřít nastavení AI"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Otevřít e-mailového klienta"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Open source"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Chraňte svůj životopis heslem před neoprávněným přístupem"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Chraňte svůj životopis heslem a umožněte jeho zobrazení jen lidem, kteří heslo znají."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Poskytovatel"
 
@@ -2617,7 +2619,7 @@ msgstr "Vydavatel"
 msgid "Quota: {0} remaining"
 msgstr "Kvóta: {0} zbývá"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI Klíč"
 
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Jednosloupcové s postranním panelem a čistým mřížkovým rozložením; univerzální pro jakoukoli profesní či technickou roli."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Jednosloupcový s inline třísloupcovým záhlavím (pozice - organizace - tečka); kompaktní a vhodný pro ATS, vhodný pro asijské konvence životopisů (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Jednosloupcové; uhlazené a seriózní pro seniorské nebo enterprise pozice."
 
@@ -3090,7 +3096,7 @@ msgstr "Slovenština"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Slovinština"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Galerie šablon"
 msgid "Templates"
 msgstr "Šablony"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Otestovat připojení"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Platné URL adresy musí začínat http:// nebo https://."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Brána Vercel AI"
 
@@ -3801,7 +3807,7 @@ msgstr "Web"
 msgid "What do you want to rename this section to?"
 msgstr "Na jaký název chcete tuto sekci přejmenovat?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Co je rozhraní JSearch API?"
 
@@ -3876,7 +3882,7 @@ msgstr "Vaše změny se ukládají automaticky."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Vaše data jsou v bezpečí a nikdy nejsou s nikým sdílena ani prodávána."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Vaše data jsou ukládána lokálně"
 
@@ -3900,7 +3906,7 @@ msgstr "Vaše heslo bylo úspěšně aktualizováno."
 msgid "Your profile has been updated successfully."
 msgstr "Váš profil byl úspěšně aktualizován."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "Klíč RapidAPI je uložen lokálně v prohlížeči. Na server se odesílá pouze při požadavku na vyhledávání pracovních míst a nikdy se neukládá ani nezaznamenává na našich serverech."
 
@@ -3945,4 +3951,3 @@ msgstr "Oddálit"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

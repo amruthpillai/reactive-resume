@@ -266,8 +266,8 @@ function DisabledState() {
           variant="outline"
           nativeButton={false}
           render={
-            <Link to="/dashboard/settings/ai">
-              <Trans>Open AI Settings</Trans>
+            <Link to="/dashboard/settings/integrations">
+              <Trans>Open Integrations Settings</Trans>
               <ArrowRightIcon />
             </Link>
           }

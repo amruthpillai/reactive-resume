@@ -79,8 +79,8 @@ function RouteComponent() {
           <p className="text-muted-foreground">
             <Trans>To search for job listings, you need to configure your RapidAPI key in settings.</Trans>
           </p>
-          <Button nativeButton={false} variant="outline" render={<Link to="/dashboard/settings/job-search" />}>
-            <Trans>Go to Settings</Trans>
+          <Button nativeButton={false} variant="outline" render={<Link to="/dashboard/settings/integrations" />}>
+            <Trans>Go to Integrations</Trans>
           </Button>
         </motion.div>
       ) : (

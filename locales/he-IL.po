@@ -8,7 +8,7 @@ msgstr ""
 "Language: he\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {לפני # יום} other {לפני # ימים}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {לפני # חודש} other {לפני # חודשים}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} מתוך {limit} בקשות שנעשה בהן שימוש ({remaining} נותרו)"
 
@@ -81,7 +81,7 @@ msgstr "<0>סוף סוף,</0><1>בונה קורות חיים חינמי בקוד
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>שאלות נפוצות</0><1>שאלות</1><2>שאלות</2>"
+msgstr "<0>שאלות</0><1>שנשאלות</1><2>לעיתים קרובות</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "ועוד שלל יכולות…"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "קלוד האנתרופי"
 
@@ -343,7 +343,7 @@ msgstr "לכל מי שיש את הקישור יש אפשרות להוריד את
 msgid "API Access"
 msgstr "גישה דרך API"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "מפתח API"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "מפתחות API"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "תיעוד API"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "שימוש ב-API"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "תחום לימודים"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "בינה מלאכותית"
 
@@ -481,7 +481,7 @@ msgstr "צבע הרקע"
 msgid "Backup codes copied to clipboard."
 msgstr "קודי הגיבוי הועתקו ללוח הגזירים."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "כתובת בסיס (רשות)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "לא ניתן היה לאחזר משרות מ-JSearch API. אנא נסה שוב."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "לא ניתן להתחבר ל-JSearch API. בדוק את מפתח ה-API שלך ונסה שוב."
 
@@ -793,7 +793,7 @@ msgstr "לא ניתן להתחבר ל-JSearch API. בדוק את מפתח ה-API
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "לא ניתן היה ליצור קשר עם ספק ה-AI. אנא נסה שוב."
 
@@ -1088,7 +1088,7 @@ msgstr "השבתת האימות הדו־שלבי"
 msgid "Disable Two-Factor Authentication"
 msgstr "השבתת אימות דו־שלבי"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "מושבת"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "למשל, משרות למפתחי frontend בברלין"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "למשל, gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "הפעלה"
 msgid "Enable 2FA"
 msgstr "הפעלת אימות דו־שלבי"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "הפעלת יכולות בינה מלאכותית"
 
@@ -1259,7 +1259,7 @@ msgstr "הפעלת יכולות בינה מלאכותית"
 msgid "Enable Two-Factor Authentication"
 msgstr "הפעלת אימות דו־שלבי"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "מופעל"
 
@@ -1311,7 +1311,7 @@ msgstr "הזן את הסיסמה שלך כדי לאשר הגדרת אימות ד
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "הזן את הסיסמה שלך כדי להשבית אימות דו־שלבי. החשבון שלך יהיה פחות מאובטח ללא אימות דו־שלבי."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "הזן את מפתח ה-RapidAPI שלך"
 
@@ -1319,7 +1319,7 @@ msgstr "הזן את מפתח ה-RapidAPI שלך"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "כל תרומה, קטנה כגדולה, עושה הבדל גדול למיזם.<0/>תודה על התמיכה!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "הכול שאתה מזין כאן נשמר מקומית בדפדפן שלך. הנתונים שלך נשלחים לשרת רק בעת שליחת בקשה לספק הבינה המלאכותית, ולעולם אינם נשמרים או נרשמים ביומנים בשרתים שלנו."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "לא הצליח לסנכרן מיומנויות"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "לא הצליח לבדוק את החיבור לספק ה-AI. אנא נסה שוב."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "לא הצליח לבדוק את החיבור ל-RapidAPI. אנא נסה שוב."
 
@@ -1639,7 +1639,7 @@ msgstr "קבל ניתוח מעמיק של קורות החיים שלך, המונ
 msgid "Get Started"
 msgstr "יוצאים לדרך"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "השג את מפתח ה-API שלך מ-RapidAPI על ידי הרשמה ל-API של JSearch."
 
@@ -1660,14 +1660,14 @@ msgstr "חזרה"
 msgid "Go to dashboard"
 msgstr "מעבר ללוח בקרה"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "עבור למרכז השליטה בקורות החיים"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "עבור אל 'הגדרות'"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "גוגל"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "גוגל ג'מיני"
 
@@ -1864,6 +1864,12 @@ msgstr "קוד מוטמע"
 msgid "Insert Table"
 msgstr "הוספת טבלה"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "מתמחה"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "תצורת ספק ה-AI אינה תקינה. אנא בדוק את ההגדרות שלך."
 
@@ -1904,11 +1910,11 @@ msgstr "יפנית"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "חיפוש עבודה"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "ממשק ה-API לחיפוש עבודה"
 
@@ -1942,13 +1948,9 @@ msgstr "ג'ון דו"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch אוסף משרות ממספר אתרי דרושים באמצעות Google for Jobs. ניתן לסנן לפי מדינה (קוד ISO alpha-2), תאריך הפרסום, סוג המשרה, אפשרויות לעבודה מרחוק ורמת הניסיון."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "תיעוד ממשק ה-API של JSearch"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "שכר מינימום"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "מודל"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "אודיה"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "אולמה"
 
@@ -2336,26 +2338,26 @@ msgstr "תחזוקה מתמשכת"
 msgid "Open"
 msgstr "פתיחה"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "פתח את הגדרות ה-AI"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "פתיחת תוכנת הדוא\"ל"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "קוד פתוח"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "הגן על קורות החיים שלך מגישה לא מורשית ב
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "הגן על קורות החיים שלך באמצעות סיסמה, כך שרק מי שמכיר את הסיסמה יוכל לצפות בהם."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "ספק"
 
@@ -2617,7 +2619,7 @@ msgstr "מוציא לאור"
 msgid "Quota: {0} remaining"
 msgstr "מכסה: {0} נותרו"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "מפתח RapidAPI"
 
@@ -2904,7 +2906,7 @@ msgstr "סוג סעיף"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr "בחר קורות חיים שברצונך להתאים ל\"{0}\" בכתובת {1}. תיווצר עותק."
+msgstr "בחר קורות חיים להתאמה אישית עבור \"{0}\" בכתובת {1}. עותק ייווצר בכתובת."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "עמודה אחת עם סרגל צד וגריד נקי; רב־שימושי לכל תפקיד מקצועי או טכני."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "עמודה אחת עם כותרת כניסה משולבת בת שלוש עמודות (תפקיד · ארגון · תקופה); קומפקטי ומתאים לשיטת ATS, מתאים היטב למנהגי כתיבת קורות חיים באסיה (סין/יפן/קוריאה)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "עמודה אחת; מלוטש ורציני לתפקידים בכירים או ברמת ארגון."
 
@@ -3090,7 +3096,7 @@ msgstr "סלובקית"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "סלובנית"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "גלריית תבניות"
 msgid "Templates"
 msgstr "תבניות"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "בדיקת חיבור"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "כתובות URL חוקיות חייבות להתחיל ב־http:// או https://."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "אתר אינטרנט"
 msgid "What do you want to rename this section to?"
 msgstr "לאיזה שם ברצונך לשנות את הסעיף הזה?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "מהו ממשק ה-API של JSearch?"
 
@@ -3876,7 +3882,7 @@ msgstr "השינויים שלך נשמרים אוטומטית."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "הנתונים שלך מאובטחים, ולעולם אינם נמסרים או נמכרים לאף אחד."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "הנתונים שלך מאוחסנים באופן מקומי"
 
@@ -3900,7 +3906,7 @@ msgstr "הסיסמה שלך עודכנה בהצלחה."
 msgid "Your profile has been updated successfully."
 msgstr "הפרופיל שלך עודכן בהצלחה."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "מפתח ה-RapidAPI שלך נשמר באופן מקומי בדפדפן שלך. הוא נשלח לשרת רק בעת ביצוע בקשה לחיפוש משרות, ואינו נשמר או נרשם בשרתים שלנו בשום אופן."
 
@@ -3945,4 +3951,3 @@ msgstr "התרחקות"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "זולו"
-

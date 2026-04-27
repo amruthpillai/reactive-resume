@@ -95,12 +95,12 @@ export function NavigationCommandGroup() {
         </CommandItem>
 
         <CommandItem
-          keywords={[t`Artificial Intelligence`]}
-          value="navigation.settings.ai"
-          onSelect={() => onNavigate("/dashboard/settings/ai")}
+          keywords={[t`Integrations`, t`Artificial Intelligence`, t`Job Search API`]}
+          value="navigation.settings.integrations"
+          onSelect={() => onNavigate("/dashboard/settings/integrations")}
         >
           <OpenAiLogoIcon />
-          <Trans>Artificial Intelligence</Trans>
+          <Trans>Integrations</Trans>
         </CommandItem>
 
         <CommandItem

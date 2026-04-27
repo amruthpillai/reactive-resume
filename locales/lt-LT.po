@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# day ago} other {# days ago}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# prieš mėnesį} other {# prieš mėnesius}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} panaudotų {limit} užklausų ({remaining} liko)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Pagaliau,</0><1>nemokamas atvirojo kodo gyvenimo aprašymų kūrėjas
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Dažnai</0><1>Klausiama</1><2>Klausimai</2>"
+msgstr "<0>Dažniausiai</0><1>Užduodami</1><2>Klausimai</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "Ir dar daugiau..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropinis Klodas"
 
@@ -343,7 +343,7 @@ msgstr "Bet kuris nuorodą turintis asmuo gali peržiūrėti ir atsisiųsti gyve
 msgid "API Access"
 msgstr "API prieiga"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API raktas"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API raktai"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API nuoroda"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "API naudojimas"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Studijų sritis"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Dirbtinis intelektas"
 
@@ -481,7 +481,7 @@ msgstr "Fono spalva"
 msgid "Backup codes copied to clipboard."
 msgstr "Atsarginiai kodai nukopijuoti į iškarpinę."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Bazinis URL (neprivaloma)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "Nepavyko gauti darbo vietų iš JSearch API. Bandykite dar kartą."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "Nepavyko pasiekti JSearch API. Patikrinkite savo API raktą ir bandykite dar kartą."
 
@@ -793,7 +793,7 @@ msgstr "Nepavyko pasiekti JSearch API. Patikrinkite savo API raktą ir bandykite
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Nepavyko susisiekti su AI teikėju. Bandykite dar kartą."
 
@@ -1088,7 +1088,7 @@ msgstr "Išjungti 2FA"
 msgid "Disable Two-Factor Authentication"
 msgstr "Išjungti dviejų veiksnių tapatumo patvirtinimą"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Išjungta"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "pvz., frontend kūrėjo darbo vietos Berlyne"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "pvz., gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Įjungti"
 msgid "Enable 2FA"
 msgstr "Įjungti 2FA"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Įjungti DI funkcijas"
 
@@ -1259,7 +1259,7 @@ msgstr "Įjungti DI funkcijas"
 msgid "Enable Two-Factor Authentication"
 msgstr "Įjungti dviejų veiksnių tapatumo patvirtinimą"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Įjungta"
 
@@ -1311,7 +1311,7 @@ msgstr "Įveskite slaptažodį, kad patvirtintumėte dviejų veiksnių tapatumo 
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Įveskite slaptažodį, kad išjungtumėte dviejų veiksnių tapatumo patvirtinimą. Be įjungto 2FA jūsų paskyra bus mažiau saugi."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Įveskite savo RapidAPI raktą"
 
@@ -1319,7 +1319,7 @@ msgstr "Įveskite savo RapidAPI raktą"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Kiekvienas įnašas, didelis ar mažas, daro milžinišką įtaką projektui.<0/>Ačiū už jūsų palaikymą!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Viskas, ką čia įvedate, saugoma vietoje jūsų naršyklėje. Jūsų duomenys siunčiami tik AI tiekėjui, kai pateikiate užklausą, ir niekada nėra saugomi ar registruojami mūsų serveriuose."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Nepavyko sinchronizuoti įgūdžių"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "Nepavyko išbandyti AI teikėjo ryšio. Bandykite dar kartą."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "Nepavyko išbandyti RapidAPI ryšio. Bandykite dar kartą."
 
@@ -1639,7 +1639,7 @@ msgstr "Gaukite išsamią dirbtinio intelekto valdomą savo gyvenimo aprašymo p
 msgid "Get Started"
 msgstr "Pradėkite"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "Gaukite API raktą iš \"RapidAPI\" užsiprenumeravę JSearch API."
 
@@ -1660,14 +1660,14 @@ msgstr "Grįžti"
 msgid "Go to dashboard"
 msgstr "Eikite į prietaisų skydelį"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Eikite į CV prietaisų skydelį"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Eikite į Nustatymai"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "\"Google\""
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "\"Google\" Dvyniai"
 
@@ -1864,6 +1864,12 @@ msgstr "Įterptinis kodas"
 msgid "Insert Table"
 msgstr "Įterpti lentelę"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Stažuotojas"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Netinkama AI teikėjo konfigūracija. Patikrinkite savo nustatymus."
 
@@ -1904,11 +1910,11 @@ msgstr "Japonų"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Darbo paieška"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "Darbo paieškos API"
 
@@ -1942,13 +1948,9 @@ msgstr "john.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "\"JSearch\" apibendrina darbo skelbimus iš kelių darbo skelbimų lentų, naudodama \"Google for Jobs\". Galite filtruoti pagal šalį (ISO alfa-2 kodas), skelbimo datą, darbo tipą, nuotolinio darbo galimybes ir patirties lygį."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API dokumentacija"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "\"Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Minimalus atlyginimas"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Modelis"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Odijų"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Nuolatinė priežiūra"
 msgid "Open"
 msgstr "Atidaryti"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "Atidaryti AI nustatymus"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Atidaryti el. pašto programą"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Atviro kodo"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "\"OpenAI\""
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "\"OpenRouter\""
 
@@ -2599,7 +2601,7 @@ msgstr "Apsaugokite savo gyvenimo aprašymą slaptažodžiu nuo neteisėtos prie
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Apsaugokite savo gyvenimo aprašymą slaptažodžiu ir leiskite jį matyti tik slaptažodį žinantiems žmonėms."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Tiekėjas"
 
@@ -2617,7 +2619,7 @@ msgstr "Leidėjas"
 msgid "Quota: {0} remaining"
 msgstr "Kvota: {0} liko"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI raktas"
 
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Vienas stulpelis su šonine juosta ir švariu tinklelio išdėstymu; universalus bet kokioms profesinėms ar techninėms pareigoms."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Vieno stulpelio su trijų stulpelių įvesties antraštėmis (pareigos - organizacija - taškas); kompaktiškas ir patogus ATS, gerai pritaikytas Azijos šalių CV konvencijoms (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Vienas stulpelis; solidus ir rimtas vyresnio ar aukšto lygio pareigoms."
 
@@ -3090,7 +3096,7 @@ msgstr "Slovakų"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Slovėnų"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Šablonų galerija"
 msgid "Templates"
 msgstr "Šablonai"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Tikrinti ryšį"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Teisingi URL turi prasidėti http:// arba https://."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "\"Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "Tinklalapis"
 msgid "What do you want to rename this section to?"
 msgstr "Kaip norite pervadinti šį skyrių?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Kas yra JSearch API?"
 
@@ -3876,7 +3882,7 @@ msgstr "Jūsų pakeitimai išsaugomi automatiškai."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Jūsų duomenys yra saugūs ir niekada nebendrinami ar neparduodami jokiems asmenims."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Jūsų duomenys saugomi vietoje"
 
@@ -3900,7 +3906,7 @@ msgstr "Jūsų slaptažodis sėkmingai atnaujintas."
 msgid "Your profile has been updated successfully."
 msgstr "Jūsų profilis sėkmingai atnaujintas."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "Jūsų \"RapidAPI\" raktas saugomas naršyklėje. Jis siunčiamas į serverį tik tada, kai pateikiama užklausa darbo vietų paieškai, ir niekada nėra saugomas ar registruojamas mūsų serveriuose."
 
@@ -3945,4 +3951,3 @@ msgstr "Tolinti"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
-

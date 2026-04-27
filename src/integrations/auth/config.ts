@@ -13,6 +13,7 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
 import { eq, or } from "drizzle-orm";
+import { createElement } from "react";
 
 import { env } from "@/utils/env";
 import { hashPassword, verifyPassword } from "@/utils/password";
@@ -23,6 +24,7 @@ import { schema } from "../drizzle";
 import { db } from "../drizzle/client";
 import { lower } from "../drizzle/helpers";
 import { sendEmail } from "../email/service";
+import { ResetPasswordEmail, VerifyEmail, VerifyEmailChange } from "../email/templates/auth";
 
 export const authBaseUrl = process.env.BETTER_AUTH_URL ?? env.APP_URL;
 
@@ -291,7 +293,7 @@ const getAuthConfig = () => {
         await sendEmail({
           to: user.email,
           subject: "Reset your password",
-          text: `You requested a password reset for your Reactive Resume account.\n\nTo reset your password, please visit the following URL:\n${url}.\n\nIf you did not request a password reset, please ignore this email.`,
+          react: createElement(ResetPasswordEmail, { url }),
         });
       },
       password: {
@@ -307,7 +309,7 @@ const getAuthConfig = () => {
         await sendEmail({
           to: user.email,
           subject: "Verify your email",
-          text: `You recently signed up for an account on Reactive Resume.\n\nTo verify your email, please visit the following URL:\n${url}`,
+          react: createElement(VerifyEmail, { url }),
         });
       },
     },
@@ -319,7 +321,7 @@ const getAuthConfig = () => {
           await sendEmail({
             to: newEmail,
             subject: "Verify your new email",
-            text: `You recently requested to change your email on Reactive Resume from ${user.email} to ${newEmail}.\n\nTo verify this change, please visit the following URL:\n${url}\n\nIf you did not request this change, please ignore this email.`,
+            react: createElement(VerifyEmailChange, { url, previousEmail: user.email, newEmail }),
           });
         },
       },

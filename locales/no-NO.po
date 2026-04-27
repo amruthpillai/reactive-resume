@@ -8,7 +8,7 @@ msgstr ""
 "Language: no\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Norwegian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -51,7 +51,7 @@ msgstr "{0, plural, one {# rolle} other {# roller}}"
 #. placeholder {1}: quota.limit
 #: src/routes/dashboard/job-search/index.tsx
 msgid "{0} / {1} requests used"
-msgstr ""
+msgstr "{0} / {1} forespørsler brukt"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -60,19 +60,19 @@ msgstr "{column, plural, one {# kolonne} other {# kolonner}}"
 
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{diffDays, plural, one {# day ago} other {# days ago}}"
-msgstr ""
+msgstr "{diffDays, plural, one {# dag siden} other {# dager siden}}"
 
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{months, plural, one {# month ago} other {# months ago}}"
-msgstr ""
+msgstr "{months, plural, one {# måned siden} other {# måneder siden}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
-msgstr ""
+msgstr "{used} av {limit} forespørsler brukt ({remaining} gjenstår)"
 
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
-msgstr ""
+msgstr "{weeks, plural, one {# uke siden} other {# uker siden}}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -81,7 +81,7 @@ msgstr "<0>Endelig</0><1>En gratis og åpen kildekode CV-bygger</1>"
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr ""
+msgstr "<0>Ofte</0><1>Stilte</1><2>Spørsmål</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -135,7 +135,7 @@ msgstr "Et lidenskapsprosjekt av <0>Amruth Pillai</0>."
 #. Error description when generated slug for duplicated tailored resume already exists
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "A resume with this slug already exists. Please try again."
-msgstr ""
+msgstr "En CV med denne sluggen finnes allerede. Prøv igjen."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -155,7 +155,7 @@ msgstr "Legg til egendefinert felt"
 
 #: src/components/input/chip-input.tsx
 msgid "Add a keyword..."
-msgstr ""
+msgstr "Legg til et nøkkelord..."
 
 #. Tooltip for action button that opens URL label editor
 #: src/components/input/url-input.tsx
@@ -229,7 +229,7 @@ msgstr "Legg til kolonne før"
 
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
-msgstr ""
+msgstr "Legg til nøkkelord"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
@@ -254,11 +254,11 @@ msgstr "Legg til rad før"
 #. placeholder {0}: skillsToSync.length
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Added {0} new skills to your original resume"
-msgstr ""
+msgstr "La til {0} nye ferdigheter i den opprinnelige CV-en din"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Advanced Filters"
-msgstr ""
+msgstr "Avanserte filtre"
 
 #: src/utils/locale.ts
 msgid "Afrikaans"
@@ -270,7 +270,7 @@ msgstr "KI"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "AI returned some invalid references"
-msgstr ""
+msgstr "KI returnerte noen ugyldige referanser"
 
 #: src/utils/locale.ts
 msgid "Albanian"
@@ -300,32 +300,32 @@ msgstr "En ukjent feil oppstod under import av CV-en din."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyze Resume"
-msgstr ""
+msgstr "Analyser CV"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Analyzing..."
-msgstr ""
+msgstr "Analyserer..."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
 msgstr "Og mange flere..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
-msgstr ""
+msgstr "Anthropic Claude"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any level"
-msgstr ""
+msgstr "Alle nivåer"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any time"
-msgstr ""
+msgstr "Når som helst"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Any type"
-msgstr ""
+msgstr "Alle typer"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Anyone visiting the resume's public URL must enter this password to access it."
@@ -343,7 +343,7 @@ msgstr "Alle med lenken kan se og laste ned CV-en."
 msgid "API Access"
 msgstr "API-tilgang"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API-nøkkel"
 
@@ -354,12 +354,13 @@ msgid "API Keys"
 msgstr "API-nøkler"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API-dokumentasjon"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
-msgstr ""
+msgstr "API-bruk"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
@@ -371,20 +372,20 @@ msgstr "Applikasjonsstatistikk"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply"
-msgstr ""
+msgstr "Søk"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply for this job"
-msgstr ""
+msgstr "Søk på denne jobben"
 
 #. Fallback publisher name for a third-party job application link
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Link"
-msgstr ""
+msgstr "Søknadslenke"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Apply Via"
-msgstr ""
+msgstr "Søk via"
 
 #: src/utils/locale.ts
 msgid "Arabic"
@@ -400,11 +401,11 @@ msgstr "Er du sikker på at du vil slette denne API-nøkkelen?"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Are you sure you want to delete this custom section?"
-msgstr ""
+msgstr "Er du sikker på at du vil slette denne egendefinerte seksjonen?"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Are you sure you want to delete this item?"
-msgstr ""
+msgstr "Er du sikker på at du vil slette dette elementet?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -428,15 +429,14 @@ msgstr "Er du sikker på at du vil fjerne passordbeskyttelsen?"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Are you sure you want to reset this section?"
-msgstr ""
+msgstr "Er du sikker på at du vil tilbakestille denne seksjonen?"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Area of Study"
 msgstr "Studiefelt"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Kunstig intelligens"
 
@@ -481,7 +481,7 @@ msgstr "Bakgrunnsfarge"
 msgid "Backup codes copied to clipboard."
 msgstr "Sikkerhetskopieringskoder kopiert til utklippstavlen."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Base-URL (valgfritt)"
 
@@ -495,7 +495,7 @@ msgstr "Vakre maler å velge mellom, med flere på vei."
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Benefits"
-msgstr ""
+msgstr "Fordeler"
 
 #: src/utils/locale.ts
 msgid "Bengali"
@@ -637,7 +637,7 @@ msgstr "Kinesisk (tradisjonell)"
 #. Preset or custom shade refer to the color picker
 #: src/components/input/rich-input.tsx
 msgid "Choose a preset or custom shade."
-msgstr ""
+msgstr "Velg en forhåndsinnstilling eller egendefinert nyanse."
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -646,11 +646,11 @@ msgstr "Sirkel"
 #. Clear the text color
 #: src/components/input/rich-input.tsx
 msgid "Clear"
-msgstr ""
+msgstr "Tøm"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Clear all"
-msgstr ""
+msgstr "Fjern alle"
 
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
@@ -674,12 +674,12 @@ msgstr "Kolonner"
 #. Accessible label for the command palette dialog
 #: src/components/command-palette/index.tsx
 msgid "Command Palette"
-msgstr ""
+msgstr "Kommandopalett"
 
 #. Accessible label for command palette dialog when browsing a nested command page
 #: src/components/command-palette/index.tsx
 msgid "Command Palette - {currentPage}"
-msgstr ""
+msgstr "Kommandopalett - {currentPage}"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
@@ -695,7 +695,7 @@ msgstr "Helt gratis, for alltid, uten skjulte kostnader."
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Configure Job Search"
-msgstr ""
+msgstr "Konfigurer jobbsøk"
 
 #. Account deletion confirmation dialog confirm action in danger zone
 #. Create API key dialog acknowledgment action after copying
@@ -735,7 +735,7 @@ msgstr "Fortsett der du slapp ved å importere en eksisterende CV du har laget m
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Contractor"
-msgstr ""
+msgstr "Konsulent"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
@@ -765,26 +765,26 @@ msgstr "Kopier URL"
 #. Error description when syncing newly detected skills to source resume fails due to invalid patch
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Could not apply skill updates to your original resume."
-msgstr ""
+msgstr "Kunne ikke bruke ferdighetsoppdateringer på den opprinnelige CV-en din."
 
 #. Fallback error description when duplicating a resume for tailoring fails
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Could not duplicate your resume."
-msgstr ""
+msgstr "Kunne ikke duplisere CV-en din."
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Could not fetch jobs"
-msgstr ""
+msgstr "Kunne ikke hente jobber"
 
 #. Error shown when job search API is unavailable while searching jobs
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Could not fetch jobs from JSearch API. Please try again."
-msgstr ""
+msgstr "Kunne ikke hente jobber fra JSearch API. Prøv igjen."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
-msgstr ""
+msgstr "Kunne ikke nå JSearch API. Sjekk API-nøkkelen din og prøv igjen."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error description when AI provider is unreachable during resume tailoring
@@ -793,13 +793,13 @@ msgstr ""
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
-msgstr ""
+msgstr "Kunne ikke nå KI-leverandøren. Prøv igjen."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -917,12 +917,12 @@ msgstr "Opprett så mange CV-er du vil, uten begrensninger."
 #. Call-to-action link from login page to account registration page
 #: src/routes/auth/login.tsx
 msgid "Create one now"
-msgstr ""
+msgstr "Opprett en nå"
 
 #. Accessible label for create-resume split button group
 #: src/dialogs/resume/index.tsx
 msgid "Create resume with options"
-msgstr ""
+msgstr "Opprett CV med alternativer"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Creating your API key..."
@@ -938,7 +938,7 @@ msgstr "Nåværende passord"
 
 #: src/components/input/rich-input.tsx
 msgid "Custom"
-msgstr ""
+msgstr "Egendefinert"
 
 #: src/routes/_home/-sections/features.tsx
 #: src/utils/resume/section.tsx
@@ -948,7 +948,7 @@ msgstr "Tilpasset CSS"
 #. Authentication provider display name in account settings
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Custom OAuth"
-msgstr ""
+msgstr "Egendefinert OAuth"
 
 #: src/utils/resume/section.tsx
 msgid "Custom Sections"
@@ -990,7 +990,7 @@ msgstr "Dato"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Date Posted"
-msgstr ""
+msgstr "Publiseringsdato"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Degree"
@@ -1026,7 +1026,7 @@ msgstr "Slett side"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Delete picture"
-msgstr ""
+msgstr "Slett bilde"
 
 #: src/components/input/rich-input.tsx
 msgid "Delete Row"
@@ -1068,15 +1068,15 @@ msgstr "Design"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Direct"
-msgstr ""
+msgstr "Direkte"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Direct Apply"
-msgstr ""
+msgstr "Søk direkte"
 
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Direct apply only"
-msgstr ""
+msgstr "Kun direkte søknad"
 
 #. Destructive action button to turn off two-factor authentication
 #: src/dialogs/auth/disable-two-factor.tsx
@@ -1088,7 +1088,7 @@ msgstr "Deaktiver 2FA"
 msgid "Disable Two-Factor Authentication"
 msgstr "Deaktiver tofaktorautentisering"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Deaktivert"
 
@@ -1108,7 +1108,7 @@ msgstr "Discord"
 #. Dialog description for the mobile sidebar panel
 #: src/components/ui/sidebar.tsx
 msgid "Displays the mobile sidebar."
-msgstr ""
+msgstr "Viser det mobile sidepanelet."
 
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
@@ -1130,7 +1130,7 @@ msgstr "Last ned"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr ""
+msgstr "Last ned en kopi av CV-en din som et Word-dokument. Bruk denne filen til å tilpasse CV-en din videre i Microsoft Word eller Google Docs."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
@@ -1142,7 +1142,7 @@ msgstr "Last ned en kopi av CV-en din i PDF-format. Bruk denne filen til utskrif
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Download DOCX"
-msgstr ""
+msgstr "Last ned DOCX"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Download JSON"
@@ -1189,39 +1189,39 @@ msgstr "Nederlandsk"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "e.g. 150000"
-msgstr ""
+msgstr "f.eks. 150000"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "e.g. 50000"
-msgstr ""
+msgstr "f.eks. 50000"
 
 #. Example placeholder text in job search input field
 #: src/routes/dashboard/job-search/index.tsx
 msgid "e.g. frontend developer jobs in Berlin"
-msgstr ""
+msgstr "f.eks. frontend-utviklerjobber i Berlin"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
-msgstr ""
+msgstr "f.eks. gpt-4, claude-3-opus, gemini-pro"
 
 #. Screen reader label for button that edits a keyword chip. Variable is the current keyword text.
 #: src/components/input/chip-input.tsx
 msgid "Edit {chip}"
-msgstr ""
+msgstr "Rediger {chip}"
 
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
-msgstr ""
+msgstr "Rediger innhold i fullskjermmodus"
 
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
-msgstr ""
+msgstr "Rediger nøkkelord"
 
 #: src/components/input/chip-input.tsx
 msgid "Editing keyword..."
-msgstr ""
+msgstr "Redigerer nøkkelord..."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
@@ -1251,7 +1251,7 @@ msgstr "Aktiver"
 msgid "Enable 2FA"
 msgstr "Aktiver 2FA"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Aktiver KI-funksjoner"
 
@@ -1259,7 +1259,7 @@ msgstr "Aktiver KI-funksjoner"
 msgid "Enable Two-Factor Authentication"
 msgstr "Aktiver tofaktorautentisering"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Aktivert"
 
@@ -1285,7 +1285,7 @@ msgstr "Styrk sikkerheten til kontoen din med ekstra lag med beskyttelse."
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Enter a name for your passkey."
-msgstr ""
+msgstr "Skriv inn et navn for passnøkkelen din."
 
 #: src/routes/auth/verify-2fa-backup.tsx
 msgid "Enter one of your saved backup codes to access your account"
@@ -1311,15 +1311,15 @@ msgstr "Skriv inn passordet ditt for å bekrefte at du vil sette opp tofaktoraut
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Skriv inn passordet ditt for å deaktivere tofaktorautentisering. Kontoen din vil være mindre sikker uten aktivert 2FA."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
-msgstr ""
+msgstr "Skriv inn RapidAPI-nøkkelen din"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Hvert bidrag, stort eller lite, gjør en enorm forskjell for prosjektet.<0/>Takk for støtten!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Alt du skriver inn her lagres lokalt i nettleseren din. Dataene dine sendes bare til serveren når du gjør en forespørsel til KI-leverandøren, og lagres eller logges aldri på våre servere."
 
@@ -1329,15 +1329,15 @@ msgstr "Alt du trenger for å opprette, tilpasse og dele profesjonelle CV-er. By
 
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Exclude {value}"
-msgstr ""
+msgstr "Ekskluder {value}"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Companies"
-msgstr ""
+msgstr "Ekskluder selskaper"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Exclude Keywords"
-msgstr ""
+msgstr "Ekskluder nøkkelord"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1372,86 +1372,86 @@ msgstr "Eksporter"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
-msgstr ""
+msgstr "Kunne ikke analysere CV-en."
 
 #. Fallback toast when creating an API key fails
 #: src/dialogs/api-key/create.tsx
 msgid "Failed to create API key. Please try again."
-msgstr ""
+msgstr "Kunne ikke opprette API-nøkkel. Prøv igjen."
 
 #. Fallback toast when account registration fails without a server error message
 #: src/routes/auth/register.tsx
 msgid "Failed to create your account. Please try again."
-msgstr ""
+msgstr "Kunne ikke opprette kontoen din. Prøv igjen."
 
 #. Fallback toast when deleting a passkey fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Failed to delete passkey. Please try again."
-msgstr ""
+msgstr "Kunne ikke slette passnøkkel. Prøv igjen."
 
 #. Fallback toast when deleting an API key fails
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "Failed to delete the API key. Please try again."
-msgstr ""
+msgstr "Kunne ikke slette API-nøkkelen. Prøv igjen."
 
 #. Fallback toast when account deletion fails
 #: src/routes/dashboard/settings/danger-zone.tsx
 msgid "Failed to delete your account. Please try again."
-msgstr ""
+msgstr "Kunne ikke slette kontoen din. Prøv igjen."
 
 #. Fallback toast when disabling two-factor authentication fails
 #: src/dialogs/auth/disable-two-factor.tsx
 msgid "Failed to disable two-factor authentication. Please try again."
-msgstr ""
+msgstr "Kunne ikke deaktivere tofaktorautentisering. Prøv igjen."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to duplicate resume"
-msgstr ""
+msgstr "Kunne ikke duplisere CV-en"
 
 #. Fallback toast when enabling two-factor authentication fails
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to enable two-factor authentication. Please try again."
-msgstr ""
+msgstr "Kunne ikke aktivere tofaktorautentisering. Prøv igjen."
 
 #. Fallback toast when linking a social authentication provider fails
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Failed to link provider. Please try again."
-msgstr ""
+msgstr "Kunne ikke koble til leverandør. Prøv igjen."
 
 #. Fallback toast when passkey registration fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Failed to register passkey. Please try again."
-msgstr ""
+msgstr "Kunne ikke registrere passnøkkel. Prøv igjen."
 
 #. Fallback toast when renaming a passkey fails
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Failed to rename passkey. Please try again."
-msgstr ""
+msgstr "Kunne ikke gi nytt navn til passnøkkel. Prøv igjen."
 
 #. Fallback toast when requesting email change confirmation fails
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Failed to request email change. Please try again."
-msgstr ""
+msgstr "Kunne ikke be om endring av e-postadresse. Prøv igjen."
 
 #. Fallback toast when resending account verification email fails
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Failed to resend verification email. Please try again."
-msgstr ""
+msgstr "Kunne ikke sende verifiserings-e-post på nytt. Prøv igjen."
 
 #. Fallback toast when resetting password fails and no backend message is available
 #: src/routes/auth/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
-msgstr ""
+msgstr "Kunne ikke tilbakestille passordet ditt. Prøv igjen."
 
 #. Fallback error shown when job search request fails
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Failed to search jobs. Please try again."
-msgstr ""
+msgstr "Kunne ikke søke etter jobber. Prøv igjen."
 
 #. Fallback toast when requesting password reset email fails without backend message
 #: src/routes/auth/forgot-password.tsx
 msgid "Failed to send password reset email. Please try again."
-msgstr ""
+msgstr "Kunne ikke sende e-post for tilbakestilling av passord. Prøv igjen."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to setup two-factor authentication."
@@ -1469,58 +1469,58 @@ msgstr "Innlogging mislyktes. Vennligst prøv igjen."
 #. Fallback toast when signing out fails
 #: src/components/user/dropdown-menu.tsx
 msgid "Failed to sign out. Please try again."
-msgstr ""
+msgstr "Kunne ikke logge ut. Prøv igjen."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Failed to sync skills"
-msgstr ""
+msgstr "Kunne ikke synkronisere ferdigheter"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
-msgstr ""
+msgstr "Kunne ikke teste tilkoblingen til KI-leverandøren. Prøv igjen."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
-msgstr ""
+msgstr "Kunne ikke teste RapidAPI-tilkoblingen. Prøv igjen."
 
 #. Fallback toast when unlinking a social authentication provider fails
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Failed to unlink provider. Please try again."
-msgstr ""
+msgstr "Kunne ikke koble fra leverandør. Prøv igjen."
 
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
-msgstr ""
+msgstr "Kunne ikke oppdatere passordet ditt. Prøv igjen."
 
 #. Fallback toast when updating profile details fails
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Failed to update your profile. Please try again."
-msgstr ""
+msgstr "Kunne ikke oppdatere profilen din. Prøv igjen."
 
 #. Fallback toast when uploading profile picture for resume fails
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Failed to upload picture. Please try again."
-msgstr ""
+msgstr "Kunne ikke laste opp bilde. Prøv igjen."
 
 #. Fallback toast when resume password verification fails unexpectedly
 #: src/routes/auth/resume-password.tsx
 msgid "Failed to verify the password. Please try again."
-msgstr ""
+msgstr "Kunne ikke bekrefte passordet. Prøv igjen."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
 #: src/routes/auth/verify-2fa-backup.tsx
 msgid "Failed to verify your backup code. Please try again."
-msgstr ""
+msgstr "Kunne ikke bekrefte reservekoden din. Prøv igjen."
 
 #. Fallback toast when verifying a two-factor authentication code fails
 #. Fallback toast when verifying two-factor setup code fails
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/routes/auth/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
-msgstr ""
+msgstr "Kunne ikke bekrefte koden din. Prøv igjen."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -1603,7 +1603,7 @@ msgstr "Full bredde"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Full-time"
-msgstr ""
+msgstr "Heltid"
 
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen"
@@ -1612,7 +1612,7 @@ msgstr "Fullskjerm"
 #. Screen reader title for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Fullscreen Editor"
-msgstr ""
+msgstr "Fullskjermredigering"
 
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
@@ -1621,7 +1621,7 @@ msgstr "Generer et tilfeldig navn"
 #. Error description when generated patch operations cannot be applied to tailored resume
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Generated resume changes were invalid. Please try again."
-msgstr ""
+msgstr "Genererte CV-endringer var ugyldige. Prøv igjen."
 
 #: src/utils/locale.ts
 msgid "German"
@@ -1629,26 +1629,26 @@ msgstr "Tysk"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr ""
+msgstr "Få en vurdering av CV-en din med en samlet poengsum, styrker og konkrete forslag."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr ""
+msgstr "Få en grundig KI-drevet vurdering av CV-en din med en samlet poengsum, viktige styrker og praktiske forslag. For å aktivere denne funksjonen må du oppdatere KI-innstillingene dine."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Kom i gang"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
-msgstr ""
+msgstr "Få API-nøkkelen din fra RapidAPI ved å abonnere på JSearch API."
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
 #: src/components/layout/not-found-screen.tsx
@@ -1660,14 +1660,14 @@ msgstr "Gå tilbake"
 msgid "Go to dashboard"
 msgstr "Gå til kontrollpanelet"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
-msgstr ""
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr ""
+msgstr "Gå til CV-oversikten"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1678,12 +1678,12 @@ msgstr "Gå til..."
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
-msgstr ""
+msgstr "Google Gemini"
 
 #: src/dialogs/resume/sections/education.tsx
 msgid "Grade"
@@ -1786,12 +1786,12 @@ msgstr "Skjul alle ikoner på CV-en"
 #: src/routes/auth/reset-password.tsx
 #: src/routes/auth/resume-password.tsx
 msgid "Hide password"
-msgstr ""
+msgstr "Skjul passord"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "High"
-msgstr ""
+msgstr "Høy"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -1846,7 +1846,7 @@ msgstr "Importerer..."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Include Keywords"
-msgstr ""
+msgstr "Inkluder nøkkelord"
 
 #: src/utils/locale.ts
 msgid "Indonesian"
@@ -1864,6 +1864,12 @@ msgstr "Innebygd kode"
 msgid "Insert Table"
 msgstr "Sett inn tabell"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1871,12 +1877,12 @@ msgstr "Interesser"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Intern"
-msgstr ""
+msgstr "Praktikant"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
-msgstr ""
+msgstr "Ugyldig konfigurasjon for KI-leverandør. Sjekk innstillingene dine."
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Is Reactive Resume available in multiple languages?"
@@ -1904,32 +1910,32 @@ msgstr "Japansk"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
-msgstr ""
+msgstr "Jobbsøk"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
-msgstr ""
+msgstr "Jobbsøk-API"
 
 #. Accessible label for free-text job search query field
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Job search query"
-msgstr ""
+msgstr "Jobbsøk"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "John Doe"
-msgstr ""
+msgstr "Ola Nordmann"
 
 #. Example username placeholder on profile settings form
 #. Example username placeholder on registration form
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "john.doe"
-msgstr ""
+msgstr "ola.nordmann"
 
 #. Example email placeholder for login identifier field
 #. Example email placeholder on forgot-password form
@@ -1940,20 +1946,16 @@ msgstr ""
 #: src/routes/auth/register.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "john.doe@example.com"
-msgstr ""
+msgstr "ola.nordmann@eksempel.no"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr ""
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
 msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
 msgid "JSON Resume"
-msgstr ""
+msgstr "JSON Resume"
 
 #: src/components/input/rich-input.tsx
 msgid "Justify Align"
@@ -2002,12 +2004,12 @@ msgstr "Språk"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Last 3 days"
-msgstr ""
+msgstr "Siste 3 dager"
 
 #. placeholder {0}: new Date(analysis.updatedAt).toLocaleString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Last analyzed on {0}"
-msgstr ""
+msgstr "Sist analysert {0}"
 
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
@@ -2091,7 +2093,7 @@ msgstr "Linjehøyde"
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Linking your {providerName} account..."
@@ -2108,7 +2110,7 @@ msgstr "Litauisk"
 #. Accessible label for loading spinner icon
 #: src/components/ui/spinner.tsx
 msgid "Loading"
-msgstr ""
+msgstr "Laster"
 
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Loading resumes..."
@@ -2150,7 +2152,7 @@ msgstr "Mistet tilgang til autentiseringsappen?"
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Low"
-msgstr ""
+msgstr "Lav"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2183,29 +2185,29 @@ msgstr "Marg (vertikal)"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Maximum Salary"
-msgstr ""
+msgstr "Maksimal lønn"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Medium"
-msgstr ""
+msgstr "Middels"
 
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
 msgid "Microsoft Word"
-msgstr ""
+msgstr "Microsoft Word"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Minimum Salary"
-msgstr ""
+msgstr "Minimumslønn"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Modell"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "More than 3 years"
-msgstr ""
+msgstr "Mer enn 3 år"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Move to"
@@ -2218,7 +2220,7 @@ msgstr "Flerspråklig"
 #. Placeholder text for custom link URL field in resume builder
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Must start with https://"
-msgstr ""
+msgstr "Må starte med https://"
 
 #. Label for full name input on registration form
 #: src/dialogs/api-key/create.tsx
@@ -2265,11 +2267,11 @@ msgstr "Ny seksjon"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "New Skills Detected"
-msgstr ""
+msgstr "Nye ferdigheter oppdaget"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Next"
-msgstr ""
+msgstr "Neste"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "No Advertising, No Tracking"
@@ -2278,23 +2280,23 @@ msgstr "Ingen annonser, ingen sporing"
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
-msgstr ""
+msgstr "Ingen data ble returnert fra KI-leverandøren."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No degree required"
-msgstr ""
+msgstr "Ingen grad kreves"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "No experience"
-msgstr ""
+msgstr "Ingen erfaring"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "No jobs found. Try a different search query."
-msgstr ""
+msgstr "Ingen jobber funnet. Prøv et annet søk."
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "No passkeys registered yet."
-msgstr ""
+msgstr "Ingen passnøkler registrert ennå."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -2302,7 +2304,7 @@ msgstr "Ingen resultater funnet."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "No resumes found. Create a resume first."
-msgstr ""
+msgstr "Ingen CV-er funnet. Opprett en CV først."
 
 #: src/utils/locale.ts
 msgid "Norwegian"
@@ -2317,9 +2319,9 @@ msgid "Odia"
 msgstr "Odia"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
-msgstr ""
+msgstr "Ollama"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "One-Click Sign-In"
@@ -2336,28 +2338,28 @@ msgstr "Løpende vedlikehold"
 msgid "Open"
 msgstr "Åpne"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr ""
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Åpne e-postklient"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Åpen kildekode"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
-msgstr ""
+msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
-msgstr ""
+msgstr "OpenRouter"
 
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
@@ -2367,7 +2369,7 @@ msgstr "åpnes i ny fane"
 #. placeholder {0}: job.job_title
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Optimizing summary, experience, and skills for {0}"
-msgstr ""
+msgstr "Optimaliserer sammendrag, erfaring og ferdigheter for {0}"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
@@ -2388,7 +2390,7 @@ msgstr "Organisasjon"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Overall Score"
-msgstr ""
+msgstr "Samlet poengsum"
 
 #: src/utils/resume/section.tsx
 msgid "Page"
@@ -2403,7 +2405,7 @@ msgstr "Side {0}"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Page {currentPage}"
-msgstr ""
+msgstr "Side {currentPage}"
 
 #. Page counter label shown above resume preview pages
 #: src/components/resume/preview.tsx
@@ -2416,26 +2418,26 @@ msgstr "Avsnitt"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Part-time"
-msgstr ""
+msgstr "Deltid"
 
 #. Authentication provider display name in account settings
 #. Label for passkey sign-in button
 #: src/routes/auth/-components/social-auth.tsx
 #: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "Passkey"
-msgstr ""
+msgstr "Passnøkkel"
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Passkey deleted successfully."
-msgstr ""
+msgstr "Passnøkkel ble slettet."
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Passkey registered successfully."
-msgstr ""
+msgstr "Passnøkkel registrert."
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Passkeys"
-msgstr ""
+msgstr "Passnøkler"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Passkeys & 2FA"
@@ -2474,7 +2476,7 @@ msgstr "Passordbeskyttelse er aktivert."
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
@@ -2548,7 +2550,7 @@ msgstr "Preferanser"
 
 #: src/components/input/rich-input.tsx
 msgid "Presets"
-msgstr ""
+msgstr "Forhåndsinnstillinger"
 
 #: src/components/input/chip-input.tsx
 msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the current keyword."
@@ -2557,11 +2559,11 @@ msgstr "Trykk <0>{RETURN_KEY}</0> eller <1>{COMMA_KEY}</1> for å legge til elle
 #. Command palette hint that pressing Enter opens the selected resume
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Press <0>Enter</0> to open"
-msgstr ""
+msgstr "Trykk <0>Enter</0> for å åpne"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Previous"
-msgstr ""
+msgstr "Forrige"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -2599,7 +2601,7 @@ msgstr "Beskytt CV-en din mot uautorisert tilgang med et passord"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Beskytt CV-en din med et passord, og la bare personer med passordet se den."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Tilbyder"
 
@@ -2615,11 +2617,11 @@ msgstr "Utgiver"
 #. placeholder {0}: quota.remaining
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Quota: {0} remaining"
-msgstr ""
+msgstr "Kvota: {0} gjenstår"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
-msgstr ""
+msgstr "RapidAPI-nøkkel"
 
 #: src/routes/_home/-sections/header.tsx
 msgid "Reactive Resume - Go to homepage"
@@ -2628,7 +2630,7 @@ msgstr "Reactive Resume - Gå til startsiden"
 #. Import source option for current Reactive Resume JSON format
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume (JSON)"
-msgstr ""
+msgstr "Reactive Resume (JSON)"
 
 #: src/routes/_home/-sections/prefooter.tsx
 msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've donated to support its continued development."
@@ -2653,12 +2655,12 @@ msgstr "Reactive Resume er åpen kildekode, personvernfokusert og helt gratis. I
 #. App version label in footer; includes semantic version variable
 #: src/components/ui/copyright.tsx
 msgid "Reactive Resume v{__APP_VERSION__}"
-msgstr ""
+msgstr "Reactive Resume v{__APP_VERSION__}"
 
 #. Import source option for legacy Reactive Resume v4 JSON format
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume v4 (JSON)"
-msgstr ""
+msgstr "Reactive Resume v4 (JSON)"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -2688,7 +2690,7 @@ msgstr "Oppdater"
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Register New Device"
-msgstr ""
+msgstr "Registrer ny enhet"
 
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
@@ -2698,11 +2700,11 @@ msgstr "Husker du passordet ditt? <0/>"
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Remote"
-msgstr ""
+msgstr "Fjernarbeid"
 
 #: src/routes/dashboard/job-search/-components/use-job-search.ts
 msgid "Remote only"
-msgstr ""
+msgstr "Kun fjernarbeid"
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Remove"
@@ -2711,7 +2713,7 @@ msgstr "Fjern"
 #. Screen reader label for button that removes a keyword chip. Variable is the current keyword text.
 #: src/components/input/chip-input.tsx
 msgid "Remove {chip}"
-msgstr ""
+msgstr "Fjern {chip}"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
@@ -2739,7 +2741,7 @@ msgstr "Rapporter et problem"
 
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 msgid "Required Skills"
-msgstr ""
+msgstr "Nødvendige ferdigheter"
 
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Resend verification email"
@@ -2774,15 +2776,15 @@ msgstr "Ressurser"
 
 #: src/utils/resume/section.tsx
 msgid "Resume Analysis"
-msgstr ""
+msgstr "CV-analyse"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Resume analysis complete."
-msgstr ""
+msgstr "CV-analysen er fullført."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Resume tailored successfully"
-msgstr ""
+msgstr "CV-en ble tilpasset"
 
 #: src/components/command-palette/pages/navigation.tsx
 #: src/components/command-palette/pages/resumes.tsx
@@ -2794,7 +2796,7 @@ msgstr "CV-er"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Retry"
-msgstr ""
+msgstr "Prøv igjen"
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2814,7 +2816,7 @@ msgstr "Rotasjon"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr ""
+msgstr "Kjør din første analyse for å få et poengkort, styrker og prioriterte forslag."
 
 #: src/utils/locale.ts
 msgid "Russian"
@@ -2823,13 +2825,13 @@ msgstr "Russisk"
 #. Passkey rename prompt confirm action in authentication settings
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Save"
-msgstr ""
+msgstr "Lagre"
 
 #. Button label to save the selected number of detected skills to the original resume
 #. placeholder {0}: selectedSkills.size
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Save {0} Skills"
-msgstr ""
+msgstr "Lagre {0} ferdigheter"
 
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
@@ -2861,20 +2863,20 @@ msgstr "Skole"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
-msgstr ""
+msgstr "Poengkort"
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #. Accessible label for command palette search input
 #: src/components/command-palette/index.tsx
 msgid "Search commands"
-msgstr ""
+msgstr "Søk i kommandoer"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "Søk etter land"
 
 #. Accessible label for icon picker search input
 #. Placeholder text in icon picker search input
@@ -2904,11 +2906,11 @@ msgstr "Seksjonstype"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr ""
+msgstr "Velg en CV som skal tilpasses for \"{0}\" hos {1}. Det opprettes en kopi."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
-msgstr ""
+msgstr "Velg land"
 
 #: src/components/ui/combobox.tsx
 msgid "Select..."
@@ -2999,7 +3001,7 @@ msgstr "Vis lenke i tittel"
 #: src/routes/auth/reset-password.tsx
 #: src/routes/auth/resume-password.tsx
 msgid "Show password"
-msgstr ""
+msgstr "Vis passord"
 
 #. Dialog title for the mobile navigation sidebar panel
 #. Layout editor column label for the secondary sidebar area
@@ -3022,7 +3024,7 @@ msgstr "Logg inn"
 #: src/routes/auth/forgot-password.tsx
 #: src/routes/auth/register.tsx
 msgid "Sign in now"
-msgstr ""
+msgstr "Logg inn nå"
 
 #. Title on the login page
 #: src/routes/auth/login.tsx
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Enkolonners med sidepanel og ren rutenettslayout; allsidig for alle profesjonelle eller tekniske roller."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Én kolonne med en innebygd topptekst i tre kolonner for hver oppføring (stilling · organisasjon · periode); kompakt og ATS-vennlig, godt egnet for asiatiske CV-konvensjoner (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Enkolonners; polert og seriøs for senior- eller virksomhetsnivåstillinger."
 
@@ -3078,7 +3084,7 @@ msgstr "Ferdigheter"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Skip"
-msgstr ""
+msgstr "Hopp over"
 
 #: src/routes/_home/route.tsx
 msgid "Skip to main content"
@@ -3090,7 +3096,7 @@ msgstr "Slovakisk"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Slovensk"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3099,17 +3105,17 @@ msgstr "Forkortelse"
 #. Fallback error description when resume analysis request fails
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Something went wrong while analyzing your resume."
-msgstr ""
+msgstr "Noe gikk galt under analysen av CV-en din."
 
 #. Fallback error description when syncing newly detected skills fails
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Something went wrong while syncing skills."
-msgstr ""
+msgstr "Noe gikk galt under synkronisering av ferdigheter."
 
 #. Fallback error description when tailoring pipeline fails
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Something went wrong while tailoring your resume."
-msgstr ""
+msgstr "Noe gikk galt under tilpasningen av CV-en din."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
@@ -3178,7 +3184,7 @@ msgstr "Bli"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
-msgstr ""
+msgstr "Styrker"
 
 #: src/components/input/rich-input.tsx
 msgid "Strike"
@@ -3190,7 +3196,7 @@ msgstr "Subreddit"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Suggestions"
-msgstr ""
+msgstr "Forslag"
 
 #. Fallback title for a custom summary item in resume builder when content is empty
 #. Fallback title for a custom summary item in resume builder when content is unavailable
@@ -3235,15 +3241,15 @@ msgstr "Tagger kan brukes til å kategorisere CV-en din etter nøkkelord."
 #: src/routes/dashboard/job-search/-components/job-detail.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailor Resume"
-msgstr ""
+msgstr "Tilpass CV"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailoring failed"
-msgstr ""
+msgstr "Tilpasning mislyktes"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Tailoring your resume..."
-msgstr ""
+msgstr "Tilpasser CV-en din..."
 
 #: src/utils/locale.ts
 msgid "Tamil"
@@ -3265,8 +3271,8 @@ msgstr "Malgalleri"
 msgid "Templates"
 msgstr "Maler"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Test tilkobling"
 
@@ -3285,21 +3291,21 @@ msgstr "Thai"
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI identified new skills from your experience that match this job. Select which ones to save back to your original resume for future applications. This will permanently modify your original resume and cannot be undone."
-msgstr ""
+msgstr "KI-en identifiserte nye ferdigheter fra erfaringen din som passer til denne jobben. Velg hvilke du vil lagre tilbake til den opprinnelige CV-en din for fremtidige søknader. Dette vil permanent endre den opprinnelige CV-en din og kan ikke angres."
 
 #. Error description when AI returns invalid resume analysis format
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "The AI returned an invalid analysis format. Please try again."
-msgstr ""
+msgstr "KI-en returnerte et ugyldig analyseformat. Prøv igjen."
 
 #. Error description when AI tailoring output is invalid
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI returned invalid tailoring data. Please try again."
-msgstr ""
+msgstr "KI-en returnerte ugyldige tilpasningsdata. Prøv igjen."
 
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "The AI will optimize it for this position."
-msgstr ""
+msgstr "KI-en vil optimalisere den for denne stillingen."
 
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "The API key has been deleted successfully."
@@ -3322,7 +3328,7 @@ msgstr "Innholdet er for høyt for denne siden, dette kan føre til uønskede re
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
-msgstr ""
+msgstr "Den importerte filen kunne ikke tolkes som en gyldig CV."
 
 #: src/routes/auth/resume-password.tsx
 msgid "The password you entered is incorrect"
@@ -3350,7 +3356,7 @@ msgstr "Skriv deretter inn den 6-sifrede koden som appen gir deg for å fortsett
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the DOCX, please try again."
-msgstr ""
+msgstr "Det oppstod et problem under generering av DOCX-filen. Prøv igjen."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
@@ -3386,7 +3392,7 @@ msgstr "Dette kan ta en stund, avhengig av serverkapasitet. Ikke lukk vinduet el
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "This month"
-msgstr ""
+msgstr "Denne måneden"
 
 #: src/components/resume/store/resume.ts
 msgid "This resume is locked and cannot be updated."
@@ -3402,7 +3408,7 @@ msgstr "Dette trinnet er valgfritt, men anbefalt."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "This week"
-msgstr ""
+msgstr "Denne uken"
 
 #: src/dialogs/api-key/create.tsx
 msgid "This will generate a new API key to access the Reactive Resume API to allow machines to interact with your resume data."
@@ -3410,11 +3416,11 @@ msgstr "Dette vil generere en ny API-nøkkel for tilgang til Reactive Resume API
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "This will help you identify it later, if you plan to have multiple passkeys."
-msgstr ""
+msgstr "Dette vil hjelpe deg med å identifisere den senere hvis du planlegger å ha flere passnøkler."
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "This will remove all items from this section."
-msgstr ""
+msgstr "Dette vil fjerne alle elementer fra denne seksjonen."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Timelapse demonstration of building a resume with Reactive Resume"
@@ -3441,29 +3447,29 @@ msgstr "For å slette kontoen din må du skrive inn bekreftelsesteksten og klikk
 
 #: src/routes/dashboard/job-search/index.tsx
 msgid "To search for job listings, you need to configure your RapidAPI key in settings."
-msgstr ""
+msgstr "For å søke etter stillingsannonser må du konfigurere RapidAPI-nøkkelen din i innstillingene."
 
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Today"
-msgstr ""
+msgstr "I dag"
 
 #. Screen-reader label for opening or closing the left sidebar in resume builder
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Toggle left sidebar"
-msgstr ""
+msgstr "Veksle venstre sidepanel"
 
 #. Screen-reader label for opening or closing the right sidebar in resume builder
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Toggle right sidebar"
-msgstr ""
+msgstr "Veksle høyre sidepanel"
 
 #. Accessible label for draggable/clickable sidebar rail that toggles sidebar visibility
 #. Screen-reader-only label for button that opens or closes the app sidebar
 #. Tooltip text for sidebar rail toggle action
 #: src/components/ui/sidebar.tsx
 msgid "Toggle Sidebar"
-msgstr ""
+msgstr "Veksle sidepanel"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Track your resume's views and downloads"
@@ -3534,7 +3540,7 @@ msgstr "Tofaktorautentisering er satt opp."
 #. Accessible title for QR code image shown during two-factor setup
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Two-Factor Authentication QR Code"
-msgstr ""
+msgstr "QR-kode for tofaktorautentisering"
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3562,7 +3568,7 @@ msgstr "Ukrainsk"
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Under 3 years"
-msgstr ""
+msgstr "Under 3 år"
 
 #: src/components/input/rich-input.tsx
 msgid "Underline"
@@ -3593,7 +3599,7 @@ msgstr "Lås opp"
 
 #: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Unnamed passkey"
-msgstr ""
+msgstr "Navnløs passnøkkel"
 
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Unverified"
@@ -3603,7 +3609,7 @@ msgstr "Ubekreftet"
 #. placeholder {0}: formatCurrency(max)
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Up to {0}{periodSuffix}"
-msgstr ""
+msgstr "Opptil {0}{periodSuffix}"
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -3699,7 +3705,7 @@ msgstr "Oppdaterer CV-en din..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"
-msgstr ""
+msgstr "Last opp bilde"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Uploading picture..."
@@ -3713,7 +3719,7 @@ msgstr "URL"
 
 #: src/components/input/rich-input.tsx
 msgid "Use color {color}"
-msgstr ""
+msgstr "Bruk fargen {color}"
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -3735,9 +3741,9 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Gyldige URL-er må starte med http:// eller https://."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
-msgstr ""
+msgstr "Vercel AI Gateway"
 
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Verified"
@@ -3801,9 +3807,9 @@ msgstr "Nettsted"
 msgid "What do you want to rename this section to?"
 msgstr "Hva vil du endre navnet på denne seksjonen til?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
-msgstr ""
+msgstr "Hva er JSearch API?"
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
@@ -3837,7 +3843,7 @@ msgstr "Ja! Reactive Resume er helt gratis å bruke, uten skjulte kostnader, pre
 
 #: src/routes/dashboard/job-search/-components/job-utils.ts
 msgid "Yesterday"
-msgstr ""
+msgstr "I går"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "You also have the option to deploy on your own servers using the Docker image."
@@ -3876,7 +3882,7 @@ msgstr "Endringene dine lagres automatisk."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Dataene dine er sikre, og blir aldri delt eller solgt til noen."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Dataene dine lagres lokalt"
 
@@ -3886,7 +3892,7 @@ msgstr "Dataene dine lagres sikkert og deles aldri med tredjeparter. Du kan ogs�
 
 #: src/components/resume/store/resume.ts
 msgid "Your latest changes could not be saved. Please make sure you are connected to the internet and try again."
-msgstr ""
+msgstr "De siste endringene dine kunne ikke lagres. Kontroller at du er koblet til internett, og prøv igjen."
 
 #: src/routes/auth/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -3900,9 +3906,9 @@ msgstr "Passordet ditt har blitt oppdatert."
 msgid "Your profile has been updated successfully."
 msgstr "Profilen din er oppdatert."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
-msgstr ""
+msgstr "RapidAPI-nøkkelen din lagres lokalt i nettleseren din. Den sendes bare til serveren når du gjør en forespørsel for å søke etter jobber, og lagres eller logges aldri på serverne våre."
 
 #: src/dialogs/resume/index.tsx
 msgid "Your resume has been created successfully."
@@ -3945,4 +3951,3 @@ msgstr "Zoom ut"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

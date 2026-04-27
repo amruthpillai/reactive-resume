@@ -8,7 +8,7 @@ msgstr ""
 "Language: uz\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Uzbek\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# kun oldin} other {# kun oldin}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# oy oldin} other {# oy oldin}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} {limit} so'rovlari ishlatildi ({remaining} qolgan)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Nihoyat,</0><1>Bepul va ochiq manbali tarjimai hol yaratuvchisi</1>"
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Ko'pincha</0><1>So'ralgan</1><2>Savollar</2>"
+msgstr "<0>Tez-tez</0><1>Beriladigan</1><2>Savollar</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "Va yana ko‘pgina..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropik Klod"
 
@@ -343,7 +343,7 @@ msgstr "Ushbu havolaga ega bo'lgan ixtiyoriy shaxs tarjimai holni ko‘rishi va 
 msgid "API Access"
 msgstr "API orqali kirish"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API kalit"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API kalitlar"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API ma'lumotnoma"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "APIdan foydalanish"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Ta'lim sohasi"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Sun'iy intellekt"
 
@@ -481,7 +481,7 @@ msgstr "Orqa fon rangi"
 msgid "Backup codes copied to clipboard."
 msgstr "Zaxira kodlari buferga nusxalandi."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Asosiy URL (ixtiyoriy)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "JSearch API'dan ishlarni olish mumkin bo'lmadi. Iltimos, yana urinib ko'ring."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "JSearch API ga ulanib bo'lmadi. API kalitingizni tekshirib, yana urinib ko'ring."
 
@@ -793,7 +793,7 @@ msgstr "JSearch API ga ulanib bo'lmadi. API kalitingizni tekshirib, yana urinib 
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "AI provayderiga ulanib bo'lmadi. Iltimos, yana urinib ko'ring."
 
@@ -1088,7 +1088,7 @@ msgstr "2BShT (2FA) ni o'chirish"
 msgid "Disable Two-Factor Authentication"
 msgstr "Ikki bosqichli autentifikatsiyani o'chirish"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Oʻchirilgan"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "Masalan, Berlin shahrida frontend-dasturchi ish o'rinlari"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "masalan, gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Faollashtirish"
 msgid "Enable 2FA"
 msgstr "2BShT (2FA) ni yoqish"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "AI xususiyatlarini yoqish"
 
@@ -1259,7 +1259,7 @@ msgstr "AI xususiyatlarini yoqish"
 msgid "Enable Two-Factor Authentication"
 msgstr "Ikki bosqichli autentifikatsiyani yoqish"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Faol"
 
@@ -1311,7 +1311,7 @@ msgstr "Ikki bosqichli autentifikatsiyani yoqishni tasdiqlash uchun parolingizni
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Ikki bosqichli autentifikatsiyani o‘chirishni tasdiqlash uchun parolingizni kiriting. 2BShT yoqilmagan holda hisobingiz kamroq xavfsiz boʻladi."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "RapidAPI kalitingizni kiriting"
 
@@ -1319,7 +1319,7 @@ msgstr "RapidAPI kalitingizni kiriting"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Har bir hissa, kichik yoki katta bo‘lishidan qat’i nazar, loyiha uchun katta ahamiyatga ega.<0/>Qo‘llab-quvvatlaganingiz uchun rahmat!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Bu yerga kiritilgan barcha ma'lumotlar faqat brauzeringizda lokal saqlanadi. Faqat AI provayderiga so'rov yuborilganda ma'lumotlaringiz serverga yuboriladi, ular bizning serverlarimizda saqlanmaydi yoki qayd etilmaydi."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Mahoratlarni sinxronlashtirish muvaffaqiyatsiz bo'ldi"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "AI provayderi ulanishini sinash muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ring."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "RapidAPI ulanishini sinash muvaffaqiyatsiz tugadi. Iltimos, yana urinib ko'ring."
 
@@ -1639,7 +1639,7 @@ msgstr "Rezyumeingizni sun'iy intellekt yordamida chuqur tahlil qiling: umumiy b
 msgid "Get Started"
 msgstr "Boshlash"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "JSearch APIga obuna bo'lib, RapidAPIdan API kalitingizni oling."
 
@@ -1660,14 +1660,14 @@ msgstr "Orqaga qaytish"
 msgid "Go to dashboard"
 msgstr "Dashboardga o'tish"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Rezyumelar boshqaruv paneliga o'ting"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Sozlamalarga o'ting"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Inline kod"
 msgid "Insert Table"
 msgstr "Jadval qoʻshish"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Stajyor"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "AI provayderi konfiguratsiyasi noto'g'ri. Iltimos, sozlamalaringizni tekshiring."
 
@@ -1904,11 +1910,11 @@ msgstr "Yapon tili"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Ish qidirish"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "Ish qidirish API"
 
@@ -1942,13 +1948,9 @@ msgstr "jon.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch Google for Jobs yordamida bir nechta ish portallaridan ish e'lonlarini birlashtiradi. Siz mamlakat (ISO alfa-2 kodi), e'lon qilingan sana, ish turi, masofaviy ish imkoniyatlari va tajriba darajasiga ko'ra filtrlashingiz mumkin."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API hujjatlari"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Minimal maosh"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Model"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Odiya tili"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Doimiy texnik xizmat ko‘rsatish"
 msgid "Open"
 msgstr "Ochiq"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "AI sozlamalarini oching"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Pochta dasturini ochish"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Ochiq kodli"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "Ochiq AI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "Ochiq marshrutizator"
 
@@ -2599,7 +2601,7 @@ msgstr "Rezyumeni ruxsatsiz kirishdan parol orqali himoya qiling"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Rezyumeingizni parol bilan himoya qiling va faqat parolga ega odamlar uni ko'ra olishini ta'minlang."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Provayder"
 
@@ -2617,7 +2619,7 @@ msgstr "Nashriyotchi"
 msgid "Quota: {0} remaining"
 msgstr "Kota: {0} qoldi"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI kaliti"
 
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Yon panel va toza tarmoq maketi bilan bir ustunli; har qanday kasbiy yoki texnik rol uchun mos."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Bir ustunli, satr ichida uch ustunli kirish sarlavhasi (lavozim · tashkilot · davr); ixcham va ATSga mos, Osiyo rezyume an'analari (Xitoy/Yaponiya/Janubiy Koreya) uchun juda qulay."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Bir ustunli; sayqallangan va jiddiy, yuqori darajali yoki korporativ lavozimlar uchun."
 
@@ -3090,7 +3096,7 @@ msgstr "Slovak tili"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Sloven"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Andoza galereyasi"
 msgid "Templates"
 msgstr "Andozalar"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Ulanishni tekshirish"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Toʻgʻri URL http:// yoki https:// bilan boshlanishi kerak."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "Veb-sayt"
 msgid "What do you want to rename this section to?"
 msgstr "Bu bo‘limni qanday nomlamoqchisiz?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "JSearch API nima?"
 
@@ -3876,7 +3882,7 @@ msgstr "O'zgartirishlaringiz avtomatik tarzda saqlanadi."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Maʼlumotlaringiz xavfsiz va hech qachon boshqalarga berilmaydi yoki sotilmaydi."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Maʼlumotlaringiz lokal tarzda saqlanadi"
 
@@ -3900,7 +3906,7 @@ msgstr "Parolingiz muvaffaqiyatli yangilandi."
 msgid "Your profile has been updated successfully."
 msgstr "Profilingiz muvaffaqiyatli yangilandi."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "Sizning RapidAPI kalitingiz brauzeringizda mahalliy saqlanadi. U faqat ish qidirish so'rovi yuborilganda serverga jo'natiladi va hech qachon bizning serverlarda saqlanmaydi yoki qayd etilmaydi."
 
@@ -3945,4 +3951,3 @@ msgstr "Kichraytirish"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

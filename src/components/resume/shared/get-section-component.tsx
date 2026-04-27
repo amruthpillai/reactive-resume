@@ -29,18 +29,46 @@ import { VolunteerItem } from "./items/volunteer-item";
 import { PageSection } from "./page-section";
 import { PageSummary } from "./page-summary";
 
+/**
+ * Extra props forwarded by a template to each rendered item. Used by templates
+ * (e.g., Meowth) to opt-in to alternative item renderings such as an inline
+ * three-column header. Only item components that declare the corresponding
+ * prop will react to it; others simply ignore the extra props via spread.
+ */
+type ItemProps = {
+  headerLayout?: "split" | "inline";
+};
+
 type SectionComponentProps = {
   sectionClassName?: string;
   itemClassName?: string;
+  itemProps?: ItemProps;
 };
 
 // Helper to render item component based on type
-function renderItemByType(type: CustomSectionType, item: CustomSectionItem, itemClassName?: string) {
+function renderItemByType(
+  type: CustomSectionType,
+  item: CustomSectionItem,
+  itemClassName?: string,
+  itemProps?: ItemProps,
+) {
   return match(type)
     .with("summary", () => <SummaryItem {...(item as SummaryItemType)} className={itemClassName} />)
     .with("profiles", () => <ProfilesItem {...(item as SectionItem<"profiles">)} className={itemClassName} />)
-    .with("experience", () => <ExperienceItem {...(item as SectionItem<"experience">)} className={itemClassName} />)
-    .with("education", () => <EducationItem {...(item as SectionItem<"education">)} className={itemClassName} />)
+    .with("experience", () => (
+      <ExperienceItem
+        {...(item as SectionItem<"experience">)}
+        className={itemClassName}
+        headerLayout={itemProps?.headerLayout}
+      />
+    ))
+    .with("education", () => (
+      <EducationItem
+        {...(item as SectionItem<"education">)}
+        className={itemClassName}
+        headerLayout={itemProps?.headerLayout}
+      />
+    ))
     .with("projects", () => <ProjectsItem {...(item as SectionItem<"projects">)} className={itemClassName} />)
     .with("skills", () => <SkillsItem {...(item as SectionItem<"skills">)} className={itemClassName} />)
     .with("languages", () => <LanguagesItem {...(item as SectionItem<"languages">)} className={itemClassName} />)
@@ -52,7 +80,13 @@ function renderItemByType(type: CustomSectionType, item: CustomSectionItem, item
     .with("publications", () => (
       <PublicationsItem {...(item as SectionItem<"publications">)} className={itemClassName} />
     ))
-    .with("volunteer", () => <VolunteerItem {...(item as SectionItem<"volunteer">)} className={itemClassName} />)
+    .with("volunteer", () => (
+      <VolunteerItem
+        {...(item as SectionItem<"volunteer">)}
+        className={itemClassName}
+        headerLayout={itemProps?.headerLayout}
+      />
+    ))
     .with("references", () => <ReferencesItem {...(item as SectionItem<"references">)} className={itemClassName} />)
     .with("cover-letter", () => <CoverLetterItem {...(item as CoverLetterItemType)} className={itemClassName} />)
     .exhaustive();
@@ -62,7 +96,7 @@ type SectionProps = { id: string };
 
 export function getSectionComponent(
   section: "summary" | SectionType | (string & {}),
-  { sectionClassName, itemClassName }: SectionComponentProps = {},
+  { sectionClassName, itemClassName, itemProps }: SectionComponentProps = {},
 ) {
   return match(section)
     .with("summary", () => {
@@ -82,7 +116,7 @@ export function getSectionComponent(
     .with("experience", () => {
       const ExperienceSection = (_: SectionProps) => (
         <PageSection type="experience" className={sectionClassName}>
-          {(item) => <ExperienceItem {...item} className={itemClassName} />}
+          {(item) => <ExperienceItem {...item} className={itemClassName} headerLayout={itemProps?.headerLayout} />}
         </PageSection>
       );
 
@@ -91,7 +125,7 @@ export function getSectionComponent(
     .with("education", () => {
       const EducationSection = (_: SectionProps) => (
         <PageSection type="education" className={sectionClassName}>
-          {(item) => <EducationItem {...item} className={itemClassName} />}
+          {(item) => <EducationItem {...item} className={itemClassName} headerLayout={itemProps?.headerLayout} />}
         </PageSection>
       );
 
@@ -163,7 +197,7 @@ export function getSectionComponent(
     .with("volunteer", () => {
       const VolunteerSection = (_: SectionProps) => (
         <PageSection type="volunteer" className={sectionClassName}>
-          {(item) => <VolunteerItem {...item} className={itemClassName} />}
+          {(item) => <VolunteerItem {...item} className={itemClassName} headerLayout={itemProps?.headerLayout} />}
         </PageSection>
       );
 
@@ -205,7 +239,7 @@ export function getSectionComponent(
                   key={item.id}
                   className={cn(`section-item section-item-${customSection.type} print:break-inside-avoid`)}
                 >
-                  {renderItemByType(customSection.type, item, itemClassName)}
+                  {renderItemByType(customSection.type, item, itemClassName, itemProps)}
                 </div>
               ))}
             </div>

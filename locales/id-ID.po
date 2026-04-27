@@ -8,7 +8,7 @@ msgstr ""
 "Language: id\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# hari yang lalu} other {# hari yang lalu}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# bulan yang lalu} other {# bulan yang lalu}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} dari {limit} permintaan yang digunakan ({remaining} tersisa)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Akhirnya,</0><1>Pembuat resume gratis dan sumber terbuka</1>"
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Sering</0><1>Ditanyakan</1><2>Pertanyaan</2>"
+msgstr "<0>Sering</0><1>Diajukan</1><2>Pertanyaan</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "Dan masih banyak lagi..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropik Claude"
 
@@ -343,7 +343,7 @@ msgstr "Siapa pun yang memiliki tautan dapat melihat dan mengunduh resume."
 msgid "API Access"
 msgstr "Akses API"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API Key"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API Key"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "Referensi API"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "Penggunaan API"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Bidang Studi"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Kecerdasan Buatan"
 
@@ -481,7 +481,7 @@ msgstr "Warna Latar Belakang"
 msgid "Backup codes copied to clipboard."
 msgstr "Kode cadangan disalin ke papan klip."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Base URL (Opsional)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "Tidak dapat mengambil pekerjaan dari API JSearch. Silakan coba lagi."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "Tidak dapat menjangkau API JSearch. Periksa kunci API Anda dan coba lagi."
 
@@ -793,7 +793,7 @@ msgstr "Tidak dapat menjangkau API JSearch. Periksa kunci API Anda dan coba lagi
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Tidak dapat menghubungi penyedia AI. Silakan coba lagi."
 
@@ -1088,7 +1088,7 @@ msgstr "Nonaktifkan 2FA"
 msgid "Disable Two-Factor Authentication"
 msgstr "Nonaktifkan Autentikasi Dua Faktor"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Nonaktif"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "mis. pekerjaan pengembang frontend di Berlin"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "misalnya, gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Aktifkan"
 msgid "Enable 2FA"
 msgstr "Aktifkan 2FA"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Aktifkan Fitur AI"
 
@@ -1259,7 +1259,7 @@ msgstr "Aktifkan Fitur AI"
 msgid "Enable Two-Factor Authentication"
 msgstr "Aktifkan Autentikasi Dua Faktor"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Aktif"
 
@@ -1311,7 +1311,7 @@ msgstr "Masukkan kata sandi Anda untuk mengonfirmasi penyiapan autentikasi dua f
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Masukkan kata sandi Anda untuk menonaktifkan autentikasi dua faktor. Akun Anda akan menjadi kurang aman tanpa 2FA diaktifkan."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Masukkan kunci RapidAPI Anda"
 
@@ -1319,7 +1319,7 @@ msgstr "Masukkan kunci RapidAPI Anda"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Setiap kontribusi, besar atau kecil, membuat perbedaan besar bagi proyek ini.<0/>Terima kasih atas dukungan Anda!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Semua yang dimasukkan di sini disimpan secara lokal di browser Anda. Data Anda hanya dikirim ke server saat membuat permintaan ke penyedia AI, dan tidak pernah disimpan atau dicatat di server kami."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Gagal menyinkronkan keterampilan"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "Gagal menguji koneksi penyedia AI. Silakan coba lagi."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "Gagal menguji koneksi RapidAPI. Silakan coba lagi."
 
@@ -1639,7 +1639,7 @@ msgstr "Dapatkan tinjauan mendalam yang didukung oleh AI atas resume Anda dengan
 msgid "Get Started"
 msgstr "Mulai"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "Dapatkan kunci API Anda dari RapidAPI dengan berlangganan API JSearch."
 
@@ -1660,14 +1660,14 @@ msgstr "Kembali"
 msgid "Go to dashboard"
 msgstr "Pergi ke dasbor"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Buka dasbor resume"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Buka Pengaturan"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Kode Inline"
 msgid "Insert Table"
 msgstr "Sisipkan Tabel"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Magang"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Konfigurasi penyedia AI tidak valid. Silakan periksa pengaturan Anda."
 
@@ -1904,11 +1910,11 @@ msgstr "Jepang"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Pencarian Pekerjaan"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "API Pencarian Pekerjaan"
 
@@ -1942,13 +1948,9 @@ msgstr "john.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch mengumpulkan daftar lowongan kerja dari berbagai papan lowongan kerja menggunakan Google for Jobs. Anda dapat memfilter berdasarkan negara (kode ISO alpha-2), tanggal diposting, jenis pekerjaan, opsi jarak jauh, dan tingkat pengalaman."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "Dokumentasi API JSearch"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Gaji Minimum"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Model"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Odia"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Pemeliharaan Berkelanjutan"
 msgid "Open"
 msgstr "Buka"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "Buka Pengaturan AI"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Buka Klien Email"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Sumber Terbuka"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Lindungi resume Anda dari akses tidak sah dengan kata sandi"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Lindungi resume Anda dengan kata sandi, dan biarkan hanya orang yang memiliki kata sandi yang dapat melihatnya."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Penyedia"
 
@@ -2617,7 +2619,7 @@ msgstr "Penerbit"
 msgid "Quota: {0} remaining"
 msgstr "Sisa kuota: {0}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "Kunci RapidAPI"
 
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Satu kolom dengan bilah sisi dan tata letak grid bersih; serbaguna untuk peran profesional atau teknis apa pun."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Kolom tunggal dengan tajuk entri tiga kolom sebaris (posisi - organisasi - periode); ringkas dan ramah ATS, cocok untuk konvensi resume Asia (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Satu kolom; rapi dan serius untuk posisi tingkat senior atau level perusahaan."
 
@@ -3090,7 +3096,7 @@ msgstr "Slovak"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Slovenia"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Galeri Template"
 msgid "Templates"
 msgstr "Template"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Uji Koneksi"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "URL yang valid harus dimulai dengan http:// atau https://."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "Situs Web"
 msgid "What do you want to rename this section to?"
 msgstr "Apa yang ingin Anda ganti nama bagian ini menjadi?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Apa yang dimaksud dengan JSearch API?"
 
@@ -3876,7 +3882,7 @@ msgstr "Perubahan Anda disimpan secara otomatis."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Data Anda aman, dan tidak pernah dibagikan atau dijual kepada siapa pun."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Data Anda disimpan secara lokal"
 
@@ -3900,7 +3906,7 @@ msgstr "Kata sandi Anda telah berhasil diperbarui."
 msgid "Your profile has been updated successfully."
 msgstr "Profil Anda telah berhasil diperbarui."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "Kunci RapidAPI Anda disimpan secara lokal di browser Anda. Kunci ini hanya dikirim ke server ketika membuat permintaan untuk mencari pekerjaan, dan tidak pernah disimpan atau dicatat di server kami."
 
@@ -3945,4 +3951,3 @@ msgstr "Perkecil"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

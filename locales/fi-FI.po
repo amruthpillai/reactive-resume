@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# day ago} other {# days ago}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# kuukausi sitten} other {# kuukautta sitten}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} käytetyt {limit} pyynnöt ({remaining} jäljellä)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Lopultakin,</0><1>ilmainen ja avoimen lähdekoodin ansioluettelon laa
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Usein</0><1>Kysytyt kysymykset</1><2>Kysymykset</2>"
+msgstr "<0>Usein</0><1>kysytyt</1><2>kysymykset</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "Ja paljon muuta..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antrooppinen Claude"
 
@@ -343,7 +343,7 @@ msgstr "Kaikki, joilla on linkki, voivat tarkastella ja ladata ansioluettelon."
 msgid "API Access"
 msgstr "API-käyttö"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API-avain"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API-avaimet"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API-viite"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "API:n käyttö"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Opintoala"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Tekoäly"
 
@@ -481,7 +481,7 @@ msgstr "Taustaväri"
 msgid "Backup codes copied to clipboard."
 msgstr "Varmuuskoodit kopioitu leikepöydälle."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Perus-URL (valinnainen)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "JSearch API:sta ei voitu noutaa töitä. Yritä uudelleen."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "JSearch API:ta ei saatu kiinni. Tarkista API-avaimesi ja yritä uudelleen."
 
@@ -793,7 +793,7 @@ msgstr "JSearch API:ta ei saatu kiinni. Tarkista API-avaimesi ja yritä uudellee
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Tekoälypalvelun tarjoajaa ei tavoitettu. Yritä uudelleen."
 
@@ -1088,7 +1088,7 @@ msgstr "Poista 2FA käytöstä"
 msgid "Disable Two-Factor Authentication"
 msgstr "Poista kaksivaiheinen todennus käytöstä"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Pois käytöstä"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "esim. frontend developer työpaikat Berliinissä"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "esim. gpt-4, claude-3-opus, gemini-pro."
 
@@ -1251,7 +1251,7 @@ msgstr "Ota käyttöön"
 msgid "Enable 2FA"
 msgstr "Ota 2FA käyttöön"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Ota tekoälyominaisuudet käyttöön"
 
@@ -1259,7 +1259,7 @@ msgstr "Ota tekoälyominaisuudet käyttöön"
 msgid "Enable Two-Factor Authentication"
 msgstr "Ota kaksivaiheinen todennus käyttöön"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Käytössä"
 
@@ -1311,7 +1311,7 @@ msgstr "Syötä salasanasi vahvistaaksesi kaksivaiheisen todennuksen käyttöön
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Syötä salasanasi poistaaksesi kaksivaiheisen todennuksen käytöstä. Tilisi on vähemmän suojattu ilman 2FA:ta."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Syötä RapidAPI-avaimesi"
 
@@ -1319,7 +1319,7 @@ msgstr "Syötä RapidAPI-avaimesi"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Jokainen panos, suuri tai pieni, vaikuttaa valtavasti projektiin.<0/>Kiitos tuestasi!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Kaikki tähän syötetty tallennetaan paikallisesti selaimeesi. Tietosi lähetetään palvelimelle vain, kun teet pyynnön tekoälypalveluntarjoajalle, eikä niitä koskaan tallenneta tai lokiteta palvelimillemme."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Taitojen synkronointi epäonnistui"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "AI-palveluntarjoajan yhteyden testaus epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "RapidAPI-yhteyden testaus epäonnistui. Yritä uudelleen."
 
@@ -1639,7 +1639,7 @@ msgstr "Saat ansioluettelostasi perusteellisen tekoälypohjaisen katsauksen, jok
 msgid "Get Started"
 msgstr "Aloita"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "Saat API-avaimesi RapidAPI:lta tilaamalla JSearch API:n."
 
@@ -1660,14 +1660,14 @@ msgstr "Palaa takaisin"
 msgid "Go to dashboard"
 msgstr "Siirry hallintapaneeliin"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Siirry ansioluetteloiden kojelautaan"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Siirry kohtaan Asetukset"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Rivikoodaus"
 msgid "Insert Table"
 msgstr "Lisää taulukko"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Harjoittelija"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "AI-palveluntarjoajan määritys on virheellinen. Tarkista asetukset."
 
@@ -1904,11 +1910,11 @@ msgstr "japani"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Työnhaku"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "Työnhaku API"
 
@@ -1942,13 +1948,9 @@ msgstr "John.Doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch kokoaa Google for Jobs -palvelun avulla yhteen työpaikkailmoituksia useista eri ilmoitustauluista. Voit suodattaa maittain (ISO alpha-2-koodi), ilmoituksen päivämäärän, työn tyypin, etävaihtoehtojen ja kokemustason mukaan."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API:n dokumentaatio"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Vähimmäispalkka"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Malli"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "odia"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Jatkuva ylläpito"
 msgid "Open"
 msgstr "Avaa"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "Avaa tekoälyn asetukset"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Avaa sähköpostiohjelma"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Avoin lähdekoodi"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Suojaa ansioluettelosi luvattomalta käytöltä salasanalla"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Suojaa ansioluettelosi salasanalla ja anna vain salasanan tietävien nähdä se."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Palveluntarjoaja"
 
@@ -2617,7 +2619,7 @@ msgstr "Julkaisija"
 msgid "Quota: {0} remaining"
 msgstr "Kiintiö: {0} jäljellä"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI-avain"
 
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Yksipalstainen, sivupalkilla ja selkeällä ruudukkoasettelulla; monipuolinen kaikkiin ammatillisiin tai teknisiin rooleihin."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Yksisarakkeinen, riviin sijoitettu kolmisarakkeinen otsikko (asema - organisaatio - piste); kompakti ja ATS-ystävällinen, sopii hyvin aasialaisiin ansioluettelokäytäntöihin (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Yksipalstainen; viimeistelty ja asiallinen kokeneille tai yritystason tehtäviin hakeville."
 
@@ -3090,7 +3096,7 @@ msgstr "slovakki"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Sloveeni"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Mallipohjagalleria"
 msgid "Templates"
 msgstr "Mallipohjat"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Testaa yhteys"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Kelvollisten URL-osoitteiden on alettava http:// tai https:// ."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "Verkkosivusto"
 msgid "What do you want to rename this section to?"
 msgstr "Miksi haluat nimetä tämän osion uudelleen?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Mikä on JSearch API?"
 
@@ -3876,7 +3882,7 @@ msgstr "Muutoksesi tallentuvat automaattisesti."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Tietosi ovat turvassa, eikä niitä koskaan jaeta tai myydä kenellekään."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Tietosi tallennetaan paikallisesti"
 
@@ -3900,7 +3906,7 @@ msgstr "Salasanasi on päivitetty onnistuneesti."
 msgid "Your profile has been updated successfully."
 msgstr "Profiilisi on päivitetty onnistuneesti."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "RapidAPI-avaimesi tallennetaan paikallisesti selaimeesi. Se lähetetään palvelimelle vain silloin, kun pyydät hakemaan työpaikkoja, eikä sitä koskaan tallenneta tai kirjata palvelimillemme."
 
@@ -3945,4 +3951,3 @@ msgstr "Loitonna"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

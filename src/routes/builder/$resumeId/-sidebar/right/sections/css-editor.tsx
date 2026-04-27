@@ -138,6 +138,7 @@ const CSS_SELECTORS = [
   ".template-kakuna",
   ".template-lapras",
   ".template-leafish",
+  ".template-meowth",
   ".template-onyx",
   ".template-pikachu",
   ".template-rhyhorn",

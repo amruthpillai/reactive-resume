@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# gün önce} other {# gün önce}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# ay önce} other {# ay önce}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} kullanılan {limit} talepleri ({remaining} kalan)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Sonunda,</0><1>Ücretsiz ve açık kaynaklı bir özgeçmiş oluştur
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Sıklıkla</0><1>Soruldu</1><2>Sorular</2>"
+msgstr "<0>Sıkça</0><1>Sorulan</1><2>Sorular</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "Ve daha fazlası..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropik Claude"
 
@@ -343,7 +343,7 @@ msgstr "Bağlantıya sahip olan herkes özgeçmişi görüntüleyebilir ve indir
 msgid "API Access"
 msgstr "API Erişimi"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API Anahtarı"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API Anahtarları"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API Referansı"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "API Kullanımı"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Çalışma alanı"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Yapay Zekâ"
 
@@ -481,7 +481,7 @@ msgstr "Arka plan rengi"
 msgid "Backup codes copied to clipboard."
 msgstr "Yedek kodlar panoya kopyalandı."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Temel URL (İsteğe Bağlı)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "JSearch API'den işler alınamadı. Lütfen tekrar deneyin."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "JSearch API'ye ulaşılamadı. API anahtarınızı kontrol edin ve tekrar deneyin."
 
@@ -793,7 +793,7 @@ msgstr "JSearch API'ye ulaşılamadı. API anahtarınızı kontrol edin ve tekra
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "AI sağlayıcısına ulaşılamadı. Lütfen tekrar deneyin."
 
@@ -1088,7 +1088,7 @@ msgstr "2FA'yı devre dışı bırak"
 msgid "Disable Two-Factor Authentication"
 msgstr "İki Faktörlü Kimlik Doğrulamayı Devre Dışı Bırak"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Devre dışı"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "örneğin Berlin'de frontend developer işleri"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "örneğin, gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Etkinleştir"
 msgid "Enable 2FA"
 msgstr "2FA'yı etkinleştir"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "Yapay Zeka Özelliklerini Etkinleştir"
 
@@ -1259,7 +1259,7 @@ msgstr "Yapay Zeka Özelliklerini Etkinleştir"
 msgid "Enable Two-Factor Authentication"
 msgstr "İki Faktörlü Kimlik Doğrulamayı Etkinleştir"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Etkin"
 
@@ -1311,7 +1311,7 @@ msgstr "İki faktörlü kimlik doğrulamayı kurmayı onaylamak için şifrenizi
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "İki faktörlü kimlik doğrulamayı devre dışı bırakmak için şifrenizi girin. 2FA etkin olmadığında hesabınız daha az güvenli olur."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "RapidAPI anahtarınızı girin"
 
@@ -1319,7 +1319,7 @@ msgstr "RapidAPI anahtarınızı girin"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Her katkı, büyük ya da küçük, projeye önemli bir katkı sağlar.<0/>Desteğiniz için teşekkürler!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Buraya girilen her şey tarayıcınıza yerel olarak kaydedilir. Verileriniz yalnızca yapay zeka sağlayıcısına istek göndermek için sunucuya gönderilir ve sunucularımızda asla depolanmaz veya kaydedilmez."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Beceriler senkronize edilemedi"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "AI sağlayıcı bağlantısı test edilemedi. Lütfen tekrar deneyin."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "RapidAPI bağlantısı test edilemedi. Lütfen tekrar deneyin."
 
@@ -1639,7 +1639,7 @@ msgstr "Genel bir puan, güçlü yönler ve pratik önerilerle özgeçmişinizin
 msgid "Get Started"
 msgstr "Başlayın"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "JSearch API'ye abone olarak RapidAPI'den API anahtarınızı alın."
 
@@ -1660,14 +1660,14 @@ msgstr "Geri Dön"
 msgid "Go to dashboard"
 msgstr "Gösterge Paneline Git"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Özgeçmişler kontrol paneline git"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Ayarlar'a gidin"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Satır İçi Kod"
 msgid "Insert Table"
 msgstr "Tablo Ekle"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Stajyer"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Geçersiz AI sağlayıcı yapılandırması. Lütfen ayarlarınızı kontrol edin."
 
@@ -1904,11 +1910,11 @@ msgstr "Japonca"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "İş Arama"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "İş Arama API'si"
 
@@ -1942,13 +1948,9 @@ msgstr "john.doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "JSearch, Google for Jobs'u kullanarak birden fazla iş panosundaki iş ilanlarını bir araya getirir. Ülkeye (ISO alfa-2 kodu), yayınlanma tarihine, iş türüne, uzaktan çalışma seçeneklerine ve deneyim düzeyine göre filtreleme yapabilirsiniz."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API Dokümantasyonu"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Asgari Ücret"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Model"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "Odiya"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Devam Eden Bakım"
 msgid "Open"
 msgstr "Aç"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "AI Ayarlarını Açın"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "E-posta İstemcisini Aç"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Açık Kaynak"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Özgeçmişinizi yetkisiz erişimden bir şifreyle koruyun"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Özgeçmişinizi bir şifre ile koruyun ve yalnızca şifreye sahip kişilerin görmesine izin verin."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Sağlayıcı"
 
@@ -2617,7 +2619,7 @@ msgstr "Yayınlayıcı"
 msgid "Quota: {0} remaining"
 msgstr "Kota: {0} kalan"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI Anahtarı"
 
@@ -2904,7 +2906,7 @@ msgstr "Bölüm Türü"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr "{1}adresinden \"{0}\" için uyarlamak üzere bir özgeçmiş seçin. Bir kopya oluşturulacaktır."
+msgstr "{1}adresinden \"{0}\" için uyarlanacak bir özgeçmiş seçin. Bir kopya oluşturulacaktır."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -3062,6 +3064,10 @@ msgstr "Minimal üst başlığa ve bol beyaz alana sahip tek sütun; tasarımcı
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a sidebar and clean grid layout; versatile for any professional or technical role."
 msgstr "Yan panel ve temiz ızgara yerleşimine sahip tek sütun; her türlü profesyonel veya teknik rol için çok yönlü."
+
+#: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Satır içi üç sütunlu giriş başlığına sahip tek sütun (pozisyon - organizasyon - nokta); kompakt ve ATS dostu, Asya özgeçmiş kuralları (CN/JP/KR) için çok uygun."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
@@ -3265,8 +3271,8 @@ msgstr "Şablon Galerisi"
 msgid "Templates"
 msgstr "Şablonlar"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Bağlantıyı Test Et"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Geçerli URL'ler http:// veya https:// ile başlamalıdır."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Ağ Geçidi"
 
@@ -3801,7 +3807,7 @@ msgstr "İnternet sitesi"
 msgid "What do you want to rename this section to?"
 msgstr "Bu bölümü hangi isimle değiştirmek istiyorsunuz?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "JSearch API nedir?"
 
@@ -3876,7 +3882,7 @@ msgstr "Değişiklikleriniz otomatik olarak kaydediliyor."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Verileriniz güvende ve asla kimseyle paylaşılmaz, satılmaz."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Verileriniz yerel olarak depolanıyor"
 
@@ -3900,7 +3906,7 @@ msgstr "Şifreniz başarıyla güncellendi."
 msgid "Your profile has been updated successfully."
 msgstr "Profiliniz başarıyla güncellendi."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "RapidAPI anahtarınız tarayıcınızda yerel olarak saklanır. Yalnızca iş aramak için bir istekte bulunurken sunucuya gönderilir ve asla sunucularımızda saklanmaz veya kaydedilmez."
 
@@ -3945,4 +3951,3 @@ msgstr "Uzaklaştır"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

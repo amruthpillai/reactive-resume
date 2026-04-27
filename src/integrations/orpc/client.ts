@@ -9,7 +9,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import router from "@/integrations/orpc/router";
 import { getLocale } from "@/utils/locale";
 
-export const getORPCClient = createIsomorphicFn()
+const getORPCClient = createIsomorphicFn()
   .server((): RouterClient<typeof router> => {
     return createRouterClient(router, {
       interceptors: [

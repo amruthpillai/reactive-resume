@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-26 08:59\n"
+"PO-Revision-Date: 2026-04-27 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -66,7 +66,7 @@ msgstr "{diffDays, plural, one {# day ago} other {# days ago}}"
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# hónappal ezelőtt} other {# hónappal ezelőtt}}"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "{used} of {limit} requests used ({remaining} remaining)"
 msgstr "{used} a felhasznált {limit} kérések ({remaining} fennmaradó)"
 
@@ -81,7 +81,7 @@ msgstr "<0>Végre</0><1>egy ingyenes és nyílt forráskódú önéletrajz‑ké
 #: src/routes/_home/-sections/faq.tsx
 msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Gyakran</0><1>Kérdések</1><2>Kérdések</2>"
+msgstr "<0>Gyakran</0><1>Ismételt</1><2>Kérdések</2>"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
@@ -311,7 +311,7 @@ msgid "And many more..."
 msgstr "– És még sok más..."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antropikus Claude"
 
@@ -343,7 +343,7 @@ msgstr "A link birtokában bárki megtekintheti és letöltheti az önéletrajzo
 msgid "API Access"
 msgstr "API hozzáférés"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "API Key"
 msgstr "API kulcs"
 
@@ -354,10 +354,11 @@ msgid "API Keys"
 msgstr "API kulcsok"
 
 #: src/routes/dashboard/settings/api-keys.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Reference"
 msgstr "API referencia"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "API Usage"
 msgstr "API-használat"
 
@@ -435,8 +436,7 @@ msgid "Area of Study"
 msgstr "Tanulmányok területe"
 
 #: src/components/command-palette/pages/navigation.tsx
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Artificial Intelligence"
 msgstr "Mesterséges intelligencia"
 
@@ -481,7 +481,7 @@ msgstr "Háttérszín"
 msgid "Backup codes copied to clipboard."
 msgstr "Biztonsági kódok a vágólapra másolva."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Base URL (Optional)"
 msgstr "Alap URL (opcionális)"
 
@@ -782,7 +782,7 @@ msgid "Could not fetch jobs from JSearch API. Please try again."
 msgstr "Nem sikerült lekérni a JSearch API-ból a munkákat. Kérjük, próbálja újra."
 
 #. Error shown when JSearch API connection test fails in job search settings
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Could not reach JSearch API. Check your API key and try again."
 msgstr "Nem sikerült elérni a JSearch API-t. Ellenőrizze az API-kulcsát, és próbálja újra."
 
@@ -793,7 +793,7 @@ msgstr "Nem sikerült elérni a JSearch API-t. Ellenőrizze az API-kulcsát, és
 #: src/dialogs/resume/import.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Nem sikerült elérni az AI szolgáltatót. Kérjük, próbálja meg újra."
 
@@ -1088,7 +1088,7 @@ msgstr "2FA kikapcsolása"
 msgid "Disable Two-Factor Authentication"
 msgstr "Kétlépcsős hitelesítés kikapcsolása"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Disabled"
 msgstr "Letiltva"
 
@@ -1201,7 +1201,7 @@ msgid "e.g. frontend developer jobs in Berlin"
 msgstr "pl. frontend developer állások ebben Berlin"
 
 #. Example model-name placeholder in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "e.g., gpt-4, claude-3-opus, gemini-pro"
 msgstr "pl.: gpt-4, claude-3-opus, gemini-pro"
 
@@ -1251,7 +1251,7 @@ msgstr "Engedélyezés"
 msgid "Enable 2FA"
 msgstr "2FA bekapcsolása"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enable AI Features"
 msgstr "AI funkciók engedélyezése"
 
@@ -1259,7 +1259,7 @@ msgstr "AI funkciók engedélyezése"
 msgid "Enable Two-Factor Authentication"
 msgstr "Kétlépcsős hitelesítés engedélyezése"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Enabled"
 msgstr "Engedélyezve"
 
@@ -1311,7 +1311,7 @@ msgstr "Add meg a jelszavadat a kétlépcsős hitelesítés beállításának me
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Add meg a jelszavadat a kétlépcsős hitelesítés kikapcsolásához. A fiókod kevésbé lesz biztonságos 2FA nélkül."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Enter your RapidAPI key"
 msgstr "Adja meg a RapidAPI kulcsát"
 
@@ -1319,7 +1319,7 @@ msgstr "Adja meg a RapidAPI kulcsát"
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Minden hozzájárulás – legyen kicsi vagy nagy – hatalmas különbséget jelent a projekt számára.<0/>Köszönjük a támogatásodat!"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Everything entered here is stored locally on your browser. Your data is only sent to the server when making a request to the AI provider, and is never stored or logged on our servers."
 msgstr "Minden itt megadott adat helyben, a böngésződben kerül tárolásra. Az adataidat csak akkor küldjük el a kiszolgálónak, amikor AI szolgáltatónak küldesz kérést, és azokat soha nem tároljuk vagy naplózzuk a szervereinken."
 
@@ -1476,12 +1476,12 @@ msgid "Failed to sync skills"
 msgstr "Nem sikerült szinkronizálni a készségeket"
 
 #. Fallback toast when testing AI provider connection fails
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Failed to test AI provider connection. Please try again."
 msgstr "Nem sikerült tesztelni az AI szolgáltatói kapcsolatot. Kérjük, próbálja újra."
 
 #. Fallback toast when testing RapidAPI job search connection fails
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Failed to test RapidAPI connection. Please try again."
 msgstr "A RapidAPI kapcsolat tesztelése sikertelen. Kérjük, próbálja újra."
 
@@ -1639,7 +1639,7 @@ msgstr "Kap egy mélyreható, mesterséges intelligencia által vezérelt áttek
 msgid "Get Started"
 msgstr "Kezdjük"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Get your API key from RapidAPI by subscribing to the JSearch API."
 msgstr "A JSearch API-ra való feliratkozással szerezze meg API-kulcsát a RapidAPI-tól."
 
@@ -1660,14 +1660,14 @@ msgstr "Vissza"
 msgid "Go to dashboard"
 msgstr "Tovább az irányítópultra"
 
+#: src/routes/dashboard/job-search/index.tsx
+msgid "Go to Integrations"
+msgstr ""
+
 #. Accessible label for button navigating from builder to resumes dashboard
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Go to resumes dashboard"
 msgstr "Menjen az önéletrajzok műszerfalára"
-
-#: src/routes/dashboard/job-search/index.tsx
-msgid "Go to Settings"
-msgstr "Menjen a Beállítások menüpontba"
 
 #: src/components/command-palette/pages/navigation.tsx
 msgid "Go to..."
@@ -1681,7 +1681,7 @@ msgid "Google"
 msgstr "Google"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
@@ -1864,6 +1864,12 @@ msgstr "Sorközi kód"
 msgid "Insert Table"
 msgstr "Táblázat beszúrása"
 
+#: src/components/command-palette/pages/navigation.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+#: src/routes/dashboard/settings/integrations/route.tsx
+msgid "Integrations"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/utils/resume/section.tsx
 msgid "Interests"
@@ -1874,7 +1880,7 @@ msgid "Intern"
 msgstr "Gyakornok"
 
 #. Error shown when AI provider credentials or base URL are invalid in AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Invalid AI provider configuration. Please check your settings."
 msgstr "Érvénytelen AI szolgáltató konfiguráció. Kérjük, ellenőrizze a beállításokat."
 
@@ -1904,11 +1910,11 @@ msgstr "japán"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/job-search/index.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Job Search"
 msgstr "Álláskeresés"
 
-#: src/routes/dashboard/-components/sidebar.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/components/command-palette/pages/navigation.tsx
 msgid "Job Search API"
 msgstr "Álláskereső API"
 
@@ -1942,13 +1948,9 @@ msgstr "John.Doe"
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch aggregates job listings from multiple job boards using Google for Jobs. You can filter by country (ISO alpha-2 code), date posted, job type, remote options, and experience level."
-msgstr "A JSearch a Google for Jobs segítségével több állásbörzéről összesíti az álláshirdetéseket. Szűrhet ország (ISO alfa-2 kód), a meghirdetés dátuma, az állás típusa, távoli lehetőségek és tapasztalati szint szerint."
-
-#: src/routes/dashboard/settings/job-search.tsx
-msgid "JSearch API Documentation"
-msgstr "JSearch API dokumentáció"
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
+msgid "JSearch aggregates job listings from multiple job boards. You can filter by country, date posted, job type, remote options, and experience level."
+msgstr ""
 
 #. Import source option for standard JSON Resume format
 #: src/dialogs/resume/import.tsx
@@ -2199,7 +2201,7 @@ msgstr "Microsoft Word"
 msgid "Minimum Salary"
 msgstr "Minimális fizetés"
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Model"
 msgstr "Modell"
 
@@ -2317,7 +2319,7 @@ msgid "Odia"
 msgstr "odija"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2336,26 +2338,26 @@ msgstr "Folyamatos karbantartás"
 msgid "Open"
 msgstr "Megnyitás"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Open AI Settings"
-msgstr "AI beállítások megnyitása"
-
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "E‑mail kliens megnyitása"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+msgid "Open Integrations Settings"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Nyílt forráskódú"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2599,7 +2601,7 @@ msgstr "Védd az önéletrajzodat a jogosulatlan hozzáféréstől jelszóval"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Védd az önéletrajzodat jelszóval, és engedd, hogy csak a jelszó birtokában lehessen megtekinteni."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Provider"
 msgstr "Szolgáltató"
 
@@ -2617,7 +2619,7 @@ msgstr "Kiadó"
 msgid "Quota: {0} remaining"
 msgstr "Kvóta: {0} fennmaradó"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "RapidAPI Key"
 msgstr "RapidAPI kulcs"
 
@@ -2904,7 +2906,7 @@ msgstr "Szekció típusa"
 #. placeholder {1}: job.employer_name
 #: src/routes/dashboard/job-search/-components/tailor-dialog.tsx
 msgid "Select a resume to tailor for \"{0}\" at {1}. A copy will be created."
-msgstr "Válasszon egy önéletrajzot a \"{0}\" személyre szabásához a {1}oldalon. Egy másolatot fogunk készíteni."
+msgstr "Válasszon egy önéletrajzot a \"{0}\" személyre szabásához a {1}oldalon. A másolat elkészül."
 
 #: src/routes/dashboard/job-search/-components/search-filters.tsx
 msgid "Select country"
@@ -3064,6 +3066,10 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Egyoszlopos elrendezés oldalsávval és rendezett rácsszerkezettel; sokoldalú bármilyen szakmai vagy technikai szerepkörhöz."
 
 #: src/dialogs/resume/template/data.ts
+msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Egyoszlopos, sorba illesztett háromoszlopos belépési fejléccel (pozíció - szervezet - pont); kompakt és ATS-barát, jól illeszkedik az ázsiai önéletrajzok konvencióihoz (CN/JP/KR)."
+
+#: src/dialogs/resume/template/data.ts
 msgid "Single-column; polished and serious for senior or enterprise-level positions."
 msgstr "Egyoszlopos; kifinomult és komoly, vezetői vagy vállalati szintű pozíciókhoz."
 
@@ -3090,7 +3096,7 @@ msgstr "szlovák"
 
 #: src/utils/locale.ts
 msgid "Slovenian"
-msgstr ""
+msgstr "Szlovén"
 
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
@@ -3265,8 +3271,8 @@ msgstr "Sablon galéria"
 msgid "Templates"
 msgstr "Sablonok"
 
-#: src/routes/dashboard/settings/ai.tsx
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Test Connection"
 msgstr "Kapcsolat tesztelése"
 
@@ -3735,7 +3741,7 @@ msgid "Valid URLs must start with http:// or https://."
 msgstr "Az érvényes URL http:// vagy https:// előtaggal kezdődik."
 
 #. AI provider option label in dashboard AI settings
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
@@ -3801,7 +3807,7 @@ msgstr "Weboldal"
 msgid "What do you want to rename this section to?"
 msgstr "Mire szeretnéd átnevezni ezt a szekciót?"
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "What is JSearch API?"
 msgstr "Mi az a JSearch API?"
 
@@ -3876,7 +3882,7 @@ msgstr "A módosításaid automatikusan mentésre kerülnek."
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Az adataid biztonságban vannak, és soha nem adjuk el vagy osztjuk meg senkivel."
 
-#: src/routes/dashboard/settings/ai.tsx
+#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Your data is stored locally"
 msgstr "Az adataid helyben tárolódnak"
 
@@ -3900,7 +3906,7 @@ msgstr "A jelszavadat sikeresen frissítettük."
 msgid "Your profile has been updated successfully."
 msgstr "A profilodat sikeresen frissítettük."
 
-#: src/routes/dashboard/settings/job-search.tsx
+#: src/routes/dashboard/settings/integrations/-components/job-search-section.tsx
 msgid "Your RapidAPI key is stored locally on your browser. It is only sent to the server when making a request to search for jobs, and is never stored or logged on our servers."
 msgstr "A RapidAPI-kulcsot a böngészője helyileg tárolja. Csak akkor kerül elküldésre a szerverre, amikor álláskeresési kérelmet nyújt be, és soha nem kerül tárolásra vagy naplózásra a szervereinken."
 
@@ -3945,4 +3951,3 @@ msgstr "Kicsinyítés"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-
