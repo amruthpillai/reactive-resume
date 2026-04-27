@@ -147,8 +147,8 @@ describe("applyResumePatches", () => {
     it("removes an item from a section's items array", () => {
       const data = freshResume();
       data.sections.skills.items = [
-        { id: "s1", hidden: false, icon: "", name: "JS", proficiency: "", level: 0, keywords: [] },
-        { id: "s2", hidden: false, icon: "", name: "TS", proficiency: "", level: 0, keywords: [] },
+        { id: "s1", hidden: false, icon: "", iconColor: "", name: "JS", proficiency: "", level: 0, keywords: [] },
+        { id: "s2", hidden: false, icon: "", iconColor: "", name: "TS", proficiency: "", level: 0, keywords: [] },
       ];
 
       const result = applyResumePatches(data, [{ op: "remove", path: "/sections/skills/items/0" }]);
@@ -455,8 +455,8 @@ describe("applyResumePatches", () => {
     it("replaces a specific item in an array", () => {
       const data = freshResume();
       data.sections.skills.items = [
-        { id: "s1", hidden: false, icon: "", name: "JS", proficiency: "", level: 0, keywords: [] },
-        { id: "s2", hidden: false, icon: "", name: "TS", proficiency: "", level: 0, keywords: [] },
+        { id: "s1", hidden: false, icon: "", iconColor: "", name: "JS", proficiency: "", level: 0, keywords: [] },
+        { id: "s2", hidden: false, icon: "", iconColor: "", name: "TS", proficiency: "", level: 0, keywords: [] },
       ];
 
       const result = applyResumePatches(data, [

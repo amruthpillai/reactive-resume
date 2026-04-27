@@ -53,7 +53,18 @@ function resumeWithCustomSection(): ResumeData {
       title: "Soft Skills",
       columns: 1,
       hidden: false,
-      items: [{ id: "cs-1", hidden: false, icon: "", name: "Leadership", proficiency: "", level: 0, keywords: [] }],
+      items: [
+        {
+          id: "cs-1",
+          hidden: false,
+          icon: "",
+          iconColor: "",
+          name: "Leadership",
+          proficiency: "",
+          level: 0,
+          keywords: [],
+        },
+      ],
     },
   ];
   return data;

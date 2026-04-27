@@ -456,6 +456,7 @@ export class ReactiveResumeV4JSONImporter {
                 id: item.id ?? generateId(),
                 hidden: !(item.visible ?? true),
                 icon: item.icon ?? "",
+                iconColor: "",
                 network: item.network!,
                 username: item.username ?? "",
                 website: {
@@ -535,6 +536,7 @@ export class ReactiveResumeV4JSONImporter {
                 id: item.id ?? generateId(),
                 hidden: !(item.visible ?? true),
                 icon: "",
+                iconColor: "",
                 name: item.name!,
                 proficiency: item.description ?? "",
                 level: clampLevel(item.level ?? 0),
@@ -565,6 +567,7 @@ export class ReactiveResumeV4JSONImporter {
                 id: item.id ?? generateId(),
                 hidden: !(item.visible ?? true),
                 icon: "",
+                iconColor: "",
                 name: item.name!,
                 keywords: item.keywords ?? [],
               })),

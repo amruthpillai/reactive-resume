@@ -68,6 +68,7 @@ describe("DialogStore — openDialog", () => {
         id: "s1",
         hidden: false,
         icon: "star",
+        iconColor: "",
         name: "TypeScript",
         proficiency: "Advanced",
         level: 4,

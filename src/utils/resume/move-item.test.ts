@@ -38,9 +38,36 @@ function freshResume(): ResumeData {
 function resumeWithSkills(): ResumeData {
   const data = freshResume();
   data.sections.skills.items = [
-    { id: "s1", hidden: false, icon: "", name: "JS", proficiency: "Advanced", level: 4, keywords: ["frontend"] },
-    { id: "s2", hidden: false, icon: "", name: "TS", proficiency: "Intermediate", level: 3, keywords: [] },
-    { id: "s3", hidden: false, icon: "", name: "Rust", proficiency: "Beginner", level: 1, keywords: [] },
+    {
+      id: "s1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "JS",
+      proficiency: "Advanced",
+      level: 4,
+      keywords: ["frontend"],
+    },
+    {
+      id: "s2",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "TS",
+      proficiency: "Intermediate",
+      level: 3,
+      keywords: [],
+    },
+    {
+      id: "s3",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Rust",
+      proficiency: "Beginner",
+      level: 1,
+      keywords: [],
+    },
   ];
   return data;
 }
@@ -74,7 +101,18 @@ function resumeWithCustomSections(): ResumeData {
       title: "Soft Skills",
       columns: 1,
       hidden: false,
-      items: [{ id: "cs1", hidden: false, icon: "", name: "Leadership", proficiency: "", level: 0, keywords: [] }],
+      items: [
+        {
+          id: "cs1",
+          hidden: false,
+          icon: "",
+          iconColor: "",
+          name: "Leadership",
+          proficiency: "",
+          level: 0,
+          keywords: [],
+        },
+      ],
     },
   ];
   // Add custom sections to the layout
@@ -306,7 +344,16 @@ describe("removeItemFromSource", () => {
 describe("addItemToSection", () => {
   it("adds an item to a standard section", () => {
     const data = freshResume();
-    const newItem = { id: "new-1", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const newItem = {
+      id: "new-1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       addItemToSection(draft, newItem, "skills", "skills");
@@ -318,7 +365,16 @@ describe("addItemToSection", () => {
 
   it("adds an item to a custom section", () => {
     const data = resumeWithCustomSections();
-    const newItem = { id: "new-2", hidden: false, icon: "", name: "Teamwork", proficiency: "", level: 0, keywords: [] };
+    const newItem = {
+      id: "new-2",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Teamwork",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       addItemToSection(draft, newItem, "custom-skills-1", "skills");
@@ -330,7 +386,16 @@ describe("addItemToSection", () => {
 
   it("does nothing when target custom section doesn't exist", () => {
     const data = freshResume();
-    const newItem = { id: "new-3", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const newItem = {
+      id: "new-3",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       addItemToSection(draft, newItem, "nonexistent-section", "skills");
@@ -342,7 +407,16 @@ describe("addItemToSection", () => {
 
   it("appends to the end of an existing items array", () => {
     const data = resumeWithSkills();
-    const newItem = { id: "s4", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const newItem = {
+      id: "s4",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       addItemToSection(draft, newItem, "skills", "skills");
@@ -360,7 +434,16 @@ describe("addItemToSection", () => {
 describe("createCustomSectionWithItem", () => {
   it("creates a new custom section with the given item", () => {
     const data = freshResume();
-    const item = { id: "item-1", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const item = {
+      id: "item-1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       const sectionId = createCustomSectionWithItem(draft, item, "skills", "Tech Skills", 0);
@@ -377,7 +460,16 @@ describe("createCustomSectionWithItem", () => {
 
   it("adds the new section to the target page's main column", () => {
     const data = freshResume();
-    const item = { id: "item-1", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const item = {
+      id: "item-1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
     const mainLengthBefore = data.metadata.layout.pages[0].main.length;
 
     const result = produce(data, (draft) => {
@@ -390,7 +482,16 @@ describe("createCustomSectionWithItem", () => {
 
   it("handles targeting a specific page index", () => {
     const data = resumeWithMultiplePages();
-    const item = { id: "item-2", hidden: false, icon: "", name: "Python", proficiency: "", level: 0, keywords: [] };
+    const item = {
+      id: "item-2",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Python",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       createCustomSectionWithItem(draft, item, "skills", "More Skills", 1);
@@ -403,7 +504,16 @@ describe("createCustomSectionWithItem", () => {
 
   it("handles out-of-bounds page index gracefully (no crash)", () => {
     const data = freshResume();
-    const item = { id: "item-3", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const item = {
+      id: "item-3",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     // Should not throw — the page just doesn't exist so nothing is pushed
     const result = produce(data, (draft) => {
@@ -424,7 +534,16 @@ describe("createCustomSectionWithItem", () => {
 describe("createPageWithSection", () => {
   it("creates a new page with a custom section", () => {
     const data = freshResume();
-    const item = { id: "item-1", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const item = {
+      id: "item-1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
     const pagesBefore = data.metadata.layout.pages.length;
 
     const result = produce(data, (draft) => {
@@ -440,7 +559,16 @@ describe("createPageWithSection", () => {
 
   it("creates the custom section with correct properties", () => {
     const data = freshResume();
-    const item = { id: "item-1", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] };
+    const item = {
+      id: "item-1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "Go",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       createPageWithSection(draft, item, "skills", "Page 2 Skills");
@@ -454,8 +582,26 @@ describe("createPageWithSection", () => {
 
   it("can create multiple pages in sequence", () => {
     const data = freshResume();
-    const item1 = { id: "i1", hidden: false, icon: "", name: "A", proficiency: "", level: 0, keywords: [] };
-    const item2 = { id: "i2", hidden: false, icon: "", name: "B", proficiency: "", level: 0, keywords: [] };
+    const item1 = {
+      id: "i1",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "A",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
+    const item2 = {
+      id: "i2",
+      hidden: false,
+      icon: "",
+      iconColor: "",
+      name: "B",
+      proficiency: "",
+      level: 0,
+      keywords: [],
+    };
 
     const result = produce(data, (draft) => {
       createPageWithSection(draft, item1, "skills", "Page 2");

@@ -115,6 +115,7 @@ describe("useResumeStore — updateResumeData", () => {
         id: "s1",
         hidden: false,
         icon: "",
+        iconColor: "",
         name: "TypeScript",
         proficiency: "Advanced",
         level: 4,
@@ -246,7 +247,16 @@ describe("useResumeStore — edge cases", () => {
   it("can remove all items from a section", () => {
     const resume = makeResume();
     resume.data.sections.skills.items = [
-      { id: "s1", hidden: false, icon: "", name: "JS", proficiency: "", level: 0, keywords: [] },
+      {
+        id: "s1",
+        hidden: false,
+        icon: "",
+        iconColor: "",
+        name: "JS",
+        proficiency: "",
+        level: 0,
+        keywords: [],
+      },
     ];
     useResumeStore.getState().initialize(resume);
 

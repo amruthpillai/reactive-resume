@@ -198,6 +198,7 @@ describe("renderBuiltInSection — skills", () => {
         id: "s1",
         hidden: false,
         icon: "",
+        iconColor: "",
         name: "TypeScript",
         proficiency: "Advanced",
         level: 4,
@@ -213,7 +214,16 @@ describe("renderBuiltInSection — skills", () => {
     const sections = freshSections();
     sections.skills.title = "Skills";
     sections.skills.items = [
-      { id: "s1", hidden: false, icon: "", name: "Go", proficiency: "", level: 0, keywords: [] },
+      {
+        id: "s1",
+        hidden: false,
+        icon: "",
+        iconColor: "",
+        name: "Go",
+        proficiency: "",
+        level: 0,
+        keywords: [],
+      },
     ];
 
     const result = renderBuiltInSection("skills", sections.skills, COLOR_HEX);
@@ -315,6 +325,7 @@ describe("renderBuiltInSection — other sections", () => {
         id: "p1",
         hidden: false,
         icon: "",
+        iconColor: "",
         network: "GitHub",
         username: "janedoe",
         website: { url: "https://github.com/janedoe", label: "GitHub" },
@@ -423,7 +434,16 @@ describe("renderBuiltInSection — other sections", () => {
   it("renders interests with keywords", () => {
     const sections = freshSections();
     sections.interests.title = "Interests";
-    sections.interests.items = [{ id: "i1", hidden: false, icon: "", name: "Gaming", keywords: ["RPG", "Strategy"] }];
+    sections.interests.items = [
+      {
+        id: "i1",
+        hidden: false,
+        icon: "",
+        iconColor: "",
+        name: "Gaming",
+        keywords: ["RPG", "Strategy"],
+      },
+    ];
 
     const result = renderBuiltInSection("interests", sections.interests, COLOR_HEX);
     expect(result.length).toBe(2);
@@ -486,7 +506,18 @@ describe("renderCustomSection", () => {
       title: "Hidden",
       columns: 1,
       hidden: true,
-      items: [{ id: "ci1", hidden: false, icon: "", name: "Skill", proficiency: "", level: 0, keywords: [] }],
+      items: [
+        {
+          id: "ci1",
+          hidden: false,
+          icon: "",
+          iconColor: "",
+          name: "Skill",
+          proficiency: "",
+          level: 0,
+          keywords: [],
+        },
+      ],
     };
 
     expect(renderCustomSection(custom, COLOR_HEX)).toHaveLength(0);
@@ -499,7 +530,18 @@ describe("renderCustomSection", () => {
       title: "Skills",
       columns: 1,
       hidden: false,
-      items: [{ id: "ci1", hidden: true, icon: "", name: "Skill", proficiency: "", level: 0, keywords: [] }],
+      items: [
+        {
+          id: "ci1",
+          hidden: true,
+          icon: "",
+          iconColor: "",
+          name: "Skill",
+          proficiency: "",
+          level: 0,
+          keywords: [],
+        },
+      ],
     };
 
     expect(renderCustomSection(custom, COLOR_HEX)).toHaveLength(0);
@@ -548,7 +590,16 @@ describe("renderCustomSection", () => {
       columns: 1,
       hidden: false,
       items: [
-        { id: "ci1", hidden: false, icon: "", name: "Leadership", proficiency: "Expert", level: 5, keywords: [] },
+        {
+          id: "ci1",
+          hidden: false,
+          icon: "",
+          iconColor: "",
+          name: "Leadership",
+          proficiency: "Expert",
+          level: 5,
+          keywords: [],
+        },
       ],
     };
 
@@ -575,7 +626,16 @@ describe("setRenderConfig", () => {
     const sections = freshSections();
     sections.skills.title = "Skills";
     sections.skills.items = [
-      { id: "s1", hidden: false, icon: "", name: "Test", proficiency: "", level: 0, keywords: [] },
+      {
+        id: "s1",
+        hidden: false,
+        icon: "",
+        iconColor: "",
+        name: "Test",
+        proficiency: "",
+        level: 0,
+        keywords: [],
+      },
     ];
 
     const result = renderBuiltInSection("skills", sections.skills, "#0000FF");

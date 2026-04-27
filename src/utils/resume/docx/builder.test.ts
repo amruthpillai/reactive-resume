@@ -137,6 +137,7 @@ describe("buildDocument", () => {
               id: "skill-1",
               hidden: false,
               icon: "",
+              iconColor: "",
               name: "TypeScript",
               proficiency: "Advanced",
               level: 4,
