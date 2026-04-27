@@ -14,7 +14,7 @@ function handler() {
       "Surrogate-Control": "max-age=86400",
       "X-Content-Type-Options": "nosniff",
       "X-Robots-Tag": "index, follow",
-      ETag: `"v5.0.0"`,
+      ETag: __APP_VERSION__,
       Vary: "Accept",
     },
   });

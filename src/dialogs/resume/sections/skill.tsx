@@ -10,13 +10,14 @@ import { useForm, useFormContext, useFormState } from "react-hook-form";
 import type { DialogProps } from "@/dialogs/store";
 
 import { ChipInput } from "@/components/input/chip-input";
-import { IconColorInput } from "@/components/input/icon-color-input";
+import { ColorPicker } from "@/components/input/color-picker";
 import { IconPicker } from "@/components/input/icon-picker";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { useDialogStore } from "@/dialogs/store";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
@@ -159,19 +160,13 @@ function SkillForm() {
             <FormItem className="shrink-0">
               <FormControl
                 render={
-                  <IconPicker {...field} popoverProps={{ modal: true }} className="rounded-r-none! border-e-0!" />
+                  <IconPicker
+                    {...field}
+                    popoverProps={{ modal: true }}
+                    className="rounded-r-none border-e-0 border-input"
+                  />
                 }
               />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="iconColor"
-          render={({ field }) => (
-            <FormItem className="shrink-0">
-              <FormControl render={<IconColorInput {...field} value={field.value} onChange={field.onChange} />} />
             </FormItem>
           )}
         />
@@ -184,8 +179,34 @@ function SkillForm() {
               <FormLabel>
                 <Trans>Name</Trans>
               </FormLabel>
-              <FormControl render={<Input className="rounded-l-none!" {...field} />} />
+              <FormControl render={<Input className="rounded-s-none rounded-e-none" {...field} />} />
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="iconColor"
+          render={({ field }) => (
+            <FormItem className="shrink-0">
+              <FormControl
+                render={
+                  <ColorPicker
+                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
+                    trigger={
+                      <PopoverTrigger className="h-9 rounded-e border-y border-e border-input px-2">
+                        <div
+                          className="size-4 shrink-0 cursor-pointer rounded-full border border-foreground/60 transition-all hover:scale-105 focus-visible:outline-hidden"
+                          style={{ backgroundColor: field.value ?? "currentColor" }}
+                        />
+                      </PopoverTrigger>
+                    }
+                  />
+                }
+              />
             </FormItem>
           )}
         />

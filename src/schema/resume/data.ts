@@ -10,7 +10,6 @@ export const iconSchema = z
 
 export const iconColorSchema = z
   .string()
-  .optional()
   .catch("")
   .describe(
     "Optional custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",

@@ -121,7 +121,7 @@ export function SectionDropdownMenu({ type }: Props) {
         }
       />
 
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end">
         {type !== "summary" && (
           <>
             <DropdownMenuGroup>

@@ -176,26 +176,3 @@
     text-underline-offset: 0.15rem;
   }
 }
-
-.color_picker {
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--color-muted);
-  padding: 0.5rem;
-
-  > :global(*) {
-    width: 100% !important;
-  }
-
-  :global(.w-color-saturation) {
-    height: 8.5rem !important;
-    border-radius: calc(var(--radius-lg) - 0.25rem) !important;
-  }
-
-  :global(.w-color-hue),
-  :global(.w-color-alpha) {
-    height: 0.75rem !important;
-    margin-top: 0.5rem !important;
-    border-radius: 9999px !important;
-  }
-}
