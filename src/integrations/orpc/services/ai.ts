@@ -35,8 +35,8 @@ import {
   patchResumeDescription,
   patchResumeInputSchema,
 } from "@/integrations/ai/tools/patch-resume";
-import { aiProviderSchema, type AIProvider } from "@/integrations/ai/types";
-import { resumeAnalysisSchema, type ResumeAnalysis } from "@/schema/resume/analysis";
+import { AI_PROVIDER_DEFAULT_BASE_URLS, aiProviderSchema, type AIProvider } from "@/integrations/ai/types";
+import { resumeAnalysisOutputSchema, resumeAnalysisSchema, type ResumeAnalysis } from "@/schema/resume/analysis";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { tailorOutputSchema, type TailorOutput } from "@/schema/tailor";
 import { buildAiExtractionTemplate } from "@/utils/ai-template";
@@ -213,20 +213,21 @@ type GetModelInput = {
 const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
 const adminAllowedBaseUrls = parseAllowedHostList(env.AI_ALLOWED_BASE_URLS);
-const defaultProviderHosts: Record<Exclude<AIProvider, "ollama">, string[]> = {
+const defaultProviderHosts: Record<AIProvider, string[]> = {
   openai: ["api.openai.com"],
   anthropic: ["api.anthropic.com"],
   gemini: ["generativelanguage.googleapis.com"],
-  "vercel-ai-gateway": ["gateway.ai.vercel.com"],
+  "vercel-ai-gateway": ["ai-gateway.vercel.sh"],
   openrouter: ["openrouter.ai"],
+  ollama: ["ollama.com"],
 };
 
 function resolveBaseUrl(input: GetModelInput): string {
-  const baseURL = input.baseURL?.trim();
+  const baseURL = input.baseURL?.trim() || AI_PROVIDER_DEFAULT_BASE_URLS[input.provider];
 
   if (!baseURL) throw new Error("INVALID_AI_BASE_URL");
 
-  const providerHosts = input.provider === "ollama" ? [] : defaultProviderHosts[input.provider];
+  const providerHosts = defaultProviderHosts[input.provider];
   const allowedHosts = new Set([...providerHosts, ...adminAllowedBaseUrls]);
   if (!isAllowedExternalUrl(baseURL, allowedHosts)) {
     throw new Error("INVALID_AI_BASE_URL");
@@ -421,7 +422,7 @@ async function analyzeResume(input: AnalyzeResumeInput): Promise<ResumeAnalysis>
 
   const result = await generateText({
     model,
-    output: Output.object({ schema: resumeAnalysisSchema }),
+    output: Output.object({ schema: resumeAnalysisOutputSchema }),
     messages: [
       { role: "system", content: systemPrompt },
       {

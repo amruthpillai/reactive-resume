@@ -5,14 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
-import type { AIProvider } from "@/integrations/ai/types";
-
 import { Button } from "@/components/ui/button";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
+import { AI_PROVIDER_DEFAULT_BASE_URLS, type AIProvider } from "@/integrations/ai/types";
 import { useAIStore } from "@/integrations/ai/store";
 import { orpc } from "@/integrations/orpc/client";
 import { getOrpcErrorMessage } from "@/utils/error-message";
@@ -28,7 +27,7 @@ const providerOptions: AIProviderOption[] = [
       message: "OpenAI",
     }),
     keywords: ["openai", "gpt", "chatgpt"],
-    defaultBaseURL: "https://api.openai.com/v1",
+    defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.openai,
   },
   {
     value: "anthropic",
@@ -37,7 +36,7 @@ const providerOptions: AIProviderOption[] = [
       message: "Anthropic Claude",
     }),
     keywords: ["anthropic", "claude", "ai"],
-    defaultBaseURL: "https://api.anthropic.com/v1",
+    defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.anthropic,
   },
   {
     value: "gemini",
@@ -46,7 +45,7 @@ const providerOptions: AIProviderOption[] = [
       message: "Google Gemini",
     }),
     keywords: ["gemini", "google", "bard"],
-    defaultBaseURL: "https://generativelanguage.googleapis.com/v1beta",
+    defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.gemini,
   },
   {
     value: "vercel-ai-gateway",
@@ -55,7 +54,7 @@ const providerOptions: AIProviderOption[] = [
       message: "Vercel AI Gateway",
     }),
     keywords: ["vercel", "gateway", "ai"],
-    defaultBaseURL: "https://ai-gateway.vercel.sh/v1/ai",
+    defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS["vercel-ai-gateway"],
   },
   {
     value: "openrouter",
@@ -64,7 +63,7 @@ const providerOptions: AIProviderOption[] = [
       message: "OpenRouter",
     }),
     keywords: ["openrouter", "router", "multi", "proxy"],
-    defaultBaseURL: "https://openrouter.ai/api/v1",
+    defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.openrouter,
   },
   {
     value: "ollama",
@@ -73,7 +72,7 @@ const providerOptions: AIProviderOption[] = [
       message: "Ollama",
     }),
     keywords: ["ollama", "ai", "local"],
-    defaultBaseURL: "https://ollama.com/api",
+    defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.ollama,
   },
 ];
 

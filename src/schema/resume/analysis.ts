@@ -21,6 +21,27 @@ export const resumeAnalysisSchema = z.object({
   strengths: z.array(z.string().min(1)).max(10),
 });
 
+export const resumeAnalysisOutputSchema = z.object({
+  overallScore: z.number(),
+  scorecard: z.array(
+    z.object({
+      dimension: z.string(),
+      score: z.number(),
+      rationale: z.string(),
+    }),
+  ),
+  suggestions: z.array(
+    z.object({
+      title: z.string(),
+      impact: z.enum(["high", "medium", "low"]),
+      why: z.string(),
+      exampleRewrite: z.string().nullable(),
+      copyPrompt: z.string(),
+    }),
+  ),
+  strengths: z.array(z.string()),
+});
+
 export const storedResumeAnalysisSchema = resumeAnalysisSchema.extend({
   updatedAt: z.coerce.date(),
   modelMeta: z.object({
