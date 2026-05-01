@@ -24,6 +24,8 @@ services:
     restart: unless-stopped
     networks:
       - printer_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - QUEUED=10
       - HEALTH=true
