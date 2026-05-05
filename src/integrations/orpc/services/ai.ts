@@ -278,7 +278,7 @@ async function testConnection(input: TestConnectionInput): Promise<boolean> {
   const result = await generateText({
     model: getModel(input),
     output: Output.choice({ options: [RESPONSE_OK] }),
-    messages: [{ role: "user", content: `Respond with "${RESPONSE_OK}"` }],
+    messages: [{ role: "user", content: `Respond only with the json object {"result":"${RESPONSE_OK}"}` }],
   });
 
   return result.output === RESPONSE_OK;
