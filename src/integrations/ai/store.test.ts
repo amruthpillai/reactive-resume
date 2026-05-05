@@ -23,6 +23,23 @@ describe("AI Store — initial state", () => {
     expect(state.apiKey).toBe("");
     expect(state.baseURL).toBe("");
     expect(state.testStatus).toBe("unverified");
+    expect(state.observability).toEqual({
+      enabled: false,
+      provider: "laminar",
+      providers: {
+        laminar: {
+          projectApiKey: "",
+          baseUrl: "",
+          httpPort: "",
+          grpcPort: "",
+        },
+        langsmith: {
+          apiKey: "",
+          projectName: "",
+          endpoint: "",
+        },
+      },
+    });
   });
 });
 
@@ -187,6 +204,11 @@ describe("AI Store — reset()", () => {
       draft.apiKey = "sk-key";
       draft.baseURL = "https://api.anthropic.com";
       draft.testStatus = "success";
+      draft.observability.enabled = true;
+      draft.observability.providers.laminar.projectApiKey = "lmnr-project-key";
+      draft.observability.providers.laminar.baseUrl = "http://localhost";
+      draft.observability.providers.laminar.httpPort = "8000";
+      draft.observability.providers.laminar.grpcPort = "8001";
     });
     useAIStore.getState().setEnabled(true);
 
@@ -199,5 +221,22 @@ describe("AI Store — reset()", () => {
     expect(state.apiKey).toBe("");
     expect(state.baseURL).toBe("");
     expect(state.testStatus).toBe("unverified");
+    expect(state.observability).toEqual({
+      enabled: false,
+      provider: "laminar",
+      providers: {
+        laminar: {
+          projectApiKey: "",
+          baseUrl: "",
+          httpPort: "",
+          grpcPort: "",
+        },
+        langsmith: {
+          apiKey: "",
+          projectName: "",
+          endpoint: "",
+        },
+      },
+    });
   });
 });

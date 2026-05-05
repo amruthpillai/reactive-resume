@@ -57,6 +57,7 @@ export function ResumeAnalysisSectionBuilder() {
   const aiModel = useAIStore((state) => state.model);
   const aiApiKey = useAIStore((state) => state.apiKey);
   const aiBaseURL = useAIStore((state) => state.baseURL);
+  const aiObservability = useAIStore((state) => state.observability);
 
   const analysisQuery = useQuery(orpc.resume.analysis.getById.queryOptions({ input: { id: resume.id } }));
 
@@ -105,6 +106,7 @@ export function ResumeAnalysisSectionBuilder() {
       model: aiModel,
       apiKey: aiApiKey,
       baseURL: aiBaseURL,
+      observability: aiObservability,
       resumeId: resume.id,
       resumeData: resume.data,
     });

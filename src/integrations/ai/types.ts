@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type { AIObservabilityProvider } from "./observability";
+
 const AI_PROVIDERS = ["openai", "anthropic", "gemini", "vercel-ai-gateway", "openrouter", "ollama"] as const;
 
 export type AIProvider = (typeof AI_PROVIDERS)[number];

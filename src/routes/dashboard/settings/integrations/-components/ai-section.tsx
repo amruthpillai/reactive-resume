@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { useAIStore } from "@/integrations/ai/store";
-import { AI_PROVIDER_DEFAULT_BASE_URLS, type AIProvider } from "@/integrations/ai/types";
+import { AI_PROVIDER_DEFAULT_BASE_URLS, type AIObservabilityProvider, type AIProvider } from "@/integrations/ai/types";
 import { orpc } from "@/integrations/orpc/client";
 import { getOrpcErrorMessage } from "@/utils/error-message";
 import { cn } from "@/utils/style";
@@ -76,8 +76,21 @@ const providerOptions: AIProviderOption[] = [
   },
 ];
 
+const observabilityProviderOptions: ComboboxOption<AIObservabilityProvider>[] = [
+  {
+    value: "laminar",
+    label: "Laminar",
+    keywords: ["laminar", "lmnr", "observability", "tracing"],
+  },
+  {
+    value: "langsmith",
+    label: "LangSmith",
+    keywords: ["langsmith", "observability", "tracing"],
+  },
+];
+
 function AIForm() {
-  const { set, model, apiKey, baseURL, provider, enabled, testStatus } = useAIStore();
+  const { set, model, apiKey, baseURL, provider, enabled, testStatus, observability } = useAIStore();
 
   const selectedOption = useMemo(() => {
     return providerOptions.find((option) => option.value === provider);
@@ -95,7 +108,7 @@ function AIForm() {
 
   const handleTestConnection = () => {
     testConnection(
-      { provider, model, apiKey, baseURL },
+      { provider, model, apiKey, baseURL, observability },
       {
         onSuccess: (data) => {
           set((draft) => {
@@ -235,6 +248,207 @@ function AIForm() {
   );
 }
 
+function AIObservabilityForm() {
+  const { set, observability } = useAIStore();
+  const laminar = observability.providers.laminar;
+  const langsmith = observability.providers.langsmith;
+
+  const handleProviderChange = (value: AIObservabilityProvider | null) => {
+    if (!value) return;
+
+    set((draft) => {
+      draft.observability.provider = value;
+    });
+  };
+
+  return (
+    <div className="grid gap-6 rounded-md border bg-popover p-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h3 className="font-semibold">
+            <Trans>AI Observability</Trans>
+          </h3>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            <Trans>
+              Send AI traces to your own observability provider to understand model calls and API credit usage.
+            </Trans>
+          </p>
+        </div>
+
+        <Switch
+          id="enable-ai-observability"
+          checked={observability.enabled}
+          onCheckedChange={(value) =>
+            set((draft) => {
+              draft.observability.enabled = value;
+            })
+          }
+        />
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="flex flex-col gap-y-2">
+          <Label htmlFor="ai-observability-provider">
+            <Trans>Provider</Trans>
+          </Label>
+          <Combobox
+            id="ai-observability-provider"
+            value={observability.provider}
+            disabled={!observability.enabled}
+            options={observabilityProviderOptions}
+            onValueChange={handleProviderChange}
+          />
+        </div>
+
+        {observability.provider === "laminar" ? (
+          <>
+            <div className="flex flex-col gap-y-2">
+              <Label htmlFor="ai-observability-laminar-project-api-key">
+                <Trans>Project API Key</Trans>
+              </Label>
+              <Input
+                id="ai-observability-laminar-project-api-key"
+                name="ai-observability-laminar-project-api-key"
+                type="password"
+                value={laminar.projectApiKey}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.laminar.projectApiKey = e.target.value;
+                  })
+                }
+                autoComplete="off"
+                data-lpignore="true"
+                data-bwignore="true"
+                data-1p-ignore="true"
+              />
+            </div>
+
+            <div className="flex flex-col gap-y-2 sm:col-span-2">
+              <Label htmlFor="ai-observability-laminar-base-url">
+                <Trans>Base URL (Optional)</Trans>
+              </Label>
+              <Input
+                id="ai-observability-laminar-base-url"
+                name="ai-observability-laminar-base-url"
+                type="url"
+                value={laminar.baseUrl}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.laminar.baseUrl = e.target.value;
+                  })
+                }
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label htmlFor="ai-observability-laminar-http-port">
+                <Trans>HTTP Port (Optional)</Trans>
+              </Label>
+              <Input
+                id="ai-observability-laminar-http-port"
+                name="ai-observability-laminar-http-port"
+                type="text"
+                value={laminar.httpPort}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.laminar.httpPort = e.target.value;
+                  })
+                }
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label htmlFor="ai-observability-laminar-grpc-port">
+                <Trans>gRPC Port (Optional)</Trans>
+              </Label>
+              <Input
+                id="ai-observability-laminar-grpc-port"
+                name="ai-observability-laminar-grpc-port"
+                type="text"
+                value={laminar.grpcPort}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.laminar.grpcPort = e.target.value;
+                  })
+                }
+                autoComplete="off"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-y-2">
+              <Label htmlFor="ai-observability-langsmith-api-key">
+                <Trans>API Key</Trans>
+              </Label>
+              <Input
+                id="ai-observability-langsmith-api-key"
+                name="ai-observability-langsmith-api-key"
+                type="password"
+                value={langsmith.apiKey}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.langsmith.apiKey = e.target.value;
+                  })
+                }
+                autoComplete="off"
+                data-lpignore="true"
+                data-bwignore="true"
+                data-1p-ignore="true"
+              />
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label htmlFor="ai-observability-langsmith-project-name">
+                <Trans>Project Name</Trans>
+              </Label>
+              <Input
+                id="ai-observability-langsmith-project-name"
+                name="ai-observability-langsmith-project-name"
+                type="text"
+                value={langsmith.projectName}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.langsmith.projectName = e.target.value;
+                  })
+                }
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="flex flex-col gap-y-2 sm:col-span-2">
+              <Label htmlFor="ai-observability-langsmith-endpoint">
+                <Trans>Endpoint (Optional)</Trans>
+              </Label>
+              <Input
+                id="ai-observability-langsmith-endpoint"
+                name="ai-observability-langsmith-endpoint"
+                type="url"
+                value={langsmith.endpoint}
+                disabled={!observability.enabled}
+                onChange={(e) =>
+                  set((draft) => {
+                    draft.observability.providers.langsmith.endpoint = e.target.value;
+                  })
+                }
+                autoComplete="off"
+              />
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function AISettingsSection() {
   const aiEnabled = useAIStore((state) => state.enabled);
   const canEnableAI = useAIStore((state) => state.canEnable());
@@ -278,6 +492,7 @@ export function AISettingsSection() {
       </p>
 
       <AIForm />
+      <AIObservabilityForm />
     </section>
   );
 }

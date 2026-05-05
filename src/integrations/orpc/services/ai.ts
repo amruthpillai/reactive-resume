@@ -23,6 +23,11 @@ import z, { flattenError, ZodError } from "zod";
 import type { JobResult } from "@/schema/jobs";
 import type { ResumeData } from "@/schema/resume/data";
 
+import {
+  aiObservabilitySchema,
+  buildAIObservabilityMetadata,
+  withAIObservability,
+} from "@/integrations/ai/observability";
 import analyzeResumeSystemPromptTemplate from "@/integrations/ai/prompts/analyze-resume-system.md?raw";
 import chatSystemPromptTemplate from "@/integrations/ai/prompts/chat-system.md?raw";
 import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system.md?raw";
@@ -263,6 +268,7 @@ export const aiCredentialsSchema = z.object({
   model: z.string(),
   apiKey: z.string(),
   baseURL: z.string().optional().default(""),
+  observability: aiObservabilitySchema.optional(),
 });
 
 export const fileInputSchema = z.object({
@@ -275,13 +281,24 @@ type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 async function testConnection(input: TestConnectionInput): Promise<boolean> {
   const RESPONSE_OK = "1";
 
-  const result = await generateText({
-    model: getModel(input),
-    output: Output.choice({ options: [RESPONSE_OK] }),
-    messages: [{ role: "user", content: `Respond with "${RESPONSE_OK}"` }],
-  });
+  return withAIObservability(
+    {
+      observability: input.observability,
+      modelProvider: input.provider,
+      operationName: "ai.test-connection",
+      metadata: buildAIObservabilityMetadata(input),
+    },
+    async (telemetry) => {
+      const result = await generateText({
+        model: getModel(input),
+        output: Output.choice({ options: [RESPONSE_OK] }),
+        messages: [{ role: "user", content: `Respond with "${RESPONSE_OK}"` }],
+        experimental_telemetry: telemetry,
+      });
 
-  return result.output === RESPONSE_OK;
+      return result.output === RESPONSE_OK;
+    },
+  );
 }
 
 type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
@@ -322,17 +339,28 @@ function buildResumeParsingMessages({
 async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
   const model = getModel(input);
 
-  const result = await generateText({
-    model,
-    messages: buildResumeParsingMessages({
-      systemPrompt: pdfParserSystemPrompt,
-      userPrompt: pdfParserUserPrompt,
-      file: input.file,
-      mediaType: "application/pdf",
-    }),
-  }).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
+  return withAIObservability(
+    {
+      observability: input.observability,
+      modelProvider: input.provider,
+      operationName: "ai.parse-pdf",
+      metadata: buildAIObservabilityMetadata(input, { mediaType: "application/pdf" }),
+    },
+    async (telemetry) => {
+      const result = await generateText({
+        model,
+        messages: buildResumeParsingMessages({
+          systemPrompt: pdfParserSystemPrompt,
+          userPrompt: pdfParserUserPrompt,
+          file: input.file,
+          mediaType: "application/pdf",
+        }),
+        experimental_telemetry: telemetry,
+      }).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
 
-  return parseAndValidateResumeJson(result.text);
+      return parseAndValidateResumeJson(result.text);
+    },
+  );
 }
 
 type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
@@ -343,17 +371,28 @@ type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
 async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
   const model = getModel(input);
 
-  const result = await generateText({
-    model,
-    messages: buildResumeParsingMessages({
-      systemPrompt: docxParserSystemPrompt,
-      userPrompt: docxParserUserPrompt,
-      file: input.file,
-      mediaType: input.mediaType,
-    }),
-  }).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
+  return withAIObservability(
+    {
+      observability: input.observability,
+      modelProvider: input.provider,
+      operationName: "ai.parse-docx",
+      metadata: buildAIObservabilityMetadata(input, { mediaType: input.mediaType }),
+    },
+    async (telemetry) => {
+      const result = await generateText({
+        model,
+        messages: buildResumeParsingMessages({
+          systemPrompt: docxParserSystemPrompt,
+          userPrompt: docxParserUserPrompt,
+          file: input.file,
+          mediaType: input.mediaType,
+        }),
+        experimental_telemetry: telemetry,
+      }).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));
 
-  return parseAndValidateResumeJson(result.text);
+      return parseAndValidateResumeJson(result.text);
+    },
+  );
 }
 
 function buildChatSystemPrompt(resumeData: ResumeData): string {
@@ -369,21 +408,32 @@ async function chat(input: ChatInput) {
   const model = getModel(input);
   const systemPrompt = buildChatSystemPrompt(input.resumeData);
 
-  const result = streamText({
-    model,
-    system: systemPrompt,
-    messages: await convertToModelMessages(input.messages),
-    tools: {
-      patch_resume: tool({
-        description: patchResumeDescription,
-        inputSchema: patchResumeInputSchema,
-        execute: async ({ operations }) => executePatchResume(input.resumeData, operations),
-      }),
+  return withAIObservability(
+    {
+      observability: input.observability,
+      modelProvider: input.provider,
+      operationName: "ai.chat",
+      metadata: buildAIObservabilityMetadata(input, { messageCount: input.messages.length }),
     },
-    stopWhen: stepCountIs(3),
-  });
+    async (telemetry) => {
+      const result = streamText({
+        model,
+        system: systemPrompt,
+        messages: await convertToModelMessages(input.messages),
+        tools: {
+          patch_resume: tool({
+            description: patchResumeDescription,
+            inputSchema: patchResumeInputSchema,
+            execute: async ({ operations }) => executePatchResume(input.resumeData, operations),
+          }),
+        },
+        stopWhen: stepCountIs(3),
+        experimental_telemetry: telemetry,
+      });
 
-  return streamToEventIterator(result.toUIMessageStream());
+      return streamToEventIterator(result.toUIMessageStream());
+    },
+  );
 }
 
 function formatJobHighlights(highlights: Record<string, string[]> | null): string {
@@ -420,47 +470,69 @@ async function analyzeResume(input: AnalyzeResumeInput): Promise<ResumeAnalysis>
   const model = getModel(input);
   const systemPrompt = buildAnalyzeResumeSystemPrompt(input.resumeData);
 
-  const result = await generateText({
-    model,
-    output: Output.object({ schema: resumeAnalysisOutputSchema }),
-    messages: [
-      { role: "system", content: systemPrompt },
-      {
-        role: "user",
-        content:
-          "Analyze this resume and return a structured report with scorecard, overall score, strengths, and actionable suggestions.",
-      },
-    ],
-  });
+  return withAIObservability(
+    {
+      observability: input.observability,
+      modelProvider: input.provider,
+      operationName: "ai.analyze-resume",
+      metadata: buildAIObservabilityMetadata(input),
+    },
+    async (telemetry) => {
+      const result = await generateText({
+        model,
+        output: Output.object({ schema: resumeAnalysisOutputSchema }),
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content:
+              "Analyze this resume and return a structured report with scorecard, overall score, strengths, and actionable suggestions.",
+          },
+        ],
+        experimental_telemetry: telemetry,
+      });
 
-  if (result.output == null) {
-    throw new Error("AI returned no structured analysis output.");
-  }
+      if (result.output == null) {
+        throw new Error("AI returned no structured analysis output.");
+      }
 
-  return resumeAnalysisSchema.parse(result.output);
+      return resumeAnalysisSchema.parse(result.output);
+    },
+  );
 }
 
 async function tailorResume(input: TailorResumeInput): Promise<TailorOutput> {
   const model = getModel(input);
   const systemPrompt = buildTailorSystemPrompt(input.resumeData, input.job);
 
-  const result = await generateText({
-    model,
-    output: Output.object({ schema: tailorOutputSchema }),
-    messages: [
-      { role: "system", content: systemPrompt },
-      {
-        role: "user",
-        content: `Please tailor this resume for the ${input.job.job_title} position at ${input.job.employer_name}. Optimize for ATS compatibility and relevance.`,
-      },
-    ],
-  });
+  return withAIObservability(
+    {
+      observability: input.observability,
+      modelProvider: input.provider,
+      operationName: "ai.tailor-resume",
+      metadata: buildAIObservabilityMetadata(input),
+    },
+    async (telemetry) => {
+      const result = await generateText({
+        model,
+        output: Output.object({ schema: tailorOutputSchema }),
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content: `Please tailor this resume for the ${input.job.job_title} position at ${input.job.employer_name}. Optimize for ATS compatibility and relevance.`,
+          },
+        ],
+        experimental_telemetry: telemetry,
+      });
 
-  if (result.output == null) {
-    throw new Error("AI returned no structured tailoring output.");
-  }
+      if (result.output == null) {
+        throw new Error("AI returned no structured tailoring output.");
+      }
 
-  return tailorOutputSchema.parse(result.output);
+      return tailorOutputSchema.parse(result.output);
+    },
+  );
 }
 
 export const aiService = {

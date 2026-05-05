@@ -4,9 +4,27 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
 
-import type { AIProvider } from "./types";
+import type { AIObservabilityProvider, AIProvider } from "./types";
 
 type TestStatus = "unverified" | "success" | "failure";
+
+type AIObservabilityState = {
+  enabled: boolean;
+  provider: AIObservabilityProvider;
+  providers: {
+    laminar: {
+      projectApiKey: string;
+      baseUrl: string;
+      httpPort: string;
+      grpcPort: string;
+    };
+    langsmith: {
+      apiKey: string;
+      projectName: string;
+      endpoint: string;
+    };
+  };
+};
 
 type AIStoreState = {
   enabled: boolean;
@@ -15,6 +33,7 @@ type AIStoreState = {
   apiKey: string;
   baseURL: string;
   testStatus: TestStatus;
+  observability: AIObservabilityState;
 };
 
 type AIStoreActions = {
@@ -33,7 +52,67 @@ const initialState: AIStoreState = {
   apiKey: "",
   baseURL: "",
   testStatus: "unverified",
+  observability: {
+    enabled: false,
+    provider: "laminar",
+    providers: {
+      laminar: {
+        projectApiKey: "",
+        baseUrl: "",
+        httpPort: "",
+        grpcPort: "",
+      },
+      langsmith: {
+        apiKey: "",
+        projectName: "",
+        endpoint: "",
+      },
+    },
+  },
 };
+
+function migrateObservabilityState(value: unknown): AIObservabilityState {
+  if (!value || typeof value !== "object") return initialState.observability;
+
+  const observability = value as Partial<AIObservabilityState> & {
+    projectApiKey?: string;
+    baseUrl?: string;
+    httpPort?: string;
+    grpcPort?: string;
+  };
+
+  if ("providers" in observability && observability.providers) {
+    return {
+      ...initialState.observability,
+      ...observability,
+      providers: {
+        laminar: {
+          ...initialState.observability.providers.laminar,
+          ...observability.providers.laminar,
+        },
+        langsmith: {
+          ...initialState.observability.providers.langsmith,
+          ...observability.providers.langsmith,
+        },
+      },
+    };
+  }
+
+  return {
+    ...initialState.observability,
+    enabled: observability.enabled ?? initialState.observability.enabled,
+    provider: observability.provider ?? initialState.observability.provider,
+    providers: {
+      ...initialState.observability.providers,
+      laminar: {
+        projectApiKey: observability.projectApiKey ?? "",
+        baseUrl: observability.baseUrl ?? "",
+        httpPort: observability.httpPort ?? "",
+        grpcPort: observability.grpcPort ?? "",
+      },
+    },
+  };
+}
 
 export const useAIStore = create<AIStore>()(
   persist(
@@ -77,6 +156,17 @@ export const useAIStore = create<AIStore>()(
     {
       name: "ai-store",
       storage: createJSONStorage(() => localStorage),
+      version: 1,
+      migrate: (persistedState) => {
+        if (!persistedState || typeof persistedState !== "object") return persistedState;
+
+        const state = persistedState as Partial<AIStoreState>;
+
+        return {
+          ...state,
+          observability: migrateObservabilityState(state.observability),
+        };
+      },
       partialize: (state) => ({
         enabled: state.enabled,
         provider: state.provider,
@@ -84,6 +174,7 @@ export const useAIStore = create<AIStore>()(
         apiKey: state.apiKey,
         baseURL: state.baseURL,
         testStatus: state.testStatus,
+        observability: state.observability,
       }),
     },
   ),

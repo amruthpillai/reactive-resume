@@ -13,8 +13,6 @@ import { aiRequestRateLimit } from "../rate-limit";
 import { aiCredentialsSchema, aiService, fileInputSchema } from "../services/ai";
 import { resumeService } from "../services/resume";
 
-type AIProvider = z.infer<typeof aiCredentialsSchema.shape.provider>;
-
 function isInvalidAiBaseUrlError(error: unknown): boolean {
   return error instanceof Error && error.message === "INVALID_AI_BASE_URL";
 }
@@ -47,7 +45,7 @@ export const aiRouter = {
       operationId: "testAiConnection",
       summary: "Test AI provider connection",
       description:
-        "Validates the connection to an AI provider by sending a simple test prompt. Requires the provider type, model name, API key, and an optional base URL. Supported providers: OpenAI, Anthropic, Google Gemini, Ollama, and Vercel AI Gateway. Requires authentication.",
+        "Validates the connection to an AI provider by sending a simple test prompt. Requires the provider type, model name, API key, and an optional base URL. Supported providers: OpenAI, OpenRouter, Anthropic, Google Gemini, Ollama, and Vercel AI Gateway. Requires authentication.",
       successDescription: "The AI provider connection was successful.",
     })
     .input(
@@ -173,14 +171,12 @@ export const aiRouter = {
         "Streams a chat response from the configured AI provider. The LLM can call the patch_resume tool to generate JSON Patch operations that modify the resume. Requires authentication and AI provider credentials.",
     })
     .input(
-      type<{
-        provider: AIProvider;
-        model: string;
-        apiKey: string;
-        baseURL: string;
-        messages: UIMessage[];
-        resumeData: ResumeData;
-      }>(),
+      type<
+        z.infer<typeof aiCredentialsSchema> & {
+          messages: UIMessage[];
+          resumeData: ResumeData;
+        }
+      >(),
     )
     .use(aiRequestRateLimit)
     .handler(async ({ input }) => {
@@ -280,6 +276,7 @@ export const aiRouter = {
             model: input.model,
             apiKey: input.apiKey,
             baseURL: input.baseURL,
+            observability: input.observability,
             resumeData: input.resumeData,
           }),
         );

@@ -83,7 +83,7 @@ function fileToBase64(file: File): Promise<string> {
 
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
   const navigate = useNavigate();
-  const { enabled: isAIEnabled, provider, model, apiKey, baseURL } = useAIStore();
+  const { enabled: isAIEnabled, provider, model, apiKey, baseURL, observability } = useAIStore();
   const closeDialog = useDialogStore((state) => state.closeDialog);
 
   const prevTypeRef = useRef<string>("");
@@ -162,6 +162,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
           model,
           apiKey,
           baseURL,
+          observability,
           file: { name: values.file.name, data: base64 },
         });
       }
@@ -182,6 +183,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
           model,
           apiKey,
           baseURL,
+          observability,
           mediaType,
           file: { name: values.file.name, data: base64 },
         });

@@ -50,6 +50,7 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
   const aiModel = useAIStore((s) => s.model);
   const aiApiKey = useAIStore((s) => s.apiKey);
   const aiBaseURL = useAIStore((s) => s.baseURL);
+  const aiObservability = useAIStore((s) => s.observability);
 
   const { mutate: duplicateResume, isPending: isDuplicating } = useMutation(orpc.resume.duplicate.mutationOptions());
 
@@ -119,6 +120,7 @@ export function TailorDialog({ job, open, onOpenChange }: Props) {
         model: aiModel,
         apiKey: aiApiKey,
         baseURL: aiBaseURL,
+        observability: aiObservability,
         resumeData: resume.data,
         job,
       });
