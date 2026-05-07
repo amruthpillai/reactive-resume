@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { definePlugin } from "nitro";
 import { Pool } from "pg";
 import { env } from "@reactive-resume/env/server";
 
@@ -19,8 +20,8 @@ function resolveMigrationsFolder(): string {
 
 const migrationsFolder = resolveMigrationsFolder();
 
-export async function migrateDatabase() {
-	console.info("🏃‍♂️ Running database migrations...");
+export default definePlugin(async () => {
+	console.info("Running database migrations...");
 
 	const connectionString = env.DATABASE_URL;
 
@@ -29,11 +30,11 @@ export async function migrateDatabase() {
 
 	try {
 		await migrate(db, { migrationsFolder });
-		console.info("✅ Database migrations completed");
+		console.info("Database migrations completed");
 	} catch (error) {
-		console.error("❌ Database migrations failed", { error });
+		console.error("Database migrations failed", { error });
 		throw error;
 	} finally {
 		await pool.end();
 	}
-}
+});

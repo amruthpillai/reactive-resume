@@ -128,8 +128,6 @@ export const resumeRouter = {
 		.input(resumeDto.getBySlug.input)
 		.output(resumeDto.getBySlug.output)
 		.handler(async ({ input, context }) => {
-			console.log("input", input);
-
 			return resumeService.getBySlug({
 				...input,
 				...(context.user?.id ? { currentUserId: context.user.id } : {}),

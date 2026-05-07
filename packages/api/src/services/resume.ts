@@ -9,11 +9,9 @@ import { get } from "es-toolkit/compat";
 import { match } from "ts-pattern";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
-import { env } from "@reactive-resume/env/server";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { applyResumePatches, ResumePatchError } from "@reactive-resume/utils/resume/patch";
 import { generateId } from "@reactive-resume/utils/string";
-import { sanitizeResumePictureUrl } from "@reactive-resume/utils/url-security";
 import { grantResumeAccess, hasResumeAccess } from "../helpers/resume-access";
 import { assertCanView, isOwner, redactResumeForViewer, shouldCountForStatistics } from "./resume-access-policy";
 import { getStorageService } from "./storage";
@@ -146,16 +144,6 @@ function toSharedResumeResponse<TPassword extends boolean>(
 	};
 }
 
-function sanitizeResumeDataPictureUrl(data: ResumeData): ResumeData {
-	return {
-		...data,
-		picture: {
-			...data.picture,
-			url: sanitizeResumePictureUrl(data.picture.url, env.APP_URL),
-		},
-	};
-}
-
 export const resumeService = {
 	tags,
 	statistics,
@@ -257,7 +245,7 @@ export const resumeService = {
 		data?: ResumeData;
 	}) => {
 		const id = generateId();
-		const data = sanitizeResumeDataPictureUrl(input.data ?? defaultResumeData);
+		const data = input.data ?? defaultResumeData;
 		data.metadata.page.locale = input.locale;
 
 		try {
@@ -303,7 +291,7 @@ export const resumeService = {
 			...(input.name !== undefined ? { name: input.name } : {}),
 			...(input.slug !== undefined ? { slug: input.slug } : {}),
 			...(input.tags !== undefined ? { tags: input.tags } : {}),
-			...(input.data !== undefined ? { data: sanitizeResumeDataPictureUrl(input.data) } : {}),
+			...(input.data !== undefined ? { data: input.data } : {}),
 			...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
 		};
 
@@ -355,7 +343,6 @@ export const resumeService = {
 
 		try {
 			patchedData = applyResumePatches(existing.data, input.operations);
-			patchedData = sanitizeResumeDataPictureUrl(patchedData);
 		} catch (error) {
 			if (error instanceof ResumePatchError) {
 				throw new ORPCError("INVALID_PATCH_OPERATIONS", {

@@ -3,7 +3,7 @@ import type { ResumeData } from "./data";
 export const sampleResumeData: ResumeData = {
 	picture: {
 		hidden: false,
-		url: "https://fastly.picsum.photos/id/447/800/800.jpg?hmac=_Vw15IjUjvkpKxYfLYoFwPS8kn2O48NlzeJ533I-6u8",
+		url: "",
 		size: 100,
 		rotation: 0,
 		aspectRatio: 1,
@@ -43,7 +43,7 @@ export const sampleResumeData: ResumeData = {
 		columns: 1,
 		hidden: false,
 		content:
-			"<p>Passionate game developer with 5+ years of professional experience creating engaging gameplay systems and polished player experiences across multiple platforms. <a href='https://www.google.com'>Specialized</a> in Unity and Unreal Engine with strong expertise in C#, C++, and game design principles. Proven ability to collaborate effectively with cross-functional teams including designers, artists, and QA to deliver high-quality games on time and within scope. <strong>Est anim est quis nostrud ipsum deserunt do anim Lorem mollit nostrud minim.</strong> Est anim est quis nostrud ipsum.</p>",
+			"<p><strong>Passionate game developer with 5+ years of professional experience</strong> creating engaging gameplay systems and polished player experiences across multiple platforms. <a href='https://www.google.com'>Specialized</a> in Unity and Unreal Engine with strong expertise in C#, C++, and game design principles. Proven ability to collaborate effectively with cross-functional teams including designers, artists, and QA to deliver high-quality games on time and within scope.</p>",
 	},
 	sections: {
 		profiles: {
@@ -547,9 +547,9 @@ export const sampleResumeData: ResumeData = {
 		},
 		page: {
 			gapX: 12,
-			gapY: 6,
+			gapY: 8,
 			marginX: 16,
-			marginY: 14,
+			marginY: 16,
 			format: "a4",
 			locale: "de-DE",
 			hideIcons: false,

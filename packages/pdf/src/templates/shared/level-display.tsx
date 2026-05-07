@@ -36,7 +36,7 @@ export const LevelDisplay = ({ level }: { level: number }) => {
 	return (
 		<View
 			style={composeStyles(
-				{ flexDirection: "row", alignItems: "center", marginTop: 4, columnGap: gap },
+				{ flexDirection: "row", alignItems: "center", marginTop: 2, columnGap: gap },
 				levelContainerStyle,
 			)}
 		>

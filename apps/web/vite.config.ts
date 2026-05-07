@@ -67,7 +67,7 @@ export default defineConfig({
 		viteReact(),
 		lingui(),
 		babel({ presets: [linguiTransformerBabelPreset()] }),
-		nitro(),
+		nitro({ plugins: ["plugins/1.migrate.ts"] }),
 		pwa(),
 	],
 });

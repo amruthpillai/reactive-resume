@@ -201,8 +201,10 @@ function PictureSectionForm() {
 											name={field.name}
 											value={field.state.value}
 											onBlur={field.handleBlur}
-											onChange={(event) => field.handleChange(event.target.value)}
-											readOnly
+											onChange={(event) => {
+												field.handleChange(event.target.value);
+												handleAutoSave();
+											}}
 										/>
 									}
 								/>

@@ -4,7 +4,7 @@
 pre-commit:
   parallel: true
   jobs:
-    - name: biome
+    - name: lint and format
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: pnpm biome check --write --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true

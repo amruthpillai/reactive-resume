@@ -103,23 +103,3 @@ export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[
 
 	return allowedHosts.has(hostname);
 }
-
-export function sanitizeResumePictureUrl(url: string, appUrl: string) {
-	if (!url) return "";
-	if (url.startsWith("/api/uploads/")) return url;
-	if (url.startsWith("/uploads/")) return `/api${url}`;
-
-	const parsed = parseUrl(url);
-	if (!parsed) return "";
-	if (parsed.username || parsed.password) return "";
-	if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
-
-	const app = parseUrl(appUrl);
-	if (!app) return "";
-
-	if (parsed.origin !== app.origin) return "";
-	if (!parsed.pathname.startsWith("/uploads/") && !parsed.pathname.startsWith("/api/uploads/")) return "";
-
-	const normalizedPath = parsed.pathname.startsWith("/uploads/") ? `/api${parsed.pathname}` : parsed.pathname;
-	return `${normalizedPath}${parsed.search}${parsed.hash}`;
-}

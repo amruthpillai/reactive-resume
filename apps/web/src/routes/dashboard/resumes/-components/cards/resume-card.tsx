@@ -1,13 +1,13 @@
 import type { RouterOutput } from "@/libs/orpc/client";
 import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
-import { FileTextIcon, LockSimpleIcon } from "@phosphor-icons/react";
+import { LockSimpleIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo } from "react";
-import { cn } from "@reactive-resume/utils/style";
 import { ResumeContextMenu } from "../menus/context-menu";
 import { BaseCard } from "./base-card";
+import { ResumeThumbnail } from "./resume-thumbnail";
 
 type ResumeCardProps = {
 	resume: RouterOutput["resume"]["list"][number];
@@ -30,14 +30,7 @@ export function ResumeCard({ resume }: ResumeCardProps) {
 					transition={{ type: "spring", stiffness: 320, damping: 28 }}
 				>
 					<BaseCard title={resume.name} description={t`Last updated on ${updatedAt}`} tags={resume.tags}>
-						<div
-							className={cn(
-								"flex size-full items-center justify-center bg-muted/40 transition-all",
-								resume.isLocked && "blur-xs",
-							)}
-						>
-							<FileTextIcon weight="thin" className="size-12 opacity-40" />
-						</div>
+						<ResumeThumbnail resume={resume} isLocked={resume.isLocked} />
 
 						<ResumeLockOverlay isLocked={resume.isLocked} />
 					</BaseCard>

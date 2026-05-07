@@ -4,7 +4,7 @@ import { Pool } from "pg";
 import { env } from "@reactive-resume/env/server";
 
 export async function resetDatabase() {
-	console.log("⌛ Resetting database...");
+	console.log("Resetting database...");
 
 	const pool = new Pool({ connectionString: env.DATABASE_URL });
 	const db = drizzle({ client: pool });
@@ -20,9 +20,9 @@ export async function resetDatabase() {
 			await tx.execute(sql`GRANT ALL ON SCHEMA public TO postgres`);
 		});
 
-		console.log("✅ Database reset completed");
+		console.log("Database reset completed");
 	} catch (error) {
-		console.error("🚨 Database reset failed:", error);
+		console.error("Database reset failed:", error);
 	} finally {
 		await pool.end();
 	}
