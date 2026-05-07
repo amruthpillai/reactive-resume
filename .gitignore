@@ -1,21 +1,51 @@
-dist
-.env*
-/data
-.nitro
-.agents
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build Outputs
 .output
 .vercel
-.cursor
-.claude
-TODO.md
-coverage
-.netlify
-.DS_Store
-.tanstack
-node_modules
+.wrangler
+
+# Environment Variables
+.env*
 !.env.example
-public/sw.js
-public/sw.js.map
-scripts/**/*.json
-public/workbox-*.js
-public/workbox-*.js.map
+
+# IDEs and Editors
+*~
+*.swp
+*.swo
+.DS_Store
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Log Files
+logs
+*.log*
+
+# Turborepo
+.turbo
+
+# TanStack Start
+.tanstack
+
+# Testing
+coverage
+reports
+
+# Cache
+tmp
+temp
+.cache
+
+# AI
+.codex
+.claude
+.cursor
+
+# Data
+apps/web/data

@@ -1,0 +1,38 @@
+{
+	"name": "@reactive-resume/db",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"exports": {
+		"./client": {
+			"default": "./src/client.ts"
+		},
+		"./schema": {
+			"default": "./src/schema/index.ts"
+		}
+	},
+	"scripts": {
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio",
+		"typecheck": "tsgo --noEmit",
+		"test": "vitest run --passWithNoTests",
+		"test:coverage": "vitest run --coverage --passWithNoTests",
+		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
+		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
+	},
+	"dependencies": {
+		"@reactive-resume/env": "workspace:*",
+		"@reactive-resume/schema": "workspace:*",
+		"@reactive-resume/utils": "workspace:*",
+		"drizzle-orm": "1.0.0-beta.22",
+		"pg": "^8.20.0"
+	},
+	"devDependencies": {
+		"@reactive-resume/config": "workspace:*",
+		"@types/pg": "^8.20.0",
+		"@typescript/native-preview": "7.0.0-dev.20260507.1",
+		"drizzle-kit": "1.0.0-beta.22",
+		"typescript": "^6.0.3"
+	}
+}

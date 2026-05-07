@@ -88,11 +88,9 @@ You represent that you have the rights necessary to upload and use any files and
 
 ---
 
-## Exports (PDF) and Screenshots
+## Exports (PDF)
 
-When you request a PDF export or screenshot, the Service uses a printer service (a headless Chromium browser) to load a resume URL and generate the output.
-
-Depending on the deployment, this rendering service may be operated by the Service Operator or a third party. You understand that resume content must be processed for rendering in order to provide the export/screenshot functionality.
+When you request a PDF export, the Service renders the document in your own browser using `@react-pdf/renderer`. Your resume content is processed locally by the JavaScript running on your device; it is not transmitted to a separate rendering service for the purpose of generating the PDF.
 
 ---
 

@@ -33,6 +33,7 @@ flowchart TD
     Router["TanStack Router"]
     Query["TanStack Query"]
     ORPCClient["oRPC Client"]
+    PDF["@react-pdf/renderer (client-side PDF export)"]
   end
 
   %% Server Side
@@ -45,7 +46,6 @@ flowchart TD
 
   Database["PostgreSQL"]
   Storage["File System OR S3-Compatible Storage"]
-  Printer["Printer (Browserless/Chromium)"]
 
   Router --> ORPCClient
   Query --> ORPCClient
@@ -55,7 +55,7 @@ flowchart TD
   Services --> Drizzle
   Drizzle --> Database
   Services --> Storage
-  Services --> Printer
+  Router --> PDF
 ```
 
 **Diagram:** This flow shows data and control flow between the main architectural layers of Reactive Resume.
@@ -90,8 +90,7 @@ flowchart TD
     <Accordion title="routes/" icon="route">
     	File-based routing using TanStack Router: - **`__root.tsx`** — Root layout with providers - **`_home/`** — Public
     	home page routes - **`auth/`** — Authentication routes (login, register, etc.) - **`dashboard/`** — User dashboard
-    	routes - **`builder/`** — Resume builder routes (the main editor) - **`printer/`** — PDF printing route - **`api/`**
-    	— API routes
+    	routes - **`builder/`** — Resume builder routes (the main editor) - **`api/`** — API routes
     </Accordion>
 
     <Accordion title="integrations/" icon="plug">

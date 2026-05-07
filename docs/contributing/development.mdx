@@ -44,8 +44,11 @@ This guide walks you through setting up Reactive Resume for local development. W
     This starts the following infrastructure services:
     - **PostgreSQL** — Database (port 5432)
     - **SeaweedFS** — S3-compatible storage (port 8333)
-    - **Printer** — PDF and screenshot generation service (port 4000)
     - **Mailpit** — Email testing server (SMTP on port 1025, UI on port 8025)
+
+    <Info>
+      **From v5.1.0 onwards** — PDF generation now runs entirely in the browser via `@react-pdf/renderer`, so no Browserless or Chromium container is required for development.
+    </Info>
     
     <Tip>
       Use `compose.dev.yml` instead of `compose.yml` for local development. The development file only includes infrastructure services with ports exposed to your host machine, while the main `compose.yml` includes the full application stack intended for production deployments.
@@ -62,10 +65,6 @@ This guide walks you through setting up Reactive Resume for local development. W
     ```bash
     # Server
     APP_URL=http://localhost:3000
-
-    # Printer (required for local development)
-    PRINTER_APP_URL=http://host.docker.internal:3000
-    PRINTER_ENDPOINT=ws://localhost:4000?token=1234567890
 
     # Database
     DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
@@ -84,10 +83,6 @@ This guide walks you through setting up Reactive Resume for local development. W
     SMTP_HOST=localhost
     SMTP_PORT=1025
     ```
-
-    <Note>
-      **PDF Generation Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while the printer service is running inside Docker (which is the case when using `compose.dev.yml`). The printer needs to reach your local app to render resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to communicate with services running on your host machine.
-    </Note>
 
     <Tip>
       **Email Testing**: The development stack includes [Mailpit](https://mailpit.axllent.org/), an email testing tool. All emails sent by the application will be captured and viewable at [http://localhost:8025](http://localhost:8025). No emails will actually be sent to real addresses during development.

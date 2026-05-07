@@ -1,21 +1,6 @@
 name: reactive_resume
 
 services:
-  adminer:
-    image: adminer:latest
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      start_period: 10s
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   postgres:
     image: postgres:latest
     restart: unless-stopped
@@ -33,34 +18,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-
-  browserless:
-    image: ${BROWSERLESS_IMAGE:-ghcr.io/browserless/chromium:latest}
-    restart: unless-stopped
-    ports:
-      - "4000:3000"
-    environment:
-      QUEUED: 10
-      HEALTH: "true"
-      CONCURRENT: 5
-      TOKEN: ${BROWSERLESS_TOKEN:-change-me}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      test: ["CMD-SHELL", 'curl -f "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN:-change-me}"']
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  # As an alternative to browserless, you can also use a lightweight image like chromedp/headless-shell:latest
-  # See https://docs.rxresu.me/self-hosting/docker#alternative-printer-options for more information.
-  chrome:
-    image: chromedp/headless-shell:latest
-    restart: unless-stopped
-    ports:
-      - "9222:9222"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
@@ -95,71 +52,6 @@ services:
       seaweedfs:
         condition: service_healthy
 
-  mailpit:
-    image: axllent/mailpit:latest
-    restart: unless-stopped
-    volumes:
-      - mailpit_data:/data
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-    healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8025/"]
-      start_period: 10s
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  web_app:
-    profiles: ["app"]
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    environment:
-      PRINTER_APP_URL: http://web_app:3000
-      PRINTER_ENDPOINT: ws://browserless:3000?token=${BROWSERLESS_TOKEN:-change-me}
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
-      SMTP_HOST: mailpit
-      S3_ENDPOINT: http://seaweedfs:8333
-      CHOKIDAR_INTERVAL: 100
-      WATCHPACK_POLLING: "true"
-      CHOKIDAR_USEPOLLING: "true"
-    volumes:
-      - ./:/app
-      - web_app_data:/app/data
-      - web_app_pnpm_store:/pnpm/store
-      - web_app_nitro_cache:/app/.nitro
-      - web_app_tanstack_cache:/app/.tanstack
-      - web_app_node_modules:/app/node_modules
-    depends_on:
-      postgres:
-        condition: service_healthy
-      browserless:
-        condition: service_healthy
-      seaweedfs:
-        condition: service_healthy
-      seaweedfs_create_bucket:
-        condition: service_completed_successfully
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      start_period: 10s
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
 volumes:
-  mailpit_data:
   postgres_data:
   seaweedfs_data:
-  web_app_data:
-  web_app_pnpm_store:
-  web_app_nitro_cache:
-  web_app_node_modules:
-  web_app_tanstack_cache:

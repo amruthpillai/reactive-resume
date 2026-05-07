@@ -1,9 +1,28 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["src/server.ts", "src/router.tsx", "lingui.config.ts"],
-  "tailwind": { "entry": ["src/styles.css"] },
-  "project": ["src/**/*.{js,jsx,ts,tsx,css}"],
-  "ignoreBinaries": ["mint"],
-  "ignoreDependencies": ["npm-check-updates", "node-addon-api", "node-gyp"],
-  "ignore": ["src/schema/**/*.ts", "src/components/ui/**/*.{ts,tsx}"]
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"tags": ["-lintignore"],
+	"workspaces": {
+		".": {
+			"ignoreFiles": [".ncurc.cjs"]
+		},
+		"apps/web": {
+			"entry": ["lingui.config.ts", "src/server.ts", "vite.config.ts", "vitest.config.ts"],
+			"vite": {
+				"config": []
+			},
+			"vitest": {
+				"config": []
+			}
+		},
+		"packages/runtime-externals": {
+			"ignoreDependencies": ["@aws-sdk/client-s3", "bcrypt", "sharp"]
+		}
+	},
+	"ignoreDependencies": [
+		"@reactive-resume/config",
+		"npm-check-updates",
+		"@testing-library/dom",
+		"@testing-library/react",
+		"@testing-library/user-event"
+	]
 }

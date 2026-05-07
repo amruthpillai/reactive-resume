@@ -1,0 +1,397 @@
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import {
+	closestCenter,
+	DndContext,
+	DragOverlay,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import { rectSortingStrategy, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
+import { PencilSimpleIcon, XIcon } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "motion/react";
+import * as React from "react";
+import { createPortal } from "react-dom";
+import { Badge } from "@reactive-resume/ui/components/badge";
+import { Input } from "@reactive-resume/ui/components/input";
+import { Kbd } from "@reactive-resume/ui/components/kbd";
+import { cn } from "@reactive-resume/utils/style";
+import { useControlledState } from "@/hooks/use-controlled-state";
+
+const RETURN_KEY = "Enter";
+const COMMA_KEY = ",";
+
+type ChipItemProps = {
+	id: string;
+	chip: string;
+	index: number;
+	isEditing: boolean;
+	onEdit: (index: number) => void;
+	onRemove: (index: number) => void;
+};
+
+function ChipDragPreview({ chip }: { chip: string }) {
+	return (
+		<Badge
+			variant="outline"
+			className="h-6 max-w-44 cursor-grabbing select-none justify-start rounded-md border-ring bg-muted px-2 font-medium text-foreground text-xs shadow-lg ring-2 ring-ring/25 sm:max-w-52"
+		>
+			<span className="truncate">{chip}</span>
+		</Badge>
+	);
+}
+
+function ChipDragOverlay({ activeChip }: { activeChip: string | null }) {
+	const overlay = (
+		<DragOverlay dropAnimation={null}>{activeChip ? <ChipDragPreview chip={activeChip} /> : null}</DragOverlay>
+	);
+
+	if (typeof document === "undefined") return overlay;
+
+	return createPortal(overlay, document.body);
+}
+
+function ChipItem({ id, chip, index, isEditing, onEdit, onRemove }: ChipItemProps) {
+	const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+	const style = {
+		transition,
+		zIndex: isDragging ? 10 : undefined,
+		transform: CSS.Transform.toString(transform),
+	};
+
+	return (
+		<motion.div
+			layout
+			initial={{ opacity: 0, scale: 0.92, y: -4 }}
+			animate={{ opacity: isDragging ? 0.62 : 1, scale: 1, y: 0 }}
+			exit={{ opacity: 0, scale: 0.92, y: -4 }}
+			transition={{ duration: 0.1, ease: "easeOut" }}
+			style={style}
+			ref={setNodeRef}
+			className="group/chip relative touch-none"
+			{...attributes}
+			{...listeners}
+		>
+			<Badge
+				variant="outline"
+				className={cn(
+					"h-6 max-w-full cursor-grab select-none justify-start gap-0 rounded-md border-border bg-muted/55 px-2 font-medium text-foreground text-xs transition-colors hover:border-foreground/20 hover:bg-muted active:cursor-grabbing",
+					isEditing && "border-primary bg-primary/10 ring-1 ring-primary/40",
+					isDragging && "border-ring bg-muted shadow-sm",
+				)}
+			>
+				<span className="max-w-32 truncate sm:max-w-44">{chip}</span>
+				<motion.div
+					initial={false}
+					animate={isEditing ? { opacity: 1 } : { opacity: 0.66 }}
+					transition={{ duration: 0.12, ease: "easeOut" }}
+					className="ms-1.5 flex shrink-0 items-center gap-x-0.5 will-change-[opacity] group-focus-within/chip:opacity-100 group-hover/chip:opacity-100"
+				>
+					<button
+						type="button"
+						tabIndex={-1}
+						className="rounded-sm p-0.5 text-foreground/70 transition-colors hover:bg-secondary hover:text-foreground focus:outline-none"
+						aria-label={t({
+							comment:
+								"Screen reader label for button that edits a keyword chip. Variable is the current keyword text.",
+							message: `Edit ${chip}`,
+						})}
+						onClick={(e) => {
+							e.stopPropagation();
+							onEdit(index);
+						}}
+					>
+						<PencilSimpleIcon className="size-3.5" />
+					</button>
+					<button
+						type="button"
+						tabIndex={-1}
+						className="rounded-sm p-0.5 text-foreground/70 transition-colors hover:bg-destructive/10 hover:text-destructive focus:outline-none"
+						aria-label={t({
+							comment:
+								"Screen reader label for button that removes a keyword chip. Variable is the current keyword text.",
+							message: `Remove ${chip}`,
+						})}
+						onClick={(e) => {
+							e.stopPropagation();
+							onRemove(index);
+						}}
+					>
+						<XIcon className="size-3.5" />
+					</button>
+				</motion.div>
+			</Badge>
+		</motion.div>
+	);
+}
+
+type Props = Omit<React.ComponentProps<"div">, "value" | "onChange"> & {
+	value?: string[];
+	defaultValue?: string[];
+	onChange?: (value: string[]) => void;
+	hideDescription?: boolean;
+};
+
+export function ChipInput({ value, defaultValue = [], onChange, className, hideDescription = false, ...props }: Props) {
+	const [chips, setChips] = useControlledState<string[]>({
+		value,
+		defaultValue,
+		onChange,
+	});
+
+	const [input, setInput] = React.useState("");
+	const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+	const [activeChip, setActiveChip] = React.useState<string | null>(null);
+	const inputRef = React.useRef<HTMLInputElement>(null);
+	const dndContextId = React.useId();
+	const isEditingKeyword = editingIndex !== null;
+	const hasChips = chips.length > 0;
+
+	const addChips = React.useCallback(
+		(values: string[]) => {
+			const nextValues = values.map((chip) => chip.trim()).filter(Boolean);
+			if (nextValues.length === 0) return;
+
+			const newChips = Array.from(new Set([...chips, ...nextValues]));
+			setChips(newChips);
+		},
+		[chips, setChips],
+	);
+
+	const addChip = React.useCallback(
+		(chip: string) => {
+			addChips([chip]);
+		},
+		[addChips],
+	);
+
+	const updateChip = React.useCallback(
+		(index: number, newValue: string) => {
+			const trimmed = newValue.trim();
+			if (!trimmed || index < 0 || index >= chips.length) return;
+
+			const existingIndex = chips.findIndex((c, i) => c === trimmed && i !== index);
+			if (existingIndex !== -1) return;
+
+			const newChips = [...chips];
+			newChips[index] = trimmed;
+			setChips(newChips);
+		},
+		[chips, setChips],
+	);
+
+	const removeChip = React.useCallback(
+		(index: number) => {
+			if (index < 0 || index >= chips.length) return;
+			const newChips = chips.slice(0, index).concat(chips.slice(index + 1));
+			setChips(newChips);
+
+			if (editingIndex === index) {
+				setEditingIndex(null);
+				setInput("");
+			} else if (editingIndex !== null && editingIndex > index) {
+				setEditingIndex(editingIndex - 1);
+			}
+		},
+		[chips, setChips, editingIndex],
+	);
+
+	const handleEdit = React.useCallback(
+		(index: number) => {
+			setEditingIndex(index);
+			setInput(chips[index]);
+			inputRef.current?.focus();
+		},
+		[chips],
+	);
+
+	const handleReorder = React.useCallback(
+		(newOrder: string[]) => {
+			if (editingIndex !== null) {
+				const editingChip = chips[editingIndex];
+				const newIndex = newOrder.indexOf(editingChip);
+				if (newIndex !== -1 && newIndex !== editingIndex) {
+					setEditingIndex(newIndex);
+				}
+			}
+			setChips(newOrder);
+		},
+		[chips, editingIndex, setChips],
+	);
+
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: { distance: 3 },
+		}),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
+
+	const handleDragStart = React.useCallback((event: DragStartEvent) => {
+		setActiveChip(event.active.id as string);
+	}, []);
+
+	const handleDragCancel = React.useCallback(() => {
+		setActiveChip(null);
+	}, []);
+
+	const handleDragEnd = React.useCallback(
+		(event: DragEndEvent) => {
+			setActiveChip(null);
+
+			const { active, over } = event;
+			if (!over || active.id === over.id) return;
+			const oldIndex = chips.indexOf(active.id as string);
+			const newIndex = chips.indexOf(over.id as string);
+			if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+				const newOrder = Array.from(chips);
+				const [removed] = newOrder.splice(oldIndex, 1);
+				newOrder.splice(newIndex, 0, removed);
+				handleReorder(newOrder);
+			}
+		},
+		[chips, handleReorder],
+	);
+
+	const handleInputChange = React.useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const newValue = e.target.value;
+
+			if (editingIndex !== null) {
+				if (newValue.includes(",")) {
+					updateChip(editingIndex, newValue.replace(",", ""));
+					setEditingIndex(null);
+					setInput("");
+				} else {
+					setInput(newValue);
+				}
+				return;
+			}
+
+			if (newValue.includes(",")) {
+				const parts = newValue.split(",");
+				addChips(parts.slice(0, -1));
+				setInput(parts[parts.length - 1]);
+			} else {
+				setInput(newValue);
+			}
+		},
+		[addChips, editingIndex, updateChip],
+	);
+
+	const handleKeyDown = React.useCallback(
+		(e: React.KeyboardEvent<HTMLInputElement>) => {
+			if (e.key === "Enter" || e.key === ",") {
+				e.preventDefault();
+
+				if (editingIndex !== null) {
+					if (input.trim()) {
+						updateChip(editingIndex, input);
+					}
+					setEditingIndex(null);
+					setInput("");
+				} else if (input.trim()) {
+					addChip(input);
+					setInput("");
+				}
+			} else if (e.key === "Escape" && editingIndex !== null) {
+				setEditingIndex(null);
+				setInput("");
+			}
+		},
+		[input, addChip, editingIndex, updateChip],
+	);
+
+	return (
+		<div className={cn("space-y-1.5", className)} {...props}>
+			<DndContext
+				id={dndContextId}
+				sensors={sensors}
+				collisionDetection={closestCenter}
+				onDragStart={handleDragStart}
+				onDragEnd={handleDragEnd}
+				onDragCancel={handleDragCancel}
+			>
+				<div
+					role="none"
+					onClick={() => inputRef.current?.focus()}
+					className="overflow-hidden rounded-lg border border-input bg-background/40 transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 dark:bg-input/20"
+				>
+					<div className="flex flex-col">
+						<div
+							className={cn("max-h-24 overflow-y-auto px-2 py-1.5", hasChips ? "border-border/70 border-b" : "hidden")}
+						>
+							<SortableContext items={chips} strategy={rectSortingStrategy}>
+								<motion.div layout className="flex flex-wrap gap-1">
+									<AnimatePresence initial={false} mode="popLayout">
+										{chips.map((chip, idx) => (
+											<ChipItem
+												key={chip}
+												id={chip}
+												chip={chip}
+												index={idx}
+												isEditing={editingIndex === idx}
+												onEdit={handleEdit}
+												onRemove={removeChip}
+											/>
+										))}
+									</AnimatePresence>
+								</motion.div>
+							</SortableContext>
+						</div>
+						<div className={cn("flex items-center gap-1.5 px-2", hasChips ? "py-1.5" : "py-0")}>
+							<Input
+								ref={inputRef}
+								type="text"
+								value={input}
+								autoComplete="off"
+								aria-label={isEditingKeyword ? t`Edit keyword` : t`Add keyword`}
+								placeholder={isEditingKeyword ? t`Editing keyword...` : t`Add a keyword...`}
+								onKeyDown={handleKeyDown}
+								onChange={handleInputChange}
+								className="h-9 flex-1 border-none px-0 py-0 focus-visible:border-none focus-visible:ring-0 dark:bg-transparent"
+							/>
+							<AnimatePresence>
+								{chips.length > 0 && (
+									<motion.span
+										layout
+										initial={{ opacity: 0, scale: 0.95 }}
+										animate={{
+											opacity: isEditingKeyword ? 1 : 0.8,
+											scale: 1,
+										}}
+										exit={{ opacity: 0, scale: 0.95 }}
+										transition={{ duration: 0.12, ease: "easeOut" }}
+										className={cn(
+											"flex h-6 min-w-6 shrink-0 items-center justify-center rounded-md border px-1.5 font-medium text-[0.7rem] tabular-nums",
+											isEditingKeyword
+												? "border-primary/30 bg-primary/10 text-primary"
+												: "border-border bg-muted/50 text-foreground/80",
+										)}
+									>
+										{isEditingKeyword ? <Trans>Edit</Trans> : chips.length}
+									</motion.span>
+								)}
+							</AnimatePresence>
+						</div>
+					</div>
+				</div>
+				<ChipDragOverlay activeChip={activeChip} />
+			</DndContext>
+
+			{!hideDescription && (
+				<p className="text-muted-foreground text-xs">
+					<Trans>
+						Press <Kbd>{RETURN_KEY}</Kbd> or <Kbd>{COMMA_KEY}</Kbd> to add or save the current keyword.
+					</Trans>
+				</p>
+			)}
+		</div>
+	);
+}

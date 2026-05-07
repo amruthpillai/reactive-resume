@@ -51,6 +51,10 @@ The easiest way to use Reactive Resume is through our cloud version at [rxresu.m
 
 For users who prefer complete control over their data, you can deploy Reactive Resume on your own infrastructure using Docker.
 
+<Info>
+  **From v5.1.0 onwards** — PDF generation now runs entirely client-side via `@react-pdf/renderer`. Self-hosted deployments no longer require Browserless, Chromium, or any external print service as a dependency. The `PRINTER_*` and `BROWSERLESS_*` environment variables are no longer read and can be removed from your `.env`.
+</Info>
+
 ### Prerequisites
 
 Before you begin, ensure you have the following installed:
@@ -80,10 +84,6 @@ Before you begin, ensure you have the following installed:
 # Application
 APP_URL=http://localhost:3000
 
-# Printer (Browserless)
-BROWSERLESS_TOKEN=change-me
-PRINTER_ENDPOINT=ws://browserless:3000?token=change-me
-
 # Database
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
 
@@ -99,7 +99,7 @@ S3_FORCE_PATH_STYLE=true
 ```
 
     	<Warning>
-    		For production deployments, always use strong, unique values for `AUTH_SECRET`, `BROWSERLESS_TOKEN`, and database credentials.
+    		For production deployments, always use strong, unique values for `AUTH_SECRET` and database credentials.
     	</Warning>
     </Step>
 
@@ -111,7 +111,6 @@ S3_FORCE_PATH_STYLE=true
     	This starts:
     	- **PostgreSQL** — Database for storing user data and resumes
     	- **SeaweedFS** — S3-compatible storage for file uploads
-    	- **Browserless** — Headless Chromium service for PDF/screenshot generation
     	- **Reactive Resume** — The main application
     </Step>
 
@@ -129,12 +128,11 @@ S3_FORCE_PATH_STYLE=true
 
 Here's what each service in the stack does:
 
-| Service           | Port                               | Description                                                 |
-| ----------------- | ---------------------------------- | ----------------------------------------------------------- |
-| `postgres`        | 5432                               | PostgreSQL database for storing all application data        |
-| `seaweedfs`       | 8333                               | S3-compatible object storage for file uploads               |
-| `browserless`     | 3000 (internal) / 4000 (published) | Headless Chromium service for PDF and screenshot generation |
-| `reactive_resume` | 3000                               | The main Reactive Resume application                        |
+| Service           | Port | Description                                          |
+| ----------------- | ---- | ---------------------------------------------------- |
+| `postgres`        | 5432 | PostgreSQL database for storing all application data |
+| `seaweedfs`       | 8333 | S3-compatible object storage for file uploads        |
+| `reactive_resume` | 3000 | The main Reactive Resume application                 |
 
 ### Health Checks
 
@@ -154,18 +152,16 @@ Here's a complete list of environment variables you can configure:
 
 ### Required Variables
 
-| Variable           | Description                    | Example                               |
-| ------------------ | ------------------------------ | ------------------------------------- |
-| `DATABASE_URL`     | PostgreSQL connection string   | `postgresql://user:pass@host:5432/db` |
-| `AUTH_SECRET`      | Secret key for authentication  | Generate with `openssl rand -hex 32`  |
-| `APP_URL`          | Public URL of your Application | `https://rxresu.me`                   |
-| `PRINTER_ENDPOINT` | URL of the printer service     | `ws://browserless:3000?token=...`     |
+| Variable       | Description                    | Example                               |
+| -------------- | ------------------------------ | ------------------------------------- |
+| `DATABASE_URL` | PostgreSQL connection string   | `postgresql://user:pass@host:5432/db` |
+| `AUTH_SECRET`  | Secret key for authentication  | Generate with `openssl rand -hex 32`  |
+| `APP_URL`      | Public URL of your Application | `https://rxresu.me`                   |
 
 ### Optional Variables
 
 | Variable                              | Description                                                 | Default                |
 | ------------------------------------- | ----------------------------------------------------------- | ---------------------- |
-| `PRINTER_APP_URL`                     | Public URL for the printer to access the Application        | —                      |
 | `GOOGLE_CLIENT_ID`                    | Google OAuth Client ID                                      | —                      |
 | `GOOGLE_CLIENT_SECRET`                | Google OAuth Client Secret                                  | —                      |
 | `GITHUB_CLIENT_ID`                    | GitHub OAuth Client ID                                      | —                      |
@@ -197,28 +193,13 @@ Here's a complete list of environment variables you can configure:
 | `S3_ENDPOINT`                         | S3-compatible Endpoint URL                                  | —                      |
 | `S3_BUCKET`                           | S3 Bucket Name                                              | —                      |
 | `S3_FORCE_PATH_STYLE`                 | Use path-style URLs for S3 (set `true` for MinIO/SeaweedFS) | `false`                |
-| `FLAG_DEBUG_PRINTER`                  | Used for debugging the printer route                        | `false`                |
 | `FLAG_DISABLE_SIGNUPS`                | Disables new user signups                                   | `false`                |
 | `FLAG_DISABLE_EMAIL_AUTH`             | Disables email/password login (SSO only)                    | `false`                |
 | `FLAG_DISABLE_IMAGE_PROCESSING`       | Disables image processing                                   | `false`                |
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
 
-> **Health check behavior:** `/api/health` reports status for database, printer, and storage. A failure in any dependency returns HTTP `503`.
-
-<Note>
-  **Hybrid Setup Note**: The `PRINTER_APP_URL` variable is required when running Reactive Resume outside of Docker while
-  the printer service is running inside Docker. In this scenario, the printer needs to reach your local app to render
-  resumes for PDF generation. Since Docker containers cannot access `localhost` on your host machine directly, you must
-  set `PRINTER_APP_URL` to `http://host.docker.internal:3000`. This special hostname allows Docker containers to
-  communicate with services running on your host machine.
-</Note>
-
-<Note>
-  **Alternative Printer Options**: If you don't want to use browserless, you can use any headless Chrome/Chromium
-  instance with its remote debugging port open. For example, run `chromium --remote-debugging-port=9222` and point
-  `PRINTER_ENDPOINT` to that instance.
-</Note>
+> **Health check behavior:** `/api/health` reports status for database and storage. A failure in either dependency returns HTTP `503`.
 
 ---
 

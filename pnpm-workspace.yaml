@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+allowBuilds:
+  bcrypt: true
+  esbuild: true
+  lefthook: true
+  msw: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - postcss@8.5.10
+  - ip-address@10.1.1

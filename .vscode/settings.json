@@ -1,42 +1,31 @@
 {
-  "biome.enabled": false,
-  "editor.defaultFormatter": "oxc.oxc-vscode",
-  "editor.codeActionsOnSave": {
-    "source.fixAll.oxc": "explicit"
-  },
-  "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file",
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
-  "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true,
-    "pnpm-lock.yaml": true
-  },
-  "files.watcherExclude": {
-    "**/routeTree.gen.ts": true,
-    "locales/**.po": true,
-    "pnpm-lock.yaml": true
-  },
-  "i18n-ally.enabledParsers": ["po"],
-  "i18n-ally.localesPaths": ["locales"],
-  "i18n-ally.sourceLanguage": "en-US",
-  "oxc.enable.oxfmt": true,
-  "oxc.enable.oxlint": true,
-  "oxc.configPath": "./vite.config.ts",
-  "oxc.fmt.configPath": "./vite.config.ts",
-  "search.exclude": {
-    "**/routeTree.gen.ts": true,
-    "locales/**.po": true,
-    "pnpm-lock.yaml": true
-  },
-  "tailwindCSS.classFunctions": ["cn", "cva"],
-  "tailwindCSS.experimental.classRegex": [
-    ["class:\\s*?[\"'`]([^\"'`]*).*?,"],
-    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ],
-  "tailwindCSS.experimental.configFile": "src/styles/globals.css",
-  "typescript.experimental.useTsgo": true,
-  "i18n-ally.keystyle": "nested"
+	"biome.enabled": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
+	"editor.defaultFormatter": "biomejs.biome",
+	"files.readonlyInclude": {
+		"**/locales/**.po": true,
+		"**/routeTree.gen.ts": true,
+		"pnpm-lock.yaml": true
+	},
+	"files.watcherExclude": {
+		"**/locales/**.po": true,
+		"**/routeTree.gen.ts": true,
+		"pnpm-lock.yaml": true
+	},
+	"search.exclude": {
+		"**/locales/**.po": true,
+		"**/routeTree.gen.ts": true,
+		"pnpm-lock.yaml": true
+	},
+	"tailwindCSS.classFunctions": ["cn", "cva"],
+	"tailwindCSS.experimental.classRegex": [
+		["class:\\s*?[\"'`]([^\"'`]*).*?,"],
+		["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+		["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+	],
+	"tailwindCSS.experimental.configFile": "src/styles/globals.css",
+	"typescript.experimental.useTsgo": true
 }

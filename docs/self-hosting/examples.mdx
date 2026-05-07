@@ -3,6 +3,10 @@ title: "Docker Compose Examples"
 description: "A collection of Docker Compose examples for different deployment scenarios. If you have a different setup that works for you, please share it by opening a pull request on GitHub."
 ---
 
+<Info>
+  **From v5.1.0 onwards** — PDF generation now runs entirely client-side via `@react-pdf/renderer`. None of the examples below require a Browserless or Chromium service. Older configurations that still define a `printer` service or set `BROWSERLESS_TOKEN` / `PRINTER_*` will continue to start, but those services are inert and can be removed.
+</Info>
+
 ## Overview
 
 Every self-hosted setup is unique. You might be running on a single VPS, a Kubernetes cluster, behind Cloudflare Tunnel, or using a specific reverse proxy like Traefik or nginx. This page provides real-world Docker Compose configurations for various deployment scenarios to help you get started faster.
@@ -19,7 +23,7 @@ These examples go beyond the basic setup in the [Self-Hosting with Docker](/self
 
 ## Docker with Traefik
 
-This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik—Postgres and the printer remain on an internal network.
+This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik—Postgres remains on an internal network.
 
 <Tip>
   Traefik automatically discovers services via Docker labels and handles SSL certificates, making it ideal for setups
@@ -78,30 +82,12 @@ services:
       timeout: 5s
       retries: 5
 
-  printer:
-    image: ghcr.io/browserless/chromium:latest
-    restart: unless-stopped
-    environment:
-      - QUEUED=10
-      - HEALTH=true
-      - CONCURRENT=5
-      - TOKEN=${BROWSERLESS_TOKEN}
-    networks:
-      - reactive_resume_network
-    healthcheck:
-      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN}" > /dev/null']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   reactive_resume:
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
     environment:
       - APP_URL=https://resume.${DOMAIN}
-      - PRINTER_APP_URL=http://reactive_resume:3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
-      - PRINTER_ENDPOINT=ws://printer:3000?token=${BROWSERLESS_TOKEN}
       - AUTH_SECRET=${AUTH_SECRET}
       # Add other optional env vars as needed (SMTP, S3, OAuth, etc.)
     volumes:
@@ -110,8 +96,6 @@ services:
       - reactive_resume_network
     depends_on:
       postgres:
-        condition: service_healthy
-      printer:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
@@ -142,7 +126,6 @@ DOMAIN="example.com"
 ACME_EMAIL="admin@example.com"
 POSTGRES_PASSWORD="your-secure-postgres-password"
 AUTH_SECRET="your-auth-secret-from-openssl-rand-hex-32"
-BROWSERLESS_TOKEN="your-browserless-token"
 # Optional: Traefik dashboard auth (generate with: htpasswd -nb admin password)
 TRAEFIK_DASHBOARD_AUTH="admin:$$apr1$$..."
 ```
@@ -184,30 +167,12 @@ services:
       timeout: 5s
       retries: 5
 
-  printer:
-    image: ghcr.io/browserless/chromium:latest
-    restart: unless-stopped
-    environment:
-      - QUEUED=10
-      - HEALTH=true
-      - CONCURRENT=5
-      - TOKEN=${BROWSERLESS_TOKEN}
-    networks:
-      - reactive_resume_network
-    healthcheck:
-      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN}" > /dev/null']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   reactive_resume:
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
     environment:
       - APP_URL=https://resume.${DOMAIN}
-      - PRINTER_APP_URL=http://reactive_resume:3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
-      - PRINTER_ENDPOINT=ws://printer:3000?token=${BROWSERLESS_TOKEN}
       - AUTH_SECRET=${AUTH_SECRET}
       # Add other optional env vars as needed (SMTP, S3, OAuth, etc.)
     volumes:
@@ -216,8 +181,6 @@ services:
       - reactive_resume_network
     depends_on:
       postgres:
-        condition: service_healthy
-      printer:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
@@ -285,7 +248,7 @@ http {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
 
-            # Timeouts for long-running requests (PDF generation)
+            # Reasonable timeouts for app requests
             proxy_connect_timeout 60s;
             proxy_send_timeout 60s;
             proxy_read_timeout 60s;
@@ -330,25 +293,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
-    deploy:
-      mode: replicated
-      replicas: 1
-
-  printer:
-    image: ghcr.io/browserless/chromium:latest
-    networks:
-      - reactive_resume_network
-    environment:
-      - QUEUED=10
-      - HEALTH=true
-      - CONCURRENT=5
-      - TOKEN=$BROWSERLESS_TOKEN
-    healthcheck:
-      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=$BROWSERLESS_TOKEN" > /dev/null']
-      interval: 30s
-      timeout: 10s
-      retries: 3
       start_period: 30s
     deploy:
       mode: replicated
@@ -399,9 +343,6 @@ services:
       - reactive_resume_data:/app/data
     environment:
       - APP_URL=$APP_URL
-      # If using browserless with token auth, include the token in the URL:
-      # PRINTER_ENDPOINT=ws://printer:3000?token=your-secret-token
-      - PRINTER_ENDPOINT=$PRINTER_ENDPOINT
       - DATABASE_URL=$DATABASE_URL
       - AUTH_SECRET=$AUTH_SECRET
       - GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID

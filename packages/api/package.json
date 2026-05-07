@@ -1,0 +1,55 @@
+{
+	"name": "@reactive-resume/api",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"exports": {
+		"./context": "./src/context.ts",
+		"./routers": "./src/routers/index.ts",
+		"./services/*": "./src/services/*.ts",
+		"./helpers/*": "./src/helpers/*.ts",
+		"./middleware/rate-limit": "./src/middleware/rate-limit/index.ts"
+	},
+	"scripts": {
+		"typecheck": "tsgo --noEmit",
+		"test": "vitest run --passWithNoTests",
+		"test:coverage": "vitest run --coverage --passWithNoTests",
+		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
+		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
+	},
+	"dependencies": {
+		"@ai-sdk/anthropic": "^3.0.75",
+		"@ai-sdk/google": "^3.0.68",
+		"@ai-sdk/openai": "^3.0.62",
+		"@ai-sdk/openai-compatible": "^2.0.46",
+		"@aws-sdk/client-s3": "^3.1044.0",
+		"@orpc/client": "^1.14.2",
+		"@orpc/experimental-ratelimit": "^1.14.2",
+		"@orpc/server": "^1.14.2",
+		"@reactive-resume/ai": "workspace:*",
+		"@reactive-resume/auth": "workspace:*",
+		"@reactive-resume/db": "workspace:*",
+		"@reactive-resume/env": "workspace:*",
+		"@reactive-resume/schema": "workspace:*",
+		"@reactive-resume/utils": "workspace:*",
+		"@tanstack/react-start": "^1.167.65",
+		"ai": "^6.0.175",
+		"bcrypt": "^6.0.0",
+		"better-auth": "1.6.9",
+		"drizzle-orm": "1.0.0-beta.22",
+		"drizzle-zod": "1.0.0-beta.14-a36c63d",
+		"es-toolkit": "^1.46.1",
+		"fast-json-patch": "^3.1.1",
+		"ollama-ai-provider-v2": "^3.5.0",
+		"react": "^19.2.6",
+		"sharp": "^0.34.5",
+		"ts-pattern": "^5.9.0",
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"@reactive-resume/config": "workspace:*",
+		"@types/bcrypt": "^6.0.0",
+		"@typescript/native-preview": "7.0.0-dev.20260507.1",
+		"typescript": "^6.0.3"
+	}
+}

@@ -1,0 +1,36 @@
+{
+	"name": "@reactive-resume/pdf",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"exports": {
+		"./context": "./src/context.tsx",
+		"./document": "./src/document.tsx",
+		"./section-title": "./src/section-title.ts",
+		"./templates": "./src/templates/index.ts"
+	},
+	"scripts": {
+		"typecheck": "tsgo --noEmit",
+		"test": "vitest run --passWithNoTests",
+		"test:coverage": "vitest run --coverage --passWithNoTests",
+		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
+		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
+	},
+	"dependencies": {
+		"@react-pdf/renderer": "^4.5.1",
+		"@reactive-resume/fonts": "workspace:*",
+		"@reactive-resume/schema": "workspace:*",
+		"@reactive-resume/utils": "workspace:*",
+		"phosphor-icons-react-pdf": "^0.1.2",
+		"react": "^19.2.6",
+		"react-pdf-html": "^2.1.5",
+		"ts-pattern": "^5.9.0"
+	},
+	"devDependencies": {
+		"@react-pdf/types": "^2.11.1",
+		"@reactive-resume/config": "workspace:*",
+		"@types/react": "^19.2.14",
+		"@typescript/native-preview": "7.0.0-dev.20260507.1",
+		"typescript": "^6.0.3"
+	}
+}

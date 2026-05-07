@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://rxresu.me">
-    <img src="public/opengraph/banner.jpg" alt="Reactive Resume" />
+    <img src="apps/web/apps/web/public/opengraph/banner.jpg" alt="Reactive Resume" />
   </a>
 
   <h1>Reactive Resume</h1>
@@ -69,65 +69,65 @@ Built with privacy as a core principle, Reactive Resume gives you complete owner
 <table>
   <tr>
     <td align="center">
-      <img src="public/templates/jpg/azurill.jpg" alt="Azurill" width="150" />
+      <img src="apps/web/public/templates/jpg/azurill.jpg" alt="Azurill" width="150" />
       <br /><sub><b>Azurill</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/bronzor.jpg" alt="Bronzor" width="150" />
+      <img src="apps/web/public/templates/jpg/bronzor.jpg" alt="Bronzor" width="150" />
       <br /><sub><b>Bronzor</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/chikorita.jpg" alt="Chikorita" width="150" />
+      <img src="apps/web/public/templates/jpg/chikorita.jpg" alt="Chikorita" width="150" />
       <br /><sub><b>Chikorita</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/ditto.jpg" alt="Ditto" width="150" />
+      <img src="apps/web/public/templates/jpg/ditto.jpg" alt="Ditto" width="150" />
       <br /><sub><b>Ditto</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="public/templates/jpg/gengar.jpg" alt="Gengar" width="150" />
+      <img src="apps/web/public/templates/jpg/gengar.jpg" alt="Gengar" width="150" />
       <br /><sub><b>Gengar</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/glalie.jpg" alt="Glalie" width="150" />
+      <img src="apps/web/public/templates/jpg/glalie.jpg" alt="Glalie" width="150" />
       <br /><sub><b>Glalie</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/kakuna.jpg" alt="Kakuna" width="150" />
+      <img src="apps/web/public/templates/jpg/kakuna.jpg" alt="Kakuna" width="150" />
       <br /><sub><b>Kakuna</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/lapras.jpg" alt="Lapras" width="150" />
+      <img src="apps/web/public/templates/jpg/lapras.jpg" alt="Lapras" width="150" />
       <br /><sub><b>Lapras</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="public/templates/jpg/leafish.jpg" alt="Leafish" width="150" />
+      <img src="apps/web/public/templates/jpg/leafish.jpg" alt="Leafish" width="150" />
       <br /><sub><b>Leafish</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/onyx.jpg" alt="Onyx" width="150" />
+      <img src="apps/web/public/templates/jpg/onyx.jpg" alt="Onyx" width="150" />
       <br /><sub><b>Onyx</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/pikachu.jpg" alt="Pikachu" width="150" />
+      <img src="apps/web/public/templates/jpg/pikachu.jpg" alt="Pikachu" width="150" />
       <br /><sub><b>Pikachu</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/rhyhorn.jpg" alt="Rhyhorn" width="150" />
+      <img src="apps/web/public/templates/jpg/rhyhorn.jpg" alt="Rhyhorn" width="150" />
       <br /><sub><b>Rhyhorn</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="public/templates/jpg/ditgar.jpg" alt="Ditgar" width="150" />
+      <img src="apps/web/public/templates/jpg/ditgar.jpg" alt="Ditgar" width="150" />
       <br /><sub><b>Ditgar</b></sub>
     </td>
     <td align="center">
-      <img src="public/templates/jpg/meowth.jpg" alt="Meowth" width="150" />
+      <img src="apps/web/public/templates/jpg/meowth.jpg" alt="Meowth" width="150" />
       <br /><sub><b>Meowth</b></sub>
     </td>
   </tr>
@@ -184,8 +184,9 @@ Comprehensive guides are available at [docs.rxresu.me](https://docs.rxresu.me):
 Reactive Resume can be self-hosted using Docker. The stack includes:
 
 - **PostgreSQL** — Database for storing user data and resumes
-- **Printer** — Headless Chromium service for PDF and screenshot generation
 - **SeaweedFS** (optional) — S3-compatible storage for file uploads
+
+> **From v5.1.0 onwards** — PDF generation now runs entirely client-side via `@react-pdf/renderer`. New deployments no longer require Browserless, Chromium, or any external print service as a dependency. The `PRINTER_*` and `BROWSERLESS_*` environment variables are no longer read and can be removed from your `.env`.
 
 Pull the latest image from Docker Hub or GitHub Container Registry:
 

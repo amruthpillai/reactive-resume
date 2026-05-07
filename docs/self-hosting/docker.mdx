@@ -1,7 +1,11 @@
 ---
 title: "Self-Hosting with Docker"
-description: "A comprehensive guide to self-host Reactive Resume with Docker (Postgres + Printer), including a detailed environment variable reference and troubleshooting tips."
+description: "A comprehensive guide to self-host Reactive Resume with Docker (Postgres only), including a detailed environment variable reference and troubleshooting tips."
 ---
+
+<Info>
+  **From v5.1.0 onwards** — PDF generation now runs entirely client-side via `@react-pdf/renderer`. New deployments no longer require Browserless, Chromium, or any external print service as a dependency. The `PRINTER_*` and `BROWSERLESS_*` environment variables are no longer read and can be removed from your `.env`.
+</Info>
 
 ## Overview
 
@@ -9,7 +13,6 @@ Reactive Resume can be self-hosted using Docker in a matter of minutes, and this
 
 <CardGroup cols={2}>
   <Card title="PostgreSQL">Stores accounts, resumes, and application data.</Card>
-  <Card title="Printer">Generates PDFs and screenshots using a headless Chromium browser.</Card>
   <Card title="Email (optional)">
     SMTP for verification emails, password reset, etc. If not configured, emails are logged to the server console.
   </Card>
@@ -27,7 +30,7 @@ You can pull the latest app image from:
 
 <CardGroup cols={1}>
   <Card title="Docker + Docker Compose">Docker Engine + Docker Compose plugin (or Docker Desktop).</Card>
-  <Card title="Compute">2 vCPU / 2 GB RAM minimum (4 GB recommended if Postgres + Printer run on the same host).</Card>
+  <Card title="Compute">1 vCPU / 1 GB RAM minimum (2 GB recommended if Postgres runs on the same host).</Card>
   <Card title="Storage">Enough for Postgres + uploads (start with 10-20 GB and scale as needed).</Card>
 </CardGroup>
 
@@ -47,16 +50,6 @@ Create a new folder (for example `reactive-resume/`) with:
 # --- Server ---
 TZ="Etc/UTC"
 APP_URL="http://localhost:3000"
-
-# Optional, uses APP_URL by default
-# This can be set to a different URL (like http://host.docker.internal:3000 or http://{docker_service}:3000)
-# to let the browser navigate to a non-public instance of Reactive Resume
-PRINTER_APP_URL="http://host.docker.internal:3000"
-
-# --- Printer ---
-# Keep this token in sync with the Browserless TOKEN value.
-BROWSERLESS_TOKEN="change-me"
-PRINTER_ENDPOINT="ws://printer:3000?token=change-me"
 
 # --- Database (PostgreSQL) ---
 DATABASE_URL="postgresql://postgres:postgres@postgres:5432/postgres"
@@ -124,7 +117,6 @@ S3_BUCKET=""
 S3_FORCE_PATH_STYLE="false"
 
 # --- Feature Flags ---
-FLAG_DEBUG_PRINTER="false"
 FLAG_DISABLE_SIGNUPS="false"
 FLAG_DISABLE_EMAIL_AUTH="false"
 FLAG_DISABLE_IMAGE_PROCESSING="false"
@@ -152,7 +144,7 @@ FLAG_DISABLE_IMAGE_PROCESSING="false"
   </Step>
 
   <Step title="Create compose.yml">
-    This setup runs Postgres + Printer + Reactive Resume on a private Docker network.
+    This setup runs Postgres and Reactive Resume on a private Docker network.
 
     <CodeGroup>
 
@@ -173,22 +165,6 @@ services:
       timeout: 5s
       retries: 10
 
-  printer:
-    image: ghcr.io/browserless/chromium:latest
-    restart: unless-stopped
-    ports:
-      - "4000:3000"
-    environment:
-      - HEALTH=true
-      - CONCURRENT=20
-      - QUEUED=10
-      - TOKEN=${BROWSERLESS_TOKEN}
-    healthcheck:
-      test: ["CMD-SHELL", 'curl -fsS "http://localhost:3000/pressure?token=${BROWSERLESS_TOKEN}" > /dev/null']
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   reactive-resume:
     image: amruthpillai/reactive-resume:latest
     # image: ghcr.io/amruthpillai/reactive-resume:latest
@@ -203,8 +179,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      printer:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
@@ -216,20 +190,6 @@ volumes:
 ```
 
     </CodeGroup>
-
-    <Note>
-      **Alternative Printer Options**: If you don't want to use browserless, you can also use a lightweight headless Chrome Docker image like `chromedp/headless-shell`:
-
-      ```yaml
-      chrome:
-        image: chromedp/headless-shell:latest
-        restart: unless-stopped
-        ports:
-          - "9222:9222"
-      ```
-
-      Then set `PRINTER_ENDPOINT` to `http://chrome:9222` (or `http://localhost:9222` if running outside Docker Compose). This provides the same PDF/screenshot generation functionality with a smaller image footprint.
-    </Note>
 
     <Tip>
       Prefer pulling from Docker Hub? Keep <code>amruthpillai/reactive-resume:latest</code>. Prefer GHCR? Swap it to <code>ghcr.io/amruthpillai/reactive-resume:latest</code>.
@@ -278,9 +238,6 @@ docker compose logs -f reactive-resume
         <code>DATABASE_URL</code>
       </li>
       <li>
-        <code>PRINTER_ENDPOINT</code>
-      </li>
-      <li>
         <code>AUTH_SECRET</code>
       </li>
     </ul>
@@ -311,28 +268,6 @@ docker compose logs -f reactive-resume
   <Accordion title="Server">
     - **`TZ`**: Sets the container timezone (affects logs and server-side timestamps). Recommended: `Etc/UTC`.
     - **`APP_URL`**: Canonical/public URL for your instance (used for absolute URLs, redirects, and auth flows). If behind a reverse proxy, set this to your public HTTPS URL (for example, `https://resume.example.com`).
-    - **`PRINTER_APP_URL`** (optional): Overrides the base URL used when rendering the print route for the printer. Defaults to `APP_URL`. Useful when the printer must access the app via a different internal URL (for example, `http://host.docker.internal:3000`).
-  </Accordion>
-
-  <Accordion title="Printer">
-    - **`PRINTER_ENDPOINT`**: Endpoint where Reactive Resume connects to the printer browser.
-    - **Recommended (Browserless)**: `ws://printer:3000?token=...` and keep the token value in sync with Browserless `TOKEN`.
-    - **Also supported**: `http://chrome:9222` for Chrome DevTools Protocol endpoints.
-    
-    <Note>
-      **Alternative to browserless**: You can use a lightweight headless Chrome Docker image like `chromedp/headless-shell`:
-
-      ```yaml
-      chrome:
-        image: chromedp/headless-shell:latest
-        restart: unless-stopped
-        ports:
-          - "9222:9222"
-      ```
-
-      Set `PRINTER_ENDPOINT` to `http://chrome:9222` (in Docker Compose) or `http://localhost:9222` (if running externally). This provides the same PDF/screenshot generation with a smaller image footprint.
-    </Note>
-
   </Accordion>
 
 <Accordion title="Database (PostgreSQL)">
@@ -406,7 +341,6 @@ openssl rand -hex 32
 </Accordion>
 
   <Accordion title="Feature Flags">
-    - **`FLAG_DEBUG_PRINTER`**: Bypasses the printer-only access restriction (useful when debugging `/printer/{resumeId}`). Recommended: keep `"false"` in production.
     - **`FLAG_DISABLE_SIGNUPS`**: Disables new signups (web app and server). Useful for private instances.
     - **`FLAG_DISABLE_EMAIL_AUTH`**: Disables email/password login entirely. Also disables email verification, forgot password, and reset password flows. Users can still sign up via social auth (Google/GitHub/LinkedIn/Custom OAuth), unless FLAG_DISABLE_SIGNUPS is also set to true. Useful when only SSO is required.
     - **`FLAG_DISABLE_IMAGE_PROCESSING`**: Disables image processing. This is useful if you are using a machine with limited resources, like a Raspberry Pi.
@@ -460,7 +394,7 @@ If you're using S3-compatible storage, consider enabling versioning on your buck
 
 ## Health Checks
 
-Reactive Resume exposes a health check endpoint at `/api/health` that verifies the application and its dependencies. It checks **database**, **printer**, and **storage**; if any one is unhealthy, the endpoint returns HTTP `503`.
+Reactive Resume exposes a health check endpoint at `/api/health` that verifies the application and its dependencies. It checks **database** and **storage**; if either is unhealthy, the endpoint returns HTTP `503`.
 
 ### How it works
 
@@ -483,7 +417,7 @@ Most reverse proxies (such as **Traefik**, **Caddy**, or **nginx** with upstream
 - **Healthy containers** receive traffic as normal
 - **Unhealthy containers** are automatically removed from the load balancer pool
 
-This is particularly useful in high-availability setups where you have multiple instances of Reactive Resume. If one instance becomes unhealthy (for example, it loses database, printer, or storage connectivity), the reverse proxy will stop routing traffic to it until it recovers.
+This is particularly useful in high-availability setups where you have multiple instances of Reactive Resume. If one instance becomes unhealthy (for example, it loses database or storage connectivity), the reverse proxy will stop routing traffic to it until it recovers.
 
 <Tip>
   If you're using **Traefik**, it automatically respects Docker health checks when using the Docker provider. Unhealthy
@@ -522,16 +456,16 @@ A healthy response returns HTTP 200. Any other response (or a connection failure
   restart the container.
 </Accordion>
 
-<Accordion title="PDF export fails / printing is stuck">
-  - **Common cause**: Reactive Resume can't reach the printer, token mismatch, or the printer can't reach your app. -
-  **Checks**: - `PRINTER_ENDPOINT` should usually be `ws://printer:3000?token=...` in Compose. - Browserless `TOKEN` and
-  the token in `PRINTER_ENDPOINT` must match. - If you use `PRINTER_APP_URL="http://host.docker.internal:3000"` on
-  Linux, set `extra_hosts: ["host.docker.internal:host-gateway"]` for the printer service.
+<Accordion title="PDF export fails or downloads an empty file">
+  - **Common cause**: PDFs are now rendered in the browser via `@react-pdf/renderer`, so failures usually come from a
+  blocked download, an extreme browser memory limit, or a custom CSP that strips inline workers. - **Checks**: confirm
+  the browser is up to date, the page hasn't been opened in a restricted iframe, and that no extension is intercepting
+  the download. There is no server-side printer to inspect.
 </Accordion>
 
 <Accordion title="/api/health returns 503 even though Postgres is up">
-  - **Common cause**: printer or storage health failed (not only database). - **Fix**: inspect the endpoint response
-  payload and check `printer` / `storage` fields: ```bash curl -s http://localhost:3000/api/health ```
+  - **Common cause**: storage health failed (not only database). - **Fix**: inspect the endpoint response payload and
+  check the `storage` field: ```bash curl -s http://localhost:3000/api/health ```
 </Accordion>
 
 <Accordion title="Uploads disappear after restart">

@@ -1,0 +1,93 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"globalEnv": [
+		"PORT",
+		"APP_URL",
+		"DATABASE_URL",
+		"AUTH_SECRET",
+		"BETTER_AUTH_API_KEY",
+		"GOOGLE_CLIENT_ID",
+		"GOOGLE_CLIENT_SECRET",
+		"GITHUB_CLIENT_ID",
+		"GITHUB_CLIENT_SECRET",
+		"LINKEDIN_CLIENT_ID",
+		"LINKEDIN_CLIENT_SECRET",
+		"OAUTH_PROVIDER_NAME",
+		"OAUTH_CLIENT_ID",
+		"OAUTH_CLIENT_SECRET",
+		"OAUTH_DISCOVERY_URL",
+		"OAUTH_AUTHORIZATION_URL",
+		"OAUTH_TOKEN_URL",
+		"OAUTH_USER_INFO_URL",
+		"OAUTH_SCOPES",
+		"OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS",
+		"SMTP_HOST",
+		"SMTP_PORT",
+		"SMTP_USER",
+		"SMTP_PASS",
+		"SMTP_FROM",
+		"SMTP_SECURE",
+		"S3_ACCESS_KEY_ID",
+		"S3_SECRET_ACCESS_KEY",
+		"S3_REGION",
+		"S3_ENDPOINT",
+		"S3_BUCKET",
+		"S3_FORCE_PATH_STYLE",
+		"FLAG_DISABLE_SIGNUPS",
+		"FLAG_DISABLE_EMAIL_AUTH",
+		"FLAG_DISABLE_IMAGE_PROCESSING",
+		"GOOGLE_CLOUD_API_KEY",
+		"CROWDIN_PROJECT_ID",
+		"CROWDIN_API_TOKEN"
+	],
+	"tasks": {
+		"source": {
+			"dependsOn": ["^source"]
+		},
+		"build": {
+			"dependsOn": ["source"],
+			"inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env*"],
+			"outputs": ["dist/**", ".output/**", ".vercel/**"]
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"typecheck": {
+			"dependsOn": ["source"]
+		},
+		"test": {
+			"dependsOn": ["source"]
+		},
+		"test:coverage": {
+			"dependsOn": ["source"]
+		},
+		"test:ci": {
+			"dependsOn": ["source"]
+		},
+		"test:agent": {
+			"dependsOn": ["source"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"start": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:generate": {
+			"cache": false
+		},
+		"db:migrate": {
+			"cache": false
+		},
+		"db:studio": {
+			"cache": false,
+			"persistent": true
+		},
+		"lingui:extract": {
+			"cache": false
+		}
+	}
+}

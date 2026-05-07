@@ -322,15 +322,6 @@ Level types: `hidden`, `circle`, `square`, `rectangle`, `rectangle-full`, `progr
 
 Font family must be available on Google Fonts. Font weights: 100-900.
 
-### CSS Customization
-
-```json
-{
-  "enabled": false,
-  "value": ""
-}
-```
-
 ## Custom Sections
 
 Custom sections extend the base section structure with additional fields:

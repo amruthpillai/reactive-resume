@@ -1,0 +1,43 @@
+{
+	"name": "@reactive-resume/auth",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"exports": {
+		"./config": "./src/config.ts",
+		"./functions": "./src/functions.ts",
+		"./types": "./src/types.ts"
+	},
+	"scripts": {
+		"typecheck": "tsgo --noEmit",
+		"test": "vitest run --passWithNoTests",
+		"test:coverage": "vitest run --coverage --passWithNoTests",
+		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
+		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
+	},
+	"dependencies": {
+		"@better-auth/api-key": "^1.6.9",
+		"@better-auth/drizzle-adapter": "^1.6.9",
+		"@better-auth/infra": "^0.2.6",
+		"@better-auth/oauth-provider": "^1.6.9",
+		"@better-auth/passkey": "^1.6.9",
+		"@reactive-resume/db": "workspace:*",
+		"@reactive-resume/email": "workspace:*",
+		"@reactive-resume/env": "workspace:*",
+		"@reactive-resume/utils": "workspace:*",
+		"@tanstack/react-start": "^1.167.65",
+		"bcrypt": "^6.0.0",
+		"better-auth": "1.6.9",
+		"drizzle-orm": "1.0.0-beta.22",
+		"jose": "^6.2.3",
+		"react": "^19.2.6",
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"@reactive-resume/config": "workspace:*",
+		"@types/bcrypt": "^6.0.0",
+		"@types/react": "^19.2.14",
+		"@typescript/native-preview": "7.0.0-dev.20260507.1",
+		"typescript": "^6.0.3"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "@reactive-resume/scripts",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"db:reset": "tsx database/reset.ts",
+		"fonts:generate": "tsx fonts/generate.ts",
+		"typecheck": "tsgo --noEmit"
+	},
+	"devDependencies": {
+		"@reactive-resume/config": "workspace:*",
+		"@reactive-resume/env": "workspace:*",
+		"@types/pg": "^8.20.0",
+		"@typescript/native-preview": "7.0.0-dev.20260507.1",
+		"drizzle-orm": "1.0.0-beta.22",
+		"pg": "^8.20.0",
+		"tsx": "^4.21.0"
+	}
+}

@@ -129,14 +129,9 @@ The Service does not include built-in behavioral advertising or third-party anal
 
 We share information only as needed to provide the Service:
 
-### PDF generation and screenshots (Printer)
+### PDF generation (client-side)
 
-When you export to PDF or request a screenshot, the Service sends a request to a configured printer endpoint (a headless Chromium browser) to render a resume URL.
-
-Depending on your deployment, the printer may be:
-
-- Self-hosted and controlled by the Service Operator, or
-- Operated by a third party (in which case the third party will process the resume content for rendering)
+When you export to PDF, the Service renders the document directly in your browser using `@react-pdf/renderer`. Resume content is processed locally on your device for this purpose and is not sent to a separate rendering service. No third-party "printer" or headless-browser service is involved in the export.
 
 ### Storage providers (optional)
 
