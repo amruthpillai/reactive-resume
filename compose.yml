@@ -98,7 +98,7 @@ services:
       - TZ=Etc/UTC
       - NODE_ENV=production
       - APP_URL=http://localhost:3000
-      - PRINTER_APP_URL=http://host.docker.internal:3000
+      - PRINTER_APP_URL=http://reactive_resume:3000
       # Printer
       - PRINTER_ENDPOINT=ws://browserless:3000?token=${BROWSERLESS_TOKEN:-change-me}
       # - PRINTER_ENDPOINT=http://chrome:9222 # Or, if you're using chromedp/headless-shell
