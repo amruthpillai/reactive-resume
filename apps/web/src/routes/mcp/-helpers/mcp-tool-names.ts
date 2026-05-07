@@ -14,7 +14,5 @@ export const MCP_TOOL_NAME = {
 	deleteResume: "reactive_resume_delete_resume",
 	lockResume: "reactive_resume_lock_resume",
 	unlockResume: "reactive_resume_unlock_resume",
-	exportResumePdf: "reactive_resume_export_resume_pdf",
-	getResumeScreenshot: "reactive_resume_get_resume_screenshot",
 	getResumeStatistics: "reactive_resume_get_resume_statistics",
 } as const;

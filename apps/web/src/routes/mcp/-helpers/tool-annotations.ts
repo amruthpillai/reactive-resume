@@ -77,18 +77,6 @@ export const TOOL_ANNOTATIONS: Record<McpRegisteredToolName, ToolAnnotations> = 
 		idempotentHint: true,
 		openWorldHint: false,
 	},
-	[MCP_TOOL_NAME.exportResumePdf]: {
-		readOnlyHint: true,
-		destructiveHint: false,
-		idempotentHint: true,
-		openWorldHint: false,
-	},
-	[MCP_TOOL_NAME.getResumeScreenshot]: {
-		readOnlyHint: true,
-		destructiveHint: false,
-		idempotentHint: true,
-		openWorldHint: false,
-	},
 	[MCP_TOOL_NAME.getResumeStatistics]: {
 		readOnlyHint: true,
 		destructiveHint: false,

@@ -496,12 +496,6 @@ export function registerTools(server: McpServer) {
 		}),
 	);
 
-	// PDF export and screenshot tools were removed during the migration — PDFs now
-	// render client-side via @react-pdf/renderer and the puppeteer-based screenshot
-	// service is gone. MCP clients that previously called exportResumePdf or
-	// getResumeScreenshot should fall back to instructing the user to download
-	// from the builder UI directly.
-
 	// ── Get Resume Statistics ────────────────────────────────────
 	server.registerTool(
 		T.getResumeStatistics,

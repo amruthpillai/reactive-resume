@@ -4,7 +4,7 @@ import { z } from "zod";
 export const env = createEnv({
 	server: {
 		// Application
-		APP_URL: z.url({ protocol: /https?/ }).default("http://localhost:3000"),
+		APP_URL: z.url({ protocol: /https?/ }),
 
 		// Database
 		DATABASE_URL: z.url({ protocol: /postgres(ql)?/ }),
