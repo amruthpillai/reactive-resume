@@ -1,5 +1,5 @@
 import { existsSync, realpathSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 
 export const findWorkspaceRoot = (cwd = process.cwd()) => {
 	let currentDirectory = realpathSync(cwd);
@@ -17,6 +17,15 @@ export const findWorkspaceRoot = (cwd = process.cwd()) => {
 
 export const getLocalDataDirectory = (cwd = process.cwd()) => {
 	const workspaceRoot = findWorkspaceRoot(cwd);
+	if (workspaceRoot) return join(workspaceRoot, "data");
 
-	return join(workspaceRoot ?? realpathSync(cwd), "data");
+	// Production fallback: in the official Docker image cwd is /app/apps/web,
+	// but the data volume is mounted at /app/data (two levels up).
+	const resolvedCwd = realpathSync(cwd);
+	const parentDirectory = dirname(resolvedCwd);
+	if (basename(resolvedCwd) === "web" && basename(parentDirectory) === "apps") {
+		return join(dirname(parentDirectory), "data");
+	}
+
+	return join(resolvedCwd, "data");
 };
