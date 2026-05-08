@@ -329,6 +329,7 @@ openssl rand -hex 32
 <Accordion title="Storage (S3 or local)">
   - **Default (local)**: If all `S3_*` values are empty, uploads are stored under `/app/data` in the official image.
   - Mount local uploads to persistent storage (for example `./data:/app/data`) or uploads can be lost on container recreation.
+  - **`LOCAL_STORAGE_PATH`** (optional): Overrides the local data directory. Defaults to `/app/data` in the official Docker image and `<workspace>/data` in development. The container validates this path is writable at startup and refuses to start otherwise.
   - **Rootless Docker**: `/app/data` remains the container path. Prefer the named volume from the example Compose file, or make sure a bind-mounted host directory is writable by the container's `node` user mapping.
   - **S3/S3-compatible**: Configure `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_ENDPOINT`, and `S3_BUCKET`.
   - **`S3_FORCE_PATH_STYLE`** controls bucket addressing (defaults to `"false"`):

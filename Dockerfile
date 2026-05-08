@@ -50,7 +50,8 @@ LABEL org.opencontainers.image.documentation="https://docs.rxresu.me"
 LABEL org.opencontainers.image.source="https://github.com/amruthpillai/reactive-resume"
 
 ENV NODE_ENV="production" \
-    PORT=3000
+    PORT=3000 \
+    LOCAL_STORAGE_PATH=/app/data
 
 WORKDIR /app
 

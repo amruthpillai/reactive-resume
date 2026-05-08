@@ -58,6 +58,7 @@ export const env = createEnv({
 		SMTP_SECURE: z.stringbool().default(false),
 
 		// Storage (Optional)
+		LOCAL_STORAGE_PATH: z.string().min(1).optional(),
 		S3_ACCESS_KEY_ID: z.string().min(1).optional(),
 		S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
 		S3_REGION: z.string().default("us-east-1"),

@@ -115,7 +115,7 @@ class LocalStorageService implements StorageService {
 	private rootDirectory: string;
 
 	constructor() {
-		this.rootDirectory = getLocalDataDirectory();
+		this.rootDirectory = getLocalDataDirectory(env.LOCAL_STORAGE_PATH);
 	}
 
 	async list(prefix: string): Promise<string[]> {
