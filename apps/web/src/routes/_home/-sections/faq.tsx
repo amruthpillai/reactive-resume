@@ -55,10 +55,6 @@ const getFaqItems = (): FAQItemData[] => [
 		answer: t`Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall.`,
 	},
 	{
-		question: t`Can I customize the templates?`,
-		answer: t`Yes! Every template is fully customizable. You can change colors, fonts, spacing, and even write custom CSS for complete control over your resume's appearance.`,
-	},
-	{
 		question: t`How do I share my resume?`,
 		answer: t`You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!`,
 	},
