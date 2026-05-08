@@ -76,7 +76,7 @@ services:
       - S3_BUCKET=reactive-resume
       - S3_FORCE_PATH_STYLE=true
     volumes:
-      - reactive_resume_data:/app/data
+      - ./data:/app/data
     depends_on:
       postgres:
         condition: service_healthy
@@ -92,7 +92,6 @@ services:
 volumes:
   postgres_data:
   seaweedfs_data:
-  reactive_resume_data:
 
 networks:
   data_network:
