@@ -1,4 +1,4 @@
-import { access, constants, mkdir } from "node:fs/promises";
+import fs from "node:fs/promises";
 import { definePlugin } from "nitro";
 import { env } from "@reactive-resume/env/server";
 import { getLocalDataDirectory } from "@reactive-resume/utils/monorepo.node";
@@ -10,8 +10,8 @@ export default definePlugin(async () => {
 	console.info(`Validating local storage path: ${dataDirectory}`);
 
 	try {
-		await mkdir(dataDirectory, { recursive: true });
-		await access(dataDirectory, constants.R_OK | constants.W_OK);
+		await fs.mkdir(dataDirectory, { recursive: true });
+		await fs.access(dataDirectory, fs.constants.R_OK | fs.constants.W_OK);
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error";
 		console.error(

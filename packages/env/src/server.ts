@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 import { createEnv } from "@t3-oss/env-core";
 import { config } from "dotenv";
 import { z } from "zod";
@@ -58,7 +58,7 @@ export const env = createEnv({
 		SMTP_SECURE: z.stringbool().default(false),
 
 		// Storage (Optional)
-		LOCAL_STORAGE_PATH: z.string().min(1).optional(),
+		LOCAL_STORAGE_PATH: z.string().min(1).refine(isAbsolute, "LOCAL_STORAGE_PATH must be an absolute path").optional(),
 		S3_ACCESS_KEY_ID: z.string().min(1).optional(),
 		S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
 		S3_REGION: z.string().default("us-east-1"),
