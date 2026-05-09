@@ -39,7 +39,13 @@ export const resumeDto = {
 
 	getBySlug: {
 		input: z.object({ username: z.string(), slug: z.string() }),
-		output: resumeSchema.omit({ password: true, userId: true, createdAt: true, updatedAt: true }),
+		// `name` is the owner-chosen dashboard title and is intentionally redacted
+		// to an empty string for non-owner viewers (see redactResumeForViewer in
+		// helpers/resume-access-policy.ts). Relax the `min(1)` constraint here so
+		// the redacted public response passes output validation.
+		output: resumeSchema
+			.omit({ name: true, password: true, userId: true, createdAt: true, updatedAt: true })
+			.extend({ name: z.string() }),
 	},
 
 	create: {
