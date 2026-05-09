@@ -32,8 +32,6 @@ const clampLineHeight = (height: number): number => clamp(height, 0.5, 4);
 
 const clampSidebarWidth = (width: number): number => clamp(width, 10, 50);
 
-const clampLevel = (level: number): number => clamp(level, 0, 5);
-
 const convertAndClampFontSize = (px: number): number => clampFontSize(pxToPt(px));
 
 const isValidEmail = (email: string): boolean => {
@@ -544,7 +542,8 @@ export class ReactiveResumeV4JSONImporter {
 								iconColor: "",
 								name: item.name ?? "",
 								proficiency: item.description ?? "",
-								level: clampLevel(item.level ?? 0),
+								// v4 stored skill level as 0-10; scale down to v5's 0-5 range
+								level: Math.round(clamp(item.level ?? 0, 0, 10) / 2),
 								keywords: item.keywords ?? [],
 							})),
 					},
@@ -559,7 +558,8 @@ export class ReactiveResumeV4JSONImporter {
 								hidden: !(item.visible ?? true),
 								language: item.name ?? "",
 								fluency: item.description ?? "",
-								level: clampLevel(item.level ?? 0),
+								// v4 stored language level as 0-10; scale down to v5's 0-5 range
+								level: Math.round(clamp(item.level ?? 0, 0, 10) / 2),
 							})),
 					},
 					interests: {
@@ -684,13 +684,15 @@ export class ReactiveResumeV4JSONImporter {
 					type: "experience" as const, // Default to experience type as it has the most compatible fields
 					columns: section.columns ?? 1,
 					hidden: !(section.visible ?? true),
-					items: section.items
-						.filter((item) => item.visible !== false)
-						.map((item, index) => ({
+					items: section.items.map((item, index) => {
+						const hasName = Boolean(item.name?.trim());
+						return {
 							id: item.id || generateId(),
-							hidden: !item.visible,
+							hidden: !(item.visible ?? true),
 							company: item.name?.trim() || `#${index + 1}`,
-							position: item.description ?? "",
+							// Only use description as subtitle when item has a name;
+							// otherwise description IS the primary content and goes to the body below
+							position: hasName ? (item.description ?? "") : "",
 							location: item.location ?? "",
 							period: item.date ?? "",
 							website: {
@@ -699,8 +701,11 @@ export class ReactiveResumeV4JSONImporter {
 								inlineLink: false,
 							},
 							roles: [],
-							description: item.summary ?? "",
-						})),
+							// Prefer HTML summary; fall back to plain description
+							// (for description-only items, description IS the body content)
+							description: item.summary ?? item.description ?? "",
+						};
+					}),
 				})),
 				metadata: {
 					template: (templateSchema.safeParse(v4Data.metadata.template).success
