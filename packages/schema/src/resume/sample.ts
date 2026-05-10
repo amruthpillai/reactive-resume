@@ -460,7 +460,7 @@ export const sampleResumeData: ResumeData = {
 	},
 	customSections: [
 		{
-			title: "Experience",
+			title: "",
 			columns: 1,
 			hidden: false,
 			id: "019becaf-0b87-769d-98a6-46ccf558c0e8",
@@ -551,7 +551,7 @@ export const sampleResumeData: ResumeData = {
 			marginX: 16,
 			marginY: 16,
 			format: "a4",
-			locale: "de-DE",
+			locale: "en-US",
 			hideIcons: false,
 		},
 		design: {

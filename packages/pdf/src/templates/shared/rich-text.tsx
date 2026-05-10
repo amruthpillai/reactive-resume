@@ -3,6 +3,7 @@ import { Text as PdfText, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import { useTemplateStyle } from "./context";
 import { safeTextStyle } from "./primitives";
+import { normalizeRichTextHtml } from "./rich-text-html";
 import { composeStyles, mergeLinkStyles, mergeStyles } from "./styles";
 
 const richListItemContentStackStyle = {
@@ -17,7 +18,9 @@ export const RichText = ({ children }: { children: string }) => {
 	const richListItemMarkerStyle = useTemplateStyle("richListItemMarker");
 	const richListItemContentStyle = useTemplateStyle("richListItemContent");
 
-	if (!children.trim()) return null;
+	const html = normalizeRichTextHtml(children);
+
+	if (!html) return null;
 
 	return (
 		<Html
@@ -54,7 +57,7 @@ export const RichText = ({ children }: { children: string }) => {
 				a: mergeLinkStyles(linkStyle, safeTextStyle),
 			}}
 		>
-			{children}
+			{html}
 		</Html>
 	);
 };
