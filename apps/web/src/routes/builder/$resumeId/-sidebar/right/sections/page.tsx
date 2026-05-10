@@ -13,6 +13,7 @@ import { Switch } from "@reactive-resume/ui/components/switch";
 import { getLocaleOptions } from "@/components/locale/combobox";
 import { useResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { Combobox } from "@/components/ui/combobox";
+import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../shared/section-base";
 
@@ -46,6 +47,7 @@ function PageSectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, page);
 
 	const handleAutoSave = <K extends keyof FormValues>(name: K, value: FormValues[K]) => {
 		persist({ ...form.state.values, [name]: value });

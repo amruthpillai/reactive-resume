@@ -18,6 +18,7 @@ import {
 } from "@reactive-resume/ui/components/input-group";
 import { ColorPicker } from "@/components/input/color-picker";
 import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { getReadableErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 import { useAppForm } from "@/libs/tanstack-form";
@@ -73,6 +74,7 @@ function PictureSectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, picture);
 
 	const handleAutoSave = () => {
 		persist(form.state.values);

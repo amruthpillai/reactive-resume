@@ -13,7 +13,6 @@ import { Input } from "@reactive-resume/ui/components/input";
 import { Label } from "@reactive-resume/ui/components/label";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { Switch } from "@reactive-resume/ui/components/switch";
-import { cn } from "@reactive-resume/utils/style";
 import { Combobox } from "@/components/ui/combobox";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -240,9 +239,9 @@ function AIForm() {
 					{isTesting ? (
 						<Spinner />
 					) : testStatus === "success" ? (
-						<CheckCircleIcon className="text-success" />
+						<CheckCircleIcon className="text-emerald-500" />
 					) : testStatus === "failure" ? (
-						<XCircleIcon className="text-destructive" />
+						<XCircleIcon className="text-rose-500" />
 					) : null}
 					<Trans>Test Connection</Trans>
 				</Button>
@@ -288,8 +287,8 @@ export function AISettingsSection() {
 				<Switch id="enable-ai" checked={aiEnabled} disabled={!canEnableAI} onCheckedChange={setAIEnabled} />
 			</div>
 
-			<p className={cn("flex items-center gap-x-2", aiEnabled ? "text-success" : "text-destructive")}>
-				{aiEnabled ? <CheckCircleIcon /> : <XCircleIcon />}
+			<p className="flex items-center gap-x-2">
+				{aiEnabled ? <CheckCircleIcon className="text-emerald-500" /> : <XCircleIcon className="text-rose-500" />}
 				{aiEnabled ? <Trans>Enabled</Trans> : <Trans>Disabled</Trans>}
 			</p>
 

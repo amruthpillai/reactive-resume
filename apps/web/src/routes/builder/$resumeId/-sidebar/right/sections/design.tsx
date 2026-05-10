@@ -12,6 +12,7 @@ import { IconPicker } from "@/components/input/icon-picker";
 import { LevelTypeCombobox } from "@/components/level/combobox";
 import { LevelDisplay } from "@/components/level/display";
 import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../shared/section-base";
 
@@ -45,6 +46,7 @@ function ColorSectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, colors);
 
 	const handleAutoSave = () => {
 		persist(form.state.values);
@@ -266,6 +268,7 @@ function LevelSectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, levelDesign);
 
 	const handleAutoSave = () => {
 		persist(form.state.values);

@@ -43,6 +43,11 @@ msgstr "{0, plural, one {# item} other {# items}}"
 msgid "{0, plural, one {# role} other {# roles}}"
 msgstr "{0, plural, one {# role} other {# roles}}"
 
+#. placeholder {0}: resolutions.length
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "{0} proposals reviewed"
+msgstr "{0} proposals reviewed"
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "{column, plural, one {# Column} other {# Columns}}"
@@ -113,6 +118,18 @@ msgstr "A4"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
 msgstr "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Accept"
+msgstr "Accept"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Accept all"
+msgstr "Accept all"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Accepted proposal"
+msgstr "Accepted proposal"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Access your resumes and data programmatically using the API."
@@ -224,9 +241,37 @@ msgstr "Add Row Before"
 msgid "Afrikaans"
 msgstr "Afrikaans"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "After"
+msgstr "After"
+
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "AI"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI integration disabled"
+msgstr "AI integration disabled"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposal applied."
+msgstr "AI proposal applied."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposal rejected."
+msgstr "AI proposal rejected."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposals applied."
+msgstr "AI proposals applied."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposals rejected."
+msgstr "AI proposals rejected."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI Resume Assistant"
+msgstr "AI Resume Assistant"
 
 #: src/libs/locale.ts
 msgid "Albanian"
@@ -362,9 +407,21 @@ msgstr "Area of Study"
 msgid "Artificial Intelligence"
 msgstr "Artificial Intelligence"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Ask for a targeted resume change..."
+msgstr "Ask for a targeted resume change..."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Ask for an incremental change"
+msgstr "Ask for an incremental change"
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
 msgstr "Aspect Ratio"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Assistant request failed"
+msgstr "Assistant request failed"
 
 #: src/components/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
@@ -415,6 +472,10 @@ msgstr "Basics"
 #: src/routes/_home/-sections/features.tsx
 msgid "Beautiful templates to choose from, with more on the way."
 msgstr "Beautiful templates to choose from, with more on the way."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Before"
+msgstr "Before"
 
 #: src/libs/locale.ts
 msgid "Bengali"
@@ -567,6 +628,14 @@ msgstr "Clear"
 msgid "Click here to select a file to import"
 msgstr "Click here to select a file to import"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Close"
+msgstr "Close"
+
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Close AI assistant"
+msgstr "Close AI assistant"
+
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
 msgstr "Code Block"
@@ -612,6 +681,10 @@ msgstr "Confirm"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "Connect"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Connect and verify an AI provider before using resume editing proposals."
+msgstr "Connect and verify an AI provider before using resume editing proposals."
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
@@ -659,6 +732,10 @@ msgstr "Copy this secret key and use it in your applications to access your data
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
 msgstr "Copy URL"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Could not apply the AI proposal."
+msgstr "Could not apply the AI proposal."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1085,6 +1162,10 @@ msgstr "Enable 2FA"
 msgid "Enable AI Features"
 msgstr "Enable AI Features"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Enable AI integration"
+msgstr "Enable AI integration"
+
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enable Two-Factor Authentication"
 msgstr "Enable Two-Factor Authentication"
@@ -1152,6 +1233,10 @@ msgstr "Everything entered here is stored locally on your browser. Your data is 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Examples: rewrite the summary, tighten one experience bullet, add metrics, or adapt the resume for a job description."
+msgstr "Examples: rewrite the summary, tighten one experience bullet, add metrics, or adapt the resume for a job description."
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1947,6 +2032,10 @@ msgstr "Microsoft Word"
 msgid "Model"
 msgstr "Model"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "More proposal actions"
+msgstr "More proposal actions"
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Move to"
 msgstr "Move to"
@@ -1972,6 +2061,10 @@ msgstr "Must start with https://"
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Name"
 msgstr "Name"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Needs review"
+msgstr "Needs review"
 
 #: src/libs/locale.ts
 msgid "Nepali"
@@ -2002,6 +2095,10 @@ msgstr "New Password"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "New Section"
 msgstr "New Section"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Next"
+msgstr "Next"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "No Advertising, No Tracking"
@@ -2052,10 +2149,18 @@ msgstr "Ongoing Maintenance"
 msgid "Open"
 msgstr "Open"
 
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Open AI assistant"
+msgstr "Open AI assistant"
+
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Open Email Client"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Open Integrations"
+msgstr "Open Integrations"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open Integrations Settings"
@@ -2245,6 +2350,10 @@ msgstr "Position"
 msgid "Preferences"
 msgstr "Preferences"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Preparing changes"
+msgstr "Preparing changes"
+
 #: src/components/input/color-picker.tsx
 msgid "Presets"
 msgstr "Presets"
@@ -2257,6 +2366,10 @@ msgstr "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the curre
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Press <0>Enter</0> to open"
 msgstr "Press <0>Enter</0> to open"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Prev"
+msgstr "Prev"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -2288,6 +2401,11 @@ msgstr "Progress Bar"
 msgid "Projects"
 msgstr "Projects"
 
+#. placeholder {0}: index + 1
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Proposal {0} of {total}"
+msgstr "Proposal {0} of {total}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Protect your resume from unauthorized access with a password"
 msgstr "Protect your resume from unauthorized access with a password"
@@ -2309,6 +2427,10 @@ msgstr "Publications"
 #: src/dialogs/resume/sections/publication.tsx
 msgid "Publisher"
 msgstr "Publisher"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Raw JSON Patch"
+msgstr "Raw JSON Patch"
 
 #: src/routes/_home/-sections/header.tsx
 msgid "Reactive Resume - Go to homepage"
@@ -2371,6 +2493,18 @@ msgstr "Refresh"
 msgid "Register New Device"
 msgstr "Register New Device"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reject"
+msgstr "Reject"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reject all"
+msgstr "Reject all"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Rejected proposal"
+msgstr "Rejected proposal"
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "Remember your password? <0/>"
@@ -2421,6 +2555,10 @@ msgstr "Resending verification email..."
 msgid "Reset"
 msgstr "Reset"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reset chat"
+msgstr "Reset chat"
+
 #. Primary action button label on reset-password form
 #: src/routes/auth/reset-password.tsx
 msgid "Reset Password"
@@ -2433,6 +2571,10 @@ msgstr "Reset your password"
 #: src/routes/auth/reset-password.tsx
 msgid "Resetting your password..."
 msgstr "Resetting your password..."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Resize AI assistant"
+msgstr "Resize AI assistant"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
@@ -2453,6 +2595,14 @@ msgstr "Resume analysis complete."
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
 msgstr "Resumes"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Review required"
+msgstr "Review required"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reviewed proposals"
+msgstr "Reviewed proposals"
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2552,6 +2702,10 @@ msgstr "Select..."
 msgid "Self-Host with Docker"
 msgstr "Self-Host with Docker"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Send"
+msgstr "Send"
+
 #. Primary action button label on forgot-password form
 #: src/routes/auth/forgot-password.tsx
 msgid "Send Password Reset Email"
@@ -2560,6 +2714,10 @@ msgstr "Send Password Reset Email"
 #: src/routes/auth/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Sending password reset email..."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Sending request"
+msgstr "Sending request"
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -2799,6 +2957,10 @@ msgstr "Statistics"
 msgid "Stay"
 msgstr "Stay"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Stop"
+msgstr "Stop"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
 msgstr "Strengths"
@@ -2893,6 +3055,14 @@ msgstr "Text Color"
 msgid "Thai"
 msgstr "Thai"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "The AI proposed a change that no longer applies to this resume."
+msgstr "The AI proposed a change that no longer applies to this resume."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "The AI returned a proposal that could not be previewed."
+msgstr "The AI returned a proposal that could not be previewed."
+
 #. Error description when AI returns invalid resume analysis format
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "The AI returned an invalid analysis format. Please try again."
@@ -2905,6 +3075,10 @@ msgstr "The API key has been deleted successfully."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "The API key will no longer be able to access your data after deletion. This action cannot be undone."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "The assistant stopped before returning a proposal."
+msgstr "The assistant stopped before returning a proposal."
 
 #. Empty-state message when no command palette results match the search query
 #: src/components/command-palette/index.tsx
@@ -2972,7 +3146,12 @@ msgstr "This is a URL-friendly name for your resume."
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "This proposal is stale. Ask the assistant to regenerate it from the latest resume."
+msgstr "This proposal is stale. Ask the assistant to regenerate it from the latest resume."
+
 #: src/components/resume/builder-resume-draft.ts
+#: src/routes/builder/$resumeId/-components/assistant.tsx
 msgid "This resume is locked and cannot be updated."
 msgstr "This resume is locked and cannot be updated."
 

@@ -1,7 +1,8 @@
 import type { StoredResumeAnalysis } from "@reactive-resume/schema/resume/analysis";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Locale } from "@reactive-resume/utils/locale";
-import type { Operation } from "fast-json-patch";
+import type { JsonPatchOperation } from "@reactive-resume/utils/resume/patch";
+import type { ResumeUpdatedEvent } from "./resume-events";
 import { ORPCError } from "@orpc/client";
 import { compare, hash } from "bcrypt";
 import { and, arrayContains, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
@@ -19,6 +20,7 @@ import {
 	redactResumeForViewer,
 	shouldCountForStatistics,
 } from "../helpers/resume-access-policy";
+import { publishResumeUpdated } from "./resume-events";
 import { getStorageService } from "./storage";
 
 const tags = {
@@ -149,6 +151,14 @@ function toSharedResumeResponse<TPassword extends boolean>(
 	};
 }
 
+async function notifyResumeUpdated(event: ResumeUpdatedEvent) {
+	try {
+		await publishResumeUpdated(event);
+	} catch (error) {
+		console.warn("Failed to publish resume.updated event:", error);
+	}
+}
+
 export const resumeService = {
 	tags,
 	statistics,
@@ -194,6 +204,7 @@ export const resumeService = {
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
+				updatedAt: schema.resume.updatedAt,
 				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 			})
 			.from(schema.resume)
@@ -263,6 +274,14 @@ export const resumeService = {
 				data,
 			});
 
+			await notifyResumeUpdated({
+				type: "resume.updated",
+				resumeId: id,
+				userId: input.userId,
+				updatedAt: new Date().toISOString(),
+				mutation: "create",
+			});
+
 			return id;
 		} catch (error) {
 			const constraint = get(error, "cause.constraint") as string | undefined;
@@ -319,13 +338,24 @@ export const resumeService = {
 					data: schema.resume.data,
 					isPublic: schema.resume.isPublic,
 					isLocked: schema.resume.isLocked,
+					updatedAt: schema.resume.updatedAt,
 					hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 				});
 
 			if (!resume) throw new ORPCError("NOT_FOUND");
 
+			await notifyResumeUpdated({
+				type: "resume.updated",
+				resumeId: resume.id,
+				userId: input.userId,
+				updatedAt: resume.updatedAt.toISOString(),
+				mutation: "update",
+			});
+
 			return resume;
 		} catch (error) {
+			if (error instanceof ORPCError) throw error;
+
 			if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
 				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
 			}
@@ -335,14 +365,21 @@ export const resumeService = {
 		}
 	},
 
-	patch: async (input: { id: string; userId: string; operations: Operation[] }) => {
+	patch: async (input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date }) => {
 		const [existing] = await db
-			.select({ data: schema.resume.data, isLocked: schema.resume.isLocked })
+			.select({ data: schema.resume.data, isLocked: schema.resume.isLocked, updatedAt: schema.resume.updatedAt })
 			.from(schema.resume)
 			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 
 		if (!existing) throw new ORPCError("NOT_FOUND");
 		if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
+		if (input.expectedUpdatedAt && existing.updatedAt.getTime() !== input.expectedUpdatedAt.getTime()) {
+			throw new ORPCError("RESUME_VERSION_CONFLICT", {
+				status: 409,
+				message: "The resume changed after this patch was generated.",
+				data: { updatedAt: existing.updatedAt.toISOString() },
+			});
+		}
 
 		let patchedData: ResumeData;
 
@@ -377,28 +414,59 @@ export const resumeService = {
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
+				updatedAt: schema.resume.updatedAt,
 				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 			});
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
 
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: resume.id,
+			userId: input.userId,
+			updatedAt: resume.updatedAt.toISOString(),
+			mutation: "patch",
+		});
+
 		return resume;
 	},
 
 	setLocked: async (input: { id: string; userId: string; isLocked: boolean }) => {
-		await db
+		const [resume] = await db
 			.update(schema.resume)
 			.set({ isLocked: input.isLocked })
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+			.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
+
+		if (!resume) return;
+
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: resume.id,
+			userId: input.userId,
+			updatedAt: resume.updatedAt.toISOString(),
+			mutation: "lock",
+		});
 	},
 
 	setPassword: async (input: { id: string; userId: string; password: string }) => {
 		const hashedPassword = await hash(input.password, 10);
 
-		await db
+		const [resume] = await db
 			.update(schema.resume)
 			.set({ password: hashedPassword })
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+			.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
+
+		if (!resume) return;
+
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: resume.id,
+			userId: input.userId,
+			updatedAt: resume.updatedAt.toISOString(),
+			mutation: "password",
+		});
 	},
 
 	verifyPassword: async (input: { slug: string; username: string; password: string }) => {
@@ -427,10 +495,21 @@ export const resumeService = {
 	},
 
 	removePassword: async (input: { id: string; userId: string }) => {
-		await db
+		const [resume] = await db
 			.update(schema.resume)
 			.set({ password: null })
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+			.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
+
+		if (!resume) return;
+
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: resume.id,
+			userId: input.userId,
+			updatedAt: resume.updatedAt.toISOString(),
+			mutation: "password",
+		});
 	},
 
 	delete: async (input: { id: string; userId: string }) => {
@@ -452,5 +531,13 @@ export const resumeService = {
 			storageService.delete(`uploads/${input.userId}/screenshots/${input.id}`),
 			storageService.delete(`uploads/${input.userId}/pdfs/${input.id}`),
 		]);
+
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: input.id,
+			userId: input.userId,
+			updatedAt: new Date().toISOString(),
+			mutation: "delete",
+		});
 	},
 };

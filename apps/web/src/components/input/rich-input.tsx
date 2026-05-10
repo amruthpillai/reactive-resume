@@ -46,7 +46,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, EditorContext, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import z from "zod";
@@ -136,6 +136,11 @@ export function RichInput({ value, onChange, style, className, editorClassName, 
 	});
 
 	const providerValue = useMemo(() => ({ editor }), [editor]);
+
+	useEffect(() => {
+		if (!editor || editor.getHTML() === value) return;
+		editor.commands.setContent(value, { emitUpdate: false });
+	}, [editor, value]);
 
 	if (!editor) return null;
 

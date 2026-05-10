@@ -32,9 +32,7 @@ export const resumeDto = {
 
 	getById: {
 		input: resumeSchema.pick({ id: true }),
-		output: resumeSchema
-			.omit({ password: true, userId: true, createdAt: true, updatedAt: true })
-			.extend({ hasPassword: z.boolean() }),
+		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
 	},
 
 	getBySlug: {
@@ -65,9 +63,7 @@ export const resumeDto = {
 			.pick({ name: true, slug: true, tags: true, data: true, isPublic: true })
 			.partial()
 			.extend({ id: z.string() }),
-		output: resumeSchema
-			.omit({ password: true, userId: true, createdAt: true, updatedAt: true })
-			.extend({ hasPassword: z.boolean() }),
+		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
 	},
 
 	setLocked: {
@@ -88,14 +84,16 @@ export const resumeDto = {
 	patch: {
 		input: z.object({
 			id: z.string().describe("The ID of the resume to patch."),
+			expectedUpdatedAt: z.coerce
+				.date()
+				.optional()
+				.describe("If provided, the patch only applies when the resume version still matches this timestamp."),
 			operations: z
 				.array(jsonPatchOperationSchema)
 				.min(1)
 				.describe("An array of JSON Patch (RFC 6902) operations to apply to the resume data."),
 		}),
-		output: resumeSchema
-			.omit({ password: true, userId: true, createdAt: true, updatedAt: true })
-			.extend({ hasPassword: z.boolean() }),
+		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
 	},
 
 	duplicate: {

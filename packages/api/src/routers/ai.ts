@@ -58,6 +58,7 @@ export const aiRouter = {
 			try {
 				return await aiService.testConnection(input);
 			} catch (error) {
+				console.error(error);
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 				throw error;
@@ -137,7 +138,7 @@ export const aiRouter = {
 			operationId: "aiChat",
 			summary: "Chat with AI to modify resume",
 			description:
-				"Streams a chat response from the configured AI provider. The LLM can call the patch_resume tool to generate JSON Patch operations that modify the resume. Requires authentication and AI provider credentials.",
+				"Streams a chat response from the configured AI provider. The LLM can call the propose_resume_patches tool to generate JSON Patch proposals for explicit user approval. Requires authentication and AI provider credentials.",
 		})
 		.input(
 			type<{
@@ -147,6 +148,7 @@ export const aiRouter = {
 				baseURL: string;
 				messages: UIMessage[];
 				resumeData: ResumeData;
+				resumeUpdatedAt: Date;
 			}>(),
 		)
 		.use(aiRequestRateLimit)

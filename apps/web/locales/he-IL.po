@@ -48,6 +48,11 @@ msgstr "{0, plural, one {# פריט} two {# פריטים} many {# פריטים} 
 msgid "{0, plural, one {# role} other {# roles}}"
 msgstr "{0, plural, one {# תפקיד} other {# תפקידים}}"
 
+#. placeholder {0}: resolutions.length
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "{0} proposals reviewed"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "{column, plural, one {# Column} other {# Columns}}"
@@ -118,6 +123,18 @@ msgstr "A4"
 #: src/routes/_home/-sections/faq.tsx
 msgid "Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly."
 msgstr "בהחלט! אפשר לייצא את קורות החיים שלך ל־PDF בלחיצה אחת. קובץ ה־PDF המיוצא שומר בצורה מושלמת על כל העיצוב והסגנון שלך."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Accept"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Accept all"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Accepted proposal"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Access your resumes and data programmatically using the API."
@@ -229,9 +246,37 @@ msgstr "הוספת שורה לפני"
 msgid "Afrikaans"
 msgstr "אפריקאנס"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "After"
+msgstr ""
+
 #: src/dialogs/resume/import.tsx
 msgid "AI"
 msgstr "בינה מלאכותית"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI integration disabled"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposal applied."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposal rejected."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposals applied."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI proposals rejected."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "AI Resume Assistant"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Albanian"
@@ -367,9 +412,21 @@ msgstr "תחום לימודים"
 msgid "Artificial Intelligence"
 msgstr "בינה מלאכותית"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Ask for a targeted resume change..."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Ask for an incremental change"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Aspect Ratio"
 msgstr "יחס גובה־רוחב"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Assistant request failed"
+msgstr ""
 
 #: src/components/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
@@ -420,6 +477,10 @@ msgstr "פרטים בסיסיים"
 #: src/routes/_home/-sections/features.tsx
 msgid "Beautiful templates to choose from, with more on the way."
 msgstr "תבניות יפות לבחירה, ועוד תבניות בדרך."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Before"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Bengali"
@@ -572,6 +633,14 @@ msgstr "נקה"
 msgid "Click here to select a file to import"
 msgstr "לחץ כאן כדי לבחור קובץ לייבוא"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Close"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Close AI assistant"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Code Block"
 msgstr "בלוק קוד"
@@ -617,6 +686,10 @@ msgstr "אישור"
 #: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
 msgid "Connect"
 msgstr "חיבור"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Connect and verify an AI provider before using resume editing proposals."
+msgstr ""
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
@@ -664,6 +737,10 @@ msgstr "העתק את המפתח הסודי הזה והשתמש בו ביישו�
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Copy URL"
 msgstr "העתקת כתובת"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Could not apply the AI proposal."
+msgstr ""
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1090,6 +1167,10 @@ msgstr "הפעלת אימות דו־שלבי"
 msgid "Enable AI Features"
 msgstr "הפעלת יכולות בינה מלאכותית"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Enable AI integration"
+msgstr ""
+
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enable Two-Factor Authentication"
 msgstr "הפעלת אימות דו־שלבי"
@@ -1157,6 +1238,10 @@ msgstr "הכול שאתה מזין כאן נשמר מקומית בדפדפן ש�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "כל מה שצריך כדי ליצור, להתאים אישית ולשתף קורות חיים מקצועיים. נבנה עם דגש על פרטיות, מונע בקוד פתוח וחינמי לחלוטין לנצח."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Examples: rewrite the summary, tighten one experience bullet, add metrics, or adapt the resume for a job description."
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1952,6 +2037,10 @@ msgstr "Microsoft Word"
 msgid "Model"
 msgstr "מודל"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "More proposal actions"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Move to"
 msgstr "העברה אל"
@@ -1977,6 +2066,10 @@ msgstr "יש להתחיל ב-https://"
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Name"
 msgstr "שם"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Needs review"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Nepali"
@@ -2007,6 +2100,10 @@ msgstr "סיסמה חדשה"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "New Section"
 msgstr "סעיף חדש"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Next"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "No Advertising, No Tracking"
@@ -2057,10 +2154,18 @@ msgstr "תחזוקה מתמשכת"
 msgid "Open"
 msgstr "פתיחה"
 
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Open AI assistant"
+msgstr ""
+
 #. Button label to open the user's default email app
 #: src/routes/auth/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "פתיחת תוכנת הדוא\"ל"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Open Integrations"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Open Integrations Settings"
@@ -2250,6 +2355,10 @@ msgstr "תפקיד"
 msgid "Preferences"
 msgstr "העדפות"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Preparing changes"
+msgstr ""
+
 #: src/components/input/color-picker.tsx
 msgid "Presets"
 msgstr "הגדרות קבועות מראש"
@@ -2262,6 +2371,10 @@ msgstr "לחץ על <0>{RETURN_KEY}</0> או <1>{COMMA_KEY}</1> כדי להוס�
 #: src/components/command-palette/pages/resumes.tsx
 msgid "Press <0>Enter</0> to open"
 msgstr "לחץ על <0>Enter</0> כדי לפתוח"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Prev"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -2293,6 +2406,11 @@ msgstr "פס התקדמות"
 msgid "Projects"
 msgstr "פרויקטים"
 
+#. placeholder {0}: index + 1
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Proposal {0} of {total}"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Protect your resume from unauthorized access with a password"
 msgstr "הגן על קורות החיים שלך מגישה לא מורשית באמצעות סיסמה"
@@ -2314,6 +2432,10 @@ msgstr "פרסומים"
 #: src/dialogs/resume/sections/publication.tsx
 msgid "Publisher"
 msgstr "מוציא לאור"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Raw JSON Patch"
+msgstr ""
 
 #: src/routes/_home/-sections/header.tsx
 msgid "Reactive Resume - Go to homepage"
@@ -2376,6 +2498,18 @@ msgstr "רענון"
 msgid "Register New Device"
 msgstr "הרשמת מכשיר חדש"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reject"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reject all"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Rejected proposal"
+msgstr ""
+
 #: src/routes/auth/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "זוכר את הסיסמה? <0/>"
@@ -2426,6 +2560,10 @@ msgstr "שולח מחדש דוא\"ל אימות..."
 msgid "Reset"
 msgstr "איפוס"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reset chat"
+msgstr ""
+
 #. Primary action button label on reset-password form
 #: src/routes/auth/reset-password.tsx
 msgid "Reset Password"
@@ -2438,6 +2576,10 @@ msgstr "איפוס הסיסמה שלך"
 #: src/routes/auth/reset-password.tsx
 msgid "Resetting your password..."
 msgstr "איפוס הסיסמה שלך..."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Resize AI assistant"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
@@ -2458,6 +2600,14 @@ msgstr "ניתוח קורות החיים הושלם."
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
 msgstr "מסמכי קורות חיים"
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Review required"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Reviewed proposals"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -2557,6 +2707,10 @@ msgstr "בחר..."
 msgid "Self-Host with Docker"
 msgstr "אירוח עצמי עם Docker"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Send"
+msgstr ""
+
 #. Primary action button label on forgot-password form
 #: src/routes/auth/forgot-password.tsx
 msgid "Send Password Reset Email"
@@ -2565,6 +2719,10 @@ msgstr "שליחת דוא\"ל לאיפוס סיסמה"
 #: src/routes/auth/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "שולח דוא\"ל לאיפוס סיסמה..."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Sending request"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -2804,6 +2962,10 @@ msgstr "סטטיסטיקה"
 msgid "Stay"
 msgstr "הישאר"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "Stop"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Strengths"
 msgstr "נקודות חוזק"
@@ -2898,6 +3060,14 @@ msgstr "צבע כתב"
 msgid "Thai"
 msgstr "תאית"
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "The AI proposed a change that no longer applies to this resume."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "The AI returned a proposal that could not be previewed."
+msgstr ""
+
 #. Error description when AI returns invalid resume analysis format
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "The AI returned an invalid analysis format. Please try again."
@@ -2910,6 +3080,10 @@ msgstr "מפתח ה־API נמחק בהצלחה."
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "לאחר המחיקה מפתח ה־API לא יוכל יותר לגשת לנתונים שלך. לא ניתן לבטל פעולה זו."
+
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "The assistant stopped before returning a proposal."
+msgstr ""
 
 #. Empty-state message when no command palette results match the search query
 #: src/components/command-palette/index.tsx
@@ -2977,7 +3151,12 @@ msgstr "זהו שם ידידותי לכתובת URL עבור קורות החיי
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "זה עלול לקחת כמה דקות, בהתאם לזמן התגובה של ספק הבינה המלאכותית. נא לא לסגור את החלון או לרענן את העמוד."
 
+#: src/routes/builder/$resumeId/-components/assistant.tsx
+msgid "This proposal is stale. Ask the assistant to regenerate it from the latest resume."
+msgstr ""
+
 #: src/components/resume/builder-resume-draft.ts
+#: src/routes/builder/$resumeId/-components/assistant.tsx
 msgid "This resume is locked and cannot be updated."
 msgstr "קורות חיים אלה נעולים ולא ניתן לעדכן אותם."
 
@@ -3487,4 +3666,3 @@ msgstr "התרחקות"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "זולו"
-

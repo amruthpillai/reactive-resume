@@ -10,6 +10,7 @@ import {
 } from "@reactive-resume/ui/components/input-group";
 import { Slider } from "@reactive-resume/ui/components/slider";
 import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../../shared/section-base";
 import { LayoutPages } from "./pages";
@@ -45,6 +46,7 @@ function LayoutSectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, { sidebarWidth: layout.sidebarWidth });
 
 	const handleAutoSave = () => {
 		persist(form.state.values);

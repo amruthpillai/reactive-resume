@@ -10,7 +10,7 @@ declare global {
 	var __drizzle: NodePgDatabase<typeof schema> | undefined;
 }
 
-function getPool() {
+export function getPool() {
 	if (!globalThis.__pool) {
 		globalThis.__pool = new Pool({ connectionString: env.DATABASE_URL });
 	}

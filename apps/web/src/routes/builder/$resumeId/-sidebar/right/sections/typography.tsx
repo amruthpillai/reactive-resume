@@ -12,6 +12,7 @@ import {
 import { Separator } from "@reactive-resume/ui/components/separator";
 import { useResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { FontFamilyCombobox, FontWeightCombobox, getNextWeights } from "@/components/typography/combobox";
+import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../shared/section-base";
 
@@ -47,6 +48,7 @@ function TypographySectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, typography);
 
 	const handleAutoSave = () => {
 		persist(form.state.values);

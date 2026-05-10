@@ -22,12 +22,13 @@ import {
 import { buildAiExtractionTemplate } from "@reactive-resume/ai/resume/extraction-template";
 import { sanitizeAndParseResumeJson } from "@reactive-resume/ai/resume/sanitize";
 import {
-	executePatchResume,
-	patchResumeDescription,
-	patchResumeInputSchema,
-} from "@reactive-resume/ai/tools/patch-resume";
+	normalizeResumePatchProposals,
+	resumePatchProposalToolInputSchema,
+	resumePatchProposalToolOutputSchema,
+} from "@reactive-resume/ai/tools/patch-proposal";
 import { AI_PROVIDER_DEFAULT_BASE_URLS, aiProviderSchema } from "@reactive-resume/ai/types";
 import { resumeAnalysisOutputSchema, resumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
+import { applyResumePatches } from "@reactive-resume/utils/resume/patch";
 import { isPrivateOrLoopbackHost, parseUrl } from "@reactive-resume/utils/url-security.node";
 
 const aiExtractionTemplate = buildAiExtractionTemplate();
@@ -209,6 +210,7 @@ function buildChatSystemPrompt(resumeData: ResumeData): string {
 type ChatInput = z.infer<typeof aiCredentialsSchema> & {
 	messages: UIMessage[];
 	resumeData: ResumeData;
+	resumeUpdatedAt: Date;
 };
 
 async function chat(input: ChatInput) {
@@ -220,10 +222,20 @@ async function chat(input: ChatInput) {
 		system: systemPrompt,
 		messages: await convertToModelMessages(input.messages),
 		tools: {
-			patch_resume: tool({
-				description: patchResumeDescription,
-				inputSchema: patchResumeInputSchema,
-				execute: async ({ operations }) => executePatchResume(input.resumeData, operations),
+			propose_resume_patches: tool({
+				description:
+					"Return one or more cohesive resume change proposals. Each proposal must include a title, optional summary, and valid JSON Patch operations against the current resume data. The tool validates but does not apply changes.",
+				inputSchema: resumePatchProposalToolInputSchema,
+				outputSchema: resumePatchProposalToolOutputSchema,
+				execute: async (toolInput) => {
+					const proposals = normalizeResumePatchProposals(toolInput, input.resumeUpdatedAt);
+
+					for (const proposal of proposals) {
+						applyResumePatches(input.resumeData, proposal.operations);
+					}
+
+					return { proposals };
+				},
 			}),
 		},
 		stopWhen: stepCountIs(3),

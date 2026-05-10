@@ -48,6 +48,39 @@ const getORPCClient = createIsomorphicFn()
 
 export const client = getORPCClient();
 
+const getORPCStreamClient = createIsomorphicFn()
+	.server((): RouterClient<typeof router> => {
+		return createRouterClient(router, {
+			interceptors: [
+				onError((error) => {
+					console.error("[oRPC server]", error);
+				}),
+			],
+			context: async () => {
+				const locale = await getLocale();
+				const reqHeaders = getRequestHeaders();
+
+				return { locale, reqHeaders };
+			},
+		});
+	})
+	.client((): RouterClient<typeof router> => {
+		const link = new RPCLink({
+			url: `${window.location.origin}/api/rpc`,
+			fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
+			interceptors: [
+				onError((error) => {
+					if (error instanceof DOMException && error.name === "AbortError") return;
+					console.warn("[oRPC stream client]", error);
+				}),
+			],
+		});
+
+		return createORPCClient(link);
+	});
+
+export const streamClient = getORPCStreamClient();
+
 export const orpc = createTanstackQueryUtils(client);
 
 export type RouterInput = InferRouterInputs<typeof router>;

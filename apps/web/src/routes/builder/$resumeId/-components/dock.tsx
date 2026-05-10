@@ -4,6 +4,7 @@ import { t } from "@lingui/core/macro";
 import {
 	AlignCenterHorizontalIcon,
 	AlignTopIcon,
+	ChatCircleDotsIcon,
 	CircleNotchIcon,
 	CubeFocusIcon,
 	FileDocIcon,
@@ -26,6 +27,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { useCurrentResume } from "@/components/resume/builder-resume-draft";
 import { authClient } from "@/libs/auth/client";
 import { createResumePdfBlob } from "@/libs/resume/pdf-document";
+import { useBuilderAssistantStore } from "./assistant-store";
 
 type BuilderDockProps = {
 	pageLayout: BuilderPreviewPageLayout;
@@ -40,6 +42,8 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 	const { zoomIn, zoomOut, centerView } = useControls();
 
 	const [isPrinting, setIsPrinting] = useState(false);
+	const isAssistantOpen = useBuilderAssistantStore((state) => state.isOpen);
+	const toggleAssistant = useBuilderAssistantStore((state) => state.toggleOpen);
 
 	const publicUrl = useMemo(() => {
 		if (!session?.user.username || !resume?.slug) return "";
@@ -108,6 +112,12 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 					title={t`Toggle page stacking`}
 					onClick={onTogglePageLayout}
 				/>
+				<DockIcon
+					icon={ChatCircleDotsIcon}
+					title={isAssistantOpen ? t`Close AI assistant` : t`Open AI assistant`}
+					onClick={toggleAssistant}
+					active={isAssistantOpen}
+				/>
 				<div className="mx-1 h-8 w-px bg-border" />
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
 				<DockIcon icon={FileJsIcon} title={t`Download JSON`} onClick={() => onDownloadJSON()} />
@@ -130,9 +140,10 @@ type DockIconProps = {
 	disabled?: boolean;
 	onClick: () => void;
 	iconClassName?: string;
+	active?: boolean;
 };
 
-function DockIcon({ icon: Icon, title, disabled, onClick, iconClassName }: DockIconProps) {
+function DockIcon({ icon: Icon, title, disabled, onClick, iconClassName, active }: DockIconProps) {
 	return (
 		<Tooltip>
 			<TooltipTrigger
@@ -143,7 +154,14 @@ function DockIcon({ icon: Icon, title, disabled, onClick, iconClassName }: DockI
 						whileTap={disabled ? undefined : { scale: 0.97 }}
 						transition={{ duration: 0.15, ease: "easeOut" }}
 					>
-						<Button size="icon" variant="ghost" disabled={disabled} onClick={onClick}>
+						<Button
+							size="icon"
+							variant="ghost"
+							disabled={disabled}
+							className={cn(active && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary")}
+							onClick={onClick}
+							aria-label={title}
+						>
 							<Icon className={cn("size-4", iconClassName)} />
 						</Button>
 					</motion.div>

@@ -5,6 +5,7 @@ import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/
 import { Input } from "@reactive-resume/ui/components/input";
 import { URLInput } from "@/components/input/url-input";
 import { useCurrentBuilderResumeSelector, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../shared/section-base";
 import { CustomFieldsSection } from "./custom-fields";
@@ -38,6 +39,7 @@ function BasicsSectionForm() {
 			persist(value);
 		},
 	});
+	useSyncFormValues(form, basics);
 
 	return (
 		<form

@@ -6,6 +6,7 @@ import { protectedProcedure, publicProcedure } from "../context";
 import { resumeDto } from "../dto/resume";
 import { resumeMutationRateLimit, resumePasswordRateLimit } from "../middleware/rate-limit";
 import { resumeService } from "../services/resume";
+import { subscribeResumeUpdated } from "../services/resume-events";
 
 const tagsRouter = {
 	list: protectedProcedure
@@ -71,10 +72,43 @@ const analysisRouter = {
 		}),
 };
 
+const updatesRouter = {
+	subscribe: protectedProcedure
+		.route({
+			method: "GET",
+			path: "/resumes/{id}/updates",
+			tags: ["Resumes"],
+			operationId: "subscribeResumeUpdates",
+			summary: "Subscribe to resume updates",
+			description:
+				"Streams lightweight invalidation events when the specified resume changes. The event payload contains metadata only; clients should refetch the resume for canonical data.",
+			successDescription: "A stream of resume update invalidation events.",
+		})
+		.input(z.object({ id: z.string().describe("The unique identifier of the resume.") }))
+		.handler(async function* ({ context, input, signal }) {
+			const resume = await resumeService.getById({ id: input.id, userId: context.user.id });
+
+			yield {
+				type: "resume.updated" as const,
+				resumeId: input.id,
+				userId: context.user.id,
+				updatedAt: resume.updatedAt.toISOString(),
+				mutation: "sync" as const,
+			};
+
+			yield* subscribeResumeUpdated({
+				resumeId: input.id,
+				userId: context.user.id,
+				...(signal ? { signal } : {}),
+			});
+		}),
+};
+
 export const resumeRouter = {
 	tags: tagsRouter,
 	statistics: statisticsRouter,
 	analysis: analysisRouter,
+	updates: updatesRouter,
 
 	list: protectedProcedure
 		.route({
@@ -250,12 +284,17 @@ export const resumeRouter = {
 				message: "The patch operations are invalid or produced an invalid resume.",
 				status: 400,
 			},
+			RESUME_VERSION_CONFLICT: {
+				message: "The resume changed after this patch was generated.",
+				status: 409,
+			},
 		})
 		.handler(async ({ context, input }) => {
 			return resumeService.patch({
 				id: input.id,
 				userId: context.user.id,
 				operations: input.operations,
+				...(input.expectedUpdatedAt ? { expectedUpdatedAt: input.expectedUpdatedAt } : {}),
 			});
 		}),
 

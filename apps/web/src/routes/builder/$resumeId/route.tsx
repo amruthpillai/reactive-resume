@@ -13,9 +13,11 @@ import {
 	useMergeResumeMetadata,
 	useResumeCleanup,
 	useResumeStore,
+	useResumeUpdateSubscription,
 } from "@/components/resume/builder-resume-draft";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpc } from "@/libs/orpc/client";
+import { BuilderAssistant } from "./-components/assistant";
 import { BuilderHeader } from "./-components/header";
 import { BuilderSidebarLeft } from "./-sidebar/left";
 import { BuilderSidebarRight } from "./-sidebar/right";
@@ -59,6 +61,7 @@ function RouteComponent() {
 	const isInitialized = isReady && initializedResumeId === resumeId;
 
 	useResumeCleanup();
+	useResumeUpdateSubscription();
 
 	useEffect(() => {
 		if (isInitialized) return;
@@ -76,6 +79,7 @@ function RouteComponent() {
 		resume.isLocked,
 		resume.isPublic,
 		resume.hasPassword,
+		resume.updatedAt,
 		resume,
 	]);
 
@@ -164,6 +168,8 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 					<BuilderSidebarRight />
 				</ResizablePanel>
 			</ResizableGroup>
+
+			<BuilderAssistant />
 		</div>
 	);
 }
