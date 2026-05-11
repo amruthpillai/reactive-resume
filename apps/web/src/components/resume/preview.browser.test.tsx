@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";

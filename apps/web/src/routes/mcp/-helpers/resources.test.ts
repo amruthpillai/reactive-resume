@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: These tests assert registered resource names before exercising their handlers.
 import { describe, expect, it, vi } from "vitest";
 
 // Avoid pulling in env-validated modules through `./tools`.

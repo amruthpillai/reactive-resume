@@ -24,7 +24,7 @@ beforeAll(() => {
 const renderScreen = (routeId = "/missing") =>
 	render(
 		<I18nProvider i18n={i18n}>
-			<NotFoundScreen routeId={routeId as never} />
+			<NotFoundScreen isNotFound routeId={routeId as never} />
 		</I18nProvider>,
 	);
 

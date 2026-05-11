@@ -13,7 +13,8 @@ describe("createSectionTitleResolver", () => {
 
 		const result = resolve({
 			sectionId: "experience",
-			sectionKind: "built-in",
+			locale: "en-US",
+			sectionKind: "builtin",
 			defaultEnglishTitle: "Experience",
 		});
 
@@ -27,6 +28,7 @@ describe("createSectionTitleResolver", () => {
 
 		const result = resolve({
 			sectionId: "custom-1",
+			locale: "en-US",
 			sectionKind: "custom",
 			customSectionType: "cover-letter",
 			defaultEnglishTitle: "Cover Letter",
@@ -41,7 +43,8 @@ describe("createSectionTitleResolver", () => {
 
 		const result = resolve({
 			sectionId: "unknown-section",
-			sectionKind: "built-in",
+			locale: "en-US",
+			sectionKind: "builtin",
 			defaultEnglishTitle: "Fallback Title",
 		});
 
@@ -54,7 +57,8 @@ describe("createSectionTitleResolver", () => {
 
 		const result = resolve({
 			sectionId: "mystery",
-			sectionKind: "built-in",
+			locale: "en-US",
+			sectionKind: "builtin",
 		});
 
 		expect(result).toBe("mystery");
@@ -68,7 +72,8 @@ describe("createSectionTitleResolver", () => {
 
 		const result = resolve({
 			sectionId: "skills",
-			sectionKind: "built-in",
+			locale: "en-US",
+			sectionKind: "builtin",
 			defaultEnglishTitle: "Habilidades",
 		});
 
@@ -81,7 +86,8 @@ describe("createSectionTitleResolver", () => {
 
 		const result = resolve({
 			sectionId: "languages",
-			sectionKind: "built-in",
+			locale: "en-US",
+			sectionKind: "builtin",
 		});
 
 		expect(result).toBe("languages");
@@ -108,7 +114,7 @@ describe("createSectionTitleResolver", () => {
 		] as const;
 
 		for (const sectionId of ids) {
-			const result = resolve({ sectionId, sectionKind: "built-in" });
+			const result = resolve({ sectionId, locale: "en-US", sectionKind: "builtin" });
 			expect(typeof result).toBe("string");
 			expect(result.length).toBeGreaterThan(0);
 		}

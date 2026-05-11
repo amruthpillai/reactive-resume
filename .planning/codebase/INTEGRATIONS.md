@@ -29,7 +29,7 @@
 - Trusted providers for account linking (`packages/auth/src/config.ts`): `google`, `github`, `linkedin`.
 
 **Translation / Localization:**
-- Crowdin — `CROWDIN_PROJECT_ID`, `CROWDIN_API_TOKEN` (env) / `CROWDIN_PERSONAL_TOKEN` (CI). Config in `crowdin.yml`; pull request automation labelled `l10n`. Source catalog `apps/web/locales/en-US.po`.
+- Crowdin — `CROWDIN_PROJECT_ID`, `CROWDIN_PERSONAL_TOKEN`. Config in `crowdin.yml`; pull request automation labelled `l10n`. Source catalog `apps/web/locales/en-US.po`.
 
 **Font Catalog Tooling:**
 - Google Fonts Developer API — `GOOGLE_CLOUD_API_KEY` consumed by `packages/scripts/fonts/generate.ts` hitting `https://www.googleapis.com/webfonts/v1/webfonts`. Output committed at `packages/fonts/src/webfontlist.json`.
@@ -163,7 +163,7 @@
 - `FLAG_DISABLE_IMAGE_PROCESSING` — Skips Sharp resize/encode (useful on resource-constrained hardware).
 
 **Optional tooling env vars:**
-- `CROWDIN_PROJECT_ID`, `CROWDIN_API_TOKEN` (or `CROWDIN_PERSONAL_TOKEN` in CI).
+- `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` for Crowdin translation sync.
 - `GOOGLE_CLOUD_API_KEY` — For `packages/scripts/fonts/generate.ts`.
 
 **Secrets location:**

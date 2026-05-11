@@ -56,6 +56,7 @@ describe("ExportSectionBuilder", () => {
 		fireEvent.click(button);
 
 		expect(downloadWithAnchor).toHaveBeenCalledTimes(1);
+		// biome-ignore lint/style/noNonNullAssertion: The assertion above verifies the download call exists before destructuring it.
 		const [blob, filename] = downloadWithAnchor.mock.calls[0]!;
 		expect(blob).toBeInstanceOf(Blob);
 		expect((blob as Blob).type).toBe("application/json");

@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: These tests assert registered prompt names before exercising their handlers.
 import { describe, expect, it, vi } from "vitest";
 
 // `./tools` pulls in the env / db client modules which require runtime env vars.

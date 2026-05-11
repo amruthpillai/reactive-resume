@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+
 import { fireEvent, render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TextMaskEffect } from "./text-mask";

@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
@@ -11,11 +12,11 @@ beforeAll(() => {
 });
 
 const renderError = (overrides: { error?: Error; reset?: () => void } = {}) => {
-	const props = {
+	const props: ErrorComponentProps = {
 		error: overrides.error ?? new Error("boom"),
 		reset: overrides.reset ?? vi.fn(),
-		info: undefined as never,
-	} as never;
+	};
+
 	return render(
 		<I18nProvider i18n={i18n}>
 			<ErrorScreen {...props} />

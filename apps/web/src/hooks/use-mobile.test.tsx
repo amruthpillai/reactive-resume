@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useIsMobile } from "./use-mobile";
@@ -27,6 +28,7 @@ const createMatchMedia = (initialMatches: boolean) => {
 			removeEventListener: (_type, fn) => listeners.delete(fn),
 			__listeners: listeners,
 			__set: (matches: boolean) => {
+				// biome-ignore lint/style/noNonNullAssertion: This closure only runs after the media query list has been initialized.
 				mql!.matches = matches;
 				for (const fn of listeners) fn({ matches });
 			},

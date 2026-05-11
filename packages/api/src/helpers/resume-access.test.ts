@@ -55,6 +55,7 @@ describe("grantResumeAccess", () => {
 		grantResumeAccess("resume-42", "hash");
 
 		expect(cookies.set).toHaveBeenCalledTimes(1);
+		// biome-ignore lint/style/noNonNullAssertion: The assertion above verifies the cookie write exists before destructuring it.
 		const [name, value, options] = cookies.set.mock.calls[0]!;
 		expect(name).toBe("resume_access_resume-42");
 		expect(value).toBe(signToken("resume-42", "hash"));

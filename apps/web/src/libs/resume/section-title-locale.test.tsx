@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -26,7 +27,7 @@ describe("createSectionTitleResolverForLocale", () => {
 		const { createSectionTitleResolverForLocale } = await import("./section-title-locale");
 
 		const resolver = await createSectionTitleResolverForLocale("en-US");
-		const title = resolver({ sectionId: "experience", sectionKind: "built-in" });
+		const title = resolver({ sectionId: "experience", locale: "en-US", sectionKind: "builtin" });
 
 		expect(typeof title).toBe("string");
 		expect(title.length).toBeGreaterThan(0);
@@ -45,7 +46,7 @@ describe("createSectionTitleResolverForLocale", () => {
 		const { createSectionTitleResolverForLocale } = await import("./section-title-locale");
 
 		const resolver = await createSectionTitleResolverForLocale("xx-YY");
-		const title = resolver({ sectionId: "skills", sectionKind: "built-in" });
+		const title = resolver({ sectionId: "skills", locale: "en-US", sectionKind: "builtin" });
 
 		expect(typeof title).toBe("string");
 		expect(title.length).toBeGreaterThan(0);
@@ -63,9 +64,12 @@ describe("useSectionTitleResolver", () => {
 	it("loads a resolver when a locale is provided", async () => {
 		const { useSectionTitleResolver } = await import("./section-title-locale");
 
-		const { result, rerender } = renderHook(({ locale }: { locale?: string }) => useSectionTitleResolver(locale), {
-			initialProps: { locale: "en-US" },
-		});
+		const { result, rerender } = renderHook(
+			({ locale }: { locale: string | undefined }) => useSectionTitleResolver(locale),
+			{
+				initialProps: { locale: "en-US" as string | undefined },
+			},
+		);
 
 		// Initially null while the resolver is loading async.
 		expect(result.current).toBeNull();

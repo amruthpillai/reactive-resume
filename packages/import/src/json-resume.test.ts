@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: These tests assert imported section lengths before inspecting the first item.
 import { describe, expect, it } from "vitest";
 import { JSONResumeImporter } from "./json-resume";
 

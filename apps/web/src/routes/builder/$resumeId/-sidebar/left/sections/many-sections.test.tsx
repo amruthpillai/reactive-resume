@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+
 //
 // Bulk-cover the small reorderable section components — they all share the same
 // shape: render a SectionItem per data row with title/subtitle mapped to specific

@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+
 import type { CustomSection, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
 import { renderBuiltInSection, renderCustomSection, renderSummary, setRenderConfig } from "./section-renderers";
@@ -22,6 +23,7 @@ describe("renderSummary", () => {
 			title: "Summary",
 			content: "<p>Hello</p>",
 			hidden: true,
+			columns: 1,
 		};
 		expect(renderSummary(summary, HEX)).toEqual([]);
 	});
@@ -31,6 +33,7 @@ describe("renderSummary", () => {
 			title: "Summary",
 			content: "",
 			hidden: false,
+			columns: 1,
 		};
 		expect(renderSummary(summary, HEX)).toEqual([]);
 	});
@@ -40,6 +43,7 @@ describe("renderSummary", () => {
 			title: "Summary",
 			content: "<p>Hello world</p>",
 			hidden: false,
+			columns: 1,
 		};
 		const paragraphs = renderSummary(summary, HEX);
 		// One heading + the htmlToParagraphs output for one <p>.
@@ -51,6 +55,7 @@ describe("renderSummary", () => {
 			title: "",
 			content: "<p>Hello world</p>",
 			hidden: false,
+			columns: 1,
 		};
 		const paragraphs = renderSummary(summary, HEX);
 		expect(paragraphs.length).toBeGreaterThanOrEqual(1);

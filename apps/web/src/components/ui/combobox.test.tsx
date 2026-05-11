@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import type { ComboboxOption } from "./combobox";
 import { render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it } from "vitest";
 import { i18n } from "@lingui/core";
@@ -10,11 +11,11 @@ beforeAll(() => {
 	i18n.loadAndActivate({ locale: "en", messages: {} });
 });
 
-const options = [
+const options: ComboboxOption<"alpha" | "beta" | "gamma">[] = [
 	{ value: "alpha", label: "Alpha" },
 	{ value: "beta", label: "Beta" },
 	{ value: "gamma", label: "Gamma" },
-] as const;
+];
 
 const wrap = (ui: React.ReactNode) => render(<I18nProvider i18n={i18n}>{ui}</I18nProvider>);
 
