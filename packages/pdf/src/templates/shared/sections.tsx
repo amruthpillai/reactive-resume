@@ -35,12 +35,11 @@ import {
 } from "./context";
 import { filterItems, hasVisibleItems, isSectionVisible, isVisibleSummary } from "./filtering";
 import { LevelDisplay } from "./level-display";
-import { MetaLine } from "./meta-line";
 import { getTemplateMetrics } from "./metrics";
 import { Bold, Div, Heading, Icon, Link, Small, Text } from "./primitives";
 import { RichText } from "./rich-text";
 import { getInlineItemWebsiteUrl, shouldRenderSeparateItemWebsite } from "./section-links";
-import { hasSplitRowText, promoteBottomRightWhenTopRightMissing } from "./split-row";
+import { hasSplitRowText, promoteSplitRowRight } from "./split-row";
 import { composeStyles } from "./styles";
 
 type SectionItemsContextValue = {
@@ -196,8 +195,8 @@ const awardTitleDateRowStyle = {
 } satisfies Style;
 
 const useSectionSplitRowStyle = () => {
-	const splitRowStyle = useTemplateStyle("splitRow");
 	const placement = useTemplatePlacement();
+	const splitRowStyle = useTemplateStyle("splitRow");
 	const stackSidebarItemHeader = useTemplateFeature("stackSidebarItemHeader");
 
 	return composeStyles(
@@ -332,9 +331,9 @@ const ExperienceSection = ({
 				{items.map((item) => {
 					const hasPosition = Boolean(item.position.trim());
 					const hasLocation = Boolean(item.location.trim());
-					const { topRight: headerLocation, bottomRight: headerPeriod } = promoteBottomRightWhenTopRightMissing({
-						topRight: item.location,
-						bottomRight: item.period,
+					const { top: headerLocation, bottom: headerPeriod } = promoteSplitRowRight({
+						top: item.location,
+						bottom: item.period,
 					});
 
 					const renderInlineHeader = () => (
@@ -375,7 +374,7 @@ const ExperienceSection = ({
 						<SectionItem key={item.id}>
 							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
 
-							{item.roles.length > 0 && <MetaLine>{[headerPeriod]}</MetaLine>}
+							{item.roles.length > 0 && <Text>{item.period}</Text>}
 
 							{item.roles.map((role) => (
 								<View key={role.id}>
@@ -423,11 +422,10 @@ const EducationSection = ({
 					const gradeAndLocation = [item.grade, item.location].filter(Boolean).join(" • ");
 					const hasArea = Boolean(item.area.trim());
 					const hasDegree = Boolean(item.degree.trim());
-					const { topRight: headerDegreeAndGrade, bottomRight: headerLocationAndPeriod } =
-						promoteBottomRightWhenTopRightMissing({
-							topRight: degreeAndGrade,
-							bottomRight: locationAndPeriod,
-						});
+					const { top: headerDegreeAndGrade, bottom: headerLocationAndPeriod } = promoteSplitRowRight({
+						top: degreeAndGrade,
+						bottom: locationAndPeriod,
+					});
 
 					const renderInlineHeader = () => (
 						<>
@@ -647,7 +645,7 @@ const AwardsSection = ({
 						<SectionItemHeader>
 							<View style={composeStyles(splitRowStyle, awardTitleDateRowStyle)}>
 								<ItemTitle website={item.website}>{item.title}</ItemTitle>
-								<Small style={composeStyles(alignRightStyle)}>{item.date}</Small>
+								<Text style={composeStyles(alignRightStyle)}>{item.date}</Text>
 							</View>
 							<Text>{item.awarder}</Text>
 						</SectionItemHeader>
@@ -671,6 +669,8 @@ const CertificationsSection = ({
 	const data = useRender();
 	const certifications = sectionData ?? data.sections.certifications;
 	const items = getVisibleItems(certifications, "certifications");
+	const splitRowStyle = useSectionSplitRowStyle();
+	const alignRightStyle = useTemplateStyle("alignRight");
 
 	if (items.length === 0) return null;
 
@@ -680,10 +680,13 @@ const CertificationsSection = ({
 				{items.map((item) => (
 					<SectionItem key={item.id}>
 						<SectionItemHeader>
-							<ItemTitle website={item.website}>{item.title}</ItemTitle>
+							<View style={composeStyles(splitRowStyle)}>
+								<ItemTitle website={item.website}>{item.title}</ItemTitle>
+								<Text style={composeStyles(alignRightStyle)}>{item.date}</Text>
+							</View>
 							<Text>{item.issuer}</Text>
-							<Small>{item.date}</Small>
 						</SectionItemHeader>
+
 						<RichText>{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
@@ -704,6 +707,8 @@ const PublicationsSection = ({
 	const data = useRender();
 	const publications = sectionData ?? data.sections.publications;
 	const items = getVisibleItems(publications, "publications");
+	const splitRowStyle = useSectionSplitRowStyle();
+	const alignRightStyle = useTemplateStyle("alignRight");
 
 	if (items.length === 0) return null;
 
@@ -713,10 +718,14 @@ const PublicationsSection = ({
 				{items.map((item) => (
 					<SectionItem key={item.id}>
 						<SectionItemHeader>
-							<ItemTitle website={item.website}>{item.title}</ItemTitle>
+							<View style={composeStyles(splitRowStyle)}>
+								<ItemTitle website={item.website}>{item.title}</ItemTitle>
+								<Text style={composeStyles(alignRightStyle)}>{item.date}</Text>
+							</View>
+
 							<Text>{item.publisher}</Text>
-							<Small>{item.date}</Small>
 						</SectionItemHeader>
+
 						<RichText>{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
@@ -747,11 +756,6 @@ const VolunteerSection = ({
 		<SectionShell sectionId={sectionId} title={volunteer.title}>
 			<SectionItems columns={volunteer.columns}>
 				{items.map((item) => {
-					const { topRight: headerLocation, bottomRight: headerPeriod } = promoteBottomRightWhenTopRightMissing({
-						topRight: item.location,
-						bottomRight: item.period,
-					});
-
 					return (
 						<SectionItem key={item.id}>
 							<SectionItemHeader>
@@ -765,12 +769,12 @@ const VolunteerSection = ({
 									<>
 										<View style={composeStyles(splitRowStyle)}>
 											<ItemTitle website={item.website}>{item.organization}</ItemTitle>
-											{hasSplitRowText(headerLocation) && (
-												<Text style={composeStyles(alignRightStyle)}>{headerLocation}</Text>
+											{hasSplitRowText(item.period) && (
+												<Text style={composeStyles(alignRightStyle)}>{item.period}</Text>
 											)}
 										</View>
 
-										<MetaLine>{[headerPeriod]}</MetaLine>
+										<Text>{item.location}</Text>
 									</>
 								)}
 							</SectionItemHeader>
@@ -806,7 +810,7 @@ const ReferencesSection = ({
 						<SectionItemHeader>
 							<ItemTitle website={item.website}>{item.name}</ItemTitle>
 							<Text>{item.position}</Text>
-							<MetaLine>{[item.phone]}</MetaLine>
+							<Text>{item.phone}</Text>
 						</SectionItemHeader>
 						<RichText>{item.description}</RichText>
 
