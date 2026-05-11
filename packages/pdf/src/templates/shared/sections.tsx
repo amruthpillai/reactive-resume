@@ -188,6 +188,12 @@ const stackedSidebarSplitRowStyle = {
 	alignItems: "flex-start",
 } satisfies Style;
 
+const awardTitleDateRowStyle = {
+	flexDirection: "row",
+	alignItems: "flex-start",
+	justifyContent: "space-between",
+} satisfies Style;
+
 const useSectionSplitRowStyle = () => {
 	const splitRowStyle = useTemplateStyle("splitRow");
 	const placement = useTemplatePlacement();
@@ -621,7 +627,7 @@ const AwardsSection = ({
 				{items.map((item) => (
 					<SectionItem key={item.id}>
 						<SectionItemHeader>
-							<View style={composeStyles(splitRowStyle)}>
+							<View style={composeStyles(splitRowStyle, awardTitleDateRowStyle)}>
 								<ItemTitle website={item.website}>{item.title}</ItemTitle>
 								<Small style={composeStyles(alignRightStyle)}>{item.date}</Small>
 							</View>
