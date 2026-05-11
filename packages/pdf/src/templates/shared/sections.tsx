@@ -40,6 +40,7 @@ import { getTemplateMetrics } from "./metrics";
 import { Bold, Div, Heading, Icon, Link, Small, Text } from "./primitives";
 import { RichText } from "./rich-text";
 import { getInlineItemWebsiteUrl, shouldRenderSeparateItemWebsite } from "./section-links";
+import { hasSplitRowText, promoteBottomRightWhenTopRightMissing } from "./split-row";
 import { composeStyles } from "./styles";
 
 type SectionItemsContextValue = {
@@ -331,6 +332,10 @@ const ExperienceSection = ({
 				{items.map((item) => {
 					const hasPosition = Boolean(item.position.trim());
 					const hasLocation = Boolean(item.location.trim());
+					const { topRight: headerLocation, bottomRight: headerPeriod } = promoteBottomRightWhenTopRightMissing({
+						topRight: item.location,
+						bottomRight: item.period,
+					});
 
 					const renderInlineHeader = () => (
 						<InlineItemHeader
@@ -352,13 +357,15 @@ const ExperienceSection = ({
 						<>
 							<View style={composeStyles(splitRowStyle)}>
 								<ItemTitle website={item.website}>{item.company}</ItemTitle>
-								<Text style={composeStyles(alignRightStyle)}>{item.location}</Text>
+								{hasSplitRowText(headerLocation) && (
+									<Text style={composeStyles(alignRightStyle)}>{headerLocation}</Text>
+								)}
 							</View>
 
-							{item.roles.length === 0 && (
+							{item.roles.length === 0 && (hasPosition || hasSplitRowText(headerPeriod)) && (
 								<View style={composeStyles(splitRowStyle)}>
-									<Text>{item.position}</Text>
-									<Text style={composeStyles(alignRightStyle)}>{item.period}</Text>
+									{hasPosition && <Text>{item.position}</Text>}
+									{hasSplitRowText(headerPeriod) && <Text style={composeStyles(alignRightStyle)}>{headerPeriod}</Text>}
 								</View>
 							)}
 						</>
@@ -368,7 +375,7 @@ const ExperienceSection = ({
 						<SectionItem key={item.id}>
 							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
 
-							{item.roles.length > 0 && <MetaLine>{[item.period]}</MetaLine>}
+							{item.roles.length > 0 && <MetaLine>{[headerPeriod]}</MetaLine>}
 
 							{item.roles.map((role) => (
 								<View key={role.id}>
@@ -416,6 +423,11 @@ const EducationSection = ({
 					const gradeAndLocation = [item.grade, item.location].filter(Boolean).join(" • ");
 					const hasArea = Boolean(item.area.trim());
 					const hasDegree = Boolean(item.degree.trim());
+					const { topRight: headerDegreeAndGrade, bottomRight: headerLocationAndPeriod } =
+						promoteBottomRightWhenTopRightMissing({
+							topRight: degreeAndGrade,
+							bottomRight: locationAndPeriod,
+						});
 
 					const renderInlineHeader = () => (
 						<>
@@ -440,13 +452,19 @@ const EducationSection = ({
 						<>
 							<View style={composeStyles(splitRowStyle)}>
 								<ItemTitle website={item.website}>{item.school}</ItemTitle>
-								<Text style={composeStyles(alignRightStyle)}>{degreeAndGrade}</Text>
+								{hasSplitRowText(headerDegreeAndGrade) && (
+									<Text style={composeStyles(alignRightStyle)}>{headerDegreeAndGrade}</Text>
+								)}
 							</View>
 
-							<View style={composeStyles(splitRowStyle)}>
-								<Text>{item.area}</Text>
-								<Text style={composeStyles(alignRightStyle)}>{locationAndPeriod}</Text>
-							</View>
+							{(hasArea || hasSplitRowText(headerLocationAndPeriod)) && (
+								<View style={composeStyles(splitRowStyle)}>
+									{hasArea && <Text>{item.area}</Text>}
+									{hasSplitRowText(headerLocationAndPeriod) && (
+										<Text style={composeStyles(alignRightStyle)}>{headerLocationAndPeriod}</Text>
+									)}
+								</View>
+							)}
 						</>
 					);
 
@@ -728,31 +746,40 @@ const VolunteerSection = ({
 	return (
 		<SectionShell sectionId={sectionId} title={volunteer.title}>
 			<SectionItems columns={volunteer.columns}>
-				{items.map((item) => (
-					<SectionItem key={item.id}>
-						<SectionItemHeader>
-							{inlineItemHeader ? (
-								<InlineItemHeader
-									leading={<Text>{item.location}</Text>}
-									middle={<ItemTitle website={item.website}>{item.organization}</ItemTitle>}
-									trailing={<Text style={composeStyles(alignRightStyle)}>{item.period}</Text>}
-								/>
-							) : (
-								<>
-									<View style={composeStyles(splitRowStyle)}>
-										<ItemTitle website={item.website}>{item.organization}</ItemTitle>
-										<Text style={composeStyles(alignRightStyle)}>{item.location}</Text>
-									</View>
+				{items.map((item) => {
+					const { topRight: headerLocation, bottomRight: headerPeriod } = promoteBottomRightWhenTopRightMissing({
+						topRight: item.location,
+						bottomRight: item.period,
+					});
 
-									<MetaLine>{[item.period]}</MetaLine>
-								</>
-							)}
-						</SectionItemHeader>
-						<RichText>{item.description}</RichText>
+					return (
+						<SectionItem key={item.id}>
+							<SectionItemHeader>
+								{inlineItemHeader ? (
+									<InlineItemHeader
+										leading={hasSplitRowText(item.location) ? <Text>{item.location}</Text> : null}
+										middle={<ItemTitle website={item.website}>{item.organization}</ItemTitle>}
+										trailing={<Text style={composeStyles(alignRightStyle)}>{item.period}</Text>}
+									/>
+								) : (
+									<>
+										<View style={composeStyles(splitRowStyle)}>
+											<ItemTitle website={item.website}>{item.organization}</ItemTitle>
+											{hasSplitRowText(headerLocation) && (
+												<Text style={composeStyles(alignRightStyle)}>{headerLocation}</Text>
+											)}
+										</View>
 
-						<ItemWebsiteLink website={item.website} />
-					</SectionItem>
-				))}
+										<MetaLine>{[headerPeriod]}</MetaLine>
+									</>
+								)}
+							</SectionItemHeader>
+							<RichText>{item.description}</RichText>
+
+							<ItemWebsiteLink website={item.website} />
+						</SectionItem>
+					);
+				})}
 			</SectionItems>
 		</SectionShell>
 	);
