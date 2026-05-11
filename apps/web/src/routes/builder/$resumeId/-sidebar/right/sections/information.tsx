@@ -95,7 +95,7 @@ export function InformationSectionBuilder() {
 					className="text-xs"
 					nativeButton={false}
 					render={
-						<a href="https://opencollective.com/reactive-resume" target="_blank" rel="noopener">
+						<a href="https://opencollective.com/reactive-resume/donate" target="_blank" rel="noopener">
 							<Trans>Sponsors</Trans>
 						</a>
 					}

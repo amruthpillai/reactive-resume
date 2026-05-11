@@ -26,7 +26,7 @@ type SocialLink = {
 
 const getResourceLinks = (): FooterLinkItem[] => [
 	{ url: "https://docs.rxresu.me", label: t`Documentation` },
-	{ url: "https://opencollective.com/reactive-resume", label: t`Sponsorships` },
+	{ url: "https://opencollective.com/reactive-resume/donate", label: t`Sponsorships` },
 	{ url: "https://github.com/amruthpillai/reactive-resume", label: t`Source Code` },
 	{ url: "https://docs.rxresu.me/changelog", label: t`Changelog` },
 ];

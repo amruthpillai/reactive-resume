@@ -18,6 +18,7 @@ import { TooltipProvider } from "@reactive-resume/ui/components/tooltip";
 import { CommandPalette } from "@/components/command-palette";
 import { BreakpointIndicator } from "@/components/layout/breakpoint-indicator";
 import { ThemeProvider } from "@/components/theme/provider";
+import { DonationToast } from "@/components/ui/donation-toast";
 import { DialogManager } from "@/dialogs/manager";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
@@ -121,6 +122,7 @@ function RootDocument({ children }: Props) {
 												<PromptDialogProvider>
 													{children}
 
+													<DonationToast />
 													<DialogManager />
 													<CommandPalette />
 													<Toaster richColors position="bottom-right" />
