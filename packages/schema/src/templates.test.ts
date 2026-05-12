@@ -18,6 +18,7 @@ describe("templateSchema", () => {
 			"onyx",
 			"pikachu",
 			"rhyhorn",
+			"scizor",
 		];
 		for (const t of validTemplates) {
 			expect(templateSchema.safeParse(t).success).toBe(true);
@@ -46,6 +47,6 @@ describe("templateSchema", () => {
 
 	it("includes 14 templates", () => {
 		const validTemplates = templateSchema.options;
-		expect(validTemplates).toHaveLength(14);
+		expect(validTemplates).toHaveLength(15);
 	});
 });

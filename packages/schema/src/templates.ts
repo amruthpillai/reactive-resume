@@ -15,6 +15,7 @@ export const templateSchema = z.enum([
 	"onyx",
 	"pikachu",
 	"rhyhorn",
+	"scizor",
 ]);
 
 export type Template = z.infer<typeof templateSchema>;
