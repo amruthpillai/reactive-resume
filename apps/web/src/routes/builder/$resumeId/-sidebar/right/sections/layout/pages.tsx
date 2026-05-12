@@ -23,6 +23,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { templates } from "@/dialogs/resume/template/data";
 import { getSectionTitle } from "@/libs/resume/section";
+import { filterVisibleLayoutSectionIds } from "./visibility";
 
 type ColumnId = "main" | "sidebar";
 
@@ -230,7 +231,11 @@ export function LayoutPages() {
 					<PageContainer
 						key={`page-${pageIndex}`}
 						pageIndex={pageIndex}
-						page={page}
+						page={{
+							...page,
+							main: filterVisibleLayoutSectionIds(page.main, resume.data),
+							sidebar: filterVisibleLayoutSectionIds(page.sidebar, resume.data),
+						}}
 						canDelete={layout.pages.length > 1}
 						sidebarPosition={templateSidebarPosition}
 						onDelete={handleDeletePage}
