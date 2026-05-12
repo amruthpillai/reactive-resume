@@ -7,7 +7,7 @@ import { parseColorString, rgbaStringToHex } from "@reactive-resume/utils/color"
 import { useRender } from "../../context";
 import { CustomFieldContactItem, WebsiteContactItem } from "../shared/contact-item";
 import { TemplateProvider } from "../shared/context";
-import { filterSections } from "../shared/filtering";
+import { filterSections, splitFirstVisibleSection } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { getTemplatePageMinHeightStyle, getTemplatePageSize } from "../shared/page-size";
 import { hasTemplatePicture } from "../shared/picture";
@@ -52,9 +52,11 @@ export const DitgarPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const showHeader = pageIndex === 0;
 	const showSidebar = !page.fullWidth || showHeader;
 	const sidebarSections = filterSections(page.sidebar, data);
-	const mainSections = filterSections(page.main, data);
-	const specialMainSection = showHeader ? mainSections[0] : undefined;
-	const regularMainSections = showHeader ? mainSections.slice(1) : mainSections;
+	const mainSectionGroups = showHeader
+		? splitFirstVisibleSection(page.main, data)
+		: { firstSection: undefined, remainingSections: filterSections(page.main, data) };
+	const specialMainSection = mainSectionGroups.firstSection;
+	const regularMainSections = mainSectionGroups.remainingSections;
 
 	return (
 		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>

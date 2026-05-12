@@ -126,3 +126,16 @@ export const isSectionVisible = (sectionId: string, data: FilterableData): boole
 export const filterSections = (sectionIds: string[], data: FilterableData): string[] => {
 	return sectionIds.filter((sectionId) => isSectionVisible(sectionId, data));
 };
+
+export const splitFirstVisibleSection = (
+	sectionIds: string[],
+	data: FilterableData,
+): { firstSection: string | undefined; remainingSections: string[] } => {
+	const [firstSectionId, ...remainingSectionIds] = sectionIds;
+	const firstSection = firstSectionId && isSectionVisible(firstSectionId, data) ? firstSectionId : undefined;
+
+	return {
+		firstSection,
+		remainingSections: filterSections(remainingSectionIds, data),
+	};
+};

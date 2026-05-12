@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { filterItems, filterSections, hasVisibleItems, isSectionVisible, isVisibleSummary } from "./filtering";
+import {
+	filterItems,
+	filterSections,
+	hasVisibleItems,
+	isSectionVisible,
+	isVisibleSummary,
+	splitFirstVisibleSection,
+} from "./filtering";
 
 describe("filterItems", () => {
 	it("returns only items where hidden is false", () => {
@@ -186,5 +193,31 @@ describe("filterSections", () => {
 
 	it("preserves order of input section ids", () => {
 		expect(filterSections(["experience", "summary"], data)).toEqual(["experience", "summary"]);
+	});
+});
+
+describe("splitFirstVisibleSection", () => {
+	const data = {
+		summary: { hidden: false, content: "<p>Hi</p>" },
+		sections: {
+			profiles: { hidden: false, items: [] },
+			experience: { hidden: false, items: [{ hidden: false, company: "Acme" }] },
+			skills: { hidden: false, items: [{ hidden: false, name: "TypeScript" }] },
+		},
+		customSections: [],
+	};
+
+	it("does not promote the next visible section when the configured first section is empty", () => {
+		expect(splitFirstVisibleSection(["profiles", "experience", "skills"], data)).toEqual({
+			firstSection: undefined,
+			remainingSections: ["experience", "skills"],
+		});
+	});
+
+	it("keeps the configured first section separate when it is visible", () => {
+		expect(splitFirstVisibleSection(["summary", "experience", "skills"], data)).toEqual({
+			firstSection: "summary",
+			remainingSections: ["experience", "skills"],
+		});
 	});
 });
