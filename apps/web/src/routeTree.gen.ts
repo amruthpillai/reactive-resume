@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SchemaDotjsonRouteImport } from './routes/schema[.]json'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
+import { Route as AgentRouteRouteImport } from './routes/agent/route'
 import { Route as HomeRouteRouteImport } from './routes/_home/route'
 import { Route as McpIndexRouteImport } from './routes/mcp/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as AgentIndexRouteImport } from './routes/agent/index'
 import { Route as HomeIndexRouteImport } from './routes/_home/index'
 import { Route as TemplatesSplatRouteImport } from './routes/templates/$'
 import { Route as AuthVerify2faBackupRouteImport } from './routes/auth/verify-2fa-backup'
@@ -27,6 +29,7 @@ import { Route as AuthOauthRouteImport } from './routes/auth/oauth'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as AgentThreadIdRouteImport } from './routes/agent/$threadId'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownOauthProtectedResourceRouteImport } from './routes/[.]well-known/oauth-protected-resource'
 import { Route as DotwellKnownOauthAuthorizationServerRouteImport } from './routes/[.]well-known/oauth-authorization-server'
@@ -66,6 +69,11 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AgentRouteRoute = AgentRouteRouteImport.update({
+  id: '/agent',
+  path: '/agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRouteRoute = HomeRouteRouteImport.update({
   id: '/_home',
   getParentRoute: () => rootRouteImport,
@@ -84,6 +92,11 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AgentIndexRoute = AgentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AgentRouteRoute,
 } as any)
 const HomeIndexRoute = HomeIndexRouteImport.update({
   id: '/',
@@ -139,6 +152,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AgentThreadIdRoute = AgentThreadIdRouteImport.update({
+  id: '/$threadId',
+  path: '/$threadId',
+  getParentRoute: () => AgentRouteRoute,
 } as any)
 const DotwellKnownOpenidConfigurationRoute =
   DotwellKnownOpenidConfigurationRouteImport.update({
@@ -271,6 +289,7 @@ const ApiUploadsUserIdSplatRoute = ApiUploadsUserIdSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof HomeIndexRoute
+  '/agent': typeof AgentRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/schema.json': typeof SchemaDotjsonRoute
@@ -280,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-authorization-server': typeof DotwellKnownOauthAuthorizationServerRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof DotwellKnownOauthProtectedResourceRouteWithChildren
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/agent/$threadId': typeof AgentThreadIdRoute
   '/api/health': typeof ApiHealthRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -290,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/auth/verify-2fa': typeof AuthVerify2faRoute
   '/auth/verify-2fa-backup': typeof AuthVerify2faBackupRoute
   '/templates/$': typeof TemplatesSplatRoute
+  '/agent/': typeof AgentIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/mcp/': typeof McpIndexRoute
@@ -318,6 +339,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-authorization-server': typeof DotwellKnownOauthAuthorizationServerRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof DotwellKnownOauthProtectedResourceRouteWithChildren
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/agent/$threadId': typeof AgentThreadIdRoute
   '/api/health': typeof ApiHealthRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -329,6 +351,7 @@ export interface FileRoutesByTo {
   '/auth/verify-2fa-backup': typeof AuthVerify2faBackupRoute
   '/templates/$': typeof TemplatesSplatRoute
   '/': typeof HomeIndexRoute
+  '/agent': typeof AgentIndexRoute
   '/auth': typeof AuthIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/mcp': typeof McpIndexRoute
@@ -353,6 +376,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_home': typeof HomeRouteRouteWithChildren
+  '/agent': typeof AgentRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/schema.json': typeof SchemaDotjsonRoute
@@ -362,6 +386,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-authorization-server': typeof DotwellKnownOauthAuthorizationServerRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof DotwellKnownOauthProtectedResourceRouteWithChildren
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/agent/$threadId': typeof AgentThreadIdRoute
   '/api/health': typeof ApiHealthRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -373,6 +398,7 @@ export interface FileRoutesById {
   '/auth/verify-2fa-backup': typeof AuthVerify2faBackupRoute
   '/templates/$': typeof TemplatesSplatRoute
   '/_home/': typeof HomeIndexRoute
+  '/agent/': typeof AgentIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/mcp/': typeof McpIndexRoute
@@ -398,6 +424,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/agent'
     | '/auth'
     | '/dashboard'
     | '/schema.json'
@@ -407,6 +434,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-authorization-server'
     | '/.well-known/oauth-protected-resource'
     | '/.well-known/openid-configuration'
+    | '/agent/$threadId'
     | '/api/health'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -417,6 +445,7 @@ export interface FileRouteTypes {
     | '/auth/verify-2fa'
     | '/auth/verify-2fa-backup'
     | '/templates/$'
+    | '/agent/'
     | '/auth/'
     | '/dashboard/'
     | '/mcp/'
@@ -445,6 +474,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-authorization-server'
     | '/.well-known/oauth-protected-resource'
     | '/.well-known/openid-configuration'
+    | '/agent/$threadId'
     | '/api/health'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -456,6 +486,7 @@ export interface FileRouteTypes {
     | '/auth/verify-2fa-backup'
     | '/templates/$'
     | '/'
+    | '/agent'
     | '/auth'
     | '/dashboard'
     | '/mcp'
@@ -479,6 +510,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_home'
+    | '/agent'
     | '/auth'
     | '/dashboard'
     | '/schema.json'
@@ -488,6 +520,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-authorization-server'
     | '/.well-known/oauth-protected-resource'
     | '/.well-known/openid-configuration'
+    | '/agent/$threadId'
     | '/api/health'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -499,6 +532,7 @@ export interface FileRouteTypes {
     | '/auth/verify-2fa-backup'
     | '/templates/$'
     | '/_home/'
+    | '/agent/'
     | '/auth/'
     | '/dashboard/'
     | '/mcp/'
@@ -523,6 +557,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   HomeRouteRoute: typeof HomeRouteRouteWithChildren
+  AgentRouteRoute: typeof AgentRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   SchemaDotjsonRoute: typeof SchemaDotjsonRoute
@@ -566,6 +601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agent': {
+      id: '/agent'
+      path: '/agent'
+      fullPath: '/agent'
+      preLoaderRoute: typeof AgentRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_home': {
       id: '/_home'
       path: ''
@@ -593,6 +635,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/'
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/agent/': {
+      id: '/agent/'
+      path: '/'
+      fullPath: '/agent/'
+      preLoaderRoute: typeof AgentIndexRouteImport
+      parentRoute: typeof AgentRouteRoute
     }
     '/_home/': {
       id: '/_home/'
@@ -670,6 +719,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/health'
       preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/agent/$threadId': {
+      id: '/agent/$threadId'
+      path: '/$threadId'
+      fullPath: '/agent/$threadId'
+      preLoaderRoute: typeof AgentThreadIdRouteImport
+      parentRoute: typeof AgentRouteRoute
     }
     '/.well-known/openid-configuration': {
       id: '/.well-known/openid-configuration'
@@ -847,6 +903,20 @@ const HomeRouteRouteWithChildren = HomeRouteRoute._addFileChildren(
   HomeRouteRouteChildren,
 )
 
+interface AgentRouteRouteChildren {
+  AgentThreadIdRoute: typeof AgentThreadIdRoute
+  AgentIndexRoute: typeof AgentIndexRoute
+}
+
+const AgentRouteRouteChildren: AgentRouteRouteChildren = {
+  AgentThreadIdRoute: AgentThreadIdRoute,
+  AgentIndexRoute: AgentIndexRoute,
+}
+
+const AgentRouteRouteWithChildren = AgentRouteRoute._addFileChildren(
+  AgentRouteRouteChildren,
+)
+
 interface AuthRouteRouteChildren {
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
@@ -948,6 +1018,7 @@ const DotwellKnownOauthProtectedResourceRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   HomeRouteRoute: HomeRouteRouteWithChildren,
+  AgentRouteRoute: AgentRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   SchemaDotjsonRoute: SchemaDotjsonRoute,

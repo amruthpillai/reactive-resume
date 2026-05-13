@@ -4,12 +4,11 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { DownloadSimpleIcon, FileIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
-import { useAIStore } from "@reactive-resume/ai/store";
 import { JSONResumeImporter } from "@reactive-resume/import/json-resume";
 import { ReactiveResumeJSONImporter } from "@reactive-resume/import/reactive-resume-json";
 import { ReactiveResumeV4JSONImporter } from "@reactive-resume/import/reactive-resume-v4-json";
@@ -91,7 +90,6 @@ function fileToBase64(file: File): Promise<string> {
 
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const navigate = useNavigate();
-	const { enabled: isAIEnabled, provider, model, apiKey, baseURL } = useAIStore();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 
 	const prevTypeRef = useRef<string>("");
@@ -99,6 +97,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { mutateAsync: importResume } = useMutation(orpc.resume.import.mutationOptions());
+	const { data: aiProviders } = useQuery(orpc.aiProviders.list.queryOptions());
+	const hasAIProvider = aiProviders?.some((provider) => provider.enabled && provider.testStatus === "success") ?? false;
 
 	const form = useAppForm({
 		defaultValues: {
@@ -137,23 +137,19 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				}
 
 				if (value.type === "pdf") {
-					if (!isAIEnabled)
-						throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
+					if (!hasAIProvider)
+						throw new Error(t`This feature requires a tested AI provider. Please add one in the settings.`);
 
 					const base64 = await fileToBase64(value.file);
 
 					data = await client.ai.parsePdf({
-						provider,
-						model,
-						apiKey,
-						baseURL,
 						file: { name: value.file.name, data: base64 },
 					});
 				}
 
 				if (value.type === "docx") {
-					if (!isAIEnabled)
-						throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
+					if (!hasAIProvider)
+						throw new Error(t`This feature requires a tested AI provider. Please add one in the settings.`);
 
 					const base64 = await fileToBase64(value.file);
 
@@ -163,10 +159,6 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 							: ("application/vnd.openxmlformats-officedocument.wordprocessingml.document" as const);
 
 					data = await client.ai.parseDocx({
-						provider,
-						model,
-						apiKey,
-						baseURL,
 						mediaType,
 						file: { name: value.file.name, data: base64 },
 					});

@@ -6,7 +6,6 @@ import { Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
-import { useAIStore } from "@reactive-resume/ai/store";
 import { Alert, AlertDescription } from "@reactive-resume/ui/components/alert";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -50,13 +49,11 @@ export function ResumeAnalysisSectionBuilder() {
 	const queryClient = useQueryClient();
 
 	const resume = useResume();
-	const aiEnabled = useAIStore((state) => state.enabled);
-	const aiProvider = useAIStore((state) => state.provider);
-	const aiModel = useAIStore((state) => state.model);
-	const aiApiKey = useAIStore((state) => state.apiKey);
-	const aiBaseURL = useAIStore((state) => state.baseURL);
 
 	const resumeId = resume?.id ?? "";
+	const providersQuery = useQuery(orpc.aiProviders.list.queryOptions());
+	const aiEnabled =
+		providersQuery.data?.some((provider) => provider.enabled && provider.testStatus === "success") ?? false;
 
 	const analysisQuery = useQuery({
 		...orpc.resume.analysis.getById.queryOptions({ input: { id: resumeId } }),
@@ -106,12 +103,7 @@ export function ResumeAnalysisSectionBuilder() {
 		if (!resume) return;
 
 		analyzeResume({
-			provider: aiProvider,
-			model: aiModel,
-			apiKey: aiApiKey,
-			baseURL: aiBaseURL,
 			resumeId: resume.id,
-			resumeData: resume.data,
 		});
 	};
 

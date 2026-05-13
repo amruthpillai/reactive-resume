@@ -1,4 +1,4 @@
-import type { FileUIPart, UIMessage, UIMessageChunk } from "ai";
+import type { UIMessage, UIMessageChunk } from "ai";
 import type { RouterOutput } from "@/libs/orpc/client";
 import { useChat } from "@ai-sdk/react";
 import { t } from "@lingui/core/macro";
@@ -41,6 +41,7 @@ import { ResumePreview } from "@/components/resume/preview";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc, streamClient } from "@/libs/orpc/client";
+import { attachmentIdsFromTransportBody, buildAgentChatSubmission } from "./-helpers/chat-attachments";
 
 type AgentThreadDetail = RouterOutput["agent"]["threads"]["get"];
 type AgentAction = AgentThreadDetail["actions"][number];
@@ -186,15 +187,6 @@ function textFromMessage(message: UIMessage) {
 		.filter((part) => part.type === "text")
 		.map((part) => part.text)
 		.join("\n");
-}
-
-function attachmentToFilePart(attachment: Pick<AgentAttachment, "id" | "filename" | "mediaType">): FileUIPart {
-	return {
-		type: "file",
-		url: `agent-attachment:${attachment.id}`,
-		mediaType: attachment.mediaType,
-		filename: attachment.filename,
-	};
 }
 
 function parseAgentSseStream(stream: ReadableStream<string>) {
@@ -504,10 +496,7 @@ function AgentChat({
 			async sendMessages(options: { messages: UIMessage[]; abortSignal?: AbortSignal; body?: object }) {
 				const message = options.messages.at(-1);
 				if (!message) throw new Error("No message to send.");
-				const attachmentIds =
-					options.body && "attachmentIds" in options.body && Array.isArray(options.body.attachmentIds)
-						? options.body.attachmentIds.filter((id): id is string => typeof id === "string")
-						: undefined;
+				const attachmentIds = attachmentIdsFromTransportBody(options.body);
 
 				return parseAgentSseStream(
 					eventIteratorToUnproxiedDataStream(
@@ -545,10 +534,8 @@ function AgentChat({
 		if ((!text && pendingAttachments.length === 0) || isReadOnly || isStreaming) return;
 
 		clearError();
-		const files = pendingAttachments.map(attachmentToFilePart);
-		sendMessage(text ? { text, ...(files.length > 0 ? { files } : {}) } : { files }, {
-			body: { attachmentIds: pendingAttachments.map((attachment) => attachment.id) },
-		});
+		const submission = buildAgentChatSubmission(text, pendingAttachments);
+		sendMessage(submission.message, submission.options);
 		setInput("");
 		setPendingAttachments([]);
 	};

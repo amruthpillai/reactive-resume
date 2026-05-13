@@ -14,6 +14,7 @@ import {
 	MagnifyingGlassMinusIcon,
 	MagnifyingGlassPlusIcon,
 } from "@phosphor-icons/react";
+import { useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useCallback, useMemo, useState } from "react";
 import { useControls } from "react-zoom-pan-pinch";
@@ -27,7 +28,6 @@ import { cn } from "@reactive-resume/utils/style";
 import { useCurrentResume } from "@/components/resume/builder-resume-draft";
 import { authClient } from "@/libs/auth/client";
 import { createResumePdfBlob } from "@/libs/resume/pdf-document";
-import { useBuilderAssistantStore } from "./assistant-store";
 
 type BuilderDockProps = {
 	pageLayout: BuilderPreviewPageLayout;
@@ -37,13 +37,12 @@ type BuilderDockProps = {
 export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps) {
 	const { data: session } = authClient.useSession();
 	const resume = useCurrentResume();
+	const navigate = useNavigate();
 
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const { zoomIn, zoomOut, centerView } = useControls();
 
 	const [isPrinting, setIsPrinting] = useState(false);
-	const isAssistantOpen = useBuilderAssistantStore((state) => state.isOpen);
-	const toggleAssistant = useBuilderAssistantStore((state) => state.toggleOpen);
 
 	const publicUrl = useMemo(() => {
 		if (!session?.user.username || !resume?.slug) return "";
@@ -114,9 +113,11 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 				/>
 				<DockIcon
 					icon={ChatCircleDotsIcon}
-					title={isAssistantOpen ? t`Close AI assistant` : t`Open AI assistant`}
-					onClick={toggleAssistant}
-					active={isAssistantOpen}
+					title={t`Open AI agent`}
+					onClick={() => {
+						if (!resume) return;
+						void navigate({ to: "/agent", search: { resumeId: resume.id } });
+					}}
 				/>
 				<div className="mx-1 h-8 w-px bg-border" />
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
