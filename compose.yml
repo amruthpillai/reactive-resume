@@ -21,6 +21,23 @@ services:
       timeout: 10s
       retries: 3
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    networks:
+      - data_network
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      start_period: 5s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   seaweedfs:
     image: chrislusf/seaweedfs:latest
     restart: unless-stopped
@@ -71,6 +88,8 @@ services:
       - APP_URL=http://localhost:3000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
       - AUTH_SECRET=change-me-to-a-secure-secret-key-in-production
+      - REDIS_URL=redis://redis:6379
+      - ENCRYPTION_SECRET=change-me-to-a-secure-agent-secret-in-production
       - S3_ACCESS_KEY_ID=seaweedfs
       - S3_SECRET_ACCESS_KEY=seaweedfs
       - S3_ENDPOINT=http://seaweedfs:8333
@@ -80,6 +99,8 @@ services:
       - ./data:/app/data
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
       seaweedfs:
         condition: service_healthy
@@ -94,6 +115,7 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   seaweedfs_data:
 
 networks:

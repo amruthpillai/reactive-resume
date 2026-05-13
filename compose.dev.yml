@@ -7,16 +7,20 @@ services:
       dockerfile: Dockerfile.dev
     init: true
     restart: unless-stopped
+    env_file:
+      - .env.local
     environment:
       PORT: "3000"
       APP_URL: http://localhost:3000
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
       AUTH_SECRET: change-me-to-a-secure-secret-key-in-production
+      ENCRYPTION_SECRET: change-me-to-a-secure-secret-key-in-production
       S3_ACCESS_KEY_ID: seaweedfs
       S3_SECRET_ACCESS_KEY: seaweedfs
       S3_ENDPOINT: http://seaweedfs:8333
       S3_BUCKET: reactive-resume
       S3_FORCE_PATH_STYLE: "true"
+      REDIS_URL: redis://redis:6379
       CHOKIDAR_USEPOLLING: "true"
     ports:
       - "127.0.0.1:3000:3000"
@@ -49,6 +53,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       seaweedfs:
         condition: service_healthy
       seaweedfs_create_bucket:
@@ -74,6 +80,21 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      start_period: 5s
       interval: 30s
       timeout: 10s
       retries: 3
@@ -113,4 +134,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   seaweedfs_data:

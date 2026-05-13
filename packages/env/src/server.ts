@@ -66,6 +66,13 @@ export const env = createEnv({
 		S3_BUCKET: z.string().min(1).optional(),
 		S3_FORCE_PATH_STYLE: z.stringbool().default(false),
 
+		// AI Agent Workspace (optional until the agent feature is used)
+		REDIS_URL: z.url({ protocol: /redis(s)?/ }).optional(),
+		ENCRYPTION_SECRET: z.string().min(1).optional(),
+		AI_PROVIDER_HOST_ALLOWLIST: z.string().optional(),
+		CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
+		CLOUDFLARE_API_TOKEN: z.string().min(1).optional(),
+
 		// Feature Flags
 		FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
 		FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
