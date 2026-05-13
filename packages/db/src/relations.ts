@@ -8,6 +8,11 @@ export const relations = defineRelations(schema, (r) => ({
 		twoFactors: r.many.twoFactor(),
 		passkeys: r.many.passkey(),
 		resumes: r.many.resume(),
+		aiProviders: r.many.aiProvider(),
+		agentThreads: r.many.agentThread(),
+		agentMessages: r.many.agentMessage(),
+		agentAttachments: r.many.agentAttachment(),
+		agentActions: r.many.agentAction(),
 		apiKeys: r.many.apikey(),
 		oauthClients: r.many.oauthClient(),
 		oauthRefreshTokens: r.many.oauthRefreshToken(),
@@ -59,6 +64,18 @@ export const relations = defineRelations(schema, (r) => ({
 			from: r.resume.id,
 			to: r.resumeAnalysis.resumeId,
 		}),
+		sourceAgentThreads: r.many.agentThread({
+			from: r.resume.id,
+			to: r.agentThread.sourceResumeId,
+		}),
+		workingAgentThreads: r.many.agentThread({
+			from: r.resume.id,
+			to: r.agentThread.workingResumeId,
+		}),
+		agentActions: r.many.agentAction({
+			from: r.resume.id,
+			to: r.agentAction.resumeId,
+		}),
 	},
 	resumeStatistics: {
 		resume: r.one.resume({
@@ -69,6 +86,81 @@ export const relations = defineRelations(schema, (r) => ({
 	resumeAnalysis: {
 		resume: r.one.resume({
 			from: r.resumeAnalysis.resumeId,
+			to: r.resume.id,
+		}),
+	},
+	aiProvider: {
+		user: r.one.user({
+			from: r.aiProvider.userId,
+			to: r.user.id,
+		}),
+		threads: r.many.agentThread({
+			from: r.aiProvider.id,
+			to: r.agentThread.aiProviderId,
+		}),
+	},
+	agentThread: {
+		user: r.one.user({
+			from: r.agentThread.userId,
+			to: r.user.id,
+		}),
+		aiProvider: r.one.aiProvider({
+			from: r.agentThread.aiProviderId,
+			to: r.aiProvider.id,
+		}),
+		sourceResume: r.one.resume({
+			from: r.agentThread.sourceResumeId,
+			to: r.resume.id,
+		}),
+		workingResume: r.one.resume({
+			from: r.agentThread.workingResumeId,
+			to: r.resume.id,
+		}),
+		messages: r.many.agentMessage(),
+		attachments: r.many.agentAttachment(),
+		actions: r.many.agentAction(),
+	},
+	agentMessage: {
+		user: r.one.user({
+			from: r.agentMessage.userId,
+			to: r.user.id,
+		}),
+		thread: r.one.agentThread({
+			from: r.agentMessage.threadId,
+			to: r.agentThread.id,
+		}),
+		attachments: r.many.agentAttachment(),
+		actions: r.many.agentAction(),
+	},
+	agentAttachment: {
+		user: r.one.user({
+			from: r.agentAttachment.userId,
+			to: r.user.id,
+		}),
+		thread: r.one.agentThread({
+			from: r.agentAttachment.threadId,
+			to: r.agentThread.id,
+		}),
+		message: r.one.agentMessage({
+			from: r.agentAttachment.messageId,
+			to: r.agentMessage.id,
+		}),
+	},
+	agentAction: {
+		user: r.one.user({
+			from: r.agentAction.userId,
+			to: r.user.id,
+		}),
+		thread: r.one.agentThread({
+			from: r.agentAction.threadId,
+			to: r.agentThread.id,
+		}),
+		message: r.one.agentMessage({
+			from: r.agentAction.messageId,
+			to: r.agentMessage.id,
+		}),
+		resume: r.one.resume({
+			from: r.agentAction.resumeId,
 			to: r.resume.id,
 		}),
 	},
