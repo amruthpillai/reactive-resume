@@ -76,17 +76,6 @@ const providerOptions: AIProviderOption[] = [
 	},
 ];
 
-function isValidOptionalBaseURL(value: string) {
-	const trimmedValue = value.trim();
-	if (!trimmedValue) return true;
-
-	try {
-		return new URL(trimmedValue).protocol === "https:";
-	} catch {
-		return false;
-	}
-}
-
 function AIForm() {
 	const { set, model, apiKey, baseURL, provider, enabled, testStatus } = useAIStore();
 
@@ -94,7 +83,7 @@ function AIForm() {
 		return providerOptions.find((option) => option.value === provider);
 	}, [provider]);
 
-	const canTestConnection = model.trim().length > 0 && apiKey.trim().length > 0 && isValidOptionalBaseURL(baseURL);
+	const canTestConnection = model.trim().length > 0 && apiKey.trim().length > 0;
 
 	const { mutate: testConnection, isPending: isTesting } = useMutation(orpc.ai.testConnection.mutationOptions());
 

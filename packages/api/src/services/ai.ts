@@ -27,6 +27,7 @@ import {
 	resumePatchProposalToolOutputSchema,
 } from "@reactive-resume/ai/tools/patch-proposal";
 import { AI_PROVIDER_DEFAULT_BASE_URLS, aiProviderSchema } from "@reactive-resume/ai/types";
+import { env } from "@reactive-resume/env/server";
 import { resumeAnalysisOutputSchema, resumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
 import { applyResumePatches } from "@reactive-resume/utils/resume/patch";
 import { isPrivateOrLoopbackHost, parseUrl } from "@reactive-resume/utils/url-security.node";
@@ -79,9 +80,12 @@ function resolveBaseUrl(input: GetModelInput): string {
 
 	const parsedBaseURL = parseUrl(baseURL);
 	if (!parsedBaseURL) throw new Error("INVALID_AI_BASE_URL");
-	if (parsedBaseURL.protocol !== "https:") throw new Error("INVALID_AI_BASE_URL");
 	if (parsedBaseURL.username || parsedBaseURL.password) throw new Error("INVALID_AI_BASE_URL");
-	if (isPrivateOrLoopbackHost(parsedBaseURL.hostname)) throw new Error("INVALID_AI_BASE_URL");
+
+	if (!env.FLAG_ALLOW_UNSAFE_AI_BASE_URL) {
+		if (parsedBaseURL.protocol !== "https:") throw new Error("INVALID_AI_BASE_URL");
+		if (isPrivateOrLoopbackHost(parsedBaseURL.hostname)) throw new Error("INVALID_AI_BASE_URL");
+	}
 
 	return parsedBaseURL.toString();
 }
