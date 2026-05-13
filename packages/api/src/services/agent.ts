@@ -482,6 +482,25 @@ export const agentService = {
 		archive: async (input: { id: string; userId: string }) => {
 			assertAgentEnvironment();
 
+			const thread = await getThread({ id: input.id, userId: input.userId });
+			const activeRunId = thread.activeRunId;
+			const activeStreamId = thread.activeStreamId;
+
+			if (activeRunId) {
+				activeRunControllers.get(activeRunId)?.abort("USER_ARCHIVED");
+				activeRunControllers.delete(activeRunId);
+				try {
+					await clearActiveAgentRunIfCurrent({
+						threadId: input.id,
+						userId: input.userId,
+						runId: activeRunId,
+						streamId: activeStreamId,
+					});
+				} catch (error) {
+					console.error("[agent] Failed to clear active run during archive", error);
+				}
+			}
+
 			await db
 				.update(schema.agentThread)
 				.set({ status: "archived", archivedAt: new Date() })
@@ -490,6 +509,8 @@ export const agentService = {
 
 		delete: async (input: { id: string; userId: string }) => {
 			assertAgentEnvironment();
+
+			await getThread({ id: input.id, userId: input.userId });
 
 			await getStorageService().delete(`uploads/${input.userId}/agent/${input.id}`);
 			await db.delete(schema.agentAttachment).where(eq(schema.agentAttachment.threadId, input.id));

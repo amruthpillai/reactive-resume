@@ -8,6 +8,14 @@ const dbMock = {
 	delete: vi.fn(),
 };
 
+const clearActiveAgentRunIfCurrentMock = vi.fn();
+const claimActiveAgentRunMock = vi.fn();
+const storageServiceMock = {
+	delete: vi.fn(),
+	write: vi.fn(),
+	read: vi.fn(),
+};
+
 const resumeServiceMock = {
 	getById: vi.fn(),
 };
@@ -77,15 +85,15 @@ vi.mock("./ai", () => ({ getAgentModel: vi.fn() }));
 vi.mock("./ai-credentials", () => ({ assertAgentEnvironment: vi.fn() }));
 vi.mock("./ai-providers", () => ({ aiProvidersService: aiProvidersServiceMock }));
 vi.mock("./resume", () => ({ resumeService: resumeServiceMock }));
-vi.mock("./storage", () => ({ getStorageService: vi.fn(), inferContentType: vi.fn() }));
+vi.mock("./storage", () => ({ getStorageService: vi.fn(() => storageServiceMock), inferContentType: vi.fn() }));
 vi.mock("./agent-patches", () => ({ createInverseResumePatches: vi.fn() }));
 vi.mock("./agent-resume", () => ({
 	buildAgentDraftResumeName: vi.fn(),
 	buildUniqueAgentDraftSlug: vi.fn(),
 }));
 vi.mock("./agent-run-state", () => ({
-	claimActiveAgentRun: vi.fn(),
-	clearActiveAgentRunIfCurrent: vi.fn(),
+	claimActiveAgentRun: claimActiveAgentRunMock,
+	clearActiveAgentRunIfCurrent: clearActiveAgentRunIfCurrentMock,
 }));
 vi.mock("./agent-streams", () => ({
 	agentStreamLifecycle: { create: vi.fn(), resume: vi.fn() },
@@ -194,5 +202,168 @@ describe("agentService.messages.send", () => {
 
 		// Ensure we never tried to claim a run or persist anything for an archived thread.
 		expect(aiProvidersServiceMock.getRunnableById).not.toHaveBeenCalled();
+	});
+});
+
+describe("agentService.threads.archive", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("skips active-run cleanup when there is no active run", async () => {
+		const idleThread = buildArchivedThread({
+			status: "active",
+			activeRunId: null,
+			activeStreamId: null,
+			archivedAt: null,
+		});
+
+		dbMock.select.mockImplementation(() => {
+			const limit = vi.fn(async () => [idleThread]);
+			const where = vi.fn(() => ({ limit }));
+			const from = vi.fn(() => ({ where }));
+			return { from };
+		});
+
+		const updateWhere = vi.fn(async () => undefined);
+		const updateSet = vi.fn(() => ({ where: updateWhere }));
+		dbMock.update.mockReturnValue({ set: updateSet });
+
+		const { agentService } = await import("./agent");
+
+		await agentService.threads.archive({ id: "thread-1", userId: "user-1" });
+
+		expect(clearActiveAgentRunIfCurrentMock).not.toHaveBeenCalled();
+		expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ status: "archived" }));
+		expect(updateWhere).toHaveBeenCalled();
+	});
+
+	it("clears active-run state when an active run is present, then flips status", async () => {
+		const activeThread = buildArchivedThread({
+			status: "active",
+			activeRunId: "run-1",
+			activeStreamId: "stream-1",
+			archivedAt: null,
+		});
+
+		dbMock.select.mockImplementation(() => {
+			const limit = vi.fn(async () => [activeThread]);
+			const where = vi.fn(() => ({ limit }));
+			const from = vi.fn(() => ({ where }));
+			return { from };
+		});
+
+		const updateWhere = vi.fn(async () => undefined);
+		const updateSet = vi.fn(() => ({ where: updateWhere }));
+		dbMock.update.mockReturnValue({ set: updateSet });
+
+		clearActiveAgentRunIfCurrentMock.mockResolvedValue(undefined);
+
+		const { agentService } = await import("./agent");
+
+		await agentService.threads.archive({ id: "thread-1", userId: "user-1" });
+
+		expect(clearActiveAgentRunIfCurrentMock).toHaveBeenCalledWith({
+			threadId: "thread-1",
+			userId: "user-1",
+			runId: "run-1",
+			streamId: "stream-1",
+		});
+		expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ status: "archived" }));
+		expect(updateWhere).toHaveBeenCalled();
+	});
+
+	it("still flips status when clearActiveAgentRunIfCurrent throws", async () => {
+		const activeThread = buildArchivedThread({
+			status: "active",
+			activeRunId: "run-2",
+			activeStreamId: "stream-2",
+			archivedAt: null,
+		});
+
+		dbMock.select.mockImplementation(() => {
+			const limit = vi.fn(async () => [activeThread]);
+			const where = vi.fn(() => ({ limit }));
+			const from = vi.fn(() => ({ where }));
+			return { from };
+		});
+
+		const updateWhere = vi.fn(async () => undefined);
+		const updateSet = vi.fn(() => ({ where: updateWhere }));
+		dbMock.update.mockReturnValue({ set: updateSet });
+
+		clearActiveAgentRunIfCurrentMock.mockRejectedValue(new Error("boom"));
+		const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+		const { agentService } = await import("./agent");
+
+		await agentService.threads.archive({ id: "thread-1", userId: "user-1" });
+
+		expect(clearActiveAgentRunIfCurrentMock).toHaveBeenCalled();
+		expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ status: "archived" }));
+		expect(consoleSpy).toHaveBeenCalled();
+
+		consoleSpy.mockRestore();
+	});
+});
+
+describe("agentService.threads.delete", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("throws NOT_FOUND when the thread does not belong to the user and skips destructive work", async () => {
+		dbMock.select.mockImplementation(() => {
+			const limit = vi.fn(async () => []);
+			const where = vi.fn(() => ({ limit }));
+			const from = vi.fn(() => ({ where }));
+			return { from };
+		});
+
+		const { agentService } = await import("./agent");
+
+		const deleting = agentService.threads.delete({ id: "thread-x", userId: "user-y" });
+
+		await expect(deleting).rejects.toBeInstanceOf(ORPCError);
+		await expect(deleting).rejects.toMatchObject({ code: "NOT_FOUND" });
+
+		expect(storageServiceMock.delete).not.toHaveBeenCalled();
+		expect(dbMock.delete).not.toHaveBeenCalled();
+		expect(dbMock.update).not.toHaveBeenCalled();
+	});
+
+	it("proceeds with cleanup when the thread is owned by the user", async () => {
+		const ownedThread = buildArchivedThread({
+			id: "thread-own",
+			userId: "user-own",
+			status: "active",
+			activeRunId: null,
+			activeStreamId: null,
+			archivedAt: null,
+		});
+
+		dbMock.select.mockImplementation(() => {
+			const limit = vi.fn(async () => [ownedThread]);
+			const where = vi.fn(() => ({ limit }));
+			const from = vi.fn(() => ({ where }));
+			return { from };
+		});
+
+		const deleteWhere = vi.fn(async () => undefined);
+		dbMock.delete.mockReturnValue({ where: deleteWhere });
+
+		const updateWhere = vi.fn(async () => undefined);
+		const updateSet = vi.fn(() => ({ where: updateWhere }));
+		dbMock.update.mockReturnValue({ set: updateSet });
+
+		storageServiceMock.delete.mockResolvedValue(undefined);
+
+		const { agentService } = await import("./agent");
+
+		await agentService.threads.delete({ id: "thread-own", userId: "user-own" });
+
+		expect(storageServiceMock.delete).toHaveBeenCalledWith("uploads/user-own/agent/thread-own");
+		expect(dbMock.delete).toHaveBeenCalled();
+		expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ status: "deleted" }));
 	});
 });
