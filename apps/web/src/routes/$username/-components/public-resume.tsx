@@ -1,16 +1,17 @@
 import { t } from "@lingui/core/macro";
 import { CircleNotchIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
+import { PDFViewer } from "@react-pdf/renderer";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
+import { useIsClient } from "usehooks-ts";
 import { BrandIcon } from "@reactive-resume/ui/components/brand-icon";
 import { Button } from "@reactive-resume/ui/components/button";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { ResumePreview } from "@/components/resume/preview";
 import { orpc } from "@/libs/orpc/client";
-import { createResumePdfBlob } from "@/libs/resume/pdf-document";
+import { createResumePdfBlob, useLocalizedResumeDocument } from "@/libs/resume/pdf-document";
 
 const publicResumeRoute = getRouteApi("/$username/$slug");
 
@@ -18,6 +19,8 @@ export function PublicResumeRoute() {
 	const { username, slug } = publicResumeRoute.useParams();
 
 	const { data: resume } = useQuery(orpc.resume.getBySlug.queryOptions({ input: { username, slug } }));
+	const isClient = useIsClient();
+	const resumeDocument = useLocalizedResumeDocument(resume?.data);
 	const [isPrinting, setIsPrinting] = useState(false);
 
 	const onDownloadPDF = useCallback(async () => {
@@ -43,14 +46,20 @@ export function PublicResumeRoute() {
 
 	return (
 		<>
-			<div className="mx-auto my-12 flex flex-col items-center gap-12 print:m-0 print:block print:max-w-full print:px-0">
-				<ResumePreview
-					data={resume.data}
-					pageGap="1rem"
-					pageScale={1.25}
-					pageLayout="vertical"
-					pageClassName="print:w-full! w-full max-w-full"
-				/>
+			<div className="mx-auto flex h-svh max-h-svh w-full flex-col items-center gap-6 overflow-hidden px-4 py-6 print:m-0 print:block print:max-h-svh print:max-w-full print:p-0">
+				<div className="min-h-0 w-full max-w-5xl flex-1 overflow-hidden bg-white print:h-svh print:max-w-full">
+					{isClient && resumeDocument ? (
+						<PDFViewer
+							showToolbar={false}
+							className="block size-full border-0 bg-transparent"
+							style={{ border: "none" }}
+						>
+							{resumeDocument}
+						</PDFViewer>
+					) : (
+						<LoadingScreen />
+					)}
+				</div>
 
 				<footer className="flex justify-center print:hidden">
 					<BrandIcon variant="icon" className="size-8 opacity-60" />
