@@ -343,9 +343,10 @@ describe("agentService.messages.send", () => {
 		vi.mocked(convertToModelMessages).mockResolvedValue([
 			{ role: "user", content: [{ type: "text", text: "Use this file" }] },
 		]);
-		vi.mocked(ToolLoopAgent).mockImplementation((() => ({
-			stream: vi.fn(async () => ({ toUIMessageStream: vi.fn(() => new ReadableStream()) })),
-		})) as never);
+		class MockToolLoopAgent {
+			stream = vi.fn(async () => ({ toUIMessageStream: vi.fn(() => new ReadableStream()) }));
+		}
+		vi.mocked(ToolLoopAgent).mockImplementation(MockToolLoopAgent as never);
 		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
 		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
 
@@ -454,7 +455,10 @@ describe("agentService.messages.send", () => {
 		vi.mocked(convertToModelMessages).mockResolvedValue([
 			{ role: "user", content: [{ type: "text", text: "Use this file" }] },
 		]);
-		vi.mocked(ToolLoopAgent).mockImplementation((() => ({ stream: streamMock })) as never);
+		class MockToolLoopAgent {
+			stream = streamMock;
+		}
+		vi.mocked(ToolLoopAgent).mockImplementation(MockToolLoopAgent as never);
 		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
 		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
 
