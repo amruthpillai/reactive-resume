@@ -280,20 +280,6 @@ export function usePatchResume() {
 	return useResumeStore((state) => state.patchResume);
 }
 
-export function useReplaceResumeFromServer() {
-	const queryClient = useQueryClient();
-	const replaceResumeFromServer = useResumeStore((state) => state.replaceResumeFromServer);
-
-	return useCallback(
-		(resume: Resume) => {
-			bindRuntimeQueryClient(resume.id, queryClient);
-			queryClient.setQueryData(getResumeQueryKey(resume.id), resume);
-			replaceResumeFromServer(resume);
-		},
-		[queryClient, replaceResumeFromServer],
-	);
-}
-
 function useBuilderResumeSelector<T>(selector: (resume: Resume) => T): T | undefined {
 	const params = useParams({ strict: false }) as { resumeId?: string };
 	const resumeId = params.resumeId;
