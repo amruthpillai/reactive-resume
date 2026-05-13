@@ -8,6 +8,57 @@ import {
 } from "./url-security.node";
 
 describe("isPrivateOrLoopbackHost", () => {
+	it.each([
+		"0.0.0.0",
+		"10.0.0.1",
+		"100.64.0.1",
+		"100.127.255.255",
+		"127.0.0.1",
+		"169.254.1.1",
+		"172.16.0.1",
+		"172.31.255.255",
+		"192.0.0.1",
+		"192.0.2.1",
+		"192.88.99.1",
+		"192.168.0.1",
+		"198.18.0.1",
+		"198.19.255.255",
+		"198.51.100.1",
+		"203.0.113.1",
+		"224.0.0.1",
+		"240.0.0.1",
+		"255.255.255.255",
+	])("matches non-public/special-use IPv4 address %s", (address) => {
+		expect(isPrivateOrLoopbackHost(address)).toBe(true);
+	});
+
+	it.each([
+		"::",
+		"::1",
+		"::ffff:8.8.8.8",
+		"::ffff:0808:0808",
+		"64:ff9b::1",
+		"64:ff9b:1::1",
+		"100::1",
+		"100:0:0:1::1",
+		"2001::1",
+		"2001:2::1",
+		"2001:10::1",
+		"2001:db8::1",
+		"2002::1",
+		"3fff::1",
+		"5f00::1",
+		"fc00::1",
+		"fd12::1",
+		"fe80::1",
+		"fe81::1",
+		"febf::1",
+		"ff00::1",
+		"ff02::1",
+	])("matches non-public/special-use IPv6 address %s", (address) => {
+		expect(isPrivateOrLoopbackHost(address)).toBe(true);
+	});
+
 	describe("loopback hostnames", () => {
 		it("matches localhost", () => {
 			expect(isPrivateOrLoopbackHost("localhost")).toBe(true);
@@ -63,9 +114,43 @@ describe("isPrivateOrLoopbackHost", () => {
 			expect(isPrivateOrLoopbackHost("0.0.0.0")).toBe(true);
 		});
 
+		it("matches 192.0.0.0/24", () => {
+			expect(isPrivateOrLoopbackHost("192.0.0.1")).toBe(true);
+		});
+
+		it("matches documentation IPv4 ranges", () => {
+			expect(isPrivateOrLoopbackHost("192.0.2.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("198.51.100.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("203.0.113.1")).toBe(true);
+		});
+
+		it("matches deprecated 6to4 relay anycast", () => {
+			expect(isPrivateOrLoopbackHost("192.88.99.1")).toBe(true);
+		});
+
+		it("matches 100.64.0.0/10 (CGNAT)", () => {
+			expect(isPrivateOrLoopbackHost("100.64.0.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("100.127.255.255")).toBe(true);
+		});
+
+		it("matches 198.18.0.0/15 (benchmarking)", () => {
+			expect(isPrivateOrLoopbackHost("198.18.0.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("198.19.255.255")).toBe(true);
+		});
+
+		it("matches multicast, reserved, and broadcast IPv4 ranges", () => {
+			expect(isPrivateOrLoopbackHost("224.0.0.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("240.0.0.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("255.255.255.255")).toBe(true);
+		});
+
 		it("does NOT match public IPs", () => {
 			expect(isPrivateOrLoopbackHost("8.8.8.8")).toBe(false);
 			expect(isPrivateOrLoopbackHost("1.1.1.1")).toBe(false);
+			expect(isPrivateOrLoopbackHost("93.184.216.34")).toBe(false);
+			expect(isPrivateOrLoopbackHost("192.31.196.1")).toBe(false);
+			expect(isPrivateOrLoopbackHost("192.52.193.1")).toBe(false);
+			expect(isPrivateOrLoopbackHost("192.175.48.1")).toBe(false);
 		});
 	});
 
@@ -77,10 +162,58 @@ describe("isPrivateOrLoopbackHost", () => {
 
 		it("matches link-local fe80::/10", () => {
 			expect(isPrivateOrLoopbackHost("fe80::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("fe81::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("febf::1")).toBe(true);
+		});
+
+		it("matches unspecified and multicast IPv6 ranges", () => {
+			expect(isPrivateOrLoopbackHost("::")).toBe(true);
+			expect(isPrivateOrLoopbackHost("ff00::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("ff02::1")).toBe(true);
+		});
+
+		it("matches NAT64 discard-only, benchmarking, and 6to4 IPv6 ranges", () => {
+			expect(isPrivateOrLoopbackHost("64:ff9b::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("64:ff9b:1::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("100::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("100:0:0:1::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("2001::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("2001:2::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("2001:10::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("2002::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("3fff::1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("5f00::1")).toBe(true);
+		});
+
+		it("matches documentation IPv6 2001:db8::/32", () => {
+			expect(isPrivateOrLoopbackHost("2001:db8::1")).toBe(true);
+		});
+
+		it("does NOT match IPv6 addresses outside fe80::/10", () => {
+			expect(isPrivateOrLoopbackHost("fec0::1")).toBe(false);
 		});
 
 		it("does NOT match global IPv6", () => {
-			expect(isPrivateOrLoopbackHost("2001:db8::1")).toBe(false);
+			expect(isPrivateOrLoopbackHost("2606:4700:4700::1111")).toBe(false);
+		});
+
+		it("matches IPv4-mapped IPv6 private and loopback addresses", () => {
+			expect(isPrivateOrLoopbackHost("::ffff:10.0.0.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("::ffff:127.0.0.1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("::ffff:169.254.169.254")).toBe(true);
+			expect(isPrivateOrLoopbackHost("[::ffff:192.168.1.1]")).toBe(true);
+			expect(isPrivateOrLoopbackHost("::ffff:7f00:1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("::ffff:0a00:1")).toBe(true);
+			expect(isPrivateOrLoopbackHost("[::ffff:7f00:1]")).toBe(true);
+		});
+
+		it("matches IPv4-mapped IPv6 public addresses because the mapped range is special-purpose", () => {
+			expect(isPrivateOrLoopbackHost("::ffff:8.8.8.8")).toBe(true);
+			expect(isPrivateOrLoopbackHost("::ffff:0808:0808")).toBe(true);
+		});
+
+		it("matches the broad 2001::/23 IETF protocol assignments range", () => {
+			expect(isPrivateOrLoopbackHost("2001:100::1")).toBe(true);
 		});
 	});
 

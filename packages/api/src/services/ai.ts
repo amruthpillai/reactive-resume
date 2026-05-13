@@ -26,10 +26,11 @@ import {
 	resumePatchProposalToolInputSchema,
 	resumePatchProposalToolOutputSchema,
 } from "@reactive-resume/ai/tools/patch-proposal";
-import { AI_PROVIDER_DEFAULT_BASE_URLS, aiProviderSchema } from "@reactive-resume/ai/types";
+import { aiProviderSchema } from "@reactive-resume/ai/types";
 import { resumeAnalysisOutputSchema, resumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
 import { applyResumePatches } from "@reactive-resume/utils/resume/patch";
-import { isPrivateOrLoopbackHost, parseUrl } from "@reactive-resume/utils/url-security.node";
+import { supportsProviderNativeWebSearch } from "./ai-capabilities";
+import { resolveAiBaseUrl } from "./ai-url-policy";
 
 const aiExtractionTemplate = buildAiExtractionTemplate();
 
@@ -72,23 +73,9 @@ type GetModelInput = {
 const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
 
-function resolveBaseUrl(input: GetModelInput): string {
-	const baseURL = input.baseURL?.trim() || AI_PROVIDER_DEFAULT_BASE_URLS[input.provider];
-
-	if (!baseURL) throw new Error("INVALID_AI_BASE_URL");
-
-	const parsedBaseURL = parseUrl(baseURL);
-	if (!parsedBaseURL) throw new Error("INVALID_AI_BASE_URL");
-	if (parsedBaseURL.protocol !== "https:") throw new Error("INVALID_AI_BASE_URL");
-	if (parsedBaseURL.username || parsedBaseURL.password) throw new Error("INVALID_AI_BASE_URL");
-	if (isPrivateOrLoopbackHost(parsedBaseURL.hostname)) throw new Error("INVALID_AI_BASE_URL");
-
-	return parsedBaseURL.toString();
-}
-
-function getModel(input: GetModelInput) {
+export function getModel(input: GetModelInput) {
 	const { provider, model, apiKey } = input;
-	const baseURL = resolveBaseUrl(input);
+	const baseURL = resolveAiBaseUrl(input);
 
 	return match(provider)
 		.with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model))
@@ -96,6 +83,9 @@ function getModel(input: GetModelInput) {
 		.with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
 		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
 		.with("openrouter", () => createOpenAICompatible({ name: "openrouter", apiKey, baseURL }).languageModel(model))
+		.with("openai-compatible", () =>
+			createOpenAICompatible({ name: "openai-compatible", apiKey, baseURL }).languageModel(model),
+		)
 		.with("ollama", () => {
 			const ollama = createOllama({
 				name: "ollama",
@@ -106,6 +96,12 @@ function getModel(input: GetModelInput) {
 			return ollama.languageModel(model);
 		})
 		.exhaustive();
+}
+
+export function getAgentModel(input: GetModelInput) {
+	if (!supportsProviderNativeWebSearch(input)) return getModel(input);
+
+	return createOpenAI({ apiKey: input.apiKey, baseURL: resolveAiBaseUrl(input) }).responses(input.model);
 }
 
 export const aiCredentialsSchema = z.object({
@@ -122,7 +118,7 @@ export const fileInputSchema = z.object({
 
 type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 
-async function testConnection(input: TestConnectionInput): Promise<boolean> {
+export async function testConnection(input: TestConnectionInput): Promise<boolean> {
 	const RESPONSE_OK = "1";
 
 	const result = await generateText({

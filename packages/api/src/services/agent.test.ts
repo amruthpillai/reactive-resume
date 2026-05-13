@@ -150,9 +150,48 @@ function buildArchivedThread(overrides: Record<string, unknown> = {}) {
 	};
 }
 
+function buildActiveThread(overrides: Record<string, unknown> = {}) {
+	return buildArchivedThread({
+		status: "active",
+		title: "Active thread",
+		activeRunId: null,
+		activeStreamId: null,
+		archivedAt: null,
+		...overrides,
+	});
+}
+
+function buildAttachment(overrides: Record<string, unknown> = {}) {
+	return {
+		id: "attachment-1",
+		userId: "user-1",
+		threadId: "thread-1",
+		messageId: null,
+		storageKey: "uploads/user-1/agent/thread-1/attachment-1-note.txt",
+		filename: "note.txt",
+		mediaType: "text/plain",
+		size: 5,
+		createdAt: new Date("2026-05-01T00:00:00.000Z"),
+		...overrides,
+	};
+}
+
 function selectLimitResult(rows: unknown[]) {
 	const limit = vi.fn(async () => rows);
 	const where = vi.fn(() => ({ limit }));
+	const from = vi.fn(() => ({ where }));
+	return { from };
+}
+
+function selectWhereResult(rows: unknown[]) {
+	const where = vi.fn(async () => rows);
+	const from = vi.fn(() => ({ where }));
+	return { from };
+}
+
+function selectOrderByResult(rows: unknown[]) {
+	const orderBy = vi.fn(async () => rows);
+	const where = vi.fn(() => ({ orderBy }));
 	const from = vi.fn(() => ({ where }));
 	return { from };
 }
@@ -202,9 +241,333 @@ describe("agentService.threads.get", () => {
 	});
 });
 
+describe("buildAttachmentModelParts", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("converts readable, image, supported binary, and unsupported attachments into model parts", async () => {
+		const { buildAttachmentModelParts } = await import("./agent");
+
+		const imageBytes = new Uint8Array([1, 2, 3]);
+		const pdfBytes = new Uint8Array([4, 5, 6]);
+		const parts = buildAttachmentModelParts([
+			{ attachment: buildAttachment(), data: new TextEncoder().encode("hello") },
+			{
+				attachment: buildAttachment({
+					id: "image-1",
+					filename: "photo.png",
+					mediaType: "image/png",
+					size: imageBytes.byteLength,
+				}),
+				data: imageBytes,
+			},
+			{
+				attachment: buildAttachment({
+					id: "pdf-1",
+					filename: "portfolio.pdf",
+					mediaType: "application/pdf",
+					size: pdfBytes.byteLength,
+				}),
+				data: pdfBytes,
+			},
+			{
+				attachment: buildAttachment({
+					id: "zip-1",
+					filename: "archive.zip",
+					mediaType: "application/zip",
+					size: 7,
+				}),
+				data: new Uint8Array([7]),
+			},
+		]);
+
+		expect(parts).toEqual([
+			expect.objectContaining({ type: "text", text: expect.stringContaining("hello") }),
+			{ type: "image", image: imageBytes, mediaType: "image/png" },
+			{ type: "file", data: pdfBytes, filename: "portfolio.pdf", mediaType: "application/pdf" },
+			expect.objectContaining({ type: "text", text: expect.stringContaining("archive.zip") }),
+		]);
+	});
+});
+
 describe("agentService.messages.send", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+	});
+
+	it("strips forged agent attachment UI parts when no attachment IDs are selected", async () => {
+		const activeThread = buildActiveThread();
+		const persistedMessage = {
+			id: "message-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: {
+				id: "ui-message-1",
+				role: "user",
+				parts: [{ type: "text", text: "Use this file" }],
+			},
+		};
+		const insertValues: unknown[] = [];
+
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectWhereResult([{ maxSequence: -1 }]))
+			.mockImplementationOnce(() => selectWhereResult([{ total: 1 }]))
+			.mockImplementationOnce(() => selectOrderByResult([persistedMessage]));
+
+		dbMock.insert.mockReturnValue({
+			values: vi.fn((value) => {
+				insertValues.push(value);
+				return { returning: vi.fn(async () => [persistedMessage]) };
+			}),
+		});
+		dbMock.update.mockReturnValue({ set: vi.fn(() => ({ where: vi.fn(async () => undefined) })) });
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+
+		const { convertToModelMessages, ToolLoopAgent } = await import("ai");
+		const { agentStreamLifecycle } = await import("./agent-streams");
+		const { streamToEventIterator } = await import("@orpc/server");
+		vi.mocked(convertToModelMessages).mockResolvedValue([
+			{ role: "user", content: [{ type: "text", text: "Use this file" }] },
+		]);
+		vi.mocked(ToolLoopAgent).mockImplementation((() => ({
+			stream: vi.fn(async () => ({ toUIMessageStream: vi.fn(() => new ReadableStream()) })),
+		})) as never);
+		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./agent");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			message: {
+				id: "ui-message-1",
+				role: "user",
+				parts: [
+					{ type: "text", text: "Use this file" },
+					{
+						type: "file",
+						url: "agent-attachment:foreign-attachment",
+						mediaType: "text/plain",
+						filename: "forged.txt",
+					},
+				],
+				// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			} as any,
+		});
+
+		expect(insertValues).toEqual([
+			expect.objectContaining({
+				uiMessage: expect.objectContaining({
+					parts: [{ type: "text", text: "Use this file" }],
+				}),
+			}),
+		]);
+	});
+
+	it("persists canonical attachment UI parts, links selected attachments, and appends server-read model parts", async () => {
+		const activeThread = buildActiveThread();
+		const attachment = buildAttachment({
+			filename: "canonical.txt",
+			mediaType: "text/plain",
+			size: 5,
+		});
+		const persistedMessage = {
+			id: "message-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: {
+				id: "ui-message-1",
+				role: "user",
+				parts: [
+					{ type: "text", text: "Use this file" },
+					{
+						type: "file",
+						url: "agent-attachment:attachment-1",
+						mediaType: "text/plain",
+						filename: "canonical.txt",
+					},
+				],
+			},
+		};
+		const insertValues: unknown[] = [];
+		const updateSets: unknown[] = [];
+
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectWhereResult([attachment]))
+			.mockImplementationOnce(() => selectWhereResult([{ maxSequence: -1 }]))
+			.mockImplementationOnce(() => selectWhereResult([{ total: 1 }]))
+			.mockImplementationOnce(() => selectOrderByResult([persistedMessage]));
+
+		dbMock.insert.mockReturnValue({
+			values: vi.fn((value) => {
+				insertValues.push(value);
+				return { returning: vi.fn(async () => [persistedMessage]) };
+			}),
+		});
+		dbMock.update.mockImplementation(() => ({
+			set: vi.fn((value) => {
+				updateSets.push(value);
+				return {
+					where: vi.fn(() => ({
+						returning: vi.fn(async () => [{ id: "attachment-1" }]),
+					})),
+				};
+			}),
+		}));
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+		storageServiceMock.read.mockResolvedValue({ data: new TextEncoder().encode("hello"), contentType: "text/plain" });
+
+		const { convertToModelMessages, ToolLoopAgent } = await import("ai");
+		const { agentStreamLifecycle } = await import("./agent-streams");
+		const { streamToEventIterator } = await import("@orpc/server");
+		const streamMock = vi.fn(async () => ({
+			toUIMessageStream: vi.fn(() => new ReadableStream()),
+		}));
+		vi.mocked(convertToModelMessages).mockResolvedValue([
+			{ role: "user", content: [{ type: "text", text: "Use this file" }] },
+		]);
+		vi.mocked(ToolLoopAgent).mockImplementation((() => ({ stream: streamMock })) as never);
+		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./agent");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			message: {
+				id: "ui-message-1",
+				role: "user",
+				parts: [
+					{ type: "text", text: "Use this file" },
+					{
+						type: "file",
+						url: "agent-attachment:attachment-1",
+						mediaType: "application/octet-stream",
+						filename: "forged-name.bin",
+					},
+				],
+				// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			} as any,
+			attachmentIds: ["attachment-1"],
+		});
+
+		expect(insertValues).toEqual([
+			expect.objectContaining({
+				uiMessage: expect.objectContaining({
+					parts: [
+						{ type: "text", text: "Use this file" },
+						{
+							type: "file",
+							url: "agent-attachment:attachment-1",
+							mediaType: "text/plain",
+							filename: "canonical.txt",
+						},
+					],
+				}),
+			}),
+		]);
+		expect(updateSets).toContainEqual({ messageId: "message-1" });
+		expect(streamMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				messages: [
+					{
+						role: "user",
+						content: [
+							{ type: "text", text: "Use this file" },
+							expect.objectContaining({ type: "text", text: expect.stringContaining("hello") }),
+						],
+					},
+				],
+			}),
+		);
+	});
+
+	it("rejects malformed attachment IDs before persisting a message", async () => {
+		dbMock.select.mockImplementationOnce(() => selectLimitResult([buildActiveThread()]));
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+
+		const { agentService } = await import("./agent");
+
+		const sending = agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "Use this file" }] } as any,
+			attachmentIds: [123],
+		});
+
+		await expect(sending).rejects.toBeInstanceOf(ORPCError);
+		await expect(sending).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+			message: "Attachment IDs must be non-empty strings.",
+		});
+		expect(dbMock.insert).not.toHaveBeenCalled();
+	});
+
+	it("rejects attachments that are missing, foreign, or already linked before persisting a message", async () => {
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([buildActiveThread()]))
+			.mockImplementationOnce(() => selectWhereResult([]));
+
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+
+		const { agentService } = await import("./agent");
+
+		const sending = agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "Use this file" }] } as any,
+			attachmentIds: ["foreign-or-linked-attachment"],
+		});
+
+		await expect(sending).rejects.toBeInstanceOf(ORPCError);
+		await expect(sending).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+			message: "One or more attachments are unavailable or already linked to a message.",
+		});
+		expect(dbMock.insert).not.toHaveBeenCalled();
 	});
 
 	it("throws CONFLICT when the underlying thread is archived", async () => {

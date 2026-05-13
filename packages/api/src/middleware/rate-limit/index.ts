@@ -87,9 +87,9 @@ export const pdfExportRateLimit = createRatelimitMiddleware<ContextWithHeaders, 
 	key: ({ context }, input) => `pdf-export:${getUserKey(context)}:${input.id}`,
 });
 
-export const aiRequestRateLimit = createRatelimitMiddleware<ContextWithHeaders, { provider: string }>({
+export const aiRequestRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
 	limiter: productionLimiter(aiLimiter),
-	key: ({ context }, input) => `ai-request:${getUserKey(context)}:${input.provider}`,
+	key: ({ context }, input) => `ai-request:${getUserKey(context)}:${getInputKeyPart(input)}`,
 });
 
 export const jobsSearchRateLimit = createRatelimitMiddleware<ContextWithHeaders, { params: { query: string } }>({

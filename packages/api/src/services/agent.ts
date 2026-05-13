@@ -1,11 +1,11 @@
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { JsonPatchOperation } from "@reactive-resume/utils/resume/patch";
-import type { UIMessage } from "ai";
+import type { FilePart, ImagePart, ModelMessage, TextPart, UIMessage } from "ai";
 import type { getModel } from "./ai";
 import { ORPCError } from "@orpc/client";
 import { streamToEventIterator } from "@orpc/server";
 import { convertToModelMessages, stepCountIs, ToolLoopAgent } from "ai";
-import { and, asc, count, desc, eq, isNull, max, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, max, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
@@ -27,6 +27,16 @@ const MAX_ATTACHMENTS_PER_MESSAGE = 10;
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 const MAX_THREAD_ATTACHMENT_BYTES = 100 * 1024 * 1024;
 const READABLE_ATTACHMENT_TYPES = new Set(["text/plain", "text/markdown", "application/json"]);
+const DIRECT_MODEL_FILE_ATTACHMENT_TYPES = new Set([
+	"application/pdf",
+	"audio/mpeg",
+	"audio/mp3",
+	"audio/wav",
+	"audio/wave",
+	"audio/x-wav",
+]);
+const AGENT_ATTACHMENT_URL_PREFIX = "agent-attachment:";
+const MAX_ATTACHMENT_TEXT_CHARS = 40_000;
 
 const activeRunControllers = new Map<string, AbortController>();
 const canceledRunsWithPersistedPartial = new Set<string>();
@@ -47,6 +57,7 @@ type SendMessageInput = {
 	userId: string;
 	threadId: string;
 	message: UIMessage;
+	attachmentIds?: unknown;
 };
 
 type CreateAttachmentInput = {
@@ -54,6 +65,11 @@ type CreateAttachmentInput = {
 	threadId: string;
 	filename: string;
 	mediaType: string;
+	data: Uint8Array;
+};
+
+type AttachmentModelInput = {
+	attachment: AgentAttachmentRecord;
 	data: Uint8Array;
 };
 
@@ -115,6 +131,211 @@ function toAttachment(row: AgentAttachmentRecord) {
 		size: row.size,
 		createdAt: row.createdAt,
 	};
+}
+
+function attachmentUiPart(attachment: AgentAttachmentRecord): UIMessage["parts"][number] {
+	return {
+		type: "file",
+		url: `${AGENT_ATTACHMENT_URL_PREFIX}${attachment.id}`,
+		mediaType: attachment.mediaType,
+		filename: attachment.filename,
+	};
+}
+
+function withAttachmentUiParts(message: UIMessage, attachments: AgentAttachmentRecord[]): UIMessage {
+	return {
+		...message,
+		parts: [...withoutAgentAttachmentUiParts(message).parts, ...attachments.map(attachmentUiPart)],
+	};
+}
+
+function withoutAgentAttachmentUiParts(message: UIMessage): UIMessage {
+	return {
+		...message,
+		parts: message.parts.filter((part) => !(part.type === "file" && part.url.startsWith(AGENT_ATTACHMENT_URL_PREFIX))),
+	};
+}
+
+function attachmentLabel(attachment: AgentAttachmentRecord) {
+	return `${attachment.filename} (${attachment.mediaType}, ${attachment.size} bytes, attachmentId: ${attachment.id})`;
+}
+
+export function buildAttachmentModelParts(input: AttachmentModelInput[]): Array<TextPart | ImagePart | FilePart> {
+	return input.map(({ attachment, data }) => {
+		if (READABLE_ATTACHMENT_TYPES.has(attachment.mediaType)) {
+			const text = new TextDecoder().decode(data).slice(0, MAX_ATTACHMENT_TEXT_CHARS);
+			return {
+				type: "text",
+				text: `Attachment ${attachmentLabel(attachment)}:\n\n${text}`,
+			};
+		}
+
+		if (attachment.mediaType.startsWith("image/")) {
+			return {
+				type: "image",
+				image: data,
+				mediaType: attachment.mediaType,
+			};
+		}
+
+		if (DIRECT_MODEL_FILE_ATTACHMENT_TYPES.has(attachment.mediaType)) {
+			return {
+				type: "file",
+				data,
+				filename: attachment.filename,
+				mediaType: attachment.mediaType,
+			};
+		}
+
+		return {
+			type: "text",
+			text: `Attachment ${attachmentLabel(attachment)} is not included directly because this media type is not supported for model file input. Use the read_attachment tool if text extraction is available.`,
+		};
+	});
+}
+
+function appendUserModelParts(message: ModelMessage, parts: Array<TextPart | ImagePart | FilePart>): ModelMessage {
+	if (parts.length === 0 || message.role !== "user") return message;
+
+	const content =
+		typeof message.content === "string" ? [{ type: "text" as const, text: message.content }] : message.content;
+	return {
+		...message,
+		content: [...content, ...parts],
+	};
+}
+
+function uniqueAttachmentIds(ids: unknown) {
+	if (ids === undefined) return [];
+	if (!Array.isArray(ids)) {
+		throw new ORPCError("BAD_REQUEST", { message: "Attachment IDs must be an array." });
+	}
+
+	if (ids.length > MAX_ATTACHMENTS_PER_MESSAGE) {
+		throw new ORPCError("BAD_REQUEST", { message: "Too many attachments for one message." });
+	}
+
+	const unique = new Set<string>();
+	for (const id of ids) {
+		if (typeof id !== "string" || !id.trim()) {
+			throw new ORPCError("BAD_REQUEST", { message: "Attachment IDs must be non-empty strings." });
+		}
+		unique.add(id.trim());
+	}
+
+	if (unique.size !== ids.length) {
+		throw new ORPCError("BAD_REQUEST", { message: "Attachment IDs must be unique." });
+	}
+
+	if (unique.size > MAX_ATTACHMENTS_PER_MESSAGE) {
+		throw new ORPCError("BAD_REQUEST", { message: "Too many attachments for one message." });
+	}
+
+	return Array.from(unique);
+}
+
+function normalizeAttachmentIds(ids: unknown) {
+	const unique = uniqueAttachmentIds(ids);
+	return unique;
+}
+
+async function getUnlinkedMessageAttachments(input: { ids: unknown; threadId: string; userId: string }) {
+	const ids = normalizeAttachmentIds(input.ids);
+	if (ids.length === 0) return [];
+
+	const attachments = await db
+		.select()
+		.from(schema.agentAttachment)
+		.where(
+			and(
+				eq(schema.agentAttachment.threadId, input.threadId),
+				eq(schema.agentAttachment.userId, input.userId),
+				inArray(schema.agentAttachment.id, ids),
+				isNull(schema.agentAttachment.messageId),
+			),
+		);
+
+	if (attachments.length !== ids.length) {
+		throw new ORPCError("BAD_REQUEST", {
+			message: "One or more attachments are unavailable or already linked to a message.",
+		});
+	}
+
+	const attachmentsById = new Map(attachments.map((attachment) => [attachment.id, attachment]));
+	return ids.map((id) => {
+		const attachment = attachmentsById.get(id);
+		if (!attachment) {
+			throw new ORPCError("BAD_REQUEST", {
+				message: "One or more attachments are unavailable or already linked to a message.",
+			});
+		}
+
+		return attachment;
+	});
+}
+
+async function linkAttachmentsToMessage(input: {
+	attachments: AgentAttachmentRecord[];
+	messageId: string;
+	threadId: string;
+	userId: string;
+}) {
+	if (input.attachments.length === 0) return;
+
+	const ids = input.attachments.map((attachment) => attachment.id);
+	const linked = await db
+		.update(schema.agentAttachment)
+		.set({ messageId: input.messageId })
+		.where(
+			and(
+				eq(schema.agentAttachment.threadId, input.threadId),
+				eq(schema.agentAttachment.userId, input.userId),
+				inArray(schema.agentAttachment.id, ids),
+				isNull(schema.agentAttachment.messageId),
+			),
+		)
+		.returning({ id: schema.agentAttachment.id });
+
+	if (linked.length !== ids.length) {
+		throw new ORPCError("CONFLICT", { message: "One or more attachments were already linked to another message." });
+	}
+}
+
+async function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): Promise<AttachmentModelInput[]> {
+	const storage = getStorageService();
+	const inputs = await Promise.all(
+		attachments.map(async (attachment) => {
+			const stored = await storage.read(attachment.storageKey);
+			if (!stored) {
+				throw new ORPCError("BAD_REQUEST", { message: `Attachment ${attachment.filename} could not be read.` });
+			}
+
+			return { attachment, data: stored.data };
+		}),
+	);
+
+	return inputs;
+}
+
+function attachModelPartsToLatestUserMessage(
+	messages: ModelMessage[],
+	parts: Array<TextPart | ImagePart | FilePart>,
+): ModelMessage[] {
+	if (parts.length === 0) return messages;
+
+	let index = -1;
+	for (let messageIndex = messages.length - 1; messageIndex >= 0; messageIndex--) {
+		if (messages[messageIndex]?.role === "user") {
+			index = messageIndex;
+			break;
+		}
+	}
+
+	if (index === -1) return messages;
+
+	return messages.map((message, messageIndex) =>
+		messageIndex === index ? appendUserModelParts(message, parts) : message,
+	);
 }
 
 async function getExistingResumeSlugs(userId: string) {
@@ -278,7 +499,7 @@ async function readAttachment(input: { id: string; threadId: string; userId: str
 			mediaType: attachment.mediaType,
 			size: attachment.size,
 			content: null,
-			note: "This attachment is available to the model as metadata only in this version.",
+			note: "This attachment is provided directly to the model when its message is sent. Text extraction is not available through this tool for this media type.",
 		};
 	}
 
@@ -540,6 +761,11 @@ export const agentService = {
 				id: thread.aiProviderId,
 				userId: input.userId,
 			});
+			const attachments = await getUnlinkedMessageAttachments({
+				ids: input.attachmentIds ?? [],
+				threadId: input.threadId,
+				userId: input.userId,
+			});
 			const runId = generateId();
 			const streamId = generateId();
 			const controller = new AbortController();
@@ -553,7 +779,20 @@ export const agentService = {
 
 			try {
 				const sequence = await getNextMessageSequence(input.threadId);
-				await persistMessage({ userId: input.userId, threadId: input.threadId, message: input.message, sequence });
+				const userMessage = withAttachmentUiParts(input.message, attachments);
+				const persistedUserMessage = await persistMessage({
+					userId: input.userId,
+					threadId: input.threadId,
+					message: userMessage,
+					sequence,
+				});
+				if (!persistedUserMessage) throw new Error("AGENT_MESSAGE_CREATE_FAILED");
+				await linkAttachmentsToMessage({
+					attachments,
+					messageId: persistedUserMessage.id,
+					threadId: input.threadId,
+					userId: input.userId,
+				});
 
 				const [messageCount] = await db
 					.select({ total: count() })
@@ -563,13 +802,15 @@ export const agentService = {
 				if ((messageCount?.total ?? 0) === 1) {
 					await db
 						.update(schema.agentThread)
-						.set({ title: buildThreadTitle(input.message, thread.title) })
+						.set({ title: buildThreadTitle(userMessage, thread.title) })
 						.where(and(eq(schema.agentThread.id, input.threadId), eq(schema.agentThread.userId, input.userId)));
 				}
 
 				await aiProvidersService.markUsed({ id: runnableProvider.id, userId: input.userId });
 
 				const messages = (await listThreadMessages({ threadId: input.threadId, userId: input.userId })).map(toMessage);
+				const modelMessages = await convertToModelMessages(messages.map(withoutAgentAttachmentUiParts));
+				const attachmentModelParts = buildAttachmentModelParts(await readAttachmentModelInputs(attachments));
 				const agent = createAgent({
 					userId: input.userId,
 					threadId: input.threadId,
@@ -589,7 +830,7 @@ export const agentService = {
 				});
 
 				const result = await agent.stream({
-					messages: await convertToModelMessages(messages),
+					messages: attachModelPartsToLatestUserMessage(modelMessages, attachmentModelParts),
 					abortSignal: controller.signal,
 				});
 
