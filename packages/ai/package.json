@@ -4,7 +4,6 @@
 	"type": "module",
 	"private": true,
 	"exports": {
-		"./store": "./src/store.ts",
 		"./types": "./src/types.ts",
 		"./prompts": "./src/prompts.ts",
 		"./tools/patch-resume": "./src/tools/patch-resume.ts",
@@ -24,10 +23,8 @@
 		"@reactive-resume/utils": "workspace:*",
 		"deepmerge-ts": "^7.1.5",
 		"fast-json-patch": "^3.1.1",
-		"immer": "^11.1.8",
 		"jsonrepair": "^3.14.0",
-		"zod": "^4.4.3",
-		"zustand": "^5.0.13"
+		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
