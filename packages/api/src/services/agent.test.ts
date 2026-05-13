@@ -18,6 +18,7 @@ const storageServiceMock = {
 
 const resumeServiceMock = {
 	getById: vi.fn(),
+	patch: vi.fn(),
 };
 
 const aiProvidersServiceMock = {
@@ -46,18 +47,29 @@ vi.mock("@reactive-resume/db/schema", () => ({
 		updatedAt: "agent_threads.updated_at",
 	},
 	agentMessage: {
+		id: "agent_messages.id",
 		threadId: "agent_messages.thread_id",
 		userId: "agent_messages.user_id",
+		role: "agent_messages.role",
+		status: "agent_messages.status",
 		sequence: "agent_messages.sequence",
+		uiMessage: "agent_messages.ui_message",
 	},
 	agentAction: {
+		id: "agent_actions.id",
 		threadId: "agent_actions.thread_id",
 		userId: "agent_actions.user_id",
 		createdAt: "agent_actions.created_at",
 	},
 	agentAttachment: {
+		id: "agent_attachments.id",
 		threadId: "agent_attachments.thread_id",
 		userId: "agent_attachments.user_id",
+		messageId: "agent_attachments.message_id",
+		storageKey: "agent_attachments.storage_key",
+		filename: "agent_attachments.filename",
+		mediaType: "agent_attachments.media_type",
+		size: "agent_attachments.size",
 		createdAt: "agent_attachments.created_at",
 	},
 	resume: { name: "resume.name", id: "resume.id", userId: "resume.user_id", slug: "resume.slug" },
@@ -70,6 +82,7 @@ vi.mock("drizzle-orm", () => ({
 	count: () => ({ type: "count" }),
 	desc: (value: unknown) => ({ type: "desc", value }),
 	eq: (left: unknown, right: unknown) => ({ type: "eq", left, right }),
+	inArray: (left: unknown, values: unknown[]) => ({ type: "inArray", left, values }),
 	isNull: (value: unknown) => ({ type: "isNull", value }),
 	max: (value: unknown) => ({ type: "max", value }),
 	sql: () => ({ type: "sql" }),
@@ -107,6 +120,15 @@ vi.mock("@reactive-resume/schema/resume/default", () => ({ defaultResumeData: {}
 vi.mock("@reactive-resume/utils/string", () => ({ generateId: () => "test-id" }));
 vi.mock("@orpc/server", () => ({ streamToEventIterator: vi.fn() }));
 
+beforeEach(() => {
+	for (const mock of Object.values(dbMock)) mock.mockReset();
+	clearActiveAgentRunIfCurrentMock.mockReset();
+	claimActiveAgentRunMock.mockReset();
+	for (const mock of Object.values(storageServiceMock)) mock.mockReset();
+	for (const mock of Object.values(resumeServiceMock)) mock.mockReset();
+	for (const mock of Object.values(aiProvidersServiceMock)) mock.mockReset();
+});
+
 function buildArchivedThread(overrides: Record<string, unknown> = {}) {
 	return {
 		id: "thread-1",
@@ -126,6 +148,52 @@ function buildArchivedThread(overrides: Record<string, unknown> = {}) {
 		updatedAt: new Date("2026-05-02T00:00:00.000Z"),
 		...overrides,
 	};
+}
+
+function buildActiveThread(overrides: Record<string, unknown> = {}) {
+	return buildArchivedThread({
+		status: "active",
+		title: "Active thread",
+		activeRunId: null,
+		activeStreamId: null,
+		archivedAt: null,
+		...overrides,
+	});
+}
+
+function buildAttachment(overrides: Record<string, unknown> = {}) {
+	return {
+		id: "attachment-1",
+		userId: "user-1",
+		threadId: "thread-1",
+		messageId: null,
+		storageKey: "uploads/user-1/agent/thread-1/attachment-1-note.txt",
+		filename: "note.txt",
+		mediaType: "text/plain",
+		size: 5,
+		createdAt: new Date("2026-05-01T00:00:00.000Z"),
+		...overrides,
+	};
+}
+
+function selectLimitResult(rows: unknown[]) {
+	const limit = vi.fn(async () => rows);
+	const where = vi.fn(() => ({ limit }));
+	const from = vi.fn(() => ({ where }));
+	return { from };
+}
+
+function selectWhereResult(rows: unknown[]) {
+	const where = vi.fn(async () => rows);
+	const from = vi.fn(() => ({ where }));
+	return { from };
+}
+
+function selectOrderByResult(rows: unknown[]) {
+	const orderBy = vi.fn(async () => rows);
+	const where = vi.fn(() => ({ orderBy }));
+	const from = vi.fn(() => ({ where }));
+	return { from };
 }
 
 describe("agentService.threads.get", () => {
@@ -173,6 +241,59 @@ describe("agentService.threads.get", () => {
 	});
 });
 
+describe("buildAttachmentModelParts", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("converts text, image, supported binary, and unsupported attachments into model parts", async () => {
+		const { buildAttachmentModelParts } = await import("./agent");
+
+		const imageBytes = new Uint8Array([1, 2, 3]);
+		const pdfBytes = new Uint8Array([4, 5, 6]);
+		const parts = buildAttachmentModelParts([
+			{ attachment: buildAttachment(), data: new TextEncoder().encode("hello") },
+			{
+				attachment: buildAttachment({
+					id: "image-1",
+					filename: "photo.png",
+					mediaType: "image/png",
+					size: imageBytes.byteLength,
+				}),
+				data: imageBytes,
+			},
+			{
+				attachment: buildAttachment({
+					id: "pdf-1",
+					filename: "portfolio.pdf",
+					mediaType: "application/pdf",
+					size: pdfBytes.byteLength,
+				}),
+				data: pdfBytes,
+			},
+			{
+				attachment: buildAttachment({
+					id: "zip-1",
+					filename: "archive.zip",
+					mediaType: "application/zip",
+					size: 7,
+				}),
+				data: new Uint8Array([7]),
+			},
+		]);
+
+		expect(parts).toEqual([
+			expect.objectContaining({ type: "text", text: expect.stringContaining("hello") }),
+			{ type: "image", image: imageBytes, mediaType: "image/png" },
+			{ type: "file", data: pdfBytes, filename: "portfolio.pdf", mediaType: "application/pdf" },
+			expect.objectContaining({
+				type: "text",
+				text: expect.stringContaining("archive.zip"),
+			}),
+		]);
+	});
+});
+
 describe("agentService.messages.send", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -202,6 +323,153 @@ describe("agentService.messages.send", () => {
 
 		// Ensure we never tried to claim a run or persist anything for an archived thread.
 		expect(aiProvidersServiceMock.getRunnableById).not.toHaveBeenCalled();
+	});
+
+	it("persists the user message with file UI parts and links selected attachments to it", async () => {
+		const activeThread = buildActiveThread();
+		const attachment = buildAttachment();
+		const persistedMessage = {
+			id: "message-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: {
+				id: "ui-message-1",
+				role: "user",
+				parts: [
+					{ type: "text", text: "Use this file" },
+					{
+						type: "file",
+						url: "agent-attachment:attachment-1",
+						mediaType: "text/plain",
+						filename: "note.txt",
+					},
+				],
+			},
+		};
+		const updateSets: unknown[] = [];
+		const insertValues: unknown[] = [];
+
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectWhereResult([attachment]))
+			.mockImplementationOnce(() => selectWhereResult([{ maxSequence: -1 }]))
+			.mockImplementationOnce(() => selectWhereResult([{ total: 1 }]))
+			.mockImplementationOnce(() => selectOrderByResult([persistedMessage]));
+
+		dbMock.insert.mockReturnValue({
+			values: vi.fn((value) => {
+				insertValues.push(value);
+				return { returning: vi.fn(async () => [persistedMessage]) };
+			}),
+		});
+		dbMock.update.mockImplementation(() => ({
+			set: vi.fn((value) => {
+				updateSets.push(value);
+				return {
+					where: vi.fn(() => ({
+						returning: vi.fn(async () => [{ id: "attachment-1" }]),
+					})),
+				};
+			}),
+		}));
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+		storageServiceMock.read.mockResolvedValue({ data: new TextEncoder().encode("hello"), contentType: "text/plain" });
+
+		const { convertToModelMessages, ToolLoopAgent } = await import("ai");
+		const { agentStreamLifecycle } = await import("./agent-streams");
+		const { streamToEventIterator } = await import("@orpc/server");
+		const streamMock = vi.fn(async () => ({
+			toUIMessageStream: vi.fn(() => new ReadableStream()),
+		}));
+		vi.mocked(convertToModelMessages).mockResolvedValue([
+			{ role: "user", content: [{ type: "text", text: "Use this file" }] },
+		]);
+		vi.mocked(ToolLoopAgent).mockImplementation((() => ({ stream: streamMock })) as never);
+		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./agent");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "Use this file" }] } as any,
+			attachmentIds: ["attachment-1"],
+		});
+
+		expect(insertValues).toEqual([
+			expect.objectContaining({
+				uiMessage: expect.objectContaining({
+					parts: expect.arrayContaining([
+						{
+							type: "file",
+							url: "agent-attachment:attachment-1",
+							mediaType: "text/plain",
+							filename: "note.txt",
+						},
+					]),
+				}),
+			}),
+		]);
+		expect(updateSets).toContainEqual({ messageId: "message-1" });
+		expect(streamMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				messages: [
+					{
+						role: "user",
+						content: [
+							{ type: "text", text: "Use this file" },
+							expect.objectContaining({ type: "text", text: expect.stringContaining("hello") }),
+						],
+					},
+				],
+			}),
+		);
+	});
+
+	it("rejects attachments that are missing, foreign, or already linked before persisting a message", async () => {
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([buildActiveThread()]))
+			.mockImplementationOnce(() => selectWhereResult([]));
+
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		claimActiveAgentRunMock.mockResolvedValue(true);
+
+		const { agentService } = await import("./agent");
+
+		const sending = agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "Use this file" }] } as any,
+			attachmentIds: ["foreign-or-linked-attachment"],
+		});
+
+		await expect(sending).rejects.toBeInstanceOf(ORPCError);
+		await expect(sending).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+			message: "One or more attachments are unavailable or already linked to a message.",
+		});
+		expect(dbMock.insert).not.toHaveBeenCalled();
 	});
 });
 
@@ -365,5 +633,145 @@ describe("agentService.threads.delete", () => {
 		expect(storageServiceMock.delete).toHaveBeenCalledWith("uploads/user-own/agent/thread-own");
 		expect(dbMock.delete).toHaveBeenCalled();
 		expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ status: "deleted" }));
+	});
+});
+
+describe("agentService.actions.revert", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	function buildAction(overrides: Record<string, unknown> = {}) {
+		return {
+			id: "action-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			messageId: null,
+			resumeId: "resume-1",
+			kind: "resume_patch",
+			status: "applied",
+			title: "Tighten summary",
+			summary: null,
+			operations: [{ op: "replace", path: "/basics/name", value: "Bob" }],
+			inverseOperations: [{ op: "replace", path: "/basics/name", value: "Alice" }],
+			baseUpdatedAt: new Date("2026-05-01T00:00:00.000Z"),
+			appliedUpdatedAt: new Date("2026-05-02T00:00:00.000Z"),
+			revertedAt: null,
+			revertMessage: null,
+			createdAt: new Date("2026-05-02T00:00:00.000Z"),
+			updatedAt: new Date("2026-05-02T00:00:00.000Z"),
+			...overrides,
+		};
+	}
+
+	it("reverts an applied action, calls resumeService.patch with the inverse operations, and updates the DB row", async () => {
+		const action = buildAction();
+		const updatedAction = { ...action, status: "reverted", revertedAt: new Date(), revertMessage: null };
+
+		dbMock.select.mockImplementation(() => selectLimitResult([action]));
+
+		const updateReturning = vi.fn(async () => [updatedAction]);
+		const updateWhere = vi.fn(() => ({ returning: updateReturning }));
+		const updateSet = vi.fn(() => ({ where: updateWhere }));
+		dbMock.update.mockReturnValue({ set: updateSet });
+
+		resumeServiceMock.patch.mockResolvedValue({ updatedAt: new Date("2026-05-03T00:00:00.000Z") });
+
+		const { agentService } = await import("./agent");
+
+		const result = await agentService.actions.revert({ id: "action-1", userId: "user-1" });
+
+		expect(resumeServiceMock.patch).toHaveBeenCalledWith({
+			id: "resume-1",
+			userId: "user-1",
+			operations: action.inverseOperations,
+			expectedUpdatedAt: action.appliedUpdatedAt,
+		});
+		expect(updateSet).toHaveBeenCalledWith(
+			expect.objectContaining({
+				status: "reverted",
+				revertMessage: null,
+				appliedUpdatedAt: new Date("2026-05-03T00:00:00.000Z"),
+			}),
+		);
+		expect(result.status).toBe("reverted");
+	});
+
+	it("returns a conflicted action when resumeService.patch throws RESUME_VERSION_CONFLICT", async () => {
+		const action = buildAction();
+		const conflictedAction = {
+			...action,
+			status: "conflicted",
+			revertMessage: "The resume changed after this action was applied.",
+		};
+
+		dbMock.select.mockImplementation(() => selectLimitResult([action]));
+
+		const updateReturning = vi.fn(async () => [conflictedAction]);
+		const updateWhere = vi.fn(() => ({ returning: updateReturning }));
+		const updateSet = vi.fn(() => ({ where: updateWhere }));
+		dbMock.update.mockReturnValue({ set: updateSet });
+
+		resumeServiceMock.patch.mockRejectedValue(new ORPCError("RESUME_VERSION_CONFLICT"));
+
+		const { agentService } = await import("./agent");
+
+		const result = await agentService.actions.revert({ id: "action-1", userId: "user-1" });
+
+		expect(resumeServiceMock.patch).toHaveBeenCalled();
+		expect(updateSet).toHaveBeenCalledWith(
+			expect.objectContaining({
+				status: "conflicted",
+				revertMessage: "The resume changed after this action was applied.",
+			}),
+		);
+		expect(updateWhere).toHaveBeenCalled();
+		expect(updateReturning).toHaveBeenCalled();
+		expect(result.status).toBe("conflicted");
+		expect(result.revertMessage).toBe("The resume changed after this action was applied.");
+	});
+
+	it("returns the existing action unchanged when its status is already reverted", async () => {
+		const action = buildAction({
+			status: "reverted",
+			revertedAt: new Date("2026-05-03T00:00:00.000Z"),
+		});
+
+		dbMock.select.mockImplementation(() => selectLimitResult([action]));
+
+		const { agentService } = await import("./agent");
+
+		const result = await agentService.actions.revert({ id: "action-1", userId: "user-1" });
+
+		expect(resumeServiceMock.patch).not.toHaveBeenCalled();
+		expect(dbMock.update).not.toHaveBeenCalled();
+		expect(result.status).toBe("reverted");
+		expect(result.id).toBe("action-1");
+	});
+
+	it("throws BAD_REQUEST when the action has no resumeId", async () => {
+		const action = buildAction({ resumeId: null });
+
+		dbMock.select.mockImplementation(() => selectLimitResult([action]));
+
+		const { agentService } = await import("./agent");
+
+		const reverting = agentService.actions.revert({ id: "action-1", userId: "user-1" });
+
+		await expect(reverting).rejects.toBeInstanceOf(ORPCError);
+		await expect(reverting).rejects.toMatchObject({ code: "BAD_REQUEST" });
+		expect(resumeServiceMock.patch).not.toHaveBeenCalled();
+	});
+
+	it("throws NOT_FOUND when no matching action is found", async () => {
+		dbMock.select.mockImplementation(() => selectLimitResult([]));
+
+		const { agentService } = await import("./agent");
+
+		const reverting = agentService.actions.revert({ id: "missing-id", userId: "user-1" });
+
+		await expect(reverting).rejects.toBeInstanceOf(ORPCError);
+		await expect(reverting).rejects.toMatchObject({ code: "NOT_FOUND" });
+		expect(resumeServiceMock.patch).not.toHaveBeenCalled();
 	});
 });

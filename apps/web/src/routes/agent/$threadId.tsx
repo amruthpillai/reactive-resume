@@ -1,4 +1,4 @@
-import type { UIMessage, UIMessageChunk } from "ai";
+import type { FileUIPart, UIMessage, UIMessageChunk } from "ai";
 import type { RouterOutput } from "@/libs/orpc/client";
 import { useChat } from "@ai-sdk/react";
 import { t } from "@lingui/core/macro";
@@ -43,6 +43,130 @@ import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc, streamClient } from "@/libs/orpc/client";
 
 type AgentThreadDetail = RouterOutput["agent"]["threads"]["get"];
+type AgentAction = AgentThreadDetail["actions"][number];
+type AgentAttachment = AgentThreadDetail["attachments"][number];
+type PatchOperation = AgentAction["operations"][number];
+
+function truncate(str: string, max = 200) {
+	return str.length > max ? `${str.slice(0, max)}...` : str;
+}
+
+function PatchToolCard({
+	part,
+	action,
+	onRevert,
+	isReverting,
+}: {
+	part: UIMessage["parts"][number];
+	action: AgentAction | undefined;
+	onRevert: (actionId: string) => void;
+	isReverting: boolean;
+}) {
+	const output =
+		"output" in part && typeof part.output === "object" && part.output
+			? (part.output as Record<string, unknown>)
+			: null;
+	const actionId = action?.id ?? (typeof output?.actionId === "string" ? output.actionId : null);
+
+	const title = action?.title ?? (typeof output?.title === "string" ? output.title : t`Resume patch`);
+	const operations: PatchOperation[] =
+		action?.operations ?? (Array.isArray(output?.operations) ? (output.operations as PatchOperation[]) : []);
+	const status = action?.status ?? "applied";
+	const revertMessage = action?.revertMessage ?? null;
+
+	const containerClass =
+		status === "reverted"
+			? "border-muted bg-muted/30 text-foreground"
+			: status === "conflicted"
+				? "border-amber-300 bg-amber-50 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
+				: "border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/20 dark:text-emerald-100";
+
+	const statusBadge =
+		status === "reverted" ? (
+			<Badge variant="secondary">
+				<Trans>Reverted</Trans>
+			</Badge>
+		) : status === "conflicted" ? (
+			<Badge variant="destructive">
+				<Trans>Conflicted</Trans>
+			</Badge>
+		) : (
+			<Badge variant="outline">
+				<Trans>Applied</Trans>
+			</Badge>
+		);
+
+	const revertDisabled = isReverting || status === "reverted" || status === "conflicted";
+
+	return (
+		<div className={cn("space-y-3 rounded-md border p-3", containerClass)}>
+			<div className="flex items-start justify-between gap-3">
+				<div className="min-w-0 space-y-1">
+					<div className="flex items-center gap-2">
+						<span className="font-medium">{title}</span>
+						{statusBadge}
+					</div>
+					{status === "conflicted" && revertMessage ? (
+						<p className="text-sm opacity-80">{revertMessage}</p>
+					) : (
+						<p className="text-sm opacity-80">
+							{status === "reverted" ? (
+								<Trans>Reverted from the working resume.</Trans>
+							) : (
+								<Trans>Applied to the working resume.</Trans>
+							)}
+						</p>
+					)}
+				</div>
+				{actionId ? (
+					<Button size="sm" variant="outline" disabled={revertDisabled} onClick={() => onRevert(actionId)}>
+						<ClockCounterClockwiseIcon />
+						<Trans>Revert</Trans>
+					</Button>
+				) : null}
+			</div>
+
+			{operations.length > 0 ? (
+				<details className="rounded border bg-background/40 px-2 py-1 text-sm">
+					<summary className="cursor-pointer text-muted-foreground">
+						<Trans>Show changes</Trans>
+					</summary>
+					<ul className="mt-2 space-y-2">
+						{operations.map((op, index) => {
+							const opKey = `${op.op}-${op.path}-${index}`;
+							const indicator =
+								op.op === "add" ? (
+									<span className="text-emerald-600 dark:text-emerald-400">+ Add</span>
+								) : op.op === "replace" ? (
+									<span className="text-amber-600 dark:text-amber-400">~ Replace</span>
+								) : op.op === "remove" ? (
+									<span className="text-rose-600 dark:text-rose-400">− Remove</span>
+								) : (
+									<span className="text-muted-foreground">{op.op}</span>
+								);
+
+							const value = op.op === "add" || op.op === "replace" ? truncate(JSON.stringify(op.value, null, 2)) : null;
+
+							return (
+								<li key={opKey} className="space-y-1">
+									<div className="flex items-center gap-2 text-xs">
+										<span className="font-medium">{indicator}</span>
+										<span className="font-mono text-xs">{op.path}</span>
+									</div>
+									{value !== null ? (
+										<pre className="whitespace-pre-wrap break-words rounded bg-muted/50 p-2 font-mono text-xs">
+											{value}
+										</pre>
+									) : null}
+								</li>
+							);
+						})}
+					</ul>
+				</details>
+			) : null}
+		</div>
+	);
+}
 
 export const Route = createFileRoute("/agent/$threadId")({
 	component: RouteComponent,
@@ -62,6 +186,15 @@ function textFromMessage(message: UIMessage) {
 		.filter((part) => part.type === "text")
 		.map((part) => part.text)
 		.join("\n");
+}
+
+function attachmentToFilePart(attachment: Pick<AgentAttachment, "id" | "filename" | "mediaType">): FileUIPart {
+	return {
+		type: "file",
+		url: `agent-attachment:${attachment.id}`,
+		mediaType: attachment.mediaType,
+		filename: attachment.filename,
+	};
 }
 
 function parseAgentSseStream(stream: ReadableStream<string>) {
@@ -152,11 +285,13 @@ function MessagePart({
 	onAnswer,
 	onRevert,
 	isReverting,
+	actionsById,
 }: {
 	part: UIMessage["parts"][number];
 	onAnswer: (toolCallId: string, answer: string) => void;
 	onRevert: (actionId: string) => void;
 	isReverting: boolean;
+	actionsById: Map<string, AgentAction>;
 }) {
 	if (part.type === "text") return <div className="whitespace-pre-wrap leading-relaxed">{part.text}</div>;
 
@@ -217,42 +352,35 @@ function MessagePart({
 				? (part.output as Record<string, unknown>)
 				: null;
 		const actionId = typeof output?.actionId === "string" ? output.actionId : null;
+		const action = actionId ? actionsById.get(actionId) : undefined;
 
-		return (
-			<div className="space-y-3 rounded-md border bg-emerald-50 p-3 text-emerald-950 dark:bg-emerald-950/20 dark:text-emerald-100">
-				<div className="flex items-center justify-between gap-3">
-					<div>
-						<div className="font-medium">{typeof output?.title === "string" ? output.title : t`Resume patch`}</div>
-						<p className="text-sm opacity-80">
-							<Trans>Applied to the working resume.</Trans>
-						</p>
-					</div>
-					{actionId ? (
-						<Button size="sm" variant="outline" disabled={isReverting} onClick={() => onRevert(actionId)}>
-							<ClockCounterClockwiseIcon />
-							<Trans>Revert</Trans>
-						</Button>
-					) : null}
-				</div>
-			</div>
-		);
+		return <PatchToolCard part={part} action={action} onRevert={onRevert} isReverting={isReverting} />;
 	}
 
-	if (part.type.startsWith("source-")) {
-		const url = "url" in part && typeof part.url === "string" ? part.url : null;
-		const title = "title" in part && typeof part.title === "string" && part.title.trim() ? part.title : null;
-		return url ? (
-			<a className="block text-primary text-sm underline" href={url} target="_blank" rel="noreferrer">
+	if (part.type === "source-url") {
+		const title = part.title?.trim() || null;
+
+		return (
+			<a className="block text-primary text-sm underline" href={part.url} target="_blank" rel="noreferrer">
 				{title ? (
 					<>
 						<span className="block truncate">{title}</span>
-						<span className="block truncate text-muted-foreground">{url}</span>
+						<span className="block truncate text-muted-foreground">{part.url}</span>
 					</>
 				) : (
-					<span className="block truncate">{url}</span>
+					<span className="block truncate">{part.url}</span>
 				)}
 			</a>
-		) : null;
+		);
+	}
+
+	if (part.type === "file") {
+		return (
+			<div className="flex max-w-full items-center gap-2 rounded-md border bg-background/20 px-2 py-1 text-sm">
+				<FileIcon className="shrink-0" />
+				<span className="truncate">{part.filename ?? part.url}</span>
+			</div>
+		);
 	}
 
 	return null;
@@ -263,11 +391,13 @@ function ChatMessage({
 	onAnswer,
 	onRevert,
 	isReverting,
+	actionsById,
 }: {
 	message: UIMessage;
 	onAnswer: (toolCallId: string, answer: string) => void;
 	onRevert: (actionId: string) => void;
 	isReverting: boolean;
+	actionsById: Map<string, AgentAction>;
 }) {
 	const isUser = message.role === "user";
 
@@ -286,6 +416,7 @@ function ChatMessage({
 						onAnswer={onAnswer}
 						onRevert={onRevert}
 						isReverting={isReverting}
+						actionsById={actionsById}
 					/>
 				))}
 			</div>
@@ -299,25 +430,34 @@ function AgentChat({
 	isReadOnly,
 	readOnlyReason,
 	threadStatus,
+	actions,
 }: {
 	threadId: string;
 	initialMessages: UIMessage[];
 	isReadOnly: boolean;
 	readOnlyReason: "archived" | "missing" | null;
 	threadStatus: string;
+	actions: AgentAction[];
 }) {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const confirm = useConfirm();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [input, setInput] = useState("");
-	const [attachmentIds, setAttachmentIds] = useState<string[]>([]);
-	const [attachmentLabels, setAttachmentLabels] = useState<string[]>([]);
+	const [pendingAttachments, setPendingAttachments] = useState<
+		Array<Pick<AgentAttachment, "id" | "filename" | "mediaType">>
+	>([]);
 	const [isUploading, setIsUploading] = useState(false);
 	const revertMutation = useMutation(orpc.agent.actions.revert.mutationOptions());
 	const archiveMutation = useMutation(orpc.agent.threads.archive.mutationOptions());
 	const deleteMutation = useMutation(orpc.agent.threads.delete.mutationOptions());
 	const isArchived = threadStatus === "archived";
+
+	const actionsById = useMemo(() => {
+		const map = new Map<string, AgentAction>();
+		for (const action of actions) map.set(action.id, action);
+		return map;
+	}, [actions]);
 
 	const handleArchive = () => {
 		archiveMutation.mutate(
@@ -361,13 +501,20 @@ function AgentChat({
 
 	const transport = useMemo(
 		() => ({
-			async sendMessages(options: { messages: UIMessage[]; abortSignal?: AbortSignal }) {
+			async sendMessages(options: { messages: UIMessage[]; abortSignal?: AbortSignal; body?: object }) {
 				const message = options.messages.at(-1);
 				if (!message) throw new Error("No message to send.");
+				const attachmentIds =
+					options.body && "attachmentIds" in options.body && Array.isArray(options.body.attachmentIds)
+						? options.body.attachmentIds.filter((id): id is string => typeof id === "string")
+						: undefined;
 
 				return parseAgentSseStream(
 					eventIteratorToUnproxiedDataStream(
-						await streamClient.agent.messages.send({ threadId, message }, { signal: options.abortSignal }),
+						await streamClient.agent.messages.send(
+							{ threadId, message, attachmentIds },
+							{ signal: options.abortSignal },
+						),
 					),
 				);
 			},
@@ -395,18 +542,15 @@ function AgentChat({
 
 	const send = () => {
 		const text = input.trim();
-		if (!text || isReadOnly || isStreaming) return;
-
-		const attachmentNote =
-			attachmentIds.length > 0
-				? `\n\nAttachments:\n${attachmentIds.map((id, index) => `- ${attachmentLabels[index]} (attachmentId: ${id})`).join("\n")}`
-				: "";
+		if ((!text && pendingAttachments.length === 0) || isReadOnly || isStreaming) return;
 
 		clearError();
-		sendMessage({ text: `${text}${attachmentNote}` });
+		const files = pendingAttachments.map(attachmentToFilePart);
+		sendMessage(text ? { text, ...(files.length > 0 ? { files } : {}) } : { files }, {
+			body: { attachmentIds: pendingAttachments.map((attachment) => attachment.id) },
+		});
 		setInput("");
-		setAttachmentIds([]);
-		setAttachmentLabels([]);
+		setPendingAttachments([]);
 	};
 
 	const uploadFiles = async (files: FileList | null) => {
@@ -421,8 +565,10 @@ function AgentChat({
 					mediaType: file.type || "application/octet-stream",
 					data: await fileToBase64(file),
 				});
-				setAttachmentIds((current) => [...current, attachment.id]);
-				setAttachmentLabels((current) => [...current, file.name]);
+				setPendingAttachments((current) => [
+					...current,
+					{ id: attachment.id, filename: attachment.filename, mediaType: attachment.mediaType },
+				]);
 			}
 			toast.success(t`Attachment uploaded.`);
 		} catch (error) {
@@ -531,6 +677,7 @@ function AgentChat({
 							key={message.id}
 							message={message}
 							isReverting={revertMutation.isPending}
+							actionsById={actionsById}
 							onAnswer={(toolCallId, answer) => {
 								addToolOutput({ tool: "ask_user_question", toolCallId, output: answer });
 								sendMessage({ text: answer });
@@ -539,8 +686,14 @@ function AgentChat({
 								revertMutation.mutate(
 									{ id: actionId },
 									{
-										onSuccess: () => {
-											toast.success(t`Patch reverted.`);
+										onSuccess: (action) => {
+											if (action.status === "conflicted") {
+												toast.error(
+													action.revertMessage ?? t`Cannot revert; the resume has changed since this edit was applied.`,
+												);
+											} else if (action.status === "reverted") {
+												toast.success(t`Patch reverted.`);
+											}
 											void queryClient.invalidateQueries({
 												queryKey: orpc.agent.threads.get.queryKey({ input: { id: threadId } }),
 											});
@@ -591,12 +744,12 @@ function AgentChat({
 				}}
 			>
 				<div className="mx-auto max-w-3xl space-y-2">
-					{attachmentLabels.length > 0 ? (
+					{pendingAttachments.length > 0 ? (
 						<div className="flex flex-wrap gap-2">
-							{attachmentLabels.map((label) => (
-								<Badge key={label} variant="secondary">
+							{pendingAttachments.map((attachment) => (
+								<Badge key={attachment.id} variant="secondary">
 									<FileIcon />
-									{label}
+									{attachment.filename}
 								</Badge>
 							))}
 						</div>
@@ -636,7 +789,11 @@ function AgentChat({
 								<StopIcon />
 							</Button>
 						) : (
-							<Button type="submit" size="icon" disabled={isReadOnly || !input.trim()}>
+							<Button
+								type="submit"
+								size="icon"
+								disabled={isReadOnly || (!input.trim() && pendingAttachments.length === 0)}
+							>
 								<PaperPlaneRightIcon />
 							</Button>
 						)}
@@ -740,6 +897,7 @@ function RouteComponent() {
 							isReadOnly={data.isReadOnly}
 							readOnlyReason={readOnlyReason}
 							threadStatus={data.thread.status}
+							actions={data.actions}
 						/>
 					</ResizablePanel>
 					<ResizableSeparator withHandle />
@@ -777,6 +935,7 @@ function RouteComponent() {
 							isReadOnly={data.isReadOnly}
 							readOnlyReason={readOnlyReason}
 							threadStatus={data.thread.status}
+							actions={data.actions}
 						/>
 					) : null}
 					{mobileTab === "resume" ? <ResumePane resume={data.resume} /> : null}
