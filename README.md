@@ -36,7 +36,7 @@ Built with privacy as a core principle, Reactive Resume gives you complete owner
 **Resume Building**
 
 - Real-time preview as you type
-- Multiple export formats (PDF, JSON)
+- Multiple export formats (PDF, JSON, DOCX)
 - Drag-and-drop section ordering
 - Custom sections for any content type
 - Rich text editor with formatting support
