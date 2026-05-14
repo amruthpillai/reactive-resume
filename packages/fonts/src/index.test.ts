@@ -11,6 +11,7 @@ import {
 	getWebFont,
 	getWebFontSource,
 	isStandardPdfFontFamily,
+	resolveLegacyFontAlias,
 	standardFontList,
 	webFontList,
 	webFontMap,
@@ -255,5 +256,47 @@ describe("buildResumeFontFamily", () => {
 	it("escapes single quotes in family names", () => {
 		const result = buildResumeFontFamily("Bob's Font");
 		expect(result).toContain("Bob\\'s Font");
+	});
+});
+
+describe("legacy font compatibility (#2989)", () => {
+	it.each([
+		["Times New Roman", "Tinos"],
+		["Arial", "Arimo"],
+		["Garamond", "EB Garamond"],
+		["Calibri", "Carlito"],
+		["Cambria", "Tinos"],
+	])("aliases %s → %s", (legacy, target) => {
+		expect(resolveLegacyFontAlias(legacy)).toBe(target);
+	});
+
+	it("returns null for non-aliased families", () => {
+		expect(resolveLegacyFontAlias("Roboto")).toBeNull();
+		expect(resolveLegacyFontAlias("IBM Plex Serif")).toBeNull();
+		expect(resolveLegacyFontAlias("UnknownFont")).toBeNull();
+	});
+
+	it("every alias target is actually registered as a known font", () => {
+		const aliasTargets = ["Tinos", "Arimo", "EB Garamond", "Carlito"];
+		for (const target of aliasTargets) {
+			expect(getFont(target), `alias target ${target} must be a known font`).toBeDefined();
+		}
+	});
+
+	it("getFont resolves a legacy family to its alias target", () => {
+		const tnr = getFont("Times New Roman");
+		expect(tnr).toBeDefined();
+		expect(tnr?.family).toBe("Tinos");
+	});
+
+	it("getFont still returns the direct font when both legacy and direct lookup would succeed", () => {
+		// Sanity check: for non-aliased families the direct path is used.
+		expect(getFont("Roboto")?.family).toBe("Roboto");
+	});
+
+	it("getFontDisplayName preserves the legacy family name (UI is not rewritten)", () => {
+		// Users who picked "Times New Roman" should keep seeing that label
+		// in the typography sidebar — the alias is a render-time concern only.
+		expect(getFontDisplayName("Times New Roman")).toBe("Times New Roman");
 	});
 });

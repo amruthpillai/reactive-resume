@@ -123,8 +123,28 @@ for (const font of fontList) {
 	fontMap.set(font.family, font);
 }
 
+// Compatibility aliases for fonts that v5.0.x resolved via the browser
+// (Arial, Times New Roman, ...) but that aren't registered with
+// @react-pdf/renderer in v5.1+. Targets are metric-compatible web fonts
+// already shipped in webfontlist (#2989).
+const legacyFontAliases: Record<string, string> = {
+	Arial: "Arimo",
+	Cambria: "Tinos",
+	Calibri: "Carlito",
+	Garamond: "EB Garamond",
+	"Times New Roman": "Tinos",
+};
+
+export function resolveLegacyFontAlias(family: string): string | null {
+	return legacyFontAliases[family] ?? null;
+}
+
 export function getFont(family: string) {
-	return fontMap.get(family);
+	const direct = fontMap.get(family);
+	if (direct) return direct;
+
+	const alias = legacyFontAliases[family];
+	return alias ? fontMap.get(alias) : undefined;
 }
 
 function getFontCategory(family: string): FontCategory | null {

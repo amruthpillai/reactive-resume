@@ -134,6 +134,32 @@ function getComputerModernWebFonts(): WebFont[] {
 	];
 }
 
+/**
+ * Helper: Additional metric-compatible web fonts that aren't in the
+ * popularity-sorted Google Fonts slice but are needed as render targets
+ * for legacy local-font aliases (#2989). Carlito is the open-source
+ * metric-compatible equivalent of Calibri.
+ */
+function getMetricCompatibleFonts(): WebFont[] {
+	const CDN = "https://fonts.gstatic.com/s/carlito/v4";
+
+	return [
+		{
+			type: "web",
+			category: "sans-serif",
+			family: "Carlito",
+			weights: ["400", "700"],
+			preview: `${CDN}/3Jn9SDPw3m-pk039DDeBSQ.ttf`,
+			files: {
+				"400": `${CDN}/3Jn9SDPw3m-pk039DDeBSQ.ttf`,
+				"700": `${CDN}/3Jn4SDPw3m-pk039BIykWXolVg.ttf`,
+				"400italic": `${CDN}/3Jn_SDPw3m-pk039DDKxTl0F.ttf`,
+				"700italic": `${CDN}/3Jn6SDPw3m-pk039DDK59XgVUcBD.ttf`,
+			},
+		},
+	];
+}
+
 export async function generateFonts() {
 	const response = await getGoogleFontsJSON();
 	console.log(`Found ${response.items.length} fonts in total (Google Fonts).`);
@@ -168,10 +194,17 @@ export async function generateFonts() {
 
 	// Manually append Computer Modern web fonts
 	const computerModernFonts = getComputerModernWebFonts();
-	const allWebFonts: WebFont[] = [...computerModernFonts, ...googleFontResults];
+	// Manually append metric-compatible fonts not covered by the popularity slice
+	const metricCompatFonts = getMetricCompatibleFonts();
+	// De-duplicate against the Google Fonts slice in case a manual entry
+	// later enters the popularity top-N.
+	const googleFontFamilies = new Set(googleFontResults.map((f) => f.family));
+	const filteredMetricCompat = metricCompatFonts.filter((f) => !googleFontFamilies.has(f.family));
+
+	const allWebFonts: WebFont[] = [...computerModernFonts, ...googleFontResults, ...filteredMetricCompat];
 
 	console.log(
-		`Added ${computerModernFonts.length} Computer Modern Web Fonts. Total output: ${allWebFonts.length} web fonts.`,
+		`Added ${computerModernFonts.length} Computer Modern Web Fonts and ${filteredMetricCompat.length} metric-compatible fonts. Total output: ${allWebFonts.length} web fonts.`,
 	);
 
 	const jsonString = argCompress ? JSON.stringify(allWebFonts) : JSON.stringify(allWebFonts, null, 2);

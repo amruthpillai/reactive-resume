@@ -1,0 +1,93 @@
+---
+title: "Using AI in the builder"
+description: "Learn how to run resume analysis and use the AI Resume Assistant to review proposed resume changes before applying them."
+---
+
+Reactive Resume includes two AI-assisted builder workflows:
+
+- **Resume Analysis** gives you a score, strengths, and prioritized suggestions.
+- **AI Resume Assistant** proposes specific edits that you can accept or reject.
+
+<Info>
+  These features require a tested and enabled AI provider in **Dashboard -> Settings -> Integrations**. For setup, see
+  [Using Artificial Intelligence](/guides/using-ai).
+</Info>
+
+## Run a resume analysis
+
+Use resume analysis when you want a broad review before making changes.
+
+<Steps>
+  <Step title="Open your resume in the builder">
+    Go to the dashboard and open the resume you want to review.
+  </Step>
+
+  <Step title="Open the Resume Analysis section">
+    In the right sidebar, select **Resume Analysis**.
+
+    <Frame caption="Resume Analysis section in the builder">
+      <img
+        src="/images/guides/using-ai-in-the-builder/screenshot-1.png"
+        alt="Resume Analysis section showing the AI setup prompt in the builder sidebar"
+      />
+    </Frame>
+  </Step>
+
+  <Step title="Click Analyze Resume">
+    Reactive Resume sends the current resume data to your configured AI provider.
+  </Step>
+
+  <Step title="Review the results">
+    Review the overall score, scorecard, strengths, and suggestions.
+  </Step>
+</Steps>
+
+Use the analysis as guidance, not as a final verdict. The best resume still depends on the job, industry, and audience.
+
+## Open the AI Resume Assistant
+
+Click the assistant button in the builder dock to open the assistant.
+
+On desktop, the assistant opens as a movable, resizable panel. On smaller screens, it opens as a full-height sheet.
+
+If AI is unavailable, the builder shows a link to **Integrations** so you can configure it.
+
+## Ask for targeted changes
+
+The assistant works best when you ask for specific, incremental changes.
+
+Good prompts:
+
+- "Rewrite my summary for a senior frontend engineer role."
+- "Tighten the bullets in my most recent job."
+- "Add measurable impact to my project descriptions."
+- "Adapt this resume for the job description below."
+
+Avoid asking it to rewrite everything at once unless you are prepared to review many changes.
+
+## Review proposals before applying them
+
+When the assistant proposes edits, Reactive Resume shows a review card with:
+
+- a proposal title and summary;
+- badges for the proposed operations;
+- before and after previews;
+- the raw JSON Patch for users who want to inspect the exact operations.
+
+You can:
+
+- **Accept** one proposal;
+- **Reject** one proposal;
+- move between proposals with **Prev** and **Next**;
+- **Accept all** or **Reject all** from the split-button menu.
+
+<Warning>
+  Review AI proposals before accepting them. AI can introduce wording that is inaccurate, too generic, or not aligned
+  with your actual experience.
+</Warning>
+
+## When a proposal cannot be applied
+
+A proposal can fail if the resume changed after the assistant generated it, if the resume is locked, or if the proposed patch no longer matches the current resume data.
+
+If that happens, ask the assistant to regenerate the change from the latest version of the resume.

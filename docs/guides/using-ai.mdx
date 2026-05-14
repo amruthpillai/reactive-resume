@@ -1,79 +1,87 @@
 ---
 title: "Using Artificial Intelligence"
-description: "Learn how to configure an AI provider and API key for AI-assisted features in Reactive Resume"
+description: "Learn how to configure an AI provider for AI-assisted features in Reactive Resume."
 ---
+
+Reactive Resume uses AI providers for features such as resume analysis, AI-assisted resume changes, AI agent drafts, and PDF or Word imports.
+
+## Open AI provider settings
 
 <Steps>
   <Step title="Sign in to the dashboard">
     Head over to [https://rxresu.me](https://rxresu.me) and sign in with your account credentials.
   </Step>
 
-<Step title="Navigate to Artificial Intelligence settings">
-  Once you're in the dashboard, look for the sidebar navigation on the left. Under the <Badge>Settings</Badge> section,
-  click on <Badge>Artificial Intelligence</Badge>.
-</Step>
+  <Step title="Navigate to Integrations settings">
+    In the dashboard sidebar, under **Settings**, click **Integrations**.
 
-  <Step title="How your data is stored and sent">
-    When you configure your AI provider settings on this page, all information (such as the API key and model) is stored locally in your browser and **not** in our database.
-
-    <Info>
-      <strong>Your credentials and AI configuration are never saved on Reactive Resume servers.</strong> They only live in your device's browser storage.
-    </Info>
-
-    However, whenever you use an AI-assisted feature (such as text generation), these credentials need to be sent to the server **temporarily and only for the duration of your request**. This is required to connect with the AI provider on your behalf. See below for a deeper explanation.
-
-  </Step>
-
-  <Step title="Choose a provider">
-    In the <Badge>Provider</Badge> field, choose one of the supported providers:
-
-    - **OpenAI**
-    - **Google Gemini**
-    - **Anthropic Claude**
-    - **Ollama** (coming soon)
-
-  </Step>
-
-<Step title="Enter a model name">
-  In the <Badge>Model</Badge> field, enter the model you want to use (for example, <code>gpt-5.2</code>,{" "}
-  <code>claude-4.5-opus</code>, or <code>gemini-3-flash</code>).
-</Step>
-
-  <Step title="Paste your API key">
-    In the <Badge>API Key</Badge> field, paste your provider API key.
-
-    <Warning>
-      Treat this key like a password. Anyone with it can use your provider account and may incur costs.
-    </Warning>
-
-  </Step>
-
-  <Step title="Verify it's enabled">
-    After setting the provider, model, and API key, the status indicator at the bottom of the page should show <Badge>Enabled</Badge>.
-
-    <Tip>
-      If the status shows <Badge>Disabled</Badge>, double-check that all three fields are filled in.
-    </Tip>
-
+    <Frame caption="AI provider settings in Integrations">
+      <img
+        src="/images/guides/using-ai/screenshot-1.png"
+        alt="Integrations settings showing AI provider configuration"
+      />
+    </Frame>
   </Step>
 </Steps>
 
-## Why AI requests are sent through our server
+## Add a provider
 
-Most AI providers (like OpenAI, Gemini, or Anthropic) block requests that come directly from the browser due to something called **CORS** ("Cross-Origin Resource Sharing"), a security mechanism built into web browsers.
+In the **AI Providers** section, fill out the **Add Provider** form.
 
-**What is CORS?**  
-CORS is a browser feature that prevents web pages from making requests to a different domain than the one that served the web page, unless that domain explicitly allows it. Most AI providers do not allow browser-based requests from random websites, primarily for security and abuse prevention.
+| Field | Description |
+| --- | --- |
+| **Label** | A name that helps you recognize the provider, such as `Work OpenAI` or `Personal OpenRouter`. |
+| **Provider** | The provider type, such as OpenAI, Anthropic Claude, Google Gemini, Vercel AI Gateway, OpenRouter, Ollama, or OpenAI-compatible. |
+| **Model** | The exact model name expected by that provider. |
+| **Base URL** | The provider endpoint. Leave the default unless you use a gateway, proxy, local provider, or OpenAI-compatible endpoint. |
+| **API Key** | The key Reactive Resume should use when sending AI requests to that provider. |
 
-Because of this restriction, the app has to **forward your AI requests (along with your credentials) through our server**, which then contacts the AI provider and returns the response to your browser. **Your credentials are not stored on our server; they are only used to make the request you initiated, and are not logged or retained.**
+Click **Save Provider** when the form is complete.
+
+<Warning>
+  Treat API keys like passwords. Anyone with a key can use the connected provider account and may incur costs.
+</Warning>
+
+## Test and enable a provider
+
+After saving a provider, test it before using it.
+
+<Steps>
+  <Step title="Click Test">
+    Reactive Resume sends a small request to verify the provider, model, base URL, and key.
+  </Step>
+
+  <Step title="Review the status">
+    A successful provider is marked **Tested**. A failed provider is marked **Failed** and may show an error message.
+  </Step>
+
+  <Step title="Enable the provider">
+    Turn on **Use** for the tested provider you want Reactive Resume to use.
+  </Step>
+</Steps>
 
 <Info>
-  If you're curious or would like to audit how your AI requests are forwarded, you can review the code yourself. See the
-  relevant implementation in <code>src/integrations/orpc/router/ai.ts</code> within the codebase.
+  Only tested providers can be used for AI-assisted features.
 </Info>
 
----
+## How credentials are stored
 
-### Do you know a workaround?
+AI provider credentials are encrypted on the server and are never shown again after saving. The settings page only shows a preview of the saved key.
 
-If you have a solution or workaround for this CORS-related limitation, please consider raising an [issue or pull request on GitHub](https://github.com/reactive-resume/reactive-resume).
+If provider management is unavailable, your self-hosted deployment may be missing required server configuration.
+
+<Warning>
+  AI provider management requires the server-side services used to encrypt credentials and run AI work. If the page says
+  provider management is unavailable, check your deployment configuration before using AI features.
+</Warning>
+
+## Where AI is used
+
+After a provider is tested and enabled, you can use AI in:
+
+- **Resume Analysis** in the builder's right sidebar;
+- **AI-assisted resume changes** from the builder;
+- **Agent** workflows that create isolated AI drafts;
+- **PDF and Microsoft Word imports** from the dashboard import dialog.
+
+For the builder workflow, see [Using AI in the builder](/guides/using-ai-in-the-builder). For AI-assisted imports, see [Importing resumes](/guides/importing-resumes).

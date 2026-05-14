@@ -8,6 +8,7 @@ import {
 	getPdfCjkFallbackFontFamily,
 	getWebFontSource,
 	isStandardPdfFontFamily,
+	resolveLegacyFontAlias,
 	sortFontWeights,
 } from "@reactive-resume/fonts";
 import { isCJKLocale } from "@reactive-resume/utils/locale";
@@ -51,8 +52,14 @@ const toFontWeight = (weight: number): FontWeight => {
 	return "900";
 };
 
+// Resolves the user-stored family to the one we hand to Font.register:
+// direct match → legacy alias (#2989) → IBM Plex Serif fallback.
 const resolvePdfFontFamily = (family: string) => {
-	return getFont(family) ? family : fallbackFontFamily;
+	if (getFont(family)) {
+		const alias = resolveLegacyFontAlias(family);
+		return alias ?? family;
+	}
+	return fallbackFontFamily;
 };
 
 const resolvePdfTypography = (typography: Typography): Typography => {
