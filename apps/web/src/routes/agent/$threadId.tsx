@@ -1219,8 +1219,10 @@ function RouteComponent() {
 					</Tabs>
 				</div>
 				<div className="min-h-0 flex-1">
-					{mobileTab === "threads" ? <AgentThreadSidebar activeThreadId={threadId} /> : null}
-					{mobileTab === "chat" ? (
+					<div className={cn("h-full", mobileTab !== "threads" && "hidden")}>
+						<AgentThreadSidebar activeThreadId={threadId} />
+					</div>
+					<div className={cn("h-full", mobileTab !== "chat" && "hidden")}>
 						<AgentChat
 							threadId={threadId}
 							initialMessages={data.messages}
@@ -1230,8 +1232,10 @@ function RouteComponent() {
 							activeRunId={data.thread.activeRunId}
 							actions={data.actions}
 						/>
-					) : null}
-					{mobileTab === "resume" ? <ResumePane resume={data.resume} /> : null}
+					</div>
+					<div className={cn("h-full", mobileTab !== "resume" && "hidden")}>
+						<ResumePane resume={data.resume} />
+					</div>
 				</div>
 			</div>
 		</div>

@@ -77,9 +77,25 @@ const emptyForm = {
 };
 
 function statusBadge(provider: SavedProvider) {
-	if (provider.testStatus === "success") return <Badge className="bg-emerald-600 text-white">Tested</Badge>;
-	if (provider.testStatus === "failure") return <Badge variant="destructive">Failed</Badge>;
-	return <Badge variant="secondary">Untested</Badge>;
+	if (provider.testStatus === "success") {
+		return (
+			<Badge className="bg-emerald-600 text-white">
+				<Trans>Tested</Trans>
+			</Badge>
+		);
+	}
+	if (provider.testStatus === "failure") {
+		return (
+			<Badge variant="destructive">
+				<Trans>Failed</Trans>
+			</Badge>
+		);
+	}
+	return (
+		<Badge variant="secondary">
+			<Trans>Untested</Trans>
+		</Badge>
+	);
 }
 
 function providerLabel(provider: AIProvider) {
@@ -108,7 +124,11 @@ function ProviderRow({ provider }: { provider: SavedProvider }) {
 				<div className="flex flex-wrap items-center gap-2">
 					<h3 className="truncate font-semibold">{provider.label}</h3>
 					{statusBadge(provider)}
-					{provider.enabled ? <Badge variant="outline">Enabled</Badge> : null}
+					{provider.enabled ? (
+						<Badge variant="outline">
+							<Trans>Enabled</Trans>
+						</Badge>
+					) : null}
 				</div>
 
 				<div className="grid gap-1 text-muted-foreground text-sm">
