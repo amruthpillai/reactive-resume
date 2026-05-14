@@ -29,6 +29,14 @@ describe("ResumePreviewLoader", () => {
 
 		expect(screen.getAllByRole("img", { name: /Loading resume page/ })).toHaveLength(pageCount);
 	});
+
+	it("writes numeric page gaps as valid CSS custom-property lengths", () => {
+		const { container } = render(<ResumePreviewLoader pageGap={96} />);
+
+		expect((container.firstElementChild as HTMLElement).style.getPropertyValue("--resume-preview-page-gap")).toBe(
+			"96px",
+		);
+	});
 });
 
 describe("getResumePreviewPageCount", () => {

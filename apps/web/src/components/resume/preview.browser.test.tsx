@@ -93,20 +93,14 @@ describe("ResumePreviewClient", () => {
 		previewMock.builderResumeData = resumeDataWithPageCount(3);
 		previewMock.toBlob.mockImplementation(() => new Promise<Blob>(() => {}));
 
-		render(<ResumePreviewClient pageGap="1rem" pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
+		render(<ResumePreviewClient pageGap={16} pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
 
 		expect(screen.getAllByRole("img", { name: /Loading resume page/ })).toHaveLength(3);
 	});
 
 	it("renders from explicit resume data when no builder resume is active", async () => {
 		render(
-			<ResumePreviewClient
-				data={sampleResumeData}
-				pageGap="1rem"
-				pageLayout="vertical"
-				pageScale={1.25}
-				showPageNumbers={false}
-			/>,
+			<ResumePreviewClient data={sampleResumeData} pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />,
 		);
 
 		expect(await screen.findByRole("img", { name: "Resume page 1 of 1" })).toBeTruthy();

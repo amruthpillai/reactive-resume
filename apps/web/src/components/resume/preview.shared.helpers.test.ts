@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
 	DEFAULT_PDF_PAGE_SIZE,
 	getPreviewCanvasScale,
+	getResumePreviewGapValue,
 	getScaledPreviewPageSize,
 	normalizeResumePreviewProps,
 } from "./preview.shared";
@@ -12,7 +13,7 @@ describe("normalizeResumePreviewProps", () => {
 	it("applies the documented defaults when fields are omitted", () => {
 		const result = normalizeResumePreviewProps({});
 		expect(result).toMatchObject({
-			pageGap: 40,
+			pageGap: 16,
 			pageLayout: "horizontal",
 			pageScale: 1,
 			showPageNumbers: false,
@@ -49,6 +50,20 @@ describe("getScaledPreviewPageSize", () => {
 	it("supports fractional scaling", () => {
 		const result = getScaledPreviewPageSize({ width: 100, height: 200 }, 0.5);
 		expect(result).toEqual({ width: 50, height: 100 });
+	});
+});
+
+describe("getResumePreviewGapValue", () => {
+	it("adds px units for numeric custom-property gap values", () => {
+		expect(getResumePreviewGapValue(96)).toBe("96px");
+	});
+
+	it("preserves explicit zero gap", () => {
+		expect(getResumePreviewGapValue(0)).toBe(0);
+	});
+
+	it("preserves string gap values", () => {
+		expect(getResumePreviewGapValue("1rem")).toBe("1rem");
 	});
 });
 

@@ -28,7 +28,7 @@ export function PreviewPage() {
 					wheel={{ step: 0.001 }}
 				>
 					<TransformComponent wrapperClass="h-full! w-full!">
-						<ResumePreview pageGap="2rem" pageLayout={pageLayout} showPageNumbers />
+						<ResumePreview showPageNumbers pageLayout={pageLayout} />
 					</TransformComponent>
 
 					<BuilderDock

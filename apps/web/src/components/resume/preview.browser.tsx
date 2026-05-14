@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { PreviewPageSize, ResolvedResumePreviewProps } from "./preview.shared";
 import { pdf } from "@react-pdf/renderer";
 import { AnimatePresence, motion } from "motion/react";
@@ -6,7 +7,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { useLocalizedResumeDocument } from "@/libs/resume/pdf-document";
 import { useResumeData } from "./builder-resume-draft";
 import { PdfCanvasDocument, PdfCanvasPage } from "./pdf-canvas";
-import { getResumePreviewPageCount, ResumePreviewLoader } from "./preview.shared";
+import { getResumePreviewGapValue, getResumePreviewPageCount, ResumePreviewLoader } from "./preview.shared";
 
 type PreviewPdf = {
 	file: Blob;
@@ -84,7 +85,7 @@ const removePreviewLayer = (layers: PreviewPdf[], layerId: number) => layers.fil
 export function ResumePreviewClient({
 	className,
 	data,
-	pageGap,
+	pageGap = 16,
 	pageLayout,
 	pageScale,
 	pageClassName,
@@ -133,6 +134,7 @@ export function ResumePreviewClient({
 	if (!resumeData) return null;
 
 	const visiblePdf = getActivePreviewLayer(previewLayers);
+	const resolvedPageGap = getResumePreviewGapValue(pageGap);
 
 	if (!visiblePdf) {
 		return (
@@ -154,8 +156,8 @@ export function ResumePreviewClient({
 					<motion.div
 						key={visiblePdf.id}
 						aria-hidden={visiblePdf.phase !== "active"}
+						style={{ "--resume-preview-page-gap": resolvedPageGap } as CSSProperties}
 						className={cn("col-start-1 row-start-1", visiblePdf.phase !== "active" && "pointer-events-none")}
-						style={{ "--resume-preview-page-gap": pageGap } as React.CSSProperties}
 						initial={{ opacity: visiblePdf.phase === "active" ? 1 : 0 }}
 						animate={{ opacity: visiblePdf.phase === "active" ? 1 : 0 }}
 						exit={{ opacity: 0 }}

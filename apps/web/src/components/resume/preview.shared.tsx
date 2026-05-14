@@ -1,11 +1,12 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { CSSProperties } from "react";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
 
 export type ResumePreviewProps = {
 	className?: string;
 	data?: ResumeData;
-	pageGap?: React.CSSProperties["gap"];
+	pageGap?: CSSProperties["gap"];
 	pageLayout?: "horizontal" | "vertical";
 	pageScale?: number;
 	pageClassName?: string;
@@ -13,7 +14,6 @@ export type ResumePreviewProps = {
 };
 
 export type ResolvedResumePreviewProps = ResumePreviewProps & {
-	pageGap: React.CSSProperties["gap"];
 	pageLayout: "horizontal" | "vertical";
 	pageScale: number;
 	showPageNumbers: boolean;
@@ -26,7 +26,7 @@ export type PreviewPageSize = {
 
 type ResumePreviewLoaderProps = Pick<ResumePreviewProps, "pageClassName" | "showPageNumbers"> & {
 	pageCount?: number;
-	pageGap?: React.CSSProperties["gap"];
+	pageGap?: CSSProperties["gap"];
 	pageLayout?: "horizontal" | "vertical";
 	pageScale?: number;
 };
@@ -39,7 +39,7 @@ export const DEFAULT_PDF_PAGE_SIZE: PreviewPageSize = {
 };
 
 export const normalizeResumePreviewProps = ({
-	pageGap = 40,
+	pageGap = 16,
 	pageLayout = "horizontal",
 	pageScale = 1,
 	showPageNumbers = false,
@@ -67,25 +67,29 @@ export const getScaledPreviewPageSize = (pageSize: PreviewPageSize, pageScale: n
 	width: pageSize.width * pageScale,
 });
 
+export const getResumePreviewGapValue = (pageGap: CSSProperties["gap"]) =>
+	typeof pageGap === "number" && pageGap !== 0 ? `${pageGap}px` : pageGap;
+
 export const getResumePreviewPageCount = (data?: ResumeData) => Math.max(1, data?.metadata.layout.pages.length ?? 1);
 
 export function ResumePreviewLoader({
 	pageCount = 1,
 	pageClassName,
-	pageGap = 40,
+	pageGap = 16,
 	pageLayout = "horizontal",
 	pageScale = 1,
 	showPageNumbers = false,
 }: ResumePreviewLoaderProps) {
 	const pageSize = getScaledPreviewPageSize(DEFAULT_PDF_PAGE_SIZE, pageScale);
+	const resolvedPageGap = getResumePreviewGapValue(pageGap);
 
 	return (
 		<div
+			style={{ "--resume-preview-page-gap": resolvedPageGap } as CSSProperties}
 			className={cn(
 				"flex justify-start gap-(--resume-preview-page-gap)",
 				pageLayout === "horizontal" ? "flex-row items-start" : "flex-col items-center",
 			)}
-			style={{ "--resume-preview-page-gap": pageGap } as React.CSSProperties}
 		>
 			{Array.from({ length: pageCount }, (_, index) => {
 				const pageNumber = index + 1;
