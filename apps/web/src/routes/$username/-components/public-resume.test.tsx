@@ -12,7 +12,7 @@ const publicResumeMock = vi.hoisted(() => ({
 	createResumePdfBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
 	downloadWithAnchor: vi.fn(),
 	generateFilename: vi.fn((name: string, extension: string) => `${name}.${extension}`),
-	PDFViewer: vi.fn<(_props: { children: ReactNode; showToolbar?: boolean; title?: string }) => ReactNode>(() => null),
+	PdfViewer: vi.fn<(_props: { className?: string; data: ResumeData }) => ReactNode>(() => null),
 	resume: undefined as
 		| undefined
 		| {
@@ -20,12 +20,6 @@ const publicResumeMock = vi.hoisted(() => ({
 				name: string;
 				slug: string;
 		  },
-	ResumePreview: vi.fn<() => ReactNode>(() => null),
-	useLocalizedResumeDocument: vi.fn<(data?: ResumeData) => ReactNode>(() => null),
-}));
-
-vi.mock("@react-pdf/renderer", () => ({
-	PDFViewer: publicResumeMock.PDFViewer,
 }));
 
 vi.mock("@tanstack/react-query", () => ({
@@ -43,8 +37,8 @@ vi.mock("@reactive-resume/utils/file", () => ({
 	generateFilename: publicResumeMock.generateFilename,
 }));
 
-vi.mock("@/components/resume/preview", () => ({
-	ResumePreview: publicResumeMock.ResumePreview,
+vi.mock("./pdf-viewer", () => ({
+	PdfViewer: publicResumeMock.PdfViewer,
 }));
 
 vi.mock("@/libs/orpc/client", () => ({
@@ -53,7 +47,6 @@ vi.mock("@/libs/orpc/client", () => ({
 
 vi.mock("@/libs/resume/pdf-document", () => ({
 	createResumePdfBlob: publicResumeMock.createResumePdfBlob,
-	useLocalizedResumeDocument: publicResumeMock.useLocalizedResumeDocument,
 }));
 
 const { PublicResumeRoute } = await import("./public-resume");
@@ -68,16 +61,10 @@ beforeEach(() => {
 		name: "Sample Resume",
 		slug: "sample",
 	};
-	publicResumeMock.PDFViewer.mockClear();
-	publicResumeMock.ResumePreview.mockClear();
-	publicResumeMock.useLocalizedResumeDocument.mockClear();
-	publicResumeMock.PDFViewer.mockImplementation(({ children, showToolbar, title }) => (
-		<div data-testid="public-pdf-viewer" data-show-toolbar={String(showToolbar)} title={title}>
-			{children}
-		</div>
+	publicResumeMock.PdfViewer.mockClear();
+	publicResumeMock.PdfViewer.mockImplementation(({ className }) => (
+		<div className={className} data-testid="pdf-viewer" />
 	));
-	publicResumeMock.ResumePreview.mockImplementation(() => <div data-testid="shared-resume-preview" />);
-	publicResumeMock.useLocalizedResumeDocument.mockImplementation(() => <div data-testid="resume-document" />);
 });
 
 const renderPublicResumeRoute = () =>
@@ -88,22 +75,23 @@ const renderPublicResumeRoute = () =>
 	);
 
 describe("PublicResumeRoute", () => {
-	it("renders the public resume through a toolbarless browser PDF viewer", () => {
+	it("renders the public resume through the route-local PDF.js viewer", () => {
 		renderPublicResumeRoute();
 
-		expect(screen.getByTestId("public-pdf-viewer")).toHaveAttribute("data-show-toolbar", "false");
-		expect(screen.getByTestId("resume-document")).toBeInTheDocument();
-		expect(screen.queryByTestId("shared-resume-preview")).not.toBeInTheDocument();
-		expect(publicResumeMock.useLocalizedResumeDocument).toHaveBeenCalledWith(sampleResumeData);
+		expect(screen.getByTestId("pdf-viewer")).toHaveClass("block", "w-full");
+		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
+			expect.objectContaining({ data: sampleResumeData }),
+			undefined,
+		);
 	});
 
-	it("caps the public resume page to the viewport without document overflow", () => {
+	it("lets the public resume page grow to the full PDF length", () => {
 		renderPublicResumeRoute();
 
-		const viewerFrame = screen.getByTestId("public-pdf-viewer").parentElement;
+		const viewerFrame = screen.getByTestId("pdf-viewer").parentElement;
 		const page = viewerFrame?.parentElement;
 
-		expect(page).toHaveClass("h-svh", "max-h-svh", "overflow-hidden");
-		expect(viewerFrame).toHaveClass("min-h-0", "flex-1", "overflow-hidden");
+		expect(page).not.toHaveClass("min-h-svh", "h-svh", "max-h-svh", "overflow-hidden");
+		expect(viewerFrame).not.toHaveClass("min-h-0", "flex-1", "overflow-hidden");
 	});
 });
