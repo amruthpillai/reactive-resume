@@ -104,3 +104,4 @@ Vitest test paths are package-relative when running through `pnpm --filter <pack
 - Biome uses tabs, double quotes, line width 120, organized import groups, and sorted Tailwind classes for `clsx`, `cva`, and `cn`.
 - Most packages use `tsgo --noEmit` for typechecking and `vitest run --passWithNoTests` for tests.
 - There may be unrelated local edits in the worktree. Inspect `git status --short` first and avoid reverting files you did not touch.
+- New server env vars must be registered in `turbo.json` `globalEnv`; Turborepo strict env mode otherwise filters them out in child processes.

@@ -180,7 +180,6 @@ Here's a complete list of environment variables you can configure:
 | `BETTER_AUTH_API_KEY`                 | Better Auth dashboard API key                               | —                      |
 | `BETTER_AUTH_URL`                     | Better Auth base URL override (advanced)                    | `APP_URL`              |
 | `BETTER_AUTH_SECRET`                  | Better Auth secret override (advanced)                      | `AUTH_SECRET`          |
-| `AI_ALLOWED_BASE_URLS`                | Allowlist for custom AI provider base URLs                  | —                      |
 | `SMTP_HOST`                           | SMTP Server Host (for email features)                       | —                      |
 | `SMTP_PORT`                           | SMTP Server Port                                            | `587`                  |
 | `SMTP_USER`                           | SMTP Username                                               | —                      |
@@ -196,6 +195,7 @@ Here's a complete list of environment variables you can configure:
 | `FLAG_DISABLE_SIGNUPS`                | Disables new user signups                                   | `false`                |
 | `FLAG_DISABLE_EMAIL_AUTH`             | Disables email/password login (SSO only)                    | `false`                |
 | `FLAG_DISABLE_IMAGE_PROCESSING`       | Disables image processing                                   | `false`                |
+| `FLAG_ALLOW_UNSAFE_AI_BASE_URL`       | Enables local-network AI providers (e.g. Ollama)            | `false`                |
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
 

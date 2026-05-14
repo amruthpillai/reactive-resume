@@ -90,11 +90,6 @@ OAUTH_SCOPES=""
 # BETTER_AUTH_URL="https://auth.example.com"
 # BETTER_AUTH_SECRET=""
 
-# --- AI (optional) ---
-# Comma-separated hostnames/origins for custom AI base URLs
-# Example: api.openai.com,https://gateway.ai.vercel.com
-AI_ALLOWED_BASE_URLS=""
-
 # --- Email (optional) ---
 # If all keys are disabled, the app logs the email to be sent to the console instead.
 SMTP_HOST=""
@@ -120,6 +115,7 @@ S3_FORCE_PATH_STYLE="false"
 FLAG_DISABLE_SIGNUPS="false"
 FLAG_DISABLE_EMAIL_AUTH="false"
 FLAG_DISABLE_IMAGE_PROCESSING="false"
+FLAG_ALLOW_UNSAFE_AI_BASE_URL="false"
 ```
 
   </Step>
@@ -255,9 +251,6 @@ docker compose logs -f reactive-resume
         S3 storage (<code>S3_&#42;</code>)
       </li>
       <li>
-        AI URL allowlist (<code>AI_ALLOWED_BASE_URLS</code>)
-      </li>
-      <li>
         Feature flags (<code>FLAG_&#42;</code>)
       </li>
     </ul>
@@ -337,15 +330,11 @@ openssl rand -hex 32
     - `"false"` for virtual-hosted-style URLs (`https://bucket.endpoint`) common with AWS S3 / Cloudflare R2.
 </Accordion>
 
-<Accordion title="AI (optional)">
-  - **`AI_ALLOWED_BASE_URLS`**: Comma-separated hosts or origins allowed as custom AI API base URLs. - Use this when
-  routing AI requests through your own gateway/proxy. - Example: `api.openai.com,https://gateway.ai.vercel.com`
-</Accordion>
-
   <Accordion title="Feature Flags">
     - **`FLAG_DISABLE_SIGNUPS`**: Disables new signups (web app and server). Useful for private instances.
     - **`FLAG_DISABLE_EMAIL_AUTH`**: Disables email/password login entirely. Also disables email verification, forgot password, and reset password flows. Users can still sign up via social auth (Google/GitHub/LinkedIn/Custom OAuth), unless FLAG_DISABLE_SIGNUPS is also set to true. Useful when only SSO is required.
     - **`FLAG_DISABLE_IMAGE_PROCESSING`**: Disables image processing. This is useful if you are using a machine with limited resources, like a Raspberry Pi.
+    - **`FLAG_ALLOW_UNSAFE_AI_BASE_URL`**: Allows AI providers to be configured with `http://` URLs and private/loopback addresses (e.g. a local Ollama instance at `http://192.168.1.10:11434`). **Warning: enabling this on a multi-tenant deployment is an SSRF risk.** Only enable on a trusted, single-tenant self-hosted instance.
   </Accordion>
 </AccordionGroup>
 

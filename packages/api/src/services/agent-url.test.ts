@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const envMock = vi.hoisted(() => ({
 	CLOUDFLARE_ACCOUNT_ID: "",
 	CLOUDFLARE_API_TOKEN: "",
-	AI_PROVIDER_HOST_ALLOWLIST: "",
+	FLAG_ALLOW_UNSAFE_AI_BASE_URL: false,
 }));
 
 const dnsMock = vi.hoisted(() => ({
@@ -53,7 +53,7 @@ describe("fetchUrlForAgent", () => {
 	beforeEach(() => {
 		envMock.CLOUDFLARE_ACCOUNT_ID = "";
 		envMock.CLOUDFLARE_API_TOKEN = "";
-		envMock.AI_PROVIDER_HOST_ALLOWLIST = "";
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = false;
 		vi.restoreAllMocks();
 		dnsMock.lookup.mockReset();
 		dnsMock.lookup.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
@@ -618,7 +618,7 @@ describe("fetchUrlForAgent", () => {
 	it("blocks private and non-HTTPS URLs before Cloudflare fallback", async () => {
 		envMock.CLOUDFLARE_ACCOUNT_ID = "account-id";
 		envMock.CLOUDFLARE_API_TOKEN = "api-token";
-		envMock.AI_PROVIDER_HOST_ALLOWLIST = "localhost,10.0.0.5";
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
 		const fetchMock = vi.fn();
 		vi.stubGlobal("fetch", fetchMock);
 

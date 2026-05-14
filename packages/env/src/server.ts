@@ -69,7 +69,6 @@ export const env = createEnv({
 		// AI Agent Workspace (optional until the agent feature is used)
 		REDIS_URL: z.url({ protocol: /redis(s)?/ }).optional(),
 		ENCRYPTION_SECRET: z.string().min(1).optional(),
-		AI_PROVIDER_HOST_ALLOWLIST: z.string().optional(),
 		CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
 		CLOUDFLARE_API_TOKEN: z.string().min(1).optional(),
 
@@ -77,6 +76,7 @@ export const env = createEnv({
 		FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
 		FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
 		FLAG_DISABLE_IMAGE_PROCESSING: z.stringbool().default(false),
+		FLAG_ALLOW_UNSAFE_AI_BASE_URL: z.stringbool().default(false),
 
 		// Crowdin (optional, for translation tooling)
 		CROWDIN_PROJECT_ID: z.string().optional(),

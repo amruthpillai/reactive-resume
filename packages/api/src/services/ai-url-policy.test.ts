@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 const envMock = vi.hoisted(() => ({
-	AI_PROVIDER_HOST_ALLOWLIST: "",
+	FLAG_ALLOW_UNSAFE_AI_BASE_URL: false,
 }));
 
 vi.mock("@reactive-resume/env/server", () => ({ env: envMock }));
@@ -10,25 +10,37 @@ const { assertFetchablePublicHttpsUrl, resolveAiBaseUrl } = await import("./ai-u
 
 describe("AI provider base URL policy", () => {
 	it("allows public HTTPS provider URLs", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = false;
+
 		expect(resolveAiBaseUrl({ provider: "openai", baseURL: "https://api.openai.com/v1" })).toBe(
 			"https://api.openai.com/v1",
 		);
 	});
 
-	it("blocks private provider URLs unless the host is explicitly allowlisted", () => {
+	it("blocks private and non-HTTPS provider URLs by default", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = false;
+
 		expect(() => resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "https://localhost:11434/v1" })).toThrow(
 			"INVALID_AI_BASE_URL",
 		);
-
-		envMock.AI_PROVIDER_HOST_ALLOWLIST = "localhost,10.0.0.5";
-
-		expect(resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "https://localhost:11434/v1" })).toBe(
-			"https://localhost:11434/v1",
+		expect(() => resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "http://example.com/v1" })).toThrow(
+			"INVALID_AI_BASE_URL",
 		);
 	});
 
-	it("keeps URL-fetch tools public HTTPS only even when provider hosts are allowlisted", () => {
-		envMock.AI_PROVIDER_HOST_ALLOWLIST = "localhost";
+	it("allows private and non-HTTPS provider URLs when explicitly enabled", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
+
+		expect(resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "http://localhost:11434/v1" })).toBe(
+			"http://localhost:11434/v1",
+		);
+		expect(resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "https://10.0.0.5/v1" })).toBe(
+			"https://10.0.0.5/v1",
+		);
+	});
+
+	it("keeps URL-fetch tools public HTTPS only even when unsafe provider URLs are enabled", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
 
 		expect(() => assertFetchablePublicHttpsUrl("https://localhost/internal-job")).toThrow("URL_NOT_FETCHABLE");
 		expect(() => assertFetchablePublicHttpsUrl("http://example.com/job")).toThrow("URL_NOT_FETCHABLE");
@@ -36,6 +48,8 @@ describe("AI provider base URL policy", () => {
 	});
 
 	it("blocks special-use IP literals for URL-fetch tools", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
+
 		expect(() => assertFetchablePublicHttpsUrl("https://100.64.0.1/job")).toThrow("URL_NOT_FETCHABLE");
 		expect(() => assertFetchablePublicHttpsUrl("https://192.0.2.1/job")).toThrow("URL_NOT_FETCHABLE");
 		expect(() => assertFetchablePublicHttpsUrl("https://192.88.99.1/job")).toThrow("URL_NOT_FETCHABLE");
