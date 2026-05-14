@@ -96,10 +96,15 @@ S3_SECRET_ACCESS_KEY=seaweedfs
 S3_ENDPOINT=http://seaweedfs:8333
 S3_BUCKET=reactive-resume
 S3_FORCE_PATH_STYLE=true
+
+# AI features (optional; ENCRYPTION_SECRET for saved providers, plus REDIS_URL for the agent)
+REDIS_URL=redis://redis:6379
+ENCRYPTION_SECRET=your-secure-encryption-secret-here
 ```
 
     	<Warning>
-    		For production deployments, always use strong, unique values for `AUTH_SECRET` and database credentials.
+		For production deployments, always use strong, unique values for `AUTH_SECRET`, `ENCRYPTION_SECRET`, and
+		database credentials.
     	</Warning>
     </Step>
 
@@ -110,6 +115,7 @@ S3_FORCE_PATH_STYLE=true
 
     	This starts:
     	- **PostgreSQL** — Database for storing user data and resumes
+	- **Redis** — Required for the AI Agent workspace
     	- **SeaweedFS** — S3-compatible storage for file uploads
     	- **Reactive Resume** — The main application
     </Step>
@@ -131,8 +137,15 @@ Here's what each service in the stack does:
 | Service           | Port | Description                                          |
 | ----------------- | ---- | ---------------------------------------------------- |
 | `postgres`        | 5432 | PostgreSQL database for storing all application data |
+| `redis`           | 6379 | Redis instance required by the AI Agent workspace    |
 | `seaweedfs`       | 8333 | S3-compatible object storage for file uploads        |
 | `reactive_resume` | 3000 | The main Reactive Resume application                 |
+
+<Note>
+  Saved AI provider management requires `ENCRYPTION_SECRET`, and the AI Agent workspace requires both `REDIS_URL` and
+  `ENCRYPTION_SECRET`. Other Reactive Resume features can run without them. Agent attachments and other private objects
+  require S3-compatible storage; local storage rejects private objects.
+</Note>
 
 ### Health Checks
 
@@ -192,12 +205,18 @@ Here's a complete list of environment variables you can configure:
 | `S3_ENDPOINT`                         | S3-compatible Endpoint URL                                  | —                      |
 | `S3_BUCKET`                           | S3 Bucket Name                                              | —                      |
 | `S3_FORCE_PATH_STYLE`                 | Use path-style URLs for S3 (set `true` for MinIO/SeaweedFS) | `false`                |
+| `REDIS_URL`                           | Redis connection string for the AI Agent workspace          | —                      |
+| `ENCRYPTION_SECRET`                   | Encryption secret for saved AI provider credentials         | —                      |
+| `CLOUDFLARE_ACCOUNT_ID`               | Optional Cloudflare URL extraction fallback account ID      | —                      |
+| `CLOUDFLARE_API_TOKEN`                | Optional Cloudflare URL extraction fallback API token       | —                      |
 | `FLAG_DISABLE_SIGNUPS`                | Disables new user signups                                   | `false`                |
 | `FLAG_DISABLE_EMAIL_AUTH`             | Disables email/password login (SSO only)                    | `false`                |
 | `FLAG_DISABLE_IMAGE_PROCESSING`       | Disables image processing                                   | `false`                |
-| `FLAG_ALLOW_UNSAFE_AI_BASE_URL`       | Enables local-network AI providers (e.g. Ollama)            | `false`                |
+| `FLAG_ALLOW_UNSAFE_AI_BASE_URL`       | Allows unsafe/private/non-public AI provider base URLs      | `false`                |
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
+
+> **AI features:** Saved AI provider management requires `ENCRYPTION_SECRET`, and the AI Agent workspace requires both `REDIS_URL` and `ENCRYPTION_SECRET`. Cloudflare variables only enable the optional URL extraction fallback and are not required for normal agent operation. Keep `FLAG_ALLOW_UNSAFE_AI_BASE_URL` disabled unless this is a trusted self-hosted deployment; public HTTPS provider URLs are the safe default.
 
 > **Health check behavior:** `/api/health` reports status for database and storage. A failure in either dependency returns HTTP `503`.
 

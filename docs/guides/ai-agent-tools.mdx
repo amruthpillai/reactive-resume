@@ -1,0 +1,83 @@
+---
+title: "AI Agent Tools"
+description: "Understand the tools available to the AI Agent workspace and how they affect resume drafts."
+---
+
+The AI Agent workspace can use a curated set of tools while it chats with you. You do not call these tools directly; the agent chooses them when your request needs resume data, web context, attachments, questions, or a resume patch.
+
+## Tool activity in chat
+
+Tool activity appears inside the conversation. Some activity is collapsed by default so the chat stays readable.
+
+Applied resume patches are shown as a small inline **Patch applied** item. Open it to inspect the raw JSON payload.
+
+<Frame caption="Patch details and tool activity in the AI Agent chat">
+  <img
+    src="/images/guides/ai-agent-tools/screenshot-1.png"
+    alt="AI Agent chat showing an applied patch with raw JSON details"
+  />
+</Frame>
+
+## Available tools
+
+| Tool | What it does | Example request |
+| --- | --- | --- |
+| `read_resume` | Reads the current AI draft and gives the agent the resume data it can safely edit. | "What are the weakest parts of this resume?" |
+| `fetch_url` | Fetches public HTTPS pages, extracts readable content, and returns it as agent input. | "Tailor this resume to this job description: `https://example.com/job`" |
+| Provider-native search | Uses the selected provider's native web search when that provider/model supports it. | "Research this company and adjust the summary for its product area." |
+| `read_attachment` | Reads extracted text from attached plain text, Markdown, or JSON files. Other supported attachments, such as images or PDFs, are passed to the model when the selected provider can use them. | "Use the attached notes to update the keywords." |
+| `ask_user_question` | Shows a question card with answer choices when the agent needs your decision. | "Ask me before changing the career narrative." |
+| `apply_resume_patch` | Applies a JSON Patch to the AI draft and stores enough history to revert it later. | "Change the visible name to Amruth Pillai." |
+
+## Resume patches
+
+Resume patches are rooted at the resume data object. For example, the visible resume name is patched at `/basics/name`.
+
+When a patch is applied:
+
+- the AI draft updates immediately;
+- the raw JSON Patch is available from the **Patch applied** details;
+- an inverse patch is stored for revert;
+- the resume preview refreshes to show the updated draft.
+
+If the resume changed after the patch was generated, revert or apply can fail with a version conflict. In that case, ask the agent to retry from the latest draft.
+
+## Web access
+
+The agent can fetch public HTTPS URLs so it can read job descriptions, company pages, or other public context you provide.
+
+For self-hosted deployments:
+
+- private, loopback, and non-HTTPS URLs are blocked by default;
+- Cloudflare URL extraction is optional and is used only as a fallback when local readability extraction fails;
+- unsafe/private AI provider base URLs require `FLAG_ALLOW_UNSAFE_AI_BASE_URL=true`, which should only be used on trusted self-hosted deployments.
+
+## Attachments
+
+Attach files from the chat composer when the agent needs extra context, such as:
+
+- a job description PDF;
+- a portfolio brief;
+- a screenshot;
+- a plain text note with constraints.
+
+Self-hosted deployments need S3-compatible storage for private agent attachments. Local filesystem storage rejects private objects.
+
+## Good prompts for tool use
+
+Use direct prompts that tell the agent what context to use and how cautious to be:
+
+- "Fetch this role URL, identify the most important keywords, and apply a conservative patch."
+- "Read the attached job description and ask me before changing anything outside the summary."
+- "Compare my current projects against this company page and suggest only truthful wording."
+- "Apply a patch for the visible resume name, then show me what changed."
+
+## When tools are unavailable
+
+Tool use can be limited by the selected provider, deployment configuration, or thread state.
+
+- A deleted provider makes the thread read-only; a disabled or untested provider blocks new agent runs until it is enabled and tested again.
+- A deleted working resume makes the thread read-only.
+- Archived threads cannot receive new messages.
+- URL fetching may fail for private URLs, blocked hosts, non-HTML pages, or pages that cannot be extracted.
+- Attachments may fail if private object storage is not configured.
