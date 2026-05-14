@@ -86,12 +86,9 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 			animationFrameId = window.requestAnimationFrame(() => {
 				if (isCancelled) return;
 
-				const nextHeight = Math.ceil(Math.max(viewer.scrollHeight, viewer.getBoundingClientRect().height));
+				const nextHeight = Math.ceil(viewer.scrollHeight);
 				if (nextHeight > 0) setViewerHeight(nextHeight);
-
-				window.requestAnimationFrame(() => {
-					if (!isCancelled) pdfViewer?.update();
-				});
+				pdfViewer?.update();
 			});
 		};
 
