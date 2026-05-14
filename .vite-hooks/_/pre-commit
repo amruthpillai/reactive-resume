@@ -16,9 +16,9 @@ call_lefthook()
   elif lefthook -h >/dev/null 2>&1
   then
     lefthook "$@"
-  elif /Users/amruth/.codex/worktrees/50d0/reactive-resume/node_modules/.pnpm/lefthook-darwin-arm64@2.1.6/node_modules/lefthook-darwin-arm64/bin/lefthook -h >/dev/null 2>&1
+  elif /Users/amruth/Projects/reactive-resume/node_modules/.pnpm/lefthook-darwin-arm64@2.1.6/node_modules/lefthook-darwin-arm64/bin/lefthook -h >/dev/null 2>&1
   then
-    /Users/amruth/.codex/worktrees/50d0/reactive-resume/node_modules/.pnpm/lefthook-darwin-arm64@2.1.6/node_modules/lefthook-darwin-arm64/bin/lefthook "$@"
+    /Users/amruth/Projects/reactive-resume/node_modules/.pnpm/lefthook-darwin-arm64@2.1.6/node_modules/lefthook-darwin-arm64/bin/lefthook "$@"
   else
     dir="$(git rev-parse --show-toplevel)"
     osArch=$(uname | tr '[:upper:]' '[:lower:]')
