@@ -14,6 +14,9 @@
 				"config": []
 			}
 		},
+		"packages/api": {
+			"ignoreDependencies": ["ioredis"]
+		},
 		"packages/runtime-externals": {
 			"ignoreDependencies": ["@aws-sdk/client-s3", "bcrypt", "sharp"]
 		}
