@@ -1,4 +1,6 @@
 import type { UIMessage, UIMessageChunk } from "ai";
+import type * as React from "react";
+import type { PanelImperativeHandle } from "react-resizable-panels";
 import type { RouterOutput } from "@/libs/orpc/client";
 import { useChat } from "@ai-sdk/react";
 import { t } from "@lingui/core/macro";
@@ -7,11 +9,16 @@ import { eventIteratorToUnproxiedDataStream } from "@orpc/client";
 import {
 	ArchiveIcon,
 	ArrowClockwiseIcon,
+	ArrowSquareOutIcon,
 	ChatCircleDotsIcon,
+	CircleNotchIcon,
 	ClockCounterClockwiseIcon,
 	CopyIcon,
 	DotsThreeVerticalIcon,
 	FileIcon,
+	FilePdfIcon,
+	MinusIcon,
+	PaperclipIcon,
 	PaperPlaneRightIcon,
 	PlusIcon,
 	SidebarSimpleIcon,
@@ -22,7 +29,10 @@ import {
 } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { motion } from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -30,17 +40,22 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { ResizableGroup, ResizablePanel, ResizableSeparator } from "@reactive-resume/ui/components/resizable";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@reactive-resume/ui/components/tabs";
 import { Textarea } from "@reactive-resume/ui/components/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
+import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { cn } from "@reactive-resume/utils/style";
 import { ResumePreview } from "@/components/resume/preview";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc, streamClient } from "@/libs/orpc/client";
+import { createResumePdfBlob } from "@/libs/resume/pdf-document";
+import { AgentThreadSidebar } from "./-components/thread-sidebar";
 import { attachmentIdsFromTransportBody, buildAgentChatSubmission } from "./-helpers/chat-attachments";
 
 type AgentThreadDetail = RouterOutput["agent"]["threads"]["get"];
@@ -48,8 +63,8 @@ type AgentAction = AgentThreadDetail["actions"][number];
 type AgentAttachment = AgentThreadDetail["attachments"][number];
 type PatchOperation = AgentAction["operations"][number];
 
-function truncate(str: string, max = 200) {
-	return str.length > max ? `${str.slice(0, max)}...` : str;
+function toRecord(value: unknown) {
+	return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : null;
 }
 
 function PatchToolCard({
@@ -63,109 +78,82 @@ function PatchToolCard({
 	onRevert: (actionId: string) => void;
 	isReverting: boolean;
 }) {
-	const output =
-		"output" in part && typeof part.output === "object" && part.output
-			? (part.output as Record<string, unknown>)
+	const partRecord = part as Record<string, unknown>;
+	const state = typeof partRecord.state === "string" ? partRecord.state : null;
+	const input = toRecord(partRecord.input);
+	const output = toRecord(partRecord.output);
+	const actionId =
+		state === "output-available"
+			? (action?.id ?? (typeof output?.actionId === "string" ? output.actionId : null))
 			: null;
-	const actionId = action?.id ?? (typeof output?.actionId === "string" ? output.actionId : null);
 
-	const title = action?.title ?? (typeof output?.title === "string" ? output.title : t`Resume patch`);
+	const title =
+		action?.title ??
+		(typeof output?.title === "string" ? output.title : null) ??
+		(typeof input?.title === "string" ? input.title : t`Resume patch`);
 	const operations: PatchOperation[] =
-		action?.operations ?? (Array.isArray(output?.operations) ? (output.operations as PatchOperation[]) : []);
+		action?.operations ??
+		(Array.isArray(output?.operations)
+			? (output.operations as PatchOperation[])
+			: Array.isArray(input?.operations)
+				? (input.operations as PatchOperation[])
+				: []);
 	const status = action?.status ?? "applied";
 	const revertMessage = action?.revertMessage ?? null;
-
-	const containerClass =
-		status === "reverted"
-			? "border-muted bg-muted/30 text-foreground"
-			: status === "conflicted"
-				? "border-amber-300 bg-amber-50 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
-				: "border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/20 dark:text-emerald-100";
-
-	const statusBadge =
-		status === "reverted" ? (
-			<Badge variant="secondary">
-				<Trans>Reverted</Trans>
-			</Badge>
-		) : status === "conflicted" ? (
-			<Badge variant="destructive">
-				<Trans>Conflicted</Trans>
-			</Badge>
-		) : (
-			<Badge variant="outline">
-				<Trans>Applied</Trans>
-			</Badge>
-		);
-
+	const label =
+		state === "output-error"
+			? t`Patch failed`
+			: state !== "output-available"
+				? t`Patch pending`
+				: status === "reverted"
+					? t`Patch reverted`
+					: status === "conflicted"
+						? t`Patch conflicted`
+						: t`Patch applied`;
 	const revertDisabled = isReverting || status === "reverted" || status === "conflicted";
+	const errorText = typeof partRecord.errorText === "string" ? partRecord.errorText : null;
+	const rawPayload = JSON.stringify(
+		{
+			state,
+			input,
+			...(partRecord.rawInput !== undefined ? { rawInput: partRecord.rawInput } : {}),
+			output,
+			...(errorText ? { errorText } : {}),
+			...(action ? { action } : {}),
+			operations,
+		},
+		null,
+		2,
+	);
 
 	return (
-		<div className={cn("space-y-3 rounded-md border p-3", containerClass)}>
-			<div className="flex items-start justify-between gap-3">
-				<div className="min-w-0 space-y-1">
-					<div className="flex items-center gap-2">
-						<span className="font-medium">{title}</span>
-						{statusBadge}
+		<details className="group text-muted-foreground text-xs">
+			<summary className="inline-flex cursor-pointer list-none items-center gap-2 rounded-md py-1 font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
+				<span>{label}</span>
+				<span className="text-muted-foreground/70 group-open:hidden">{title}</span>
+			</summary>
+
+			<div className="mt-2 space-y-2 rounded-md border bg-muted/20 p-3">
+				<div className="flex items-center justify-between gap-3">
+					<div className="min-w-0">
+						<p className="truncate font-medium text-foreground">{title}</p>
+						{status === "conflicted" && revertMessage ? (
+							<p className="mt-1 text-amber-600 dark:text-amber-300">{revertMessage}</p>
+						) : null}
+						{errorText ? <p className="mt-1 text-rose-500">{errorText}</p> : null}
 					</div>
-					{status === "conflicted" && revertMessage ? (
-						<p className="text-sm opacity-80">{revertMessage}</p>
-					) : (
-						<p className="text-sm opacity-80">
-							{status === "reverted" ? (
-								<Trans>Reverted from the working resume.</Trans>
-							) : (
-								<Trans>Applied to the working resume.</Trans>
-							)}
-						</p>
-					)}
+					{actionId ? (
+						<Button size="xs" variant="ghost" disabled={revertDisabled} onClick={() => onRevert(actionId)}>
+							<ClockCounterClockwiseIcon />
+							<Trans>Revert</Trans>
+						</Button>
+					) : null}
 				</div>
-				{actionId ? (
-					<Button size="sm" variant="outline" disabled={revertDisabled} onClick={() => onRevert(actionId)}>
-						<ClockCounterClockwiseIcon />
-						<Trans>Revert</Trans>
-					</Button>
-				) : null}
+				<pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded border bg-background p-3 font-mono text-[0.7rem] leading-relaxed">
+					{rawPayload}
+				</pre>
 			</div>
-
-			{operations.length > 0 ? (
-				<details className="rounded border bg-background/40 px-2 py-1 text-sm">
-					<summary className="cursor-pointer text-muted-foreground">
-						<Trans>Show changes</Trans>
-					</summary>
-					<ul className="mt-2 space-y-2">
-						{operations.map((op, index) => {
-							const opKey = `${op.op}-${op.path}-${index}`;
-							const indicator =
-								op.op === "add" ? (
-									<span className="text-emerald-600 dark:text-emerald-400">+ Add</span>
-								) : op.op === "replace" ? (
-									<span className="text-amber-600 dark:text-amber-400">~ Replace</span>
-								) : op.op === "remove" ? (
-									<span className="text-rose-600 dark:text-rose-400">− Remove</span>
-								) : (
-									<span className="text-muted-foreground">{op.op}</span>
-								);
-
-							const value = op.op === "add" || op.op === "replace" ? truncate(JSON.stringify(op.value, null, 2)) : null;
-
-							return (
-								<li key={opKey} className="space-y-1">
-									<div className="flex items-center gap-2 text-xs">
-										<span className="font-medium">{indicator}</span>
-										<span className="font-mono text-xs">{op.path}</span>
-									</div>
-									{value !== null ? (
-										<pre className="whitespace-pre-wrap break-words rounded bg-muted/50 p-2 font-mono text-xs">
-											{value}
-										</pre>
-									) : null}
-								</li>
-							);
-						})}
-					</ul>
-				</details>
-			) : null}
-		</div>
+		</details>
 	);
 }
 
@@ -219,73 +207,127 @@ function parseAgentSseStream(stream: ReadableStream<string>) {
 	);
 }
 
-function ThreadSidebar({ activeThreadId }: { activeThreadId: string }) {
-	const { data: threads } = useQuery(orpc.agent.threads.list.queryOptions());
+function promptPreview(prompt: string) {
+	const words = prompt.split(/\s+/).filter(Boolean);
+	return `${words.slice(0, 7).join(" ")}${words.length > 7 ? "..." : ""}`;
+}
+
+function chunkPrompts(prompts: string[], columns: number) {
+	return prompts.reduce<string[][]>(
+		(rows, prompt, index) => {
+			rows[index % columns]?.push(prompt);
+			return rows;
+		},
+		Array.from({ length: columns }, () => []),
+	);
+}
+
+function StarterPromptMarquee({ onSelect }: { onSelect: (prompt: string) => void }) {
+	const prompts = [
+		t`Tailor this resume to a product manager job description and emphasize roadmap ownership, stakeholder communication, and measurable launch outcomes.`,
+		t`Compare this resume against this role URL and update keywords while keeping the voice concise and credible.`,
+		t`Find weak bullets and rewrite them with stronger outcomes, numbers, scope, and sharper verbs.`,
+		t`Rework the summary so it targets a senior engineering manager role without sounding generic.`,
+		t`Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements.`,
+		t`Rewrite this resume for a startup founder-to-product-lead transition with clear business impact.`,
+		t`Make the experience section more results-oriented and remove vague responsibilities.`,
+		t`Adjust the resume for a remote-first role that values async communication and ownership.`,
+		t`Review the resume against a job description and ask me questions before changing uncertain sections.`,
+		t`Tighten the skills section so it supports the target role instead of reading like a keyword dump.`,
+		t`Update project bullets to show leadership, constraints, tradeoffs, and measurable outcomes.`,
+		t`Prepare a conservative patch that improves clarity without changing my career narrative.`,
+	];
+
+	const promptRows = chunkPrompts(prompts, 3);
 
 	return (
-		<aside className="flex h-full flex-col border-e bg-muted/30">
-			<div className="flex h-14 items-center justify-between gap-2 border-b px-3">
-				<div className="flex items-center gap-2 font-semibold">
-					<ChatCircleDotsIcon />
-					<Trans>Agent</Trans>
-				</div>
-				<Button size="icon-sm" variant="ghost" nativeButton={false} render={<Link to="/agent" />}>
-					<PlusIcon />
-					<span className="sr-only">
-						<Trans>New thread</Trans>
-					</span>
-				</Button>
-			</div>
-			<ScrollArea className="min-h-0 flex-1">
-				<div className="space-y-1 p-2">
-					{threads?.map((thread) => {
-						const isArchived = thread.status === "archived";
+		<div className="relative mx-auto grid w-full max-w-4xl gap-3 overflow-hidden py-1 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+			{promptRows.map((row, rowIndex) => {
+				const marqueePrompts = [...row, ...row, ...row];
+				const duration = 135 + rowIndex * 22;
+				const animate = rowIndex % 2 === 0 ? { x: ["0%", "-33.333%"] } : { x: ["-33.333%", "0%"] };
 
-						return (
-							<Link
-								key={thread.id}
-								to="/agent/$threadId"
-								params={{ threadId: thread.id }}
-								className={cn(
-									"block rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent",
-									thread.id === activeThreadId && "bg-accent",
-									isArchived && "opacity-60",
-								)}
+				return (
+					<motion.div
+						key={`prompt-row-${rowIndex}`}
+						className="flex w-max gap-3"
+						animate={animate}
+						transition={{ duration, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
+					>
+						{marqueePrompts.map((prompt, index) => (
+							<Button
+								key={`${prompt}-${index}`}
+								type="button"
+								variant="outline"
+								className="h-8 shrink-0 rounded-full bg-background/70 px-3 font-normal text-muted-foreground hover:text-foreground"
+								onClick={() => onSelect(prompt)}
 							>
-								<div className="flex items-center justify-between gap-2">
-									<div className="truncate font-medium">{thread.title}</div>
-									{isArchived ? (
-										<Badge variant="secondary">
-											<Trans>Archived</Trans>
-										</Badge>
-									) : null}
-								</div>
-								<div className="truncate text-muted-foreground text-xs">
-									{thread.resumeName ?? thread.providerLabel}
-								</div>
-							</Link>
-						);
-					})}
-				</div>
-			</ScrollArea>
-		</aside>
+								{promptPreview(prompt)}
+							</Button>
+						))}
+					</motion.div>
+				);
+			})}
+		</div>
+	);
+}
+
+function AssistantMarkdown({ text }: { text: string }) {
+	return (
+		<ReactMarkdown
+			skipHtml
+			components={{
+				p: ({ children }) => <p className="my-2 leading-relaxed first:mt-0 last:mb-0">{children}</p>,
+				ul: ({ children }) => <ul className="my-2 ms-5 list-disc space-y-1">{children}</ul>,
+				ol: ({ children }) => <ol className="my-2 ms-5 list-decimal space-y-1">{children}</ol>,
+				li: ({ children }) => <li className="ps-1">{children}</li>,
+				a: ({ children, href }) => (
+					<a className="text-primary underline underline-offset-4" href={href} target="_blank" rel="noreferrer">
+						{children}
+					</a>
+				),
+				code: ({ children, className }) => (
+					<code className={cn("rounded border bg-muted px-1 py-0.5 font-mono text-[0.85em]", className)}>
+						{children}
+					</code>
+				),
+				pre: ({ children }) => (
+					<pre className="my-3 max-w-full overflow-auto rounded-md border bg-muted/30 p-3 text-xs leading-relaxed">
+						{children}
+					</pre>
+				),
+				blockquote: ({ children }) => (
+					<blockquote className="my-3 border-l-2 ps-3 text-muted-foreground">{children}</blockquote>
+				),
+			}}
+		>
+			{text}
+		</ReactMarkdown>
 	);
 }
 
 function MessagePart({
 	part,
+	isUser,
 	onAnswer,
 	onRevert,
 	isReverting,
 	actionsById,
 }: {
 	part: UIMessage["parts"][number];
+	isUser: boolean;
 	onAnswer: (toolCallId: string, answer: string) => void;
 	onRevert: (actionId: string) => void;
 	isReverting: boolean;
 	actionsById: Map<string, AgentAction>;
 }) {
-	if (part.type === "text") return <div className="whitespace-pre-wrap leading-relaxed">{part.text}</div>;
+	if (part.type === "text") {
+		return isUser ? (
+			<div className="whitespace-pre-wrap leading-relaxed">{part.text}</div>
+		) : (
+			<AssistantMarkdown text={part.text} />
+		);
+	}
 
 	if (part.type === "reasoning") {
 		return (
@@ -397,14 +439,17 @@ function ChatMessage({
 		<div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
 			<div
 				className={cn(
-					"max-w-[86%] space-y-3 rounded-md px-4 py-3 text-sm",
-					isUser ? "bg-primary text-primary-foreground" : "bg-muted",
+					"space-y-3 text-sm",
+					isUser
+						? "max-w-[86%] rounded-md bg-primary px-4 py-3 text-primary-foreground"
+						: "w-full max-w-full py-1 text-foreground",
 				)}
 			>
 				{message.parts.map((part, index) => (
 					<MessagePart
 						key={`${message.id}-${index}`}
 						part={part}
+						isUser={isUser}
 						onAnswer={onAnswer}
 						onRevert={onRevert}
 						isReverting={isReverting}
@@ -422,19 +467,26 @@ function AgentChat({
 	isReadOnly,
 	readOnlyReason,
 	threadStatus,
+	activeRunId,
 	actions,
+	onToggleThreads,
+	onToggleResume,
 }: {
 	threadId: string;
 	initialMessages: UIMessage[];
 	isReadOnly: boolean;
 	readOnlyReason: "archived" | "missing" | null;
 	threadStatus: string;
+	activeRunId: string | null;
 	actions: AgentAction[];
+	onToggleThreads?: () => void;
+	onToggleResume?: () => void;
 }) {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const confirm = useConfirm();
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const refreshedPatchOutputsRef = useRef(new Set<string>());
 	const [input, setInput] = useState("");
 	const [pendingAttachments, setPendingAttachments] = useState<
 		Array<Pick<AgentAttachment, "id" | "filename" | "mediaType">>
@@ -444,6 +496,13 @@ function AgentChat({
 	const archiveMutation = useMutation(orpc.agent.threads.archive.mutationOptions());
 	const deleteMutation = useMutation(orpc.agent.threads.delete.mutationOptions());
 	const isArchived = threadStatus === "archived";
+
+	const refreshThread = useCallback(async () => {
+		await Promise.all([
+			queryClient.invalidateQueries({ queryKey: orpc.agent.threads.list.queryKey() }),
+			queryClient.invalidateQueries({ queryKey: orpc.agent.threads.get.queryKey({ input: { id: threadId } }) }),
+		]);
+	}, [queryClient, threadId]);
 
 	const actionsById = useMemo(() => {
 		const map = new Map<string, AgentAction>();
@@ -457,10 +516,7 @@ function AgentChat({
 			{
 				onSuccess: async () => {
 					toast.success(t`Thread archived.`);
-					await Promise.all([
-						queryClient.invalidateQueries({ queryKey: orpc.agent.threads.list.queryKey() }),
-						queryClient.invalidateQueries({ queryKey: orpc.agent.threads.get.queryKey({ input: { id: threadId } }) }),
-					]);
+					await refreshThread();
 				},
 				onError: (error) => {
 					toast.error(getOrpcErrorMessage(error, { fallback: t`Failed to archive thread.` }));
@@ -519,9 +575,35 @@ function AgentChat({
 	const { messages, sendMessage, regenerate, setMessages, status, error, clearError, addToolOutput } = useChat({
 		id: threadId,
 		messages: initialMessages,
-		resume: true,
+		resume: !!activeRunId,
 		transport,
+		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+		onFinish: () => {
+			void refreshThread();
+		},
 	});
+
+	useEffect(() => {
+		let shouldRefresh = false;
+
+		for (const message of messages) {
+			for (const part of message.parts) {
+				if (part.type !== "tool-apply_resume_patch" || !("output" in part) || !part.output) continue;
+
+				const output = typeof part.output === "object" ? (part.output as Record<string, unknown>) : null;
+				const actionId = typeof output?.actionId === "string" ? output.actionId : null;
+				const toolCallId = "toolCallId" in part && typeof part.toolCallId === "string" ? part.toolCallId : null;
+				const patchOutputKey = actionId ?? toolCallId;
+
+				if (!patchOutputKey || refreshedPatchOutputsRef.current.has(patchOutputKey)) continue;
+
+				refreshedPatchOutputsRef.current.add(patchOutputKey);
+				shouldRefresh = true;
+			}
+		}
+
+		if (shouldRefresh) void refreshThread();
+	}, [messages, refreshThread]);
 
 	useEffect(() => {
 		setMessages(initialMessages);
@@ -574,28 +656,51 @@ function AgentChat({
 		});
 	};
 
+	const copyConversationJson = () => {
+		void navigator.clipboard.writeText(
+			JSON.stringify(
+				{
+					threadId,
+					threadStatus,
+					chatStatus: status,
+					isReadOnly,
+					readOnlyReason,
+					messages,
+					actions,
+				},
+				null,
+				2,
+			),
+		);
+		toast.success(t`Conversation JSON copied.`);
+	};
+
 	return (
 		<section className="flex h-full min-h-0 flex-col bg-background">
 			<div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
-				<div>
-					<div className="font-semibold">
+				<div className="flex min-w-0 items-center gap-2">
+					{onToggleThreads ? (
+						<Button size="icon-sm" variant="ghost" onClick={onToggleThreads}>
+							<SidebarSimpleIcon />
+							<span className="sr-only">
+								<Trans>Toggle threads</Trans>
+							</span>
+						</Button>
+					) : null}
+
+					<div className="min-w-0 truncate font-semibold">
 						<Trans>Chat</Trans>
-					</div>
-					<div className="text-muted-foreground text-xs">
-						<Trans>Use URLs, files, and direct instructions to refine the draft.</Trans>
 					</div>
 				</div>
 				<div className="flex items-center gap-1">
-					<Button
-						size="icon-sm"
-						variant="ghost"
-						onClick={() => {
-							void navigator.clipboard.writeText(messages.map(textFromMessage).join("\n\n"));
-							toast.success(t`Conversation copied.`);
-						}}
-					>
-						<CopyIcon />
-					</Button>
+					{onToggleResume ? (
+						<Button size="icon-sm" variant="ghost" onClick={onToggleResume}>
+							<SquaresFourIcon />
+							<span className="sr-only">
+								<Trans>Toggle resume preview</Trans>
+							</span>
+						</Button>
+					) : null}
 					<DropdownMenu>
 						<DropdownMenuTrigger
 							render={
@@ -607,13 +712,31 @@ function AgentChat({
 								</Button>
 							}
 						/>
+
 						<DropdownMenuContent align="end">
+							<DropdownMenuItem
+								onClick={() => {
+									void navigator.clipboard.writeText(messages.map(textFromMessage).join("\n\n"));
+									toast.success(t`Conversation copied.`);
+								}}
+							>
+								<CopyIcon />
+								<Trans>Copy</Trans>
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={copyConversationJson}>
+								<CopyIcon />
+								<Trans>Copy JSON</Trans>
+							</DropdownMenuItem>
+
+							<DropdownMenuSeparator />
+
 							{!isArchived ? (
 								<DropdownMenuItem disabled={archiveMutation.isPending} onClick={handleArchive}>
 									<ArchiveIcon />
 									<Trans>Archive</Trans>
 								</DropdownMenuItem>
 							) : null}
+
 							<DropdownMenuItem
 								variant="destructive"
 								disabled={deleteMutation.isPending}
@@ -640,22 +763,12 @@ function AgentChat({
 			<ScrollArea className="min-h-0 flex-1">
 				<div className="mx-auto flex max-w-3xl flex-col gap-4 p-4">
 					{messages.length === 0 ? (
-						<div className="grid gap-3 py-12 text-center">
-							<SparkleIcon className="mx-auto size-8 text-primary" />
+						<div className="grid gap-6 py-12 text-center">
+							<SparkleIcon className="mx-auto size-8 text-muted-foreground" />
 							<h2 className="font-semibold text-2xl">
-								<Trans>What should this resume target?</Trans>
+								<Trans>What do you want to do?</Trans>
 							</h2>
-							<div className="mx-auto flex max-w-xl flex-wrap justify-center gap-2">
-								{[
-									t`Tailor this resume to a product manager job description.`,
-									t`Find weak bullets and rewrite them with stronger outcomes.`,
-									t`Compare this resume against a role URL and update keywords.`,
-								].map((prompt) => (
-									<Button key={prompt} variant="outline" onClick={() => setInput(prompt)}>
-										{prompt}
-									</Button>
-								))}
-							</div>
+							<StarterPromptMarquee onSelect={setInput} />
 						</div>
 					) : null}
 
@@ -667,7 +780,6 @@ function AgentChat({
 							actionsById={actionsById}
 							onAnswer={(toolCallId, answer) => {
 								addToolOutput({ tool: "ask_user_question", toolCallId, output: answer });
-								sendMessage({ text: answer });
 							}}
 							onRevert={(actionId) =>
 								revertMutation.mutate(
@@ -681,9 +793,7 @@ function AgentChat({
 											} else if (action.status === "reverted") {
 												toast.success(t`Patch reverted.`);
 											}
-											void queryClient.invalidateQueries({
-												queryKey: orpc.agent.threads.get.queryKey({ input: { id: threadId } }),
-											});
+											void refreshThread();
 										},
 										onError: (error) =>
 											toast.error(getOrpcErrorMessage(error, { fallback: t`Could not revert this patch.` })),
@@ -742,7 +852,7 @@ function AgentChat({
 						</div>
 					) : null}
 
-					<div className="flex items-end gap-2 rounded-md border bg-card p-2">
+					<div className="flex items-end gap-1 rounded-md border bg-card p-1.5">
 						<input
 							ref={fileInputRef}
 							type="file"
@@ -754,13 +864,15 @@ function AgentChat({
 							type="button"
 							size="icon"
 							variant="ghost"
+							aria-label={t`Attach files`}
 							disabled={isReadOnly || isUploading}
 							onClick={() => fileInputRef.current?.click()}
 						>
-							{isUploading ? <ArrowClockwiseIcon className="animate-spin" /> : <PlusIcon />}
+							{isUploading ? <ArrowClockwiseIcon className="animate-spin" /> : <PaperclipIcon />}
 						</Button>
 						<Textarea
 							value={input}
+							rows={1}
 							disabled={isReadOnly || isStreaming}
 							onChange={(event) => setInput(event.target.value)}
 							onKeyDown={(event) => {
@@ -769,16 +881,23 @@ function AgentChat({
 								send();
 							}}
 							placeholder={isReadOnly ? t`This thread is read-only` : t`Ask anything about this resume`}
-							className="max-h-40 min-h-11 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0"
+							className="max-h-40 min-h-9 resize-none border-0 bg-transparent px-2 py-2 leading-5 shadow-none focus-visible:ring-0"
 						/>
 						{isStreaming && !isReadOnly ? (
-							<Button type="button" size="icon" variant="outline" onClick={() => void stopRun()}>
+							<Button
+								type="button"
+								size="icon"
+								variant="outline"
+								aria-label={t`Stop generation`}
+								onClick={() => void stopRun()}
+							>
 								<StopIcon />
 							</Button>
 						) : (
 							<Button
 								type="submit"
 								size="icon"
+								aria-label={t`Send message`}
 								disabled={isReadOnly || (!input.trim() && pendingAttachments.length === 0)}
 							>
 								<PaperPlaneRightIcon />
@@ -791,7 +910,86 @@ function AgentChat({
 	);
 }
 
+const AGENT_PREVIEW_ZOOM_STORAGE_KEY = "reactive-resume:agent-preview-zoom:v3";
+const AGENT_PREVIEW_ZOOM_MIGRATION_KEY = `${AGENT_PREVIEW_ZOOM_STORAGE_KEY}:initialized`;
+const MIN_PREVIEW_ZOOM = 0.4;
+const MAX_PREVIEW_ZOOM = 1.5;
+const PREVIEW_ZOOM_STEP = 0.05;
+const DEFAULT_PREVIEW_ZOOM = 1;
+
+function clampPreviewZoom(value: number) {
+	return Math.min(MAX_PREVIEW_ZOOM, Math.max(MIN_PREVIEW_ZOOM, value));
+}
+
+function getInitialPreviewZoom() {
+	if (typeof window === "undefined") return DEFAULT_PREVIEW_ZOOM;
+
+	if (!window.localStorage.getItem(AGENT_PREVIEW_ZOOM_MIGRATION_KEY)) {
+		window.localStorage.setItem(AGENT_PREVIEW_ZOOM_STORAGE_KEY, String(DEFAULT_PREVIEW_ZOOM));
+		window.localStorage.setItem(AGENT_PREVIEW_ZOOM_MIGRATION_KEY, "true");
+		return DEFAULT_PREVIEW_ZOOM;
+	}
+
+	const stored = Number(window.localStorage.getItem(AGENT_PREVIEW_ZOOM_STORAGE_KEY));
+	return Number.isFinite(stored) ? clampPreviewZoom(stored) : DEFAULT_PREVIEW_ZOOM;
+}
+
+function ToolbarButton({
+	label,
+	children,
+	...props
+}: React.ComponentProps<typeof Button> & {
+	label: string;
+}) {
+	return (
+		<Tooltip>
+			<TooltipTrigger
+				render={
+					<Button size="icon-sm" variant="ghost" aria-label={label} {...props}>
+						{children}
+					</Button>
+				}
+			/>
+			<TooltipContent side="bottom" align="center">
+				{label}
+			</TooltipContent>
+		</Tooltip>
+	);
+}
+
 function ResumePane({ resume }: { resume: AgentThreadDetail["resume"] }) {
+	const [zoom, setZoom] = useState(getInitialPreviewZoom);
+	const [isPrinting, setIsPrinting] = useState(false);
+
+	useEffect(() => {
+		window.localStorage.setItem(AGENT_PREVIEW_ZOOM_STORAGE_KEY, String(zoom));
+	}, [zoom]);
+
+	const setClampedZoom = useCallback((value: number) => {
+		setZoom(clampPreviewZoom(Number(value.toFixed(2))));
+	}, []);
+
+	const onDownloadPDF = useCallback(async () => {
+		if (!resume) return;
+
+		const filename = generateFilename(resume.name || resume.data.basics.name || resume.id, "pdf");
+		const toastId = toast.loading(t`Please wait while your PDF is being generated...`);
+
+		setIsPrinting(true);
+
+		try {
+			const blob = await createResumePdfBlob(resume.data);
+			downloadWithAnchor(blob, filename);
+		} catch {
+			toast.error(t`There was a problem while generating the PDF, please try again.`);
+		} finally {
+			setIsPrinting(false);
+			toast.dismiss(toastId);
+		}
+	}, [resume]);
+
+	const zoomPercent = Math.round(zoom * 100);
+
 	return (
 		<section className="flex h-full min-h-0 flex-col bg-muted/30">
 			<div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
@@ -801,34 +999,81 @@ function ResumePane({ resume }: { resume: AgentThreadDetail["resume"] }) {
 					</div>
 					<div className="text-muted-foreground text-xs">{resume?.name ?? t`Missing working resume`}</div>
 				</div>
-				{resume ? (
-					<Button
-						size="sm"
-						variant="outline"
-						nativeButton={false}
-						render={<Link to="/builder/$resumeId" params={{ resumeId: resume.id }} />}
-					>
-						<Trans>Open Builder</Trans>
-					</Button>
-				) : null}
 			</div>
 
-			<div className="min-h-0 flex-1 overflow-auto p-4">
-				{resume ? (
-					<ResumePreview
-						data={resume.data}
-						pageLayout="vertical"
-						pageScale={0.62}
-						pageGap={28}
-						showPageNumbers
-						className="mx-auto"
-						pageClassName="shadow-lg"
-					/>
-				) : (
-					<div className="rounded-md border border-dashed p-6 text-center text-muted-foreground">
-						<Trans>The working resume was deleted. This thread is read-only.</Trans>
+			<div className="min-h-0 flex-1 overflow-auto">
+				<div className="sticky top-0 z-10 flex h-10 items-center justify-between border-b bg-background/90 px-2 backdrop-blur">
+					<div className="flex items-center gap-1">
+						<ToolbarButton
+							label={t`Decrease zoom`}
+							disabled={!resume}
+							onClick={() => setClampedZoom(zoom - PREVIEW_ZOOM_STEP)}
+						>
+							<MinusIcon />
+						</ToolbarButton>
+						<Tooltip>
+							<TooltipTrigger
+								render={
+									<input
+										type="text"
+										inputMode="numeric"
+										value={`${zoomPercent}%`}
+										disabled={!resume}
+										aria-label={t`Zoom level`}
+										className="h-8 w-14 rounded-md border bg-background px-1 text-center text-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
+										onChange={(event) => {
+											const nextValue = Number(event.target.value.replace(/[^0-9.]/g, ""));
+											if (Number.isFinite(nextValue)) setClampedZoom(nextValue / 100);
+										}}
+									/>
+								}
+							/>
+							<TooltipContent side="bottom" align="center">
+								<Trans>Zoom level</Trans>
+							</TooltipContent>
+						</Tooltip>
+						<ToolbarButton
+							label={t`Increase zoom`}
+							disabled={!resume}
+							onClick={() => setClampedZoom(zoom + PREVIEW_ZOOM_STEP)}
+						>
+							<PlusIcon />
+						</ToolbarButton>
 					</div>
-				)}
+					<div className="flex items-center gap-1">
+						<ToolbarButton
+							label={t`Open in builder`}
+							disabled={!resume}
+							nativeButton={false}
+							render={resume ? <Link to="/builder/$resumeId" params={{ resumeId: resume.id }} /> : undefined}
+						>
+							<ArrowSquareOutIcon />
+						</ToolbarButton>
+						<ToolbarButton
+							label={t`Download PDF`}
+							disabled={!resume || isPrinting}
+							onClick={() => void onDownloadPDF()}
+						>
+							{isPrinting ? <CircleNotchIcon className="animate-spin" /> : <FilePdfIcon />}
+						</ToolbarButton>
+					</div>
+				</div>
+				<div className="p-4">
+					{resume ? (
+						<ResumePreview
+							data={resume.data}
+							pageLayout="vertical"
+							pageScale={zoom}
+							showPageNumbers
+							className="mx-auto"
+							pageClassName="shadow-lg"
+						/>
+					) : (
+						<div className="rounded-md border border-dashed p-6 text-center text-muted-foreground">
+							<Trans>The working resume was deleted. This thread is read-only.</Trans>
+						</div>
+					)}
+				</div>
 			</div>
 		</section>
 	);
@@ -838,7 +1083,35 @@ function RouteComponent() {
 	const { threadId } = Route.useParams();
 	const navigate = useNavigate();
 	const [mobileTab, setMobileTab] = useState("chat");
+	const threadsPanelRef = useRef<PanelImperativeHandle | null>(null);
+	const resumePanelRef = useRef<PanelImperativeHandle | null>(null);
+	const [isThreadsCollapsed, setIsThreadsCollapsed] = useState(false);
+	const [isResumeCollapsed, setIsResumeCollapsed] = useState(false);
 	const { data, isLoading, error } = useQuery(orpc.agent.threads.get.queryOptions({ input: { id: threadId } }));
+
+	const toggleThreadsPanel = useCallback(() => {
+		const panel = threadsPanelRef.current;
+		if (!panel) return;
+		if (panel.isCollapsed()) {
+			panel.expand();
+			setIsThreadsCollapsed(false);
+		} else {
+			panel.collapse();
+			setIsThreadsCollapsed(true);
+		}
+	}, []);
+
+	const toggleResumePanel = useCallback(() => {
+		const panel = resumePanelRef.current;
+		if (!panel) return;
+		if (panel.isCollapsed()) {
+			panel.expand();
+			setIsResumeCollapsed(false);
+		} else {
+			panel.collapse();
+			setIsResumeCollapsed(true);
+		}
+	}, []);
 
 	if (isLoading) {
 		return (
@@ -855,7 +1128,7 @@ function RouteComponent() {
 					<p className="text-muted-foreground">
 						<Trans>This agent thread could not be opened.</Trans>
 					</p>
-					<Button onClick={() => void navigate({ to: "/agent" })}>
+					<Button onClick={() => void navigate({ to: "/agent/new" })}>
 						<Trans>Start a new thread</Trans>
 					</Button>
 				</div>
@@ -873,23 +1146,46 @@ function RouteComponent() {
 		<div className="h-svh bg-background">
 			<div className="hidden h-full lg:block">
 				<ResizableGroup orientation="horizontal" className="h-full">
-					<ResizablePanel id="threads" defaultSize="18%" minSize="240px" maxSize="360px">
-						<ThreadSidebar activeThreadId={threadId} />
+					<ResizablePanel
+						id="threads"
+						panelRef={threadsPanelRef}
+						defaultSize="18%"
+						minSize="240px"
+						maxSize="360px"
+						collapsible
+						collapsedSize="0px"
+						onResize={(size) => setIsThreadsCollapsed(size.inPixels < 24)}
+					>
+						<AgentThreadSidebar activeThreadId={threadId} className={cn(isThreadsCollapsed && "invisible")} />
 					</ResizablePanel>
 					<ResizableSeparator withHandle />
-					<ResizablePanel id="chat" defaultSize="52%" minSize="420px">
+					<ResizablePanel id="chat" defaultSize="52%" minSize="280px">
 						<AgentChat
 							threadId={threadId}
 							initialMessages={data.messages}
 							isReadOnly={data.isReadOnly}
 							readOnlyReason={readOnlyReason}
 							threadStatus={data.thread.status}
+							activeRunId={data.thread.activeRunId}
 							actions={data.actions}
+							onToggleThreads={toggleThreadsPanel}
+							onToggleResume={toggleResumePanel}
 						/>
 					</ResizablePanel>
 					<ResizableSeparator withHandle />
-					<ResizablePanel id="resume" defaultSize="30%" minSize="340px">
-						<ResumePane resume={data.resume} />
+					<ResizablePanel
+						id="resume"
+						panelRef={resumePanelRef}
+						defaultSize="30%"
+						minSize="340px"
+						maxSize="70%"
+						collapsible
+						collapsedSize="0px"
+						onResize={(size) => setIsResumeCollapsed(size.inPixels < 24)}
+					>
+						<div className={cn("h-full", isResumeCollapsed && "invisible")}>
+							<ResumePane resume={data.resume} />
+						</div>
 					</ResizablePanel>
 				</ResizableGroup>
 			</div>
@@ -914,7 +1210,7 @@ function RouteComponent() {
 					</Tabs>
 				</div>
 				<div className="min-h-0 flex-1">
-					{mobileTab === "threads" ? <ThreadSidebar activeThreadId={threadId} /> : null}
+					{mobileTab === "threads" ? <AgentThreadSidebar activeThreadId={threadId} /> : null}
 					{mobileTab === "chat" ? (
 						<AgentChat
 							threadId={threadId}
@@ -922,6 +1218,7 @@ function RouteComponent() {
 							isReadOnly={data.isReadOnly}
 							readOnlyReason={readOnlyReason}
 							threadStatus={data.thread.status}
+							activeRunId={data.thread.activeRunId}
 							actions={data.actions}
 						/>
 					) : null}

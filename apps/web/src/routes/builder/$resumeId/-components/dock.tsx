@@ -116,7 +116,7 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 					title={t`Open AI agent`}
 					onClick={() => {
 						if (!resume) return;
-						void navigate({ to: "/agent", search: { resumeId: resume.id } });
+						void navigate({ to: "/agent/new", search: { resumeId: resume.id } });
 					}}
 				/>
 				<div className="mx-1 h-8 w-px bg-border" />

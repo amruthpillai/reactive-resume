@@ -49,7 +49,7 @@ const appSidebarItems = [
 	},
 	{
 		icon: <ChatCircleDotsIcon />,
-		label: msg`Agent`,
+		label: msg`Agents`,
 		href: "/agent",
 	},
 ] as const satisfies SidebarItem[];

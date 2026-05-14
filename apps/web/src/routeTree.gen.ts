@@ -29,6 +29,7 @@ import { Route as AuthOauthRouteImport } from './routes/auth/oauth'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as AgentNewRouteImport } from './routes/agent/new'
 import { Route as AgentThreadIdRouteImport } from './routes/agent/$threadId'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownOauthProtectedResourceRouteImport } from './routes/[.]well-known/oauth-protected-resource'
@@ -152,6 +153,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AgentNewRoute = AgentNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AgentRouteRoute,
 } as any)
 const AgentThreadIdRoute = AgentThreadIdRouteImport.update({
   id: '/$threadId',
@@ -300,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof DotwellKnownOauthProtectedResourceRouteWithChildren
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/agent/$threadId': typeof AgentThreadIdRoute
+  '/agent/new': typeof AgentNewRoute
   '/api/health': typeof ApiHealthRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -340,6 +347,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof DotwellKnownOauthProtectedResourceRouteWithChildren
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/agent/$threadId': typeof AgentThreadIdRoute
+  '/agent/new': typeof AgentNewRoute
   '/api/health': typeof ApiHealthRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -387,6 +395,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof DotwellKnownOauthProtectedResourceRouteWithChildren
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/agent/$threadId': typeof AgentThreadIdRoute
+  '/agent/new': typeof AgentNewRoute
   '/api/health': typeof ApiHealthRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -435,6 +444,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/.well-known/openid-configuration'
     | '/agent/$threadId'
+    | '/agent/new'
     | '/api/health'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/.well-known/openid-configuration'
     | '/agent/$threadId'
+    | '/agent/new'
     | '/api/health'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -521,6 +532,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/.well-known/openid-configuration'
     | '/agent/$threadId'
+    | '/agent/new'
     | '/api/health'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -720,6 +732,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agent/new': {
+      id: '/agent/new'
+      path: '/new'
+      fullPath: '/agent/new'
+      preLoaderRoute: typeof AgentNewRouteImport
+      parentRoute: typeof AgentRouteRoute
+    }
     '/agent/$threadId': {
       id: '/agent/$threadId'
       path: '/$threadId'
@@ -905,11 +924,13 @@ const HomeRouteRouteWithChildren = HomeRouteRoute._addFileChildren(
 
 interface AgentRouteRouteChildren {
   AgentThreadIdRoute: typeof AgentThreadIdRoute
+  AgentNewRoute: typeof AgentNewRoute
   AgentIndexRoute: typeof AgentIndexRoute
 }
 
 const AgentRouteRouteChildren: AgentRouteRouteChildren = {
   AgentThreadIdRoute: AgentThreadIdRoute,
+  AgentNewRoute: AgentNewRoute,
   AgentIndexRoute: AgentIndexRoute,
 }
 
