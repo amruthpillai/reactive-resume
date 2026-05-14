@@ -33,7 +33,7 @@ vi.mock("@aws-sdk/client-s3", () => ({
 	ListObjectsV2Command: vi.fn(),
 }));
 
-const { inferContentType, isImageFile, processImageForUpload } = await import("./storage");
+const { getStorageService, inferContentType, isImageFile, processImageForUpload } = await import("./storage");
 
 const makeFile = (bytes: Uint8Array, type = "image/png") =>
 	({
@@ -109,5 +109,18 @@ describe("isImageFile", () => {
 		expect(isImageFile("application/pdf")).toBe(false);
 		expect(isImageFile("text/plain")).toBe(false);
 		expect(isImageFile("")).toBe(false);
+	});
+});
+
+describe("LocalStorageService", () => {
+	it("rejects private writes instead of silently storing them on the local filesystem", async () => {
+		await expect(
+			getStorageService().write({
+				key: "uploads/user/agent/thread/file.txt",
+				data: new TextEncoder().encode("private"),
+				contentType: "text/plain",
+				private: true,
+			}),
+		).rejects.toThrow("Private storage writes are not supported by the local filesystem backend.");
 	});
 });

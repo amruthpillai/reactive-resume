@@ -25,6 +25,14 @@ import { getStorageService } from "./storage";
 
 type DbOrTx = typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
 
+function resumeVersionConflict(updatedAt: Date) {
+	return new ORPCError("RESUME_VERSION_CONFLICT", {
+		status: 409,
+		message: "The resume changed after this patch was generated.",
+		data: { updatedAt: updatedAt.toISOString() },
+	});
+}
+
 async function applyResumePatchTx(
 	client: DbOrTx,
 	input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date },
@@ -32,16 +40,13 @@ async function applyResumePatchTx(
 	const [existing] = await client
 		.select({ data: schema.resume.data, isLocked: schema.resume.isLocked, updatedAt: schema.resume.updatedAt })
 		.from(schema.resume)
-		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+		.for("update");
 
 	if (!existing) throw new ORPCError("NOT_FOUND");
 	if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
 	if (input.expectedUpdatedAt && existing.updatedAt.getTime() !== input.expectedUpdatedAt.getTime()) {
-		throw new ORPCError("RESUME_VERSION_CONFLICT", {
-			status: 409,
-			message: "The resume changed after this patch was generated.",
-			data: { updatedAt: existing.updatedAt.toISOString() },
-		});
+		throw resumeVersionConflict(existing.updatedAt);
 	}
 
 	let patchedData: ResumeData;
@@ -67,7 +72,12 @@ async function applyResumePatchTx(
 		.update(schema.resume)
 		.set({ data: patchedData })
 		.where(
-			and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
+			and(
+				eq(schema.resume.id, input.id),
+				eq(schema.resume.isLocked, false),
+				eq(schema.resume.userId, input.userId),
+				...(input.expectedUpdatedAt ? [eq(schema.resume.updatedAt, input.expectedUpdatedAt)] : []),
+			),
 		)
 		.returning({
 			id: schema.resume.id,
@@ -81,7 +91,10 @@ async function applyResumePatchTx(
 			hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 		});
 
-	if (!resume) throw new ORPCError("NOT_FOUND");
+	if (!resume) {
+		if (input.expectedUpdatedAt) throw resumeVersionConflict(existing.updatedAt);
+		throw new ORPCError("NOT_FOUND");
+	}
 
 	return resume;
 }

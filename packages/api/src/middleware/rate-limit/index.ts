@@ -48,7 +48,10 @@ function getInputKeyPart(input: unknown): string {
 	const fields = ["resumeId", "threadId", "conversationId", "messageId", "fileId", "id"] as const;
 	for (const field of fields) {
 		const value = inputRecord[field];
-		if (typeof value === "string" && value.trim()) return `${field}:${value}`;
+		if (typeof value !== "string") continue;
+
+		const trimmedValue = value.trim();
+		if (trimmedValue) return `${field}:${trimmedValue}`;
 	}
 
 	const username = inputRecord.username;

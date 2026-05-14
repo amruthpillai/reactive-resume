@@ -55,6 +55,21 @@ describe("createInverseResumePatches", () => {
 		expect(inverse).toEqual([{ op: "remove", path: "/basics/customFields/2" }]);
 	});
 
+	it("inverts an array insert at an existing index into a remove at the same path", () => {
+		const data = buildFixture();
+		const operations: JsonPatchOperation[] = [
+			{
+				op: "add",
+				path: "/basics/customFields/1",
+				value: { id: "field-inserted", icon: "phosphor", text: "inserted", link: "" },
+			},
+		];
+
+		const inverse = createInverseResumePatches(data, operations);
+
+		expect(inverse).toEqual([{ op: "remove", path: "/basics/customFields/1" }]);
+	});
+
 	it("composes inverses in reverse order with each original value", () => {
 		const data = buildFixture();
 		const operations: JsonPatchOperation[] = [

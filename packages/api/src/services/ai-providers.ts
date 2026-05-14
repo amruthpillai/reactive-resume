@@ -1,6 +1,6 @@
 import type { AIProvider } from "@reactive-resume/ai/types";
 import { ORPCError } from "@orpc/client";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { aiProviderSchema } from "@reactive-resume/ai/types";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
@@ -86,6 +86,10 @@ function normalizeBaseUrl(input: { provider: AIProvider; baseURL?: string | null
 	return resolveAiBaseUrl({ provider: input.provider, baseURL: trimmed });
 }
 
+function orderByLastUsedAtDescNullsLast() {
+	return desc(sql<Date>`coalesce(${schema.aiProvider.lastUsedAt}, '1970-01-01T00:00:00.000Z'::timestamptz)`);
+}
+
 async function getOwnedProvider(input: { id: string; userId: string }) {
 	const [provider] = await db
 		.select()
@@ -106,7 +110,7 @@ export const aiProvidersService = {
 			.select()
 			.from(schema.aiProvider)
 			.where(eq(schema.aiProvider.userId, input.userId))
-			.orderBy(desc(schema.aiProvider.lastUsedAt), asc(schema.aiProvider.createdAt));
+			.orderBy(orderByLastUsedAtDescNullsLast(), asc(schema.aiProvider.createdAt));
 
 		return providers.map(toResponse);
 	},
@@ -139,7 +143,7 @@ export const aiProvidersService = {
 					eq(schema.aiProvider.testStatus, "success"),
 				),
 			)
-			.orderBy(desc(schema.aiProvider.lastUsedAt), asc(schema.aiProvider.createdAt))
+			.orderBy(orderByLastUsedAtDescNullsLast(), asc(schema.aiProvider.createdAt))
 			.limit(1);
 
 		return provider

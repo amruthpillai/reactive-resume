@@ -492,6 +492,7 @@ function AgentChat({
 	const confirm = useConfirm();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const refreshedPatchOutputsRef = useRef(new Set<string>());
+	const lastSyncedThreadIdRef = useRef<string | null>(null);
 	const [input, setInput] = useState("");
 	const [pendingAttachments, setPendingAttachments] = useState<
 		Array<Pick<AgentAttachment, "id" | "filename" | "mediaType">>
@@ -611,14 +612,16 @@ function AgentChat({
 	}, [messages, refreshThread]);
 
 	useEffect(() => {
+		if (lastSyncedThreadIdRef.current === threadId) return;
+		lastSyncedThreadIdRef.current = threadId;
 		setMessages(initialMessages);
-	}, [initialMessages, setMessages]);
+	}, [threadId, initialMessages, setMessages]);
 
 	const isStreaming = status === "submitted" || status === "streaming";
 
 	const send = () => {
 		const text = input.trim();
-		if ((!text && pendingAttachments.length === 0) || isReadOnly || isStreaming) return;
+		if ((!text && pendingAttachments.length === 0) || isReadOnly || isStreaming || isUploading) return;
 
 		clearError();
 		const submission = buildAgentChatSubmission(text, pendingAttachments);
@@ -881,6 +884,7 @@ function AgentChat({
 							disabled={isReadOnly || isStreaming}
 							onChange={(event) => setInput(event.target.value)}
 							onKeyDown={(event) => {
+								if (event.nativeEvent.isComposing) return;
 								if (event.key !== "Enter" || event.shiftKey) return;
 								event.preventDefault();
 								send();
@@ -903,7 +907,7 @@ function AgentChat({
 								type="submit"
 								size="icon"
 								aria-label={t`Send message`}
-								disabled={isReadOnly || (!input.trim() && pendingAttachments.length === 0)}
+								disabled={isReadOnly || isUploading || (!input.trim() && pendingAttachments.length === 0)}
 							>
 								<PaperPlaneRightIcon />
 							</Button>

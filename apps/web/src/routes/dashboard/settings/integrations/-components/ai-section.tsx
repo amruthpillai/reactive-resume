@@ -3,6 +3,7 @@ import type { ComboboxOption } from "@/components/ui/combobox";
 import type { RouterOutput } from "@/libs/orpc/client";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
+import { ORPCError } from "@orpc/client";
 import { CheckCircleIcon, KeyIcon, PlusIcon, TrashIcon, WarningCircleIcon, XCircleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -85,12 +86,21 @@ function providerLabel(provider: AIProvider) {
 	return providerOptions.find((option) => option.value === provider)?.label ?? provider;
 }
 
+function isAiProviderConfigError(error: unknown) {
+	if (error instanceof ORPCError && error.code === "PRECONDITION_FAILED") return true;
+
+	if (!error || typeof error !== "object") return false;
+	const status = (error as { status?: unknown; code?: unknown }).status ?? (error as { code?: unknown }).code;
+	return status === "PRECONDITION_FAILED" || status === 412;
+}
+
 function ProviderRow({ provider }: { provider: SavedProvider }) {
 	const queryClient = useQueryClient();
 	const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.queryKey() });
 	const { mutate: testProvider, isPending: isTesting } = useMutation(orpc.aiProviders.test.mutationOptions());
 	const { mutate: updateProvider, isPending: isUpdating } = useMutation(orpc.aiProviders.update.mutationOptions());
 	const { mutate: deleteProvider, isPending: isDeleting } = useMutation(orpc.aiProviders.delete.mutationOptions());
+	const isMutating = isTesting || isUpdating || isDeleting;
 
 	return (
 		<div className="grid gap-4 rounded-md border bg-card p-4 md:grid-cols-[1fr_auto]">
@@ -117,7 +127,7 @@ function ProviderRow({ provider }: { provider: SavedProvider }) {
 				<div className="flex items-center gap-2 pe-2">
 					<Switch
 						checked={provider.enabled}
-						disabled={provider.testStatus !== "success" || isUpdating}
+						disabled={provider.testStatus !== "success" || isMutating}
 						onCheckedChange={(enabled) =>
 							updateProvider(
 								{ id: provider.id, enabled },
@@ -136,17 +146,23 @@ function ProviderRow({ provider }: { provider: SavedProvider }) {
 
 				<Button
 					variant="outline"
-					disabled={isTesting}
+					disabled={isMutating}
 					onClick={() =>
 						testProvider(
 							{ id: provider.id },
 							{
-								onSuccess: () => {
-									toast.success(t`Provider connection verified.`);
+								onSuccess: (response) => {
+									if (response.testStatus === "success") {
+										toast.success(t`Provider connection verified.`);
+									} else {
+										toast.error(response.testError ?? t`Could not verify provider connection.`);
+									}
 									void invalidate();
 								},
-								onError: (error) =>
-									toast.error(getOrpcErrorMessage(error, { fallback: t`Could not verify provider connection.` })),
+								onError: (error) => {
+									toast.error(getOrpcErrorMessage(error, { fallback: t`Could not verify provider connection.` }));
+									void invalidate();
+								},
 							},
 						)
 					}
@@ -158,7 +174,7 @@ function ProviderRow({ provider }: { provider: SavedProvider }) {
 				<Button
 					size="icon"
 					variant="ghost"
-					disabled={isDeleting}
+					disabled={isMutating}
 					onClick={() =>
 						deleteProvider(
 							{ id: provider.id },
@@ -323,6 +339,7 @@ function CreateProviderForm() {
 export function AISettingsSection() {
 	const { data: providers, isLoading, error } = useQuery(orpc.aiProviders.list.queryOptions());
 	const hasUsableProvider = providers?.some((provider) => provider.enabled && provider.testStatus === "success");
+	const isConfigError = isAiProviderConfigError(error);
 
 	return (
 		<section className="grid gap-6">
@@ -349,12 +366,23 @@ export function AISettingsSection() {
 			</div>
 
 			{error ? (
-				<div className="rounded-md border border-amber-300 bg-amber-50 p-4 text-amber-950 text-sm dark:bg-amber-950/20 dark:text-amber-200">
-					<Trans>AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured.</Trans>
+				<div
+					className={cn(
+						"rounded-md border p-4 text-sm",
+						isConfigError
+							? "border-amber-300 bg-amber-50 text-amber-950 dark:bg-amber-950/20 dark:text-amber-200"
+							: "border-rose-300 bg-rose-50 text-rose-950 dark:bg-rose-950/20 dark:text-rose-200",
+					)}
+				>
+					{isConfigError ? (
+						<Trans>AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured.</Trans>
+					) : (
+						<Trans>AI provider management is unavailable. Please try again.</Trans>
+					)}
 				</div>
 			) : null}
 
-			<CreateProviderForm />
+			{error ? null : <CreateProviderForm />}
 
 			<div className="grid gap-3">
 				{isLoading ? (

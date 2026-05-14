@@ -36,6 +36,11 @@ function pointerExists(document: unknown, pointer: string): boolean {
 	return true;
 }
 
+function getParentPointer(pointer: string) {
+	const lastSlashIndex = pointer.lastIndexOf("/");
+	return lastSlashIndex <= 0 ? "" : pointer.slice(0, lastSlashIndex);
+}
+
 function cloneJson<T>(value: T): T {
 	return JSON.parse(JSON.stringify(value)) as T;
 }
@@ -52,9 +57,13 @@ export function createInverseResumePatches(data: ResumeData, operations: JsonPat
 		} else if (operation.op === "remove") {
 			inverse.unshift({ op: "add", path: operation.path, value: cloneJson(readPointer(working, operation.path)) });
 		} else if (operation.op === "add") {
-			// JSON Patch "add" overwrites existing object members. If the target path already exists,
-			// the correct inverse is "replace" with the prior value so revert restores it instead of deleting.
-			if (pointerExists(working, operation.path)) {
+			const parent = readPointer(working, getParentPointer(operation.path));
+
+			// JSON Patch "add" inserts into arrays, but overwrites existing object members.
+			// Array inserts must be reverted with remove; object overwrites need replace.
+			if (Array.isArray(parent)) {
+				inverse.unshift({ op: "remove", path: operation.path });
+			} else if (pointerExists(working, operation.path)) {
 				inverse.unshift({
 					op: "replace",
 					path: operation.path,
