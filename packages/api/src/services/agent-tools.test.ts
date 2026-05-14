@@ -92,5 +92,9 @@ describe("agent tools", () => {
 		expect(buildAgentInstructions({ hasProviderNativeSearch: true })).toContain("Use fetch_url");
 		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).not.toContain("Use web_search");
 		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("Use fetch_url");
+		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("Batch related JSON Patch operations");
+		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("/basics/name");
+		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("never /data/basics/name or /name");
+		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("clean Markdown");
 	});
 });

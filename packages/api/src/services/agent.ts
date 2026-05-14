@@ -156,6 +156,92 @@ function withoutAgentAttachmentUiParts(message: UIMessage): UIMessage {
 	};
 }
 
+type AgentToolPart = UIMessage["parts"][number] & {
+	errorText?: string;
+	output?: unknown;
+	state?: string;
+	toolCallId?: string;
+};
+
+function isAnsweredAskUserQuestionPart(part: UIMessage["parts"][number]): part is AgentToolPart {
+	const toolPart = part as AgentToolPart;
+	return (
+		toolPart.type === "tool-ask_user_question" &&
+		typeof toolPart.toolCallId === "string" &&
+		(toolPart.state === "output-available" || toolPart.state === "output-error")
+	);
+}
+
+function mergeAskUserQuestionOutputs(existingMessage: UIMessage, incomingMessage: UIMessage): UIMessage {
+	const answeredParts = new Map(
+		incomingMessage.parts.filter(isAnsweredAskUserQuestionPart).map((part) => [part.toolCallId, part] as const),
+	);
+
+	let didMerge = false;
+	const parts = existingMessage.parts.map((part) => {
+		const existingPart = part as AgentToolPart;
+		if (
+			existingPart.type !== "tool-ask_user_question" ||
+			typeof existingPart.toolCallId !== "string" ||
+			existingPart.state !== "input-available"
+		) {
+			return part;
+		}
+
+		const answeredPart = answeredParts.get(existingPart.toolCallId);
+		if (!answeredPart) return part;
+
+		didMerge = true;
+		if (answeredPart.state === "output-error") {
+			return {
+				...part,
+				state: "output-error",
+				errorText: answeredPart.errorText ?? "User answer failed.",
+			} as UIMessage["parts"][number];
+		}
+
+		return {
+			...part,
+			state: "output-available",
+			output: answeredPart.output,
+		} as UIMessage["parts"][number];
+	});
+
+	if (!didMerge) {
+		throw new ORPCError("BAD_REQUEST", { message: "No matching unanswered user question was found." });
+	}
+
+	return { ...existingMessage, parts };
+}
+
+function getFirstUnansweredAskUserQuestionToolCallId(message: UIMessage) {
+	const part = message.parts.find((part) => {
+		const toolPart = part as AgentToolPart;
+		return (
+			toolPart.type === "tool-ask_user_question" &&
+			typeof toolPart.toolCallId === "string" &&
+			toolPart.state === "input-available"
+		);
+	}) as AgentToolPart | undefined;
+
+	return part?.toolCallId;
+}
+
+function answerAskUserQuestionToolCall(message: UIMessage, toolCallId: string, answer: string) {
+	return mergeAskUserQuestionOutputs(message, {
+		...message,
+		parts: [
+			{
+				type: "tool-ask_user_question",
+				toolCallId,
+				state: "output-available",
+				input: undefined,
+				output: answer,
+			} as UIMessage["parts"][number],
+		],
+	});
+}
+
 function attachmentLabel(attachment: AgentAttachmentRecord) {
 	return `${attachment.filename} (${attachment.mediaType}, ${attachment.size} bytes, attachmentId: ${attachment.id})`;
 }
@@ -434,6 +520,78 @@ async function persistMessage(input: {
 	return message;
 }
 
+async function updateAssistantToolResultMessage(input: { userId: string; threadId: string; message: UIMessage }) {
+	const existingRows = await listThreadMessages({ threadId: input.threadId, userId: input.userId });
+	const existingRow = existingRows.find((row) => row.role === "assistant" && toMessage(row).id === input.message.id);
+	if (!existingRow) {
+		throw new ORPCError("BAD_REQUEST", { message: "The answered assistant message was not found." });
+	}
+
+	const mergedMessage = mergeAskUserQuestionOutputs(toMessage(existingRow), input.message);
+
+	await db
+		.update(schema.agentMessage)
+		.set({
+			status: "completed",
+			uiMessage: mergedMessage as unknown as Record<string, unknown>,
+		})
+		.where(
+			and(
+				eq(schema.agentMessage.id, existingRow.id),
+				eq(schema.agentMessage.threadId, input.threadId),
+				eq(schema.agentMessage.userId, input.userId),
+			),
+		);
+
+	await db
+		.update(schema.agentThread)
+		.set({ lastMessageAt: new Date() })
+		.where(and(eq(schema.agentThread.id, input.threadId), eq(schema.agentThread.userId, input.userId)));
+
+	return mergedMessage;
+}
+
+async function repairLegacyAskUserQuestionAnswers(
+	rows: AgentMessageRecord[],
+	input: { threadId: string; userId: string },
+) {
+	const nextRows = [...rows];
+
+	for (let index = 0; index < nextRows.length - 1; index++) {
+		const assistantRow = nextRows[index];
+		const answerRow = nextRows[index + 1];
+
+		if (!assistantRow || !answerRow || assistantRow.role !== "assistant" || answerRow.role !== "user") continue;
+
+		const assistantMessage = toMessage(assistantRow);
+		const toolCallId = getFirstUnansweredAskUserQuestionToolCallId(assistantMessage);
+		const answer = messageText(toMessage(answerRow));
+		if (!toolCallId || !answer) continue;
+
+		const mergedMessage = answerAskUserQuestionToolCall(assistantMessage, toolCallId, answer);
+		nextRows[index] = {
+			...assistantRow,
+			uiMessage: mergedMessage as unknown as AgentMessageRecord["uiMessage"],
+		};
+
+		await db
+			.update(schema.agentMessage)
+			.set({
+				status: "completed",
+				uiMessage: mergedMessage as unknown as Record<string, unknown>,
+			})
+			.where(
+				and(
+					eq(schema.agentMessage.id, assistantRow.id),
+					eq(schema.agentMessage.threadId, input.threadId),
+					eq(schema.agentMessage.userId, input.userId),
+				),
+			);
+	}
+
+	return nextRows;
+}
+
 async function cleanupActiveRun(input: {
 	threadId: string;
 	userId: string;
@@ -580,6 +738,15 @@ function createAgent(input: {
 					id: resume.id,
 					name: resume.name,
 					updatedAt: resume.updatedAt.toISOString(),
+					patchRoot: "data",
+					patchPathExamples: {
+						visibleName: "/basics/name",
+					},
+					patchNotes: [
+						"apply_resume_patch paths are rooted at the `data` object below.",
+						"Do not prefix paths with `/data`.",
+						"The resume file/title `name` metadata is read-only for apply_resume_patch.",
+					],
 					data: resume.data,
 				};
 			},
@@ -656,7 +823,7 @@ export const agentService = {
 					aiProviderId: selectedProvider.id,
 					sourceResumeId: input.sourceResumeId ?? null,
 					workingResumeId: working.id,
-					title: working.title,
+					title: "New thread",
 				})
 				.returning();
 
@@ -756,6 +923,9 @@ export const agentService = {
 			if (!thread.workingResumeId || !thread.aiProviderId) {
 				throw new ORPCError("BAD_REQUEST", { message: "This thread is read-only." });
 			}
+			if (input.message.role !== "user" && input.message.role !== "assistant") {
+				throw new ORPCError("BAD_REQUEST", { message: "Agent messages must be user messages or tool results." });
+			}
 
 			const runnableProvider = await aiProvidersService.getRunnableById({
 				id: thread.aiProviderId,
@@ -778,39 +948,58 @@ export const agentService = {
 			}
 
 			try {
-				const sequence = await getNextMessageSequence(input.threadId);
-				const userMessage = withAttachmentUiParts(input.message, attachments);
-				const persistedUserMessage = await persistMessage({
-					userId: input.userId,
-					threadId: input.threadId,
-					message: userMessage,
-					sequence,
-				});
-				if (!persistedUserMessage) throw new Error("AGENT_MESSAGE_CREATE_FAILED");
-				await linkAttachmentsToMessage({
-					attachments,
-					messageId: persistedUserMessage.id,
-					threadId: input.threadId,
-					userId: input.userId,
-				});
+				let attachmentsForModel: AgentAttachmentRecord[] = [];
 
-				const [messageCount] = await db
-					.select({ total: count() })
-					.from(schema.agentMessage)
-					.where(eq(schema.agentMessage.threadId, input.threadId));
+				if (input.message.role === "assistant") {
+					if (attachments.length > 0) {
+						throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
+					}
 
-				if ((messageCount?.total ?? 0) === 1) {
-					await db
-						.update(schema.agentThread)
-						.set({ title: buildThreadTitle(userMessage, thread.title) })
-						.where(and(eq(schema.agentThread.id, input.threadId), eq(schema.agentThread.userId, input.userId)));
+					await updateAssistantToolResultMessage({
+						userId: input.userId,
+						threadId: input.threadId,
+						message: input.message,
+					});
+				} else {
+					attachmentsForModel = attachments;
+					const sequence = await getNextMessageSequence(input.threadId);
+					const userMessage = withAttachmentUiParts(input.message, attachments);
+					const persistedUserMessage = await persistMessage({
+						userId: input.userId,
+						threadId: input.threadId,
+						message: userMessage,
+						sequence,
+					});
+					if (!persistedUserMessage) throw new Error("AGENT_MESSAGE_CREATE_FAILED");
+					await linkAttachmentsToMessage({
+						attachments,
+						messageId: persistedUserMessage.id,
+						threadId: input.threadId,
+						userId: input.userId,
+					});
+
+					const [messageCount] = await db
+						.select({ total: count() })
+						.from(schema.agentMessage)
+						.where(eq(schema.agentMessage.threadId, input.threadId));
+
+					if ((messageCount?.total ?? 0) === 1) {
+						await db
+							.update(schema.agentThread)
+							.set({ title: buildThreadTitle(userMessage, thread.title) })
+							.where(and(eq(schema.agentThread.id, input.threadId), eq(schema.agentThread.userId, input.userId)));
+					}
 				}
 
 				await aiProvidersService.markUsed({ id: runnableProvider.id, userId: input.userId });
 
-				const messages = (await listThreadMessages({ threadId: input.threadId, userId: input.userId })).map(toMessage);
+				const messageRows = await repairLegacyAskUserQuestionAnswers(
+					await listThreadMessages({ threadId: input.threadId, userId: input.userId }),
+					{ threadId: input.threadId, userId: input.userId },
+				);
+				const messages = messageRows.map(toMessage);
 				const modelMessages = await convertToModelMessages(messages.map(withoutAgentAttachmentUiParts));
-				const attachmentModelParts = buildAttachmentModelParts(await readAttachmentModelInputs(attachments));
+				const attachmentModelParts = buildAttachmentModelParts(await readAttachmentModelInputs(attachmentsForModel));
 				const agent = createAgent({
 					userId: input.userId,
 					threadId: input.threadId,
