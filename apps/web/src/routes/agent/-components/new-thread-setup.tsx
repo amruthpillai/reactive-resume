@@ -19,6 +19,14 @@ function providerLabel(provider: { label: string; provider: AIProvider; model: s
 	return `${provider.label} · ${provider.provider} · ${provider.model}`;
 }
 
+function isAgentConfigError(error: unknown) {
+	if (!error || typeof error !== "object") return false;
+	const message = (error as { message?: unknown }).message;
+	const status = (error as { status?: unknown; code?: unknown }).status ?? (error as { code?: unknown }).code;
+	if (status === "PRECONDITION_FAILED" || status === 412) return true;
+	return typeof message === "string" && /REDIS_URL|ENCRYPTION_SECRET/.test(message);
+}
+
 export function NewThreadSetup({ resumeId }: { resumeId?: string }) {
 	const isClient = useIsClient();
 	const navigate = useNavigate();
@@ -86,7 +94,11 @@ export function NewThreadSetup({ resumeId }: { resumeId?: string }) {
 
 			{providersError ? (
 				<div className="rounded-md border border-amber-300 bg-amber-50 p-4 text-amber-950 text-sm dark:bg-amber-950/20 dark:text-amber-200">
-					<Trans>AI agent setup is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured.</Trans>
+					{isAgentConfigError(providersError) ? (
+						<Trans>AI agent setup is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured.</Trans>
+					) : (
+						<Trans>AI agent setup is unavailable right now. Please try again in a moment.</Trans>
+					)}
 				</div>
 			) : null}
 

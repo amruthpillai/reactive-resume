@@ -39,6 +39,9 @@ export function buildProviderNativeAgentTools(provider: AgentProviderConfig): To
 		...(provider.baseURL ? { baseURL: provider.baseURL } : {}),
 	});
 
+	// Defensive runtime check: older `@ai-sdk/openai` versions and some OpenAI-compatible
+	// gateways don't expose tools.webSearch. supportsProviderNativeWebSearch() filters out
+	// non-OpenAI providers, but this guards against SDK-shape drift on the OpenAI path.
 	if (typeof openai.tools.webSearch !== "function") return {};
 
 	return {

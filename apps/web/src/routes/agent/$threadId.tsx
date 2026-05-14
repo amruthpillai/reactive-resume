@@ -159,6 +159,7 @@ function PatchToolCard({
 
 export const Route = createFileRoute("/agent/$threadId")({
 	component: RouteComponent,
+	ssr: false,
 });
 
 function fileToBase64(file: File): Promise<string> {
@@ -197,7 +198,11 @@ function parseAgentSseStream(stream: ReadableStream<string>) {
 						const data = line.slice("data:".length).trimStart();
 						if (!data || data === "[DONE]") continue;
 
-						controller.enqueue(JSON.parse(data) as UIMessageChunk);
+						try {
+							controller.enqueue(JSON.parse(data) as UIMessageChunk);
+						} catch (error) {
+							console.warn("[agent] dropping malformed SSE frame", error);
+						}
 					}
 
 					boundary = eventBoundary.exec(buffer);
@@ -527,7 +532,7 @@ function AgentChat({
 
 	const handleDelete = async () => {
 		const confirmation = await confirm(t`Delete this agent thread?`, {
-			description: t`This action cannot be undone. Messages and the working draft will be removed.`,
+			description: t`This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume draft remains in your dashboard and can be deleted separately.`,
 		});
 
 		if (!confirmation) return;

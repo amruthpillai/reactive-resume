@@ -6,7 +6,7 @@ import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { testConnection } from "./ai";
 import {
-	assertAgentEnvironment,
+	assertCredentialEncryptionConfigured,
 	decryptCredential,
 	encryptCredential,
 	redactEncryptedCredential,
@@ -100,7 +100,7 @@ async function getOwnedProvider(input: { id: string; userId: string }) {
 
 export const aiProvidersService = {
 	list: async (input: { userId: string }) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		const providers = await db
 			.select()
@@ -112,7 +112,7 @@ export const aiProvidersService = {
 	},
 
 	getRunnableById: async (input: { id: string; userId: string }) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		const provider = await getOwnedProvider(input);
 		if (!provider.enabled || provider.testStatus !== "success") {
@@ -127,7 +127,7 @@ export const aiProvidersService = {
 	},
 
 	getDefaultRunnable: async (input: { userId: string }) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		const [provider] = await db
 			.select()
@@ -152,7 +152,7 @@ export const aiProvidersService = {
 	},
 
 	create: async (input: CreateAiProviderInput) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		const encrypted = encryptCredential(input.apiKey.trim());
 		const [provider] = await db
@@ -173,14 +173,21 @@ export const aiProvidersService = {
 	},
 
 	update: async (input: UpdateAiProviderInput) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		const existing = await getOwnedProvider(input);
 		const provider = input.provider ?? aiProviderSchema.parse(existing.provider);
 		const nextApiKey = input.apiKey?.trim();
 		const encrypted = nextApiKey ? encryptCredential(nextApiKey) : {};
 		const credentialChanged = !!nextApiKey;
-		if (input.enabled === true && existing.testStatus !== "success" && !credentialChanged) {
+		const nextBaseUrl =
+			input.baseURL !== undefined ? normalizeBaseUrl({ provider, baseURL: input.baseURL }) : existing.baseUrl;
+		const providerChanged = input.provider !== undefined && input.provider !== existing.provider;
+		const modelChanged = input.model !== undefined && input.model.trim() !== existing.model;
+		const baseUrlChanged = input.baseURL !== undefined && nextBaseUrl !== existing.baseUrl;
+		const runtimeChanged = credentialChanged || providerChanged || modelChanged || baseUrlChanged;
+
+		if (input.enabled === true && existing.testStatus !== "success" && !runtimeChanged) {
 			throw new ORPCError("BAD_REQUEST", { message: "AI provider must be tested successfully before enabling." });
 		}
 
@@ -190,9 +197,9 @@ export const aiProvidersService = {
 				...(input.label !== undefined ? { label: input.label.trim() } : {}),
 				...(input.provider !== undefined ? { provider: input.provider } : {}),
 				...(input.model !== undefined ? { model: input.model.trim() } : {}),
-				...(input.baseURL !== undefined ? { baseUrl: normalizeBaseUrl({ provider, baseURL: input.baseURL }) } : {}),
-				...(input.enabled !== undefined && !credentialChanged ? { enabled: input.enabled } : {}),
-				...(credentialChanged ? { enabled: false, testStatus: "untested", lastTestedAt: null, testError: null } : {}),
+				...(input.baseURL !== undefined ? { baseUrl: nextBaseUrl } : {}),
+				...(input.enabled !== undefined && !runtimeChanged ? { enabled: input.enabled } : {}),
+				...(runtimeChanged ? { enabled: false, testStatus: "untested", lastTestedAt: null, testError: null } : {}),
 				...encrypted,
 			})
 			.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)))
@@ -203,7 +210,7 @@ export const aiProvidersService = {
 	},
 
 	delete: async (input: { id: string; userId: string }) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		await db
 			.delete(schema.aiProvider)
@@ -211,7 +218,7 @@ export const aiProvidersService = {
 	},
 
 	test: async (input: { id: string; userId: string }) => {
-		assertAgentEnvironment();
+		assertCredentialEncryptionConfigured();
 
 		const provider = await getOwnedProvider(input);
 		const parsedProvider = aiProviderSchema.parse(provider.provider);

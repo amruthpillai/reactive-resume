@@ -24,9 +24,15 @@ export function attachmentIdsFromTransportBody(body: object | undefined) {
 export function buildAgentChatSubmission(text: string, pendingAttachments: ChatAttachment[]) {
 	const trimmedText = text.trim();
 	const files = pendingAttachments.map(attachmentToFilePart);
+	const attachmentIds = pendingAttachments.map((attachment) => attachment.id);
+	const options = { body: { attachmentIds } };
 
-	return {
-		message: trimmedText ? { text: trimmedText, ...(files.length > 0 ? { files } : {}) } : { files },
-		options: { body: { attachmentIds: pendingAttachments.map((attachment) => attachment.id) } },
-	};
+	if (trimmedText) {
+		return {
+			message: files.length > 0 ? { text: trimmedText, files } : { text: trimmedText },
+			options,
+		};
+	}
+
+	return { message: { files }, options };
 }

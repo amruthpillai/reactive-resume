@@ -24,7 +24,7 @@ function getEncryptionSecret() {
 
 function getEncryptionKey() {
 	const secret = getEncryptionSecret();
-	if (!secret) throw new Error("AGENT_ENVIRONMENT_UNAVAILABLE");
+	if (!secret) throw new Error("AI_CREDENTIAL_ENCRYPTION_UNAVAILABLE");
 
 	return createHash("sha256").update(secret).digest();
 }
@@ -92,8 +92,20 @@ export function redactEncryptedCredential(fields: StoredCredentialFields): Redac
 	};
 }
 
+export function isCredentialEncryptionConfigured() {
+	return !!getEncryptionSecret();
+}
+
+export function isAgentStreamingConfigured() {
+	return !!env.REDIS_URL?.trim();
+}
+
 export function isAgentEnvironmentConfigured() {
-	return !!getEncryptionSecret() && !!env.REDIS_URL?.trim();
+	return isCredentialEncryptionConfigured() && isAgentStreamingConfigured();
+}
+
+export function assertCredentialEncryptionConfigured() {
+	if (!isCredentialEncryptionConfigured()) throw new Error("AI_CREDENTIAL_ENCRYPTION_UNAVAILABLE");
 }
 
 export function assertAgentEnvironment() {

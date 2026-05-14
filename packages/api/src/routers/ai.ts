@@ -19,12 +19,22 @@ function isAiProviderGatewayError(error: unknown): boolean {
 	return error instanceof AISDKError;
 }
 
+function isCredentialEncryptionUnavailable(error: unknown): boolean {
+	return error instanceof Error && error.message === "AI_CREDENTIAL_ENCRYPTION_UNAVAILABLE";
+}
+
 function throwAiProviderGatewayError(): never {
 	throw new ORPCError("BAD_GATEWAY", { message: "Could not reach the AI provider." });
 }
 
 function throwAiProviderConfigError(): never {
 	throw new ORPCError("BAD_REQUEST", { message: "Invalid AI provider configuration." });
+}
+
+function throwCredentialEncryptionUnavailable(): never {
+	throw new ORPCError("PRECONDITION_FAILED", {
+		message: "AI providers are unavailable because ENCRYPTION_SECRET is not configured.",
+	});
 }
 
 function throwResumeStructureError(error: ZodError): never {
@@ -73,6 +83,7 @@ export const aiRouter = {
 					file: input.file,
 				});
 			} catch (error) {
+				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 				if (error instanceof ZodError) throwResumeStructureError(error);
@@ -118,6 +129,7 @@ export const aiRouter = {
 					file: input.file,
 				});
 			} catch (error) {
+				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 				if (error instanceof ZodError) throwResumeStructureError(error);
@@ -160,6 +172,7 @@ export const aiRouter = {
 					resumeUpdatedAt: resume.updatedAt,
 				});
 			} catch (error) {
+				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 				throw error;
@@ -213,6 +226,7 @@ export const aiRouter = {
 					},
 				});
 			} catch (error) {
+				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
 				if (error instanceof ZodError) {

@@ -6,6 +6,7 @@ const dbMock = {
 	insert: vi.fn(),
 	update: vi.fn(),
 	delete: vi.fn(),
+	transaction: vi.fn(async <T>(callback: (tx: typeof dbMock) => Promise<T>) => callback(dbMock)),
 };
 
 const clearActiveAgentRunIfCurrentMock = vi.fn();
@@ -19,6 +20,8 @@ const storageServiceMock = {
 const resumeServiceMock = {
 	getById: vi.fn(),
 	patch: vi.fn(),
+	patchInTransaction: vi.fn(),
+	notifyResumePatched: vi.fn(),
 };
 
 const aiProvidersServiceMock = {
@@ -122,6 +125,7 @@ vi.mock("@orpc/server", () => ({ streamToEventIterator: vi.fn() }));
 
 beforeEach(() => {
 	for (const mock of Object.values(dbMock)) mock.mockReset();
+	dbMock.transaction.mockImplementation(async <T>(callback: (tx: typeof dbMock) => Promise<T>) => callback(dbMock));
 	clearActiveAgentRunIfCurrentMock.mockReset();
 	claimActiveAgentRunMock.mockReset();
 	for (const mock of Object.values(storageServiceMock)) mock.mockReset();
@@ -1093,13 +1097,16 @@ describe("agentService.actions.revert", () => {
 		const updateSet = vi.fn(() => ({ where: updateWhere }));
 		dbMock.update.mockReturnValue({ set: updateSet });
 
-		resumeServiceMock.patch.mockResolvedValue({ updatedAt: new Date("2026-05-03T00:00:00.000Z") });
+		resumeServiceMock.patchInTransaction.mockResolvedValue({
+			id: "resume-1",
+			updatedAt: new Date("2026-05-03T00:00:00.000Z"),
+		});
 
 		const { agentService } = await import("./agent");
 
 		const result = await agentService.actions.revert({ id: "action-1", userId: "user-1" });
 
-		expect(resumeServiceMock.patch).toHaveBeenCalledWith({
+		expect(resumeServiceMock.patchInTransaction).toHaveBeenCalledWith(dbMock, {
 			id: "resume-1",
 			userId: "user-1",
 			operations: action.inverseOperations,
@@ -1130,13 +1137,13 @@ describe("agentService.actions.revert", () => {
 		const updateSet = vi.fn(() => ({ where: updateWhere }));
 		dbMock.update.mockReturnValue({ set: updateSet });
 
-		resumeServiceMock.patch.mockRejectedValue(new ORPCError("RESUME_VERSION_CONFLICT"));
+		resumeServiceMock.patchInTransaction.mockRejectedValue(new ORPCError("RESUME_VERSION_CONFLICT"));
 
 		const { agentService } = await import("./agent");
 
 		const result = await agentService.actions.revert({ id: "action-1", userId: "user-1" });
 
-		expect(resumeServiceMock.patch).toHaveBeenCalled();
+		expect(resumeServiceMock.patchInTransaction).toHaveBeenCalled();
 		expect(updateSet).toHaveBeenCalledWith(
 			expect.objectContaining({
 				status: "conflicted",

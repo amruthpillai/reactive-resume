@@ -105,9 +105,9 @@ function ProviderRow({ provider }: { provider: SavedProvider }) {
 					<p>
 						{providerLabel(provider.provider)} · {provider.model}
 					</p>
-					<p className="truncate">{provider.baseURL || AI_PROVIDER_DEFAULT_BASE_URLS[provider.provider]}</p>
+					<p className="truncate">{provider.baseURL ?? AI_PROVIDER_DEFAULT_BASE_URLS[provider.provider]}</p>
 					<p>
-						<Trans>Key</Trans>: {provider.apiKeyPreview} · {provider.apiKeyFingerprint.slice(0, 12)}
+						<Trans>Key</Trans>: {provider.apiKeyPreview}
 					</p>
 					{provider.testError ? <p className="text-rose-600">{provider.testError}</p> : null}
 				</div>
@@ -286,11 +286,11 @@ function CreateProviderForm() {
 					onClick={() =>
 						createProvider(
 							{
-								label: form.label,
+								label: form.label.trim(),
 								provider: form.provider,
-								model: form.model,
-								baseURL: form.baseURL,
-								apiKey: form.apiKey,
+								model: form.model.trim(),
+								baseURL: form.baseURL.trim(),
+								apiKey: form.apiKey.trim(),
 							},
 							{
 								onSuccess: () => {

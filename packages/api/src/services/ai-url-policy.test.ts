@@ -39,6 +39,17 @@ describe("AI provider base URL policy", () => {
 		);
 	});
 
+	it("rejects non-HTTP schemes even when unsafe provider URLs are enabled", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
+
+		expect(() => resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "file:///etc/passwd" })).toThrow(
+			"INVALID_AI_BASE_URL",
+		);
+		expect(() => resolveAiBaseUrl({ provider: "openai-compatible", baseURL: "ftp://example.com/v1" })).toThrow(
+			"INVALID_AI_BASE_URL",
+		);
+	});
+
 	it("keeps URL-fetch tools public HTTPS only even when unsafe provider URLs are enabled", () => {
 		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
 

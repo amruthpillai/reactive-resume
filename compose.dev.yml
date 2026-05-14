@@ -6,10 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     restart: unless-stopped
-    profiles:
-      - app
     env_file:
-      - .env.local
+      - path: .env.local
+        required: false
     environment:
       APP_URL: http://localhost:3000
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres

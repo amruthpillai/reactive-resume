@@ -87,7 +87,7 @@ CREATE INDEX "agent_actions_message_id_index" ON "agent_actions" ("message_id");
 CREATE INDEX "agent_attachments_thread_id_index" ON "agent_attachments" ("thread_id");--> statement-breakpoint
 CREATE INDEX "agent_attachments_message_id_index" ON "agent_attachments" ("message_id");--> statement-breakpoint
 CREATE INDEX "agent_attachments_user_id_index" ON "agent_attachments" ("user_id");--> statement-breakpoint
-CREATE INDEX "agent_messages_thread_id_sequence_index" ON "agent_messages" ("thread_id","sequence");--> statement-breakpoint
+CREATE UNIQUE INDEX "agent_messages_thread_id_sequence_index" ON "agent_messages" ("thread_id","sequence");--> statement-breakpoint
 CREATE INDEX "agent_messages_user_id_created_at_index" ON "agent_messages" ("user_id","created_at" DESC NULLS LAST);--> statement-breakpoint
 CREATE INDEX "agent_threads_user_id_status_last_message_at_index" ON "agent_threads" ("user_id","status","last_message_at" DESC NULLS LAST);--> statement-breakpoint
 CREATE INDEX "agent_threads_working_resume_id_index" ON "agent_threads" ("working_resume_id");--> statement-breakpoint

@@ -680,31 +680,42 @@ async function applyResumePatch(input: {
 }) {
 	const before = await resumeService.getById({ id: input.resumeId, userId: input.userId });
 	const inverseOperations = createInverseResumePatches(before.data, input.operations);
-	const patched = await resumeService.patch({
-		id: input.resumeId,
-		userId: input.userId,
-		operations: input.operations,
-		expectedUpdatedAt: before.updatedAt,
+
+	const { action, patched } = await db.transaction(async (tx) => {
+		const patched = await resumeService.patchInTransaction(tx, {
+			id: input.resumeId,
+			userId: input.userId,
+			operations: input.operations,
+			expectedUpdatedAt: before.updatedAt,
+		});
+
+		const [action] = await tx
+			.insert(schema.agentAction)
+			.values({
+				userId: input.userId,
+				threadId: input.threadId,
+				resumeId: input.resumeId,
+				kind: "resume_patch",
+				status: "applied",
+				title: input.title,
+				...(input.summary !== undefined ? { summary: input.summary } : {}),
+				operations: input.operations,
+				inverseOperations,
+				baseUpdatedAt: before.updatedAt,
+				appliedUpdatedAt: patched.updatedAt,
+			})
+			.returning();
+
+		if (!action) throw new Error("AGENT_ACTION_CREATE_FAILED");
+
+		return { action, patched };
 	});
 
-	const [action] = await db
-		.insert(schema.agentAction)
-		.values({
-			userId: input.userId,
-			threadId: input.threadId,
-			resumeId: input.resumeId,
-			kind: "resume_patch",
-			status: "applied",
-			title: input.title,
-			...(input.summary !== undefined ? { summary: input.summary } : {}),
-			operations: input.operations,
-			inverseOperations,
-			baseUpdatedAt: before.updatedAt,
-			appliedUpdatedAt: patched.updatedAt,
-		})
-		.returning();
-
-	if (!action) throw new Error("AGENT_ACTION_CREATE_FAILED");
+	await resumeService.notifyResumePatched({
+		resumeId: patched.id,
+		userId: input.userId,
+		updatedAt: patched.updatedAt,
+	});
 
 	return {
 		actionId: action.id,
@@ -1147,7 +1158,7 @@ export const agentService = {
 			const id = generateId();
 			const key = `uploads/${input.userId}/agent/${input.threadId}/${id}-${input.filename}`;
 
-			await getStorageService().write({ key, data: input.data, contentType: mediaType });
+			await getStorageService().write({ key, data: input.data, contentType: mediaType, private: true });
 			const [attachment] = await db
 				.insert(schema.agentAttachment)
 				.values({
@@ -1199,25 +1210,34 @@ export const agentService = {
 			if (!action.resumeId) throw new ORPCError("BAD_REQUEST", { message: "The edited resume no longer exists." });
 
 			try {
-				const reverted = await resumeService.patch({
-					id: action.resumeId,
-					userId: input.userId,
-					operations: action.inverseOperations,
-					expectedUpdatedAt: action.appliedUpdatedAt,
+				const { updated, reverted } = await db.transaction(async (tx) => {
+					const reverted = await resumeService.patchInTransaction(tx, {
+						id: action.resumeId as string,
+						userId: input.userId,
+						operations: action.inverseOperations,
+						expectedUpdatedAt: action.appliedUpdatedAt,
+					});
+
+					const [updated] = await tx
+						.update(schema.agentAction)
+						.set({
+							status: "reverted",
+							revertedAt: new Date(),
+							revertMessage: null,
+							appliedUpdatedAt: reverted.updatedAt,
+						})
+						.where(and(eq(schema.agentAction.id, input.id), eq(schema.agentAction.userId, input.userId)))
+						.returning();
+
+					if (!updated) throw new ORPCError("NOT_FOUND");
+					return { updated, reverted };
 				});
 
-				const [updated] = await db
-					.update(schema.agentAction)
-					.set({
-						status: "reverted",
-						revertedAt: new Date(),
-						revertMessage: null,
-						appliedUpdatedAt: reverted.updatedAt,
-					})
-					.where(and(eq(schema.agentAction.id, input.id), eq(schema.agentAction.userId, input.userId)))
-					.returning();
-
-				if (!updated) throw new ORPCError("NOT_FOUND");
+				await resumeService.notifyResumePatched({
+					resumeId: reverted.id,
+					userId: input.userId,
+					updatedAt: reverted.updatedAt,
+				});
 
 				return toAction(updated);
 			} catch (error) {

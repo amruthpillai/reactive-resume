@@ -12,6 +12,7 @@ function assertSafeUrl(input: string, errorCode: string, options?: { allowUnsafe
 	const parsed = parseUrl(input);
 	if (!parsed) throw new Error(errorCode);
 	if (parsed.username || parsed.password) throw new Error(errorCode);
+	if (parsed.protocol !== "http:" && parsed.protocol !== "https:") throw new Error(errorCode);
 
 	if (!options?.allowUnsafe) {
 		if (parsed.protocol !== "https:") throw new Error(errorCode);

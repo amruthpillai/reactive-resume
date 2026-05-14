@@ -128,4 +128,13 @@ describe("createInverseResumePatches", () => {
 
 		expect(() => createInverseResumePatches(data, operations)).toThrow("INVALID_PATCH_OPERATIONS");
 	});
+
+	it("inverts an add at an existing object member into a replace with the prior value", () => {
+		const data = buildFixture();
+		const operations: JsonPatchOperation[] = [{ op: "add", path: "/basics/name", value: "Bob" }];
+
+		const inverse = createInverseResumePatches(data, operations);
+
+		expect(inverse).toEqual([{ op: "replace", path: "/basics/name", value: "Alice" }]);
+	});
 });

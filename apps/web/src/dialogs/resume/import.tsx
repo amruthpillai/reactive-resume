@@ -97,7 +97,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { mutateAsync: importResume } = useMutation(orpc.resume.import.mutationOptions());
-	const { data: aiProviders } = useQuery(orpc.aiProviders.list.queryOptions());
+	const { data: aiProviders, isLoading: isLoadingAiProviders } = useQuery(orpc.aiProviders.list.queryOptions());
 	const hasAIProvider = aiProviders?.some((provider) => provider.enabled && provider.testStatus === "success") ?? false;
 
 	const form = useAppForm({
@@ -137,6 +137,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				}
 
 				if (value.type === "pdf") {
+					if (isLoadingAiProviders) throw new Error(t`Loading AI providers. Please try again in a moment.`);
 					if (!hasAIProvider)
 						throw new Error(t`This feature requires a tested AI provider. Please add one in the settings.`);
 
@@ -148,6 +149,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				}
 
 				if (value.type === "docx") {
+					if (isLoadingAiProviders) throw new Error(t`Loading AI providers. Please try again in a moment.`);
 					if (!hasAIProvider)
 						throw new Error(t`This feature requires a tested AI provider. Please add one in the settings.`);
 

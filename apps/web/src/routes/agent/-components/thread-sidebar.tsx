@@ -41,7 +41,7 @@ function formatRelativeTime(value: Date | string, locale: string) {
 		{ amount: 60_000, unit: "minute" },
 	];
 
-	if (absMs < 45_000) return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(0, "second");
+	if (absMs < 60_000) return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(0, "second");
 
 	const division = divisions.find((candidate) => absMs >= candidate.amount);
 	if (!division) return "";

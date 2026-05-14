@@ -27,8 +27,11 @@ services:
     command: redis-server --appendonly yes
     networks:
       - data_network
-    ports:
-      - "6379:6379"
+    # Not exposed on the host by default. Redis can contain agent stream data
+    # including user chat content; keep it internal to the Docker network.
+    # Uncomment the ports block below if you need host access for tooling.
+    # ports:
+    #   - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:

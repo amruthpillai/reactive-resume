@@ -68,7 +68,7 @@ export const env = createEnv({
 
 		// AI Agent Workspace (optional until the agent feature is used)
 		REDIS_URL: z.url({ protocol: /redis(s)?/ }).optional(),
-		ENCRYPTION_SECRET: z.string().min(1).optional(),
+		ENCRYPTION_SECRET: z.string().min(32, "ENCRYPTION_SECRET must be at least 32 characters").optional(),
 		CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
 		CLOUDFLARE_API_TOKEN: z.string().min(1).optional(),
 

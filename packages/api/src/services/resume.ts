@@ -23,6 +23,69 @@ import {
 import { publishResumeUpdated } from "./resume-events";
 import { getStorageService } from "./storage";
 
+type DbOrTx = typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+async function applyResumePatchTx(
+	client: DbOrTx,
+	input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date },
+) {
+	const [existing] = await client
+		.select({ data: schema.resume.data, isLocked: schema.resume.isLocked, updatedAt: schema.resume.updatedAt })
+		.from(schema.resume)
+		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+	if (!existing) throw new ORPCError("NOT_FOUND");
+	if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
+	if (input.expectedUpdatedAt && existing.updatedAt.getTime() !== input.expectedUpdatedAt.getTime()) {
+		throw new ORPCError("RESUME_VERSION_CONFLICT", {
+			status: 409,
+			message: "The resume changed after this patch was generated.",
+			data: { updatedAt: existing.updatedAt.toISOString() },
+		});
+	}
+
+	let patchedData: ResumeData;
+
+	try {
+		patchedData = applyResumePatches(existing.data, input.operations);
+	} catch (error) {
+		if (error instanceof ResumePatchError) {
+			throw new ORPCError("INVALID_PATCH_OPERATIONS", {
+				status: 400,
+				message: error.message,
+				data: { code: error.code, index: error.index, operation: error.operation },
+			});
+		}
+
+		throw new ORPCError("INVALID_PATCH_OPERATIONS", {
+			status: 400,
+			message: error instanceof Error ? error.message : "Failed to apply patch operations",
+		});
+	}
+
+	const [resume] = await client
+		.update(schema.resume)
+		.set({ data: patchedData })
+		.where(
+			and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
+		)
+		.returning({
+			id: schema.resume.id,
+			name: schema.resume.name,
+			slug: schema.resume.slug,
+			tags: schema.resume.tags,
+			data: schema.resume.data,
+			isPublic: schema.resume.isPublic,
+			isLocked: schema.resume.isLocked,
+			updatedAt: schema.resume.updatedAt,
+			hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+		});
+
+	if (!resume) throw new ORPCError("NOT_FOUND");
+
+	return resume;
+}
+
 const tags = {
 	list: async (input: { userId: string }) => {
 		const result = await db
@@ -366,59 +429,7 @@ export const resumeService = {
 	},
 
 	patch: async (input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date }) => {
-		const [existing] = await db
-			.select({ data: schema.resume.data, isLocked: schema.resume.isLocked, updatedAt: schema.resume.updatedAt })
-			.from(schema.resume)
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
-
-		if (!existing) throw new ORPCError("NOT_FOUND");
-		if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
-		if (input.expectedUpdatedAt && existing.updatedAt.getTime() !== input.expectedUpdatedAt.getTime()) {
-			throw new ORPCError("RESUME_VERSION_CONFLICT", {
-				status: 409,
-				message: "The resume changed after this patch was generated.",
-				data: { updatedAt: existing.updatedAt.toISOString() },
-			});
-		}
-
-		let patchedData: ResumeData;
-
-		try {
-			patchedData = applyResumePatches(existing.data, input.operations);
-		} catch (error) {
-			if (error instanceof ResumePatchError) {
-				throw new ORPCError("INVALID_PATCH_OPERATIONS", {
-					status: 400,
-					message: error.message,
-					data: { code: error.code, index: error.index, operation: error.operation },
-				});
-			}
-
-			throw new ORPCError("INVALID_PATCH_OPERATIONS", {
-				status: 400,
-				message: error instanceof Error ? error.message : "Failed to apply patch operations",
-			});
-		}
-
-		const [resume] = await db
-			.update(schema.resume)
-			.set({ data: patchedData })
-			.where(
-				and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
-			)
-			.returning({
-				id: schema.resume.id,
-				name: schema.resume.name,
-				slug: schema.resume.slug,
-				tags: schema.resume.tags,
-				data: schema.resume.data,
-				isPublic: schema.resume.isPublic,
-				isLocked: schema.resume.isLocked,
-				updatedAt: schema.resume.updatedAt,
-				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
-			});
-
-		if (!resume) throw new ORPCError("NOT_FOUND");
+		const resume = await applyResumePatchTx(db, input);
 
 		await notifyResumeUpdated({
 			type: "resume.updated",
@@ -429,6 +440,18 @@ export const resumeService = {
 		});
 
 		return resume;
+	},
+
+	patchInTransaction: applyResumePatchTx,
+
+	notifyResumePatched: async (input: { resumeId: string; userId: string; updatedAt: Date }) => {
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: input.resumeId,
+			userId: input.userId,
+			updatedAt: input.updatedAt.toISOString(),
+			mutation: "patch",
+		});
 	},
 
 	setLocked: async (input: { id: string; userId: string; isLocked: boolean }) => {

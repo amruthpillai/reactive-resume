@@ -1,9 +1,8 @@
 import type { UIMessage } from "ai";
 import { ORPCError } from "@orpc/client";
-import { type } from "@orpc/server";
 import z from "zod";
 import { protectedProcedure } from "../context";
-import { aiRequestRateLimit } from "../middleware/rate-limit";
+import { aiRequestRateLimit, storageUploadRateLimit } from "../middleware/rate-limit";
 import { agentService } from "../services/agent";
 
 function isAgentEnvironmentUnavailable(error: unknown) {
@@ -168,7 +167,12 @@ const messagesRouter = {
 			operationId: "stopAgentMessage",
 			summary: "Stop active agent run",
 		})
-		.input(type<{ threadId: string; partialMessage?: UIMessage }>())
+		.input(
+			z.object({
+				threadId: z.string(),
+				partialMessage: z.custom<UIMessage>(isUiMessage, { message: "Invalid UI message." }).optional(),
+			}),
+		)
 		.output(z.void())
 		.handler(async ({ context, input }) => {
 			try {
@@ -219,6 +223,7 @@ const attachmentsRouter = {
 				data: z.string().min(1),
 			}),
 		)
+		.use(storageUploadRateLimit)
 		.handler(async ({ context, input }) => {
 			try {
 				return await agentService.attachments.create({

@@ -44,9 +44,12 @@ function getInputKeyPart(input: unknown): string {
 	if (!input || typeof input !== "object") return "no-input";
 
 	const inputRecord = input as Record<string, unknown>;
-	const id = inputRecord.id;
 
-	if (typeof id === "string" && id.trim()) return id;
+	const fields = ["resumeId", "threadId", "conversationId", "messageId", "fileId", "id"] as const;
+	for (const field of fields) {
+		const value = inputRecord[field];
+		if (typeof value === "string" && value.trim()) return `${field}:${value}`;
+	}
 
 	const username = inputRecord.username;
 	const slug = inputRecord.slug;

@@ -15,6 +15,7 @@ interface StorageWriteInput {
 	key: string;
 	data: Uint8Array;
 	contentType: string;
+	private?: boolean;
 }
 
 interface StorageReadResult {
@@ -258,13 +259,13 @@ class S3StorageService implements StorageService {
 		return response.Contents.map((object) => object.Key ?? "");
 	}
 
-	async write({ key, data, contentType }: StorageWriteInput): Promise<void> {
+	async write({ key, data, contentType, private: isPrivate }: StorageWriteInput): Promise<void> {
 		const client = await this.getClient();
 		const command = new PutObjectCommand({
 			Bucket: this.bucket,
 			Key: key,
 			Body: data,
-			ACL: "public-read",
+			ACL: isPrivate ? "private" : "public-read",
 			ContentType: contentType,
 		});
 

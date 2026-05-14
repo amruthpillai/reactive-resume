@@ -110,7 +110,7 @@ export const agentMessage = pg.pgTable(
 			.defaultNow()
 			.$onUpdate(() => /* @__PURE__ */ new Date()),
 	},
-	(t) => [pg.index().on(t.threadId, t.sequence), pg.index().on(t.userId, t.createdAt.desc())],
+	(t) => [pg.uniqueIndex().on(t.threadId, t.sequence), pg.index().on(t.userId, t.createdAt.desc())],
 );
 
 export const agentAttachment = pg.pgTable(
