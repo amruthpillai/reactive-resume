@@ -5,21 +5,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    init: true
     restart: unless-stopped
+    profiles:
+      - app
     env_file:
       - .env.local
     environment:
-      PORT: "3000"
       APP_URL: http://localhost:3000
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
-      AUTH_SECRET: change-me-to-a-secure-secret-key-in-production
-      ENCRYPTION_SECRET: change-me-to-a-secure-secret-key-in-production
-      S3_ACCESS_KEY_ID: seaweedfs
-      S3_SECRET_ACCESS_KEY: seaweedfs
       S3_ENDPOINT: http://seaweedfs:8333
-      S3_BUCKET: reactive-resume
-      S3_FORCE_PATH_STYLE: "true"
       REDIS_URL: redis://redis:6379
       CHOKIDAR_USEPOLLING: "true"
     ports:
@@ -60,7 +54,7 @@ services:
       seaweedfs_create_bucket:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then((r) => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));"]
+      test: ["CMD", "node", "-e", "const net = require('node:net'); const socket = net.connect(3000, '127.0.0.1', () => socket.end()); socket.setTimeout(1000, () => process.exit(1)); socket.on('error', () => process.exit(1));"]
       start_period: 30s
       interval: 30s
       timeout: 10s
@@ -75,8 +69,8 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql
-    expose:
-      - "5432"
+    ports:
+      - "127.0.0.1:5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       start_period: 10s
@@ -90,8 +84,8 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
-    expose:
-      - "6379"
+    ports:
+      - "127.0.0.1:6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       start_period: 5s
@@ -108,8 +102,8 @@ services:
       AWS_SECRET_ACCESS_KEY: seaweedfs
     volumes:
       - seaweedfs_data:/data
-    expose:
-      - "8333"
+    ports:
+      - "127.0.0.1:8333:8333"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8888"]
       start_period: 10s
