@@ -8,9 +8,9 @@ import { BrandIcon } from "@reactive-resume/ui/components/brand-icon";
 import { Button } from "@reactive-resume/ui/components/button";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { ResumePreview } from "@/components/resume/preview";
 import { orpc } from "@/libs/orpc/client";
 import { createResumePdfBlob } from "@/libs/resume/pdf-document";
+import { PdfViewer } from "./pdf-viewer";
 
 const publicResumeRoute = getRouteApi("/$username/$slug");
 
@@ -43,14 +43,10 @@ export function PublicResumeRoute() {
 
 	return (
 		<>
-			<div className="mx-auto my-12 flex flex-col items-center gap-12 print:m-0 print:block print:max-w-full print:px-0">
-				<ResumePreview
-					data={resume.data}
-					pageGap="1rem"
-					pageScale={1.25}
-					pageLayout="vertical"
-					pageClassName="print:w-full! w-full max-w-full"
-				/>
+			<div className="mx-auto flex w-full flex-col items-center gap-6 px-4 py-6 print:m-0 print:block print:max-w-full print:p-0">
+				<div className="w-full max-w-5xl bg-white print:max-w-full">
+					<PdfViewer data={resume.data} className="block w-full" />
+				</div>
 
 				<footer className="flex justify-center print:hidden">
 					<BrandIcon variant="icon" className="size-8 opacity-60" />
