@@ -1,14 +1,12 @@
 {
-	"name": "@reactive-resume/auth",
+	"name": "server",
 	"version": "0.0.0",
 	"type": "module",
 	"private": true,
-	"exports": {
-		"./config": "./src/config.ts",
-		"./functions": "./src/functions.ts",
-		"./types": "./src/types.ts"
-	},
 	"scripts": {
+		"build": "vite build",
+		"dev": "tsx watch src/index.ts",
+		"start": "node dist/index.mjs",
 		"typecheck": "tsgo --noEmit",
 		"test": "vitest run --passWithNoTests",
 		"test:coverage": "vitest run --coverage --passWithNoTests",
@@ -16,27 +14,39 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
-		"@better-auth/api-key": "^1.6.11",
-		"@better-auth/drizzle-adapter": "^1.6.11",
-		"@better-auth/infra": "^0.2.8",
 		"@better-auth/oauth-provider": "^1.6.11",
-		"@better-auth/passkey": "^1.6.11",
+		"@hono/node-server": "^1.19.14",
+		"@modelcontextprotocol/sdk": "^1.29.0",
+		"@orpc/client": "^1.14.3",
+		"@orpc/json-schema": "^1.14.3",
+		"@orpc/openapi": "^1.14.3",
+		"@orpc/server": "^1.14.3",
+		"@orpc/zod": "^1.14.3",
+		"@react-pdf/renderer": "^4.5.1",
+		"@reactive-resume/api": "workspace:*",
+		"@reactive-resume/auth": "workspace:*",
 		"@reactive-resume/db": "workspace:*",
-		"@reactive-resume/email": "workspace:*",
 		"@reactive-resume/env": "workspace:*",
+		"@reactive-resume/pdf": "workspace:*",
+		"@reactive-resume/schema": "workspace:*",
 		"@reactive-resume/utils": "workspace:*",
-		"bcrypt": "^6.0.0",
 		"better-auth": "1.6.11",
 		"drizzle-orm": "1.0.0-rc.2",
-		"jose": "^6.2.3",
+		"hono": "^4.12.18",
+		"pg": "^8.20.0",
 		"react": "^19.2.6",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
-		"@types/bcrypt": "^6.0.0",
+		"@types/node": "^25.7.0",
+		"@types/pg": "^8.20.0",
 		"@types/react": "^19.2.14",
 		"@typescript/native-preview": "7.0.0-dev.20260514.1",
-		"typescript": "^6.0.3"
+		"@vitejs/plugin-react": "^6.0.1",
+		"tsx": "^4.22.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.13",
+		"vitest": "^4.1.6"
 	}
 }

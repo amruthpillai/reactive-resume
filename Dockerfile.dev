@@ -15,6 +15,7 @@ ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps/server/package.json ./apps/server/package.json
 COPY apps/web/package.json ./apps/web/package.json
 COPY packages/ai/package.json ./packages/ai/package.json
 COPY packages/api/package.json ./packages/api/package.json
@@ -37,6 +38,6 @@ RUN --mount=type=cache,id=reactive-resume-dev-pnpm-store,target=/pnpm/store,shar
 
 COPY . .
 
-EXPOSE 3000/tcp
+EXPOSE 3000/tcp 3001/tcp
 
-CMD ["pnpm", "run", "dev:web"]
+CMD ["pnpm", "run", "dev"]

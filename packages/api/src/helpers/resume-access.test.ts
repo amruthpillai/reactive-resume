@@ -2,80 +2,69 @@ import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 
 const envMock = vi.hoisted(() => ({ APP_URL: "https://example.com" }));
-const cookies = vi.hoisted(() => ({
-	get: vi.fn<(name: string) => string | undefined>(),
-	set: vi.fn(),
-}));
 
 vi.mock("@reactive-resume/env/server", () => ({ env: envMock }));
-vi.mock("@tanstack/react-start/server", () => ({
-	getCookie: (name: string) => cookies.get(name),
-	setCookie: (name: string, value: string, options: unknown) => cookies.set(name, value, options),
-}));
 
 const { hasResumeAccess, grantResumeAccess } = await import("./resume-access");
 
 const signToken = (resumeId: string, passwordHash: string) =>
 	createHash("sha256").update(`${resumeId}:${passwordHash}`).digest("hex");
 
+const requestHeadersWithCookie = (name: string, value: string) =>
+	new Headers({ Cookie: `other=value; ${name}=${value}; theme=dark` });
+
 describe("hasResumeAccess", () => {
 	it("returns false when no passwordHash is supplied", () => {
-		expect(hasResumeAccess("resume-1", null)).toBe(false);
+		expect(hasResumeAccess(new Headers(), "resume-1", null)).toBe(false);
 	});
 
 	it("returns false when no cookie is present", () => {
-		cookies.get.mockReturnValueOnce(undefined);
-		expect(hasResumeAccess("resume-1", "hash")).toBe(false);
+		expect(hasResumeAccess(new Headers(), "resume-1", "hash")).toBe(false);
 	});
 
 	it("returns true for a cookie value that matches the expected signed token", () => {
 		const token = signToken("resume-1", "hash");
-		cookies.get.mockReturnValueOnce(token);
+		const headers = requestHeadersWithCookie("resume_access_resume-1", token);
 
-		expect(hasResumeAccess("resume-1", "hash")).toBe(true);
+		expect(hasResumeAccess(headers, "resume-1", "hash")).toBe(true);
 	});
 
 	it("returns false for a cookie value that does not match the expected signed token", () => {
-		cookies.get.mockReturnValueOnce("not-the-right-token");
+		const headers = requestHeadersWithCookie("resume_access_resume-1", "not-the-right-token");
 
-		expect(hasResumeAccess("resume-1", "hash")).toBe(false);
+		expect(hasResumeAccess(headers, "resume-1", "hash")).toBe(false);
 	});
 
 	it("returns false when the cookie has a different length than the expected token", () => {
-		cookies.get.mockReturnValueOnce("short");
+		const headers = requestHeadersWithCookie("resume_access_resume-1", "short");
 
-		expect(hasResumeAccess("resume-1", "hash")).toBe(false);
+		expect(hasResumeAccess(headers, "resume-1", "hash")).toBe(false);
 	});
 });
 
 describe("grantResumeAccess", () => {
-	it("writes a signed cookie scoped to the resume id with httpOnly + sameSite=lax + 10-minute TTL", () => {
-		cookies.set.mockReset();
+	it("appends a signed Set-Cookie header scoped to the resume id with httpOnly + sameSite=lax + 10-minute TTL", () => {
+		const responseHeaders = new Headers();
 
-		grantResumeAccess("resume-42", "hash");
+		grantResumeAccess(responseHeaders, "resume-42", "hash");
 
-		expect(cookies.set).toHaveBeenCalledTimes(1);
-		// biome-ignore lint/style/noNonNullAssertion: The assertion above verifies the cookie write exists before destructuring it.
-		const [name, value, options] = cookies.set.mock.calls[0]!;
-		expect(name).toBe("resume_access_resume-42");
-		expect(value).toBe(signToken("resume-42", "hash"));
-		expect(options).toMatchObject({
-			path: "/",
-			httpOnly: true,
-			sameSite: "lax",
-			maxAge: 600,
-		});
+		const cookie = responseHeaders.get("Set-Cookie");
+		expect(cookie).toContain(`resume_access_resume-42=${signToken("resume-42", "hash")}`);
+		expect(cookie).toContain("Path=/");
+		expect(cookie).toContain("HttpOnly");
+		expect(cookie).toContain("SameSite=Lax");
+		expect(cookie).toContain("Max-Age=600");
 	});
 
 	it("only marks the cookie secure when APP_URL is https", () => {
 		envMock.APP_URL = "http://localhost:3000";
-		cookies.set.mockReset();
-		grantResumeAccess("r", "h");
-		expect(cookies.set.mock.calls[0]?.[2]).toMatchObject({ secure: false });
+		const localHeaders = new Headers();
+		grantResumeAccess(localHeaders, "r", "h");
+		expect(localHeaders.get("Set-Cookie")).not.toContain("Secure");
 
 		envMock.APP_URL = "https://example.com";
-		cookies.set.mockReset();
-		grantResumeAccess("r", "h");
-		expect(cookies.set.mock.calls[0]?.[2]).toMatchObject({ secure: true });
+		const productionHeaders = new Headers();
+		grantResumeAccess(productionHeaders, "r", "h");
+		expect(productionHeaders.get("Set-Cookie")).toContain("Secure");
 	});
 });

@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from "react";
 import type { Theme } from "@/libs/theme";
 import { useRouter } from "@tanstack/react-router";
-import { createContext, use } from "react";
-import { setThemeServerFn } from "@/libs/theme";
+import { createContext, use, useEffect } from "react";
+import { setThemeCookie } from "@/libs/theme";
 
 type ThemeContextValue = {
 	theme: Theme;
@@ -17,11 +17,15 @@ type Props = PropsWithChildren<{ theme: Theme }>;
 export function ThemeProvider({ children, theme }: Props) {
 	const router = useRouter();
 
+	useEffect(() => {
+		document.documentElement.classList.toggle("dark", theme === "dark");
+	}, [theme]);
+
 	async function setTheme(value: Theme, options: { playSound?: boolean } = {}) {
 		const { playSound = true } = options;
 
 		document.documentElement.classList.toggle("dark", value === "dark");
-		await setThemeServerFn({ data: value });
+		setThemeCookie(value);
 		void router.invalidate();
 
 		if (!playSound) return;

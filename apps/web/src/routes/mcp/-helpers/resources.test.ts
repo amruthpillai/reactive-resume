@@ -10,8 +10,6 @@ const clientMock = vi.hoisted(() => ({
 	},
 }));
 
-vi.mock("@/libs/orpc/client", () => ({ client: clientMock }));
-
 const { registerResources } = await import("./resources");
 
 type ResourceHandler = (uri: URL) => Promise<{
@@ -40,7 +38,7 @@ const makeFakeServer = () => {
 describe("registerResources", () => {
 	it("registers the resume and resume-schema resources", () => {
 		const { server, registered } = makeFakeServer();
-		registerResources(server as never);
+		registerResources(server as never, clientMock as never);
 
 		expect(server.registerResource).toHaveBeenCalledTimes(2);
 		expect(registered.map((r) => r.name).sort()).toEqual(["resume", "resume-schema"]);
@@ -50,7 +48,7 @@ describe("registerResources", () => {
 		clientMock.resume.getById.mockResolvedValueOnce({ data: { id: "abc", basics: { name: "Jane" } } });
 
 		const { server, registered } = makeFakeServer();
-		registerResources(server as never);
+		registerResources(server as never, clientMock as never);
 
 		const resume = registered.find((r) => r.name === "resume")!;
 		const result = await resume.handler(new URL("resume://abc"));
@@ -63,7 +61,7 @@ describe("registerResources", () => {
 
 	it("resume handler throws when the URI has no id segment", async () => {
 		const { server, registered } = makeFakeServer();
-		registerResources(server as never);
+		registerResources(server as never, clientMock as never);
 
 		const resume = registered.find((r) => r.name === "resume")!;
 		await expect(resume.handler(new URL("resume://"))).rejects.toThrow(/Invalid resume URI/);
@@ -71,7 +69,7 @@ describe("registerResources", () => {
 
 	it("resume-schema handler returns the static JSON schema as text", async () => {
 		const { server, registered } = makeFakeServer();
-		registerResources(server as never);
+		registerResources(server as never, clientMock as never);
 
 		const resumeSchema = registered.find((r) => r.name === "resume-schema")!;
 		const result = await resumeSchema.handler(new URL("resume://_meta/schema"));

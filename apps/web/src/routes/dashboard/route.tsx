@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
 import { SidebarProvider } from "@reactive-resume/ui/components/sidebar";
-import { getDashboardSidebarServerFn, setDashboardSidebarServerFn } from "./-components/functions";
+import { getDashboardSidebarState, setDashboardSidebarState } from "./-components/functions";
 import { DashboardSidebar } from "./-components/sidebar";
 
 export const Route = createFileRoute("/dashboard")({
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/dashboard")({
 		return { session: context.session };
 	},
 	loader: async () => {
-		const sidebarState = await getDashboardSidebarServerFn();
+		const sidebarState = getDashboardSidebarState();
 		return { sidebarState };
 	},
 });
@@ -19,8 +19,8 @@ function RouteComponent() {
 	const router = useRouter();
 	const { sidebarState } = Route.useLoaderData();
 
-	const handleSidebarOpenChange = async (open: boolean) => {
-		await setDashboardSidebarServerFn({ data: open });
+	const handleSidebarOpenChange = (open: boolean) => {
+		setDashboardSidebarState(open);
 		void router.invalidate();
 	};
 

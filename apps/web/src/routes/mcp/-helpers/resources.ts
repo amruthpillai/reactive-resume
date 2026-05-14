@@ -1,10 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { RouterClient } from "@orpc/server";
+import type router from "@reactive-resume/api/routers";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import schemaJSON from "@reactive-resume/schema/schema.json";
-import { client } from "@/libs/orpc/client";
 import { MCP_TOOL_NAME as T } from "./tools";
 
-export function registerResources(server: McpServer) {
+export function registerResources(server: McpServer, client: RouterClient<typeof router>) {
 	// ── Resource: resume://{id} ──────────────────────────────────
 	// Template resource: read resume JSON by ID. Discovery is via list tool (tools), not resources/list.
 	const resumeTemplate = new ResourceTemplate("resume://{id}", { list: undefined });

@@ -74,7 +74,7 @@ function RouteComponent() {
 						placeholder={t`Sort by`}
 						onValueChange={(value) => {
 							if (!value) return;
-							void navigate({ search: (prev) => ({ ...prev, sort: value as SortOption }) });
+							void navigate({ search: (prev: Search) => ({ ...prev, sort: value as SortOption }) });
 						}}
 					/>
 				</div>
@@ -89,7 +89,7 @@ function RouteComponent() {
 						options={tagOptions}
 						placeholder={t`Filter by`}
 						onValueChange={(value) => {
-							void navigate({ search: (prev) => ({ ...prev, tags: value ?? [] }) });
+							void navigate({ search: (prev: Search) => ({ ...prev, tags: value ?? [] }) });
 						}}
 					/>
 				</div>
@@ -100,7 +100,7 @@ function RouteComponent() {
 							value="grid"
 							nativeButton={false}
 							className="rounded-r-none"
-							render={<Link to="." search={(prev) => ({ ...prev, view: "grid" })} />}
+							render={<Link to="." search={(prev: Search) => ({ ...prev, view: "grid" })} />}
 						>
 							<GridFourIcon />
 							<Trans>Grid</Trans>
@@ -110,7 +110,7 @@ function RouteComponent() {
 							value="list"
 							nativeButton={false}
 							className="rounded-l-none"
-							render={<Link to="." search={(prev) => ({ ...prev, view: "list" })} />}
+							render={<Link to="." search={(prev: Search) => ({ ...prev, view: "list" })} />}
 						>
 							<ListIcon />
 							<Trans>List</Trans>

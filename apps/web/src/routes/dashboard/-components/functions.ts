@@ -1,16 +1,13 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getCookie, setCookie } from "@tanstack/react-start/server";
+import Cookies from "js-cookie";
 import z from "zod";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 
-export const getDashboardSidebarServerFn = createServerFn({ method: "GET" }).handler(async () => {
-	const sidebarState = getCookie(SIDEBAR_COOKIE_NAME) !== "false";
-	return sidebarState;
-});
+export function getDashboardSidebarState() {
+	return Cookies.get(SIDEBAR_COOKIE_NAME) !== "false";
+}
 
-export const setDashboardSidebarServerFn = createServerFn({ method: "POST" })
-	.inputValidator(z.boolean())
-	.handler(async ({ data }) => {
-		setCookie(SIDEBAR_COOKIE_NAME, data.toString());
-	});
+export function setDashboardSidebarState(value: boolean) {
+	const parsed = z.boolean().parse(value);
+	Cookies.set(SIDEBAR_COOKIE_NAME, parsed.toString());
+}

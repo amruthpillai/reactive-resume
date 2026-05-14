@@ -159,7 +159,6 @@ function PatchToolCard({
 
 export const Route = createFileRoute("/agent/$threadId")({
 	component: RouteComponent,
-	ssr: false,
 });
 
 function fileToBase64(file: File): Promise<string> {

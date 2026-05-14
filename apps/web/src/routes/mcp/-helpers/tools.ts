@@ -1,12 +1,12 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { getRequestHeaders } from "@tanstack/react-start/server";
+import type { RouterClient } from "@orpc/server";
+import type router from "@reactive-resume/api/routers";
 import z from "zod";
 import { resolveUserFromRequestHeaders } from "@reactive-resume/api/context";
 import { env } from "@reactive-resume/env/server";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { jsonPatchOperationSchema } from "@reactive-resume/utils/resume/patch";
-import { client } from "@/libs/orpc/client";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
 import { TOOL_ANNOTATIONS } from "./tool-annotations";
 
@@ -83,7 +83,7 @@ const resumeIdSchema = z.string().min(1).describe(`Resume ID. Use \`${T.listResu
 
 // ── Tool Registration ───────────────────────────────────────────
 
-export function registerTools(server: McpServer) {
+export function registerTools(server: McpServer, client: RouterClient<typeof router>, requestHeaders: Headers) {
 	// ── List Resumes ──────────────────────────────────────────────
 	server.registerTool(
 		T.listResumes,
@@ -390,51 +390,47 @@ export function registerTools(server: McpServer) {
 			}),
 			annotations: TOOL_ANNOTATIONS[T.updateResume],
 		},
-		withErrorHandling(
-			"updating resume",
-			async (params: { id: string; name?: string; slug?: string; tags?: string[]; isPublic?: boolean }) => {
-				const { id, name, slug, tags, isPublic } = params;
-				if (name === undefined && slug === undefined && tags === undefined && isPublic === undefined)
-					throw new Error("Provide at least one of: name, slug, tags, isPublic.");
+		withErrorHandling("updating resume", async (params) => {
+			const { id, name, slug, tags, isPublic } = params;
+			if (name === undefined && slug === undefined && tags === undefined && isPublic === undefined)
+				throw new Error("Provide at least one of: name, slug, tags, isPublic.");
 
-				const resume = await client.resume.update({
-					id,
-					...(name !== undefined ? { name } : {}),
-					...(slug !== undefined ? { slug } : {}),
-					...(tags !== undefined ? { tags } : {}),
-					...(isPublic !== undefined ? { isPublic } : {}),
-				});
+			const resume = await client.resume.update({
+				id,
+				...(name !== undefined ? { name } : {}),
+				...(slug !== undefined ? { slug } : {}),
+				...(tags !== undefined ? { tags } : {}),
+				...(isPublic !== undefined ? { isPublic } : {}),
+			});
 
-				const headers = getRequestHeaders();
-				const user = await resolveUserFromRequestHeaders(headers);
-				const username =
-					user && "username" in user && typeof (user as { username: unknown }).username === "string"
-						? (user as { username: string }).username
-						: "";
-				const shareUrl =
-					username !== ""
-						? buildResumeShareUrl(username, resume.slug)
-						: "(could not build share URL — missing username on account)";
+			const user = await resolveUserFromRequestHeaders(requestHeaders);
+			const username =
+				user && "username" in user && typeof (user as { username: unknown }).username === "string"
+					? (user as { username: string }).username
+					: "";
+			const shareUrl =
+				username !== ""
+					? buildResumeShareUrl(username, resume.slug)
+					: "(could not build share URL — missing username on account)";
 
-				const payload = {
-					id: resume.id,
-					name: resume.name,
-					slug: resume.slug,
-					tags: resume.tags,
-					isPublic: resume.isPublic,
-					hasPassword: resume.hasPassword,
-					shareUrl,
-				};
+			const payload = {
+				id: resume.id,
+				name: resume.name,
+				slug: resume.slug,
+				tags: resume.tags,
+				isPublic: resume.isPublic,
+				hasPassword: resume.hasPassword,
+				shareUrl,
+			};
 
-				return text(
-					[
-						JSON.stringify(payload, null, 2),
-						"",
-						resumeShareUrlNotes({ isPublic: resume.isPublic, hasPassword: resume.hasPassword }),
-					].join("\n"),
-				);
-			},
-		),
+			return text(
+				[
+					JSON.stringify(payload, null, 2),
+					"",
+					resumeShareUrlNotes({ isPublic: resume.isPublic, hasPassword: resume.hasPassword }),
+				].join("\n"),
+			);
+		}),
 	);
 
 	// ── Delete Resume ─────────────────────────────────────────────

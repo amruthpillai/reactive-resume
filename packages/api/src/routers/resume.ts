@@ -164,6 +164,7 @@ export const resumeRouter = {
 		.handler(async ({ input, context }) => {
 			return resumeService.getBySlug({
 				...input,
+				requestHeaders: context.reqHeaders,
 				...(context.user?.id ? { currentUserId: context.user.id } : {}),
 			});
 		}),
@@ -362,11 +363,12 @@ export const resumeRouter = {
 		)
 		.use(resumePasswordRateLimit)
 		.output(z.boolean())
-		.handler(async ({ input }): Promise<boolean> => {
+		.handler(async ({ context, input }): Promise<boolean> => {
 			return resumeService.verifyPassword({
 				username: input.username,
 				slug: input.slug,
 				password: input.password,
+				...(context.resHeaders ? { responseHeaders: context.resHeaders } : {}),
 			});
 		}),
 

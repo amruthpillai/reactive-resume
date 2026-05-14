@@ -37,5 +37,4 @@ export const Route = createFileRoute("/$username/$slug")({
 
 		throw notFound();
 	},
-	ssr: "data-only",
 });

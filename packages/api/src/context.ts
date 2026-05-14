@@ -8,7 +8,8 @@ import { user } from "@reactive-resume/db/schema";
 
 interface ORPCContext {
 	locale: Locale;
-	reqHeaders?: Headers;
+	reqHeaders: Headers;
+	resHeaders?: Headers;
 }
 
 async function getUserFromBearerToken(headers: Headers): Promise<User | null> {
@@ -77,7 +78,7 @@ export async function resolveUserFromRequestHeaders(headers: Headers): Promise<U
 const base = os.$context<ORPCContext>();
 
 export const publicProcedure = base.use(async ({ context, next }) => {
-	const user = await resolveUserFromRequestHeaders(context.reqHeaders ?? new Headers());
+	const user = await resolveUserFromRequestHeaders(context.reqHeaders);
 
 	return next({
 		context: {

@@ -22,7 +22,7 @@ import {
 import { useTheme } from "@/components/theme/provider";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
-import { isLocale, loadLocale, localeMap, setLocaleServerFn } from "@/libs/locale";
+import { isLocale, loadLocale, localeMap, setLocaleCookie } from "@/libs/locale";
 import { isTheme } from "@/libs/theme";
 
 type Props = {
@@ -43,7 +43,8 @@ export function UserDropdownMenu({ children }: Props) {
 
 	const handleLocaleChange = async (value: string) => {
 		if (!isLocale(value)) return;
-		await Promise.all([loadLocale(value), setLocaleServerFn({ data: value })]);
+		setLocaleCookie(value);
+		await loadLocale(value);
 		window.location.reload();
 	};
 

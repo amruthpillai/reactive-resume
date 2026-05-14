@@ -1,5 +1,4 @@
 import { createHash, timingSafeEqual } from "node:crypto";
-import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { env } from "@reactive-resume/env/server";
 
 const RESUME_ACCESS_COOKIE_PREFIX = "resume_access";
@@ -17,20 +16,48 @@ const safeEquals = (value: string, expected: string) => {
 	return timingSafeEqual(valueBuffer, expectedBuffer);
 };
 
-export const hasResumeAccess = (resumeId: string, passwordHash: string | null) => {
+const parseCookieHeader = (cookieHeader: string | null): Map<string, string> => {
+	const cookies = new Map<string, string>();
+	if (!cookieHeader) return cookies;
+
+	for (const part of cookieHeader.split(";")) {
+		const [rawName, ...rawValue] = part.trim().split("=");
+		if (!rawName || rawValue.length === 0) continue;
+
+		cookies.set(rawName, rawValue.join("="));
+	}
+
+	return cookies;
+};
+
+const serializeCookie = (
+	name: string,
+	value: string,
+	options: { path: string; httpOnly: boolean; sameSite: "lax"; maxAge: number; secure: boolean },
+) => {
+	const parts = [`${name}=${value}`, `Path=${options.path}`, `Max-Age=${options.maxAge}`, "SameSite=Lax"];
+	if (options.httpOnly) parts.push("HttpOnly");
+	if (options.secure) parts.push("Secure");
+	return parts.join("; ");
+};
+
+export const hasResumeAccess = (requestHeaders: Headers, resumeId: string, passwordHash: string | null) => {
 	if (!passwordHash) return false;
 	const cookieName = getResumeAccessCookieName(resumeId);
-	const cookieValue = getCookie(cookieName);
+	const cookieValue = parseCookieHeader(requestHeaders.get("cookie")).get(cookieName);
 	if (!cookieValue) return false;
 	const expected = signResumeAccessToken(resumeId, passwordHash);
 	return safeEquals(cookieValue, expected);
 };
 
-export const grantResumeAccess = (resumeId: string, passwordHash: string) =>
-	setCookie(getResumeAccessCookieName(resumeId), signResumeAccessToken(resumeId, passwordHash), {
+export const grantResumeAccess = (responseHeaders: Headers, resumeId: string, passwordHash: string) => {
+	const cookie = serializeCookie(getResumeAccessCookieName(resumeId), signResumeAccessToken(resumeId, passwordHash), {
 		path: "/",
 		httpOnly: true,
 		sameSite: "lax",
 		maxAge: RESUME_ACCESS_TTL_SECONDS,
 		secure: env.APP_URL.startsWith("https"),
 	});
+
+	responseHeaders.append("Set-Cookie", cookie);
+};

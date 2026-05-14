@@ -16,7 +16,7 @@ RUN corepack enable
 FROM base AS pruner
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm dlx turbo@2.9.9 prune web --docker
+    pnpm dlx turbo@2.9.9 prune web server --docker
 
 FROM base AS builder
 COPY --from=pruner /app/out/json/ ./
@@ -25,18 +25,18 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm install --frozen-lockfile
 
 COPY --from=pruner /app/out/full/ ./
-RUN rm -rf apps/web/.output && pnpm turbo run build --filter=web --force
+RUN rm -rf apps/web/dist apps/server/dist && pnpm turbo run build --filter=web --filter=server --force
 
 FROM base AS runtime-pruner
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm dlx turbo@2.9.9 prune @reactive-resume/runtime-externals --docker
+    pnpm dlx turbo@2.9.9 prune server @reactive-resume/runtime-externals --docker
 
 FROM base AS runtime-deps
 COPY --from=runtime-pruner /app/out/json/ ./
 COPY --from=runtime-pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm --filter=@reactive-resume/runtime-externals deploy --prod --legacy /runtime-deps
+    pnpm install --prod --frozen-lockfile
 
 FROM node:${NODE_VERSION}-slim AS runtime
 
@@ -55,18 +55,20 @@ ENV NODE_ENV="production" \
 
 WORKDIR /app
 
-RUN mkdir -p /app/apps/web /app/data && chown node:node /app/data
+RUN mkdir -p /app/apps/server /app/apps/web /app/data && chown node:node /app/data
 
-COPY --from=runtime-deps --chown=node:node /runtime-deps/node_modules ./node_modules
-COPY --from=builder --chown=node:node /app/apps/web/.output ./apps/web/.output
+COPY --from=runtime-deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=pruner --chown=node:node /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=builder --chown=node:node /app/apps/web/dist ./apps/web/dist
+COPY --from=builder --chown=node:node /app/apps/server/dist ./apps/server/dist
 COPY --from=pruner --chown=node:node /app/migrations ./migrations
 
-WORKDIR /app/apps/web
+WORKDIR /app
 
 USER node
 
 EXPOSE 3000/tcp
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD ["node", "-e", "fetch('http://127.0.0.1:3000/api/health').then((r) => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));"]
+    CMD ["node", "-e", "fetch(`http://127.0.0.1:${process.env.PORT ?? 3000}/api/health`).then((r) => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));"]
 
-CMD ["node", ".output/server/index.mjs"]
+CMD ["node", "apps/server/dist/index.mjs"]

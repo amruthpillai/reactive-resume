@@ -5,7 +5,6 @@ import { useStore } from "@tanstack/react-form";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
-import { match } from "ts-pattern";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
@@ -229,28 +228,25 @@ function RouteComponent() {
 								}
 							/>
 							<FormMessage errors={field.state.meta.errors} />
-							{match(session.user.emailVerified)
-								.with(true, () => (
-									<p className="flex items-center gap-x-1.5 text-green-700 text-xs">
-										<CheckIcon />
-										<Trans>Verified</Trans>
-									</p>
-								))
-								.with(false, () => (
-									<p className="flex items-center gap-x-1.5 text-amber-600 text-xs">
-										<WarningIcon className="size-3.5" />
-										<Trans>Unverified</Trans>
-										<span>|</span>
-										<Button
-											variant="link"
-											className="h-auto gap-x-1.5 p-0! text-inherit text-xs"
-											onClick={handleResendVerificationEmail}
-										>
-											<Trans>Resend verification email</Trans>
-										</Button>
-									</p>
-								))
-								.exhaustive()}
+							{session.user.emailVerified === true ? (
+								<p className="flex items-center gap-x-1.5 text-green-700 text-xs">
+									<CheckIcon />
+									<Trans>Verified</Trans>
+								</p>
+							) : (
+								<p className="flex items-center gap-x-1.5 text-amber-600 text-xs">
+									<WarningIcon className="size-3.5" />
+									<Trans>Unverified</Trans>
+									<span>|</span>
+									<Button
+										variant="link"
+										className="h-auto gap-x-1.5 p-0! text-inherit text-xs"
+										onClick={handleResendVerificationEmail}
+									>
+										<Trans>Resend verification email</Trans>
+									</Button>
+								</p>
+							)}
 						</FormItem>
 					)}
 				</form.Field>

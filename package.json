@@ -28,7 +28,7 @@
 		"dev": "turbo run dev",
 		"dev:web": "turbo run dev --filter=web",
 		"knip": "knip",
-		"start": "node apps/web/.output/server/index.mjs",
+		"start": "node apps/server/dist/index.mjs",
 		"typecheck": "turbo run typecheck",
 		"test": "turbo run test",
 		"test:coverage": "turbo run test:coverage",

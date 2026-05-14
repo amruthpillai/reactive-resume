@@ -1,12 +1,11 @@
-import type { Plugin, PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
-import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { pwaManifest } from "./src/libs/pwa";
@@ -18,7 +17,7 @@ const workspaceRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 const pwa = (): PluginOption =>
 	VitePWA({
-		outDir: ".output/public",
+		outDir: "dist",
 		useCredentials: true,
 		injectRegister: false,
 		includeAssets: ["favicon.ico", "favicon.svg", "apple-touch-icon-180x180.png", "screenshots/**/*"],
@@ -33,10 +32,7 @@ const pwa = (): PluginOption =>
 			navigateFallback: null,
 		},
 		manifest: pwaManifest,
-	}).map((plugin) => ({
-		...(plugin as Plugin),
-		applyToEnvironment: (environment) => environment.name === "client",
-	}));
+	}) as PluginOption;
 
 export default defineConfig({
 	envDir: workspaceRoot,
@@ -60,15 +56,43 @@ export default defineConfig({
 		host: true,
 		strictPort: true,
 		port: Number.parseInt(process.env.PORT ?? "3000", 10),
+		proxy: {
+			"/api": {
+				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+				changeOrigin: true,
+			},
+			"/uploads": {
+				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+				changeOrigin: true,
+			},
+			"/schema.json": {
+				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+				changeOrigin: true,
+			},
+			"/auth/oauth": {
+				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+				changeOrigin: true,
+			},
+			"/mcp": {
+				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+				changeOrigin: true,
+			},
+			"/.well-known": {
+				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+				changeOrigin: true,
+			},
+		},
 	},
 
 	plugins: [
 		tailwindcss(),
-		tanstackStart(),
+		tanstackRouter({
+			target: "react",
+			autoCodeSplitting: true,
+		}),
 		viteReact(),
 		lingui(),
 		babel({ presets: [linguiTransformerBabelPreset()] }),
-		nitro({ plugins: ["plugins/1.migrate.ts", "plugins/2.storage.ts"] }),
 		pwa(),
 	],
 });

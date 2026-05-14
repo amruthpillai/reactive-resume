@@ -1,7 +1,5 @@
 import type { MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
-import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
-import { getCookie, setCookie } from "@tanstack/react-start/server";
 import Cookies from "js-cookie";
 import z from "zod";
 
@@ -21,20 +19,12 @@ export function isTheme(theme: string): theme is Theme {
 	return themeSchema.safeParse(theme).success;
 }
 
-export const getTheme = createIsomorphicFn()
-	.client(() => {
-		const theme = Cookies.get(storageKey);
-		if (!theme || !isTheme(theme)) return defaultTheme;
-		return theme;
-	})
-	.server(async () => {
-		const cookieTheme = getCookie(storageKey);
-		if (!cookieTheme || !isTheme(cookieTheme)) return defaultTheme;
-		return cookieTheme;
-	});
+export const getTheme = () => {
+	const theme = Cookies.get(storageKey);
+	if (!theme || !isTheme(theme)) return defaultTheme;
+	return theme;
+};
 
-export const setThemeServerFn = createServerFn({ method: "POST" })
-	.inputValidator(themeSchema)
-	.handler(async ({ data }) => {
-		setCookie(storageKey, data);
-	});
+export const setThemeCookie = (theme: Theme) => {
+	Cookies.set(storageKey, theme);
+};

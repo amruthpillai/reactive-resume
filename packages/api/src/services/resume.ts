@@ -291,7 +291,7 @@ export const resumeService = {
 		return resume;
 	},
 
-	getBySlug: async (input: { username: string; slug: string; currentUserId?: string }) => {
+	getBySlug: async (input: { username: string; slug: string; requestHeaders: Headers; currentUserId?: string }) => {
 		const [resume] = await db
 			.select({
 				id: schema.resume.id,
@@ -314,7 +314,7 @@ export const resumeService = {
 		const viewer = input.currentUserId ? { id: input.currentUserId } : null;
 		assertCanView(resume, viewer);
 
-		if (resume.hasPassword && !hasResumeAccess(resume.id, resume.passwordHash)) {
+		if (resume.hasPassword && !hasResumeAccess(input.requestHeaders, resume.id, resume.passwordHash)) {
 			throw new ORPCError("NEED_PASSWORD", {
 				status: 401,
 				data: { username: input.username, slug: input.slug },
@@ -505,7 +505,7 @@ export const resumeService = {
 		});
 	},
 
-	verifyPassword: async (input: { slug: string; username: string; password: string }) => {
+	verifyPassword: async (input: { slug: string; username: string; password: string; responseHeaders?: Headers }) => {
 		const [resume] = await db
 			.select({ id: schema.resume.id, password: schema.resume.password })
 			.from(schema.resume)
@@ -525,7 +525,7 @@ export const resumeService = {
 
 		if (!isValid) throw new ORPCError("INVALID_PASSWORD", { status: 401 });
 
-		grantResumeAccess(resume.id, passwordHash);
+		if (input.responseHeaders) grantResumeAccess(input.responseHeaders, resume.id, passwordHash);
 
 		return true;
 	},

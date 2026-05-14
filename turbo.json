@@ -3,6 +3,7 @@
 	"ui": "tui",
 	"globalEnv": [
 		"PORT",
+		"SERVER_PORT",
 		"APP_URL",
 		"DATABASE_URL",
 		"AUTH_SECRET",
@@ -53,7 +54,7 @@
 		"build": {
 			"dependsOn": ["source"],
 			"inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env*"],
-			"outputs": ["dist/**", ".output/**", ".vercel/**"]
+			"outputs": ["dist/**", ".vercel/**"]
 		},
 		"lint": {
 			"dependsOn": ["^lint"]

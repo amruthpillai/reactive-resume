@@ -3,8 +3,7 @@ import type { Layout } from "react-resizable-panels";
 import type { BuilderLayout } from "./-store/sidebar";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { getCookie, setCookie } from "@tanstack/react-start/server";
+import Cookies from "js-cookie";
 import { useEffect, useRef } from "react";
 import { usePanelRef } from "react-resizable-panels";
 import { ResizableGroup, ResizablePanel, ResizableSeparator } from "@reactive-resume/ui/components/resizable";
@@ -37,7 +36,7 @@ export const Route = createFileRoute("/builder/$resumeId")({
 	},
 	loader: async ({ params, context }) => {
 		const [layout, resume] = await Promise.all([
-			getBuilderLayoutServerFn(),
+			getBuilderLayout(),
 			context.queryClient.ensureQueryData(orpc.resume.getById.queryOptions({ input: { id: params.resumeId } })),
 		]);
 
@@ -116,7 +115,7 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 		const nextLayout = mapPanelLayoutToBuilderLayout(layout);
 		if (!canPersistLayoutRef.current) return;
 		setLayout(nextLayout);
-		void setBuilderLayoutServerFn({ data: nextLayout });
+		setBuilderLayout(nextLayout);
 	};
 
 	useEffect(() => {
@@ -171,14 +170,13 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 	);
 }
 
-const setBuilderLayoutServerFn = createServerFn({ method: "POST" })
-	.inputValidator((data): BuilderLayout => parseBuilderLayoutCookie(JSON.stringify(data)))
-	.handler(async ({ data }) => {
-		setCookie(BUILDER_LAYOUT_COOKIE_NAME, JSON.stringify(data), { path: "/" });
-	});
+const setBuilderLayout = (data: BuilderLayout) => {
+	const layout = parseBuilderLayoutCookie(JSON.stringify(data));
+	Cookies.set(BUILDER_LAYOUT_COOKIE_NAME, JSON.stringify(layout), { path: "/" });
+};
 
-const getBuilderLayoutServerFn = createServerFn({ method: "GET" }).handler(async (): Promise<BuilderLayout> => {
-	const layout = getCookie(BUILDER_LAYOUT_COOKIE_NAME);
+const getBuilderLayout = (): BuilderLayout => {
+	const layout = Cookies.get(BUILDER_LAYOUT_COOKIE_NAME);
 	if (!layout) return DEFAULT_BUILDER_LAYOUT;
 	return parseBuilderLayoutCookie(layout);
-});
+};

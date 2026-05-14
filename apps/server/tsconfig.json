@@ -1,0 +1,12 @@
+{
+	"extends": "@reactive-resume/config/tsconfig.base.json",
+	"include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts", "vitest.config.ts"],
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"lib": ["ESNext", "DOM"],
+		"types": ["node"],
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	}
+}

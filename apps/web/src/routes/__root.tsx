@@ -9,9 +9,9 @@ import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { IconContext } from "@phosphor-icons/react";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
-import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
 import { MotionConfig } from "motion/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { DirectionProvider } from "@reactive-resume/ui/components/direction";
 import { Toaster } from "@reactive-resume/ui/components/sonner";
 import { TooltipProvider } from "@reactive-resume/ui/components/tooltip";
@@ -27,7 +27,6 @@ import { getLocale, isRTL, loadLocale } from "@/libs/locale";
 import { client } from "@/libs/orpc/client";
 import { pwaHeadMetaTags, pwaServiceWorkerRegistrationScript } from "@/libs/pwa";
 import { getTheme } from "@/libs/theme";
-import appCss from "../index.css?url";
 
 type RouterContext = {
 	theme: Theme;
@@ -45,13 +44,12 @@ const description =
 	"Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	shellComponent: RootDocument,
+	component: RootComponent,
 	head: () => {
-		const appUrl = process.env.APP_URL ?? "https://rxresu.me/";
+		const appUrl = typeof window !== "undefined" ? window.location.origin : "https://rxresu.me";
 
 		return {
 			links: [
-				{ rel: "stylesheet", href: appCss },
 				// Icons
 				{ rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "128x128" },
 				{ rel: "icon", href: "/favicon.svg", type: "image/svg+xml", sizes: "256x256 any" },
@@ -94,52 +92,48 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 	},
 });
 
-type Props = {
-	children: React.ReactNode;
-};
-
-function RootDocument({ children }: Props) {
+function RootComponent() {
 	const { theme, locale } = Route.useRouteContext();
 	const dir = isRTL(locale) ? "rtl" : "ltr";
 
 	const iconContextValue = useMemo<IconProps>(() => ({ size: 16, weight: "regular" }), []);
 
+	useEffect(() => {
+		document.documentElement.lang = locale;
+		document.documentElement.dir = dir;
+		document.documentElement.classList.toggle("dark", theme === "dark");
+	}, [dir, locale, theme]);
+
 	return (
-		<html suppressHydrationWarning dir={dir} lang={locale} className={theme}>
-			<head>
-				<HeadContent />
-			</head>
+		<>
+			<HeadContent />
 
-			<body>
-				<MotionConfig reducedMotion="user">
-					<I18nProvider i18n={i18n}>
-						<IconContext.Provider value={iconContextValue}>
-							<ThemeProvider theme={theme}>
-								<HotkeysProvider>
-									<DirectionProvider>
-										<TooltipProvider>
-											<ConfirmDialogProvider>
-												<PromptDialogProvider>
-													{children}
+			<MotionConfig reducedMotion="user">
+				<I18nProvider i18n={i18n}>
+					<IconContext.Provider value={iconContextValue}>
+						<ThemeProvider theme={theme}>
+							<HotkeysProvider>
+								<DirectionProvider>
+									<TooltipProvider>
+										<ConfirmDialogProvider>
+											<PromptDialogProvider>
+												<Outlet />
 
-													<DonationToast />
-													<DialogManager />
-													<CommandPalette />
-													<Toaster richColors position="bottom-right" />
+												<DonationToast />
+												<DialogManager />
+												<CommandPalette />
+												<Toaster richColors position="bottom-right" />
 
-													{import.meta.env.DEV && <BreakpointIndicator />}
-												</PromptDialogProvider>
-											</ConfirmDialogProvider>
-										</TooltipProvider>
-									</DirectionProvider>
-								</HotkeysProvider>
-							</ThemeProvider>
-						</IconContext.Provider>
-					</I18nProvider>
-				</MotionConfig>
-
-				<Scripts />
-			</body>
-		</html>
+												{import.meta.env.DEV && <BreakpointIndicator />}
+											</PromptDialogProvider>
+										</ConfirmDialogProvider>
+									</TooltipProvider>
+								</DirectionProvider>
+							</HotkeysProvider>
+						</ThemeProvider>
+					</IconContext.Provider>
+				</I18nProvider>
+			</MotionConfig>
+		</>
 	);
 }

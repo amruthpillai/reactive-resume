@@ -1,6 +1,3 @@
-// Server-only API route. Lazy-imports keep db/storage/drizzle out of the client bundle.
-
-import { createFileRoute } from "@tanstack/react-router";
 import { sql } from "drizzle-orm";
 import { getStorageService } from "@reactive-resume/api/services/storage";
 import { db } from "@reactive-resume/db/client";
@@ -51,7 +48,31 @@ async function runCheck(check: () => Promise<object>): Promise<CheckResult> {
 	}
 }
 
-async function healthHandler() {
+async function checkDatabase() {
+	try {
+		await db.execute(sql`SELECT 1`);
+		return { status: "healthy" };
+	} catch (error) {
+		return {
+			status: "unhealthy",
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
+	}
+}
+
+async function checkStorage() {
+	try {
+		const storageService = getStorageService();
+		return await storageService.healthcheck();
+	} catch (error) {
+		return {
+			status: "unhealthy",
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
+	}
+}
+
+export async function handleHealth() {
 	const [database, storage] = await Promise.all([runCheck(checkDatabase), runCheck(checkStorage)]);
 	const status = [database, storage].some((check) => check.status === "unhealthy") ? "unhealthy" : "healthy";
 
@@ -79,35 +100,3 @@ async function healthHandler() {
 		status: checks.status === "unhealthy" ? 503 : 200,
 	});
 }
-
-async function checkDatabase() {
-	try {
-		await db.execute(sql`SELECT 1`);
-		return { status: "healthy" };
-	} catch (error) {
-		return {
-			status: "unhealthy",
-			error: error instanceof Error ? error.message : "Unknown error",
-		};
-	}
-}
-
-async function checkStorage() {
-	try {
-		const storageService = getStorageService();
-		return await storageService.healthcheck();
-	} catch (error) {
-		return {
-			status: "unhealthy",
-			error: error instanceof Error ? error.message : "Unknown error",
-		};
-	}
-}
-
-export const Route = createFileRoute("/api/health")({
-	server: {
-		handlers: {
-			GET: healthHandler,
-		},
-	},
-});

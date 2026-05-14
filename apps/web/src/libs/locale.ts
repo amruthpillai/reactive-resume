@@ -2,8 +2,6 @@ import type { MessageDescriptor, Messages } from "@lingui/core";
 import type { Locale } from "@reactive-resume/utils/locale";
 import { i18n } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
-import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
-import { getCookie, setCookie } from "@tanstack/react-start/server";
 import Cookies from "js-cookie";
 import { localeSchema } from "@reactive-resume/utils/locale";
 
@@ -95,23 +93,15 @@ export function isRTL(locale: string): boolean {
 	return RTL_LANGUAGES.has(language);
 }
 
-export const getLocale = createIsomorphicFn()
-	.client(() => {
-		const locale = Cookies.get(storageKey);
-		if (!locale || !isLocale(locale)) return defaultLocale;
-		return locale;
-	})
-	.server(async () => {
-		const cookieLocale = getCookie(storageKey);
-		if (!cookieLocale || !isLocale(cookieLocale)) return defaultLocale;
-		return cookieLocale;
-	});
+export const getLocale = () => {
+	const locale = Cookies.get(storageKey);
+	if (!locale || !isLocale(locale)) return defaultLocale;
+	return locale;
+};
 
-export const setLocaleServerFn = createServerFn({ method: "POST" })
-	.inputValidator(localeSchema)
-	.handler(async ({ data }) => {
-		setCookie(storageKey, data);
-	});
+export const setLocaleCookie = (locale: Locale) => {
+	Cookies.set(storageKey, locale);
+};
 
 const loadMessages = async (locale: Locale) => {
 	const load = messageLoaders[`../../locales/${locale}.po`];

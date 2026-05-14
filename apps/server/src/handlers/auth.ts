@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import crypto from "node:crypto";
+import { eq } from "drizzle-orm";
 import { auth } from "@reactive-resume/auth/config";
+import { db } from "@reactive-resume/db/client";
+import { oauthClient, verification } from "@reactive-resume/db/schema";
 import { env } from "@reactive-resume/env/server";
+import { generateId } from "@reactive-resume/utils/string";
 import { isAllowedOAuthRedirectUri, parseAllowedHostList } from "@reactive-resume/utils/url-security.node";
 
 const oauthAuthorizeSanitizedParams = [
@@ -47,7 +51,7 @@ function sanitizeOAuthAuthorizeRequest(request: Request): Request {
 	}
 
 	if (url.toString() === request.url) return request;
-	return new Request(url, request);
+	return new Request(url.toString(), request);
 }
 
 async function defaultPublicClientRegistration(request: Request): Promise<Request> {
@@ -65,14 +69,11 @@ async function defaultPublicClientRegistration(request: Request): Promise<Reques
 		return request;
 	}
 
-	// Claude.ai sends token_endpoint_auth_method: "client_secret_post" without a
-	// client_secret, causing Better Auth to require authentication for what is
-	// effectively a public client. Force to "none" for unauthenticated registrations.
 	if (!request.headers.get("authorization")) {
 		body.token_endpoint_auth_method = "none";
 	}
 
-	return new Request(url, {
+	return new Request(url.toString(), {
 		method: request.method,
 		headers: request.headers,
 		body: JSON.stringify(body),
@@ -111,7 +112,7 @@ async function validateDynamicClientRegistrationRequest(request: Request): Promi
 	}
 }
 
-async function handler({ request }: { request: Request }) {
+export async function handleAuth(request: Request) {
 	const registrationValidationError = await validateDynamicClientRegistrationRequest(request);
 	if (registrationValidationError) return registrationValidationError;
 
@@ -121,11 +122,90 @@ async function handler({ request }: { request: Request }) {
 	return auth.handler(finalRequest);
 }
 
-export const Route = createFileRoute("/api/auth/$")({
-	server: {
-		handlers: {
-			GET: handler,
-			POST: handler,
-		},
-	},
-});
+function generateCode() {
+	return crypto.randomBytes(32).toString("base64url");
+}
+
+function hashCode(code: string) {
+	return crypto.createHash("sha256").update(code).digest("base64url");
+}
+
+export async function handleOAuth(request: Request) {
+	const session = await auth.api.getSession({ headers: request.headers });
+	const url = new URL(request.url);
+
+	if (session?.user) {
+		const clientId = url.searchParams.get("client_id");
+		const redirectUri = url.searchParams.get("redirect_uri");
+		const state = url.searchParams.get("state");
+		const scope = url.searchParams.get("scope");
+		const codeChallenge = url.searchParams.get("code_challenge");
+		const codeChallengeMethod = url.searchParams.get("code_challenge_method");
+
+		if (!clientId || !redirectUri) {
+			return Response.json({ error: "missing client_id or redirect_uri" }, { status: 400 });
+		}
+
+		const [client] = await db.select().from(oauthClient).where(eq(oauthClient.clientId, clientId)).limit(1);
+
+		if (!client) {
+			return Response.json({ error: "invalid client" }, { status: 400 });
+		}
+
+		if (!client.redirectUris.includes(redirectUri)) {
+			return Response.json({ error: "invalid redirect_uri" }, { status: 400 });
+		}
+
+		const code = generateCode();
+		const hashedCode = hashCode(code);
+		const now = new Date();
+		const expiresAt = new Date(now.getTime() + 600_000);
+
+		await db.insert(verification).values({
+			id: generateId(),
+			identifier: hashedCode,
+			value: JSON.stringify({
+				type: "authorization_code",
+				query: {
+					response_type: "code",
+					client_id: clientId,
+					redirect_uri: redirectUri,
+					scope,
+					state,
+					code_challenge: codeChallenge,
+					code_challenge_method: codeChallengeMethod,
+				},
+				userId: session.user.id,
+				sessionId: session.session.id,
+				authTime: new Date(session.session.createdAt).getTime(),
+			}),
+			expiresAt,
+			createdAt: now,
+			updatedAt: now,
+		});
+
+		const callbackUrl = new URL(redirectUri);
+		callbackUrl.searchParams.set("code", code);
+		if (state) callbackUrl.searchParams.set("state", state);
+		callbackUrl.searchParams.set("iss", `${env.APP_URL}/api/auth`);
+
+		return new Response(null, {
+			status: 302,
+			headers: { Location: callbackUrl.toString() },
+		});
+	}
+
+	const loginUrl = new URL("/auth/login", env.APP_URL);
+	const oauthParams = new URLSearchParams();
+	for (const [key, value] of url.searchParams) {
+		if (!["exp", "sig"].includes(key)) {
+			oauthParams.set(key, value);
+		}
+	}
+	loginUrl.searchParams.set("callbackURL", `/auth/oauth?${oauthParams.toString()}`);
+
+	return new Response(null, {
+		status: 302,
+		headers: { Location: `${loginUrl.pathname}${loginUrl.search}` },
+	});
+}

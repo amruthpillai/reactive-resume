@@ -4,12 +4,12 @@ import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { onError } from "@orpc/server";
 import { BatchHandlerPlugin, RequestHeadersPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { createFileRoute } from "@tanstack/react-router";
 import router from "@reactive-resume/api/routers";
 import { env } from "@reactive-resume/env/server";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
-import { getLocale } from "@/libs/locale";
-import { downloadResumePdfProcedure } from "./-helpers/resume-pdf";
+import { mergeResponseHeaders } from "../lib/http";
+import { downloadResumePdfProcedure } from "./resume-pdf";
+import { getRequestLocale } from "./rpc";
 
 const openAPIRouter = {
 	...router,
@@ -19,29 +19,27 @@ const openAPIRouter = {
 	},
 };
 
-async function handler({ request }: { request: Request }) {
-	const openAPIHandler = new OpenAPIHandler(openAPIRouter, {
-		plugins: [
-			new BatchHandlerPlugin(),
-			new RequestHeadersPlugin(),
-			new StrictGetMethodPlugin(),
-			new SmartCoercionPlugin({
-				schemaConverters: [new ZodToJsonSchemaConverter()],
-			}),
-		],
-		interceptors: [
-			onError((error) => {
-				console.error("[OpenAPI]", error);
-			}),
-		],
-	});
+const openAPIHandler = new OpenAPIHandler(openAPIRouter, {
+	plugins: [
+		new BatchHandlerPlugin(),
+		new RequestHeadersPlugin(),
+		new StrictGetMethodPlugin(),
+		new SmartCoercionPlugin({
+			schemaConverters: [new ZodToJsonSchemaConverter()],
+		}),
+	],
+	interceptors: [
+		onError((error) => {
+			console.error("[OpenAPI]", error);
+		}),
+	],
+});
 
-	const openAPIGenerator = new OpenAPIGenerator({
-		schemaConverters: [new ZodToJsonSchemaConverter()],
-	});
+const openAPIGenerator = new OpenAPIGenerator({
+	schemaConverters: [new ZodToJsonSchemaConverter()],
+});
 
-	const locale = await getLocale();
-
+export async function handleOpenApi(request: Request) {
 	if (request.method === "GET" && (request.url.endsWith("/spec.json") || request.url.endsWith("/spec"))) {
 		const spec = await openAPIGenerator.generate(openAPIRouter, {
 			info: {
@@ -73,22 +71,12 @@ async function handler({ request }: { request: Request }) {
 		return Response.json(spec);
 	}
 
+	const resHeaders = new Headers();
 	const { response } = await openAPIHandler.handle(request, {
 		prefix: "/api/openapi",
-		context: { locale, reqHeaders: request.headers },
+		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders },
 	});
 
-	if (!response) {
-		return new Response("NOT_FOUND", { status: 404 });
-	}
-
-	return response;
+	if (!response) return new Response("NOT_FOUND", { status: 404 });
+	return mergeResponseHeaders(response, resHeaders);
 }
-
-export const Route = createFileRoute("/api/openapi/$")({
-	server: {
-		handlers: {
-			ANY: handler,
-		},
-	},
-});
