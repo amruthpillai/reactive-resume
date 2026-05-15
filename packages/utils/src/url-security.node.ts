@@ -205,9 +205,14 @@ export function isAllowedExternalUrl(input: string, allowedHosts: Set<string>) {
 	return allowedHosts.has(origin);
 }
 
-export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[], allowedHosts: Set<string>) {
+type OAuthRedirectUriOptions = {
+	allowUnsafe?: boolean;
+};
+
+export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[], options?: OAuthRedirectUriOptions) {
 	const parsed = parseUrl(input);
 	if (!parsed) return false;
+	if (options?.allowUnsafe) return true;
 	if (parsed.username || parsed.password) return false;
 	if (parsed.hash) return false;
 
@@ -218,8 +223,5 @@ export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[
 	if (parsed.protocol !== "https:") return false;
 	if (isPrivateOrLoopbackHost(hostname)) return false;
 
-	if (trustedOrigins.includes(origin)) return true;
-	if (allowedHosts.has(origin)) return true;
-
-	return allowedHosts.has(hostname);
+	return trustedOrigins.includes(origin);
 }

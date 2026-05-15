@@ -24,7 +24,7 @@ import { sendEmail } from "@reactive-resume/email/transport";
 import { env } from "@reactive-resume/env/server";
 import { rateLimitConfig, TRUSTED_IP_HEADERS } from "@reactive-resume/utils/rate-limit";
 import { generateId, toUsername } from "@reactive-resume/utils/string";
-import { isAllowedOAuthRedirectUri, parseAllowedHostList } from "@reactive-resume/utils/url-security.node";
+import { isAllowedOAuthRedirectUri } from "@reactive-resume/utils/url-security.node";
 import { getTrustedOrigins } from "./trusted-origins";
 
 const authBaseUrl = env.APP_URL;
@@ -57,7 +57,6 @@ function isCustomOAuthProviderEnabled() {
 }
 
 const TRUSTED_ORIGINS = getTrustedOrigins(env.APP_URL);
-const OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS = parseAllowedHostList(env.OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS);
 const oauthProviderRateLimit = isRateLimitEnabled
 	? rateLimitConfig.betterAuth.oauthProvider
 	: ({
@@ -253,7 +252,11 @@ const getAuthConfig = () => {
 					if (typeof uri !== "string") {
 						throw new APIError("BAD_REQUEST", { message: "redirect_uris entries must be strings" });
 					}
-					if (!isAllowedOAuthRedirectUri(uri, TRUSTED_ORIGINS, OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS)) {
+					if (
+						!isAllowedOAuthRedirectUri(uri, TRUSTED_ORIGINS, {
+							allowUnsafe: env.FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI,
+						})
+					) {
 						throw new APIError("BAD_REQUEST", {
 							message: "redirect_uri is not allowed for dynamic client registration",
 						});
@@ -387,7 +390,7 @@ const getAuthConfig = () => {
 				validAudiences: OAUTH_AUDIENCES,
 				allowDynamicClientRegistration: true,
 				// Required for MCP client onboarding (RFC 7591). Phishing vector is closed by the
-				// redirect_uri allowlist in the hooks.before middleware above and in src/routes/api/auth.$.ts.
+				// redirect_uri policy in the hooks.before middleware above and server auth preflight.
 				allowUnauthenticatedClientRegistration: true,
 				rateLimit: oauthProviderRateLimit,
 				silenceWarnings: { oauthAuthServerConfig: true },

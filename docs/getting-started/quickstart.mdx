@@ -188,7 +188,6 @@ Here's a complete list of environment variables you can configure:
 | `OAUTH_AUTHORIZATION_URL`             | OAuth Authorization URL (manual config)                     | —                      |
 | `OAUTH_TOKEN_URL`                     | OAuth Token URL (manual config)                             | —                      |
 | `OAUTH_USER_INFO_URL`                 | OAuth User Info URL (manual config)                         | —                      |
-| `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` | Trusted HTTPS hosts/origins for dynamic OAuth redirects     | —                      |
 | `OAUTH_SCOPES`                        | OAuth Scopes (space-separated)                              | `openid profile email` |
 | `BETTER_AUTH_API_KEY`                 | Better Auth dashboard API key                               | —                      |
 | `SMTP_HOST`                           | SMTP Server Host (for email features)                       | —                      |
@@ -208,11 +207,14 @@ Here's a complete list of environment variables you can configure:
 | `FLAG_DISABLE_SIGNUPS`                | Disables new user signups                                   | `false`                |
 | `FLAG_DISABLE_EMAIL_AUTH`             | Disables email/password login (SSO only)                    | `false`                |
 | `FLAG_DISABLE_IMAGE_PROCESSING`       | Disables image processing                                   | `false`                |
+| `FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI` | Allows arbitrary dynamic OAuth redirect URIs                | `false`                |
 | `FLAG_ALLOW_UNSAFE_AI_BASE_URL`       | Allows unsafe/private/non-public AI provider base URLs      | `false`                |
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
 
 > **AI features:** Saved AI provider management requires `ENCRYPTION_SECRET`, and the AI Agent workspace requires both `REDIS_URL` and `ENCRYPTION_SECRET`. Live web research depends on the selected AI provider/model supporting native web search. Keep `FLAG_ALLOW_UNSAFE_AI_BASE_URL` disabled unless this is a trusted self-hosted deployment; public HTTPS provider URLs are the safe default.
+
+> **OAuth redirect safety:** Keep `FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI` disabled unless this is a trusted self-hosted deployment. Enabling it allows dynamic OAuth clients to register any parseable redirect URI, including custom schemes, private hosts, and non-loopback `http://` URLs, which can enable phishing or token exfiltration on public or multi-tenant instances.
 
 > **Health check behavior:** `/api/health` reports status for database and storage. A failure in either dependency returns HTTP `503`.
 

@@ -43,7 +43,6 @@ export const env = createEnv({
 		OAUTH_AUTHORIZATION_URL: z.url({ protocol: /https?/ }).optional(),
 		OAUTH_TOKEN_URL: z.url({ protocol: /https?/ }).optional(),
 		OAUTH_USER_INFO_URL: z.url({ protocol: /https?/ }).optional(),
-		OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS: z.string().optional(),
 		OAUTH_SCOPES: z
 			.string()
 			.min(1)
@@ -75,6 +74,7 @@ export const env = createEnv({
 		FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
 		FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
 		FLAG_DISABLE_IMAGE_PROCESSING: z.stringbool().default(false),
+		FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI: z.stringbool().default(false),
 		FLAG_ALLOW_UNSAFE_AI_BASE_URL: z.stringbool().default(false),
 
 		// Crowdin (optional, for translation tooling)

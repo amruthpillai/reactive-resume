@@ -82,7 +82,6 @@ OAUTH_DISCOVERY_URL=""
 OAUTH_AUTHORIZATION_URL=""
 OAUTH_TOKEN_URL=""
 OAUTH_USER_INFO_URL=""
-OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS=""
 # Custom scopes (space-separated, defaults to "openid profile email")
 OAUTH_SCOPES=""
 
@@ -118,6 +117,8 @@ ENCRYPTION_SECRET=""
 FLAG_DISABLE_SIGNUPS="false"
 FLAG_DISABLE_EMAIL_AUTH="false"
 FLAG_DISABLE_IMAGE_PROCESSING="false"
+# Allows any parseable dynamic OAuth redirect URI. Keep false unless this is a trusted self-hosted deployment.
+FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI="false"
 # Allows unsafe/private/non-public AI provider base URLs. Keep false unless this is a trusted self-hosted deployment.
 FLAG_ALLOW_UNSAFE_AI_BASE_URL="false"
 ```
@@ -301,7 +302,6 @@ openssl rand -hex 32
     **Custom OAuth provider** (optional):
     - **`OAUTH_PROVIDER_NAME`**: Display name in the UI
     - **`OAUTH_CLIENT_ID`** / **`OAUTH_CLIENT_SECRET`**: Required for any custom OAuth provider
-    - **`OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS`**: Comma-separated allowlist for extra dynamic OAuth redirect hosts/origins (HTTPS only, non-private hosts).
     - **`OAUTH_SCOPES`**: Space-separated scopes (defaults to `openid profile email`)
 
     Configure endpoints using **one** of these methods:
@@ -348,6 +348,7 @@ openssl rand -hex 32
   - **`FLAG_DISABLE_SIGNUPS`**: Disables new signups (web app and server). Useful for private instances.
   - **`FLAG_DISABLE_EMAIL_AUTH`**: Disables email/password login entirely. Also disables email verification, forgot password, and reset password flows. Users can still sign up via social auth (Google/GitHub/LinkedIn/Custom OAuth), unless FLAG_DISABLE_SIGNUPS is also set to true. Useful when only SSO is required.
   - **`FLAG_DISABLE_IMAGE_PROCESSING`**: Disables image processing. This is useful if you are using a machine with limited resources, like a Raspberry Pi.
+  - **`FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI`**: Allows dynamic OAuth client registration to use any parseable redirect URI, including custom schemes, private hosts, and non-loopback `http://` URLs. **Warning: enabling this on a public or multi-tenant deployment can enable phishing or token exfiltration.** Only enable on trusted, self-hosted deployments.
   - **`FLAG_ALLOW_UNSAFE_AI_BASE_URL`**: Allows AI providers to be configured with unsafe, private, or non-public base URLs, including `http://` and private/loopback addresses (for example, a local Ollama instance at `http://192.168.1.10:11434`). Public HTTPS provider URLs remain the safe default. **Warning: enabling this on a multi-tenant deployment is an SSRF risk.** Only enable on trusted, self-hosted deployments.
 </Accordion>
 </AccordionGroup>
@@ -484,8 +485,7 @@ A healthy response returns HTTP 200. Any other response (or a connection failure
 </Accordion>
 
 <Accordion title="Dynamic OAuth redirect URI is rejected">
-  - **Common cause**: redirect host is not trusted for dynamic client registration. - **Fix**: add trusted HTTPS
-  hosts/origins to `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS`.
+  - **Common cause**: redirect URI is not the app origin or a local loopback callback. - **Fix**: use an app-origin or loopback redirect URI, or enable `FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI` only on a trusted self-hosted deployment that needs arbitrary redirect URIs.
 </Accordion>
 
   <Accordion title="S3 storage error: ENOTFOUND bucket.endpoint">

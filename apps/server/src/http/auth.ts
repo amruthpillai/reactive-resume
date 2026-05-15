@@ -5,7 +5,7 @@ import { db } from "@reactive-resume/db/client";
 import { oauthClient, verification } from "@reactive-resume/db/schema";
 import { env } from "@reactive-resume/env/server";
 import { generateId } from "@reactive-resume/utils/string";
-import { isAllowedOAuthRedirectUri, parseAllowedHostList } from "@reactive-resume/utils/url-security.node";
+import { isAllowedOAuthRedirectUri } from "@reactive-resume/utils/url-security.node";
 
 const oauthAuthorizeSanitizedParams = [
 	"prompt",
@@ -96,13 +96,14 @@ async function validateDynamicClientRegistrationRequest(request: Request): Promi
 	}
 
 	const oauthTrustedOrigins = [new URL(env.APP_URL).origin.toLowerCase()];
-	const oauthDynamicClientRedirectHosts = parseAllowedHostList(env.OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS);
 
 	const redirectUris = Array.isArray(body.redirect_uris) ? body.redirect_uris : [];
 	for (const redirectUri of redirectUris) {
 		if (
 			typeof redirectUri !== "string" ||
-			!isAllowedOAuthRedirectUri(redirectUri, oauthTrustedOrigins, oauthDynamicClientRedirectHosts)
+			!isAllowedOAuthRedirectUri(redirectUri, oauthTrustedOrigins, {
+				allowUnsafe: env.FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI,
+			})
 		) {
 			return Response.json(
 				{ error: "invalid_redirect_uri", error_description: "redirect_uri is not allowed" },

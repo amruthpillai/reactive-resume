@@ -66,7 +66,6 @@ You must configure endpoints using **one** of these two methods:
 | ------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------- |
 | `OAUTH_PROVIDER_NAME`                 | Display name shown on the sign-in button                                               | `Custom OAuth`         |
 | `OAUTH_SCOPES`                        | Space-separated list of OAuth scopes                                                   | `openid profile email` |
-| `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` | Comma-separated allowlist for dynamic OAuth client redirect hosts/origins (HTTPS only) | _empty_                |
 
 ## Callback URL
 
@@ -314,8 +313,10 @@ OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.wel
 </Accordion>
 
 <Accordion title="Dynamic client redirect URI is rejected">
-  Dynamic OAuth client registration only allows HTTPS redirect URIs on trusted hosts. Add allowed hosts/origins to
-  `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` (comma-separated).
+  Dynamic OAuth client registration allows the app origin and local loopback callbacks by default. Trusted self-hosted
+  deployments that need arbitrary redirect URIs can enable `FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI`, which permits any
+  parseable redirect URI including custom schemes, private hosts, and non-loopback `http://` URLs. Do not enable it on
+  public or multi-tenant deployments.
 </Accordion>
 
   <Accordion title="User profile data is missing or incorrect">
