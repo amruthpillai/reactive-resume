@@ -7,7 +7,6 @@ import { orpc } from "@/libs/orpc/client";
 type LoaderData = Omit<RouterOutput["resume"]["getBySlug"], "data"> & { data: ResumeData };
 
 export const Route = createFileRoute("/$username/$slug")({
-	ssr: "data-only",
 	component: lazyRouteComponent(() => import("@/features/resume/public/public-resume"), "PublicResumeRoute"),
 	loader: async ({ context, params }) => {
 		const { username, slug } = params;

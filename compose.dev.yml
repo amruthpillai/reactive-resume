@@ -22,6 +22,8 @@ services:
       - "127.0.0.1:3001:3001"
     volumes:
       - ./data:/app/data
+    profiles:
+      - app
     develop:
       watch:
         - action: sync

@@ -21,17 +21,22 @@ navigation.
 
 ## Architecture
 
-Keep PWA install metadata centered in `apps/web/src/libs/pwa.ts`. That module continues to own:
+Keep install metadata in `apps/web/public/manifest.webmanifest`. That static manifest remains the source of truth
+for app name, description, theme color, background color, icons, screenshots, categories, scope, and start URL.
 
-- `pwaManifest`
+Keep mobile install/open-as-app meta tags in `apps/web/src/libs/pwa.ts`. That module continues to own:
+
 - `pwaHeadMetaTags`
-- app name, description, theme color, background color, icons, screenshots, categories, scope, and start URL
+- app name and theme color used by those head meta tags
+
+Add the same manifest, icon, and mobile install hints directly to `apps/web/index.html` so install metadata is
+present in the initial HTML without relying on `vite-plugin-pwa` HTML injection or client-side route head updates.
 
 Remove the service-worker part of the current architecture:
 
 - Remove `VitePWA` usage from `apps/web/vite.config.ts`.
 - Remove the `vite-plugin-pwa` dependency from `apps/web/package.json` and the lockfile.
-- Remove the exported `pwaServiceWorkerRegistrationScript` from `apps/web/src/libs/pwa.ts`.
+- Remove the now-unused `pwaManifest` and `pwaServiceWorkerRegistrationScript` exports from `apps/web/src/libs/pwa.ts`.
 - Stop injecting the production `navigator.serviceWorker.register("/sw.js", { scope: "/" })` script from
   `apps/web/src/routes/__root.tsx`.
 
@@ -77,6 +82,7 @@ as a dedicated unit test.
 
 Implementation should still verify by inspection and build output that:
 
+- `apps/web/dist/index.html` includes the manifest link and mobile install meta tags
 - the root route keeps the manifest link
 - PWA head meta tags remain present
 - no service-worker registration script is exported or injected by the root route

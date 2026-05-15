@@ -1,4 +1,4 @@
-import type { PluginOption, ProxyOptions } from "vite";
+import type { ProxyOptions } from "vite";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
@@ -7,8 +7,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
-import { pwaManifest } from "./src/libs/pwa";
 
 const rootPackageJsonPath = new URL("../../package.json", import.meta.url);
 const rootPackageJson = JSON.parse(readFileSync(rootPackageJsonPath, "utf-8")) as { version: string | undefined };
@@ -27,25 +25,6 @@ const serverProxy = serverPaths.reduce(
 	},
 	{} as Record<string, ProxyOptions>,
 );
-
-const pwa = (): PluginOption =>
-	VitePWA({
-		outDir: "dist",
-		useCredentials: true,
-		injectRegister: false,
-		includeAssets: ["favicon.ico", "favicon.svg", "apple-touch-icon-180x180.png", "screenshots/**/*"],
-		registerType: "autoUpdate",
-		workbox: {
-			skipWaiting: true,
-			clientsClaim: true,
-			cleanupOutdatedCaches: true,
-			globPatterns: ["**/*"],
-			globIgnores: ["**/manifest.webmanifest"],
-			maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
-			navigateFallback: null,
-		},
-		manifest: pwaManifest,
-	}) as PluginOption;
 
 export default defineConfig({
 	envDir: workspaceRoot,
@@ -81,6 +60,5 @@ export default defineConfig({
 		viteReact(),
 		lingui(),
 		babel({ presets: [linguiTransformerBabelPreset()] }),
-		pwa(),
 	],
 });

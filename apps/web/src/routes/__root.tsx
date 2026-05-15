@@ -26,7 +26,6 @@ import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { getSession } from "@/libs/auth/session";
 import { getLocale, isRTL, loadLocale } from "@/libs/locale";
 import { client } from "@/libs/orpc/client";
-import { pwaHeadMetaTags, pwaServiceWorkerRegistrationScript } from "@/libs/pwa";
 import { getTheme } from "@/libs/theme";
 
 type RouterContext = {
@@ -63,7 +62,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 				{ charSet: "UTF-8" },
 				{ name: "description", content: description },
 				{ name: "viewport", content: "width=device-width, initial-scale=1" },
-				...pwaHeadMetaTags,
+				// Meta Tags
+				{ name: "theme-color", content: "#09090B" },
+				{ name: "application-name", content: "Reactive Resume" },
+				{ name: "mobile-web-app-capable", content: "yes" },
+				{ name: "apple-mobile-web-app-capable", content: "yes" },
+				{ name: "apple-mobile-web-app-title", content: "Reactive Resume" },
+				{ name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
 				// Twitter Tags
 				{ property: "twitter:image", content: `${appUrl}/opengraph/banner.jpg` },
 				{ property: "twitter:card", content: "summary_large_image" },
@@ -76,7 +81,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 				{ property: "og:description", content: description },
 				{ property: "og:url", content: appUrl },
 			],
-			scripts: import.meta.env.PROD ? [{ children: pwaServiceWorkerRegistrationScript }] : [],
 		};
 	},
 	beforeLoad: async () => {
