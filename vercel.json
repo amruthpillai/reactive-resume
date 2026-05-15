@@ -1,8 +1,10 @@
 {
   "functions": {
-    "apps/web/api/**/*": {
+    "api/**/*.js": {
+      "includeFiles": "migrations/**"
+    },
+    "index.mjs": {
       "includeFiles": "migrations/**"
     }
   }
 }
-
