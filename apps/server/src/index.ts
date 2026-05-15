@@ -11,6 +11,7 @@ async function main() {
 
 	const port =
 		process.env.NODE_ENV === "production" ? Number.parseInt(process.env.PORT ?? "3000", 10) : env.SERVER_PORT;
+
 	const app = createApp();
 
 	serve(

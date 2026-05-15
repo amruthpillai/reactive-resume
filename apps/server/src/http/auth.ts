@@ -203,7 +203,7 @@ export async function handleOAuth(request: Request) {
 			oauthParams.set(key, value);
 		}
 	}
-	loginUrl.searchParams.set("callbackURL", `/auth/oauth?${oauthParams.toString()}`);
+	loginUrl.searchParams.set("callbackURL", `/api/auth/oauth?${oauthParams.toString()}`);
 
 	return new Response(null, {
 		status: 302,

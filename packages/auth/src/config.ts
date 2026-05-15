@@ -385,8 +385,8 @@ const getAuthConfig = () => {
 				},
 			}),
 			oauthProvider({
-				loginPage: "/auth/oauth",
-				consentPage: "/auth/oauth",
+				loginPage: "/api/auth/oauth",
+				consentPage: "/api/auth/oauth",
 				validAudiences: OAUTH_AUDIENCES,
 				allowDynamicClientRegistration: true,
 				// Required for MCP client onboarding (RFC 7591). Phishing vector is closed by the

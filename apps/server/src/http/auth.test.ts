@@ -75,7 +75,7 @@ describe("handleOAuth", () => {
 
 		const response = await handleOAuth(
 			new Request(
-				"http://localhost:3001/auth/oauth?client_id=test-client&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&state=abc&exp=123&sig=456",
+				"http://localhost:3001/api/auth/oauth?client_id=test-client&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&state=abc&exp=123&sig=456",
 			),
 		);
 
@@ -87,7 +87,7 @@ describe("handleOAuth", () => {
 		const callbackUrl = new URL(loginUrl.searchParams.get("callbackURL") ?? "", "http://localhost:3000");
 
 		expect(loginUrl.origin).toBe("http://localhost:3000");
-		expect(callbackUrl.pathname).toBe("/auth/oauth");
+		expect(callbackUrl.pathname).toBe("/api/auth/oauth");
 		expect(callbackUrl.searchParams.get("client_id")).toBe("test-client");
 		expect(callbackUrl.searchParams.get("redirect_uri")).toBe("https://example.com/callback");
 		expect(callbackUrl.searchParams.get("state")).toBe("abc");
