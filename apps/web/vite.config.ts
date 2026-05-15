@@ -1,4 +1,4 @@
-import type { PluginOption } from "vite";
+import type { PluginOption, ProxyOptions } from "vite";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
@@ -14,6 +14,19 @@ const rootPackageJsonPath = new URL("../../package.json", import.meta.url);
 const rootPackageJson = JSON.parse(readFileSync(rootPackageJsonPath, "utf-8")) as { version: string | undefined };
 const appVersion = JSON.stringify(rootPackageJson.version ?? "0.0.0");
 const workspaceRoot = fileURLToPath(new URL("../..", import.meta.url));
+
+const serverPaths = ["/api", "/mcp", "/uploads", "/.well-known", "/schema.json"] as const;
+
+const serverProxy = serverPaths.reduce(
+	(acc, path) => {
+		acc[path] = {
+			target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
+			changeOrigin: true,
+		};
+		return acc;
+	},
+	{} as Record<string, ProxyOptions>,
+);
 
 const pwa = (): PluginOption =>
 	VitePWA({
@@ -56,32 +69,7 @@ export default defineConfig({
 		host: true,
 		strictPort: true,
 		port: Number.parseInt(process.env.PORT ?? "3000", 10),
-		proxy: {
-			"/api": {
-				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
-				changeOrigin: true,
-			},
-			"/uploads": {
-				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
-				changeOrigin: true,
-			},
-			"/schema.json": {
-				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
-				changeOrigin: true,
-			},
-			"/auth/oauth": {
-				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
-				changeOrigin: true,
-			},
-			"/mcp": {
-				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
-				changeOrigin: true,
-			},
-			"/.well-known": {
-				target: `http://localhost:${process.env.SERVER_PORT ?? "3001"}`,
-				changeOrigin: true,
-			},
-		},
+		proxy: serverProxy,
 	},
 
 	plugins: [
