@@ -86,7 +86,7 @@ msgstr "3 mesi"
 msgid "6 months"
 msgstr "6 mesi"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Un link di conferma è stato inviato al tuo attuale indirizzo email. Controlla la posta in arrivo per confermare la modifica."
 
@@ -103,7 +103,7 @@ msgstr "Un collegamento al tuo curriculum è stato copiato negli appunti."
 msgid "A lot of people have written to me over the years to share their experiences with Reactive Resume and how it has helped them, and I never get tired of reading them. If you have a story to share, let me know by sending me an email at <0>{email}</0>."
 msgstr "Molte persone mi hanno scritto negli anni per condividere le loro esperienze con Reactive Resume e come li abbia aiutati, e non mi stanco mai di leggerle. Se hai una storia da raccontare, fammelo sapere inviandomi un'email a <0>{email}</0>."
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Un nuovo link di verifica è stato inviato al tuo indirizzo email. Controlla la posta in arrivo per verificare il tuo account."
 
@@ -197,7 +197,7 @@ msgstr "Aggiungi una nuova esperienza di volontariato"
 msgid "Add and test a provider before starting a thread."
 msgstr "Aggiungi e testa un provider prima di avviare una discussione."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
 msgstr "Aggiungi e testa un provider prima di avviare un thread dell'agente."
 
@@ -221,7 +221,7 @@ msgstr "Aggiungi più ruoli per mostrare la progressione di carriera nella stess
 msgid "Add Page"
 msgstr "Aggiungi pagina"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add Provider"
 msgstr "Aggiungi fornitore"
 
@@ -245,11 +245,11 @@ msgstr "Adatta il curriculum per un ruolo che predilige il lavoro da remoto, val
 msgid "Afrikaans"
 msgstr "Afrikaans"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Agent"
 msgstr "Agente"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Agent ready"
 msgstr "Agente pronto"
 
@@ -269,23 +269,23 @@ msgstr "La configurazione dell'agente AI non è attualmente disponibile. Riprova
 msgid "AI agent setup is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "La configurazione dell'agente AI non è disponibile finché non vengono configurati REDIS_URL e ENCRYPTION_SECRET."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "La gestione del provider AI non è disponibile finché non vengono configurati REDIS_URL e ENCRYPTION_SECRET."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable. Please try again."
 msgstr "La gestione del provider AI non è disponibile. Riprova."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider saved. Test it before use."
 msgstr "Provider di IA salvato. Testalo prima dell'uso."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Fornitori di IA"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
 msgstr "I provider di intelligenza artificiale richiedono la configurazione di REDIS_URL e ENCRYPTION_SECRET."
 
@@ -297,7 +297,7 @@ msgstr "Albanese"
 msgid "Allow Public Access"
 msgstr "Consenti accesso pubblico"
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Hai già un account? <0/>"
 
@@ -327,7 +327,7 @@ msgstr "Analizzare..."
 msgid "And many more..."
 msgstr "E molti altri..."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Claude antropico"
 
@@ -347,21 +347,21 @@ msgstr "Chiunque abbia il collegamento può visualizzare e scaricare il curricul
 msgid "API Access"
 msgstr "Accesso API"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "API Key"
 msgstr "Chiave API"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "API Keys"
 msgstr "Chiavi API"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "API keys are encrypted on the server and never shown again after saving."
 msgstr "Le chiavi API vengono crittografate sul server e non vengono più visualizzate dopo il salvataggio."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "API Reference"
 msgstr "Riferimento API"
 
@@ -386,7 +386,7 @@ msgstr "Archivio"
 msgid "Are you sure you want to close this dialog?"
 msgstr "Sei sicuro di voler chiudere questa finestra di dialogo?"
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Sei sicuro di voler eliminare questa chiave API?"
 
@@ -404,7 +404,7 @@ msgstr "È sicuro di voler eliminare questo articolo?"
 msgid "Are you sure you want to delete this resume?"
 msgstr "Sei sicuro di voler eliminare questo curriculum?"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Are you sure you want to delete your account?"
 msgstr "Sei sicuro di voler eliminare il tuo account?"
 
@@ -426,7 +426,7 @@ msgstr "È sicuro di voler resettare questa sezione?"
 msgid "Area of Study"
 msgstr "Area di studio"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Artificial Intelligence"
 msgstr "Intelligenza artificiale"
 
@@ -446,7 +446,7 @@ msgstr "Allega i file"
 msgid "Attachment uploaded."
 msgstr "Allegato caricato."
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/authentication/index.tsx
 msgid "Authentication"
@@ -472,7 +472,7 @@ msgid "Azerbaijani"
 msgstr "Azerbaigiano"
 
 #. Secondary navigation button on 2FA verification screen
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Back to Login"
 msgstr "Torna al login"
 
@@ -488,7 +488,7 @@ msgstr "Colore di sfondo"
 msgid "Backup codes copied to clipboard."
 msgstr "Codici di backup copiati negli appunti."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Base URL"
 msgstr "URL di base"
 
@@ -526,7 +526,7 @@ msgid "Border Width"
 msgstr "Larghezza del bordo"
 
 #. Screen-reader dialog title for the command palette in the resume builder
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Builder Command Palette"
 msgstr "Tavolo comandi del generatore"
 
@@ -572,14 +572,14 @@ msgstr "Posso esportare il mio curriculum in PDF?"
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
+#: src/features/settings/pages/api-keys.tsx
+#: src/features/settings/pages/danger-zone.tsx
+#: src/features/settings/pages/profile.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/settings/api-keys.tsx
-#: src/routes/dashboard/settings/danger-zone.tsx
-#: src/routes/dashboard/settings/profile.tsx
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -609,11 +609,11 @@ msgstr "Certificazioni"
 msgid "Change language"
 msgstr "Cambia lingua"
 
-#: src/components/command-palette/pages/preferences/index.tsx
+#: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change language to..."
 msgstr "Cambia lingua in..."
 
-#: src/components/command-palette/pages/preferences/index.tsx
+#: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change theme to..."
 msgstr "Cambia tema in..."
 
@@ -629,11 +629,11 @@ msgstr "Changelog"
 msgid "Chat"
 msgstr "Chiacchierata"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Controlla la tua email per un link per reimpostare la password."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "Controlla la tua email per un link per verificare il tuo account."
 
@@ -686,12 +686,12 @@ msgstr "Colonne"
 
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Command Palette"
 msgstr "Tavolozza dei comandi"
 
 #. Accessible label for command palette dialog when browsing a nested command page
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Command Palette - {currentPage}"
 msgstr "Tavolozza dei comandi - {currentPage}"
 
@@ -714,14 +714,14 @@ msgstr "Completamente gratuito, per sempre, senza costi nascosti."
 #. Account deletion confirmation dialog confirm action in danger zone
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
+#: src/features/settings/pages/danger-zone.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/settings/danger-zone.tsx
 msgid "Confirm"
 msgstr "Conferma"
 
 #. Authentication settings action to link a social login provider
-#: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
+#: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Connetti"
 
@@ -734,7 +734,7 @@ msgstr "Contenuto"
 #. Final action button after saving backup codes
 #. Primary action button to proceed to next step in two-factor setup
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Continue"
 msgstr "Continua"
 
@@ -796,7 +796,7 @@ msgstr "Impossibile raggiungere il provider AI. La preghiamo di riprovare."
 msgid "Could not revert this patch."
 msgstr "Impossibile annullare questa patch."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Could not verify provider connection."
 msgstr "Impossibile verificare la connessione al provider."
 
@@ -830,12 +830,12 @@ msgstr "Lettera di presentazione"
 msgid "Create"
 msgstr "Crea"
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Create a new account"
 msgstr "Crea un nuovo account"
 
 #: src/dialogs/api-key/create.tsx
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Create a new API key"
 msgstr "Crea una nuova chiave API"
 
@@ -887,8 +887,8 @@ msgstr "Crea una nuova pubblicazione"
 msgid "Create a new reference"
 msgstr "Crea un nuovo referente"
 
-#: src/components/command-palette/pages/resumes.tsx
 #: src/dialogs/resume/index.tsx
+#: src/features/command-palette/pages/resumes.tsx
 #: src/routes/dashboard/resumes/-components/cards/create-card.tsx
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Create a new resume"
@@ -919,7 +919,7 @@ msgid "Create from scratch"
 msgstr "Creare da zero"
 
 #. Call-to-action link from login page to account registration page
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Create one now"
 msgstr "Ne crei uno ora"
 
@@ -945,7 +945,7 @@ msgid "Custom"
 msgstr "Personalizzato"
 
 #. Authentication provider display name in account settings
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Custom OAuth"
 msgstr "OAuth personalizzato"
 
@@ -957,7 +957,7 @@ msgstr "Sezioni personalizzate"
 msgid "Czech"
 msgstr "Ceco"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/danger-zone.tsx
 msgid "Danger Zone"
@@ -968,12 +968,12 @@ msgid "Danish"
 msgstr "Danese"
 
 #. Appearance theme option for dark mode
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 #: src/libs/theme.ts
 msgid "Dark"
 msgstr "Scuro"
 
-#: src/components/command-palette/pages/preferences/theme.tsx
+#: src/features/command-palette/pages/preferences/theme.tsx
 msgid "Dark theme"
 msgstr "Tema scuro"
 
@@ -1001,6 +1001,8 @@ msgstr "Titolo di studio"
 #. Passkey row action to remove the selected passkey
 #. Resume card context menu destructive action to remove a resume
 #. Resume card dropdown destructive action to remove a resume
+#: src/features/settings/authentication/components/passkeys.tsx
+#: src/features/settings/pages/api-keys.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
@@ -1008,12 +1010,10 @@ msgstr "Titolo di studio"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
-#: src/routes/dashboard/settings/api-keys.tsx
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "Elimina"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Delete Account"
 msgstr "Elimina account"
 
@@ -1029,7 +1029,7 @@ msgstr "Elimina pagina"
 msgid "Delete picture"
 msgstr "Cancellare l'immagine"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Delete provider"
 msgstr "Elimina il fornitore"
 
@@ -1046,11 +1046,11 @@ msgstr "Elimina tabella"
 msgid "Delete this agent thread?"
 msgstr "Eliminare questa discussione dell'agente?"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Deleting your account..."
 msgstr "Eliminazione del tuo account in corso..."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Eliminazione della chiave API in corso..."
 
@@ -1077,7 +1077,7 @@ msgstr "Design"
 
 #. Destructive action button to turn off two-factor authentication
 #: src/dialogs/auth/disable-two-factor.tsx
-#: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
+#: src/features/settings/authentication/components/two-factor.tsx
 msgid "Disable 2FA"
 msgstr "Disabilita l'autenticazione a due fattori"
 
@@ -1090,7 +1090,7 @@ msgid "Disabling two-factor authentication..."
 msgstr "Disattivazione dell'autenticazione a due fattori..."
 
 #. Authentication settings action to unlink a connected social login provider
-#: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
+#: src/features/settings/authentication/components/social-provider.tsx
 msgid "Disconnect"
 msgstr "Disconnetti"
 
@@ -1107,7 +1107,7 @@ msgstr "Congedare"
 msgid "Documentation"
 msgstr "Documentazione"
 
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Don't have an account? <0/>"
 msgstr "Non hai un account? <0/>"
 
@@ -1144,7 +1144,7 @@ msgstr "Scaricare DOCX"
 msgid "Download JSON"
 msgstr "Scarica JSON"
 
-#: src/routes/$username/-components/public-resume.tsx
+#: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Download PDF"
@@ -1224,14 +1224,14 @@ msgstr "Email"
 #. Label for email input on forgot-password form
 #. Label for email input on registration form
 #. Label for login identifier input that accepts email or username
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Email Address"
 msgstr "Indirizzo email"
 
-#: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
+#: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Abilita 2FA"
 
@@ -1239,7 +1239,7 @@ msgstr "Abilita 2FA"
 msgid "Enable Two-Factor Authentication"
 msgstr "Abilita autenticazione a due fattori"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Enabled"
 msgstr "Abilitato"
 
@@ -1263,11 +1263,11 @@ msgstr "Inglese (Regno Unito)"
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "Aumenta la sicurezza del tuo account con ulteriori livelli di protezione."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Enter a name for your passkey."
 msgstr "Inserisca un nome per la sua chiave d'accesso."
 
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "Inserisci uno dei tuoi codici di backup salvati per accedere al tuo account"
 
@@ -1275,7 +1275,7 @@ msgstr "Inserisci uno dei tuoi codici di backup salvati per accedere al tuo acco
 msgid "Enter the URL to link to"
 msgstr "Inserisci l'URL a cui collegarti"
 
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter the verification code from your authenticator app"
 msgstr "Inserisci il codice di verifica dalla tua app di autenticazione"
 
@@ -1314,7 +1314,7 @@ msgid "Expires in"
 msgstr "Scade tra"
 
 #. placeholder {0}: key.expiresAt?.toLocaleDateString()
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Scade il {0}"
 
@@ -1322,7 +1322,7 @@ msgstr "Scade il {0}"
 msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. Reactive Resume currently offers 12 templates, with more on the way."
 msgstr "Esplora la nostra ampia selezione di modelli, ciascuno progettato per adattarsi a stili, professioni e personalità differenti. Reactive Resume offre attualmente 12 modelli, con altri in arrivo."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find detailed endpoints, request examples, and authentication methods."
 msgstr "Consulta la documentazione dell'API per imparare a integrare Reactive Resume con le tue applicazioni. Troverai endpoint dettagliati, esempi di richieste e metodi di autenticazione."
 
@@ -1334,7 +1334,7 @@ msgstr "Esporta"
 msgid "Export your resume to PDF instantly, without any waiting or delays."
 msgstr "Esporta il tuo curriculum in PDF all'istante, senza attese né ritardi."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed"
 msgstr "Fallito"
 
@@ -1353,21 +1353,21 @@ msgid "Failed to create API key. Please try again."
 msgstr "Impossibile creare una chiave API. La preghiamo di riprovare."
 
 #. Fallback toast when account registration fails without a server error message
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Failed to create your account. Please try again."
 msgstr "Impossibile creare il suo account. Provi di nuovo."
 
 #. Fallback toast when deleting a passkey fails
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Failed to delete passkey. Please try again."
 msgstr "Non è stato possibile eliminare la chiave d'accesso. Provi di nuovo."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to delete provider."
 msgstr "Impossibile eliminare il provider."
 
 #. Fallback toast when deleting an API key fails
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Failed to delete the API key. Please try again."
 msgstr "Impossibile eliminare la chiave API. Provi di nuovo."
 
@@ -1377,7 +1377,7 @@ msgid "Failed to delete thread."
 msgstr "Impossibile eliminare il thread."
 
 #. Fallback toast when account deletion fails
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Failed to delete your account. Please try again."
 msgstr "Non è stato possibile eliminare il suo account. Provi di nuovo."
 
@@ -1392,41 +1392,41 @@ msgid "Failed to enable two-factor authentication. Please try again."
 msgstr "Impossibile abilitare l'autenticazione a due fattori. Provi di nuovo."
 
 #. Fallback toast when linking a social authentication provider fails
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Failed to link provider. Please try again."
 msgstr "Impossibile collegare il fornitore. La preghiamo di riprovare."
 
 #. Fallback toast when passkey registration fails
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Failed to register passkey. Please try again."
 msgstr "Impossibile registrare la chiave d'accesso. Provi di nuovo."
 
 #. Fallback toast when renaming a passkey fails
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Failed to rename passkey. Please try again."
 msgstr "Impossibile rinominare la passkey. Provi di nuovo."
 
 #. Fallback toast when requesting email change confirmation fails
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Failed to request email change. Please try again."
 msgstr "La richiesta di modifica dell'e-mail è fallita. Provi di nuovo."
 
 #. Fallback toast when resending account verification email fails
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Failed to resend verification email. Please try again."
 msgstr "Impossibile inviare nuovamente l'e-mail di verifica. La preghiamo di riprovare."
 
 #. Fallback toast when resetting password fails and no backend message is available
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "La reimpostazione della password non è riuscita. Provi di nuovo."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
 msgstr "Impossibile salvare il provider di IA."
 
 #. Fallback toast when requesting password reset email fails without backend message
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Failed to send password reset email. Please try again."
 msgstr "Non è stato possibile inviare l'e-mail di reimpostazione della password. La preghiamo di riprovare."
 
@@ -1438,13 +1438,13 @@ msgstr "Impossibile configurare l'autenticazione a due fattori."
 #. Fallback toast when passkey sign-in fails without an error message
 #. Fallback toast when sign-in fails and no server error message is available
 #. Fallback toast when social sign-in fails without a provider error message
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/auth/login.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Failed to sign in. Please try again."
 msgstr "Accesso non riuscito. Riprova."
 
 #. Fallback toast when signing out fails
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Failed to sign out. Please try again."
 msgstr "Non è stato possibile effettuare l'accesso. La preghiamo di riprovare."
 
@@ -1453,11 +1453,11 @@ msgid "Failed to start agent thread."
 msgstr "Impossibile avviare il thread dell'agente."
 
 #. Fallback toast when unlinking a social authentication provider fails
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Failed to unlink provider. Please try again."
 msgstr "Impossibile scollegare il provider. Provi di nuovo."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to update provider."
 msgstr "Impossibile aggiornare il provider."
 
@@ -1467,7 +1467,7 @@ msgid "Failed to update your password. Please try again."
 msgstr "L'aggiornamento della password non è riuscito. Provi di nuovo."
 
 #. Fallback toast when updating profile details fails
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Failed to update your profile. Please try again."
 msgstr "Non è riuscito ad aggiornare il suo profilo. Provi di nuovo."
 
@@ -1481,29 +1481,25 @@ msgid "Failed to upload picture. Please try again."
 msgstr "Non è riuscito a caricare l'immagine. Provi di nuovo."
 
 #. Fallback toast when resume password verification fails unexpectedly
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Failed to verify the password. Please try again."
 msgstr "Impossibile verificare la password. Provi di nuovo."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "Impossibile verificare il suo codice di backup. Provi di nuovo."
 
 #. Fallback toast when verifying a two-factor authentication code fails
 #. Fallback toast when verifying two-factor setup code fails
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Non è stato possibile verificare il suo codice. La preghiamo di riprovare."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
 msgstr "Funzionalità"
-
-#: src/routes/agent/$threadId.tsx
-msgid "Fetched URL"
-msgstr "URL recuperato"
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Filter by"
@@ -1554,11 +1550,11 @@ msgid "For security reasons, this key will only be displayed once."
 msgstr "Per motivi di sicurezza, questa chiave verrà visualizzata una sola volta."
 
 #. Link label to password reset page from login form
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Forgot Password?"
 msgstr "Password dimenticata?"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Forgot your password?"
 msgstr "Hai dimenticato la password?"
 
@@ -1615,15 +1611,15 @@ msgstr "Per iniziare"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
 #: src/components/layout/not-found-screen.tsx
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Go Back"
 msgstr "Torna indietro"
 
@@ -1636,22 +1632,22 @@ msgstr "Vai alla dashboard"
 msgid "Go to resumes dashboard"
 msgstr "Vada al cruscotto dei curriculum"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Go to..."
 msgstr "Vai a..."
 
 #. Authentication provider display name in account settings
 #. Brand name label for Google social sign-in button
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Google"
 msgstr "Google"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "gpt-4.1"
 msgstr "gpt-4.1"
 
@@ -1712,7 +1708,7 @@ msgstr "Ebraico"
 msgid "Help me bring more experienced contributors on board, reducing the burden on a single maintainer and accelerating development."
 msgstr "Aiutami a coinvolgere collaboratori più esperti, riducendo il carico su un solo manutentore e accelerando lo sviluppo."
 
-#: src/routes/dashboard/settings/preferences.tsx
+#: src/features/settings/pages/preferences.tsx
 msgid "Help translate the app to your language"
 msgstr "Aiuta a tradurre l'app nella tua lingua"
 
@@ -1751,10 +1747,10 @@ msgstr "Nascondi tutte le icone sul curriculum"
 #: src/dialogs/auth/change-password.tsx
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/auth/reset-password.tsx
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/auth/pages/reset-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Nascondere la password"
 
@@ -1771,7 +1767,7 @@ msgstr "Evidenzia"
 msgid "Hindi"
 msgstr "Hindi"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Home"
 
@@ -1779,7 +1775,7 @@ msgstr "Home"
 msgid "How do I share my resume?"
 msgstr "Come posso condividere il mio curriculum?"
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "How do I use the API?"
 msgstr "Come faccio a usare l'API?"
 
@@ -1787,7 +1783,7 @@ msgstr "Come faccio a usare l'API?"
 msgid "How is my data protected?"
 msgstr "In che modo i miei dati sono protetti?"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "https://gateway.example.com/v1"
 msgstr "https://gateway.example.com/v1"
 
@@ -1846,7 +1842,7 @@ msgstr "Inserisci tabella"
 msgid "Instant Generation"
 msgstr "Generazione istantanea"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/integrations/route.tsx
 msgid "Integrations"
@@ -1858,7 +1854,7 @@ msgstr "Integrazioni"
 msgid "Interests"
 msgstr "Interessi"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Invalid AI provider configuration."
 msgstr "Configurazione del provider AI non valida."
 
@@ -1888,15 +1884,15 @@ msgstr "Giapponese"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "John Doe"
 msgstr "Sconosciuto"
 
 #. Example username placeholder on profile settings form
 #. Example username placeholder on registration form
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "john.doe"
 msgstr "john.doe"
 
@@ -1904,10 +1900,10 @@ msgstr "john.doe"
 #. Example email placeholder on forgot-password form
 #. Example email placeholder on profile settings form
 #. Example email placeholder on registration form
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
@@ -1924,7 +1920,7 @@ msgstr "Giustifica"
 msgid "Kannada"
 msgstr "Kannada"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Key"
 msgstr "Chiave"
 
@@ -1943,7 +1939,7 @@ msgstr "Coreano"
 
 #. Short field label for custom display text associated with a URL
 #: src/components/input/url-input.tsx
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Label"
 msgstr "Etichetta"
 
@@ -1953,11 +1949,11 @@ msgid "Landscape"
 msgstr "Orizzontale"
 
 #. Menu item that opens language selection submenu
-#: src/components/command-palette/pages/preferences/language.tsx
-#: src/components/user/dropdown-menu.tsx
 #: src/dialogs/resume/sections/language.tsx
+#: src/features/command-palette/pages/preferences/language.tsx
+#: src/features/settings/pages/preferences.tsx
+#: src/features/user/dropdown-menu.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-#: src/routes/dashboard/settings/preferences.tsx
 msgid "Language"
 msgstr "Lingua"
 
@@ -2031,12 +2027,12 @@ msgid "Licensed under <0>MIT</0>."
 msgstr "Con licenza <0>MIT</0>."
 
 #. Appearance theme option for light mode
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 #: src/libs/theme.ts
 msgid "Light"
 msgstr "Chiaro"
 
-#: src/components/command-palette/pages/preferences/theme.tsx
+#: src/features/command-palette/pages/preferences/theme.tsx
 msgid "Light theme"
 msgstr "Tema chiaro"
 
@@ -2046,13 +2042,13 @@ msgstr "Altezza linea"
 
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Linking your {providerName} account..."
 msgstr "Collegamento del tuo account {providerName} in corso..."
 
@@ -2072,12 +2068,12 @@ msgstr "Caricamento dell'area di lavoro dell'agente..."
 msgid "Loading AI providers. Please try again in a moment."
 msgstr "Caricamento dei provider di intelligenza artificiale. Riprova tra un attimo."
 
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Loading providers..."
 msgstr "Caricamento dei provider in corso..."
 
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/resumes.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading resumes..."
 msgstr "Caricamento dei curriculum in corso..."
@@ -2106,7 +2102,7 @@ msgid "Lock"
 msgstr "Blocca"
 
 #. User menu action to sign out of current account
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Logout"
 msgstr "Disconnessione"
 
@@ -2115,7 +2111,7 @@ msgid "Long-term Sustainability"
 msgstr "Sostenibilità a lungo termine"
 
 #. Link to backup-code verification flow when authenticator app is unavailable
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Lost access to your authenticator?"
 msgstr "Hai perso l'accesso alla tua app di autenticazione?"
 
@@ -2171,7 +2167,7 @@ msgstr "Microsoft Word"
 msgid "Missing working resume"
 msgstr "Mancanza di curriculum vitae"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
 msgstr "Modello"
 
@@ -2195,9 +2191,9 @@ msgstr "Deve iniziare con https://"
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
-#: src/routes/dashboard/settings/profile.tsx
 msgid "Name"
 msgstr "Nome"
 
@@ -2223,7 +2219,7 @@ msgstr "Nuova pagina"
 
 #. Label for new password input on reset-password form
 #: src/dialogs/auth/change-password.tsx
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "New Password"
 msgstr "Nuova password"
 
@@ -2244,7 +2240,7 @@ msgstr "Nessuna pubblicità, nessun tracciamento"
 msgid "No data was returned from the AI provider."
 msgstr "Non sono stati restituiti dati dal fornitore di AI."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Non sono ancora stati registrati dei passepartout."
 
@@ -2252,7 +2248,7 @@ msgstr "Non sono ancora stati registrati dei passepartout."
 msgid "No results found."
 msgstr "Nessun risultato trovato."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Nessun fornitore segnalato"
 
@@ -2272,7 +2268,7 @@ msgstr "Note"
 msgid "Odia"
 msgstr "Odia"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2296,7 +2292,7 @@ msgid "Open AI agent"
 msgstr "Agente Open AI"
 
 #. Button label to open the user's default email app
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Apri client email"
 
@@ -2312,15 +2308,15 @@ msgstr "Apra le Impostazioni delle integrazioni"
 msgid "Open Source"
 msgstr "Open Source"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "Compatibile con OpenAI"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2333,7 +2329,7 @@ msgstr "apre in una nuova scheda"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Facoltativamente, imposta una password affinché solo le persone che la conoscono possano visualizzare il tuo curriculum tramite il link."
 
-#: src/routes/auth/-components/social-auth.tsx
+#: src/features/auth/components/social-auth.tsx
 msgctxt "Choose to authenticate with a social provider (Google, GitHub, etc.) instead of email and password"
 msgid "or continue with"
 msgstr "o continua con"
@@ -2367,20 +2363,20 @@ msgstr "Paragrafo"
 
 #. Authentication provider display name in account settings
 #. Label for passkey sign-in button
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Passkey"
 msgstr "Passkey"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Passkey deleted successfully."
 msgstr "La chiave di accesso è stata cancellata con successo."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Passkey registered successfully."
 msgstr "La chiave d'accesso è stata registrata con successo."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Passkeys"
 msgstr "Passkeys"
 
@@ -2394,11 +2390,11 @@ msgstr "Passkey e 2FA"
 #. Label for password input on registration form
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/auth/resume-password.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
-#: src/routes/dashboard/settings/authentication/-components/password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/auth/pages/resume-password.tsx
+#: src/features/settings/authentication/components/hooks.tsx
+#: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "Password"
 
@@ -2471,11 +2467,11 @@ msgstr "Telefono"
 msgid "Picture"
 msgstr "Immagine"
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Inserisci una nuova password per il tuo account"
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Please enter the password shared with you by the owner of the resume to continue."
 msgstr "Inserisci la password condivisa con te dal proprietario del curriculum per continuare."
 
@@ -2487,7 +2483,7 @@ msgstr "Inserisci l'URL a cui vuoi collegarti:"
 msgid "Please support the project"
 msgstr "Per favore, sostenete il progetto."
 
-#: src/routes/$username/-components/public-resume.tsx
+#: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
@@ -2516,8 +2512,8 @@ msgstr "Portoghese (Portogallo)"
 msgid "Position"
 msgstr "Posizione"
 
-#: src/components/command-palette/pages/navigation.tsx
-#: src/components/command-palette/pages/preferences/index.tsx
+#: src/features/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/preferences/index.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/preferences.tsx
 msgid "Preferences"
@@ -2536,7 +2532,7 @@ msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the curren
 msgstr "Premi <0>{RETURN_KEY}</0> o <1>{COMMA_KEY}</1> per aggiungere o salvare la parola chiave corrente."
 
 #. Command palette hint that pressing Enter opens the selected resume
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/resumes.tsx
 msgid "Press <0>Enter</0> to open"
 msgstr "Premere <0>Invio</0> per aprire"
 
@@ -2548,7 +2544,7 @@ msgstr "Colore primario"
 msgid "Proficiency"
 msgstr "Competenza"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Profile"
@@ -2578,11 +2574,11 @@ msgstr "Proteggi il tuo curriculum da accessi non autorizzati con una password"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Proteggi il tuo curriculum con una password e consenti solo alle persone che la conoscono di visualizzarlo."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider"
 msgstr "Provider"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "Connessione al provider verificata."
 
@@ -2657,11 +2653,11 @@ msgstr "Referenze"
 msgid "Refresh"
 msgstr "Aggiorna"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Register New Device"
 msgstr "Registra un nuovo dispositivo"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "Ricordi la tua password? <0/>"
 
@@ -2698,11 +2694,11 @@ msgstr "Segnala un bug"
 msgid "Report an issue"
 msgstr "Segnala un problema"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Resend verification email"
 msgstr "Invia di nuovo email di verifica"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Invio dell'email di verifica in corso..."
 
@@ -2712,15 +2708,15 @@ msgid "Reset"
 msgstr "Ripristina"
 
 #. Primary action button label on reset-password form
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Reimposta password"
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Reimposta la tua password"
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Resetting your password..."
 msgstr "Reimpostazione della tua password in corso..."
 
@@ -2744,8 +2740,8 @@ msgstr "Analisi del curriculum completata."
 msgid "Resume patch"
 msgstr "Riprendi la patch"
 
-#: src/components/command-palette/pages/navigation.tsx
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/resumes.tsx
 #: src/routes/_home/-sections/statistics.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2797,7 +2793,7 @@ msgid "Russian"
 msgstr "Russo"
 
 #. Passkey rename prompt confirm action in authentication settings
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Save"
 msgstr "Risparmiare"
 
@@ -2817,11 +2813,11 @@ msgstr "Risparmiare"
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "Salva le modifiche"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Save Provider"
 msgstr "Fornitore di salvataggi"
 
@@ -2838,7 +2834,7 @@ msgid "Scorecard"
 msgstr "Scheda di valutazione"
 
 #. Accessible label for command palette search input
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Search commands"
 msgstr "Comandi di ricerca"
 
@@ -2848,13 +2844,13 @@ msgstr "Comandi di ricerca"
 msgid "Search for an icon"
 msgstr "Cerca un'icona"
 
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/resumes.tsx
 msgid "Search for..."
 msgstr "Cerca..."
 
 #. Placeholder in command palette input on nested pages
-#: src/components/command-palette/index.tsx
 #: src/components/ui/combobox.tsx
+#: src/features/command-palette/index.tsx
 msgid "Search..."
 msgstr "Cerca..."
 
@@ -2899,11 +2895,11 @@ msgid "Send message"
 msgstr "Invia messaggio"
 
 #. Primary action button label on forgot-password form
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Send Password Reset Email"
 msgstr "Invia email per reimpostare la password"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Invio dell'email per reimpostare la password in corso..."
 
@@ -2915,12 +2911,12 @@ msgstr "Separatore"
 msgid "Serbian"
 msgstr "Serbo"
 
+#: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/settings/authentication/-components/password.tsx
 msgid "Set Password"
 msgstr "Imposta password"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "Settings"
@@ -2975,10 +2971,10 @@ msgstr "Mostra il link nel titolo"
 #: src/dialogs/auth/change-password.tsx
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/auth/reset-password.tsx
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/auth/pages/reset-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Show password"
 msgstr "Mostra la password"
 
@@ -2992,19 +2988,19 @@ msgid "Sidebar Width"
 msgstr "Larghezza barra laterale"
 
 #. Primary action button label on login form
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Accedi"
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Sign in now"
 msgstr "Accedi ora"
 
 #. Title on the login page
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Sign in to your account"
 msgstr "Accedi al tuo account"
 
@@ -3013,20 +3009,20 @@ msgid "Sign in with GitHub, Google or a custom OAuth provider."
 msgstr "Accedi con GitHub, Google o un provider OAuth personalizzato."
 
 #. Primary action button label on registration form
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Sign up"
 msgstr "Registrazione"
 
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/auth/login.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Signing in..."
 msgstr "Accesso in corso..."
 
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Signing out..."
 msgstr "Disconnessione in corso..."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Signing up..."
 msgstr "Registrazione in corso..."
 
@@ -3207,11 +3203,11 @@ msgstr "Sostieni l'app facendo quello che puoi!"
 msgid "Swedish"
 msgstr "Svedese"
 
-#: src/components/theme/toggle-button.tsx
+#: src/features/theme/toggle-button.tsx
 msgid "Switch to dark theme"
 msgstr "Passa al tema scuro"
 
-#: src/components/theme/toggle-button.tsx
+#: src/features/theme/toggle-button.tsx
 msgid "Switch to light theme"
 msgstr "Passa al tema chiaro"
 
@@ -3251,11 +3247,11 @@ msgstr "Galleria modelli"
 msgid "Templates"
 msgstr "Modelli"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
 msgstr "Test"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Tested"
 msgstr "Testato"
 
@@ -3281,16 +3277,16 @@ msgstr "L'agente ha bisogno del tuo contributo."
 msgid "The AI returned an invalid analysis format. Please try again."
 msgstr "L'AI ha restituito un formato di analisi non valido. La preghiamo di riprovare."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "La chiave API è stata eliminata correttamente."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "Dopo l'eliminazione, la chiave API non potrà più accedere ai tuoi dati. Questa azione non può essere annullata."
 
 #. Empty-state message when no command palette results match the search query
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "Il comando che stai cercando non esiste."
 
@@ -3299,11 +3295,11 @@ msgstr "Il comando che stai cercando non esiste."
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Il file importato non ha potuto essere analizzato in un curriculum valido."
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "La password inserita non è corretta"
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Il curriculum a cui stai cercando di accedere è protetto da password"
 
@@ -3316,9 +3312,9 @@ msgid "The working resume was deleted. This thread is read-only."
 msgstr "Il curriculum vitae è stato eliminato. Questa discussione è in sola lettura."
 
 #. Menu item that opens appearance theme selection submenu
-#: src/components/command-palette/pages/preferences/theme.tsx
-#: src/components/user/dropdown-menu.tsx
-#: src/routes/dashboard/settings/preferences.tsx
+#: src/features/command-palette/pages/preferences/theme.tsx
+#: src/features/settings/pages/preferences.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Theme"
 msgstr "Tema"
 
@@ -3331,7 +3327,7 @@ msgstr "Quindi inserisci il codice a 6 cifre fornito dall'app per continuare."
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "Si è verificato un problema durante la generazione del DOCX, la preghiamo di riprovare."
 
-#: src/routes/$username/-components/public-resume.tsx
+#: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
@@ -3348,7 +3344,7 @@ msgstr "Pensiero"
 msgid "This action cannot be undone."
 msgstr "Questa azione non può essere annullata."
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "This action cannot be undone. All your data will be permanently deleted."
 msgstr "Questa azione non può essere annullata. Tutti i tuoi dati verranno eliminati in modo permanente."
 
@@ -3376,7 +3372,7 @@ msgstr "Questo è un nome adatto agli URL per il tuo curriculum."
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Potrebbero essere necessari alcuni minuti, a seconda della risposta del provider IA. Non chiudere la finestra e non aggiornare la pagina."
 
-#: src/components/resume/builder-resume-draft.ts
+#: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
 msgstr "Questo curriculum è bloccato e non può essere aggiornato."
 
@@ -3384,7 +3380,7 @@ msgstr "Questo curriculum è bloccato e non può essere aggiornato."
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Questa sezione è riservata alle tue note personali specifiche per questo curriculum. Il contenuto qui rimane privato e non è condiviso con nessun altro."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
 msgstr "Questo passaggio è facoltativo, ma consigliato."
 
@@ -3404,7 +3400,7 @@ msgstr "Questa discussione è in sola lettura perché il curriculum funzionante 
 msgid "This will generate a new API key to access the Reactive Resume API to allow machines to interact with your resume data."
 msgstr "Questo genererà una nuova chiave API per accedere all'API di Reactive Resume e consentire alle macchine di interagire con i dati del tuo curriculum."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "This will help you identify it later, if you plan to have multiple passkeys."
 msgstr "Questo la aiuterà a identificarlo in seguito, se prevede di avere più passepartout."
 
@@ -3453,7 +3449,7 @@ msgstr "Suggerimento: puoi nominare il curriculum facendo riferimento alla posiz
 msgid "Title"
 msgstr "Titolo"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "To delete your account, you need to enter the confirmation text and click the button below."
 msgstr "Per eliminare il tuo account devi inserire il testo di conferma e fare clic sul pulsante qui sotto."
 
@@ -3532,8 +3528,8 @@ msgstr "Due colonne, minimale e denso di testo senza elementi decorativi; perfet
 msgid "Two-column, minimal with light gray sidebar and subtle icons; professional and understated for legal, finance, or executive roles."
 msgstr "Due colonne, minimale con barra laterale grigio chiaro e icone discrete; professionale e sobrio per ruoli legali, finanziari o dirigenziali."
 
-#: src/routes/auth/verify-2fa.tsx
-#: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
+#: src/features/auth/pages/verify-2fa.tsx
+#: src/features/settings/authentication/components/two-factor.tsx
 msgid "Two-Factor Authentication"
 msgstr "Autenticazione a due fattori"
 
@@ -3555,13 +3551,13 @@ msgstr "Codice QR di autenticazione a due fattori"
 msgid "Type"
 msgstr "Tipo"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Type \"{CONFIRMATION_TEXT}\" to confirm"
 msgstr "Digita \"{CONFIRMATION_TEXT}\" per confermare"
 
 #. Placeholder in command palette input on root page
 #. Screen-reader dialog description instructing users how to use the command palette
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Type a command or search..."
 msgstr "Digita un comando o cerca..."
 
@@ -3581,29 +3577,29 @@ msgstr "Sottolinea"
 msgid "Unlimited Resumes"
 msgstr "Curriculum illimitati"
 
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Unlinking your {providerName} account..."
 msgstr "Scollegamento del tuo account {providerName} in corso..."
 
 #. Primary action button label to unlock a password-protected resume
 #. Resume card context menu action to remove edit lock
 #. Resume card dropdown action to remove edit lock
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "Unlock"
 msgstr "Sblocca"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Unnamed passkey"
 msgstr "Chiave d'accesso senza nome"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Untested"
 msgstr "Non testato"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Unverified"
 msgstr "Non verificato"
 
@@ -3679,7 +3675,7 @@ msgstr "Aggiorna un'esperienza di volontariato esistente"
 
 #. Primary action button to submit changed password
 #: src/dialogs/auth/change-password.tsx
-#: src/routes/dashboard/settings/authentication/-components/password.tsx
+#: src/features/settings/authentication/components/password.tsx
 msgid "Update Password"
 msgstr "Aggiorna password"
 
@@ -3717,7 +3713,7 @@ msgstr "Caricamento dell'immagine in corso..."
 msgid "URL"
 msgstr "URL"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Use"
 msgstr "Utilizzo"
 
@@ -3727,8 +3723,8 @@ msgstr "Utilizzi il colore {color}"
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Username"
 msgstr "Nome utente"
 
@@ -3744,39 +3740,39 @@ msgstr "Uzbeco"
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Gli URL validi devono iniziare con http:// o https://."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Gateway Vercel AI"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Verified"
 msgstr "Verificato"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/routes/auth/verify-2fa-backup.tsx
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "Verifica"
 
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Verify with a Backup Code"
 msgstr "Verifica con un codice di backup"
 
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Verifying backup code..."
 msgstr "Verifica del codice di backup in corso..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying code..."
 msgstr "Verifica del codice in corso..."
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Verifying password..."
 msgstr "Verifica della password in corso..."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Verifying your email is required when resetting your password."
 msgstr "La verifica della tua email è necessaria per reimpostare la password."
 
@@ -3793,10 +3789,6 @@ msgstr "Visualizzazioni"
 #: src/libs/resume/section.tsx
 msgid "Volunteer"
 msgstr "Volontariato"
-
-#: src/routes/agent/$threadId.tsx
-msgid "Waiting for fetch result..."
-msgstr "In attesa del risultato del recupero..."
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
@@ -3833,7 +3825,7 @@ msgstr "Cosa c'è di nuovo nell'ultima versione?"
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "Quando è bloccato, il curriculum non può essere aggiornato o eliminato."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Lavora con OpenAI"
 
@@ -3857,7 +3849,7 @@ msgstr "Sì! Reactive Resume è completamente gratuito da usare, senza costi nas
 msgid "You also have the option to deploy on your own servers using the Docker image."
 msgstr "Hai anche la possibilità di distribuirlo sui tuoi server usando l'immagine Docker."
 
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "You can also use your username to login."
 msgstr "Puoi anche usare il tuo nome utente per accedere."
 
@@ -3869,12 +3861,12 @@ msgstr "Puoi condividere il tuo curriculum tramite un URL pubblico univoco, prot
 msgid "You have unsaved changes that will be lost."
 msgstr "Hai modifiche non salvate che andranno perse."
 
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
 msgstr "C’è posta per te!"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Your account has been deleted successfully."
 msgstr "Il tuo account è stato eliminato correttamente."
 
@@ -3894,11 +3886,11 @@ msgstr "I tuoi dati sono al sicuro e non vengono mai condivisi o venduti a nessu
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "I tuoi dati sono archiviati in modo sicuro e non vengono mai condivisi con terze parti. Puoi anche fare self-host di Reactive Resume sui tuoi server per avere il pieno controllo dei tuoi dati."
 
-#: src/components/resume/builder-resume-draft.ts
+#: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Impossibile salvare le ultime modifiche."
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "La tua password è stata reimpostata correttamente. Ora puoi accedere con la tua nuova password."
 
@@ -3906,7 +3898,7 @@ msgstr "La tua password è stata reimpostata correttamente. Ora puoi accedere co
 msgid "Your password has been updated successfully."
 msgstr "L'aggiornamento della password è stato completato con successo."
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
 msgstr "Il tuo profilo è stato aggiornato correttamente."
 
@@ -3955,4 +3947,3 @@ msgstr "Rimpicciolisci"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

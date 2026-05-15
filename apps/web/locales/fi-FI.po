@@ -86,7 +86,7 @@ msgstr "3 kuukautta"
 msgid "6 months"
 msgstr "6 kuukautta"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Vahvistuslinkki on lähetetty nykyiseen sähköpostiosoitteeseesi. Tarkista postilaatikkosi vahvistaaksesi muutoksen."
 
@@ -103,7 +103,7 @@ msgstr "Linkki ansioluetteloosi on kopioitu leikepöydälle."
 msgid "A lot of people have written to me over the years to share their experiences with Reactive Resume and how it has helped them, and I never get tired of reading them. If you have a story to share, let me know by sending me an email at <0>{email}</0>."
 msgstr "Monet ihmiset ovat vuosien varrella kirjoittaneet minulle jakaakseen kokemuksiaan Reactive Resumesta ja siitä, miten se on auttanut heitä, enkä koskaan kyllästy lukemaan niitä. Jos sinulla on tarina jaettavaksi, kerro siitä lähettämällä minulle sähköpostia osoitteeseen <0>{email}</0>."
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Uusi vahvistuslinkki on lähetetty sähköpostiosoitteeseesi. Tarkista postilaatikkosi vahvistaaksesi tilisi."
 
@@ -197,7 +197,7 @@ msgstr "Lisää uusi vapaaehtoistyökokemus"
 msgid "Add and test a provider before starting a thread."
 msgstr "Lisää ja testaa palveluntarjoaja ennen ketjun aloittamista."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
 msgstr "Lisää ja testaa toimittaja ennen agenttiketjun aloittamista."
 
@@ -221,7 +221,7 @@ msgstr "Lisää useita rooleja näyttääksesi uraetenemisen samassa yrityksess�
 msgid "Add Page"
 msgstr "Lisää sivu"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add Provider"
 msgstr "Lisää palveluntarjoaja"
 
@@ -245,11 +245,11 @@ msgstr "Muokkaa ansioluetteloasi etätyöhön keskittyvään rooliin, jossa arvo
 msgid "Afrikaans"
 msgstr "afrikaans"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Agent"
 msgstr "Agentti"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Agent ready"
 msgstr "Agentti valmis"
 
@@ -269,23 +269,23 @@ msgstr "Tekoälyagentin määritys ei ole tällä hetkellä käytettävissä. Yr
 msgid "AI agent setup is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Tekoälyagentin asetukset eivät ole käytettävissä, ennen kuin REDIS_URL ja ENCRYPTION_SECRET on määritetty."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Tekoälypalveluntarjoajien hallinta ei ole käytettävissä, ennen kuin REDIS_URL ja ENCRYPTION_SECRET on määritetty."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable. Please try again."
 msgstr "Tekoälypalveluntarjoajien hallinta ei ole käytettävissä. Yritä uudelleen."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider saved. Test it before use."
 msgstr "Tekoälypalveluntarjoaja tallennettu. Testaa sitä ennen käyttöä."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Tekoälypalveluntarjoajat"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
 msgstr "Tekoälypalveluntarjoajat vaativat REDIS_URL- ja ENCRYPTION_SECRET-määritykset."
 
@@ -297,7 +297,7 @@ msgstr "albania"
 msgid "Allow Public Access"
 msgstr "Salli julkinen käyttö"
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Onko sinulla jo tili? <0/>"
 
@@ -327,7 +327,7 @@ msgstr "Analysoimalla..."
 msgid "And many more..."
 msgstr "Ja paljon muuta..."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Anthropic Claude"
 msgstr "Antrooppinen Claude"
 
@@ -347,21 +347,21 @@ msgstr "Kaikki, joilla on linkki, voivat tarkastella ja ladata ansioluettelon."
 msgid "API Access"
 msgstr "API-käyttö"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "API Key"
 msgstr "API-avain"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/api-keys.tsx
 msgid "API Keys"
 msgstr "API-avaimet"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "API keys are encrypted on the server and never shown again after saving."
 msgstr "API-avaimet salataan palvelimella, eikä niitä koskaan näytetä uudelleen tallennuksen jälkeen."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "API Reference"
 msgstr "API-viite"
 
@@ -386,7 +386,7 @@ msgstr "Arkisto"
 msgid "Are you sure you want to close this dialog?"
 msgstr "Haluatko varmasti sulkea tämän ikkunan?"
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Are you sure you want to delete this API key?"
 msgstr "Haluatko varmasti poistaa tämän API-avaimen?"
 
@@ -404,7 +404,7 @@ msgstr "Haluatko varmasti poistaa tämän kohteen?"
 msgid "Are you sure you want to delete this resume?"
 msgstr "Haluatko varmasti poistaa tämän ansioluettelon?"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Are you sure you want to delete your account?"
 msgstr "Haluatko varmasti poistaa tilisi?"
 
@@ -426,7 +426,7 @@ msgstr "Haluatko varmasti nollata tämän osion?"
 msgid "Area of Study"
 msgstr "Opintoala"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Artificial Intelligence"
 msgstr "Tekoäly"
 
@@ -446,7 +446,7 @@ msgstr "Liitä tiedostoja"
 msgid "Attachment uploaded."
 msgstr "Liite ladattu."
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/authentication/index.tsx
 msgid "Authentication"
@@ -472,7 +472,7 @@ msgid "Azerbaijani"
 msgstr "azeri"
 
 #. Secondary navigation button on 2FA verification screen
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Back to Login"
 msgstr "Takaisin kirjautumiseen"
 
@@ -488,7 +488,7 @@ msgstr "Taustaväri"
 msgid "Backup codes copied to clipboard."
 msgstr "Varmuuskoodit kopioitu leikepöydälle."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Base URL"
 msgstr "Perus-URL"
 
@@ -526,7 +526,7 @@ msgid "Border Width"
 msgstr "Reunan leveys"
 
 #. Screen-reader dialog title for the command palette in the resume builder
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Builder Command Palette"
 msgstr "Rakentajan komentopaletti"
 
@@ -572,14 +572,14 @@ msgstr "Voinko viedä ansioluetteloni PDF-muotoon?"
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
+#: src/features/settings/pages/api-keys.tsx
+#: src/features/settings/pages/danger-zone.tsx
+#: src/features/settings/pages/profile.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/settings/api-keys.tsx
-#: src/routes/dashboard/settings/danger-zone.tsx
-#: src/routes/dashboard/settings/profile.tsx
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -609,11 +609,11 @@ msgstr "Sertifikaatit"
 msgid "Change language"
 msgstr "Vaihda kieli"
 
-#: src/components/command-palette/pages/preferences/index.tsx
+#: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change language to..."
 msgstr "Vaihda kieli..."
 
-#: src/components/command-palette/pages/preferences/index.tsx
+#: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change theme to..."
 msgstr "Vaihda teema..."
 
@@ -629,11 +629,11 @@ msgstr "Muutosloki"
 msgid "Chat"
 msgstr "Chat"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Tarkista sähköpostisi linkin löytämiseksi salasanan palauttamiseksi."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "Tarkista sähköpostisi linkin löytämiseksi tilisi vahvistamiseksi."
 
@@ -686,12 +686,12 @@ msgstr "Sarakkeet"
 
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Command Palette"
 msgstr "Komentopaletti"
 
 #. Accessible label for command palette dialog when browsing a nested command page
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Command Palette - {currentPage}"
 msgstr "Komentopaletti - {currentPage}"
 
@@ -714,14 +714,14 @@ msgstr "Täysin ilmainen, ikuisesti, ei piilokuluja."
 #. Account deletion confirmation dialog confirm action in danger zone
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
+#: src/features/settings/pages/danger-zone.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/settings/danger-zone.tsx
 msgid "Confirm"
 msgstr "Vahvista"
 
 #. Authentication settings action to link a social login provider
-#: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
+#: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Yhdistä"
 
@@ -734,7 +734,7 @@ msgstr "Sisältö"
 #. Final action button after saving backup codes
 #. Primary action button to proceed to next step in two-factor setup
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Continue"
 msgstr "Jatka"
 
@@ -796,7 +796,7 @@ msgstr "Tekoälypalvelun tarjoajaa ei tavoitettu. Yritä uudelleen."
 msgid "Could not revert this patch."
 msgstr "Tätä korjaustiedostoa ei voitu palauttaa."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Could not verify provider connection."
 msgstr "Palveluntarjoajan yhteyden vahvistaminen epäonnistui."
 
@@ -830,12 +830,12 @@ msgstr "Saatekirje"
 msgid "Create"
 msgstr "Luo"
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Create a new account"
 msgstr "Luo uusi tili"
 
 #: src/dialogs/api-key/create.tsx
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Create a new API key"
 msgstr "Luo uusi API-avain"
 
@@ -887,8 +887,8 @@ msgstr "Luo uusi julkaisu"
 msgid "Create a new reference"
 msgstr "Luo uusi suosittelija"
 
-#: src/components/command-palette/pages/resumes.tsx
 #: src/dialogs/resume/index.tsx
+#: src/features/command-palette/pages/resumes.tsx
 #: src/routes/dashboard/resumes/-components/cards/create-card.tsx
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Create a new resume"
@@ -919,7 +919,7 @@ msgid "Create from scratch"
 msgstr "Luo alusta alkaen"
 
 #. Call-to-action link from login page to account registration page
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Create one now"
 msgstr "Luo sellainen nyt"
 
@@ -945,7 +945,7 @@ msgid "Custom"
 msgstr "Custom"
 
 #. Authentication provider display name in account settings
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Custom OAuth"
 msgstr "Mukautettu OAuth"
 
@@ -957,7 +957,7 @@ msgstr "Mukautetut osiot"
 msgid "Czech"
 msgstr "tšekki"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/danger-zone.tsx
 msgid "Danger Zone"
@@ -968,12 +968,12 @@ msgid "Danish"
 msgstr "tanska"
 
 #. Appearance theme option for dark mode
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 #: src/libs/theme.ts
 msgid "Dark"
 msgstr "Tumma"
 
-#: src/components/command-palette/pages/preferences/theme.tsx
+#: src/features/command-palette/pages/preferences/theme.tsx
 msgid "Dark theme"
 msgstr "Tumma teema"
 
@@ -1001,6 +1001,8 @@ msgstr "Tutkinto"
 #. Passkey row action to remove the selected passkey
 #. Resume card context menu destructive action to remove a resume
 #. Resume card dropdown destructive action to remove a resume
+#: src/features/settings/authentication/components/passkeys.tsx
+#: src/features/settings/pages/api-keys.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
@@ -1008,12 +1010,10 @@ msgstr "Tutkinto"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
-#: src/routes/dashboard/settings/api-keys.tsx
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
 msgid "Delete"
 msgstr "Poista"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Delete Account"
 msgstr "Poista tili"
 
@@ -1029,7 +1029,7 @@ msgstr "Poista sivu"
 msgid "Delete picture"
 msgstr "Poista kuva"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Delete provider"
 msgstr "Poista palveluntarjoaja"
 
@@ -1046,11 +1046,11 @@ msgstr "Poista taulukko"
 msgid "Delete this agent thread?"
 msgstr "Poistetaanko tämä agenttiketju?"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Deleting your account..."
 msgstr "Poistetaan tiliäsi..."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Deleting your API key..."
 msgstr "Poistetaan API-avaintasi..."
 
@@ -1077,7 +1077,7 @@ msgstr "Ulkoasu"
 
 #. Destructive action button to turn off two-factor authentication
 #: src/dialogs/auth/disable-two-factor.tsx
-#: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
+#: src/features/settings/authentication/components/two-factor.tsx
 msgid "Disable 2FA"
 msgstr "Poista 2FA käytöstä"
 
@@ -1090,7 +1090,7 @@ msgid "Disabling two-factor authentication..."
 msgstr "Poistetaan kaksivaiheista todennusta käytöstä..."
 
 #. Authentication settings action to unlink a connected social login provider
-#: src/routes/dashboard/settings/authentication/-components/social-provider.tsx
+#: src/features/settings/authentication/components/social-provider.tsx
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
@@ -1107,7 +1107,7 @@ msgstr "Hylkää"
 msgid "Documentation"
 msgstr "Dokumentaatio"
 
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Don't have an account? <0/>"
 msgstr "Eikö sinulla ole tiliä? <0/>"
 
@@ -1144,7 +1144,7 @@ msgstr "Lataa DOCX"
 msgid "Download JSON"
 msgstr "Lataa JSON"
 
-#: src/routes/$username/-components/public-resume.tsx
+#: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Download PDF"
@@ -1224,14 +1224,14 @@ msgstr "Sähköposti"
 #. Label for email input on forgot-password form
 #. Label for email input on registration form
 #. Label for login identifier input that accepts email or username
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Email Address"
 msgstr "Sähköpostiosoite"
 
-#: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
+#: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Ota 2FA käyttöön"
 
@@ -1239,7 +1239,7 @@ msgstr "Ota 2FA käyttöön"
 msgid "Enable Two-Factor Authentication"
 msgstr "Ota kaksivaiheinen todennus käyttöön"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Enabled"
 msgstr "Käytössä"
 
@@ -1263,11 +1263,11 @@ msgstr "Englanti (Yhdistynyt kuningaskunta)"
 msgid "Enhance the security of your account with additional layers of protection."
 msgstr "Paranna tilisi turvallisuutta lisäsuojaustasoilla."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Enter a name for your passkey."
 msgstr "Anna nimi salasanalle."
 
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "Syötä yksi tallennetuista varmuuskoodeistasi päästäksesi tiliisi"
 
@@ -1275,7 +1275,7 @@ msgstr "Syötä yksi tallennetuista varmuuskoodeistasi päästäksesi tiliisi"
 msgid "Enter the URL to link to"
 msgstr "Syötä linkitettävä URL-osoite"
 
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter the verification code from your authenticator app"
 msgstr "Syötä todennussovelluksesi antama vahvistuskoodi"
 
@@ -1314,7 +1314,7 @@ msgid "Expires in"
 msgstr "Vanhenee"
 
 #. placeholder {0}: key.expiresAt?.toLocaleDateString()
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Vanhenee {0}"
 
@@ -1322,7 +1322,7 @@ msgstr "Vanhenee {0}"
 msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. Reactive Resume currently offers 12 templates, with more on the way."
 msgstr "Tutustu laajaan valikoimaan mallipohjia, jotka sopivat erilaisiin tyyleihin, ammatteihin ja persoonallisuuksiin. Reactive Resumessa on tällä hetkellä 12 mallipohjaa, ja lisää on tulossa."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find detailed endpoints, request examples, and authentication methods."
 msgstr "Tutustu API-dokumentaatioon nähdäksesi, miten yhdistät Reactive Resumen sovelluksiisi. Löydät sieltä yksityiskohtaiset päätepisteet, pyyntöesimerkit ja todennusmenetelmät."
 
@@ -1334,7 +1334,7 @@ msgstr "Vienti"
 msgid "Export your resume to PDF instantly, without any waiting or delays."
 msgstr "Vie ansioluettelosi PDF-muotoon välittömästi, ilman odottelua tai viivytyksiä."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed"
 msgstr "Epäonnistui"
 
@@ -1353,21 +1353,21 @@ msgid "Failed to create API key. Please try again."
 msgstr "API-avaimen luominen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when account registration fails without a server error message
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Failed to create your account. Please try again."
 msgstr "Tilin luominen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when deleting a passkey fails
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Failed to delete passkey. Please try again."
 msgstr "Avaimen poistaminen epäonnistui. Yritä uudelleen."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to delete provider."
 msgstr "Palveluntarjoajan poistaminen epäonnistui."
 
 #. Fallback toast when deleting an API key fails
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "Failed to delete the API key. Please try again."
 msgstr "API-avaimen poistaminen epäonnistui. Yritä uudelleen."
 
@@ -1377,7 +1377,7 @@ msgid "Failed to delete thread."
 msgstr "Ketjun poistaminen epäonnistui."
 
 #. Fallback toast when account deletion fails
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Failed to delete your account. Please try again."
 msgstr "Tilisi poistaminen epäonnistui. Yritä uudelleen."
 
@@ -1392,41 +1392,41 @@ msgid "Failed to enable two-factor authentication. Please try again."
 msgstr "Kahden tekijän todennuksen käyttöönotto epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when linking a social authentication provider fails
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Failed to link provider. Please try again."
 msgstr "Palveluntarjoajan linkittäminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when passkey registration fails
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Failed to register passkey. Please try again."
 msgstr "Avaimen rekisteröinti epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when renaming a passkey fails
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Failed to rename passkey. Please try again."
 msgstr "Avaimen uudelleen nimeäminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when requesting email change confirmation fails
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Failed to request email change. Please try again."
 msgstr "Sähköpostimuutospyyntö epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when resending account verification email fails
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Failed to resend verification email. Please try again."
 msgstr "Vahvistussähköpostia ei onnistuttu lähettämään uudelleen. Yritä uudelleen."
 
 #. Fallback toast when resetting password fails and no backend message is available
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "Salasanan palauttaminen epäonnistui. Yritä uudelleen."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
 msgstr "Tekoälypalveluntarjoajan tallentaminen epäonnistui."
 
 #. Fallback toast when requesting password reset email fails without backend message
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Failed to send password reset email. Please try again."
 msgstr "Salasanan palautussähköpostia ei onnistuttu lähettämään. Yritä uudelleen."
 
@@ -1438,13 +1438,13 @@ msgstr "Kaksivaiheisen todennuksen käyttöönotto epäonnistui."
 #. Fallback toast when passkey sign-in fails without an error message
 #. Fallback toast when sign-in fails and no server error message is available
 #. Fallback toast when social sign-in fails without a provider error message
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/auth/login.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Failed to sign in. Please try again."
 msgstr "Kirjautuminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when signing out fails
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Failed to sign out. Please try again."
 msgstr "Kirjautuminen ulos ei onnistunut. Yritä uudelleen."
 
@@ -1453,11 +1453,11 @@ msgid "Failed to start agent thread."
 msgstr "Agenttiketjun aloittaminen epäonnistui."
 
 #. Fallback toast when unlinking a social authentication provider fails
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Failed to unlink provider. Please try again."
 msgstr "Palveluntarjoajan linkityksen poistaminen epäonnistui. Yritä uudelleen."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to update provider."
 msgstr "Palveluntarjoajan päivittäminen epäonnistui."
 
@@ -1467,7 +1467,7 @@ msgid "Failed to update your password. Please try again."
 msgstr "Salasanan päivittäminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when updating profile details fails
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Failed to update your profile. Please try again."
 msgstr "Profiilin päivittäminen epäonnistui. Yritä uudelleen."
 
@@ -1481,29 +1481,25 @@ msgid "Failed to upload picture. Please try again."
 msgstr "Kuvan lataaminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when resume password verification fails unexpectedly
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Failed to verify the password. Please try again."
 msgstr "Salasanan vahvistaminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "Varmuuskopiointikoodin vahvistaminen epäonnistui. Yritä uudelleen."
 
 #. Fallback toast when verifying a two-factor authentication code fails
 #. Fallback toast when verifying two-factor setup code fails
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Koodiasi ei onnistuttu tarkistamaan. Yritä uudelleen."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
 msgstr "Ominaisuudet"
-
-#: src/routes/agent/$threadId.tsx
-msgid "Fetched URL"
-msgstr "Haettu URL-osoite"
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Filter by"
@@ -1554,11 +1550,11 @@ msgid "For security reasons, this key will only be displayed once."
 msgstr "Turvallisuussyistä tämä avain näytetään vain kerran."
 
 #. Link label to password reset page from login form
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Forgot Password?"
 msgstr "Unohditko salasanasi?"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Forgot your password?"
 msgstr "Unohditko salasanasi?"
 
@@ -1615,15 +1611,15 @@ msgstr "Aloita"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
 #: src/components/layout/not-found-screen.tsx
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Go Back"
 msgstr "Palaa takaisin"
 
@@ -1636,22 +1632,22 @@ msgstr "Siirry hallintapaneeliin"
 msgid "Go to resumes dashboard"
 msgstr "Siirry ansioluetteloiden kojelautaan"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Go to..."
 msgstr "Siirry..."
 
 #. Authentication provider display name in account settings
 #. Brand name label for Google social sign-in button
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Google"
 msgstr "Google"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Google Gemini"
 msgstr "Google Gemini"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "gpt-4.1"
 msgstr "gpt-4.1"
 
@@ -1712,7 +1708,7 @@ msgstr "heprea"
 msgid "Help me bring more experienced contributors on board, reducing the burden on a single maintainer and accelerating development."
 msgstr "Auta minua tuomaan mukaan kokeneempia tekijöitä, vähentämään yhden ylläpitäjän taakkaa ja nopeuttamaan kehitystä."
 
-#: src/routes/dashboard/settings/preferences.tsx
+#: src/features/settings/pages/preferences.tsx
 msgid "Help translate the app to your language"
 msgstr "Auta kääntämään sovellus omalle kielellesi"
 
@@ -1751,10 +1747,10 @@ msgstr "Piilota kaikki ansioluettelon ikonit"
 #: src/dialogs/auth/change-password.tsx
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/auth/reset-password.tsx
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/auth/pages/reset-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Piilota salasana"
 
@@ -1771,7 +1767,7 @@ msgstr "Korostus"
 msgid "Hindi"
 msgstr "hindi"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Etusivu"
 
@@ -1779,7 +1775,7 @@ msgstr "Etusivu"
 msgid "How do I share my resume?"
 msgstr "Miten jaan ansioluetteloni?"
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "How do I use the API?"
 msgstr "Miten käytän rajapintaa (API:a)?"
 
@@ -1787,7 +1783,7 @@ msgstr "Miten käytän rajapintaa (API:a)?"
 msgid "How is my data protected?"
 msgstr "Miten tietojani suojataan?"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "https://gateway.example.com/v1"
 msgstr "https://yhdyskäytävä.esimerkki.com/v1"
 
@@ -1846,7 +1842,7 @@ msgstr "Lisää taulukko"
 msgid "Instant Generation"
 msgstr "Välitön sukupolvi"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/integrations/route.tsx
 msgid "Integrations"
@@ -1858,7 +1854,7 @@ msgstr "Integraatiot"
 msgid "Interests"
 msgstr "Kiinnostuksen kohteet"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Invalid AI provider configuration."
 msgstr "Virheellinen tekoälypalveluntarjoajan määritys."
 
@@ -1888,15 +1884,15 @@ msgstr "japani"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "John Doe"
 msgstr "John Doe"
 
 #. Example username placeholder on profile settings form
 #. Example username placeholder on registration form
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "john.doe"
 msgstr "John.Doe"
 
@@ -1904,10 +1900,10 @@ msgstr "John.Doe"
 #. Example email placeholder on forgot-password form
 #. Example email placeholder on profile settings form
 #. Example email placeholder on registration form
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
@@ -1924,7 +1920,7 @@ msgstr "Tasaa molemmat reunat"
 msgid "Kannada"
 msgstr "kannada"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Key"
 msgstr "Avain"
 
@@ -1943,7 +1939,7 @@ msgstr "korea"
 
 #. Short field label for custom display text associated with a URL
 #: src/components/input/url-input.tsx
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Label"
 msgstr "Selite"
 
@@ -1953,11 +1949,11 @@ msgid "Landscape"
 msgstr "Vaaka"
 
 #. Menu item that opens language selection submenu
-#: src/components/command-palette/pages/preferences/language.tsx
-#: src/components/user/dropdown-menu.tsx
 #: src/dialogs/resume/sections/language.tsx
+#: src/features/command-palette/pages/preferences/language.tsx
+#: src/features/settings/pages/preferences.tsx
+#: src/features/user/dropdown-menu.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-#: src/routes/dashboard/settings/preferences.tsx
 msgid "Language"
 msgstr "Kieli"
 
@@ -2031,12 +2027,12 @@ msgid "Licensed under <0>MIT</0>."
 msgstr "Lisensoitu <0>MIT</0>-lisenssillä."
 
 #. Appearance theme option for light mode
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 #: src/libs/theme.ts
 msgid "Light"
 msgstr "Vaalea"
 
-#: src/components/command-palette/pages/preferences/theme.tsx
+#: src/features/command-palette/pages/preferences/theme.tsx
 msgid "Light theme"
 msgstr "Vaalea teema"
 
@@ -2046,13 +2042,13 @@ msgstr "Riviväli"
 
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Linking your {providerName} account..."
 msgstr "Yhdistetään tiliäsi palvelussa {providerName}..."
 
@@ -2072,12 +2068,12 @@ msgstr "Ladataan agentin työtilaa..."
 msgid "Loading AI providers. Please try again in a moment."
 msgstr "Ladataan tekoälypalveluntarjoajia. Yritä uudelleen hetken kuluttua."
 
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
 msgid "Loading providers..."
 msgstr "Ladataan palveluntarjoajia..."
 
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/resumes.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading resumes..."
 msgstr "Ladataan ansioluetteloita..."
@@ -2106,7 +2102,7 @@ msgid "Lock"
 msgstr "Lukitse"
 
 #. User menu action to sign out of current account
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Logout"
 msgstr "Kirjaudu ulos"
 
@@ -2115,7 +2111,7 @@ msgid "Long-term Sustainability"
 msgstr "Pitkäaikainen kestävyys"
 
 #. Link to backup-code verification flow when authenticator app is unavailable
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Lost access to your authenticator?"
 msgstr "Etkö pääse käsiksi todennussovellukseesi?"
 
@@ -2171,7 +2167,7 @@ msgstr "Microsoft Word"
 msgid "Missing working resume"
 msgstr "Puuttuva työansioluettelo"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
 msgstr "Malli"
 
@@ -2195,9 +2191,9 @@ msgstr "Aloitettava osoitteesta https://"
 #: src/dialogs/resume/sections/project.tsx
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
-#: src/routes/dashboard/settings/profile.tsx
 msgid "Name"
 msgstr "Nimi"
 
@@ -2223,7 +2219,7 @@ msgstr "Uusi sivu"
 
 #. Label for new password input on reset-password form
 #: src/dialogs/auth/change-password.tsx
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "New Password"
 msgstr "Uusi salasana"
 
@@ -2244,7 +2240,7 @@ msgstr "Ei mainoksia, ei seurantaa"
 msgid "No data was returned from the AI provider."
 msgstr "Tekoälypalvelun tarjoaja ei palauttanut tietoja."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Ei vielä rekisteröityjä kulkulupia."
 
@@ -2252,7 +2248,7 @@ msgstr "Ei vielä rekisteröityjä kulkulupia."
 msgid "No results found."
 msgstr "Tuloksia ei löytynyt."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Ei testattua tarjoajaa"
 
@@ -2272,7 +2268,7 @@ msgstr "Muistiinpanot"
 msgid "Odia"
 msgstr "odia"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
 
@@ -2296,7 +2292,7 @@ msgid "Open AI agent"
 msgstr "Avoin tekoälyagentti"
 
 #. Button label to open the user's default email app
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Open Email Client"
 msgstr "Avaa sähköpostiohjelma"
 
@@ -2312,15 +2308,15 @@ msgstr "Avaa Integraatioiden asetukset"
 msgid "Open Source"
 msgstr "Avoin lähdekoodi"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
 msgstr "OpenAI"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "OpenAI-yhteensopiva"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
@@ -2333,7 +2329,7 @@ msgstr "avautuu uuteen välilehteen"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Halutessasi voit asettaa salasanan, jotta vain salasanan tietävät voivat nähdä ansioluettelosi linkin kautta."
 
-#: src/routes/auth/-components/social-auth.tsx
+#: src/features/auth/components/social-auth.tsx
 msgctxt "Choose to authenticate with a social provider (Google, GitHub, etc.) instead of email and password"
 msgid "or continue with"
 msgstr "tai jatka käyttäen"
@@ -2367,20 +2363,20 @@ msgstr "Kappale"
 
 #. Authentication provider display name in account settings
 #. Label for passkey sign-in button
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Passkey"
 msgstr "Passkey"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Passkey deleted successfully."
 msgstr "Avain poistettu onnistuneesti."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Passkey registered successfully."
 msgstr "Avain rekisteröity onnistuneesti."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Passkeys"
 msgstr "Passkeys"
 
@@ -2394,11 +2390,11 @@ msgstr "Avaimet & 2FA"
 #. Label for password input on registration form
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/auth/resume-password.tsx
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
-#: src/routes/dashboard/settings/authentication/-components/password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/auth/pages/resume-password.tsx
+#: src/features/settings/authentication/components/hooks.tsx
+#: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "Salasana"
 
@@ -2471,11 +2467,11 @@ msgstr "Puhelin"
 msgid "Picture"
 msgstr "Kuva"
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Syötä uusi salasana tilillesi"
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Please enter the password shared with you by the owner of the resume to continue."
 msgstr "Syötä ansioluettelon omistajan jakama salasana jatkaaksesi."
 
@@ -2487,7 +2483,7 @@ msgstr "Syötä linkitettävä URL-osoite:"
 msgid "Please support the project"
 msgstr "Tue projektia"
 
-#: src/routes/$username/-components/public-resume.tsx
+#: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
@@ -2516,8 +2512,8 @@ msgstr "portugali (Portugali)"
 msgid "Position"
 msgstr "Tehtävänimike"
 
-#: src/components/command-palette/pages/navigation.tsx
-#: src/components/command-palette/pages/preferences/index.tsx
+#: src/features/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/preferences/index.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/preferences.tsx
 msgid "Preferences"
@@ -2536,7 +2532,7 @@ msgid "Press <0>{RETURN_KEY}</0> or <1>{COMMA_KEY}</1> to add or save the curren
 msgstr "Paina <0>{RETURN_KEY}</0> tai <1>{COMMA_KEY}</1> lisätäksesi tai tallentaaksesi nykyisen avainsanan."
 
 #. Command palette hint that pressing Enter opens the selected resume
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/resumes.tsx
 msgid "Press <0>Enter</0> to open"
 msgstr "Paina <0>Enter</0> avataksesi"
 
@@ -2548,7 +2544,7 @@ msgstr "Pääväri"
 msgid "Proficiency"
 msgstr "Osaamistaso"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/profile.tsx
 msgid "Profile"
@@ -2578,11 +2574,11 @@ msgstr "Suojaa ansioluettelosi luvattomalta käytöltä salasanalla"
 msgid "Protect your resume with a password, and let only people with the password view it."
 msgstr "Suojaa ansioluettelosi salasanalla ja anna vain salasanan tietävien nähdä se."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider"
 msgstr "Palveluntarjoaja"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "Palveluntarjoajan yhteys vahvistettu."
 
@@ -2657,11 +2653,11 @@ msgstr "Suosittelijat"
 msgid "Refresh"
 msgstr "Päivitä"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Register New Device"
 msgstr "Rekisteröi uusi laite"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Remember your password? <0/>"
 msgstr "Muistatko salasanasi? <0/>"
 
@@ -2698,11 +2694,11 @@ msgstr "Ilmoita virheestä"
 msgid "Report an issue"
 msgstr "Ilmoita ongelmasta"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Resend verification email"
 msgstr "Lähetä vahvistussähköposti uudelleen"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Lähetetään vahvistussähköpostia uudelleen..."
 
@@ -2712,15 +2708,15 @@ msgid "Reset"
 msgstr "Palauta"
 
 #. Primary action button label on reset-password form
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Palauta salasana"
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Palauta salasanasi"
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Resetting your password..."
 msgstr "Palautetaan salasanaasi..."
 
@@ -2744,8 +2740,8 @@ msgstr "Ansioluettelon analyysi valmis."
 msgid "Resume patch"
 msgstr "Ansioluettelon korjaustiedosto"
 
-#: src/components/command-palette/pages/navigation.tsx
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/resumes.tsx
 #: src/routes/_home/-sections/statistics.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2797,7 +2793,7 @@ msgid "Russian"
 msgstr "venäjä"
 
 #. Passkey rename prompt confirm action in authentication settings
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Save"
 msgstr "Tallenna"
 
@@ -2817,11 +2813,11 @@ msgstr "Tallenna"
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "Tallenna muutokset"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Save Provider"
 msgstr "Tallenna palveluntarjoaja"
 
@@ -2838,7 +2834,7 @@ msgid "Scorecard"
 msgstr "Tuloskortti"
 
 #. Accessible label for command palette search input
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Search commands"
 msgstr "Hakukomennot"
 
@@ -2848,13 +2844,13 @@ msgstr "Hakukomennot"
 msgid "Search for an icon"
 msgstr "Etsi ikonia"
 
-#: src/components/command-palette/pages/resumes.tsx
+#: src/features/command-palette/pages/resumes.tsx
 msgid "Search for..."
 msgstr "Etsi..."
 
 #. Placeholder in command palette input on nested pages
-#: src/components/command-palette/index.tsx
 #: src/components/ui/combobox.tsx
+#: src/features/command-palette/index.tsx
 msgid "Search..."
 msgstr "Etsi..."
 
@@ -2899,11 +2895,11 @@ msgid "Send message"
 msgstr "Lähetä viesti"
 
 #. Primary action button label on forgot-password form
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Send Password Reset Email"
 msgstr "Lähetä salasanan palautussähköposti"
 
-#: src/routes/auth/forgot-password.tsx
+#: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Lähetetään salasanan palautussähköpostia..."
 
@@ -2915,12 +2911,12 @@ msgstr "Erotin"
 msgid "Serbian"
 msgstr "serbia"
 
+#: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-#: src/routes/dashboard/settings/authentication/-components/password.tsx
 msgid "Set Password"
 msgstr "Aseta salasana"
 
-#: src/components/command-palette/pages/navigation.tsx
+#: src/features/command-palette/pages/navigation.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "Settings"
@@ -2975,10 +2971,10 @@ msgstr "Näytä linkki otsikossa"
 #: src/dialogs/auth/change-password.tsx
 #: src/dialogs/auth/disable-two-factor.tsx
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/login.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/auth/reset-password.tsx
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/login.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/auth/pages/reset-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Show password"
 msgstr "Näytä salasana"
 
@@ -2992,19 +2988,19 @@ msgid "Sidebar Width"
 msgstr "Sivupalkin leveys"
 
 #. Primary action button label on login form
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Kirjaudu sisään"
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Sign in now"
 msgstr "Kirjaudu sisään nyt"
 
 #. Title on the login page
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Sign in to your account"
 msgstr "Kirjaudu tilillesi"
 
@@ -3013,20 +3009,20 @@ msgid "Sign in with GitHub, Google or a custom OAuth provider."
 msgstr "Kirjaudu sisään GitHubilla, Googlella tai mukautetulla OAuth-palveluntarjoajalla."
 
 #. Primary action button label on registration form
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Sign up"
 msgstr "Rekisteröidy"
 
-#: src/routes/auth/-components/social-auth.tsx
-#: src/routes/auth/login.tsx
+#: src/features/auth/components/social-auth.tsx
+#: src/features/auth/pages/login.tsx
 msgid "Signing in..."
 msgstr "Kirjaudutaan sisään..."
 
-#: src/components/user/dropdown-menu.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Signing out..."
 msgstr "Kirjaudutaan ulos..."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Signing up..."
 msgstr "Rekisteröidytään..."
 
@@ -3207,11 +3203,11 @@ msgstr "Tue sovellusta parhaasi mukaan!"
 msgid "Swedish"
 msgstr "ruotsi"
 
-#: src/components/theme/toggle-button.tsx
+#: src/features/theme/toggle-button.tsx
 msgid "Switch to dark theme"
 msgstr "Vaihda tummaan teemaan"
 
-#: src/components/theme/toggle-button.tsx
+#: src/features/theme/toggle-button.tsx
 msgid "Switch to light theme"
 msgstr "Vaihda vaaleaan teemaan"
 
@@ -3251,11 +3247,11 @@ msgstr "Mallipohjagalleria"
 msgid "Templates"
 msgstr "Mallipohjat"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
 msgstr "Testata"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Tested"
 msgstr "Testattu"
 
@@ -3281,16 +3277,16 @@ msgstr "Välittäjä tarvitsee panostasi."
 msgid "The AI returned an invalid analysis format. Please try again."
 msgstr "Tekoäly palautti virheellisen analyysiformaatin. Yritä uudelleen."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "API-avain on poistettu onnistuneesti."
 
-#: src/routes/dashboard/settings/api-keys.tsx
+#: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "API-avain ei voi enää käyttää tietojasi poistamisen jälkeen. Tätä toimintoa ei voi perua."
 
 #. Empty-state message when no command palette results match the search query
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "Etsimääsi komentoa ei ole olemassa."
 
@@ -3299,11 +3295,11 @@ msgstr "Etsimääsi komentoa ei ole olemassa."
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Tuotua tiedostoa ei voitu jäsentää kelvolliseksi jatkumoksi."
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "Syöttämäsi salasana on virheellinen"
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Ansioluettelo, johon yrität päästä, on salasanalla suojattu"
 
@@ -3316,9 +3312,9 @@ msgid "The working resume was deleted. This thread is read-only."
 msgstr "Työansioluettelo poistettiin. Tämä ketju on vain luku -tilassa."
 
 #. Menu item that opens appearance theme selection submenu
-#: src/components/command-palette/pages/preferences/theme.tsx
-#: src/components/user/dropdown-menu.tsx
-#: src/routes/dashboard/settings/preferences.tsx
+#: src/features/command-palette/pages/preferences/theme.tsx
+#: src/features/settings/pages/preferences.tsx
+#: src/features/user/dropdown-menu.tsx
 msgid "Theme"
 msgstr "Teema"
 
@@ -3331,7 +3327,7 @@ msgstr "Syötä sitten sovelluksen antama kuusinumeroinen koodi jatkaaksesi."
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "DOCX-tiedoston luomisessa ilmeni ongelma, yritä uudelleen."
 
-#: src/routes/$username/-components/public-resume.tsx
+#: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
@@ -3348,7 +3344,7 @@ msgstr "Ajattelu"
 msgid "This action cannot be undone."
 msgstr "Tätä toimintoa ei voi perua."
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "This action cannot be undone. All your data will be permanently deleted."
 msgstr "Tätä toimintoa ei voi perua. Kaikki tietosi poistetaan pysyvästi."
 
@@ -3376,7 +3372,7 @@ msgstr "Tämä on URL-ystävällinen nimi ansioluettelollesi."
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Tämä voi kestää muutaman minuutin riippuen tekoälypalveluntarjoajan vasteesta. Älä sulje ikkunaa tai päivitä sivua."
 
-#: src/components/resume/builder-resume-draft.ts
+#: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
 msgstr "Tämä ansioluettelo on lukittu eikä sitä voi päivittää."
 
@@ -3384,7 +3380,7 @@ msgstr "Tämä ansioluettelo on lukittu eikä sitä voi päivittää."
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Tämä osio on varattu henkilökohtaisille muistiinpanoillesi, jotka koskevat tätä ansioluetteloa. Sisältö pysyy yksityisenä eikä sitä jaeta kenellekään."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
 msgstr "Tämä vaihe on vapaaehtoinen, mutta suositeltava."
 
@@ -3404,7 +3400,7 @@ msgstr "Tämä ketju on vain luku -tilassa, koska työssä oleva ansioluettelo t
 msgid "This will generate a new API key to access the Reactive Resume API to allow machines to interact with your resume data."
 msgstr "Tämä luo uuden API-avaimen Reactive Resume -rajapinnan käyttöä varten, jotta koneet voivat käsitellä ansioluettelotietojasi."
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "This will help you identify it later, if you plan to have multiple passkeys."
 msgstr "Tämä auttaa sinua tunnistamaan sen myöhemmin, jos aiot käyttää useita tunnuslukuja."
 
@@ -3453,7 +3449,7 @@ msgstr "Vinkki: Voit nimetä ansioluettelon haettavan tehtävän mukaan."
 msgid "Title"
 msgstr "Otsikko"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "To delete your account, you need to enter the confirmation text and click the button below."
 msgstr "Poistaaksesi tilisi sinun täytyy syöttää vahvistusteksti ja napsauttaa alla olevaa painiketta."
 
@@ -3532,8 +3528,8 @@ msgstr "Kaksipalstainen, pelkistetty ja tekstitiivis ilman koriste-elementtejä;
 msgid "Two-column, minimal with light gray sidebar and subtle icons; professional and understated for legal, finance, or executive roles."
 msgstr "Kaksipalstainen, pelkistetty, vaaleanharmaalla sivupalkilla ja hienovaraisilla ikoneilla; ammattimainen ja hillitty lakialalle, rahoitukseen tai johtotehtäviin."
 
-#: src/routes/auth/verify-2fa.tsx
-#: src/routes/dashboard/settings/authentication/-components/two-factor.tsx
+#: src/features/auth/pages/verify-2fa.tsx
+#: src/features/settings/authentication/components/two-factor.tsx
 msgid "Two-Factor Authentication"
 msgstr "Kaksivaiheinen todennus"
 
@@ -3555,13 +3551,13 @@ msgstr "Kaksitekijätodennus QR-koodi"
 msgid "Type"
 msgstr "Tyyppi"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Type \"{CONFIRMATION_TEXT}\" to confirm"
 msgstr "Kirjoita \"{CONFIRMATION_TEXT}\" vahvistaaksesi"
 
 #. Placeholder in command palette input on root page
 #. Screen-reader dialog description instructing users how to use the command palette
-#: src/components/command-palette/index.tsx
+#: src/features/command-palette/index.tsx
 msgid "Type a command or search..."
 msgstr "Kirjoita komento tai hae..."
 
@@ -3581,29 +3577,29 @@ msgstr "Alleviivaus"
 msgid "Unlimited Resumes"
 msgstr "Rajoittamattomasti ansioluetteloita"
 
-#: src/routes/dashboard/settings/authentication/-components/hooks.tsx
+#: src/features/settings/authentication/components/hooks.tsx
 msgid "Unlinking your {providerName} account..."
 msgstr "Katkaistaan yhteys palveluun {providerName}..."
 
 #. Primary action button label to unlock a password-protected resume
 #. Resume card context menu action to remove edit lock
 #. Resume card dropdown action to remove edit lock
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "Unlock"
 msgstr "Avaa lukitus"
 
-#: src/routes/dashboard/settings/authentication/-components/passkeys.tsx
+#: src/features/settings/authentication/components/passkeys.tsx
 msgid "Unnamed passkey"
 msgstr "Nimetön kulkuavain"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Untested"
 msgstr "Testaamaton"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Unverified"
 msgstr "Vahvistamaton"
 
@@ -3679,7 +3675,7 @@ msgstr "Päivitä olemassa oleva vapaaehtoistyökokemus"
 
 #. Primary action button to submit changed password
 #: src/dialogs/auth/change-password.tsx
-#: src/routes/dashboard/settings/authentication/-components/password.tsx
+#: src/features/settings/authentication/components/password.tsx
 msgid "Update Password"
 msgstr "Päivitä salasana"
 
@@ -3717,7 +3713,7 @@ msgstr "Ladataan kuvaa..."
 msgid "URL"
 msgstr "URL-osoite"
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Use"
 msgstr "Käyttää"
 
@@ -3727,8 +3723,8 @@ msgstr "Käytä väriä {color}"
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
-#: src/routes/auth/register.tsx
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/auth/pages/register.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Username"
 msgstr "Käyttäjätunnus"
 
@@ -3744,39 +3740,39 @@ msgstr "uzbekki"
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Kelvollisten URL-osoitteiden on alettava http:// tai https:// ."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Verified"
 msgstr "Vahvistettu"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/routes/auth/verify-2fa-backup.tsx
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "Vahvista"
 
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Verify with a Backup Code"
 msgstr "Vahvista varmuuskoodilla"
 
-#: src/routes/auth/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Verifying backup code..."
 msgstr "Vahvistetaan varmuuskoodia..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/auth/verify-2fa.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying code..."
 msgstr "Vahvistetaan koodia..."
 
-#: src/routes/auth/resume-password.tsx
+#: src/features/auth/pages/resume-password.tsx
 msgid "Verifying password..."
 msgstr "Vahvistetaan salasanaa..."
 
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/register.tsx
 msgid "Verifying your email is required when resetting your password."
 msgstr "Sähköpostin vahvistus vaaditaan, kun palautat salasanaasi."
 
@@ -3793,10 +3789,6 @@ msgstr "Katselut"
 #: src/libs/resume/section.tsx
 msgid "Volunteer"
 msgstr "Vapaaehtoistyö"
-
-#: src/routes/agent/$threadId.tsx
-msgid "Waiting for fetch result..."
-msgstr "Odotetaan hakutulosta..."
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
@@ -3833,7 +3825,7 @@ msgstr "Mikä on uutta uusimmassa versiossa?"
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "Kun se on lukittu, ansioluetteloa ei voi päivittää tai poistaa."
 
-#: src/routes/dashboard/settings/integrations/-components/ai-section.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Työskentele OpenAI:lla"
 
@@ -3857,7 +3849,7 @@ msgstr "Kyllä! Reactive Resume on täysin ilmainen käyttää – ei piilokuluj
 msgid "You also have the option to deploy on your own servers using the Docker image."
 msgstr "Voit myös ottaa sen käyttöön omilla palvelimillasi Docker-kuvan avulla."
 
-#: src/routes/auth/login.tsx
+#: src/features/auth/pages/login.tsx
 msgid "You can also use your username to login."
 msgstr "Voit myös käyttää käyttäjätunnustasi kirjautumiseen."
 
@@ -3869,12 +3861,12 @@ msgstr "Voit jakaa ansioluettelosi yksilöllisen julkisen URL-osoitteen kautta, 
 msgid "You have unsaved changes that will be lost."
 msgstr "Sinulla on tallentamattomia muutoksia, jotka menetetään."
 
-#: src/routes/auth/forgot-password.tsx
-#: src/routes/auth/register.tsx
+#: src/features/auth/pages/forgot-password.tsx
+#: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
 msgstr "Sinulle on tullut postia!"
 
-#: src/routes/dashboard/settings/danger-zone.tsx
+#: src/features/settings/pages/danger-zone.tsx
 msgid "Your account has been deleted successfully."
 msgstr "Tilisi on poistettu onnistuneesti."
 
@@ -3894,11 +3886,11 @@ msgstr "Tietosi ovat turvassa, eikä niitä koskaan jaeta tai myydä kenellekä�
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Tietosi tallennetaan turvallisesti eikä niitä koskaan jaeta kolmansille osapuolille. Voit myös itseisännöidä Reactive Resumen omilla palvelimillasi täydellisen tietokontrollin takaamiseksi."
 
-#: src/components/resume/builder-resume-draft.ts
+#: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Viimeisimpiä muutoksiasi ei voitu tallentaa."
 
-#: src/routes/auth/reset-password.tsx
+#: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "Salasanasi on palautettu onnistuneesti. Voit nyt kirjautua sisään uudella salasanallasi."
 
@@ -3906,7 +3898,7 @@ msgstr "Salasanasi on palautettu onnistuneesti. Voit nyt kirjautua sisään uude
 msgid "Your password has been updated successfully."
 msgstr "Salasanasi on päivitetty onnistuneesti."
 
-#: src/routes/dashboard/settings/profile.tsx
+#: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
 msgstr "Profiilisi on päivitetty onnistuneesti."
 
@@ -3955,4 +3947,3 @@ msgstr "Loitonna"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-
