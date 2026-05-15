@@ -69,20 +69,22 @@ because installability is the only remaining PWA goal.
 
 ## Testing
 
-Update `apps/web/src/libs/pwa.test.ts` to keep installability coverage and remove service-worker expectations.
+Remove `apps/web/src/libs/pwa.test.ts`.
 
-The focused test surface should assert:
+The file currently tests both install metadata and service-worker registration behavior. After this change, the
+remaining PWA surface is static manifest/head metadata with no behavior-specific module contract worth preserving
+as a dedicated unit test.
 
-- the manifest still declares standalone display and root scope
-- required icons and maskable icon remain present
-- wide and narrow screenshots remain present for install UI
+Implementation should still verify by inspection and build output that:
+
+- the root route keeps the manifest link
 - PWA head meta tags remain present
 - no service-worker registration script is exported or injected by the root route
+- no `sw.js` or Workbox precache output is emitted by the web build
 
 Focused validation after implementation:
 
 ```sh
-pnpm --filter web test -- src/libs/pwa.test.ts
 pnpm --filter web typecheck
 pnpm --filter web build
 ```
