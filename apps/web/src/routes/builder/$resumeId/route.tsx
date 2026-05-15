@@ -16,6 +16,7 @@ import {
 } from "@/features/resume/builder/draft";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpc } from "@/libs/orpc/client";
+import { createNoindexFollowMeta } from "@/libs/seo";
 import { BuilderHeader } from "./-components/header";
 import { BuilderSidebarLeft } from "./-sidebar/left";
 import { BuilderSidebarRight } from "./-sidebar/right";
@@ -43,7 +44,9 @@ export const Route = createFileRoute("/builder/$resumeId")({
 		return { layout, name: resume.name };
 	},
 	head: ({ loaderData }) => ({
-		meta: loaderData ? [{ title: `${loaderData.name} - Reactive Resume` }] : undefined,
+		meta: loaderData
+			? [{ title: `${loaderData.name} - Reactive Resume` }, createNoindexFollowMeta()]
+			: [createNoindexFollowMeta()],
 	}),
 });
 

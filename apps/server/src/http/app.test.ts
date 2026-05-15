@@ -13,6 +13,9 @@ const mocks = vi.hoisted(() => ({
 	handleOAuthProtectedResource: vi.fn(),
 	handleOpenIdConfiguration: vi.fn(),
 	handleWellKnownFallback: vi.fn(),
+	handleRobots: vi.fn(),
+	handleSitemap: vi.fn(),
+	handleLlms: vi.fn(),
 	serveWebDistStatic: vi.fn(),
 	handleWebApp: vi.fn(),
 	handleWebAppHead: vi.fn(),
@@ -47,6 +50,12 @@ vi.mock("../static/uploads", () => ({
 	handleUpload: mocks.handleUpload,
 }));
 
+vi.mock("../static/seo", () => ({
+	handleRobots: mocks.handleRobots,
+	handleSitemap: mocks.handleSitemap,
+	handleLlms: mocks.handleLlms,
+}));
+
 vi.mock("../static/web", () => ({
 	serveWebDistStatic: mocks.serveWebDistStatic,
 	handleWebApp: mocks.handleWebApp,
@@ -71,6 +80,9 @@ beforeEach(() => {
 	mocks.handleOAuthProtectedResource.mockReturnValue(new Response("oauth-protected-resource"));
 	mocks.handleOpenIdConfiguration.mockReturnValue(new Response("openid-configuration"));
 	mocks.handleWellKnownFallback.mockReturnValue(new Response("well-known"));
+	mocks.handleRobots.mockReturnValue(new Response("robots"));
+	mocks.handleSitemap.mockReturnValue(new Response("sitemap"));
+	mocks.handleLlms.mockReturnValue(new Response("llms"));
 	mocks.serveWebDistStatic.mockResolvedValue(undefined);
 	mocks.handleWebApp.mockResolvedValue(new Response("web"));
 	mocks.handleWebAppHead.mockReturnValue(new Response(null));
@@ -87,5 +99,26 @@ describe("createApp", () => {
 		await expect(response.text()).resolves.toBe("oauth");
 		expect(mocks.handleOAuth).toHaveBeenCalledWith(request);
 		expect(mocks.handleAuth).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		["GET", "/robots.txt", "robots", mocks.handleRobots],
+		["HEAD", "/robots.txt", "", mocks.handleRobots],
+		["GET", "/sitemap.xml", "sitemap", mocks.handleSitemap],
+		["HEAD", "/sitemap.xml", "", mocks.handleSitemap],
+		["GET", "/llms.txt", "llms", mocks.handleLlms],
+		["HEAD", "/llms.txt", "", mocks.handleLlms],
+	])("routes %s %s before the static fallback", async (method, pathname, expectedBody, handler) => {
+		const { createApp } = await import("./app");
+		const app = createApp();
+		const request = new Request(`http://localhost:3001${pathname}`, { method });
+
+		const response = await app.fetch(request);
+
+		await expect(response.text()).resolves.toBe(expectedBody);
+		expect(handler).toHaveBeenCalledWith({ head: method === "HEAD" });
+		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
+		expect(mocks.handleWebApp).not.toHaveBeenCalled();
+		expect(mocks.handleWebAppHead).not.toHaveBeenCalled();
 	});
 });

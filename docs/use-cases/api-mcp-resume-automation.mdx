@@ -1,0 +1,47 @@
+---
+title: "API and MCP Resume Automation"
+description: "Automate resume workflows in Reactive Resume with API keys, the Patch API, the MCP server, AI agent tools, and the JSON resume schema."
+---
+
+Reactive Resume supports resume automation through authenticated API access and an MCP server that lets compatible tools list, read, create, import, duplicate, and patch resumes.
+
+## Automation options
+
+Use the API when you want direct programmatic access from scripts, services, or integrations. Use MCP when you want an AI tool or agent that supports the Model Context Protocol to work with your resumes through exposed tools.
+
+Key docs:
+
+- [Using the API](/guides/using-the-api)
+- [Using the Patch API](/guides/using-the-patch-api)
+- [Using the MCP Server](/guides/using-the-mcp-server)
+- [AI Agent Tools](/guides/ai-agent-tools)
+- [JSON Resume Schema](/guides/json-resume-schema)
+
+## Common automation workflows
+
+You can build workflows that:
+
+- Create a resume from structured data.
+- Import a full resume JSON document.
+- Read resume data for review or transformation.
+- Patch targeted fields without replacing the whole resume.
+- Connect an MCP-compatible client to operate on resumes with authenticated tools.
+
+The Patch API is the safest starting point for targeted resume updates because it is designed around explicit changes to existing resume data.
+
+## Authentication and scope
+
+API requests use API keys. MCP can use OAuth2 in clients that support it, with API keys available as a fallback. If you self-host, use your own instance URL for API and MCP endpoints.
+
+<Info>
+  Automation changes affect the resumes available to the authenticated account or instance. Test workflows on a copy of a
+  resume before using them for important application materials.
+</Info>
+
+## When not to use automation
+
+Do not start with API or MCP automation when you only need to edit one resume manually. The builder is usually faster for one-off changes, template selection, and visual review. Avoid automation for important resume updates unless you can test the exact changes on a copy first.
+
+## Next action
+
+For scripts and integrations, create an API key with [Using the API](/guides/using-the-api), then use [Using the Patch API](/guides/using-the-patch-api) for targeted edits. For agent workflows, start with [Using the MCP Server](/guides/using-the-mcp-server).

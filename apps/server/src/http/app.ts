@@ -9,6 +9,8 @@ import {
 	handleWellKnownFallback,
 } from "../openapi/metadata";
 import { handleRpc } from "../rpc/handler";
+import { handleSchemaJson } from "../static/schema";
+import { handleLlms, handleRobots, handleSitemap } from "../static/seo";
 import { handleUpload } from "../static/uploads";
 import { handleWebApp, handleWebAppHead, serveWebDistStatic } from "../static/web";
 import { handleAuth, handleOAuth } from "./auth";
@@ -26,6 +28,7 @@ export function createApp() {
 	app.get("/api/health", () => handleHealth());
 	app.get("/api/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/uploads/*", (c) => handleUpload(c.req.raw));
+	app.get("/schema.json", () => handleSchemaJson());
 	app.all("/mcp", (c) => handleMcp(c.req.raw));
 	app.all("/mcp/*", (c) => handleMcp(c.req.raw));
 
@@ -36,6 +39,10 @@ export function createApp() {
 	app.get("/.well-known/oauth-protected-resource", () => handleOAuthProtectedResource());
 	app.get("/.well-known/oauth-protected-resource/*", () => handleOAuthProtectedResource());
 	app.all("/.well-known/*", () => handleWellKnownFallback());
+
+	app.on(["GET", "HEAD"], "/robots.txt", (c) => handleRobots({ head: c.req.method === "HEAD" }));
+	app.on(["GET", "HEAD"], "/sitemap.xml", (c) => handleSitemap({ head: c.req.method === "HEAD" }));
+	app.on(["GET", "HEAD"], "/llms.txt", (c) => handleLlms({ head: c.req.method === "HEAD" }));
 
 	app.use("/*", serveWebDistStatic);
 	app.on(["GET"], "/*", (c) => handleWebApp(c.req.raw));

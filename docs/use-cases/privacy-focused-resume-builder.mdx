@@ -1,0 +1,46 @@
+---
+title: "Privacy-Focused Resume Builder"
+description: "Understand the privacy-focused parts of Reactive Resume, including open source transparency, self-hosting, public sharing controls, and optional AI provider configuration."
+---
+
+Reactive Resume is a privacy-focused resume builder because it is open source, can be self-hosted, supports private-by-default resume editing, and makes sharing and optional AI features explicit choices.
+
+## Privacy controls in the resume workflow
+
+Resumes are edited inside your account. When you want someone else to view a resume, you can enable a public URL and send that link to human recipients. Public resume URLs are not search-indexed by default. Public access can be turned off again, and public resumes can optionally require a password.
+
+For the sharing workflow, see [Sharing your resume publicly](/guides/sharing-your-resume-publicly). For account-level security, see [Setting up two-factor authentication](/guides/setting-up-two-factor-authentication) and [Setting up passkeys](/guides/setting-up-passkeys).
+
+## When to use this path
+
+Use this path when you want to understand the privacy tradeoffs before choosing hosted use, self-hosting, public sharing, API automation, or optional AI features. It is especially useful if your resume contains sensitive job-search information or if you plan to share links selectively.
+
+## When not to use this path
+
+Do not treat public sharing as private access control by itself. Use password protection or keep the resume private if the link should only be opened by specific people. Do not enable AI features unless you are comfortable sending relevant prompts and resume content to the provider you configure.
+
+## Open source and self-hosting
+
+The source code is available on [GitHub](https://github.com/amruthpillai/reactive-resume), so you can inspect how the application works. If you need direct control over infrastructure, storage, auth providers, and deployment policy, you can self-host Reactive Resume.
+
+Start with:
+
+- [Self-hosting with Docker](/self-hosting/docker)
+- [Self-hosting examples](/self-hosting/examples)
+- [Single sign-on](/self-hosting/sso)
+- [Privacy policy](/legal/privacy-policy)
+
+## Optional AI features
+
+AI features are optional. Reactive Resume does not need AI to create, edit, export, or share a resume. When you choose to use AI-assisted features, you configure a provider and key for the provider you want to use.
+
+For setup details, see [Using Artificial Intelligence](/guides/using-ai), [Using AI in the builder](/guides/using-ai-in-the-builder), and [Using the AI Agent Workspace](/guides/using-ai-agent).
+
+<Info>
+  Review the privacy policy for the instance you use. If you self-host, you are responsible for the deployment's data
+  handling, storage, email, and third-party provider configuration.
+</Info>
+
+## Next action
+
+Review [Privacy Policy](/legal/privacy-policy), then choose either [Sharing your resume publicly](/guides/sharing-your-resume-publicly) for link controls or [Self-hosting with Docker](/self-hosting/docker) for infrastructure control.

@@ -3,7 +3,7 @@ title: "Sharing your resume publicly"
 description: "Learn how to share your resume via a public URL, track public engagement, and optionally protect your resume with a password."
 ---
 
-Reactive Resume lets you share your resume via a **public URL** that anyone can access. When you make your resume public, it becomes available at a unique link that you can share with recruiters, include in your portfolio, or add to your LinkedIn profile.
+Reactive Resume lets you share your resume via a **public URL** that anyone can access. When you make your resume public, it becomes available at a unique link that you can share with human recipients such as recruiters, collaborators, or portfolio visitors. Public resume URLs are not search-indexed by default.
 
 ## Key benefits of public sharing
 
@@ -12,7 +12,7 @@ Reactive Resume lets you share your resume via a **public URL** that anyone can 
     Viewers always see the latest version of your resume. No need to send new files when you make updates.
   </Card>
   <Card title="Track engagement" icon="chart-line">
-    See public engagement counters in the builder.
+    See public view counters in the builder.
   </Card>
   <Card title="Password protection" icon="lock">
     Optionally require a password so only people you trust can access your resume.
@@ -66,11 +66,11 @@ When someone visits your public resume URL:
 1. **They see the live version** - The page renders your current resume data with all your latest changes
 2. **No account required** - Visitors don't need a Reactive Resume account to view or download your resume
 3. **They can download a PDF** - Visitors can use the download button on the public page
-4. **Views are tracked** - Each visit is counted in your resume statistics (see below)
+4. **Views are tracked** - Visits are counted in your resume statistics (see below)
 
 <Info>
   Changes you make in the builder are reflected immediately on the public URL. There's no separate "publish" step—your
-  public resume is always in sync.
+  public resume is always in sync. Treat the link as something you send to people directly, not as a search profile page.
 </Info>
 
 ## Tracking public engagement
@@ -81,14 +81,12 @@ When your resume is public, Reactive Resume tracks public views. This helps you 
 
 In the resume builder, open the **right sidebar** and select **Statistics**.
 
-You'll see:
+You'll see public view information such as:
 
 | Metric              | Description                                                      |
 | ------------------- | ---------------------------------------------------------------- |
 | **Views**           | Number of times your public resume page was visited              |
 | **Last viewed**     | The date when your resume was last viewed                        |
-| **Downloads**       | Number of recorded resume downloads                              |
-| **Last downloaded** | The date when the last recorded download happened                |
 
 <Info>
   Statistics are only shown after public sharing is enabled. If you turn off public access, existing stats are
@@ -101,11 +99,12 @@ A view is counted each time someone loads your public resume page. This includes
 
 - Direct visits to your public URL
 - Clicks from links you've shared
-- Search engine visits (if your resume is indexed)
+
+Owner self-visits while you are signed in to your account are not included in the view statistics.
 
 <Note>
-  Only **you** can see your resume's statistics. Visitors to your public URL cannot see how many views or downloads your
-  resume has.
+  Only **you** can see your resume's view statistics. Visitors to your public URL cannot see how many views your resume
+  has.
 </Note>
 
 ## Password protecting your resume
@@ -166,7 +165,8 @@ Your resume will become accessible to anyone with the public URL.
 </Accordion>
 
 <Accordion title="Job applications" icon="briefcase">
-  Some applications ask for a link to your resume. Your public URL is a professional alternative to file uploads.
+  Some applications accept a link to your resume, while others require a file upload. Use the public URL when a link is
+  accepted, and export a PDF when an upload is required.
 </Accordion>
 
 <Accordion title="Networking events" icon="users">
@@ -213,18 +213,17 @@ The builder dock includes a **Copy URL** shortcut. It copies the same public URL
     Yes! The URL is based on your **username** and the resume's **slug**. You can change the slug in the **Update Resume** dialog. To open it, right-click on your resume card in the dashboard and select "Update". The username is set in your account settings.
   </Accordion>
 
-<Accordion title="Will search engines index my public resume?">
-  Public resumes may be indexed by search engines. If you want to prevent indexing, use password protection or keep your
-  resume private.
+<Accordion title="Are public resumes meant to be search-indexed pages?">
+  No. By default, public resume URLs are meant for human recipients who receive the link from you, not as search profile
+  pages. If you want tighter access control, use password protection or keep your resume private.
 </Accordion>
 
 <Accordion title="Do views from my own visits count?">
-  Views are only counted when someone visits your public resume URL while not logged in. Visits made while you're logged
-  in to your account are not included in the view statistics.
+  No. If you are signed in as the owner, your own visits are excluded from the view statistics.
 </Accordion>
 
 <Accordion title="Can I see who viewed my resume?">
-  No, Reactive Resume only tracks view and download counts, not the identity of visitors. This protects visitor privacy.
+  No, Reactive Resume tracks public view counts, not the identity of visitors. This protects visitor privacy.
 </Accordion>
 
   <Accordion title="What happens if I change my username?">

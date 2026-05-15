@@ -3,6 +3,7 @@ import type { RouterOutput } from "@/libs/orpc/client";
 import { ORPCError } from "@orpc/client";
 import { createFileRoute, lazyRouteComponent, notFound, redirect } from "@tanstack/react-router";
 import { orpc } from "@/libs/orpc/client";
+import { createNoindexFollowMeta } from "@/libs/seo";
 
 type LoaderData = Omit<RouterOutput["resume"]["getBySlug"], "data"> & { data: ResumeData };
 
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/$username/$slug")({
 	head: ({ loaderData }) => {
 		const resume = loaderData?.resume;
 		const title = resume ? resume.name || resume.data.basics.name || "Resume" : "Reactive Resume";
-		return { meta: [{ title: `${title} - Reactive Resume` }] };
+		return { meta: [{ title: `${title} - Reactive Resume` }, createNoindexFollowMeta()] };
 	},
 	onError: (error) => {
 		if (error instanceof ORPCError && error.code === "NEED_PASSWORD") {

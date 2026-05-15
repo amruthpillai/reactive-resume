@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createRootStructuredDataScript, getCanonicalRootUrl } from "@/libs/seo";
 import { DonationBanner } from "./-sections/donate";
 import { FAQ } from "./-sections/faq";
 import { Features } from "./-sections/features";
@@ -11,6 +12,15 @@ import { Testimonials } from "./-sections/testimonials";
 
 export const Route = createFileRoute("/_home/")({
 	component: RouteComponent,
+	head: () => {
+		const appUrl = typeof window !== "undefined" ? window.location.origin : "https://rxresu.me";
+		const canonicalUrl = getCanonicalRootUrl(appUrl);
+
+		return {
+			links: [{ rel: "canonical", href: canonicalUrl }],
+			scripts: [createRootStructuredDataScript(canonicalUrl)],
+		};
+	},
 });
 
 function RouteComponent() {

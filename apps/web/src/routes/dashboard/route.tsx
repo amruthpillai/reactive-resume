@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
 import { SidebarProvider } from "@reactive-resume/ui/components/sidebar";
+import { createNoindexFollowMeta } from "@/libs/seo";
 import { getDashboardSidebarState, setDashboardSidebarState } from "./-components/functions";
 import { DashboardSidebar } from "./-components/sidebar";
 
@@ -13,6 +14,9 @@ export const Route = createFileRoute("/dashboard")({
 		const sidebarState = getDashboardSidebarState();
 		return { sidebarState };
 	},
+	head: () => ({
+		meta: [createNoindexFollowMeta()],
+	}),
 });
 
 function RouteComponent() {

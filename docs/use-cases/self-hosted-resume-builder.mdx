@@ -1,0 +1,40 @@
+---
+title: "Self-Hosted Resume Builder"
+description: "Run Reactive Resume as a self-hosted resume builder with Docker, PostgreSQL, optional storage, SSO, and migration guidance."
+---
+
+Reactive Resume can be run as a self-hosted resume builder when you want to operate the app on your own infrastructure instead of using the hosted instance.
+
+## When self-hosting is a good fit
+
+Self-hosting is useful when you need control over deployment, domain, database, storage, email delivery, authentication providers, and operational policies. The Docker guide is the main setup path for most deployments.
+
+Start here:
+
+- [Self-hosting with Docker](/self-hosting/docker)
+- [Self-hosting examples](/self-hosting/examples)
+- [Single sign-on](/self-hosting/sso)
+- [Migration guide](/self-hosting/migration)
+
+## Core deployment pieces
+
+A typical self-hosted deployment uses:
+
+- Reactive Resume application container.
+- PostgreSQL database.
+- SMTP configuration for account emails, or console-logged emails in simple development setups.
+- Optional S3-compatible storage for uploads.
+- Optional SSO or custom OAuth configuration.
+
+The Docker guide includes the environment variable reference and a Compose example.
+
+## Feature considerations
+
+Some features require extra configuration. For example, saved AI providers need server-side encryption configuration, and the AI Agent workspace uses Redis. Self-hosted deployments can also expose API and MCP endpoints from their own domain.
+
+For automation setup on self-hosted instances, see [Using the API](/guides/using-the-api) and [Using the MCP Server](/guides/using-the-mcp-server).
+
+<Tip>
+  Replace hosted URLs such as <code>https://rxresu.me</code> with your own instance URL when following API, MCP, or
+  sharing examples.
+</Tip>
