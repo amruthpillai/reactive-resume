@@ -21,7 +21,7 @@ vi.mock("@/components/input/rich-input", () => ({
 		return <textarea data-testid="rich-input" value={props.value} readOnly />;
 	},
 }));
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { metadata: { notes: "saved notes" } },
 	}),

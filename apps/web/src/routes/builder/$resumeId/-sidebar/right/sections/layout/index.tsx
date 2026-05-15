@@ -9,7 +9,7 @@ import {
 	InputGroupText,
 } from "@reactive-resume/ui/components/input-group";
 import { Slider } from "@reactive-resume/ui/components/slider";
-import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../../shared/section-base";

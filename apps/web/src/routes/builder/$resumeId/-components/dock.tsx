@@ -20,14 +20,14 @@ import { useCallback, useMemo, useState } from "react";
 import { useControls } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
+import { buildDocx } from "@reactive-resume/docx";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
-import { buildDocx } from "@reactive-resume/utils/resume/docx";
 import { cn } from "@reactive-resume/utils/style";
-import { useCurrentResume } from "@/components/resume/builder-resume-draft";
+import { useCurrentResume } from "@/features/resume/builder/draft";
+import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
 import { authClient } from "@/libs/auth/client";
-import { createResumePdfBlob } from "@/libs/resume/pdf-document";
 
 type BuilderDockProps = {
 	pageLayout: BuilderPreviewPageLayout;

@@ -9,7 +9,7 @@ import { useDialogStore } from "@/dialogs/store";
 vi.mock("../shared/section-base", () => ({
 	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { metadata: { template: "ditto" } },
 	}),

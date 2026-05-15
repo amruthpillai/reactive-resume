@@ -1,5 +1,5 @@
 import type { IconProps } from "@phosphor-icons/react";
-import type { FeatureFlags } from "@reactive-resume/api/services/flags";
+import type { FeatureFlags } from "@reactive-resume/api/features/flags";
 import type { AuthSession } from "@reactive-resume/auth/types";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { QueryClient } from "@tanstack/react-query";
@@ -9,17 +9,18 @@ import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { IconContext } from "@phosphor-icons/react";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
 import { MotionConfig } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { DirectionProvider } from "@reactive-resume/ui/components/direction";
 import { Toaster } from "@reactive-resume/ui/components/sonner";
 import { TooltipProvider } from "@reactive-resume/ui/components/tooltip";
-import { CommandPalette } from "@/components/command-palette";
 import { BreakpointIndicator } from "@/components/layout/breakpoint-indicator";
-import { ThemeProvider } from "@/components/theme/provider";
 import { DonationToast } from "@/components/ui/donation-toast";
 import { DialogManager } from "@/dialogs/manager";
+import { CommandPalette } from "@/features/command-palette";
+import { ThemeProvider } from "@/features/theme/provider";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { getSession } from "@/libs/auth/session";
@@ -93,7 +94,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootComponent() {
-	const { theme, locale } = Route.useRouteContext();
+	const { theme, locale, queryClient } = Route.useRouteContext();
 	const dir = isRTL(locale) ? "rtl" : "ltr";
 
 	const iconContextValue = useMemo<IconProps>(() => ({ size: 16, weight: "regular" }), []);
@@ -108,32 +109,34 @@ function RootComponent() {
 		<>
 			<HeadContent />
 
-			<MotionConfig reducedMotion="user">
-				<I18nProvider i18n={i18n}>
-					<IconContext.Provider value={iconContextValue}>
-						<ThemeProvider theme={theme}>
-							<HotkeysProvider>
-								<DirectionProvider>
-									<TooltipProvider>
-										<ConfirmDialogProvider>
-											<PromptDialogProvider>
-												<Outlet />
+			<QueryClientProvider client={queryClient}>
+				<MotionConfig reducedMotion="user">
+					<I18nProvider i18n={i18n}>
+						<IconContext.Provider value={iconContextValue}>
+							<ThemeProvider theme={theme}>
+								<HotkeysProvider>
+									<DirectionProvider>
+										<TooltipProvider>
+											<ConfirmDialogProvider>
+												<PromptDialogProvider>
+													<Outlet />
 
-												<DonationToast />
-												<DialogManager />
-												<CommandPalette />
-												<Toaster richColors position="bottom-right" />
+													<DonationToast />
+													<DialogManager />
+													<CommandPalette />
+													<Toaster richColors position="bottom-right" />
 
-												{import.meta.env.DEV && <BreakpointIndicator />}
-											</PromptDialogProvider>
-										</ConfirmDialogProvider>
-									</TooltipProvider>
-								</DirectionProvider>
-							</HotkeysProvider>
-						</ThemeProvider>
-					</IconContext.Provider>
-				</I18nProvider>
-			</MotionConfig>
+													{import.meta.env.DEV && <BreakpointIndicator />}
+												</PromptDialogProvider>
+											</ConfirmDialogProvider>
+										</TooltipProvider>
+									</DirectionProvider>
+								</HotkeysProvider>
+							</ThemeProvider>
+						</IconContext.Provider>
+					</I18nProvider>
+				</MotionConfig>
+			</QueryClientProvider>
 		</>
 	);
 }

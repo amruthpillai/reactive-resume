@@ -6,7 +6,7 @@ import { Button } from "@reactive-resume/ui/components/button";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 import { Separator } from "@reactive-resume/ui/components/separator";
 import { getInitials } from "@reactive-resume/utils/string";
-import { UserDropdownMenu } from "@/components/user/dropdown-menu";
+import { UserDropdownMenu } from "@/features/user/dropdown-menu";
 import { getSectionIcon, getSectionTitle, leftSidebarSections } from "@/libs/resume/section";
 import { BuilderSidebarEdge } from "../../-components/edge";
 import { useBuilderSidebar } from "../../-store/sidebar";

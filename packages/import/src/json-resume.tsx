@@ -1,11 +1,11 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { flattenError, ZodError, z } from "zod";
+import { getNetworkIcon } from "@reactive-resume/resume/icons";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { formatPeriod, formatSingleDate } from "@reactive-resume/utils/date";
 import { arrayToHtmlList, toHtmlDescription } from "@reactive-resume/utils/html";
 import { parseLevel } from "@reactive-resume/utils/level";
-import { getNetworkIcon } from "@reactive-resume/utils/network-icons";
 import { generateId } from "@reactive-resume/utils/string";
 import { createUrl } from "@reactive-resume/utils/url";
 

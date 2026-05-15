@@ -4,7 +4,7 @@ import { plural } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, Reorder } from "motion/react";
 import { cn } from "@reactive-resume/utils/style";
-import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
 

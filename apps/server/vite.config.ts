@@ -22,10 +22,8 @@ export default defineConfig({
 		outDir: "dist",
 		emptyOutDir: true,
 		rollupOptions: {
-			output: {
-				entryFileNames: "index.mjs",
-			},
-			external: ["@aws-sdk/client-s3", "bcrypt", "pg-native", "sharp"],
+			output: { entryFileNames: "index.mjs" },
+			external: ["@aws-sdk/client-s3", "bcrypt", "pg-native", "react-pdf-html", "sharp"],
 		},
 	},
 });

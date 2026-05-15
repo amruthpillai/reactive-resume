@@ -67,8 +67,6 @@ You must configure endpoints using **one** of these two methods:
 | `OAUTH_PROVIDER_NAME`                 | Display name shown on the sign-in button                                               | `Custom OAuth`         |
 | `OAUTH_SCOPES`                        | Space-separated list of OAuth scopes                                                   | `openid profile email` |
 | `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` | Comma-separated allowlist for dynamic OAuth client redirect hosts/origins (HTTPS only) | _empty_                |
-| `BETTER_AUTH_URL`                     | Optional auth base URL override for split-host setups                                  | `APP_URL`              |
-| `BETTER_AUTH_SECRET`                  | Optional Better Auth secret override                                                   | `AUTH_SECRET`          |
 
 ## Callback URL
 
@@ -97,7 +95,7 @@ https://resume.example.com/api/auth/oauth2/callback/custom
 ## URL and Proxy Requirements
 
 - Set `APP_URL` to the exact public URL users access (prefer HTTPS in production).
-- If auth metadata/JWKS must be served from a different public host, set `BETTER_AUTH_URL`.
+- Auth metadata, JWKS, and OAuth callback URLs are derived from `APP_URL`.
 - Behind a reverse proxy, forward `Host` and `X-Forwarded-Proto` correctly, or cookie/session behavior may break.
 - `trustedOrigins` are derived from `APP_URL`, so alternate domains are not automatically trusted.
 
@@ -345,7 +343,7 @@ OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.wel
     Configure your OAuth provider to only allow the exact redirect URI. Avoid wildcards in redirect URI configurations.
   </Card>
   <Card title="Protect auth internals" icon="shield">
-    Keep `BETTER_AUTH_SECRET` and `BETTER_AUTH_API_KEY` private. Rotating these values may invalidate active sessions.
+    Keep `AUTH_SECRET` and `BETTER_AUTH_API_KEY` private. Rotating `AUTH_SECRET` may invalidate active sessions.
   </Card>
   <Card title="Review scopes" icon="list-check">
     Only request the scopes you need. The default (`openid profile email`) is sufficient for Reactive Resume.

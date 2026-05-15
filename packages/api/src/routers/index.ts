@@ -1,11 +1,11 @@
-import { agentRouter } from "./agent";
-import { aiRouter } from "./ai";
-import { aiProvidersRouter } from "./ai-providers";
-import { authRouter } from "./auth";
-import { flagsRouter } from "./flags";
-import { resumeRouter } from "./resume";
-import { statisticsRouter } from "./statistics";
-import { storageRouter } from "./storage";
+import { agentRouter } from "../features/agent/router";
+import { aiRouter } from "../features/ai/router";
+import { aiProvidersRouter } from "../features/ai-providers/router";
+import { authRouter } from "../features/auth/router";
+import { flagsRouter } from "../features/flags/router";
+import { resumeRouter } from "../features/resume/router";
+import { statisticsRouter } from "../features/statistics/router";
+import { storageRouter } from "../features/storage/router";
 
 export default {
 	ai: aiRouter,

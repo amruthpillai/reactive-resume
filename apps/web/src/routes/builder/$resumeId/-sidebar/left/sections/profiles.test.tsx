@@ -26,7 +26,7 @@ const sectionItems = vi.hoisted(() => [
 	},
 ]);
 
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: {
 			sections: { profiles: { title: "Profiles", columns: 1, hidden: false, items: sectionItems } },

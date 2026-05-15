@@ -10,9 +10,9 @@ import {
 	InputGroupText,
 } from "@reactive-resume/ui/components/input-group";
 import { Switch } from "@reactive-resume/ui/components/switch";
-import { getLocaleOptions } from "@/components/locale/combobox";
-import { useResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { Combobox } from "@/components/ui/combobox";
+import { getLocaleOptions } from "@/features/locale/combobox";
+import { useResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SectionBase } from "../shared/section-base";

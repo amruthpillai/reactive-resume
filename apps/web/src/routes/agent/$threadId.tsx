@@ -50,11 +50,11 @@ import { Textarea } from "@reactive-resume/ui/components/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { cn } from "@reactive-resume/utils/style";
-import { ResumePreview } from "@/components/resume/preview";
+import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
+import { ResumePreview } from "@/features/resume/preview/preview";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc, streamClient } from "@/libs/orpc/client";
-import { createResumePdfBlob } from "@/libs/resume/pdf-document";
 import { AgentThreadSidebar } from "./-components/thread-sidebar";
 import { attachmentIdsFromTransportBody, buildAgentChatSubmission } from "./-helpers/chat-attachments";
 
@@ -363,24 +363,6 @@ function MessagePart({
 					))}
 				</div>
 			</div>
-		);
-	}
-
-	if (part.type === "tool-fetch_url") {
-		const output =
-			"output" in part && typeof part.output === "object" && part.output
-				? (part.output as Record<string, unknown>)
-				: null;
-		return (
-			<details className="rounded-md border bg-card p-3 text-sm">
-				<summary className="cursor-pointer font-medium">
-					<Trans>Fetched URL</Trans>
-				</summary>
-				<div className="mt-2 space-y-1 text-muted-foreground">
-					<p>{typeof output?.url === "string" ? output.url : t`Waiting for fetch result...`}</p>
-					{typeof output?.title === "string" ? <p>{output.title}</p> : null}
-				</div>
-			</details>
 		);
 	}
 

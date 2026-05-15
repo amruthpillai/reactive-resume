@@ -5,7 +5,7 @@ import { Suspense, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { LoadingScreen } from "@/components/layout/loading-screen";
-import { ResumePreview } from "@/components/resume/preview";
+import { ResumePreview } from "@/features/resume/preview/preview";
 import { BuilderDock } from "./dock";
 import { DEFAULT_BUILDER_PREVIEW_PAGE_LAYOUT, getNextBuilderPreviewPageLayout } from "./page-layout";
 

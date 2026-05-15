@@ -2,6 +2,11 @@ name: Build Docker Image
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,17 +17,34 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  mode:
+    runs-on: ubuntu-latest
+
+    outputs:
+      nightly: ${{ steps.mode.outputs.nightly }}
+      release: ${{ steps.mode.outputs.release }}
+      matrix: ${{ steps.mode.outputs.matrix }}
+
+    steps:
+      - name: Determine publishing mode
+        id: mode
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "nightly=true" >> "$GITHUB_OUTPUT"
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo 'matrix={"include":[{"platform":"linux/amd64","runner":"ubuntu-latest","arch":"amd64"}]}' >> "$GITHUB_OUTPUT"
+          else
+            echo "nightly=false" >> "$GITHUB_OUTPUT"
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo 'matrix={"include":[{"platform":"linux/amd64","runner":"ubuntu-latest","arch":"amd64"},{"platform":"linux/arm64","runner":"ubuntu-24.04-arm","arch":"arm64"}]}' >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: mode
+
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            arch: arm64
+      matrix: ${{ fromJSON(needs.mode.outputs.matrix) }}
 
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
@@ -97,7 +119,9 @@ jobs:
           retention-days: 1
 
   merge:
-    needs: build
+    needs:
+      - mode
+      - build
     timeout-minutes: 30
     runs-on: ubuntu-latest
 
@@ -160,16 +184,25 @@ jobs:
             docker.io/${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=latest
-            type=raw,value=v${{ steps.version.outputs.version }}
-            type=raw,value=v${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
-            type=raw,value=v${{ steps.semver.outputs.major }}
+            type=raw,value=nightly,enable=${{ needs.mode.outputs.nightly == 'true' }}
+            type=raw,value=nightly-{{date 'YYYYMMDDHHmmss' tz='UTC'}},enable=${{ needs.mode.outputs.nightly == 'true' }}
+            type=raw,value=latest,enable=${{ needs.mode.outputs.release == 'true' }}
+            type=raw,value=v${{ steps.version.outputs.version }},enable=${{ needs.mode.outputs.release == 'true' }}
+            type=raw,value=v${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }},enable=${{ needs.mode.outputs.release == 'true' }}
+            type=raw,value=v${{ steps.semver.outputs.major }},enable=${{ needs.mode.outputs.release == 'true' }}
 
       - name: Create manifest list and push
         id: manifest
         working-directory: /tmp/digests
         run: |
           set -euo pipefail
+
+          if [[ "${{ needs.mode.outputs.nightly }}" == "true" ]]; then
+            FINAL_TAG="nightly"
+          else
+            FINAL_TAG="v${{ steps.version.outputs.version }}"
+          fi
+
           docker buildx imagetools create \
             $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             --annotation "index:org.opencontainers.image.licenses=MIT" \
@@ -184,8 +217,9 @@ jobs:
             $(printf 'docker.io/${{ env.IMAGE }}@sha256:%s ' *)
 
           # Get the digest of the multi-arch manifest
-          GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }} --format '{{json .Manifest.Digest}}' | tr -d '"')
-          DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          echo "final_tag=$FINAL_TAG" >> "$GITHUB_OUTPUT"
           echo "ghcr_digest=$GHCR_DIGEST" >> "$GITHUB_OUTPUT"
           echo "docker_digest=$DOCKER_DIGEST" >> "$GITHUB_OUTPUT"
 
@@ -202,10 +236,11 @@ jobs:
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }}
-          docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:v${{ steps.version.outputs.version }}
+          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:${{ steps.manifest.outputs.final_tag }}
+          docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:${{ steps.manifest.outputs.final_tag }}
 
       - name: Redeploy Stack
+        if: ${{ needs.mode.outputs.release == 'true' }}
         uses: appleboy/ssh-action@v1
         with:
           key: ${{ secrets.SSH_KEY }}

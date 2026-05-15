@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { redactResumeForViewer } from "../helpers/resume-access-policy";
+import { redactResumeForViewer } from "../features/resume/access-policy";
 import { resumeDto } from "./resume";
 
 describe("resume DTO output validation", () => {

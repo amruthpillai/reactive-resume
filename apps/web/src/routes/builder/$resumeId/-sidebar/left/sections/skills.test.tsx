@@ -10,7 +10,7 @@ const sectionItems = vi.hoisted(() => [
 	{ id: "s2", name: "Go", proficiency: "Intermediate", level: 3, keywords: [], description: "", hidden: false },
 ]);
 
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { sections: { skills: { title: "Skills", columns: 1, hidden: false, items: sectionItems } } },
 	}),

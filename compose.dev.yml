@@ -26,25 +26,6 @@ services:
         - action: sync
           path: .
           target: /app
-          ignore:
-            - .git/
-            - .pnpm-store/
-            - .turbo/
-            - .vite-hooks/
-            - data/
-            - node_modules/
-            - apps/*/node_modules/
-            - packages/*/node_modules/
-            - apps/*/dist/
-            - apps/*/.tanstack/
-            - apps/*/.turbo/
-            - packages/*/.turbo/
-            - coverage/
-            - apps/*/coverage/
-            - packages/*/coverage/
-            - reports/
-            - apps/*/reports/
-            - packages/*/reports/
     depends_on:
       postgres:
         condition: service_healthy

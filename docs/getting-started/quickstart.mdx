@@ -73,7 +73,7 @@ Before you begin, ensure you have the following installed:
 	<Step title="Clone the Repository">
 		```bash
 		git clone https://github.com/amruthpillai/reactive-resume.git
-		cd Reactive-Resume
+		cd reactive-resume
 		```
 	</Step>
 
@@ -191,8 +191,6 @@ Here's a complete list of environment variables you can configure:
 | `OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS` | Trusted HTTPS hosts/origins for dynamic OAuth redirects     | —                      |
 | `OAUTH_SCOPES`                        | OAuth Scopes (space-separated)                              | `openid profile email` |
 | `BETTER_AUTH_API_KEY`                 | Better Auth dashboard API key                               | —                      |
-| `BETTER_AUTH_URL`                     | Better Auth base URL override (advanced)                    | `APP_URL`              |
-| `BETTER_AUTH_SECRET`                  | Better Auth secret override (advanced)                      | `AUTH_SECRET`          |
 | `SMTP_HOST`                           | SMTP Server Host (for email features)                       | —                      |
 | `SMTP_PORT`                           | SMTP Server Port                                            | `587`                  |
 | `SMTP_USER`                           | SMTP Username                                               | —                      |
@@ -207,8 +205,6 @@ Here's a complete list of environment variables you can configure:
 | `S3_FORCE_PATH_STYLE`                 | Use path-style URLs for S3 (set `true` for MinIO/SeaweedFS) | `false`                |
 | `REDIS_URL`                           | Redis connection string for the AI Agent workspace          | —                      |
 | `ENCRYPTION_SECRET`                   | Encryption secret for saved AI provider credentials         | —                      |
-| `CLOUDFLARE_ACCOUNT_ID`               | Optional Cloudflare URL extraction fallback account ID      | —                      |
-| `CLOUDFLARE_API_TOKEN`                | Optional Cloudflare URL extraction fallback API token       | —                      |
 | `FLAG_DISABLE_SIGNUPS`                | Disables new user signups                                   | `false`                |
 | `FLAG_DISABLE_EMAIL_AUTH`             | Disables email/password login (SSO only)                    | `false`                |
 | `FLAG_DISABLE_IMAGE_PROCESSING`       | Disables image processing                                   | `false`                |
@@ -216,7 +212,7 @@ Here's a complete list of environment variables you can configure:
 
 > **Note:** Some variables are only required for using related features (OAuth, SMTP, S3, etc.) and can be left unset if unused.
 
-> **AI features:** Saved AI provider management requires `ENCRYPTION_SECRET`, and the AI Agent workspace requires both `REDIS_URL` and `ENCRYPTION_SECRET`. Cloudflare variables only enable the optional URL extraction fallback and are not required for normal agent operation. Keep `FLAG_ALLOW_UNSAFE_AI_BASE_URL` disabled unless this is a trusted self-hosted deployment; public HTTPS provider URLs are the safe default.
+> **AI features:** Saved AI provider management requires `ENCRYPTION_SECRET`, and the AI Agent workspace requires both `REDIS_URL` and `ENCRYPTION_SECRET`. Live web research depends on the selected AI provider/model supporting native web search. Keep `FLAG_ALLOW_UNSAFE_AI_BASE_URL` disabled unless this is a trusted self-hosted deployment; public HTTPS provider URLs are the safe default.
 
 > **Health check behavior:** `/api/health` reports status for database and storage. A failure in either dependency returns HTTP `503`.
 

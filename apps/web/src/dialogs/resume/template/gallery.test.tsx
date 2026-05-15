@@ -9,7 +9,7 @@ import { useDialogStore } from "@/dialogs/store";
 
 const updateResumeData = vi.hoisted(() => vi.fn());
 
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { metadata: { template: "ditto" } },
 	}),

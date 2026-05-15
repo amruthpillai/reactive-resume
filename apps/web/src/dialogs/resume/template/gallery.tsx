@@ -10,8 +10,8 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@reactive-resume/
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 import { cn } from "@reactive-resume/utils/style";
 import { CometCard } from "@/components/animation/comet-card";
-import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { useDialogStore } from "@/dialogs/store";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { templates } from "./data";
 
 export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">) {

@@ -6,8 +6,8 @@ import { useEffect, useRef } from "react";
 import { BrandIcon } from "@reactive-resume/ui/components/brand-icon";
 import { Button } from "@reactive-resume/ui/components/button";
 import { GithubStarsButton } from "@/components/input/github-stars-button";
-import { LocaleCombobox } from "@/components/locale/combobox";
-import { ThemeToggleButton } from "@/components/theme/toggle-button";
+import { LocaleCombobox } from "@/features/locale/combobox";
+import { ThemeToggleButton } from "@/features/theme/toggle-button";
 
 export function Header() {
 	const y = useMotionValue(0);

@@ -15,10 +15,10 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@/components/input/github-stars-button", () => ({
 	GithubStarsButton: () => <div data-testid="github-stars-button" />,
 }));
-vi.mock("@/components/locale/combobox", () => ({
+vi.mock("@/features/locale/combobox", () => ({
 	LocaleCombobox: ({ render: renderProp }: { render: React.ReactElement }) => renderProp,
 }));
-vi.mock("@/components/theme/toggle-button", () => ({
+vi.mock("@/features/theme/toggle-button", () => ({
 	ThemeToggleButton: () => <button type="button" data-testid="theme-toggle" />,
 }));
 

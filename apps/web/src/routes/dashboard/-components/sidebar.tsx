@@ -33,7 +33,7 @@ import {
 } from "@reactive-resume/ui/components/sidebar";
 import { getInitials } from "@reactive-resume/utils/string";
 import { Copyright } from "@/components/ui/copyright";
-import { UserDropdownMenu } from "@/components/user/dropdown-menu";
+import { UserDropdownMenu } from "@/features/user/dropdown-menu";
 
 type SidebarItem = {
 	icon: React.ReactNode;

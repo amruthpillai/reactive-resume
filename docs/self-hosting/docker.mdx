@@ -86,10 +86,6 @@ OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS=""
 # Custom scopes (space-separated, defaults to "openid profile email")
 OAUTH_SCOPES=""
 
-# Optional Better Auth runtime overrides for advanced deployments:
-# BETTER_AUTH_URL="https://auth.example.com"
-# BETTER_AUTH_SECRET=""
-
 # --- Email (optional) ---
 # If all keys are disabled, the app logs the email to be sent to the console instead.
 SMTP_HOST=""
@@ -117,9 +113,6 @@ S3_FORCE_PATH_STYLE="false"
 REDIS_URL=""
 # Generated using `openssl rand -hex 32`
 ENCRYPTION_SECRET=""
-# Optional fallback for URL extraction. Not required for normal agent operation.
-CLOUDFLARE_ACCOUNT_ID=""
-CLOUDFLARE_API_TOKEN=""
 
 # --- Feature Flags ---
 FLAG_DISABLE_SIGNUPS="false"
@@ -305,10 +298,6 @@ openssl rand -hex 32
 
     **`BETTER_AUTH_API_KEY`** (optional): Enables Better Auth dashboard integrations.
 
-    **`BETTER_AUTH_URL`** (optional, advanced): Overrides auth base URL if it must differ from `APP_URL` (for split-host deployments).
-
-    **`BETTER_AUTH_SECRET`** (optional, advanced): Overrides `AUTH_SECRET` for Better Auth internals.
-
     **Custom OAuth provider** (optional):
     - **`OAUTH_PROVIDER_NAME`**: Display name in the UI
     - **`OAUTH_CLIENT_ID`** / **`OAUTH_CLIENT_SECRET`**: Required for any custom OAuth provider
@@ -350,7 +339,7 @@ openssl rand -hex 32
 
   - **`REDIS_URL`**: Redis connection string used by the AI Agent workspace.
   - **`ENCRYPTION_SECRET`**: Secret used to encrypt saved AI provider credentials. Generate with `openssl rand -hex 32`.
-  - **`CLOUDFLARE_ACCOUNT_ID`** / **`CLOUDFLARE_API_TOKEN`** (optional): Enables the Cloudflare URL extraction fallback. Cloudflare is not required for normal agent operation.
+  - Live web research depends on the selected AI provider/model supporting native web search. The app does not run its own URL crawler.
 
   If you use the Postgres-only Compose example above and want the AI Agent workspace, add a Redis service or use managed Redis, then set `REDIS_URL`.
 </Accordion>

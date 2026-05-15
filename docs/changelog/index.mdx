@@ -26,7 +26,7 @@ rss: true
 ## AI & Agent Workflows
 
 - Added server-side AI provider management with encrypted credentials, provider testing, and provider/model capability checks. This replaces the old local AI store and keeps AI configuration centralized. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062)
-- Added Agent tools for reading resume drafts, fetching public URLs, reading supported attachments, asking follow-up questions, and applying JSON Patch updates to the AI draft. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062)
+- Added Agent tools for reading resume drafts, using provider-native web search when supported, reading supported attachments, asking follow-up questions, and applying JSON Patch updates to the AI draft. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062)
 - Added archive and delete actions for Agent threads, including read-only archived states, in-flight run cleanup when archiving, and ownership checks before destructive deletion. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062)
 - Added attachment upload rate limits, private S3 ACLs for Agent attachments, runtime validation for streamed messages, transactional patch/action writes, and a unique message sequence index for safer Agent runs. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062)
 - Added `FLAG_ALLOW_UNSAFE_AI_BASE_URL` for trusted self-hosted deployments that need private or local AI provider URLs, while still restricting provider URLs to `http` or `https`. Thanks to [@SirSKillz](https://github.com/SirSKillz). [#3059](https://github.com/amruthpillai/reactive-resume/pull/3059)
@@ -40,7 +40,7 @@ rss: true
 ## Self-Hosting, Docs & Maintenance
 
 - Added a development Dockerfile plus improved Compose development services and health checks for running Reactive Resume with local dependencies. [1294d3354](https://github.com/amruthpillai/reactive-resume/commit/1294d3354)
-- Updated self-hosting documentation for Redis, encrypted AI provider credentials, optional Cloudflare URL extraction, private Agent attachments, S3 path-style storage, and unsafe AI base URL behavior. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062), [#3059](https://github.com/amruthpillai/reactive-resume/pull/3059)
+- Updated self-hosting documentation for Redis, encrypted AI provider credentials, provider-native web research, private Agent attachments, S3 path-style storage, and unsafe AI base URL behavior. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062), [#3059](https://github.com/amruthpillai/reactive-resume/pull/3059)
 - Added new and refreshed guides for the AI Agent workspace, Agent tools, AI setup, builder dock, dashboard management, importing, exporting, public sharing, and private notes. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062), [affa1d664](https://github.com/amruthpillai/reactive-resume/commit/affa1d664)
 - Removed a stale Custom CSS documentation link now that custom CSS is no longer part of the v5.1 renderer flow. [#3056](https://github.com/amruthpillai/reactive-resume/pull/3056)
 - Added a Reactive Resume design system reference and updated dependencies across the workspace. [#3062](https://github.com/amruthpillai/reactive-resume/pull/3062)

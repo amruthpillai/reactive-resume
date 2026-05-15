@@ -3,11 +3,11 @@ import { Trans } from "@lingui/react/macro";
 import { CircleNotchIcon, FileDocIcon, FileJsIcon, FilePdfIcon } from "@phosphor-icons/react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
+import { buildDocx } from "@reactive-resume/docx";
 import { Button } from "@reactive-resume/ui/components/button";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
-import { buildDocx } from "@reactive-resume/utils/resume/docx";
-import { useResume } from "@/components/resume/builder-resume-draft";
-import { createResumePdfBlob } from "@/libs/resume/pdf-document";
+import { useResume } from "@/features/resume/builder/draft";
+import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
 import { SectionBase } from "../shared/section-base";
 
 export function ExportSectionBuilder() {

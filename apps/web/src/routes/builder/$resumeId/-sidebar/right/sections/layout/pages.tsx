@@ -20,8 +20,8 @@ import { match } from "ts-pattern";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Switch } from "@reactive-resume/ui/components/switch";
 import { cn } from "@reactive-resume/utils/style";
-import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { templates } from "@/dialogs/resume/template/data";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { getSectionTitle } from "@/libs/resume/section";
 import { filterVisibleLayoutSectionIds } from "./visibility";
 

@@ -168,7 +168,7 @@ For detailed setup instructions, environment configuration, and self-hosting gui
 | API              | ORPC (Type-safe RPC)            |
 | Auth             | Better Auth                     |
 | Styling          | Tailwind CSS                    |
-| UI Components    | Radix UI                        |
+| UI Components    | Base UI + shadcn-style package  |
 | State Management | Zustand + TanStack Query        |
 
 ## Documentation

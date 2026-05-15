@@ -65,8 +65,6 @@ function getInputKeyPart(input: unknown): string {
 const resumePasswordLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.resumePassword);
 const pdfLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.pdfExport);
 const aiLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.aiRequest);
-const jobsSearchLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.jobsSearch);
-const jobsTestConnectionLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.jobsTestConnection);
 const storageUploadLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.storageUpload);
 const storageDeleteLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.storageDelete);
 const resumeMutationLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.resumeMutations);
@@ -96,16 +94,6 @@ export const pdfExportRateLimit = createRatelimitMiddleware<ContextWithHeaders, 
 export const aiRequestRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
 	limiter: productionLimiter(aiLimiter),
 	key: ({ context }, input) => `ai-request:${getUserKey(context)}:${getInputKeyPart(input)}`,
-});
-
-export const jobsSearchRateLimit = createRatelimitMiddleware<ContextWithHeaders, { params: { query: string } }>({
-	limiter: productionLimiter(jobsSearchLimiter),
-	key: ({ context }, input) => `jobs-search:${getUserKey(context)}:${input.params.query.trim().toLowerCase()}`,
-});
-
-export const jobsTestConnectionRateLimit = createRatelimitMiddleware<ContextWithHeaders, { apiKey: string }>({
-	limiter: productionLimiter(jobsTestConnectionLimiter),
-	key: ({ context }) => `jobs-test-connection:${getUserKey(context)}`,
 });
 
 export const storageUploadRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({

@@ -16,7 +16,7 @@ RUN corepack enable
 FROM base AS pruner
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm dlx turbo@2.9.9 prune web server --docker
+    pnpm dlx turbo@2.9.12 prune web server --docker
 
 FROM base AS builder
 COPY --from=pruner /app/out/json/ ./
@@ -30,7 +30,7 @@ RUN rm -rf apps/web/dist apps/server/dist && pnpm turbo run build --filter=web -
 FROM base AS runtime-pruner
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm dlx turbo@2.9.9 prune server @reactive-resume/runtime-externals --docker
+    pnpm dlx turbo@2.9.12 prune server --docker
 
 FROM base AS runtime-deps
 COPY --from=runtime-pruner /app/out/json/ ./
@@ -59,6 +59,8 @@ RUN mkdir -p /app/apps/server /app/apps/web /app/data && chown node:node /app/da
 
 COPY --from=runtime-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=pruner --chown=node:node /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=runtime-deps --chown=node:node /app/apps/server/package.json ./apps/server/package.json
+COPY --from=runtime-deps --chown=node:node /app/apps/server/node_modules ./apps/server/node_modules
 COPY --from=builder --chown=node:node /app/apps/web/dist ./apps/web/dist
 COPY --from=builder --chown=node:node /app/apps/server/dist ./apps/server/dist
 COPY --from=pruner --chown=node:node /app/migrations ./migrations

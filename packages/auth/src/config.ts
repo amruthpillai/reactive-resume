@@ -25,6 +25,7 @@ import { env } from "@reactive-resume/env/server";
 import { rateLimitConfig, TRUSTED_IP_HEADERS } from "@reactive-resume/utils/rate-limit";
 import { generateId, toUsername } from "@reactive-resume/utils/string";
 import { isAllowedOAuthRedirectUri, parseAllowedHostList } from "@reactive-resume/utils/url-security.node";
+import { getTrustedOrigins } from "./trusted-origins";
 
 const authBaseUrl = env.APP_URL;
 const isRateLimitEnabled = process.env.NODE_ENV === "production";
@@ -55,16 +56,7 @@ function isCustomOAuthProviderEnabled() {
 	return Boolean(env.OAUTH_CLIENT_ID) && Boolean(env.OAUTH_CLIENT_SECRET) && (hasDiscovery || hasManual);
 }
 
-function getTrustedOrigins(): string[] {
-	const normalizeOrigin = (origin: string): string => origin.replace(/\/$/, "");
-	const trustedOrigins = new Set<string>(["http://localhost:3000", "http://127.0.0.1:3000"]);
-
-	trustedOrigins.add(normalizeOrigin(new URL(env.APP_URL).origin));
-
-	return Array.from(trustedOrigins);
-}
-
-const TRUSTED_ORIGINS = getTrustedOrigins();
+const TRUSTED_ORIGINS = getTrustedOrigins(env.APP_URL);
 const OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS = parseAllowedHostList(env.OAUTH_DYNAMIC_CLIENT_REDIRECT_HOSTS);
 const oauthProviderRateLimit = isRateLimitEnabled
 	? rateLimitConfig.betterAuth.oauthProvider

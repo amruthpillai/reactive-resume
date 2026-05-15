@@ -16,7 +16,8 @@
 	"packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499",
 	"workspaces": [
 		"apps/*",
-		"packages/*"
+		"packages/*",
+		"tooling"
 	],
 	"scripts": {
 		"build": "turbo run build",
@@ -44,7 +45,7 @@
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
 		"@testing-library/user-event": "^14.6.1",
-		"@types/node": "^25.7.0",
+		"@types/node": "^25.8.0",
 		"@vitest/coverage-v8": "^4.1.6",
 		"happy-dom": "^20.9.0",
 		"knip": "^6.13.1",

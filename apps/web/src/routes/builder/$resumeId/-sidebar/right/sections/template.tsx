@@ -2,9 +2,9 @@ import { useLingui } from "@lingui/react";
 import { SwapIcon } from "@phosphor-icons/react";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
-import { useCurrentResume } from "@/components/resume/builder-resume-draft";
 import { templates } from "@/dialogs/resume/template/data";
 import { useDialogStore } from "@/dialogs/store";
+import { useCurrentResume } from "@/features/resume/builder/draft";
 import { SectionBase } from "../shared/section-base";
 
 export function TemplateSectionBuilder() {

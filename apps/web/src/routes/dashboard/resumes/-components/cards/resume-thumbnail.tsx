@@ -6,83 +6,14 @@ import { useInView } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
+import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
+import { createPdfFirstPageImageUrl } from "@/features/resume/preview/pdf-thumbnail";
+import { getResumeThumbnailCacheKey } from "@/features/resume/preview/resume-thumbnail.shared";
 import { orpc } from "@/libs/orpc/client";
-import { createResumePdfBlob } from "@/libs/resume/pdf-document";
-import {
-	getResumeThumbnailCacheKey,
-	getResumeThumbnailRenderSize,
-	RESUME_THUMBNAIL_TARGET_WIDTH,
-} from "./resume-thumbnail.shared";
 
 type ResumeListItem = RouterOutput["resume"]["list"][number];
 
 type ThumbnailState = { status: "error" | "idle" | "loading" } | { status: "ready"; url: string };
-
-const canvasToBlob = async (canvas: HTMLCanvasElement) => {
-	return await new Promise<Blob>((resolve, reject) => {
-		canvas.toBlob((blob) => {
-			if (!blob) {
-				reject(new Error("Failed to create resume thumbnail image."));
-				return;
-			}
-
-			resolve(blob);
-		}, "image/png");
-	});
-};
-
-const createPdfFirstPageImageUrl = async (file: Blob) => {
-	const { AnnotationMode, GlobalWorkerOptions, getDocument } = await import("pdfjs-dist");
-	GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
-
-	const arrayBuffer = await file.arrayBuffer();
-	const loadingTask = getDocument({ data: new Uint8Array(arrayBuffer) });
-	let pdfDocument: Awaited<typeof loadingTask.promise> | undefined;
-
-	try {
-		pdfDocument = await loadingTask.promise;
-		const page = await pdfDocument.getPage(1);
-
-		try {
-			const baseViewport = page.getViewport({ scale: 1 });
-			const renderSize = getResumeThumbnailRenderSize(
-				{ height: baseViewport.height, width: baseViewport.width },
-				RESUME_THUMBNAIL_TARGET_WIDTH,
-				window.devicePixelRatio || 1,
-			);
-
-			const canvas = document.createElement("canvas");
-			const canvasContext = canvas.getContext("2d");
-
-			if (!canvasContext) throw new Error("Failed to create resume thumbnail canvas context.");
-
-			canvas.height = renderSize.height;
-			canvas.width = renderSize.width;
-
-			const viewport = page.getViewport({ scale: renderSize.scale });
-			const renderTask = page.render({
-				canvas,
-				canvasContext,
-				viewport,
-				annotationMode: AnnotationMode.DISABLE,
-				background: "white",
-			});
-
-			await renderTask.promise;
-
-			const image = await canvasToBlob(canvas);
-			return URL.createObjectURL(image);
-		} finally {
-			page.cleanup();
-		}
-	} finally {
-		if (pdfDocument) {
-			void pdfDocument.destroy();
-		} else {
-			void loadingTask.destroy();
-		}
-	}
-};
 
 function useResumeThumbnail(data: ResumeData | undefined, cacheKey: string | undefined) {
 	const [thumbnail, setThumbnail] = useState<ThumbnailState>({ status: "idle" });

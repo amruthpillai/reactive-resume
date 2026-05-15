@@ -35,7 +35,7 @@ const items = vi.hoisted(() => [
 	},
 ]);
 
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { sections: { projects: { title: "Projects", columns: 1, hidden: false, items } } },
 	}),

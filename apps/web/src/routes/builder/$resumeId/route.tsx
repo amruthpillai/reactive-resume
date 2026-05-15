@@ -13,7 +13,7 @@ import {
 	useResumeCleanup,
 	useResumeStore,
 	useResumeUpdateSubscription,
-} from "@/components/resume/builder-resume-draft";
+} from "@/features/resume/builder/draft";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpc } from "@/libs/orpc/client";
 import { BuilderHeader } from "./-components/header";

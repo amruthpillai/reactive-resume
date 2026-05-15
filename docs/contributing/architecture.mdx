@@ -1,321 +1,143 @@
 ---
 title: "Project Architecture"
-description: "Understand the architecture and codebase structure of Reactive Resume"
+description: "Understand the Reactive Resume monorepo, runtime boundaries, and package ownership model"
 ---
 
-This guide provides a comprehensive overview of Reactive Resume's architecture and codebase structure, helping you understand how different parts of the application work together.
+Reactive Resume is a pnpm/Turborepo monorepo. The product runs as one deployed Node.js process, while the source is split into a full-stack web app, a server adapter, and focused internal packages.
 
----
-
-## Tech Stack Overview
-
-Reactive Resume is built with a modern, type-safe stack:
-
-<CardGroup cols={2}>
-  <Card title="Frontend" icon="browser">
-    - **React 19** with TanStack Start - **TypeScript** for type safety - **Tailwind CSS** for styling - **Radix UI**
-    for accessible components
-  </Card>
-  <Card title="Backend" icon="server">
-    - **ORPC** for type-safe RPC - **Drizzle ORM** with PostgreSQL - **Better Auth** for authentication - **Sharp** for
-    image processing
-  </Card>
-</CardGroup>
+Internal packages are source-consumed through their `package.json` export maps. Import package subpaths, not another workspace's private `src` files.
 
 ---
 
-## Application Architecture
+## Runtime Shape
 
 ```mermaid
 flowchart TD
-  %% Client Side
-  subgraph Client ["Client"]
-    Router["TanStack Router"]
-    Query["TanStack Query"]
-    ORPCClient["oRPC Client"]
-    PDF["@react-pdf/renderer (client-side PDF export)"]
+  Browser["Browser"] --> WebRoutes["apps/web routes"]
+  WebRoutes --> ORPCClient["oRPC client"]
+  ORPCClient --> RPC["/api/rpc"]
+
+  subgraph NodeProcess["Node process"]
+    Server["apps/server Hono adapter"]
+    API["packages/api feature routers"]
+    Auth["packages/auth"]
+    MCP["packages/mcp"]
+    PDFServer["@reactive-resume/pdf/server"]
   end
 
-  %% Server Side
-  subgraph Server ["Server"]
-    ORPCRouter["oRPC Router"]
-    Auth["Better Auth"]
-    Services["Services Layer"]
-    Drizzle["Drizzle ORM"]
-  end
-
-  Database["PostgreSQL"]
-  Storage["File System OR S3-Compatible Storage"]
-
-  Router --> ORPCClient
-  Query --> ORPCClient
-  ORPCClient -- calls --> ORPCRouter
-  ORPCRouter --> Services
-  Auth --> Services
-  Services --> Drizzle
-  Drizzle --> Database
-  Services --> Storage
-  Router --> PDF
+  Server --> RPC
+  RPC --> API
+  Server --> Auth
+  Server --> MCP
+  API --> PDFServer
+  API --> DB["packages/db"]
+  API --> Storage["File system or S3-compatible storage"]
+  DB --> Postgres["PostgreSQL"]
 ```
 
-**Diagram:** This flow shows data and control flow between the main architectural layers of Reactive Resume.
+`apps/web` owns the TanStack Start experience. `apps/server` owns the production Hono process and mounts RPC, auth, OpenAPI, MCP, static uploads, schema JSON, and the built web app.
 
 ---
 
-## Directory Structure
+## Workspace Map
 
-### Root Level
-
-| Directory     | Purpose                             |
-| ------------- | ----------------------------------- |
-| `src/`        | Main application source code        |
-| `public/`     | Static assets served directly       |
-| `locales/`    | Translation files (.po format)      |
-| `migrations/` | Database migration files            |
-| `docs/`       | Mintlify documentation              |
-| `data/`       | Local data storage (fonts, uploads) |
-| `scripts/`    | Utility scripts                     |
-
-### Source Code (`src/`)
-
-<AccordionGroup>
-	<Accordion title="components/" icon="cube">
-		Reusable React components organized by category: - **`ui/`** — Base UI components (Button, Card, Dialog, etc.) -
-		**`resume/`** — Resume-specific components (sections, templates) - **`input/`** — Form input components
-		(ColorPicker, RichInput) - **`layout/`** — Layout components (Sidebar, LoadingScreen) - **`animation/`** — Animation
-		components (Spotlight, TextMask) - **`theme/`** — Theme management components - **`typography/`** — Font management
-		components
-	</Accordion>
-
-    <Accordion title="routes/" icon="route">
-    	File-based routing using TanStack Router: - **`__root.tsx`** — Root layout with providers - **`_home/`** — Public
-    	home page routes - **`auth/`** — Authentication routes (login, register, etc.) - **`dashboard/`** — User dashboard
-    	routes - **`builder/`** — Resume builder routes (the main editor) - **`api/`** — API routes
-    </Accordion>
-
-    <Accordion title="integrations/" icon="plug">
-    	Third-party service integrations: - **`auth/`** — Better Auth client configuration - **`drizzle/`** — Database
-    	schema and utilities - **`orpc/`** — API router, client, and services - **`ai/`** — AI service integrations -
-    	**`import/`** — Resume import utilities
-    </Accordion>
-
-    <Accordion title="dialogs/" icon="window-maximize">
-    	Modal dialog components: - **`auth/`** — Authentication dialogs - **`resume/`** — Resume management dialogs -
-    	**`api-key/`** — API key management dialogs - **`manager.tsx`** — Dialog manager component - **`store.ts`** — Dialog
-    	state management (Zustand)
-    </Accordion>
-
-    <Accordion title="schema/" icon="file-code">
-    	Zod schemas for validation: - **`resume/`** — Resume data schemas - **`icons.ts`** — Icon definitions -
-    	**`templates.ts`** — Template definitions
-    </Accordion>
-
-    <Accordion title="hooks/" icon="hook">
-    	Custom React hooks: - `use-confirm.tsx` — Confirmation dialog hook - `use-prompt.tsx` — Prompt dialog hook -
-    	`use-mobile.tsx` — Mobile detection hook - `use-safe-context.tsx` — Safe context consumption
-    </Accordion>
-
-    <Accordion title="utils/" icon="wrench">
-    	Utility functions: - `env.ts` — Environment variable validation - `locale.ts` — Locale utilities - `theme.ts` —
-    	Theme utilities - `string.ts` — String manipulation - `file.ts` — File handling utilities
-    </Accordion>
-
-</AccordionGroup>
+| Workspace | Ownership |
+| --- | --- |
+| `apps/web` | TanStack Start routes, web features, browser PDF.js preview/viewer code, PWA setup, oRPC browser client |
+| `apps/server` | Hono route composition, production HTTP adapters, MCP transport, OpenAPI/well-known handlers, static file serving, startup checks |
+| `packages/api` | oRPC procedures and feature-owned business behavior under `src/features/*` |
+| `packages/auth` | Better Auth config, auth helpers, and exported auth types |
+| `packages/db` | Drizzle client and schema; root `migrations/` stores generated migrations |
+| `packages/env` | Server environment validation and root `.env` loading |
+| `packages/schema` | Zod schemas and typed resume/page/template models |
+| `packages/resume` | Pure resume-domain helpers, including JSON Patch behavior and network icon mapping |
+| `packages/pdf` | React PDF document, template primitives, templates, font registration, and browser/server generation adapters |
+| `packages/docx` | DOCX export generation |
+| `packages/mcp` | MCP tools, prompts, resources, server card, and tool metadata |
+| `packages/ui` | Shared Base UI/shadcn-style primitives and hooks |
+| `packages/ai` | AI provider types, prompts, resume parsing/sanitization helpers, and model-facing tool contracts |
+| `packages/import` | Resume importers |
+| `packages/fonts` | Font metadata |
+| `packages/email` | Email transport and templates |
+| `packages/utils` | Narrow cross-cutting utilities with explicit export subpaths |
+| `packages/config` | Shared development configuration |
+| `tooling` | Development-only scripts and repo tooling |
 
 ---
 
-## Key Concepts
+## Boundary Rules
 
-### File-Based Routing
+- Use `@reactive-resume/*` package exports for cross-workspace imports.
+- Do not import another workspace through `apps/**`, `packages/**`, `@reactive-resume/*/src/**`, or a TypeScript path alias to another workspace's `src`.
+- Keep browser-only code in web features or explicit browser subpaths.
+- Keep server-only code in server packages or explicit server subpaths.
+- Keep environment-neutral domain packages free of DB, HTTP, DOM, and app imports.
+- Add public package exports deliberately. Wildcard exports are reserved for leaf-style public surfaces such as UI components/hooks and schema resume files.
 
-Routes are automatically generated from the file structure in `src/routes/`. TanStack Router conventions:
+The checks are executable:
 
-| Pattern      | Description           | Example              |
-| ------------ | --------------------- | -------------------- |
-| `index.tsx`  | Index route           | `/dashboard`         |
-| `$param.tsx` | Dynamic parameter     | `/builder/$resumeId` |
-| `_layout/`   | Layout group (prefix) | `_home/`             |
-| `__root.tsx` | Root layout           | Wraps all routes     |
-
-<Warning>Never edit `src/routeTree.gen.ts` manually — it's auto-generated when you run the dev server.</Warning>
-
-### API Layer (ORPC)
-
-ORPC provides end-to-end type safety for API calls:
-
-```
-src/integrations/orpc/
-├── client.ts         # Client-side ORPC setup
-├── router/           # API route definitions
-│   ├── auth.ts      # Authentication endpoints
-│   ├── resume.ts    # Resume CRUD operations
-│   └── storage.ts   # File storage operations
-├── services/         # Business logic layer
-└── helpers/          # Utility functions
-```
-
-**Using the API client:**
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-import { orpc } from "@/integrations/orpc/client";
-
-// Type-safe API calls with TanStack Query
-const { data } = useQuery(orpc.resume.findMany.queryOptions());
-```
-
-### State Management
-
-Reactive Resume uses a hybrid approach:
-
-| Type         | Tool            | Use Case                       |
-| ------------ | --------------- | ------------------------------ |
-| Server State | TanStack Query  | API data, caching, sync        |
-| Client State | Zustand         | UI state, dialogs, preferences |
-| Form State   | React Hook Form | Form inputs and validation     |
-
-### Database Schema
-
-The database schema is defined using Drizzle ORM in `src/integrations/drizzle/schema.ts`:
-
-```tsx
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-
-export const resume = pgTable("resume", {
-  id: text("id").primaryKey().defaultRandom(),
-  title: text("title").notNull(),
-  slug: text("slug").notNull(),
-  // ... more fields
-});
+```bash
+pnpm exec turbo boundaries
+pnpm exec biome check biome.json turbo.json tooling/grit/no-cross-workspace-src-imports.grit apps/web/tsconfig.json apps/*/turbo.json packages/*/turbo.json
 ```
 
 ---
 
-## Common Development Patterns
+## Feature Placement
 
-### Adding a New Component
+When adding code, choose the owner by behavior:
 
-1. Create the component in the appropriate `src/components/` subdirectory
-2. Export it from the directory's index file (if applicable)
-3. Use TypeScript props interfaces for type safety
-4. Follow existing patterns for consistency
-
-```tsx
-// src/components/ui/my-component.tsx
-import { cn } from "@/utils/style";
-
-interface MyComponentProps {
-  title: string;
-  className?: string;
-}
-
-export const MyComponent = ({ title, className }: MyComponentProps) => {
-  return <div className={cn("p-4", className)}>{title}</div>;
-};
-```
-
-### Adding a New Route
-
-1. Create a new file in `src/routes/` following TanStack Router conventions
-2. The route tree auto-generates when you save
-3. Use `createFileRoute` for type-safe routes
-
-```tsx
-// src/routes/my-page.tsx
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/my-page")({
-  component: MyPage,
-});
-
-function MyPage() {
-  return <div>My Page Content</div>;
-}
-```
-
-### Adding an API Endpoint
-
-1. Add the route handler in `src/integrations/orpc/router/`
-2. Create service functions in `src/integrations/orpc/services/` if needed
-3. The endpoint is automatically typed on the client
-
-```tsx
-// In router file
-import { z } from "zod";
-import { publicProcedure, router } from "../server";
-
-export const myRouter = router({
-  hello: publicProcedure.input(z.object({ name: z.string() })).handler(async ({ input }) => {
-    return { message: `Hello, ${input.name}!` };
-  }),
-});
-```
-
-### Adding Translations
-
-1. Wrap text with `t` macro or `<Trans>` component
-2. Run `pnpm run lingui:extract` to update locale files
-3. Edit the `.po` files in `locales/` to add translations
-
-```tsx
-import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
-
-// In component
-const title = t`Welcome`;
-<Trans>Click here to continue</Trans>;
-```
+| Change | Put it here |
+| --- | --- |
+| Route, loader, route-level server handler, or web workflow | `apps/web/src/routes` plus `apps/web/src/features/<domain>` |
+| API procedure or authenticated business behavior | `packages/api/src/features/<domain>` |
+| Pure resume data logic | `packages/resume` |
+| Resume schema or template list shape | `packages/schema` |
+| React PDF template/rendering behavior | `packages/pdf` |
+| PDF.js canvas/viewer UI | `apps/web/src/features/resume` |
+| DOCX export behavior | `packages/docx` |
+| MCP tool/prompt/resource behavior | `packages/mcp` |
+| Shared UI primitive/hook | `packages/ui` |
+| Cross-cutting helper | Prefer a domain package first; otherwise add an explicit `packages/utils` export |
 
 ---
 
-## Configuration Files
+## Web Layout
 
-| File                | Purpose                           |
-| ------------------- | --------------------------------- |
-| `vite.config.ts`    | Vite bundler configuration        |
-| `tsconfig.json`     | TypeScript configuration          |
-| `.oxfmtrc.json`     | Formatter settings                |
-| `.oxlintrc.json`    | Linter settings                   |
-| `drizzle.config.ts` | Drizzle ORM configuration         |
-| `lingui.config.ts`  | Lingui i18n configuration         |
-| `components.json`   | shadcn/ui component configuration |
+`apps/web/src/routes` stays route-owned. Route files handle URL shape, loaders, redirects, metadata, and SSR flags.
+
+Domain UI and browser-heavy implementation code lives under `apps/web/src/features`. Current feature areas include resume preview/export/public pages, command palette, auth, settings, theme, locale, and user menu behavior.
+
+Generic app-local components remain in `apps/web/src/components`; shared reusable primitives live in `packages/ui`.
+
+Dialog runtime state is centralized in `apps/web/src/dialogs/store.ts`, while dialog schemas and renderers are registered by domain under `apps/web/src/dialogs/{auth,api-key,resume}`.
 
 ---
 
-## Contributing Guidelines
+## API Layout
 
-<Steps>
-	<Step title="Fork & Clone">Fork the repository on GitHub and clone your fork locally.</Step>
+`packages/api/src/routers/index.ts` exports the top-level oRPC contract. Feature modules under `packages/api/src/features/*` own their procedure modules, services, helpers, tests, and public package exports.
 
-    <Step title="Create a Branch">
-    	Create a feature branch from `main`: ```bash git checkout -b feature/my-feature ```
-    </Step>
-
-    <Step title="Make Changes">Implement your changes following the patterns described above.</Step>
-
-    <Step title="Test Locally">
-    	Ensure the app works correctly with your changes: ```bash pnpm run dev pnpm run lint pnpm run typecheck ```
-    </Step>
-
-    <Step title="Commit & Push">Write clear commit messages and push to your fork.</Step>
-
-    <Step title="Open a Pull Request">
-    	Open a PR against the main repository with a clear description of your changes.
-    </Step>
-
-</Steps>
-
-<Note>Make sure to read any `CONTRIBUTING.md` file in the repository for additional guidelines.</Note>
+Avoid reintroducing technical-layer folders such as `services/` or `helpers/` at the package root. If a helper is used by one feature, keep it in that feature. If it becomes shared, name the shared capability explicitly and export it intentionally.
 
 ---
 
-## Need Help?
+## PDF And Export Boundaries
 
-<CardGroup cols={2}>
-  <Card title="GitHub Discussions" icon="comments" href="https://github.com/amruthpillai/reactive-resume/discussions">
-    Ask questions and discuss ideas with the community.
-  </Card>
-  <Card title="GitHub Issues" icon="bug" href="https://github.com/amruthpillai/reactive-resume/issues">
-    Report bugs or request features.
-  </Card>
-</CardGroup>
+`packages/pdf` owns React PDF generation:
+
+- `@reactive-resume/pdf/browser` creates browser PDF blobs.
+- `@reactive-resume/pdf/server` creates server PDF files.
+- Template code stays under `packages/pdf/src/templates`.
+
+Localized section-title resolution stays in the caller because it depends on web/server locale context. PDF.js preview and viewer code stays in `apps/web/src/features/resume`, not in `packages/pdf`.
+
+DOCX export generation lives in `packages/docx`.
+
+---
+
+## MCP Boundary
+
+MCP implementation lives in `packages/mcp`. It exposes canonical unprefixed tool names such as `list_resumes`, `read_resume`, and `apply_resume_patch`.
+
+The server process imports MCP from `@reactive-resume/mcp` and injects the in-process oRPC router client. It must not import MCP code from `apps/web/src`.

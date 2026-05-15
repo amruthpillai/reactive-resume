@@ -14,11 +14,11 @@
 				"config": []
 			}
 		},
+		"apps/server": {
+			"ignoreDependencies": ["@aws-sdk/client-s3", "@react-pdf/renderer", "bcrypt", "react-pdf-html", "sharp"]
+		},
 		"packages/api": {
 			"ignoreDependencies": ["ioredis"]
-		},
-		"packages/runtime-externals": {
-			"ignoreDependencies": ["@aws-sdk/client-s3", "bcrypt", "sharp"]
 		}
 	},
 	"ignoreDependencies": ["@reactive-resume/config", "npm-check-updates"]

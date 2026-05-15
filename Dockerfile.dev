@@ -27,11 +27,10 @@ COPY packages/env/package.json ./packages/env/package.json
 COPY packages/fonts/package.json ./packages/fonts/package.json
 COPY packages/import/package.json ./packages/import/package.json
 COPY packages/pdf/package.json ./packages/pdf/package.json
-COPY packages/runtime-externals/package.json ./packages/runtime-externals/package.json
 COPY packages/schema/package.json ./packages/schema/package.json
-COPY packages/scripts/package.json ./packages/scripts/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
 COPY packages/utils/package.json ./packages/utils/package.json
+COPY tooling/package.json ./tooling/package.json
 
 RUN --mount=type=cache,id=reactive-resume-dev-pnpm-store,target=/pnpm/store,sharing=locked \
 	pnpm install --frozen-lockfile

@@ -4,8 +4,8 @@ description: "Set up a local development environment for Reactive Resume"
 ---
 
 <Info>
-  **Prerequisites**: - [Node.js](https://nodejs.org/) v20 or higher - [pnpm](https://pnpm.io/) v10.28.0 or higher
-  (package manager) - [Docker](https://docs.docker.com/get-docker/) and Docker Compose - [Git](https://git-scm.com/)
+  **Prerequisites**: - [Node.js](https://nodejs.org/) v24 - [pnpm](https://pnpm.io/) v11.1.2 through Corepack -
+  [Docker](https://docs.docker.com/get-docker/) and Docker Compose - [Git](https://git-scm.com/)
 </Info>
 
 This guide walks you through setting up Reactive Resume for local development. Whether you're contributing to the project or customizing it for your needs, these steps will get you up and running.
@@ -18,16 +18,16 @@ This guide walks you through setting up Reactive Resume for local development. W
   <Step title="Clone the Repository">
     ```bash
     git clone https://github.com/amruthpillai/reactive-resume.git
-    cd Reactive-Resume
+    cd reactive-resume
     ```
   </Step>
   
   <Step title="Install Dependencies">
-    This project uses [pnpm](https://pnpm.io/) as its package manager for its speed and efficiency.
+    This project uses [pnpm](https://pnpm.io/) through Corepack.
     
     ```bash
-    # Install pnpm if you haven't already
-    npm install -g pnpm
+    # Enable the package manager version from package.json
+    corepack enable
     
     # Install project dependencies
     pnpm install
@@ -35,23 +35,24 @@ This guide walks you through setting up Reactive Resume for local development. W
   </Step>
   
   <Step title="Start Infrastructure Services">
-    Start the required services using the development-specific Docker Compose file:
+    If you want to run the app directly on your machine with `pnpm dev`, start only the infrastructure services:
     
     ```bash
-    docker compose -f compose.dev.yml up -d
+    docker compose -f compose.dev.yml up -d postgres redis seaweedfs seaweedfs_create_bucket
     ```
     
     This starts the following infrastructure services:
     - **PostgreSQL** — Database (port 5432)
+    - **Redis** — AI Agent workspace streams/state (port 6379)
     - **SeaweedFS** — S3-compatible storage (port 8333)
-    - **Mailpit** — Email testing server (SMTP on port 1025, UI on port 8025)
 
     <Info>
       **From v5.1.0 onwards** — PDF generation now runs entirely in the browser via `@react-pdf/renderer`, so no Browserless or Chromium container is required for development.
     </Info>
     
     <Tip>
-      Use `compose.dev.yml` instead of `compose.yml` for local development. The development file only includes infrastructure services with ports exposed to your host machine, while the main `compose.yml` includes the full application stack intended for production deployments.
+      `compose.dev.yml` can also run the app in a development container with `docker compose -f compose.dev.yml up -d`.
+      Use the service-filtered command above when you want local editor tooling and `pnpm dev` on the host.
     </Tip>
     
     <Tip>
@@ -63,7 +64,9 @@ This guide walks you through setting up Reactive Resume for local development. W
     Create a `.env` file in the project root:
     
     ```bash
-    # Server
+    # Application
+    PORT=3000
+    SERVER_PORT=3001
     APP_URL=http://localhost:3000
 
     # Database
@@ -82,6 +85,11 @@ This guide walks you through setting up Reactive Resume for local development. W
     # Email (Mailpit for local development)
     SMTP_HOST=localhost
     SMTP_PORT=1025
+    SMTP_FROM="Reactive Resume <noreply@rxresu.me>"
+
+    # AI Agent workspace and saved AI providers
+    REDIS_URL=redis://localhost:6379
+    ENCRYPTION_SECRET=change-me-to-a-secure-agent-secret-in-production
     ```
 
     <Tip>
@@ -90,11 +98,12 @@ This guide walks you through setting up Reactive Resume for local development. W
 
   </Step>
   
-  <Step title="Run Database Migrations">
-    Apply the database schema:
+  <Step title="Run Database Migrations If Needed">
+    The server startup path runs migrations before serving traffic. To apply migrations manually without starting the app,
+    export `DATABASE_URL` because Drizzle Kit reads directly from `process.env`:
     
     ```bash
-    pnpm run db:migrate
+    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres" pnpm run db:migrate
     ```
   </Step>
   
@@ -115,14 +124,16 @@ Here are the most commonly used scripts during development:
 
 ### Development
 
-| Command              | Description                                  |
-| -------------------- | -------------------------------------------- |
-| `pnpm run dev`       | Start the development server with hot reload |
-| `pnpm run build`     | Build the application for production         |
-| `pnpm run start`     | Start the production server                  |
-| `pnpm run lint`      | Run Oxlint linter and formatter              |
-| `pnpm run format`    | Run Oxfmt formatter                          |
-| `pnpm run typecheck` | Run TypeScript type checking                 |
+| Command                        | Description                                                 |
+| ------------------------------ | ----------------------------------------------------------- |
+| `pnpm dev`                     | Start the web and server development processes              |
+| `pnpm build`                   | Build the production web bundle and server bundle           |
+| `pnpm start`                   | Start the built production server                           |
+| `pnpm typecheck`               | Run TypeScript type checking                                |
+| `pnpm test`                    | Run Vitest across workspaces                                |
+| `pnpm exec biome check .`      | Run a non-mutating Biome check                              |
+| `pnpm check`                   | Run Biome with write/fix behavior (`--write --unsafe`)      |
+| `pnpm exec turbo boundaries`   | Check workspace/package boundary rules                      |
 
 ### Database
 
@@ -138,44 +149,30 @@ Here are the most commonly used scripts during development:
 | ------------------------- | -------------------------------------- |
 | `pnpm run lingui:extract` | Extract translatable strings from code |
 
-### Documentation
-
-| Command             | Description                                |
-| ------------------- | ------------------------------------------ |
-| `pnpm run docs:dev` | Start the Mintlify docs development server |
-
----
-
 ## Understanding the Project Structure
 
 Understanding the project structure will help you navigate the codebase:
 
 ```
 reactive-resume/
-├── src/
-│   ├── components/         # Reusable React components
-│   │   ├── ui/             # Base UI components (Button, Card, etc.)
-│   │   ├── resume/         # Resume-specific components
-│   │   └── ...
-│   ├── dialogs/            # Modal dialogs
-│   ├── hooks/              # Custom React hooks
-│   ├── integrations/       # Third-party integrations
-│   │   ├── auth/           # Better Auth integration
-│   │   ├── drizzle/        # Database schema & utilities
-│   │   └── orpc/           # API routes & services
-│   ├── routes/             # File-based routing (TanStack Router)
-│   │   ├── builder/        # Resume builder pages
-│   │   ├── dashboard/      # User dashboard
-│   │   ├── auth/           # Authentication pages
-│   │   └── ...
-│   ├── schema/             # Zod schemas for validation
-│   ├── utils/              # Utility functions
-│   └── styles/             # Global CSS styles
-├── public/                 # Static assets
-├── locales/                # Translation files (.po format)
-├── migrations/             # Database migrations
-├── docs/                   # Mintlify documentation
-└── data/                   # Local data (fonts, uploads)
+├── apps/
+│   ├── web/                # TanStack Start routes, web features, and browser UI
+│   └── server/             # Hono production server, HTTP adapters, static serving
+├── packages/
+│   ├── api/                # oRPC features and business behavior
+│   ├── auth/               # Better Auth configuration and helpers
+│   ├── db/                 # Drizzle client and schema
+│   ├── docx/               # DOCX export generation
+│   ├── mcp/                # MCP tools, prompts, resources, and metadata
+│   ├── pdf/                # React PDF rendering and PDF generation adapters
+│   ├── resume/             # Pure resume-domain helpers
+│   ├── schema/             # Zod schemas and typed models
+│   ├── ui/                 # Shared Base UI/shadcn-style primitives
+│   └── ...
+├── tooling/                # Development-only scripts and repository tooling
+├── migrations/             # Generated database migrations
+├── docs/                   # Documentation
+└── data/                   # Local development data and uploads
 ```
 
 ---
@@ -194,7 +191,7 @@ This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizz
 
 ### Making Schema Changes
 
-1. Edit the schema in `src/integrations/drizzle/schema.ts`
+1. Edit the schema in `packages/db/src/schema/*`
 2. Generate a migration:
    ```bash
    pnpm run db:generate
@@ -235,7 +232,7 @@ After adding new translatable text, extract them to the locale files:
 pnpm run lingui:extract
 ```
 
-Translation files are located in the `locales/` directory in `.po` format.
+Translation files are located in `apps/web/locales` in `.po` format.
 
 ---
 
@@ -243,12 +240,14 @@ Translation files are located in the `locales/` directory in `.po` format.
 
 ### Linting & Formatting
 
-Uses [Oxlint](https://oxlint.dev/) for linting and [Oxfmt](https://oxfmt.dev/) for formatting:
+Uses [Biome](https://biomejs.dev/) for linting, formatting, import organization, and Tailwind class sorting:
 
 ```bash
-# Check and auto-fix issues
-pnpm run lint:fix
-pnpm run format:fix
+# Non-mutating check
+pnpm exec biome check .
+
+# Project script with write/fix behavior
+pnpm check
 ```
 
 ### Type Checking
@@ -260,9 +259,8 @@ pnpm run typecheck
 ```
 
 <Tip>
-  Configure your IDE to use Oxlint for automatic linting and Oxfmt for automatic formatting on save. For VS Code,
-  install the [Oxlint extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode) and configure the
-  settings in `.vscode/settings.json`.
+  Configure your IDE to use Biome for formatting and lint diagnostics. The repo uses tabs, double quotes, 120-column
+  lines, and organized import groups.
 </Tip>
 
 ---
@@ -270,9 +268,9 @@ pnpm run typecheck
 ## Troubleshooting
 
 <AccordionGroup>
-	<Accordion title="Port 3000 is already in use">
-		Another process is using port 3000. Either stop that process or start the dev server on a different port: ```bash
-		PORT=3001 pnpm run dev ```
+	<Accordion title="Port 3000 or 3001 is already in use">
+		The Vite web server uses `PORT` (default `3000`), and the Hono server uses `SERVER_PORT` (default `3001`).
+		Either stop the conflicting process or choose alternate ports: ```bash PORT=3002 SERVER_PORT=3003 pnpm dev ```
 	</Accordion>
 
     <Accordion title="Database connection refused">

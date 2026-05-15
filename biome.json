@@ -1,16 +1,17 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"vcs": {
-		"enabled": false,
+		"enabled": true,
 		"clientKind": "git",
-		"useIgnoreFile": false
+		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false,
+		"ignoreUnknown": true,
 		"includes": [
 			"**",
 			"!**/.turbo",
 			"!**/.output",
+			"!**/dist",
 			"!**/.vercel",
 			"!**/.wrangler",
 			"!**/coverage",
@@ -18,6 +19,7 @@
 			"!**/routeTree.gen.ts"
 		]
 	},
+	"plugins": ["./tooling/grit/workspace-boundaries.grit"],
 	"formatter": {
 		"enabled": true,
 		"lineWidth": 120,
@@ -67,6 +69,21 @@
 					"level": "on",
 					"options": {
 						"style": "separatedType"
+					}
+				},
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [
+							{
+								"group": ["@reactive-resume/*/src/**"],
+								"message": "Import through the package export map instead of another workspace's private src path."
+							},
+							{
+								"group": ["apps/**", "packages/**"],
+								"message": "Do not import another workspace by repository path; use an explicit package export."
+							}
+						]
 					}
 				},
 				"noParameterAssign": "error",

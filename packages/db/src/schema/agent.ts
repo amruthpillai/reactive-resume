@@ -1,10 +1,16 @@
-import type { JsonPatchOperation } from "@reactive-resume/utils/resume/patch";
 import * as pg from "drizzle-orm/pg-core";
 import { generateId } from "@reactive-resume/utils/string";
 import { user } from "./auth";
 import { resume } from "./resume";
 
 export type AgentUiMessage = Record<string, unknown>;
+type StoredJsonPatchOperation =
+	| { op: "add"; path: string; value: unknown }
+	| { op: "remove"; path: string }
+	| { op: "replace"; path: string; value: unknown }
+	| { op: "move"; path: string; from: string }
+	| { op: "copy"; path: string; from: string }
+	| { op: "test"; path: string; value: unknown };
 
 export const aiProvider = pg.pgTable(
 	"ai_providers",
@@ -161,8 +167,8 @@ export const agentAction = pg.pgTable(
 		status: pg.text("status").notNull().default("applied"),
 		title: pg.text("title").notNull(),
 		summary: pg.text("summary"),
-		operations: pg.jsonb("operations").notNull().$type<JsonPatchOperation[]>(),
-		inverseOperations: pg.jsonb("inverse_operations").notNull().$type<JsonPatchOperation[]>(),
+		operations: pg.jsonb("operations").notNull().$type<StoredJsonPatchOperation[]>(),
+		inverseOperations: pg.jsonb("inverse_operations").notNull().$type<StoredJsonPatchOperation[]>(),
 		baseUpdatedAt: pg.timestamp("base_updated_at", { withTimezone: true }).notNull(),
 		appliedUpdatedAt: pg.timestamp("applied_updated_at", { withTimezone: true }).notNull(),
 		revertedAt: pg.timestamp("reverted_at", { withTimezone: true }),

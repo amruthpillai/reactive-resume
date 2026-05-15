@@ -17,9 +17,9 @@ vi.mock("@reactive-resume/utils/file", () => ({
 	downloadWithAnchor,
 	generateFilename: (name: string, ext: string) => `${name}.${ext}`,
 }));
-vi.mock("@reactive-resume/utils/resume/docx", () => ({ buildDocx }));
-vi.mock("@/libs/resume/pdf-document", () => ({ createResumePdfBlob }));
-vi.mock("@/components/resume/builder-resume-draft", () => ({
+vi.mock("@reactive-resume/docx", () => ({ buildDocx }));
+vi.mock("@/features/resume/export/pdf-document", () => ({ createResumePdfBlob }));
+vi.mock("@/features/resume/builder/draft", () => ({
 	useResume: () => ({ id: "r1", name: "My Resume", data: defaultResumeData }),
 }));
 

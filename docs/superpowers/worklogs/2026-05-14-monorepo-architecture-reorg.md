@@ -1,0 +1,323 @@
+# Monorepo Architecture Reorg Worklog
+
+Append-only log for implementation, validation, and delegation notes.
+
+> **Status note:** This file is chronological. Earlier entries may mention paths that were moved by later tasks. Use the latest handoff plus `AGENTS.md` and `docs/contributing/architecture.mdx` for current-state guidance.
+
+## 2026-05-14
+
+- Started implementation on branch `feat/explore-hono-orpc-migration`.
+- Initial dirty files existed before architecture implementation:
+  - `apps/server/package.json`
+  - `package.json`
+  - `packages/api/package.json`
+  - `packages/env/package.json`
+  - `packages/utils/package.json`
+  - `pnpm-lock.yaml`
+- Created coordination artifacts:
+  - `docs/superpowers/plans/2026-05-14-monorepo-architecture-reorg.md`
+  - `docs/superpowers/handoffs/2026-05-14-monorepo-architecture-reorg.md`
+  - `docs/superpowers/worklogs/2026-05-14-monorepo-architecture-reorg.md`
+- Task 1 completed:
+  - Created `packages/resume` as `@reactive-resume/resume`.
+  - Moved `packages/utils/src/resume/patch.ts` to `packages/resume/src/patch.ts`.
+  - Moved `packages/utils/src/network-icons.ts` to `packages/resume/src/icons.ts`.
+  - Moved the patch and network icon tests into `packages/resume/src`.
+  - Updated all old `@reactive-resume/utils/resume/patch` and `@reactive-resume/utils/network-icons` imports to `@reactive-resume/resume/patch` and `@reactive-resume/resume/icons`.
+  - Updated package manifests and `pnpm-lock.yaml` for the new package and consumer dependency edges.
+  - Removed `fast-json-patch` from `@reactive-resume/utils` and `@reactive-resume/ai`; it now belongs to `@reactive-resume/resume`.
+  - Did not remove `@reactive-resume/schema` from `@reactive-resume/utils` because DOCX files still import schema and Task 2 owns that extraction.
+- Validation for Task 1:
+  - Initial `pnpm --filter @reactive-resume/resume test` failed before Vitest because pnpm wanted to refresh modules in a non-TTY.
+  - Retried with `CI=true`; it failed because the new workspace package was not yet represented in the frozen lockfile.
+  - Ran `pnpm install --lockfile-only --no-frozen-lockfile`; completed with no downloads.
+  - A later test run triggered pnpm dependency status install, but `node_modules` had been purged and registry access was blocked by sandbox DNS (`ENOTFOUND` / `fetch failed`).
+  - Ran `pnpm install --no-frozen-lockfile` with network approval to restore `node_modules`; completed.
+  - `pnpm --filter @reactive-resume/resume test` passed: 2 files, 43 tests.
+  - `pnpm --filter @reactive-resume/resume typecheck` passed.
+  - `pnpm --filter @reactive-resume/ai typecheck` passed.
+  - `pnpm --filter @reactive-resume/api typecheck` passed.
+  - `pnpm --filter web typecheck` passed.
+  - Additional direct-consumer checks passed: `pnpm --filter @reactive-resume/db typecheck`, `pnpm --filter @reactive-resume/import typecheck`, and `pnpm --filter @reactive-resume/utils typecheck`.
+  - Focused `pnpm exec biome check ...` initially found import-order/type-import issues; `pnpm exec biome check --write ...` fixed 10 touched files.
+  - Focused `pnpm exec biome check ...` passed afterward on the touched package/source/manifests.
+- Task 1 review correction:
+  - Spec review found `packages/db` had a type-only manifest dependency on `@reactive-resume/resume`.
+  - Replaced the DB import with a local structural `StoredJsonPatchOperation` type for JSONB column annotations in `packages/db/src/schema/agent.ts`.
+  - Removed `@reactive-resume/resume` from `packages/db/package.json` and `pnpm-lock.yaml`.
+- Task 1 review validation:
+  - `pnpm --filter @reactive-resume/db typecheck` passed after the DB boundary correction.
+  - `pnpm --filter @reactive-resume/api typecheck` passed.
+  - `pnpm --filter web typecheck` passed.
+  - `pnpm --filter @reactive-resume/resume test` passed: 2 files, 43 tests.
+  - `pnpm --filter @reactive-resume/resume typecheck` passed.
+  - Code-quality review noted unrelated dependency bumps in package manifests; those files were already dirty before this architecture work and were not treated as part of Task 1.
+- Task 2 completed:
+  - Created `packages/docx` as `@reactive-resume/docx` with source-consumed root export.
+  - Moved DOCX implementation/tests from `packages/utils/src/resume/docx` into `packages/docx/src`.
+  - Updated web DOCX callers to import `buildDocx` from `@reactive-resume/docx`.
+  - Removed the old `@reactive-resume/utils/resume/docx` export.
+  - Removed `docx` and `@reactive-resume/schema` from `@reactive-resume/utils`.
+  - Added `@reactive-resume/docx` as a web dependency.
+- Task 2 validation:
+  - `pnpm --filter @reactive-resume/docx test` passed: 5 files, 46 tests.
+  - `pnpm --filter @reactive-resume/docx typecheck` passed.
+  - `pnpm --filter @reactive-resume/utils typecheck` passed.
+  - `pnpm --filter web typecheck` passed.
+  - Spec review found only stale coordination text; plan and handoff were corrected.
+- Task 2 completed:
+  - Created `packages/docx` as `@reactive-resume/docx` with source-consumed root export `"." -> "./src/index.ts"`.
+  - Moved `packages/utils/src/resume/docx/*` to `packages/docx/src/*`, keeping the implementation and tests colocated.
+  - Updated builder DOCX export callers and the export-section test mock from `@reactive-resume/utils/resume/docx` to `@reactive-resume/docx`.
+  - Removed the old `@reactive-resume/utils` `./resume/docx` export.
+  - Removed `docx` and `@reactive-resume/schema` from `@reactive-resume/utils`; the new DOCX package owns those dependencies and depends on `@reactive-resume/utils` only for shared color parsing.
+  - Added `@reactive-resume/docx` as a web dependency and refreshed `pnpm-lock.yaml`.
+- Validation for Task 2:
+  - Initial `pnpm --filter @reactive-resume/docx test` failed on pnpm's non-TTY dependency-status install guard.
+  - `CI=true pnpm --filter @reactive-resume/docx test` then failed because sandbox DNS blocked registry fetches while pnpm recreated `node_modules`.
+  - Retried `CI=true pnpm --filter @reactive-resume/docx test` with network approval; passed: 5 files, 46 tests.
+  - `pnpm --filter @reactive-resume/docx typecheck` passed.
+  - `pnpm --filter @reactive-resume/utils typecheck` passed.
+  - `pnpm --filter web typecheck` passed.
+  - `pnpm --filter web test -- 'src/routes/builder/$resumeId/-sidebar/right/sections/export.test.tsx'` passed; Vitest reported 78 files and 430 tests.
+  - Focused `pnpm exec biome check --write ...` passed on the moved DOCX package, touched web callers, and package manifests; no fixes were applied.
+- Task 3 in progress:
+  - Added `packages/pdf/src/browser.tsx` with `createResumePdfBlob({ data, template, resolveSectionTitle })`.
+  - Added `packages/pdf/src/server.tsx` with `createResumePdfFile({ data, filename, template, resolveSectionTitle })`.
+  - Added `@reactive-resume/pdf/browser` and `@reactive-resume/pdf/server` package exports.
+  - Kept Lingui locale loading in `apps/web/src/libs/resume/pdf-document.tsx`; the web wrapper now resolves localized section titles and delegates blob generation to `@reactive-resume/pdf/browser`.
+  - Updated `apps/web/src/libs/resume/pdf-document.server.tsx` to delegate file generation to `@reactive-resume/pdf/server` after resolving localized section titles.
+  - Updated `apps/web/src/components/resume/preview.browser.tsx` so the PDF.js canvas viewer remains in web but PDF blob generation goes through the web-local wrapper.
+  - Updated `apps/server/src/handlers/resume-pdf.tsx` to reuse `@reactive-resume/pdf/server` and preserve the existing `File` response body flow.
+  - Added package helper tests for browser/server generation adapters.
+- Task 3 validation so far:
+  - Red test: `pnpm --filter @reactive-resume/pdf test -- src/browser.test.tsx src/server.test.tsx` failed because `packages/pdf/src/browser.tsx` and `packages/pdf/src/server.tsx` did not exist.
+  - Interim implementation test exposed Vitest/Rolldown JSX transform limits for newly imported package TSX helpers; helpers now use `createElement` while keeping requested `.tsx` filenames.
+  - `pnpm --filter @reactive-resume/pdf test -- src/browser.test.tsx src/server.test.tsx` passed; Vitest reported 17 files and 139 tests.
+  - Initial focused web preview test failed because the test still mocked the old `useLocalizedResumeDocument` generation path.
+  - Updated `apps/web/src/components/resume/preview.browser.test.tsx` to mock/assert `createResumePdfBlob`.
+  - `pnpm --filter web test -- src/components/resume/preview.browser.test.tsx` passed; Vitest reported 78 files and 430 tests.
+  - `pnpm --filter web test -- 'src/routes/builder/$resumeId/-sidebar/right/sections/export.test.tsx' 'src/routes/$username/-components/public-resume.test.tsx' 'src/routes/$username/-components/pdf-viewer.test.tsx'` passed; Vitest reported 78 files and 430 tests.
+- Task 4 completed:
+  - Created `packages/mcp` as `@reactive-resume/mcp` with source-consumed exports for the compact public surface and direct server-card/tool/prompt/resource subpaths.
+  - Moved MCP helper implementation and tests from `apps/web/src/routes/mcp/-helpers` into `packages/mcp/src`, then removed the empty web MCP helper route directory.
+  - Updated `apps/server/src/handlers/mcp.ts` and `apps/server/src/handlers/metadata.ts` to import from `@reactive-resume/mcp`, removing the app-to-app source imports from `apps/server` into `apps/web`.
+  - Preserved in-process MCP execution through the injected oRPC `RouterClient`; no HTTP RPC calls were introduced inside the server process.
+  - Renamed MCP tool values to canonical unprefixed snake_case names: `list_resumes`, `list_resume_tags`, `read_resume`, `get_resume_analysis`, `create_resume`, `import_resume`, `duplicate_resume`, `apply_resume_patch`, `update_resume`, `delete_resume`, `lock_resume`, `unlock_resume`, and `get_resume_statistics`.
+  - Updated prompts, server instructions, server-card metadata, and tests to use the canonical names and removed `reactive_resume_*` aliases/instructions.
+  - Added `packages/ai/src/tools/resume-tool-contracts.ts` with the shared JSON Patch operations contract and reused it from `packages/ai/src/tools/patch-resume.ts` and MCP patch schemas.
+  - Updated package manifests and `pnpm-lock.yaml`; `web` no longer owns `@modelcontextprotocol/sdk`, and `server` now depends on `@reactive-resume/mcp`.
+- Validation for Task 4:
+  - Initial `pnpm --filter @reactive-resume/mcp test` reported no matching package before creation.
+  - After package creation, `pnpm --filter @reactive-resume/mcp test` hit pnpm's non-TTY dependency-status install guard.
+  - `CI=true pnpm --filter @reactive-resume/mcp test` then failed with a frozen-lockfile mismatch after moving dependencies.
+  - Ran `pnpm install --lockfile-only --no-frozen-lockfile`; completed.
+  - A later `CI=true pnpm --filter @reactive-resume/mcp test` failed because sandbox DNS blocked registry fetches while pnpm restored `node_modules`.
+  - Retried `CI=true pnpm --filter @reactive-resume/mcp test` with network approval; passed: 4 files, 29 tests.
+  - `pnpm --filter @reactive-resume/mcp typecheck` initially failed because the package type graph reaches API/auth TSX and tests had optional text access; fixed by enabling JSX in the package tsconfig and narrowing test content access.
+  - Final validation commands passed: `pnpm --filter @reactive-resume/mcp test`, `pnpm --filter @reactive-resume/mcp typecheck`, `pnpm --filter server typecheck`, `pnpm --filter @reactive-resume/ai typecheck`, focused `pnpm exec biome check ...`, and `rg -n "\\.\\./\\.\\./\\.\\./web/src|apps/web/src|web/src/routes/mcp" apps/server/src packages/mcp/src`.
+  - Initial final validation found `pnpm exec biome check ...` import/format issues in touched PDF/web files and type errors around the React element type passed into `pdf(...)` and `renderToBuffer(...)`.
+  - Added narrow render-boundary casts using `Parameters<typeof pdf>[0]` and `Parameters<typeof renderToBuffer>[0]`.
+  - Ran `pnpm exec biome check --write ...`; Biome fixed 4 touched files.
+  - `pnpm --filter @reactive-resume/pdf test` passed: 17 files, 139 tests.
+  - `pnpm --filter @reactive-resume/pdf typecheck` passed.
+  - `pnpm --filter web typecheck` passed.
+  - `pnpm --filter server typecheck` passed.
+  - `pnpm exec biome check packages/pdf/src/browser.tsx packages/pdf/src/server.tsx packages/pdf/src/browser.test.tsx packages/pdf/src/server.test.tsx packages/pdf/package.json apps/web/src/libs/resume/pdf-document.tsx apps/web/src/libs/resume/pdf-document.server.tsx apps/web/src/components/resume/preview.browser.tsx apps/web/src/components/resume/preview.browser.test.tsx apps/server/src/handlers/resume-pdf.tsx docs/superpowers/plans/2026-05-14-monorepo-architecture-reorg.md docs/superpowers/worklogs/2026-05-14-monorepo-architecture-reorg.md docs/superpowers/handoffs/2026-05-14-monorepo-architecture-reorg.md` passed.
+  - `pnpm --filter web test -- src/components/resume/preview.browser.test.tsx` passed; Vitest reported 78 files and 430 tests.
+  - `pnpm --filter web test -- 'src/routes/builder/$resumeId/-sidebar/right/sections/export.test.tsx' 'src/routes/$username/-components/public-resume.test.tsx' 'src/routes/$username/-components/pdf-viewer.test.tsx'` passed; Vitest reported 78 files and 430 tests.
+- Task 4 review correction:
+  - Spec review found stale MCP guide references to removed prefixed tool names and the unavailable `tailor_resume` prompt.
+  - Updated `docs/guides/using-the-mcp-server.mdx` to document canonical tool names such as `list_resumes`, `read_resume`, and `apply_resume_patch`, and removed `tailor_resume`.
+  - Removed the last code-side literal reference to the old prefixed tool-name family from `packages/mcp/src/tool-annotations.test.ts`.
+  - Re-ran `rg "reactive_resume_|tailor_resume|web/src/routes/mcp|apps/web/src|\\.\\./\\.\\./\\.\\./web" apps/server packages/mcp packages/ai/src docs/guides/using-the-mcp-server.mdx -n`; no matches.
+  - Re-ran `pnpm --filter @reactive-resume/mcp test`, `pnpm --filter @reactive-resume/mcp typecheck`, `pnpm --filter server typecheck`, `pnpm --filter @reactive-resume/ai typecheck`, and focused `pnpm exec biome check ...`; all passed.
+- Task 5 review correction:
+  - Spec review found stale root project guidance that still pointed API work at `packages/api/src/routers/*` and `packages/api/src/services/*`.
+  - Updated `AGENTS.md` so the normative guidance now points API work at `packages/api/src/features/*` and documents the new `resume`, `docx`, `pdf`, and `mcp` package ownership boundaries.
+  - Re-ran `pnpm --filter @reactive-resume/api test`: 19 files, 155 tests passed.
+  - Re-ran `pnpm --filter @reactive-resume/api typecheck`, `pnpm --filter server typecheck`, and `pnpm --filter web typecheck`; all passed.
+  - Re-ran focused `pnpm exec biome check ...` on `AGENTS.md`, API/server/web touchpoints, and coordination docs; passed.
+- Task 7 slice 1 review correction:
+  - Spec review found the moved public resume route missing its expected `ssr: "data-only"` setting and the builder preview route missing `ssr: false`.
+  - Restored `ssr: "data-only"` in `apps/web/src/routes/$username/$slug.tsx`.
+  - Restored `ssr: false` in `apps/web/src/routes/builder/$resumeId/index.tsx`.
+  - Updated `AGENTS.md` and the handoff notes to point browser-only resume preview/public viewer code at `apps/web/src/features/resume/*` instead of the removed `components/resume` and `libs/resume` paths.
+- Task 5 completed:
+  - Moved API routers and service/helpers from the old technical-layer folders into `packages/api/src/features/*`.
+  - Agent is now feature-owned under `features/agent`, with procedure modules for `threads`, `messages`, `attachments`, and `actions`, run-state in `runs`, tool construction in `tools`, and remaining shared runtime orchestration in `service.ts`.
+  - Finer-grained follow-up: `features/agent/service.ts` still contains shared thread/message/action orchestration because the run lifecycle, message persistence, attachment linking, and patch transaction helpers are tightly coupled; splitting that service body further should be a dedicated follow-up with behavior-specific tests.
+  - Resume is now feature-owned under `features/resume`, with procedure modules for `crud`, `tags`, `statistics`, `analysis`, `event-router`, `sharing`, and `export`; access helpers and event publication moved under the same feature.
+  - Finer-grained follow-up: `features/resume/service.ts` remains the DB-backed facade for shared transaction helpers, update notifications, access/statistics coupling, and storage cleanup. The public procedure surface is capability-split, and further DB-service extraction should preserve the existing transaction and event behavior.
+  - Moved the authenticated PDF download procedure from `apps/server/src/handlers/resume-pdf.tsx` into `packages/api/src/features/resume/export.ts`; it now calls `@reactive-resume/pdf/server`.
+  - Removed the old API package `./services/*` and `./helpers/*` wildcard exports.
+  - Added explicit API runtime/type exports for `./features/storage`, `./features/resume`, `./features/resume/export`, and `./features/flags`.
+  - Updated `apps/server` to import storage/PDF runtime surfaces from explicit API feature exports.
+  - Updated `apps/web` to keep API imports type-only, including the `FeatureFlags` type from `@reactive-resume/api/features/flags`.
+  - Added `@reactive-resume/pdf` as an API package dependency and refreshed `pnpm-lock.yaml`.
+- Validation for Task 5:
+  - Initial `pnpm --filter @reactive-resume/api typecheck` failed because pnpm attempted a non-TTY dependency-status install after package metadata changes.
+  - Retried with `CI=true`; sandbox DNS blocked registry fetches while rebuilding `node_modules`.
+  - Retried `CI=true pnpm --filter @reactive-resume/api typecheck` with network approval; dependency restoration completed and the first compiler pass found moved import paths that needed correction.
+  - `pnpm --filter @reactive-resume/api test` initially failed because the moved agent service test mocked the new `./service` module instead of its relocated AI/resume dependencies; fixed the mocks.
+  - Final focused validations passed: `pnpm --filter @reactive-resume/api test`, `pnpm --filter @reactive-resume/api typecheck`, `pnpm --filter server typecheck`, `pnpm --filter web typecheck`, and `pnpm --filter @reactive-resume/mcp typecheck`.
+  - Focused Biome check initially reported import-order/format issues; `pnpm exec biome check --write ...` fixed 7 touched API files.
+  - Re-ran focused Biome check after the write pass; it passed.
+  - Repo scans passed for no remaining `@reactive-resume/api/services/*` or `@reactive-resume/api/helpers/*` imports outside `packages/api`, no internal `../services` or `../helpers` imports, and no `./services/*` or `./helpers/*` wildcard exports in `packages/api/package.json`.
+- Task 6 completed:
+  - Reorganized `apps/server/src` into runtime adapter areas: `http`, `rpc`, `mcp`, `openapi`, `static`, and `startup`.
+  - Moved route registration into `apps/server/src/http/app.ts` and kept `apps/server/src/index.ts` as the process entrypoint that runs startup checks and starts Hono.
+  - Moved common response/cookie helpers to `http/headers.ts`, auth and health HTTP handlers to `http`, oRPC request handling and locale extraction to `rpc`, MCP auth/server setup/transport handling to `mcp`, OpenAPI and well-known metadata to `openapi`, uploads/schema/web-dist serving to `static`, and migrations/local-storage lifecycle checks to `startup`.
+  - Kept the public route order and paths from the previous `index.ts`, including serving `apps/web/dist`.
+  - Preserved explicit API runtime imports only: `@reactive-resume/api/routers`, `@reactive-resume/api/features/storage`, and `@reactive-resume/api/features/resume/export`.
+- Validation for Task 6:
+  - Baseline before moving files: `pnpm --filter server test` passed: 1 file, 1 test.
+  - Interim validation after moving files: `pnpm --filter server typecheck` passed.
+  - Interim validation after moving files: `pnpm --filter server test` passed: 1 file, 1 test.
+  - Final `pnpm --filter server test` passed: 1 file, 1 test.
+  - Final `pnpm --filter server typecheck` passed.
+  - Final `pnpm --filter @reactive-resume/api typecheck` passed.
+  - Focused `pnpm exec biome check apps/server/src docs/superpowers/plans/2026-05-14-monorepo-architecture-reorg.md docs/superpowers/worklogs/2026-05-14-monorepo-architecture-reorg.md docs/superpowers/handoffs/2026-05-14-monorepo-architecture-reorg.md` initially found import-order issues in `apps/server/src/http/app.ts` and `apps/server/src/mcp/handler.ts`; after manual import ordering fixes, the same command passed.
+  - `rg -n "apps/web/src|from ['\"][^'\"]*web/src|@reactive-resume/api/services/" apps/server/src` returned no matches.
+  - `rg -n "@reactive-resume/api/services/" apps/server packages/api apps/web packages` returned no matches.
+  - `rg -n "from ['\"][^'\"]*apps/web/src|from ['\"][^'\"]*web/src|apps/web/src" apps/server` returned no matches.
+- Task 7 slice 1 completed:
+  - Moved `apps/web/src/components/resume/builder-resume-draft.ts` to `apps/web/src/features/resume/builder/draft.ts` and updated builder/dialog consumers to import the feature-owned draft store directly.
+  - Moved builder preview files and colocated tests from `apps/web/src/components/resume` to `apps/web/src/features/resume/preview`, including `preview.tsx`, `preview.browser.tsx`, `preview.shared.tsx`, `pdf-canvas.tsx`, and preview shared tests.
+  - Moved dashboard resume thumbnail sizing helpers to `features/resume/preview/resume-thumbnail.shared.ts` and moved PDF.js thumbnail rendering into `features/resume/preview/pdf-thumbnail.ts`, so direct `pdfjs-dist` usage stays under `features/resume`.
+  - Moved web-local PDF document wrappers from `apps/web/src/libs/resume/pdf-document*.tsx` to `apps/web/src/features/resume/export/pdf-document*.tsx`; the wrappers still resolve localized section titles in web and call `@reactive-resume/pdf/browser` or `@reactive-resume/pdf/server`.
+  - Moved public resume route components and tests from `apps/web/src/routes/$username/-components` to `apps/web/src/features/resume/public`, including `public-resume.tsx`, `pdf-viewer.tsx`, `pdf-viewer.css`, and their tests.
+  - Updated the public resume route to lazy-load `features/resume/public/public-resume` while preserving its loader, redirects, metadata, and route settings.
+  - Removed the now-empty `apps/web/src/components/resume` and `apps/web/src/routes/$username/-components` directories.
+  - Broader Task 7 remains open for command palette, theme, locale, user, auth, settings, and Task 8 dialog-registry work.
+- Task 7 slice 2 completed:
+  - Moved command palette implementation/tests to `apps/web/src/features/command-palette`.
+  - Moved theme provider, combobox, toggle button, and tests to `apps/web/src/features/theme`.
+  - Moved locale combobox implementation/tests to `apps/web/src/features/locale`.
+  - Moved user dropdown implementation to `apps/web/src/features/user`.
+  - Moved auth layout, page UI, and social auth component into `apps/web/src/features/auth`; auth route files now keep route guards/search validation and compose feature pages.
+  - Moved settings page UI and authentication/integration subcomponents into `apps/web/src/features/settings`; settings route files now keep dashboard headers and compose feature pages.
+  - Left `apps/web/src/routes/dashboard/settings/job-search.tsx` route-only because it is already a redirect shim.
+  - `pnpm --filter web test -- src/features/command-palette src/features/theme src/features/locale` passed; Vitest reported 74 files and 402 tests.
+  - `pnpm --filter web typecheck` passed.
+  - Focused Biome passed on the moved shell/auth/settings files and their route/import consumers; it checked 64 files with no fixes applied after a formatting write pass.
+  - `rg -n "@/components/(command-palette|theme|locale|user)" apps/web/src` and `rg -n "components/(command-palette|theme|locale|user)" apps/web/src` returned no matches.
+- Task 8 completed:
+  - Added dialog schema registries under `apps/web/src/dialogs/{auth,api-key,resume}/schema.ts` and composed them through `apps/web/src/dialogs/schemas.ts`.
+  - Added domain renderer registries under `apps/web/src/dialogs/{auth,api-key,resume}/registry.tsx`, with shared renderer helper types in `apps/web/src/dialogs/renderer-registry.ts`.
+  - Reduced `apps/web/src/dialogs/store.ts` to the single global dialog runtime/store while preserving typed `openDialog(type, data)` and `DialogProps<T>` exports.
+  - Reduced `apps/web/src/dialogs/manager.tsx` to render via composed registries instead of directly importing all auth/API-key/resume dialog components.
+  - Added a store test assertion that the central schema union is built from the domain schema registries.
+- Validation for Task 8 so far:
+  - Red check: `pnpm --filter web test -- src/dialogs/store.test.ts` failed because `./schemas` did not exist.
+  - `pnpm --filter web test -- src/dialogs/store.test.ts` passed after the registry implementation.
+  - Initial `pnpm --filter web typecheck` found renderer-entry variance errors; fixed by typing renderer entries as an existential union of concrete dialog renderers.
+  - `pnpm --filter web typecheck` passed after the renderer type fix.
+  - `pnpm --filter web test -- src/dialogs/store.test.ts src/dialogs/resume/template/data.test.ts src/dialogs/resume/template/gallery.test.tsx` passed; Vitest reported 74 files and 403 tests.
+  - Final `pnpm --filter web typecheck` passed.
+  - Final `pnpm --filter web test -- src/dialogs/store.test.ts src/dialogs/resume/template/data.test.ts src/dialogs/resume/template/gallery.test.tsx` passed; Vitest reported 74 files and 403 tests.
+  - Focused `pnpm exec biome check ...` passed on the touched dialog registry/store/manager files and Task 8 coordination docs; Biome checked 12 TypeScript files and ignored Markdown.
+  - `rg -n "ts-pattern|Create[A-Za-z]+Dialog|Update[A-Za-z]+Dialog|TemplateGalleryDialog|from \"\\./(api-key|auth|resume)" apps/web/src/dialogs/manager.tsx` returned no matches.
+  - `rg -n "@reactive-resume/schema/resume/data|awardItemSchema|certificationItemSchema|coverLetterItemSchema|customSectionSchema|educationItemSchema|experienceItemSchema|interestItemSchema|languageItemSchema|profileItemSchema|projectItemSchema|publicationItemSchema|referenceItemSchema|skillItemSchema|summaryItemSchema|volunteerItemSchema|z\\.object\\(\\{ type" apps/web/src/dialogs/store.ts` returned no matches.
+- Task 9 completed:
+  - Inspected installed Turbo and Biome versions and local schemas/docs:
+    - `pnpm exec turbo --version`: `2.9.12`
+    - `pnpm exec biome --version`: `2.4.15`
+    - `node_modules/.pnpm/turbo@2.9.12/node_modules/turbo/schema.json` includes root `boundaries`, `dependencies`, `dependents`, `implicitDependencies`, and workspace `tags`.
+    - Context7/Biome docs and `node_modules/@biomejs/biome/configuration_schema.json` confirm local `.grit` plugins can be loaded through `biome.json` `plugins`.
+  - Updated `turbo.json` with executable boundaries:
+    - Deny dependencies on app workspaces `web` and `server`, preventing package-to-app and app-to-app imports.
+    - Add root test-tool implicit dependencies for `vitest`, `@testing-library/jest-dom`, `@testing-library/react`, and `@testing-library/user-event` so test imports do not require duplicating root test devDependencies in every workspace package.
+    - Add tag rules for app, server, browser, universal, domain, and UI layers.
+  - Added workspace `turbo.json` files with `extends: ["//"]` and boundary tags for both apps and all packages.
+  - Added `@boundaries-ignore root shared Vitest config` to every workspace `vitest.config.ts` import of `../../vitest.shared`; this is the only allowed cross-package source import left for the shared root test config.
+  - Updated `biome.json` with `style.noRestrictedImports` patterns for:
+    - `@reactive-resume/*/src/**`
+    - `apps/**`
+    - `packages/**`
+  - Added `tooling/grit/no-cross-workspace-src-imports.grit` and registered it in `biome.json` as a second layer for import/export/dynamic import sources that reference another workspace's `src` tree.
+  - Removed the cross-workspace `@reactive-resume/ui/* -> ../../packages/ui/src/*` path alias from `apps/web/tsconfig.json`; web now relies on the UI package export map.
+- Files changed for Task 9:
+  - `turbo.json`
+  - `apps/server/turbo.json`
+  - `apps/web/turbo.json`
+  - `apps/web/tsconfig.json`
+  - `biome.json`
+  - `tooling/grit/no-cross-workspace-src-imports.grit`
+  - `apps/server/vitest.config.ts`
+  - `apps/web/vitest.config.ts`
+  - `packages/ai/turbo.json`
+  - `packages/ai/vitest.config.ts`
+  - `packages/api/turbo.json`
+  - `packages/api/vitest.config.ts`
+  - `packages/auth/turbo.json`
+  - `packages/auth/vitest.config.ts`
+  - `packages/config/turbo.json`
+  - `packages/config/vitest.config.ts`
+  - `packages/db/turbo.json`
+  - `packages/db/vitest.config.ts`
+  - `packages/docx/turbo.json`
+  - `packages/docx/vitest.config.ts`
+  - `packages/email/turbo.json`
+  - `packages/email/vitest.config.ts`
+  - `packages/env/turbo.json`
+  - `packages/env/vitest.config.ts`
+  - `packages/fonts/turbo.json`
+  - `packages/fonts/vitest.config.ts`
+  - `packages/import/turbo.json`
+  - `packages/import/vitest.config.ts`
+  - `packages/mcp/turbo.json`
+  - `packages/mcp/vitest.config.ts`
+  - `packages/pdf/turbo.json`
+  - `packages/pdf/vitest.config.ts`
+  - `packages/resume/turbo.json`
+  - `packages/resume/vitest.config.ts`
+  - `packages/runtime-externals/turbo.json`
+  - `packages/schema/turbo.json`
+  - `packages/schema/vitest.config.ts`
+  - `packages/scripts/turbo.json`
+  - `packages/ui/turbo.json`
+  - `packages/ui/vitest.config.ts`
+  - `packages/utils/turbo.json`
+  - `packages/utils/vitest.config.ts`
+  - `docs/superpowers/worklogs/2026-05-14-monorepo-architecture-reorg.md`
+  - `docs/superpowers/handoffs/2026-05-14-monorepo-architecture-reorg.md`
+- Validation for Task 9:
+  - Baseline `pnpm exec turbo boundaries` failed with 321 issues before configuration, mostly undeclared root test-tool imports and shared root Vitest config imports.
+  - Intermediate `pnpm exec turbo boundaries` passed after adding implicit dependencies and the Vitest config boundary-ignore comments.
+  - Final `pnpm exec turbo boundaries` passed: checked 660 files in 20 packages, no issues found.
+  - `pnpm exec biome check biome.json turbo.json tooling/grit/no-cross-workspace-src-imports.grit apps/web/tsconfig.json apps/server/turbo.json apps/web/turbo.json packages/*/turbo.json` passed: checked 24 files, no fixes applied.
+  - `pnpm --filter web typecheck` passed.
+  - `pnpm --filter @reactive-resume/api typecheck` passed.
+  - `pnpm --filter server typecheck` passed.
+- Remaining risks for Task 9:
+  - The current Turbo tags are coarse layer tags. They enforce the current obvious app/browser/server/domain/UI direction, but future package splits may need more granular tags or per-package dependency/dependent rules.
+  - The GritQL plugin is intentionally narrow: it only covers code import/export sources. JSON/tsconfig source-path aliases are covered separately by `noRestrictedImports`, manual scans, and the removal of the web-to-UI source alias.
+  - The shared root `vitest.shared` import remains intentionally ignored in workspace Vitest configs. Moving that helper into a package would remove the ignore comments but would be a broader test-infra reorg.
+- Task 10 completed:
+  - Updated `AGENTS.md` with executable boundary rules, package-role/runtime tags, a placement decision tree, and the `pnpm exec turbo boundaries` validation command.
+  - Replaced the stale public architecture guide at `docs/contributing/architecture.mdx`, which still described an old single-`src` layout, with the current monorepo runtime map, workspace ownership table, boundary rules, feature placement guide, API layout, PDF/DOCX boundaries, and MCP boundary.
+  - Added `docs/adr/0001-workspace-boundaries.md` with the accepted decision, context, consequences, and rejected alternatives.
+  - Left MCP and AI Agent user guides unchanged in this task because Task 4 already updated MCP tool names, and `docs/guides/ai-agent-tools.mdx` already documents the canonical `read_resume` and `apply_resume_patch` tool names.
+  - Did not add local package READMEs; `AGENTS.md`, the architecture guide, the ADR, `turbo.json`, workspace `turbo.json` tags, and `biome.json` are the source of truth.
+- Validation for Task 10:
+  - `rg -n "src/integrations|src/components/resume|packages/api/src/services|packages/api/src/helpers|reactive_resume_|tailor_resume|Radix UI|ORPC" AGENTS.md docs/contributing/architecture.mdx docs/adr/0001-workspace-boundaries.md docs/guides/using-the-mcp-server.mdx docs/guides/ai-agent-tools.mdx` returned only the expected `ORPCClient` labels in the architecture mermaid diagram.
+  - `pnpm exec biome check AGENTS.md docs/contributing/architecture.mdx docs/adr/0001-workspace-boundaries.md docs/superpowers/plans/2026-05-14-monorepo-architecture-reorg.md docs/superpowers/worklogs/2026-05-14-monorepo-architecture-reorg.md docs/superpowers/handoffs/2026-05-14-monorepo-architecture-reorg.md` did not process files because this Biome config ignores Markdown/MDX; there is no dedicated docs check script in `package.json`.
+- Task 11 completed:
+  - Ran `pnpm install --lockfile-only`; first pass was already up to date, and a later pass updated `pnpm-lock.yaml` after removing stale app dependencies.
+  - Ran `pnpm install` after manifest cleanup so pnpm's dependency-status check would stop trying to purge modules from non-TTY subcommands.
+  - Cleaned up final `pnpm knip` findings:
+    - Deleted unused `apps/web/src/features/resume/export/pdf-document.server.tsx`.
+    - Removed unused app dependencies from `apps/server/package.json` and `apps/web/package.json`.
+    - Removed unused internal exports in dialog registries, startup checks, API AI helpers, and agent tool helpers.
+    - Reattached `pdfExportRateLimit` to `downloadResumePdfProcedure`.
+    - Removed stale jobs rate-limit middleware exports that no current router uses.
+  - `pnpm knip` now exits successfully with only the existing configuration hint: `src/server.ts apps/web knip.json Refine entry pattern (no matches)`.
+- Final validation for Task 11:
+  - `pnpm install --lockfile-only` passed.
+  - `pnpm exec biome check .` passed: 756 files checked, no fixes applied.
+  - `pnpm exec turbo boundaries` passed: 659 files checked in 20 packages, no issues found.
+  - `pnpm knip` passed with one configuration hint and no unused files/dependencies/exports.
+  - `pnpm typecheck` passed: 18 successful tasks.
+  - `pnpm test` passed: 18 successful tasks; notable totals include web 74 files/403 tests, UI 42 files/421 tests, API 19 files/155 tests, PDF 17 files/139 tests.
+  - `pnpm build` passed: web and server builds completed.

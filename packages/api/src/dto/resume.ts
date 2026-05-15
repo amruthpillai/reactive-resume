@@ -1,8 +1,8 @@
 import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
 import * as schema from "@reactive-resume/db/schema";
+import { jsonPatchOperationSchema } from "@reactive-resume/resume/patch";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
-import { jsonPatchOperationSchema } from "@reactive-resume/utils/resume/patch";
 
 const resumeSchema = createSelectSchema(schema.resume, {
 	id: z.string().describe("The ID of the resume."),
@@ -39,7 +39,7 @@ export const resumeDto = {
 		input: z.object({ username: z.string(), slug: z.string() }),
 		// `name` is the owner-chosen dashboard title and is intentionally redacted
 		// to an empty string for non-owner viewers (see redactResumeForViewer in
-		// helpers/resume-access-policy.ts). Relax the `min(1)` constraint here so
+		// features/resume/access-policy.ts). Relax the `min(1)` constraint here so
 		// the redacted public response passes output validation.
 		output: resumeSchema
 			.omit({ name: true, password: true, userId: true, createdAt: true, updatedAt: true })

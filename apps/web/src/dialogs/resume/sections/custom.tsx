@@ -19,9 +19,9 @@ import {
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { generateId } from "@reactive-resume/utils/string";
-import { useUpdateResumeData } from "@/components/resume/builder-resume-draft";
 import { Combobox } from "@/components/ui/combobox";
 import { useDialogStore } from "@/dialogs/store";
+import { useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { useAppForm, withForm } from "@/libs/tanstack-form";
 

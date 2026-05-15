@@ -12,10 +12,7 @@
 		"./level": "./src/level.ts",
 		"./locale": "./src/locale.ts",
 		"./monorepo.node": "./src/monorepo.node.ts",
-		"./network-icons": "./src/network-icons.ts",
 		"./rate-limit": "./src/rate-limit.ts",
-		"./resume/docx": "./src/resume/docx/index.ts",
-		"./resume/patch": "./src/resume/patch.ts",
 		"./sanitize": "./src/sanitize.ts",
 		"./string": "./src/string.ts",
 		"./style": "./src/style.ts",
@@ -30,13 +27,10 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
-		"@reactive-resume/schema": "workspace:*",
 		"@sindresorhus/slugify": "^3.0.0",
 		"@uiw/color-convert": "^2.10.1",
 		"clsx": "^2.1.1",
-		"docx": "^9.6.1",
 		"dompurify": "^3.4.3",
-		"fast-json-patch": "^3.1.1",
 		"tailwind-merge": "^3.6.0",
 		"unique-names-generator": "^4.7.1",
 		"uuid": "^14.0.0",
@@ -44,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
-		"@types/node": "^25.7.0",
+		"@types/node": "^25.8.0",
 		"@typescript/native-preview": "7.0.0-dev.20260514.1",
 		"typescript": "^6.0.3"
 	}

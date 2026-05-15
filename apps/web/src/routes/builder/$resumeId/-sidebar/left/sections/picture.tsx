@@ -17,7 +17,7 @@ import {
 	InputGroupText,
 } from "@reactive-resume/ui/components/input-group";
 import { ColorPicker } from "@/components/input/color-picker";
-import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useSyncFormValues } from "@/hooks/use-sync-form-values";
 import { getReadableErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";

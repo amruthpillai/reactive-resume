@@ -10,7 +10,7 @@ import { Button } from "@reactive-resume/ui/components/button";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Label } from "@reactive-resume/ui/components/label";
 import { Switch } from "@reactive-resume/ui/components/switch";
-import { useCurrentResume, usePatchResume } from "@/components/resume/builder-resume-draft";
+import { useCurrentResume, usePatchResume } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
 import { authClient } from "@/libs/auth/client";

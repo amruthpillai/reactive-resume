@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/react/macro";
 import { RichInput } from "@/components/input/rich-input";
-import { useCurrentResume, useUpdateResumeData } from "@/components/resume/builder-resume-draft";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { SectionBase } from "../shared/section-base";
 
 export function NotesSectionBuilder() {
