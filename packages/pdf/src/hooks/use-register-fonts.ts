@@ -133,19 +133,38 @@ export const registerFonts = (typography: Typography, locale: Locale, hasCjkCont
 	}
 
 	// Register a CJK fallback so textkit can substitute per-codepoint for
-	// characters the primary font lacks (#2986). One weight per style is
-	// enough — substitution is per-codepoint, not per-weight.
+	// characters the primary font lacks (#2986). We register both the
+	// regular and bold weights so that <strong>/font-weight: 700 styles
+	// are honored for CJK glyphs — without the bold variant, textkit
+	// would only find a 400-weight match and synthesize an unbolded run.
 	const bodyCjkFallback = needsCjkTextSupport ? getPdfCjkFallbackFontFamily(bodyFontFamily) : null;
 	const headingCjkFallback = needsCjkTextSupport ? getPdfCjkFallbackFontFamily(headingFontFamily) : null;
 
-	if (bodyCjkFallback) {
-		registerFont(bodyCjkFallback, 400, false);
-		registerFont(bodyCjkFallback, 400, true);
-	}
+	const registerCjkFallback = (family: string, ranges: FontWeightRange[]) => {
+		const weights = new Set<number>();
+		for (const range of ranges) {
+			weights.add(range.lowest);
+			weights.add(range.highest);
+		}
+		for (const italic of [false, true]) {
+			for (const weight of weights) {
+				registerFont(family, weight, italic);
+			}
+		}
+	};
 
-	if (headingCjkFallback && headingCjkFallback !== bodyCjkFallback) {
-		registerFont(headingCjkFallback, 400, false);
-		registerFont(headingCjkFallback, 400, true);
+	if (bodyCjkFallback && bodyCjkFallback === headingCjkFallback) {
+		// Same fallback for body and heading: merge weight ranges so that
+		// bold styles applied to either typography level have a matching
+		// CJK glyph variant.
+		registerCjkFallback(bodyCjkFallback, [bodyRange, headingRange]);
+	} else {
+		if (bodyCjkFallback) {
+			registerCjkFallback(bodyCjkFallback, [bodyRange]);
+		}
+		if (headingCjkFallback) {
+			registerCjkFallback(headingCjkFallback, [headingRange]);
+		}
 	}
 
 	// Latin-only path: no fallback registered, return as-is.
