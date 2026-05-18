@@ -71,6 +71,43 @@ describe("registerFonts", () => {
 		);
 	});
 
+	it("registers a bold CJK fallback variant so <strong> renders bold for CJK glyphs", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		// body has highest weight 700, heading has 600 — both should be registered
+		// for the CJK fallback so textkit can substitute bold CJK glyphs.
+		const boldTypography = {
+			body: { ...typography.body, fontWeights: ["400", "700"] },
+			heading: { ...typography.heading, fontWeights: ["400", "600"] },
+		} satisfies Typography;
+
+		registerFonts(boldTypography, "zh-CN");
+
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({
+				family: "Noto Serif SC",
+				fontWeight: 700,
+				fontStyle: "normal",
+			}),
+		);
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({
+				family: "Noto Serif SC",
+				fontWeight: 700,
+				fontStyle: "italic",
+			}),
+		);
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({
+				family: "Noto Serif SC",
+				fontWeight: 600,
+				fontStyle: "normal",
+			}),
+		);
+	});
+
 	it("uses the full CJK font source for synthetic italic variants when the CJK font is primary", async () => {
 		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
 		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
