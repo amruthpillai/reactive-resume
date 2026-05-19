@@ -15,6 +15,7 @@ ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY patches ./patches
 COPY apps/web/package.json ./apps/web/package.json
 COPY packages/ai/package.json ./packages/ai/package.json
 COPY packages/api/package.json ./packages/api/package.json
