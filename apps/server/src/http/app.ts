@@ -14,6 +14,7 @@ import { handleLlms, handleRobots, handleSitemap } from "../static/seo";
 import { handleUpload } from "../static/uploads";
 import { handleWebApp, handleWebAppHead, serveWebDistStatic } from "../static/web";
 import { handleAuth, handleOAuth } from "./auth";
+import { getFontFileStore, handleTemplateFont } from "./fonts";
 import { handleHealth } from "./health";
 
 export function createApp() {
@@ -28,6 +29,10 @@ export function createApp() {
 	app.get("/api/health", () => handleHealth());
 	app.get("/api/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/uploads/*", (c) => handleUpload(c.req.raw));
+	app.get("/api/templates/:id/fonts/*", async (c) => {
+		const templateId = c.req.param("id") ?? "";
+		return handleTemplateFont(c.req.raw, templateId, "", getFontFileStore());
+	});
 	app.get("/schema.json", () => handleSchemaJson());
 	app.all("/mcp", (c) => handleMcp(c.req.raw));
 	app.all("/mcp/*", (c) => handleMcp(c.req.raw));

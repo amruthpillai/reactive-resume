@@ -8,7 +8,7 @@
 		"./context": "./src/context.tsx",
 		"./document": "./src/document.tsx",
 		"./section-title": "./src/section-title.ts",
-		"./server": "./src/server.tsx",
+		"./server": "./src/server.ts",
 		"./templates": "./src/templates/index.ts"
 	},
 	"scripts": {
@@ -21,11 +21,13 @@
 	"dependencies": {
 		"@react-pdf/renderer": "^4.5.1",
 		"@reactive-resume/fonts": "workspace:*",
+		"@reactive-resume/renderer": "workspace:*",
 		"@reactive-resume/schema": "workspace:*",
 		"@reactive-resume/utils": "workspace:*",
 		"cjk-regex": "^3.4.0",
 		"node-html-parser": "^7.1.0",
 		"phosphor-icons-react-pdf": "^0.1.3",
+		"puppeteer": "^23.11.0",
 		"react": "^19.2.6",
 		"react-pdf-html": "^2.1.5",
 		"ts-pattern": "^5.9.0"

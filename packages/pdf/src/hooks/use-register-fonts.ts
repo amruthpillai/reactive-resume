@@ -182,5 +182,6 @@ export const registerFonts = (typography: Typography, locale: Locale, hasCjkCont
 	return {
 		body: { ...pdfTypography.body, fontFamily: bodyStack },
 		heading: { ...pdfTypography.heading, fontFamily: headingStack },
+		slots: {},
 	};
 };

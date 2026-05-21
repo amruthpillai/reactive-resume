@@ -17,6 +17,7 @@ const typography = {
 		lineHeight: 1.5,
 		fontWeights: ["600"],
 	},
+	slots: {},
 } satisfies Typography;
 
 const cjkTypography = {
@@ -32,6 +33,7 @@ const cjkTypography = {
 		lineHeight: 1.5,
 		fontWeights: ["400"],
 	},
+	slots: {},
 } satisfies Typography;
 
 describe("registerFonts", () => {
@@ -77,6 +79,7 @@ describe("registerFonts", () => {
 		const { registerFonts } = await import("./use-register-fonts");
 
 		const boldTypography = {
+			...typography,
 			body: { ...typography.body, fontWeights: ["400", "700"] },
 			heading: { ...typography.heading, fontWeights: ["400", "600"] },
 		} satisfies Typography;
