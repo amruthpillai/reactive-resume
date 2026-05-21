@@ -4,10 +4,10 @@ import { Html } from "react-pdf-html";
 import { useTemplateStyle } from "./context";
 import { safeTextStyle } from "./primitives";
 import { normalizeRichTextHtml, richTextMarkClassName } from "./rich-text-html";
+import { renderRichTextParagraph, toRichTextStyleArray } from "./rich-text-renderers";
 import {
 	createRichTextProseSpacing,
 	getRichTextEdgeTrimStyle,
-	isRichTextElementInsideListItem,
 	isRichTextElementInsideOrderedList,
 	resolveRichTextBodyLineHeight,
 	stripRichTextVerticalMargins,
@@ -21,13 +21,6 @@ const richListItemContentStackStyle = {
 const richMarkStyle = {
 	backgroundColor: "#ffff00",
 } satisfies Style;
-
-const toStyleArray = (style: Style | Style[] | undefined): Style[] => {
-	if (!style) return [];
-	if (Array.isArray(style)) return style.filter(Boolean);
-
-	return [style];
-};
 
 export const RichText = ({ children }: { children: string }) => {
 	const boldStyle = useTemplateStyle("bold");
@@ -48,17 +41,11 @@ export const RichText = ({ children }: { children: string }) => {
 			resetStyles
 			renderers={{
 				b: ({ children }) => <PdfText style={composeStyles(boldStyle, safeTextStyle)}>{children}</PdfText>,
-				p: ({ element, style, children }) => {
-					const paragraphStyles = isRichTextElementInsideListItem(element)
-						? toStyleArray(style).map(stripRichTextVerticalMargins)
-						: style;
-
-					return <View style={composeStyles(paragraphStyles, getRichTextEdgeTrimStyle(element))}>{children}</View>;
-				},
+				p: renderRichTextParagraph,
 				li: ({ element, style, children }) => {
 					const isOrderedList = isRichTextElementInsideOrderedList(element);
 					const marker = isOrderedList ? `${element.indexOfType + 1}.` : "•";
-					const itemStyles = toStyleArray(style);
+					const itemStyles = toRichTextStyleArray(style);
 					const contentItemStyles = itemStyles.map(stripRichTextVerticalMargins);
 
 					return (

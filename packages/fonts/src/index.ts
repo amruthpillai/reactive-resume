@@ -132,7 +132,7 @@ const legacyFontAliases: Record<string, string> = {
 	Cambria: "Tinos",
 	Calibri: "Carlito",
 	Garamond: "EB Garamond",
-	"Times New Roman": "Tinos",
+	"Times New Roman": "Times-Roman",
 };
 
 export function resolveLegacyFontAlias(family: string): string | null {

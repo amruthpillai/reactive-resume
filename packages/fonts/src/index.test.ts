@@ -261,7 +261,7 @@ describe("buildResumeFontFamily", () => {
 
 describe("legacy font compatibility (#2989)", () => {
 	it.each([
-		["Times New Roman", "Tinos"],
+		["Times New Roman", "Times-Roman"],
 		["Arial", "Arimo"],
 		["Garamond", "EB Garamond"],
 		["Calibri", "Carlito"],
@@ -277,7 +277,7 @@ describe("legacy font compatibility (#2989)", () => {
 	});
 
 	it("every alias target is actually registered as a known font", () => {
-		const aliasTargets = ["Tinos", "Arimo", "EB Garamond", "Carlito"];
+		const aliasTargets = ["Times-Roman", "Tinos", "Arimo", "EB Garamond", "Carlito"];
 		for (const target of aliasTargets) {
 			expect(getFont(target), `alias target ${target} must be a known font`).toBeDefined();
 		}
@@ -286,7 +286,7 @@ describe("legacy font compatibility (#2989)", () => {
 	it("getFont resolves a legacy family to its alias target", () => {
 		const tnr = getFont("Times New Roman");
 		expect(tnr).toBeDefined();
-		expect(tnr?.family).toBe("Tinos");
+		expect(tnr?.family).toBe("Times-Roman");
 	});
 
 	it("getFont still returns the direct font when both legacy and direct lookup would succeed", () => {
