@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	baseItemSchema,
 	basicsSchema,
 	customFieldSchema,
 	experienceItemSchema,
@@ -313,5 +314,49 @@ describe("layoutSchema — sidebarPosition", () => {
 			expect(result.success).toBe(true);
 			expect(result.data?.sidebarPosition).toBe(pos);
 		}
+	});
+});
+
+describe("baseItemSchema — extensions", () => {
+	it("accepts extensions as a record of unknown values", () => {
+		const result = baseItemSchema.safeParse({
+			id: "item-1",
+			hidden: false,
+			extensions: { additionalHtml: "<p>extra</p>", logoUrl: "https://example.com/logo.png" },
+		});
+		expect(result.success).toBe(true);
+		expect(result.data?.extensions).toEqual({
+			additionalHtml: "<p>extra</p>",
+			logoUrl: "https://example.com/logo.png",
+		});
+	});
+
+	it("defaults extensions to empty object when absent", () => {
+		const result = baseItemSchema.safeParse({ id: "item-1", hidden: false });
+		expect(result.success).toBe(true);
+		expect(result.data?.extensions).toEqual({});
+	});
+
+	it("defaults extensions to empty object when null is passed", () => {
+		const result = baseItemSchema.safeParse({ id: "item-1", hidden: false, extensions: null });
+		expect(result.success).toBe(true);
+		expect(result.data?.extensions).toEqual({});
+	});
+
+	it("experienceItemSchema inherits extensions from baseItemSchema", () => {
+		const result = experienceItemSchema.safeParse({
+			id: "exp-1",
+			hidden: false,
+			company: "Acme",
+			position: "Engineer",
+			location: "",
+			period: "",
+			website: { url: "", label: "", inlineLink: false },
+			description: "",
+			roles: [],
+			extensions: { logoUrl: "https://example.com/logo.png" },
+		});
+		expect(result.success).toBe(true);
+		expect(result.data?.extensions?.logoUrl).toBe("https://example.com/logo.png");
 	});
 });
