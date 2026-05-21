@@ -454,6 +454,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								icon: item.icon ?? "",
 								iconColor: "",
 								network: item.network ?? "",
@@ -474,6 +475,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								company: item.company ?? "",
 								position: item.position ?? "",
 								location: item.location ?? "",
@@ -496,6 +498,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								school: item.institution ?? "",
 								degree: item.studyType ?? "",
 								area: item.area ?? "",
@@ -519,6 +522,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								name: item.name ?? "",
 								period: item.date ?? "",
 								website: {
@@ -538,6 +542,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								icon: "",
 								iconColor: "",
 								name: item.name ?? "",
@@ -556,6 +561,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								language: item.name ?? "",
 								fluency: item.description ?? "",
 								// v4 stored language level as 0-10; scale down to v5's 0-5 range
@@ -571,6 +577,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								icon: "",
 								iconColor: "",
 								name: item.name ?? "",
@@ -586,6 +593,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								title: item.title ?? "",
 								awarder: item.awarder ?? "",
 								date: item.date ?? "",
@@ -606,6 +614,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								title: item.name ?? "",
 								issuer: item.issuer ?? "",
 								date: item.date ?? "",
@@ -626,6 +635,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								title: item.name ?? "",
 								publisher: item.publisher ?? "",
 								date: item.date ?? "",
@@ -646,6 +656,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								organization: item.organization ?? "",
 								location: item.location ?? "",
 								period: item.date ?? "",
@@ -666,6 +677,7 @@ export class ReactiveResumeV4JSONImporter {
 							.map((item) => ({
 								id: item.id ?? generateId(),
 								hidden: !(item.visible ?? true),
+								extensions: {},
 								name: item.name ?? "",
 								position: item.description ?? "",
 								phone: "",
@@ -689,6 +701,7 @@ export class ReactiveResumeV4JSONImporter {
 						return {
 							id: item.id || generateId(),
 							hidden: !(item.visible ?? true),
+							extensions: {},
 							company: item.name?.trim() || `#${index + 1}`,
 							// Only use description as subtitle when item has a name;
 							// otherwise description IS the primary content and goes to the body below
@@ -713,6 +726,7 @@ export class ReactiveResumeV4JSONImporter {
 						: "onyx") as Template,
 					layout: {
 						sidebarWidth: clampSidebarWidth(35),
+						sidebarPosition: "left" as const,
 						pages: (v4Data.metadata.layout ?? []).map((page) => {
 							const main = transformLayoutColumn(page[0] ?? []);
 							const sidebar = transformLayoutColumn(page[1] ?? []);
@@ -760,6 +774,7 @@ export class ReactiveResumeV4JSONImporter {
 							fontSize: clampFontSize(convertAndClampFontSize(v4Data.metadata.typography?.font?.size ?? 14.67) + 3),
 							lineHeight: clampLineHeight(v4Data.metadata.typography?.lineHeight ?? 1.5),
 						},
+						slots: {},
 					},
 					notes: v4Data.metadata.notes ?? "",
 				},

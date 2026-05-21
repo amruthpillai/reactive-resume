@@ -222,6 +222,7 @@ export class JSONResumeImporter {
 					.map((work) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						company: work.name || "",
 						position: work.position || "",
 						location: work.location || "",
@@ -242,6 +243,7 @@ export class JSONResumeImporter {
 					.map((edu) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						school: edu.institution || "",
 						degree: [edu.studyType, edu.area].filter(Boolean).join(" in ") || "",
 						area: edu.area || "",
@@ -263,6 +265,7 @@ export class JSONResumeImporter {
 					.map((project) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						name: project.name || "",
 						period: formatPeriod(project.startDate, project.endDate),
 						website: createItemWebsite(project.url),
@@ -280,6 +283,7 @@ export class JSONResumeImporter {
 					.map((skill) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						icon: "star",
 						iconColor: "",
 						name: skill.name || "",
@@ -299,6 +303,7 @@ export class JSONResumeImporter {
 					.map((lang) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						language: lang.language || "",
 						fluency: lang.fluency || "",
 						level: parseLevel(lang.fluency),
@@ -315,6 +320,7 @@ export class JSONResumeImporter {
 					.map((interest) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						icon: "star",
 						iconColor: "",
 						name: interest.name || "",
@@ -332,6 +338,7 @@ export class JSONResumeImporter {
 					.map((award) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						title: award.title || "",
 						awarder: award.awarder || "",
 						date: formatSingleDate(award.date),
@@ -350,6 +357,7 @@ export class JSONResumeImporter {
 					.map((cert) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						title: cert.name || "",
 						issuer: cert.issuer || "",
 						date: formatSingleDate(cert.date),
@@ -368,6 +376,7 @@ export class JSONResumeImporter {
 					.map((pub) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						title: pub.name || "",
 						publisher: pub.publisher || "",
 						date: formatSingleDate(pub.releaseDate),
@@ -386,6 +395,7 @@ export class JSONResumeImporter {
 					.map((vol) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						organization: vol.organization || "",
 						location: "",
 						period: formatPeriod(vol.startDate, vol.endDate),
@@ -404,6 +414,7 @@ export class JSONResumeImporter {
 					.map((ref) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						name: ref.name || "",
 						position: "",
 						website: createItemWebsite(),
@@ -422,6 +433,7 @@ export class JSONResumeImporter {
 					.map((profile) => ({
 						id: generateId(),
 						hidden: false,
+						extensions: {},
 						icon: getNetworkIcon(profile.network),
 						iconColor: "",
 						network: profile.network || "",

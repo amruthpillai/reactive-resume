@@ -30,6 +30,7 @@ type FormValues = z.infer<typeof formSchema>;
 const defaultValues: FormValues = {
 	id: "",
 	hidden: false,
+	extensions: {},
 	name: "",
 	period: "",
 	website: { url: "", label: "", inlineLink: false },
