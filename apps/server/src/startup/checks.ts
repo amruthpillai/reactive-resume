@@ -7,6 +7,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
 import { env } from "@reactive-resume/env/server";
 import { getLocalDataDirectory } from "@reactive-resume/utils/monorepo.node";
+import { seedTemplates } from "./seed-templates";
 
 function resolveFromCurrentModule(relativePath: string) {
 	return fileURLToPath(new URL(relativePath, import.meta.url));
@@ -64,4 +65,5 @@ async function validateLocalStoragePath() {
 export async function runStartupChecks() {
 	await runDatabaseMigrations();
 	await validateLocalStoragePath();
+	await seedTemplates();
 }

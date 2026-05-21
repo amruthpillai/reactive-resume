@@ -6,6 +6,7 @@ import { flagsRouter } from "../features/flags/router";
 import { resumeRouter } from "../features/resume/router";
 import { statisticsRouter } from "../features/statistics/router";
 import { storageRouter } from "../features/storage/router";
+import { templatesRouter } from "../features/templates/router";
 
 export default {
 	ai: aiRouter,
@@ -16,4 +17,5 @@ export default {
 	resume: resumeRouter,
 	statistics: statisticsRouter,
 	storage: storageRouter,
+	templates: templatesRouter,
 };
