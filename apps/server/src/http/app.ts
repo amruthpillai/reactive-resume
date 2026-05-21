@@ -32,7 +32,8 @@ export function createApp() {
 	app.get("/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/api/templates/:id/fonts/*", async (c) => {
 		const templateId = c.req.param("id") ?? "";
-		return handleTemplateFont(c.req.raw, templateId, "", getFontFileStore());
+		const fontPath = c.req.param("*") ?? "";
+		return handleTemplateFont(c.req.raw, templateId, fontPath, getFontFileStore());
 	});
 	app.post("/api/builder/preview", async (c) => handleBuilderPreview(c.req.raw));
 	app.get("/schema.json", () => handleSchemaJson());

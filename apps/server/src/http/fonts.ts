@@ -44,11 +44,22 @@ export const upsertTemplateFonts = (
 
 export async function handleTemplateFont(
 	_request: Request,
-	_templateId: string,
+	templateId: string,
 	_filename: string,
-	_fontMap: Record<string, FontFileEntry>,
+	fontMap: Record<string, FontFileEntry>,
 ): Promise<Response> {
-	// Font serving wired here; functional when font store is seeded (Phase 5).
-	// During Phase 3/4 the route exists but returns 404 until the store is populated.
-	return new Response("Not Found", { status: 404 });
+	const key = `${templateId}/${_filename}`;
+	const entry = fontMap[key];
+
+	if (!entry) {
+		return new Response("Font not found", { status: 404 });
+	}
+
+	return new Response(Buffer.from(entry.data, "base64"), {
+		headers: {
+			"Content-Type": entry.contentType,
+			"Cache-Control": "public, max-age=86400,immutable",
+			"Access-Control-Allow-Origin": "*",
+		},
+	});
 }

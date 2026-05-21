@@ -63,7 +63,7 @@ export class TemplateService {
 	async createFromZip(zipBuffer: Buffer, userId: string): Promise<StoredTemplate> {
 		const parsed: ParsedTemplate = await parseTemplate(zipBuffer);
 		const id = generateId();
-		return this.upsert({
+		const record = await this.upsert({
 			id,
 			name: parsed.metadata.name,
 			tags: parsed.metadata.tags,
@@ -74,6 +74,10 @@ export class TemplateService {
 			...(parsed.metadata.description !== undefined ? { description: parsed.metadata.description } : {}),
 			...(parsed.metadata.author !== undefined ? { author: parsed.metadata.author } : {}),
 		});
+
+		// NOTE: Font store population is handled by the caller (seed-templates.ts or router handler)
+		// to avoid an HTTP-layer dependency inside the API package.
+		return record;
 	}
 
 	async delete(id: string, userId: string): Promise<boolean> {
