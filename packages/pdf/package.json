@@ -12,6 +12,7 @@
 		"./templates": "./src/templates/index.ts"
 	},
 	"scripts": {
+		"build:rxt": "tsx ../../tooling/build-rxt.ts",
 		"typecheck": "tsgo --noEmit",
 		"test": "vitest run --passWithNoTests",
 		"test:coverage": "vitest run --coverage --passWithNoTests",
