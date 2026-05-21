@@ -148,6 +148,7 @@ export const defaultResumeData: ResumeData = {
 				fontSize: 14,
 				lineHeight: 1.5,
 			},
+			slots: {},
 		},
 		notes: "",
 	},

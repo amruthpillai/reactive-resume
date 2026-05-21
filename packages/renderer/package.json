@@ -1,15 +1,10 @@
 {
-	"name": "@reactive-resume/schema",
+	"name": "@reactive-resume/renderer",
 	"version": "0.0.0",
 	"type": "module",
 	"private": true,
 	"exports": {
-		"./icons": "./src/icons.ts",
-		"./page": "./src/page.ts",
-		"./resume/*": "./src/resume/*.ts",
-		"./schema.json": "./schema.json",
-		"./template-metadata": "./src/template-metadata.ts",
-		"./templates": "./src/templates.ts"
+		".": "./src/index.ts"
 	},
 	"scripts": {
 		"typecheck": "tsgo --noEmit",
@@ -19,11 +14,16 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
-		"zod": "^4.4.3"
+		"@reactive-resume/schema": "workspace:*",
+		"jszip": "^3.10.1",
+		"node-html-parser": "^7.1.0",
+		"nunjucks": "^3.2.4"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
+		"@types/nunjucks": "^3.2.6",
 		"@typescript/native-preview": "7.0.0-dev.20260519.1",
-		"typescript": "^6.0.3"
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.7"
 	}
 }

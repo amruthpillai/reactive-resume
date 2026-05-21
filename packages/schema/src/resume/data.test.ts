@@ -8,6 +8,7 @@ import {
 	pictureSchema,
 	resumeDataSchema,
 	skillItemSchema,
+	typographySchema,
 	websiteSchema,
 } from "./data";
 import { defaultResumeData } from "./default";
@@ -267,6 +268,50 @@ describe("pageSchema", () => {
 		for (const format of ["a4", "letter", "free-form"] as const) {
 			const valid = { ...defaultResumeData.metadata.page, format };
 			expect(pageSchema.safeParse(valid).success).toBe(true);
+		}
+	});
+});
+
+describe("typographySchema — slots", () => {
+	it("defaults slots to empty object when absent", () => {
+		const result = typographySchema.safeParse({
+			body: { fontFamily: "IBM Plex Serif", fontWeights: ["400"], fontSize: 10, lineHeight: 1.5 },
+			heading: { fontFamily: "IBM Plex Serif", fontWeights: ["600"], fontSize: 14, lineHeight: 1.5 },
+		});
+		expect(result.success).toBe(true);
+		expect(result.data?.slots).toEqual({});
+	});
+
+	it("accepts slot overrides with partial fields", () => {
+		const result = typographySchema.safeParse({
+			body: { fontFamily: "Inter", fontWeights: ["400"], fontSize: 10, lineHeight: 1.5 },
+			heading: { fontFamily: "Inter", fontWeights: ["600"], fontSize: 14, lineHeight: 1.5 },
+			slots: {
+				name: { fontFamily: "Playfair Display", fontSize: 28, fontWeight: 700 },
+				caption: { fontSize: 8.5 },
+			},
+		});
+		expect(result.success).toBe(true);
+		expect(result.data?.slots.name?.fontFamily).toBe("Playfair Display");
+		expect(result.data?.slots.caption?.fontSize).toBe(8.5);
+	});
+});
+
+describe("layoutSchema — sidebarPosition", () => {
+	it("defaults sidebarPosition to undefined when absent", () => {
+		const result = layoutSchema.safeParse({
+			sidebarWidth: 35,
+			pages: [{ fullWidth: false, main: ["experience"], sidebar: [] }],
+		});
+		expect(result.success).toBe(true);
+		expect(result.data?.sidebarPosition).toBeUndefined();
+	});
+
+	it("accepts sidebarPosition left or right", () => {
+		for (const pos of ["left", "right"] as const) {
+			const result = layoutSchema.safeParse({ sidebarWidth: 35, pages: [], sidebarPosition: pos });
+			expect(result.success).toBe(true);
+			expect(result.data?.sidebarPosition).toBe(pos);
 		}
 	});
 });

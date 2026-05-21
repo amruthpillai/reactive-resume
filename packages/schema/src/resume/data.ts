@@ -102,6 +102,10 @@ export const summarySchema = z.object({
 export const baseItemSchema = z.object({
 	id: z.string().describe("The unique identifier for the item. Usually generated as a UUID."),
 	hidden: z.boolean().describe("Whether to hide the item from the resume."),
+	extensions: z
+		.record(z.string(), z.unknown())
+		.catch({})
+		.describe("Template-specific custom data keyed by resume-slot id."),
 });
 
 export const summaryItemSchema = baseItemSchema.extend({
@@ -442,6 +446,12 @@ export const layoutSchema = z.object({
 		.catch(35)
 		.describe("The width of the sidebar column, defined as a percentage of the page width."),
 	pages: z.array(pageLayoutSchema).describe("The pages to display in the layout."),
+	sidebarPosition: z
+		.enum(["left", "right"])
+		.optional()
+		.describe(
+			"User's sidebar direction override. Only used when the active template declares sidebarPosition: 'either'.",
+		),
 });
 
 export const pageSchema = z.object({
@@ -486,9 +496,22 @@ export const designSchema = z.object({
 	colors: colorDesignSchema,
 });
 
+export const typographySlotValueSchema = z.object({
+	fontFamily: z.string().optional(),
+	fontSize: z.number().optional(),
+	fontWeight: z.number().int().optional(),
+	lineHeight: z.number().optional(),
+});
+
+export type TypographySlotValue = z.infer<typeof typographySlotValueSchema>;
+
 export const typographySchema = z.object({
 	body: typographyItemSchema.describe("The typography for the body of the resume."),
 	heading: typographyItemSchema.describe("The typography for the headings of the resume."),
+	slots: z
+		.record(z.string(), typographySlotValueSchema)
+		.catch({})
+		.describe("User overrides per template-declared typography slot, keyed by slot id."),
 });
 
 export const metadataSchema = z.object({
