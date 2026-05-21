@@ -1,0 +1,396 @@
+{#
+  macros.html — shared Nunjucks macros for all section types.
+  Injected into every .rxt archive by build-rxt.ts.
+  CSS classes are defined per-template in index.html.
+#}
+
+{# ── Helpers ── #}
+
+{% macro renderWebsiteLink(website) %}
+{% if website and not website.inlineLink and website.url %}
+<a href="{{ website.url }}" class="item-website">{{ website.label or website.url }}</a>
+{% endif %}
+{% endmacro %}
+
+{% macro renderItemTitle(title, website) %}
+{% if website and website.inlineLink and website.url %}<a href="{{ website.url }}" class="item-title-link"><strong class="item-title">{{ title }}</strong></a>
+{% else %}<strong class="item-title">{{ title }}</strong>
+{% endif %}
+{% endmacro %}
+
+{% macro renderLevelDots(level) %}
+{% if level and level > 0 %}
+<div class="level-dots">
+{% for i in range(5) %}
+<span class="level-dot{% if i < level %} filled{% endif %}"></span>
+{% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{# ── Summary ── #}
+
+{% macro renderSummarySection(section) %}
+{% if section and not section.hidden and section.content %}
+<section class="resume-section summary-section">
+  {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
+  <div class="rich-text">{{ section.content | safe }}</div>
+</section>
+{% endif %}
+{% endmacro %}
+
+{# ── Profiles ── #}
+
+{% macro renderProfilesSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section profiles-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item profile-item">
+      <div class="item-header">
+        <strong>{{ item.network }}</strong>
+      </div>
+      {% if item.website.url %}<a href="{{ item.website.url }}" class="item-website">{{ item.username }}</a>{% else %}<span>{{ item.username }}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Experience ── #}
+
+{% macro renderExperienceSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section experience-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item experience-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.company, item.website) }}
+          {% if item.location and item.roles | length == 0 %}<span class="align-right">{{ item.location }}</span>{% else %}<span class="align-right">{{ item.period }}</span>{% endif %}
+        </div>
+        {% if item.roles | length == 0 and item.position %}
+        <div class="split-row">
+          <span>{{ item.position }}</span>
+          {% if item.location %}<span class="align-right">{{ item.period }}</span>{% endif %}
+        </div>
+        {% endif %}
+        {% if item.roles | length > 0 %}<div><span class="small">{{ item.period }}</span></div>{% endif %}
+      </div>
+      {% for role in item.roles %}
+      <div class="experience-role">
+        <div class="split-row">
+          <span>{{ role.position }}</span>
+          <span class="align-right small">{{ role.period }}</span>
+        </div>
+        {% if role.description %}<div class="rich-text">{{ role.description | safe }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      {% if item.roles | length == 0 and item.description %}
+      <div class="rich-text">{{ item.description | safe }}</div>
+      {% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Education ── #}
+
+{% macro renderEducationSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section education-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item education-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.school, item.website) }}
+          {% if item.degree or item.grade %}<span class="align-right">{{ [item.degree, item.grade] | select | join(" • ") }}</span>{% endif %}
+        </div>
+        {% if item.area or item.period or item.location %}
+        <div class="split-row">
+          {% if item.area %}<span>{{ item.area }}</span>{% endif %}
+          {% if item.location or item.period %}<span class="align-right">{{ [item.location, item.period] | select | join(" • ") }}</span>{% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Projects ── #}
+
+{% macro renderProjectsSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section projects-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item project-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.name, item.website) }}
+          <span class="align-right">{{ item.period }}</span>
+        </div>
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Skills ── #}
+
+{% macro renderSkillsSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section skills-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item skill-item">
+      <div class="item-header">
+        <strong>{{ item.name }}</strong>
+      </div>
+      {% if item.proficiency %}<div class="small">{{ item.proficiency }}</div>{% endif %}
+      {{ renderLevelDots(item.level) }}
+      {% if item.keywords | length > 0 %}<div class="small keywords">{{ item.keywords | join(", ") }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Languages ── #}
+
+{% macro renderLanguagesSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section languages-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item language-item">
+      <div class="item-header">
+        <strong>{{ item.language }}</strong>
+        {% if item.fluency %}<div>{{ item.fluency }}</div>{% endif %}
+      </div>
+      {{ renderLevelDots(item.level) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Interests ── #}
+
+{% macro renderInterestsSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section interests-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item interest-item">
+      <div class="item-header"><strong>{{ item.name }}</strong></div>
+      {% if item.keywords | length > 0 %}<div class="small keywords">{{ item.keywords | join(", ") }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Awards ── #}
+
+{% macro renderAwardsSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section awards-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item award-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.title, item.website) }}
+          <span class="align-right">{{ item.date }}</span>
+        </div>
+        {% if item.awarder %}<div>{{ item.awarder }}</div>{% endif %}
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Certifications ── #}
+
+{% macro renderCertificationsSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section certifications-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item certification-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.title, item.website) }}
+          <span class="align-right">{{ item.date }}</span>
+        </div>
+        {% if item.issuer %}<div>{{ item.issuer }}</div>{% endif %}
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Publications ── #}
+
+{% macro renderPublicationsSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section publications-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item publication-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.title, item.website) }}
+          <span class="align-right">{{ item.date }}</span>
+        </div>
+        {% if item.publisher %}<div>{{ item.publisher }}</div>{% endif %}
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Volunteer ── #}
+
+{% macro renderVolunteerSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section volunteer-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item volunteer-item">
+      <div class="item-header">
+        <div class="split-row">
+          {{ renderItemTitle(item.organization, item.website) }}
+          <span class="align-right">{{ item.period }}</span>
+        </div>
+        {% if item.location %}<div class="small">{{ item.location }}</div>{% endif %}
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── References ── #}
+
+{% macro renderReferencesSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% if items | length > 0 %}
+<section class="resume-section references-section">
+  <h2 class="section-title">{{ section.title }}</h2>
+  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+    {% for item in items %}
+    <div class="section-item reference-item">
+      <div class="item-header">
+        {{ renderItemTitle(item.name, item.website) }}
+        {% if item.position %}<div>{{ item.position }}</div>{% endif %}
+        {% if item.phone %}<div class="small">{{ item.phone }}</div>{% endif %}
+      </div>
+      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {{ renderWebsiteLink(item.website) }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ── Custom section dispatch (used by sections/default.html for UUID section IDs) ── #}
+
+{% macro renderCustomSection(section) %}
+{% if section %}
+  {% if section.type == "experience" %}{{ renderExperienceSection(section) }}
+  {% elif section.type == "education" %}{{ renderEducationSection(section) }}
+  {% elif section.type == "projects" %}{{ renderProjectsSection(section) }}
+  {% elif section.type == "skills" %}{{ renderSkillsSection(section) }}
+  {% elif section.type == "languages" %}{{ renderLanguagesSection(section) }}
+  {% elif section.type == "interests" %}{{ renderInterestsSection(section) }}
+  {% elif section.type == "awards" %}{{ renderAwardsSection(section) }}
+  {% elif section.type == "certifications" %}{{ renderCertificationsSection(section) }}
+  {% elif section.type == "publications" %}{{ renderPublicationsSection(section) }}
+  {% elif section.type == "volunteer" %}{{ renderVolunteerSection(section) }}
+  {% elif section.type == "references" %}{{ renderReferencesSection(section) }}
+  {% elif section.type == "profiles" %}{{ renderProfilesSection(section) }}
+  {% endif %}
+{% endif %}
+{% endmacro %}
