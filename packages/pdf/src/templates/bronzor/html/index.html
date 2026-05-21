@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--resume-font-body, "IBM Plex Serif", serif);
+  font-size: var(--resume-size-body, 10pt);
+  font-weight: var(--resume-weight-body, 400);
+  line-height: var(--resume-line-height-body, 1.5);
+  color: var(--resume-foreground, #000);
+  background: var(--resume-background, #fff);
+  padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
+}
+
+a { color: inherit; text-decoration: none; }
+strong, b { font-weight: var(--resume-weight-heading, 600); }
+
+/* ── Header ── */
+.resume-header {
+  display: flex;
+  align-items: center;
+  gap: var(--resume-column-gap, 4pt);
+  border-bottom: 1.5pt solid var(--resume-primary, #c00);
+  padding-bottom: var(--resume-page-padding-y);
+  margin-bottom: var(--resume-section-gap, 6pt);
+}
+.header-picture {
+  width: 64px; height: 64px;
+  object-fit: cover; border-radius: 50%; flex-shrink: 0;
+}
+.header-content { flex: 1; display: flex; flex-direction: column; gap: 4pt; }
+.header-identity { display: flex; flex-direction: column; gap: 2pt; }
+.header-name {
+  font-family: var(--resume-font-heading, inherit);
+  font-size: calc(var(--resume-size-heading, 14pt) * 1.5);
+  font-weight: var(--resume-weight-heading, 600);
+  line-height: 1.2;
+}
+.header-headline { font-size: var(--resume-size-body); opacity: 0.85; }
+.contact-list {
+  display: flex; flex-wrap: wrap;
+  gap: 2pt var(--resume-column-gap, 4pt);
+}
+.contact-item {
+  display: flex; align-items: center; gap: 3pt;
+  font-size: var(--resume-size-body);
+}
+
+/* ── Page layout ── */
+.page-sections {
+  display: flex; flex-direction: column;
+  gap: var(--resume-section-gap, 6pt);
+}
+
+/* ── Sections ── */
+.resume-section { display: flex; flex-direction: column; gap: 3pt; }
+.section-title {
+  font-family: var(--resume-font-heading, inherit);
+  font-size: var(--resume-size-heading, 14pt);
+  font-weight: var(--resume-weight-heading, 600);
+  color: var(--resume-foreground);
+  border-bottom: 1pt solid var(--resume-primary, #c00);
+  padding-bottom: 1pt;
+  margin-bottom: 2pt;
+}
+
+/* ── Section items grid ── */
+.section-items {
+  display: grid;
+  grid-template-columns: repeat(var(--section-columns, 1), 1fr);
+  gap: calc(var(--resume-section-gap) * 0.5) var(--resume-column-gap, 4pt);
+}
+
+/* ── Item ── */
+.section-item {
+  display: flex; flex-direction: column;
+  gap: calc(var(--resume-section-gap) * 0.15);
+}
+.item-header { display: flex; flex-direction: column; gap: 1pt; }
+.item-title { font-weight: var(--resume-weight-heading, 600); }
+.item-title-link { text-decoration: underline; }
+
+/* ── Split row ── */
+.split-row {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 4pt; flex-wrap: wrap;
+}
+.align-right { text-align: right; flex-shrink: 1; min-width: 0; }
+
+/* ── Misc ── */
+.small { font-size: 0.875em; }
+.item-website { font-size: 0.875em; text-decoration: underline; }
+.keywords { color: var(--resume-foreground); opacity: 0.75; }
+
+/* ── Rich text ── */
+.rich-text p { margin-bottom: 0.2em; }
+.rich-text p:last-child { margin-bottom: 0; }
+.rich-text ul, .rich-text ol { padding-left: 1.25em; }
+.rich-text li { margin-bottom: 0.1em; }
+
+/* ── Level dots ── */
+.level-dots { display: flex; gap: 3pt; align-items: center; margin-top: 1pt; }
+.level-dot {
+  width: 0.55em; height: 0.55em; border-radius: 50%;
+  border: 1pt solid var(--resume-primary, #c00);
+}
+.level-dot.filled { background: var(--resume-primary, #c00); }
+
+/* ── Experience roles ── */
+.experience-role { display: flex; flex-direction: column; gap: 1pt; padding-left: 6pt; }
+
+/* ── Bronzor: centered header + section title column ── */
+.resume-header {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  gap: 3pt;
+  padding-bottom: var(--resume-page-padding-y);
+  margin-bottom: var(--resume-section-gap);
+}
+.header-name {
+  font-family: var(--resume-font-heading, inherit);
+  font-size: calc(var(--resume-size-heading, 14pt) * 1.5);
+  font-weight: var(--resume-weight-heading, 600);
+  line-height: 1.2;
+}
+.header-headline { opacity: 0.85; }
+.header-picture {
+  width: 64px; height: 64px;
+  object-fit: cover; border-radius: 50%;
+}
+.contact-list {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 2pt calc(var(--resume-column-gap) * 1.5);
+}
+.contact-item { display: flex; align-items: center; gap: 3pt; }
+
+/* section title: column left, content right */
+.resume-section {
+  display: grid;
+  grid-template-columns: var(--resume-sidebar-width, 35%) 1fr;
+  column-gap: var(--resume-column-gap);
+  border-top: 1pt solid var(--resume-primary);
+  padding-top: calc(var(--resume-section-gap) * 0.5);
+  align-items: start;
+}
+.section-title {
+  font-family: var(--resume-font-heading, inherit);
+  font-size: calc(var(--resume-size-heading) * 0.75);
+  font-weight: var(--resume-weight-heading, 600);
+  color: var(--resume-primary);
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.section-items { grid-column: 2; }
+</style>
+</head>
+<body>
+{% include "sections/header.html" %}
+{% for page in metadata.layout.pages %}
+<div class="page-sections">
+  {% for sectionId in page.main %}
+    {% include "sections/" + sectionId + ".html" ignore missing %}
+  {% endfor %}
+  {% if not page.fullWidth %}
+    {% for sectionId in page.sidebar %}
+      {% include "sections/" + sectionId + ".html" ignore missing %}
+    {% endfor %}
+  {% endif %}
+</div>
+{% endfor %}
+</body>
+</html>

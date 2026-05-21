@@ -1,0 +1,18 @@
+<header class="resume-header">
+  {% if not picture.hidden and picture.url %}
+  <img src="{{ picture.url }}" class="header-picture" alt="" />
+  {% endif %}
+  <div class="header-identity">
+    <h1 class="header-name">{{ basics.name }}</h1>
+    {% if basics.headline %}<p class="header-headline">{{ basics.headline }}</p>{% endif %}
+  </div>
+  <div class="contact-list">
+    {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ basics.email }}</a>{% endif %}
+    {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ basics.phone }}</a>{% endif %}
+    {% if basics.location %}<span class="contact-item">{{ basics.location }}</span>{% endif %}
+    {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ basics.website.label or basics.website.url }}</a>{% endif %}
+    {% for field in basics.customFields %}
+    <span class="contact-item">{{ field.name }}: {{ field.value }}</span>
+    {% endfor %}
+  </div>
+</header>
