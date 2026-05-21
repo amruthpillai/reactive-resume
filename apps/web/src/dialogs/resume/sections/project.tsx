@@ -18,6 +18,8 @@ import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
+import { useTemplateSlots } from "@/features/resume/hooks/use-template-slots";
+import { TemplateExtensionFields } from "@/features/resume/sections/template-extension-fields";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { makeSectionItem } from "@/libs/resume/make-section-item";
 import { createSectionItem, updateSectionItem } from "@/libs/resume/section-actions";
@@ -144,6 +146,7 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 const ProjectForm = withForm({
 	defaultValues,
 	render: ({ form }) => {
+		const slots = useTemplateSlots("projectItem");
 		const inlineLink = useStore(form.store, (s) => s.values.website.inlineLink);
 
 		return (
@@ -203,6 +206,12 @@ const ProjectForm = withForm({
 							<FormControl render={<RichInput value={field.state.value} onChange={(v) => field.handleChange(v)} />} />
 							<FormMessage errors={field.state.meta.errors} />
 						</FormItem>
+					)}
+				</form.Field>
+
+				<form.Field name="extensions">
+					{(field) => (
+						<TemplateExtensionFields value={field.state.value} onChange={(v) => field.handleChange(v)} slots={slots} />
 					)}
 				</form.Field>
 			</>

@@ -23,6 +23,8 @@ import { ColorPicker } from "@/components/input/color-picker";
 import { IconPicker } from "@/components/input/icon-picker";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
+import { useTemplateSlots } from "@/features/resume/hooks/use-template-slots";
+import { TemplateExtensionFields } from "@/features/resume/sections/template-extension-fields";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { makeSectionItem } from "@/libs/resume/make-section-item";
 import { createSectionItem, updateSectionItem } from "@/libs/resume/section-actions";
@@ -151,6 +153,7 @@ export function UpdateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 const SkillForm = withForm({
 	defaultValues,
 	render: ({ form }) => {
+		const slots = useTemplateSlots("skillItem");
 		const nameMeta = useStore(form.store, (s) => s.fieldMeta?.name);
 
 		const isNameInvalid = (nameMeta?.isTouched ?? false) && (nameMeta?.errors?.length ?? 0) > 0;
@@ -280,6 +283,12 @@ const SkillForm = withForm({
 							/>
 							<FormMessage errors={field.state.meta.errors} />
 						</FormItem>
+					)}
+				</form.Field>
+
+				<form.Field name="extensions">
+					{(field) => (
+						<TemplateExtensionFields value={field.state.value} onChange={(v) => field.handleChange(v)} slots={slots} />
 					)}
 				</form.Field>
 			</>

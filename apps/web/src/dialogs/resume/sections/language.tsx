@@ -17,6 +17,8 @@ import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "
 import { Slider } from "@reactive-resume/ui/components/slider";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
+import { useTemplateSlots } from "@/features/resume/hooks/use-template-slots";
+import { TemplateExtensionFields } from "@/features/resume/sections/template-extension-fields";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { makeSectionItem } from "@/libs/resume/make-section-item";
 import { createSectionItem, updateSectionItem } from "@/libs/resume/section-actions";
@@ -142,6 +144,8 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 const LanguageForm = withForm({
 	defaultValues,
 	render: ({ form }) => {
+		const slots = useTemplateSlots("languageItem");
+
 		return (
 			<>
 				<form.AppField name="language">{(field) => <field.TextField label={<Trans>Language</Trans>} />}</form.AppField>
@@ -175,6 +179,12 @@ const LanguageForm = withForm({
 								{Number(field.state.value) === 0 ? t`Hidden` : `${field.state.value} / 5`}
 							</FormDescription>
 						</FormItem>
+					)}
+				</form.Field>
+
+				<form.Field name="extensions">
+					{(field) => (
+						<TemplateExtensionFields value={field.state.value} onChange={(v) => field.handleChange(v)} slots={slots} />
 					)}
 				</form.Field>
 			</>
