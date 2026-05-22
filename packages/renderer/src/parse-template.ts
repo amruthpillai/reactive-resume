@@ -106,7 +106,7 @@ export const parseTemplate = async (zipBuffer: Buffer): Promise<ParsedTemplate> 
 	if (!zip.file("index.html")) throw new TemplateParseError("Missing required file: index.html");
 
 	const isAllowedPath = (name: string): boolean => {
-		if (name === "template.json" || name === "index.html") return true;
+		if (name === "template.json" || name === "index.html" || name === "macros.html") return true;
 		const firstSlash = name.indexOf("/");
 		if (firstSlash === -1) return false;
 		const dir = name.slice(0, firstSlash);

@@ -1,6 +1,8 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { ORPCError } from "@orpc/server";
 import z from "zod";
-import { createResumePdfFile } from "@reactive-resume/pdf/server";
+import { templateService } from "@reactive-resume/api/features/templates";
+import { generatePdfFromTemplate } from "@reactive-resume/pdf/server";
 import { generateFilename } from "@reactive-resume/utils/file";
 import { protectedProcedure } from "../../context";
 import { pdfExportRateLimit } from "../../middleware/rate-limit";
@@ -30,19 +32,26 @@ export const downloadResumePdfProcedure = protectedProcedure
 	.use(pdfExportRateLimit)
 	.handler(async ({ context, input }) => {
 		const resume = await resumeService.getById({ id: input.id, userId: context.user.id });
-		const filename = generateFilename(resume.name, "pdf");
+		const resumeData = resume.data as ResumeData;
+		const templateRecord = await templateService.getById(resumeData.metadata.template);
 
-		try {
-			const body = await createResumePdfFile({ data: resume.data, filename });
-
-			return {
-				headers: {
-					"content-disposition": `attachment; filename="${filename}"`,
-				},
-				body,
-			};
-		} catch (error) {
-			console.error("[PDF API] Failed to render resume PDF", { resumeId: input.id, error });
-			throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to generate resume PDF" });
+		if (!templateRecord) {
+			throw new ORPCError("NOT_FOUND", { message: "Template not found" });
 		}
+
+		const filename = generateFilename(resume.name, "pdf");
+		const pdfBinary = await generatePdfFromTemplate({
+			files: (resumeData.files ?? {}) as Record<string, string>,
+			data: resumeData,
+			metadata: templateRecord.metadata,
+			templateId: templateRecord.id,
+			baseUrl: process.env.APP_URL ?? "",
+		});
+
+		return {
+			headers: {
+				"content-disposition": `attachment; filename="${filename}"`,
+			},
+			body: new File([pdfBinary as unknown as BlobPart], filename, { type: "application/pdf" }),
+		};
 	});

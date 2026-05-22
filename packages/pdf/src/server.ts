@@ -47,8 +47,3 @@ export const closeBrowser = async (): Promise<void> => {
 		_browser = null;
 	}
 };
-
-// Re-export from server.tsx for backward compatibility during transition.
-// The bulk of PDF generation still routes through @react-pdf/renderer until
-// Phase 7 migrates all 15 built-in templates to .rxt archives.
-export { createResumePdfFile } from "./server.tsx";

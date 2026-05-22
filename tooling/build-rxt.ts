@@ -12,6 +12,7 @@ const sharedMacros = readFileSync(join(sharedHtmlDir, "macros.html"), "utf-8");
 const collectSharedSections = (): Record<string, string> => {
 	const sectionsDir = join(sharedHtmlDir, "sections");
 	const result: Record<string, string> = {};
+	result["sections/macros.html"] = sharedMacros;
 	for (const f of readdirSync(sectionsDir)) {
 		result[`sections/${f}`] = readFileSync(join(sectionsDir, f), "utf-8");
 	}
@@ -46,7 +47,7 @@ async function buildAll(): Promise<void> {
 
 		const zip = new JSZip();
 
-		// 1. Inject shared macros
+		// 1. Put macros.html at zip root (Nunjucks `{% from "macros.html" %}` looks it up bare)
 		zip.file("macros.html", sharedMacros);
 
 		// 2. Inject shared section files (don't overwrite template-specific ones)
