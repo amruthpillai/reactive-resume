@@ -41,7 +41,7 @@ export const downloadResumePdfProcedure = protectedProcedure
 
 		const filename = generateFilename(resume.name, "pdf");
 		const pdfBinary = await generatePdfFromTemplate({
-			files: (resumeData.files ?? {}) as Record<string, string>,
+			files: templateRecord.files as Record<string, string>,
 			data: resumeData,
 			metadata: templateRecord.metadata,
 			templateId: templateRecord.id,
