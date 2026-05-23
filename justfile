@@ -43,9 +43,13 @@ down:
 logs:
     docker compose logs -f reactive_resume
 
-# Block until /api/health returns 200.
+# Block until /api/health returns 200, with a 3-minute ceiling.
 wait-healthy:
-    @until curl -fs http://localhost:3000/api/health >/dev/null 2>&1; do sleep 2; done
+    @attempts=0; until curl -fs http://localhost:3000/api/health >/dev/null 2>&1; do \
+        attempts=$((attempts + 1)); \
+        [ $attempts -ge 90 ] && { echo "✗ timed out"; docker compose ps reactive_resume; exit 1; } || true; \
+        sleep 2; \
+    done
     @echo "✓ app healthy at http://localhost:3000"
 
 # Open a psql shell against the dev database.
