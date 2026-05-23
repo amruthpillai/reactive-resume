@@ -29,8 +29,8 @@ import { Route as AgentNewRouteImport } from './routes/agent/new'
 import { Route as AgentThreadIdRouteImport } from './routes/agent/$threadId'
 import { Route as UsernameSlugRouteImport } from './routes/$username/$slug'
 import { Route as BuilderResumeIdRouteRouteImport } from './routes/builder/$resumeId/route'
-import { Route as DashboardResumesIndexRouteImport } from './routes/dashboard/resumes/index'
 import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
+import { Route as DashboardResumesIndexRouteImport } from './routes/dashboard/resumes/index'
 import { Route as BuilderResumeIdIndexRouteImport } from './routes/builder/$resumeId/index'
 import { Route as DashboardSettingsProfileRouteImport } from './routes/dashboard/settings/profile'
 import { Route as DashboardSettingsPreferencesRouteImport } from './routes/dashboard/settings/preferences'
@@ -139,14 +139,14 @@ const BuilderResumeIdRouteRoute = BuilderResumeIdRouteRouteImport.update({
   path: '/builder/$resumeId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardResumesIndexRoute = DashboardResumesIndexRouteImport.update({
-  id: '/resumes/',
-  path: '/resumes/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
   id: '/templates/',
   path: '/templates/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardResumesIndexRoute = DashboardResumesIndexRouteImport.update({
+  id: '/resumes/',
+  path: '/resumes/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const BuilderResumeIdIndexRoute = BuilderResumeIdIndexRouteImport.update({
@@ -533,18 +533,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuilderResumeIdRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/resumes/': {
-      id: '/dashboard/resumes/'
-      path: '/resumes'
-      fullPath: '/dashboard/resumes/'
-      preLoaderRoute: typeof DashboardResumesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
     '/dashboard/templates/': {
       id: '/dashboard/templates/'
       path: '/templates'
       fullPath: '/dashboard/templates/'
       preLoaderRoute: typeof DashboardTemplatesIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/resumes/': {
+      id: '/dashboard/resumes/'
+      path: '/resumes'
+      fullPath: '/dashboard/resumes/'
+      preLoaderRoute: typeof DashboardResumesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/builder/$resumeId/': {

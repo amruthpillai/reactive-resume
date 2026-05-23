@@ -15,6 +15,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@reactive-resume/ui/components/dialog";
+import { cn } from "@reactive-resume/utils/style";
 import { orpc } from "@/libs/orpc/client";
 import { useDialogStore } from "../store";
 
@@ -24,16 +25,37 @@ export function ImportTemplateDialog(_: DialogProps<"template.import">) {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [file, setFile] = useState<File | undefined>();
 	const [validationError, setValidationError] = useState<string | undefined>();
+	const [isDragging, setIsDragging] = useState(false);
 
 	const { mutateAsync: importTemplate, isPending } = useMutation(orpc.templates.importTemplate.mutationOptions());
+
+	const pickFile = (f: File) => {
+		setFile(f);
+		setValidationError(undefined);
+	};
 
 	const onSelectFile = () => inputRef.current?.click();
 
 	const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const f = e.target.files?.[0];
-		if (!f) return;
-		setFile(f);
-		setValidationError(undefined);
+		if (f) pickFile(f);
+	};
+
+	const onDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragging(true);
+	};
+
+	const onDragLeave = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragging(false);
+	};
+
+	const onDrop = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragging(false);
+		const f = e.dataTransfer.files[0];
+		if (f) pickFile(f);
 	};
 
 	const onSubmit = async (e: React.FormEvent) => {
@@ -81,8 +103,14 @@ export function ImportTemplateDialog(_: DialogProps<"template.import">) {
 					<Button
 						type="button"
 						variant="outline"
-						className="h-auto w-full flex-col border-dashed py-8 font-normal"
+						className={cn(
+							"h-auto w-full flex-col border-dashed py-8 font-normal transition-colors",
+							isDragging && "border-primary bg-primary/5",
+						)}
 						onClick={onSelectFile}
+						onDragOver={onDragOver}
+						onDragLeave={onDragLeave}
+						onDrop={onDrop}
 					>
 						{file ? (
 							<>
@@ -92,7 +120,7 @@ export function ImportTemplateDialog(_: DialogProps<"template.import">) {
 						) : (
 							<>
 								<UploadSimpleIcon weight="thin" size={32} />
-								<Trans>Click here to select a .rxt file to import</Trans>
+								<Trans>Click or drag a .rxt file here to import</Trans>
 							</>
 						)}
 					</Button>
