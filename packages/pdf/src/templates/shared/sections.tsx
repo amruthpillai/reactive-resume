@@ -48,10 +48,7 @@ type SectionItemsContextValue = {
 	useTimeline: boolean;
 };
 
-const SectionItemsContext = createContext<SectionItemsContextValue>({
-	itemStyle: undefined,
-	useTimeline: false,
-});
+const SectionItemsContext = createContext<SectionItemsContextValue>({ itemStyle: undefined, useTimeline: false });
 const SECTION_ITEM_PLACEHOLDER_KEYS = [
 	"placeholder-1",
 	"placeholder-2",

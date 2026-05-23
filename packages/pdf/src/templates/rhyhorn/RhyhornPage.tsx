@@ -52,22 +52,14 @@ export const RhyhornPage = ({ page, pageIndex }: TemplatePageProps) => {
 			<TemplateProvider styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
-				<View
-					style={composeStyles(styles.sectionGroup, {
-						rowGap: metrics.sectionGap,
-					})}
-				>
+				<View style={composeStyles(styles.sectionGroup, { rowGap: metrics.sectionGap })}>
 					{mainSections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
 				</View>
 
 				{!page.fullWidth && (
-					<View
-						style={composeStyles(styles.sectionGroup, {
-							rowGap: metrics.sectionGap,
-						})}
-					>
+					<View style={composeStyles(styles.sectionGroup, { rowGap: metrics.sectionGap })}>
 						{sidebarSections.map((section) => (
 							<Section key={section} section={section} placement="sidebar" />
 						))}
@@ -203,16 +195,10 @@ const useRhyhornTemplate = (): RhyhornTemplate => {
 				...(rtl ? { direction: "rtl" as const, textAlign: "right" as const } : {}),
 			},
 			div: { rowGap: metrics.gapY(0.125), columnGap: metrics.gapX(1 / 3) },
-			inline: {
-				flexDirection: rtl ? "row-reverse" : "row",
-				alignItems: "center",
-				columnGap: metrics.gapX(1 / 3),
-			},
+			inline: { flexDirection: rtl ? "row-reverse" : "row", alignItems: "center", columnGap: metrics.gapX(1 / 3) },
 			link: { textDecoration: "none", color: foreground },
 			small: { fontSize: metadata.typography.body.fontSize * 0.875 },
-			bold: {
-				fontWeight: metadata.typography.body.fontWeights.at(-1) ?? "600",
-			},
+			bold: { fontWeight: metadata.typography.body.fontWeights.at(-1) ?? "600" },
 			richParagraph: { margin: 0, ...bodyText },
 			richListItemRow: {
 				// Stays `row` for both LTR and RTL; the <li> renderer swaps DOM order for RTL.
@@ -234,12 +220,7 @@ const useRhyhornTemplate = (): RhyhornTemplate => {
 				justifyContent: "space-between",
 				columnGap: metrics.gapX(2 / 3),
 			},
-			alignRight: {
-				textAlign: rtl ? "left" : "right",
-				minWidth: 0,
-				maxWidth: "100%",
-				flexShrink: 1,
-			},
+			alignRight: { textAlign: rtl ? "left" : "right", minWidth: 0, maxWidth: "100%", flexShrink: 1 },
 			section: { flexDirection: "column", rowGap: metrics.gapY(0.25) },
 			sectionHeading: {
 				color: primary,
@@ -251,26 +232,15 @@ const useRhyhornTemplate = (): RhyhornTemplate => {
 			levelContainer: { width: "100%" },
 			levelItem: { borderColor: primary },
 			levelItemActive: { backgroundColor: primary },
-			header: {
-				flexDirection: rtl ? "row-reverse" : "row",
-				alignItems: "center",
-				columnGap: metrics.gapX(0.5),
-			},
+			header: { flexDirection: rtl ? "row-reverse" : "row", alignItems: "center", columnGap: metrics.gapX(0.5) },
 			headerTitle: { flex: 1, rowGap: metrics.gapY(0.5) },
 			headerIdentity: {
 				textAlign: rtl ? "right" : "left",
 				alignItems: rtl ? "flex-end" : "flex-start",
 				rowGap: metrics.gapY(0.35),
 			},
-			headerName: {
-				fontSize: metadata.typography.heading.fontSize * 1.5,
-				lineHeight: headerNameLineHeight,
-			},
-			contactList: {
-				flexDirection: rtl ? "row-reverse" : "row",
-				flexWrap: "wrap",
-				rowGap: metrics.gapY(0.125),
-			},
+			headerName: { fontSize: metadata.typography.heading.fontSize * 1.5, lineHeight: headerNameLineHeight },
+			contactList: { flexDirection: rtl ? "row-reverse" : "row", flexWrap: "wrap", rowGap: metrics.gapY(0.125) },
 			contactItem: {
 				flexDirection: rtl ? "row-reverse" : "row",
 				alignItems: "center",
@@ -317,10 +287,7 @@ const useRhyhornTemplate = (): RhyhornTemplate => {
 			colors,
 			styles: {
 				...baseStyles,
-				sectionHeading: (context) => ({
-					...baseStyles.sectionHeading,
-					color: accentFor(context),
-				}),
+				sectionHeading: (context) => ({ ...baseStyles.sectionHeading, color: accentFor(context) }),
 				levelItem: (context) => ({ borderColor: accentFor(context) }),
 				levelItemActive: (context) => ({ backgroundColor: accentFor(context) }),
 				icon: (context) => ({
