@@ -15,140 +15,201 @@ body {
 a { color: inherit; text-decoration: none; }
 strong, b { font-weight: var(--resume-weight-heading, 600); }
 
-/* ── Layout grid ── */
 .page-layout {
-  display: grid;
-  grid-template-areas: var(--resume-sidebar-grid-areas, "header header" "sidebar main");
-  grid-template-columns: var(--resume-sidebar-grid-columns, var(--resume-sidebar-width, 35%) 1fr);
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
-.sidebar-column {
-  grid-area: sidebar;
-  background: var(--resume-primary, #c00);
-  color: var(--resume-background, #fff);
-  padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
-  display: flex; flex-direction: column; gap: var(--resume-section-gap, 6pt);
-}
-.sidebar-column a { color: inherit; }
-.main-column {
-  grid-area: main;
-  padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
-  display: flex; flex-direction: column; gap: var(--resume-section-gap, 6pt);
-}
-
-/* ── Full-width header bar ── */
 .resume-header {
-  grid-area: header;
-  display: flex; align-items: center; gap: var(--resume-column-gap);
-  border-bottom: 1.5pt solid var(--resume-primary, #c00);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.header-band {
+  display: flex;
+  align-items: stretch;
+  color: var(--resume-background, #fff);
+  background: var(--resume-primary, #c00);
+}
+.picture-anchor {
+  width: var(--resume-sidebar-width, 35%);
+  flex-shrink: 0;
+  position: relative;
+  min-height: 72pt;
+}
+.picture {
+  position: absolute;
+  top: var(--resume-page-padding-y, 12pt);
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin-left: -28px;
+  object-fit: cover;
+  aspect-ratio: 1;
+  border-radius: 10pt;
+}
+.header-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4pt;
   padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
-  margin-bottom: var(--resume-section-gap, 6pt);
+  color: var(--resume-background, #fff);
 }
-.header-picture {
-  width: 64px; height: 64px; object-fit: cover; border-radius: 50%; flex-shrink: 0;
+.header-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2pt;
 }
-.header-identity { display: flex; flex-direction: column; gap: 2pt; }
 .header-name {
   font-family: var(--resume-font-heading, inherit);
   font-size: calc(var(--resume-size-heading, 14pt) * 1.5);
-  font-weight: var(--resume-weight-heading, 600); line-height: 1.2;
+  font-weight: var(--resume-weight-heading, 600);
+  line-height: 1.2;
 }
-.header-headline { font-size: var(--resume-size-body); opacity: 0.85; }
+.header-headline { color: var(--resume-background, #fff); opacity: 0.85; }
+.contact-row {
+  display: flex;
+  align-items: flex-start;
+}
+.contact-offset {
+  width: var(--resume-sidebar-width, 35%);
+  flex-shrink: 0;
+}
 .contact-list {
-  display: flex; flex-wrap: wrap; gap: 2pt var(--resume-column-gap, 4pt);
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2pt var(--resume-column-gap, 4pt);
+  padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt) 0;
 }
-.contact-item { display: flex; align-items: center; gap: 3pt; font-size: var(--resume-size-body); }
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 3pt;
+  font-size: 0.9em;
+}
 
-/* ── Sections ── */
+.content-row {
+  display: flex;
+  gap: var(--resume-column-gap, 4pt);
+  padding: var(--resume-header-gap, 6pt) 0 var(--resume-page-padding-y, 12pt);
+}
+.sidebar-column {
+  width: var(--resume-sidebar-width, 35%);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--resume-section-gap, 6pt);
+  padding-left: var(--resume-page-padding-x, 14pt);
+}
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--resume-section-gap, 6pt);
+  padding-right: var(--resume-page-padding-x, 14pt);
+}
+
 .resume-section { display: flex; flex-direction: column; gap: 3pt; }
 .section-title {
   font-family: var(--resume-font-heading, inherit);
   font-size: var(--resume-size-heading, 14pt);
   font-weight: var(--resume-weight-heading, 600);
-  border-bottom: 1pt solid currentColor;
-  padding-bottom: 1pt; margin-bottom: 2pt;
+  color: var(--resume-primary, #c00);
+  border-bottom: 1px solid var(--resume-primary, #c00);
+  padding-bottom: 1pt;
+  margin-bottom: 2pt;
 }
-.sidebar-column .section-title { color: var(--resume-background, #fff); opacity: 0.9; }
-.main-column .section-title { color: var(--resume-primary, #c00); }
-
-/* ── Section items grid ── */
 .section-items {
   display: grid;
   grid-template-columns: repeat(var(--section-columns, 1), 1fr);
   gap: calc(var(--resume-section-gap) * 0.5) var(--resume-column-gap, 4pt);
 }
-
-/* ── Item ── */
 .section-item { display: flex; flex-direction: column; gap: 1pt; }
 .item-header { display: flex; flex-direction: column; gap: 1pt; }
 .item-title { font-weight: var(--resume-weight-heading, 600); }
 .item-title-link { text-decoration: underline; }
-
-/* ── Split row ── */
 .split-row {
-  display: flex; justify-content: space-between; align-items: flex-start; gap: 4pt; flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4pt;
+  flex-wrap: wrap;
 }
 .align-right { text-align: right; flex-shrink: 1; min-width: 0; }
-
-/* ── Misc ── */
 .small { font-size: 0.875em; }
 .item-website { font-size: 0.875em; text-decoration: underline; }
 .keywords { opacity: 0.75; }
-
-/* ── Rich text ── */
 .rich-text p { margin-bottom: 0.2em; }
 .rich-text p:last-child { margin-bottom: 0; }
 .rich-text ul, .rich-text ol { padding-left: 1.25em; }
 .rich-text li { margin-bottom: 0.1em; }
-
-/* ── Level dots ── */
 .level-dots { display: flex; gap: 3pt; align-items: center; margin-top: 1pt; }
 .level-dot {
-  width: 0.55em; height: 0.55em; border-radius: 50%;
-  border: 1pt solid var(--resume-background, #fff);
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  border: 1pt solid var(--resume-primary, #c00);
 }
-.level-dot.filled { background: var(--resume-background, #fff); }
-.main-column .level-dot { border-color: var(--resume-primary, #c00); }
-.main-column .level-dot.filled { background: var(--resume-primary, #c00); }
-
-/* ── Experience roles ── */
+.level-dot.filled { background: var(--resume-primary, #c00); }
 .experience-role { display: flex; flex-direction: column; gap: 1pt; padding-left: 6pt; }
+
+.sidebar-column .split-row {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.sidebar-column .align-right { text-align: left; }
 </style>
 </head>
 <body>
 {% for page in metadata.layout.pages %}
 <div class="page-layout">
-{% if loop.first %}
-<div class="resume-header">
-  {% if not picture.hidden and picture.url %}
-  <img src="{{ picture.url }}" class="header-picture" alt="" />
+  {% if loop.first %}
+  <header class="resume-header">
+    <div class="header-band">
+      <div class="picture-anchor">
+        {% if not picture.hidden and picture.url %}
+        <img src="{{ picture.url }}" class="picture" alt="" />
+        {% endif %}
+      </div>
+      <div class="header-title">
+        <div class="header-identity">
+          <h1 class="header-name">{{ basics.name }}</h1>
+          {% if basics.headline %}<p class="header-headline">{{ basics.headline }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-offset"></div>
+      <div class="contact-list">
+        {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ basics.email }}</a>{% endif %}
+        {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ basics.phone }}</a>{% endif %}
+        {% if basics.location %}<span class="contact-item">{{ basics.location }}</span>{% endif %}
+        {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ basics.website.label or basics.website.url }}</a>{% endif %}
+        {% for field in basics.customFields %}
+        <span class="contact-item">{{ field.name }}: {{ field.value }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </header>
   {% endif %}
-  <div class="header-identity">
-    <h1 class="header-name">{{ basics.name }}</h1>
-    {% if basics.headline %}<p class="header-headline">{{ basics.headline }}</p>{% endif %}
+
+  <div class="content-row">
+    <div class="sidebar-column" style="display: {% if page.fullWidth %}none{% else %}flex{% endif %};">
+      {% for sectionId in page.sidebar %}
+        {% include "sections/" + sectionId + ".html" ignore missing %}
+      {% endfor %}
+    </div>
+
+    <div class="main-column">
+      {% for sectionId in page.main %}
+        {% include "sections/" + sectionId + ".html" ignore missing %}
+      {% endfor %}
+    </div>
   </div>
-  <div class="contact-list">
-    {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ basics.email }}</a>{% endif %}
-    {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ basics.phone }}</a>{% endif %}
-    {% if basics.location %}<span class="contact-item">{{ basics.location }}</span>{% endif %}
-    {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ basics.website.label or basics.website.url }}</a>{% endif %}
-    {% for field in basics.customFields %}
-    <span class="contact-item">{{ field.name }}: {{ field.value }}</span>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-<div class="sidebar-column">
-  {% for sectionId in page.sidebar %}
-    {% include "sections/" + sectionId + ".html" ignore missing %}
-  {% endfor %}
-</div>
-<div class="main-column">
-  {% for sectionId in page.main %}
-    {% include "sections/" + sectionId + ".html" ignore missing %}
-  {% endfor %}
-</div>
 </div>
 {% endfor %}
 </body>
