@@ -17,8 +17,9 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 
 .page-layout {
   display: grid;
-  grid-template-areas: var(--resume-sidebar-grid-areas, "main sidebar");
+  grid-template-areas: var(--resume-sidebar-grid-areas, "header header" "main sidebar");
   grid-template-columns: var(--resume-sidebar-grid-columns, 1fr var(--resume-sidebar-width, 35%));
+  grid-template-rows: auto 1fr;
   min-height: 100vh;
 }
 .sidebar-column {
@@ -36,7 +37,7 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 }
 
 .resume-header {
-  grid-column: 1 / -1;
+  grid-area: header;
   display: flex; align-items: center; gap: var(--resume-column-gap);
   border-bottom: 1pt solid var(--resume-primary, #c00);
   padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
@@ -83,7 +84,9 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 </style>
 </head>
 <body>
+{% for page in metadata.layout.pages %}
 <div class="page-layout">
+{% if loop.first %}
 <div class="resume-header">
   {% if not picture.hidden and picture.url %}
   <img src="{{ picture.url }}" class="header-picture" alt="" />
@@ -102,20 +105,18 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
     {% endfor %}
   </div>
 </div>
+{% endif %}
 <div class="main-column">
-  {% for page in metadata.layout.pages %}
-    {% for sectionId in page.main %}
-      {% include "sections/" + sectionId + ".html" ignore missing %}
-    {% endfor %}
+  {% for sectionId in page.main %}
+    {% include "sections/" + sectionId + ".html" ignore missing %}
   {% endfor %}
 </div>
 <div class="sidebar-column">
-  {% for page in metadata.layout.pages %}
-    {% for sectionId in page.sidebar %}
-      {% include "sections/" + sectionId + ".html" ignore missing %}
-    {% endfor %}
+  {% for sectionId in page.sidebar %}
+    {% include "sections/" + sectionId + ".html" ignore missing %}
   {% endfor %}
 </div>
 </div>
+{% endfor %}
 </body>
 </html>

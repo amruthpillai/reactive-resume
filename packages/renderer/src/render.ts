@@ -21,9 +21,13 @@ export const render = (
 ): string => {
 	const env = createEnvironment(files);
 	const css = buildInjectedStyles(data, template, templateId, baseUrl);
-	const html = env.render("index.html", {
+	let html = env.render("index.html", {
 		...data,
 		metadata: { ...data.metadata, template, css },
 	});
+	// Auto-inject CSS vars when the template doesn't include {{ metadata.css | safe }}
+	if (css && !html.includes('id="resume-css-vars"')) {
+		html = html.replace("</head>", `${css}\n</head>`);
+	}
 	return html.replace(stripResumeSlotTagRe, "");
 };

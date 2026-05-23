@@ -69,7 +69,8 @@ const buildSidebarVars = (tmpl: TemplateMetadata, data: ResumeData): string => {
 	if (sidebarPosition === "none") return "";
 	const layout = data.metadata.layout as Layout;
 	const side = sidebarPosition === "either" ? (layout.sidebarPosition ?? "left") : sidebarPosition;
-	const areas = side === "right" ? '"main sidebar"' : '"sidebar main"';
+	const contentAreas = side === "right" ? '"main sidebar"' : '"sidebar main"';
+	const areas = `"header header" ${contentAreas}`;
 	const columns = side === "right" ? "1fr var(--resume-sidebar-width)" : "var(--resume-sidebar-width) 1fr";
 	return `  --resume-sidebar-grid-areas: ${areas};\n  --resume-sidebar-grid-columns: ${columns};`;
 };
@@ -92,7 +93,7 @@ export const buildInjectedStyles = (
 	const cssVarsBlock = `<style id="resume-css-vars">
 ${pageRule}
 
-  :root {
+:root {
   --resume-primary: ${design.colors.primary};
   --resume-foreground: ${design.colors.text};
   --resume-background: ${design.colors.background};
@@ -103,6 +104,9 @@ ${sidebarVars ? `${sidebarVars}\n` : ""}  --resume-section-gap: ${page.gapY}pt;
   --resume-column-gap: ${page.gapX}pt;
 ${typographyVars}
 }
+
+.page-sections:not(:last-child) { break-after: page; }
+.page-layout:not(:last-child) { break-after: page; }
 </style>`;
 
 	return [googleFontsLink, fontFaceBlock, cssVarsBlock].filter(Boolean).join("\n");
