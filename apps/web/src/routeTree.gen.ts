@@ -30,6 +30,7 @@ import { Route as AgentThreadIdRouteImport } from './routes/agent/$threadId'
 import { Route as UsernameSlugRouteImport } from './routes/$username/$slug'
 import { Route as BuilderResumeIdRouteRouteImport } from './routes/builder/$resumeId/route'
 import { Route as DashboardResumesIndexRouteImport } from './routes/dashboard/resumes/index'
+import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
 import { Route as BuilderResumeIdIndexRouteImport } from './routes/builder/$resumeId/index'
 import { Route as DashboardSettingsProfileRouteImport } from './routes/dashboard/settings/profile'
 import { Route as DashboardSettingsPreferencesRouteImport } from './routes/dashboard/settings/preferences'
@@ -143,6 +144,11 @@ const DashboardResumesIndexRoute = DashboardResumesIndexRouteImport.update({
   path: '/resumes/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
+  id: '/templates/',
+  path: '/templates/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const BuilderResumeIdIndexRoute = BuilderResumeIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings/profile': typeof DashboardSettingsProfileRoute
   '/builder/$resumeId/': typeof BuilderResumeIdIndexRoute
   '/dashboard/resumes/': typeof DashboardResumesIndexRoute
+  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
   '/dashboard/settings/authentication/': typeof DashboardSettingsAuthenticationIndexRoute
 }
 export interface FileRoutesByTo {
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/dashboard/settings/profile': typeof DashboardSettingsProfileRoute
   '/builder/$resumeId': typeof BuilderResumeIdIndexRoute
   '/dashboard/resumes': typeof DashboardResumesIndexRoute
+  '/dashboard/templates': typeof DashboardTemplatesIndexRoute
   '/dashboard/settings/authentication': typeof DashboardSettingsAuthenticationIndexRoute
 }
 export interface FileRoutesById {
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/dashboard/settings/profile': typeof DashboardSettingsProfileRoute
   '/builder/$resumeId/': typeof BuilderResumeIdIndexRoute
   '/dashboard/resumes/': typeof DashboardResumesIndexRoute
+  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
   '/dashboard/settings/authentication/': typeof DashboardSettingsAuthenticationIndexRoute
 }
 export interface FileRouteTypes {
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings/profile'
     | '/builder/$resumeId/'
     | '/dashboard/resumes/'
+    | '/dashboard/templates/'
     | '/dashboard/settings/authentication/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings/profile'
     | '/builder/$resumeId'
     | '/dashboard/resumes'
+    | '/dashboard/templates'
     | '/dashboard/settings/authentication'
   id:
     | '__root__'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings/profile'
     | '/builder/$resumeId/'
     | '/dashboard/resumes/'
+    | '/dashboard/templates/'
     | '/dashboard/settings/authentication/'
   fileRoutesById: FileRoutesById
 }
@@ -528,6 +540,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardResumesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/templates/': {
+      id: '/dashboard/templates/'
+      path: '/templates'
+      fullPath: '/dashboard/templates/'
+      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/builder/$resumeId/': {
       id: '/builder/$resumeId/'
       path: '/'
@@ -650,6 +669,7 @@ interface DashboardRouteRouteChildren {
   DashboardSettingsPreferencesRoute: typeof DashboardSettingsPreferencesRoute
   DashboardSettingsProfileRoute: typeof DashboardSettingsProfileRoute
   DashboardResumesIndexRoute: typeof DashboardResumesIndexRoute
+  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute
   DashboardSettingsAuthenticationIndexRoute: typeof DashboardSettingsAuthenticationIndexRoute
 }
 
@@ -663,6 +683,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardSettingsPreferencesRoute: DashboardSettingsPreferencesRoute,
   DashboardSettingsProfileRoute: DashboardSettingsProfileRoute,
   DashboardResumesIndexRoute: DashboardResumesIndexRoute,
+  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
   DashboardSettingsAuthenticationIndexRoute:
     DashboardSettingsAuthenticationIndexRoute,
 }

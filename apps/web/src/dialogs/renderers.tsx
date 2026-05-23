@@ -2,11 +2,13 @@ import type { DialogSchema } from "./schemas";
 import { apiKeyDialogRendererRegistry } from "./api-key/registry";
 import { authDialogRendererRegistry } from "./auth/registry";
 import { resumeDialogRendererRegistry } from "./resume/registry";
+import { templateDialogRendererRegistry } from "./template/registry";
 
 const dialogRendererRegistries = [
 	authDialogRendererRegistry,
 	apiKeyDialogRendererRegistry,
 	resumeDialogRendererRegistry,
+	templateDialogRendererRegistry,
 ] as const;
 
 export const renderDialog = (dialog: DialogSchema | null) => {

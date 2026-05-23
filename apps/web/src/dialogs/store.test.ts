@@ -15,7 +15,12 @@ describe("useDialogStore", () => {
 
 	describe("openDialog", () => {
 		it("uses schema entries from domain registries", () => {
-			expect(dialogSchemaRegistries.map((registry) => registry.domain)).toEqual(["auth", "api-key", "resume"]);
+			expect(dialogSchemaRegistries.map((registry) => registry.domain)).toEqual([
+				"auth",
+				"api-key",
+				"resume",
+				"template",
+			]);
 			expect(dialogTypeSchema.options).toHaveLength(
 				dialogSchemaRegistries.reduce((total, registry) => total + registry.schemas.length, 0),
 			);

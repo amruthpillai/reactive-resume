@@ -5,6 +5,7 @@ import { Trans } from "@lingui/react/macro";
 import {
 	BrainIcon,
 	ChatCircleDotsIcon,
+	FilmStripIcon,
 	GearSixIcon,
 	KeyIcon,
 	ReadCvLogoIcon,
@@ -46,6 +47,11 @@ const appSidebarItems = [
 		icon: <ReadCvLogoIcon />,
 		label: msg`Resumes`,
 		href: "/dashboard/resumes",
+	},
+	{
+		icon: <FilmStripIcon />,
+		label: msg`Templates`,
+		href: "/dashboard/templates",
 	},
 	{
 		icon: <ChatCircleDotsIcon />,

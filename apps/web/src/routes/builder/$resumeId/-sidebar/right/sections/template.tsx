@@ -1,9 +1,9 @@
 import { useLingui } from "@lingui/react";
 import { SwapIcon } from "@phosphor-icons/react";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
 import { templates } from "@/dialogs/resume/template/data";
-import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume } from "@/features/resume/builder/draft";
 import { SectionBase } from "../shared/section-base";
 
@@ -17,14 +17,15 @@ export function TemplateSectionBuilder() {
 
 function TemplateSectionForm() {
 	const { i18n } = useLingui();
-	const openDialog = useDialogStore((state) => state.openDialog);
+	const { resumeId } = useParams({ from: "/builder/$resumeId" });
+	const navigate = useNavigate();
 	const resume = useCurrentResume();
 	const template = resume.data.metadata.template;
 
 	const metadata = templates[template];
 
 	const onOpenTemplateGallery = () => {
-		openDialog("resume.template.gallery", undefined);
+		void navigate({ to: "/dashboard/templates", search: { resume: resumeId } });
 	};
 
 	return (

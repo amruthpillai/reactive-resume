@@ -4,7 +4,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
-import { useDialogStore } from "@/dialogs/store";
+
+const mockNavigate = vi.fn();
 
 vi.mock("../shared/section-base", () => ({
 	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -14,6 +15,10 @@ vi.mock("@/features/resume/builder/draft", () => ({
 		data: { metadata: { template: "ditto" } },
 	}),
 }));
+vi.mock("@tanstack/react-router", () => ({
+	useParams: () => ({ resumeId: "resume-123" }),
+	useNavigate: () => mockNavigate,
+}));
 
 const { TemplateSectionBuilder } = await import("./template");
 
@@ -22,7 +27,7 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-	useDialogStore.setState({ open: false, activeDialog: null, onBeforeClose: null });
+	mockNavigate.mockClear();
 });
 
 const renderTemplate = () =>
@@ -40,19 +45,19 @@ describe("TemplateSectionBuilder", () => {
 
 	it("renders the template tags as badges", () => {
 		renderTemplate();
-		// Ditto's tags include 'ATS friendly' per templates/data.
 		expect(screen.getByText("ATS friendly")).toBeInTheDocument();
 	});
 
-	it("opens the template gallery dialog when the preview is clicked", () => {
+	it("navigates to /dashboard/templates with resume search param when preview is clicked", () => {
 		renderTemplate();
 
 		const preview = screen.getByAltText("Ditto").closest("button") as HTMLButtonElement;
 		fireEvent.click(preview);
 
-		const state = useDialogStore.getState();
-		expect(state.open).toBe(true);
-		expect(state.activeDialog?.type).toBe("resume.template.gallery");
+		expect(mockNavigate).toHaveBeenCalledWith({
+			to: "/dashboard/templates",
+			search: { resume: "resume-123" },
+		});
 	});
 
 	it("renders the template preview image with the data-mapped URL", () => {
