@@ -71,6 +71,8 @@ describe("iconSvg filter", () => {
 		const result = env.renderString("{{ 'github-logo' | iconSvg('item-icon') }}");
 		expect(result).toContain("<svg");
 		expect(result).toContain('class="item-icon"');
+		expect(result).toContain('fill="currentColor"');
+		expect(result).not.toContain('stroke="currentColor"');
 	});
 });
 

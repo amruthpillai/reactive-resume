@@ -299,6 +299,11 @@ describe("render", () => {
 		expect(html).toContain("font-weight: 600");
 		expect(html).toContain('<strong class="item-title">GitHub</strong>');
 		expect(html).toContain('<strong class="item-title">LinkedIn</strong>');
+		expect(html).toContain("a.contact-item {");
+		expect(html).toContain("text-decoration: underline;");
+		expect(html).toContain('class="contact-item-text"');
+		expect(html).toContain(".section-items.section-items-single::before");
+		expect(html).toContain(".rich-text a { text-decoration: underline; color: inherit; }");
 		expect(html).toContain("David Kowalski");
 		expect(html).toContain("Summary");
 	});

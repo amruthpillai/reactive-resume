@@ -189,4 +189,9 @@ describe("buildInjectedStyles — fonts", () => {
 		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
 		expect(out).toContain(".rich-text .rr-pdf-mark");
 	});
+
+	it("keeps rich text links inheriting the surrounding text color", () => {
+		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
+		expect(out).toContain(".rich-text a { text-decoration: underline; color: inherit; }");
+	});
 });

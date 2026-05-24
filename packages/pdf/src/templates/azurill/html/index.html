@@ -24,9 +24,10 @@ svg { display: block; flex: 0 0 auto; }
   flex-direction: column;
   width: 100%;
   height: 841.89px;
+  padding: var(--resume-page-padding-y, 12px) var(--resume-page-padding-x, 14px);
   overflow: hidden;
   break-after: page;
-  gap: var(--resume-section-gap, 6px);
+  gap: var(--resume-page-padding-y, 12px);
 }
 .resume-header {
   display: flex;
@@ -34,7 +35,6 @@ svg { display: block; flex: 0 0 auto; }
   align-items: center;
   text-align: center;
   gap: 8px;
-  padding: var(--resume-page-padding-y, 12px) var(--resume-page-padding-x, 14px) 0;
 }
 .header-picture {
   width: {{ picture.size }}px;
@@ -72,6 +72,13 @@ svg { display: block; flex: 0 0 auto; }
   gap: 2px;
   font-size: var(--resume-size-body, 10px);
 }
+.contact-item-text {
+  text-decoration: inherit;
+}
+a.contact-item {
+  color: inherit;
+  text-decoration: underline;
+}
 .contact-item-icon,
 .item-icon {
   width: 0.95em;
@@ -97,7 +104,6 @@ svg { display: block; flex: 0 0 auto; }
   display: flex;
   align-items: flex-start;
   gap: var(--resume-column-gap, 4px);
-  padding: 0 var(--resume-page-padding-x, 14px) var(--resume-page-padding-y, 12px);
   flex: 1;
   min-height: 0;
 }
@@ -116,7 +122,6 @@ svg { display: block; flex: 0 0 auto; }
   display: flex;
   flex-direction: column;
   gap: var(--resume-section-gap, 6px);
-  padding-left: 6px;
 }
 
 .resume-section { display: flex; flex-direction: column; gap: 4px; }
@@ -220,11 +225,11 @@ svg { display: block; flex: 0 0 auto; }
 .experience-role { display: flex; flex-direction: column; gap: 1px; padding-left: 6px; }
 
 /* Timeline applies to ALL sections in main column (matches Azurill sectionTimeline: true) */
-.main-column .section-items {
+.main-column .section-items.section-items-single {
   position: relative;
   padding-left: 20px;
 }
-.main-column .section-items::before {
+.main-column .section-items.section-items-single::before {
   content: "";
   position: absolute;
   top: 0;
@@ -233,10 +238,10 @@ svg { display: block; flex: 0 0 auto; }
   width: 1px;
   background: var(--resume-primary, #0084d1);
 }
-.main-column .section-item {
+.main-column .section-items.section-items-single > .section-item {
   position: relative;
 }
-.main-column .section-item::before {
+.main-column .section-items.section-items-single > .section-item::before {
   content: "";
   position: absolute;
   top: 10px;
@@ -262,12 +267,12 @@ svg { display: block; flex: 0 0 auto; }
     {% if basics.headline %}<p class="header-headline">{{ basics.headline }}</p>{% endif %}
   </div>
   <div class="contact-list">
-    {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ "envelope" | iconSvg("contact-item-icon") | safe }}{{ basics.email }}</a>{% endif %}
-    {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ "phone" | iconSvg("contact-item-icon") | safe }}{{ basics.phone }}</a>{% endif %}
+    {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ "envelope" | iconSvg("contact-item-icon") | safe }}<span class="contact-item-text">{{ basics.email }}</span></a>{% endif %}
+    {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ "phone" | iconSvg("contact-item-icon") | safe }}<span class="contact-item-text">{{ basics.phone }}</span></a>{% endif %}
     {% if basics.location %}<span class="contact-item">{{ "map-pin" | iconSvg("contact-item-icon") | safe }}{{ basics.location }}</span>{% endif %}
-    {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ "globe" | iconSvg("contact-item-icon") | safe }}{{ basics.website.label or basics.website.url }}</a>{% endif %}
+    {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ "globe" | iconSvg("contact-item-icon") | safe }}<span class="contact-item-text">{{ basics.website.label or basics.website.url }}</span></a>{% endif %}
     {% for field in basics.customFields %}
-    {% if field.link %}<a href="{{ field.link }}" class="contact-item">{{ field.icon | iconSvg("contact-item-icon") | safe }}{{ field.text }}</a>{% else %}<span class="contact-item">{{ field.icon | iconSvg("contact-item-icon") | safe }}{{ field.text }}</span>{% endif %}
+    {% if field.link %}<a href="{{ field.link }}" class="contact-item">{{ field.icon | iconSvg("contact-item-icon") | safe }}<span class="contact-item-text">{{ field.text }}</span></a>{% else %}<span class="contact-item">{{ field.icon | iconSvg("contact-item-icon") | safe }}{{ field.text }}</span>{% endif %}
     {% endfor %}
   </div>
 </header>

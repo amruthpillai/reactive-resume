@@ -49,13 +49,13 @@
 {% if items | length > 0 %}
 <section class="resume-section profiles-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item profile-item">
       <div class="item-header">
         <div class="inline-with-icon">
           {{ item.icon | iconSvg("item-icon") | safe }}
-          <strong>{{ item.network }}</strong>
+          <strong class="item-title">{{ item.network }}</strong>
         </div>
       </div>
       {% if item.website.url %}<a href="{{ item.website.url }}" class="item-website">{{ item.username }}</a>{% else %}<span>{{ item.username }}</span>{% endif %}
@@ -75,7 +75,7 @@
 {% if items | length > 0 %}
 <section class="resume-section experience-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item experience-item">
       <div class="item-header">
@@ -120,7 +120,7 @@
 {% if items | length > 0 %}
 <section class="resume-section education-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item education-item">
       <div class="item-header">
@@ -153,7 +153,7 @@
 {% if items | length > 0 %}
 <section class="resume-section projects-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item project-item">
       <div class="item-header">
@@ -180,13 +180,13 @@
 {% if items | length > 0 %}
 <section class="resume-section skills-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item skill-item">
       <div class="item-header">
         <div class="inline-with-icon">
           {{ item.icon | iconSvg("item-icon") | safe }}
-          <strong>{{ item.name }}</strong>
+          <strong class="item-title">{{ item.name }}</strong>
         </div>
       </div>
       {% if item.proficiency %}<div class="small">{{ item.proficiency }}</div>{% endif %}
@@ -208,11 +208,11 @@
 {% if items | length > 0 %}
 <section class="resume-section languages-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item language-item">
       <div class="item-header">
-        <strong>{{ item.language }}</strong>
+        <strong class="item-title">{{ item.language }}</strong>
         {% if item.fluency %}<div>{{ item.fluency }}</div>{% endif %}
       </div>
       {{ renderLevelDots(item.level) }}
@@ -232,13 +232,13 @@
 {% if items | length > 0 %}
 <section class="resume-section interests-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item interest-item">
       <div class="item-header">
         <div class="inline-with-icon">
           {{ item.icon | iconSvg("item-icon") | safe }}
-          <strong>{{ item.name }}</strong>
+          <strong class="item-title">{{ item.name }}</strong>
         </div>
       </div>
       {% if item.keywords | length > 0 %}<div class="small keywords">{{ item.keywords | join(", ") }}</div>{% endif %}
@@ -258,7 +258,7 @@
 {% if items | length > 0 %}
 <section class="resume-section awards-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item award-item">
       <div class="item-header">
@@ -286,7 +286,7 @@
 {% if items | length > 0 %}
 <section class="resume-section certifications-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item certification-item">
       <div class="item-header">
@@ -314,7 +314,7 @@
 {% if items | length > 0 %}
 <section class="resume-section publications-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item publication-item">
       <div class="item-header">
@@ -342,7 +342,7 @@
 {% if items | length > 0 %}
 <section class="resume-section volunteer-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item volunteer-item">
       <div class="item-header">
@@ -370,7 +370,7 @@
 {% if items | length > 0 %}
 <section class="resume-section references-section">
   <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
-  <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
+  <div class="section-items {% if (section.columns | default(1)) == 1 %}section-items-single{% else %}section-items-multi{% endif %}" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item reference-item">
       <div class="item-header">
