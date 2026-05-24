@@ -12,6 +12,27 @@
 				},
 				"background": {
 					"activeOnStart": true,
+					"beginsPattern": "Running dev in",
+					"endsPattern": "Up and running on http://localhost:3001"
+				}
+			},
+			"presentation": {
+				"group": "dev",
+				"panel": "dedicated",
+				"reveal": "silent"
+			}
+		},
+		{
+			"label": "web: dev:web",
+			"type": "shell",
+			"command": "pnpm exec dotenvx run -f .env.local -- pnpm dev:web:only",
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": {
+					"regexp": "^$"
+				},
+				"background": {
+					"activeOnStart": true,
 					"beginsPattern": "VITE",
 					"endsPattern": "ready in"
 				}
