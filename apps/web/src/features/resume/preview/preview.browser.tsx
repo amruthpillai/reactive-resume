@@ -2,6 +2,7 @@ import type { TemplateMetadata } from "@reactive-resume/schema/template-metadata
 import type { CSSProperties } from "react";
 import type { ResolvedResumePreviewProps } from "./preview.shared";
 import { useEffect, useRef, useState } from "react";
+import { useControls } from "react-zoom-pan-pinch";
 import { cn } from "@reactive-resume/utils/style";
 import { client } from "@/libs/orpc/client";
 import { useResumeData } from "../builder/draft";
@@ -52,10 +53,12 @@ export function ResumePreviewClient({
 }: ResolvedResumePreviewProps) {
 	const builderResumeData = useResumeData();
 	const resumeData = data ?? builderResumeData;
+	const { centerView } = useControls();
 	const [rawHtml, setRawHtml] = useState<string | null>(null);
 	const [pageCount, setPageCount] = useState(0);
 	const requestIdRef = useRef(0);
 	const hasRenderedRef = useRef(false);
+	const centeredSignatureRef = useRef<string | null>(null);
 
 	// Render Nunjucks → rawHtml on resume data change
 	useEffect(() => {
@@ -122,6 +125,21 @@ export function ResumePreviewClient({
 		window.addEventListener("message", handler);
 		return () => window.removeEventListener("message", handler);
 	}, []);
+
+	useEffect(() => {
+		if (!resumeData || !rawHtml) return;
+
+		const visiblePageCount = pageCount || getResumePreviewPageCount(resumeData);
+		const signature = `${resumeData.metadata.template ?? ""}:${pageLayout}:${visiblePageCount}`;
+		if (centeredSignatureRef.current === signature) return;
+
+		const rafId = window.requestAnimationFrame(() => {
+			centerView(undefined, 0);
+			centeredSignatureRef.current = signature;
+		});
+
+		return () => window.cancelAnimationFrame(rafId);
+	}, [centerView, pageCount, pageLayout, rawHtml, resumeData]);
 
 	if (!resumeData) return null;
 
