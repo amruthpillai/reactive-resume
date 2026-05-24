@@ -31,6 +31,7 @@
 		"dev:web": "turbo run dev",
 		"dev:web:only": "turbo run dev --filter=web",
 		"knip": "knip",
+		"generate:renderer-icons": "pnpm --filter @reactive-resume/renderer generate:icons",
 		"start": "node apps/server/dist/index.mjs",
 		"typecheck": "turbo run typecheck",
 		"test": "turbo run test",

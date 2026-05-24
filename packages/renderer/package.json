@@ -7,6 +7,7 @@
 		".": "./src/index.ts"
 	},
 	"scripts": {
+		"generate:icons": "tsx ../../tooling/generate-phosphor-icon-map.ts",
 		"typecheck": "tsgo --noEmit",
 		"test": "vitest run --passWithNoTests",
 		"test:coverage": "vitest run --coverage --passWithNoTests",

@@ -81,7 +81,7 @@ describe("iconSvg filter", () => {
 
 		expect(result).toContain('viewBox="0 0 256 256"');
 		expect(result).toContain('fill="currentColor"');
-		expect(result).toContain("M216,40H40");
+		expect(result).toContain("M69.12,94.15,28.5,128");
 	});
 
 	it("renders canonical Phosphor geometry for cpu", () => {
@@ -89,7 +89,7 @@ describe("iconSvg filter", () => {
 		const result = env.renderString("{{ 'cpu' | iconSvg('item-icon') }}");
 
 		expect(result).toContain('viewBox="0 0 256 256"');
-		expect(result).toContain("M104,104h48v48H104");
+		expect(result).toContain("M152,96H104");
 	});
 
 	it("does not use the old simplified 24x24 geometry for brackets-curly", () => {
@@ -105,7 +105,7 @@ describe("iconSvg filter", () => {
 		const env = makeEnv();
 		const result = env.renderString("{{ 'not-a-real-icon' | iconSvg('item-icon') }}");
 
-		expect(result).toContain("m12 3");
+		expect(result).toContain("M239.18,97.26");
 	});
 });
 
