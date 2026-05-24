@@ -165,7 +165,7 @@ export function ResumePreviewClient({
 						sandbox="allow-scripts allow-same-origin"
 						srcDoc={buildPagedSrcdoc(rawHtml, i)}
 						className="block rounded-md border-0 bg-white"
-						style={{ width: pageSize.width, height: pageSize.height }}
+						style={{ width: pageSize.width, height: pageSize.height, pointerEvents: "none" }}
 					/>
 				</figure>
 			))}
