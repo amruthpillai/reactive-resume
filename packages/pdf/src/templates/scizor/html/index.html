@@ -12,7 +12,6 @@ body {
   line-height: var(--resume-line-height-body, 1.5);
   color: var(--resume-foreground, #000);
   background: var(--resume-background, #fff);
-  padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -53,6 +52,11 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 .page-sections {
   display: flex; flex-direction: column;
   gap: var(--resume-section-gap, 6pt);
+  height: 841.89px;
+  overflow: hidden;
+  break-after: page;
+  padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);
+  box-sizing: border-box;
 }
 
 /* ── Sections ── */
@@ -129,9 +133,9 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 </style>
 </head>
 <body>
-{% include "sections/header.html" %}
 {% for page in metadata.layout.pages %}
 <div class="page-sections">
+  {% if loop.first %}{% include "sections/header.html" %}{% endif %}
   {% for sectionId in page.main %}
     {% include "sections/" + sectionId + ".html" ignore missing %}
   {% endfor %}

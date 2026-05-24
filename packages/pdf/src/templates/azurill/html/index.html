@@ -11,14 +11,20 @@ body {
   line-height: var(--resume-line-height-body, 1.5);
   color: var(--resume-foreground, #000);
   background: var(--resume-background, #fff);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 a { color: inherit; text-decoration: none; }
 strong, b { font-weight: var(--resume-weight-heading, 600); }
+svg { display: block; flex: 0 0 auto; }
 
 .page-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  width: 100%;
+  height: 841.89px;
+  overflow: hidden;
+  break-after: page;
   gap: var(--resume-section-gap, 6pt);
 }
 .resume-header {
@@ -26,14 +32,19 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 6pt;
+  gap: 8pt;
   padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt) 0;
+  margin-bottom: var(--resume-section-gap, 6pt);
 }
 .header-picture {
-  width: 64px;
-  height: 64px;
+  width: {{ picture.size }}pt;
+  height: {{ picture.size }}pt;
   object-fit: cover;
-  border-radius: 50%;
+  aspect-ratio: {{ picture.aspectRatio }};
+  border-radius: {{ picture.borderRadius }}pt;
+  border: {{ picture.borderWidth }}pt solid {{ picture.borderColor }};
+  box-shadow: 0 0 {{ picture.shadowWidth }}pt {{ picture.shadowColor }};
+  transform: rotate({{ picture.rotation }}deg);
   flex-shrink: 0;
 }
 .header-identity {
@@ -53,13 +64,33 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2pt var(--resume-column-gap, 4pt);
+  gap: 3pt calc(var(--resume-column-gap, 4pt) * 0.9);
 }
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 3pt;
+  gap: 2pt;
   font-size: var(--resume-size-body, 10pt);
+}
+.contact-item-icon,
+.item-icon {
+  width: 0.95em;
+  height: 0.95em;
+}
+.contact-item-icon {
+  color: var(--resume-primary, #0084d1);
+}
+.item-icon {
+  color: var(--resume-primary, #0084d1);
+}
+.level-icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+.inline-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 3pt;
 }
 
 .content-row {
@@ -83,13 +114,17 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
   display: flex;
   flex-direction: column;
   gap: var(--resume-section-gap, 6pt);
+  padding-left: 10pt;
+  border-left: 1px solid color-mix(in srgb, var(--resume-primary, #0084d1) 28%, transparent);
 }
 
-.resume-section { display: flex; flex-direction: column; gap: 3pt; }
+.resume-section { display: flex; flex-direction: column; gap: 4pt; }
 .section-title {
   font-family: var(--resume-font-heading, inherit);
-  font-size: var(--resume-size-heading, 14pt);
+  font-size: calc(var(--resume-size-heading, 14pt) * 0.96);
   font-weight: var(--resume-weight-heading, 600);
+  line-height: var(--resume-line-height-heading, 1.5);
+  letter-spacing: 0.01em;
   color: var(--resume-primary, #c00);
   border-bottom: none;
   padding-bottom: 0;
@@ -99,10 +134,10 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 .section-items {
   display: grid;
   grid-template-columns: repeat(var(--section-columns, 1), 1fr);
-  gap: calc(var(--resume-section-gap) * 0.5) var(--resume-column-gap, 4pt);
+  gap: calc(var(--resume-section-gap) * 0.66) var(--resume-column-gap, 4pt);
 }
-.section-item { display: flex; flex-direction: column; gap: 1pt; }
-.item-header { display: flex; flex-direction: column; gap: 1pt; }
+.section-item { display: flex; flex-direction: column; gap: 2pt; }
+.item-header { display: flex; flex-direction: column; gap: 2pt; }
 .item-title { font-weight: var(--resume-weight-heading, 600); }
 .item-title-link { text-decoration: underline; }
 .split-row {
@@ -116,10 +151,43 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 .small { font-size: 0.875em; }
 .item-website { font-size: 0.875em; text-decoration: underline; }
 .keywords { opacity: 0.75; }
+.profile-item .item-website,
+.skill-item .small,
+.interest-item .small {
+  line-height: 1.35;
+}
 .rich-text p { margin-bottom: 0.2em; }
 .rich-text p:last-child { margin-bottom: 0; }
-.rich-text ul, .rich-text ol { padding-left: 1.25em; }
-.rich-text li { margin-bottom: 0.1em; }
+.rich-text ul,
+.rich-text ol {
+  padding-left: 0;
+  margin: 0;
+}
+.rich-text ul { list-style: none; }
+.rich-text ol {
+  list-style: none;
+  counter-reset: resume-ol;
+}
+.rich-text li {
+  position: relative;
+  margin-bottom: 0.28em;
+  padding-left: 1.15em;
+}
+.rich-text ul > li::before,
+.rich-text ol > li::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.8em;
+  color: var(--resume-foreground, #000);
+  text-align: right;
+}
+.rich-text ul > li::before { content: "•"; }
+.rich-text ol > li {
+  counter-increment: resume-ol;
+}
+.rich-text ol > li::before { content: counter(resume-ol) "."; }
+.rich-text li > *:last-child { margin-bottom: 0; }
 .level-dots { display: flex; gap: 3pt; align-items: center; margin-top: 1pt; }
 .level-dot {
   width: 0.55em;
@@ -128,6 +196,23 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
   border: 1pt solid var(--resume-primary, #c00);
 }
 .level-dot.filled { background: var(--resume-primary, #c00); }
+.level-icon-wrapper {
+  display: inline-flex;
+  color: var(--resume-primary, #0084d1);
+  opacity: 0.35;
+}
+.level-icon-wrapper.filled {
+  opacity: 1;
+}
+.sidebar-column .section-item {
+  gap: 1.5pt;
+}
+.sidebar-column .section-title {
+  margin-bottom: 2pt;
+}
+.sidebar-column .item-header {
+  gap: 1pt;
+}
 .experience-role { display: flex; flex-direction: column; gap: 1pt; padding-left: 6pt; }
 
 .main-column .experience-section .section-items {
@@ -172,12 +257,12 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
     {% if basics.headline %}<p class="header-headline">{{ basics.headline }}</p>{% endif %}
   </div>
   <div class="contact-list">
-    {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ basics.email }}</a>{% endif %}
-    {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ basics.phone }}</a>{% endif %}
-    {% if basics.location %}<span class="contact-item">{{ basics.location }}</span>{% endif %}
-    {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ basics.website.label or basics.website.url }}</a>{% endif %}
+    {% if basics.email %}<a href="mailto:{{ basics.email }}" class="contact-item">{{ "envelope" | iconSvg("contact-item-icon") | safe }}{{ basics.email }}</a>{% endif %}
+    {% if basics.phone %}<a href="tel:{{ basics.phone }}" class="contact-item">{{ "phone" | iconSvg("contact-item-icon") | safe }}{{ basics.phone }}</a>{% endif %}
+    {% if basics.location %}<span class="contact-item">{{ "map-pin" | iconSvg("contact-item-icon") | safe }}{{ basics.location }}</span>{% endif %}
+    {% if basics.website.url %}<a href="{{ basics.website.url }}" class="contact-item">{{ "globe" | iconSvg("contact-item-icon") | safe }}{{ basics.website.label or basics.website.url }}</a>{% endif %}
     {% for field in basics.customFields %}
-    <span class="contact-item">{{ field.name }}: {{ field.value }}</span>
+    {% if field.link %}<a href="{{ field.link }}" class="contact-item">{{ field.icon | iconSvg("contact-item-icon") | safe }}{{ field.text }}</a>{% else %}<span class="contact-item">{{ field.icon | iconSvg("contact-item-icon") | safe }}{{ field.text }}</span>{% endif %}
     {% endfor %}
   </div>
 </header>

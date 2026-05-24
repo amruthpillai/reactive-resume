@@ -53,6 +53,25 @@ describe("levelDots filter", () => {
 		const env = makeEnv();
 		expect(() => env.renderString("{{ level | levelDots }}", { level: "high" })).not.toThrow();
 	});
+
+	it("renders icon-based levels when the design requests icons", () => {
+		const env = makeEnv();
+		const result = env.renderString("{{ level | levelDots(levelDesign) }}", {
+			level: 4,
+			levelDesign: { type: "icon", icon: "star" },
+		});
+		expect(result.match(/<svg/g)?.length).toBe(5);
+		expect(result).toContain("level-icon-wrapper filled");
+	});
+});
+
+describe("iconSvg filter", () => {
+	it("renders inline SVG markup", () => {
+		const env = makeEnv();
+		const result = env.renderString("{{ 'github-logo' | iconSvg('item-icon') }}");
+		expect(result).toContain("<svg");
+		expect(result).toContain('class="item-icon"');
+	});
 });
 
 describe("formatDate filter", () => {

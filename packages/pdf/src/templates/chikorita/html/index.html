@@ -17,8 +17,10 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 
 .page-layout {
   display: flex;
-  min-height: 100vh;
+  height: 841.89px;
+  overflow: hidden;
   align-items: flex-start;
+  break-after: page;
 }
 .main-column {
   flex: 1;
@@ -165,7 +167,7 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
           <div class="header-contact-row">
             {% if basics.website.url %}<a href="{{ basics.website.url }}" class="header-contact-item">{{ basics.website.label or basics.website.url }}</a>{% endif %}
             {% for field in basics.customFields %}
-            <span class="header-contact-item">{{ field.name }}: {{ field.value }}</span>
+            {% if field.link %}<a href="{{ field.link }}" class="header-contact-item">{{ field.text }}</a>{% else %}<span class="header-contact-item">{{ field.text }}</span>{% endif %}
             {% endfor %}
           </div>
         </div>

@@ -18,7 +18,11 @@ const PAGED_JS_URL = "/vendor/paged.polyfill.js";
 const UPDATE_DEBOUNCE_MS = 100;
 
 function buildPagedSrcdoc(rawHtml: string, pageIndex: number): string {
+	const withBaseHref = rawHtml.includes("<base ")
+		? rawHtml
+		: rawHtml.replace("</head>", `<base href="${window.location.origin}/" />\n</head>`);
 	const handlerScript = `
+<style>@page { size: 595.28px 841.89px; margin: 0; }</style>
 <script src="${PAGED_JS_URL}"></script>
 <script>
 (function() {
@@ -36,7 +40,7 @@ function buildPagedSrcdoc(rawHtml: string, pageIndex: number): string {
   window.Paged.registerHandlers(PageHandler);
 })();
 </script>`;
-	return rawHtml.replace("</head>", `${handlerScript}\n</head>`);
+	return withBaseHref.replace("</head>", `${handlerScript}\n</head>`);
 }
 
 export function ResumePreviewClient({

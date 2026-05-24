@@ -1,3 +1,3 @@
-{% from "macros.html" import renderEducationSection %}
+{% from "macros.html" import renderEducationSection with context %}
 {% set section = sectionById[sectionId] %}
-{{ renderEducationSection(section) }}
+{{ renderEducationSection(section, sectionId) }}

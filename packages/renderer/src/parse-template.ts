@@ -7,7 +7,7 @@ import {
 	resumeSlotSchema,
 	templateMetadataSchema,
 } from "@reactive-resume/schema/template-metadata";
-import { FileMapLoader } from "./loader";
+import { createEnvironment } from "./environment";
 
 export class TemplateParseError extends Error {
 	constructor(message: string) {
@@ -76,6 +76,7 @@ const MOCK_CONTEXT = {
 	sectionById: Object.fromEntries(
 		[...STANDARD_SECTION_IDS].map((id) => [id, { title: id, columns: 1, hidden: false, items: [] }]),
 	),
+	getSectionTitle: (sectionId: string, legacyFallback?: string) => legacyFallback || sectionId,
 	metadata: {
 		template: "test",
 		layout: { sidebarWidth: 35, pages: [{ fullWidth: false, main: ["experience", "education"], sidebar: ["skills"] }] },
@@ -182,7 +183,7 @@ export const parseTemplate = async (zipBuffer: Buffer): Promise<ParsedTemplate> 
 	}
 
 	// Layer 3: syntactic — each HTML file must compile as valid Nunjucks
-	const env = new nunjucks.Environment(new FileMapLoader(files) as nunjucks.ILoader, { autoescape: false });
+	const env = createEnvironment(files);
 	for (const [name, content] of Object.entries(files)) {
 		if (!name.endsWith(".html")) continue;
 		try {

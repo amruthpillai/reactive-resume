@@ -27,6 +27,13 @@ const minimalFiles: Record<string, string> = {
 </div>
 {% endfor %}
 </section>`,
+	"sections/skills.html": `{% set section = sectionById[sectionId] %}
+<section>
+<h2>{{ section.title }}</h2>
+{% for item in section.items | selectVisible %}
+<div class="skill">{{ item.name }}</div>
+{% endfor %}
+</section>`,
 };
 
 const minimalMetadata: TemplateMetadata = {
@@ -94,6 +101,35 @@ const makeData = (): ResumeData =>
 					},
 				],
 			},
+			skills: {
+				title: "Skills",
+				columns: 1,
+				hidden: false,
+				items: [
+					{
+						id: "skill-1",
+						hidden: false,
+						name: "TypeScript",
+						proficiency: "Advanced",
+						level: 4,
+						keywords: [],
+						icon: "",
+						iconColor: "",
+						extensions: {},
+					},
+					{
+						id: "skill-2",
+						hidden: false,
+						name: "Rust",
+						proficiency: "Intermediate",
+						level: 3,
+						keywords: [],
+						icon: "",
+						iconColor: "",
+						extensions: {},
+					},
+				],
+			},
 		},
 		customSections: [],
 		metadata: {
@@ -149,5 +185,66 @@ describe("render", () => {
 	it("dispatches sections via layout pages", () => {
 		const html = render(minimalFiles, makeData(), minimalMetadata, "test", "http://localhost:3001");
 		expect(html).toContain("Careem");
+	});
+
+	it("provides sectionById for shared section partials", () => {
+		const files = {
+			...minimalFiles,
+			"index.html": `<!DOCTYPE html>
+<html>
+<head>{{ metadata.css | safe }}</head>
+<body>
+{% for page in metadata.layout.pages %}
+  {% for sectionId in page.main %}
+    {% include "sections/" + sectionId + ".html" ignore missing %}
+  {% endfor %}
+{% endfor %}
+</body>
+</html>`,
+		};
+		const data = makeData();
+		data.metadata.layout.pages = [{ main: ["skills"], sidebar: [], fullWidth: true }];
+
+		const html = render(files, data, minimalMetadata, "test", "http://localhost:3001");
+
+		expect(html).toContain("Skills");
+		expect(html).toContain("TypeScript");
+	});
+
+	it("renders all visible items when shared partials filter section items", () => {
+		const files = {
+			...minimalFiles,
+			"sections/skills.html": `{% set section = sectionById[sectionId] %}
+{% set items = section.items | selectVisible %}
+<section>
+{% for item in items %}
+<div class="skill">{{ item.name }}</div>
+{% endfor %}
+</section>`,
+		};
+		const data = makeData();
+		data.metadata.layout.pages = [{ main: ["skills"], sidebar: [], fullWidth: true }];
+
+		const html = render(files, data, minimalMetadata, "test", "http://localhost:3001");
+
+		expect(html).toContain("TypeScript");
+		expect(html).toContain("Rust");
+	});
+
+	it("resolves default section titles when the stored title is empty", () => {
+		const files = {
+			...minimalFiles,
+			"sections/skills.html": `{% set section = sectionById[sectionId] %}
+<section>
+<h2>{{ getSectionTitle(sectionId, section.title) }}</h2>
+</section>`,
+		};
+		const data = makeData();
+		data.sections.skills.title = "";
+		data.metadata.layout.pages = [{ main: ["skills"], sidebar: [], fullWidth: true }];
+
+		const html = render(files, data, minimalMetadata, "test", "http://localhost:3001");
+
+		expect(html).toContain("Skills");
 	});
 });

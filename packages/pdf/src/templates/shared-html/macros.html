@@ -21,9 +21,7 @@
 {% macro renderLevelDots(level) %}
 {% if level and level > 0 %}
 <div class="level-dots">
-{% for i in range(5) %}
-<span class="level-dot{% if i < level %} filled{% endif %}"></span>
-{% endfor %}
+{{ level | levelDots(metadata.design.level) | safe }}
 </div>
 {% endif %}
 {% endmacro %}
@@ -33,7 +31,7 @@
 {% macro renderSummarySection(section) %}
 {% if section and not section.hidden and section.content %}
 <section class="resume-section summary-section">
-  {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
+  <h2 class="section-title">{{ getSectionTitle("summary", section.title) }}</h2>
   <div class="rich-text">{{ section.content | safe }}</div>
 </section>
 {% endif %}
@@ -41,17 +39,20 @@
 
 {# ── Profiles ── #}
 
-{% macro renderProfilesSection(section) %}
+{% macro renderProfilesSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section profiles-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item profile-item">
       <div class="item-header">
-        <strong>{{ item.network }}</strong>
+        <div class="inline-with-icon">
+          {{ item.icon | iconSvg("item-icon") | safe }}
+          <strong>{{ item.network }}</strong>
+        </div>
       </div>
       {% if item.website.url %}<a href="{{ item.website.url }}" class="item-website">{{ item.username }}</a>{% else %}<span>{{ item.username }}</span>{% endif %}
     </div>
@@ -64,12 +65,12 @@
 
 {# ── Experience ── #}
 
-{% macro renderExperienceSection(section) %}
+{% macro renderExperienceSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section experience-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item experience-item">
@@ -109,12 +110,12 @@
 
 {# ── Education ── #}
 
-{% macro renderEducationSection(section) %}
+{% macro renderEducationSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section education-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item education-item">
@@ -142,12 +143,12 @@
 
 {# ── Projects ── #}
 
-{% macro renderProjectsSection(section) %}
+{% macro renderProjectsSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section projects-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item project-item">
@@ -169,17 +170,20 @@
 
 {# ── Skills ── #}
 
-{% macro renderSkillsSection(section) %}
+{% macro renderSkillsSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section skills-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item skill-item">
       <div class="item-header">
-        <strong>{{ item.name }}</strong>
+        <div class="inline-with-icon">
+          {{ item.icon | iconSvg("item-icon") | safe }}
+          <strong>{{ item.name }}</strong>
+        </div>
       </div>
       {% if item.proficiency %}<div class="small">{{ item.proficiency }}</div>{% endif %}
       {{ renderLevelDots(item.level) }}
@@ -194,12 +198,12 @@
 
 {# ── Languages ── #}
 
-{% macro renderLanguagesSection(section) %}
+{% macro renderLanguagesSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section languages-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item language-item">
@@ -218,16 +222,21 @@
 
 {# ── Interests ── #}
 
-{% macro renderInterestsSection(section) %}
+{% macro renderInterestsSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section interests-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item interest-item">
-      <div class="item-header"><strong>{{ item.name }}</strong></div>
+      <div class="item-header">
+        <div class="inline-with-icon">
+          {{ item.icon | iconSvg("item-icon") | safe }}
+          <strong>{{ item.name }}</strong>
+        </div>
+      </div>
       {% if item.keywords | length > 0 %}<div class="small keywords">{{ item.keywords | join(", ") }}</div>{% endif %}
     </div>
     {% endfor %}
@@ -239,12 +248,12 @@
 
 {# ── Awards ── #}
 
-{% macro renderAwardsSection(section) %}
+{% macro renderAwardsSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section awards-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item award-item">
@@ -267,12 +276,12 @@
 
 {# ── Certifications ── #}
 
-{% macro renderCertificationsSection(section) %}
+{% macro renderCertificationsSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section certifications-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item certification-item">
@@ -295,12 +304,12 @@
 
 {# ── Publications ── #}
 
-{% macro renderPublicationsSection(section) %}
+{% macro renderPublicationsSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section publications-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item publication-item">
@@ -323,12 +332,12 @@
 
 {# ── Volunteer ── #}
 
-{% macro renderVolunteerSection(section) %}
+{% macro renderVolunteerSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section volunteer-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item volunteer-item">
@@ -351,12 +360,12 @@
 
 {# ── References ── #}
 
-{% macro renderReferencesSection(section) %}
+{% macro renderReferencesSection(section, sectionId) %}
 {% if section and not section.hidden %}
-{% set items = section.items | selectattr("hidden", "equalto", false) %}
+{% set items = section.items | selectVisible %}
 {% if items | length > 0 %}
 <section class="resume-section references-section">
-  <h2 class="section-title">{{ section.title }}</h2>
+  <h2 class="section-title">{{ getSectionTitle(sectionId, section.title) }}</h2>
   <div class="section-items" style="--section-columns: {{ section.columns | default(1) }}">
     {% for item in items %}
     <div class="section-item reference-item">
@@ -379,18 +388,18 @@
 
 {% macro renderCustomSection(section) %}
 {% if section %}
-  {% if section.type == "experience" %}{{ renderExperienceSection(section) }}
-  {% elif section.type == "education" %}{{ renderEducationSection(section) }}
-  {% elif section.type == "projects" %}{{ renderProjectsSection(section) }}
-  {% elif section.type == "skills" %}{{ renderSkillsSection(section) }}
-  {% elif section.type == "languages" %}{{ renderLanguagesSection(section) }}
-  {% elif section.type == "interests" %}{{ renderInterestsSection(section) }}
-  {% elif section.type == "awards" %}{{ renderAwardsSection(section) }}
-  {% elif section.type == "certifications" %}{{ renderCertificationsSection(section) }}
-  {% elif section.type == "publications" %}{{ renderPublicationsSection(section) }}
-  {% elif section.type == "volunteer" %}{{ renderVolunteerSection(section) }}
-  {% elif section.type == "references" %}{{ renderReferencesSection(section) }}
-  {% elif section.type == "profiles" %}{{ renderProfilesSection(section) }}
+  {% if section.type == "experience" %}{{ renderExperienceSection(section, section.id) }}
+  {% elif section.type == "education" %}{{ renderEducationSection(section, section.id) }}
+  {% elif section.type == "projects" %}{{ renderProjectsSection(section, section.id) }}
+  {% elif section.type == "skills" %}{{ renderSkillsSection(section, section.id) }}
+  {% elif section.type == "languages" %}{{ renderLanguagesSection(section, section.id) }}
+  {% elif section.type == "interests" %}{{ renderInterestsSection(section, section.id) }}
+  {% elif section.type == "awards" %}{{ renderAwardsSection(section, section.id) }}
+  {% elif section.type == "certifications" %}{{ renderCertificationsSection(section, section.id) }}
+  {% elif section.type == "publications" %}{{ renderPublicationsSection(section, section.id) }}
+  {% elif section.type == "volunteer" %}{{ renderVolunteerSection(section, section.id) }}
+  {% elif section.type == "references" %}{{ renderReferencesSection(section, section.id) }}
+  {% elif section.type == "profiles" %}{{ renderProfilesSection(section, section.id) }}
   {% endif %}
 {% endif %}
 {% endmacro %}

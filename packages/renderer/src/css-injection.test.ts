@@ -105,7 +105,7 @@ describe("buildInjectedStyles — CSS vars", () => {
 
 	it("injects body typography slot vars", () => {
 		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
-		expect(out).toContain('--resume-font-body: "IBM Plex Serif"');
+		expect(out).toContain("--resume-font-body: 'IBM Plex Serif'");
 		expect(out).toContain("--resume-size-body: 10pt");
 		expect(out).toContain("--resume-weight-body: 400");
 	});
@@ -149,7 +149,7 @@ describe("buildInjectedStyles — CSS vars", () => {
 			},
 		});
 		const out = buildInjectedStyles(data, eitherTemplate, "khaled", "http://localhost:3001");
-		expect(out).toContain('--resume-font-name: "Roboto"');
+		expect(out).toContain("--resume-font-name: 'Roboto'");
 		expect(out).toContain("--resume-size-name: 24pt");
 	});
 });
@@ -177,17 +177,10 @@ describe("buildInjectedStyles — fonts", () => {
 		expect(out).toContain("http://localhost:3001/api/templates/khaled/fonts/fonts/pf-400.woff2");
 	});
 
-	it("generates Google Fonts link for google fonts", () => {
-		const tmpl: TemplateMetadata = {
-			id: "test",
-			name: "Test",
-			sidebarPosition: "none",
-			tags: [],
-			fonts: [{ family: "Inter", weights: [400, 600], source: "google" }],
-			typography: [],
-		};
-		const out = buildInjectedStyles(makeData(), tmpl, "test", "http://localhost:3001");
-		expect(out).toContain('href="https://fonts.googleapis.com');
-		expect(out).toContain("Inter");
+	it("generates @font-face for resume typography web fonts", () => {
+		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
+		expect(out).toContain("@font-face");
+		expect(out).toContain('"IBM Plex Serif"');
+		expect(out).toContain("fonts.gstatic.com");
 	});
 });

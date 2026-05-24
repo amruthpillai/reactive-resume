@@ -124,6 +124,28 @@ describe("parseTemplate", () => {
 		await expect(parseTemplate(buf)).rejects.toThrow(TemplateParseError);
 	});
 
+	it("supports renderer filters during dry-run validation", async () => {
+		const buf = await makeZip({
+			"template.json": JSON.stringify(validMeta),
+			"index.html": `{% set sectionId = "skills" %}{% include "sections/skills.html" %}`,
+			"sections/skills.html":
+				"{% set section = sectionById[sectionId] %}{% set items = section.items | selectVisible %}{% for item in items %}{{ item.name }} {% endfor %}",
+		});
+		const result = await parseTemplate(buf);
+		expect(result.files["sections/skills.html"]).toContain("selectVisible");
+	});
+
+	it("supports shared title helpers during dry-run validation", async () => {
+		const buf = await makeZip({
+			"template.json": JSON.stringify(validMeta),
+			"index.html": `{% set sectionId = "skills" %}{% include "sections/skills.html" %}`,
+			"sections/skills.html":
+				"{% set section = sectionById[sectionId] %}<h2>{{ getSectionTitle(sectionId, section.title) }}</h2>",
+		});
+		const result = await parseTemplate(buf);
+		expect(result.files["sections/skills.html"]).toContain("getSectionTitle");
+	});
+
 	it("throws TemplateParseError when template contains script tag (Layer 6)", async () => {
 		const buf = await makeZip({
 			"template.json": JSON.stringify(validMeta),
