@@ -32,7 +32,7 @@
 {% if section and not section.hidden and section.content %}
 <section class="resume-section summary-section">
   <h2 class="section-title">{{ getSectionTitle("summary", section.title) }}</h2>
-  <div class="section-items">
+  <div class="section-items section-items-single" style="--section-columns: 1">
     <div class="section-item">
       <div class="rich-text">{{ section.content | richText }}</div>
     </div>

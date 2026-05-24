@@ -303,6 +303,8 @@ describe("render", () => {
 		expect(html).toContain("text-decoration: underline;");
 		expect(html).toContain('class="contact-item-text"');
 		expect(html).toContain(".section-items.section-items-single::before");
+		expect(html).toContain('<section class="resume-section summary-section">');
+		expect(html).toContain('<div class="section-items section-items-single" style="--section-columns: 1">');
 		expect(html).toContain(".rich-text a { text-decoration: underline; color: inherit; }");
 		expect(html).toContain("David Kowalski");
 		expect(html).toContain("Summary");
