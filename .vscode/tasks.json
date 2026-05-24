@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "web: dev",
+			"type": "shell",
+			"command": "pnpm exec dotenvx run -f .env.local -- pnpm dev:web",
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": {
+					"regexp": "^$"
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "VITE",
+					"endsPattern": "ready in"
+				}
+			},
+			"presentation": {
+				"group": "dev",
+				"panel": "dedicated",
+				"reveal": "silent"
+			}
+		}
+	]
+}
