@@ -388,6 +388,26 @@
 {% endif %}
 {% endmacro %}
 
+{# ── Cover Letter ── #}
+
+{% macro renderCoverLetterSection(section) %}
+{% if section and not section.hidden %}
+{% set items = section.items | selectVisible %}
+{% if items | length > 0 %}
+<section class="resume-section cover-letter-section">
+  <div class="section-items section-items-single" style="--section-columns: 1">
+    {% for item in items %}
+    <div class="section-item cover-letter-item">
+      {% if item.recipient %}<div class="rich-text cover-letter-recipient">{{ item.recipient | richText }}</div>{% endif %}
+      {% if item.content %}<div class="rich-text cover-letter-content">{{ item.content | richText }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
 {# ── Custom section dispatch (used by sections/default.html for UUID section IDs) ── #}
 
 {% macro renderCustomSection(section) %}
@@ -404,6 +424,7 @@
   {% elif section.type == "volunteer" %}{{ renderVolunteerSection(section, section.id) }}
   {% elif section.type == "references" %}{{ renderReferencesSection(section, section.id) }}
   {% elif section.type == "profiles" %}{{ renderProfilesSection(section, section.id) }}
+  {% elif section.type == "cover-letter" %}{{ renderCoverLetterSection(section) }}
   {% endif %}
 {% endif %}
 {% endmacro %}

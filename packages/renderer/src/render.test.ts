@@ -307,4 +307,15 @@ describe("render", () => {
 		expect(html).toContain("David Kowalski");
 		expect(html).toContain("Summary");
 	});
+
+	it("renders custom cover-letter sections from the shared HTML dispatcher", () => {
+		const { files, metadata } = loadAzurillTemplate();
+		const html = render(files, sampleResumeData, metadata, "azurill", "http://localhost:3000");
+
+		expect(html).toContain("Hiring Manager");
+		expect(html).toContain("Sunrise Games Studio");
+		expect(html).toContain("Dear Hiring Manager,");
+		expect(html).toContain("Sincerely,");
+		expect(html).toContain("cover-letter-section");
+	});
 });
