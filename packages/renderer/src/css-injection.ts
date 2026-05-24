@@ -186,7 +186,12 @@ ${typographyVars}
 .rich-text em, .rich-text i { font-style: italic; }
 .rich-text u { text-decoration: underline; }
 .rich-text s { text-decoration: line-through; }
-.rich-text a { text-decoration: underline; color: inherit; }
+.rich-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 1px;
+}
 </style>`;
 
 	return [fontFaceBlock, cssVarsBlock].filter(Boolean).join("\n");

@@ -21,6 +21,7 @@
 	],
 	"scripts": {
 		"build": "turbo run build",
+		"build:rxt": "pnpm --filter @reactive-resume/pdf build:rxt",
 		"check": "biome check --write --unsafe .",
 		"db:generate": "turbo run db:generate --filter=@reactive-resume/db",
 		"db:migrate": "turbo run db:migrate --filter=@reactive-resume/db",
