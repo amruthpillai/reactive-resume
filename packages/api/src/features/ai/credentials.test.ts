@@ -25,6 +25,13 @@ describe("AI credential encryption", () => {
 		expect(decryptCredential(encrypted.encryptedApiKey)).toBe("sk-test-secret");
 	});
 
+	it("supports providers without API keys", () => {
+		const encrypted = encryptCredential("");
+
+		expect(encrypted.apiKeyPreview).toBe("No key");
+		expect(decryptCredential(encrypted.encryptedApiKey)).toBe("");
+	});
+
 	it("generates salted non-revealable fingerprints", () => {
 		const first = fingerprintCredential("sk-test-secret", "salt-a");
 		const again = fingerprintCredential("sk-test-secret", "salt-a");

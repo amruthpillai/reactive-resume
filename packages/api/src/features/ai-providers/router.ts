@@ -7,15 +7,25 @@ import { protectedProcedure } from "../../context";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
 import { aiProvidersService } from "./service";
 
-const providerInput = z.object({
+const providerFields = {
 	label: z.string().trim().min(1),
 	provider: aiProviderSchema,
 	model: z.string().trim().min(1),
-	baseURL: z.string().trim().optional().default(""),
-	apiKey: z.string().trim().min(1),
+	baseURL: z.string().trim(),
+};
+
+const providerInput = z.object({
+	...providerFields,
+	baseURL: providerFields.baseURL.optional().default(""),
+	apiKey: z.string().trim().default(""),
 });
 
-const updateProviderInput = providerInput
+const updateProviderInput = z
+	.object({
+		...providerFields,
+		baseURL: providerFields.baseURL.optional(),
+		apiKey: z.string().trim().optional(),
+	})
 	.partial()
 	.extend({ id: z.string(), enabled: z.boolean().optional() })
 	.refine((input) => Object.keys(input).some((key) => key !== "id"), {

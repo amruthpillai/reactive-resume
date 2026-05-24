@@ -76,6 +76,7 @@ const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
 export function getModel(input: GetModelInput) {
 	const { provider, model, apiKey } = input;
 	const baseURL = resolveAiBaseUrl(input);
+	const apiKeyConfig = apiKey.trim() ? { apiKey } : {};
 
 	return match(provider)
 		.with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model))
@@ -84,8 +85,9 @@ export function getModel(input: GetModelInput) {
 		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
 		.with("openrouter", () => createOpenAICompatible({ name: "openrouter", apiKey, baseURL }).languageModel(model))
 		.with("openai-compatible", () =>
-			createOpenAICompatible({ name: "openai-compatible", apiKey, baseURL }).languageModel(model),
+			createOpenAICompatible({ name: "openai-compatible", baseURL, ...apiKeyConfig }).languageModel(model),
 		)
+		.with("lmstudio", () => createOpenAICompatible({ name: "lmstudio", baseURL, ...apiKeyConfig }).languageModel(model))
 		.with("ollama", () => {
 			const ollama = createOllama({
 				name: "ollama",
@@ -107,7 +109,7 @@ export function getAgentModel(input: GetModelInput) {
 const aiCredentialsSchema = z.object({
 	provider: aiProviderSchema,
 	model: z.string().trim().min(1),
-	apiKey: z.string().trim().min(1),
+	apiKey: z.string().trim().default(""),
 	baseURL: z.string().optional().default(""),
 });
 

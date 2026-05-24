@@ -73,6 +73,7 @@ describe("agent tools", () => {
 		"vercel-ai-gateway",
 		"openrouter",
 		"ollama",
+		"lmstudio",
 		"openai-compatible",
 	])("does not add provider-native web search for %s", (provider) => {
 		const tools = buildTools(provider);

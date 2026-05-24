@@ -39,6 +39,7 @@ function decode(value: string) {
 
 function makePreview(apiKey: string) {
 	const trimmed = apiKey.trim();
+	if (!trimmed) return "No key";
 	if (trimmed.length <= 8) return "••••";
 
 	return `${trimmed.slice(0, 4)}...${trimmed.slice(-4)}`;
@@ -67,7 +68,7 @@ export function encryptCredential(apiKey: string): StoredCredentialFields {
 
 export function decryptCredential(payload: string) {
 	const [version, encodedIv, encodedAuthTag, encodedCiphertext] = payload.split(".");
-	if (version !== CREDENTIAL_VERSION || !encodedIv || !encodedAuthTag || !encodedCiphertext) {
+	if (version !== CREDENTIAL_VERSION || !encodedIv || !encodedAuthTag || encodedCiphertext === undefined) {
 		throw new Error("INVALID_ENCRYPTED_CREDENTIAL");
 	}
 

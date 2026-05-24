@@ -8,6 +8,8 @@ type ResolveAiBaseUrlInput = {
 	baseURL?: string | null;
 };
 
+const LOCAL_AI_PROVIDERS = new Set<AIProvider>(["ollama", "lmstudio"]);
+
 function assertSafeUrl(input: string, errorCode: string, options?: { allowUnsafe?: boolean }) {
 	const parsed = parseUrl(input);
 	if (!parsed) throw new Error(errorCode);
@@ -27,5 +29,7 @@ export function resolveAiBaseUrl(input: ResolveAiBaseUrlInput) {
 	const baseURL = input.baseURL?.trim() || AI_PROVIDER_DEFAULT_BASE_URLS[input.provider];
 	if (!baseURL) throw new Error("INVALID_AI_BASE_URL");
 
-	return assertSafeUrl(baseURL, "INVALID_AI_BASE_URL", { allowUnsafe: env.FLAG_ALLOW_UNSAFE_AI_BASE_URL });
+	return assertSafeUrl(baseURL, "INVALID_AI_BASE_URL", {
+		allowUnsafe: env.FLAG_ALLOW_UNSAFE_AI_BASE_URL || LOCAL_AI_PROVIDERS.has(input.provider),
+	});
 }

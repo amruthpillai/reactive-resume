@@ -181,9 +181,9 @@ export const aiProvidersService = {
 
 		const existing = await getOwnedProvider(input);
 		const provider = input.provider ?? aiProviderSchema.parse(existing.provider);
-		const nextApiKey = input.apiKey?.trim();
-		const encrypted = nextApiKey ? encryptCredential(nextApiKey) : {};
-		const credentialChanged = !!nextApiKey;
+		const nextApiKey = input.apiKey !== undefined ? input.apiKey.trim() : undefined;
+		const encrypted = nextApiKey !== undefined ? encryptCredential(nextApiKey) : {};
+		const credentialChanged = nextApiKey !== undefined;
 		const nextBaseUrl =
 			input.baseURL !== undefined ? normalizeBaseUrl({ provider, baseURL: input.baseURL }) : existing.baseUrl;
 		const providerChanged = input.provider !== undefined && input.provider !== existing.provider;

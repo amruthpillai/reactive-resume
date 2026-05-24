@@ -61,9 +61,15 @@ const providerOptions: AIProviderOption[] = [
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.ollama,
 	},
 	{
+		value: "lmstudio",
+		label: t`LM Studio`,
+		keywords: ["lmstudio", "lm studio", "local"],
+		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.lmstudio,
+	},
+	{
 		value: "openai-compatible",
 		label: t`OpenAI-compatible`,
-		keywords: ["compatible", "custom", "gateway"],
+		keywords: ["compatible", "custom", "gateway", "lmstudio", "lm studio"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS["openai-compatible"],
 	},
 ];
@@ -223,7 +229,7 @@ function CreateProviderForm() {
 		() => providerOptions.find((option) => option.value === form.provider),
 		[form.provider],
 	);
-	const canCreate = form.label.trim() && form.model.trim() && form.apiKey.trim();
+	const canCreate = form.label.trim() && form.model.trim();
 	const { mutate: createProvider, isPending } = useMutation(orpc.aiProviders.create.mutationOptions());
 
 	return (

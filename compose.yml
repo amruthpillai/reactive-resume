@@ -85,6 +85,8 @@ services:
     networks:
       - data_network
       - storage_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3000:3000"
     env_file:

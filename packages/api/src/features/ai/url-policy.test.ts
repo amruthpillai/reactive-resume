@@ -28,6 +28,17 @@ describe("AI provider base URL policy", () => {
 		);
 	});
 
+	it("allows local AI provider URLs by default", () => {
+		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = false;
+
+		expect(resolveAiBaseUrl({ provider: "ollama", baseURL: "http://localhost:11434/api" })).toBe(
+			"http://localhost:11434/api",
+		);
+		expect(resolveAiBaseUrl({ provider: "lmstudio", baseURL: "http://host.docker.internal:1234/v1" })).toBe(
+			"http://host.docker.internal:1234/v1",
+		);
+	});
+
 	it("allows private and non-HTTPS provider URLs when explicitly enabled", () => {
 		envMock.FLAG_ALLOW_UNSAFE_AI_BASE_URL = true;
 
