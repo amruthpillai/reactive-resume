@@ -117,10 +117,7 @@ export function ResumePreviewClient({
 	useEffect(() => {
 		const handler = (e: MessageEvent) => {
 			if (e.data?.type !== "paged-ready") return;
-			setPageCount((current) => {
-				const incoming = e.data.count as number;
-				return incoming > current ? incoming : current;
-			});
+			setPageCount(Math.max(1, e.data.count as number));
 		};
 		window.addEventListener("message", handler);
 		return () => window.removeEventListener("message", handler);

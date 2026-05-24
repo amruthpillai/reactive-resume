@@ -105,6 +105,23 @@ describe("ResumePreviewClient (iframe)", () => {
 		});
 	});
 
+	it("shrinks the iframe list when paged-ready reports fewer physical pages than the layout count", async () => {
+		render(<ResumePreviewClient data={sampleResumeData} pageLayout="vertical" pageScale={1} showPageNumbers={false} />);
+
+		await screen.findByTitle("Resume page 4");
+
+		window.dispatchEvent(
+			new MessageEvent("message", {
+				data: { type: "paged-ready", count: 3 },
+			}),
+		);
+
+		await waitFor(() => {
+			expect(screen.queryByTitle("Resume page 4")).toBeNull();
+		});
+		expect(screen.getByTitle("Resume page 3")).toBeTruthy();
+	});
+
 	it("returns null when no resume data is available", () => {
 		const { container } = render(
 			<ResumePreviewClient pageGap={16} pageLayout="horizontal" pageScale={1} showPageNumbers={false} />,

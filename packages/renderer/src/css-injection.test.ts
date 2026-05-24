@@ -194,4 +194,17 @@ describe("buildInjectedStyles — fonts", () => {
 		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
 		expect(out).toContain(".rich-text a { text-decoration: underline; color: inherit; }");
 	});
+
+	it("allows logical page containers to fragment instead of clipping overflow", () => {
+		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
+		expect(out).toContain(".page-layout, .page-sections {");
+		expect(out).toContain("height: auto !important;");
+		expect(out).toContain("overflow: visible !important;");
+	});
+
+	it("keeps section titles and items together during pagination", () => {
+		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
+		expect(out).toContain(".section-title { break-after: avoid; page-break-after: avoid; }");
+		expect(out).toContain(".section-item { break-inside: avoid; page-break-inside: avoid; }");
+	});
 });
