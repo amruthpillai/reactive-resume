@@ -23,7 +23,12 @@ function buildPagedSrcdoc(rawHtml: string, pageIndex: number): string {
 		? rawHtml
 		: rawHtml.replace("</head>", `<base href="${window.location.origin}/" />\n</head>`);
 	const handlerScript = `
-<style>@page { size: 595.28px 841.89px; margin: 0; }</style>
+<style>
+@page {
+  size: 595.28px 841.89px;
+  margin: 0;
+}
+</style>
 <script src="${PAGED_JS_URL}"></script>
 <script>
 (function() {

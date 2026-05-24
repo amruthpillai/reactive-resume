@@ -77,6 +77,9 @@ describe("ResumePreviewClient (iframe)", () => {
 		const iframe = await screen.findByTitle("Resume page 1");
 		expect(iframe).toBeTruthy();
 		expect(iframe.getAttribute("srcdoc")).toContain("Hello");
+		expect(iframe.getAttribute("srcdoc")).toContain("@page {");
+		expect(iframe.getAttribute("srcdoc")).toContain("size: 595.28px 841.89px;");
+		expect(iframe.getAttribute("srcdoc")).toContain("margin: 0;");
 		expect(screen.getByTitle("Resume page 4")).toBeTruthy();
 	});
 

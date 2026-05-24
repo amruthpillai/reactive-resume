@@ -147,16 +147,6 @@ ${typographyVars}
 .page-sections:not(:last-child) { break-after: page; }
 .page-layout:not(:last-child) { break-after: page; }
 
-/* Let paged media fragment overflowing logical pages instead of clipping them. */
-.page-layout, .page-sections {
-  height: auto !important;
-  overflow: visible !important;
-}
-
-/* Keep headings with following content and move whole items forward when they do not fit. */
-.section-title { break-after: avoid; page-break-after: avoid; }
-.section-item { break-inside: avoid; page-break-inside: avoid; }
-
 /* Rich text inline formatting — shared across all HTML templates */
 .rich-text p { margin: calc(var(--resume-line-height-body, 1.5) * 0.2em) 0; }
 .rich-text p:first-child { margin-top: 0; }
