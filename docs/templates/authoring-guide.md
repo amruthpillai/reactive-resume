@@ -1,3 +1,8 @@
+---
+title: "Template Authoring Guide"
+description: "Build HTML/CSS .rxt templates for Reactive Resume with Nunjucks, shared section macros, and the current preview/export pipeline."
+---
+
 # Template Authoring Guide
 
 This guide covers everything you need to build a `.rxt` template for Reactive Resume.
@@ -6,7 +11,13 @@ This guide covers everything you need to build a `.rxt` template for Reactive Re
 
 ## What is a `.rxt` file?
 
-A `.rxt` file is a ZIP archive with a `.rxt` extension. It contains the HTML, CSS, and optional font files that define how a resume looks. The engine renders it server-side (Puppeteer PDF) and in the browser (iframe preview) from the same source.
+A `.rxt` file is a ZIP archive with a `.rxt` extension. It contains the HTML, CSS, and optional font files that define how a resume looks.
+
+The current template engine is HTML/CSS-based:
+- the builder preview renders the template in an iframe and paginates it with Paged.js
+- PDF export renders the same HTML on the server and prints it with Puppeteer
+
+Preview and export use the same template source.
 
 ---
 
@@ -93,7 +104,7 @@ The entry point. Rendered with Nunjucks. Receives the full resume context and th
 </html>
 ```
 
-`{{ metadata.css | safe }}` outputs the injected `<style>` block containing all CSS custom properties. Always place it inside `<head>`.
+`{{ metadata.css | safe }}` outputs the injected `<style>` block containing shared CSS custom properties and paged-media rules. Always place it inside `<head>`.
 
 ### Two-column layout example
 
@@ -179,7 +190,7 @@ Iterate with `{% for page in metadata.layout.pages %}`.
 ### `basics.customFields`
 
 ```
-[{ id, icon, name, value }]
+[{ id, icon, text, link }]
 ```
 
 ---
@@ -348,7 +359,7 @@ Extension values are stored in `item.extensions`:
 }
 ```
 
-The engine injects a `<link>` tag for Google Fonts automatically. In your CSS, reference the font by family name via the CSS vars:
+The engine injects `@font-face` rules for the selected Google font weights automatically. In your CSS, reference the font by family name via the CSS vars:
 
 ```css
 body {
@@ -413,7 +424,7 @@ Each slot gets injected as `--resume-font-label`, `--resume-size-label`, `--resu
 Template source lives in `packages/pdf/src/templates/<name>/html/`. Run:
 
 ```bash
-pnpm --filter @reactive-resume/pdf build:rxt
+pnpm build:rxt
 ```
 
 This:
@@ -423,6 +434,13 @@ This:
 4. Template-specific `sections/` files override the shared ones
 
 The output `.rxt` files are committed to git alongside their source dirs.
+
+If you are editing a built-in template, rebuild alone is not enough for the builder to pick up the change. The running app reads seeded template archives, not raw source files.
+
+After changing a built-in template:
+1. Run `pnpm build:rxt`
+2. Restart the dev server so built-in templates are reseeded from the rebuilt `.rxt` files
+3. Refresh the builder preview
 
 ---
 
@@ -556,7 +574,7 @@ a { color: inherit; text-decoration: none; }
 
 Build and verify:
 ```bash
-pnpm --filter @reactive-resume/pdf build:rxt
+pnpm build:rxt
 # ✓ minimal.rxt (X KB)
 ```
 

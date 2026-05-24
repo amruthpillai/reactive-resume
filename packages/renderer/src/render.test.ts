@@ -309,6 +309,7 @@ describe("render", () => {
 		expect(html).toContain(".rich-text a {");
 		expect(html).toContain("text-decoration-thickness: 0.5px;");
 		expect(html).toContain("text-underline-offset: 1px;");
+		expect(html).toContain("M104,104h48v48H104");
 		expect(html).toContain("David Kowalski");
 		expect(html).toContain("Summary");
 	});

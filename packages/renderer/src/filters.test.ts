@@ -74,6 +74,39 @@ describe("iconSvg filter", () => {
 		expect(result).toContain('fill="currentColor"');
 		expect(result).not.toContain('stroke="currentColor"');
 	});
+
+	it("renders canonical Phosphor geometry for code", () => {
+		const env = makeEnv();
+		const result = env.renderString("{{ 'code' | iconSvg('item-icon') }}");
+
+		expect(result).toContain('viewBox="0 0 256 256"');
+		expect(result).toContain('fill="currentColor"');
+		expect(result).toContain("M216,40H40");
+	});
+
+	it("renders canonical Phosphor geometry for cpu", () => {
+		const env = makeEnv();
+		const result = env.renderString("{{ 'cpu' | iconSvg('item-icon') }}");
+
+		expect(result).toContain('viewBox="0 0 256 256"');
+		expect(result).toContain("M104,104h48v48H104");
+	});
+
+	it("does not use the old simplified 24x24 geometry for brackets-curly", () => {
+		const env = makeEnv();
+		const result = env.renderString("{{ 'brackets-curly' | iconSvg('item-icon') }}");
+
+		expect(result).toContain('viewBox="0 0 256 256"');
+		expect(result).not.toContain('viewBox="0 0 24 24"');
+		expect(result).not.toContain('d="M9 4H7');
+	});
+
+	it("falls back to star for unknown icons", () => {
+		const env = makeEnv();
+		const result = env.renderString("{{ 'not-a-real-icon' | iconSvg('item-icon') }}");
+
+		expect(result).toContain("m12 3");
+	});
 });
 
 describe("formatDate filter", () => {
