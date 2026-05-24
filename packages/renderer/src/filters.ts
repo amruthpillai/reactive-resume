@@ -1,5 +1,6 @@
 import type { Environment } from "nunjucks";
 import nunjucks from "nunjucks";
+import { normalizeRichTextHtml } from "./rich-text";
 
 const iconSvgPaths: Record<string, { viewBox?: string; paths: string[] }> = {
 	envelope: { paths: ['<rect x="3" y="5" width="18" height="14" rx="2"/>', '<path d="M3 7l9 7 9-7"/>'] },
@@ -106,6 +107,13 @@ export const registerFilters = (env: Environment): void => {
 	env.addFilter("selectVisible", (items: unknown) => {
 		if (!Array.isArray(items)) return [];
 		return items.filter((item) => item && typeof item === "object" && !("hidden" in item && item.hidden));
+	});
+
+	env.addFilter("richText", (html: unknown) => {
+		if (typeof html !== "string") return new nunjucks.runtime.SafeString("");
+
+		const normalized = normalizeRichTextHtml(html);
+		return new nunjucks.runtime.SafeString(normalized);
 	});
 
 	env.addFilter("iconSvg", (name: unknown, className?: string) => renderIconSvg(name, className));

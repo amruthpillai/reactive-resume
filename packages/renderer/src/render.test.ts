@@ -1,6 +1,10 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { TemplateMetadata } from "@reactive-resume/schema/template-metadata";
+import { readdirSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { render } from "./render";
 
 const minimalFiles: Record<string, string> = {
@@ -18,11 +22,11 @@ const minimalFiles: Record<string, string> = {
 </html>`,
 	"sections/experience.html": `<section>
 <h2>{{ sections.experience.title }}</h2>
-{% for item in sections.experience.items | selectVisible %}
+  {% for item in sections.experience.items | selectVisible %}
 <div class="exp">
   <strong>{{ item.company }}</strong>
-  {{ item.description | safe }}
-  {% if item.extensions.additionalHtml %}{{ item.extensions.additionalHtml | safe }}{% endif %}
+  {{ item.description | richText }}
+  {% if item.extensions.additionalHtml %}{{ item.extensions.additionalHtml | richText }}{% endif %}
   <resume-slot id="additionalHtml" item-type="experienceItem" type="rich-text" label="Additional section" />
 </div>
 {% endfor %}
@@ -43,6 +47,32 @@ const minimalMetadata: TemplateMetadata = {
 	tags: [],
 	fonts: [],
 	typography: [],
+};
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const repoRoot = resolve(__dirname, "../../..");
+
+const loadAzurillTemplate = (): { files: Record<string, string>; metadata: TemplateMetadata } => {
+	const templatesDir = join(repoRoot, "packages/pdf/src/templates");
+	const sharedHtmlDir = join(templatesDir, "shared-html");
+	const azurillHtmlDir = join(templatesDir, "azurill/html");
+	const files: Record<string, string> = {
+		"macros.html": readFileSync(join(sharedHtmlDir, "macros.html"), "utf-8"),
+	};
+
+	for (const file of readdirSync(join(sharedHtmlDir, "sections"))) {
+		files[`sections/${file}`] = readFileSync(join(sharedHtmlDir, "sections", file), "utf-8");
+	}
+
+	files["index.html"] = readFileSync(join(azurillHtmlDir, "index.html"), "utf-8");
+
+	for (const file of readdirSync(join(azurillHtmlDir, "sections"))) {
+		files[`sections/${file}`] = readFileSync(join(azurillHtmlDir, "sections", file), "utf-8");
+	}
+
+	const metadata = JSON.parse(readFileSync(join(azurillHtmlDir, "template.json"), "utf-8")) as TemplateMetadata;
+
+	return { files, metadata };
 };
 
 const makeData = (): ResumeData =>
@@ -166,14 +196,26 @@ describe("render", () => {
 		expect(html).toContain("--resume-sidebar-width");
 	});
 
-	it("renders HTML description fields as HTML via safe filter", () => {
+	it("renders HTML description fields through the richText filter", () => {
 		const html = render(minimalFiles, makeData(), minimalMetadata, "test", "http://localhost:3001");
 		expect(html).toContain("<p>Built platform infrastructure.</p>");
 	});
 
-	it("renders extension values", () => {
+	it("renders extension values through the richText filter", () => {
 		const html = render(minimalFiles, makeData(), minimalMetadata, "test", "http://localhost:3001");
 		expect(html).toContain("<p>Extra content.</p>");
+		expect(html).toContain("<p>Built platform infrastructure.</p>");
+	});
+
+	it("normalizes inline-only rich text through the richText filter", () => {
+		const data = makeData();
+		data.sections.experience.items[0].description = "Intro <strong>text</strong>";
+		data.sections.experience.items[0].extensions.additionalHtml = "before <em>after</em>";
+
+		const html = render(minimalFiles, data, minimalMetadata, "test", "http://localhost:3001");
+
+		expect(html).toContain("<p>Intro <strong>text</strong></p>");
+		expect(html).toContain("<p>before <em>after</em></p>");
 	});
 
 	it("filters hidden items via selectVisible", () => {
@@ -246,5 +288,18 @@ describe("render", () => {
 		const html = render(files, data, minimalMetadata, "test", "http://localhost:3001");
 
 		expect(html).toContain("Skills");
+	});
+
+	it("renders Azurill with body-bold profile titles and matching font faces", () => {
+		const { files, metadata } = loadAzurillTemplate();
+		const html = render(files, sampleResumeData, metadata, "azurill", "http://localhost:3000");
+
+		expect(html).toContain("--resume-weight-body-bold: 600");
+		expect(html).toContain('font-family: "IBM Plex Serif"');
+		expect(html).toContain("font-weight: 600");
+		expect(html).toContain('<strong class="item-title">GitHub</strong>');
+		expect(html).toContain('<strong class="item-title">LinkedIn</strong>');
+		expect(html).toContain("David Kowalski");
+		expect(html).toContain("Summary");
 	});
 });

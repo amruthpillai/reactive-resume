@@ -5,3 +5,4 @@ export { registerFilters } from "./filters";
 export { FileMapLoader } from "./loader";
 export { parseTemplate, TemplateParseError } from "./parse-template";
 export { render } from "./render";
+export { normalizeRichTextHtml, richTextMarkClassName } from "./rich-text";

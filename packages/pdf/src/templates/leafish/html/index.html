@@ -13,7 +13,7 @@ body {
   background: var(--resume-background, #fff);
 }
 a { color: inherit; text-decoration: none; }
-strong, b { font-weight: var(--resume-weight-heading, 600); }
+strong, b { font-weight: var(--resume-weight-body-bold, var(--resume-weight-heading, 600)); }
 
 .page-layout {
   display: flex;
@@ -120,7 +120,7 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 }
 .section-item { display: flex; flex-direction: column; gap: 1pt; }
 .item-header { display: flex; flex-direction: column; gap: 1pt; }
-.item-title { font-weight: var(--resume-weight-heading, 600); }
+.item-title { font-weight: var(--resume-weight-body-bold, var(--resume-weight-heading, 600)); }
 .item-title-link { text-decoration: underline; }
 .split-row {
   display: flex;
@@ -166,7 +166,7 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
           </div>
 
           {% if summary and summary.content %}
-          <div class="rich-text">{{ summary.content | safe }}</div>
+          <div class="rich-text">{{ summary.content | richText }}</div>
           {% endif %}
         </div>
       </div>

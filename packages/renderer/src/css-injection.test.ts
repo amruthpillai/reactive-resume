@@ -99,15 +99,16 @@ describe("buildInjectedStyles — CSS vars", () => {
 
 	it("injects page padding from marginX/marginY", () => {
 		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
-		expect(out).toContain("--resume-page-padding-x: 14pt");
-		expect(out).toContain("--resume-page-padding-y: 12pt");
+		expect(out).toContain("--resume-page-padding-x: 14px");
+		expect(out).toContain("--resume-page-padding-y: 12px");
 	});
 
 	it("injects body typography slot vars", () => {
 		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
 		expect(out).toContain("--resume-font-body: 'IBM Plex Serif'");
-		expect(out).toContain("--resume-size-body: 10pt");
+		expect(out).toContain("--resume-size-body: 10px");
 		expect(out).toContain("--resume-weight-body: 400");
+		expect(out).toContain("--resume-weight-body-bold: 400");
 	});
 
 	it("does not inject sidebar vars when sidebarPosition is none", () => {
@@ -136,7 +137,7 @@ describe("buildInjectedStyles — CSS vars", () => {
 	it("injects extra typography slot vars from template declaration", () => {
 		const out = buildInjectedStyles(makeData(), eitherTemplate, "khaled", "http://localhost:3001");
 		expect(out).toContain("--resume-font-name");
-		expect(out).toContain("--resume-size-name: 28pt");
+		expect(out).toContain("--resume-size-name: 28px");
 		expect(out).toContain("--resume-weight-name: 700");
 	});
 
@@ -150,7 +151,7 @@ describe("buildInjectedStyles — CSS vars", () => {
 		});
 		const out = buildInjectedStyles(data, eitherTemplate, "khaled", "http://localhost:3001");
 		expect(out).toContain("--resume-font-name: 'Roboto'");
-		expect(out).toContain("--resume-size-name: 24pt");
+		expect(out).toContain("--resume-size-name: 24px");
 	});
 });
 
@@ -182,5 +183,10 @@ describe("buildInjectedStyles — fonts", () => {
 		expect(out).toContain("@font-face");
 		expect(out).toContain('"IBM Plex Serif"');
 		expect(out).toContain("fonts.gstatic.com");
+	});
+
+	it("targets normalized mark spans in rich text", () => {
+		const out = buildInjectedStyles(makeData(), noneTemplate, "test", "http://localhost:3001");
+		expect(out).toContain(".rich-text .rr-pdf-mark");
 	});
 });

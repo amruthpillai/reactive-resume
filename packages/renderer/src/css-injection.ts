@@ -22,7 +22,7 @@ const buildTypographyFontDeclarations = (data: ResumeData, metadata: TemplateMet
 	const slotOverrides: Record<string, TypographySlotValue> = data.metadata.typography.slots ?? {};
 	const requestedFonts = new Map<string, string[]>();
 
-	requestedFonts.set(data.metadata.typography.body.fontFamily, bodyWeights);
+	requestedFonts.set(data.metadata.typography.body.fontFamily, [...bodyWeights, "700"]);
 	requestedFonts.set(data.metadata.typography.heading.fontFamily, [
 		...(requestedFonts.get(data.metadata.typography.heading.fontFamily) ?? []),
 		...headingWeights,
@@ -75,15 +75,17 @@ const buildFontFaceBlock = (
 };
 
 const slotLine = (id: string, font: string, size: number, weight: number, lineHeight: number): string =>
-	`  --resume-font-${id}: ${joinFont(font)};\n  --resume-size-${id}: ${size}pt;\n  --resume-weight-${id}: ${weight};\n  --resume-line-height-${id}: ${lineHeight};`;
+	`  --resume-font-${id}: ${joinFont(font)};\n  --resume-size-${id}: ${size}px;\n  --resume-weight-${id}: ${weight};\n  --resume-line-height-${id}: ${lineHeight};`;
 
 const buildTypographySlotVars = (data: ResumeData, tmplMeta: TemplateMetadata): string => {
 	const t = data.metadata.typography;
 	const bodyWeight = parseWeight(t.body.fontWeights[0], 400);
+	const bodyBoldWeight = parseWeight(t.body.fontWeights.at(-1), 600);
 	const headWeight = parseWeight(t.heading.fontWeights.at(-1), 600);
 
 	const lines: string[] = [
 		slotLine("body", t.body.fontFamily, t.body.fontSize, bodyWeight, t.body.lineHeight),
+		`  --resume-weight-body-bold: ${bodyBoldWeight};`,
 		slotLine("heading", t.heading.fontFamily, t.heading.fontSize, headWeight, t.heading.lineHeight),
 	];
 
@@ -134,16 +136,57 @@ ${pageRule}
   --resume-primary: ${design.colors.primary};
   --resume-foreground: ${design.colors.text};
   --resume-background: ${design.colors.background};
-  --resume-page-padding-x: ${page.marginX}pt;
-  --resume-page-padding-y: ${page.marginY}pt;
+  --resume-page-padding-x: ${page.marginX}px;
+  --resume-page-padding-y: ${page.marginY}px;
   --resume-sidebar-width: ${sidebarWidth}%;
-${sidebarVars ? `${sidebarVars}\n` : ""}  --resume-section-gap: ${page.gapY}pt;
-  --resume-column-gap: ${page.gapX}pt;
+${sidebarVars ? `${sidebarVars}\n` : ""}  --resume-section-gap: ${page.gapY}px;
+  --resume-column-gap: ${page.gapX}px;
 ${typographyVars}
 }
 
 .page-sections:not(:last-child) { break-after: page; }
 .page-layout:not(:last-child) { break-after: page; }
+
+/* Rich text inline formatting — shared across all HTML templates */
+.rich-text p { margin: calc(var(--resume-line-height-body, 1.5) * 0.2em) 0; }
+.rich-text p:first-child { margin-top: 0; }
+.rich-text p:last-child { margin-bottom: 0; }
+.rich-text ul,
+.rich-text ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rich-text li {
+  position: relative;
+  margin: calc(var(--resume-line-height-body, 1.5) * 0.2em) 0;
+  padding-left: 1.33em;
+}
+.rich-text li > p {
+  margin: 0;
+}
+.rich-text ul > li::before,
+.rich-text ol > li::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1em;
+  text-align: right;
+  color: var(--resume-foreground, inherit);
+}
+.rich-text ul > li::before { content: "•"; }
+.rich-text ol { counter-reset: resume-ol; }
+.rich-text ol > li { counter-increment: resume-ol; }
+.rich-text ol > li::before { content: counter(resume-ol) "."; }
+.rich-text li > *:last-child { margin-bottom: 0; }
+.rich-text .rr-pdf-mark {
+  background: #ffff00;
+}
+.rich-text strong, .rich-text b { font-weight: var(--resume-weight-body-bold, 700); }
+.rich-text em, .rich-text i { font-style: italic; }
+.rich-text u { text-decoration: underline; }
+.rich-text s { text-decoration: line-through; }
+.rich-text a { text-decoration: underline; color: var(--resume-primary, inherit); }
 </style>`;
 
 	return [fontFaceBlock, cssVarsBlock].filter(Boolean).join("\n");

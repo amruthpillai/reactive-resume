@@ -15,7 +15,7 @@ body {
 }
 
 a { color: inherit; text-decoration: none; }
-strong, b { font-weight: var(--resume-weight-heading, 600); }
+strong, b { font-weight: var(--resume-weight-body-bold, var(--resume-weight-heading, 600)); }
 
 /* ── Header ── */
 .resume-header {
@@ -84,7 +84,10 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
   gap: calc(var(--resume-section-gap) * 0.15);
 }
 .item-header { display: flex; flex-direction: column; gap: 1pt; }
-.item-title { font-weight: var(--resume-weight-heading, 600); }
+.item-title {
+  font-family: var(--resume-font-body, inherit);
+  font-weight: var(--resume-weight-body-bold, 600);
+}
 .item-title-link { text-decoration: underline; }
 
 /* ── Split row ── */

@@ -32,7 +32,11 @@
 {% if section and not section.hidden and section.content %}
 <section class="resume-section summary-section">
   <h2 class="section-title">{{ getSectionTitle("summary", section.title) }}</h2>
-  <div class="rich-text">{{ section.content | safe }}</div>
+  <div class="section-items">
+    <div class="section-item">
+      <div class="rich-text">{{ section.content | richText }}</div>
+    </div>
+  </div>
 </section>
 {% endif %}
 {% endmacro %}
@@ -93,11 +97,11 @@
           <span>{{ role.position }}</span>
           <span class="align-right small">{{ role.period }}</span>
         </div>
-        {% if role.description %}<div class="rich-text">{{ role.description | safe }}</div>{% endif %}
+        {% if role.description %}<div class="rich-text">{{ role.description | richText }}</div>{% endif %}
       </div>
       {% endfor %}
       {% if item.roles | length == 0 and item.description %}
-      <div class="rich-text">{{ item.description | safe }}</div>
+      <div class="rich-text">{{ item.description | richText }}</div>
       {% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
@@ -131,7 +135,7 @@
         </div>
         {% endif %}
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}
@@ -158,7 +162,7 @@
           <span class="align-right">{{ item.period }}</span>
         </div>
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}
@@ -264,7 +268,7 @@
         </div>
         {% if item.awarder %}<div>{{ item.awarder }}</div>{% endif %}
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}
@@ -292,7 +296,7 @@
         </div>
         {% if item.issuer %}<div>{{ item.issuer }}</div>{% endif %}
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}
@@ -320,7 +324,7 @@
         </div>
         {% if item.publisher %}<div>{{ item.publisher }}</div>{% endif %}
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}
@@ -348,7 +352,7 @@
         </div>
         {% if item.location %}<div class="small">{{ item.location }}</div>{% endif %}
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}
@@ -374,7 +378,7 @@
         {% if item.position %}<div>{{ item.position }}</div>{% endif %}
         {% if item.phone %}<div class="small">{{ item.phone }}</div>{% endif %}
       </div>
-      {% if item.description %}<div class="rich-text">{{ item.description | safe }}</div>{% endif %}
+      {% if item.description %}<div class="rich-text">{{ item.description | richText }}</div>{% endif %}
       {{ renderWebsiteLink(item.website) }}
     </div>
     {% endfor %}

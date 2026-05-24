@@ -13,7 +13,7 @@ body {
   background: var(--resume-background, #fff);
 }
 a { color: inherit; text-decoration: none; }
-strong, b { font-weight: var(--resume-weight-heading, 600); }
+strong, b { font-weight: var(--resume-weight-body-bold, var(--resume-weight-heading, 600)); }
 
 .page-layout {
   display: flex;
@@ -116,7 +116,10 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
 }
 .section-item { display: flex; flex-direction: column; gap: 1pt; }
 .item-header { display: flex; flex-direction: column; gap: 1pt; }
-.item-title { font-weight: var(--resume-weight-heading, 600); }
+.item-title {
+  font-family: var(--resume-font-body, inherit);
+  font-weight: var(--resume-weight-body-bold, 600);
+}
 .item-title-link { text-decoration: underline; }
 .split-row {
   display: flex;
@@ -187,7 +190,7 @@ strong, b { font-weight: var(--resume-weight-heading, 600); }
   <div class="main-column">
     {% if loop.first and summary and summary.content %}
     <section class="resume-section summary-section" style="background: color-mix(in srgb, var(--resume-primary, #c00) 16%, var(--resume-background, #fff)); padding: var(--resume-page-padding-y, 12pt) var(--resume-page-padding-x, 14pt);">
-      <div class="rich-text">{{ summary.content | safe }}</div>
+      <div class="rich-text">{{ summary.content | richText }}</div>
     </section>
     {% endif %}
 
