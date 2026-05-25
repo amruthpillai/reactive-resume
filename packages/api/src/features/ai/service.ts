@@ -120,7 +120,31 @@ export const fileInputSchema = z.object({
 
 type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 
+function isLmStudioEndpoint(input: TestConnectionInput) {
+	if (input.provider === "lmstudio") return true;
+
+	if (input.provider !== "openai-compatible") return false;
+
+	try {
+		const baseURL = new URL(resolveAiBaseUrl(input));
+		return baseURL.hostname === "localhost" && baseURL.port === "1234";
+	} catch {
+		return false;
+	}
+}
+
+async function testLmStudioConnection(input: TestConnectionInput) {
+	const baseURL = new URL(resolveAiBaseUrl(input));
+	const modelsURL = new URL(`${baseURL.pathname.replace(/\/+$/, "")}/models`, baseURL);
+	const apiKey = input.apiKey.trim();
+	const response = await fetch(modelsURL, apiKey ? { headers: { Authorization: `Bearer ${apiKey}` } } : undefined);
+
+	return response.ok;
+}
+
 export async function testConnection(input: TestConnectionInput): Promise<boolean> {
+	if (isLmStudioEndpoint(input)) return testLmStudioConnection(input);
+
 	const RESPONSE_OK = "1";
 
 	const result = await generateText({

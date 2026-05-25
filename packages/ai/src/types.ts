@@ -21,7 +21,7 @@ export const AI_PROVIDER_DEFAULT_BASE_URLS: Record<AIProvider, string> = {
 	gemini: "https://generativelanguage.googleapis.com/v1beta",
 	"vercel-ai-gateway": "https://ai-gateway.vercel.sh/v3/ai",
 	openrouter: "https://openrouter.ai/api/v1",
-	ollama: "http://host.docker.internal:11434/api",
-	lmstudio: "http://host.docker.internal:1234/v1",
+	ollama: "http://localhost:11434/api",
+	lmstudio: "http://localhost:1234/v1",
 	"openai-compatible": "",
 };

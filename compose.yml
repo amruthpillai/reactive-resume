@@ -1,8 +1,7 @@
-name: reactive_resume
-
 services:
   postgres:
     image: postgres:latest
+    container_name: reactive-resume-postgres
     restart: unless-stopped
     networks:
       - data_network
@@ -23,15 +22,14 @@ services:
 
   redis:
     image: redis:latest
+    container_name: reactive-resume-redis
     restart: unless-stopped
     command: redis-server --appendonly yes
     networks:
       - data_network
-    # Not exposed on the host by default. Redis can contain agent stream data
-    # including user chat content; keep it internal to the Docker network.
-    # Uncomment the ports block below if you need host access for tooling.
-    # ports:
-    #   - "127.0.0.1:6379:6379"
+    # Exposed on localhost because the app container uses host networking.
+    ports:
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -43,6 +41,7 @@ services:
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
+    container_name: reactive-resume-seaweedfs
     restart: unless-stopped
     command: server -s3 -filer -dir=/data -ip=0.0.0.0
     networks:
@@ -63,6 +62,7 @@ services:
 
   seaweedfs_create_bucket:
     image: quay.io/minio/mc:latest
+    container_name: reactive-resume-sw-mc
     restart: on-failure
     entrypoint: >
       /bin/sh -c "
@@ -82,16 +82,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    networks:
-      - data_network
-      - storage_network
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - "3000:3000"
+    container_name: reactive-resume-ui
+    network_mode: host
     env_file:
       - path: .env.example
         required: false
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+      - REDIS_URL=redis://localhost:6379
+      - S3_ENDPOINT=http://localhost:8333
     volumes:
       - ./data:/app/data
     depends_on:

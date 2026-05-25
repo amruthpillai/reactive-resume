@@ -34,8 +34,8 @@ describe("AI provider base URL policy", () => {
 		expect(resolveAiBaseUrl({ provider: "ollama", baseURL: "http://localhost:11434/api" })).toBe(
 			"http://localhost:11434/api",
 		);
-		expect(resolveAiBaseUrl({ provider: "lmstudio", baseURL: "http://host.docker.internal:1234/v1" })).toBe(
-			"http://host.docker.internal:1234/v1",
+		expect(resolveAiBaseUrl({ provider: "lmstudio", baseURL: "http://localhost:1234/v1" })).toBe(
+			"http://localhost:1234/v1",
 		);
 	});
 
