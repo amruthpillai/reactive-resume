@@ -1,5 +1,6 @@
 import type { Style } from "@react-pdf/types";
-import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
+import { cloneElement, isValidElement } from "react";
 import { Html } from "react-pdf-html";
 import { isRTL } from "@reactive-resume/utils/locale";
 import { useRender } from "../../context";
