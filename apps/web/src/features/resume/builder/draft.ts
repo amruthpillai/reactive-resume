@@ -93,7 +93,7 @@ function isAbortError(error: unknown): error is DOMException {
 	return error instanceof DOMException && error.name === "AbortError";
 }
 
-function isResumeVersionConflict(error: unknown): error is ORPCError {
+function isResumeVersionConflict(error: unknown): boolean {
 	return error instanceof ORPCError && error.code === "RESUME_VERSION_CONFLICT";
 }
 
