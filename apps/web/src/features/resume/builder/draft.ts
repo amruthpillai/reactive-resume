@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
+import { applyResumePatches, createResumePatches } from "@reactive-resume/resume/patch";
 import { orpc, streamClient } from "@/libs/orpc/client";
 
 export type Resume = {
@@ -45,6 +46,7 @@ type ResumeStore = ResumeStoreState & ResumeStoreActions;
 type Runtime = {
 	abortController: AbortController;
 	queryClient?: QueryClient;
+	baselineData?: ResumeData;
 	hasPendingLocalChanges: boolean;
 	isSaving: boolean;
 	pendingResume?: Resume;
@@ -82,6 +84,7 @@ function createResumeUpdateEventIterator(resumeId: string) {
 
 function setRuntimeBaseline(resume: Resume) {
 	const runtime = getRuntime(resume.id);
+	runtime.baselineData = cloneResumeData(resume.data);
 	runtime.hasPendingLocalChanges = false;
 	runtime.pendingResume = undefined;
 }
@@ -96,12 +99,21 @@ async function flushResumeSave(id: string) {
 	runtime.isSaving = true;
 
 	try {
-		const updated = (await orpc.resume.update.call(
-			{ id: submitted.id, data: submittedData },
+		const baselineData = runtime.baselineData ?? cloneResumeData(submitted.data);
+		const operations = createResumePatches(baselineData, submittedData);
+
+		if (operations.length === 0) {
+			runtime.hasPendingLocalChanges = false;
+			return;
+		}
+
+		const updated = (await orpc.resume.patch.call(
+			{ id: submitted.id, operations },
 			{ signal: runtime.abortController.signal },
 		)) as Resume;
 
 		runtime.queryClient?.setQueryData(getResumeQueryKey(submitted.id), updated);
+		runtime.baselineData = cloneResumeData(updated.data);
 
 		const currentResume = useResumeStore.getState().resume;
 		const currentDataStillMatchesSubmission =
@@ -404,7 +416,25 @@ export function useBuilderResumeUpdateSubscription() {
 		queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
 
 		if (hasPendingLocalChanges(resumeId)) {
-			useResumeStore.getState().mergeResumeMetadata(resume);
+			const runtime = getRuntime(resumeId);
+			const currentResume = useResumeStore.getState().resume;
+			const baselineData = runtime.baselineData ?? currentResume?.data;
+
+			if (currentResume && baselineData) {
+				const localOperations = createResumePatches(baselineData, currentResume.data);
+				const mergedData = applyResumePatches(resume.data, localOperations);
+				const mergedResume = { ...resume, data: mergedData };
+
+				runtime.baselineData = cloneResumeData(resume.data);
+				runtime.hasPendingLocalChanges = localOperations.length > 0;
+				if (runtime.pendingResume) runtime.pendingResume = cloneResume(mergedResume);
+
+				useResumeStore.getState().replaceResumeDraft(mergedResume);
+				syncCurrentResume(resumeId);
+			} else {
+				runtime.baselineData = cloneResumeData(resume.data);
+				useResumeStore.getState().mergeResumeMetadata(resume);
+			}
 			return;
 		}
 
