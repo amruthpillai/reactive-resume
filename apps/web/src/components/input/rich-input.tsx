@@ -62,12 +62,14 @@ import {
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { PopoverHeader, PopoverTitle, PopoverTrigger } from "@reactive-resume/ui/components/popover";
 import { Toggle } from "@reactive-resume/ui/components/toggle";
+import { isDarkColor } from "@reactive-resume/utils/color";
 import { cn } from "@reactive-resume/utils/style";
 import { usePrompt } from "@/hooks/use-prompt";
 import { isRTL } from "@/libs/locale";
 import { ColorPicker } from "./color-picker";
 
 const defaultTextColor = "rgba(0, 0, 0, 1)";
+const defaultHighlightColor = "rgba(255, 255, 0, 1)";
 
 const extensions = [
 	StarterKit.configure({
@@ -86,7 +88,15 @@ const extensions = [
 	}),
 	TextStyle,
 	Color,
-	Highlight.configure(),
+	Highlight.configure({ multicolor: true }).extend({
+		renderHTML({ HTMLAttributes }) {
+			const color = HTMLAttributes["data-color"] as string | undefined;
+			if (color && isDarkColor(color)) {
+				HTMLAttributes.style = `${HTMLAttributes.style ?? ""}; color: #ffffff`;
+			}
+			return ["mark", HTMLAttributes, 0];
+		},
+	}),
 	TextAlign.configure({ types: ["heading", "paragraph", "listItem"] }),
 	TableKit.configure(),
 ];
@@ -223,10 +233,11 @@ function useEditorToolbarState(editor: Editor) {
 				canStrike: ctx.editor.can().chain().toggleStrike().run() ?? false,
 				toggleStrike: () => ctx.editor.chain().focus().toggleStrike().run(),
 
-				// Highlight
-				isHighlight: ctx.editor.isActive("highlight") ?? false,
-				canHighlight: ctx.editor.can().chain().toggleHighlight().run() ?? false,
-				toggleHighlight: () => ctx.editor.chain().focus().toggleHighlight().run(),
+				// Highlight Color
+				highlightColor: (ctx.editor.getAttributes("highlight").color as string | undefined) ?? null,
+				canHighlightColor: ctx.editor.can().chain().toggleHighlight().run() ?? false,
+				setHighlightColor: (color: string) => ctx.editor.chain().focus().toggleHighlight({ color }).run(),
+				unsetHighlightColor: () => ctx.editor.chain().focus().unsetHighlight().run(),
 
 				// Text Color
 				textColor: (ctx.editor.getAttributes("textStyle").color as string | undefined) ?? null,
@@ -429,17 +440,65 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 				<TextStrikethroughIcon className="size-3.5" />
 			</Toggle>
 
-			<Toggle
-				size={isFullscreen ? "lg" : "sm"}
-				tabIndex={-1}
-				className="rounded-none"
-				title={t`Highlight`}
-				pressed={state.isHighlight}
-				disabled={!state.canHighlight}
-				onPressedChange={state.toggleHighlight}
+			<ColorPicker
+				defaultValue={defaultHighlightColor}
+				value={state.highlightColor ?? undefined}
+				onChange={state.setHighlightColor}
+				trigger={
+					<PopoverTrigger
+						render={
+							<Button
+								size={isFullscreen ? "lg" : "sm"}
+								tabIndex={-1}
+								variant="ghost"
+								className={cn("rounded-none px-2", state.highlightColor && "bg-muted text-foreground")}
+								title={t`Highlight`}
+								disabled={!state.canHighlightColor}
+							>
+								<span className="flex flex-col items-center leading-none">
+									<HighlighterCircleIcon className="size-3.5" />
+									<span
+										className="mt-0.5 h-0.5 w-3 rounded-full"
+										style={{ backgroundColor: state.highlightColor ?? "currentColor" }}
+									/>
+								</span>
+							</Button>
+						}
+					/>
+				}
 			>
-				<HighlighterCircleIcon className="size-3.5" />
-			</Toggle>
+				<PopoverHeader className="flex-row items-start justify-between gap-2">
+					<div className="flex items-center gap-2.5">
+						<span
+							className="grid size-9 place-items-center rounded-lg border border-border bg-muted/60 text-sm shadow-xs"
+							style={{ backgroundColor: state.highlightColor ?? defaultHighlightColor }}
+						>
+							<HighlighterCircleIcon className="size-4" />
+						</span>
+
+						<div className="flex flex-col gap-0.5">
+							<PopoverTitle>
+								<Trans>Highlight Color</Trans>
+							</PopoverTitle>
+							<span className="text-muted-foreground text-xs">
+								<Trans comment="Preset or custom shade refer to the color picker">
+									Choose a preset or custom shade.
+								</Trans>
+							</span>
+						</div>
+					</div>
+
+					<Button
+						size="xs"
+						variant="ghost"
+						className="shrink-0"
+						onClick={state.unsetHighlightColor}
+						disabled={!state.highlightColor}
+					>
+						<Trans comment="Clear the highlight color">Clear</Trans>
+					</Button>
+				</PopoverHeader>
+			</ColorPicker>
 
 			<ColorPicker
 				defaultValue={defaultTextColor}

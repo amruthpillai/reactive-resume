@@ -55,4 +55,17 @@ describe("htmlToParagraphs", () => {
 		const result = htmlToParagraphs("<!--c--><script>x</script><p>Hello</p>");
 		expect(result.length).toBeGreaterThanOrEqual(1);
 	});
+
+	it("applies default yellow shading for <mark> without background-color", () => {
+		const result = htmlToParagraphs("<p><mark>highlighted</mark></p>");
+		const json = JSON.stringify(result[0]);
+		// TextRun with shading should contain "FFFF00" in serialized output
+		expect(json).toContain("FFFF00");
+	});
+
+	it("reads custom background-color from <mark> style for shading fill", () => {
+		const result = htmlToParagraphs('<p><mark style="background-color: rgba(204, 255, 204, 1)">green</mark></p>');
+		const json = JSON.stringify(result[0]);
+		expect(json).toContain("CCFFCC");
+	});
 });

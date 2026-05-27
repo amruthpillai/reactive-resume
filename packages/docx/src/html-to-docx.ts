@@ -1,6 +1,6 @@
 import type { IShadingAttributesProperties, ISpacingProperties } from "docx";
 import { ExternalHyperlink, HeadingLevel, Paragraph, TextRun } from "docx";
-import { parseColorString } from "@reactive-resume/utils/color";
+import { isDarkColor, parseColorString } from "@reactive-resume/utils/color";
 import { toSafeDocxLink } from "./link-utils";
 
 export interface HtmlStyleConfig {
@@ -65,9 +65,13 @@ function mergeStyle(parent: InlineStyle, tag: string, element?: HTMLElement): In
 		case "CODE":
 			next.font = "Courier New";
 			break;
-		case "MARK":
-			next.shading = { fill: "FFFF00" };
+		case "MARK": {
+			const bgColor = (element as HTMLElement | undefined)?.style.backgroundColor;
+			const fill = bgColor ? toDocxColorValue(bgColor) : null;
+			next.shading = { fill: fill ?? "FFFF00" };
+			if (bgColor && isDarkColor(bgColor)) next.color = "FFFFFF";
 			break;
+		}
 	}
 
 	const colorValue = (element as HTMLElement | undefined)?.style.color;

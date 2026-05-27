@@ -54,3 +54,12 @@ export function parseColorString(value: string): ColorResult["rgba"] | null {
 
 	return null;
 }
+
+/** Returns true if the given color string is perceptually dark (luminance < 128). */
+export function isDarkColor(colorString: string): boolean {
+	const color = parseColorString(colorString);
+	if (!color) return false;
+	// Relative luminance (ITU-R BT.601)
+	const luminance = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+	return luminance < 128;
+}

@@ -1,5 +1,6 @@
 import type { Node } from "node-html-parser";
 import { NodeType, parse } from "node-html-parser";
+import { isDarkColor } from "@reactive-resume/utils/color";
 
 export const richTextMarkClassName = "rr-pdf-mark";
 
@@ -45,8 +46,19 @@ const mergeClassNames = (...classNames: (string | undefined)[]): string => {
 
 const normalizeMarkElements = (root: ReturnType<typeof parse>) => {
 	for (const mark of root.querySelectorAll("mark")) {
+		const dataColor = mark.getAttribute("data-color");
+
 		mark.tagName = "span";
 		mark.setAttribute("class", mergeClassNames(mark.getAttribute("class"), richTextMarkClassName));
+
+		// Preserve custom highlight color as inline background-color for react-pdf-html.
+		// Legacy marks without data-color fall back to the .rr-pdf-mark stylesheet (yellow).
+		if (dataColor) {
+			const existingStyle = mark.getAttribute("style") ?? "";
+			let inlineStyle = `background-color: ${dataColor}`;
+			if (isDarkColor(dataColor)) inlineStyle += "; color: #ffffff";
+			mark.setAttribute("style", existingStyle ? `${inlineStyle}; ${existingStyle}` : inlineStyle);
+		}
 	}
 };
 
