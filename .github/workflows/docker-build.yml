@@ -249,3 +249,24 @@ jobs:
           script: |
             cd docker
             ./manage_stack.sh up reactive_resume
+
+      - name: Purge Cloudflare cache
+        if: ${{ needs.mode.outputs.release == 'true' }}
+        env:
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          response=$(curl -fsS -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}')
+
+          if [ "$(jq -r '.success' <<< "$response")" != "true" ]; then
+            echo "$response" | jq .
+            exit 1
+          fi
+
+          echo "Cloudflare cache purged successfully."
