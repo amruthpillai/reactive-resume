@@ -415,7 +415,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 								{hasSplitRowText(headerLocation) && <Text style={composeStyles(alignEndStyle)}>{headerLocation}</Text>}
 							</View>
 
-							{item.roles.length === 0 && (hasPosition || hasSplitRowText(headerPeriod)) && (
+							{(hasPosition || hasSplitRowText(headerPeriod)) && (
 								<View style={composeStyles(splitRowStyle)}>
 									{hasPosition && <Text>{item.position}</Text>}
 									{hasSplitRowText(headerPeriod) && <Text style={composeStyles(alignEndStyle)}>{headerPeriod}</Text>}
@@ -427,8 +427,6 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 					return (
 						<SectionItem key={item.id}>
 							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
-
-							{item.roles.length > 0 && <Text>{item.period}</Text>}
 
 							{item.roles.map((role) => (
 								<View key={role.id}>
