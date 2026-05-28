@@ -4,6 +4,7 @@ import { onError } from "@orpc/client";
 import { createRouterClient } from "@orpc/server";
 import router from "@reactive-resume/api/routers";
 import { MCP_TOOL_NAME, registerPrompts, registerResources, registerTools } from "@reactive-resume/mcp";
+import { appVersion } from "../app-version";
 import { getRequestLocale } from "../rpc/locale";
 
 function createRequestClient(request: Request): RouterClient<typeof router> {
@@ -25,7 +26,7 @@ export async function createMcpServer(request: Request) {
 	const server = new McpServer(
 		{
 			name: "reactive-resume",
-			version: __APP_VERSION__,
+			version: appVersion,
 			title: "Reactive Resume",
 			websiteUrl: "https://rxresu.me",
 			description:
