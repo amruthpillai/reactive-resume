@@ -2,6 +2,7 @@ import { oauthProviderAuthServerMetadata, oauthProviderOpenIdConfigMetadata } fr
 import { auth } from "@reactive-resume/auth/config";
 import { env } from "@reactive-resume/env/server";
 import { buildMcpServerCard } from "@reactive-resume/mcp/server-card";
+import { appVersion } from "../app-version";
 
 const oauthAuthorizationServerHandler = oauthProviderAuthServerMetadata(auth);
 const openIdConfigurationHandler = oauthProviderOpenIdConfigMetadata(auth);
@@ -11,7 +12,7 @@ export function handleWellKnownFallback() {
 }
 
 export function handleMcpServerCard() {
-	return Response.json(buildMcpServerCard(__APP_VERSION__), {
+	return Response.json(buildMcpServerCard(appVersion), {
 		headers: {
 			"Content-Type": "application/json",
 			"Cache-Control": "public, max-age=60, stale-while-revalidate=120",
