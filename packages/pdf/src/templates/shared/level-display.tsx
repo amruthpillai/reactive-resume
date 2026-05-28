@@ -3,6 +3,7 @@ import type { IconName } from "phosphor-icons-react-pdf/dynamic";
 import { useRender } from "../../context";
 import { View } from "../../renderer";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplateStyle } from "./context";
+import { resolveStyleFontSize } from "./icon-size";
 import { getTemplateMetrics } from "./metrics";
 import { Icon } from "./primitives";
 import { composeStyles } from "./styles";
@@ -16,7 +17,6 @@ type LevelDisplayProps = {
 export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	const data = useRender();
 	const levelDesign = data.metadata.design.level;
-	const iconSize = data.metadata.typography.body.fontSize - 2;
 	const metrics = getTemplateMetrics(data.metadata.page);
 	const iconProps = useTemplateIconSlot("icon");
 	const levelContainerStyle = useTemplateStyle("levelContainer");
@@ -24,6 +24,10 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	const levelItemActiveStyle = useTemplateStyle("levelItemActive");
 	const levelItemInactiveStyle = useTemplateStyle("levelItemInactive");
 	const levelRuleStyle = useSectionStyleRule("level");
+	const levelFontSize = resolveStyleFontSize(levelRuleStyle);
+	const defaultIconSize = data.metadata.typography.body.fontSize - 2;
+	const iconSize = levelFontSize ?? defaultIconSize;
+	const levelIconSize = levelFontSize ?? iconSize + 4;
 	const color = typeof iconProps.color === "string" ? iconProps.color : "#000000";
 
 	if (level === 0) return null;
@@ -55,7 +59,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 					return (
 						<Icon
 							key={itemKey}
-							size={iconSize + 4}
+							size={levelIconSize}
 							name={levelDesign.icon as IconName}
 							style={{ opacity: isActive ? 1 : 0.35 }}
 						/>

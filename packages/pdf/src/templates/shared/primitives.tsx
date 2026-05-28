@@ -4,6 +4,7 @@ import type { StyleInput } from "./styles";
 import { Icon as PhosphorIcon } from "phosphor-icons-react-pdf/dynamic";
 import { Link as PdfLink, Text as PdfText, View } from "../../renderer";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplateStyle } from "./context";
+import { resolveIconSize } from "./icon-size";
 import { safeTextStyle } from "./safe-text-style";
 import { composeLinkStyles, composeStyles } from "./styles";
 
@@ -64,9 +65,17 @@ export const Bold = ({ style, ...props }: ComponentProps<typeof PdfText>) => {
 	);
 };
 
-export const Icon = ({ style, ...props }: ComponentProps<typeof PhosphorIcon>) => {
-	const { style: iconStyle, ...iconProps } = useTemplateIconSlot("icon");
+export const Icon = ({ style, size: sizeProp, ...props }: ComponentProps<typeof PhosphorIcon>) => {
+	const { style: iconStyle, size: templateSize, ...iconProps } = useTemplateIconSlot("icon");
 	const iconRuleStyle = useSectionStyleRule("icon");
+	const composedStyle = composeStyles(asStyleInput(iconStyle), iconRuleStyle, asStyleInput(style));
+	const templateIconSize =
+		typeof templateSize === "number" || typeof templateSize === "string" ? templateSize : undefined;
+	const resolvedSize =
+		resolveIconSize({
+			size: sizeProp,
+			styles: [iconRuleStyle, asStyleInput(style)],
+		}) ?? templateIconSize;
 
 	if (iconProps.display === "none") return null;
 
@@ -74,7 +83,8 @@ export const Icon = ({ style, ...props }: ComponentProps<typeof PhosphorIcon>) =
 		<PhosphorIcon
 			{...iconProps}
 			{...props}
-			style={composeStyles(asStyleInput(iconStyle), iconRuleStyle, asStyleInput(style))}
+			{...(resolvedSize === undefined ? {} : { size: resolvedSize })}
+			style={composedStyle}
 		/>
 	);
 };
