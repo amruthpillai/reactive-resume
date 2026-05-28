@@ -258,7 +258,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          response=$(curl -fsS -X POST \
+          response=$(curl -fsS --max-time 10 --retry 3 --retry-delay 5 --retry-connrefused -X POST \
             "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
             -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
             -H "Content-Type: application/json" \
