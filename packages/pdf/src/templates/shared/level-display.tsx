@@ -1,5 +1,6 @@
 import type { Style } from "@react-pdf/types";
 import type { IconName } from "phosphor-icons-react-pdf/dynamic";
+import { resolveLevelDisplaySizes } from "@reactive-resume/schema/resume/level-display-sizes";
 import { useRender } from "../../context";
 import { View } from "../../renderer";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplateStyle } from "./context";
@@ -23,11 +24,13 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	const levelItemStyle = useTemplateStyle("levelItem");
 	const levelItemActiveStyle = useTemplateStyle("levelItemActive");
 	const levelItemInactiveStyle = useTemplateStyle("levelItemInactive");
+	const iconRuleStyle = useSectionStyleRule("icon");
 	const levelRuleStyle = useSectionStyleRule("level");
-	const levelFontSize = resolveStyleFontSize(levelRuleStyle);
-	const defaultIconSize = data.metadata.typography.body.fontSize - 2;
-	const iconSize = levelFontSize ?? defaultIconSize;
-	const levelIconSize = levelFontSize ?? iconSize + 4;
+	const { decorationSize, levelIconExplicitSize } = resolveLevelDisplaySizes({
+		bodyFontSize: data.metadata.typography.body.fontSize,
+		iconFontSize: resolveStyleFontSize(iconRuleStyle),
+		levelFontSize: resolveStyleFontSize(levelRuleStyle),
+	});
 	const color = typeof iconProps.color === "string" ? iconProps.color : "#000000";
 
 	if (level === 0) return null;
@@ -59,7 +62,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 					return (
 						<Icon
 							key={itemKey}
-							size={levelIconSize}
+							{...(levelIconExplicitSize === undefined ? {} : { size: levelIconExplicitSize })}
 							name={levelDesign.icon as IconName}
 							style={{ opacity: isActive ? 1 : 0.35 }}
 						/>
@@ -73,7 +76,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 							style={composeStyles(
 								{
 									flex: 1,
-									height: iconSize,
+									height: decorationSize,
 									borderWidth: 0.75,
 									borderColor: color,
 									backgroundColor: isActive ? color : "transparent",
@@ -87,7 +90,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 
 				const itemStyle: Style = {};
 				let borderRadius = 0;
-				let width: string | number = iconSize;
+				let width: string | number = decorationSize;
 
 				if (levelDesign.type === "rectangle") {
 					width = 16;
@@ -108,7 +111,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 						style={composeStyles(
 							{
 								width,
-								height: iconSize,
+								height: decorationSize,
 								borderWidth: 0.75,
 								borderColor: color,
 								borderRadius,
