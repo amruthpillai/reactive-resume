@@ -323,7 +323,7 @@ const useGlalieTemplate = (): GlalieTemplate => {
 				width: "100%",
 				borderWidth: 1,
 				borderColor: primary,
-				borderRadius: picture.borderRadius / 4,
+				borderRadius: 0,
 				padding: metrics.gapX(0.75),
 				rowGap: metrics.gapY(0.125),
 			},
