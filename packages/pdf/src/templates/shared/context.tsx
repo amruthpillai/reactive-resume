@@ -141,9 +141,9 @@ export const useTemplateFeatureStyle = (
 	return resolveStyleSlot(slots?.[slot] as TemplateStyleSlot | undefined, context);
 };
 
-export const useTemplateIconSlot = (slot: "icon") => {
+export const useTemplateIconSlot = (slot: "icon" | "sectionHeadingIcon") => {
 	const { styles } = useTemplateContext();
 	const context = useTemplateStyleContext();
 
-	return resolveIconSlot(styles[slot], context);
+	return resolveIconSlot(styles[slot] as TemplateIconSlot | undefined, context);
 };

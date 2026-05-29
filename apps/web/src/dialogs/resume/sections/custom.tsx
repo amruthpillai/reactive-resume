@@ -19,10 +19,12 @@ import {
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { generateId } from "@reactive-resume/utils/string";
+import { IconPicker } from "@/components/input/icon-picker";
 import { Combobox } from "@/components/ui/combobox";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
+import { defaultSectionIconNames } from "@/libs/resume/section";
 import { useAppForm, withForm } from "@/libs/tanstack-form";
 
 const formSchema = customSectionSchema;
@@ -33,6 +35,7 @@ const defaultValues: FormValues = {
 	id: "",
 	title: "",
 	type: "experience",
+	icon: "",
 	columns: 1,
 	hidden: false,
 	items: [],
@@ -68,6 +71,7 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			id: generateId(),
 			title: data?.title ?? "",
 			type: (data?.type ?? "experience") as CustomSectionType,
+			icon: data?.icon || defaultSectionIconNames[data?.type ?? "experience"] || "",
 			columns: data?.columns ?? 1,
 			hidden: data?.hidden ?? false,
 			items: data?.items ?? [],
@@ -126,7 +130,10 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	const updateResumeData = useUpdateResumeData();
 
 	const form = useAppForm({
-		defaultValues: data,
+		defaultValues: {
+			...data,
+			icon: data.icon || defaultSectionIconNames[data.type] || "",
+		},
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
 			updateResumeData((draft) => {
@@ -206,6 +213,27 @@ const CreateCustomSectionForm = withForm({
 					)}
 				</form.Field>
 
+				<form.Field name="icon">
+					{(field) => (
+						<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+							<FormLabel>
+								<Trans>Icon</Trans>
+							</FormLabel>
+							<FormControl
+								render={
+									<IconPicker
+										value={field.state.value === "none" ? "" : field.state.value}
+										onChange={(icon) => {
+											field.handleChange(icon === "" ? "none" : icon);
+										}}
+									/>
+								}
+							/>
+							<FormMessage errors={field.state.meta.errors} />
+						</FormItem>
+					)}
+				</form.Field>
+
 				<form.Field name="type">
 					{(field) => (
 						<FormItem
@@ -263,6 +291,27 @@ const UpdateCustomSectionForm = withForm({
 										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(event) => field.handleChange(event.target.value)}
+									/>
+								}
+							/>
+							<FormMessage errors={field.state.meta.errors} />
+						</FormItem>
+					)}
+				</form.Field>
+
+				<form.Field name="icon">
+					{(field) => (
+						<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+							<FormLabel>
+								<Trans>Icon</Trans>
+							</FormLabel>
+							<FormControl
+								render={
+									<IconPicker
+										value={field.state.value === "none" ? "" : field.state.value}
+										onChange={(icon) => {
+											field.handleChange(icon === "" ? "none" : icon);
+										}}
 									/>
 								}
 							/>

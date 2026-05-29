@@ -2,6 +2,7 @@ import type { Style } from "@react-pdf/types";
 import type { ComponentProps } from "react";
 import type { StyleInput } from "./styles";
 import { Icon as PhosphorIcon } from "phosphor-icons-react-pdf/dynamic";
+import { useRender } from "../../context";
 import { Link as PdfLink, Text as PdfText, View } from "../../renderer";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplateStyle } from "./context";
 import { resolveIconSize } from "./icon-size";
@@ -85,6 +86,33 @@ export const Icon = ({ style, size: sizeProp, ...props }: ComponentProps<typeof 
 			{...props}
 			{...(resolvedSize === undefined ? {} : { size: resolvedSize })}
 			style={composedStyle}
+		/>
+	);
+};
+
+export const SectionHeadingIcon = ({ style, ...props }: ComponentProps<typeof PhosphorIcon>) => {
+	const data = useRender();
+	const { style: sectionIconStyle, ...sectionIconProps } = useTemplateIconSlot("sectionHeadingIcon");
+	const { style: fallbackIconStyle, ...fallbackIconProps } = useTemplateIconSlot("icon");
+
+	// Fall back to the item icon slot if no section heading icon slot is defined
+	const hasSlot = sectionIconStyle !== undefined || Object.keys(sectionIconProps).length > 0;
+	const iconStyle = hasSlot ? sectionIconStyle : fallbackIconStyle;
+	const iconProps = hasSlot ? sectionIconProps : fallbackIconProps;
+
+	// Section heading icon visibility is controlled by hideSectionIcons (in SectionShell),
+	// NOT by the item-level hideIcons toggle. Ignore the "display: none" from item icon slot.
+	const { display: _, ...iconPropsWithoutDisplay } = iconProps;
+
+	// Icon size follows heading fontSize so they scale together
+	const headingFontSize = data.metadata.typography.heading.fontSize;
+	const sizeStyle = { size: headingFontSize } as Style;
+
+	return (
+		<PhosphorIcon
+			{...iconPropsWithoutDisplay}
+			{...props}
+			style={composeStyles(asStyleInput(iconStyle), sizeStyle, asStyleInput(style))}
 		/>
 	);
 };

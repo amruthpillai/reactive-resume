@@ -440,6 +440,7 @@ export class ReactiveResumeV4JSONImporter {
 				},
 				summary: {
 					title: v4Data.sections.summary?.name ?? "",
+					icon: "",
 					columns: v4Data.sections.summary?.columns ?? 1,
 					hidden: !(v4Data.sections.summary?.visible ?? true),
 					content: v4Data.sections.summary?.content ?? "",
@@ -447,6 +448,7 @@ export class ReactiveResumeV4JSONImporter {
 				sections: {
 					profiles: {
 						title: v4Data.sections.profiles?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.profiles?.columns ?? 1,
 						hidden: !(v4Data.sections.profiles?.visible ?? true),
 						items: (v4Data.sections.profiles?.items ?? [])
@@ -467,6 +469,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					experience: {
 						title: v4Data.sections.experience?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.experience?.columns ?? 1,
 						hidden: !(v4Data.sections.experience?.visible ?? true),
 						items: (v4Data.sections.experience?.items ?? [])
@@ -489,6 +492,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					education: {
 						title: v4Data.sections.education?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.education?.columns ?? 1,
 						hidden: !(v4Data.sections.education?.visible ?? true),
 						items: (v4Data.sections.education?.items ?? [])
@@ -512,6 +516,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					projects: {
 						title: v4Data.sections.projects?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.projects?.columns ?? 1,
 						hidden: !(v4Data.sections.projects?.visible ?? true),
 						items: (v4Data.sections.projects?.items ?? [])
@@ -531,6 +536,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					skills: {
 						title: v4Data.sections.skills?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.skills?.columns ?? 1,
 						hidden: !(v4Data.sections.skills?.visible ?? true),
 						items: (v4Data.sections.skills?.items ?? [])
@@ -549,6 +555,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					languages: {
 						title: v4Data.sections.languages?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.languages?.columns ?? 1,
 						hidden: !(v4Data.sections.languages?.visible ?? true),
 						items: (v4Data.sections.languages?.items ?? [])
@@ -564,6 +571,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					interests: {
 						title: v4Data.sections.interests?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.interests?.columns ?? 1,
 						hidden: !(v4Data.sections.interests?.visible ?? true),
 						items: (v4Data.sections.interests?.items ?? [])
@@ -579,6 +587,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					awards: {
 						title: v4Data.sections.awards?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.awards?.columns ?? 1,
 						hidden: !(v4Data.sections.awards?.visible ?? true),
 						items: (v4Data.sections.awards?.items ?? [])
@@ -599,6 +608,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					certifications: {
 						title: v4Data.sections.certifications?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.certifications?.columns ?? 1,
 						hidden: !(v4Data.sections.certifications?.visible ?? true),
 						items: (v4Data.sections.certifications?.items ?? [])
@@ -619,6 +629,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					publications: {
 						title: v4Data.sections.publications?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.publications?.columns ?? 1,
 						hidden: !(v4Data.sections.publications?.visible ?? true),
 						items: (v4Data.sections.publications?.items ?? [])
@@ -639,6 +650,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					volunteer: {
 						title: v4Data.sections.volunteer?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.volunteer?.columns ?? 1,
 						hidden: !(v4Data.sections.volunteer?.visible ?? true),
 						items: (v4Data.sections.volunteer?.items ?? [])
@@ -659,6 +671,7 @@ export class ReactiveResumeV4JSONImporter {
 					},
 					references: {
 						title: v4Data.sections.references?.name ?? "",
+						icon: "",
 						columns: v4Data.sections.references?.columns ?? 1,
 						hidden: !(v4Data.sections.references?.visible ?? true),
 						items: (v4Data.sections.references?.items ?? [])
@@ -681,6 +694,7 @@ export class ReactiveResumeV4JSONImporter {
 				customSections: Object.entries(v4Data.sections.custom ?? {}).map(([sectionId, section]) => ({
 					id: section.id || sectionId,
 					title: section.name ?? "",
+					icon: "",
 					type: "experience" as const, // Default to experience type as it has the most compatible fields
 					columns: section.columns ?? 1,
 					hidden: !(section.visible ?? true),
@@ -731,6 +745,7 @@ export class ReactiveResumeV4JSONImporter {
 						format: v4Data.metadata.page?.format ?? "a4",
 						locale: "en-US",
 						hideIcons: v4Data.metadata.typography?.hideIcons ?? false,
+						hideSectionIcons: true,
 					},
 					design: {
 						colors: {

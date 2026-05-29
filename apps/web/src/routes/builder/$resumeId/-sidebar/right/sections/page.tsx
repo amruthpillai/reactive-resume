@@ -276,7 +276,31 @@ function PageSectionForm() {
 							}
 						/>
 						<FormLabel>
-							<Trans>Hide all icons on the resume</Trans>
+							<Trans>Hide item icons (skills, profiles, interests)</Trans>
+						</FormLabel>
+					</FormItem>
+				)}
+			</form.Field>
+
+			<form.Field name="hideSectionIcons">
+				{(field) => (
+					<FormItem
+						className="col-span-full flex items-center gap-x-3 py-2"
+						hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+					>
+						<FormControl
+							render={
+								<Switch
+									checked={field.state.value}
+									onCheckedChange={(checked) => {
+										field.handleChange(checked);
+										handleAutoSave("hideSectionIcons", checked);
+									}}
+								/>
+							}
+						/>
+						<FormLabel>
+							<Trans>Hide section heading icons</Trans>
 						</FormLabel>
 					</FormItem>
 				)}

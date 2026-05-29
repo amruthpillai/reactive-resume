@@ -175,3 +175,25 @@ export const getSectionIcon = (type: SidebarSection | CustomOnlyType, props?: Ic
 			.exhaustive()
 	);
 };
+
+/**
+ * Returns the default Phosphor icon name (string) for a given section type.
+ * Used as fallback when the user hasn't set a custom icon (icon field is empty).
+ */
+export const defaultSectionIconNames: Record<string, string> = {
+	summary: "article",
+	profiles: "messenger-logo",
+	experience: "briefcase",
+	education: "graduation-cap",
+	projects: "code-simple",
+	skills: "compass-tool",
+	languages: "translate",
+	interests: "football",
+	awards: "trophy",
+	certifications: "certificate",
+	publications: "books",
+	volunteer: "hand-heart",
+	references: "phone",
+	custom: "star",
+	"cover-letter": "envelope-simple",
+};
