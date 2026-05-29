@@ -321,6 +321,10 @@ msgstr "An unknown error occurred while building your career plan."
 msgid "An unknown error occurred while building your resume draft."
 msgstr "An unknown error occurred while building your resume draft."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "An unknown error occurred while checking this job post."
+msgstr "An unknown error occurred while checking this job post."
+
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
@@ -470,6 +474,10 @@ msgstr "Authentication"
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Available in multiple languages. If you would like to contribute, check out Crowdin."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Avoid until verified"
+msgstr "Avoid until verified"
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -672,6 +680,10 @@ msgstr "Check your email for a link to reset your password."
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "Check your email for a link to verify your account."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Checking the job post..."
+msgstr "Checking the job post..."
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -979,6 +991,10 @@ msgstr "Creating your API key..."
 #: src/dialogs/resume/index.tsx
 msgid "Creating your resume..."
 msgstr "Creating your resume..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Critical risk"
+msgstr "Critical risk"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
@@ -1825,9 +1841,14 @@ msgid "Hide password"
 msgstr "Hide password"
 
 #. Impact severity label in resume analysis suggestion card
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "High"
 msgstr "High"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "High risk"
+msgstr "High risk"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2219,9 +2240,14 @@ msgid "Lost access to your authenticator?"
 msgstr "Lost access to your authenticator?"
 
 #. Impact severity label in resume analysis suggestion card
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Low"
 msgstr "Low"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Low risk"
+msgstr "Low risk"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2257,9 +2283,14 @@ msgid "Margin (Vertical)"
 msgstr "Margin (Vertical)"
 
 #. Impact severity label in resume analysis suggestion card
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Medium"
 msgstr "Medium"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Medium risk"
+msgstr "Medium risk"
 
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
@@ -2530,6 +2561,10 @@ msgid "Password protection has been enabled."
 msgstr "Password protection has been enabled."
 
 #: src/dialogs/resume/wizard.tsx
+msgid "Paste a job description before running the scam detector."
+msgstr "Paste a job description before running the scam detector."
+
+#: src/dialogs/resume/wizard.tsx
 msgid "Paste a job description to tailor keywords, bullets, ATS scoring, and positioning."
 msgstr "Paste a job description to tailor keywords, bullets, ATS scoring, and positioning."
 
@@ -2633,6 +2668,10 @@ msgstr "Portuguese (Portugal)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Position"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Possible red flags"
+msgstr "Possible red flags"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -2744,6 +2783,10 @@ msgstr "Reactive Resume v{__APP_VERSION__}"
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reactive Resume v4 (JSON)"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Reassuring signals"
+msgstr "Reassuring signals"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -2895,6 +2938,10 @@ msgstr "Rewrite this resume for a startup founder-to-product-lead transition wit
 msgid "Right Align"
 msgstr "Right Align"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Risk score"
+msgstr "Risk score"
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
 msgstr "Role Progression"
@@ -2918,6 +2965,10 @@ msgstr "Run your first analysis to get a scorecard, strengths, and prioritized s
 #: src/libs/locale.ts
 msgid "Russian"
 msgstr "Russian"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Safe next steps"
+msgstr "Safe next steps"
 
 #: src/dialogs/resume/wizard.tsx
 msgid "Salary negotiation"
@@ -2955,6 +3006,14 @@ msgstr "Save Changes"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Save Provider"
 msgstr "Save Provider"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Scam detector"
+msgstr "Scam detector"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Scam detector finished."
+msgstr "Scam detector finished."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Scan the QR code below with your preferred authenticator app. You can also copy the secret below and paste it into your app."
@@ -3431,6 +3490,10 @@ msgstr "The AI returned an invalid career plan. Please try again."
 msgid "The AI returned an invalid resume draft. Please try again."
 msgstr "The AI returned an invalid resume draft. Please try again."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "The AI returned an invalid scam analysis. Please try again."
+msgstr "The AI returned an invalid scam analysis. Please try again."
+
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "The API key has been deleted successfully."
@@ -3460,6 +3523,10 @@ msgstr "The password you entered is incorrect"
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "The resume you are trying to access is password protected"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "The scam detector is reviewing risk signals and verification steps."
+msgstr "The scam detector is reviewing risk signals and verification steps."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -3919,6 +3986,10 @@ msgstr "Valid URLs must start with http:// or https://."
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Verification questions"
+msgstr "Verification questions"
 
 #: src/features/settings/pages/profile.tsx
 msgid "Verified"

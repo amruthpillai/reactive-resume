@@ -11,6 +11,7 @@ const careerGrowthSystemPrompt = readPrompt("career-growth-system.md");
 const chatSystemPromptTemplate = readPrompt("chat-system.md");
 const docxParserSystemPrompt = readPrompt("docx-parser-system.md");
 const docxParserUserPrompt = readPrompt("docx-parser-user.md");
+const jobScamDetectorSystemPrompt = readPrompt("job-scam-detector-system.md");
 const pdfParserSystemPrompt = readPrompt("pdf-parser-system.md");
 const pdfParserUserPrompt = readPrompt("pdf-parser-user.md");
 const resumeWizardSystemPrompt = readPrompt("resume-wizard-system.md");
@@ -24,6 +25,7 @@ export {
 	chatSystemPromptTemplate,
 	docxParserSystemPrompt,
 	docxParserUserPrompt,
+	jobScamDetectorSystemPrompt,
 	pdfParserSystemPrompt,
 	pdfParserUserPrompt,
 	resumeWizardSystemPrompt,

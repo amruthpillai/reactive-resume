@@ -115,6 +115,25 @@ export const linkedinProfileSchema = z.object({
 	language: assistantLanguageSchema,
 });
 
+export const jobScamRedFlagSchema = z.object({
+	title: z.string().min(1),
+	evidence: z.string().min(1),
+	severity: z.enum(["low", "medium", "high"]),
+	candidateAction: z.string().min(1),
+});
+
+export const jobScamAnalysisSchema = z.object({
+	riskScore: z.number().int().min(0).max(100),
+	riskLevel: z.enum(["low", "medium", "high", "critical"]),
+	summary: z.string().min(1),
+	redFlags: z.array(jobScamRedFlagSchema).max(12),
+	reassuringSignals: z.array(z.string().min(1)).max(8),
+	verificationQuestions: z.array(z.string().min(1)).max(8),
+	safeNextSteps: z.array(z.string().min(1)).max(8),
+	avoidUntilVerified: z.array(z.string().min(1)).max(8),
+	language: assistantLanguageSchema,
+});
+
 export const resumeWizardDraftSchema = z.object({
 	resumeName: z.string().min(1).max(64),
 	resumeData: resumeDataSchema,
@@ -129,6 +148,7 @@ export type AssistantLanguage = z.infer<typeof assistantLanguageSchema>;
 export type AtsAnalysis = z.infer<typeof atsAnalysisSchema>;
 export type CareerCoachPlan = z.infer<typeof careerCoachPlanSchema>;
 export type CareerGrowthPlan = z.infer<typeof careerGrowthPlanSchema>;
+export type JobScamAnalysis = z.infer<typeof jobScamAnalysisSchema>;
 export type LinkedInProfile = z.infer<typeof linkedinProfileSchema>;
 export type SalaryNegotiation = z.infer<typeof salaryNegotiationSchema>;
 export type ResumeWizardDraft = z.infer<typeof resumeWizardDraftSchema>;

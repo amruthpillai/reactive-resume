@@ -1,13 +1,15 @@
-import type { ResumeWizardDraft } from "@reactive-resume/schema/resume/assistant";
+import type { JobScamAnalysis, ResumeWizardDraft } from "@reactive-resume/schema/resume/assistant";
 import type { DialogProps } from "../store";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { MagicWandIcon } from "@phosphor-icons/react";
+import { MagicWandIcon, WarningIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
+import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DialogContent,
@@ -156,12 +158,123 @@ function buildStrategyNotes(draft: ResumeWizardDraft) {
 		.join("");
 }
 
+function getRiskLevelLabel(level: JobScamAnalysis["riskLevel"]) {
+	switch (level) {
+		case "low":
+			return t`Low risk`;
+		case "medium":
+			return t`Medium risk`;
+		case "high":
+			return t`High risk`;
+		case "critical":
+			return t`Critical risk`;
+	}
+}
+
+function getRiskLevelClassName(level: JobScamAnalysis["riskLevel"]) {
+	switch (level) {
+		case "low":
+			return "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
+		case "medium":
+			return "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300";
+		case "high":
+			return "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-300";
+		case "critical":
+			return "border-destructive/30 bg-destructive/10 text-destructive";
+	}
+}
+
+function getSeverityLabel(severity: JobScamAnalysis["redFlags"][number]["severity"]) {
+	switch (severity) {
+		case "low":
+			return t`Low`;
+		case "medium":
+			return t`Medium`;
+		case "high":
+			return t`High`;
+	}
+}
+
+function getSeverityVariant(severity: JobScamAnalysis["redFlags"][number]["severity"]) {
+	switch (severity) {
+		case "low":
+			return "outline";
+		case "medium":
+			return "secondary";
+		case "high":
+			return "destructive";
+	}
+}
+
+function ScamAnalysisList({ title, items }: { title: string; items: string[] }) {
+	if (items.length === 0) return null;
+
+	return (
+		<section className="space-y-2">
+			<h4 className="font-medium text-xs">{title}</h4>
+			<ul className="list-disc space-y-1 ps-5 text-muted-foreground text-xs">
+				{items.map((item) => (
+					<li key={item}>{item}</li>
+				))}
+			</ul>
+		</section>
+	);
+}
+
+function ScamDetectorResult({ analysis }: { analysis: JobScamAnalysis }) {
+	return (
+		<div className="space-y-3 rounded-lg border bg-muted/20 p-3">
+			<div className="flex flex-wrap items-center gap-2">
+				<Badge variant="outline" className={getRiskLevelClassName(analysis.riskLevel)}>
+					{getRiskLevelLabel(analysis.riskLevel)}
+				</Badge>
+				<Badge variant="secondary">
+					<Trans>Risk score</Trans>: {analysis.riskScore}/100
+				</Badge>
+			</div>
+
+			<p className="text-sm">{analysis.summary}</p>
+
+			{analysis.redFlags.length > 0 ? (
+				<section className="space-y-2">
+					<h4 className="font-medium text-xs">
+						<Trans>Possible red flags</Trans>
+					</h4>
+					<div className="space-y-2">
+						{analysis.redFlags.map((flag) => (
+							<div key={`${flag.title}-${flag.evidence}`} className="space-y-1 rounded-md border p-2">
+								<div className="flex flex-wrap items-center gap-2">
+									<p className="font-medium text-sm">{flag.title}</p>
+									<Badge variant={getSeverityVariant(flag.severity)}>{getSeverityLabel(flag.severity)}</Badge>
+								</div>
+								<p className="text-muted-foreground text-xs">{flag.evidence}</p>
+								<p className="text-xs">{flag.candidateAction}</p>
+							</div>
+						))}
+					</div>
+				</section>
+			) : null}
+
+			<div className="grid gap-3 md:grid-cols-2">
+				<ScamAnalysisList title={t`Reassuring signals`} items={analysis.reassuringSignals} />
+				<ScamAnalysisList title={t`Verification questions`} items={analysis.verificationQuestions} />
+				<ScamAnalysisList title={t`Safe next steps`} items={analysis.safeNextSteps} />
+				<ScamAnalysisList title={t`Avoid until verified`} items={analysis.avoidUntilVerified} />
+			</div>
+		</div>
+	);
+}
+
 export function WizardResumeDialog(_: DialogProps<"resume.wizard">) {
 	const navigate = useNavigate();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
+	const [scamAnalysis, setScamAnalysis] = useState<JobScamAnalysis | null>(null);
 
 	const { mutateAsync: generateDraft, isPending: isGenerating } = useMutation(
 		orpc.ai.generateResumeDraft.mutationOptions(),
+	);
+	const { mutateAsync: detectJobScam, isPending: isDetectingScam } = useMutation(
+		orpc.ai.detectJobScam.mutationOptions(),
 	);
 	const { mutateAsync: importResume, isPending: isImporting } = useMutation(orpc.resume.import.mutationOptions());
 	const { data: aiProviders, isLoading: isLoadingAiProviders } = useQuery(orpc.aiProviders.list.queryOptions());
@@ -235,8 +348,53 @@ export function WizardResumeDialog(_: DialogProps<"resume.wizard">) {
 	});
 
 	const mode = useStore(form.store, (s) => s.values.mode);
+	const language = useStore(form.store, (s) => s.values.language);
+	const jobDescription = useStore(form.store, (s) => s.values.jobDescription);
 	const includeSalaryNegotiation = useStore(form.store, (s) => s.values.includeSalaryNegotiation);
 	const includeLinkedInProfile = useStore(form.store, (s) => s.values.includeLinkedInProfile);
+
+	const runScamDetector = async () => {
+		if (isLoadingAiProviders) {
+			toast.error(t`Loading AI providers. Please try again in a moment.`);
+			return;
+		}
+
+		if (!hasAIProvider) {
+			toast.error(t`This feature requires a tested AI provider. Please add one in the settings.`);
+			return;
+		}
+
+		const trimmedJobDescription = jobDescription.trim();
+		if (!trimmedJobDescription) {
+			toast.error(t`Paste a job description before running the scam detector.`);
+			return;
+		}
+
+		const toastId = toast.loading(t`Checking the job post...`, {
+			description: t`The scam detector is reviewing risk signals and verification steps.`,
+		});
+
+		try {
+			const result = await detectJobScam({
+				language,
+				jobDescription: trimmedJobDescription,
+			});
+
+			setScamAnalysis(result);
+			toast.success(t`Scam detector finished.`, { id: toastId });
+		} catch (error) {
+			toast.error(
+				getOrpcErrorMessage(error, {
+					byCode: {
+						BAD_GATEWAY: t`Could not reach the AI provider. Please try again.`,
+						BAD_REQUEST: t`The AI returned an invalid scam analysis. Please try again.`,
+					},
+					fallback: t`An unknown error occurred while checking this job post.`,
+				}),
+				{ id: toastId, description: null },
+			);
+		}
+	};
 
 	useFormBlocker(form);
 
@@ -476,16 +634,31 @@ export function WizardResumeDialog(_: DialogProps<"resume.wizard">) {
 				<form.Field name="jobDescription">
 					{(field) => (
 						<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
-							<FormLabel>
-								<Trans>Job offer text</Trans>
-							</FormLabel>
+							<div className="flex flex-wrap items-center justify-between gap-2">
+								<FormLabel>
+									<Trans>Job offer text</Trans>
+								</FormLabel>
+								<Button
+									type="button"
+									size="sm"
+									variant="outline"
+									disabled={isDetectingScam || isLoadingAiProviders || !hasAIProvider}
+									onClick={() => void runScamDetector()}
+								>
+									{isDetectingScam ? <Spinner /> : <WarningIcon />}
+									<Trans>Scam detector</Trans>
+								</Button>
+							</div>
 							<FormControl
 								render={
 									<Textarea
 										rows={6}
 										value={field.state.value}
 										onBlur={field.handleBlur}
-										onChange={(event) => field.handleChange(event.target.value)}
+										onChange={(event) => {
+											field.handleChange(event.target.value);
+											setScamAnalysis(null);
+										}}
 									/>
 								}
 							/>
@@ -493,6 +666,7 @@ export function WizardResumeDialog(_: DialogProps<"resume.wizard">) {
 								<Trans>Paste a job description to tailor keywords, bullets, ATS scoring, and positioning.</Trans>
 							</FormDescription>
 							<FormMessage errors={field.state.meta.errors} />
+							{scamAnalysis ? <ScamDetectorResult analysis={scamAnalysis} /> : null}
 						</FormItem>
 					)}
 				</form.Field>

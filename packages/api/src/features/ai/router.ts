@@ -10,6 +10,7 @@ import {
 	atsAnalysisSchema,
 	careerCoachPlanSchema,
 	careerGrowthPlanSchema,
+	jobScamAnalysisSchema,
 	resumeWizardDraftSchema,
 	salaryNegotiationSchema,
 } from "@reactive-resume/schema/resume/assistant";
@@ -241,6 +242,50 @@ export const aiRouter = {
 					location: input.location,
 					includeSalaryNegotiation: input.includeSalaryNegotiation,
 					includeLinkedInProfile: input.includeLinkedInProfile,
+				});
+			} catch (error) {
+				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
+				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
+				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError();
+				if (error instanceof ZodError) throwAiOutputStructureError(error);
+				throw error;
+			}
+		}),
+
+	detectJobScam: protectedProcedure
+		.route({
+			method: "POST",
+			path: "/ai/job-scam-detector",
+			tags: ["AI"],
+			operationId: "detectJobScam",
+			summary: "Detect scam risk in a job description",
+			description:
+				"Evaluates a pasted job description or offer text for scam-like, misleading, predatory, or too-good-to-be-true signals.",
+			successDescription: "Job scam risk analysis returned successfully.",
+		})
+		.input(
+			z.object({
+				aiProviderId: z.string().optional(),
+				language: assistantLanguageSchema.default("en"),
+				jobDescription: z.string().trim().min(1).max(20000),
+			}),
+		)
+		.use(aiRequestRateLimit)
+		.output(jobScamAnalysisSchema)
+		.errors({
+			BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
+			BAD_REQUEST: { message: "The AI returned an improperly formatted structure.", status: 400 },
+		})
+		.handler(async ({ context, input }) => {
+			try {
+				const provider = await getRunnableProvider(context.user.id, input.aiProviderId);
+				return await aiService.detectJobScam({
+					provider: provider.provider,
+					model: provider.model,
+					apiKey: provider.apiKey,
+					baseURL: provider.baseURL ?? "",
+					language: input.language,
+					jobDescription: input.jobDescription,
 				});
 			} catch (error) {
 				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();

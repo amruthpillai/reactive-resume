@@ -5,6 +5,7 @@ import type {
 	AtsAnalysis,
 	CareerCoachPlan,
 	CareerGrowthPlan,
+	JobScamAnalysis,
 	ResumeWizardDraft,
 	SalaryNegotiation,
 } from "@reactive-resume/schema/resume/assistant";
@@ -27,6 +28,7 @@ import {
 	chatSystemPromptTemplate,
 	docxParserSystemPrompt,
 	docxParserUserPrompt,
+	jobScamDetectorSystemPrompt,
 	pdfParserSystemPrompt,
 	pdfParserUserPrompt,
 	resumeWizardSystemPrompt,
@@ -46,6 +48,7 @@ import {
 	atsAnalysisSchema,
 	careerCoachPlanSchema,
 	careerGrowthPlanSchema,
+	jobScamAnalysisSchema,
 	resumeWizardDraftSchema,
 	salaryNegotiationSchema,
 } from "@reactive-resume/schema/resume/assistant";
@@ -642,6 +645,38 @@ async function analyzeAts(input: AnalyzeAtsInput): Promise<AtsAnalysis> {
 	return atsAnalysisSchema.parse(result.output);
 }
 
+type DetectJobScamInput = z.infer<typeof aiCredentialsSchema> & {
+	language: AssistantLanguage;
+	jobDescription: string;
+};
+
+async function detectJobScam(input: DetectJobScamInput): Promise<JobScamAnalysis> {
+	const model = getModel(input);
+
+	const result = await generateText({
+		model,
+		output: Output.object({ schema: jobScamAnalysisSchema }),
+		messages: [
+			{ role: "system", content: jobScamDetectorSystemPrompt },
+			{
+				role: "user",
+				content: JSON.stringify(
+					{
+						language: input.language,
+						jobDescription: input.jobDescription,
+					},
+					null,
+					2,
+				),
+			},
+		],
+	});
+
+	if (result.output == null) throw new Error("AI returned no job scam analysis output.");
+
+	return jobScamAnalysisSchema.parse(result.output);
+}
+
 type CoachCareerInput = z.infer<typeof aiCredentialsSchema> & {
 	language: AssistantLanguage;
 	currentSituation?: string | undefined;
@@ -767,6 +802,7 @@ export const aiService = {
 	analyzeAts,
 	chat,
 	coachCareer,
+	detectJobScam,
 	generateResumeDraft,
 	negotiateSalary,
 	parseDocx,

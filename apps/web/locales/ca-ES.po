@@ -326,6 +326,10 @@ msgstr "S'ha produït un error desconegut en crear el teu pla de carrera."
 msgid "An unknown error occurred while building your resume draft."
 msgstr "S'ha produït un error desconegut en crear l'esborrany del teu currículum."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "An unknown error occurred while checking this job post."
+msgstr "An unknown error occurred while checking this job post."
+
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
@@ -475,6 +479,10 @@ msgstr "Autenticació"
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Disponible en múltiples idiomes. Si vols contribuir-hi, visita Crowdin."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Avoid until verified"
+msgstr "Avoid until verified"
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -677,6 +685,10 @@ msgstr "Comprova el correu electrònic per trobar un enllaç per restablir la co
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "Comprova el correu electrònic per trobar un enllaç per verificar el compte."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Checking the job post..."
+msgstr "Checking the job post..."
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -984,6 +996,10 @@ msgstr "S’està creant la clau API..."
 #: src/dialogs/resume/index.tsx
 msgid "Creating your resume..."
 msgstr "S’està creant el currículum..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Critical risk"
+msgstr "Critical risk"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
@@ -1830,9 +1846,14 @@ msgid "Hide password"
 msgstr "Amagar contrasenya"
 
 #. Impact severity label in resume analysis suggestion card
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "High"
 msgstr "Alt"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "High risk"
+msgstr "High risk"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2224,9 +2245,14 @@ msgid "Lost access to your authenticator?"
 msgstr "Has perdut l’accés a l’autenticador?"
 
 #. Impact severity label in resume analysis suggestion card
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Low"
 msgstr "Baix"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Low risk"
+msgstr "Low risk"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2262,9 +2288,14 @@ msgid "Margin (Vertical)"
 msgstr "Marge (vertical)"
 
 #. Impact severity label in resume analysis suggestion card
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Medium"
 msgstr "Mitjà"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Medium risk"
+msgstr "Medium risk"
 
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
@@ -2535,6 +2566,10 @@ msgid "Password protection has been enabled."
 msgstr "La protecció amb contrasenya s’ha activat."
 
 #: src/dialogs/resume/wizard.tsx
+msgid "Paste a job description before running the scam detector."
+msgstr "Paste a job description before running the scam detector."
+
+#: src/dialogs/resume/wizard.tsx
 msgid "Paste a job description to tailor keywords, bullets, ATS scoring, and positioning."
 msgstr "Enganxa una descripció de feina per adaptar paraules clau, punts destacats, puntuació ATS i posicionament."
 
@@ -2638,6 +2673,10 @@ msgstr "Portuguès (Portugal)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Càrrec"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Possible red flags"
+msgstr "Possible red flags"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -2749,6 +2788,10 @@ msgstr "Reactive Resume v{__APP_VERSION__}"
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reactive Resume v4 (JSON)"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Reassuring signals"
+msgstr "Reassuring signals"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -2900,6 +2943,10 @@ msgstr "Reescriu aquest currículum per a una transició de fundador d'una start
 msgid "Right Align"
 msgstr "Alinea a la dreta"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Risk score"
+msgstr "Risk score"
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Role Progression"
 msgstr "Progressió del càrrec"
@@ -2923,6 +2970,10 @@ msgstr "Executa la teva primera anàlisi per obtenir un quadre de comandament, e
 #: src/libs/locale.ts
 msgid "Russian"
 msgstr "Rus"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Safe next steps"
+msgstr "Safe next steps"
 
 #: src/dialogs/resume/wizard.tsx
 msgid "Salary negotiation"
@@ -2960,6 +3011,14 @@ msgstr "Desa els canvis"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Save Provider"
 msgstr "Desa el proveïdor"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Scam detector"
+msgstr "Scam detector"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Scam detector finished."
+msgstr "Scam detector finished."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Scan the QR code below with your preferred authenticator app. You can also copy the secret below and paste it into your app."
@@ -3436,6 +3495,10 @@ msgstr "La IA ha retornat un pla de carrera no vàlid. Torna-ho a intentar."
 msgid "The AI returned an invalid resume draft. Please try again."
 msgstr "La IA ha retornat un esborrany de currículum no vàlid. Torna-ho a intentar."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "The AI returned an invalid scam analysis. Please try again."
+msgstr "The AI returned an invalid scam analysis. Please try again."
+
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "La clau API s’ha suprimit correctament."
@@ -3465,6 +3528,10 @@ msgstr "La contrasenya introduïda és incorrecta"
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "El currículum al qual intentes accedir està protegit amb contrasenya"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "The scam detector is reviewing risk signals and verification steps."
+msgstr "The scam detector is reviewing risk signals and verification steps."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -3924,6 +3991,10 @@ msgstr "Les URL vàlides han de començar per http:// o https://."
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
 msgstr "Vercel AI Gateway"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Verification questions"
+msgstr "Verification questions"
 
 #: src/features/settings/pages/profile.tsx
 msgid "Verified"
