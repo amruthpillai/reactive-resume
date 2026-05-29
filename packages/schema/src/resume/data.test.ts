@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	baseSectionSchema,
 	basicsSchema,
 	customFieldSchema,
 	experienceItemSchema,
@@ -10,6 +11,7 @@ import {
 	skillItemSchema,
 	styleRuleSchema,
 	styleRulesSchema,
+	summarySchema,
 	websiteSchema,
 } from "./data";
 import { defaultResumeData } from "./default";
@@ -270,6 +272,41 @@ describe("pageSchema", () => {
 			const valid = { ...defaultResumeData.metadata.page, format };
 			expect(pageSchema.safeParse(valid).success).toBe(true);
 		}
+	});
+
+	it("defaults hideSectionIcons to true when missing", () => {
+		const { hideSectionIcons: _, ...pageWithout } = defaultResumeData.metadata.page;
+		const result = pageSchema.safeParse(pageWithout);
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.hideSectionIcons).toBe(true);
+	});
+});
+
+describe("baseSectionSchema", () => {
+	it("defaults icon to empty string when missing", () => {
+		const result = baseSectionSchema.safeParse({ title: "Test", columns: 1, hidden: false });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.icon).toBe("");
+	});
+
+	it("accepts a custom icon value", () => {
+		const result = baseSectionSchema.safeParse({ title: "Test", icon: "rocket", columns: 1, hidden: false });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.icon).toBe("rocket");
+	});
+
+	it("accepts 'none' as a valid icon value", () => {
+		const result = baseSectionSchema.safeParse({ title: "Test", icon: "none", columns: 1, hidden: false });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.icon).toBe("none");
+	});
+});
+
+describe("summarySchema", () => {
+	it("defaults icon to empty string when missing", () => {
+		const result = summarySchema.safeParse({ title: "", columns: 1, hidden: false, content: "" });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.icon).toBe("");
 	});
 });
 
