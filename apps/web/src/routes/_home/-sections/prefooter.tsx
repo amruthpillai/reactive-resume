@@ -30,7 +30,7 @@ export function Prefooter() {
 							Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to
 							numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders
 							who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it
-							accessible to a broader audience, and the people who've donated to support its continued development.
+							accessible to a broader audience, and the people who've helped improve the product over time.
 						</Trans>
 					</p>
 				</m.div>

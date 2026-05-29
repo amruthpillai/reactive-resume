@@ -6,6 +6,8 @@ import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { useDialogStore } from "@/dialogs/store";
 
+const updateResumeData = vi.hoisted(() => vi.fn());
+
 vi.mock("../shared/section-base", () => ({
 	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
@@ -13,6 +15,7 @@ vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { metadata: { template: "ditto" } },
 	}),
+	useUpdateResumeData: () => updateResumeData,
 }));
 
 const { TemplateSectionBuilder } = await import("./template");
@@ -22,6 +25,7 @@ beforeAll(() => {
 });
 
 afterEach(() => {
+	updateResumeData.mockClear();
 	useDialogStore.setState({ open: false, activeDialog: null, onBeforeClose: null });
 });
 
@@ -53,6 +57,21 @@ describe("TemplateSectionBuilder", () => {
 		const state = useDialogStore.getState();
 		expect(state.open).toBe(true);
 		expect(state.activeDialog?.type).toBe("resume.template.gallery");
+	});
+
+	it("shows an explicit browse templates button", () => {
+		renderTemplate();
+
+		fireEvent.click(screen.getByRole("button", { name: "Browse templates" }));
+
+		const state = useDialogStore.getState();
+		expect(state.open).toBe(true);
+		expect(state.activeDialog?.type).toBe("resume.template.gallery");
+	});
+
+	it("renders the current template in a searchable template selector", () => {
+		renderTemplate();
+		expect(screen.getByRole("button", { name: "Ditto" })).toBeInTheDocument();
 	});
 
 	it("renders the template preview image with the data-mapped URL", () => {

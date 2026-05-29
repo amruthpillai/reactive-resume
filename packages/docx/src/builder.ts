@@ -1,5 +1,5 @@
 import type { ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
-import type { Template } from "@reactive-resume/schema/templates";
+import type { BaseTemplate } from "@reactive-resume/schema/templates";
 import {
 	BorderStyle,
 	convertMillimetersToTwip,
@@ -14,6 +14,7 @@ import {
 	TextRun,
 	WidthType,
 } from "docx";
+import { getBaseTemplate } from "@reactive-resume/schema/templates";
 import { parseColorString } from "@reactive-resume/utils/color";
 import { toSafeDocxLink } from "./link-utils";
 import { renderBuiltInSection, renderCustomSection, renderSummary, setRenderConfig } from "./section-renderers";
@@ -84,7 +85,7 @@ interface TemplateConfig {
 	headerPosition: "full-width" | "main-only" | "sidebar-only";
 }
 
-const TEMPLATE_CONFIGS: Record<Template, TemplateConfig> = {
+const TEMPLATE_CONFIGS: Record<BaseTemplate, TemplateConfig> = {
 	azurill: { sidebarSide: "left", sidebarBackground: "none", headerPosition: "full-width" },
 	bronzor: { sidebarSide: "right", sidebarBackground: "none", headerPosition: "full-width" },
 	chikorita: { sidebarSide: "right", sidebarBackground: "solid", headerPosition: "main-only" },
@@ -385,7 +386,7 @@ export function buildDocument(data: ResumeData): Document {
 	const sidebarWidth = data.metadata.layout.sidebarWidth;
 
 	// Template-aware layout config
-	const templateConfig = TEMPLATE_CONFIGS[data.metadata.template] ?? DEFAULT_TEMPLATE_CONFIG;
+	const templateConfig = TEMPLATE_CONFIGS[getBaseTemplate(data.metadata.template)] ?? DEFAULT_TEMPLATE_CONFIG;
 
 	// Compute sidebar background shading hex
 	let sidebarShadingHex: string | undefined;

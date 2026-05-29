@@ -12,7 +12,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { CometCard } from "@/components/animation/comet-card";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
-import { templates } from "./data";
+import { getTemplateDescription, templates } from "./data";
 
 export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">) {
 	const closeDialog = useDialogStore((state) => state.closeDialog);
@@ -22,7 +22,9 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 
 	function onSelectTemplate(template: Template) {
 		updateResumeData((draft) => {
+			const metadata = templates[template];
 			draft.metadata.template = template;
+			draft.metadata.design.colors.primary = metadata.accentColor;
 		});
 
 		closeDialog();
@@ -103,7 +105,9 @@ function TemplateCard({ id, metadata, isActive, onSelect }: TemplateCardProps) {
 				>
 					<div className="space-y-1">
 						<h3 className="font-semibold text-lg">{metadata.name}</h3>
-						<p className="text-muted-foreground">{i18n.t(metadata.description)}</p>
+						<p className="text-muted-foreground">
+							{getTemplateDescription(metadata.description, (descriptor) => i18n.t(descriptor))}
+						</p>
 					</div>
 
 					{metadata.tags.length > 0 && (

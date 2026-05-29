@@ -2,6 +2,7 @@ import { agentRouter } from "../features/agent/router";
 import { aiRouter } from "../features/ai/router";
 import { aiProvidersRouter } from "../features/ai-providers/router";
 import { authRouter } from "../features/auth/router";
+import { billingRouter } from "../features/billing/router";
 import { flagsRouter } from "../features/flags/router";
 import { resumeRouter } from "../features/resume/router";
 import { statisticsRouter } from "../features/statistics/router";
@@ -12,6 +13,7 @@ export default {
 	aiProviders: aiProvidersRouter,
 	agent: agentRouter,
 	auth: authRouter,
+	billing: billingRouter,
 	flags: flagsRouter,
 	resume: resumeRouter,
 	statistics: statisticsRouter,

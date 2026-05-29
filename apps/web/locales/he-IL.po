@@ -62,10 +62,6 @@ msgctxt "Home page FAQ section heading with each word visually separated into in
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
 msgstr "<0>שאלות</0><1>שנשאלות</1><2>לעיתים קרובות</2>"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
-msgstr "<0>תודה על השימוש ב־Reactive Resume! היישום הזה הוא פרויקט אהבה, שנוצר ברובו בזמני הפנוי, עם תמיכה נהדרת מתורמי קוד פתוח מכל רחבי העולם.</0><1>אם Reactive Resume סייע לך, ואם ברצונך לעזור לשמור עליו חינמי ופתוח לכולם, נשקלת האפשרות לתרום. כל תרומה, קטנה כגדולה, מוערכת מאוד!</1>"
-
 #: src/dialogs/api-key/create.tsx
 msgid "1 month"
 msgstr "חודש אחד"
@@ -75,8 +71,8 @@ msgid "1 year"
 msgstr "שנה אחת"
 
 #: src/routes/_home/-sections/features.tsx
-msgid "12+ Templates"
-msgstr "יותר מ־12 תבניות"
+msgid "250+ Templates"
+msgstr "250+ תבניות"
 
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
@@ -122,6 +118,14 @@ msgstr "בהחלט! אפשר לייצא את קורות החיים שלך ל־PD
 #: src/routes/_home/-sections/features.tsx
 msgid "Access your resumes and data programmatically using the API."
 msgstr "גש לקורות החיים ולנתונים שלך באופן תכנותי באמצעות ה־API."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Achievements"
+msgstr "הישגים"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Action plan"
+msgstr "תוכנית פעולה"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Add a custom field"
@@ -217,6 +221,10 @@ msgstr "הוסף מילת מפתח"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "הוסף מספר תפקידים כדי להציג את ההתקדמות הקריירתית באותה חברה."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Add negotiation scripts and an email template to the resume notes."
+msgstr "הוסף תסריטי מו\"מ ותבנית אימייל להערות קורות החיים."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "הוספת עמוד"
@@ -309,6 +317,14 @@ msgstr "אמהרית"
 #: src/components/layout/not-found-screen.tsx
 msgid "An error occurred while loading the page."
 msgstr "אירעה שגיאה בטעינת העמוד."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "An unknown error occurred while building your career plan."
+msgstr "אירעה שגיאה לא ידועה בעת בניית תוכנית הקריירה שלך."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "An unknown error occurred while building your resume draft."
+msgstr "אירעה שגיאה לא ידועה בעת בניית טיוטת קורות החיים שלך."
 
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
@@ -438,6 +454,10 @@ msgstr "שאלו כל דבר בנוגע לקורות חיים אלה"
 msgid "Aspect Ratio"
 msgstr "יחס גובה־רוחב"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "ATS, growth, and salary notes were saved in the resume notes."
+msgstr "הערות ATS, צמיחה ושכר נשמרו בהערות קורות החיים."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Attach files"
 msgstr "צרף קבצים"
@@ -496,10 +516,6 @@ msgstr "כתובת אתר בסיסית"
 msgid "Basics"
 msgstr "פרטים בסיסיים"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Beautiful templates to choose from, with more on the way."
-msgstr "תבניות יפות לבחירה, ועוד תבניות בדרך."
-
 #: src/libs/locale.ts
 msgid "Bengali"
 msgstr "בנגלית"
@@ -525,10 +541,26 @@ msgstr "רדיוס מסגרת"
 msgid "Border Width"
 msgstr "רוחב מסגרת"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Browse templates"
+msgstr "עיון בתבניות"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Build a practical plan for target roles, skills, interviews, LinkedIn, and compensation."
+msgstr "בנה תוכנית מעשית לתפקידים, מיומנויות, ראיונות, LinkedIn ושכר."
+
 #. Screen-reader dialog title for the command palette in the resume builder
 #: src/features/command-palette/index.tsx
 msgid "Builder Command Palette"
 msgstr "לוח פקודות הבונה"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Building your career plan..."
+msgstr "בונה את תוכנית הקריירה שלך..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Building your resume draft..."
+msgstr "בונה את טיוטת קורות החיים שלך..."
 
 #: src/libs/locale.ts
 msgid "Bulgarian"
@@ -587,6 +619,15 @@ msgstr "ביטול"
 msgid "Cannot restore; the resume has changed since this edit was applied."
 msgstr "לא ניתן לשחזר; קורות החיים השתנו מאז שהעריכה הזו הוחלה."
 
+#: src/dialogs/resume/career-coach.tsx
+#: src/routes/dashboard/resumes/-components/cards/career-coach-card.tsx
+msgid "Career coach"
+msgstr "מאמן קריירה"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Career plan ready."
+msgstr "תוכנית הקריירה מוכנה."
+
 #: src/libs/locale.ts
 msgid "Catalan"
 msgstr "קטלאנית"
@@ -605,13 +646,13 @@ msgstr "מרכוז התצוגה"
 msgid "Certifications"
 msgstr "הסמכות"
 
-#: src/routes/_home/-sections/header.tsx
-msgid "Change language"
-msgstr "שינוי שפה"
-
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change language to…"
 msgstr "שנה שפה ל-…"
+
+#: src/features/locale/dropdown.tsx
+msgid "Change language. Current language: {selectedLabel}"
+msgstr "שנה שפה. השפה הנוכחית: {selectedLabel}"
 
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change theme to…"
@@ -657,6 +698,11 @@ msgstr "בחר גוון קבוע מראש או גוון מותאם אישית."
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a resume"
 msgstr "בחר קורות חיים"
+
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Choose a template"
+msgstr "בחר תבנית"
 
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
@@ -725,6 +771,11 @@ msgstr "אישור"
 msgid "Connect"
 msgstr "חיבור"
 
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Constraints"
+msgstr "מגבלות"
+
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
@@ -746,10 +797,6 @@ msgstr "להמשיך מאיפה שהפסקת"
 #: src/dialogs/resume/import.tsx
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "המשיכי מאיפה שהפסקת על ידי ייבוא קורות חיים קיימים שיצרת באמצעות Reactive Resume או כל בונה קורות חיים אחר. התבניות הנתמכות כוללות PDF, Microsoft Word וכן קובצי JSON מ־Reactive Resume."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
-msgstr "תרומות מממנות תיקוני באגים, עדכוני אבטחה ושיפורים מתמשכים כדי שהיישום ימשיך לפעול בצורה חלקה."
 
 #: src/routes/agent/$threadId.tsx
 msgid "Conversation copied."
@@ -787,7 +834,9 @@ msgstr "העתקת כתובת"
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "לא ניתן היה ליצור קשר עם ספק ה-AI. אנא נסה שוב."
@@ -939,6 +988,10 @@ msgstr "יוצר את קורות החיים שלך..."
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "סיסמה נוכחית"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Current situation"
+msgstr "מצב נוכחי"
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1098,10 +1151,6 @@ msgstr "ניתוק"
 msgid "Discord"
 msgstr "דיסקורד"
 
-#: src/components/ui/donation-toast.tsx
-msgid "Dismiss"
-msgstr "לְפַטֵר"
-
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -1110,14 +1159,6 @@ msgstr "תיעוד"
 #: src/features/auth/pages/login.tsx
 msgid "Don't have an account? <0/>"
 msgstr "אין לך חשבון? <0/>"
-
-#: src/components/ui/donation-toast.tsx
-msgid "Donate"
-msgstr "לִתְרוֹם"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Donate to Reactive Resume"
-msgstr "תרומה ל־Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -1212,6 +1253,7 @@ msgid "Editing keyword..."
 msgstr "עריכת מילת מפתח..."
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Education"
@@ -1291,9 +1333,9 @@ msgstr "הזן את הסיסמה שלך כדי לאשר הגדרת אימות ד
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "הזן את הסיסמה שלך כדי להשבית אימות דו־שלבי. החשבון שלך יהיה פחות מאובטח ללא אימות דו־שלבי."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
-msgstr "כל תרומה, קטנה כגדולה, עושה הבדל גדול למיזם.<0/>תודה על התמיכה!"
+#: src/dialogs/resume/wizard.tsx
+msgid "Essay"
+msgstr "חיבור"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
@@ -1309,6 +1351,10 @@ msgstr "יציאה ממסך מלא"
 msgid "Experience"
 msgstr "ניסיון"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Experience essay"
+msgstr "חיבור ניסיון"
+
 #: src/dialogs/api-key/create.tsx
 msgid "Expires in"
 msgstr "פג בעוד"
@@ -1319,8 +1365,8 @@ msgid "Expires on {0}"
 msgstr "פג בתאריך {0}"
 
 #: src/routes/_home/-sections/templates.tsx
-msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. Reactive Resume currently offers 12 templates, with more on the way."
-msgstr "גלה את מגוון התבניות שלנו, שכל אחת מהן מעוצבת להתאים לסגנונות, מקצועות ואישיויות שונות. Reactive Resume מציע כרגע 12 תבניות, ועוד תבניות בדרך."
+msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. The platform now includes 250+ resume and CV templates, with role-specific options for ATS-heavy, executive, technical, creative, academic, and international applications."
+msgstr "גלה את מבחר התבניות המגוון שלנו, כל אחת מותאמת לסגנונות, מקצועות ואישיויות שונות. הפלטפורמה כוללת כעת מעל 250 תבניות קורות חיים ו-CV, עם אפשרויות ייעודיות ל-ATS, מנהלים, טכני, יצירתי, אקדמי ובינלאומי."
 
 #: src/features/settings/pages/api-keys.tsx
 msgid "Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find detailed endpoints, request examples, and authentication methods."
@@ -1589,13 +1635,42 @@ msgstr "מסך מלא"
 msgid "Fullscreen Editor"
 msgstr "עורך במסך מלא"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Gaps to close"
+msgstr "פערים לסגירה"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate a headline, About section, recruiter message, and profile improvement ideas."
+msgstr "צור כותרת, קטע 'על עצמי', הודעה למגייס ורעיונות לשיפור הפרופיל."
+
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
 msgstr "יצירת שם אקראי"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate a tailored resume from your experience, a target job, and optional offer details."
+msgstr "צור קורות חיים מותאמים מהניסיון שלך, משרה יעד ופרטי הצעה אופציונליים."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Generate plan"
+msgstr "צור תוכנית"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate resume"
+msgstr "צור קורות חיים"
+
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Generating..."
+msgstr "יוצר..."
+
 #: src/libs/locale.ts
 msgid "German"
 msgstr "גרמנית"
+
+#: src/routes/dashboard/resumes/-components/cards/career-coach-card.tsx
+msgid "Get a practical plan for roles, skills, interviews, LinkedIn, and salary"
+msgstr "קבל תוכנית מעשית לתפקידים, מיומנויות, ראיונות, LinkedIn ושכר"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
@@ -1636,6 +1711,10 @@ msgstr "עבור למרכז השליטה בקורות החיים"
 msgid "Go to…"
 msgstr "עבור אל…"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Goals"
+msgstr "מטרות"
+
 #. Authentication provider display name in account settings
 #. Brand name label for Google social sign-in button
 #: src/features/auth/components/social-auth.tsx
@@ -1663,9 +1742,9 @@ msgstr "יוונית"
 msgid "Grid"
 msgstr "רשת"
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Grow the Team"
-msgstr "הגדלת הצוות"
+#: src/dialogs/resume/wizard.tsx
+msgid "Guided"
+msgstr "מודרך"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
@@ -1703,10 +1782,6 @@ msgstr "כותרת עליונה"
 #: src/libs/locale.ts
 msgid "Hebrew"
 msgstr "עברית"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Help me bring more experienced contributors on board, reducing the burden on a single maintainer and accelerating development."
-msgstr "עזרו לי להביא תורמים מנוסים יותר, להפחית את העומס מתחזק יחיד ולהאיץ את הפיתוח."
 
 #: src/features/settings/pages/preferences.tsx
 msgid "Help translate the app to your language"
@@ -1818,6 +1893,10 @@ msgstr "מייבא את קורות החיים שלך..."
 msgid "Importing…"
 msgstr "ייבוא…"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Include roles, projects, tools, achievements, education, and anything you want highlighted."
+msgstr "כלול תפקידים, פרויקטים, כלים, הישגים, השכלה וכל דבר שתרצה להדגיש."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Increase zoom"
 msgstr "הגדלת הזום"
@@ -1854,6 +1933,10 @@ msgstr "שילובים"
 msgid "Interests"
 msgstr "תחביבים"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Interview preparation"
+msgstr "הכנה לראיונות"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Invalid AI provider configuration."
 msgstr "תצורה לא חוקית של ספק בינה מלאכותית."
@@ -1881,6 +1964,14 @@ msgstr "נטוי"
 #: src/libs/locale.ts
 msgid "Japanese"
 msgstr "יפנית"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Job description"
+msgstr "תיאור משרה"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Job offer text"
+msgstr "טקסט הצעת עבודה"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
@@ -1949,7 +2040,9 @@ msgid "Landscape"
 msgstr "לרוחב"
 
 #. Menu item that opens language selection submenu
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/sections/language.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/features/command-palette/pages/preferences/language.tsx
 #: src/features/settings/pages/preferences.tsx
 #: src/features/user/dropdown-menu.tsx
@@ -2047,9 +2140,25 @@ msgstr "גובה שורה"
 msgid "LinkedIn"
 msgstr "לינקדאין"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "LinkedIn content will be saved into the resume notes with the ATS and growth plan."
+msgstr "תוכן LinkedIn יישמר בהערות קורות החיים יחד עם תוכנית ATS וצמיחה."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "LinkedIn profile builder"
+msgstr "בונה פרופיל LinkedIn"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "LinkedIn strategy"
+msgstr "אסטרטגיית LinkedIn"
+
 #: src/features/settings/authentication/components/hooks.tsx
 msgid "Linking your {providerName} account..."
 msgstr "מקשר את חשבון {providerName} שלך..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Links"
+msgstr "קישורים"
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "List"
@@ -2063,7 +2172,9 @@ msgstr "ליטאית"
 msgid "Loading agent workspace…"
 msgstr "טוען את סביבת העבודה של הסוכן…"
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 msgid "Loading AI providers. Please try again in a moment."
 msgstr "טוען ספקי בינה מלאכותית. אנא נסה שוב בעוד רגע."
 
@@ -2085,9 +2196,11 @@ msgstr "טוען שרשורים…"
 msgid "Loading…"
 msgstr "טוען…"
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "מקום"
@@ -2104,10 +2217,6 @@ msgstr "נעילה"
 #: src/features/user/dropdown-menu.tsx
 msgid "Logout"
 msgstr "יציאה"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Long-term Sustainability"
-msgstr "קיימות לטווח הארוך"
 
 #. Link to backup-code verification flow when authenticator app is unavailable
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2204,6 +2313,10 @@ msgstr "נפאלית"
 msgid "Network"
 msgstr "רשת"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Networking"
+msgstr "נטוורקינג"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "New features are constantly being added and improved, so be sure to check back often."
 msgstr "תמיד נוספים ומשתפרים פיצ׳רים חדשים, אז שווה לחזור ולבדוק מדי פעם."
@@ -2247,6 +2360,11 @@ msgstr "עדיין לא נרשמו מפתחות גישה."
 msgid "No results found."
 msgstr "לא נמצאו תוצאות."
 
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "No templates found."
+msgstr "לא נמצאו תבניות."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "אין ספק שנבדק"
@@ -2267,6 +2385,10 @@ msgstr "הערות"
 msgid "Odia"
 msgstr "אודיה"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Offer details"
+msgstr "פרטי הצעה"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Ollama"
 msgstr "אולמה"
@@ -2274,10 +2396,6 @@ msgstr "אולמה"
 #: src/routes/_home/-sections/features.tsx
 msgid "One-Click Sign-In"
 msgstr "התחברות בלחיצה אחת"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Ongoing Maintenance"
-msgstr "תחזוקה מתמשכת"
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -2319,10 +2437,13 @@ msgstr "תואם ל-OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
-#: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
 msgstr "נפתח בלשונית חדשה"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Optional"
+msgstr "אופציונלי"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
@@ -2413,6 +2534,10 @@ msgstr "ההגנה באמצעות סיסמה הושבתה."
 msgid "Password protection has been enabled."
 msgstr "ההגנה באמצעות סיסמה הופעלה."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Paste a job description to tailor keywords, bullets, ATS scoring, and positioning."
+msgstr "הדבק תיאור משרה כדי להתאים מילות מפתח, נקודות, דירוג ATS ומיצוב."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Patch applied"
 msgstr "תיקון הוחל"
@@ -2462,6 +2587,10 @@ msgstr "התאם אישית את קורות החיים שלך עם כל צבע, 
 msgid "Phone"
 msgstr "טלפון"
 
+#: src/dialogs/resume/index.tsx
+msgid "Pick one of the resume and CV templates before you start editing."
+msgstr "בחר אחת מתבניות קורות החיים (Resume ו-CV) לפני שתתחיל לערוך."
+
 #: src/libs/resume/section.tsx
 msgid "Picture"
 msgstr "תמונה"
@@ -2477,10 +2606,6 @@ msgstr "נא להזין את הסיסמה ששיתף איתך בעל קורות 
 #: src/components/input/rich-input.tsx
 msgid "Please enter the URL you want to link to:"
 msgstr "נא להזין את כתובת ה־URL שאליה ברצונך לקשר:"
-
-#: src/components/ui/donation-toast.tsx
-msgid "Please support the project"
-msgstr "אנא תמכו בפרויקט"
 
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
@@ -2604,20 +2729,12 @@ msgid "Reactive Resume (JSON)"
 msgstr "קורות חיים תגובתיים (JSON)"
 
 #: src/routes/_home/-sections/prefooter.tsx
-msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've donated to support its continued development."
-msgstr "Reactive Resume ממשיך לצמוח בזכות הקהילה התוססת שסביבו. המיזם הזה חב את ההתקדמות שלו לשלל אנשים שהקדישו את זמנם וכישרונם כדי לשפר אותו. אנחנו חוגגים את המפתחים שהרחיבו את היכולות שלו ב־GitHub, את הלשונאים שהתרגומים שלהם ב־Crowdin הפכו אותו לנגיש לקהל רחב יותר, ואת האנשים שתרמו כדי לתמוך בפיתוח המתמשך שלו."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Reactive Resume is a free and open-source project, built with love and maintained by me and a community of contributors. Your donations help keep the lights on and the code flowing."
-msgstr "Reactive Resume הוא מיזם חינמי בקוד פתוח, שנבנה באהבה ומנוהל על ידי ועל ידי קהילת תורמים. התרומות שלך עוזרות להשאיר את המיזם פעיל ואת הקוד זורם."
+msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've helped improve the product over time."
+msgstr "Reactive Resume ממשיך לצמוח בזכות הקהילה התוססת שלו. הפרויקט הזה חב את התקדמותו לאנשים רבים שהקדישו מזמנם וכישוריהם לשיפורו. אנו מוקירים את המפתחים ששיפרו את הפיצ'רים ב-GitHub, את המתרגמים שתרמו ב-Crowdin והפכו אותו לנגיש לקהל רחב יותר, ואת כל מי שסייע לשפר את המוצר לאורך הזמן."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
 msgstr "Reactive Resume הוא בונה קורות חיים חינמי בקוד פתוח שמפשט את תהליך יצירת, עדכון ושיתוף קורות החיים שלך."
-
-#: src/components/ui/donation-toast.tsx
-msgid "Reactive Resume is free and open source. If it has helped you, please consider donating."
-msgstr "ריאקטיבי קורות חיים הם חינמיים ובקוד פתוח. אם זה עזר לך, אנא שקול לתרום."
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
@@ -2734,6 +2851,7 @@ msgstr "לְשַׁחְזֵר"
 msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
 msgstr "לשחזר את קורות החיים למצב שלפני תיקון זה? פעולה זו תחזיר את התיקון הזה וכל תיקון שהוחל לאחריו."
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "קוֹרוֹת חַיִים"
@@ -2749,6 +2867,10 @@ msgstr "ניתוח קורות החיים הושלם."
 #: src/routes/agent/$threadId.tsx
 msgid "Resume patch"
 msgstr "תיקון קורות חיים"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Resume strategy"
+msgstr "אסטרטגיית קורות חיים"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2782,6 +2904,10 @@ msgstr "יישור לימין"
 msgid "Role Progression"
 msgstr "התקדמות בתפקיד"
 
+#: src/routes/_home/-sections/features.tsx
+msgid "Role-specific resume and CV templates for ATS, executive, technical, creative, academic, and international applications."
+msgstr "תבניות קורות חיים ו-CV ייעודיות ל-ATS, מנהלים, טכני, יצירתי, אקדמי ובינלאומי."
+
 #: src/libs/locale.ts
 msgid "Romanian"
 msgstr "רומנית"
@@ -2797,6 +2923,14 @@ msgstr "בצע את הניתוח הראשון שלך כדי לקבל דוח בי
 #: src/libs/locale.ts
 msgid "Russian"
 msgstr "רוסית"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Salary negotiation"
+msgstr "מו\"מ שכר"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Salary strategy"
+msgstr "אסטרטגיית שכר"
 
 #. Passkey rename prompt confirm action in authentication settings
 #: src/features/settings/authentication/components/passkeys.tsx
@@ -2853,6 +2987,11 @@ msgstr "חיפוש סמל"
 #: src/features/command-palette/pages/resumes.tsx
 msgid "Search for…"
 msgstr "חפש…"
+
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Search templates..."
+msgstr "חפש תבניות..."
 
 #: src/components/ui/combobox.tsx
 msgid "Search..."
@@ -2911,6 +3050,10 @@ msgstr "שליחת דוא\"ל לאיפוס סיסמה"
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "שולח דוא\"ל לאיפוס סיסמה..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Seniority"
+msgstr "ותק"
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -3048,8 +3191,8 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "עמודה אחת עם סרגל צד וגריד נקי; רב־שימושי לכל תפקיד מקצועי או טכני."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
-msgstr "עמודה אחת עם כותרת כניסה משולבת בת שלוש עמודות (תפקיד · ארגון · תקופה); קומפקטי ומתאים לשיטת ATS, מתאים היטב למנהגי כתיבת קורות חיים באסיה (סין/יפן/קוריאה)."
+msgid "Single-column with an inline three-column entry header (position, organization, period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "טור יחיד עם כותרת רשומה בשלושה טורים (תפקיד, ארגון, תקופה); קומפקטי וידידותי ל-ATS, מתאים במיוחד לקורות חיים בסגנון אסייתי (CN/JP/KR)."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with uppercase section headings and a primary-color top rule on every page; polished for executive, consulting, or startup resumes."
@@ -3064,6 +3207,7 @@ msgid "Size"
 msgstr "גודל"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Skills"
@@ -3114,14 +3258,6 @@ msgstr "ריווח (אנכי)"
 #: src/libs/locale.ts
 msgid "Spanish"
 msgstr "ספרדית"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Sponsors"
-msgstr "נותני חסות"
-
-#: src/routes/_home/-sections/footer.tsx
-msgid "Sponsorships"
-msgstr "חסויות"
 
 #. Preset button for setting picture aspect ratio to square
 #: src/components/level/combobox.tsx
@@ -3179,6 +3315,10 @@ msgstr "עצירת הדור"
 msgid "Strengths"
 msgstr "נקודות חוזק"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Strengths to leverage"
+msgstr "חוזקות למינוף"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "קו חוצה"
@@ -3199,14 +3339,6 @@ msgstr "הצעות"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "תקציר"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Support Reactive Resume"
-msgstr "תמיכה ב־Reactive Resume"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Support the app by doing what you can!"
-msgstr "אפשר לתמוך ביישום על ידי עשייה בכל דרך שאפשרית לך!"
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -3240,10 +3372,20 @@ msgstr "התאם את קורות החיים לתיאור תפקיד של מנה�
 msgid "Tamil"
 msgstr "טמילית"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Target compensation"
+msgstr "שכר יעד"
+
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Target role"
+msgstr "תפקיד יעד"
+
 #: src/libs/locale.ts
 msgid "Telugu"
 msgstr "טלוגו"
 
+#: src/dialogs/resume/index.tsx
 #: src/libs/resume/section.tsx
 msgid "Template"
 msgstr "תבנית"
@@ -3286,6 +3428,14 @@ msgstr "הסוכן זקוק לתשומתך."
 msgid "The AI returned an invalid analysis format. Please try again."
 msgstr "ה-AI החזיר פורמט ניתוח לא תקין. אנא נסה שוב."
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "The AI returned an invalid career plan. Please try again."
+msgstr "ה-AI החזיר תוכנית קריירה לא תקינה. נסה שוב."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "The AI returned an invalid resume draft. Please try again."
+msgstr "ה-AI החזיר טיוטת קורות חיים לא תקינה. נסה שוב."
+
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "מפתח ה־API נמחק בהצלחה."
@@ -3293,6 +3443,10 @@ msgstr "מפתח ה־API נמחק בהצלחה."
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "לאחר המחיקה מפתח ה־API לא יוכל יותר לגשת לנתונים שלך. לא ניתן לבטל פעולה זו."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "The coach is reviewing your resume, goals, and market positioning."
+msgstr "המאמן בודק את קורות החיים, המטרות והמיצוב שלך בשוק."
 
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
@@ -3369,7 +3523,9 @@ msgstr "לא ניתן לבטל פעולה זו. הודעות וקבצים מצו
 msgid "This agent thread could not be opened."
 msgstr "לא ניתן היה לפתוח את שרשור הסוכן הזה."
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 msgid "This feature requires a tested AI provider. Please add one in the settings."
 msgstr "תכונה זו דורשת ספק בינה מלאכותית שנבדק. אנא הוסף ספק כזה בהגדרות."
 
@@ -3380,6 +3536,10 @@ msgstr "זהו שם ידידותי לכתובת URL עבור קורות החיי
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "זה עלול לקחת כמה דקות, בהתאם לזמן התגובה של ספק הבינה המלאכותית. נא לא לסגור את החלון או לרענן את העמוד."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "This may take a minute while the AI turns your experience into structured resume sections."
+msgstr "זה עשוי לקחת דקה בזמן שה-AI הופך את הניסיון שלך לקטעי קורות חיים מובנים."
 
 #: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
@@ -3438,6 +3598,10 @@ msgstr "שרשורים"
 #: src/routes/agent/$threadId.tsx
 msgid "Tighten the skills section so it supports the target role instead of reading like a keyword dump."
 msgstr "הדקו את סעיף המיומנויות כך שיתמוך בתפקיד היעד במקום להיקרא כמו אוסף מילות מפתח."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Timeframe"
+msgstr "מסגרת זמן"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Timelapse demonstration of building a resume with Reactive Resume"
@@ -3500,6 +3664,10 @@ msgstr "טורקית"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
 msgstr "הפעל שיתוף ציבורי כדי לעקוב כמה פעמים קורות החיים שלך נצפו או הורדו. רק אתה יכול לראות את הסטטיסטיקה של קורות החיים שלך."
+
+#: src/routes/dashboard/resumes/-components/cards/wizard-card.tsx
+msgid "Turn your story or a job offer into a tailored resume"
+msgstr "הפוך את הסיפור שלך או הצעת עבודה לקורות חיים מותאמים אישית"
 
 #: src/dialogs/resume/template/data.ts
 msgid "Two-column with a bold colored sidebar and skill bars; great for creative or tech roles where visual flair is welcome."
@@ -3730,6 +3898,10 @@ msgstr "לְהִשְׁתַמֵשׁ"
 msgid "Use color {color}"
 msgstr "השתמש בצבע {color}"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Use one of your resumes as coaching context."
+msgstr "השתמש באחד מקורות החיים שלך כהקשר לאימון."
+
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
 #: src/features/auth/pages/register.tsx
@@ -3802,6 +3974,10 @@ msgstr "צפיות"
 msgid "Volunteer"
 msgstr "התנדבות"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Watch-outs"
+msgstr "דגשים לשים לב אליהם"
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -3814,6 +3990,10 @@ msgstr "התנדבות"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Website"
 msgstr "אתר אינטרנט"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Weekly plan"
+msgstr "תוכנית שבועית"
 
 #: src/routes/agent/$threadId.tsx
 msgid "What do you want to do?"
@@ -3836,6 +4016,15 @@ msgstr "מה חדש בגרסה העדכנית?"
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "כאשר קורות החיים נעולים, אי אפשר לעדכן או למחוק אותם."
+
+#: src/dialogs/resume/wizard.tsx
+#: src/routes/dashboard/resumes/-components/cards/wizard-card.tsx
+msgid "Wizard mode"
+msgstr "מצב אשף"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Work history"
+msgstr "היסטוריית עבודה"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
@@ -3940,9 +4129,9 @@ msgstr "קורות החיים שלך עודכנו בהצלחה."
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "הקישור הציבורי לקורות החיים שלך מוגן כעת בסיסמה. שתף את הסיסמה רק עם אנשים שאתה בוטח בהם."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Your support ensures the project remains free and accessible for everyone, now and in the future."
-msgstr "התמיכה שלך מבטיחה שהמיזם יישאר חינמי ונגיש לכולם, כעת ובעתיד."
+#: src/dialogs/resume/wizard.tsx
+msgid "Your wizard resume is ready."
+msgstr "קורות החיים במצב אשף מוכנים."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Zoom in"
@@ -3959,4 +4148,3 @@ msgstr "התרחקות"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "זולו"
-

@@ -71,6 +71,7 @@ export const crudRouter = {
 				tags: input.tags,
 				locale: context.locale,
 				userId: context.user.id,
+				...(input.template ? { template: input.template } : {}),
 				...(input.withSampleData ? { data: sampleResumeData } : {}),
 			});
 		}),
@@ -96,13 +97,13 @@ export const crudRouter = {
 			},
 		})
 		.handler(async ({ context, input }) => {
-			const name = generateRandomName();
-			const slug = slugify(name);
+			const name = input.name ?? generateRandomName();
+			const slug = input.slug ?? slugify(name);
 
 			return resumeService.create({
 				name,
 				slug,
-				tags: [],
+				tags: input.tags ?? [],
 				data: input.data,
 				locale: context.locale,
 				userId: context.user.id,

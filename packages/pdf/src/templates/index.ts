@@ -1,5 +1,6 @@
-import type { Template } from "@reactive-resume/schema/templates";
+import type { BaseTemplate, Template } from "@reactive-resume/schema/templates";
 import type { TemplatePage } from "../document";
+import { getBaseTemplate } from "@reactive-resume/schema/templates";
 import { AzurillPage } from "./azurill/AzurillPage";
 import { BronzorPage } from "./bronzor/BronzorPage";
 import { ChikoritaPage } from "./chikorita/ChikoritaPage";
@@ -16,7 +17,7 @@ import { PikachuPage } from "./pikachu/PikachuPage";
 import { RhyhornPage } from "./rhyhorn/RhyhornPage";
 import { ScizorPage } from "./scizor/ScizorPage";
 
-export const templatePages: Partial<Record<Template, TemplatePage>> = {
+export const templatePages: Record<BaseTemplate, TemplatePage> = {
 	azurill: AzurillPage,
 	bronzor: BronzorPage,
 	chikorita: ChikoritaPage,
@@ -36,7 +37,8 @@ export const templatePages: Partial<Record<Template, TemplatePage>> = {
 
 export const defaultTemplatePage = AzurillPage;
 
-export const getTemplatePage = (template: Template): TemplatePage => templatePages[template] ?? defaultTemplatePage;
+export const getTemplatePage = (template: Template): TemplatePage =>
+	templatePages[getBaseTemplate(template)] ?? defaultTemplatePage;
 
 export {
 	AzurillPage,

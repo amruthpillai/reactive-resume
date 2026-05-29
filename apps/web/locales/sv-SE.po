@@ -62,10 +62,6 @@ msgctxt "Home page FAQ section heading with each word visually separated into in
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
 msgstr "<0>Vanliga</0><1>Ställda</1><2>Frågor</2>"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
-msgstr "<0>Tack för att du använder Reactive Resume! Den här appen är ett kärleksprojekt, skapat mestadels på min fritid, med fantastiskt stöd från open source-bidragare runt om i världen.</0><1>Om Reactive Resume har varit hjälpsamt för dig och du vill hjälpa till att hålla det gratis och öppet för alla, överväg gärna att donera. Varje litet bidrag uppskattas!</1>"
-
 #: src/dialogs/api-key/create.tsx
 msgid "1 month"
 msgstr "1 månad"
@@ -75,8 +71,8 @@ msgid "1 year"
 msgstr "1 år"
 
 #: src/routes/_home/-sections/features.tsx
-msgid "12+ Templates"
-msgstr "12+ mallar"
+msgid "250+ Templates"
+msgstr "250+ mallar"
 
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
@@ -122,6 +118,14 @@ msgstr "Ja, absolut! Du kan exportera ditt CV till PDF med ett enda klick. Den e
 #: src/routes/_home/-sections/features.tsx
 msgid "Access your resumes and data programmatically using the API."
 msgstr "Få tillgång till dina CV:n och data programmatiskt med hjälp av API:et."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Achievements"
+msgstr "Prestationer"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Action plan"
+msgstr "Handlingsplan"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Add a custom field"
@@ -217,6 +221,10 @@ msgstr "Lägg till nyckelord"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Lägg till flera roller för att visa karriärutveckling på samma företag."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Add negotiation scripts and an email template to the resume notes."
+msgstr "Lägg till förhandlingsskript och en e-postmall i CV-anteckningarna."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Lägg till sida"
@@ -309,6 +317,14 @@ msgstr "Amhariska"
 #: src/components/layout/not-found-screen.tsx
 msgid "An error occurred while loading the page."
 msgstr "Ett fel inträffade när sidan skulle läsas in."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "An unknown error occurred while building your career plan."
+msgstr "Ett okänt fel inträffade när din karriärplan skapades."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "An unknown error occurred while building your resume draft."
+msgstr "Ett okänt fel inträffade när ditt CV-utkast skapades."
 
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
@@ -438,6 +454,10 @@ msgstr "Fråga vad som helst om detta CV"
 msgid "Aspect Ratio"
 msgstr "Bildförhållande"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "ATS, growth, and salary notes were saved in the resume notes."
+msgstr "ATS-, tillväxt- och löneanteckningar har sparats i CV-anteckningarna."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Attach files"
 msgstr "Bifoga filer"
@@ -496,10 +516,6 @@ msgstr "Bas-URL"
 msgid "Basics"
 msgstr "Grunderna"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Beautiful templates to choose from, with more on the way."
-msgstr "Vackra mallar att välja mellan, fler är på väg."
-
 #: src/libs/locale.ts
 msgid "Bengali"
 msgstr "Bengali"
@@ -525,10 +541,26 @@ msgstr "Gränsradie"
 msgid "Border Width"
 msgstr "Kantbredd"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Browse templates"
+msgstr "Bläddra bland mallar"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Build a practical plan for target roles, skills, interviews, LinkedIn, and compensation."
+msgstr "Bygg en praktisk plan för målroller, färdigheter, intervjuer, LinkedIn och ersättning."
+
 #. Screen-reader dialog title for the command palette in the resume builder
 #: src/features/command-palette/index.tsx
 msgid "Builder Command Palette"
 msgstr "Kommandopalett För Byggaren"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Building your career plan..."
+msgstr "Bygger din karriärplan..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Building your resume draft..."
+msgstr "Bygger ditt CV-utkast..."
 
 #: src/libs/locale.ts
 msgid "Bulgarian"
@@ -587,6 +619,15 @@ msgstr "Avbryt"
 msgid "Cannot restore; the resume has changed since this edit was applied."
 msgstr "Det går inte att återställa; CV:t har ändrats sedan den här redigeringen gjordes."
 
+#: src/dialogs/resume/career-coach.tsx
+#: src/routes/dashboard/resumes/-components/cards/career-coach-card.tsx
+msgid "Career coach"
+msgstr "Karriärcoach"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Career plan ready."
+msgstr "Karriärplanen är klar."
+
 #: src/libs/locale.ts
 msgid "Catalan"
 msgstr "Katalanska"
@@ -605,13 +646,13 @@ msgstr "Centrera vy"
 msgid "Certifications"
 msgstr "Certifieringar"
 
-#: src/routes/_home/-sections/header.tsx
-msgid "Change language"
-msgstr "Byt språk"
-
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change language to…"
 msgstr "Ändra språk till…"
+
+#: src/features/locale/dropdown.tsx
+msgid "Change language. Current language: {selectedLabel}"
+msgstr "Byt språk. Nuvarande språk: {selectedLabel}"
 
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change theme to…"
@@ -657,6 +698,11 @@ msgstr "Välj en förinställd eller anpassad nyans."
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a resume"
 msgstr "Välj ett CV"
+
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Choose a template"
+msgstr "Välj en mall"
 
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
@@ -725,6 +771,11 @@ msgstr "Bekräfta"
 msgid "Connect"
 msgstr "Anslut"
 
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Constraints"
+msgstr "Begränsningar"
+
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
@@ -746,10 +797,6 @@ msgstr "Fortsätt där du slutade"
 #: src/dialogs/resume/import.tsx
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "Fortsätt där du slutade genom att importera ett befintligt CV som du har skapat med Reactive Resume eller någon annan CV-byggare. Format som stöds är PDF, Microsoft Word samt JSON från Reactive Resume."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
-msgstr "Dina bidrag finansierar buggfixar, säkerhetsuppdateringar och kontinuerliga förbättringar för att hålla appens utveckling igång."
 
 #: src/routes/agent/$threadId.tsx
 msgid "Conversation copied."
@@ -787,7 +834,9 @@ msgstr "Kopiera URL"
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Det gick inte att nå AI-leverantören. Vänligen försök igen."
@@ -939,6 +988,10 @@ msgstr "Skapar ditt CV..."
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "Nuvarande lösenord"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Current situation"
+msgstr "Nuvarande situation"
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1098,10 +1151,6 @@ msgstr "Koppla från"
 msgid "Discord"
 msgstr "Discord"
 
-#: src/components/ui/donation-toast.tsx
-msgid "Dismiss"
-msgstr "Avfärda"
-
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -1110,14 +1159,6 @@ msgstr "Dokumentation"
 #: src/features/auth/pages/login.tsx
 msgid "Don't have an account? <0/>"
 msgstr "Har du inget konto? <0/>"
-
-#: src/components/ui/donation-toast.tsx
-msgid "Donate"
-msgstr "Donera"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Donate to Reactive Resume"
-msgstr "Donera till Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -1212,6 +1253,7 @@ msgid "Editing keyword..."
 msgstr "Redigering av nyckelord..."
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Education"
@@ -1291,9 +1333,9 @@ msgstr "Ange ditt lösenord för att bekräfta att du vill ställa in tvåfaktor
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Ange ditt lösenord för att inaktivera tvåfaktorsautentisering. Ditt konto blir mindre säkert utan aktiverad 2FA."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
-msgstr "Varje bidrag, stort som litet, gör en enorm skillnad för projektet.<0/>Tack för ditt stöd!"
+#: src/dialogs/resume/wizard.tsx
+msgid "Essay"
+msgstr "Uppsats"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
@@ -1309,6 +1351,10 @@ msgstr "Avsluta helskärm"
 msgid "Experience"
 msgstr "Erfarenhet"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Experience essay"
+msgstr "Erfarenhetsuppsats"
+
 #: src/dialogs/api-key/create.tsx
 msgid "Expires in"
 msgstr "Förfaller om"
@@ -1319,8 +1365,8 @@ msgid "Expires on {0}"
 msgstr "Förfaller den {0}"
 
 #: src/routes/_home/-sections/templates.tsx
-msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. Reactive Resume currently offers 12 templates, with more on the way."
-msgstr "Utforska vårt breda urval av mallar, var och en utformad för olika stilar, yrken och personligheter. Reactive Resume erbjuder för närvarande 12 mallar, med fler på väg."
+msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. The platform now includes 250+ resume and CV templates, with role-specific options for ATS-heavy, executive, technical, creative, academic, and international applications."
+msgstr "Utforska vårt breda urval av mallar, alla utformade för olika stilar, yrken och personligheter. Plattformen innehåller nu över 250 CV- och meritförteckningsmallar, med rollspecifika alternativ för ATS-tunga, ledande, tekniska, kreativa, akademiska och internationella ansökningar."
 
 #: src/features/settings/pages/api-keys.tsx
 msgid "Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find detailed endpoints, request examples, and authentication methods."
@@ -1589,13 +1635,42 @@ msgstr "Helskärm"
 msgid "Fullscreen Editor"
 msgstr "Fullskärmsredigerare"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Gaps to close"
+msgstr "Luckor att täppa till"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate a headline, About section, recruiter message, and profile improvement ideas."
+msgstr "Generera en rubrik, Om-sektion, rekryterarmeddelande och idéer för profilförbättring."
+
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
 msgstr "Generera ett slumpmässigt namn"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate a tailored resume from your experience, a target job, and optional offer details."
+msgstr "Skapa ett skräddarsytt CV utifrån din erfarenhet, ett måljobb och eventuella erbjudandedetaljer."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Generate plan"
+msgstr "Skapa plan"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate resume"
+msgstr "Skapa CV"
+
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Generating..."
+msgstr "Genererar..."
+
 #: src/libs/locale.ts
 msgid "German"
 msgstr "Tyska"
+
+#: src/routes/dashboard/resumes/-components/cards/career-coach-card.tsx
+msgid "Get a practical plan for roles, skills, interviews, LinkedIn, and salary"
+msgstr "Få en praktisk plan för roller, färdigheter, intervjuer, LinkedIn och lön"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
@@ -1636,6 +1711,10 @@ msgstr "Gå till kontrollpanelen för CV"
 msgid "Go to…"
 msgstr "Gå till…"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Goals"
+msgstr "Mål"
+
 #. Authentication provider display name in account settings
 #. Brand name label for Google social sign-in button
 #: src/features/auth/components/social-auth.tsx
@@ -1663,9 +1742,9 @@ msgstr "Grekiska"
 msgid "Grid"
 msgstr "Rutnät"
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Grow the Team"
-msgstr "Väx teamet"
+#: src/dialogs/resume/wizard.tsx
+msgid "Guided"
+msgstr "Guidad"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
@@ -1703,10 +1782,6 @@ msgstr "Rubrik"
 #: src/libs/locale.ts
 msgid "Hebrew"
 msgstr "Hebreiska"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Help me bring more experienced contributors on board, reducing the burden on a single maintainer and accelerating development."
-msgstr "Hjälp mig att få fler utvecklare ombord, detta skulle minska bördan för mig som enda utvecklare och påskyndar projektets utvecklingstakt."
 
 #: src/features/settings/pages/preferences.tsx
 msgid "Help translate the app to your language"
@@ -1818,6 +1893,10 @@ msgstr "Importerar ditt CV..."
 msgid "Importing…"
 msgstr "Importerar…"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Include roles, projects, tools, achievements, education, and anything you want highlighted."
+msgstr "Inkludera roller, projekt, verktyg, prestationer, utbildning och allt du vill lyfta fram."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Increase zoom"
 msgstr "Öka zoomen"
@@ -1854,6 +1933,10 @@ msgstr "Integrationer"
 msgid "Interests"
 msgstr "Intressen"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Interview preparation"
+msgstr "Intervjuförberedelse"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Invalid AI provider configuration."
 msgstr "Ogiltig konfiguration för AI-leverantör."
@@ -1881,6 +1964,14 @@ msgstr "Kursiv"
 #: src/libs/locale.ts
 msgid "Japanese"
 msgstr "Japanska"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Job description"
+msgstr "Jobbbeskrivning"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Job offer text"
+msgstr "Jobberbjudandetext"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
@@ -1949,7 +2040,9 @@ msgid "Landscape"
 msgstr "Liggande"
 
 #. Menu item that opens language selection submenu
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/sections/language.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/features/command-palette/pages/preferences/language.tsx
 #: src/features/settings/pages/preferences.tsx
 #: src/features/user/dropdown-menu.tsx
@@ -2047,9 +2140,25 @@ msgstr "Radavstånd"
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "LinkedIn content will be saved into the resume notes with the ATS and growth plan."
+msgstr "LinkedIn-innehåll sparas i CV-anteckningarna tillsammans med ATS- och tillväxtplanen."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "LinkedIn profile builder"
+msgstr "LinkedIn-profilbyggare"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "LinkedIn strategy"
+msgstr "LinkedIn-strategi"
+
 #: src/features/settings/authentication/components/hooks.tsx
 msgid "Linking your {providerName} account..."
 msgstr "Länkar ditt {providerName}-konto..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Links"
+msgstr "Länkar"
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "List"
@@ -2063,7 +2172,9 @@ msgstr "Litauiska"
 msgid "Loading agent workspace…"
 msgstr "Laddar agentarbetsyta…"
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 msgid "Loading AI providers. Please try again in a moment."
 msgstr "Laddar AI-leverantörer. Försök igen om en stund."
 
@@ -2085,9 +2196,11 @@ msgstr "Laddar trådar…"
 msgid "Loading…"
 msgstr "Laddar…"
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Plats"
@@ -2104,10 +2217,6 @@ msgstr "Lås"
 #: src/features/user/dropdown-menu.tsx
 msgid "Logout"
 msgstr "Logga ut"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Long-term Sustainability"
-msgstr "Långsiktig hållbarhet"
 
 #. Link to backup-code verification flow when authenticator app is unavailable
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2204,6 +2313,10 @@ msgstr "Nepalesiska"
 msgid "Network"
 msgstr "Nätverk"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Networking"
+msgstr "Nätverkande"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "New features are constantly being added and improved, so be sure to check back often."
 msgstr "Nya funktioner läggs ständigt till och förbättras, så kom gärna tillbaka ofta."
@@ -2247,6 +2360,11 @@ msgstr "Inga nycklar registrerade ännu."
 msgid "No results found."
 msgstr "Inga resultat hittades."
 
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "No templates found."
+msgstr "Inga mallar hittades."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Ingen testad leverantör"
@@ -2267,6 +2385,10 @@ msgstr "Anteckningar"
 msgid "Odia"
 msgstr "Odia"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Offer details"
+msgstr "Erbjudandedetaljer"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
@@ -2274,10 +2396,6 @@ msgstr "Ollama"
 #: src/routes/_home/-sections/features.tsx
 msgid "One-Click Sign-In"
 msgstr "Inloggning med ett klick"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Ongoing Maintenance"
-msgstr "Löpande underhåll"
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -2319,10 +2437,13 @@ msgstr "OpenAI-kompatibel"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
-#: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
 msgstr "öppnas i ny flik"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Optional"
+msgstr "Valfritt"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
@@ -2413,6 +2534,10 @@ msgstr "Lösenordsskydd har inaktiverats."
 msgid "Password protection has been enabled."
 msgstr "Lösenordsskydd har aktiverats."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Paste a job description to tailor keywords, bullets, ATS scoring, and positioning."
+msgstr "Klistra in en jobbbeskrivning för att anpassa nyckelord, punkter, ATS-poäng och positionering."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Patch applied"
 msgstr "Patch tillämpad"
@@ -2462,6 +2587,10 @@ msgstr "Anpassa ditt CV med vilka färger, typsnitt eller designer du vill och g
 msgid "Phone"
 msgstr "Telefon"
 
+#: src/dialogs/resume/index.tsx
+msgid "Pick one of the resume and CV templates before you start editing."
+msgstr "Välj en av CV- och meritförteckningsmallarna innan du börjar redigera."
+
 #: src/libs/resume/section.tsx
 msgid "Picture"
 msgstr "Bild"
@@ -2477,10 +2606,6 @@ msgstr "Ange lösenordet som delats med dig av ägaren av CV:t för att fortsät
 #: src/components/input/rich-input.tsx
 msgid "Please enter the URL you want to link to:"
 msgstr "Ange URL:en du vill länka till:"
-
-#: src/components/ui/donation-toast.tsx
-msgid "Please support the project"
-msgstr "Stöd projektet"
 
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
@@ -2604,20 +2729,12 @@ msgid "Reactive Resume (JSON)"
 msgstr "Reaktivt CV (JSON)"
 
 #: src/routes/_home/-sections/prefooter.tsx
-msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've donated to support its continued development."
-msgstr "Reactive Resume fortsätter att växa tack vare sin livliga gemenskap. Det här projektet har utvecklats tack vare många individer som har ägnat sin tid och kraft åt att göra det bättre. Vi hyllar utvecklarna som har förbättrat dess funktioner på GitHub, översättare på Crowdin som har gjort det tillgängligt för en bredare publik och de människor som har donerat för att stödja dess fortsatta utveckling."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Reactive Resume is a free and open-source project, built with love and maintained by me and a community of contributors. Your donations help keep the lights on and the code flowing."
-msgstr "Reactive Resume är ett gratis projekt med öppen källkod, byggt med kärlek och underhållet av mig och en community av utvecklare. Dina donationer hjälper till att hålla lamporna tända och koden flödande."
+msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've helped improve the product over time."
+msgstr "Reactive Resume fortsätter att växa tack vare sitt livliga community. Projektet har utvecklats tack vare många personer som har bidragit med sin tid och kompetens. Vi hyllar kodarna som förbättrat funktionerna på GitHub, lingvisterna vars översättningar på Crowdin gjort det tillgängligt för fler, och alla som hjälpt till att förbättra produkten över tid."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
 msgstr "Reactive Resume är en gratis CV-byggare med öppen källkod som förenklar processen med att skapa, uppdatera och dela ditt CV."
-
-#: src/components/ui/donation-toast.tsx
-msgid "Reactive Resume is free and open source. If it has helped you, please consider donating."
-msgstr "Reactive Resume är gratis och har öppen källkod. Om det har hjälpt dig, överväg gärna att donera."
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
@@ -2734,6 +2851,7 @@ msgstr "Återställa"
 msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
 msgstr "Återställa CV:t till före den här patchen? Detta kommer att återställa den här patchen och alla patchar som installerats efter den."
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Resume"
@@ -2749,6 +2867,10 @@ msgstr "CV-analysen är klar."
 #: src/routes/agent/$threadId.tsx
 msgid "Resume patch"
 msgstr "CV-patch"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Resume strategy"
+msgstr "CV-strategi"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2782,6 +2904,10 @@ msgstr "Högerjustera"
 msgid "Role Progression"
 msgstr "Rollutveckling"
 
+#: src/routes/_home/-sections/features.tsx
+msgid "Role-specific resume and CV templates for ATS, executive, technical, creative, academic, and international applications."
+msgstr "Rollspecifika CV- och meritförteckningsmallar för ATS, ledande, tekniska, kreativa, akademiska och internationella ansökningar."
+
 #: src/libs/locale.ts
 msgid "Romanian"
 msgstr "Rumänska"
@@ -2797,6 +2923,14 @@ msgstr "Kör din första analys för att få ett scorecard, styrkor och priorite
 #: src/libs/locale.ts
 msgid "Russian"
 msgstr "Ryska"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Salary negotiation"
+msgstr "Löneförhandling"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Salary strategy"
+msgstr "Lönestrategi"
 
 #. Passkey rename prompt confirm action in authentication settings
 #: src/features/settings/authentication/components/passkeys.tsx
@@ -2853,6 +2987,11 @@ msgstr "Sök efter en ikon"
 #: src/features/command-palette/pages/resumes.tsx
 msgid "Search for…"
 msgstr "Sök efter…"
+
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Search templates..."
+msgstr "Sök mallar..."
 
 #: src/components/ui/combobox.tsx
 msgid "Search..."
@@ -2911,6 +3050,10 @@ msgstr "Skicka e-post för återställning av lösenord"
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Skickar e-post för återställning av lösenord..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Seniority"
+msgstr "Senioritet"
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -3048,8 +3191,8 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "En kolumn med ett sidofält och ren rutnätslayout; mångsidig för alla professionella eller tekniska roller."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
-msgstr "Enkolumnig med en inline-rubrik på tre kolumner (position - organisation - period); kompakt och ATS-vänlig, väl lämpad för asiatiska CV-konventioner (CN/JP/KR)."
+msgid "Single-column with an inline three-column entry header (position, organization, period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Enkolumnslayout med en inbyggd trekolumns rubrik (befattning, organisation, period); kompakt och ATS-vänlig, väl lämpad för asiatiska CV-konventioner (CN/JP/KR)."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with uppercase section headings and a primary-color top rule on every page; polished for executive, consulting, or startup resumes."
@@ -3064,6 +3207,7 @@ msgid "Size"
 msgstr "Storlek"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Skills"
@@ -3114,14 +3258,6 @@ msgstr "Mellanrum (vertikalt)"
 #: src/libs/locale.ts
 msgid "Spanish"
 msgstr "Spanska"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Sponsors"
-msgstr "Sponsorer"
-
-#: src/routes/_home/-sections/footer.tsx
-msgid "Sponsorships"
-msgstr "Sponsorskap"
 
 #. Preset button for setting picture aspect ratio to square
 #: src/components/level/combobox.tsx
@@ -3179,6 +3315,10 @@ msgstr "Stoppa genereringen"
 msgid "Strengths"
 msgstr "Styrkor"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Strengths to leverage"
+msgstr "Styrkor att utnyttja"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Genomstrykning"
@@ -3199,14 +3339,6 @@ msgstr "Förslag"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Sammanfattning"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Support Reactive Resume"
-msgstr "Stöd Reactive Resume"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Support the app by doing what you can!"
-msgstr "Stöd appen genom att göra vad du kan!"
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -3240,10 +3372,20 @@ msgstr "Anpassa detta CV till en produktchefs arbetsbeskrivning och betona ansva
 msgid "Tamil"
 msgstr "Tamil"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Target compensation"
+msgstr "Målersättning"
+
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Target role"
+msgstr "Målroll"
+
 #: src/libs/locale.ts
 msgid "Telugu"
 msgstr "Telugu"
 
+#: src/dialogs/resume/index.tsx
 #: src/libs/resume/section.tsx
 msgid "Template"
 msgstr "Mall"
@@ -3286,6 +3428,14 @@ msgstr "Agenten behöver din input."
 msgid "The AI returned an invalid analysis format. Please try again."
 msgstr "AI returnerade ett ogiltigt analysformat. Vänligen försök igen."
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "The AI returned an invalid career plan. Please try again."
+msgstr "AI:n returnerade en ogiltig karriärplan. Försök igen."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "The AI returned an invalid resume draft. Please try again."
+msgstr "AI:n returnerade ett ogiltigt CV-utkast. Försök igen."
+
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "API-nyckeln har raderats."
@@ -3293,6 +3443,10 @@ msgstr "API-nyckeln har raderats."
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "API-nyckeln kommer inte längre att kunna komma åt dina data efter att den raderats. Denna åtgärd kan inte ångras."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "The coach is reviewing your resume, goals, and market positioning."
+msgstr "Coachen granskar ditt CV, dina mål och din marknadspositionering."
 
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
@@ -3369,7 +3523,9 @@ msgstr "Den här åtgärden kan inte ångras. Meddelanden och trådbilagor komme
 msgid "This agent thread could not be opened."
 msgstr "Den här agenttråden kunde inte öppnas."
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 msgid "This feature requires a tested AI provider. Please add one in the settings."
 msgstr "Den här funktionen kräver en testad AI-leverantör. Lägg till en i inställningarna."
 
@@ -3380,6 +3536,10 @@ msgstr "Detta är ett URL-vänligt namn för ditt CV."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Detta kan ta några minuter, beroende på svaret från AI-leverantören. Stäng inte fönstret och uppdatera inte sidan."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "This may take a minute while the AI turns your experience into structured resume sections."
+msgstr "Detta kan ta en minut medan AI:n omvandlar din erfarenhet till strukturerade CV-sektioner."
 
 #: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
@@ -3438,6 +3598,10 @@ msgstr "Trådar"
 #: src/routes/agent/$threadId.tsx
 msgid "Tighten the skills section so it supports the target role instead of reading like a keyword dump."
 msgstr "Skärp ner färdighetsavsnittet så att det stöder målrollen istället för att läsas som en nyckelordsdump."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Timeframe"
+msgstr "Tidsram"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Timelapse demonstration of building a resume with Reactive Resume"
@@ -3500,6 +3664,10 @@ msgstr "Turkiska"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
 msgstr "Aktivera offentlig delning för att spåra hur många gånger ditt CV har visats eller laddats ner. Endast du kan se statistiken för ditt CV."
+
+#: src/routes/dashboard/resumes/-components/cards/wizard-card.tsx
+msgid "Turn your story or a job offer into a tailored resume"
+msgstr "Gör din berättelse eller ett jobberbjudande till ett skräddarsytt CV"
 
 #: src/dialogs/resume/template/data.ts
 msgid "Two-column with a bold colored sidebar and skill bars; great for creative or tech roles where visual flair is welcome."
@@ -3730,6 +3898,10 @@ msgstr "Använda"
 msgid "Use color {color}"
 msgstr "Använd färg {color}"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Use one of your resumes as coaching context."
+msgstr "Använd ett av dina CV:n som coachningsunderlag."
+
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
 #: src/features/auth/pages/register.tsx
@@ -3802,6 +3974,10 @@ msgstr "Visningar"
 msgid "Volunteer"
 msgstr "Volontärarbete"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Watch-outs"
+msgstr "Varningar"
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -3814,6 +3990,10 @@ msgstr "Volontärarbete"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Website"
 msgstr "Webbplats"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Weekly plan"
+msgstr "Veckoplan"
 
 #: src/routes/agent/$threadId.tsx
 msgid "What do you want to do?"
@@ -3836,6 +4016,15 @@ msgstr "Vad är nytt i den senaste versionen?"
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "När det är låst kan CV:t inte uppdateras eller raderas."
+
+#: src/dialogs/resume/wizard.tsx
+#: src/routes/dashboard/resumes/-components/cards/wizard-card.tsx
+msgid "Wizard mode"
+msgstr "Guideläge"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Work history"
+msgstr "Arbetslivserfarenhet"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
@@ -3940,9 +4129,9 @@ msgstr "Ditt CV har uppdaterats."
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Den offentliga länken till ditt CV är för närvarande skyddad av ett lösenord. Dela endast lösenordet med personer du litar på."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Your support ensures the project remains free and accessible for everyone, now and in the future."
-msgstr "Ditt stöd säkerställer att projektet förblir gratis och tillgängligt för alla, nu och i framtiden."
+#: src/dialogs/resume/wizard.tsx
+msgid "Your wizard resume is ready."
+msgstr "Ditt guide-CV är klart."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Zoom in"
@@ -3959,4 +4148,3 @@ msgstr "Zooma ut"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

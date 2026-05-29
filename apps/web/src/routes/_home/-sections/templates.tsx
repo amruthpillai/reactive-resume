@@ -2,7 +2,7 @@ import type { TemplateMetadata } from "@/dialogs/resume/template/data";
 import { Trans } from "@lingui/react/macro";
 import { m } from "motion/react";
 import { useMemo } from "react";
-import { templates } from "@/dialogs/resume/template/data";
+import { featuredTemplateIds, templates } from "@/dialogs/resume/template/data";
 
 type TemplateItemProps = {
 	metadata: TemplateMetadata;
@@ -78,7 +78,7 @@ const createMarqueeItems = (entries: Array<[string, TemplateMetadata]>, rowId: s
 export function Templates() {
 	// Split templates into two rows and duplicate for seamless infinite scroll
 	const { row1, row2 } = useMemo(() => {
-		const entries = Object.entries(templates);
+		const entries = featuredTemplateIds.map((id) => [id, templates[id]] as [string, TemplateMetadata]);
 		const half = Math.ceil(entries.length / 2);
 		const firstHalf = entries.slice(0, half);
 		const secondHalf = entries.slice(half);
@@ -106,7 +106,8 @@ export function Templates() {
 				<p className="max-w-2xl text-muted-foreground leading-relaxed">
 					<Trans>
 						Explore our diverse selection of templates, each designed to fit different styles, professions, and
-						personalities. Reactive Resume currently offers 12 templates, with more on the way.
+						personalities. The platform now includes 250+ resume and CV templates, with role-specific options for
+						ATS-heavy, executive, technical, creative, academic, and international applications.
 					</Trans>
 				</p>
 			</m.div>

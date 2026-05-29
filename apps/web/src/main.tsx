@@ -1,4 +1,6 @@
 import "./polyfills/map-upsert";
+import { i18n } from "@lingui/core";
+import { I18nProvider } from "@lingui/react";
 import { RouterProvider } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
 import { getRouter } from "./router";
@@ -12,5 +14,9 @@ const router = await getRouter();
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 
-	root.render(<RouterProvider router={router} />);
+	root.render(
+		<I18nProvider i18n={i18n}>
+			<RouterProvider router={router} />
+		</I18nProvider>,
+	);
 }

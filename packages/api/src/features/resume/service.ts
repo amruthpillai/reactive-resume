@@ -1,6 +1,7 @@
 import type { JsonPatchOperation } from "@reactive-resume/resume/patch";
 import type { StoredResumeAnalysis } from "@reactive-resume/schema/resume/analysis";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { Template } from "@reactive-resume/schema/templates";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { ResumeUpdatedEvent } from "./events";
 import { ORPCError } from "@orpc/client";
@@ -12,6 +13,7 @@ import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { applyResumePatches, ResumePatchError } from "@reactive-resume/resume/patch";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { getTemplateAccentColor } from "@reactive-resume/schema/templates";
 import { generateId } from "@reactive-resume/utils/string";
 import { getStorageService } from "../storage/service";
 import { grantResumeAccess, hasResumeAccess } from "./access";
@@ -329,11 +331,16 @@ export const resumeService = {
 		slug: string;
 		tags: string[];
 		locale: Locale;
+		template?: Template;
 		data?: ResumeData;
 	}) => {
 		const id = generateId();
-		const data = input.data ?? defaultResumeData;
+		const data = structuredClone(input.data ?? defaultResumeData);
 		data.metadata.page.locale = input.locale;
+		if (input.template) {
+			data.metadata.template = input.template;
+			data.metadata.design.colors.primary = getTemplateAccentColor(input.template);
+		}
 
 		try {
 			await db.insert(schema.resume).values({

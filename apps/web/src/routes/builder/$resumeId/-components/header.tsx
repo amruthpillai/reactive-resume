@@ -22,6 +22,7 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
+import { LocaleDropdown } from "@/features/locale/dropdown";
 import { useCurrentResume, usePatchResume } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
@@ -66,14 +67,17 @@ export function BuilderHeader() {
 				<BuilderHeaderDropdown />
 			</div>
 
-			<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
-				<SidebarSimpleIcon className="-scale-x-100" />
-				<span className="sr-only">
-					<Trans comment="Screen-reader label for opening or closing the right sidebar in resume builder">
-						Toggle right sidebar
-					</Trans>
-				</span>
-			</Button>
+			<div className="flex items-center gap-x-1">
+				<LocaleDropdown />
+				<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
+					<SidebarSimpleIcon className="-scale-x-100" />
+					<span className="sr-only">
+						<Trans comment="Screen-reader label for opening or closing the right sidebar in resume builder">
+							Toggle right sidebar
+						</Trans>
+					</span>
+				</Button>
+			</div>
 		</div>
 	);
 }

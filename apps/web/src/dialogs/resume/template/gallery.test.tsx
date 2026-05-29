@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
+import { getTemplateAccentColor } from "@reactive-resume/schema/templates";
 import { Dialog } from "@reactive-resume/ui/components/dialog";
 import { useDialogStore } from "@/dialogs/store";
 
@@ -45,9 +46,9 @@ describe("TemplateGalleryDialog", () => {
 
 	it("renders one tile per template", () => {
 		renderGallery();
-		// Each tile renders an <img alt={metadata.name}>. The data module lists 14 templates.
+		// Each tile renders an <img alt={metadata.name}>.
 		const images = screen.getAllByRole("img");
-		expect(images.length).toBeGreaterThanOrEqual(14);
+		expect(images.length).toBeGreaterThanOrEqual(250);
 	});
 
 	it("ring-highlights the currently-selected template tile (Ditto)", () => {
@@ -64,9 +65,14 @@ describe("TemplateGalleryDialog", () => {
 		fireEvent.click(button);
 
 		expect(updateResumeData).toHaveBeenCalledTimes(1);
-		const recipe = updateResumeData.mock.calls[0]?.[0] as (draft: { metadata: { template: string } }) => void;
-		const draft = { metadata: { template: "ditto" } };
+		const recipe = updateResumeData.mock.calls[0]?.[0] as (draft: {
+			metadata: { template: string; design: { colors: { primary: string } } };
+		}) => void;
+		const draft = {
+			metadata: { template: "ditto", design: { colors: { primary: getTemplateAccentColor("ditto") } } },
+		};
 		recipe(draft);
 		expect(draft.metadata.template).toBe("onyx");
+		expect(draft.metadata.design.colors.primary).toBe(getTemplateAccentColor("onyx"));
 	});
 });

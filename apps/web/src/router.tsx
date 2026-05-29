@@ -2,24 +2,15 @@ import { createRouter } from "@tanstack/react-router";
 import { ErrorScreen } from "./components/layout/error-screen";
 import { LoadingScreen } from "./components/layout/loading-screen";
 import { NotFoundScreen } from "./components/layout/not-found-screen";
-import { getSession } from "./libs/auth/session";
-import { getLocale, loadLocale } from "./libs/locale";
-import { client, orpc } from "./libs/orpc/client";
+import { getBootstrapContext } from "./libs/app/bootstrap";
+import { orpc } from "./libs/orpc/client";
 import { getQueryClient } from "./libs/query/client";
-import { getTheme } from "./libs/theme";
 import { routeTree } from "./routeTree.gen";
 
 export const getRouter = async () => {
 	const queryClient = getQueryClient();
 
-	const [theme, locale, session, flags] = await Promise.all([
-		getTheme(),
-		getLocale(),
-		getSession(),
-		client.flags.get(),
-	]);
-
-	await loadLocale(locale);
+	const { theme, locale, session, flags } = await getBootstrapContext();
 
 	const router = createRouter({
 		routeTree,

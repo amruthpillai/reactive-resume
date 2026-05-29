@@ -1,11 +1,21 @@
+import type { Template } from "@reactive-resume/schema/templates";
+import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
+import { Trans } from "@lingui/react/macro";
 import { SwapIcon } from "@phosphor-icons/react";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
-import { templates } from "@/dialogs/resume/template/data";
+import { Combobox } from "@/components/ui/combobox";
+import { getTemplateDescription, templates } from "@/dialogs/resume/template/data";
 import { useDialogStore } from "@/dialogs/store";
-import { useCurrentResume } from "@/features/resume/builder/draft";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { SectionBase } from "../shared/section-base";
+
+const templateOptions = Object.entries(templates).map(([template, metadata]) => ({
+	value: template as Template,
+	label: metadata.name,
+	keywords: [template, metadata.name, ...metadata.tags],
+}));
 
 export function TemplateSectionBuilder() {
 	return (
@@ -19,12 +29,23 @@ function TemplateSectionForm() {
 	const { i18n } = useLingui();
 	const openDialog = useDialogStore((state) => state.openDialog);
 	const resume = useCurrentResume();
+	const updateResumeData = useUpdateResumeData();
 	const template = resume.data.metadata.template;
 
 	const metadata = templates[template];
 
 	const onOpenTemplateGallery = () => {
 		openDialog("resume.template.gallery", undefined);
+	};
+
+	const onSelectTemplate = (template: Template | null) => {
+		if (!template) return;
+
+		updateResumeData((draft) => {
+			const metadata = templates[template];
+			draft.metadata.template = template;
+			draft.metadata.design.colors.primary = metadata.accentColor;
+		});
 	};
 
 	return (
@@ -46,7 +67,9 @@ function TemplateSectionForm() {
 			<div className="flex flex-1 flex-col gap-y-4 @md:pt-1 @md:pb-3">
 				<div className="space-y-1">
 					<h3 className="font-semibold text-2xl capitalize tracking-tight">{metadata.name}</h3>
-					<p className="text-muted-foreground text-sm">{i18n.t(metadata.description)}</p>
+					<p className="text-muted-foreground text-sm">
+						{getTemplateDescription(metadata.description, (descriptor) => i18n.t(descriptor))}
+					</p>
 				</div>
 
 				<div className="flex flex-wrap gap-2.5">
@@ -55,6 +78,23 @@ function TemplateSectionForm() {
 							{tag}
 						</Badge>
 					))}
+				</div>
+
+				<div className="space-y-2">
+					<Combobox
+						options={templateOptions}
+						value={template}
+						onValueChange={onSelectTemplate}
+						placeholder={t`Choose a template`}
+						searchPlaceholder={t`Search templates...`}
+						emptyMessage={t`No templates found.`}
+						className="w-full"
+					/>
+
+					<Button type="button" variant="outline" className="w-full justify-start" onClick={onOpenTemplateGallery}>
+						<SwapIcon />
+						<Trans>Browse templates</Trans>
+					</Button>
 				</div>
 			</div>
 		</div>

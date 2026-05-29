@@ -1,25 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { templateSchema } from "./templates";
+import {
+	baseTemplateAccentColors,
+	baseTemplateIds,
+	getTemplateAccentColor,
+	templateSchema,
+	templateVariantFamilies,
+} from "./templates";
 
 describe("templateSchema", () => {
 	it("accepts known template names", () => {
-		const validTemplates = [
-			"azurill",
-			"bronzor",
-			"chikorita",
-			"ditgar",
-			"ditto",
-			"gengar",
-			"glalie",
-			"kakuna",
-			"lapras",
-			"leafish",
-			"meowth",
-			"onyx",
-			"pikachu",
-			"rhyhorn",
-			"scizor",
-		];
+		const validTemplates = [...baseTemplateIds, "ditto-ats-classic", "scizor-executive", "meowth-international"];
 		for (const t of validTemplates) {
 			expect(templateSchema.safeParse(t).success).toBe(true);
 		}
@@ -45,8 +35,15 @@ describe("templateSchema", () => {
 		}
 	});
 
-	it("includes 14 templates", () => {
+	it("includes the base templates plus all generated professional variants", () => {
 		const validTemplates = templateSchema.options;
-		expect(validTemplates).toHaveLength(15);
+		expect(validTemplates).toHaveLength(baseTemplateIds.length * (templateVariantFamilies.length + 1));
+		expect(validTemplates.length).toBeGreaterThanOrEqual(250);
+	});
+
+	it("maps every template to a primary accent color", () => {
+		expect(Object.keys(baseTemplateAccentColors).sort()).toEqual([...baseTemplateIds].sort());
+		expect(getTemplateAccentColor("leafish")).toBe(baseTemplateAccentColors.leafish);
+		expect(getTemplateAccentColor("leafish-healthcare")).toBe(baseTemplateAccentColors.leafish);
 	});
 });

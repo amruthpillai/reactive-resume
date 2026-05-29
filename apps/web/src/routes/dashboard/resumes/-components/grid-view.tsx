@@ -1,8 +1,10 @@
 import type { RouterOutput } from "@/libs/orpc/client";
 import { AnimatePresence, m } from "motion/react";
+import { CareerCoachCard } from "./cards/career-coach-card";
 import { CreateResumeCard } from "./cards/create-card";
 import { ImportResumeCard } from "./cards/import-card";
 import { ResumeCard } from "./cards/resume-card";
+import { WizardResumeCard } from "./cards/wizard-card";
 
 type Resume = RouterOutput["resume"]["list"][number];
 
@@ -33,6 +35,26 @@ export function GridView({ resumes }: Props) {
 				<ImportResumeCard />
 			</m.div>
 
+			<m.div
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: -20 }}
+				transition={{ duration: 0.2, delay: 0.06, ease: "easeOut" }}
+				className="will-change-[transform,opacity]"
+			>
+				<WizardResumeCard />
+			</m.div>
+
+			<m.div
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: -20 }}
+				transition={{ duration: 0.2, delay: 0.09, ease: "easeOut" }}
+				className="will-change-[transform,opacity]"
+			>
+				<CareerCoachCard />
+			</m.div>
+
 			<AnimatePresence initial={false} mode="popLayout">
 				{resumes?.map((resume, index) => (
 					<m.div
@@ -45,7 +67,7 @@ export function GridView({ resumes }: Props) {
 							y: -20,
 							filter: "blur(8px)",
 						}}
-						transition={{ duration: 0.2, delay: Math.min(0.12, (index + 2) * 0.02), ease: "easeOut" }}
+						transition={{ duration: 0.2, delay: Math.min(0.12, (index + 4) * 0.02), ease: "easeOut" }}
 						className="will-change-[transform,opacity]"
 					>
 						<ResumeCard resume={resume} />

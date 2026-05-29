@@ -5,8 +5,6 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import type { QueryClient } from "@tanstack/react-query";
 import type { orpc } from "@/libs/orpc/client";
 import type { Theme } from "@/libs/theme";
-import { i18n } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
 import { IconContext } from "@phosphor-icons/react";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -17,16 +15,13 @@ import { DirectionProvider } from "@reactive-resume/ui/components/direction";
 import { Toaster } from "@reactive-resume/ui/components/sonner";
 import { TooltipProvider } from "@reactive-resume/ui/components/tooltip";
 import { BreakpointIndicator } from "@/components/layout/breakpoint-indicator";
-import { DonationToast } from "@/components/ui/donation-toast";
 import { DialogManager } from "@/dialogs/manager";
 import { CommandPalette } from "@/features/command-palette";
 import { ThemeProvider } from "@/features/theme/provider";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
-import { getSession } from "@/libs/auth/session";
-import { getLocale, isRTL, loadLocale } from "@/libs/locale";
-import { client } from "@/libs/orpc/client";
-import { getTheme } from "@/libs/theme";
+import { getBootstrapContext } from "@/libs/app/bootstrap";
+import { isRTL } from "@/libs/locale";
 
 type RouterContext = {
 	theme: Theme;
@@ -83,18 +78,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 			],
 		};
 	},
-	beforeLoad: async () => {
-		const [theme, locale, session, flags] = await Promise.all([
-			getTheme(),
-			getLocale(),
-			getSession(),
-			client.flags.get(),
-		]);
-
-		await loadLocale(locale);
-
-		return { theme, locale, session, flags };
-	},
+	beforeLoad: getBootstrapContext,
 });
 
 function RootComponent() {
@@ -116,30 +100,27 @@ function RootComponent() {
 			<QueryClientProvider client={queryClient}>
 				<MotionConfig reducedMotion="user">
 					<LazyMotion features={domAnimation}>
-						<I18nProvider i18n={i18n}>
-							<IconContext.Provider value={iconContextValue}>
-								<ThemeProvider theme={theme}>
-									<HotkeysProvider>
-										<DirectionProvider>
-											<TooltipProvider>
-												<ConfirmDialogProvider>
-													<PromptDialogProvider>
-														<Outlet />
+						<IconContext.Provider value={iconContextValue}>
+							<ThemeProvider theme={theme}>
+								<HotkeysProvider>
+									<DirectionProvider>
+										<TooltipProvider>
+											<ConfirmDialogProvider>
+												<PromptDialogProvider>
+													<Outlet />
 
-														<DonationToast />
-														<DialogManager />
-														<CommandPalette />
-														<Toaster richColors position="bottom-right" />
+													<DialogManager />
+													<CommandPalette />
+													<Toaster richColors position="bottom-right" />
 
-														{import.meta.env.DEV && <BreakpointIndicator />}
-													</PromptDialogProvider>
-												</ConfirmDialogProvider>
-											</TooltipProvider>
-										</DirectionProvider>
-									</HotkeysProvider>
-								</ThemeProvider>
-							</IconContext.Provider>
-						</I18nProvider>
+													{import.meta.env.DEV && <BreakpointIndicator />}
+												</PromptDialogProvider>
+											</ConfirmDialogProvider>
+										</TooltipProvider>
+									</DirectionProvider>
+								</HotkeysProvider>
+							</ThemeProvider>
+						</IconContext.Provider>
 					</LazyMotion>
 				</MotionConfig>
 			</QueryClientProvider>

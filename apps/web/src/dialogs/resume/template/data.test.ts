@@ -1,30 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { templates } from "./data";
+import { baseTemplateIds, templateIds } from "@reactive-resume/schema/templates";
+import { baseTemplates, templates } from "./data";
 
 describe("templates metadata", () => {
 	const entries = Object.entries(templates);
 
 	it("declares the expected template ids", () => {
 		const ids = Object.keys(templates).sort();
-		expect(ids).toEqual(
-			[
-				"azurill",
-				"bronzor",
-				"chikorita",
-				"ditgar",
-				"ditto",
-				"gengar",
-				"glalie",
-				"kakuna",
-				"lapras",
-				"leafish",
-				"meowth",
-				"onyx",
-				"pikachu",
-				"rhyhorn",
-				"scizor",
-			].sort(),
-		);
+		expect(ids).toEqual([...templateIds].sort());
+		expect(ids.length).toBeGreaterThanOrEqual(250);
 	});
 
 	it("provides a name, description, image, and tags for every template", () => {
@@ -32,8 +16,10 @@ describe("templates metadata", () => {
 			expect(meta.name, id).toBeTruthy();
 			expect(meta.description, id).toBeDefined();
 			expect(meta.imageUrl, id).toMatch(/^\/templates\//);
+			expect(meta.accentColor, id).toMatch(/^rgba\(\d+, \d+, \d+, 1\)$/);
 			expect(Array.isArray(meta.tags), id).toBe(true);
 			expect(meta.tags.length, id).toBeGreaterThan(0);
+			expect(baseTemplateIds).toContain(meta.baseTemplate);
 		}
 	});
 
@@ -44,15 +30,17 @@ describe("templates metadata", () => {
 		}
 	});
 
-	it("uses unique image URLs per template", () => {
-		const urls = entries.map(([, m]) => m.imageUrl);
-		expect(new Set(urls).size).toBe(urls.length);
+	it("reuses the base template preview image for generated variants", () => {
+		const variant = templates["scizor-executive"];
+		expect(variant.imageUrl).toBe(baseTemplates.scizor.imageUrl);
+		expect(variant.accentColor).toBe(baseTemplates.scizor.accentColor);
+		expect(variant.isVariant).toBe(true);
 	});
 
-	it("uses lowercase ids that match a lowercase form of the display name", () => {
+	it("uses lowercase ids and display names for every template", () => {
 		for (const [id, meta] of entries) {
 			expect(id).toBe(id.toLowerCase());
-			expect(meta.name.toLowerCase()).toBe(id);
+			expect(meta.name).toBeTruthy();
 		}
 	});
 });

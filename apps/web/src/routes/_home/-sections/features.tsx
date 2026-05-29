@@ -102,8 +102,8 @@ const getFeatures = (): Feature[] => [
 	{
 		id: "templates",
 		icon: LayoutIcon,
-		title: t`12+ Templates`,
-		description: t`Beautiful templates to choose from, with more on the way.`,
+		title: t`250+ Templates`,
+		description: t`Role-specific resume and CV templates for ATS, executive, technical, creative, academic, and international applications.`,
 	},
 	{
 		id: "public",

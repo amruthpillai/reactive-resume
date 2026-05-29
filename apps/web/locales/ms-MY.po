@@ -62,10 +62,6 @@ msgctxt "Home page FAQ section heading with each word visually separated into in
 msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
 msgstr "<0>Soalan</0><1>Lazim</1><2>Ditanya</2>"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "<0>Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with wonderful support from open-source contributors around the world.</0><1>If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone, please consider making a donation. Every little bit is appreciated!</1>"
-msgstr "<0>Terima kasih kerana menggunakan Reactive Resume! Aplikasi ini adalah hasil kerja penuh minat, kebanyakannya dibangunkan pada masa lapang saya, dengan sokongan hebat daripada penyumbang sumber terbuka di seluruh dunia.</0><1>Jika Reactive Resume telah membantu anda dan anda ingin membantunya kekal percuma dan terbuka untuk semua orang, sila pertimbangkan untuk membuat derma. Setiap sumbangan amat dihargai!</1>"
-
 #: src/dialogs/api-key/create.tsx
 msgid "1 month"
 msgstr "1 bulan"
@@ -75,8 +71,8 @@ msgid "1 year"
 msgstr "1 tahun"
 
 #: src/routes/_home/-sections/features.tsx
-msgid "12+ Templates"
-msgstr "12+ Templat"
+msgid "250+ Templates"
+msgstr "250+ Templat"
 
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
@@ -122,6 +118,14 @@ msgstr "Sudah tentu! Anda boleh mengeksport resume anda ke PDF dengan satu klik 
 #: src/routes/_home/-sections/features.tsx
 msgid "Access your resumes and data programmatically using the API."
 msgstr "Akses resume dan data anda secara programatik menggunakan API."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Achievements"
+msgstr "Pencapaian"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Action plan"
+msgstr "Pelan tindakan"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Add a custom field"
@@ -217,6 +221,10 @@ msgstr "Tambah kata kunci"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Tambah pelbagai peranan untuk menunjukkan kemajuan kerjaya di syarikat yang sama."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Add negotiation scripts and an email template to the resume notes."
+msgstr "Tambah skrip rundingan dan templat emel ke dalam nota resume."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Tambah Halaman"
@@ -309,6 +317,14 @@ msgstr "Amharic"
 #: src/components/layout/not-found-screen.tsx
 msgid "An error occurred while loading the page."
 msgstr "Ralat telah berlaku semasa memuatkan halaman."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "An unknown error occurred while building your career plan."
+msgstr "Ralat tidak diketahui berlaku semasa membina pelan kerjaya anda."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "An unknown error occurred while building your resume draft."
+msgstr "Ralat tidak diketahui berlaku semasa membina draf resume anda."
 
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
@@ -438,6 +454,10 @@ msgstr "Tanya apa-apa sahaja tentang resume ini"
 msgid "Aspect Ratio"
 msgstr "Nisbah Aspek"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "ATS, growth, and salary notes were saved in the resume notes."
+msgstr "Nota ATS, perkembangan, dan gaji telah disimpan dalam nota resume."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Attach files"
 msgstr "Lampirkan fail"
@@ -496,10 +516,6 @@ msgstr "URL Asas"
 msgid "Basics"
 msgstr "Asas"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Beautiful templates to choose from, with more on the way."
-msgstr "Templat cantik untuk dipilih, dengan lebih banyak lagi akan datang."
-
 #: src/libs/locale.ts
 msgid "Bengali"
 msgstr "Bengali"
@@ -525,10 +541,26 @@ msgstr "Jejari Sempadan"
 msgid "Border Width"
 msgstr "Lebar Sempadan"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Browse templates"
+msgstr "Lihat templat"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Build a practical plan for target roles, skills, interviews, LinkedIn, and compensation."
+msgstr "Bina pelan praktikal untuk peranan sasaran, kemahiran, temuduga, LinkedIn, dan pampasan."
+
 #. Screen-reader dialog title for the command palette in the resume builder
 #: src/features/command-palette/index.tsx
 msgid "Builder Command Palette"
 msgstr "Palet Perintah Pembina"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Building your career plan..."
+msgstr "Sedang membina pelan kerjaya anda..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Building your resume draft..."
+msgstr "Sedang membina draf resume anda..."
 
 #: src/libs/locale.ts
 msgid "Bulgarian"
@@ -587,6 +619,15 @@ msgstr "Batal"
 msgid "Cannot restore; the resume has changed since this edit was applied."
 msgstr "Tidak dapat memulihkan; resume telah berubah sejak suntingan ini digunakan."
 
+#: src/dialogs/resume/career-coach.tsx
+#: src/routes/dashboard/resumes/-components/cards/career-coach-card.tsx
+msgid "Career coach"
+msgstr "Jurulatih kerjaya"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Career plan ready."
+msgstr "Pelan kerjaya sedia."
+
 #: src/libs/locale.ts
 msgid "Catalan"
 msgstr "Catalan"
@@ -605,13 +646,13 @@ msgstr "Pusatkan paparan"
 msgid "Certifications"
 msgstr "Pensijilan"
 
-#: src/routes/_home/-sections/header.tsx
-msgid "Change language"
-msgstr "Tukar bahasa"
-
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change language to…"
 msgstr "Tukar bahasa kepada…"
+
+#: src/features/locale/dropdown.tsx
+msgid "Change language. Current language: {selectedLabel}"
+msgstr "Tukar bahasa. Bahasa semasa: {selectedLabel}"
 
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change theme to…"
@@ -657,6 +698,11 @@ msgstr "Pilih pratetap atau rona tersuai."
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a resume"
 msgstr "Pilih resume"
+
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Choose a template"
+msgstr "Pilih templat"
 
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
@@ -725,6 +771,11 @@ msgstr "Sahkan"
 msgid "Connect"
 msgstr "Sambung"
 
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Constraints"
+msgstr "Kekangan"
+
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
@@ -746,10 +797,6 @@ msgstr "Sambung dari tempat anda berhenti"
 #: src/dialogs/resume/import.tsx
 msgid "Continue where you left off by importing an existing resume you created using Reactive Resume or any another resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume."
 msgstr "Sambung dari tempat anda berhenti dengan mengimport resume sedia ada yang anda cipta menggunakan Reactive Resume atau mana-mana pembina resume lain. Format yang disokong termasuk PDF, Microsoft Word serta fail JSON daripada Reactive Resume."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
-msgstr "Sumbangan membiayai pembaikan pepijat, kemas kini keselamatan dan penambahbaikan berterusan untuk memastikan aplikasi berjalan lancar."
 
 #: src/routes/agent/$threadId.tsx
 msgid "Conversation copied."
@@ -787,7 +834,9 @@ msgstr "Salin URL"
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Tidak dapat mencapai penyedia AI. Sila cuba lagi."
@@ -939,6 +988,10 @@ msgstr "Mencipta resume anda..."
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "Kata Laluan Semasa"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Current situation"
+msgstr "Situasi semasa"
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1098,10 +1151,6 @@ msgstr "Putuskan sambungan"
 msgid "Discord"
 msgstr "Discord"
 
-#: src/components/ui/donation-toast.tsx
-msgid "Dismiss"
-msgstr "Ketepikan"
-
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -1110,14 +1159,6 @@ msgstr "Dokumentasi"
 #: src/features/auth/pages/login.tsx
 msgid "Don't have an account? <0/>"
 msgstr "Tiada akaun? <0/>"
-
-#: src/components/ui/donation-toast.tsx
-msgid "Donate"
-msgstr "Derma"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Donate to Reactive Resume"
-msgstr "Derma kepada Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
 #: src/dialogs/auth/enable-two-factor.tsx
@@ -1212,6 +1253,7 @@ msgid "Editing keyword..."
 msgstr "Menyunting kata kunci..."
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Education"
@@ -1291,9 +1333,9 @@ msgstr "Masukkan kata laluan anda untuk mengesahkan penyediaan pengesahan dua fa
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Masukkan kata laluan anda untuk melumpuhkan pengesahan dua faktor. Akaun anda akan menjadi kurang selamat tanpa 2FA diaktifkan."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
-msgstr "Setiap sumbangan, besar atau kecil, memberi perbezaan besar kepada projek ini.<0/>Terima kasih atas sokongan anda!"
+#: src/dialogs/resume/wizard.tsx
+msgid "Essay"
+msgstr "Esei"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
@@ -1309,6 +1351,10 @@ msgstr "Keluar dari Skrin Penuh"
 msgid "Experience"
 msgstr "Pengalaman"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Experience essay"
+msgstr "Esei pengalaman"
+
 #: src/dialogs/api-key/create.tsx
 msgid "Expires in"
 msgstr "Tamat dalam"
@@ -1319,8 +1365,8 @@ msgid "Expires on {0}"
 msgstr "Tamat pada {0}"
 
 #: src/routes/_home/-sections/templates.tsx
-msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. Reactive Resume currently offers 12 templates, with more on the way."
-msgstr "Terokai pilihan templat kami yang pelbagai, setiap satu direka untuk memenuhi gaya, profesion dan personaliti yang berbeza. Reactive Resume kini menawarkan 12 templat, dengan lebih banyak lagi akan datang."
+msgid "Explore our diverse selection of templates, each designed to fit different styles, professions, and personalities. The platform now includes 250+ resume and CV templates, with role-specific options for ATS-heavy, executive, technical, creative, academic, and international applications."
+msgstr "Terokai pelbagai pilihan templat kami, setiap satu direka untuk gaya, profesion, dan personaliti yang berbeza. Platform kini menawarkan lebih 250 templat resume dan CV, dengan pilihan khusus peranan untuk permohonan ATS, eksekutif, teknikal, kreatif, akademik, dan antarabangsa."
 
 #: src/features/settings/pages/api-keys.tsx
 msgid "Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find detailed endpoints, request examples, and authentication methods."
@@ -1589,13 +1635,42 @@ msgstr "Skrin Penuh"
 msgid "Fullscreen Editor"
 msgstr "Penyunting Skrin Penuh"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Gaps to close"
+msgstr "Jurang untuk ditutup"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate a headline, About section, recruiter message, and profile improvement ideas."
+msgstr "Jana tajuk utama, bahagian Tentang, mesej perekrut, dan idea penambahbaikan profil."
+
 #: src/dialogs/resume/index.tsx
 msgid "Generate a random name"
 msgstr "Jana nama rawak"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate a tailored resume from your experience, a target job, and optional offer details."
+msgstr "Jana resume yang disesuaikan daripada pengalaman anda, pekerjaan sasaran, dan butiran tawaran (jika ada)."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Generate plan"
+msgstr "Jana pelan"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Generate resume"
+msgstr "Jana resume"
+
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Generating..."
+msgstr "Sedang menjana..."
+
 #: src/libs/locale.ts
 msgid "German"
 msgstr "Bahasa Jerman"
+
+#: src/routes/dashboard/resumes/-components/cards/career-coach-card.tsx
+msgid "Get a practical plan for roles, skills, interviews, LinkedIn, and salary"
+msgstr "Dapatkan pelan praktikal untuk peranan, kemahiran, temuduga, LinkedIn, dan gaji"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
@@ -1636,6 +1711,10 @@ msgstr "Pergi ke papan pemuka resume"
 msgid "Go to…"
 msgstr "Pergi ke…"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Goals"
+msgstr "Matlamat"
+
 #. Authentication provider display name in account settings
 #. Brand name label for Google social sign-in button
 #: src/features/auth/components/social-auth.tsx
@@ -1663,9 +1742,9 @@ msgstr "Greek"
 msgid "Grid"
 msgstr "Grid"
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Grow the Team"
-msgstr "Tambahkan Ahli Pasukan"
+#: src/dialogs/resume/wizard.tsx
+msgid "Guided"
+msgstr "Berpandu"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
@@ -1703,10 +1782,6 @@ msgstr "Tajuk Utama"
 #: src/libs/locale.ts
 msgid "Hebrew"
 msgstr "Ibrani"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Help me bring more experienced contributors on board, reducing the burden on a single maintainer and accelerating development."
-msgstr "Bantu saya membawa lebih ramai penyumbang berpengalaman, mengurangkan beban ke atas seorang penyelenggara sahaja dan mempercepatkan pembangunan."
 
 #: src/features/settings/pages/preferences.tsx
 msgid "Help translate the app to your language"
@@ -1818,6 +1893,10 @@ msgstr "Mengimport resume anda..."
 msgid "Importing…"
 msgstr "Mengimport…"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Include roles, projects, tools, achievements, education, and anything you want highlighted."
+msgstr "Sertakan peranan, projek, alat, pencapaian, pendidikan, dan apa sahaja yang anda ingin tonjolkan."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Increase zoom"
 msgstr "Tingkatkan zum"
@@ -1854,6 +1933,10 @@ msgstr "Integrasi"
 msgid "Interests"
 msgstr "Minat"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Interview preparation"
+msgstr "Persediaan temuduga"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Invalid AI provider configuration."
 msgstr "Konfigurasi pembekal AI tidak sah."
@@ -1881,6 +1964,14 @@ msgstr "Condong"
 #: src/libs/locale.ts
 msgid "Japanese"
 msgstr "Jepun"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Job description"
+msgstr "Deskripsi pekerjaan"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Job offer text"
+msgstr "Teks tawaran kerja"
 
 #. Example full name placeholder on profile settings form
 #. Example full name placeholder on registration form
@@ -1949,7 +2040,9 @@ msgid "Landscape"
 msgstr "Lanskap"
 
 #. Menu item that opens language selection submenu
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/sections/language.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/features/command-palette/pages/preferences/language.tsx
 #: src/features/settings/pages/preferences.tsx
 #: src/features/user/dropdown-menu.tsx
@@ -2047,9 +2140,25 @@ msgstr "Tinggi Baris"
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "LinkedIn content will be saved into the resume notes with the ATS and growth plan."
+msgstr "Kandungan LinkedIn akan disimpan dalam nota resume bersama ATS dan pelan perkembangan."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "LinkedIn profile builder"
+msgstr "Pembina profil LinkedIn"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "LinkedIn strategy"
+msgstr "Strategi LinkedIn"
+
 #: src/features/settings/authentication/components/hooks.tsx
 msgid "Linking your {providerName} account..."
 msgstr "Memautkan akaun {providerName} anda..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Links"
+msgstr "Pautan"
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "List"
@@ -2063,7 +2172,9 @@ msgstr "Lithuania"
 msgid "Loading agent workspace…"
 msgstr "Memuatkan ruang kerja ejen…"
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 msgid "Loading AI providers. Please try again in a moment."
 msgstr "Memuatkan penyedia AI. Sila cuba lagi sebentar lagi."
 
@@ -2085,9 +2196,11 @@ msgstr "Memuatkan thread…"
 msgid "Loading…"
 msgstr "Memuatkan…"
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/sections/education.tsx
 #: src/dialogs/resume/sections/experience.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Lokasi"
@@ -2104,10 +2217,6 @@ msgstr "Kunci"
 #: src/features/user/dropdown-menu.tsx
 msgid "Logout"
 msgstr "Log keluar"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Long-term Sustainability"
-msgstr "Kelestarian Jangka Panjang"
 
 #. Link to backup-code verification flow when authenticator app is unavailable
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2204,6 +2313,10 @@ msgstr "Nepal"
 msgid "Network"
 msgstr "Rangkaian"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Networking"
+msgstr "Rangkaian"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "New features are constantly being added and improved, so be sure to check back often."
 msgstr "Ciri baharu sentiasa ditambah dan dipertingkatkan, jadi pastikan anda kembali semula dengan kerap."
@@ -2247,6 +2360,11 @@ msgstr "Tiada kunci laluan yang didaftarkan lagi."
 msgid "No results found."
 msgstr "Tiada keputusan dijumpai."
 
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "No templates found."
+msgstr "Tiada templat ditemui."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Tiada pembekal yang diuji"
@@ -2267,6 +2385,10 @@ msgstr "Nota"
 msgid "Odia"
 msgstr "Odia"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Offer details"
+msgstr "Butiran tawaran"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Ollama"
 msgstr "Ollama"
@@ -2274,10 +2396,6 @@ msgstr "Ollama"
 #: src/routes/_home/-sections/features.tsx
 msgid "One-Click Sign-In"
 msgstr "Log Masuk Satu Klik"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Ongoing Maintenance"
-msgstr "Penyelenggaraan Berterusan"
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -2319,10 +2437,13 @@ msgstr "Serasi dengan OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
-#: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
 msgstr "dibuka dalam tab baharu"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Optional"
+msgstr "Pilihan"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
@@ -2413,6 +2534,10 @@ msgstr "Perlindungan kata laluan telah dilumpuhkan."
 msgid "Password protection has been enabled."
 msgstr "Perlindungan kata laluan telah diaktifkan."
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Paste a job description to tailor keywords, bullets, ATS scoring, and positioning."
+msgstr "Tampal deskripsi pekerjaan untuk menyesuaikan kata kunci, butiran, skor ATS, dan penjenamaan."
+
 #: src/routes/agent/$threadId.tsx
 msgid "Patch applied"
 msgstr "Tampalan telah digunakan"
@@ -2462,6 +2587,10 @@ msgstr "Peribadikan resume anda dengan sebarang warna, fon atau reka bentuk dan 
 msgid "Phone"
 msgstr "Telefon"
 
+#: src/dialogs/resume/index.tsx
+msgid "Pick one of the resume and CV templates before you start editing."
+msgstr "Pilih salah satu templat resume dan CV sebelum anda mula mengedit."
+
 #: src/libs/resume/section.tsx
 msgid "Picture"
 msgstr "Gambar"
@@ -2477,10 +2606,6 @@ msgstr "Sila masukkan kata laluan yang dikongsi dengan anda oleh pemilik resume 
 #: src/components/input/rich-input.tsx
 msgid "Please enter the URL you want to link to:"
 msgstr "Sila masukkan URL yang anda ingin pautkan:"
-
-#: src/components/ui/donation-toast.tsx
-msgid "Please support the project"
-msgstr "Sila sokong projek ini"
 
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
@@ -2604,20 +2729,12 @@ msgid "Reactive Resume (JSON)"
 msgstr "Resume Reaktif (JSON)"
 
 #: src/routes/_home/-sections/prefooter.tsx
-msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've donated to support its continued development."
-msgstr "Reactive Resume terus berkembang hasil daripada komuniti yang bertenaga. Projek ini berhutang kemajuannya kepada ramai individu yang telah mendedikasikan masa dan kemahiran mereka untuk menambah baiknya. Kami meraikan pengkod yang telah menambah baik ciri-cirinya di GitHub, ahli bahasa yang terjemahan mereka di Crowdin telah menjadikannya boleh diakses oleh audiens yang lebih luas, dan mereka yang telah menderma untuk menyokong pembangunan berterusan projek ini."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Reactive Resume is a free and open-source project, built with love and maintained by me and a community of contributors. Your donations help keep the lights on and the code flowing."
-msgstr "Reactive Resume ialah projek percuma dan sumber terbuka, dibina dengan penuh kasih sayang dan diselenggara oleh saya serta komuniti penyumbang. Derma anda membantu mengekalkan operasi dan pembangunan kod."
+msgid "Reactive Resume continues to grow thanks to its vibrant community. This project owes its progress to numerous individuals who've dedicated their time and skills to make it better. We celebrate the coders who've enhanced its features on GitHub, the linguists whose translations on Crowdin have made it accessible to a broader audience, and the people who've helped improve the product over time."
+msgstr "Reactive Resume terus berkembang hasil komuniti yang aktif. Projek ini berterima kasih kepada ramai individu yang telah meluangkan masa dan kemahiran untuk menambah baiknya. Kami menghargai penulis kod yang menambah ciri di GitHub, ahli bahasa yang menterjemah di Crowdin sehingga ia boleh diakses lebih ramai, dan semua yang membantu memperbaiki produk ini dari semasa ke semasa."
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
 msgstr "Reactive Resume ialah pembina resume percuma dan sumber terbuka yang menyederhanakan proses mencipta, mengemas kini dan berkongsi resume anda."
-
-#: src/components/ui/donation-toast.tsx
-msgid "Reactive Resume is free and open source. If it has helped you, please consider donating."
-msgstr "Resume Reaktif adalah percuma dan sumber terbuka. Jika ia telah membantu anda, sila pertimbangkan untuk menderma."
 
 #: src/routes/_home/-sections/faq.tsx
 msgid "Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall."
@@ -2734,6 +2851,7 @@ msgstr "Pulihkan"
 msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
 msgstr "Pulihkan resume ke tahap sebelum tampalan ini? Ini akan mengembalikan tampalan ini dan sebarang tampalan yang digunakan selepasnya."
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Resume"
@@ -2749,6 +2867,10 @@ msgstr "Analisis resume selesai."
 #: src/routes/agent/$threadId.tsx
 msgid "Resume patch"
 msgstr "Tampalan resume"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Resume strategy"
+msgstr "Strategi resume"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2782,6 +2904,10 @@ msgstr "Jajaran Kanan"
 msgid "Role Progression"
 msgstr "Kemajuan Peranan"
 
+#: src/routes/_home/-sections/features.tsx
+msgid "Role-specific resume and CV templates for ATS, executive, technical, creative, academic, and international applications."
+msgstr "Templat resume dan CV khusus peranan untuk permohonan ATS, eksekutif, teknikal, kreatif, akademik, dan antarabangsa."
+
 #: src/libs/locale.ts
 msgid "Romanian"
 msgstr "Rom"
@@ -2797,6 +2923,14 @@ msgstr "Jalankan analisis pertama anda untuk mendapatkan kad skor, kekuatan, dan
 #: src/libs/locale.ts
 msgid "Russian"
 msgstr "Rusia"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Salary negotiation"
+msgstr "Rundingan gaji"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Salary strategy"
+msgstr "Strategi gaji"
 
 #. Passkey rename prompt confirm action in authentication settings
 #: src/features/settings/authentication/components/passkeys.tsx
@@ -2853,6 +2987,11 @@ msgstr "Cari ikon"
 #: src/features/command-palette/pages/resumes.tsx
 msgid "Search for…"
 msgstr "Cari…"
+
+#: src/dialogs/resume/index.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Search templates..."
+msgstr "Cari templat..."
 
 #: src/components/ui/combobox.tsx
 msgid "Search..."
@@ -2911,6 +3050,10 @@ msgstr "Hantar E-mel Tetapan Semula Kata Laluan"
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Menghantar e-mel tetapan semula kata laluan..."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Seniority"
+msgstr "Kesenioran"
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -3048,8 +3191,8 @@ msgid "Single-column with a sidebar and clean grid layout; versatile for any pro
 msgstr "Satu kolum dengan panel sisi dan tataletak grid yang kemas; serba boleh untuk sebarang peranan profesional atau teknikal."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
-msgstr "Satu lajur dengan tajuk kemasukan tiga lajur bersepadu (posisi · organisasi · tempoh); padat dan mesra ATS, sesuai untuk konvensyen resume Asia (CN/JP/KR)."
+msgid "Single-column with an inline three-column entry header (position, organization, period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR)."
+msgstr "Satu lajur dengan pengepala entri tiga lajur sebaris (jawatan, organisasi, tempoh); padat dan mesra ATS, sesuai untuk konvensyen resume Asia (CN/JP/KR)."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with uppercase section headings and a primary-color top rule on every page; polished for executive, consulting, or startup resumes."
@@ -3064,6 +3207,7 @@ msgid "Size"
 msgstr "Saiz"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/dialogs/resume/wizard.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Skills"
@@ -3114,14 +3258,6 @@ msgstr "Jarak (Menegak)"
 #: src/libs/locale.ts
 msgid "Spanish"
 msgstr "Sepanyol"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Sponsors"
-msgstr "Penaja"
-
-#: src/routes/_home/-sections/footer.tsx
-msgid "Sponsorships"
-msgstr "Tajaan"
 
 #. Preset button for setting picture aspect ratio to square
 #: src/components/level/combobox.tsx
@@ -3179,6 +3315,10 @@ msgstr "Hentikan penjanaan"
 msgid "Strengths"
 msgstr "Kekuatan"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Strengths to leverage"
+msgstr "Kekuatan untuk dimanfaatkan"
+
 #: src/components/input/rich-input.tsx
 msgid "Strike"
 msgstr "Coret"
@@ -3199,14 +3339,6 @@ msgstr "Cadangan"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Ringkasan"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Support Reactive Resume"
-msgstr "Sokong Reactive Resume"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
-msgid "Support the app by doing what you can!"
-msgstr "Sokong apl ini dengan melakukan apa yang anda mampu!"
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -3240,10 +3372,20 @@ msgstr "Sesuaikan resume ini dengan huraian kerja pengurus produk dan tekankan p
 msgid "Tamil"
 msgstr "Tamil"
 
+#: src/dialogs/resume/wizard.tsx
+msgid "Target compensation"
+msgstr "Pampasan sasaran"
+
+#: src/dialogs/resume/career-coach.tsx
+#: src/dialogs/resume/wizard.tsx
+msgid "Target role"
+msgstr "Peranan sasaran"
+
 #: src/libs/locale.ts
 msgid "Telugu"
 msgstr "Telugu"
 
+#: src/dialogs/resume/index.tsx
 #: src/libs/resume/section.tsx
 msgid "Template"
 msgstr "Templat"
@@ -3286,6 +3428,14 @@ msgstr "Ejen memerlukan input anda."
 msgid "The AI returned an invalid analysis format. Please try again."
 msgstr "AI telah mengembalikan format analisis yang tidak sah. Sila cuba lagi."
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "The AI returned an invalid career plan. Please try again."
+msgstr "AI mengembalikan pelan kerjaya yang tidak sah. Sila cuba lagi."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "The AI returned an invalid resume draft. Please try again."
+msgstr "AI mengembalikan draf resume yang tidak sah. Sila cuba lagi."
+
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key has been deleted successfully."
 msgstr "Kunci API telah berjaya dipadamkan."
@@ -3293,6 +3443,10 @@ msgstr "Kunci API telah berjaya dipadamkan."
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "Kunci API ini tidak lagi boleh mengakses data anda selepas dipadamkan. Tindakan ini tidak boleh dibatalkan."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "The coach is reviewing your resume, goals, and market positioning."
+msgstr "Jurulatih sedang menyemak resume, matlamat, dan penjenamaan pasaran anda."
 
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
@@ -3369,7 +3523,9 @@ msgstr "Tindakan ini tidak boleh dibuat asal. Mesej dan lampiran thread akan dia
 msgid "This agent thread could not be opened."
 msgstr "Utas ejen ini tidak dapat dibuka."
 
+#: src/dialogs/resume/career-coach.tsx
 #: src/dialogs/resume/import.tsx
+#: src/dialogs/resume/wizard.tsx
 msgid "This feature requires a tested AI provider. Please add one in the settings."
 msgstr "Ciri ini memerlukan penyedia AI yang telah diuji. Sila tambahkan satu dalam tetapan."
 
@@ -3380,6 +3536,10 @@ msgstr "Ini ialah nama mesra URL untuk resume anda."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Ini mungkin mengambil masa beberapa minit, bergantung pada respons penyedia AI. Sila jangan tutup tetingkap atau segarkan semula halaman."
+
+#: src/dialogs/resume/wizard.tsx
+msgid "This may take a minute while the AI turns your experience into structured resume sections."
+msgstr "Ini mungkin mengambil masa sebentar sementara AI menukar pengalaman anda kepada bahagian resume yang terstruktur."
 
 #: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
@@ -3438,6 +3598,10 @@ msgstr "Benang"
 #: src/routes/agent/$threadId.tsx
 msgid "Tighten the skills section so it supports the target role instead of reading like a keyword dump."
 msgstr "Ketatkan bahagian kemahiran supaya ia menyokong peranan sasaran dan bukannya terbaca seperti lambakan kata kunci."
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Timeframe"
+msgstr "Jangka masa"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "Timelapse demonstration of building a resume with Reactive Resume"
@@ -3500,6 +3664,10 @@ msgstr "Turki"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
 msgstr "Hidupkan perkongsian awam untuk menjejak berapa kali resume anda telah dilihat atau dimuat turun. Hanya anda boleh melihat statistik resume anda."
+
+#: src/routes/dashboard/resumes/-components/cards/wizard-card.tsx
+msgid "Turn your story or a job offer into a tailored resume"
+msgstr "Tukar kisah anda atau tawaran kerja menjadi resume yang disesuaikan"
 
 #: src/dialogs/resume/template/data.ts
 msgid "Two-column with a bold colored sidebar and skill bars; great for creative or tech roles where visual flair is welcome."
@@ -3730,6 +3898,10 @@ msgstr "Gunakan"
 msgid "Use color {color}"
 msgstr "Gunakan warna {color}"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Use one of your resumes as coaching context."
+msgstr "Guna salah satu resume anda sebagai konteks bimbingan."
+
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
 #: src/features/auth/pages/register.tsx
@@ -3802,6 +3974,10 @@ msgstr "Paparan"
 msgid "Volunteer"
 msgstr "Sukarelawan"
 
+#: src/dialogs/resume/career-coach.tsx
+msgid "Watch-outs"
+msgstr "Perkara yang perlu diberi perhatian"
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -3814,6 +3990,10 @@ msgstr "Sukarelawan"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Website"
 msgstr "Laman web"
+
+#: src/dialogs/resume/career-coach.tsx
+msgid "Weekly plan"
+msgstr "Pelan mingguan"
 
 #: src/routes/agent/$threadId.tsx
 msgid "What do you want to do?"
@@ -3836,6 +4016,15 @@ msgstr "Apakah yang baru dalam versi terkini?"
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "Apabila dikunci, resume tidak boleh dikemas kini atau dipadam."
+
+#: src/dialogs/resume/wizard.tsx
+#: src/routes/dashboard/resumes/-components/cards/wizard-card.tsx
+msgid "Wizard mode"
+msgstr "Mod wizard"
+
+#: src/dialogs/resume/wizard.tsx
+msgid "Work history"
+msgstr "Sejarah pekerjaan"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
@@ -3940,9 +4129,9 @@ msgstr "Resume anda telah berjaya dikemas kini."
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Pautan awam resume anda kini dilindungi oleh kata laluan. Kongsikan kata laluan hanya dengan orang yang anda percayai."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Your support ensures the project remains free and accessible for everyone, now and in the future."
-msgstr "Sokongan anda memastikan projek ini kekal percuma dan boleh diakses oleh semua orang, sekarang dan pada masa hadapan."
+#: src/dialogs/resume/wizard.tsx
+msgid "Your wizard resume is ready."
+msgstr "Resume wizard anda sudah sedia."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Zoom in"
@@ -3959,4 +4148,3 @@ msgstr "Zum keluar"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

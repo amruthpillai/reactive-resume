@@ -1,3 +1,4 @@
+import type { Template } from "@reactive-resume/schema/templates";
 import type { RouterInput } from "@/libs/orpc/client";
 import type { DialogProps } from "../store";
 import { t } from "@lingui/core/macro";
@@ -6,7 +7,7 @@ import { CaretDownIcon, MagicWandIcon, PencilSimpleLineIcon, PlusIcon, TestTubeI
 import { useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -34,6 +35,7 @@ import {
 } from "@reactive-resume/ui/components/input-group";
 import { generateId, generateRandomName, slugify } from "@reactive-resume/utils/string";
 import { ChipInput } from "@/components/input/chip-input";
+import { Combobox } from "@/components/ui/combobox";
 import { usePatchResume } from "@/features/resume/builder/draft";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/libs/auth/client";
@@ -41,6 +43,7 @@ import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 import { useAppForm, withForm } from "@/libs/tanstack-form";
 import { useDialogStore } from "../store";
+import { templates } from "./template/data";
 
 const formSchema = z.object({
 	id: z.string(),
@@ -58,8 +61,15 @@ const defaultValues: FormValues = {
 	tags: [],
 };
 
+const templateOptions = Object.entries(templates).map(([template, metadata]) => ({
+	value: template as Template,
+	label: metadata.name,
+	keywords: [template, metadata.name, ...metadata.tags],
+}));
+
 export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 	const closeDialog = useDialogStore((state) => state.closeDialog);
+	const [selectedTemplate, setSelectedTemplate] = useState<Template>("onyx");
 
 	const { mutate: createResume, isPending } = useMutation(orpc.resume.create.mutationOptions());
 
@@ -74,15 +84,18 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 		onSubmit: ({ value }) => {
 			const toastId = toast.loading(t`Creating your resume...`);
 
-			createResume(value, {
-				onSuccess: () => {
-					toast.success(t`Your resume has been created successfully.`, { id: toastId });
-					closeDialog();
+			createResume(
+				{ ...value, template: selectedTemplate },
+				{
+					onSuccess: () => {
+						toast.success(t`Your resume has been created successfully.`, { id: toastId });
+						closeDialog();
+					},
+					onError: (error) => {
+						toast.error(getResumeErrorMessage(error), { id: toastId });
+					},
 				},
-				onError: (error) => {
-					toast.error(getResumeErrorMessage(error), { id: toastId });
-				},
-			});
+			);
 		},
 	});
 
@@ -102,6 +115,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 			name: values.name || randomName,
 			slug: values.slug || slugify(randomName),
 			tags: values.tags,
+			template: selectedTemplate,
 			withSampleData: true,
 		} satisfies RouterInput["resume"]["create"];
 
@@ -139,6 +153,40 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 				}}
 			>
 				<ResumeForm form={form} />
+				<FormItem>
+					<FormLabel>
+						<Trans>Template</Trans>
+					</FormLabel>
+					<FormControl
+						render={
+							<Combobox
+								options={templateOptions}
+								value={selectedTemplate}
+								onValueChange={(value) => setSelectedTemplate(value ?? "onyx")}
+								placeholder={t`Choose a template`}
+								searchPlaceholder={t`Search templates...`}
+								emptyMessage={t`No templates found.`}
+								className="w-full"
+							/>
+						}
+					/>
+					<div className="flex gap-3 rounded-md border bg-muted/20 p-2">
+						<img
+							src={templates[selectedTemplate].imageUrl}
+							alt={templates[selectedTemplate].name}
+							className="h-24 w-17 rounded-sm object-cover ring-1 ring-border"
+						/>
+						<div className="min-w-0 space-y-1 py-1">
+							<p className="truncate font-medium text-sm">{templates[selectedTemplate].name}</p>
+							<p className="line-clamp-3 text-muted-foreground text-xs">
+								{templates[selectedTemplate].tags.slice(0, 6).join(", ")}
+							</p>
+						</div>
+					</div>
+					<FormDescription>
+						<Trans>Pick one of the resume and CV templates before you start editing.</Trans>
+					</FormDescription>
+				</FormItem>
 
 				<DialogFooter>
 					<ButtonGroup

@@ -1,5 +1,6 @@
 import { defineDialogRenderer, defineDialogRendererRegistry } from "../renderer-registry";
 import { CreateResumeDialog, DuplicateResumeDialog, UpdateResumeDialog } from ".";
+import { CareerCoachDialog } from "./career-coach";
 import { ImportResumeDialog } from "./import";
 import { CreateAwardDialog, UpdateAwardDialog } from "./sections/award";
 import { CreateCertificationDialog, UpdateCertificationDialog } from "./sections/certification";
@@ -17,9 +18,12 @@ import { CreateSkillDialog, UpdateSkillDialog } from "./sections/skill";
 import { CreateSummaryItemDialog, UpdateSummaryItemDialog } from "./sections/summary-item";
 import { CreateVolunteerDialog, UpdateVolunteerDialog } from "./sections/volunteer";
 import { TemplateGalleryDialog } from "./template/gallery";
+import { WizardResumeDialog } from "./wizard";
 
 export const resumeDialogRendererRegistry = defineDialogRendererRegistry("resume", [
 	defineDialogRenderer("resume.create", () => <CreateResumeDialog />),
+	defineDialogRenderer("resume.wizard", () => <WizardResumeDialog />),
+	defineDialogRenderer("resume.career-coach", () => <CareerCoachDialog />),
 	defineDialogRenderer("resume.update", ({ data }) => <UpdateResumeDialog data={data} />),
 	defineDialogRenderer("resume.duplicate", ({ data }) => <DuplicateResumeDialog data={data} />),
 	defineDialogRenderer("resume.import", () => <ImportResumeDialog />),

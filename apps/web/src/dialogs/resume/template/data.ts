@@ -1,16 +1,29 @@
 import type { MessageDescriptor } from "@lingui/core";
-import type { Template } from "@reactive-resume/schema/templates";
+import type { BaseTemplate, Template, TemplateVariantFamily } from "@reactive-resume/schema/templates";
 import { msg } from "@lingui/core/macro";
+import {
+	baseTemplateIds,
+	getBaseTemplate,
+	getTemplateAccentColor,
+	getTemplateVariantFamily,
+	templateIds,
+} from "@reactive-resume/schema/templates";
 
 export type TemplateMetadata = {
 	name: string;
-	description: MessageDescriptor;
+	description: MessageDescriptor | string;
 	imageUrl: string;
 	tags: string[];
 	sidebarPosition: "left" | "right" | "none";
+	accentColor: string;
+	baseTemplate: BaseTemplate;
+	family?: TemplateVariantFamily;
+	isVariant?: boolean;
 };
 
-export const templates = {
+type BaseTemplateMetadata = Omit<TemplateMetadata, "accentColor" | "baseTemplate" | "family" | "isVariant">;
+
+const baseTemplateMetadata = {
 	azurill: {
 		name: "Azurill",
 		description: msg`Two-column with a bold colored sidebar and skill bars; great for creative or tech roles where visual flair is welcome.`,
@@ -83,7 +96,7 @@ export const templates = {
 	},
 	meowth: {
 		name: "Meowth",
-		description: msg`Single-column with an inline three-column entry header (position · organization · period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR).`,
+		description: msg`Single-column with an inline three-column entry header (position, organization, period); compact and ATS-friendly, well-suited for Asian resume conventions (CN/JP/KR).`,
 		imageUrl: "/templates/jpg/meowth.jpg",
 		tags: ["Single-column", "ATS friendly", "Inline header", "Compact", "Asian style", "CN/JP/KR"],
 		sidebarPosition: "none",
@@ -116,4 +129,174 @@ export const templates = {
 		tags: ["Single-column", "ATS friendly", "Uppercase headings", "Executive", "Consulting", "Startup"],
 		sidebarPosition: "none",
 	},
-} as const satisfies Record<Template, TemplateMetadata>;
+} as const satisfies Record<BaseTemplate, BaseTemplateMetadata>;
+
+const templateFamilyMetadata = {
+	executive: {
+		label: "Executive",
+		tags: ["Executive", "Leadership", "Board-ready"],
+		description: (baseName: string) =>
+			`${baseName} tuned for senior leaders, directors, founders, and executives who need crisp impact statements and board-ready structure.`,
+	},
+	"ats-classic": {
+		label: "ATS Classic",
+		tags: ["ATS friendly", "Conservative", "Recruiter scan"],
+		description: (baseName: string) =>
+			`${baseName} configured as a conservative ATS-first layout with direct headings, dense content, and minimal visual noise.`,
+	},
+	"tech-lead": {
+		label: "Tech Lead",
+		tags: ["Technology", "Engineering leadership", "Systems"],
+		description: (baseName: string) =>
+			`${baseName} positioned for software engineers, architects, and technical leads who need space for systems, tools, and outcomes.`,
+	},
+	product: {
+		label: "Product",
+		tags: ["Product", "Strategy", "Roadmaps"],
+		description: (baseName: string) =>
+			`${baseName} adapted for product managers and product owners, balancing discovery, delivery, analytics, and stakeholder impact.`,
+	},
+	creative: {
+		label: "Creative",
+		tags: ["Creative", "Portfolio", "Brand"],
+		description: (baseName: string) =>
+			`${baseName} styled for designers, writers, marketers, and creators who want personality while keeping the resume readable.`,
+	},
+	healthcare: {
+		label: "Healthcare",
+		tags: ["Healthcare", "Care delivery", "Compliance"],
+		description: (baseName: string) =>
+			`${baseName} tailored for clinical, administrative, and allied-health roles with emphasis on credentials, care quality, and compliance.`,
+	},
+	finance: {
+		label: "Finance",
+		tags: ["Finance", "Risk", "Analysis"],
+		description: (baseName: string) =>
+			`${baseName} tuned for finance, accounting, audit, banking, and analyst roles where precision and measurable results matter.`,
+	},
+	legal: {
+		label: "Legal",
+		tags: ["Legal", "Compliance", "Professional"],
+		description: (baseName: string) =>
+			`${baseName} adapted for legal, compliance, contracts, and policy roles with a restrained professional presentation.`,
+	},
+	education: {
+		label: "Education",
+		tags: ["Education", "Teaching", "Student outcomes"],
+		description: (baseName: string) =>
+			`${baseName} focused for teachers, trainers, academic staff, and education leaders highlighting programs and learner outcomes.`,
+	},
+	engineering: {
+		label: "Engineering",
+		tags: ["Engineering", "Projects", "Technical delivery"],
+		description: (baseName: string) =>
+			`${baseName} shaped for mechanical, civil, electrical, and industrial engineering resumes with project and certification emphasis.`,
+	},
+	sales: {
+		label: "Sales",
+		tags: ["Sales", "Revenue", "Targets"],
+		description: (baseName: string) =>
+			`${baseName} optimized for sales, account management, and business development roles with quota, revenue, and pipeline focus.`,
+	},
+	operations: {
+		label: "Operations",
+		tags: ["Operations", "Process", "Execution"],
+		description: (baseName: string) =>
+			`${baseName} structured for operations, logistics, supply chain, and administration roles where process wins need to stand out.`,
+	},
+	hospitality: {
+		label: "Hospitality",
+		tags: ["Hospitality", "Customer service", "Frontline"],
+		description: (baseName: string) =>
+			`${baseName} tuned for hospitality, retail, service, and customer-facing roles with clear skills and reliability signals.`,
+	},
+	construction: {
+		label: "Construction",
+		tags: ["Construction", "Skilled trades", "Field work"],
+		description: (baseName: string) =>
+			`${baseName} adapted for construction, HVAC, electrical, plumbing, field service, and skilled-trade experience.`,
+	},
+	"entry-level": {
+		label: "Entry Level",
+		tags: ["Entry level", "Internship", "Early career"],
+		description: (baseName: string) =>
+			`${baseName} arranged for early-career candidates, career changers, students, and internship applications.`,
+	},
+	international: {
+		label: "International",
+		tags: ["International", "Multilingual", "Global"],
+		description: (baseName: string) =>
+			`${baseName} prepared for multilingual and international applications where compact structure and global readability matter.`,
+	},
+	academic: {
+		label: "Academic",
+		tags: ["Academic", "Research", "Publications"],
+		description: (baseName: string) =>
+			`${baseName} oriented for academic CVs, researchers, lecturers, and applicants who need publications and credentials to scan well.`,
+	},
+} as const satisfies Record<
+	TemplateVariantFamily,
+	{
+		label: string;
+		tags: string[];
+		description: (baseName: string) => string;
+	}
+>;
+
+const uniqueTags = (...tagGroups: string[][]) => Array.from(new Set(tagGroups.flat())).slice(0, 10);
+
+export const baseTemplates = Object.fromEntries(
+	baseTemplateIds.map((template) => [
+		template,
+		{
+			...baseTemplateMetadata[template],
+			accentColor: getTemplateAccentColor(template),
+			baseTemplate: template,
+		},
+	]),
+) as unknown as Record<BaseTemplate, TemplateMetadata>;
+
+const createTemplateMetadata = (template: Template): TemplateMetadata => {
+	const baseTemplate = getBaseTemplate(template);
+	const baseMetadata = baseTemplates[baseTemplate];
+	const family = getTemplateVariantFamily(template);
+
+	if (!family) return baseMetadata;
+
+	const familyMetadata = templateFamilyMetadata[family];
+
+	return {
+		name: `${familyMetadata.label} ${baseMetadata.name}`,
+		description: familyMetadata.description(baseMetadata.name),
+		imageUrl: baseMetadata.imageUrl,
+		tags: uniqueTags(familyMetadata.tags, baseMetadata.tags.slice(0, 5), [`Base: ${baseMetadata.name}`]),
+		sidebarPosition: baseMetadata.sidebarPosition,
+		accentColor: baseMetadata.accentColor,
+		baseTemplate,
+		family,
+		isVariant: true,
+	};
+};
+
+export const templates = Object.fromEntries(
+	templateIds.map((template) => [template, createTemplateMetadata(template)]),
+) as Record<Template, TemplateMetadata>;
+
+export const featuredTemplateIds = [
+	...baseTemplateIds,
+	"ditto-ats-classic",
+	"scizor-executive",
+	"meowth-international",
+	"azurill-creative",
+	"ditgar-tech-lead",
+	"bronzor-finance",
+	"leafish-healthcare",
+	"rhyhorn-academic",
+] as const satisfies readonly Template[];
+
+export const getTemplateDescription = (
+	description: TemplateMetadata["description"],
+	translate: (descriptor: MessageDescriptor) => string,
+) => {
+	return typeof description === "string" ? description : translate(description);
+};

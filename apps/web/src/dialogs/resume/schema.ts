@@ -19,6 +19,8 @@ import {
 
 export const resumeDialogSchemas = [
 	z.object({ type: z.literal("resume.create"), data: z.undefined() }),
+	z.object({ type: z.literal("resume.wizard"), data: z.undefined() }),
+	z.object({ type: z.literal("resume.career-coach"), data: z.undefined() }),
 	z.object({
 		type: z.literal("resume.update"),
 		data: z.object({ id: z.string(), name: z.string(), slug: z.string(), tags: z.array(z.string()) }),
