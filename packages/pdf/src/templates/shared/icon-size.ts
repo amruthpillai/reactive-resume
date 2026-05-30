@@ -17,7 +17,12 @@ export const parseStyleFontSize = (fontSize: Style["fontSize"] | undefined): num
 
 export const resolveStyleFontSize = (...styles: StyleInput[]): number | undefined => {
 	for (let index = styles.length - 1; index >= 0; index -= 1) {
-		for (const style of composeStyles(styles[index]).toReversed()) {
+		const composedStyles = composeStyles(styles[index]);
+
+		for (let styleIndex = composedStyles.length - 1; styleIndex >= 0; styleIndex -= 1) {
+			const style = composedStyles[styleIndex];
+			if (style === undefined) continue;
+
 			const fontSize = parseStyleFontSize(style.fontSize);
 			if (fontSize !== undefined) return fontSize;
 		}
