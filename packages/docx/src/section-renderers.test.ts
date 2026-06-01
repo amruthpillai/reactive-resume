@@ -2,6 +2,7 @@
 
 import type { CustomSection, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
+import { getDefaultSectionIconName } from "@reactive-resume/schema/resume/section-icons";
 import { renderBuiltInSection, renderCustomSection, renderSummary, setRenderConfig } from "./section-renderers";
 
 const baseConfig = {
@@ -21,6 +22,7 @@ describe("renderSummary", () => {
 	it("returns [] when the section is hidden", () => {
 		const summary: ResumeData["summary"] = {
 			title: "Summary",
+			icon: getDefaultSectionIconName("summary"),
 			content: "<p>Hello</p>",
 			hidden: true,
 			columns: 1,
@@ -31,6 +33,7 @@ describe("renderSummary", () => {
 	it("returns [] when content is empty", () => {
 		const summary: ResumeData["summary"] = {
 			title: "Summary",
+			icon: getDefaultSectionIconName("summary"),
 			content: "",
 			hidden: false,
 			columns: 1,
@@ -41,6 +44,7 @@ describe("renderSummary", () => {
 	it("includes a heading paragraph when both title and content are present", () => {
 		const summary: ResumeData["summary"] = {
 			title: "Summary",
+			icon: getDefaultSectionIconName("summary"),
 			content: "<p>Hello world</p>",
 			hidden: false,
 			columns: 1,
@@ -53,6 +57,7 @@ describe("renderSummary", () => {
 	it("omits the heading when title is empty but still renders content", () => {
 		const summary: ResumeData["summary"] = {
 			title: "",
+			icon: getDefaultSectionIconName("summary"),
 			content: "<p>Hello world</p>",
 			hidden: false,
 			columns: 1,
@@ -62,9 +67,10 @@ describe("renderSummary", () => {
 	});
 });
 
-const emptySection = <T extends SectionType>(_type: T): ResumeData["sections"][T] =>
+const emptySection = <T extends SectionType>(type: T): ResumeData["sections"][T] =>
 	({
 		title: "Section",
+		icon: getDefaultSectionIconName(type),
 		columns: 1,
 		hidden: false,
 		items: [],
@@ -90,6 +96,7 @@ describe("renderCustomSection", () => {
 		id: "custom-1",
 		type: "summary",
 		title: "Notes",
+		icon: getDefaultSectionIconName("summary"),
 		columns: 1,
 		hidden: false,
 		items: [],

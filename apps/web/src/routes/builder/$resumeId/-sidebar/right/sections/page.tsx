@@ -261,7 +261,7 @@ function PageSectionForm() {
 			<form.Field name="hideIcons">
 				{(field) => (
 					<FormItem
-						className="col-span-full flex items-center gap-x-3 py-2"
+						className="col-span-full flex items-center gap-x-3 py-1"
 						hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
 					>
 						<FormControl
@@ -276,7 +276,7 @@ function PageSectionForm() {
 							}
 						/>
 						<FormLabel>
-							<Trans>Hide item icons (skills, profiles, interests)</Trans>
+							<Trans>Hide Icons</Trans>
 						</FormLabel>
 					</FormItem>
 				)}
@@ -285,7 +285,7 @@ function PageSectionForm() {
 			<form.Field name="hideSectionIcons">
 				{(field) => (
 					<FormItem
-						className="col-span-full flex items-center gap-x-3 py-2"
+						className="col-span-full flex items-center gap-x-3 py-1"
 						hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
 					>
 						<FormControl
@@ -300,7 +300,7 @@ function PageSectionForm() {
 							}
 						/>
 						<FormLabel>
-							<Trans>Hide section heading icons</Trans>
+							<Trans>Hide Section Icons</Trans>
 						</FormLabel>
 					</FormItem>
 				)}

@@ -19,6 +19,7 @@ import {
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { generateId } from "@reactive-resume/utils/string";
+import { cn } from "@reactive-resume/utils/style";
 import { IconPicker } from "@/components/input/icon-picker";
 import { Combobox } from "@/components/ui/combobox";
 import { useDialogStore } from "@/dialogs/store";
@@ -62,6 +63,12 @@ function isCustomSectionType(value: string | null | undefined): value is CustomS
 	return SECTION_TYPE_OPTIONS.some((option) => option.value === value);
 }
 
+function getIconPickerValue(icon: string, type: CustomSectionType): string {
+	if (icon === "none") return "";
+
+	return icon || defaultSectionIconNames[type];
+}
+
 export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections.custom.create">) {
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 	const updateResumeData = useUpdateResumeData();
@@ -71,7 +78,7 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			id: generateId(),
 			title: data?.title ?? "",
 			type: (data?.type ?? "experience") as CustomSectionType,
-			icon: data?.icon || defaultSectionIconNames[data?.type ?? "experience"] || "",
+			icon: data?.icon ?? "",
 			columns: data?.columns ?? 1,
 			hidden: data?.hidden ?? false,
 			items: data?.items ?? [],
@@ -132,7 +139,7 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	const form = useAppForm({
 		defaultValues: {
 			...data,
-			icon: data.icon || defaultSectionIconNames[data.type] || "",
+			icon: data.icon ?? "",
 		},
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
@@ -186,53 +193,57 @@ const CreateCustomSectionForm = withForm({
 	defaultValues,
 	render: function CreateCustomSectionFormRenderer({ form }) {
 		const { i18n } = useLingui();
+		const titleMeta = useStore(form.store, (state) => state.fieldMeta?.title);
+		const sectionType = useStore(form.store, (state) => state.values.type);
+
+		const isTitleInvalid = (titleMeta?.isTouched ?? false) && (titleMeta?.errors?.length ?? 0) > 0;
 
 		return (
 			<>
-				<form.Field name="title">
-					{(field) => (
-						<FormItem
-							className="sm:col-span-full"
-							hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
-						>
-							<FormLabel>
-								<Trans>Title</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<Input
-										name={field.name}
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(event) => field.handleChange(event.target.value)}
-									/>
-								}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
-					)}
-				</form.Field>
+				<div className={cn("flex items-end sm:col-span-full", isTitleInvalid && "items-center")}>
+					<form.Field name="icon">
+						{(field) => (
+							<FormItem
+								className="shrink-0"
+								hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+							>
+								<FormControl
+									render={
+										<IconPicker
+											value={getIconPickerValue(field.state.value, sectionType)}
+											onChange={(icon) => {
+												field.handleChange(icon === "" ? "none" : icon);
+											}}
+											className="rounded-r-none border-input border-e-0"
+										/>
+									}
+								/>
+							</FormItem>
+						)}
+					</form.Field>
 
-				<form.Field name="icon">
-					{(field) => (
-						<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
-							<FormLabel>
-								<Trans>Icon</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<IconPicker
-										value={field.state.value === "none" ? "" : field.state.value}
-										onChange={(icon) => {
-											field.handleChange(icon === "" ? "none" : icon);
-										}}
-									/>
-								}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
-					)}
-				</form.Field>
+					<form.Field name="title">
+						{(field) => (
+							<FormItem className="flex-1" hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+								<FormLabel>
+									<Trans>Title</Trans>
+								</FormLabel>
+								<FormControl
+									render={
+										<Input
+											className="rounded-s-none"
+											name={field.name}
+											value={field.state.value}
+											onBlur={field.handleBlur}
+											onChange={(event) => field.handleChange(event.target.value)}
+										/>
+									}
+								/>
+								<FormMessage errors={field.state.meta.errors} />
+							</FormItem>
+						)}
+					</form.Field>
+				</div>
 
 				<form.Field name="type">
 					{(field) => (
@@ -272,53 +283,57 @@ const UpdateCustomSectionForm = withForm({
 	defaultValues,
 	render: function UpdateCustomSectionFormRenderer({ form }) {
 		const { i18n } = useLingui();
+		const titleMeta = useStore(form.store, (state) => state.fieldMeta?.title);
+		const sectionType = useStore(form.store, (state) => state.values.type);
+
+		const isTitleInvalid = (titleMeta?.isTouched ?? false) && (titleMeta?.errors?.length ?? 0) > 0;
 
 		return (
 			<>
-				<form.Field name="title">
-					{(field) => (
-						<FormItem
-							className="sm:col-span-full"
-							hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
-						>
-							<FormLabel>
-								<Trans>Title</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<Input
-										name={field.name}
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(event) => field.handleChange(event.target.value)}
-									/>
-								}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
-					)}
-				</form.Field>
+				<div className={cn("flex items-end sm:col-span-full", isTitleInvalid && "items-center")}>
+					<form.Field name="icon">
+						{(field) => (
+							<FormItem
+								className="shrink-0"
+								hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+							>
+								<FormControl
+									render={
+										<IconPicker
+											value={getIconPickerValue(field.state.value, sectionType)}
+											onChange={(icon) => {
+												field.handleChange(icon === "" ? "none" : icon);
+											}}
+											className="rounded-r-none border-input border-e-0"
+										/>
+									}
+								/>
+							</FormItem>
+						)}
+					</form.Field>
 
-				<form.Field name="icon">
-					{(field) => (
-						<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
-							<FormLabel>
-								<Trans>Icon</Trans>
-							</FormLabel>
-							<FormControl
-								render={
-									<IconPicker
-										value={field.state.value === "none" ? "" : field.state.value}
-										onChange={(icon) => {
-											field.handleChange(icon === "" ? "none" : icon);
-										}}
-									/>
-								}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
-					)}
-				</form.Field>
+					<form.Field name="title">
+						{(field) => (
+							<FormItem className="flex-1" hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+								<FormLabel>
+									<Trans>Title</Trans>
+								</FormLabel>
+								<FormControl
+									render={
+										<Input
+											className="rounded-s-none"
+											name={field.name}
+											value={field.state.value}
+											onBlur={field.handleBlur}
+											onChange={(event) => field.handleChange(event.target.value)}
+										/>
+									}
+								/>
+								<FormMessage errors={field.state.meta.errors} />
+							</FormItem>
+						)}
+					</form.Field>
+				</div>
 
 				<form.Field name="type">
 					{(field) => (

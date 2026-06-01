@@ -98,7 +98,7 @@ export const summarySchema = z.object({
 		.string()
 		.catch("")
 		.describe(
-			"Phosphor icon name to display before the summary section title in the PDF output. Empty string means no icon is shown.",
+			"Phosphor icon name to display before the summary section title in the PDF output. Empty string uses the default summary icon; 'none' hides the icon.",
 		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the summary should span across."),
 	hidden: z.boolean().describe("Whether to hide the summary from the resume."),
@@ -281,7 +281,7 @@ export const baseSectionSchema = z.object({
 		.string()
 		.catch("")
 		.describe(
-			"Phosphor icon name to display before the section title in the PDF output. Empty string means no icon is shown.",
+			"Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
 		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the section should span across."),
 	hidden: z.boolean().describe("Whether to hide the section from the resume."),

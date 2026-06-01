@@ -134,6 +134,24 @@ describe("getResumeSectionIcon", () => {
 			expect(getResumeSectionIcon(data, "custom-1")).toBe("graduation-cap");
 		});
 
+		it("falls back to the cover letter default for cover-letter custom sections", () => {
+			const data = {
+				...defaultResumeData,
+				customSections: [
+					{
+						id: "custom-cover-letter",
+						type: "cover-letter" as const,
+						title: "Cover Letter",
+						icon: "",
+						columns: 1,
+						hidden: false,
+						items: [],
+					},
+				],
+			};
+			expect(getResumeSectionIcon(data, "custom-cover-letter")).toBe("envelope-simple");
+		});
+
 		it("returns empty when custom section icon is 'none'", () => {
 			const data = {
 				...defaultResumeData,

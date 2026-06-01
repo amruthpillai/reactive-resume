@@ -90,7 +90,7 @@ export const Icon = ({ style, size: sizeProp, ...props }: ComponentProps<typeof 
 	);
 };
 
-export const SectionHeadingIcon = ({ style, ...props }: ComponentProps<typeof PhosphorIcon>) => {
+export const SectionHeadingIcon = ({ style, size: sizeProp, ...props }: ComponentProps<typeof PhosphorIcon>) => {
 	const data = useRender();
 	const { style: sectionIconStyle, ...sectionIconProps } = useTemplateIconSlot("sectionHeadingIcon");
 	const { style: fallbackIconStyle, ...fallbackIconProps } = useTemplateIconSlot("icon");
@@ -102,17 +102,26 @@ export const SectionHeadingIcon = ({ style, ...props }: ComponentProps<typeof Ph
 
 	// Section heading icon visibility is controlled by hideSectionIcons (in SectionShell),
 	// NOT by the item-level hideIcons toggle. Ignore the "display: none" from item icon slot.
-	const { display: _, ...iconPropsWithoutDisplay } = iconProps;
+	const { display: _, size: templateSize, ...iconPropsWithoutDisplay } = iconProps;
+	const templateIconSize =
+		hasSlot && (typeof templateSize === "number" || typeof templateSize === "string") ? templateSize : undefined;
 
 	// Icon size follows heading fontSize so they scale together
 	const headingFontSize = data.metadata.typography.heading.fontSize;
-	const sizeStyle = { size: headingFontSize } as Style;
+	const resolvedSize =
+		resolveIconSize({
+			size: sizeProp,
+			styles: [asStyleInput(iconStyle), asStyleInput(style)],
+		}) ??
+		templateIconSize ??
+		headingFontSize;
 
 	return (
 		<PhosphorIcon
 			{...iconPropsWithoutDisplay}
 			{...props}
-			style={composeStyles(asStyleInput(iconStyle), sizeStyle, asStyleInput(style))}
+			{...(resolvedSize === undefined ? {} : { size: resolvedSize })}
+			style={composeStyles(asStyleInput(iconStyle), asStyleInput(style))}
 		/>
 	);
 };

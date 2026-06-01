@@ -135,19 +135,32 @@ const SECTION_ITEM_PLACEHOLDER_KEYS = [
 
 const defaultSectionHeadingContainerStyle = {
 	flexDirection: "row",
-	alignItems: "center",
+	alignItems: "flex-start",
 	columnGap: 4,
 } satisfies Style;
 
-const noBorderStyle = {
-	borderWidth: 0,
-	borderTopWidth: 0,
-	borderBottomWidth: 0,
-	borderLeftWidth: 0,
-	borderRightWidth: 0,
-	paddingTop: 0,
-	paddingBottom: 0,
-} satisfies Style;
+const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] =>
+	composeStyles(...styles).map(
+		({
+			borderBottomWidth: _borderBottomWidth,
+			borderLeftWidth: _borderLeftWidth,
+			borderRightWidth: _borderRightWidth,
+			borderTopWidth: _borderTopWidth,
+			borderWidth: _borderWidth,
+			flexGrow: _flexGrow,
+			flexShrink: _flexShrink,
+			marginBottom: _marginBottom,
+			marginLeft: _marginLeft,
+			marginRight: _marginRight,
+			marginTop: _marginTop,
+			paddingBottom: _paddingBottom,
+			paddingLeft: _paddingLeft,
+			paddingRight: _paddingRight,
+			paddingTop: _paddingTop,
+			width: _width,
+			...textStyle
+		}) => textStyle,
+	);
 
 const useSectionItemsContext = () => use(SectionItemsContext);
 
@@ -171,6 +184,7 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	const sectionStyle = useTemplateStyle("section");
 	const sectionRuleStyle = useSectionStyleRule("section");
 	const sectionHeadingStyle = useTemplateStyle("sectionHeading");
+	const sectionHeadingContainerStyle = useTemplateStyle("sectionHeadingContainer");
 	const sectionHeadingRuleStyle = useSectionStyleRule("heading");
 	const sectionTitle = getResumeSectionTitle(data, sectionId, title);
 	const sectionIcon = getResumeSectionIcon(data, sectionId);
@@ -179,8 +193,10 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	if (!showIcon) {
 		// No icon: render heading exactly as before (no structural change)
 		return (
-			<View style={composeStyles(sectionStyle)}>
-				{showHeading && <Heading style={composeStyles(sectionHeadingStyle)}>{sectionTitle}</Heading>}
+			<View style={composeStyles(sectionStyle, sectionRuleStyle)}>
+				{showHeading && (
+					<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>{sectionTitle}</Heading>
+				)}
 				{children}
 			</View>
 		);
@@ -190,9 +206,16 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	return (
 		<View style={composeStyles(sectionStyle, sectionRuleStyle)}>
 			{showHeading && (
-				<View style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle, defaultSectionHeadingContainerStyle)}>
+				<View
+					style={composeStyles(
+						sectionHeadingStyle,
+						defaultSectionHeadingContainerStyle,
+						sectionHeadingContainerStyle,
+						sectionHeadingRuleStyle,
+					)}
+				>
 					<SectionHeadingIcon name={sectionIcon as IconName} />
-					<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle, noBorderStyle)}>
+					<Heading style={getSectionHeadingTextStyle(sectionHeadingStyle, sectionHeadingRuleStyle)}>
 						{sectionTitle}
 					</Heading>
 				</View>
