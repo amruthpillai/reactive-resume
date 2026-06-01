@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseColorString, rgbaStringToHex } from "./color";
+import { isDarkColor, parseColorString, rgbaStringToHex } from "./color";
 
 describe("rgbaStringToHex", () => {
 	it("converts opaque rgb to hex", () => {
@@ -25,6 +25,16 @@ describe("rgbaStringToHex", () => {
 	it("preserves 6-digit hex colors", () => {
 		expect(rgbaStringToHex("#F1F5F9")).toBe("#f1f5f9");
 		expect(rgbaStringToHex("#0F172A")).toBe("#0f172a");
+	});
+});
+
+describe("isDarkColor", () => {
+	it("classifies opaque dark colors as dark", () => {
+		expect(isDarkColor("rgba(0, 0, 0, 1)")).toBe(true);
+	});
+
+	it("composites transparent colors over white before checking darkness", () => {
+		expect(isDarkColor("rgba(0, 0, 0, 0.1)")).toBe(false);
 	});
 });
 

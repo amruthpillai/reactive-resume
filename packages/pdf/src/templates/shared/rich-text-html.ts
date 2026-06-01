@@ -57,7 +57,7 @@ const normalizeMarkElements = (root: ReturnType<typeof parse>) => {
 			const existingStyle = mark.getAttribute("style") ?? "";
 			let inlineStyle = `background-color: ${dataColor}`;
 			if (isDarkColor(dataColor)) inlineStyle += "; color: #ffffff";
-			mark.setAttribute("style", existingStyle ? `${inlineStyle}; ${existingStyle}` : inlineStyle);
+			mark.setAttribute("style", existingStyle ? `${existingStyle}; ${inlineStyle}` : inlineStyle);
 		}
 	}
 };

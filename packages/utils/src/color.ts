@@ -59,7 +59,11 @@ export function parseColorString(value: string): ColorResult["rgba"] | null {
 export function isDarkColor(colorString: string): boolean {
 	const color = parseColorString(colorString);
 	if (!color) return false;
+	const alpha = Math.max(0, Math.min(1, color.a ?? 1));
+	const r = color.r * alpha + 255 * (1 - alpha);
+	const g = color.g * alpha + 255 * (1 - alpha);
+	const b = color.b * alpha + 255 * (1 - alpha);
 	// Relative luminance (ITU-R BT.601)
-	const luminance = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+	const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
 	return luminance < 128;
 }

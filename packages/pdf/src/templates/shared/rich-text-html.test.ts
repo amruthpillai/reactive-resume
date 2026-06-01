@@ -60,6 +60,14 @@ describe("normalizeRichTextHtml", () => {
 		expect(result).toContain(">green</span>");
 	});
 
+	it("keeps generated dark-highlight contrast after existing Tiptap mark styles", () => {
+		const result = normalizeRichTextHtml(
+			'<mark data-color="rgba(0, 0, 0, 1)" style="background-color: rgba(0, 0, 0, 1); color: inherit">dark</mark>',
+		);
+
+		expect(result.indexOf("color: inherit")).toBeLessThan(result.lastIndexOf("color: #ffffff"));
+	});
+
 	it("does not add inline style to legacy <mark> without data-color", () => {
 		const result = normalizeRichTextHtml("<mark>yellow</mark>");
 		expect(result).toBe('<p><span class="rr-pdf-mark">yellow</span></p>');

@@ -234,6 +234,7 @@ function useEditorToolbarState(editor: Editor) {
 				toggleStrike: () => ctx.editor.chain().focus().toggleStrike().run(),
 
 				// Highlight Color
+				isHighlight: ctx.editor.isActive("highlight") ?? false,
 				highlightColor: (ctx.editor.getAttributes("highlight").color as string | undefined) ?? null,
 				canHighlightColor: ctx.editor.can().chain().toggleHighlight().run() ?? false,
 				setHighlightColor: (color: string) => ctx.editor.chain().focus().toggleHighlight({ color }).run(),
@@ -383,6 +384,12 @@ function useEditorToolbarState(editor: Editor) {
 
 type EditorToolbarState = ReturnType<typeof useEditorToolbarState>;
 
+export function resolveHighlightToolbarState(isHighlight: boolean, highlightColor: string | null) {
+	const visibleHighlightColor = highlightColor ?? (isHighlight ? defaultHighlightColor : undefined);
+
+	return { visibleHighlightColor, canClearHighlight: isHighlight };
+}
+
 type EditorToolbarProps = {
 	editor: Editor;
 	isFullscreen: boolean;
@@ -395,6 +402,11 @@ function EditorToolbar({ editor, isFullscreen }: EditorToolbarProps) {
 }
 
 function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
+	const { visibleHighlightColor, canClearHighlight } = resolveHighlightToolbarState(
+		state.isHighlight,
+		state.highlightColor,
+	);
+
 	return (
 		<div className="flex flex-wrap items-center gap-y-0.5 rounded-md rounded-b-none border border-b-0">
 			<Toggle
@@ -447,7 +459,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 
 			<ColorPicker
 				defaultValue={defaultHighlightColor}
-				value={state.highlightColor ?? undefined}
+				value={visibleHighlightColor}
 				onChange={state.setHighlightColor}
 				trigger={
 					<PopoverTrigger
@@ -456,7 +468,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 								size={isFullscreen ? "lg" : "sm"}
 								tabIndex={-1}
 								variant="ghost"
-								className={cn("rounded-none px-2", state.highlightColor && "bg-muted text-foreground")}
+								className={cn("rounded-none px-2", state.isHighlight && "bg-muted text-foreground")}
 								title={t`Highlight`}
 								disabled={!state.canHighlightColor}
 							>
@@ -464,7 +476,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 									<HighlighterCircleIcon className="size-3.5" />
 									<span
 										className="mt-0.5 h-0.5 w-3 rounded-full"
-										style={{ backgroundColor: state.highlightColor ?? "currentColor" }}
+										style={{ backgroundColor: visibleHighlightColor ?? "currentColor" }}
 									/>
 								</span>
 							</Button>
@@ -476,7 +488,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 					<div className="flex items-center gap-2.5">
 						<span
 							className="grid size-9 place-items-center rounded-lg border border-border bg-muted/60 text-sm shadow-xs"
-							style={{ backgroundColor: state.highlightColor ?? defaultHighlightColor }}
+							style={{ backgroundColor: visibleHighlightColor ?? defaultHighlightColor }}
 						>
 							<HighlighterCircleIcon className="size-4" />
 						</span>
@@ -498,7 +510,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 						variant="ghost"
 						className="shrink-0"
 						onClick={state.unsetHighlightColor}
-						disabled={!state.highlightColor}
+						disabled={!canClearHighlight}
 					>
 						<Trans comment="Clear the highlight color">Clear</Trans>
 					</Button>
