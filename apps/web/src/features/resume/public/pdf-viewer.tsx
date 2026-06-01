@@ -168,7 +168,7 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 				const nextDocument = await loadingTask.promise;
 
 				if (isCancelled) {
-					void nextDocument.destroy();
+					void loadingTask.destroy();
 				} else {
 					pdfDocument = nextDocument;
 					const pdfViewerOptions = {
@@ -208,7 +208,6 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 			window.cancelAnimationFrame(animationFrameId);
 			resizeObserver?.disconnect();
 			if (pdfViewer) clearPdfViewerDocument(pdfViewer);
-			void pdfDocument?.destroy();
 			void loadingTask?.destroy();
 			viewer.replaceChildren();
 		};

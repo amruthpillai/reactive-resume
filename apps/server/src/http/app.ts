@@ -15,6 +15,7 @@ import { handleUpload } from "../static/uploads";
 import { handleWebApp, handleWebAppHead, serveWebDistStatic } from "../static/web";
 import { handleAuth, handleOAuth } from "./auth";
 import { handleHealth } from "./health";
+import { handleResumePdfDownload } from "./resume-pdf";
 
 export function createApp() {
 	const app = new Hono();
@@ -26,6 +27,7 @@ export function createApp() {
 	app.get("/api/auth/oauth", (c) => handleOAuth(c.req.raw));
 	app.all("/api/auth/*", (c) => handleAuth(c.req.raw));
 	app.get("/api/health", () => handleHealth());
+	app.get("/api/resumes/:id/pdf", (c) => handleResumePdfDownload(c.req.raw, c.req.param("id")));
 	app.get("/api/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/schema.json", () => handleSchemaJson());

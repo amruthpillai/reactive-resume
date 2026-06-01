@@ -44,6 +44,13 @@ describe("TOOL_ANNOTATIONS", () => {
 		}
 	});
 
+	it("marks PDF download URL generation as read-only but non-idempotent", () => {
+		const annotations = TOOL_ANNOTATIONS[MCP_TOOL_NAME.downloadResumePdf];
+		expect(annotations.readOnlyHint).toBe(true);
+		expect(annotations.idempotentHint).toBe(false);
+		expect(annotations.destructiveHint).toBe(false);
+	});
+
 	it("marks deleteResume as destructive (but still idempotent)", () => {
 		const annotations = TOOL_ANNOTATIONS[MCP_TOOL_NAME.deleteResume];
 		expect(annotations.destructiveHint).toBe(true);

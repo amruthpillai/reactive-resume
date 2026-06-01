@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
 	handleHealth: vi.fn(),
 	handleUpload: vi.fn(),
 	handleMcp: vi.fn(),
+	handleResumePdfDownload: vi.fn(),
 	handleMcpServerCard: vi.fn(),
 	handleOAuthAuthorizationServer: vi.fn(),
 	handleOAuthProtectedResource: vi.fn(),
@@ -66,6 +67,10 @@ vi.mock("../mcp/handler", () => ({
 	handleMcp: mocks.handleMcp,
 }));
 
+vi.mock("./resume-pdf", () => ({
+	handleResumePdfDownload: mocks.handleResumePdfDownload,
+}));
+
 beforeEach(() => {
 	vi.clearAllMocks();
 	mocks.handleAuth.mockResolvedValue(new Response("auth"));
@@ -75,6 +80,7 @@ beforeEach(() => {
 	mocks.handleHealth.mockReturnValue(new Response("health"));
 	mocks.handleUpload.mockResolvedValue(new Response("upload"));
 	mocks.handleMcp.mockResolvedValue(new Response("mcp"));
+	mocks.handleResumePdfDownload.mockResolvedValue(new Response("pdf"));
 	mocks.handleMcpServerCard.mockReturnValue(new Response("server-card"));
 	mocks.handleOAuthAuthorizationServer.mockReturnValue(new Response("oauth-authorization-server"));
 	mocks.handleOAuthProtectedResource.mockReturnValue(new Response("oauth-protected-resource"));
@@ -99,6 +105,19 @@ describe("createApp", () => {
 		await expect(response.text()).resolves.toBe("oauth");
 		expect(mocks.handleOAuth).toHaveBeenCalledWith(request);
 		expect(mocks.handleAuth).not.toHaveBeenCalled();
+	});
+
+	it("routes signed resume PDF downloads before the web fallback", async () => {
+		const { createApp } = await import("./app");
+		const app = createApp();
+		const request = new Request("http://localhost:3001/api/resumes/resume-1/pdf?token=signed");
+
+		const response = await app.fetch(request);
+
+		await expect(response.text()).resolves.toBe("pdf");
+		expect(mocks.handleResumePdfDownload).toHaveBeenCalledWith(request, "resume-1");
+		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
+		expect(mocks.handleWebApp).not.toHaveBeenCalled();
 	});
 
 	it.each([

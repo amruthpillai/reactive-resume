@@ -10,7 +10,6 @@ const pdfjsMock = vi.hoisted(() => {
 	};
 
 	const pdfDocument = {
-		destroy: vi.fn(),
 		getPage: vi.fn(async () => page),
 		numPages: 1,
 	};
@@ -49,7 +48,6 @@ describe("PDF.js browser entrypoints", () => {
 		pdfjsMock.legacyModule.GlobalWorkerOptions.workerSrc = undefined;
 		pdfjsMock.legacyModule.getDocument.mockClear();
 		pdfjsMock.loadingTask.destroy.mockClear();
-		pdfjsMock.pdfDocument.destroy.mockClear();
 		pdfjsMock.pdfDocument.getPage.mockClear();
 		pdfjsMock.page.cleanup.mockClear();
 		pdfjsMock.page.getViewport.mockClear();
@@ -100,6 +98,6 @@ describe("PDF.js browser entrypoints", () => {
 		expect(pdfjsMock.page.render).toHaveBeenCalledWith(
 			expect.objectContaining({ annotationMode: 0, background: "white" }),
 		);
-		expect(pdfjsMock.pdfDocument.destroy).toHaveBeenCalledTimes(1);
+		expect(pdfjsMock.loadingTask.destroy).toHaveBeenCalledTimes(1);
 	});
 });

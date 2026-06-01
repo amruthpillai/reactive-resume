@@ -32,6 +32,15 @@ describe("buildMcpServerCard", () => {
 		expect(cardToolNames).toEqual(expectedNames);
 	});
 
+	it("advertises a short-lived PDF download URL tool", () => {
+		const tool = card.tools.find((item) => item.name === "download_resume_pdf");
+
+		expect(tool?.title).toBe("Download Resume PDF");
+		expect(tool?.description).toContain("short-lived");
+		expect(tool?.description).toContain("10 minutes");
+		expect(tool?.annotations?.readOnlyHint).toBe(true);
+	});
+
 	it("declares a JSON Schema input for every tool", () => {
 		for (const tool of card.tools) {
 			expect(tool.inputSchema, tool.name).toBeDefined();

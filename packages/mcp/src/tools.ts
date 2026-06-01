@@ -5,6 +5,10 @@ import type router from "@reactive-resume/api/routers";
 import z from "zod";
 import { resumePatchOperationsSchema } from "@reactive-resume/ai/tools/resume-tool-contracts";
 import { resolveUserFromRequestHeaders } from "@reactive-resume/api/context";
+import {
+	createResumePdfDownloadUrl,
+	MAX_PDF_DOWNLOAD_URL_TTL_SECONDS,
+} from "@reactive-resume/api/features/resume/export";
 import { env } from "@reactive-resume/env/server";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
@@ -192,6 +196,44 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 			if (!analysis) return text("No saved analysis for this resume yet.");
 
 			return text(JSON.stringify(analysis, null, 2));
+		}),
+	);
+
+	// ── Download Resume PDF ───────────────────────────────────────
+	server.registerTool(
+		T.downloadResumePdf,
+		{
+			title: "Download Resume PDF",
+			description: [
+				"Create a short-lived authenticated URL for downloading a resume as a PDF.",
+				`The URL expires in ${MAX_PDF_DOWNLOAD_URL_TTL_SECONDS / 60} minutes and should be used immediately.`,
+				"Returns JSON containing: resumeId, name, downloadUrl, expiresAt, expiresInSeconds, contentType.",
+				`Use \`${T.listResumes}\` first to find valid IDs.`,
+			].join("\n"),
+			inputSchema: z.object({ id: resumeIdSchema }),
+			annotations: TOOL_ANNOTATIONS[T.downloadResumePdf],
+		},
+		withErrorHandling("creating PDF download URL", async ({ id }: { id: string }) => {
+			const resume = await client.resume.getById({ id });
+			const user = await resolveUserFromRequestHeaders(requestHeaders);
+			if (!user) throw new Error("Unauthorized");
+
+			const signedUrl = createResumePdfDownloadUrl({ resumeId: id, userId: user.id });
+
+			return text(
+				JSON.stringify(
+					{
+						resumeId: id,
+						name: resume.name,
+						downloadUrl: signedUrl.url,
+						expiresAt: signedUrl.expiresAt,
+						expiresInSeconds: signedUrl.expiresInSeconds,
+						contentType: "application/pdf",
+					},
+					null,
+					2,
+				),
+			);
 		}),
 	);
 

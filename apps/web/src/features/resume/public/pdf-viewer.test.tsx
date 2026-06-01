@@ -6,7 +6,6 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 
 const pdfViewerMock = vi.hoisted(() => {
 	const pdfDocument = {
-		destroy: vi.fn(),
 		numPages: 1,
 	};
 
@@ -93,7 +92,6 @@ beforeEach(() => {
 	pdfViewerMock.createResumePdfBlob.mockClear();
 	pdfViewerMock.getDocument.mockClear();
 	pdfViewerMock.loadingTask.destroy.mockClear();
-	pdfViewerMock.pdfDocument.destroy.mockClear();
 });
 
 describe("PdfViewer", () => {
@@ -113,7 +111,6 @@ describe("PdfViewer", () => {
 
 		expect(abortSignal?.aborted).toBe(true);
 		expect(viewer.setDocument).toHaveBeenCalledWith(null);
-		expect(pdfViewerMock.pdfDocument.destroy).toHaveBeenCalledTimes(1);
 		expect(pdfViewerMock.loadingTask.destroy).toHaveBeenCalledTimes(1);
 	});
 });

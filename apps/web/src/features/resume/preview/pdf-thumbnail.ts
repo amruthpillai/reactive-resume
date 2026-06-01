@@ -60,10 +60,6 @@ export const createPdfFirstPageImageUrl = async (file: Blob) => {
 			page.cleanup();
 		}
 	} finally {
-		if (pdfDocument) {
-			void pdfDocument.destroy();
-		} else {
-			void loadingTask.destroy();
-		}
+		void loadingTask.destroy();
 	}
 };

@@ -53,6 +53,7 @@ export async function createMcpServer(request: Request) {
 				`Read schema at \`resume://_meta/schema\`; read resume JSON via \`resume://{id}\` or \`${MCP_TOOL_NAME.getResume}\`.`,
 				`Apply body edits with JSON Patch through \`${MCP_TOOL_NAME.patchResume}\`.`,
 				`Change name, slug, tags, or public visibility with \`${MCP_TOOL_NAME.updateResume}\` (returns canonical share URL; anonymous access only when \`isPublic\` is true; passwords are managed in the web app only).`,
+				`Create short-lived authenticated PDF download URLs with \`${MCP_TOOL_NAME.downloadResumePdf}\`.`,
 				`Import full ResumeData JSON with \`${MCP_TOOL_NAME.importResume}\`; read saved AI analysis with \`${MCP_TOOL_NAME.getResumeAnalysis}\`.`,
 			].join(" "),
 		},
