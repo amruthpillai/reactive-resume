@@ -8,7 +8,7 @@ msgstr ""
 "Language: pl\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-01 11:26\n"
+"PO-Revision-Date: 2026-06-01 12:55\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
@@ -654,6 +654,7 @@ msgid "Choose a model and resume draft."
 msgstr "Wybierz model i szkic CV."
 
 #. Preset or custom shade refer to the color picker
+#. Preset or custom shade refer to the color picker
 #: src/components/input/rich-input.tsx
 msgid "Choose a preset or custom shade."
 msgstr "Proszę wybrać wstępnie ustawiony lub niestandardowy odcień."
@@ -670,6 +671,7 @@ msgstr "Wybierz istniejącą konwersację z paska bocznego lub rozpocznij nowy w
 msgid "Circle"
 msgstr "Koło"
 
+#. Clear the highlight color
 #. Clear the text color
 #: src/components/input/rich-input.tsx
 msgid "Clear"
@@ -1779,6 +1781,10 @@ msgstr "Wysoki"
 msgid "Highlight"
 msgstr "Zakreślenie"
 
+#: src/components/input/rich-input.tsx
+msgid "Highlight Color"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Hindi"
@@ -1808,7 +1814,6 @@ msgid "Hungarian"
 msgstr "Węgierski"
 
 #: src/components/level/combobox.tsx
-#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikona"
@@ -3996,4 +4001,3 @@ msgstr "Pomniejsz"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

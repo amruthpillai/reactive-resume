@@ -8,7 +8,7 @@ msgstr ""
 "Language: ar\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-01 11:26\n"
+"PO-Revision-Date: 2026-06-01 12:55\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
@@ -654,6 +654,7 @@ msgid "Choose a model and resume draft."
 msgstr "اختر نموذجًا واكتب مسودة سيرة ذاتية."
 
 #. Preset or custom shade refer to the color picker
+#. Preset or custom shade refer to the color picker
 #: src/components/input/rich-input.tsx
 msgid "Choose a preset or custom shade."
 msgstr "اختر لوناً محدداً مسبقاً أو مخصصاً."
@@ -670,6 +671,7 @@ msgstr "اختر محادثة موجودة من الشريط الجانبي، أ
 msgid "Circle"
 msgstr "دائرة"
 
+#. Clear the highlight color
 #. Clear the text color
 #: src/components/input/rich-input.tsx
 msgid "Clear"
@@ -1779,6 +1781,10 @@ msgstr "عالية"
 msgid "Highlight"
 msgstr "تمييز"
 
+#: src/components/input/rich-input.tsx
+msgid "Highlight Color"
+msgstr "لون مميز"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "الهندية"
@@ -1808,7 +1814,6 @@ msgid "Hungarian"
 msgstr "الهنغارية"
 
 #: src/components/level/combobox.tsx
-#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "الأيقونة"
@@ -3996,4 +4001,3 @@ msgstr "تصغير"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "الزولو"
-

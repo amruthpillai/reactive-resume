@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-01 11:26\n"
+"PO-Revision-Date: 2026-06-01 12:55\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -654,6 +654,7 @@ msgid "Choose a model and resume draft."
 msgstr "Pasirinkite modelį ir gyvenimo aprašymo juodraštį."
 
 #. Preset or custom shade refer to the color picker
+#. Preset or custom shade refer to the color picker
 #: src/components/input/rich-input.tsx
 msgid "Choose a preset or custom shade."
 msgstr "Pasirinkite iš anksto nustatytą arba pasirinktinį atspalvį."
@@ -670,6 +671,7 @@ msgstr "Šoninėje juostoje pasirinkite esamą pokalbį arba pradėkite naują, 
 msgid "Circle"
 msgstr "Apskritimas"
 
+#. Clear the highlight color
 #. Clear the text color
 #: src/components/input/rich-input.tsx
 msgid "Clear"
@@ -1779,6 +1781,10 @@ msgstr "Aukštas"
 msgid "Highlight"
 msgstr "Paryškinti"
 
+#: src/components/input/rich-input.tsx
+msgid "Highlight Color"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Hindi"
@@ -1808,7 +1814,6 @@ msgid "Hungarian"
 msgstr "Vengrų"
 
 #: src/components/level/combobox.tsx
-#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikona"
@@ -3996,4 +4001,3 @@ msgstr "Tolinti"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
-
