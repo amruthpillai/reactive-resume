@@ -5,13 +5,15 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { i18n } from "@lingui/core";
 import { PromptDialogProvider, usePrompt } from "./use-prompt";
 
+type HookWrapperProps = {
+	children: React.ReactNode;
+};
+
 beforeAll(() => {
 	i18n.loadAndActivate({ locale: "en", messages: {} });
 });
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-	<PromptDialogProvider>{children}</PromptDialogProvider>
-);
+const wrapper = ({ children }: HookWrapperProps) => <PromptDialogProvider>{children}</PromptDialogProvider>;
 
 const clickButton = (re: RegExp) => {
 	const buttons = Array.from(document.body.querySelectorAll<HTMLButtonElement>("button"));

@@ -322,7 +322,11 @@ function TypographySectionForm() {
 	);
 }
 
-function TypographyFieldGroup({ label }: { label: ReactNode }) {
+type TypographyFieldGroupProps = {
+	label: ReactNode;
+};
+
+function TypographyFieldGroup({ label }: TypographyFieldGroupProps) {
 	return (
 		<div className="col-span-full flex items-center gap-x-2">
 			<Separator className="basis-[16px]" />

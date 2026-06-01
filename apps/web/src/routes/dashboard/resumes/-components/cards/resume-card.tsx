@@ -13,6 +13,10 @@ type ResumeCardProps = {
 	resume: RouterOutput["resume"]["list"][number];
 };
 
+type ResumeLockOverlayProps = {
+	isLocked: boolean;
+};
+
 export function ResumeCard({ resume }: ResumeCardProps) {
 	const { i18n } = useLingui();
 
@@ -40,7 +44,7 @@ export function ResumeCard({ resume }: ResumeCardProps) {
 	);
 }
 
-function ResumeLockOverlay({ isLocked }: { isLocked: boolean }) {
+function ResumeLockOverlay({ isLocked }: ResumeLockOverlayProps) {
 	return (
 		<AnimatePresence>
 			{isLocked && (

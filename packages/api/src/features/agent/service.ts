@@ -946,11 +946,13 @@ export const agentService = {
 
 			await getThread({ id: input.id, userId: input.userId });
 
-			await db.delete(schema.agentAttachment).where(eq(schema.agentAttachment.threadId, input.id));
-			await db
-				.update(schema.agentThread)
-				.set({ status: "deleted", deletedAt: new Date() })
-				.where(and(eq(schema.agentThread.id, input.id), eq(schema.agentThread.userId, input.userId)));
+			await Promise.all([
+				db.delete(schema.agentAttachment).where(eq(schema.agentAttachment.threadId, input.id)),
+				db
+					.update(schema.agentThread)
+					.set({ status: "deleted", deletedAt: new Date() })
+					.where(and(eq(schema.agentThread.id, input.id), eq(schema.agentThread.userId, input.userId))),
+			]);
 
 			try {
 				await getStorageService().delete(`uploads/${input.userId}/agent/${input.id}`);

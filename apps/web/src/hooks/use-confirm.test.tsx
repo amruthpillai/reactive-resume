@@ -4,9 +4,11 @@ import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ConfirmDialogProvider, useConfirm } from "./use-confirm";
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-	<ConfirmDialogProvider>{children}</ConfirmDialogProvider>
-);
+type HookWrapperProps = {
+	children: React.ReactNode;
+};
+
+const wrapper = ({ children }: HookWrapperProps) => <ConfirmDialogProvider>{children}</ConfirmDialogProvider>;
 
 describe("useConfirm", () => {
 	it("throws when used outside ConfirmDialogProvider", () => {

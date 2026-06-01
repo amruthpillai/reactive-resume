@@ -94,6 +94,12 @@ export const basicsSchema = z.object({
 
 export const summarySchema = z.object({
 	title: z.string().describe("The title of the summary of the resume."),
+	icon: z
+		.string()
+		.catch("")
+		.describe(
+			"Phosphor icon name to display before the summary section title in the PDF output. Empty string uses the default summary icon; 'none' hides the icon.",
+		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the summary should span across."),
 	hidden: z.boolean().describe("Whether to hide the summary from the resume."),
 	content: z.string().describe("The content of the summary of the resume. This should be a HTML-formatted string."),
@@ -271,6 +277,12 @@ export type CoverLetterItem = z.infer<typeof coverLetterItemSchema>;
 
 export const baseSectionSchema = z.object({
 	title: z.string().describe("The title of the section."),
+	icon: z
+		.string()
+		.catch("")
+		.describe(
+			"Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the section should span across."),
 	hidden: z.boolean().describe("Whether to hide the section from the resume."),
 });
@@ -457,7 +469,11 @@ export const pageSchema = z.object({
 		.string()
 		.describe("The locale of the page. Used for displaying pre-translated section headings, if not overridden.")
 		.catch("en-US"),
-	hideIcons: z.boolean().describe("Whether to hide the icons of the sections.").catch(false),
+	hideIcons: z.boolean().describe("Whether to hide the item-level icons (skills, profiles, interests).").catch(false),
+	hideSectionIcons: z
+		.boolean()
+		.describe("Whether to hide the section heading icons displayed before section titles.")
+		.catch(true),
 });
 
 export const levelDesignSchema = z.object({
@@ -491,6 +507,102 @@ export const typographySchema = z.object({
 	heading: typographyItemSchema.describe("The typography for the headings of the resume."),
 });
 
+export const styleSlotSchema = z.enum([
+	"section",
+	"heading",
+	"item",
+	"text",
+	"secondaryText",
+	"link",
+	"icon",
+	"level",
+	"richParagraph",
+	"richList",
+	"richListItemRow",
+	"richListItemContent",
+	"richLink",
+	"richBold",
+	"richMark",
+]);
+
+export type StyleSlot = z.infer<typeof styleSlotSchema>;
+
+export const styleIntentSchema = z
+	.strictObject({
+		color: z.string().optional(),
+		backgroundColor: z.string().optional(),
+		borderColor: z.string().optional(),
+		textDecorationColor: z.string().optional(),
+		opacity: z.number().min(0).max(1).optional(),
+		fontSize: z.number().min(6).max(48).optional(),
+		fontWeight: fontWeightSchema.optional(),
+		fontStyle: z.enum(["normal", "italic"]).optional(),
+		lineHeight: z.number().min(0.5).max(4).optional(),
+		letterSpacing: z.number().min(-16).max(16).optional(),
+		textDecoration: z.enum(["none", "underline", "line-through"]).optional(),
+		textDecorationStyle: z.enum(["solid", "dashed", "dotted"]).optional(),
+		textAlign: z.enum(["left", "center", "right", "justify"]).optional(),
+		textTransform: z.enum(["none", "uppercase", "lowercase", "capitalize"]).optional(),
+		padding: z.number().min(-72).max(72).optional(),
+		paddingTop: z.number().min(-72).max(72).optional(),
+		paddingRight: z.number().min(-72).max(72).optional(),
+		paddingBottom: z.number().min(-72).max(72).optional(),
+		paddingLeft: z.number().min(-72).max(72).optional(),
+		marginTop: z.number().min(-72).max(72).optional(),
+		marginRight: z.number().min(-72).max(72).optional(),
+		marginBottom: z.number().min(-72).max(72).optional(),
+		marginLeft: z.number().min(-72).max(72).optional(),
+		rowGap: z.number().min(-72).max(72).optional(),
+		columnGap: z.number().min(-72).max(72).optional(),
+		borderStyle: z.enum(["solid", "dashed", "dotted"]).optional(),
+		borderWidth: z.number().min(0).optional(),
+		borderRadius: z.number().min(0).optional(),
+	})
+	.describe("Constrained visual style intent that can be safely translated to React PDF styles.");
+
+export type StyleIntent = z.infer<typeof styleIntentSchema>;
+
+export const styleRuleSlotsSchema = z
+	.strictObject({
+		section: styleIntentSchema.optional(),
+		heading: styleIntentSchema.optional(),
+		item: styleIntentSchema.optional(),
+		text: styleIntentSchema.optional(),
+		secondaryText: styleIntentSchema.optional(),
+		link: styleIntentSchema.optional(),
+		icon: styleIntentSchema.optional(),
+		level: styleIntentSchema.optional(),
+		richParagraph: styleIntentSchema.optional(),
+		richList: styleIntentSchema.optional(),
+		richListItemRow: styleIntentSchema.optional(),
+		richListItemContent: styleIntentSchema.optional(),
+		richLink: styleIntentSchema.optional(),
+		richBold: styleIntentSchema.optional(),
+		richMark: styleIntentSchema.optional(),
+	})
+	.refine((slots) => Object.values(slots).some(Boolean), {
+		message: "At least one style slot must be configured.",
+	});
+
+export const styleRuleTargetSchema = z.discriminatedUnion("scope", [
+	z.strictObject({ scope: z.literal("global") }),
+	z.strictObject({ scope: z.literal("sectionType"), sectionType: sectionTypeSchema }),
+	z.strictObject({ scope: z.literal("sectionId"), sectionId: z.string().min(1) }),
+]);
+
+export const styleRuleSchema = z.strictObject({
+	id: z.string().min(1).describe("Unique identifier for this style rule."),
+	label: z.string().catch("").describe("Human-readable label for this style rule."),
+	enabled: z.boolean().catch(true).describe("Whether this style rule should affect PDF rendering."),
+	target: styleRuleTargetSchema.describe("The resume content this style rule applies to."),
+	slots: styleRuleSlotsSchema.describe("The semantic style slots configured by this rule."),
+});
+
+export const styleRulesSchema = z.array(styleRuleSchema).catch([]);
+
+export type StyleRule = z.infer<typeof styleRuleSchema>;
+export type StyleRuleTarget = z.infer<typeof styleRuleTargetSchema>;
+
 export const metadataSchema = z.object({
 	template: templateSchema
 		.catch("onyx")
@@ -512,6 +624,9 @@ export const metadataSchema = z.object({
 		.describe(
 			"Personal notes for the resume. Can be used to add any additional information or instructions for the resume. These notes are not displayed on the resume, they are only visible to the author of the resume when editing the resume. This should be a HTML-formatted string.",
 		),
+	styleRules: styleRulesSchema.describe(
+		"Structured style rules that target semantic resume sections and slots for React PDF rendering.",
+	),
 });
 
 export const resumeDataSchema = z.looseObject({

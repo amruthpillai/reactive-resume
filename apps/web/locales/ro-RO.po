@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -373,6 +373,10 @@ msgstr "Aplicație"
 msgid "Application Statistics"
 msgstr "Statistici aplicație"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Reguli aplicate"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arabă"
@@ -671,6 +675,10 @@ msgstr "Cerc"
 msgid "Clear"
 msgstr "Clar"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Ștergeți selecția"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Faceți clic aici pentru a selecta un fișier de importat"
@@ -952,6 +960,10 @@ msgstr "OAuth personalizat"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Secțiuni personalizate"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Stiluri personalizate"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Ascunde"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Ascunde toate iconițele de pe CV"
+msgid "Hide Icons"
+msgstr "Ascunde pictogramele"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Ascunde toate iconițele de pe CV"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Ascundeți parola"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Ascundeți pictogramele secțiunii"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Maghiară"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Iconiță"
@@ -2246,6 +2263,10 @@ msgstr "Nicio cheie de acces înregistrată încă."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Nu s-a găsit niciun rezultat."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Încă nu există reguli de stil."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Resetează"
 msgid "Reset Password"
 msgstr "Resetați parola"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Resetare stil"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Resetați-vă parola"
@@ -2789,6 +2814,14 @@ msgstr "Română"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Rotire"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "regulă"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "reguli"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Se actualizează parola..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Se actualizează CV-ul..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Încărcați atașamente"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

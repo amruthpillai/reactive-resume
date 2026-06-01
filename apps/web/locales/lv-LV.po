@@ -8,7 +8,7 @@ msgstr ""
 "Language: lv\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Latvian\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
@@ -373,6 +373,10 @@ msgstr "Lietotne"
 msgid "Application Statistics"
 msgstr "Lietotnes statistika"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Piemērotie noteikumi"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arābu"
@@ -671,6 +675,10 @@ msgstr "Aplis"
 msgid "Clear"
 msgstr "Skaidrs"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Notīrīt atlasi"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Noklikšķiniet šeit, lai izvēlētos importējamo failu"
@@ -952,6 +960,10 @@ msgstr "Pielāgotais OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Pielāgotās sadaļas"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Pielāgoti stili"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Slēpt"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Paslēpt visas ikonas CV"
+msgid "Hide Icons"
+msgstr "Slēpt ikonas"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Paslēpt visas ikonas CV"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Paslēpt paroli"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Slēpt sadaļu ikonas"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Ungāru"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikona"
@@ -2246,6 +2263,10 @@ msgstr "Pagaidām nav reģistrēti pases taustiņi."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Rezultāti nav atrasti."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Vēl nav stila noteikumu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Atiestatīt"
 msgid "Reset Password"
 msgstr "Atiestatīt paroli"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Atiestatīt stilu"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Atiestatīt paroli"
@@ -2789,6 +2814,14 @@ msgstr "Rumāņu"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Rotācija"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "noteikums"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "noteikumi"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Tiek atjaunināta jūsu parole..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Tiek atjaunināts jūsu CV..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Augšupielādēt pielikumus"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

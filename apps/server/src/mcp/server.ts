@@ -4,6 +4,7 @@ import { onError } from "@orpc/client";
 import { createRouterClient } from "@orpc/server";
 import router from "@reactive-resume/api/routers";
 import { MCP_TOOL_NAME, registerPrompts, registerResources, registerTools } from "@reactive-resume/mcp";
+import { appVersion } from "../app-version";
 import { getRequestLocale } from "../rpc/locale";
 
 function createRequestClient(request: Request): RouterClient<typeof router> {
@@ -25,7 +26,7 @@ export async function createMcpServer(request: Request) {
 	const server = new McpServer(
 		{
 			name: "reactive-resume",
-			version: __APP_VERSION__,
+			version: appVersion,
 			title: "Reactive Resume",
 			websiteUrl: "https://rxresu.me",
 			description:
@@ -52,6 +53,7 @@ export async function createMcpServer(request: Request) {
 				`Read schema at \`resume://_meta/schema\`; read resume JSON via \`resume://{id}\` or \`${MCP_TOOL_NAME.getResume}\`.`,
 				`Apply body edits with JSON Patch through \`${MCP_TOOL_NAME.patchResume}\`.`,
 				`Change name, slug, tags, or public visibility with \`${MCP_TOOL_NAME.updateResume}\` (returns canonical share URL; anonymous access only when \`isPublic\` is true; passwords are managed in the web app only).`,
+				`Create short-lived authenticated PDF download URLs with \`${MCP_TOOL_NAME.downloadResumePdf}\`.`,
 				`Import full ResumeData JSON with \`${MCP_TOOL_NAME.importResume}\`; read saved AI analysis with \`${MCP_TOOL_NAME.getResumeAnalysis}\`.`,
 			].join(" "),
 		},

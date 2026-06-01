@@ -33,6 +33,10 @@ type LaprasTemplate = {
 	styles: LaprasStyles;
 };
 
+type LaprasHeaderProps = {
+	styles: LaprasStyles;
+};
+
 export const LaprasPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -67,7 +71,7 @@ export const LaprasPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: LaprasStyles }) => {
+const Header = ({ styles }: LaprasHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -190,7 +194,6 @@ const useLaprasTemplate = (): LaprasTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

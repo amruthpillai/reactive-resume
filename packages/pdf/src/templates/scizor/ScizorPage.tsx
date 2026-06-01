@@ -34,6 +34,10 @@ type ScizorTemplate = {
 	styles: ScizorStyles;
 };
 
+type ScizorHeaderProps = {
+	styles: ScizorStyles;
+};
+
 export const ScizorPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -61,7 +65,7 @@ export const ScizorPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: ScizorStyles }) => {
+const Header = ({ styles }: ScizorHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -183,7 +187,6 @@ const useScizorTemplate = (): ScizorTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

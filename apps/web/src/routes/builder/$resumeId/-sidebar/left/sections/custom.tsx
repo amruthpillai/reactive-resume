@@ -133,7 +133,11 @@ export function CustomSectionBuilder() {
 	);
 }
 
-function CustomSectionContainer({ section }: { section: CustomSection }) {
+type CustomSectionContainerProps = {
+	section: CustomSection;
+};
+
+function CustomSectionContainer({ section }: CustomSectionContainerProps) {
 	const { openDialog } = useDialogStore();
 	const updateResumeData = useUpdateResumeData();
 
@@ -203,7 +207,11 @@ function CustomSectionContainer({ section }: { section: CustomSection }) {
 	);
 }
 
-function CustomSectionDropdownMenu({ section }: { section: CustomSection }) {
+type CustomSectionDropdownMenuProps = {
+	section: CustomSection;
+};
+
+function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) {
 	const confirm = useConfirm();
 	const { openDialog } = useDialogStore();
 	const updateResumeData = useUpdateResumeData();

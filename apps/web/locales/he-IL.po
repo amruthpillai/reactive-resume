@@ -8,7 +8,7 @@ msgstr ""
 "Language: he\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -373,6 +373,10 @@ msgstr "יישום"
 msgid "Application Statistics"
 msgstr "סטטיסטיקת היישום"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "כללים יישומיים"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "ערבית"
@@ -671,6 +675,10 @@ msgstr "עיגול"
 msgid "Clear"
 msgstr "נקה"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "נקה את הבחירה"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "לחץ כאן כדי לבחור קובץ לייבוא"
@@ -952,6 +960,10 @@ msgstr "OAuth מותאם אישית"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "סעיפים מותאמים אישית"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "סגנונות מותאמים אישית"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "הסתרה"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "הסתרת כל הסמלים בקורות החיים"
+msgid "Hide Icons"
+msgstr "הסתר סמלים"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "הסתרת כל הסמלים בקורות החיים"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "הסתר סיסמה"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "הסתר סמלי מדור"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "הונגרית"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "סמל"
@@ -2246,6 +2263,10 @@ msgstr "עדיין לא נרשמו מפתחות גישה."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "לא נמצאו תוצאות."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "עדיין אין חוקי סגנון."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "איפוס"
 msgid "Reset Password"
 msgstr "איפוס סיסמה"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "איפוס סגנון"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "איפוס הסיסמה שלך"
@@ -2789,6 +2814,14 @@ msgstr "רומנית"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "סיבוב"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "כְּלָל"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "כללים"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "מעדכן את הסיסמה שלך..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "מעדכן את קורות החיים שלך..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "העלאת קבצים מצורפים"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

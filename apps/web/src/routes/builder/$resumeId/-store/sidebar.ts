@@ -20,6 +20,22 @@ export const DEFAULT_BUILDER_LAYOUT: BuilderLayout = {
 	right: 22,
 };
 
+export const DESKTOP_BUILDER_SIDEBAR_COLLAPSED_SIZE = 48;
+export const DESKTOP_BUILDER_SIDEBAR_MIN_SIZE = 320;
+
+type BuilderSidebarResizeConfigInput = {
+	isMobile: boolean;
+	width: number;
+};
+
+export const getBuilderSidebarResizeConfig = ({ isMobile, width }: BuilderSidebarResizeConfigInput) => ({
+	maxSidebarSize: !width ? 0 : isMobile ? "95%" : "45%",
+	minSidebarSize: !width ? 0 : isMobile ? 0 : DESKTOP_BUILDER_SIDEBAR_MIN_SIZE,
+	collapsedSidebarSize: !width ? 0 : isMobile ? 0 : DESKTOP_BUILDER_SIDEBAR_COLLAPSED_SIZE,
+	expandSize: isMobile ? "95%" : "30%",
+	groupResizeBehavior: "preserve-pixel-size" as const,
+});
+
 export const mapPanelLayoutToBuilderLayout = (layout: Layout): BuilderLayout => {
 	const left = layout.left;
 	const artboard = layout.artboard;
@@ -78,7 +94,9 @@ export const useBuilderSidebarStore = create<BuilderSidebar>((set) => ({
 
 type UseBuilderSidebarReturn = {
 	maxSidebarSize: string | number;
+	minSidebarSize: number;
 	collapsedSidebarSize: number;
+	groupResizeBehavior: "preserve-pixel-size";
 	isCollapsed: (side: "left" | "right") => boolean;
 	toggleSidebar: (side: "left" | "right", forceState?: boolean) => void;
 };
@@ -87,9 +105,8 @@ export function useBuilderSidebar<T = UseBuilderSidebarReturn>(selector?: (build
 	const isMobile = useIsMobile();
 	const { width } = useWindowSize();
 
-	const maxSidebarSize: string | number = !width ? 0 : isMobile ? "95%" : "45%";
-	const collapsedSidebarSize = !width ? 0 : isMobile ? 0 : 48;
-	const expandSize = isMobile ? "95%" : "30%";
+	const { maxSidebarSize, minSidebarSize, collapsedSidebarSize, expandSize, groupResizeBehavior } =
+		getBuilderSidebarResizeConfig({ isMobile, width });
 
 	const isCollapsed = useCallback((side: "left" | "right") => {
 		const sidebar =
@@ -121,11 +138,13 @@ export function useBuilderSidebar<T = UseBuilderSidebarReturn>(selector?: (build
 	const state = useMemo(() => {
 		return {
 			maxSidebarSize,
+			minSidebarSize,
 			collapsedSidebarSize,
+			groupResizeBehavior,
 			isCollapsed,
 			toggleSidebar,
 		};
-	}, [maxSidebarSize, collapsedSidebarSize, isCollapsed, toggleSidebar]);
+	}, [maxSidebarSize, minSidebarSize, collapsedSidebarSize, groupResizeBehavior, isCollapsed, toggleSidebar]);
 
 	return selector ? selector(state) : (state as T);
 }

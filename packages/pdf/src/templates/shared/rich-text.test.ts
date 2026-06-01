@@ -5,6 +5,7 @@ import { parse } from "node-html-parser";
 import { createElement } from "react";
 import { normalizeRichTextHtml } from "./rich-text-html";
 import { renderRichTextParagraph } from "./rich-text-renderers";
+import { createRichTextStylesheet } from "./rich-text-stylesheet";
 
 type PdfElement = ReactElement<{ children?: unknown; style?: unknown }>;
 
@@ -22,13 +23,13 @@ describe("normalizeRichTextHtml", () => {
 
 	it("preserves existing block rich text", () => {
 		expect(normalizeRichTextHtml("<p>Existing paragraph.</p><ul><li><p>Existing item.</p></li></ul>")).toBe(
-			"<p>Existing paragraph.</p><ul><li><p>Existing item.</p></li></ul>",
+			"<p>Existing paragraph.</p><ul><li>Existing item.</li></ul>",
 		);
 	});
 
 	it("wraps inline runs around top-level blocks", () => {
 		expect(normalizeRichTextHtml("Intro <strong>text</strong><ul><li><p>Item</p></li></ul>Outro")).toBe(
-			"<p>Intro <strong>text</strong></p><ul><li><p>Item</p></li></ul><p>Outro</p>",
+			"<p>Intro <strong>text</strong></p><ul><li>Item</li></ul><p>Outro</p>",
 		);
 	});
 });
@@ -48,5 +49,21 @@ describe("renderRichTextParagraph", () => {
 
 		expect(rendered.type).toBe(PdfText);
 		expect(props.children).toEqual(["Plain ", expect.any(Object), " text"]);
+	});
+});
+
+describe("createRichTextStylesheet", () => {
+	it("applies list style rules to unordered and ordered list containers", () => {
+		const stylesheet = createRichTextStylesheet({
+			richListRuleStyle: { rowGap: 8 },
+			proseSpacing: {
+				paragraph: { marginTop: 12, marginBottom: 12 },
+				listItem: { marginTop: 2, marginBottom: 2 },
+			},
+		});
+
+		expect(stylesheet.ul).toEqual({ rowGap: 8 });
+		expect(stylesheet.ol).toEqual({ rowGap: 8 });
+		expect(stylesheet.li).toEqual({ marginTop: 2, marginBottom: 2 });
 	});
 });

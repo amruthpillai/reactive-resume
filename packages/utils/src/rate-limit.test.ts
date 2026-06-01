@@ -91,7 +91,7 @@ describe("rateLimitConfig", () => {
 		});
 
 		it("provides reasonable mutation throughput for resume edits", () => {
-			expect(rateLimitConfig.orpc.resumeMutations).toEqual({ maxRequests: 60, window: 60 * 1000 });
+			expect(rateLimitConfig.orpc.resumeMutations).toEqual({ maxRequests: 300, window: 60 * 1000 });
 		});
 
 		it("limits storage uploads more strictly than deletes", () => {

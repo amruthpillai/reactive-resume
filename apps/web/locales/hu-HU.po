@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -373,6 +373,10 @@ msgstr "Alkalmazás"
 msgid "Application Statistics"
 msgstr "Alkalmazásstatisztikák"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Alkalmazott szabályok"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "arab"
@@ -671,6 +675,10 @@ msgstr "Kör"
 msgid "Clear"
 msgstr "Tiszta"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Kijelölés törlése"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Kattints ide az importálandó fájl kiválasztásához"
@@ -952,6 +960,10 @@ msgstr "Egyéni OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Egyéni szekciók"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Egyéni stílusok"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Elrejtés"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Az önéletrajz összes ikonjának elrejtése"
+msgid "Hide Icons"
+msgstr "Ikonok elrejtése"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Az önéletrajz összes ikonjának elrejtése"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Jelszó elrejtése"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Szakasz ikonok elrejtése"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "magyar"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikon"
@@ -2246,6 +2263,10 @@ msgstr "Még nincsenek regisztrált kulcsok."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Nincs találat."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Stílusra még nincsenek szabályok."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Visszaállítás"
 msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Stílus visszaállítása"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Jelszó visszaállítása"
@@ -2789,6 +2814,14 @@ msgstr "Román"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Forgatás"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "szabály"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "szabályok"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Jelszó frissítése..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Önéletrajz frissítése..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Mellékletek feltöltése"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

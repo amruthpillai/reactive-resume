@@ -5,23 +5,20 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 
+type GridProps = {
+	rowCount: number;
+	columnCount: number;
+	cellComponent: React.ComponentType<
+		{ rowIndex: number; columnIndex: number; style: React.CSSProperties } & Record<string, unknown>
+	>;
+	cellProps: Record<string, unknown>;
+};
+
 // react-window's <Grid> uses ResizeObserver / IntersectionObserver heavily and
 // expects measurable layouts that happy-dom can't provide. Stub it with a simple
 // pass-through that renders the first row of cells via the supplied cellComponent.
 vi.mock("react-window", () => ({
-	Grid: ({
-		rowCount,
-		columnCount,
-		cellComponent: CellComponent,
-		cellProps,
-	}: {
-		rowCount: number;
-		columnCount: number;
-		cellComponent: React.ComponentType<
-			{ rowIndex: number; columnIndex: number; style: React.CSSProperties } & Record<string, unknown>
-		>;
-		cellProps: Record<string, unknown>;
-	}) => {
+	Grid: ({ rowCount, columnCount, cellComponent: CellComponent, cellProps }: GridProps) => {
 		const cells: React.ReactNode[] = [];
 		for (let r = 0; r < Math.min(rowCount, 1); r++) {
 			for (let c = 0; c < columnCount; c++) {

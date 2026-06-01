@@ -36,6 +36,10 @@ type RhyhornTemplate = {
 	styles: RhyhornStyles;
 };
 
+type RhyhornHeaderProps = {
+	styles: RhyhornStyles;
+};
+
 export const RhyhornPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -70,7 +74,7 @@ export const RhyhornPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: RhyhornStyles }) => {
+const Header = ({ styles }: RhyhornHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 	const contactItems: {
@@ -236,7 +240,6 @@ const useRhyhornTemplate = (): RhyhornTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

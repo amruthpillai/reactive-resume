@@ -42,6 +42,10 @@ type AzurillTemplate = {
 	featureStyles: TemplateFeatureStyleSlots;
 };
 
+type AzurillHeaderProps = {
+	styles: AzurillStyles;
+};
+
 const azurillFeatures = {
 	sectionTimeline: true,
 } satisfies TemplateFeatures;
@@ -88,7 +92,7 @@ export const AzurillPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: AzurillStyles }) => {
+const Header = ({ styles }: AzurillHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -210,7 +214,6 @@ const useAzurillTemplate = (): AzurillTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

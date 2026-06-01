@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
 	DEFAULT_BUILDER_LAYOUT,
+	DESKTOP_BUILDER_SIDEBAR_COLLAPSED_SIZE,
+	DESKTOP_BUILDER_SIDEBAR_MIN_SIZE,
+	getBuilderSidebarResizeConfig,
 	mapPanelLayoutToBuilderLayout,
 	parseBuilderLayoutCookie,
 	useBuilderSidebarStore,
@@ -61,6 +64,25 @@ describe("mapPanelLayoutToBuilderLayout", () => {
 	it("returns the layout when all panel sizes are numeric", () => {
 		const layout = mapPanelLayoutToBuilderLayout({ left: 15, artboard: 70, right: 15 } as never);
 		expect(layout).toEqual({ left: 15, artboard: 70, right: 15 });
+	});
+});
+
+describe("getBuilderSidebarResizeConfig", () => {
+	it("uses a desktop minimum width that is larger than the collapsed rail", () => {
+		const config = getBuilderSidebarResizeConfig({ isMobile: false, width: 1280 });
+
+		expect(config.minSidebarSize).toBe(DESKTOP_BUILDER_SIDEBAR_MIN_SIZE);
+		expect(config.collapsedSidebarSize).toBe(DESKTOP_BUILDER_SIDEBAR_COLLAPSED_SIZE);
+		expect(config.minSidebarSize).toBeGreaterThan(config.collapsedSidebarSize);
+		expect(config.groupResizeBehavior).toBe("preserve-pixel-size");
+	});
+
+	it("allows mobile sidebars to collapse fully without a desktop minimum", () => {
+		const config = getBuilderSidebarResizeConfig({ isMobile: true, width: 390 });
+
+		expect(config.minSidebarSize).toBe(0);
+		expect(config.collapsedSidebarSize).toBe(0);
+		expect(config.maxSidebarSize).toBe("95%");
 	});
 });
 

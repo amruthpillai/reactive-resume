@@ -40,6 +40,10 @@ type DittoTemplate = {
 	styles: DittoStyles;
 };
 
+type DittoHeaderProps = {
+	styles: DittoStyles;
+};
+
 export const DittoPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata, picture } = data;
@@ -91,7 +95,7 @@ export const DittoPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: DittoStyles }) => {
+const Header = ({ styles }: DittoHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -216,7 +220,6 @@ const useDittoTemplate = (): DittoTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

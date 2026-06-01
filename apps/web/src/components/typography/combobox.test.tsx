@@ -8,8 +8,12 @@ const comboboxMock = vi.hoisted(() => ({
 	props: undefined as { onValueChange?: (value: string[] | null) => void } | undefined,
 }));
 
+type ComboboxProps = {
+	onValueChange?: (value: string[] | null) => void;
+};
+
 vi.mock("@/components/ui/combobox", () => ({
-	Combobox: (props: { onValueChange?: (value: string[] | null) => void }) => {
+	Combobox: (props: ComboboxProps) => {
 		comboboxMock.props = props;
 		return null;
 	},

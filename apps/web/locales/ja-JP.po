@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -373,6 +373,10 @@ msgstr "アプリ"
 msgid "Application Statistics"
 msgstr "アプリケーション統計"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "適用規則"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "アラビア語"
@@ -671,6 +675,10 @@ msgstr "円"
 msgid "Clear"
 msgstr "クリア"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "選択をクリア"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "ここをクリックしてインポートするファイルを選択"
@@ -952,6 +960,10 @@ msgstr "カスタムOAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "カスタムセクション"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "カスタムスタイル"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "非表示にする"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "履歴書上のすべてのアイコンを非表示にする"
+msgid "Hide Icons"
+msgstr "アイコンを非表示にする"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "履歴書上のすべてのアイコンを非表示にする"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "パスワードを隠す"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "セクションアイコンを非表示にする"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "ハンガリー語"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "アイコン"
@@ -2246,6 +2263,10 @@ msgstr "パスキーはまだ登録されていない。"
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "結果が見つかりません。"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "まだスタイルに関するルールはありません。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "リセット"
 msgid "Reset Password"
 msgstr "パスワードをリセット"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "スタイルをリセット"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "パスワードをリセット"
@@ -2789,6 +2814,14 @@ msgstr "ルーマニア語"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "回転"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "ルール"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "ルール"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "パスワードを更新しています..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "履歴書を更新しています..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "添付ファイルをアップロードする"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

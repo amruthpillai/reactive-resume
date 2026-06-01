@@ -34,6 +34,10 @@ type MeowthTemplate = {
 	styles: MeowthStyles;
 };
 
+type MeowthHeaderProps = {
+	styles: MeowthStyles;
+};
+
 const meowthFeatures = {
 	inlineItemHeader: true,
 } satisfies TemplateFeatures;
@@ -72,7 +76,7 @@ export const MeowthPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: MeowthStyles }) => {
+const Header = ({ styles }: MeowthHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -191,7 +195,6 @@ const useMeowthTemplate = (): MeowthTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

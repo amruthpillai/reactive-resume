@@ -60,7 +60,7 @@ const getFaqItems = (): FAQItemData[] => [
 	},
 ];
 
-export function FAQ() {
+export function Faq() {
 	const faqItems = getFaqItems();
 
 	return (

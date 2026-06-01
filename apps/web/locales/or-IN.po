@@ -8,7 +8,7 @@ msgstr ""
 "Language: or\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Odia\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -373,6 +373,10 @@ msgstr "ଆପ୍"
 msgid "Application Statistics"
 msgstr "ଆପ୍ଲିକେସନ୍ ସଂଖ୍ୟାତ୍ମକ ତଥ୍ୟ"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "ଲାଗୁ ହୋଇଥିବା ନିୟମଗୁଡ଼ିକ"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "ଆରବୀ"
@@ -671,6 +675,10 @@ msgstr "ବୃତ୍ତ"
 msgid "Clear"
 msgstr "ସଫା କରନ୍ତୁ"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "ଚୟନ ଖାଲି କରନ୍ତୁ"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "ଆୟାତ କରିବା ପାଇଁ ଫାଇଲ୍ ଚୟନ କରିବାକୁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ"
@@ -952,6 +960,10 @@ msgstr "କଷ୍ଟମ୍ OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "କଷ୍ଟମ୍ ବିଭାଗଗୁଡିକ"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "କଷ୍ଟମ୍ ଷ୍ଟାଇଲ୍ସ"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "ଲୁଚାନ୍ତୁ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "ରେଜ୍ୟୁମେର ସମସ୍ତ ଆଇକନ୍ ଲୁଚାନ୍ତୁ"
+msgid "Hide Icons"
+msgstr "ଚିତ୍ରସଂକେତଗୁଡିକୁ ଲୁଚାନ୍ତୁ"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "ରେଜ୍ୟୁମେର ସମସ୍ତ ଆଇକନ୍ ଲୁଚା
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "ପାସୱାର୍ଡ ଲୁଚାନ୍ତୁ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "ବିଭାଗ ଆଇକନଗୁଡ଼ିକୁ ଲୁଚାନ୍ତୁ"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "ହଙ୍ଗେରିଆନ୍"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "ଆଇକନ୍"
@@ -2246,6 +2263,10 @@ msgstr "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପାସକି ପଞ୍
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "କୌଣସି ଫଳାଫଳ ମିଳିଲା ନାହିଁ।"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଷ୍ଟାଇଲ୍ ନିୟମ ନାହିଁ।"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "ରିସେଟ୍ କରନ୍ତୁ"
 msgid "Reset Password"
 msgstr "ପାସୱାର୍ଡ ରିସେଟ୍ କରନ୍ତୁ"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "ଷ୍ଟାଇଲ୍ ରିସେଟ୍ କରନ୍ତୁ"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "ଆପଣଙ୍କ ପାସୱାର୍ଡ ରିସେଟ୍ କରନ୍ତୁ"
@@ -2789,6 +2814,14 @@ msgstr "ରୋମାନିଆନ୍"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "ଘୁର୍ଣ୍ଣନ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "ନିୟମ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "ନିୟମ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "ଆପଣଙ୍କ ପାସୱାର୍ଡ ଅଦ୍ୟତନ ହେଉ
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "ଆପଣଙ୍କ ରେଜ୍ୟୁମେ ଅଦ୍ୟତନ ହେଉଛି..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "ଆଟାଚମେଣ୍ଟ୍ ଅପଲୋଡ୍ କରନ୍ତୁ"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

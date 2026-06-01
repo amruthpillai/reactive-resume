@@ -49,7 +49,6 @@ function InputGroupAddon({
 			className={cn(inputGroupAddonVariants({ align }), className)}
 			onKeyDown={(e) => {
 				if (!(e.target instanceof Element) || !e.currentTarget.contains(e.target)) return;
-				// Only respond to Space or Enter
 				if (e.key !== " " && e.key !== "Enter") return;
 				if (!(e.target as HTMLElement).closest("button")) {
 					e.preventDefault();

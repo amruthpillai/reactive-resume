@@ -8,11 +8,16 @@ import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 
+type PdfViewerProps = {
+	className?: string;
+	data: ResumeData;
+};
+
 const publicResumeMock = vi.hoisted(() => ({
 	createResumePdfBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
 	downloadWithAnchor: vi.fn(),
 	generateFilename: vi.fn((name: string, extension: string) => `${name}.${extension}`),
-	PdfViewer: vi.fn<(_props: { className?: string; data: ResumeData }) => ReactNode>(() => null),
+	PdfViewer: vi.fn<(_props: PdfViewerProps) => ReactNode>(() => null),
 	resume: undefined as
 		| undefined
 		| {

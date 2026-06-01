@@ -38,6 +38,10 @@ type GlalieTemplate = {
 	styles: GlalieStyles;
 };
 
+type GlalieHeaderProps = {
+	styles: GlalieStyles;
+};
+
 const glalieFeatures = {
 	stackSidebarItemHeader: true,
 } satisfies TemplateFeatures;
@@ -91,7 +95,7 @@ export const GlaliePage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: GlalieStyles }) => {
+const Header = ({ styles }: GlalieHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -225,7 +229,6 @@ const useGlalieTemplate = (): GlalieTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,
@@ -320,7 +323,7 @@ const useGlalieTemplate = (): GlalieTemplate => {
 				width: "100%",
 				borderWidth: 1,
 				borderColor: primary,
-				borderRadius: picture.borderRadius / 4,
+				borderRadius: 0,
 				padding: metrics.gapX(0.75),
 				rowGap: metrics.gapY(0.125),
 			},

@@ -23,6 +23,10 @@ import { orpc } from "@/libs/orpc/client";
 type SavedProvider = RouterOutput["aiProviders"]["list"][number];
 type AIProviderOption = ComboboxOption<AIProvider> & { defaultBaseURL: string };
 
+type ProviderRowProps = {
+	provider: SavedProvider;
+};
+
 const providerOptions: AIProviderOption[] = [
 	{
 		value: "openai",
@@ -110,7 +114,7 @@ function isAiProviderConfigError(error: unknown) {
 	return status === "PRECONDITION_FAILED" || status === 412;
 }
 
-function ProviderRow({ provider }: { provider: SavedProvider }) {
+function ProviderRow({ provider }: ProviderRowProps) {
 	const queryClient = useQueryClient();
 	const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.queryKey() });
 	const { mutate: testProvider, isPending: isTesting } = useMutation(orpc.aiProviders.test.mutationOptions());

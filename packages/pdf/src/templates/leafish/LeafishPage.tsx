@@ -38,6 +38,10 @@ type LeafishTemplate = {
 	styles: LeafishStyles;
 };
 
+type LeafishHeaderProps = {
+	styles: LeafishStyles;
+};
+
 export const LeafishPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -79,7 +83,7 @@ export const LeafishPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: LeafishStyles }) => {
+const Header = ({ styles }: LeafishHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -216,7 +220,6 @@ const useLeafishTemplate = (): LeafishTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

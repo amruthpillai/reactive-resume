@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -373,6 +373,10 @@ msgstr "App"
 msgid "Application Statistics"
 msgstr "Statistiques d'application"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Règles appliquées"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arabe"
@@ -671,6 +675,10 @@ msgstr "Cercle"
 msgid "Clear"
 msgstr "Clair"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Sélection claire"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Cliquez ici pour sélectionner un fichier à importer"
@@ -952,6 +960,10 @@ msgstr "OAuth personnalisé"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Sections personnalisées"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Styles personnalisés"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Masquer"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Masquer toutes les icônes du CV"
+msgid "Hide Icons"
+msgstr "Masquer les icônes"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Masquer toutes les icônes du CV"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Cacher le mot de passe"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Masquer les icônes de section"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Hongrois"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Icône"
@@ -2246,6 +2263,10 @@ msgstr "Aucun passe-partout n'a encore été enregistré."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Aucun résultat trouvé."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Pas encore de règles de style."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Réinitialiser"
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Réinitialiser le style"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Réinitialisez votre mot de passe"
@@ -2789,6 +2814,14 @@ msgstr "Roumain"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Rotation"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "règle"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "règles"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Mise à jour de votre mot de passe..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Mise à jour de votre CV..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Télécharger des pièces jointes"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

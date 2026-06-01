@@ -21,6 +21,7 @@ import {
 	LayoutIcon,
 	MessengerLogoIcon,
 	NotepadIcon,
+	PaintBrushBroadIcon,
 	PaletteIcon,
 	PhoneIcon,
 	ReadCvLogoIcon,
@@ -34,6 +35,8 @@ import {
 import { match } from "ts-pattern";
 import { cn } from "@reactive-resume/utils/style";
 
+export { defaultSectionIconNames } from "@reactive-resume/schema/resume/section-icons";
+
 export type LeftSidebarSection = "picture" | "basics" | "summary" | SectionType | "custom";
 
 // CustomSectionType values that are not in SectionType (used in custom sections only)
@@ -44,6 +47,7 @@ export type RightSidebarSection =
 	| "layout"
 	| "typography"
 	| "design"
+	| "styles"
 	| "page"
 	| "notes"
 	| "sharing"
@@ -78,6 +82,7 @@ export const rightSidebarSections: RightSidebarSection[] = [
 	"layout",
 	"typography",
 	"design",
+	"styles",
 	"page",
 	"notes",
 	"sharing",
@@ -116,6 +121,7 @@ export const getSectionTitle = (type: SidebarSection | CustomOnlyType): string =
 			.with("layout", () => t`Layout`)
 			.with("typography", () => t`Typography`)
 			.with("design", () => t`Design`)
+			.with("styles", () => t`Custom Styles`)
 			.with("page", () => t`Page`)
 			.with("notes", () => t`Notes`)
 			.with("sharing", () => t`Sharing`)
@@ -159,6 +165,7 @@ export const getSectionIcon = (type: SidebarSection | CustomOnlyType, props?: Ic
 			.with("layout", () => <LayoutIcon {...iconProps} />)
 			.with("typography", () => <TextTIcon {...iconProps} />)
 			.with("design", () => <PaletteIcon {...iconProps} />)
+			.with("styles", () => <PaintBrushBroadIcon {...iconProps} />)
 			.with("page", () => <ReadCvLogoIcon {...iconProps} />)
 			.with("notes", () => <NotepadIcon {...iconProps} />)
 			.with("sharing", () => <ShareFatIcon {...iconProps} />)

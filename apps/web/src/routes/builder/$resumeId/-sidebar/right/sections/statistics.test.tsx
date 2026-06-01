@@ -17,6 +17,10 @@ const queryResult = vi.hoisted(() => ({
 		  },
 }));
 
+type SectionBaseProps = {
+	children: React.ReactNode;
+};
+
 vi.mock("@tanstack/react-query", () => ({
 	useQuery: () => queryResult,
 }));
@@ -27,7 +31,7 @@ vi.mock("@/libs/orpc/client", () => ({
 	orpc: { resume: { statistics: { getById: { queryOptions: () => ({}) } } } },
 }));
 vi.mock("../shared/section-base", () => ({
-	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+	SectionBase: ({ children }: SectionBaseProps) => <div>{children}</div>,
 }));
 
 const { StatisticsSectionBuilder } = await import("./statistics");

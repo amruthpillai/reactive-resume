@@ -224,11 +224,11 @@ export function ResumeAnalysisSectionBuilder() {
 											<div key={suggestion.title} className="space-y-3 rounded-md border bg-card p-3">
 												<div className="flex items-center gap-2">
 													<span
-														role="img"
+														aria-hidden="true"
 														className={`size-2.5 shrink-0 rounded-full ring-1 ring-border ${impactCircleClass(suggestion.impact)}`}
 														title={impactLabel(suggestion.impact)}
-														aria-label={impactLabel(suggestion.impact)}
 													/>
+													<span className="sr-only">{impactLabel(suggestion.impact)}</span>
 													<div className="font-semibold text-sm tracking-tight">{suggestion.title}</div>
 												</div>
 

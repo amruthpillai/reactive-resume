@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -373,6 +373,10 @@ msgstr "Приложение"
 msgid "Application Statistics"
 msgstr "Статистика приложения"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Применяемые правила"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Арабский"
@@ -671,6 +675,10 @@ msgstr "Круг"
 msgid "Clear"
 msgstr "Clear"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Четкий выбор"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Нажмите здесь, чтобы выбрать файл для импорта"
@@ -952,6 +960,10 @@ msgstr "Пользовательский OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Пользовательские разделы"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Пользовательские стили"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Скрыть"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Скрыть все иконки в резюме"
+msgid "Hide Icons"
+msgstr "Скрыть значки"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Скрыть все иконки в резюме"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Скрыть пароль"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Скрыть значки разделов"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Венгерский"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Иконка"
@@ -2246,6 +2263,10 @@ msgstr "Паски пока не зарегистрированы."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Результатов не найдено."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Пока нет никаких правил стиля."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Сброс"
 msgid "Reset Password"
 msgstr "Сбросить пароль"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Сбросить стиль"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Сбросить пароль"
@@ -2789,6 +2814,14 @@ msgstr "Румынский"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Поворот"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "правило"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "правила"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Обновление пароля..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Обновление вашего резюме..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Загрузить вложения"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

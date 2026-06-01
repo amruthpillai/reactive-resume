@@ -4,6 +4,48 @@ description: "List of all notable changes and updates to Reactive Resume"
 rss: true
 ---
 
+<Update label="v5.1.7" description="27th May 2026">
+## Highlights
+
+- **Custom Styles replaces Custom CSS.** Reactive Resume now has a structured Custom Styles panel in the builder for fine-grained resume styling without raw CSS. Because v5 renders resumes through React PDF instead of browser HTML/CSS, Custom Styles uses safe, semantic rules that work consistently in the live preview, exported PDFs, public resumes, and server-side generation. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147), [c6a654191](https://github.com/amruthpillai/reactive-resume/commit/c6a654191), [16f4d2c07](https://github.com/amruthpillai/reactive-resume/commit/16f4d2c07)
+
+<img
+  src="/images/guides/using-custom-styles/screenshot-1.webp"
+  alt="Custom Styles section in the right sidebar with target scope, style slot, style controls, and applied rules"
+/>
+
+- **Better live resume sync.** The builder now handles local edits, Agent updates, MCP changes, and API updates more reliably by saving the latest resume draft and merging server metadata without losing in-progress changes. [dd1e37e57](https://github.com/amruthpillai/reactive-resume/commit/dd1e37e57)
+- **More accessible links across the app and exports.** Link handling was refreshed across web UI, dialogs, PDF preview/rendering, email, and shared UI components for improved accessibility behavior. [8da780c86](https://github.com/amruthpillai/reactive-resume/commit/8da780c86)
+
+## Custom Styles
+
+- Added a new **Custom Styles** section to the builder's right sidebar with target scope, style slot, style controls, and applied-rule management. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147), [c6a654191](https://github.com/amruthpillai/reactive-resume/commit/c6a654191)
+- Added style rule metadata to resume data so styling can be saved with the resume and preserved during imports from Reactive Resume v4 JSON. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147)
+- Added target scopes for **All sections**, **Section type**, and **Specific section**, allowing broad defaults or precise overrides for duplicate and custom sections. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147)
+- Added semantic style slots for section containers, headings, item containers, primary and secondary text, links, icons, level indicators, rich-text paragraphs, lists, list rows, list content, inline links, bold text, and highlights. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147), [c6a654191](https://github.com/amruthpillai/reactive-resume/commit/c6a654191)
+- Added structured controls for color, typography, spacing, borders, opacity, text decoration, alignment, and transforms, with empty fields falling back to the selected template. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147)
+- Added shared PDF style-rule resolution so Custom Styles layer on top of every template and apply consistently to rich text, lists, contact items, level indicators, and template-owned section rendering. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147), [c6a654191](https://github.com/amruthpillai/reactive-resume/commit/c6a654191)
+- Added focused tests for style rule schema validation, PDF style resolution, rich-text style inheritance, and the Custom Styles builder UI. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147), [c6a654191](https://github.com/amruthpillai/reactive-resume/commit/c6a654191)
+
+## Builder, Accessibility & Agent Updates
+
+- Reworked resume draft saving so the builder queues full draft saves, retries failed saves, and avoids overwriting newer local edits when server responses arrive out of order. [dd1e37e57](https://github.com/amruthpillai/reactive-resume/commit/dd1e37e57)
+- Added a resume update subscription for Agent threads so resume previews can refresh when external Agent changes land. [dd1e37e57](https://github.com/amruthpillai/reactive-resume/commit/dd1e37e57)
+- Improved import, picture, information, resume analysis, homepage, Agent, and shared UI link behavior for better accessibility and safer rendering. [8da780c86](https://github.com/amruthpillai/reactive-resume/commit/8da780c86)
+- Added safer PDF text style handling for links and rich text so invalid or unsupported link styles do not leak into React PDF output. [8da780c86](https://github.com/amruthpillai/reactive-resume/commit/8da780c86)
+- Improved combobox behavior and tests used by Custom Styles and other builder controls. [c6a654191](https://github.com/amruthpillai/reactive-resume/commit/c6a654191), [b49158263](https://github.com/amruthpillai/reactive-resume/commit/b49158263)
+
+## Docs, Localization & Maintenance
+
+- Added a full **Using Custom Styles** guide with screenshots, target-scope guidance, style-slot reference tables, practical examples, and notes on when to use Custom Styles instead of the broader Design, Typography, Layout, and Page settings. [16f4d2c07](https://github.com/amruthpillai/reactive-resume/commit/16f4d2c07)
+- Added an architecture decision record explaining why structured Style Rules are the supported replacement for raw Custom CSS in the React PDF rendering model. [b04eef147](https://github.com/amruthpillai/reactive-resume/commit/b04eef147)
+- Added a Custom Styles header-target design note for future styling scope decisions. [7bff6644d](https://github.com/amruthpillai/reactive-resume/commit/7bff6644d)
+- Synced missing translations for Custom Styles and related builder text across locale catalogs. [b49158263](https://github.com/amruthpillai/reactive-resume/commit/b49158263)
+- Removed React Doctor from package scripts, refreshed task dependencies in `turbo.json`, and cleaned up related workspace dependency entries. [8461aa65](https://github.com/amruthpillai/reactive-resume/commit/8461aa65)
+
+**Full Changelog**: [v5.1.6...v5.1.7](https://github.com/amruthpillai/reactive-resume/compare/v5.1.6...v5.1.7)
+</Update>
+
 <Update label="v5.1.6" description="26th May 2026">
 ## Highlights
 

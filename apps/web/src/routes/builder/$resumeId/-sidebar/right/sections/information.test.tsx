@@ -5,8 +5,12 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 
+type SectionBaseProps = {
+	children: React.ReactNode;
+};
+
 vi.mock("../shared/section-base", () => ({
-	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+	SectionBase: ({ children }: SectionBaseProps) => <div>{children}</div>,
 }));
 
 const { InformationSectionBuilder } = await import("./information");
@@ -47,6 +51,6 @@ describe("InformationSectionBuilder", () => {
 		renderInfo();
 		const docs = screen.getByText("Documentation").closest("a") as HTMLAnchorElement;
 		expect(docs.getAttribute("target")).toBe("_blank");
-		expect(docs.getAttribute("rel")).toBe("noopener");
+		expect(docs.getAttribute("rel")).toBe("noopener noreferrer");
 	});
 });

@@ -35,7 +35,11 @@ type ChipItemProps = {
 	onRemove: (index: number) => void;
 };
 
-function ChipDragPreview({ chip }: { chip: string }) {
+type ChipDragPreviewProps = {
+	chip: string;
+};
+
+function ChipDragPreview({ chip }: ChipDragPreviewProps) {
 	return (
 		<Badge
 			variant="outline"
@@ -46,7 +50,11 @@ function ChipDragPreview({ chip }: { chip: string }) {
 	);
 }
 
-function ChipDragOverlay({ activeChip }: { activeChip: string | null }) {
+type ChipDragOverlayProps = {
+	activeChip: string | null;
+};
+
+function ChipDragOverlay({ activeChip }: ChipDragOverlayProps) {
 	const overlay = (
 		<DragOverlay dropAnimation={null}>{activeChip ? <ChipDragPreview chip={activeChip} /> : null}</DragOverlay>
 	);

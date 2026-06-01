@@ -12,7 +12,7 @@ export function Copyright({ className, ...props }: Props) {
 					<a
 						href="https://github.com/AmruthPillai/Reactive-Resume/blob/main/LICENSE"
 						target="_blank"
-						rel="noopener"
+						rel="noopener noreferrer"
 						className="font-medium underline underline-offset-2"
 					>
 						MIT
@@ -30,7 +30,7 @@ export function Copyright({ className, ...props }: Props) {
 					A passion project by{" "}
 					<a
 						target="_blank"
-						rel="noopener"
+						rel="noopener noreferrer"
 						href="https://amruthpillai.com"
 						className="font-medium underline underline-offset-2"
 					>

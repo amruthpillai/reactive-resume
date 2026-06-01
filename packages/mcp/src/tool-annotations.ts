@@ -29,6 +29,12 @@ export const TOOL_ANNOTATIONS: Record<McpRegisteredToolName, ToolAnnotations> = 
 		idempotentHint: true,
 		openWorldHint: false,
 	},
+	[MCP_TOOL_NAME.downloadResumePdf]: {
+		readOnlyHint: true,
+		destructiveHint: false,
+		idempotentHint: false,
+		openWorldHint: false,
+	},
 	[MCP_TOOL_NAME.createResume]: {
 		readOnlyHint: false,
 		destructiveHint: false,

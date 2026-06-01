@@ -33,6 +33,10 @@ type OnyxTemplate = {
 	styles: OnyxStyles;
 };
 
+type OnyxHeaderProps = {
+	styles: OnyxStyles;
+};
+
 export const OnyxPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -67,7 +71,7 @@ export const OnyxPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: OnyxStyles }) => {
+const Header = ({ styles }: OnyxHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -186,7 +190,6 @@ const useOnyxTemplate = (): OnyxTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

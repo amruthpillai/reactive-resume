@@ -32,8 +32,8 @@ describe("Badge", () => {
 	});
 
 	it("supports a custom render function", () => {
-		render(<Badge render={(props) => <a {...props} href="/x" />}>link</Badge>);
-		const anchor = screen.getByRole("link", { name: "link" });
+		render(<Badge render={(props) => <a {...props} href="/x" aria-label="View profile" />}>View profile</Badge>);
+		const anchor = screen.getByRole("link", { name: "View profile" });
 		expect(anchor).toBeInTheDocument();
 	});
 });

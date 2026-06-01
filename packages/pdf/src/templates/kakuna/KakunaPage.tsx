@@ -34,6 +34,10 @@ type KakunaTemplate = {
 	styles: KakunaStyles;
 };
 
+type KakunaHeaderProps = {
+	styles: KakunaStyles;
+};
+
 export const KakunaPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -68,7 +72,7 @@ export const KakunaPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: KakunaStyles }) => {
+const Header = ({ styles }: KakunaHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -188,7 +192,6 @@ const useKakunaTemplate = (): KakunaTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

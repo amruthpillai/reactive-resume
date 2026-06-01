@@ -33,6 +33,10 @@ type BronzorTemplate = {
 	styles: BronzorStyles;
 };
 
+type BronzorHeaderProps = {
+	styles: BronzorStyles;
+};
+
 const getBronzorSections = ({
 	mainSections,
 	sidebarSections,
@@ -85,7 +89,7 @@ export const BronzorPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: BronzorStyles }) => {
+const Header = ({ styles }: BronzorHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -206,7 +210,6 @@ const useBronzorTemplate = (): BronzorTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

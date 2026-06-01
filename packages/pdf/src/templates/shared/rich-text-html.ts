@@ -1,4 +1,4 @@
-import type { Node } from "node-html-parser";
+import type { HTMLElement, Node } from "node-html-parser";
 import { NodeType, parse } from "node-html-parser";
 import { isDarkColor } from "@reactive-resume/utils/color";
 
@@ -62,6 +62,23 @@ const normalizeMarkElements = (root: ReturnType<typeof parse>) => {
 	}
 };
 
+const isMeaningfulNode = (node: Node): boolean =>
+	node.nodeType !== NodeType.TEXT_NODE || node.toString().trim().length > 0;
+
+const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
+
+const unwrapSingleParagraphListItems = (root: ReturnType<typeof parse>) => {
+	for (const listItem of root.querySelectorAll("li")) {
+		const meaningfulChildren = listItem.childNodes.filter(isMeaningfulNode);
+		if (meaningfulChildren.length !== 1) continue;
+
+		const child = meaningfulChildren[0];
+		if (!child || !isElement(child) || getTagName(child) !== "p") continue;
+
+		listItem.innerHTML = child.innerHTML;
+	}
+};
+
 const isInlineNode = (node: Node): boolean => {
 	if (node.nodeType === NodeType.TEXT_NODE || node.nodeType === NodeType.COMMENT_NODE) return true;
 	if (node.nodeType !== NodeType.ELEMENT_NODE) return false;
@@ -84,9 +101,11 @@ const tryConvertPseudoBulletParagraph = (paragraphInnerHtml: string): string | n
 	const cleaned = stripEmptyInlineWrappers(paragraphInnerHtml);
 	if (!/<br\b/i.test(cleaned)) return null;
 
-	const segments = splitByBreaks(cleaned)
-		.map((segment) => segment.trim())
-		.filter((segment) => segment.length > 0);
+	const segments: string[] = [];
+	for (const segment of splitByBreaks(cleaned)) {
+		const trimmed = segment.trim();
+		if (trimmed.length > 0) segments.push(trimmed);
+	}
 
 	if (segments.length < 2) return null;
 	if (!segments.every((segment) => PSEUDO_BULLET_LEAD.test(segment))) return null;
@@ -108,6 +127,7 @@ export const normalizeRichTextHtml = (html: string): string => {
 	let inlineNodes: string[] = [];
 
 	normalizeMarkElements(root);
+	unwrapSingleParagraphListItems(root);
 
 	const flushInlineNodes = () => {
 		const inlineHtml = inlineNodes.join("").trim();

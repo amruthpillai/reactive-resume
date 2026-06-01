@@ -5,8 +5,16 @@ import { describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 
+type LinkProps = React.PropsWithChildren<{
+	to: string;
+}>;
+
+type LocaleComboboxProps = {
+	render: React.ReactElement;
+};
+
 vi.mock("@tanstack/react-router", () => ({
-	Link: ({ children, to, ...rest }: React.PropsWithChildren<{ to: string }>) => (
+	Link: ({ children, to, ...rest }: LinkProps) => (
 		<a href={typeof to === "string" ? to : "#"} {...rest}>
 			{children}
 		</a>
@@ -16,7 +24,7 @@ vi.mock("@/components/input/github-stars-button", () => ({
 	GithubStarsButton: () => <div data-testid="github-stars-button" />,
 }));
 vi.mock("@/features/locale/combobox", () => ({
-	LocaleCombobox: ({ render: renderProp }: { render: React.ReactElement }) => renderProp,
+	LocaleCombobox: ({ render: renderProp }: LocaleComboboxProps) => renderProp,
 }));
 vi.mock("@/features/theme/toggle-button", () => ({
 	ThemeToggleButton: () => <button type="button" data-testid="theme-toggle" />,

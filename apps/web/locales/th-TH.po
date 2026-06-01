@@ -8,7 +8,7 @@ msgstr ""
 "Language: th\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Thai\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -373,6 +373,10 @@ msgstr "แอป"
 msgid "Application Statistics"
 msgstr "สถิติของแอปพลิเคชัน"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "กฎที่ใช้"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "อารบิก"
@@ -671,6 +675,10 @@ msgstr "วงกลม"
 msgid "Clear"
 msgstr "ชัดเจน"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "การเลือกที่ชัดเจน"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "คลิกที่นี่เพื่อเลือกไฟล์ที่จะนำเข้า"
@@ -952,6 +960,10 @@ msgstr "OAuth แบบกำหนดเอง"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "ส่วนที่กำหนดเอง"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "สไตล์ที่กำหนดเอง"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "ซ่อน"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "ซ่อนไอคอนทั้งหมดในเรซูเม่"
+msgid "Hide Icons"
+msgstr "ซ่อนไอคอน"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "ซ่อนไอคอนทั้งหมดในเรซูเม
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "ซ่อนรหัสผ่าน"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "ซ่อนไอคอนส่วนต่างๆ"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "ฮังการี"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "ไอคอน"
@@ -2246,6 +2263,10 @@ msgstr "ยังไม่มีพาสคีย์ที่ลงทะเบ
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "ไม่พบผลลัพธ์"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "ยังไม่มีกฎเกณฑ์ด้านสไตล์ใดๆ"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "รีเซ็ต"
 msgid "Reset Password"
 msgstr "รีเซ็ตรหัสผ่าน"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "รีเซ็ตสไตล์"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "รีเซ็ตรหัสผ่านของคุณ"
@@ -2789,6 +2814,14 @@ msgstr "โรมาเนีย"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "การหมุน"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "กฎ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "กฎ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "กำลังอัปเดตรหัสผ่านของคุ
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "กำลังอัปเดตประวัติย่อของคุณ..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "อัปโหลดไฟล์แนบ"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

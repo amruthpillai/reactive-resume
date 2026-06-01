@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -373,6 +373,10 @@ msgstr "App"
 msgid "Application Statistics"
 msgstr "Applikationsstatistik"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Anvendte regler"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arabisk"
@@ -671,6 +675,10 @@ msgstr "Cirkel"
 msgid "Clear"
 msgstr "Klar"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Ryd valg"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Klik her for at vælge en fil, der skal importeres"
@@ -952,6 +960,10 @@ msgstr "Brugerdefineret OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Brugerdefinerede afsnit"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Brugerdefinerede stilarter"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Skjul"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Skjul alle ikoner på CV'et"
+msgid "Hide Icons"
+msgstr "Skjul ikoner"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Skjul alle ikoner på CV'et"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Skjul adgangskode"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Skjul sektionsikoner"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Ungarsk"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikon"
@@ -2246,6 +2263,10 @@ msgstr "Ingen nøgler registreret endnu."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Ingen resultater fundet."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Ingen stilregler endnu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Nulstil"
 msgid "Reset Password"
 msgstr "Nulstil adgangskode"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Nulstil stil"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Nulstil din adgangskode"
@@ -2789,6 +2814,14 @@ msgstr "Rumænsk"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Rotation"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "herske"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "regler"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Opdaterer din adgangskode..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Opdaterer dit CV..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Upload vedhæftede filer"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

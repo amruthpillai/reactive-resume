@@ -31,9 +31,13 @@ type PromptContextType = {
 	prompt: (title: string, options?: PromptOptions) => Promise<string | null>;
 };
 
+type PromptDialogProviderProps = {
+	children: React.ReactNode;
+};
+
 const PromptContext = React.createContext<PromptContextType | null>(null);
 
-export function PromptDialogProvider({ children }: { children: React.ReactNode }) {
+export function PromptDialogProvider({ children }: PromptDialogProviderProps) {
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const [state, setState] = React.useState<PromptState>({
@@ -96,8 +100,10 @@ export function PromptDialogProvider({ children }: { children: React.ReactNode }
 		[handleConfirm],
 	);
 
+	const contextValue = React.useMemo<PromptContextType>(() => ({ prompt }), [prompt]);
+
 	return (
-		<PromptContext.Provider value={{ prompt }}>
+		<PromptContext.Provider value={contextValue}>
 			{children}
 
 			<AlertDialog open={state.open} onOpenChange={(open) => !open && handleCancel()}>

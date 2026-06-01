@@ -6,7 +6,7 @@ import { DownloadSimpleIcon, FileIcon, UploadSimpleIcon } from "@phosphor-icons/
 import { useStore } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { JSONResumeImporter } from "@reactive-resume/import/json-resume";
@@ -92,7 +92,6 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const navigate = useNavigate();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 
-	const prevTypeRef = useRef<string>("");
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [isImporting, setIsImporting] = useState<boolean>(false);
 
@@ -207,12 +206,6 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 	const type = useStore(form.store, (s) => s.values.type);
 
-	useEffect(() => {
-		if (prevTypeRef.current === type) return;
-		prevTypeRef.current = type;
-		form.setFieldValue("file", undefined);
-	}, [form, type]);
-
 	const onSelectFile = () => {
 		if (!inputRef.current) return;
 		inputRef.current.click();
@@ -261,7 +254,9 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 										showClear={false}
 										value={field.state.value}
 										onValueChange={(value) => {
-											field.handleChange(value as ImportType);
+											const nextType = value as ImportType;
+											if (nextType !== field.state.value) form.setFieldValue("file", undefined);
+											field.handleChange(nextType);
 										}}
 										options={[
 											{

@@ -8,6 +8,7 @@ import { downloadResumePdfProcedure } from "@reactive-resume/api/features/resume
 import router from "@reactive-resume/api/routers";
 import { env } from "@reactive-resume/env/server";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { appVersion } from "../app-version";
 import { mergeResponseHeaders } from "../http/headers";
 import { getRequestLocale } from "../rpc/locale";
 
@@ -44,7 +45,7 @@ export async function handleOpenApi(request: Request) {
 		const spec = await openAPIGenerator.generate(openAPIRouter, {
 			info: {
 				title: "Reactive Resume",
-				version: __APP_VERSION__,
+				version: appVersion,
 				description: "Reactive Resume API",
 				license: { name: "MIT", url: "https://github.com/amruthpillai/reactive-resume/blob/main/LICENSE" },
 				contact: { name: "Amruth Pillai", email: "hello@amruthpillai.com", url: "https://amruthpillai.com" },

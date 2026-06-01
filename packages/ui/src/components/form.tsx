@@ -18,9 +18,10 @@ type FormItemProps = React.ComponentProps<"div"> & { hasError?: boolean };
 
 function FormItem({ className, hasError = false, ...props }: FormItemProps) {
 	const id = React.useId();
+	const contextValue = React.useMemo<FormItemContextValue>(() => ({ id, hasError }), [hasError, id]);
 
 	return (
-		<FormItemContext.Provider value={{ id, hasError }}>
+		<FormItemContext.Provider value={contextValue}>
 			<div data-slot="form-item" className={cn("grid gap-1.5", className)} {...props} />
 		</FormItemContext.Provider>
 	);

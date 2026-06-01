@@ -15,6 +15,10 @@ import { Combobox } from "@/components/ui/combobox";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 
+type NewThreadSetupProps = {
+	resumeId?: string;
+};
+
 function providerLabel(provider: { label: string; provider: AIProvider; model: string }) {
 	return `${provider.label} · ${provider.provider} · ${provider.model}`;
 }
@@ -27,7 +31,7 @@ function isAgentConfigError(error: unknown) {
 	return typeof message === "string" && /REDIS_URL|ENCRYPTION_SECRET/.test(message);
 }
 
-export function NewThreadSetup({ resumeId }: { resumeId?: string }) {
+export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 	const isClient = useIsClient();
 	const navigate = useNavigate();
 	const {

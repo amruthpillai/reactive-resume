@@ -1,10 +1,12 @@
 import type { SectionType } from "@reactive-resume/schema/resume/data";
 import type { LeftSidebarSection } from "@/libs/resume/section";
 import { CaretDownIcon } from "@phosphor-icons/react";
+import { getDefaultSectionIconName } from "@reactive-resume/schema/resume/section-icons";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@reactive-resume/ui/components/accordion";
 import { Button } from "@reactive-resume/ui/components/button";
 import { cn } from "@reactive-resume/utils/style";
-import { useCurrentResume } from "@/features/resume/builder/draft";
+import { IconPicker } from "@/components/input/icon-picker";
+import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { getSectionIcon, getSectionTitle } from "@/libs/resume/section";
 import { useSectionStore } from "../../../-store/section";
 import { SectionDropdownMenu } from "./section-menu";
@@ -15,6 +17,7 @@ type Props = React.ComponentProps<typeof AccordionContent> & {
 
 export function SectionBase({ type, className, ...props }: Props) {
 	const resume = useCurrentResume();
+	const updateResumeData = useUpdateResumeData();
 	const data = resume.data;
 	const section =
 		type === "basics"
@@ -28,8 +31,26 @@ export function SectionBase({ type, className, ...props }: Props) {
 						: data.sections[type];
 
 	const isHidden = "hidden" in section && section.hidden;
+	const hasSectionIcon = !["picture", "basics", "custom"].includes(type);
+	const rawIcon = "icon" in section && typeof section.icon === "string" ? section.icon : "";
+	const fallbackIcon = hasSectionIcon ? getDefaultSectionIconName(type as "summary" | SectionType) : "";
+	const sectionIcon = rawIcon === "none" ? "" : rawIcon || fallbackIcon;
+
 	const collapsed = useSectionStore((state) => state.sections[type]?.collapsed ?? false);
 	const toggleCollapsed = useSectionStore((state) => state.toggleCollapsed);
+
+	const onIconChange = (icon: string) => {
+		// Store "none" when user explicitly picks the empty/prohibit option
+		const valueToStore = icon === "" ? "none" : icon;
+
+		updateResumeData((draft) => {
+			if (type === "summary") {
+				draft.summary.icon = valueToStore;
+			} else if (type !== "basics" && type !== "picture" && type !== "custom") {
+				draft.sections[type as SectionType].icon = valueToStore;
+			}
+		});
+	};
 
 	return (
 		<Accordion
@@ -49,8 +70,12 @@ export function SectionBase({ type, className, ...props }: Props) {
 						}
 					/>
 
-					<div className="flex flex-1 items-center gap-x-4">
-						{getSectionIcon(type)}
+					<div className={cn("flex flex-1 items-center gap-x-4", hasSectionIcon && "gap-x-2")}>
+						{hasSectionIcon ? (
+							<IconPicker value={sectionIcon} onChange={onIconChange} size="icon" variant="ghost" />
+						) : (
+							getSectionIcon(type)
+						)}
 						<h2 className="line-clamp-1 font-semibold text-2xl tracking-tight">
 							{("title" in section && section.title) || getSectionTitle(type)}
 						</h2>

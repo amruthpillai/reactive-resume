@@ -1,5 +1,6 @@
 import z from "zod";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { appVersion } from "../app-version";
 
 export function handleSchemaJson() {
 	const resumeDataJSONSchema = z.toJSONSchema(resumeDataSchema);
@@ -12,7 +13,7 @@ export function handleSchemaJson() {
 			"Surrogate-Control": "max-age=86400",
 			"X-Content-Type-Options": "nosniff",
 			"X-Robots-Tag": "index, follow",
-			ETag: __APP_VERSION__,
+			ETag: appVersion,
 			Vary: "Accept",
 		},
 	});

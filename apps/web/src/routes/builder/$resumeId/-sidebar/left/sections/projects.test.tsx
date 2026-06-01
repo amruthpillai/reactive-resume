@@ -35,6 +35,19 @@ const items = vi.hoisted(() => [
 	},
 ]);
 
+type SectionBaseProps = {
+	children: React.ReactNode;
+};
+
+type SectionAddItemButtonProps = {
+	children: React.ReactNode;
+};
+
+type SectionItemProps = {
+	title: string;
+	subtitle?: string;
+};
+
 vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentResume: () => ({
 		data: { sections: { projects: { title: "Projects", columns: 1, hidden: false, items } } },
@@ -42,11 +55,11 @@ vi.mock("@/features/resume/builder/draft", () => ({
 	useUpdateResumeData: () => vi.fn(),
 }));
 vi.mock("../shared/section-base", () => ({
-	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+	SectionBase: ({ children }: SectionBaseProps) => <div>{children}</div>,
 }));
 vi.mock("../shared/section-item", () => ({
-	SectionAddItemButton: ({ children }: { children: React.ReactNode }) => <button type="button">{children}</button>,
-	SectionItem: ({ title, subtitle }: { title: string; subtitle?: string }) => (
+	SectionAddItemButton: ({ children }: SectionAddItemButtonProps) => <button type="button">{children}</button>,
+	SectionItem: ({ title, subtitle }: SectionItemProps) => (
 		<div>
 			<span data-testid="item-title">{title}</span>
 			<span data-testid="item-subtitle">{subtitle ?? "<undefined>"}</span>

@@ -29,6 +29,18 @@ import { orpc } from "@/libs/orpc/client";
 
 type AgentThreadSummary = RouterOutput["agent"]["threads"]["list"][number];
 
+type ThreadActionsProps = {
+	thread: AgentThreadSummary;
+	activeThreadId: string | null;
+};
+
+type ThreadRowProps = ThreadActionsProps;
+
+type AgentThreadSidebarProps = {
+	activeThreadId?: string | null;
+	className?: string;
+};
+
 const RELATIVE_TIME_DIVISIONS: Array<{ amount: number; unit: Intl.RelativeTimeFormatUnit }> = [
 	{ amount: 31_536_000_000, unit: "year" },
 	{ amount: 2_592_000_000, unit: "month" },
@@ -51,7 +63,7 @@ function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFo
 	return formatter.format(Math.round(diffMs / division.amount), division.unit);
 }
 
-function ThreadActions({ thread, activeThreadId }: { thread: AgentThreadSummary; activeThreadId: string | null }) {
+function ThreadActions({ thread, activeThreadId }: ThreadActionsProps) {
 	const navigate = useNavigate();
 	const confirm = useConfirm();
 	const queryClient = useQueryClient();
@@ -127,7 +139,7 @@ function ThreadActions({ thread, activeThreadId }: { thread: AgentThreadSummary;
 	);
 }
 
-function ThreadRow({ thread, activeThreadId }: { thread: AgentThreadSummary; activeThreadId: string | null }) {
+function ThreadRow({ thread, activeThreadId }: ThreadRowProps) {
 	const { i18n } = useLingui();
 	const relativeTimeFormatter = useMemo(
 		() => Reflect.construct(Intl.RelativeTimeFormat, [i18n.locale, { numeric: "auto" }]) as Intl.RelativeTimeFormat,
@@ -160,13 +172,7 @@ function ThreadRow({ thread, activeThreadId }: { thread: AgentThreadSummary; act
 	);
 }
 
-export function AgentThreadSidebar({
-	activeThreadId = null,
-	className,
-}: {
-	activeThreadId?: string | null;
-	className?: string;
-}) {
+export function AgentThreadSidebar({ activeThreadId = null, className }: AgentThreadSidebarProps) {
 	const { data: threads, isLoading } = useQuery(orpc.agent.threads.list.queryOptions());
 
 	return (

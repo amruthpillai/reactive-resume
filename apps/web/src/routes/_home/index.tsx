@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createRootStructuredDataScript, getCanonicalRootUrl } from "@/libs/seo";
 import { DonationBanner } from "./-sections/donate";
-import { FAQ } from "./-sections/faq";
+import { Faq } from "./-sections/faq";
 import { Features } from "./-sections/features";
 import { Footer } from "./-sections/footer";
 import { Hero } from "./-sections/hero";
@@ -35,7 +35,7 @@ function RouteComponent() {
 					<Templates />
 					<Testimonials />
 					<DonationBanner />
-					<FAQ />
+					<Faq />
 					<Prefooter />
 					<Footer />
 				</div>

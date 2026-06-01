@@ -10,7 +10,6 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
-import { applyResumePatches, createResumePatches } from "@reactive-resume/resume/patch";
 import { orpc, streamClient } from "@/libs/orpc/client";
 
 export type Resume = {
@@ -46,11 +45,18 @@ type ResumeStore = ResumeStoreState & ResumeStoreActions;
 type Runtime = {
 	abortController: AbortController;
 	queryClient?: QueryClient;
-	baselineData?: ResumeData;
 	hasPendingLocalChanges: boolean;
+	isSaving: boolean;
+	pendingResume?: Resume;
 	syncErrorToastId?: string | number;
-	syncResume: ReturnType<typeof debounce<(resume: Resume) => Promise<void>>>;
+	syncResume: ReturnType<typeof debounce<(resume: Resume) => void>>;
 	beforeUnloadHandler?: () => void;
+};
+
+type ResumeUpdateSubscriptionOptions = {
+	resumeId?: string;
+	onUpdate: () => Promise<void> | void;
+	onError?: (error: unknown) => void;
 };
 
 const SAVE_DEBOUNCE_MS = 500;
@@ -66,66 +72,86 @@ function cloneResumeData(data: ResumeData): ResumeData {
 	return structuredClone(data);
 }
 
+function cloneResume(resume: Resume): Resume {
+	return { ...resume, data: cloneResumeData(resume.data) };
+}
+
 function createResumeUpdateEventIterator(resumeId: string) {
 	return streamClient.resume.updates.subscribe({ id: resumeId });
 }
 
 function setRuntimeBaseline(resume: Resume) {
 	const runtime = getRuntime(resume.id);
-	runtime.baselineData = cloneResumeData(resume.data);
 	runtime.hasPendingLocalChanges = false;
+	runtime.pendingResume = undefined;
+}
+
+async function flushResumeSave(id: string) {
+	const runtime = runtimes.get(id);
+	if (!runtime || runtime.isSaving || !runtime.pendingResume) return;
+
+	const submitted = runtime.pendingResume;
+	const submittedData = cloneResumeData(submitted.data);
+	runtime.pendingResume = undefined;
+	runtime.isSaving = true;
+
+	try {
+		const updated = (await orpc.resume.update.call(
+			{ id: submitted.id, data: submittedData },
+			{ signal: runtime.abortController.signal },
+		)) as Resume;
+
+		runtime.queryClient?.setQueryData(getResumeQueryKey(submitted.id), updated);
+
+		const currentResume = useResumeStore.getState().resume;
+		const currentDataStillMatchesSubmission =
+			currentResume?.id === submitted.id && isEqual(currentResume.data, submittedData);
+
+		if (currentDataStillMatchesSubmission && !runtime.pendingResume) {
+			runtime.hasPendingLocalChanges = false;
+			useResumeStore.getState().replaceResumeFromServer(updated);
+		} else {
+			runtime.hasPendingLocalChanges = true;
+			useResumeStore.getState().mergeResumeMetadata(updated);
+
+			if (!runtime.pendingResume && currentResume?.id === submitted.id && !isEqual(currentResume.data, submittedData)) {
+				runtime.syncResume.cancel();
+				runtime.pendingResume = cloneResume(currentResume);
+			}
+		}
+
+		if (runtime.syncErrorToastId !== undefined) {
+			toast.dismiss(runtime.syncErrorToastId);
+			runtime.syncErrorToastId = undefined;
+		}
+	} catch (error: unknown) {
+		if (error instanceof DOMException && error.name === "AbortError") return;
+
+		runtime.pendingResume ??= submitted;
+		runtime.hasPendingLocalChanges = true;
+		runtime.syncErrorToastId = toast.error(t`Your latest changes could not be saved.`, {
+			id: runtime.syncErrorToastId,
+			duration: Number.POSITIVE_INFINITY,
+		});
+	} finally {
+		runtime.isSaving = false;
+		if (runtime.pendingResume && runtime.syncErrorToastId === undefined) void flushResumeSave(id);
+	}
+}
+
+function queueResumeSave(resume: Resume) {
+	const runtime = getRuntime(resume.id);
+	runtime.pendingResume = cloneResume(resume);
+	runtime.hasPendingLocalChanges = true;
+	void flushResumeSave(resume.id);
 }
 
 function createRuntime(): Runtime {
 	const abortController = new AbortController();
 
 	const syncResume = debounce(
-		async (resume: Resume) => {
-			const runtime = runtimes.get(resume.id);
-			if (!runtime) return;
-
-			const baselineData = runtime.baselineData ?? cloneResumeData(resume.data);
-			const operations = createResumePatches(baselineData, resume.data);
-
-			if (operations.length === 0) {
-				runtime.hasPendingLocalChanges = false;
-				return;
-			}
-
-			const submittedData = cloneResumeData(resume.data);
-
-			try {
-				const updated = (await orpc.resume.patch.call(
-					{ id: resume.id, operations },
-					{ signal: abortController.signal },
-				)) as Resume;
-
-				runtime.queryClient?.setQueryData(getResumeQueryKey(resume.id), updated);
-				runtime.baselineData = cloneResumeData(updated.data);
-
-				const currentResume = useResumeStore.getState().resume;
-				const currentDataStillMatchesSubmission =
-					currentResume?.id === resume.id && isEqual(currentResume.data, submittedData);
-
-				if (currentDataStillMatchesSubmission) {
-					runtime.hasPendingLocalChanges = false;
-					useResumeStore.getState().replaceResumeFromServer(updated);
-				} else {
-					runtime.hasPendingLocalChanges = true;
-					useResumeStore.getState().mergeResumeMetadata(updated);
-					syncCurrentResume(resume.id);
-				}
-
-				if (runtime.syncErrorToastId === undefined) return;
-				toast.dismiss(runtime.syncErrorToastId);
-				runtime.syncErrorToastId = undefined;
-			} catch (error: unknown) {
-				if (error instanceof DOMException && error.name === "AbortError") return;
-				runtime.syncErrorToastId = toast.error(t`Your latest changes could not be saved.`, {
-					id: runtime.syncErrorToastId,
-					duration: Number.POSITIVE_INFINITY,
-				});
-			}
+		(resume: Resume) => {
+			queueResumeSave(resume);
 		},
 		SAVE_DEBOUNCE_MS,
 		{ signal: abortController.signal },
@@ -134,6 +160,7 @@ function createRuntime(): Runtime {
 	const runtime: Runtime = {
 		abortController,
 		hasPendingLocalChanges: false,
+		isSaving: false,
 		syncResume,
 	};
 
@@ -330,56 +357,26 @@ export function useUpdateResumeData() {
 	);
 }
 
-export function useResumeUpdateSubscription() {
-	const queryClient = useQueryClient();
-	const replaceResumeFromServer = useResumeStore((state) => state.replaceResumeFromServer);
-	const params = useParams({ strict: false }) as { resumeId?: string };
-	const resumeId = params.resumeId;
+export function useResumeUpdateSubscription({ resumeId, onUpdate, onError }: ResumeUpdateSubscriptionOptions) {
 	const [_retryNonce, setRetryNonce] = useState(0);
 
 	useEffect(() => {
 		if (!resumeId) return;
-
-		bindRuntimeQueryClient(resumeId, queryClient);
 
 		let didCancel = false;
 		let retryTimer: number | undefined;
 		const cancel = consumeEventIterator(createResumeUpdateEventIterator(resumeId), {
 			onEvent: async () => {
 				try {
-					const resume = (await orpc.resume.getById.call({ id: resumeId })) as Resume;
-
-					if (hasPendingLocalChanges(resumeId)) {
-						const runtime = getRuntime(resumeId);
-						const currentResume = useResumeStore.getState().resume;
-						const baselineData = runtime.baselineData ?? currentResume?.data;
-
-						if (currentResume && baselineData) {
-							const localOperations = createResumePatches(baselineData, currentResume.data);
-							const mergedData = applyResumePatches(resume.data, localOperations);
-
-							runtime.baselineData = cloneResumeData(resume.data);
-							runtime.hasPendingLocalChanges = localOperations.length > 0;
-							queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
-							useResumeStore.getState().replaceResumeDraft({ ...resume, data: mergedData });
-							syncCurrentResume(resumeId);
-						} else {
-							runtime.baselineData = cloneResumeData(resume.data);
-							useResumeStore.getState().mergeResumeMetadata(resume);
-						}
-						return;
-					}
-
-					queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
-					replaceResumeFromServer(resume);
+					await onUpdate();
 				} catch (error) {
 					if (error instanceof DOMException && error.name === "AbortError") return;
-					console.warn("Failed to refresh resume after update event:", error);
+					onError?.(error);
 				}
 			},
 			onError: (error) => {
 				if (didCancel) return;
-				console.warn("Resume update stream failed, reconnecting:", error);
+				onError?.(error);
 				retryTimer = window.setTimeout(() => setRetryNonce((value) => value + 1), 2500);
 			},
 		});
@@ -389,7 +386,36 @@ export function useResumeUpdateSubscription() {
 			if (retryTimer) window.clearTimeout(retryTimer);
 			void cancel().catch(() => {});
 		};
+	}, [onError, onUpdate, resumeId]);
+}
+
+export function useBuilderResumeUpdateSubscription() {
+	const queryClient = useQueryClient();
+	const replaceResumeFromServer = useResumeStore((state) => state.replaceResumeFromServer);
+	const params = useParams({ strict: false }) as { resumeId?: string };
+	const resumeId = params.resumeId;
+
+	const onUpdate = useCallback(async () => {
+		if (!resumeId) return;
+
+		bindRuntimeQueryClient(resumeId, queryClient);
+		const resume = (await orpc.resume.getById.call({ id: resumeId })) as Resume;
+
+		queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
+
+		if (hasPendingLocalChanges(resumeId)) {
+			useResumeStore.getState().mergeResumeMetadata(resume);
+			return;
+		}
+
+		replaceResumeFromServer(resume);
 	}, [queryClient, replaceResumeFromServer, resumeId]);
+
+	const onError = useCallback((error: unknown) => {
+		console.warn("Resume update stream failed, reconnecting:", error);
+	}, []);
+
+	useResumeUpdateSubscription({ resumeId, onUpdate, onError });
 }
 
 export function useResumeCleanup() {

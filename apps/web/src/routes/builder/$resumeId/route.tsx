@@ -8,11 +8,11 @@ import { useEffect, useRef } from "react";
 import { usePanelRef } from "react-resizable-panels";
 import { ResizableGroup, ResizablePanel, ResizableSeparator } from "@reactive-resume/ui/components/resizable";
 import {
+	useBuilderResumeUpdateSubscription,
 	useInitializeResumeStore,
 	useMergeResumeMetadata,
 	useResumeCleanup,
 	useResumeStore,
-	useResumeUpdateSubscription,
 } from "@/features/resume/builder/draft";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpc } from "@/libs/orpc/client";
@@ -62,7 +62,7 @@ function RouteComponent() {
 	const isInitialized = isReady && initializedResumeId === resumeId;
 
 	useResumeCleanup();
-	useResumeUpdateSubscription();
+	useBuilderResumeUpdateSubscription();
 
 	useEffect(() => {
 		if (isInitialized) return;
@@ -104,9 +104,11 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 	const setRightSidebar = useBuilderSidebarStore((state) => state.setRightSidebar);
 	const setLayout = useBuilderSidebarStore((state) => state.setLayout);
 
-	const { maxSidebarSize, collapsedSidebarSize } = useBuilderSidebar((state) => ({
+	const { maxSidebarSize, minSidebarSize, collapsedSidebarSize, groupResizeBehavior } = useBuilderSidebar((state) => ({
 		maxSidebarSize: state.maxSidebarSize,
+		minSidebarSize: state.minSidebarSize,
 		collapsedSidebarSize: state.collapsedSidebarSize,
+		groupResizeBehavior: state.groupResizeBehavior,
 	}));
 
 	useEffect(() => {
@@ -128,7 +130,7 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 		setRightSidebar(rightSidebarRef);
 	}, [leftSidebarRef, rightSidebarRef, setLeftSidebar, setRightSidebar]);
 
-	const sidebarMinSize = isMobile ? "0%" : `${collapsedSidebarSize * 2}px`;
+	const sidebarMinSize = isMobile ? "0%" : `${minSidebarSize}px`;
 	const sidebarCollapsedSize = isMobile ? "0%" : `${collapsedSidebarSize}px`;
 	const leftSidebarSize = isMobile ? "0%" : `${initialLayout.left}%`;
 	const rightSidebarSize = isMobile ? "0%" : `${initialLayout.right}%`;
@@ -143,6 +145,7 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 					collapsible
 					id="left"
 					panelRef={leftSidebarRef}
+					groupResizeBehavior={groupResizeBehavior}
 					maxSize={maxSidebarSize}
 					minSize={sidebarMinSize}
 					collapsedSize={sidebarCollapsedSize}
@@ -160,6 +163,7 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 					collapsible
 					id="right"
 					panelRef={rightSidebarRef}
+					groupResizeBehavior={groupResizeBehavior}
 					maxSize={maxSidebarSize}
 					minSize={sidebarMinSize}
 					collapsedSize={sidebarCollapsedSize}

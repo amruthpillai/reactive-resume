@@ -11,6 +11,18 @@ const previewMock = vi.hoisted(() => ({
 	toBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
 }));
 
+type PdfCanvasDocumentProps = {
+	children: (document: { numPages: number }) => React.ReactNode;
+	onLoadSuccess: (document: { numPages: number }) => void;
+};
+
+type PdfCanvasPageProps = {
+	onLoadSuccess: (pageNumber: number, pageSize: { height: number; width: number }) => void;
+	onRenderSuccess?: () => void;
+	pageNumber: number;
+	totalPages: number;
+};
+
 const resumeDataWithPageCount = (pageCount: number): ResumeData => ({
 	...sampleResumeData,
 	metadata: {
@@ -35,30 +47,14 @@ vi.mock("./pdf-canvas", async () => {
 	const pdfDocument = { numPages: 1 };
 
 	return {
-		PdfCanvasDocument: ({
-			children,
-			onLoadSuccess,
-		}: {
-			children: (document: typeof pdfDocument) => React.ReactNode;
-			onLoadSuccess: (document: typeof pdfDocument) => void;
-		}) => {
+		PdfCanvasDocument: ({ children, onLoadSuccess }: PdfCanvasDocumentProps) => {
 			React.useEffect(() => {
 				onLoadSuccess(pdfDocument);
 			}, [onLoadSuccess]);
 
 			return React.createElement(React.Fragment, null, children(pdfDocument));
 		},
-		PdfCanvasPage: ({
-			onLoadSuccess,
-			onRenderSuccess,
-			pageNumber,
-			totalPages,
-		}: {
-			onLoadSuccess: (pageNumber: number, pageSize: { height: number; width: number }) => void;
-			onRenderSuccess?: () => void;
-			pageNumber: number;
-			totalPages: number;
-		}) => {
+		PdfCanvasPage: ({ onLoadSuccess, onRenderSuccess, pageNumber, totalPages }: PdfCanvasPageProps) => {
 			React.useEffect(() => {
 				onLoadSuccess(pageNumber, { height: 200, width: 100 });
 				onRenderSuccess?.();

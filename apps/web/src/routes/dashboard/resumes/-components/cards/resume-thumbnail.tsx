@@ -15,6 +15,11 @@ type ResumeListItem = RouterOutput["resume"]["list"][number];
 
 type ThumbnailState = { status: "error" | "idle" | "loading" } | { status: "ready"; url: string };
 
+type ResumeThumbnailProps = {
+	isLocked: boolean;
+	resume: ResumeListItem;
+};
+
 const throwIfAborted = (signal: AbortSignal) => {
 	if (signal.aborted) throw new DOMException("Thumbnail generation aborted.", "AbortError");
 };
@@ -63,7 +68,7 @@ function useResumeThumbnail(data: ResumeData | undefined, cacheKey: string | und
 	return { status: "loading" };
 }
 
-export function ResumeThumbnail({ isLocked, resume }: { isLocked: boolean; resume: ResumeListItem }) {
+export function ResumeThumbnail({ isLocked, resume }: ResumeThumbnailProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(containerRef, { amount: 0.1, margin: "240px", once: true });
 	const resumeQuery = useQuery({

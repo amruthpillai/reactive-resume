@@ -38,6 +38,11 @@ type PikachuTemplate = {
 	styles: PikachuStyles;
 };
 
+type PikachuHeaderProps = {
+	styles: PikachuStyles;
+	colors: TemplateColorRoles;
+};
+
 const pikachuFeatures = {
 	stackSidebarItemHeader: true,
 } satisfies TemplateFeatures;
@@ -96,7 +101,7 @@ export const PikachuPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles, colors }: { styles: PikachuStyles; colors: TemplateColorRoles }) => {
+const Header = ({ styles, colors }: PikachuHeaderProps) => {
 	const { basics } = useRender();
 
 	return (
@@ -223,7 +228,6 @@ const usePikachuTemplate = (): PikachuTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

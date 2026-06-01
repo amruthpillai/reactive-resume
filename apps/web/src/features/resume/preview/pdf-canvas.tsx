@@ -46,7 +46,6 @@ export function PdfCanvasDocument({ children, file, onLoadSuccess }: PdfCanvasDo
 	useEffect(() => {
 		let isCancelled = false;
 		let loadingTask: PDFDocumentLoadingTask | undefined;
-		let loadedDocument: PDFDocumentProxy | undefined;
 
 		const loadDocument = async () => {
 			setDocument(null);
@@ -59,9 +58,8 @@ export function PdfCanvasDocument({ children, file, onLoadSuccess }: PdfCanvasDo
 				const pdfDocument = await loadingTask.promise;
 
 				if (isCancelled) {
-					void pdfDocument.destroy();
+					void loadingTask.destroy();
 				} else {
-					loadedDocument = pdfDocument;
 					setDocument(pdfDocument);
 					onLoadSuccessRef.current(pdfDocument);
 				}
@@ -76,12 +74,7 @@ export function PdfCanvasDocument({ children, file, onLoadSuccess }: PdfCanvasDo
 
 		return () => {
 			isCancelled = true;
-
-			if (loadedDocument) {
-				void loadedDocument.destroy();
-			} else if (loadingTask) {
-				void loadingTask.destroy();
-			}
+			void loadingTask?.destroy();
 		};
 	}, [file]);
 
@@ -190,13 +183,8 @@ export function PdfCanvasPage({
 				</figcaption>
 			) : null}
 
-			<div
-				role="img"
-				aria-label={`Resume page ${pageNumber} of ${totalPages}`}
-				style={scaledPageSize}
-				className={cn("aspect-page overflow-hidden rounded-md", className)}
-			>
-				<canvas ref={canvasRef} />
+			<div style={scaledPageSize} className={cn("aspect-page overflow-hidden rounded-md", className)}>
+				<canvas ref={canvasRef} aria-label={`Resume page ${pageNumber} of ${totalPages}`} />
 			</div>
 		</figure>
 	);

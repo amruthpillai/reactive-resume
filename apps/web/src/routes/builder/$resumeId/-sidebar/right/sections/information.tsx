@@ -30,7 +30,7 @@ export function InformationSectionBuilder() {
 					nativeButton={false}
 					className="mt-2 whitespace-normal px-4! text-xs"
 					render={
-						<a href="http://opencollective.com/reactive-resume" target="_blank" rel="noopener">
+						<a href="http://opencollective.com/reactive-resume" target="_blank" rel="noopener noreferrer">
 							<HandHeartIcon />
 							<span className="truncate">
 								<Trans>Donate to Reactive Resume</Trans>
@@ -47,7 +47,7 @@ export function InformationSectionBuilder() {
 					className="text-xs"
 					nativeButton={false}
 					render={
-						<a href="https://docs.rxresu.me" target="_blank" rel="noopener">
+						<a href="https://docs.rxresu.me" target="_blank" rel="noopener noreferrer">
 							<Trans>Documentation</Trans>
 						</a>
 					}
@@ -59,7 +59,7 @@ export function InformationSectionBuilder() {
 					className="text-xs"
 					nativeButton={false}
 					render={
-						<a href="https://github.com/amruthpillai/reactive-resume" target="_blank" rel="noopener">
+						<a href="https://github.com/amruthpillai/reactive-resume" target="_blank" rel="noopener noreferrer">
 							<Trans>Source Code</Trans>
 						</a>
 					}
@@ -71,7 +71,7 @@ export function InformationSectionBuilder() {
 					className="text-xs"
 					nativeButton={false}
 					render={
-						<a href="https://github.com/amruthpillai/reactive-resume/issues" target="_blank" rel="noopener">
+						<a href="https://github.com/amruthpillai/reactive-resume/issues" target="_blank" rel="noopener noreferrer">
 							<Trans>Report a Bug</Trans>
 						</a>
 					}
@@ -83,7 +83,7 @@ export function InformationSectionBuilder() {
 					className="text-xs"
 					nativeButton={false}
 					render={
-						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener">
+						<a href="https://crowdin.com/project/reactive-resume" target="_blank" rel="noopener noreferrer">
 							<Trans>Translations</Trans>
 						</a>
 					}
@@ -95,7 +95,7 @@ export function InformationSectionBuilder() {
 					className="text-xs"
 					nativeButton={false}
 					render={
-						<a href="https://opencollective.com/reactive-resume/donate" target="_blank" rel="noopener">
+						<a href="https://opencollective.com/reactive-resume/donate" target="_blank" rel="noopener noreferrer">
 							<Trans>Sponsors</Trans>
 						</a>
 					}

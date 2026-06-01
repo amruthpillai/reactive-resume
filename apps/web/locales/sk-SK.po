@@ -8,7 +8,7 @@ msgstr ""
 "Language: sk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Slovak\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -373,6 +373,10 @@ msgstr "Aplikácia"
 msgid "Application Statistics"
 msgstr "Štatistiky aplikácie"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Použité pravidlá"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arabčina"
@@ -671,6 +675,10 @@ msgstr "Kruh"
 msgid "Clear"
 msgstr "Jasné"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Vymazať výber"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Kliknutím sem vyber súbor na import"
@@ -952,6 +960,10 @@ msgstr "Vlastný OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Vlastné sekcie"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Vlastné štýly"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Skryť"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Skryť všetky ikony v životopise"
+msgid "Hide Icons"
+msgstr "Skryť ikony"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Skryť všetky ikony v životopise"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Skryť heslo"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Skryť ikony sekcií"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Maďarčina"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikona"
@@ -2246,6 +2263,10 @@ msgstr "Zatiaľ neboli zaregistrované žiadne pasové kľúče."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Nenašli sa žiadne výsledky."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Zatiaľ žiadne pravidlá štýlu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Resetovať"
 msgid "Reset Password"
 msgstr "Obnoviť heslo"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Obnoviť štýl"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Obnov svoje heslo"
@@ -2789,6 +2814,14 @@ msgstr "Rumunčina"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Otočenie"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "pravidlo"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "pravidlá"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Aktualizujem tvoje heslo..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Aktualizujem tvoj životopis..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Nahrať prílohy"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

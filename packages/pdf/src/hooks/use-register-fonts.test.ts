@@ -191,6 +191,24 @@ describe("registerFonts", () => {
 		expect(pdfTypography.body.fontWeights).toEqual(["400", "600", "800"]);
 		expect(pdfTypography.heading.fontWeights).toEqual(["500", "900"]);
 	});
+
+	it("replaces unsupported font weights with an available fallback pair", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const migratedTypography = {
+			...typography,
+			body: { ...typography.body, fontFamily: "Lato", fontWeights: ["400"] },
+			heading: { ...typography.heading, fontFamily: "Lato", fontWeights: ["600"] },
+		} satisfies Typography;
+
+		const pdfTypography = registerFonts(migratedTypography, "en-US");
+
+		expect(pdfTypography.body.fontWeights).toEqual(["400"]);
+		expect(pdfTypography.heading.fontWeights).toEqual(["400", "700"]);
+		expect(registerSpy).not.toHaveBeenCalledWith(expect.objectContaining({ family: "Lato", fontWeight: 600 }));
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Lato", fontWeight: 700 }));
+	});
 });
 
 describe("resumeContentContainsCJK", () => {

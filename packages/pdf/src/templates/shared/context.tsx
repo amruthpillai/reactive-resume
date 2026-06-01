@@ -1,4 +1,6 @@
+import type { StyleSlot } from "@reactive-resume/schema/resume/data";
 import type { ReactNode } from "react";
+import type { SectionStyleRuleContext } from "./style-rules";
 import type { StyleInput, TemplatePlacement } from "./styles";
 import type {
 	SectionTimelineStyleSlots,
@@ -10,7 +12,9 @@ import type {
 	TemplateStyleSlot,
 	TemplateStyleSlots,
 } from "./types";
-import { createContext, use } from "react";
+import { createContext, use, useMemo } from "react";
+import { useRender } from "../../context";
+import { resolveStyleRuleSlot } from "./style-rules";
 
 type TemplateContextValue = {
 	styles: TemplateStyleSlots;
@@ -25,8 +29,19 @@ type TemplateProviderProps = Omit<TemplateContextValue, "featureStyles" | "featu
 	children: ReactNode;
 };
 
+type TemplatePlacementProviderProps = {
+	placement: TemplatePlacement;
+	children: ReactNode;
+};
+
+type SectionStyleProviderProps = {
+	context: SectionStyleRuleContext;
+	children: ReactNode;
+};
+
 const TemplateContext = createContext<TemplateContextValue | null>(null);
 const TemplatePlacementContext = createContext<TemplatePlacement>("main");
+const SectionStyleContext = createContext<SectionStyleRuleContext | null>(null);
 
 const resolveStyleSlot = (slot: TemplateStyleSlot | undefined, context: TemplateStyleContextValue): StyleInput => {
 	if (!slot) return undefined;
@@ -60,19 +75,20 @@ export const TemplateProvider = ({
 	features = EMPTY_FEATURES,
 	children,
 }: TemplateProviderProps) => {
-	return (
-		<TemplateContext.Provider value={{ styles, featureStyles, colors, features }}>{children}</TemplateContext.Provider>
+	const contextValue = useMemo<TemplateContextValue>(
+		() => ({ styles, featureStyles, colors, features }),
+		[colors, featureStyles, features, styles],
 	);
+
+	return <TemplateContext.Provider value={contextValue}>{children}</TemplateContext.Provider>;
 };
 
-export const TemplatePlacementProvider = ({
-	placement,
-	children,
-}: {
-	placement: TemplatePlacement;
-	children: ReactNode;
-}) => {
+export const TemplatePlacementProvider = ({ placement, children }: TemplatePlacementProviderProps) => {
 	return <TemplatePlacementContext.Provider value={placement}>{children}</TemplatePlacementContext.Provider>;
+};
+
+export const SectionStyleProvider = ({ context, children }: SectionStyleProviderProps) => {
+	return <SectionStyleContext.Provider value={context}>{children}</SectionStyleContext.Provider>;
 };
 
 const useTemplateContext = () => {
@@ -105,6 +121,15 @@ export const useTemplateStyle = (slot: keyof TemplateStyleSlots): StyleInput => 
 	return resolveStyleSlot(styles[slot] as TemplateStyleSlot | undefined, context);
 };
 
+export const useSectionStyleRule = (slot: StyleSlot): StyleInput => {
+	const data = useRender();
+	const context = use(SectionStyleContext);
+
+	if (!context) return undefined;
+
+	return resolveStyleRuleSlot(data, { ...context, slot });
+};
+
 export const useTemplateFeatureStyle = (
 	feature: keyof TemplateFeatureStyleSlots,
 	slot: keyof SectionTimelineStyleSlots,
@@ -116,9 +141,9 @@ export const useTemplateFeatureStyle = (
 	return resolveStyleSlot(slots?.[slot] as TemplateStyleSlot | undefined, context);
 };
 
-export const useTemplateIconSlot = (slot: "icon") => {
+export const useTemplateIconSlot = (slot: "icon" | "sectionHeadingIcon") => {
 	const { styles } = useTemplateContext();
 	const context = useTemplateStyleContext();
 
-	return resolveIconSlot(styles[slot], context);
+	return resolveIconSlot(styles[slot] as TemplateIconSlot | undefined, context);
 };

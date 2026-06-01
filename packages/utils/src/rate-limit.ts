@@ -45,6 +45,6 @@ export const rateLimitConfig = {
 		jobsTestConnection: { maxRequests: 10, window: 60 * 1000 },
 		storageUpload: { maxRequests: 20, window: 60 * 1000 },
 		storageDelete: { maxRequests: 30, window: 60 * 1000 },
-		resumeMutations: { maxRequests: 60, window: 60 * 1000 },
+		resumeMutations: { maxRequests: 300, window: 60 * 1000 },
 	},
 } as const;

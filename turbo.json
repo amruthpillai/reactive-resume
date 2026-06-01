@@ -1,6 +1,6 @@
 {
 	"$schema": "https://turbo.build/schema.json",
-	"ui": "stream-with-experimental-timestamps",
+	"ui": "tui",
 	"boundaries": {
 		"dependencies": {
 			"deny": ["web", "server"]
@@ -90,32 +90,16 @@
 		"CROWDIN_API_TOKEN"
 	],
 	"tasks": {
-		"source": {
-			"dependsOn": ["^source"]
-		},
 		"build": {
-			"dependsOn": ["source"],
 			"inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env*"],
 			"outputs": ["dist/**", ".vercel/**"]
 		},
-		"lint": {
-			"dependsOn": ["^lint"]
-		},
-		"typecheck": {
-			"dependsOn": ["source"]
-		},
-		"test": {
-			"dependsOn": ["source"]
-		},
-		"test:coverage": {
-			"dependsOn": ["source"]
-		},
-		"test:ci": {
-			"dependsOn": ["source"]
-		},
-		"test:agent": {
-			"dependsOn": ["source"]
-		},
+		"check": {},
+		"typecheck": {},
+		"test": {},
+		"test:coverage": {},
+		"test:ci": {},
+		"test:agent": {},
 		"dev": {
 			"cache": false,
 			"persistent": true

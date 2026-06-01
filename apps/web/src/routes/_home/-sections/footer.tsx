@@ -129,7 +129,7 @@ function FooterLink({ url, label }: FooterLinkItem) {
 			<a
 				href={url}
 				target="_blank"
-				rel="noopener"
+				rel="noopener noreferrer"
 				className="relative inline-block text-sm transition-colors hover:text-foreground"
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}

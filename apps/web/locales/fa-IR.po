@@ -8,7 +8,7 @@ msgstr ""
 "Language: fa\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Persian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -373,6 +373,10 @@ msgstr "اپ"
 msgid "Application Statistics"
 msgstr "آمار اپلیکیشن"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "قوانین کاربردی"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "عربی"
@@ -671,6 +675,10 @@ msgstr "دایره"
 msgid "Clear"
 msgstr "شفاف"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "انتخاب را پاک کنید"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "برای انتخاب فایل برای وارد کردن، اینجا کلیک کنید"
@@ -952,6 +960,10 @@ msgstr "OAuth سفارشی"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "بخش‌های سفارشی"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "سبک‌های سفارشی"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "پنهان کردن"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "تمام آیکون‌ها را روی رزومه مخفی کن"
+msgid "Hide Icons"
+msgstr "پنهان کردن آیکون‌ها"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "تمام آیکون‌ها را روی رزومه مخفی کن"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "پنهان کردن رمز عبور"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "پنهان کردن آیکن‌های بخش"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "مجاری"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "آیکون"
@@ -2246,6 +2263,10 @@ msgstr "هنوز هیچ کلید عبوری ثبت نشده است."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "موردی یافت نشد."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "هنوز هیچ قانون سبکی وجود ندارد."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "ریست"
 msgid "Reset Password"
 msgstr "تنظیم مجدد گذرواژه"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "تنظیم مجدد سبک"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "تنظیم مجدد گذرواژهٔ شما"
@@ -2789,6 +2814,14 @@ msgstr "رومانیایی"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "چرخش"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "قاعده"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "قوانین"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "در حال به‌روزرسانی گذرواژه شما..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "در حال به‌روزرسانی رزومه شما..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "آپلود پیوست‌ها"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

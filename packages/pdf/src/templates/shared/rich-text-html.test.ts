@@ -26,6 +26,12 @@ describe("normalizeRichTextHtml", () => {
 		expect(normalizeRichTextHtml(html)).toBe(html);
 	});
 
+	it("unwraps single paragraph wrappers inside list items", () => {
+		expect(normalizeRichTextHtml("<ul><li><p>a</p></li><li><p><strong>b</strong></p></li></ul>")).toBe(
+			"<ul><li>a</li><li><strong>b</strong></li></ul>",
+		);
+	});
+
 	it("flushes accumulated inlines before block-level tags", () => {
 		expect(normalizeRichTextHtml("loose<ul><li>a</li></ul>")).toBe("<p>loose</p><ul><li>a</li></ul>");
 	});

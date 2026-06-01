@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -373,6 +373,10 @@ msgstr "Sovellus"
 msgid "Application Statistics"
 msgstr "Sovelluksen tilastot"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Sovelletut säännöt"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "arabia"
@@ -671,6 +675,10 @@ msgstr "Ympyrä"
 msgid "Clear"
 msgstr "Kirkas"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Tyhjennä valinta"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Napsauta tästä valitaksesi tuotavan tiedoston"
@@ -952,6 +960,10 @@ msgstr "Mukautettu OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Mukautetut osiot"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Mukautetut tyylit"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Piilota"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Piilota kaikki ansioluettelon ikonit"
+msgid "Hide Icons"
+msgstr "Piilota kuvakkeet"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Piilota kaikki ansioluettelon ikonit"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Piilota salasana"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Piilota osiokuvakkeet"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "unkari"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikoni"
@@ -2246,6 +2263,10 @@ msgstr "Ei vielä rekisteröityjä kulkulupia."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Tuloksia ei löytynyt."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Ei vielä tyylisääntöjä."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Palauta"
 msgid "Reset Password"
 msgstr "Palauta salasana"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Palauta tyyli"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Palauta salasanasi"
@@ -2789,6 +2814,14 @@ msgstr "romania"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Kierrätys"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "sääntö"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "säännöt"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Päivitetään salasanaasi..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Päivitetään ansioluetteloasi..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Lähetä liitteitä"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

@@ -3,15 +3,13 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { ConfirmDialogProvider, useConfirm } from "./use-confirm";
 
-const ConfirmRunner = ({
-	onResult,
-	title,
-	options,
-}: {
+type ConfirmRunnerProps = {
 	onResult: (v: boolean) => void;
 	title: string;
 	options?: Parameters<ReturnType<typeof useConfirm>>[1];
-}) => {
+};
+
+const ConfirmRunner = ({ onResult, title, options }: ConfirmRunnerProps) => {
 	const confirm = useConfirm();
 	return (
 		<button

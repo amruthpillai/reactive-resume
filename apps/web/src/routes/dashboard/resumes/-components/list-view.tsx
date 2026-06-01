@@ -11,11 +11,15 @@ import { ResumeDropdownMenu } from "./menus/dropdown-menu";
 
 type Resume = RouterOutput["resume"]["list"][number];
 
-type Props = {
+type ListViewProps = {
 	resumes: Resume[];
 };
 
-export function ListView({ resumes }: Props) {
+type ResumeListItemProps = {
+	resume: Resume;
+};
+
+export function ListView({ resumes }: ListViewProps) {
 	const { openDialog } = useDialogStore();
 
 	const handleCreateResume = () => {
@@ -96,7 +100,7 @@ export function ListView({ resumes }: Props) {
 	);
 }
 
-function ResumeListItem({ resume }: { resume: Resume }) {
+function ResumeListItem({ resume }: ResumeListItemProps) {
 	const { i18n } = useLingui();
 
 	const updatedAt = useMemo(() => {

@@ -71,6 +71,21 @@ describe("LevelDisplay", () => {
 		expect(wrapper.getAttribute("aria-label")).toContain("4");
 	});
 
+	it("applies custom decoration and icon sizes in pixels", () => {
+		const { container } = render(
+			<LevelDisplay type="circle" icon="star" level={2} decorationSizePx={18} iconSizePx={20} />,
+		);
+
+		const shapes = container.querySelectorAll("div[data-active]");
+		expect(shapes[0]).toHaveStyle({ width: "18px", height: "18px" });
+
+		const { container: iconContainer } = render(
+			<LevelDisplay type="icon" icon="star" level={2} decorationSizePx={16} />,
+		);
+		const icon = iconContainer.querySelector("i");
+		expect(icon).toHaveStyle({ fontSize: "16px", width: "16px", height: "16px" });
+	});
+
 	it("merges extra className into the wrapper", () => {
 		const { container } = render(<LevelDisplay type="circle" icon="star" level={1} className="extra" />);
 		const wrapper = container.firstChild as HTMLElement;

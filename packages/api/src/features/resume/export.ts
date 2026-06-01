@@ -6,6 +6,36 @@ import { protectedProcedure } from "../../context";
 import { pdfExportRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
 
+export {
+	createResumePdfDownloadUrl,
+	MAX_PDF_DOWNLOAD_URL_TTL_SECONDS,
+	verifyResumePdfDownloadToken,
+} from "./pdf-download-url";
+
+type CreateResumePdfDownloadInput = {
+	id: string;
+	userId: string;
+};
+
+export async function createResumePdfDownload(input: CreateResumePdfDownloadInput) {
+	const resume = await resumeService.getById({ id: input.id, userId: input.userId });
+	const filename = generateFilename(resume.name, "pdf");
+
+	try {
+		const body = await createResumePdfFile({ data: resume.data, filename });
+
+		return {
+			headers: {
+				"content-disposition": `attachment; filename="${filename}"`,
+			},
+			body,
+		};
+	} catch (error) {
+		console.error("[PDF API] Failed to render resume PDF", { resumeId: input.id, error });
+		throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to generate resume PDF" });
+	}
+}
+
 export const downloadResumePdfProcedure = protectedProcedure
 	.route({
 		method: "GET",
@@ -29,20 +59,5 @@ export const downloadResumePdfProcedure = protectedProcedure
 	)
 	.use(pdfExportRateLimit)
 	.handler(async ({ context, input }) => {
-		const resume = await resumeService.getById({ id: input.id, userId: context.user.id });
-		const filename = generateFilename(resume.name, "pdf");
-
-		try {
-			const body = await createResumePdfFile({ data: resume.data, filename });
-
-			return {
-				headers: {
-					"content-disposition": `attachment; filename="${filename}"`,
-				},
-				body,
-			};
-		} catch (error) {
-			console.error("[PDF API] Failed to render resume PDF", { resumeId: input.id, error });
-			throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to generate resume PDF" });
-		}
+		return createResumePdfDownload({ id: input.id, userId: context.user.id });
 	});

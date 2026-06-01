@@ -1,7 +1,7 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ReactNode } from "react";
 import type { SectionTitleResolver } from "./section-title";
-import { createContext, use } from "react";
+import { createContext, use, useMemo } from "react";
 import { isRTL } from "@reactive-resume/utils/locale";
 
 type RenderContextValue = ResumeData & {
@@ -19,8 +19,12 @@ export type RenderProviderProps = {
 
 export const RenderProvider = ({ data, resolveSectionTitle, children }: RenderProviderProps) => {
 	const rtl = isRTL(data.metadata.page.locale);
+	const contextValue = useMemo<RenderContextValue>(
+		() => ({ ...data, resolveSectionTitle, rtl }),
+		[data, resolveSectionTitle, rtl],
+	);
 
-	return <RenderContext.Provider value={{ ...data, resolveSectionTitle, rtl }}>{children}</RenderContext.Provider>;
+	return <RenderContext.Provider value={contextValue}>{children}</RenderContext.Provider>;
 };
 
 export const useRender = (): RenderContextValue => {

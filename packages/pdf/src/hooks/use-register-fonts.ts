@@ -21,6 +21,8 @@ type FontWeightRange = {
 const registeredFontVariants = new Set<string>();
 const fallbackFontFamily = "IBM Plex Serif";
 const cjkLetterRegex = cjkLetters().toRegExp();
+const fontWeightValues = new Set<FontWeight>(["100", "200", "300", "400", "500", "600", "700", "800", "900"]);
+const preferredFallbackFontWeights = ["400", "700", "600", "500"] satisfies FontWeight[];
 
 // `fontFamily` is widened to `string | string[]` so react-pdf can do
 // glyph-level font fallback for CJK characters (#2986).
@@ -44,6 +46,52 @@ const getFontWeightRange = (fontWeights: string[]): FontWeightRange => {
 	const highest = rawHighest <= lowest ? 700 : rawHighest;
 
 	return { lowest, highest };
+};
+
+const isFontWeight = (weight: string): weight is FontWeight => fontWeightValues.has(weight as FontWeight);
+
+const uniqueSortedFontWeights = (fontWeights: FontWeight[]): FontWeight[] => {
+	return [...new Set(sortFontWeights(fontWeights))];
+};
+
+const getFallbackFontWeights = (availableWeights: FontWeight[]): FontWeight[] => {
+	const sortedAvailableWeights = uniqueSortedFontWeights(availableWeights);
+	const availableWeightSet = new Set(sortedAvailableWeights);
+	const preferredWeights = preferredFallbackFontWeights.filter((weight) => availableWeightSet.has(weight));
+
+	if (preferredWeights.length >= 2) {
+		return uniqueSortedFontWeights(preferredWeights.slice(0, 2));
+	}
+
+	if (preferredWeights.length === 1) {
+		const firstWeight = preferredWeights[0];
+		if (!firstWeight) return [];
+
+		const secondWeight =
+			sortedAvailableWeights.find((weight) => Number(weight) > Number(firstWeight)) ??
+			sortedAvailableWeights.find((weight) => weight !== firstWeight);
+
+		return uniqueSortedFontWeights(secondWeight ? [firstWeight, secondWeight] : [firstWeight]);
+	}
+
+	return sortedAvailableWeights.slice(0, 2);
+};
+
+const resolvePdfFontWeights = (family: string, fontWeights: string[]): FontWeight[] => {
+	const requestedWeights = uniqueSortedFontWeights(fontWeights.filter(isFontWeight));
+	const availableWeights = getFont(family)?.weights;
+
+	if (!availableWeights || availableWeights.length === 0) {
+		return requestedWeights.length > 0 ? requestedWeights : ["400", "700"];
+	}
+
+	const availableWeightSet = new Set(availableWeights);
+	const allRequestedWeightsAreAvailable =
+		requestedWeights.length > 0 && requestedWeights.every((weight) => availableWeightSet.has(weight));
+
+	if (allRequestedWeightsAreAvailable) return requestedWeights;
+
+	return getFallbackFontWeights(availableWeights);
 };
 
 const toFontWeight = (weight: number): FontWeight => {
@@ -82,8 +130,8 @@ const resolvePdfFontFamily = (family: string) => {
 const resolvePdfTypography = (typography: Typography): Typography => {
 	const bodyFontFamily = resolvePdfFontFamily(typography.body.fontFamily);
 	const headingFontFamily = resolvePdfFontFamily(typography.heading.fontFamily);
-	const bodyFontWeights = sortFontWeights(typography.body.fontWeights);
-	const headingFontWeights = sortFontWeights(typography.heading.fontWeights);
+	const bodyFontWeights = resolvePdfFontWeights(bodyFontFamily, typography.body.fontWeights);
+	const headingFontWeights = resolvePdfFontWeights(headingFontFamily, typography.heading.fontWeights);
 
 	return {
 		...typography,

@@ -36,6 +36,14 @@ const verifyFormSchema = z.object({
 
 type TwoFactorSetupStep = "backup" | "enable" | "verify";
 
+type TwoFactorStepProps = {
+	step: TwoFactorSetupStep;
+};
+
+type TwoFactorQRCodeProps = {
+	totpUri: string;
+};
+
 export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) {
 	const router = useRouter();
 
@@ -345,7 +353,7 @@ function extractSecretFromTotpUri(totpUri: string): string | null {
 	}
 }
 
-function TwoFactorDialogTitle({ step }: { step: TwoFactorSetupStep }) {
+function TwoFactorDialogTitle({ step }: TwoFactorStepProps) {
 	return match(step)
 		.with("enable", () => <Trans>Enable Two-Factor Authentication</Trans>)
 		.with("verify", () => <Trans>Setup Authenticator App</Trans>)
@@ -353,7 +361,7 @@ function TwoFactorDialogTitle({ step }: { step: TwoFactorSetupStep }) {
 		.exhaustive();
 }
 
-function TwoFactorDialogDescription({ step }: { step: TwoFactorSetupStep }) {
+function TwoFactorDialogDescription({ step }: TwoFactorStepProps) {
 	return match(step)
 		.with("enable", () => (
 			<Trans>
@@ -371,7 +379,7 @@ function TwoFactorDialogDescription({ step }: { step: TwoFactorSetupStep }) {
 		.exhaustive();
 }
 
-function TwoFactorQRCode({ totpUri }: { totpUri: string }) {
+function TwoFactorQRCode({ totpUri }: TwoFactorQRCodeProps) {
 	return (
 		<QRCodeSVG
 			value={totpUri}

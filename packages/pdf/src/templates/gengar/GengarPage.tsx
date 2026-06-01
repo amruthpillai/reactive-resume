@@ -39,6 +39,11 @@ type GengarTemplate = {
 	styles: GengarStyles;
 };
 
+type GengarHeaderProps = {
+	styles: GengarStyles;
+	colors: TemplateColorRoles;
+};
+
 export const GengarPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata } = data;
@@ -99,7 +104,7 @@ export const GengarPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles, colors }: { styles: GengarStyles; colors: TemplateColorRoles }) => {
+const Header = ({ styles, colors }: GengarHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -245,7 +250,6 @@ const useGengarTemplate = (): GengarTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

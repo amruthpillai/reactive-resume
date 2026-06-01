@@ -202,7 +202,7 @@ export const DonationBanner = () => (
 					nativeButton={false}
 					className="h-11 gap-2 px-6"
 					render={
-						<a href="https://opencollective.com/reactive-resume/donate" target="_blank" rel="noopener">
+						<a href="https://opencollective.com/reactive-resume/donate" target="_blank" rel="noopener noreferrer">
 							<HeartIcon aria-hidden="true" weight="fill" className="text-rose-400 dark:text-rose-600" />
 							Open Collective
 							<span className="sr-only"> ({t`opens in new tab`})</span>
@@ -215,7 +215,7 @@ export const DonationBanner = () => (
 					nativeButton={false}
 					className="h-11 gap-2 px-6"
 					render={
-						<a href="https://github.com/sponsors/AmruthPillai" target="_blank" rel="noopener">
+						<a href="https://github.com/sponsors/AmruthPillai" target="_blank" rel="noopener noreferrer">
 							<GithubLogoIcon aria-hidden="true" weight="fill" className="text-zinc-400 dark:text-zinc-600" />
 							GitHub Sponsors
 							<span className="sr-only"> ({t`opens in new tab`})</span>

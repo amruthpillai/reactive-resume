@@ -383,7 +383,12 @@ function useEditorToolbarState(editor: Editor) {
 
 type EditorToolbarState = ReturnType<typeof useEditorToolbarState>;
 
-function EditorToolbar({ editor, isFullscreen }: { editor: Editor; isFullscreen: boolean }) {
+type EditorToolbarProps = {
+	editor: Editor;
+	isFullscreen: boolean;
+};
+
+function EditorToolbar({ editor, isFullscreen }: EditorToolbarProps) {
 	const state = useEditorToolbarState(editor);
 
 	return renderEditorToolbar(state, isFullscreen);

@@ -66,6 +66,8 @@ export type TemplateStyleSlots = {
 	sectionItemHeader?: TemplateStyleSlot;
 	section?: TemplateStyleSlot;
 	sectionHeading?: TemplateStyleSlot;
+	sectionHeadingContainer?: TemplateStyleSlot;
+	sectionHeadingIcon?: TemplateIconSlot;
 	sectionItems?: TemplateStyleSlot;
 	item?: TemplateStyleSlot;
 	levelContainer?: TemplateStyleSlot;

@@ -35,6 +35,10 @@ type ChikoritaTemplate = {
 	styles: ChikoritaStyles;
 };
 
+type ChikoritaHeaderProps = {
+	styles: ChikoritaStyles;
+};
+
 export const ChikoritaPage = ({ page, pageIndex }: TemplatePageProps) => {
 	const data = useRender();
 	const { metadata, picture } = data;
@@ -91,7 +95,7 @@ export const ChikoritaPage = ({ page, pageIndex }: TemplatePageProps) => {
 	);
 };
 
-const Header = ({ styles }: { styles: ChikoritaStyles }) => {
+const Header = ({ styles }: ChikoritaHeaderProps) => {
 	const { basics, picture } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
 
@@ -220,7 +224,6 @@ const useChikoritaTemplate = (): ChikoritaTemplate => {
 			richListItemContent: {
 				...bodyText,
 				flex: 1,
-				lineHeight: metadata.typography.body.lineHeight * 0.5,
 			},
 			splitRow: {
 				flexDirection: r.row,

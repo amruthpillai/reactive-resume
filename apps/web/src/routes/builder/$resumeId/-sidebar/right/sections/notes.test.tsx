@@ -11,11 +11,20 @@ const richInputProps = vi.hoisted(() => ({
 	onChange: undefined as ((value: string) => void) | undefined,
 }));
 
+type SectionBaseProps = {
+	children: React.ReactNode;
+};
+
+type RichInputProps = {
+	value: string;
+	onChange: (value: string) => void;
+};
+
 vi.mock("../shared/section-base", () => ({
-	SectionBase: ({ children }: { children: React.ReactNode }) => <div data-testid="section-base">{children}</div>,
+	SectionBase: ({ children }: SectionBaseProps) => <div data-testid="section-base">{children}</div>,
 }));
 vi.mock("@/components/input/rich-input", () => ({
-	RichInput: (props: { value: string; onChange: (value: string) => void }) => {
+	RichInput: (props: RichInputProps) => {
 		richInputProps.value = props.value;
 		richInputProps.onChange = props.onChange;
 		return <textarea data-testid="rich-input" value={props.value} readOnly />;

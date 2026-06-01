@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-21 07:54\n"
+"PO-Revision-Date: 2026-06-01 11:26\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -373,6 +373,10 @@ msgstr "Programa"
 msgid "Application Statistics"
 msgstr "Programos statistika"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Applied Rules"
+msgstr "Taikomos taisyklės"
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arabų"
@@ -671,6 +675,10 @@ msgstr "Apskritimas"
 msgid "Clear"
 msgstr "Skaidrus"
 
+#: src/components/ui/combobox.tsx
+msgid "Clear selection"
+msgstr "Išvalyti pasirinkimą"
+
 #: src/dialogs/resume/import.tsx
 msgid "Click here to select a file to import"
 msgstr "Spustelėkite čia, kad pasirinktumėte importuojamą failą"
@@ -952,6 +960,10 @@ msgstr "Pasirinktinis OAuth"
 #: src/libs/resume/section.tsx
 msgid "Custom Sections"
 msgstr "Pasirinktiniai skyriai"
+
+#: src/libs/resume/section.tsx
+msgid "Custom Styles"
+msgstr "Pasirinktiniai stiliai"
 
 #: src/libs/locale.ts
 msgid "Czech"
@@ -1733,8 +1745,8 @@ msgid "Hide"
 msgstr "Paslėpti"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
-msgid "Hide all icons on the resume"
-msgstr "Paslėpti visas ikonas gyvenimo aprašyme"
+msgid "Hide Icons"
+msgstr "Slėpti piktogramas"
 
 #. Accessible label for button that hides password in registration form
 #. Accessible label for button that hides password in reset-password form
@@ -1753,6 +1765,10 @@ msgstr "Paslėpti visas ikonas gyvenimo aprašyme"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Hide password"
 msgstr "Paslėpti slaptažodį"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
+msgid "Hide Section Icons"
+msgstr "Slėpti skyrių piktogramas"
 
 #. Impact severity label in resume analysis suggestion card
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -1792,6 +1808,7 @@ msgid "Hungarian"
 msgstr "Vengrų"
 
 #: src/components/level/combobox.tsx
+#: src/dialogs/resume/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Icon"
 msgstr "Ikona"
@@ -2246,6 +2263,10 @@ msgstr "Kol kas neužregistruota jokių passkeys."
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Rezultatų nerasta."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "No style rules yet."
+msgstr "Stiliaus taisyklių dar nėra."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
@@ -2714,6 +2735,10 @@ msgstr "Nustatyti iš naujo"
 msgid "Reset Password"
 msgstr "Atkurti slaptažodį"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "Reset Style"
+msgstr "Atstatyti stilių"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
 msgstr "Atkurkite slaptažodį"
@@ -2789,6 +2814,14 @@ msgstr "Rumunų"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Sukimas"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rule"
+msgstr "taisyklė"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
+msgid "rules"
+msgstr "taisyklės"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3707,6 +3740,10 @@ msgstr "Atnaujinamas jūsų slaptažodis..."
 #: src/dialogs/resume/index.tsx
 msgid "Updating your resume..."
 msgstr "Atnaujinamas jūsų gyvenimo aprašymas..."
+
+#: src/routes/agent/$threadId.tsx
+msgid "Upload attachments"
+msgstr "Įkelti priedus"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Upload picture"

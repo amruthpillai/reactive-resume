@@ -25,7 +25,7 @@ describe("Copyright", () => {
 		renderCopyright();
 		const link = screen.getByRole("link", { name: "MIT" });
 		expect(link.getAttribute("href")).toBe("https://github.com/AmruthPillai/Reactive-Resume/blob/main/LICENSE");
-		expect(link.getAttribute("rel")).toBe("noopener");
+		expect(link.getAttribute("rel")).toBe("noopener noreferrer");
 	});
 
 	it("renders the Amruth Pillai attribution link", () => {

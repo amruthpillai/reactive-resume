@@ -10,8 +10,12 @@ const downloadWithAnchor = vi.hoisted(() => vi.fn());
 const buildDocx = vi.hoisted(() => vi.fn().mockResolvedValue(new Blob(["x"], { type: "application/x-docx" })));
 const createResumePdfBlob = vi.hoisted(() => vi.fn().mockResolvedValue(new Blob(["x"], { type: "application/pdf" })));
 
+type SectionBaseProps = {
+	children: React.ReactNode;
+};
+
 vi.mock("../shared/section-base", () => ({
-	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+	SectionBase: ({ children }: SectionBaseProps) => <div>{children}</div>,
 }));
 vi.mock("@reactive-resume/utils/file", () => ({
 	downloadWithAnchor,

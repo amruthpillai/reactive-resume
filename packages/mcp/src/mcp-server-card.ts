@@ -84,6 +84,18 @@ export function buildMcpServerCard(appVersion: string) {
 			annotations: TOOL_ANNOTATIONS[T.getResumeAnalysis],
 		},
 		{
+			name: T.downloadResumePdf,
+			title: "Download Resume PDF",
+			description: [
+				"Create a short-lived authenticated URL for downloading a resume as a PDF.",
+				"The URL expires in 10 minutes and should be used immediately.",
+				"Returns JSON containing: resumeId, name, downloadUrl, expiresAt, expiresInSeconds, contentType.",
+				`Use \`${T.listResumes}\` first to find valid IDs.`,
+			].join("\n"),
+			inputSchema: toJsonSchemaCompat(z.object({ id: resumeId })),
+			annotations: TOOL_ANNOTATIONS[T.downloadResumePdf],
+		},
+		{
 			name: T.createResume,
 			title: "Create Resume",
 			description: [

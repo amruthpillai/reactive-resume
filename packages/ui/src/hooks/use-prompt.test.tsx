@@ -3,15 +3,13 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { PromptDialogProvider, usePrompt } from "./use-prompt";
 
-const PromptRunner = ({
-	onResult,
-	title,
-	options,
-}: {
+type PromptRunnerProps = {
 	onResult: (v: string | null) => void;
 	title: string;
 	options?: Parameters<ReturnType<typeof usePrompt>>[1];
-}) => {
+};
+
+const PromptRunner = ({ onResult, title, options }: PromptRunnerProps) => {
 	const prompt = usePrompt();
 	return (
 		<button

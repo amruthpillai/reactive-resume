@@ -1,0 +1,337 @@
+---
+title: "Using Custom Styles"
+description: "Learn how to use Custom Styles to fine-tune section layouts, text, rich text, lists, links, spacing, borders, and other resume presentation details."
+---
+
+Custom Styles let you fine-tune the visual details of your resume after you choose a template. Instead of writing CSS, you create structured style rules that target resume sections and semantic parts of those sections, such as section headings, item containers, normal text, links, rich-text paragraphs, and list rows.
+
+Use Custom Styles when the regular **Design**, **Typography**, **Layout**, and **Page** settings are too broad. For example, you can make only your Experience headings uppercase, add a border around Projects, tighten the spacing inside rich-text bullet lists, or change how inline links appear in descriptions.
+
+<Frame caption="Screenshot of the Custom Styles section in the resume builder right sidebar">
+  <img
+    src="/images/guides/using-custom-styles/screenshot-1.webp"
+    alt="Custom Styles section in the right sidebar with target scope, style slot, style controls, and applied rules"
+  />
+</Frame>
+
+<Warning>
+  Custom Styles are powerful layout controls. Small changes can improve polish, but large negative margins, heavy
+  borders, or oversized text can make a resume harder to read or cause content to overflow.
+</Warning>
+
+## When to use Custom Styles
+
+Start with the normal builder settings first:
+
+| Need | Use this first |
+| --- | --- |
+| Change the overall color palette | **Design** |
+| Change body or heading fonts | **Typography** |
+| Change page size, margins, or section gaps | **Page** |
+| Move sections between columns or pages | **Layout** |
+| Hide, reorder, or edit section content | The section controls in the left sidebar |
+
+Use **Custom Styles** when you need a targeted adjustment, such as:
+
+- Styling one section differently from the rest of the resume.
+- Adding padding, background, or border treatment to section items.
+- Adjusting the spacing between rich-text list bullets and their text.
+- Making rich-text links, bold text, or highlights stand out.
+- Tightening rich-text paragraphs or lists in a long section without changing the whole resume.
+
+## Create a style rule
+
+<Steps>
+  <Step title="Open your resume in the builder">
+    From the Dashboard, open the resume you want to customize.
+  </Step>
+
+  <Step title="Open the right sidebar">
+    The right sidebar contains the resume-wide presentation controls.
+  </Step>
+
+  <Step title="Open Custom Styles">
+    Select **Custom Styles** from the right sidebar.
+  </Step>
+
+  <Step title="Choose a Target Scope">
+    Choose where the rule should apply: **All sections**, a **Section type**, or a **Specific section**.
+  </Step>
+
+  <Step title="Choose a Style Slot">
+    Choose which part of the target should receive the style, such as **Section heading**, **Item container**, **Primary
+    text**, **Paragraph**, or **List item row**.
+  </Step>
+
+  <Step title="Set the style values">
+    Use the **Color**, **Text**, **Spacing**, and **Border** controls. Empty fields mean "use the template default."
+  </Step>
+
+  <Step title="Review the preview">
+    The resume preview updates as the rule changes. Exported PDFs use the same rendering path as the preview, so the
+    exported PDF should match what you see.
+  </Step>
+</Steps>
+
+<Frame caption="Screenshot of the Target Scope and Style Slot selectors">
+  <img
+    src="/images/guides/using-custom-styles/screenshot-2.webp"
+    alt="Target Scope and Style Slot selectors showing All sections, Section type, Specific section, and grouped style slots"
+  />
+</Frame>
+
+## How style rules work
+
+A Custom Style rule has three parts:
+
+| Part | What it means | Example |
+| --- | --- | --- |
+| **Target Scope** | Where the rule applies | All sections, every Experience section, or one custom Projects section |
+| **Style Slot** | Which semantic element receives the style | Section heading, Item container, Paragraph, List item row |
+| **Style values** | The visual properties to apply | Text color, font size, padding, row gap, border width |
+
+Rules are layered on top of the selected template. The template still provides the base design, and Custom Styles override only the values you set.
+
+If multiple rules affect the same slot, the more specific rule wins:
+
+1. **All sections** applies first.
+2. **Section type** overrides matching All sections values.
+3. **Specific section** overrides matching Section type and All sections values.
+
+For example, you can make all section headings green, then make only Experience headings black, then make one specific custom Experience section red.
+
+<Info>
+  Disabled rules are ignored. Deleted or hidden sections do not render, so their rules have nothing to affect until the
+  section is visible again.
+</Info>
+
+## Target scopes
+
+Target Scope decides how broad a rule should be.
+
+| Target Scope | What it affects | Useful when |
+| --- | --- | --- |
+| **All sections** | Every rendered section where the selected slot exists. This includes built-in sections and custom sections. | You want a resume-wide default, such as all section headings using the same color or all rich-text lists using tighter spacing. |
+| **Section type** | Every section with that content type. This includes matching custom sections. For example, a Projects-style custom section is affected by a Projects section-type rule. | You want every Experience section, every Skills section, or every Summary-style section to share a treatment. |
+| **Specific section** | One actual section in this resume. | You have duplicate or custom sections and want only one of them to look different. |
+
+<Frame caption="Screenshot of selecting a Section type target">
+  <img
+    src="/images/guides/using-custom-styles/screenshot-3.webp"
+    alt="Custom Styles target controls with Section type selected and Experience chosen as the target"
+  />
+</Frame>
+
+## Style property groups
+
+The style editor is grouped by property type. Not every property is meaningful on every slot. Text properties work best on text-facing slots, while spacing, background, and border properties work best on containers.
+
+<Frame caption="Screenshot of the Color, Text, Spacing, and Border controls">
+  <img
+    src="/images/guides/using-custom-styles/screenshot-4.webp"
+    alt="Custom Styles controls grouped into Color, Text, Spacing, and Border panels"
+  />
+</Frame>
+
+### Color
+
+| Control | What it changes | Notes |
+| --- | --- | --- |
+| **Text Color** | Text color on text-facing slots. | Most reliable on heading, text, secondary text, link, and rich-text slots. |
+| **Background** | Background color behind the selected slot. | Useful on section containers, item containers, paragraphs, list rows, and highlights. |
+| **Text Decoration Color** | Underline or line-through color. | Use with **Text Decoration**. |
+| **Opacity** | Transparency of the selected slot. | Values range from 0 to 1. |
+
+Colors are stored as `rgba(r, g, b, a)` values. Use the color picker when possible.
+
+### Text
+
+| Control | What it changes |
+| --- | --- |
+| **Font Size** | Size in points. |
+| **Font Weight** | Weight from 100 to 900. |
+| **Font Style** | Normal or italic. |
+| **Line Height** | Line-height multiplier. |
+| **Letter Spacing** | Space between letters. |
+| **Text Decoration** | None, underline, or line-through. |
+| **Decoration Style** | Solid, dashed, or dotted decoration line. |
+| **Text Align** | Left, center, right, or justify. |
+| **Text Transform** | None, uppercase, lowercase, or capitalize. |
+
+Use text controls sparingly. Resume text should stay readable, especially when exported to PDF or parsed by hiring systems.
+
+### Spacing
+
+| Control | What it changes | Useful for |
+| --- | --- | --- |
+| **Padding** | Space inside the selected slot. | Creating breathing room inside boxes, highlighted paragraphs, or section items. |
+| **Margin** | Space outside the selected slot. | Moving headings, paragraphs, or items closer together or farther apart. |
+| **Row Gap** | Vertical gap between children when the selected slot lays out multiple rows. | Increasing or tightening list spacing and stacked item content. |
+| **Column Gap** | Horizontal gap between children when the selected slot lays out multiple columns or row children. | Increasing or decreasing the space between a bullet marker and bullet text on **List item row**. |
+
+Spacing values are points. Negative values are allowed for some spacing controls, but they can make content overlap. Prefer small adjustments first.
+
+### Border
+
+| Control | What it changes |
+| --- | --- |
+| **Border Style** | Solid, dashed, or dotted. |
+| **Border Width** | Border thickness in points. |
+| **Border Radius** | Corner roundness in points. |
+| **Border Color** | Border color. |
+
+Borders are most useful on container slots such as **Section container**, **Item container**, **Paragraph**, and **List item row**.
+
+## Style Slots reference
+
+Style Slots are semantic targets. They describe the part of a section that receives the style.
+
+### Section slots
+
+Section slots affect the structured fields of a resume section, such as titles, item headers, dates, keywords, profile links, and level indicators.
+
+| Style Slot | What it affects | Useful examples |
+| --- | --- | --- |
+| **Section container** | The outer wrapper for a section, including the heading and section content. | Add a background tint behind a whole section, add section padding, or place a border around one custom section. |
+| **Section heading** | The section title, such as Experience, Education, Projects, or a custom section title. | Make all headings uppercase, add extra margin below headings, or use a different color for Skills headings. |
+| **Item container** | Each item inside a section, such as one job, one school, one project, one skill, or one summary item. | Add padding around each Project, create card-like Education entries, or increase the vertical gap inside Skill items. |
+| **Primary text** | Normal section text and bold item titles rendered by the template, such as company names, roles, schools, dates, periods, and labels. | Make Experience body text slightly smaller, change date text color in a section type, or align normal text in a custom section. |
+| **Secondary text** | Smaller supporting text rendered as secondary content, such as skill keywords or interest keywords. | Make skill keywords lighter, reduce keyword font size, or increase opacity for muted metadata. |
+| **Link** | Structured links outside rich-text descriptions, such as item website links and linked item titles. | Underline project links, change website link color, or make all profile links use the primary color. |
+| **Icon** | Section-content icons, such as profile, skill, interest, and custom-field icons rendered inside sections. Icon-based level indicators also use the shared icon styling. | Change icon color in Skills, reduce icon opacity in Interests, or use a softer color so icons do not compete with the text. |
+| **Level indicator** | The wrapper around proficiency indicators used by Skills and Languages. | Add space above level indicators, reduce opacity for less prominent levels, or place a light border around the whole scale. |
+
+<Info>
+  Custom Styles currently target sections and rich-text content. The resume header, profile picture, name, headline, and
+  contact area are controlled by template, Design, Typography, Page, and Picture settings instead of these section
+  slots.
+</Info>
+
+### Rich-text slots
+
+Rich-text slots affect content entered in rich-text editors, such as Summary content, Experience descriptions, Education descriptions, Project descriptions, Awards, Certifications, Publications, Volunteer, References, cover letters, and summary-style custom sections.
+
+They do not affect structured fields like company name, school name, date, or website unless those values are inside a rich-text description.
+
+| Style Slot | What it affects | Useful examples |
+| --- | --- | --- |
+| **Paragraph** | Paragraph blocks inside rich-text content. | Tighten long summaries with a smaller line height, add margin between cover letter paragraphs, or add a subtle background behind summary paragraphs. |
+| **List** | Ordered and unordered list containers inside rich text. | Increase **Row Gap** to add space between bullet items, or reduce **Row Gap** to fit more achievements on a page. |
+| **List item row** | The outer row for each rich-text list item, including the bullet or number marker and the text content. | Increase **Column Gap** to add more space between the bullet icon and the text, reduce **Column Gap** for compact lists, or add padding/background around each bullet row. |
+| **List item content** | The text/content area of each rich-text list item after the bullet or number marker. | Change bullet text line height, make only list content smaller, or apply text color without changing the bullet row layout. |
+| **Inline link** | Links inside rich-text descriptions. This is separate from the **Link** slot used by structured website fields. | Underline links in descriptions, change inline link color, or make links use a dotted underline. |
+| **Bold text** | Bold or strong text inside rich-text descriptions. | Make bold achievements use the primary color, increase bold font weight, or remove extra emphasis by lowering the weight. |
+| **Highlight** | Highlighted text inside rich-text descriptions. | Change the default highlight background, make highlighted metrics use a different text color, or reduce highlight opacity. |
+
+<Tip>
+  **List item row** and **List item content** are intentionally separate. Use **List item row** for layout and chrome,
+  such as padding, background, border, opacity, and the marker-to-text **Column Gap**. Use **List item content** for the
+  bullet text itself, such as color, font size, font weight, line height, text decoration, and text transform.
+</Tip>
+
+## Practical examples
+
+### Increase the space between bullet markers and text
+
+Use this when bullet text feels too close to the bullet icon or number.
+
+1. Set **Target Scope** to **All sections** or choose a specific section type, such as **Experience**.
+2. Set **Style Slot** to **List item row**.
+3. In **Spacing**, increase **Column Gap**.
+4. Review the preview and adjust in small increments.
+
+### Make section headings more distinct
+
+Use this when your template headings need more contrast.
+
+1. Set **Target Scope** to **All sections**.
+2. Set **Style Slot** to **Section heading**.
+3. Set **Text Color** to your primary brand color.
+4. Set **Text Transform** to **Uppercase** if you want a stronger heading style.
+5. Add a small **Margin Bottom** value if headings feel too close to the content.
+
+### Create card-like project items
+
+Use this when you want one section to feel visually grouped without changing the whole resume.
+
+1. Set **Target Scope** to **Specific section**.
+2. Choose your Projects section.
+3. Set **Style Slot** to **Item container**.
+4. Add **Padding** on each side.
+5. Set a light **Background** color.
+6. Add **Border Width**, **Border Color**, and a small **Border Radius** if the template supports the look.
+
+### Tighten long descriptions
+
+Use this when descriptions or bullet lists take too much vertical space.
+
+1. Set **Target Scope** to the long section type, such as **Experience**.
+2. Set **Style Slot** to **Paragraph** and reduce **Line Height** slightly.
+3. Set **Style Slot** to **List** and reduce **Row Gap**.
+4. Set **Style Slot** to **List item content** and reduce **Line Height** if bullet text still feels loose.
+
+<Warning>
+  Avoid reducing line height so far that letters collide or text becomes hard to scan. If the resume still overflows,
+  cut content before making the typography cramped.
+</Warning>
+
+### Muting skill keywords
+
+Use this when skill keywords or interest keywords compete with the main labels.
+
+1. Set **Target Scope** to **Section type**.
+2. Choose **Skills** or **Interests**.
+3. Set **Style Slot** to **Secondary text**.
+4. Lower **Opacity** or choose a softer **Text Color**.
+
+## Manage applied rules
+
+Every rule you create appears in **Applied Rules**. Each rule shows its target, style slot, and a compact summary of the properties you set.
+
+<Frame caption="Screenshot of the Applied Rules list">
+  <img
+    src="/images/guides/using-custom-styles/screenshot-5.webp"
+    alt="Applied Rules list showing enabled and disabled custom style rules with edit and delete actions"
+  />
+</Frame>
+
+Use the rule actions to:
+
+- **Disable or enable** a rule without deleting it.
+- **Edit** a rule by loading its target and slot back into the style editor.
+- **Delete** a rule permanently.
+- **Reset Style** to remove the rule for the currently selected target and slot.
+
+<Tip>
+  If a style change looks wrong, disable the rule first. If the resume looks correct again, edit or delete that rule
+  instead of changing unrelated settings.
+</Tip>
+
+## Troubleshooting
+
+### The style did not change anything
+
+Check that the selected slot exists in the selected target.
+
+Common mismatches:
+
+- Using **Paragraph** for company names or dates. Use **Primary text** instead.
+- Using **Link** for links inside a description. Use **Inline link** instead.
+- Using **Secondary text** in a section that does not render secondary text.
+- Styling **Level indicator** in a section with no skill or language level values.
+
+### A section-specific rule is overriding my global rule
+
+This is expected. More specific rules override broader rules for the same property and slot. Check **Applied Rules** for matching Section type or Specific section rules.
+
+### The resume looks cramped or content overlaps
+
+Disable the most recent spacing rule and review the preview again. Large negative margins, very small line height, and high border widths are the most common causes.
+
+### The PDF does not match the preview
+
+Refresh the builder and export again. The preview and PDF export use the same resume rendering path, so persistent differences usually come from stale preview state or font loading.
+
+### I want to write custom CSS
+
+Custom Styles do not accept raw CSS. Reactive Resume renders final resumes through a PDF renderer, so Custom Styles use structured style rules that can be safely translated to PDF styles.

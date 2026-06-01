@@ -7,6 +7,10 @@ import { I18nProvider } from "@lingui/react";
 
 const queryResult = vi.hoisted(() => ({ data: undefined as number | undefined }));
 
+type CountUpProps = {
+	to: number;
+};
+
 vi.mock("@tanstack/react-query", () => ({
 	useQuery: () => queryResult,
 }));
@@ -14,7 +18,7 @@ vi.mock("@/libs/orpc/client", () => ({
 	orpc: { statistics: { github: { getStarCount: { queryOptions: () => ({}) } } } },
 }));
 vi.mock("../animation/count-up", () => ({
-	CountUp: ({ to }: { to: number }) => <span data-testid="count-up">{to.toLocaleString()}</span>,
+	CountUp: ({ to }: CountUpProps) => <span data-testid="count-up">{to.toLocaleString()}</span>,
 }));
 
 const { GithubStarsButton } = await import("./github-stars-button");
@@ -35,12 +39,12 @@ const renderButton = () =>
 	);
 
 describe("GithubStarsButton", () => {
-	it("renders an anchor pointing at the project repo with rel=noopener and target=_blank", () => {
+	it("renders an anchor pointing at the project repo with rel=noopener noreferrer and target=_blank", () => {
 		renderButton();
 		const link = screen.getByRole("button") as HTMLAnchorElement;
 		expect(link.href).toBe("https://github.com/amruthpillai/reactive-resume");
 		expect(link.target).toBe("_blank");
-		expect(link.rel).toBe("noopener");
+		expect(link.rel).toBe("noopener noreferrer");
 	});
 
 	it("uses the no-count aria-label when star count hasn't loaded yet", () => {
