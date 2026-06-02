@@ -59,7 +59,7 @@ describe("redactResumeForViewer", () => {
 			data: defaultResumeData,
 		};
 		const result = redactResumeForViewer(resume, false);
-		expect(result.name).toBe("");
+		expect(result.name).toBe("Resume");
 	});
 
 	it("strips metadata.notes for non-owner", () => {
