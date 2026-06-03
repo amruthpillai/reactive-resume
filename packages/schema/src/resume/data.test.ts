@@ -3,7 +3,9 @@ import {
 	baseSectionSchema,
 	basicsSchema,
 	customFieldSchema,
+	educationItemSchema,
 	experienceItemSchema,
+	itemLogoSchema,
 	layoutSchema,
 	pageSchema,
 	pictureSchema,
@@ -419,5 +421,119 @@ describe("styleRulesSchema", () => {
 				slots: { heading: { opacity: 2, lineHeight: 10, letterSpacing: -17 } },
 			}).success,
 		).toBe(false);
+	});
+});
+
+describe("itemLogoSchema", () => {
+	it("accepts a valid logo object", () => {
+		expect(
+			itemLogoSchema.safeParse({ hidden: false, url: "/uploads/logo.png", size: 32, borderRadius: 4 }).success,
+		).toBe(true);
+	});
+
+	it("defaults hidden to false when missing", () => {
+		const result = itemLogoSchema.safeParse({ url: "", size: 32, borderRadius: 0 });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.hidden).toBe(false);
+	});
+
+	it("defaults url to empty string when missing", () => {
+		const result = itemLogoSchema.safeParse({ hidden: false, size: 32, borderRadius: 0 });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.url).toBe("");
+	});
+
+	it("defaults size to 32 when missing", () => {
+		const result = itemLogoSchema.safeParse({ hidden: false, url: "" });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.size).toBe(32);
+	});
+
+	it("defaults borderRadius to 0 when missing", () => {
+		const result = itemLogoSchema.safeParse({ hidden: false, url: "" });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.borderRadius).toBe(0);
+	});
+
+	it("rejects size below 16", () => {
+		const result = itemLogoSchema.safeParse({ hidden: false, url: "", size: 8, borderRadius: 0 });
+		// .catch() means it coerces to default 32, not rejects
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.size).toBe(32);
+	});
+
+	it("rejects borderRadius above 50 (coerces to default)", () => {
+		const result = itemLogoSchema.safeParse({ hidden: false, url: "", size: 32, borderRadius: 999 });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.borderRadius).toBe(0);
+	});
+});
+
+describe("experienceItemSchema – logo field", () => {
+	const baseExperience = {
+		id: "1",
+		hidden: false,
+		company: "Acme Corp",
+		position: "Developer",
+		location: "NYC",
+		period: "2020–2021",
+		website: { url: "", label: "", inlineLink: false },
+		description: "",
+		roles: [],
+	};
+
+	it("accepts an item with a logo", () => {
+		const result = experienceItemSchema.safeParse({
+			...baseExperience,
+			logo: { hidden: false, url: "/api/uploads/logo.jpeg", size: 32, borderRadius: 4 },
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it("provides default logo when logo field is absent", () => {
+		const result = experienceItemSchema.safeParse(baseExperience);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.logo).toEqual({ hidden: false, url: "", size: 32, borderRadius: 0 });
+		}
+	});
+
+	it("provides default logo when logo field is invalid", () => {
+		const result = experienceItemSchema.safeParse({ ...baseExperience, logo: "not-an-object" });
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.logo).toEqual({ hidden: false, url: "", size: 32, borderRadius: 0 });
+		}
+	});
+});
+
+describe("educationItemSchema – logo field", () => {
+	const baseEducation = {
+		id: "1",
+		hidden: false,
+		school: "MIT",
+		degree: "BSc",
+		area: "Computer Science",
+		grade: "4.0",
+		location: "Cambridge, MA",
+		period: "2016–2020",
+		website: { url: "", label: "", inlineLink: false },
+		description: "",
+	};
+
+	it("accepts an item with a logo", () => {
+		const result = educationItemSchema.safeParse({
+			...baseEducation,
+			logo: { hidden: false, url: "/api/uploads/mit.jpeg", size: 48, borderRadius: 8 },
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it("provides default logo when logo field is absent", () => {
+		const result = educationItemSchema.safeParse(baseEducation);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.logo).toEqual({ hidden: false, url: "", size: 32, borderRadius: 0 });
+		}
 	});
 });

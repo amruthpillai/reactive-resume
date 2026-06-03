@@ -22,7 +22,7 @@ import type { CustomItemSection, ItemSection } from "./types";
 import { Children, createContext, isValidElement, use } from "react";
 import { match } from "ts-pattern";
 import { useRender } from "../../context";
-import { View } from "../../renderer";
+import { Image, View } from "../../renderer";
 import { getResumeSectionIcon } from "../../section-icon";
 import { getResumeSectionTitle } from "../../section-title";
 import { getSectionItemRows, getSectionItemsLayout, shouldUseSectionTimeline } from "./columns";
@@ -37,6 +37,7 @@ import {
 	useTemplateStyle,
 } from "./context";
 import { filterItems, hasVisibleItems, isSectionVisible, isVisibleSummary } from "./filtering";
+import { hasItemLogo } from "./item-image";
 import { LevelDisplay } from "./level-display";
 import { getTemplateMetrics } from "./metrics";
 import { Bold, Div, Heading, Icon, Link, SectionHeadingIcon, Small, Text } from "./primitives";
@@ -453,7 +454,17 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 					const renderInlineHeader = () => (
 						<InlineItemHeader
 							leading={
-								hasPosition || hasLocation ? (
+								hasItemLogo(item.logo) ? (
+									<Image
+										src={item.logo.url}
+										style={{
+											width: item.logo.size,
+											height: item.logo.size,
+											borderRadius: item.logo.borderRadius,
+											objectFit: "contain",
+										}}
+									/>
+								) : hasPosition || hasLocation ? (
 									<Text>
 										{hasPosition ? item.position : ""}
 										{hasPosition && hasLocation ? " " : ""}
@@ -535,7 +546,17 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 						<>
 							<InlineItemHeader
 								leading={
-									hasArea || hasDegree ? (
+									hasItemLogo(item.logo) ? (
+										<Image
+											src={item.logo.url}
+											style={{
+												width: item.logo.size,
+												height: item.logo.size,
+												borderRadius: item.logo.borderRadius,
+												objectFit: "contain",
+											}}
+										/>
+									) : hasArea || hasDegree ? (
 										<Text>
 											{hasArea ? item.area : ""}
 											{hasArea && hasDegree ? " " : ""}

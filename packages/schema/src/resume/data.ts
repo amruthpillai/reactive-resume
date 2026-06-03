@@ -75,6 +75,28 @@ export const pictureSchema = z.object({
 		.describe("The width of the shadow of the picture to display on the resume, defined in points (pt)."),
 });
 
+export const itemLogoSchema = z.object({
+	hidden: z.boolean().catch(false).describe("Whether to hide the logo from the resume."),
+	url: z
+		.string()
+		.catch("")
+		.describe(
+			"The URL to the logo to display on the resume. Prefer local app-served paths (for example /uploads/...) populated via upload.",
+		),
+	size: z
+		.number()
+		.min(16)
+		.max(128)
+		.catch(32)
+		.describe("The size of the logo to display on the resume, defined in points (pt)."),
+	borderRadius: z
+		.number()
+		.min(0)
+		.max(50)
+		.catch(0)
+		.describe("The border radius of the logo to display on the resume, defined in points (pt)."),
+});
+
 export const customFieldSchema = z.object({
 	id: z.string().describe("The unique identifier for the custom field. Usually generated as a UUID."),
 	icon: iconSchema,
@@ -141,6 +163,9 @@ export const educationItemSchema = baseItemSchema.extend({
 	period: z.string().describe("The period of time the education was obtained over."),
 	website: itemWebsiteSchema.describe("The website of the school or institution, if any."),
 	description: z.string().describe("The description of the education. This should be a HTML-formatted string."),
+	logo: itemLogoSchema
+		.catch({ hidden: false, url: "", size: 32, borderRadius: 0 })
+		.describe("The logo of the school or institution, if any."),
 });
 
 export const roleItemSchema = z.object({
@@ -171,6 +196,9 @@ export const experienceItemSchema = baseItemSchema.extend({
 		.array(roleItemSchema)
 		.catch([])
 		.describe("List of individual roles held at this company to show career progression."),
+	logo: itemLogoSchema
+		.catch({ hidden: false, url: "", size: 32, borderRadius: 0 })
+		.describe("The logo of the company or organization, if any."),
 });
 
 export const interestItemSchema = baseItemSchema.extend({
@@ -679,5 +707,6 @@ export type ReferencesSection = z.infer<typeof referencesSectionSchema>;
 export type SkillsSection = z.infer<typeof skillsSectionSchema>;
 export type VolunteerSection = z.infer<typeof volunteerSectionSchema>;
 export type Picture = z.infer<typeof pictureSchema>;
+export type ItemLogo = z.infer<typeof itemLogoSchema>;
 export type CustomField = z.infer<typeof customFieldSchema>;
 export type Website = z.infer<typeof websiteSchema>;

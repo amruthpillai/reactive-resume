@@ -18,6 +18,7 @@ import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/
 import { Input } from "@reactive-resume/ui/components/input";
 import { Switch } from "@reactive-resume/ui/components/switch";
 import { generateId } from "@reactive-resume/utils/string";
+import { LogoUploadField } from "@/components/input/logo-upload";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useDialogStore } from "@/dialogs/store";
@@ -41,6 +42,7 @@ const defaultValues: FormValues = {
 	website: { url: "", label: "", inlineLink: false },
 	description: "",
 	roles: [] as RoleItem[],
+	logo: { hidden: false, url: "", size: 32, borderRadius: 0 },
 };
 
 export function CreateExperienceDialog({ data }: DialogProps<"resume.sections.experience.create">) {
@@ -203,6 +205,18 @@ const ExperienceForm = withForm({
 							<FormLabel>
 								<Trans>Show link in title</Trans>
 							</FormLabel>
+						</FormItem>
+					)}
+				</form.Field>
+
+				{/* Company Logo */}
+				<form.Field name="logo">
+					{(field) => (
+						<FormItem className="sm:col-span-full">
+							<FormLabel>
+								<Trans>Company Logo</Trans>
+							</FormLabel>
+							<LogoUploadField value={field.state.value} onChange={(v) => field.handleChange(v)} />
 						</FormItem>
 					)}
 				</form.Field>

@@ -14,6 +14,7 @@ import {
 } from "@reactive-resume/ui/components/dialog";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Switch } from "@reactive-resume/ui/components/switch";
+import { LogoUploadField } from "@/components/input/logo-upload";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useDialogStore } from "@/dialogs/store";
@@ -38,6 +39,7 @@ const defaultValues: FormValues = {
 	period: "",
 	website: { url: "", label: "", inlineLink: false },
 	description: "",
+	logo: { hidden: false, url: "", size: 32, borderRadius: 0 },
 };
 
 export function CreateEducationDialog({ data }: DialogProps<"resume.sections.education.create">) {
@@ -198,6 +200,18 @@ const EducationForm = withForm({
 							<FormLabel className="mt-0!">
 								<Trans>Show link in title</Trans>
 							</FormLabel>
+						</FormItem>
+					)}
+				</form.Field>
+
+				{/* School Logo */}
+				<form.Field name="logo">
+					{(field) => (
+						<FormItem className="sm:col-span-full">
+							<FormLabel>
+								<Trans>School Logo</Trans>
+							</FormLabel>
+							<LogoUploadField value={field.state.value} onChange={(v) => field.handleChange(v)} />
 						</FormItem>
 					)}
 				</form.Field>
