@@ -64,7 +64,9 @@ export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadField
 
 		uploadFile(file, {
 			onSuccess: ({ url }) => {
-				onChange({ ...value, url });
+				const safeSize = value.size >= SIZE_MIN && value.size <= SIZE_MAX ? value.size : 32;
+				setSizeError([]);
+				onChange({ ...value, url, size: safeSize });
 				onAutoSave?.();
 				toast.dismiss(toastId);
 				if (fileInputRef.current) fileInputRef.current.value = "";
@@ -91,6 +93,15 @@ export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadField
 		}
 		onChange({ ...value, size: num });
 		onAutoSave?.();
+	};
+
+	const onSizeBlur = () => {
+		if (!value.url) return;
+		if (value.size < SIZE_MIN || value.size > SIZE_MAX) {
+			setSizeError([]);
+			onChange({ ...value, size: 32 });
+			onAutoSave?.();
+		}
 	};
 
 	return (
@@ -166,7 +177,7 @@ export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadField
 						<Trans>Logo Size (pt)</Trans>
 					</FormLabel>
 					<InputGroup>
-						<InputGroupInput type="number" min={SIZE_MIN} max={SIZE_MAX} value={value.size} onChange={onSizeChange} />
+						<InputGroupInput type="number" value={value.size} onChange={onSizeChange} onBlur={onSizeBlur} />
 						<InputGroupAddon align="inline-end">
 							<InputGroupText>pt</InputGroupText>
 						</InputGroupAddon>
