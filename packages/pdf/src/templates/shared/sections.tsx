@@ -466,7 +466,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 							}
 							middle={
 								hasItemLogo(item.logo) ? (
-									<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+									<View style={{ flexDirection: "row", alignItems: "center", columnGap: 4 }}>
 										<Image
 											src={item.logo.url}
 											style={{
@@ -477,7 +477,9 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 												flexShrink: 0,
 											}}
 										/>
-										<ItemTitle website={item.website}>{item.company}</ItemTitle>
+										<View style={{ flex: 1 }}>
+											<ItemTitle website={item.website}>{item.company}</ItemTitle>
+										</View>
 									</View>
 								) : (
 									<ItemTitle website={item.website}>{item.company}</ItemTitle>
@@ -491,7 +493,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 						<>
 							<View style={composeStyles(splitRowStyle)}>
 								{hasItemLogo(item.logo) ? (
-									<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+									<View style={{ flexDirection: "row", alignItems: "center", columnGap: 4 }}>
 										<Image
 											src={item.logo.url}
 											style={{
@@ -502,7 +504,9 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 												flexShrink: 0,
 											}}
 										/>
-										<ItemTitle website={item.website}>{item.company}</ItemTitle>
+										<View style={{ flex: 1 }}>
+											<ItemTitle website={item.website}>{item.company}</ItemTitle>
+										</View>
 									</View>
 								) : (
 									<ItemTitle website={item.website}>{item.company}</ItemTitle>
@@ -583,7 +587,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 								}
 								middle={
 									hasItemLogo(item.logo) ? (
-										<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+										<View style={{ flexDirection: "row", alignItems: "center", columnGap: 4 }}>
 											<Image
 												src={item.logo.url}
 												style={{
@@ -594,7 +598,9 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 													flexShrink: 0,
 												}}
 											/>
-											<ItemTitle website={item.website}>{item.school}</ItemTitle>
+											<View style={{ flex: 1 }}>
+												<ItemTitle website={item.website}>{item.school}</ItemTitle>
+											</View>
 										</View>
 									) : (
 										<ItemTitle website={item.website}>{item.school}</ItemTitle>
@@ -610,7 +616,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 						<>
 							<View style={composeStyles(splitRowStyle)}>
 								{hasItemLogo(item.logo) ? (
-									<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+									<View style={{ flexDirection: "row", alignItems: "center", columnGap: 4 }}>
 										<Image
 											src={item.logo.url}
 											style={{
@@ -621,7 +627,9 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 												flexShrink: 0,
 											}}
 										/>
-										<ItemTitle website={item.website}>{item.school}</ItemTitle>
+										<View style={{ flex: 1 }}>
+											<ItemTitle website={item.website}>{item.school}</ItemTitle>
+										</View>
 									</View>
 								) : (
 									<ItemTitle website={item.website}>{item.school}</ItemTitle>
