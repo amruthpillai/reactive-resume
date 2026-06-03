@@ -477,9 +477,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 												flexShrink: 0,
 											}}
 										/>
-										<View style={{ flex: 1 }}>
-											<ItemTitle website={item.website}>{item.company}</ItemTitle>
-										</View>
+										<ItemTitle website={item.website}>{item.company}</ItemTitle>
 									</View>
 								) : (
 									<ItemTitle website={item.website}>{item.company}</ItemTitle>
@@ -504,9 +502,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 												flexShrink: 0,
 											}}
 										/>
-										<View style={{ flex: 1 }}>
-											<ItemTitle website={item.website}>{item.company}</ItemTitle>
-										</View>
+										<ItemTitle website={item.website}>{item.company}</ItemTitle>
 									</View>
 								) : (
 									<ItemTitle website={item.website}>{item.company}</ItemTitle>
@@ -598,9 +594,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 													flexShrink: 0,
 												}}
 											/>
-											<View style={{ flex: 1 }}>
-												<ItemTitle website={item.website}>{item.school}</ItemTitle>
-											</View>
+											<ItemTitle website={item.website}>{item.school}</ItemTitle>
 										</View>
 									) : (
 										<ItemTitle website={item.website}>{item.school}</ItemTitle>
@@ -627,9 +621,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 												flexShrink: 0,
 											}}
 										/>
-										<View style={{ flex: 1 }}>
-											<ItemTitle website={item.website}>{item.school}</ItemTitle>
-										</View>
+										<ItemTitle website={item.website}>{item.school}</ItemTitle>
 									</View>
 								) : (
 									<ItemTitle website={item.website}>{item.school}</ItemTitle>
