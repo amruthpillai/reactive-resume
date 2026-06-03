@@ -74,6 +74,7 @@ type InlineItemHeaderProps = {
 	leading?: ReactNode;
 	middle?: ReactNode;
 	trailing?: ReactNode;
+	center?: boolean;
 };
 
 type SectionItemHeaderProps = {
@@ -307,14 +308,14 @@ const SectionItem = ({ children, style }: SectionItemProps) => {
 	);
 };
 
-const InlineItemHeader = ({ leading, middle, trailing }: InlineItemHeaderProps) => {
+const InlineItemHeader = ({ leading, middle, trailing, center }: InlineItemHeaderProps) => {
 	const inlineItemHeaderStyle = useTemplateStyle("inlineItemHeader");
 	const leadingStyle = useTemplateStyle("inlineItemHeaderLeading");
 	const middleStyle = useTemplateStyle("inlineItemHeaderMiddle");
 	const trailingStyle = useTemplateStyle("inlineItemHeaderTrailing");
 
 	return (
-		<View style={composeStyles(inlineItemHeaderStyle)}>
+		<View style={composeStyles(inlineItemHeaderStyle, center ? { alignItems: "center" } : undefined)}>
 			<View style={composeStyles(leadingStyle)}>{leading}</View>
 			<View style={composeStyles(middleStyle)}>{middle}</View>
 			<View style={composeStyles(trailingStyle)}>{trailing}</View>
@@ -453,18 +454,9 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 
 					const renderInlineHeader = () => (
 						<InlineItemHeader
+							center={hasItemLogo(item.logo)}
 							leading={
-								hasItemLogo(item.logo) ? (
-									<Image
-										src={item.logo.url}
-										style={{
-											width: item.logo.size,
-											height: item.logo.size,
-											borderRadius: item.logo.borderRadius,
-											objectFit: "contain",
-										}}
-									/>
-								) : hasPosition || hasLocation ? (
+								hasPosition || hasLocation ? (
 									<Text>
 										{hasPosition ? item.position : ""}
 										{hasPosition && hasLocation ? " " : ""}
@@ -472,7 +464,25 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 									</Text>
 								) : null
 							}
-							middle={<ItemTitle website={item.website}>{item.company}</ItemTitle>}
+							middle={
+								hasItemLogo(item.logo) ? (
+									<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+										<Image
+											src={item.logo.url}
+											style={{
+												width: item.logo.size,
+												height: item.logo.size,
+												borderRadius: item.logo.borderRadius,
+												objectFit: "contain",
+												flexShrink: 0,
+											}}
+										/>
+										<ItemTitle website={item.website}>{item.company}</ItemTitle>
+									</View>
+								) : (
+									<ItemTitle website={item.website}>{item.company}</ItemTitle>
+								)
+							}
 							trailing={<Text style={composeStyles(alignEndStyle)}>{item.period}</Text>}
 						/>
 					);
@@ -480,7 +490,23 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 					const renderSplitHeader = () => (
 						<>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.company}</ItemTitle>
+								{hasItemLogo(item.logo) ? (
+									<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+										<Image
+											src={item.logo.url}
+											style={{
+												width: item.logo.size,
+												height: item.logo.size,
+												borderRadius: item.logo.borderRadius,
+												objectFit: "contain",
+												flexShrink: 0,
+											}}
+										/>
+										<ItemTitle website={item.website}>{item.company}</ItemTitle>
+									</View>
+								) : (
+									<ItemTitle website={item.website}>{item.company}</ItemTitle>
+								)}
 								{hasSplitRowText(headerLocation) && <Text style={composeStyles(alignEndStyle)}>{headerLocation}</Text>}
 							</View>
 
@@ -545,18 +571,9 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 					const renderInlineHeader = () => (
 						<>
 							<InlineItemHeader
+								center={hasItemLogo(item.logo)}
 								leading={
-									hasItemLogo(item.logo) ? (
-										<Image
-											src={item.logo.url}
-											style={{
-												width: item.logo.size,
-												height: item.logo.size,
-												borderRadius: item.logo.borderRadius,
-												objectFit: "contain",
-											}}
-										/>
-									) : hasArea || hasDegree ? (
+									hasArea || hasDegree ? (
 										<Text>
 											{hasArea ? item.area : ""}
 											{hasArea && hasDegree ? " " : ""}
@@ -564,7 +581,25 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 										</Text>
 									) : null
 								}
-								middle={<ItemTitle website={item.website}>{item.school}</ItemTitle>}
+								middle={
+									hasItemLogo(item.logo) ? (
+										<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+											<Image
+												src={item.logo.url}
+												style={{
+													width: item.logo.size,
+													height: item.logo.size,
+													borderRadius: item.logo.borderRadius,
+													objectFit: "contain",
+													flexShrink: 0,
+												}}
+											/>
+											<ItemTitle website={item.website}>{item.school}</ItemTitle>
+										</View>
+									) : (
+										<ItemTitle website={item.website}>{item.school}</ItemTitle>
+									)
+								}
 								trailing={<Text style={composeStyles(alignEndStyle)}>{item.period}</Text>}
 							/>
 							{gradeAndLocation && <Text>{gradeAndLocation}</Text>}
@@ -574,7 +609,23 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 					const renderSplitHeader = () => (
 						<>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.school}</ItemTitle>
+								{hasItemLogo(item.logo) ? (
+									<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+										<Image
+											src={item.logo.url}
+											style={{
+												width: item.logo.size,
+												height: item.logo.size,
+												borderRadius: item.logo.borderRadius,
+												objectFit: "contain",
+												flexShrink: 0,
+											}}
+										/>
+										<ItemTitle website={item.website}>{item.school}</ItemTitle>
+									</View>
+								) : (
+									<ItemTitle website={item.website}>{item.school}</ItemTitle>
+								)}
 								{hasSplitRowText(headerDegreeAndGrade) && (
 									<Text style={composeStyles(alignEndStyle)}>{headerDegreeAndGrade}</Text>
 								)}
