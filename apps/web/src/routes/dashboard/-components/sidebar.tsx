@@ -7,6 +7,7 @@ import {
 	ChatCircleDotsIcon,
 	GearSixIcon,
 	KeyIcon,
+	PaintBrushHouseholdIcon,
 	ReadCvLogoIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
@@ -46,6 +47,11 @@ const appSidebarItems = [
 		icon: <ReadCvLogoIcon />,
 		label: msg`Resumes`,
 		href: "/dashboard/resumes",
+	},
+	{
+		icon: <PaintBrushHouseholdIcon />,
+		label: msg`Templates`,
+		href: "/dashboard/templates",
 	},
 	{
 		icon: <ChatCircleDotsIcon />,

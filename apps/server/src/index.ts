@@ -18,6 +18,7 @@ async function main() {
 		{
 			fetch: app.fetch,
 			port,
+			hostname: process.env.HOST ?? "127.0.0.1",
 		},
 		(info) => {
 			console.info(`🚀 Up and running on http://localhost:${info.port}`);
