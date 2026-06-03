@@ -489,7 +489,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 
 					const renderSplitHeader = () => (
 						<>
-							<View style={composeStyles(splitRowStyle)}>
+							<View style={composeStyles(splitRowStyle, hasItemLogo(item.logo) ? { alignItems: "center" } : undefined)}>
 								{hasItemLogo(item.logo) ? (
 									<View style={{ flexDirection: "row", alignItems: "center", columnGap: 4 }}>
 										<Image
@@ -608,7 +608,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 
 					const renderSplitHeader = () => (
 						<>
-							<View style={composeStyles(splitRowStyle)}>
+							<View style={composeStyles(splitRowStyle, hasItemLogo(item.logo) ? { alignItems: "center" } : undefined)}>
 								{hasItemLogo(item.logo) ? (
 									<View style={{ flexDirection: "row", alignItems: "center", columnGap: 4 }}>
 										<Image
