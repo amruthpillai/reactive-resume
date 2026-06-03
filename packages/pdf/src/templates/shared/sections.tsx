@@ -475,6 +475,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 												borderRadius: item.logo.borderRadius,
 												objectFit: "contain",
 												flexShrink: 0,
+												alignSelf: "center",
 											}}
 										/>
 										<ItemTitle website={item.website}>{item.company}</ItemTitle>
@@ -500,6 +501,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 												borderRadius: item.logo.borderRadius,
 												objectFit: "contain",
 												flexShrink: 0,
+												alignSelf: "center",
 											}}
 										/>
 										<ItemTitle website={item.website}>{item.company}</ItemTitle>
@@ -592,6 +594,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 													borderRadius: item.logo.borderRadius,
 													objectFit: "contain",
 													flexShrink: 0,
+													alignSelf: "center",
 												}}
 											/>
 											<ItemTitle website={item.website}>{item.school}</ItemTitle>
@@ -619,6 +622,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 												borderRadius: item.logo.borderRadius,
 												objectFit: "contain",
 												flexShrink: 0,
+												alignSelf: "center",
 											}}
 										/>
 										<ItemTitle website={item.website}>{item.school}</ItemTitle>

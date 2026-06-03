@@ -3,10 +3,10 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, TrashSimpleIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
-import { FormControl, FormItem, FormLabel } from "@reactive-resume/ui/components/form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import {
 	InputGroup,
@@ -17,6 +17,9 @@ import {
 import { getReadableErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 
+const SIZE_MIN = 16;
+const SIZE_MAX = 128;
+
 interface LogoUploadFieldProps {
 	value: ItemLogo;
 	onChange: (value: ItemLogo) => void;
@@ -25,6 +28,7 @@ interface LogoUploadFieldProps {
 
 export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadFieldProps) {
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [sizeError, setSizeError] = useState<string[]>([]);
 
 	const { mutate: uploadFile } = useMutation(orpc.storage.uploadFile.mutationOptions({ meta: { noInvalidate: true } }));
 	const { mutate: deleteFile } = useMutation(orpc.storage.deleteFile.mutationOptions({ meta: { noInvalidate: true } }));
@@ -47,6 +51,7 @@ export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadField
 			// ignore invalid URLs
 		}
 
+		setSizeError([]);
 		onChange({ ...value, url: "" });
 		onAutoSave?.();
 	};
@@ -70,6 +75,22 @@ export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadField
 				});
 			},
 		});
+	};
+
+	const onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const raw = e.target.value;
+		const num = Number(raw);
+		if (value.url) {
+			if (num < SIZE_MIN) {
+				setSizeError([t`Too small: expected number to be >=${SIZE_MIN}`]);
+			} else if (num > SIZE_MAX) {
+				setSizeError([t`Too large: expected number to be <=${SIZE_MAX}`]);
+			} else {
+				setSizeError([]);
+			}
+		}
+		onChange({ ...value, size: num });
+		onAutoSave?.();
 	};
 
 	return (
@@ -139,26 +160,18 @@ export function LogoUploadField({ value, onChange, onAutoSave }: LogoUploadField
 			</div>
 
 			{/* Size + border radius row */}
-			<div className="grid grid-cols-2 gap-3">
-				<FormItem>
+			<div className="grid grid-cols-2 items-start gap-3">
+				<FormItem hasError={sizeError.length > 0}>
 					<FormLabel>
 						<Trans>Logo Size (pt)</Trans>
 					</FormLabel>
 					<InputGroup>
-						<InputGroupInput
-							type="number"
-							min={16}
-							max={128}
-							value={value.size}
-							onChange={(e) => {
-								onChange({ ...value, size: Number(e.target.value) });
-								onAutoSave?.();
-							}}
-						/>
+						<InputGroupInput type="number" min={SIZE_MIN} max={SIZE_MAX} value={value.size} onChange={onSizeChange} />
 						<InputGroupAddon align="inline-end">
 							<InputGroupText>pt</InputGroupText>
 						</InputGroupAddon>
 					</InputGroup>
+					<FormMessage errors={sizeError} />
 				</FormItem>
 
 				<FormItem>
