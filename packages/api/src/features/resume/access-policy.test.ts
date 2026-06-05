@@ -53,7 +53,7 @@ describe("redactResumeForViewer", () => {
 		expect(redactResumeForViewer(resume, true)).toBe(resume);
 	});
 
-	it("strips name to empty for non-owner", () => {
+	it("replaces name with placeholder for non-owner", () => {
 		const resume = {
 			name: "Senior Eng @ Foo — final draft",
 			data: defaultResumeData,
