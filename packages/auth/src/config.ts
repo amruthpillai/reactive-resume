@@ -26,7 +26,7 @@ import { createGithubProfileMapper, createProfileMapper } from "./oauth-profile"
 import { getTrustedOrigins } from "./trusted-origins";
 
 const authBaseUrl = env.APP_URL;
-const isRateLimitEnabled = process.env.NODE_ENV === "production";
+const isRateLimitEnabled = process.env.NODE_ENV === "production" && !env.FLAG_DISABLE_API_RATE_LIMIT;
 
 function getOAuthAudiences(): string[] {
 	const base = authBaseUrl.replace(/\/$/, "");
