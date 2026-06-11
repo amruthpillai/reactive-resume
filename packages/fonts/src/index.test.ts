@@ -7,6 +7,7 @@ import {
 	getFontDisplayName,
 	getFontSearchKeywords,
 	getLoadableWebFontWeights,
+	getPdfCjkFallbackFontFamilies,
 	getPdfCjkFallbackFontFamily,
 	getWebFont,
 	getWebFontSource,
@@ -160,6 +161,61 @@ describe("getPdfCjkFallbackFontFamily", () => {
 
 	it("returns null when family already is the CJK fallback", () => {
 		expect(getPdfCjkFallbackFontFamily("Noto Sans SC")).toBeNull();
+	});
+});
+
+describe("getPdfCjkFallbackFontFamilies", () => {
+	it("puts the Korean Noto font first for the ko-KR locale (Hangul needs KR, not SC)", () => {
+		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "ko-KR" })).toEqual([
+			"Noto Serif KR",
+			"Noto Serif SC",
+		]);
+		expect(getPdfCjkFallbackFontFamilies("Helvetica", { locale: "ko-KR" })).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+	});
+
+	it("uses the Japanese Noto font for the ja-JP locale", () => {
+		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "ja-JP" })).toEqual([
+			"Noto Serif JP",
+			"Noto Serif SC",
+		]);
+	});
+
+	it("uses the Traditional Chinese Noto font for the zh-TW locale", () => {
+		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "zh-TW" })).toEqual([
+			"Noto Serif TC",
+			"Noto Serif SC",
+		]);
+	});
+
+	it("returns only the Simplified Chinese font for zh-CN (unchanged behavior)", () => {
+		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "zh-CN" })).toEqual(["Noto Serif SC"]);
+	});
+
+	it("includes a Korean font before SC when Hangul is detected in Latin-locale content", () => {
+		expect(getPdfCjkFallbackFontFamilies("Helvetica", { scripts: ["hangul"] })).toEqual([
+			"Noto Sans KR",
+			"Noto Sans SC",
+		]);
+	});
+
+	it("dedupes the locale script and content scripts", () => {
+		expect(
+			getPdfCjkFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["hangul", "han-simplified"] }),
+		).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+	});
+
+	it("excludes the family itself when it already is a fallback", () => {
+		expect(getPdfCjkFallbackFontFamilies("Noto Sans KR", { locale: "ko-KR" })).toEqual(["Noto Sans SC"]);
+	});
+
+	it("only returns fonts that exist in the webfontlist", () => {
+		const families = getPdfCjkFallbackFontFamilies("Helvetica", {
+			locale: "ko-KR",
+			scripts: ["hangul", "kana", "han-simplified"],
+		});
+		for (const family of families) {
+			expect(getWebFont(family)).toBeDefined();
+		}
 	});
 });
 

@@ -71,6 +71,51 @@ describe("registerFonts", () => {
 		);
 	});
 
+	it("registers the Korean Noto fallback for the ko-KR locale so Hangul renders", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const pdfTypography = registerFonts(typography, "ko-KR");
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC"]);
+		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif KR" }));
+	});
+
+	it("registers the Japanese Noto fallback for the ja-JP locale", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const pdfTypography = registerFonts(typography, "ja-JP");
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif JP", "Noto Serif SC"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif JP" }));
+	});
+
+	it("registers the Traditional Chinese Noto fallback for the zh-TW locale", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const pdfTypography = registerFonts(typography, "zh-TW");
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif TC", "Noto Serif SC"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif TC" }));
+	});
+
+	it("registers the Korean Noto fallback for Latin locale when content contains Hangul", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const pdfTypography = registerFonts(typography, "en-US", true, new Set(["hangul"]));
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif KR" }));
+	});
+
 	it("registers bold CJK fallback variants so strong text keeps bold glyphs", async () => {
 		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
 		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
@@ -230,5 +275,49 @@ describe("resumeContentContainsCJK", () => {
 		} satisfies ResumeData;
 
 		expect(resumeContentContainsCJK(data)).toBe(false);
+	});
+});
+
+describe("resumeContentCjkScripts", () => {
+	const withSummary = (content: string): ResumeData => ({
+		...defaultResumeData,
+		summary: { ...defaultResumeData.summary, content: `<p>${content}</p>` },
+	});
+
+	it("detects Hangul", async () => {
+		const { resumeContentCjkScripts } = await import("./use-register-fonts");
+		expect([...resumeContentCjkScripts(withSummary("안녕하세요"))]).toEqual(["hangul"]);
+	});
+
+	it("detects Kana", async () => {
+		const { resumeContentCjkScripts } = await import("./use-register-fonts");
+		expect([...resumeContentCjkScripts(withSummary("こんにちは"))]).toEqual(["kana"]);
+	});
+
+	it("detects Han as han-simplified", async () => {
+		const { resumeContentCjkScripts } = await import("./use-register-fonts");
+		expect([...resumeContentCjkScripts(withSummary("翠翠红红"))]).toEqual(["han-simplified"]);
+	});
+
+	it("detects multiple scripts in mixed content", async () => {
+		const { resumeContentCjkScripts } = await import("./use-register-fonts");
+		const scripts = resumeContentCjkScripts(withSummary("안녕 翠翠"));
+		expect(scripts.has("hangul")).toBe(true);
+		expect(scripts.has("han-simplified")).toBe(true);
+	});
+
+	it("returns an empty set for Latin-only content", async () => {
+		const { resumeContentCjkScripts } = await import("./use-register-fonts");
+		expect(resumeContentCjkScripts(withSummary("Reactive Resume")).size).toBe(0);
+	});
+
+	it("does not scan private metadata notes", async () => {
+		const { resumeContentCjkScripts } = await import("./use-register-fonts");
+		const data = {
+			...defaultResumeData,
+			metadata: { ...defaultResumeData.metadata, notes: "안녕하세요" },
+		} satisfies ResumeData;
+
+		expect(resumeContentCjkScripts(data).size).toBe(0);
 	});
 });

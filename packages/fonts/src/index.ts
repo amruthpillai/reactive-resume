@@ -1,4 +1,6 @@
+import type { CjkScript, Locale } from "@reactive-resume/utils/locale";
 import { unique } from "@reactive-resume/utils/field";
+import { getLocaleCjkScript } from "@reactive-resume/utils/locale";
 import webFontListJSON from "./webfontlist.json";
 
 export type FontCategory = "display" | "handwriting" | "monospace" | "serif" | "sans-serif";
@@ -80,6 +82,17 @@ const resumeCjkSerifFontFallbacks = [
 	"KaiTi",
 	"FangSong",
 ] as const;
+
+// Per-script Noto web font, split by serif/sans category. Unlike the SC-only
+// fonts above, these match the actual writing system: Hangul lives only in the
+// KR fonts and Kana only in the JP fonts, so Simplified-Chinese fonts cannot
+// render them (#3134-style tofu). All entries are present in webfontlist.json.
+const cjkScriptFonts: Record<CjkScript, { serif: string; sansSerif: string }> = {
+	hangul: { serif: "Noto Serif KR", sansSerif: "Noto Sans KR" },
+	kana: { serif: "Noto Serif JP", sansSerif: "Noto Sans JP" },
+	"han-traditional": { serif: "Noto Serif TC", sansSerif: "Noto Sans TC" },
+	"han-simplified": { serif: "Noto Serif SC", sansSerif: "Noto Sans SC" },
+};
 
 const genericFontFamilies = new Set([
 	"-apple-system",
@@ -172,6 +185,11 @@ function getPrimaryCjkWebFont(family: string) {
 	return category === "serif" ? "Noto Serif SC" : "Noto Sans SC";
 }
 
+function getCjkScriptFont(script: CjkScript, category: FontCategory | null) {
+	const variants = cjkScriptFonts[script];
+	return category === "serif" ? variants.serif : variants.sansSerif;
+}
+
 export function isStandardPdfFontFamily(family: string) {
 	return standardFontList.some((font) => font.family === family);
 }
@@ -200,20 +218,41 @@ export function getFallbackWebFontFamilies(family: string) {
 }
 
 /**
- * Returns a CJK web font (Noto Sans/Serif SC) to register as a glyph-level
- * fallback for PDF rendering, or `null` when no fallback is needed
- * (primary already is the fallback).
+ * Returns an ordered stack of CJK web fonts to register as glyph-level
+ * fallbacks for PDF rendering. react-pdf resolves the font per-codepoint
+ * left-to-right across the stack, so listing one font per writing system
+ * lets a single resume mix Hangul, Kana and Han correctly.
  *
- * Source Han Sans/Serif SC covers all CJK-Unified ideographs, so a single
- * font handles Simplified/Traditional Chinese, Japanese kanji and Korean
- * hanja — the locales reporting #2986 / #3006.
+ * Ordering: the locale's primary script first (the dominant language), then
+ * any other scripts actually detected in the content, then a Simplified
+ * Chinese safety net that covers stray CJK-Unified ideographs. The result is
+ * deduped, has the primary family removed, and only keeps fonts that exist in
+ * the webfontlist.
+ */
+export function getPdfCjkFallbackFontFamilies(
+	family: string,
+	options: { locale?: Locale; scripts?: Iterable<CjkScript> } = {},
+): string[] {
+	const category = getFontCategory(family);
+
+	const ordered: CjkScript[] = [];
+	const localeScript = getLocaleCjkScript(options.locale);
+	if (localeScript) ordered.push(localeScript);
+	if (options.scripts) ordered.push(...options.scripts);
+	ordered.push("han-simplified");
+
+	return unique(ordered.map((script) => getCjkScriptFont(script, category)))
+		.filter((candidate) => candidate !== family)
+		.filter((candidate) => Boolean(getWebFont(candidate)));
+}
+
+/**
+ * Back-compat single-font resolver. With no locale/scripts it returns the
+ * Simplified Chinese fallback (Noto Sans/Serif SC) or `null` when the family
+ * already is that fallback — matching the pre-stack behavior.
  */
 export function getPdfCjkFallbackFontFamily(family: string): string | null {
-	const fallback = getPrimaryCjkWebFont(family);
-	if (fallback === family) return null;
-	if (!getWebFont(fallback)) return null;
-
-	return fallback;
+	return getPdfCjkFallbackFontFamilies(family)[0] ?? null;
 }
 
 export function getLoadableWebFontWeights(family: string, preferredWeights: string[]) {

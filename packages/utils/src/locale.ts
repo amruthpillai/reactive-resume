@@ -70,6 +70,26 @@ export function isCJKLocale(locale: Locale): boolean {
 	return locale === "zh-CN" || locale === "zh-TW" || locale === "ja-JP" || locale === "ko-KR";
 }
 
+// The writing system a CJK locale primarily uses. Used to pick the matching
+// Noto fallback font (KR/JP/TC/SC) so e.g. Korean Hangul gets a font that
+// actually contains Hangul glyphs instead of a Han-only Simplified font.
+export type CjkScript = "hangul" | "kana" | "han-traditional" | "han-simplified";
+
+export function getLocaleCjkScript(locale?: Locale): CjkScript | null {
+	switch (locale) {
+		case "ko-KR":
+			return "hangul";
+		case "ja-JP":
+			return "kana";
+		case "zh-TW":
+			return "han-traditional";
+		case "zh-CN":
+			return "han-simplified";
+		default:
+			return null;
+	}
+}
+
 const RTL_LANGUAGES = new Set([
 	"ar", // Arabic
 	"ckb", // Kurdish (Sorani)
