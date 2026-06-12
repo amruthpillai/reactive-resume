@@ -7,8 +7,8 @@ import {
 	getFontDisplayName,
 	getFontSearchKeywords,
 	getLoadableWebFontWeights,
-	getPdfCjkFallbackFontFamilies,
 	getPdfCjkFallbackFontFamily,
+	getPdfFallbackFontFamilies,
 	getWebFont,
 	getWebFontSource,
 	isStandardPdfFontFamily,
@@ -164,54 +164,69 @@ describe("getPdfCjkFallbackFontFamily", () => {
 	});
 });
 
-describe("getPdfCjkFallbackFontFamilies", () => {
+describe("getPdfFallbackFontFamilies", () => {
 	it("puts the Korean Noto font first for the ko-KR locale (Hangul needs KR, not SC)", () => {
-		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "ko-KR" })).toEqual([
-			"Noto Serif KR",
-			"Noto Serif SC",
-		]);
-		expect(getPdfCjkFallbackFontFamilies("Helvetica", { locale: "ko-KR" })).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ko-KR" })).toEqual(["Noto Serif KR", "Noto Serif SC"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR" })).toEqual(["Noto Sans KR", "Noto Sans SC"]);
 	});
 
 	it("uses the Japanese Noto font for the ja-JP locale", () => {
-		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "ja-JP" })).toEqual([
-			"Noto Serif JP",
-			"Noto Serif SC",
-		]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ja-JP" })).toEqual(["Noto Serif JP", "Noto Serif SC"]);
 	});
 
 	it("uses the Traditional Chinese Noto font for the zh-TW locale", () => {
-		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "zh-TW" })).toEqual([
-			"Noto Serif TC",
-			"Noto Serif SC",
-		]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-TW" })).toEqual(["Noto Serif TC", "Noto Serif SC"]);
 	});
 
 	it("returns only the Simplified Chinese font for zh-CN (unchanged behavior)", () => {
-		expect(getPdfCjkFallbackFontFamilies("Times-Roman", { locale: "zh-CN" })).toEqual(["Noto Serif SC"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-CN" })).toEqual(["Noto Serif SC"]);
 	});
 
-	it("includes a Korean font before SC when Hangul is detected in Latin-locale content", () => {
-		expect(getPdfCjkFallbackFontFamilies("Helvetica", { scripts: ["hangul"] })).toEqual([
+	it("uses the Arabic Noto font for the fa-IR (Persian) and ar-SA locales", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "fa-IR" })).toEqual(["Noto Sans Arabic"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ar-SA" })).toEqual(["Noto Naskh Arabic"]);
+	});
+
+	it("uses the Hebrew Noto font for he-IL, reusing the sans font for serif (no Noto Serif Hebrew)", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "he-IL" })).toEqual(["Noto Sans Hebrew"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "he-IL" })).toEqual(["Noto Sans Hebrew"]);
+	});
+
+	it("uses the Thai Noto font for th-TH", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "th-TH" })).toEqual(["Noto Sans Thai"]);
+	});
+
+	it("does not append the Simplified Chinese safety net for non-CJK scripts", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["arabic"] })).toEqual(["Noto Sans Arabic"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["thai"] })).not.toContain("Noto Sans SC");
+	});
+
+	it("orders the locale script first, then content scripts (mixed RTL + CJK resume)", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["arabic"] })).toEqual([
 			"Noto Sans KR",
+			"Noto Sans Arabic",
 			"Noto Sans SC",
 		]);
 	});
 
+	it("includes a Korean font before SC when Hangul is detected in Latin-locale content", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["hangul"] })).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+	});
+
 	it("dedupes the locale script and content scripts", () => {
-		expect(
-			getPdfCjkFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["hangul", "han-simplified"] }),
-		).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["hangul", "han-simplified"] })).toEqual(
+			["Noto Sans KR", "Noto Sans SC"],
+		);
 	});
 
 	it("excludes the family itself when it already is a fallback", () => {
-		expect(getPdfCjkFallbackFontFamilies("Noto Sans KR", { locale: "ko-KR" })).toEqual(["Noto Sans SC"]);
+		expect(getPdfFallbackFontFamilies("Noto Sans KR", { locale: "ko-KR" })).toEqual(["Noto Sans SC"]);
 	});
 
 	it("only returns fonts that exist in the webfontlist", () => {
-		const families = getPdfCjkFallbackFontFamilies("Helvetica", {
+		const families = getPdfFallbackFontFamilies("Helvetica", {
 			locale: "ko-KR",
-			scripts: ["hangul", "kana", "han-simplified"],
+			scripts: ["hangul", "kana", "han-simplified", "arabic", "hebrew", "thai"],
 		});
 		for (const family of families) {
 			expect(getWebFont(family)).toBeDefined();

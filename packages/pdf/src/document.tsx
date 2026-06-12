@@ -5,7 +5,7 @@ import type { ComponentType } from "react";
 import type { SectionTitleResolver } from "./section-title";
 import { useMemo } from "react";
 import { RenderProvider } from "./context";
-import { registerFonts, resumeContentCjkScripts, resumeContentContainsCJK } from "./hooks/use-register-fonts";
+import { registerFonts, resumeContentContainsCJK, resumeContentScripts } from "./hooks/use-register-fonts";
 import { Document } from "./renderer";
 import { getTemplatePage } from "./templates";
 
@@ -29,12 +29,12 @@ export const ResumeDocument = ({ data, template, resolveSectionTitle }: ResumeDo
 	const TemplatePageComponent = getTemplatePage(template);
 	const creationDate = useMemo(() => new Date(), []);
 	const hasCjkContent = useMemo(() => resumeContentContainsCJK(data), [data]);
-	const cjkScripts = useMemo(() => resumeContentCjkScripts(data), [data]);
+	const scripts = useMemo(() => resumeContentScripts(data), [data]);
 	const typography = registerFonts(
 		data.metadata.typography,
 		data.metadata.page.locale as Locale,
 		hasCjkContent,
-		cjkScripts,
+		scripts,
 	) as Typography;
 
 	// `registerFonts` widens `fontFamily` to `string | string[]` for CJK

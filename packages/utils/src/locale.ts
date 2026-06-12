@@ -70,12 +70,26 @@ export function isCJKLocale(locale: Locale): boolean {
 	return locale === "zh-CN" || locale === "zh-TW" || locale === "ja-JP" || locale === "ko-KR";
 }
 
-// The writing system a CJK locale primarily uses. Used to pick the matching
-// Noto fallback font (KR/JP/TC/SC) so e.g. Korean Hangul gets a font that
-// actually contains Hangul glyphs instead of a Han-only Simplified font.
-export type CjkScript = "hangul" | "kana" | "han-traditional" | "han-simplified";
+// A writing system that needs a dedicated fallback font in the PDF renderer,
+// because react-pdf (unlike a browser) has no automatic system-font fallback:
+// a glyph only renders if a registered font contains it. We pick the matching
+// Noto font per script so e.g. Hangul → Noto KR, Arabic → Noto Arabic, instead
+// of falling back to a Latin/Han-only font and producing tofu.
+export type Script = "hangul" | "kana" | "han-traditional" | "han-simplified" | "arabic" | "hebrew" | "thai";
 
-export function getLocaleCjkScript(locale?: Locale): CjkScript | null {
+// The CJK subset of `Script`. CJK needs extra per-character line breaking that
+// must NOT be applied to Arabic (cursive, joined letters) or Thai (combining
+// marks), so callers gate line-breaking on this rather than on `Script`.
+export const cjkScripts: readonly Script[] = ["hangul", "kana", "han-traditional", "han-simplified"];
+
+export function isCjkScript(script: Script): boolean {
+	return cjkScripts.includes(script);
+}
+
+// The script a locale primarily uses, used to order the fallback stack so the
+// dominant language renders with its native font. Persian (fa-IR) uses the
+// Arabic script.
+export function getLocaleScript(locale?: Locale): Script | null {
 	switch (locale) {
 		case "ko-KR":
 			return "hangul";
@@ -85,6 +99,13 @@ export function getLocaleCjkScript(locale?: Locale): CjkScript | null {
 			return "han-traditional";
 		case "zh-CN":
 			return "han-simplified";
+		case "ar-SA":
+		case "fa-IR":
+			return "arabic";
+		case "he-IL":
+			return "hebrew";
+		case "th-TH":
+			return "thai";
 		default:
 			return null;
 	}
