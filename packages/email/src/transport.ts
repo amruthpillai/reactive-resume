@@ -1,5 +1,6 @@
+import type { SendMailOptions, Transporter } from "nodemailer";
 import type { ReactElement } from "react";
-import nodemailer, { type SendMailOptions, type Transporter } from "nodemailer";
+import nodemailer from "nodemailer";
 import { render } from "react-email";
 import { env } from "@reactive-resume/env/server";
 

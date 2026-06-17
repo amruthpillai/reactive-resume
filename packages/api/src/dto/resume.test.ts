@@ -28,7 +28,7 @@ describe("resume DTO output validation", () => {
 			hasPassword: dbResume.hasPassword,
 		};
 
-		expect(publicResume.name).toBe("");
+		expect(publicResume.name).toBe("Resume");
 		expect(publicResume.data.metadata.notes).toBe("");
 		expect(resumeDto.getBySlug.output.safeParse(publicResume).success).toBe(true);
 	});

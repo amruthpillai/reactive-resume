@@ -257,24 +257,8 @@ describe("registerFonts", () => {
 
 		const hyphenationCallback = registerHyphenationSpy.mock.calls.at(-1)?.[0];
 		expect(hyphenationCallback?.("翠翠红红处处")).toEqual(["翠", "", "翠", "", "红", "", "红", "", "处", "", "处", ""]);
-		expect(hyphenationCallback?.("Reactive")).toEqual([
-			"R",
-			"",
-			"e",
-			"",
-			"a",
-			"",
-			"c",
-			"",
-			"t",
-			"",
-			"i",
-			"",
-			"v",
-			"",
-			"e",
-			"",
-		]);
+		// Latin words must stay intact even in CJK mode — no character-level breaking.
+		expect(hyphenationCallback?.("Reactive")).toEqual(["Reactive"]);
 	});
 
 	it("returns typography with font weights sorted ascending", async () => {

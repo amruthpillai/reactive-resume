@@ -1,4 +1,5 @@
-import DOMPurify, { type Config } from "dompurify";
+import type { Config } from "dompurify";
+import DOMPurify from "dompurify";
 
 const RICH_TEXT_CONFIG: Config = {
 	ALLOWED_TAGS: [

@@ -1,5 +1,6 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import jsonpatch, { type JsonPatchError, type Operation } from "fast-json-patch";
+import type { JsonPatchError, Operation } from "fast-json-patch";
+import jsonpatch from "fast-json-patch";
 import z from "zod";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 

@@ -56,7 +56,7 @@ export function redactResumeForViewer<T extends { name: string; data: ResumeData
 
 	return {
 		...resume,
-		name: "",
+		name: "Resume",
 		data: {
 			...resume.data,
 			metadata: {

@@ -224,7 +224,11 @@ export const registerFonts = (
 	Font.registerHyphenationCallback((word) => {
 		if (needsCjkLineBreaking) {
 			if (word === " ") return ["\u200C "];
-			return [...word].flatMap((l) => [l, ""]);
+			// Only break at every character for words that contain CJK characters.
+			// Latin/non-CJK words must stay intact even in a CJK-locale resume.
+			if (cjkLetterRegex.test(word)) {
+				return [...word].flatMap((l) => [l, ""]);
+			}
 		}
 
 		return [word];

@@ -11,7 +11,7 @@ vi.mock("@reactive-resume/api/context", () => ({
 }));
 
 vi.mock("@reactive-resume/api/features/resume/export", () => ({
-	PDF_DOWNLOAD_URL_EXPIRES_IN_SECONDS: 600,
+	MAX_PDF_DOWNLOAD_URL_TTL_SECONDS: 600,
 	createResumePdfDownloadUrl: mocks.createResumePdfDownloadUrl,
 }));
 
