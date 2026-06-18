@@ -160,6 +160,18 @@ describe("registerFonts", () => {
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Sans Thai" }));
 	});
 
+	it("registers the Armenian Noto fallback for Latin locale when content contains Armenian (no SC safety net)", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const pdfTypography = registerFonts(typography, "en-US", false, new Set(["armenian"]));
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif Armenian"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif Armenian" }));
+		expect(registerSpy).not.toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif SC" }));
+	});
+
 	it("does NOT enable CJK per-character line breaking for non-CJK fallback scripts", async () => {
 		const registerHyphenationSpy = vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
 		vi.spyOn(Font, "register").mockImplementation(() => {});
@@ -352,6 +364,11 @@ describe("resumeContentScripts", () => {
 	it("detects Thai", async () => {
 		const { resumeContentScripts } = await import("./use-register-fonts");
 		expect([...resumeContentScripts(withSummary("สวัสดี"))]).toEqual(["thai"]);
+	});
+
+	it("detects Armenian", async () => {
+		const { resumeContentScripts } = await import("./use-register-fonts");
+		expect([...resumeContentScripts(withSummary("Բարև Ձեզ"))]).toEqual(["armenian"]);
 	});
 
 	it("detects multiple scripts in mixed content", async () => {

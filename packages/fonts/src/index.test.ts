@@ -196,6 +196,11 @@ describe("getPdfFallbackFontFamilies", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "th-TH" })).toEqual(["Noto Sans Thai"]);
 	});
 
+	it("uses the category-matching Armenian Noto font (real sans and serif variants exist)", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["armenian"] })).toEqual(["Noto Sans Armenian"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["armenian"] })).toEqual(["Noto Serif Armenian"]);
+	});
+
 	it("does not append the Simplified Chinese safety net for non-CJK scripts", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["arabic"] })).toEqual(["Noto Sans Arabic"]);
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["thai"] })).not.toContain("Noto Sans SC");
@@ -226,7 +231,7 @@ describe("getPdfFallbackFontFamilies", () => {
 	it("only returns fonts that exist in the webfontlist", () => {
 		const families = getPdfFallbackFontFamilies("Helvetica", {
 			locale: "ko-KR",
-			scripts: ["hangul", "kana", "han-simplified", "arabic", "hebrew", "thai"],
+			scripts: ["hangul", "kana", "han-simplified", "arabic", "hebrew", "thai", "armenian"],
 		});
 		for (const family of families) {
 			expect(getWebFont(family)).toBeDefined();

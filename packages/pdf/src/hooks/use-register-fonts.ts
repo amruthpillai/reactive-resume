@@ -169,6 +169,9 @@ const hanRegex = /[㐀-䶿一-鿿豈-﫿]/;
 const arabicRegex = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-ﻼ]/;
 const hebrewRegex = /[֐-׿יִ-ﭏ]/;
 const thaiRegex = /[฀-๿]/;
+// Armenian block (U+0531-U+058F) + Armenian ligatures in the Alphabetic
+// Presentation Forms block (U+FB13-U+FB17, e.g. ﬓ ﬔ ﬕ ﬖ ﬗ).
+const armenianRegex = /[Ա-֏ﬓ-ﬗ]/;
 
 const scriptDetectors: { script: Script; regex: RegExp }[] = [
 	{ script: "hangul", regex: hangulRegex },
@@ -177,6 +180,7 @@ const scriptDetectors: { script: Script; regex: RegExp }[] = [
 	{ script: "arabic", regex: arabicRegex },
 	{ script: "hebrew", regex: hebrewRegex },
 	{ script: "thai", regex: thaiRegex },
+	{ script: "armenian", regex: armenianRegex },
 ];
 
 const collectScripts = (value: unknown, scripts: Set<Script>): void => {
