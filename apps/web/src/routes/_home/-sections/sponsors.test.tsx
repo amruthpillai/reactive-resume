@@ -33,12 +33,19 @@ describe("Sponsors", () => {
 		expect(link).toHaveAttribute("rel", "noopener noreferrer");
 	});
 
-	it("renders the full Atlas Cloud logo", () => {
-		const { getByAltText } = renderSponsors(true);
+	it("renders the full Atlas Cloud logo inside the sponsor link", () => {
+		const { container, getByRole } = renderSponsors(true);
 
-		const logo = getByAltText("Atlas Cloud");
-		expect(logo).toHaveAttribute("src", "/sponsors/atlas-cloud-logo-black.svg");
-		expect(logo).toHaveClass("h-20");
+		const link = getByRole("link", { name: "Atlas Cloud" });
+		const logos = container.querySelectorAll("a[aria-label='Atlas Cloud'] img");
+
+		expect(logos).toHaveLength(2);
+		expect(logos[0]).toHaveAttribute("src", "/sponsors/atlas-cloud-logo-black.svg");
+		expect(logos[0]).toHaveClass("h-20", "pointer-events-none");
+		expect(logos[0]).toHaveAttribute("draggable", "false");
+		expect(logos[1]).toHaveAttribute("src", "/sponsors/atlas-cloud-logo-white.svg");
+		expect(link).toContainElement(logos[0] as HTMLElement);
+		expect(link).toContainElement(logos[1] as HTMLElement);
 	});
 
 	it("thanks sponsors and links sponsorship inquiries to email", () => {

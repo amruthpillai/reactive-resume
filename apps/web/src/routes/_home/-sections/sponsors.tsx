@@ -28,18 +28,23 @@ export const Sponsors = ({ show }: SponsorsProps) => {
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Atlas Cloud"
-					className="mt-12 block"
+					className="mt-12 inline-block"
 				>
+					<span className="sr-only">Atlas Cloud</span>
 					<img
 						src="/sponsors/atlas-cloud-logo-black.svg"
-						alt="Atlas Cloud"
-						className="h-20 w-auto md:h-24 dark:hidden"
+						alt=""
+						aria-hidden="true"
+						draggable={false}
+						className="pointer-events-none h-20 w-auto md:h-24 dark:hidden"
 						loading="lazy"
 					/>
 					<img
 						src="/sponsors/atlas-cloud-logo-white.svg"
 						alt=""
-						className="hidden h-20 w-auto md:h-24 dark:block"
+						aria-hidden="true"
+						draggable={false}
+						className="pointer-events-none hidden h-20 w-auto md:h-24 dark:block"
 						loading="lazy"
 					/>
 				</a>
