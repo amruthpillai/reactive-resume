@@ -12,8 +12,7 @@ type Fixtures = {
 };
 
 export const test = base.extend<Fixtures>({
-	account: async ({ baseURL }, use, testInfo) => {
-		void baseURL;
+	account: async ({}, use, testInfo) => {
 		const account = createAccount(testInfo);
 
 		try {
@@ -22,13 +21,12 @@ export const test = base.extend<Fixtures>({
 			await deleteE2EUser(account);
 		}
 	},
-	authContext: async ({ browser, request, account }, use, testInfo) => {
-		const baseURL = String(testInfo.project.use.baseURL ?? "http://localhost:3000");
-		const context = await createAuthenticatedContext(browser, request, account, baseURL);
+	authContext: async ({ browser, request, account, baseURL }, use) => {
+		const context = await createAuthenticatedContext(browser, request, account, baseURL ?? "http://localhost:3000");
 
 		try {
 			await use(context);
-		} finally {
+
 			await context.close();
 		}
 	},

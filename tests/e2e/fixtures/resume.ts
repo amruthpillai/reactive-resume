@@ -15,7 +15,7 @@ export async function createSampleResumeFromDashboard(page: Page, testInfo: Test
 	await createGroup.getByRole("button").nth(1).click();
 	await page.getByRole("menuitem", { name: "Create a Sample Resume" }).click();
 
-	const resumeLink = page.getByRole("link", { name: new RegExp(resumeName) });
+	const resumeLink = page.getByRole("link", { name: resumeName, exact: true });
 	await expect(resumeLink).toBeVisible();
 	await resumeLink.click();
 	await page.waitForURL(/\/builder\/.+/);
