@@ -1,0 +1,79 @@
+name: E2E Tests
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  APP_URL: http://localhost:3000
+  PORT: "3000"
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+  AUTH_SECRET: e2e-test-secret
+  FLAG_DISABLE_SIGNUPS: "false"
+  FLAG_DISABLE_EMAIL_AUTH: "false"
+  FLAG_DISABLE_API_RATE_LIMIT: "true"
+  LOCAL_STORAGE_PATH: /tmp/reactive-resume-e2e-storage
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Prepare Storage
+        run: mkdir -p "$LOCAL_STORAGE_PATH"
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run E2E Tests
+        run: pnpm test:e2e:ci
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 7
