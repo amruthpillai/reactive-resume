@@ -13,8 +13,6 @@ env:
   APP_URL: http://localhost:3000
   PORT: "3000"
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-  AUTH_SECRET: 3f95d9f2687e4d1f9571a7adf0b2e89a7cc98f5b1fb72ad8c9d4b67a42fdf613
-  ENCRYPTION_SECRET: 2f724ef46009b17ea8c5f88e9ea28fd93d12529e7ff71731a8d2875566551d91
   FLAG_DISABLE_SIGNUPS: "false"
   FLAG_DISABLE_EMAIL_AUTH: "false"
   FLAG_DISABLE_API_RATE_LIMIT: "true"
@@ -27,7 +25,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:16
         env:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
@@ -43,6 +41,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -58,6 +58,11 @@ jobs:
 
       - name: Install Playwright Browser
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate Test Secrets
+        run: |
+          echo "AUTH_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          echo "ENCRYPTION_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
 
       - name: Prepare Storage
         run: mkdir -p "$LOCAL_STORAGE_PATH"

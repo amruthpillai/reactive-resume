@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const port = Number.parseInt(process.env.PORT ?? "3000", 10);
 const baseURL = process.env.APP_URL ?? `http://localhost:${port}`;
-const isCI = Boolean(process.env.CI);
+const isCI = process.env.CI === "true" || process.env.CI === "1";
 
 export default defineConfig({
 	testDir: "./tests/e2e/specs",

@@ -12,7 +12,7 @@ export async function createSampleResumeFromDashboard(page: Page, testInfo: Test
 	await dialog.getByLabel("Name").fill(resumeName);
 
 	const createGroup = dialog.getByRole("group", { name: "Create resume with options" });
-	await createGroup.getByRole("button").nth(1).click();
+	await createGroup.getByRole("button").last().click();
 	await page.getByRole("menuitem", { name: "Create a Sample Resume" }).click();
 
 	const resumeLink = page.getByRole("link", { name: new RegExp(resumeName) });
@@ -23,7 +23,7 @@ export async function createSampleResumeFromDashboard(page: Page, testInfo: Test
 	return resumeName;
 }
 
-export async function openSidebarSection(page: Page, title: string, side: "left" | "right" = "left") {
+export async function openSidebarSection(page: Page, title: string) {
 	await page.getByTitle(title, { exact: true }).click();
-	await expect(page.getByTestId(side).getByRole("heading", { name: title })).toBeVisible();
+	await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible();
 }

@@ -6,9 +6,14 @@ test("creates a sample resume and persists a basics edit", async ({ authPage: pa
 
 	const updatedName = `E2E Edited ${Date.now()}`;
 	await openSidebarSection(page, "Basics");
-	const savePromise = page.waitForResponse(
-		(response) => response.url().includes("/api/rpc") && response.request().method() === "POST" && response.ok(),
-	);
+	const savePromise = page.waitForResponse((response) => {
+		if (!response.url().includes("/api/rpc")) return false;
+		if (response.request().method() !== "POST") return false;
+		if (!response.ok()) return false;
+
+		const body = response.request().postData() ?? "";
+		return body.includes(updatedName);
+	});
 	await page.getByLabel("Name").fill(updatedName);
 	await savePromise;
 

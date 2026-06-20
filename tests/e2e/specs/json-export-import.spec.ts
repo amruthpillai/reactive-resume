@@ -5,7 +5,7 @@ import { expect, test } from "../fixtures/test";
 test("exports and imports a resume JSON backup", async ({ authPage: page }, testInfo) => {
 	await createSampleResumeFromDashboard(page, testInfo);
 
-	await openSidebarSection(page, "Export", "right");
+	await openSidebarSection(page, "Export");
 
 	const downloadPromise = page.waitForEvent("download");
 	await page.getByRole("button", { name: /^JSON/ }).click();
