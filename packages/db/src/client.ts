@@ -11,7 +11,21 @@ declare global {
 
 export function getPool() {
 	if (!globalThis.__pool) {
-		globalThis.__pool = new Pool({ connectionString: env.DATABASE_URL });
+		const pool = new Pool({ connectionString: env.DATABASE_URL });
+		const logPgError = (error: unknown) => {
+			console.error("[db] postgres connection error:", error);
+		};
+		// A Postgres connection can drop at any time — e.g. a serverless Postgres such as Neon
+		// terminating the connection (code 57P01). `pg` surfaces this as an 'error' event, and
+		// without a listener node re-throws it as an unhandled 'error' that crashes the process.
+		// Idle clients emit on the pool; a client that is connecting or checked out emits on the
+		// client itself, so we must listen on both. The pool then discards the dead client and
+		// opens a fresh one on the next query.
+		pool.on("error", logPgError);
+		pool.on("connect", (client) => {
+			client.on("error", logPgError);
+		});
+		globalThis.__pool = pool;
 	}
 	return globalThis.__pool;
 }
