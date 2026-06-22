@@ -628,6 +628,18 @@ export const metadataSchema = z.object({
 	styleRules: styleRulesSchema.describe(
 		"Structured style rules that target semantic resume sections and slots for React PDF rendering.",
 	),
+	customTemplateId: z
+		.string()
+		.optional()
+		.describe(
+			"The ID of the user's custom template, when a custom template is selected. The `template` field will hold the base template used for PDF rendering.",
+		),
+	customTemplate: z
+		.any()
+		.optional()
+		.describe(
+			"Snapshot of the custom template's data (`CustomTemplateData`). Inlined so the PDF renderer can render without an extra fetch. Untyped here to avoid a schema cycle with `@reactive-resume/schema/custom-template`.",
+		),
 });
 
 export const resumeDataSchema = z.looseObject({

@@ -6,7 +6,7 @@ import { create } from "zustand/react";
 
 export type EditorLayout = { left: number; canvas: number; right: number };
 
-export const DEFAULT_EDITOR_LAYOUT: EditorLayout = { left: 0, canvas: 78, right: 22 };
+export const DEFAULT_EDITOR_LAYOUT: EditorLayout = { left: 19, canvas: 55, right: 26 };
 
 export const parseEditorLayoutCookie = (value: string): EditorLayout => {
 	try {
@@ -26,32 +26,47 @@ export const mapPanelLayoutToEditorLayout = (layout: Layout): EditorLayout => ({
 
 export const EDITOR_LAYOUT_COOKIE_NAME = "template-editor-layout";
 
+export type EditorViewMode = "edit" | "preview";
+
 type EditorSidebarState = {
 	layout: EditorLayout;
+	leftSidebar: PanelImperativeHandle | null;
 	rightSidebar: PanelImperativeHandle | null;
+	viewMode: EditorViewMode;
 };
 
 type EditorSidebarActions = {
 	setLayout: (layout: EditorLayout) => void;
+	setLeftSidebar: (ref: PanelImperativeHandle) => void;
 	setRightSidebar: (ref: PanelImperativeHandle) => void;
+	toggleLeftSidebar: (open?: boolean) => void;
 	toggleRightSidebar: (open?: boolean) => void;
+	setViewMode: (mode: EditorViewMode) => void;
 };
 
 type EditorSidebarStore = EditorSidebarState & EditorSidebarActions;
 
+const togglePanel = (panel: PanelImperativeHandle | null, open?: boolean) => {
+	// `usePanelRef()` returns a RefObject; the imperative API is on `.current`.
+	const handle = panel?.current;
+	if (!handle) return;
+	if (open !== undefined) {
+		open ? handle.expand() : handle.collapse();
+	} else {
+		handle.isCollapsed() ? handle.expand() : handle.collapse();
+	}
+};
+
 export const useEditorSidebarStore = create<EditorSidebarStore>((set, get) => ({
 	layout: DEFAULT_EDITOR_LAYOUT,
+	leftSidebar: null,
 	rightSidebar: null,
+	viewMode: "edit",
 
 	setLayout: (layout) => set({ layout }),
+	setLeftSidebar: (ref) => set({ leftSidebar: ref }),
 	setRightSidebar: (ref) => set({ rightSidebar: ref }),
-	toggleRightSidebar: (open) => {
-		const { rightSidebar } = get();
-		if (!rightSidebar) return;
-		if (open !== undefined) {
-			open ? rightSidebar.expand() : rightSidebar.collapse();
-		} else {
-			rightSidebar.isCollapsed() ? rightSidebar.expand() : rightSidebar.collapse();
-		}
-	},
+	toggleLeftSidebar: (open) => togglePanel(get().leftSidebar, open),
+	toggleRightSidebar: (open) => togglePanel(get().rightSidebar, open),
+	setViewMode: (viewMode) => set({ viewMode }),
 }));

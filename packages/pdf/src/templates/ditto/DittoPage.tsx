@@ -144,7 +144,7 @@ const Header = ({ styles }: DittoHeaderProps) => {
 	);
 };
 
-const useDittoTemplate = (): DittoTemplate => {
+export const useDittoTemplate = (): DittoTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

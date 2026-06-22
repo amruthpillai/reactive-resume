@@ -8,6 +8,7 @@ import { ResizableGroup, ResizablePanel, ResizableSeparator } from "@reactive-re
 import { useTemplateEditorStore } from "@/features/template-editor/store";
 import { orpc } from "@/libs/orpc/client";
 import { TemplateEditorHeader } from "./-components/header";
+import { TemplateEditorLeftSidebar } from "./-sidebar/left";
 import { TemplateEditorRightSidebar } from "./-sidebar/right";
 import {
 	DEFAULT_EDITOR_LAYOUT,
@@ -68,7 +69,9 @@ type EditorLayoutShellProps = { initialLayout: typeof DEFAULT_EDITOR_LAYOUT };
 
 function EditorLayoutShell({ initialLayout }: EditorLayoutShellProps) {
 	const canPersistLayoutRef = useRef(false);
+	const leftSidebarRef = usePanelRef();
 	const rightSidebarRef = usePanelRef();
+	const setLeftSidebar = useEditorSidebarStore((state) => state.setLeftSidebar);
 	const setRightSidebar = useEditorSidebarStore((state) => state.setRightSidebar);
 	const setLayout = useEditorSidebarStore((state) => state.setLayout);
 
@@ -76,6 +79,10 @@ function EditorLayoutShell({ initialLayout }: EditorLayoutShellProps) {
 		setLayout(initialLayout);
 		canPersistLayoutRef.current = true;
 	}, [initialLayout, setLayout]);
+
+	useEffect(() => {
+		if (leftSidebarRef) setLeftSidebar(leftSidebarRef);
+	}, [leftSidebarRef, setLeftSidebar]);
 
 	useEffect(() => {
 		if (rightSidebarRef) setRightSidebar(rightSidebarRef);
@@ -93,6 +100,19 @@ function EditorLayoutShell({ initialLayout }: EditorLayoutShellProps) {
 			<TemplateEditorHeader />
 
 			<ResizableGroup orientation="horizontal" className="mt-14 flex-1" onLayoutChanged={onLayoutChanged}>
+				<ResizablePanel
+					collapsible
+					id="left"
+					panelRef={leftSidebarRef}
+					maxSize="32%"
+					minSize="180px"
+					collapsedSize="0px"
+					defaultSize={`${initialLayout.left}%`}
+					className="z-20 h-[calc(100svh-3.5rem)] overflow-hidden"
+				>
+					<TemplateEditorLeftSidebar />
+				</ResizablePanel>
+				<ResizableSeparator withHandle className="z-50 border-e" />
 				<ResizablePanel id="canvas" defaultSize={`${initialLayout.canvas}%`} className="h-[calc(100svh-3.5rem)]">
 					<Outlet />
 				</ResizablePanel>
@@ -102,10 +122,10 @@ function EditorLayoutShell({ initialLayout }: EditorLayoutShellProps) {
 					id="right"
 					panelRef={rightSidebarRef}
 					maxSize="40%"
-					minSize="180px"
-					collapsedSize="48px"
+					minSize="200px"
+					collapsedSize="0px"
 					defaultSize={`${initialLayout.right}%`}
-					className="z-20 h-[calc(100svh-3.5rem)]"
+					className="z-20 h-[calc(100svh-3.5rem)] overflow-hidden"
 				>
 					<TemplateEditorRightSidebar />
 				</ResizablePanel>

@@ -114,7 +114,7 @@ const Header = ({ styles }: LaprasHeaderProps) => {
 	);
 };
 
-const useLaprasTemplate = (): LaprasTemplate => {
+export const useLaprasTemplate = (): LaprasTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

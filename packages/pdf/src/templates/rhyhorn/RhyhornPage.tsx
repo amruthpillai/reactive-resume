@@ -160,7 +160,7 @@ const Header = ({ styles }: RhyhornHeaderProps) => {
 	);
 };
 
-const useRhyhornTemplate = (): RhyhornTemplate => {
+export const useRhyhornTemplate = (): RhyhornTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

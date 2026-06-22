@@ -132,7 +132,7 @@ const Header = ({ styles }: BronzorHeaderProps) => {
 	);
 };
 
-const useBronzorTemplate = (): BronzorTemplate => {
+export const useBronzorTemplate = (): BronzorTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

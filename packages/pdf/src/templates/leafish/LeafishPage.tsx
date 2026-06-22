@@ -144,7 +144,7 @@ const getPrimaryAlpha = (primaryColor: string, opacity: number): string => {
 	return `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha})`;
 };
 
-const useLeafishTemplate = (): LeafishTemplate => {
+export const useLeafishTemplate = (): LeafishTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

@@ -152,7 +152,7 @@ const Header = ({ styles, colors }: PikachuHeaderProps) => {
 	);
 };
 
-const usePikachuTemplate = (): PikachuTemplate => {
+export const usePikachuTemplate = (): PikachuTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

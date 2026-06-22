@@ -107,6 +107,8 @@ export const useSelectedNode = (): TemplateNode | null => {
 	return findNodeById(template.data.nodes, selectedNodeId);
 };
 
+// ─── Tree helpers ────────────────────────────────────────────────────────────
+
 export function findNodeById(nodes: TemplateNode[], id: string): TemplateNode | null {
 	for (const node of nodes) {
 		if (node.id === id) return node;
@@ -165,6 +167,7 @@ export function insertNodeAt(
 			if (node.type === "columns" && columnIndex !== null) {
 				const col = node.children?.[columnIndex];
 				if (!col) return false;
+				if (!col.children) col.children = [];
 				(col.children as WritableDraft<TemplateNode>[]).splice(insertIndex, 0, newNode as WritableDraft<TemplateNode>);
 			} else {
 				if (!node.children) node.children = [];

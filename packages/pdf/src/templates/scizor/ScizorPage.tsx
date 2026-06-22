@@ -107,7 +107,7 @@ const Header = ({ styles }: ScizorHeaderProps) => {
 	);
 };
 
-const useScizorTemplate = (): ScizorTemplate => {
+export const useScizorTemplate = (): ScizorTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

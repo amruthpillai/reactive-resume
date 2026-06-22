@@ -3,6 +3,7 @@ import type { TemplatePage } from "../document";
 import { AzurillPage } from "./azurill/AzurillPage";
 import { BronzorPage } from "./bronzor/BronzorPage";
 import { ChikoritaPage } from "./chikorita/ChikoritaPage";
+import { CustomTemplatePage, getCustomTemplatePageCount } from "./custom/CustomTemplatePage";
 import { DitgarPage } from "./ditgar/DitgarPage";
 import { DittoPage } from "./ditto/DittoPage";
 import { GengarPage } from "./gengar/GengarPage";
@@ -42,10 +43,12 @@ export {
 	AzurillPage,
 	BronzorPage,
 	ChikoritaPage,
+	CustomTemplatePage,
 	DitgarPage,
 	DittoPage,
 	GengarPage,
 	GlaliePage,
+	getCustomTemplatePageCount,
 	KakunaPage,
 	LaprasPage,
 	LeafishPage,
