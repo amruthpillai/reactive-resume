@@ -18,6 +18,10 @@ import { createRichTextStylesheet } from "./rich-text-stylesheet";
 import { safeTextStyle } from "./safe-text-style";
 import { composeStyles } from "./styles";
 
+const richListItemMarkerMargin = {
+	marginRight: 4,
+} satisfies Style;
+
 const richListItemContentStackStyle = {
 	flexDirection: "column",
 } satisfies Style;
@@ -118,10 +122,11 @@ export const RichText = ({ children }: RichTextProps) => {
 					const contentItemStyles = itemStyles.map(stripRichTextVerticalMargins);
 
 					const markerNode = (
-						<PdfText key="marker" style={composeStyles(richListItemMarkerStyle)}>
+						<PdfText key="marker" style={composeStyles(richListItemMarkerStyle, richListItemMarkerMargin)}>
 							{marker}
 						</PdfText>
 					);
+
 					// Same BiDi-injection trick as the <p> renderer — see applyRtlDirectionRecursively.
 					const contentNode = rtl ? (
 						<PdfText
@@ -147,7 +152,10 @@ export const RichText = ({ children }: RichTextProps) => {
 								safeTextStyle,
 							)}
 						>
-							{children}
+							<View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+								{markerNode}
+								{children}
+							</View>
 						</View>
 					);
 
@@ -162,7 +170,7 @@ export const RichText = ({ children }: RichTextProps) => {
 								getRichTextEdgeTrimStyle(element),
 							)}
 						>
-							{rtl ? [contentNode, markerNode] : [markerNode, contentNode]}
+							{rtl ? [contentNode, markerNode] : contentNode}
 						</View>
 					);
 				},
