@@ -18,10 +18,6 @@ import { createRichTextStylesheet } from "./rich-text-stylesheet";
 import { safeTextStyle } from "./safe-text-style";
 import { composeStyles } from "./styles";
 
-const richListItemMarkerMargin = {
-	marginRight: 4,
-} satisfies Style;
-
 const richListItemContentStackStyle = {
 	flexDirection: "column",
 } satisfies Style;
@@ -64,6 +60,11 @@ const applyRtlDirectionRecursively = (node: ReactNode): ReactNode => {
 export const RichText = ({ children }: RichTextProps) => {
 	const { metadata, rtl } = useRender();
 	const rtlTextWrapStyle: Style | undefined = rtl ? { direction: "rtl", textAlign: "right" } : undefined;
+
+	const richListItemMarkerMargin: Style = {
+		marginLeft: rtl ? 4 : 0,
+		marginRight: rtl ? 0 : 4
+	};
 	const boldStyle = useTemplateStyle("bold");
 	const linkStyle = useTemplateStyle("link");
 	const richParagraphStyle = useTemplateStyle("richParagraph");
