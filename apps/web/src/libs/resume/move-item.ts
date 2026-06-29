@@ -141,9 +141,9 @@ export function getCompatibleMoveTargets(
  * Removes an item from its source section (standard or custom).
  *
  * @param draft - The immer draft of resume data
- * @param itemId - The ID of the item to remove
- * @param type - The section type
- * @param customSectionId - The custom section ID (if applicable)
+ * @param itemId - The ID of the item to remove in the source section
+ * @param type - The source section type
+ * @param customSectionId - The source custom section ID (if applicable)
  * @returns The removed item, or null if not found
  */
 export function removeItemFromSource(
@@ -153,13 +153,26 @@ export function removeItemFromSource(
 	customSectionId?: string,
 ): SectionItem | null {
 	if (customSectionId) {
-		const section = draft.customSections.find((s) => s.id === customSectionId);
-		if (!section) return null;
+		const customSection = draft.customSections.find((s) => s.id === customSectionId);
+		if (!customSection) return null;
 
-		const index = section.items.findIndex((item) => item.id === itemId);
-		if (index === -1) return null;
+		const itemIndex = customSection.items.findIndex((item) => item.id === itemId);
+		if (itemIndex === -1) return null;
 
-		const [removed] = section.items.splice(index, 1);
+		const [removed] = customSection.items.splice(itemIndex, 1);
+
+		if (customSection.items.length === 0) {
+			const sectionIndex = draft.customSections.indexOf(customSection);
+			draft.customSections.splice(sectionIndex, 1);
+
+			const customSectionPageIndex = draft.metadata.layout.pages.findIndex((page) =>
+				page.main.includes(customSectionId),
+			);
+			if (draft.metadata.layout.pages[customSectionPageIndex].main.length === 1) {
+				draft.metadata.layout.pages.splice(customSectionPageIndex, 1);
+			}
+		}
+
 		return removed as SectionItem;
 	}
 
