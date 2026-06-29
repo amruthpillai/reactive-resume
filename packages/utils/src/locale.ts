@@ -75,7 +75,15 @@ export function isCJKLocale(locale: Locale): boolean {
 // a glyph only renders if a registered font contains it. We pick the matching
 // Noto font per script so e.g. Hangul → Noto KR, Arabic → Noto Arabic, instead
 // of falling back to a Latin/Han-only font and producing tofu.
-export type Script = "hangul" | "kana" | "han-traditional" | "han-simplified" | "arabic" | "hebrew" | "thai";
+export type Script =
+	| "hangul"
+	| "kana"
+	| "han-traditional"
+	| "han-simplified"
+	| "arabic"
+	| "hebrew"
+	| "thai"
+	| "armenian";
 
 // The CJK subset of `Script`. CJK needs extra per-character line breaking that
 // must NOT be applied to Arabic (cursive, joined letters) or Thai (combining

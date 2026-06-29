@@ -98,6 +98,7 @@ const scriptFonts: Record<Script, { serif: string; sansSerif: string }> = {
 	arabic: { serif: "Noto Naskh Arabic", sansSerif: "Noto Sans Arabic" },
 	hebrew: { serif: "Noto Sans Hebrew", sansSerif: "Noto Sans Hebrew" },
 	thai: { serif: "Noto Sans Thai", sansSerif: "Noto Sans Thai" },
+	armenian: { serif: "Noto Serif Armenian", sansSerif: "Noto Sans Armenian" },
 };
 
 const genericFontFamilies = new Set([
