@@ -66,7 +66,32 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Determine registries
+        id: registries
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          dockerhub=false
+          image="${GITHUB_REPOSITORY,,}"
+          images="ghcr.io/${image}"
+          if [[ -n "$DOCKER_USERNAME" && -n "$DOCKER_PASSWORD" ]]; then
+            dockerhub=true
+            images="${images}"$'\n'"docker.io/${image}"
+          fi
+
+          {
+            echo "image=$image"
+            echo "images<<EOF"
+            echo "$images"
+            echo "EOF"
+            echo "dockerhub=$dockerhub"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Login to Docker Hub
+        if: ${{ steps.registries.outputs.dockerhub == 'true' }}
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -83,9 +108,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: |
-            ghcr.io/${{ env.IMAGE }}
-            docker.io/${{ env.IMAGE }}
+          images: ${{ steps.registries.outputs.images }}
           tags: |
             type=sha,prefix=sha-,suffix=-${{ matrix.arch }}
 
@@ -101,8 +124,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: type=gha,scope=${{ env.IMAGE }}-${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ env.IMAGE }}-${{ matrix.arch }}
+          cache-from: type=gha,scope=${{ steps.registries.outputs.image }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ steps.registries.outputs.image }}-${{ matrix.arch }}
 
       - name: Export digest
         run: |
@@ -152,7 +175,32 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Determine registries
+        id: registries
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          dockerhub=false
+          image="${GITHUB_REPOSITORY,,}"
+          images="ghcr.io/${image}"
+          if [[ -n "$DOCKER_USERNAME" && -n "$DOCKER_PASSWORD" ]]; then
+            dockerhub=true
+            images="${images}"$'\n'"docker.io/${image}"
+          fi
+
+          {
+            echo "image=$image"
+            echo "images<<EOF"
+            echo "$images"
+            echo "EOF"
+            echo "dockerhub=$dockerhub"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Login to Docker Hub
+        if: ${{ steps.registries.outputs.dockerhub == 'true' }}
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -179,9 +227,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: |
-            ghcr.io/${{ env.IMAGE }}
-            docker.io/${{ env.IMAGE }}
+          images: ${{ steps.registries.outputs.images }}
           tags: |
             type=sha,prefix=sha-
             type=raw,value=nightly,enable=${{ needs.mode.outputs.nightly == 'true' }}
@@ -203,6 +249,14 @@ jobs:
             FINAL_TAG="v${{ steps.version.outputs.version }}"
           fi
 
+          sources=()
+          for digest in *; do
+            sources+=("ghcr.io/${{ steps.registries.outputs.image }}@sha256:${digest}")
+            if [[ "${{ steps.registries.outputs.dockerhub }}" == "true" ]]; then
+              sources+=("docker.io/${{ steps.registries.outputs.image }}@sha256:${digest}")
+            fi
+          done
+
           docker buildx imagetools create \
             $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             --annotation "index:org.opencontainers.image.licenses=MIT" \
@@ -213,15 +267,17 @@ jobs:
             --annotation "index:org.opencontainers.image.documentation=https://docs.rxresu.me" \
             --annotation "index:org.opencontainers.image.source=https://github.com/amruthpillai/reactive-resume" \
             --annotation "index:org.opencontainers.image.version=${{ steps.version.outputs.version }}" \
-            $(printf 'ghcr.io/${{ env.IMAGE }}@sha256:%s ' *) \
-            $(printf 'docker.io/${{ env.IMAGE }}@sha256:%s ' *)
+            "${sources[@]}"
 
           # Get the digest of the multi-arch manifest
-          GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
-          DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ steps.registries.outputs.image }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
           echo "final_tag=$FINAL_TAG" >> "$GITHUB_OUTPUT"
           echo "ghcr_digest=$GHCR_DIGEST" >> "$GITHUB_OUTPUT"
-          echo "docker_digest=$DOCKER_DIGEST" >> "$GITHUB_OUTPUT"
+
+          if [[ "${{ steps.registries.outputs.dockerhub }}" == "true" ]]; then
+            DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ steps.registries.outputs.image }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
+            echo "docker_digest=$DOCKER_DIGEST" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
@@ -229,18 +285,46 @@ jobs:
       - name: Sign images with Cosign
         run: |
           # Sign GHCR image
-          cosign sign --yes ghcr.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.ghcr_digest }}
+          cosign sign --yes ghcr.io/${{ steps.registries.outputs.image }}@${{ steps.manifest.outputs.ghcr_digest }}
 
-          # Sign Docker Hub image
-          cosign sign --yes docker.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.docker_digest }}
+          if [[ "${{ steps.registries.outputs.dockerhub }}" == "true" ]]; then
+            # Sign Docker Hub image
+            cosign sign --yes docker.io/${{ steps.registries.outputs.image }}@${{ steps.manifest.outputs.docker_digest }}
+          fi
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:${{ steps.manifest.outputs.final_tag }}
-          docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:${{ steps.manifest.outputs.final_tag }}
+          docker buildx imagetools inspect ghcr.io/${{ steps.registries.outputs.image }}:${{ steps.manifest.outputs.final_tag }}
+          if [[ "${{ steps.registries.outputs.dockerhub }}" == "true" ]]; then
+            docker buildx imagetools inspect docker.io/${{ steps.registries.outputs.image }}:${{ steps.manifest.outputs.final_tag }}
+          fi
+
+      - name: Determine release integrations
+        id: release-integrations
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          deploy=false
+          if [[ -n "$SSH_KEY" && -n "$SSH_HOST" && -n "$SSH_USER" ]]; then
+            deploy=true
+          fi
+
+          purge_cloudflare=false
+          if [[ -n "$CLOUDFLARE_ZONE_ID" && -n "$CLOUDFLARE_API_TOKEN" ]]; then
+            purge_cloudflare=true
+          fi
+
+          echo "deploy=$deploy" >> "$GITHUB_OUTPUT"
+          echo "purge_cloudflare=$purge_cloudflare" >> "$GITHUB_OUTPUT"
 
       - name: Redeploy Stack
-        if: ${{ needs.mode.outputs.release == 'true' }}
+        if: ${{ needs.mode.outputs.release == 'true' && steps.release-integrations.outputs.deploy == 'true' }}
         uses: appleboy/ssh-action@v1
         with:
           key: ${{ secrets.SSH_KEY }}
@@ -251,7 +335,7 @@ jobs:
             ./manage_stack.sh up reactive_resume
 
       - name: Purge Cloudflare cache
-        if: ${{ needs.mode.outputs.release == 'true' }}
+        if: ${{ needs.mode.outputs.release == 'true' && steps.release-integrations.outputs.purge_cloudflare == 'true' }}
         env:
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
