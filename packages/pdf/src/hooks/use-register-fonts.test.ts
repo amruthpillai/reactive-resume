@@ -269,22 +269,10 @@ describe("registerFonts", () => {
 
 		const hyphenationCallback = registerHyphenationSpy.mock.calls.at(-1)?.[0];
 		expect(hyphenationCallback?.("Reactive")).toEqual(["Reactive"]);
-		expect(hyphenationCallback?.("Information")).toEqual(["In", "", "for", "", "ma", "", "tion"]);
-		expect(hyphenationCallback?.("Produktivitet")).toEqual(["Pro", "", "duk", "", "ti", "", "vi", "", "tet"]);
-		expect(hyphenationCallback?.("Tidsplanlægning,")).toEqual(["Tids", "", "plan", "", "læg", "", "ning,"]);
-		expect(hyphenationCallback?.("Informationsstyring")).toEqual([
-			"In",
-			"",
-			"for",
-			"",
-			"ma",
-			"",
-			"tions",
-			"",
-			"sty",
-			"",
-			"ring",
-		]);
+		expect(hyphenationCallback?.("Information")).toEqual(["In", "for", "ma", "tion"]);
+		expect(hyphenationCallback?.("Produktivitet")).toEqual(["Pro", "duk", "ti", "vi", "tet"]);
+		expect(hyphenationCallback?.("Tidsplanlægning,")).toEqual(["Tids", "plan", "læg", "ning,"]);
+		expect(hyphenationCallback?.("Informationsstyring")).toEqual(["In", "for", "ma", "tions", "sty", "ring"]);
 	});
 
 	it("does not apply Danish hyphenation to English pages", async () => {
@@ -294,18 +282,8 @@ describe("registerFonts", () => {
 		registerFonts(typography, "en-US");
 
 		const hyphenationCallback = registerHyphenationSpy.mock.calls.at(-1)?.[0];
-		expect(hyphenationCallback?.("Productivity")).toEqual(["Pro", "", "duc", "", "tiv", "", "i", "", "ty"]);
-		expect(hyphenationCallback?.("Informationsstyring")).toEqual([
-			"In",
-			"",
-			"for",
-			"",
-			"ma",
-			"",
-			"tion",
-			"",
-			"sstyring",
-		]);
+		expect(hyphenationCallback?.("Productivity")).toEqual(["Pro", "duc", "tiv", "i", "ty"]);
+		expect(hyphenationCallback?.("Informationsstyring")).toEqual(["In", "for", "ma", "tion", "sstyring"]);
 	});
 
 	it("returns typography with font weights sorted ascending", async () => {

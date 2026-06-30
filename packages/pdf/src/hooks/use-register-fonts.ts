@@ -150,9 +150,6 @@ const chunkGraphemes = (value: string, maxChunkLength: number): string[] => {
 	return chunks;
 };
 
-const createEmergencyBreaks = (chunks: string[]): string[] =>
-	chunks.flatMap((chunk, index) => (index === chunks.length - 1 ? [chunk] : [chunk, ""]));
-
 const hyphenateWith = (word: string, hyphenator: Hyphenator): string[] | null => {
 	const hyphenated = hyphenator.hyphenateSync(word, { hyphenChar: hyphenationSeparator });
 	const chunks = hyphenated.split(hyphenationSeparator);
@@ -165,7 +162,7 @@ const hyphenateWithLocale = (word: string, locale: Locale): string[] | null => {
 	if (!hyphenator) return null;
 
 	const chunks = hyphenateWith(word, hyphenator);
-	return chunks ? createEmergencyBreaks(chunks) : null;
+	return chunks;
 };
 
 const hyphenateLatinWord = (word: string, locale: Locale): string[] => {
@@ -179,11 +176,9 @@ const hyphenateLatinWord = (word: string, locale: Locale): string[] => {
 	if (localeHyphenation) return localeHyphenation;
 
 	const chunks = chunkGraphemes(body, latinEmergencyBreakMaxChunkLength);
-	const prefixedChunks = chunks.map(
+	return chunks.map(
 		(chunk, index) => `${index === 0 ? prefix : ""}${chunk}${index === chunks.length - 1 ? suffix : ""}`,
 	);
-
-	return createEmergencyBreaks(prefixedChunks);
 };
 
 // Resolves the user-stored family to the one we hand to Font.register:
