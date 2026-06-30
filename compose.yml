@@ -82,6 +82,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
     networks:
       - data_network
       - storage_network
