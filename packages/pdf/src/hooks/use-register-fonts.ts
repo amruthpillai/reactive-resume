@@ -2,8 +2,8 @@ import type { FontWeight } from "@reactive-resume/fonts";
 import type { ResumeData, Typography } from "@reactive-resume/schema/resume/data";
 import type { Locale, Script } from "@reactive-resume/utils/locale";
 import { letters as cjkLetters } from "cjk-regex";
-import daHyphenator from "hyphen/da";
-import enUsHyphenator from "hyphen/en-us";
+import daHyphenator from "hyphen/da/index.js";
+import enUsHyphenator from "hyphen/en-us/index.js";
 import {
 	getFont,
 	getPdfFallbackFontFamilies,
