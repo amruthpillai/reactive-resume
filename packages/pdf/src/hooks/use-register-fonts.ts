@@ -2,6 +2,8 @@ import type { FontWeight } from "@reactive-resume/fonts";
 import type { ResumeData, Typography } from "@reactive-resume/schema/resume/data";
 import type { Locale, Script } from "@reactive-resume/utils/locale";
 import { letters as cjkLetters } from "cjk-regex";
+import daHyphenator from "hyphen/da/index.js";
+import enUsHyphenator from "hyphen/en-us/index.js";
 import {
 	getFont,
 	getPdfFallbackFontFamilies,
@@ -18,11 +20,24 @@ type FontWeightRange = {
 	highest: number;
 };
 
+type Hyphenator = {
+	hyphenateSync: (text: string, options?: { hyphenChar?: string }) => string;
+};
+
 const registeredFontVariants = new Set<string>();
 const fallbackFontFamily = "IBM Plex Serif";
 const cjkLetterRegex = cjkLetters().toRegExp();
 const fontWeightValues = new Set<FontWeight>(["100", "200", "300", "400", "500", "600", "700", "800", "900"]);
 const preferredFallbackFontWeights = ["400", "700", "600", "500"] satisfies FontWeight[];
+const latinEmergencyBreakMinLength = 11;
+const latinEmergencyBreakMaxChunkLength = 6;
+const hyphenationSeparator = "\u001F";
+const latinTokenRegex = /^([^\p{L}\p{M}\p{N}]*)([\p{L}\p{M}\p{N}]+)([^\p{L}\p{M}\p{N}]*)$/u;
+const localeHyphenators: Partial<Record<Locale, Hyphenator>> = {
+	"da-DK": daHyphenator as Hyphenator,
+	"en-GB": enUsHyphenator as Hyphenator,
+	"en-US": enUsHyphenator as Hyphenator,
+};
 
 // `fontFamily` is widened to `string | string[]` so react-pdf can do
 // glyph-level font fallback for CJK characters (#2986).
@@ -115,6 +130,55 @@ const collectFontRangeWeights = (ranges: FontWeightRange[]): number[] => {
 	}
 
 	return [...weights];
+};
+
+const chunkGraphemes = (value: string, maxChunkLength: number): string[] => {
+	const graphemes = [...value];
+	const chunkCount = Math.ceil(graphemes.length / maxChunkLength);
+	const chunks: string[] = [];
+	let cursor = 0;
+
+	for (let index = 0; index < chunkCount; index++) {
+		const remainingGraphemes = graphemes.length - cursor;
+		const remainingChunks = chunkCount - index;
+		const chunkLength = Math.ceil(remainingGraphemes / remainingChunks);
+
+		chunks.push(graphemes.slice(cursor, cursor + chunkLength).join(""));
+		cursor += chunkLength;
+	}
+
+	return chunks;
+};
+
+const hyphenateWith = (word: string, hyphenator: Hyphenator): string[] | null => {
+	const hyphenated = hyphenator.hyphenateSync(word, { hyphenChar: hyphenationSeparator });
+	const chunks = hyphenated.split(hyphenationSeparator);
+
+	return chunks.length > 1 ? chunks : null;
+};
+
+const hyphenateWithLocale = (word: string, locale: Locale): string[] | null => {
+	const hyphenator = localeHyphenators[locale];
+	if (!hyphenator) return null;
+
+	const chunks = hyphenateWith(word, hyphenator);
+	return chunks;
+};
+
+const hyphenateLatinWord = (word: string, locale: Locale): string[] => {
+	const match = latinTokenRegex.exec(word);
+	const [, prefix = "", body = "", suffix = ""] = match ?? [];
+	const graphemeCount = [...body].length;
+
+	if (!match || graphemeCount < latinEmergencyBreakMinLength) return [word];
+
+	const localeHyphenation = hyphenateWithLocale(word, locale);
+	if (localeHyphenation) return localeHyphenation;
+
+	const chunks = chunkGraphemes(body, latinEmergencyBreakMaxChunkLength);
+	return chunks.map(
+		(chunk, index) => `${index === 0 ? prefix : ""}${chunk}${index === chunks.length - 1 ? suffix : ""}`,
+	);
 };
 
 // Resolves the user-stored family to the one we hand to Font.register:
@@ -231,7 +295,7 @@ export const registerFonts = (
 			}
 		}
 
-		return [word];
+		return hyphenateLatinWord(word, locale);
 	});
 
 	const pdfTypography = resolvePdfTypography(typography);

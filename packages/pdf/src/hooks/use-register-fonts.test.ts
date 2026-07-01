@@ -261,6 +261,31 @@ describe("registerFonts", () => {
 		expect(hyphenationCallback?.("Reactive")).toEqual(["Reactive"]);
 	});
 
+	it("adds locale-specific break points for long Latin words", async () => {
+		const registerHyphenationSpy = vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		registerFonts(typography, "da-DK");
+
+		const hyphenationCallback = registerHyphenationSpy.mock.calls.at(-1)?.[0];
+		expect(hyphenationCallback?.("Reactive")).toEqual(["Reactive"]);
+		expect(hyphenationCallback?.("Information")).toEqual(["In", "for", "ma", "tion"]);
+		expect(hyphenationCallback?.("Produktivitet")).toEqual(["Pro", "duk", "ti", "vi", "tet"]);
+		expect(hyphenationCallback?.("Tidsplanlægning,")).toEqual(["Tids", "plan", "læg", "ning,"]);
+		expect(hyphenationCallback?.("Informationsstyring")).toEqual(["In", "for", "ma", "tions", "sty", "ring"]);
+	});
+
+	it("does not apply Danish hyphenation to English pages", async () => {
+		const registerHyphenationSpy = vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		registerFonts(typography, "en-US");
+
+		const hyphenationCallback = registerHyphenationSpy.mock.calls.at(-1)?.[0];
+		expect(hyphenationCallback?.("Productivity")).toEqual(["Pro", "duc", "tiv", "i", "ty"]);
+		expect(hyphenationCallback?.("Informationsstyring")).toEqual(["In", "for", "ma", "tion", "sstyring"]);
+	});
+
 	it("returns typography with font weights sorted ascending", async () => {
 		vi.spyOn(Font, "register").mockImplementation(() => {});
 		const { registerFonts } = await import("./use-register-fonts");
