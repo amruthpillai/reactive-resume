@@ -90,6 +90,15 @@ services:
     env_file:
       - path: .env.example
         required: false
+    environment:
+      # Override the placeholder secrets from .env.example with the real values
+      # from the host .env (Compose interpolates ${...} from ./.env). These must
+      # stay stable: AUTH_SECRET encrypts the Better Auth JWKS private keys and
+      # ENCRYPTION_SECRET encrypts agent data, both persisted in Postgres. If the
+      # running secret differs from the one used to write those rows, Better Auth
+      # fails with "Failed to decrypt private key" and sessions break.
+      - AUTH_SECRET=${AUTH_SECRET:-change-me-to-a-secure-secret-key-in-production}
+      - ENCRYPTION_SECRET=${ENCRYPTION_SECRET:-change-me-to-a-secure-agent-secret-in-production}
     volumes:
       - ./data:/app/data
     depends_on:

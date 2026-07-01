@@ -171,7 +171,7 @@ const getPrimaryTint = (primaryColor: string, opacity: number): string => {
 	return `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha})`;
 };
 
-const useDitgarTemplate = (): DitgarTemplate => {
+export const useDitgarTemplate = (): DitgarTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

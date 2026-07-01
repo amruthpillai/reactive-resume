@@ -6,7 +6,10 @@ import { describe, expect, it } from "vitest";
 const templatesDir = fileURLToPath(new URL("../", import.meta.url));
 
 const templatePageFiles = readdirSync(templatesDir, { withFileTypes: true }).flatMap((entry) => {
-	if (!entry.isDirectory() || entry.name === "shared") return [];
+	// "shared" holds primitives, not a template; "custom" renders the node tree
+	// through the base template's styles (so it has no rich-text styling of its
+	// own — the base templates it reuses are covered by this same test).
+	if (!entry.isDirectory() || entry.name === "shared" || entry.name === "custom") return [];
 
 	const templateDir = join(templatesDir, entry.name);
 	const pageFile = readdirSync(templateDir).find((file) => file.endsWith("Page.tsx"));

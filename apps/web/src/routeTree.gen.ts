@@ -28,7 +28,10 @@ import { Route as AuthForgotPasswordRouteImport } from "./routes/auth/forgot-pas
 import { Route as AgentNewRouteImport } from "./routes/agent/new";
 import { Route as AgentThreadIdRouteImport } from "./routes/agent/$threadId";
 import { Route as UsernameSlugRouteImport } from "./routes/$username/$slug";
+import { Route as TemplateEditorTemplateIdRouteRouteImport } from "./routes/template-editor/$templateId/route";
 import { Route as BuilderResumeIdRouteRouteImport } from "./routes/builder/$resumeId/route";
+import { Route as TemplateEditorTemplateIdIndexRouteImport } from "./routes/template-editor/$templateId/index";
+import { Route as DashboardTemplatesIndexRouteImport } from "./routes/dashboard/templates/index";
 import { Route as DashboardResumesIndexRouteImport } from "./routes/dashboard/resumes/index";
 import { Route as BuilderResumeIdIndexRouteImport } from "./routes/builder/$resumeId/index";
 import { Route as DashboardSettingsProfileRouteImport } from "./routes/dashboard/settings/profile";
@@ -133,10 +136,27 @@ const UsernameSlugRoute = UsernameSlugRouteImport.update({
   path: "/$username/$slug",
   getParentRoute: () => rootRouteImport,
 } as any);
+const TemplateEditorTemplateIdRouteRoute =
+  TemplateEditorTemplateIdRouteRouteImport.update({
+    id: "/template-editor/$templateId",
+    path: "/template-editor/$templateId",
+    getParentRoute: () => rootRouteImport,
+  } as any);
 const BuilderResumeIdRouteRoute = BuilderResumeIdRouteRouteImport.update({
   id: "/builder/$resumeId",
   path: "/builder/$resumeId",
   getParentRoute: () => rootRouteImport,
+} as any);
+const TemplateEditorTemplateIdIndexRoute =
+  TemplateEditorTemplateIdIndexRouteImport.update({
+    id: "/",
+    path: "/",
+    getParentRoute: () => TemplateEditorTemplateIdRouteRoute,
+  } as any);
+const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
+  id: "/templates/",
+  path: "/templates/",
+  getParentRoute: () => DashboardRouteRoute,
 } as any);
 const DashboardResumesIndexRoute = DashboardResumesIndexRouteImport.update({
   id: "/resumes/",
@@ -197,6 +217,7 @@ export interface FileRoutesByFullPath {
   "/auth": typeof AuthRouteRouteWithChildren;
   "/dashboard": typeof DashboardRouteRouteWithChildren;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
+  "/template-editor/$templateId": typeof TemplateEditorTemplateIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
@@ -219,6 +240,8 @@ export interface FileRoutesByFullPath {
   "/dashboard/settings/profile": typeof DashboardSettingsProfileRoute;
   "/builder/$resumeId/": typeof BuilderResumeIdIndexRoute;
   "/dashboard/resumes/": typeof DashboardResumesIndexRoute;
+  "/dashboard/templates/": typeof DashboardTemplatesIndexRoute;
+  "/template-editor/$templateId/": typeof TemplateEditorTemplateIdIndexRoute;
   "/dashboard/settings/authentication/": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRoutesByTo {
@@ -245,6 +268,8 @@ export interface FileRoutesByTo {
   "/dashboard/settings/profile": typeof DashboardSettingsProfileRoute;
   "/builder/$resumeId": typeof BuilderResumeIdIndexRoute;
   "/dashboard/resumes": typeof DashboardResumesIndexRoute;
+  "/dashboard/templates": typeof DashboardTemplatesIndexRoute;
+  "/template-editor/$templateId": typeof TemplateEditorTemplateIdIndexRoute;
   "/dashboard/settings/authentication": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRoutesById {
@@ -254,6 +279,7 @@ export interface FileRoutesById {
   "/auth": typeof AuthRouteRouteWithChildren;
   "/dashboard": typeof DashboardRouteRouteWithChildren;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
+  "/template-editor/$templateId": typeof TemplateEditorTemplateIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
@@ -277,6 +303,8 @@ export interface FileRoutesById {
   "/dashboard/settings/profile": typeof DashboardSettingsProfileRoute;
   "/builder/$resumeId/": typeof BuilderResumeIdIndexRoute;
   "/dashboard/resumes/": typeof DashboardResumesIndexRoute;
+  "/dashboard/templates/": typeof DashboardTemplatesIndexRoute;
+  "/template-editor/$templateId/": typeof TemplateEditorTemplateIdIndexRoute;
   "/dashboard/settings/authentication/": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRouteTypes {
@@ -287,6 +315,7 @@ export interface FileRouteTypes {
     | "/auth"
     | "/dashboard"
     | "/builder/$resumeId"
+    | "/template-editor/$templateId"
     | "/$username/$slug"
     | "/agent/$threadId"
     | "/agent/new"
@@ -309,6 +338,8 @@ export interface FileRouteTypes {
     | "/dashboard/settings/profile"
     | "/builder/$resumeId/"
     | "/dashboard/resumes/"
+    | "/dashboard/templates/"
+    | "/template-editor/$templateId/"
     | "/dashboard/settings/authentication/";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -335,6 +366,8 @@ export interface FileRouteTypes {
     | "/dashboard/settings/profile"
     | "/builder/$resumeId"
     | "/dashboard/resumes"
+    | "/dashboard/templates"
+    | "/template-editor/$templateId"
     | "/dashboard/settings/authentication";
   id:
     | "__root__"
@@ -343,6 +376,7 @@ export interface FileRouteTypes {
     | "/auth"
     | "/dashboard"
     | "/builder/$resumeId"
+    | "/template-editor/$templateId"
     | "/$username/$slug"
     | "/agent/$threadId"
     | "/agent/new"
@@ -366,6 +400,8 @@ export interface FileRouteTypes {
     | "/dashboard/settings/profile"
     | "/builder/$resumeId/"
     | "/dashboard/resumes/"
+    | "/dashboard/templates/"
+    | "/template-editor/$templateId/"
     | "/dashboard/settings/authentication/";
   fileRoutesById: FileRoutesById;
 }
@@ -375,6 +411,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren;
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren;
   BuilderResumeIdRouteRoute: typeof BuilderResumeIdRouteRouteWithChildren;
+  TemplateEditorTemplateIdRouteRoute: typeof TemplateEditorTemplateIdRouteRouteWithChildren;
   UsernameSlugRoute: typeof UsernameSlugRoute;
   TemplatesSplatRoute: typeof TemplatesSplatRoute;
 }
@@ -514,12 +551,33 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof UsernameSlugRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/template-editor/$templateId": {
+      id: "/template-editor/$templateId";
+      path: "/template-editor/$templateId";
+      fullPath: "/template-editor/$templateId";
+      preLoaderRoute: typeof TemplateEditorTemplateIdRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/builder/$resumeId": {
       id: "/builder/$resumeId";
       path: "/builder/$resumeId";
       fullPath: "/builder/$resumeId";
       preLoaderRoute: typeof BuilderResumeIdRouteRouteImport;
       parentRoute: typeof rootRouteImport;
+    };
+    "/template-editor/$templateId/": {
+      id: "/template-editor/$templateId/";
+      path: "/";
+      fullPath: "/template-editor/$templateId/";
+      preLoaderRoute: typeof TemplateEditorTemplateIdIndexRouteImport;
+      parentRoute: typeof TemplateEditorTemplateIdRouteRoute;
+    };
+    "/dashboard/templates/": {
+      id: "/dashboard/templates/";
+      path: "/templates";
+      fullPath: "/dashboard/templates/";
+      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport;
+      parentRoute: typeof DashboardRouteRoute;
     };
     "/dashboard/resumes/": {
       id: "/dashboard/resumes/";
@@ -650,6 +708,7 @@ interface DashboardRouteRouteChildren {
   DashboardSettingsPreferencesRoute: typeof DashboardSettingsPreferencesRoute;
   DashboardSettingsProfileRoute: typeof DashboardSettingsProfileRoute;
   DashboardResumesIndexRoute: typeof DashboardResumesIndexRoute;
+  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute;
   DashboardSettingsAuthenticationIndexRoute: typeof DashboardSettingsAuthenticationIndexRoute;
 }
 
@@ -663,6 +722,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardSettingsPreferencesRoute: DashboardSettingsPreferencesRoute,
   DashboardSettingsProfileRoute: DashboardSettingsProfileRoute,
   DashboardResumesIndexRoute: DashboardResumesIndexRoute,
+  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
   DashboardSettingsAuthenticationIndexRoute:
     DashboardSettingsAuthenticationIndexRoute,
 };
@@ -682,12 +742,28 @@ const BuilderResumeIdRouteRouteChildren: BuilderResumeIdRouteRouteChildren = {
 const BuilderResumeIdRouteRouteWithChildren =
   BuilderResumeIdRouteRoute._addFileChildren(BuilderResumeIdRouteRouteChildren);
 
+interface TemplateEditorTemplateIdRouteRouteChildren {
+  TemplateEditorTemplateIdIndexRoute: typeof TemplateEditorTemplateIdIndexRoute;
+}
+
+const TemplateEditorTemplateIdRouteRouteChildren: TemplateEditorTemplateIdRouteRouteChildren =
+  {
+    TemplateEditorTemplateIdIndexRoute: TemplateEditorTemplateIdIndexRoute,
+  };
+
+const TemplateEditorTemplateIdRouteRouteWithChildren =
+  TemplateEditorTemplateIdRouteRoute._addFileChildren(
+    TemplateEditorTemplateIdRouteRouteChildren,
+  );
+
 const rootRouteChildren: RootRouteChildren = {
   HomeRouteRoute: HomeRouteRouteWithChildren,
   AgentRouteRoute: AgentRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   BuilderResumeIdRouteRoute: BuilderResumeIdRouteRouteWithChildren,
+  TemplateEditorTemplateIdRouteRoute:
+    TemplateEditorTemplateIdRouteRouteWithChildren,
   UsernameSlugRoute: UsernameSlugRoute,
   TemplatesSplatRoute: TemplatesSplatRoute,
 };

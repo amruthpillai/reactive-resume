@@ -114,7 +114,7 @@ const Header = ({ styles }: OnyxHeaderProps) => {
 	);
 };
 
-const useOnyxTemplate = (): OnyxTemplate => {
+export const useOnyxTemplate = (): OnyxTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

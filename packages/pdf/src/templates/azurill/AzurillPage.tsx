@@ -135,7 +135,7 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 	);
 };
 
-const useAzurillTemplate = (): AzurillTemplate => {
+export const useAzurillTemplate = (): AzurillTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

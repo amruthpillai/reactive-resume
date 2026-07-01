@@ -8,6 +8,7 @@ export const relations = defineRelations(schema, (r) => ({
 		twoFactors: r.many.twoFactor(),
 		passkeys: r.many.passkey(),
 		resumes: r.many.resume(),
+		customTemplates: r.many.customTemplate(),
 		aiProviders: r.many.aiProvider(),
 		agentThreads: r.many.agentThread(),
 		agentMessages: r.many.agentMessage(),
@@ -75,6 +76,12 @@ export const relations = defineRelations(schema, (r) => ({
 		agentActions: r.many.agentAction({
 			from: r.resume.id,
 			to: r.agentAction.resumeId,
+		}),
+	},
+	customTemplate: {
+		user: r.one.user({
+			from: r.customTemplate.userId,
+			to: r.user.id,
 		}),
 	},
 	resumeStatistics: {

@@ -119,7 +119,7 @@ const Header = ({ styles }: MeowthHeaderProps) => {
 	);
 };
 
-const useMeowthTemplate = (): MeowthTemplate => {
+export const useMeowthTemplate = (): MeowthTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

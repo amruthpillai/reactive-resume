@@ -1,12 +1,14 @@
 import type { DialogSchema } from "./schemas";
 import { apiKeyDialogRendererRegistry } from "./api-key/registry";
 import { authDialogRendererRegistry } from "./auth/registry";
+import { customTemplateDialogRendererRegistry } from "./custom-template/registry";
 import { resumeDialogRendererRegistry } from "./resume/registry";
 
 const dialogRendererRegistries = [
 	authDialogRendererRegistry,
 	apiKeyDialogRendererRegistry,
 	resumeDialogRendererRegistry,
+	customTemplateDialogRendererRegistry,
 ] as const;
 
 const dialogRendererByType = new Map(

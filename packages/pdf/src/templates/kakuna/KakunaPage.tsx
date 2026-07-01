@@ -115,7 +115,7 @@ const Header = ({ styles }: KakunaHeaderProps) => {
 	);
 };
 
-const useKakunaTemplate = (): KakunaTemplate => {
+export const useKakunaTemplate = (): KakunaTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

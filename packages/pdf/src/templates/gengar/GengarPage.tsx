@@ -168,7 +168,7 @@ const getPrimaryTint = (primaryColor: string, opacity: number): string => {
 	return `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha})`;
 };
 
-const useGengarTemplate = (): GengarTemplate => {
+export const useGengarTemplate = (): GengarTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {

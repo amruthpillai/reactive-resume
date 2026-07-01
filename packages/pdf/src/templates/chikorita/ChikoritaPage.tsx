@@ -143,7 +143,7 @@ const Header = ({ styles }: ChikoritaHeaderProps) => {
 	);
 };
 
-const useChikoritaTemplate = (): ChikoritaTemplate => {
+export const useChikoritaTemplate = (): ChikoritaTemplate => {
 	const { picture, metadata, rtl } = useRender();
 
 	return useMemo(() => {
