@@ -1,4 +1,4 @@
-declare module "hyphen/da/index.js" {
+declare module "hyphen/da" {
 	const hyphenator: {
 		hyphenateSync: (text: string, options?: { hyphenChar?: string }) => string;
 	};
@@ -6,7 +6,7 @@ declare module "hyphen/da/index.js" {
 	export default hyphenator;
 }
 
-declare module "hyphen/en-us/index.js" {
+declare module "hyphen/en-us" {
 	const hyphenator: {
 		hyphenateSync: (text: string, options?: { hyphenChar?: string }) => string;
 	};
