@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { PreviewPageSize, ResolvedResumePreviewProps } from "./preview.shared";
 import { AnimatePresence, m } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { isRTL } from "@reactive-resume/utils/locale";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
 import { useResumeData } from "../builder/draft";
@@ -174,6 +175,7 @@ export function ResumePreviewClient({
 						>
 							{(document) => (
 								<div
+									dir={isRTL(resumeData.metadata.page.locale) ? "rtl" : "ltr"}
 									className={cn(
 										"flex justify-start gap-(--resume-preview-page-gap)",
 										pageLayout === "horizontal" ? "flex-row items-start" : "flex-col items-center",

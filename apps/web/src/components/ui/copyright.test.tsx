@@ -36,7 +36,8 @@ describe("Copyright", () => {
 
 	it("includes the app version string", () => {
 		renderCopyright();
-		expect(screen.getByText(/v9\.9\.9/)).toBeInTheDocument();
+		// The version is wrapped in <bdi> for RTL isolation, so it is its own text node.
+		expect(screen.getByText("9.9.9")).toBeInTheDocument();
 	});
 
 	it("merges custom className into the wrapper", () => {

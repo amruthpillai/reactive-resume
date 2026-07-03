@@ -85,6 +85,8 @@ export function ResumePreviewLoader({
 
 	return (
 		<div
+			// Chrome-only placeholder: anchor pages left-to-right so page 1 stays on-screen regardless of UI direction.
+			dir="ltr"
 			style={{ "--resume-preview-page-gap": resolvedPageGap } as CSSProperties}
 			className={cn(
 				"flex justify-start gap-(--resume-preview-page-gap)",
