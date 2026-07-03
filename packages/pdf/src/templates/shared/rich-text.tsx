@@ -130,7 +130,7 @@ export const RichText = ({ children }: RichTextProps) => {
 
           let hasNestedList = false;
           if (Array.isArray(children)) {
-            hasNestedList = children!.some(
+            hasNestedList = children.some(
               (child) =>
                 child?.props?.element?.rawTagName === "ul" ||
                 child?.props?.element?.rawTagName === "ol",
