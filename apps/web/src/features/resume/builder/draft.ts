@@ -24,10 +24,17 @@ export type Resume = {
 	isPublic?: boolean;
 };
 
+// Mirrors the server-side ResumeUpdatedEvent discriminator (packages/api resume/events.ts).
+type ResumeUpdateMutation = "sync" | "create" | "update" | "patch" | "lock" | "password" | "delete";
+type ResumeUpdateEvent = { mutation: ResumeUpdateMutation };
+
+export type SaveStatus = "idle" | "saving" | "saved" | "error";
+
 type ResumeStoreState = {
 	resume: Resume | null;
 	resumeId?: string;
 	isReady: boolean;
+	saveStatus: SaveStatus;
 };
 
 type ResumeStoreActions = {
@@ -38,6 +45,7 @@ type ResumeStoreActions = {
 	updateResumeData: (fn: (draft: WritableDraft<ResumeData>) => void) => void;
 	patchResume: (fn: (draft: WritableDraft<Resume>) => void) => void;
 	mergeResumeMetadata: (resume: Resume) => void;
+	setSaveStatus: (status: SaveStatus) => void;
 };
 
 type ResumeStore = ResumeStoreState & ResumeStoreActions;
@@ -51,11 +59,13 @@ type Runtime = {
 	syncErrorToastId?: string | number;
 	syncResume: ReturnType<typeof debounce<(resume: Resume) => void>>;
 	beforeUnloadHandler?: () => void;
+	deferredRemoteResume?: Resume;
+	deferredFocusHandler?: () => void;
 };
 
 type ResumeUpdateSubscriptionOptions = {
 	resumeId?: string;
-	onUpdate: () => Promise<void> | void;
+	onUpdate: (event: ResumeUpdateEvent) => Promise<void> | void;
 	onError?: (error: unknown) => void;
 };
 
@@ -78,6 +88,66 @@ function cloneResume(resume: Resume): Resume {
 
 function createResumeUpdateEventIterator(resumeId: string) {
 	return streamClient.resume.updates.subscribe({ id: resumeId });
+}
+
+function isEditableElementFocused(): boolean {
+	if (typeof document === "undefined") return false;
+	const element = document.activeElement as HTMLElement | null;
+	if (!element) return false;
+	return (
+		element.tagName === "INPUT" ||
+		element.tagName === "TEXTAREA" ||
+		element.tagName === "SELECT" ||
+		element.isContentEditable
+	);
+}
+
+function externalUpdateMessage(mutation: ResumeUpdateMutation): string {
+	if (mutation === "patch") return t`This resume was updated by an AI agent.`;
+	if (mutation === "lock" || mutation === "password") return t`This resume's sharing settings changed elsewhere.`;
+	return t`Synced changes made in another tab.`;
+}
+
+function notifyExternalUpdate(mutation: ResumeUpdateMutation) {
+	toast.info(externalUpdateMessage(mutation), { id: "resume-external-update" });
+}
+
+// #54: applies a remote update that was deferred because the user was typing.
+function applyDeferredRemoteResume(id: string) {
+	const runtime = runtimes.get(id);
+	if (!runtime?.deferredRemoteResume) return;
+
+	const resume = runtime.deferredRemoteResume;
+	runtime.deferredRemoteResume = undefined;
+	if (runtime.deferredFocusHandler && typeof document !== "undefined") {
+		document.removeEventListener("focusout", runtime.deferredFocusHandler, true);
+		runtime.deferredFocusHandler = undefined;
+	}
+
+	// The user may have started editing again while the update was deferred; local edits win.
+	if (runtime.hasPendingLocalChanges) return;
+
+	useResumeStore.getState().replaceResumeFromServer(resume);
+	notifyExternalUpdate("update");
+}
+
+// #54: don't overwrite a focused field mid-keystroke; stash the remote resume and apply it on blur.
+function deferRemoteResumeUntilBlur(id: string, resume: Resume) {
+	const runtime = getRuntime(id);
+	runtime.deferredRemoteResume = resume;
+
+	if (runtime.deferredFocusHandler || typeof document === "undefined") return;
+
+	const handler = () => {
+		// Let focus settle (e.g. tabbing between fields) before deciding editing has ended.
+		window.setTimeout(() => {
+			if (isEditableElementFocused()) return;
+			applyDeferredRemoteResume(id);
+		}, 0);
+	};
+
+	runtime.deferredFocusHandler = handler;
+	document.addEventListener("focusout", handler, true);
 }
 
 function setRuntimeBaseline(resume: Resume) {
@@ -110,6 +180,7 @@ async function flushResumeSave(id: string) {
 		if (currentDataStillMatchesSubmission && !runtime.pendingResume) {
 			runtime.hasPendingLocalChanges = false;
 			useResumeStore.getState().replaceResumeFromServer(updated);
+			useResumeStore.getState().setSaveStatus("saved");
 		} else {
 			runtime.hasPendingLocalChanges = true;
 			useResumeStore.getState().mergeResumeMetadata(updated);
@@ -129,6 +200,7 @@ async function flushResumeSave(id: string) {
 
 		runtime.pendingResume ??= submitted;
 		runtime.hasPendingLocalChanges = true;
+		useResumeStore.getState().setSaveStatus("error");
 		runtime.syncErrorToastId = toast.error(t`Your latest changes could not be saved.`, {
 			id: runtime.syncErrorToastId,
 			duration: Number.POSITIVE_INFINITY,
@@ -200,6 +272,10 @@ function cleanupRuntime(id: string) {
 		window.removeEventListener("beforeunload", runtime.beforeUnloadHandler);
 	}
 
+	if (runtime.deferredFocusHandler && typeof document !== "undefined") {
+		document.removeEventListener("focusout", runtime.deferredFocusHandler, true);
+	}
+
 	runtimes.delete(id);
 }
 
@@ -215,6 +291,7 @@ export const useResumeStore = create<ResumeStore>()(
 		resume: null,
 		resumeId: undefined,
 		isReady: false,
+		saveStatus: "idle",
 
 		initialize: (resume) => {
 			if (resume) setRuntimeBaseline(resume);
@@ -259,6 +336,12 @@ export const useResumeStore = create<ResumeStore>()(
 			});
 		},
 
+		setSaveStatus: (status) => {
+			set((state) => {
+				state.saveStatus = status;
+			});
+		},
+
 		mergeResumeMetadata: (resume) => {
 			set((state) => {
 				if (!state.resume || state.resume.id !== resume.id) return;
@@ -287,6 +370,7 @@ export const useResumeStore = create<ResumeStore>()(
 			set((state) => {
 				if (!state.resume) return;
 				fn(state.resume.data as WritableDraft<ResumeData>);
+				state.saveStatus = "saving";
 			});
 
 			getRuntime(currentResume.id).hasPendingLocalChanges = true;
@@ -341,6 +425,14 @@ export function useResumeData(): ResumeData | undefined {
 	return useBuilderResumeSelector((resume) => resume.data);
 }
 
+export function useIsResumeLocked(): boolean {
+	return useBuilderResumeSelector((resume) => resume.isLocked) ?? false;
+}
+
+export function useSaveStatus(): SaveStatus {
+	return useResumeStore((state) => state.saveStatus);
+}
+
 export function useUpdateResumeData() {
 	const queryClient = useQueryClient();
 	const params = useParams({ strict: false }) as { resumeId?: string };
@@ -366,9 +458,9 @@ export function useResumeUpdateSubscription({ resumeId, onUpdate, onError }: Res
 		let didCancel = false;
 		let retryTimer: number | undefined;
 		const cancel = consumeEventIterator(createResumeUpdateEventIterator(resumeId), {
-			onEvent: async () => {
+			onEvent: async (event) => {
 				try {
-					await onUpdate();
+					await onUpdate((event ?? { mutation: "sync" }) as ResumeUpdateEvent);
 				} catch (error) {
 					if (error instanceof DOMException && error.name === "AbortError") return;
 					onError?.(error);
@@ -395,21 +487,42 @@ export function useBuilderResumeUpdateSubscription() {
 	const params = useParams({ strict: false }) as { resumeId?: string };
 	const resumeId = params.resumeId;
 
-	const onUpdate = useCallback(async () => {
-		if (!resumeId) return;
+	const onUpdate = useCallback(
+		async (event: ResumeUpdateEvent) => {
+			if (!resumeId) return;
 
-		bindRuntimeQueryClient(resumeId, queryClient);
-		const resume = (await orpc.resume.getById.call({ id: resumeId })) as Resume;
+			bindRuntimeQueryClient(resumeId, queryClient);
+			const resume = (await orpc.resume.getById.call({ id: resumeId })) as Resume;
 
-		queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
+			queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
 
-		if (hasPendingLocalChanges(resumeId)) {
-			useResumeStore.getState().mergeResumeMetadata(resume);
-			return;
-		}
+			if (hasPendingLocalChanges(resumeId)) {
+				useResumeStore.getState().mergeResumeMetadata(resume);
+				return;
+			}
 
-		replaceResumeFromServer(resume);
-	}, [queryClient, replaceResumeFromServer, resumeId]);
+			const current = useResumeStore.getState().resume;
+			const isExternalChange =
+				event.mutation !== "sync" && current?.id === resume.id && !isEqual(current.data, resume.data);
+
+			if (!isExternalChange) {
+				replaceResumeFromServer(resume);
+				return;
+			}
+
+			// #54: never overwrite a field the user is editing; defer the swap until blur.
+			if (isEditableElementFocused()) {
+				useResumeStore.getState().mergeResumeMetadata(resume);
+				deferRemoteResumeUntilBlur(resumeId, resume);
+				return;
+			}
+
+			// #53: attribute cross-tab / AI-agent edits instead of silently swapping the document.
+			replaceResumeFromServer(resume);
+			notifyExternalUpdate(event.mutation);
+		},
+		[queryClient, replaceResumeFromServer, resumeId],
+	);
 
 	const onError = useCallback((error: unknown) => {
 		console.warn("Resume update stream failed, reconnecting:", error);

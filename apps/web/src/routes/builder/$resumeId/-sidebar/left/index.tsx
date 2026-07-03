@@ -1,12 +1,19 @@
 import type { LeftSidebarSection } from "@/libs/resume/section";
+import { Trans } from "@lingui/react/macro";
+import { LockSimpleIcon } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import { Fragment, useCallback, useRef } from "react";
+import { toast } from "sonner";
 import { match } from "ts-pattern";
 import { Avatar, AvatarFallback, AvatarImage } from "@reactive-resume/ui/components/avatar";
 import { Button } from "@reactive-resume/ui/components/button";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 import { Separator } from "@reactive-resume/ui/components/separator";
 import { getInitials } from "@reactive-resume/utils/string";
+import { useCurrentResume, useIsResumeLocked, usePatchResume } from "@/features/resume/builder/draft";
 import { UserDropdownMenu } from "@/features/user/dropdown-menu";
+import { getResumeErrorMessage } from "@/libs/error-message";
+import { orpc } from "@/libs/orpc/client";
 import { getSectionIcon, getSectionTitle, leftSidebarSections } from "@/libs/resume/section";
 import { BuilderSidebarEdge } from "../../-components/edge";
 import { useBuilderSidebar } from "../../-store/sidebar";
@@ -50,6 +57,7 @@ function getSectionComponent(type: LeftSidebarSection) {
 
 export function BuilderSidebarLeft() {
 	const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+	const isLocked = useIsResumeLocked();
 
 	return (
 		<>
@@ -57,15 +65,58 @@ export function BuilderSidebarLeft() {
 
 			<ScrollArea ref={scrollAreaRef} className="@container h-[calc(100svh-3.5rem)] bg-background sm:ms-12">
 				<div className="space-y-4 p-4">
-					{leftSidebarSections.map((section) => (
-						<Fragment key={section}>
-							{getSectionComponent(section)}
-							<Separator />
-						</Fragment>
-					))}
+					{isLocked && <LockBanner />}
+
+					<fieldset disabled={isLocked} className="m-0 min-w-0 space-y-4 border-0 p-0">
+						{leftSidebarSections.map((section) => (
+							<Fragment key={section}>
+								{getSectionComponent(section)}
+								<Separator />
+							</Fragment>
+						))}
+					</fieldset>
 				</div>
 			</ScrollArea>
 		</>
+	);
+}
+
+function LockBanner() {
+	const resume = useCurrentResume();
+	const patchResume = usePatchResume();
+	const { mutate: setLocked, isPending } = useMutation(orpc.resume.setLocked.mutationOptions());
+
+	const handleUnlock = () => {
+		setLocked(
+			{ id: resume.id, isLocked: false },
+			{
+				onSuccess: () => {
+					patchResume((draft) => {
+						draft.isLocked = false;
+					});
+				},
+				onError: (error) => {
+					toast.error(getResumeErrorMessage(error));
+				},
+			},
+		);
+	};
+
+	return (
+		<div className="flex items-center gap-x-3 rounded-md border border-amber-500/30 bg-amber-500/10 p-3">
+			<LockSimpleIcon className="size-5 shrink-0 text-amber-600 dark:text-amber-500" />
+			<div className="min-w-0 flex-1">
+				<p className="font-medium text-sm">
+					<Trans>This resume is locked</Trans>
+				</p>
+				<p className="text-muted-foreground text-xs">
+					<Trans>Editing is disabled until you unlock it.</Trans>
+				</p>
+			</div>
+			<Button size="sm" variant="secondary" disabled={isPending} onClick={handleUnlock}>
+				<Trans>Enable editing</Trans>
+			</Button>
+		</div>
 	);
 }
 

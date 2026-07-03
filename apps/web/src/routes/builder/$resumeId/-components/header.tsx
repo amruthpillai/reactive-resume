@@ -2,6 +2,8 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
 	CaretDownIcon,
+	CheckCircleIcon,
+	CircleNotchIcon,
 	CopySimpleIcon,
 	HouseSimpleIcon,
 	LockSimpleIcon,
@@ -9,10 +11,12 @@ import {
 	PencilSimpleLineIcon,
 	SidebarSimpleIcon,
 	TrashSimpleIcon,
+	WarningCircleIcon,
 } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { match } from "ts-pattern";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
@@ -22,7 +26,7 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
-import { useCurrentResume, usePatchResume } from "@/features/resume/builder/draft";
+import { useCurrentResume, usePatchResume, useSaveStatus } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -63,6 +67,7 @@ export function BuilderHeader() {
 				<span className="me-2.5 text-muted-foreground">/</span>
 				<h2 className="flex-1 truncate font-medium">{name}</h2>
 				{isLocked && <LockSimpleIcon className="ms-2 text-muted-foreground" />}
+				<SaveStatusIndicator />
 				<BuilderHeaderDropdown />
 			</div>
 
@@ -75,6 +80,34 @@ export function BuilderHeader() {
 				</span>
 			</Button>
 		</div>
+	);
+}
+
+function SaveStatusIndicator() {
+	const status = useSaveStatus();
+	if (status === "idle") return null;
+
+	const { icon, label } = match(status)
+		.with("saving", () => ({
+			icon: <CircleNotchIcon className="animate-spin" />,
+			label: t`Saving…`,
+		}))
+		.with("saved", () => ({ icon: <CheckCircleIcon />, label: t`Saved` }))
+		.with("error", () => ({
+			icon: <WarningCircleIcon className="text-destructive" />,
+			label: t`Couldn't save`,
+		}))
+		.exhaustive();
+
+	return (
+		<span
+			className="ms-1 flex shrink-0 items-center gap-x-1 text-muted-foreground text-xs"
+			aria-live="polite"
+			role="status"
+		>
+			{icon}
+			<span className="hidden md:inline">{label}</span>
+		</span>
 	);
 }
 
@@ -162,7 +195,7 @@ function BuilderHeaderDropdown() {
 			<DropdownMenuContent>
 				<DropdownMenuItem disabled={isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon className="me-2" />
-					<Trans>Update</Trans>
+					<Trans>Edit details</Trans>
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onClick={handleDuplicate}>
