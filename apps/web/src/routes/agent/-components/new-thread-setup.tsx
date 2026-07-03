@@ -116,13 +116,13 @@ export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 								value={aiProviderId}
 								options={providerOptions}
 								disabled={isLoadingProviders || providerOptions.length === 0}
-								placeholder={isLoadingProviders ? t`Loading providers…` : t`Select a tested provider`}
+								placeholder={isLoadingProviders ? t`Loading providers…` : t`Select an AI provider`}
 								onValueChange={setAiProviderIdOverride}
 							/>
 							{providerOptions.length === 0 && !isLoadingProviders ? (
 								<div className="flex flex-col gap-3 rounded-md border border-dashed p-3 text-sm lg:flex-row lg:items-center lg:justify-between">
 									<span className="text-muted-foreground">
-										<Trans>Add and test a provider before starting a thread.</Trans>
+										<Trans>Set up an AI provider to get started.</Trans>
 									</span>
 									<Button
 										size="sm"
@@ -187,7 +187,7 @@ export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 											getOrpcErrorMessage(error, {
 												byCode: {
 													PRECONDITION_FAILED: t`AI agent setup is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured.`,
-													BAD_REQUEST: t`Select a tested provider before starting a thread.`,
+													BAD_REQUEST: t`Set up an AI provider before starting a thread.`,
 												},
 												fallback: t`Failed to start agent thread.`,
 											}),

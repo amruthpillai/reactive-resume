@@ -101,7 +101,7 @@ export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
 
 				<DropdownMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon />
-					<Trans comment="Resume card dropdown action to edit resume metadata">Update</Trans>
+					<Trans comment="Resume card dropdown action to edit resume metadata">Edit details</Trans>
 				</DropdownMenuItem>
 
 				<DropdownMenuItem onClick={handleDuplicate}>

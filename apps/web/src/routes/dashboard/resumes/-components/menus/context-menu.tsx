@@ -103,7 +103,7 @@ export function ResumeContextMenu({ resume, children }: Props) {
 
 				<ContextMenuItem disabled={resume.isLocked} onClick={handleUpdate}>
 					<PencilSimpleLineIcon />
-					<Trans comment="Resume card context menu action to edit resume metadata">Update</Trans>
+					<Trans comment="Resume card context menu action to edit resume metadata">Edit details</Trans>
 				</ContextMenuItem>
 
 				<ContextMenuItem onClick={handleDuplicate}>

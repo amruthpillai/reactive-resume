@@ -14,9 +14,9 @@ export function GridView({ resumes }: Props) {
 	return (
 		<div className="grid 3xl:grid-cols-6 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
 			<m.div
-				initial={{ opacity: 0, y: -20 }}
+				initial={{ y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
-				exit={{ opacity: 0, y: -20 }}
+				exit={{ y: -20 }}
 				transition={{ duration: 0.2, ease: "easeOut" }}
 				className="will-change-[transform,opacity]"
 			>
@@ -24,9 +24,9 @@ export function GridView({ resumes }: Props) {
 			</m.div>
 
 			<m.div
-				initial={{ opacity: 0, y: -20 }}
+				initial={{ y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
-				exit={{ opacity: 0, y: -20 }}
+				exit={{ y: -20 }}
 				transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
 				className="will-change-[transform,opacity]"
 			>
@@ -38,7 +38,7 @@ export function GridView({ resumes }: Props) {
 					<m.div
 						layout
 						key={resume.id}
-						initial={{ opacity: 0, y: -20 }}
+						initial={{ y: -20 }}
 						animate={{ opacity: 1, y: 0 }}
 						exit={{
 							opacity: 0,

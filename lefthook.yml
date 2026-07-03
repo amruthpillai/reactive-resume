@@ -4,6 +4,18 @@
 pre-commit:
   parallel: true
   jobs:
+    - name: check merge conflict markers
+      glob: "*"
+      exclude:
+        - "*.md"
+        - "*.mdx"
+      run: |
+        matches=$(grep -nEI '<{7} |>{7} |^={7}$' {staged_files} || true)
+        if [ -n "$matches" ]; then
+          echo "$matches"
+          echo "Error: merge conflict markers found in staged files"
+          exit 1
+        fi
     - name: lint and format
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: pnpm biome check --write --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}

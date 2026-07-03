@@ -36,7 +36,7 @@ export function SocialProviderSection({ provider, name, animationDelay = 0 }: So
 	return (
 		<m.div
 			className="will-change-[transform,opacity]"
-			initial={{ opacity: 0, y: -20 }}
+			initial={{ y: -20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.2, delay: animationDelay, ease: "easeOut" }}
 		>

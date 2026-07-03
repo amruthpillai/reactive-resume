@@ -84,20 +84,20 @@ function statusBadge(provider: SavedProvider) {
 	if (provider.testStatus === "success") {
 		return (
 			<Badge className="bg-emerald-600 text-white">
-				<Trans>Tested</Trans>
+				<Trans>Connected</Trans>
 			</Badge>
 		);
 	}
 	if (provider.testStatus === "failure") {
 		return (
 			<Badge variant="destructive">
-				<Trans>Failed</Trans>
+				<Trans>Connection failed</Trans>
 			</Badge>
 		);
 	}
 	return (
 		<Badge variant="secondary">
-			<Trans>Untested</Trans>
+			<Trans>Not connected</Trans>
 		</Badge>
 	);
 }

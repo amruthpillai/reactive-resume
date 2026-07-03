@@ -184,11 +184,9 @@ export function AgentThreadSidebar({ activeThreadId = null, className }: AgentTh
 						<Trans>Threads</Trans>
 					</div>
 				</div>
-				<Button size="icon-sm" variant="ghost" nativeButton={false} render={<Link to="/dashboard/resumes" />}>
+				<Button size="sm" variant="ghost" nativeButton={false} render={<Link to="/dashboard/resumes" />}>
 					<ArrowLeftIcon />
-					<span className="sr-only">
-						<Trans>Back to resumes</Trans>
-					</span>
+					<Trans>Back to resumes</Trans>
 				</Button>
 			</div>
 

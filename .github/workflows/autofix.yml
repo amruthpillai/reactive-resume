@@ -19,6 +19,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
+      - name: Check for merge conflict markers
+        run: |
+          if git grep -nEI '<{7} |>{7} |^={7}$' -- ':(exclude)*.md' ':(exclude)*.mdx'; then
+            echo "::error::Merge conflict markers found in tracked files"
+            exit 1
+          fi
+
       - name: Install pnpm
         uses: pnpm/action-setup@v6
 

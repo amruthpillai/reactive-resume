@@ -25,7 +25,7 @@ export function PasswordSection() {
 
 	return (
 		<m.div
-			initial={{ opacity: 0, y: -20 }}
+			initial={{ y: -20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.2, delay: 0.1, ease: "easeOut" }}
 			className="flex items-center justify-between gap-x-4 will-change-[transform,opacity]"
