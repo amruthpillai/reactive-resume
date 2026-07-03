@@ -11,30 +11,36 @@ type Props = {
 };
 
 export function GridView({ resumes }: Props) {
+	if (resumes.length === 0) {
+		return (
+			<div className="grid 3xl:grid-cols-6 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+				<m.div
+					initial={{ y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ y: -20 }}
+					transition={{ duration: 0.2, ease: "easeOut" }}
+					className="will-change-[transform,opacity]"
+				>
+					<CreateResumeCard />
+				</m.div>
+
+				<m.div
+					initial={{ y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ y: -20 }}
+					transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
+					className="will-change-[transform,opacity]"
+				>
+					<ImportResumeCard />
+				</m.div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="grid 3xl:grid-cols-6 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-			<m.div
-				initial={{ y: -20 }}
-				animate={{ opacity: 1, y: 0 }}
-				exit={{ y: -20 }}
-				transition={{ duration: 0.2, ease: "easeOut" }}
-				className="will-change-[transform,opacity]"
-			>
-				<CreateResumeCard />
-			</m.div>
-
-			<m.div
-				initial={{ y: -20 }}
-				animate={{ opacity: 1, y: 0 }}
-				exit={{ y: -20 }}
-				transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-				className="will-change-[transform,opacity]"
-			>
-				<ImportResumeCard />
-			</m.div>
-
 			<AnimatePresence initial={false} mode="popLayout">
-				{resumes?.map((resume, index) => (
+				{resumes.map((resume, index) => (
 					<m.div
 						layout
 						key={resume.id}
@@ -45,7 +51,7 @@ export function GridView({ resumes }: Props) {
 							y: -20,
 							filter: "blur(8px)",
 						}}
-						transition={{ duration: 0.2, delay: Math.min(0.12, (index + 2) * 0.02), ease: "easeOut" }}
+						transition={{ duration: 0.2, delay: Math.min(0.12, index * 0.02), ease: "easeOut" }}
 						className="will-change-[transform,opacity]"
 					>
 						<ResumeCard resume={resume} />

@@ -5,7 +5,18 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
-import { ErrorScreen } from "./error-screen";
+
+// `Link` from tanstack/react-router requires a Router context. Stub it out with
+// a plain anchor so we can render the screen in isolation.
+vi.mock("@tanstack/react-router", () => ({
+	Link: ({ children, to, ...rest }: React.PropsWithChildren<{ to: string }>) => (
+		<a href={typeof to === "string" ? to : "#"} {...rest}>
+			{children}
+		</a>
+	),
+}));
+
+const { ErrorScreen } = await import("./error-screen");
 
 beforeAll(() => {
 	i18n.loadAndActivate({ locale: "en", messages: {} });
@@ -25,21 +36,27 @@ const renderError = (overrides: { error?: Error; reset?: () => void } = {}) => {
 };
 
 describe("ErrorScreen", () => {
-	it("shows the error message provided", () => {
-		renderError({ error: new Error("Network is down") });
-		expect(screen.getByText("Network is down")).toBeInTheDocument();
-	});
-
-	it("shows the user-facing error heading", () => {
+	it("shows a distinct, non-blaming error heading", () => {
 		renderError();
-		expect(screen.getByText("An error occurred while loading the page.")).toBeInTheDocument();
+		expect(screen.getByText("Something went wrong")).toBeInTheDocument();
 	});
 
-	it("calls reset when the Refresh button is clicked", () => {
+	it("does not surface the raw error message to the user", () => {
+		renderError({ error: new Error("Network is down") });
+		expect(screen.queryByText("Network is down")).not.toBeInTheDocument();
+	});
+
+	it("calls reset when the Try again button is clicked", () => {
 		const reset = vi.fn();
 		renderError({ reset });
 
-		fireEvent.click(screen.getByRole("button", { name: /refresh/i }));
+		fireEvent.click(screen.getByRole("button", { name: /try again/i }));
 		expect(reset).toHaveBeenCalledTimes(1);
+	});
+
+	it("offers an absolute dashboard escape", () => {
+		renderError();
+		const link = screen.getByRole("link", { name: /go to dashboard/i });
+		expect(link.getAttribute("href")).toBe("/dashboard");
 	});
 });

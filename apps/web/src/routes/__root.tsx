@@ -11,7 +11,7 @@ import { I18nProvider } from "@lingui/react";
 import { IconContext } from "@phosphor-icons/react";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, HeadContent, Outlet, useRouterState } from "@tanstack/react-router";
 import { domAnimation, LazyMotion, MotionConfig } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { Toaster } from "@reactive-resume/ui/components/sonner";
@@ -101,6 +101,9 @@ function RootComponent() {
 	const { theme, locale, queryClient } = Route.useRouteContext();
 	const dir = isRTL(locale) ? "rtl" : "ltr";
 
+	// Suppress the app-wide donation toast inside the builder so it doesn't cover the right-sidebar controls.
+	const isBuilder = useRouterState({ select: (s) => s.location.pathname.startsWith("/builder") });
+
 	const iconContextValue = useMemo<IconProps>(() => ({ size: 16, weight: "regular" }), []);
 
 	useEffect(() => {
@@ -126,10 +129,10 @@ function RootComponent() {
 													<PromptDialogProvider>
 														<Outlet />
 
-														<DonationToast />
+														{!isBuilder && <DonationToast />}
 														<DialogManager />
 														<CommandPalette />
-														<Toaster richColors position="bottom-right" />
+														<Toaster richColors position="bottom-center" />
 
 														{import.meta.env.DEV && <BreakpointIndicator />}
 													</PromptDialogProvider>

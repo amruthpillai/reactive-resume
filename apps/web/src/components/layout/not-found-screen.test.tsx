@@ -21,27 +21,33 @@ beforeAll(() => {
 	i18n.loadAndActivate({ locale: "en", messages: {} });
 });
 
-const renderScreen = (routeId = "/missing") =>
+const renderScreen = () =>
 	render(
 		<I18nProvider i18n={i18n}>
-			<NotFoundScreen isNotFound routeId={routeId as never} />
+			<NotFoundScreen />
 		</I18nProvider>,
 	);
 
 describe("NotFoundScreen", () => {
-	it("renders the documented error heading", () => {
+	it("renders a distinct not-found heading", () => {
 		renderScreen();
-		expect(screen.getByText("An error occurred while loading the page.")).toBeInTheDocument();
+		expect(screen.getByText("We couldn't find that page")).toBeInTheDocument();
 	});
 
-	it("displays the routeId that triggered the not-found", () => {
-		renderScreen("/dashboard/missing-page");
-		expect(screen.getByText("/dashboard/missing-page")).toBeInTheDocument();
+	it("does not surface the raw routeId", () => {
+		renderScreen();
+		expect(screen.queryByText(/\/dashboard\/missing-page/)).not.toBeInTheDocument();
 	});
 
-	it("renders a Go Back link", () => {
+	it("offers an absolute dashboard escape", () => {
 		renderScreen();
-		const link = screen.getByRole("link", { name: /go back/i });
-		expect(link.getAttribute("href")).toBe("..");
+		const link = screen.getByRole("link", { name: /go to dashboard/i });
+		expect(link.getAttribute("href")).toBe("/dashboard");
+	});
+
+	it("offers an absolute home escape", () => {
+		renderScreen();
+		const link = screen.getByRole("link", { name: /go home/i });
+		expect(link.getAttribute("href")).toBe("/");
 	});
 });
