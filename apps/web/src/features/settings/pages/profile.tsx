@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { CheckIcon, WarningIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
-import { useRouter } from "@tanstack/react-router";
+import { useRouteContext, useRouter } from "@tanstack/react-router";
 import { AnimatePresence, m } from "motion/react";
 import { toast } from "sonner";
 import z from "zod";
@@ -33,6 +33,8 @@ type Props = {
 
 export function ProfileSettingsPage({ session }: Props) {
 	const router = useRouter();
+	const context = useRouteContext({ strict: false });
+	const smtpEnabled = context.flags?.smtpEnabled ?? false;
 
 	const form = useAppForm({
 		defaultValues: {
@@ -226,7 +228,7 @@ export function ProfileSettingsPage({ session }: Props) {
 								<CheckIcon />
 								<Trans>Verified</Trans>
 							</p>
-						) : (
+						) : smtpEnabled ? (
 							<p className="flex items-center gap-x-1.5 text-amber-600 text-xs">
 								<WarningIcon className="size-3.5" />
 								<Trans>Unverified</Trans>
@@ -238,6 +240,10 @@ export function ProfileSettingsPage({ session }: Props) {
 								>
 									<Trans>Resend verification email</Trans>
 								</Button>
+							</p>
+						) : (
+							<p className="text-muted-foreground text-xs">
+								<Trans>Email delivery isn't configured on this instance, so verification is disabled.</Trans>
 							</p>
 						)}
 					</FormItem>
