@@ -1,8 +1,32 @@
 ---
-title: "Changelog"
-description: "List of all notable changes and updates to Reactive Resume"
+title: "Reactive Resume changelog"
+description: "Release notes for Reactive Resume covering new features, resume builder updates, PDF export fixes, AI Agent changes, and self-hosting updates."
 rss: true
 ---
+
+<Update label="Unreleased" description="Week of 29th June 2026">
+## Highlights
+
+- **Polished motion across the app.** Menus, dialogs, tooltips, tabs, buttons, sheets, and form validation now share a consistent motion system with interruptible transitions and cleaner press feedback, so the builder and dashboard feel smoother end to end. [578a9832](https://github.com/amruthpillai/reactive-resume/commit/578a9832)
+- **More reliable PDF list rendering.** A series of fixes to bulleted and numbered lists in exported PDFs restores correct bullet alignment, nested list layout, page breaks with markers, and text that continues after a line break inside a list item.
+
+## Updates
+
+- Consistent easing tokens, restored menu open/close animations, 200ms/150ms dialog timings, grouped tooltip delays, a sliding active-tab indicator, and iOS-style sheet drawer timing across the app. [578a9832](https://github.com/amruthpillai/reactive-resume/commit/578a9832)
+- Animated form validation messages and a smoother auth page entrance. [578a9832](https://github.com/amruthpillai/reactive-resume/commit/578a9832)
+
+## Fixes
+
+- Fixed PDF list items so bullets and markers respect item margins and long text wraps correctly inside the bullet column. [#3202](https://github.com/amruthpillai/reactive-resume/pull/3202)
+- Fixed nested list layout in PDF rich text so nested content sizes correctly. [#3198](https://github.com/amruthpillai/reactive-resume/pull/3198)
+- Fixed page breaks inside PDF lists so the list marker stays with its item. [#3178](https://github.com/amruthpillai/reactive-resume/pull/3178)
+- Fixed PDF text being clipped after a line break by removing an overly aggressive overflow rule from shared text styles. [#3186](https://github.com/amruthpillai/reactive-resume/pull/3186)
+- Fixed the Atlas Cloud sponsor logo so the whole logo reliably opens the sponsor site in a new tab. [#3170](https://github.com/amruthpillai/reactive-resume/pull/3170)
+- Kept the server running through transient Postgres disconnects (for example, idle drops from serverless Postgres providers like Neon) by handling database pool errors and reconnecting on the next query. Thanks to [@helder-mattos](https://github.com/helder-mattos). [#3172](https://github.com/amruthpillai/reactive-resume/pull/3172)
+- Synced the latest translation catalogs from Crowdin. [#3167](https://github.com/amruthpillai/reactive-resume/pull/3167), [#3183](https://github.com/amruthpillai/reactive-resume/pull/3183)
+
+**Full Changelog**: [v5.1.9...main](https://github.com/amruthpillai/reactive-resume/compare/v5.1.9...main)
+</Update>
 
 <Update label="v5.1.9" description="18th June 2026">
 ## Highlights
