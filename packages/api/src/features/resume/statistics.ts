@@ -27,4 +27,34 @@ export const resumeStatisticsRouter = {
 		.handler(async ({ context, input }) => {
 			return resumeService.statistics.getById({ id: input.id, userId: context.user.id });
 		}),
+
+	getDailyById: protectedProcedure
+		.route({
+			method: "GET",
+			path: "/resumes/{id}/statistics/daily",
+			tags: ["Resume Statistics"],
+			operationId: "getResumeDailyStatistics",
+			summary: "Get resume daily statistics",
+			description:
+				"Returns a continuous, zero-filled per-day series of view and download counts for the specified resume over the last `days` days (UTC). Requires authentication and resume ownership.",
+			successDescription: "The resume's daily view and download statistics.",
+		})
+		.input(
+			z.object({
+				id: z.string().describe("The unique identifier of the resume."),
+				days: z.number().int().min(1).max(365).default(30).describe("Number of trailing days to include."),
+			}),
+		)
+		.output(
+			z.array(
+				z.object({
+					date: z.string().describe("The UTC day in YYYY-MM-DD format."),
+					views: z.number().describe("Number of views recorded on this day."),
+					downloads: z.number().describe("Number of downloads recorded on this day."),
+				}),
+			),
+		)
+		.handler(async ({ context, input }) => {
+			return resumeService.statistics.getDailySeries({ id: input.id, userId: context.user.id, days: input.days });
+		}),
 };

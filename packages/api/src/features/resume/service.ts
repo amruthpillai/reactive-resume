@@ -5,7 +5,7 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import type { ResumeUpdatedEvent } from "./events";
 import { ORPCError } from "@orpc/client";
 import { compare, hash } from "bcrypt";
-import { and, arrayContains, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, arrayContains, asc, desc, eq, gte, isNotNull, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
 import { match } from "ts-pattern";
 import { db } from "@reactive-resume/db/client";
@@ -138,6 +138,7 @@ const statistics = {
 		const downloads = input.downloads ? 1 : 0;
 		const lastViewedAt = input.views ? sql`now()` : undefined;
 		const lastDownloadedAt = input.downloads ? sql`now()` : undefined;
+		const today = new Date().toISOString().slice(0, 10);
 
 		await db
 			.insert(schema.resumeStatistics)
@@ -157,6 +158,52 @@ const statistics = {
 					lastDownloadedAt,
 				},
 			});
+
+		await db
+			.insert(schema.resumeStatisticsDaily)
+			.values({ resumeId: input.id, date: today, views, downloads })
+			.onConflictDoUpdate({
+				target: [schema.resumeStatisticsDaily.resumeId, schema.resumeStatisticsDaily.date],
+				set: {
+					views: sql`${schema.resumeStatisticsDaily.views} + ${views}`,
+					downloads: sql`${schema.resumeStatisticsDaily.downloads} + ${downloads}`,
+				},
+			});
+	},
+
+	// Returns the last `days` (default 30) of daily view/download counts, zero-filled so the series is continuous.
+	getDailySeries: async (input: { id: string; userId: string; days?: number }) => {
+		const days = input.days ?? 30;
+
+		const [resume] = await db
+			.select({ id: schema.resume.id })
+			.from(schema.resume)
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+
+		if (!resume) throw new ORPCError("NOT_FOUND");
+
+		const now = new Date();
+		const utcDay = (offset: number) =>
+			new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - offset)).toISOString().slice(0, 10);
+		const start = utcDay(days - 1);
+		const dates = Array.from({ length: days }, (_, i) => utcDay(days - 1 - i));
+
+		const rows = await db
+			.select({
+				date: schema.resumeStatisticsDaily.date,
+				views: schema.resumeStatisticsDaily.views,
+				downloads: schema.resumeStatisticsDaily.downloads,
+			})
+			.from(schema.resumeStatisticsDaily)
+			.where(and(eq(schema.resumeStatisticsDaily.resumeId, input.id), gte(schema.resumeStatisticsDaily.date, start)));
+
+		const byDate = new Map(rows.map((row) => [row.date, row]));
+
+		return dates.map((date) => ({
+			date,
+			views: byDate.get(date)?.views ?? 0,
+			downloads: byDate.get(date)?.downloads ?? 0,
+		}));
 	},
 };
 

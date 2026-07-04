@@ -5,16 +5,30 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { Accordion, AccordionContent, AccordionItem } from "@reactive-resume/ui/components/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@reactive-resume/ui/components/alert";
+import { cn } from "@reactive-resume/utils/style";
 import { orpc } from "@/libs/orpc/client";
 import { SectionBase } from "../shared/section-base";
+
+// Fetch 60 days so we can render a 30-day sparkline and compare it against the prior 30 days.
+const TREND_DAYS = 60;
+const WINDOW = 30;
 
 export function StatisticsSectionBuilder() {
 	const params = useParams({ from: "/builder/$resumeId" });
 	const { data: statistics } = useQuery(
 		orpc.resume.statistics.getById.queryOptions({ input: { id: params.resumeId } }),
 	);
+	const { data: daily } = useQuery(
+		orpc.resume.statistics.getDailyById.queryOptions({
+			input: { id: params.resumeId, days: TREND_DAYS },
+			enabled: Boolean(statistics?.isPublic),
+		}),
+	);
 
 	if (!statistics) return null;
+
+	const viewsSeries = daily?.map((day) => day.views) ?? [];
+	const downloadsSeries = daily?.map((day) => day.downloads) ?? [];
 
 	return (
 		<SectionBase type="statistics">
@@ -41,12 +55,14 @@ export function StatisticsSectionBuilder() {
 						<StatisticsItem
 							label={t`Views`}
 							value={statistics.views}
+							series={viewsSeries}
 							timestamp={statistics.lastViewedAt ? t`Last viewed on ${statistics.lastViewedAt.toDateString()}` : null}
 						/>
 
 						<StatisticsItem
 							label={t`Downloads`}
 							value={statistics.downloads}
+							series={downloadsSeries}
 							timestamp={
 								statistics.lastDownloadedAt ? t`Last downloaded on ${statistics.lastDownloadedAt.toDateString()}` : null
 							}
@@ -61,15 +77,66 @@ export function StatisticsSectionBuilder() {
 type StatisticsItemProps = {
 	label: string;
 	value: number;
+	series: number[];
 	timestamp: string | null;
 };
 
-function StatisticsItem({ label, value, timestamp }: StatisticsItemProps) {
+function StatisticsItem({ label, value, series, timestamp }: StatisticsItemProps) {
+	const recent = series.slice(-WINDOW);
+	const previous = series.slice(-WINDOW * 2, -WINDOW);
+	const recentSum = recent.reduce((sum, n) => sum + n, 0);
+	const previousSum = previous.reduce((sum, n) => sum + n, 0);
+	const delta = previousSum === 0 ? null : Math.round(((recentSum - previousSum) / previousSum) * 100);
+
 	return (
 		<div>
-			<h4 className="mb-1 font-mono font-semibold text-4xl">{value}</h4>
+			<div className="mb-1 flex items-center justify-between gap-2">
+				<h4 className="font-mono font-semibold text-4xl">{value}</h4>
+				<Sparkline title={t`${label} over the last 30 days`} values={recent} />
+			</div>
 			<p className="font-medium text-muted-foreground leading-none">{label}</p>
-			{timestamp && <span className="text-muted-foreground text-xs">{timestamp}</span>}
+			{delta === null ? (
+				<span className="text-muted-foreground text-xs">
+					<Trans>No prior data</Trans>
+				</span>
+			) : (
+				<span className={cn("text-xs", delta >= 0 ? "text-emerald-600 dark:text-emerald-500" : "text-red-600")}>
+					{`${delta >= 0 ? "+" : ""}${delta}% `}
+					<Trans>vs previous 30 days</Trans>
+				</span>
+			)}
+			{timestamp && <span className="block text-muted-foreground text-xs">{timestamp}</span>}
 		</div>
+	);
+}
+
+type SparklineProps = {
+	title: string;
+	values: number[];
+};
+
+function Sparkline({ title, values }: SparklineProps) {
+	if (values.length < 2 || values.every((n) => n === 0)) return null;
+
+	const width = 80;
+	const height = 24;
+	const max = Math.max(...values, 1);
+	const step = width / (values.length - 1);
+	const points = values
+		.map((value, index) => `${(index * step).toFixed(1)},${(height - (value / max) * height).toFixed(1)}`)
+		.join(" ");
+
+	return (
+		<svg className="text-primary" height={height} role="img" viewBox={`0 0 ${width} ${height}`} width={width}>
+			<title>{title}</title>
+			<polyline
+				fill="none"
+				points={points}
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth={1.5}
+			/>
+		</svg>
 	);
 }

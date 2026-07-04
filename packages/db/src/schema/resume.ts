@@ -67,6 +67,31 @@ export const resumeStatistics = pg.pgTable("resume_statistics", {
 		.$onUpdate(() => /* @__PURE__ */ new Date()),
 });
 
+export const resumeStatisticsDaily = pg.pgTable(
+	"resume_statistics_daily",
+	{
+		id: pg
+			.text("id")
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => generateId()),
+		date: pg.date("date", { mode: "string" }).notNull(),
+		views: pg.integer("views").notNull().default(0),
+		downloads: pg.integer("downloads").notNull().default(0),
+		resumeId: pg
+			.text("resume_id")
+			.notNull()
+			.references(() => resume.id, { onDelete: "cascade" }),
+		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+		updatedAt: pg
+			.timestamp("updated_at", { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => /* @__PURE__ */ new Date()),
+	},
+	(t) => [pg.unique().on(t.resumeId, t.date), pg.index().on(t.resumeId, t.date.desc())],
+);
+
 export const resumeAnalysis = pg.pgTable(
 	"resume_analysis",
 	{
