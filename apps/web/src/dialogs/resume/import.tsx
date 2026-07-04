@@ -4,8 +4,8 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { DownloadSimpleIcon, FileIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
@@ -24,8 +24,8 @@ import {
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
-import { cn } from "@reactive-resume/utils/style";
 import { Combobox } from "@/components/ui/combobox";
+import { useHasUsableAiProvider } from "@/features/settings/integrations/hooks/use-has-usable-ai-provider";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc } from "@/libs/orpc/client";
@@ -88,6 +88,56 @@ function fileToBase64(file: File): Promise<string> {
 	});
 }
 
+// #7: sniff the source format from magic bytes + JSON shape rather than trusting the extension/MIME
+// (multiple resume interchange formats share the .json extension). Returns "" when unrecognized.
+async function detectImportType(file: File): Promise<ImportType> {
+	const name = file.name.toLowerCase();
+	const mime = file.type;
+
+	const header = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+	const isPdf = header[0] === 0x25 && header[1] === 0x50 && header[2] === 0x44 && header[3] === 0x46; // "%PDF"
+	const isZip = header[0] === 0x50 && header[1] === 0x4b && header[2] === 0x03 && header[3] === 0x04; // "PK\x03\x04"
+
+	if (isPdf || mime === "application/pdf" || name.endsWith(".pdf")) return "pdf";
+	if (
+		isZip ||
+		mime === "application/msword" ||
+		mime === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+		name.endsWith(".docx") ||
+		name.endsWith(".doc")
+	) {
+		return "docx";
+	}
+
+	if (mime === "application/json" || name.endsWith(".json")) {
+		try {
+			return detectJsonImportType(JSON.parse(await file.text()));
+		} catch {
+			return "";
+		}
+	}
+
+	return "";
+}
+
+export function detectJsonImportType(parsed: unknown): ImportType {
+	if (!parsed || typeof parsed !== "object") return "";
+	const data = parsed as Record<string, unknown>;
+
+	// JSON Resume standard: top-level `basics`, without Reactive Resume's `sections`/`metadata`.
+	if ("basics" in data && !("sections" in data) && !("metadata" in data)) return "json-resume-json";
+
+	// Reactive Resume exports carry `sections` + `metadata`; the current schema's metadata has a `page` key,
+	// the legacy v4 schema does not. Best-effort guess — the user can override the type below.
+	if ("sections" in data || "metadata" in data) {
+		const metadata = data.metadata as Record<string, unknown> | undefined;
+		if (metadata && !("page" in metadata)) return "reactive-resume-v4-json";
+		return "reactive-resume-json";
+	}
+
+	return "";
+}
+
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const navigate = useNavigate();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
@@ -96,8 +146,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	const [isImporting, setIsImporting] = useState<boolean>(false);
 
 	const { mutateAsync: importResume } = useMutation(orpc.resume.import.mutationOptions());
-	const { data: aiProviders, isLoading: isLoadingAiProviders } = useQuery(orpc.aiProviders.list.queryOptions());
-	const hasAIProvider = aiProviders?.some((provider) => provider.enabled && provider.testStatus === "success") ?? false;
+	const { hasUsableProvider, isLoading: isLoadingAiProviders } = useHasUsableAiProvider();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -137,8 +186,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 				if (value.type === "pdf") {
 					if (isLoadingAiProviders) throw new Error(t`Loading AI providers. Please try again in a moment.`);
-					if (!hasAIProvider)
-						throw new Error(t`This feature requires a tested AI provider. Please add one in the settings.`);
+					if (!hasUsableProvider)
+						throw new Error(t`This feature requires a connected AI provider. Please set one up in the settings.`);
 
 					const base64 = await fileToBase64(value.file);
 
@@ -149,8 +198,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 				if (value.type === "docx") {
 					if (isLoadingAiProviders) throw new Error(t`Loading AI providers. Please try again in a moment.`);
-					if (!hasAIProvider)
-						throw new Error(t`This feature requires a tested AI provider. Please add one in the settings.`);
+					if (!hasUsableProvider)
+						throw new Error(t`This feature requires a connected AI provider. Please set one up in the settings.`);
 
 					const base64 = await fileToBase64(value.file);
 
@@ -205,19 +254,24 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 	});
 
 	const type = useStore(form.store, (s) => s.values.type);
+	const file = useStore(form.store, (s) => s.values.file);
+	const aiRequired = type === "pdf" || type === "docx";
 
 	const onSelectFile = () => {
 		if (!inputRef.current) return;
 		inputRef.current.click();
 	};
 
-	const onUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (!file) return;
-		form.setFieldValue("file", file);
+	const onUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const selected = e.target.files?.[0];
+		if (!selected) return;
+		form.setFieldValue("file", selected);
+		// #7: pre-select the source format from the file's content; the user can still override below.
+		form.setFieldValue("type", await detectImportType(selected));
 	};
 
-	useFormBlocker(form);
+	// #6: only warn about unsaved changes once a file has actually been chosen — not on a bare type selection.
+	useFormBlocker(form, { shouldBlock: () => Boolean(file) });
 
 	return (
 		<DialogContent>
@@ -242,83 +296,12 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 					void form.handleSubmit();
 				}}
 			>
-				<form.Field name="type">
+				<form.Field name="file">
 					{(field) => (
 						<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
 							<FormLabel>
-								<Trans>Type</Trans>
+								<Trans>File</Trans>
 							</FormLabel>
-							<FormControl
-								render={
-									<Combobox
-										showClear={false}
-										value={field.state.value}
-										onValueChange={(value) => {
-											const nextType = value as ImportType;
-											if (nextType !== field.state.value) form.setFieldValue("file", undefined);
-											field.handleChange(nextType);
-										}}
-										options={[
-											{
-												value: "reactive-resume-json",
-												label: t({
-													comment: "Import source option for current Reactive Resume JSON format",
-													message: "Reactive Resume (JSON)",
-												}),
-											},
-											{
-												value: "reactive-resume-v4-json",
-												label: t({
-													comment: "Import source option for legacy Reactive Resume v4 JSON format",
-													message: "Reactive Resume v4 (JSON)",
-												}),
-											},
-											{
-												value: "json-resume-json",
-												label: t({
-													comment: "Import source option for standard JSON Resume format",
-													message: "JSON Resume",
-												}),
-											},
-											{
-												value: "pdf",
-												label: (
-													<div className="flex items-center gap-x-2">
-														{t({
-															comment: "File format label in import source selector",
-															message: "PDF",
-														})}{" "}
-														<Badge>{t`AI`}</Badge>
-													</div>
-												),
-											},
-											{
-												value: "docx",
-												label: (
-													<div className="flex items-center gap-x-2">
-														{t({
-															comment: "File format label in import source selector",
-															message: "Microsoft Word",
-														})}{" "}
-														<Badge>{t`AI`}</Badge>
-													</div>
-												),
-											},
-										]}
-									/>
-								}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
-					)}
-				</form.Field>
-
-				<form.Field key={type} name="file">
-					{(field) => (
-						<FormItem
-							className={cn(!type && "hidden")}
-							hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
-						>
 							<FormControl>
 								<Input type="file" className="hidden" ref={inputRef} onChange={onUploadFile} />
 
@@ -345,8 +328,98 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 					)}
 				</form.Field>
 
+				{file && (
+					<form.Field name="type">
+						{(field) => (
+							<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+								<FormLabel>
+									<Trans>Type</Trans>
+								</FormLabel>
+								<FormControl
+									render={
+										<Combobox
+											showClear={false}
+											value={field.state.value}
+											onValueChange={(value) => field.handleChange(value as ImportType)}
+											options={[
+												{
+													value: "reactive-resume-json",
+													label: t({
+														comment: "Import source option for current Reactive Resume JSON format",
+														message: "Reactive Resume (JSON)",
+													}),
+												},
+												{
+													value: "reactive-resume-v4-json",
+													label: t({
+														comment: "Import source option for legacy Reactive Resume v4 JSON format",
+														message: "Reactive Resume v4 (JSON)",
+													}),
+												},
+												{
+													value: "json-resume-json",
+													label: t({
+														comment: "Import source option for standard JSON Resume format",
+														message: "JSON Resume",
+													}),
+												},
+												{
+													value: "pdf",
+													textValue: t({ comment: "File format label in import source selector", message: "PDF" }),
+													label: (
+														<div className="flex items-center gap-x-2">
+															{t({ comment: "File format label in import source selector", message: "PDF" })}{" "}
+															<Badge>{t`AI`}</Badge>
+														</div>
+													),
+												},
+												{
+													value: "docx",
+													textValue: t({
+														comment: "File format label in import source selector",
+														message: "Microsoft Word",
+													}),
+													label: (
+														<div className="flex items-center gap-x-2">
+															{t({
+																comment: "File format label in import source selector",
+																message: "Microsoft Word",
+															})}{" "}
+															<Badge>{t`AI`}</Badge>
+														</div>
+													),
+												},
+											]}
+										/>
+									}
+								/>
+								{!field.state.value && (
+									<p className="text-muted-foreground text-xs">
+										<Trans>We couldn't detect the format automatically — please choose it above.</Trans>
+									</p>
+								)}
+								<FormMessage errors={field.state.meta.errors} />
+							</FormItem>
+						)}
+					</form.Field>
+				)}
+
+				{aiRequired && !isLoadingAiProviders && !hasUsableProvider && (
+					<div className="flex flex-col gap-3 rounded-md border border-dashed p-3 text-sm lg:flex-row lg:items-center lg:justify-between">
+						<span className="text-muted-foreground">
+							<Trans>Importing from PDF or Word requires a connected AI provider.</Trans>
+						</span>
+						<Button
+							size="sm"
+							variant="secondary"
+							nativeButton={false}
+							render={<Link to="/dashboard/settings/integrations">{t`Set up a provider`}</Link>}
+						/>
+					</div>
+				)}
+
 				<DialogFooter>
-					<Button type="submit" disabled={!type || isImporting}>
+					<Button type="submit" disabled={!type || !file || isImporting || (aiRequired && !hasUsableProvider)}>
 						{isImporting ? <Spinner /> : null}
 						{isImporting ? t`Importing…` : t`Import`}
 					</Button>
