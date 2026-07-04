@@ -6,14 +6,14 @@ import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { languageItemSchema } from "@reactive-resume/schema/resume/data";
 import { Button } from "@reactive-resume/ui/components/button";
-import {
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@reactive-resume/ui/components/dialog";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
+import {
+	SheetContent,
+	SheetDescription,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+} from "@reactive-resume/ui/components/sheet";
 import { Slider } from "@reactive-resume/ui/components/slider";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
@@ -53,17 +53,17 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
-		<DialogContent>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
+		<SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-md">
+			<SheetHeader>
+				<SheetTitle className="flex items-center gap-x-2">
 					<PlusIcon />
 					<Trans>Create a new language</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+				</SheetTitle>
+				<SheetDescription />
+			</SheetHeader>
 
 			<form
-				className="grid gap-4 sm:grid-cols-2"
+				className="grid gap-4 p-4 sm:grid-cols-2"
 				onSubmit={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
@@ -72,7 +72,7 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 			>
 				<LanguageForm form={form} />
 
-				<DialogFooter className="sm:col-span-full">
+				<SheetFooter className="-mx-4 -mb-4 border-t bg-muted/50 sm:col-span-full sm:flex-row sm:justify-end">
 					<Button variant="ghost" onClick={requestClose}>
 						<Trans>Cancel</Trans>
 					</Button>
@@ -80,9 +80,9 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 					<Button type="submit" disabled={isSubmitting}>
 						<Trans>Create</Trans>
 					</Button>
-				</DialogFooter>
+				</SheetFooter>
 			</form>
-		</DialogContent>
+		</SheetContent>
 	);
 }
 
@@ -105,17 +105,17 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
-		<DialogContent>
-			<DialogHeader>
-				<DialogTitle className="flex items-center gap-x-2">
+		<SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-md">
+			<SheetHeader>
+				<SheetTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
 					<Trans>Update an existing language</Trans>
-				</DialogTitle>
-				<DialogDescription />
-			</DialogHeader>
+				</SheetTitle>
+				<SheetDescription />
+			</SheetHeader>
 
 			<form
-				className="grid gap-4 sm:grid-cols-2"
+				className="grid gap-4 p-4 sm:grid-cols-2"
 				onSubmit={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
@@ -124,7 +124,7 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 			>
 				<LanguageForm form={form} />
 
-				<DialogFooter className="sm:col-span-full">
+				<SheetFooter className="-mx-4 -mb-4 border-t bg-muted/50 sm:col-span-full sm:flex-row sm:justify-end">
 					<Button variant="ghost" onClick={requestClose}>
 						<Trans>Cancel</Trans>
 					</Button>
@@ -132,9 +132,9 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 					<Button type="submit" disabled={isSubmitting}>
 						<Trans>Save Changes</Trans>
 					</Button>
-				</DialogFooter>
+				</SheetFooter>
 			</form>
-		</DialogContent>
+		</SheetContent>
 	);
 }
 
