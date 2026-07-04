@@ -1,4 +1,5 @@
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import type { ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
 import type { CSSProperties, HTMLAttributes, Ref } from "react";
 import {
 	closestCorners,
@@ -27,6 +28,7 @@ import { match } from "ts-pattern";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
+	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
@@ -512,6 +514,67 @@ function MoveToSubmenu({ id, pageIndex, columnId }: MoveToSubmenuProps) {
 	);
 }
 
+type SectionBreakField = "keepTogether" | "startOnNewPage";
+
+const readSectionBreak = (data: ResumeData, id: string, field: SectionBreakField): boolean => {
+	if (id === "summary") return data.summary[field];
+	if (id in data.sections) return data.sections[id as SectionType][field];
+	return data.customSections.find((section) => section.id === id)?.[field] ?? false;
+};
+
+type SectionBreakItemsProps = {
+	id: string;
+};
+
+/**
+ * Per-section page-break controls. These write the declarative `keepTogether` /
+ * `startOnNewPage` flags onto the section metadata (summary, standard, or custom),
+ * which the PDF renderer applies as `wrap` / `break` on the section container.
+ */
+function SectionBreakItems({ id }: SectionBreakItemsProps) {
+	const resume = useCurrentResume();
+	const updateResumeData = useUpdateResumeData();
+
+	const keepTogether = readSectionBreak(resume.data, id, "keepTogether");
+	const startOnNewPage = readSectionBreak(resume.data, id, "startOnNewPage");
+
+	const toggle = (field: SectionBreakField) => {
+		updateResumeData((draft) => {
+			if (id === "summary") {
+				draft.summary[field] = !draft.summary[field];
+				return;
+			}
+			if (id in draft.sections) {
+				const section = draft.sections[id as SectionType];
+				section[field] = !section[field];
+				return;
+			}
+			const custom = draft.customSections.find((section) => section.id === id);
+			if (custom) custom[field] = !custom[field];
+		});
+	};
+
+	return (
+		<>
+			<DropdownMenuCheckboxItem
+				checked={keepTogether}
+				onSelect={(event) => event.preventDefault()}
+				onCheckedChange={() => toggle("keepTogether")}
+			>
+				<Trans comment="Layout editor toggle that prevents a section from splitting across pages">Keep together</Trans>
+			</DropdownMenuCheckboxItem>
+
+			<DropdownMenuCheckboxItem
+				checked={startOnNewPage}
+				onSelect={(event) => event.preventDefault()}
+				onCheckedChange={() => toggle("startOnNewPage")}
+			>
+				<Trans comment="Layout editor toggle that forces a section to begin on a new page">Start on new page</Trans>
+			</DropdownMenuCheckboxItem>
+		</>
+	);
+}
+
 type LayoutItemContentProps = HTMLAttributes<HTMLDivElement> & {
 	id: string;
 	ref?: Ref<HTMLDivElement>;
@@ -566,6 +629,8 @@ function LayoutItemContent({
 
 					<DropdownMenuContent align="end">
 						<MoveToSubmenu id={id} pageIndex={pageIndex} columnId={columnId} />
+						<DropdownMenuSeparator />
+						<SectionBreakItems id={id} />
 					</DropdownMenuContent>
 				</DropdownMenu>
 			)}

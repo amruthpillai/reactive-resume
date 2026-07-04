@@ -231,6 +231,8 @@ export function createCustomSectionWithItem(
 		icon: "",
 		columns: 1,
 		hidden: false,
+		keepTogether: false,
+		startOnNewPage: false,
 		items: [item as never],
 	};
 
@@ -269,6 +271,8 @@ export function createPageWithSection(
 		icon: "",
 		columns: 1,
 		hidden: false,
+		keepTogether: false,
+		startOnNewPage: false,
 		items: [item as never],
 	};
 

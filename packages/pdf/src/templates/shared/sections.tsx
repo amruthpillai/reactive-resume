@@ -11,6 +11,8 @@ import type {
 	ProjectItem,
 	PublicationItem,
 	ReferenceItem,
+	ResumeData,
+	SectionType,
 	SkillItem,
 	SummaryItem,
 	VolunteerItem,
@@ -179,6 +181,26 @@ const getVisibleItems = <T extends { hidden: boolean }>(section: ItemSection<T>,
 	return filterItems(section.items, sectionType);
 };
 
+// Resolve the per-section page-break constraints the same way section title/icon are resolved:
+// standard sections live under data.sections[id], the summary under data.summary, and custom
+// sections are matched by id. Missing flags default to false (older stored resumes lack them).
+const getSectionBreaks = (data: ResumeData, sectionId: string): { keepTogether: boolean; startOnNewPage: boolean } => {
+	if (sectionId === "summary") {
+		return { keepTogether: data.summary.keepTogether, startOnNewPage: data.summary.startOnNewPage };
+	}
+
+	if (sectionId in data.sections) {
+		const section = data.sections[sectionId as SectionType];
+		return { keepTogether: section.keepTogether, startOnNewPage: section.startOnNewPage };
+	}
+
+	const customSection = data.customSections.find((section) => section.id === sectionId);
+	return {
+		keepTogether: customSection?.keepTogether ?? false,
+		startOnNewPage: customSection?.startOnNewPage ?? false,
+	};
+};
+
 const SectionShell = ({ sectionId, title, showHeading = true, children }: SectionShellProps) => {
 	const data = useRender();
 	const sectionStyle = useTemplateStyle("section");
@@ -189,11 +211,17 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	const sectionTitle = getResumeSectionTitle(data, sectionId, title);
 	const sectionIcon = getResumeSectionIcon(data, sectionId);
 	const showIcon = Boolean(sectionIcon) && !data.metadata.page.hideSectionIcons;
+	const { keepTogether, startOnNewPage } = getSectionBreaks(data, sectionId);
+	// wrap={false} keeps the whole section on one page; break forces it onto a fresh page.
+	// Only set the props when enabled so we never pass undefined (exactOptionalPropertyTypes).
+	const breakProps: { wrap?: false; break?: true } = {};
+	if (keepTogether) breakProps.wrap = false;
+	if (startOnNewPage) breakProps.break = true;
 
 	if (!showIcon) {
 		// No icon: render heading exactly as before (no structural change)
 		return (
-			<View style={composeStyles(sectionStyle, sectionRuleStyle)}>
+			<View style={composeStyles(sectionStyle, sectionRuleStyle)} {...breakProps}>
 				{showHeading && (
 					<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>{sectionTitle}</Heading>
 				)}
@@ -204,7 +232,7 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 
 	// With icon: wrap in a flex row container that inherits the heading's border/decoration
 	return (
-		<View style={composeStyles(sectionStyle, sectionRuleStyle)}>
+		<View style={composeStyles(sectionStyle, sectionRuleStyle)} {...breakProps}>
 			{showHeading && (
 				<View
 					style={composeStyles(

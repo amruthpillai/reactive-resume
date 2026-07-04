@@ -16,7 +16,7 @@ describe("ExperienceSection", () => {
 
 describe("SectionShell", () => {
 	it("keeps section and heading style rules when section heading icons are hidden", () => {
-		expect(source).toContain("<View style={composeStyles(sectionStyle, sectionRuleStyle)}>");
+		expect(source).toContain("<View style={composeStyles(sectionStyle, sectionRuleStyle)} {...breakProps}>");
 		expect(source).toContain("<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>");
 	});
 

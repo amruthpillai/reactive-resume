@@ -21,6 +21,8 @@ describe("createSectionItem", () => {
 				icon: "",
 				columns: 1,
 				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
 				items: [],
 			});
 		});
@@ -79,6 +81,8 @@ describe("updateSectionItem", () => {
 				icon: "",
 				columns: 1,
 				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
 				items: [{ id: "x", value: "old" } as never],
 			});
 		});

@@ -27,6 +27,8 @@ export const defaultResumeData: ResumeData = {
 		icon: "article",
 		columns: 1,
 		hidden: false,
+		keepTogether: false,
+		startOnNewPage: false,
 		content: "",
 	},
 	sections: {
@@ -35,6 +37,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "messenger-logo",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		experience: {
@@ -42,6 +46,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "briefcase",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		education: {
@@ -49,6 +55,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "graduation-cap",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		projects: {
@@ -56,6 +64,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "code-simple",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		skills: {
@@ -63,6 +73,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "compass-tool",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		languages: {
@@ -70,6 +82,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "translate",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		interests: {
@@ -77,6 +91,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "football",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		awards: {
@@ -84,6 +100,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "trophy",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		certifications: {
@@ -91,6 +109,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "certificate",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		publications: {
@@ -98,6 +118,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "books",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		volunteer: {
@@ -105,6 +127,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "hand-heart",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 		references: {
@@ -112,6 +136,8 @@ export const defaultResumeData: ResumeData = {
 			icon: "phone",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [],
 		},
 	},

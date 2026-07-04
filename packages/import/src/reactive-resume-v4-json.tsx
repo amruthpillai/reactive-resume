@@ -443,6 +443,8 @@ export class ReactiveResumeV4JSONImporter {
 					icon: "",
 					columns: v4Data.sections.summary?.columns ?? 1,
 					hidden: !(v4Data.sections.summary?.visible ?? true),
+					keepTogether: false,
+					startOnNewPage: false,
 					content: v4Data.sections.summary?.content ?? "",
 				},
 				sections: {
@@ -451,6 +453,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.profiles?.columns ?? 1,
 						hidden: !(v4Data.sections.profiles?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.profiles?.items ?? [])
 							.filter((item) => item.network && item.network.length > 0)
 							.map((item) => ({
@@ -472,6 +476,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.experience?.columns ?? 1,
 						hidden: !(v4Data.sections.experience?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.experience?.items ?? [])
 							.filter((item) => item.company && item.company.length > 0)
 							.map((item) => ({
@@ -495,6 +501,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.education?.columns ?? 1,
 						hidden: !(v4Data.sections.education?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.education?.items ?? [])
 							.filter((item) => item.institution && item.institution.length > 0)
 							.map((item) => ({
@@ -519,6 +527,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.projects?.columns ?? 1,
 						hidden: !(v4Data.sections.projects?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.projects?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -539,6 +549,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.skills?.columns ?? 1,
 						hidden: !(v4Data.sections.skills?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.skills?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -558,6 +570,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.languages?.columns ?? 1,
 						hidden: !(v4Data.sections.languages?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.languages?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -574,6 +588,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.interests?.columns ?? 1,
 						hidden: !(v4Data.sections.interests?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.interests?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -590,6 +606,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.awards?.columns ?? 1,
 						hidden: !(v4Data.sections.awards?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.awards?.items ?? [])
 							.filter((item) => item.title && item.title.length > 0)
 							.map((item) => ({
@@ -611,6 +629,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.certifications?.columns ?? 1,
 						hidden: !(v4Data.sections.certifications?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.certifications?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -632,6 +652,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.publications?.columns ?? 1,
 						hidden: !(v4Data.sections.publications?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.publications?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -653,6 +675,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.volunteer?.columns ?? 1,
 						hidden: !(v4Data.sections.volunteer?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.volunteer?.items ?? [])
 							.filter((item) => item.organization && item.organization.length > 0)
 							.map((item) => ({
@@ -674,6 +698,8 @@ export class ReactiveResumeV4JSONImporter {
 						icon: "",
 						columns: v4Data.sections.references?.columns ?? 1,
 						hidden: !(v4Data.sections.references?.visible ?? true),
+						keepTogether: false,
+						startOnNewPage: false,
 						items: (v4Data.sections.references?.items ?? [])
 							.filter((item) => item.name && item.name.length > 0)
 							.map((item) => ({
@@ -698,6 +724,8 @@ export class ReactiveResumeV4JSONImporter {
 					type: "experience" as const, // Default to experience type as it has the most compatible fields
 					columns: section.columns ?? 1,
 					hidden: !(section.visible ?? true),
+					keepTogether: false,
+					startOnNewPage: false,
 					items: section.items.map((item, index) => {
 						const hasName = Boolean(item.name?.trim());
 						return {

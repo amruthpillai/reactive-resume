@@ -39,6 +39,8 @@ const defaultValues: FormValues = {
 	icon: "",
 	columns: 1,
 	hidden: false,
+	keepTogether: false,
+	startOnNewPage: false,
 	items: [],
 };
 
@@ -81,6 +83,8 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			icon: data?.icon ?? "",
 			columns: data?.columns ?? 1,
 			hidden: data?.hidden ?? false,
+			keepTogether: data?.keepTogether ?? false,
+			startOnNewPage: data?.startOnNewPage ?? false,
 			items: data?.items ?? [],
 		},
 		validators: { onSubmit: formSchema },

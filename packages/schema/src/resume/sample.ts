@@ -43,6 +43,8 @@ export const sampleResumeData: ResumeData = {
 		icon: "article",
 		columns: 1,
 		hidden: false,
+		keepTogether: false,
+		startOnNewPage: false,
 		content:
 			"<p><strong>Passionate game developer with 5+ years of professional experience</strong> creating engaging gameplay systems and polished player experiences across multiple platforms. Specialized in Unity and Unreal Engine with strong expertise in C#, C++, and game design principles. Proven ability to collaborate effectively with cross-functional teams including designers, artists, and QA to deliver high-quality games on time and within scope.</p>",
 	},
@@ -52,6 +54,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "messenger-logo",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-3d42ddc9b4d8",
@@ -86,6 +90,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "briefcase",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-44d8cec98ca4",
@@ -110,6 +116,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "graduation-cap",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-48455f6cef9e",
@@ -135,6 +143,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "code-simple",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-4d2603fe2801",
@@ -182,6 +192,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "compass-tool",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-5a52dcf50ed4",
@@ -250,6 +262,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "translate",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-73807ccc48b5",
@@ -272,6 +286,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "football",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-7821b4de95f7",
@@ -312,6 +328,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "trophy",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-8a8bb9fbe182",
@@ -348,6 +366,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "certificate",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-91fe8a4dfea6",
@@ -382,6 +402,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "books",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-9816f0081895",
@@ -418,6 +440,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "hand-heart",
 			columns: 2,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-a02580473e05",
@@ -454,6 +478,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "phone",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			items: [
 				{
 					id: "019bef5a-93e4-7746-ad39-a945c0f42dd5",
@@ -477,6 +503,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "briefcase",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			id: "019becaf-0b87-769d-98a6-46ccf558c0e8",
 			type: "experience",
 			items: [
@@ -519,6 +547,8 @@ export const sampleResumeData: ResumeData = {
 			icon: "envelope-simple",
 			columns: 1,
 			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
 			id: "019bef5b-0b3d-7e2a-8a7c-12d9e23a4f6b",
 			type: "cover-letter",
 			items: [

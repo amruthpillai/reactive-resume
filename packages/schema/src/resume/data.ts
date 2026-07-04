@@ -102,6 +102,11 @@ export const summarySchema = z.object({
 		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the summary should span across."),
 	hidden: z.boolean().describe("Whether to hide the summary from the resume."),
+	keepTogether: z
+		.boolean()
+		.catch(false)
+		.describe("If true, the summary is kept on a single page instead of splitting across a page break."),
+	startOnNewPage: z.boolean().catch(false).describe("If true, the summary always begins on a new page."),
 	content: z.string().describe("The content of the summary of the resume. This should be a HTML-formatted string."),
 });
 
@@ -285,6 +290,11 @@ export const baseSectionSchema = z.object({
 		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the section should span across."),
 	hidden: z.boolean().describe("Whether to hide the section from the resume."),
+	keepTogether: z
+		.boolean()
+		.catch(false)
+		.describe("If true, the section is kept on a single page instead of splitting across a page break."),
+	startOnNewPage: z.boolean().catch(false).describe("If true, the section always begins on a new page."),
 });
 
 const awardsSectionSchema = baseSectionSchema.extend({
