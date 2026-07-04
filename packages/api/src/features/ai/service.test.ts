@@ -1,38 +1,6 @@
 import type { UIMessage } from "ai";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { convertToModelMessages, modelMessageSchema } from "ai";
-import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
-
-const envMock = vi.hoisted(() => ({ FLAG_ALLOW_UNSAFE_AI_BASE_URL: false }));
-vi.mock("@reactive-resume/env/server", () => ({ env: envMock }));
-
-vi.mock("ai", async (importOriginal) => {
-	const actual = await importOriginal<typeof import("ai")>();
-	return {
-		...actual,
-		generateText: vi.fn(async () => {
-			throw new Error("AI provider unreachable");
-		}),
-	};
-});
-
-const { aiService } = await import("./service");
-
-describe("AI starter resume generation", () => {
-	it("falls back to sample resume data with the given name when AI generation fails", async () => {
-		const data = await aiService.generateStarterResume({
-			provider: "openai",
-			model: "gpt-4o-mini",
-			apiKey: "test-key",
-			baseURL: "",
-			name: "Ada Lovelace",
-		});
-
-		expect(resumeDataSchema.safeParse(data).success).toBe(true);
-		expect(data.basics.name).toBe("Ada Lovelace");
-		expect(data.sections.experience.items.length).toBeGreaterThan(0);
-	});
-});
 
 describe("AI chat service", () => {
 	it("keeps proposal tool history valid for follow-up chat messages", async () => {

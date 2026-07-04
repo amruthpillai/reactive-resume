@@ -29,7 +29,6 @@ import {
 import { aiProviderSchema } from "@reactive-resume/ai/types";
 import { applyResumePatches } from "@reactive-resume/resume/patch";
 import { resumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
-import { createSampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { supportsProviderNativeWebSearch } from "./capabilities";
 import { resolveAiBaseUrl } from "./url-policy";
 
@@ -200,65 +199,6 @@ async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 	return parseAndValidateResumeJson(result.text);
 }
 
-const starterResumeSystemPrompt = `You are a professional resume writer helping someone start a brand-new resume from a blank canvas.
-Generate realistic, personalized STARTER content the user can immediately edit. Given a name and/or target role, produce:
-- A concise 2-3 sentence professional summary written for that role.
-- 1-2 work experience entries, each with 3-4 achievement-style bullet highlights. Use clearly generic, obviously-editable placeholder employer names (e.g. "Acme Corp", "Example Studio"). Set the most recent role's period to "Present" and leave earlier periods blank or approximate. NEVER invent specific real employers or exact dates presented as factual.
-- 4-6 skills relevant to the role.
-- One education entry with a plausible degree and field of study, leaving dates blank.
-Keep every value truthful-looking but obviously a starting template the user will personalize.`;
-
-type GenerateStarterResumeInput = z.infer<typeof aiCredentialsSchema> & {
-	name: string;
-	headline?: string;
-};
-
-/** Ensures the generated (or fallback) resume reflects the name/headline the user entered when creating it. */
-function applyStarterIdentity(data: ResumeData, input: { name: string; headline?: string }): ResumeData {
-	const name = input.name.trim();
-	const headline = input.headline?.trim();
-
-	return {
-		...data,
-		basics: {
-			...data.basics,
-			...(name ? { name } : {}),
-			...(headline ? { headline } : {}),
-		},
-	};
-}
-
-/**
- * Generates realistic starter resume content for the given name/role via the configured AI provider.
- * Falls back to the generic sample resume on any AI or parse error so the create flow is never blocked.
- */
-async function generateStarterResume(input: GenerateStarterResumeInput): Promise<ResumeData> {
-	const target = input.headline?.trim() ? `${input.name} (${input.headline.trim()})` : input.name;
-
-	try {
-		const result = await generateText({
-			model: getModel(input),
-			messages: [
-				{
-					role: "system",
-					content: `${starterResumeSystemPrompt}\n\nReturn ONLY raw valid JSON matching the template below. Do not return markdown or explanations. For arrays you MUST use the exact key names shown in the template:\n\n${JSON.stringify(aiExtractionTemplate, null, 2)}`,
-				},
-				{
-					role: "user",
-					content: `Generate starter resume content for: ${target}. Set basics.name to "${input.name}"${
-						input.headline?.trim() ? ` and basics.headline to a role like "${input.headline.trim()}"` : ""
-					}.`,
-				},
-			],
-		});
-
-		return applyStarterIdentity(parseAndValidateResumeJson(result.text), input);
-	} catch (error) {
-		console.error("Failed to generate starter resume; falling back to sample data:", error);
-		return applyStarterIdentity(createSampleResumeData(input.name), input);
-	}
-}
-
 function buildChatSystemPrompt(resumeData: ResumeData): string {
 	return chatSystemPromptTemplate.replace("{{RESUME_DATA}}", JSON.stringify(resumeData, null, 2));
 }
@@ -345,7 +285,6 @@ async function analyzeResume(input: AnalyzeResumeInput): Promise<ResumeAnalysis>
 export const aiService = {
 	analyzeResume,
 	chat,
-	generateStarterResume,
 	parseDocx,
 	parsePdf,
 	testConnection,

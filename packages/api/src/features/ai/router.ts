@@ -5,7 +5,6 @@ import { type } from "@orpc/server";
 import { AISDKError } from "ai";
 import { flattenError, ZodError, z } from "zod";
 import { storedResumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
-import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { protectedProcedure } from "../../context";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
 import { aiProvidersService } from "../ai-providers/service";
@@ -135,45 +134,6 @@ export const aiRouter = {
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
 				if (error instanceof ZodError) throwResumeStructureError(error);
-				throw error;
-			}
-		}),
-
-	generateStarterResume: protectedProcedure
-		.route({
-			method: "POST",
-			path: "/ai/generate-starter-resume",
-			tags: ["AI"],
-			operationId: "generateStarterResume",
-			summary: "Generate starter resume data with AI",
-			description:
-				"Uses the configured AI provider to generate realistic, personalized starter resume content (summary, experience, skills, education) for the given name and optional role. Falls back to the generic sample resume on any AI or parse error so the caller is never blocked. Returns a complete ResumeData object. Requires authentication.",
-			successDescription: "Starter resume data was generated successfully.",
-		})
-		.input(
-			z.object({
-				aiProviderId: z.string().optional(),
-				name: z.string().trim().min(1),
-				headline: z.string().trim().optional(),
-			}),
-		)
-		.use(aiRequestRateLimit)
-		.output(resumeDataSchema)
-		.handler(async ({ context, input }): Promise<ResumeData> => {
-			try {
-				const provider = await getRunnableProvider(context.user.id, input.aiProviderId);
-				return await aiService.generateStarterResume({
-					provider: provider.provider,
-					model: provider.model,
-					apiKey: provider.apiKey,
-					baseURL: provider.baseURL ?? "",
-					name: input.name,
-					...(input.headline ? { headline: input.headline } : {}),
-				});
-			} catch (error) {
-				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
-				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
-				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
 				throw error;
 			}
 		}),
