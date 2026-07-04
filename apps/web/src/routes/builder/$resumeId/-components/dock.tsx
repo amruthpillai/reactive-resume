@@ -1,22 +1,29 @@
 import type { Icon } from "@phosphor-icons/react";
 import type { BuilderPreviewPageLayout } from "./page-layout";
 import { t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 import {
 	AlignCenterHorizontalIcon,
 	AlignTopIcon,
 	ChatCircleDotsIcon,
-	CubeFocusIcon,
 	LinkSimpleIcon,
 	MagnifyingGlassMinusIcon,
 	MagnifyingGlassPlusIcon,
 } from "@phosphor-icons/react";
+import { useHotkey } from "@tanstack/react-hotkeys";
 import { useNavigate } from "@tanstack/react-router";
 import { m } from "motion/react";
 import { useCallback, useMemo } from "react";
-import { useControls } from "react-zoom-pan-pinch";
+import { useControls, useTransformComponent } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
 import { Button } from "@reactive-resume/ui/components/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@reactive-resume/ui/components/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { cn } from "@reactive-resume/utils/style";
 import { useCurrentResume } from "@/features/resume/builder/draft";
@@ -33,7 +40,9 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 	const navigate = useNavigate();
 
 	const [_, copyToClipboard] = useCopyToClipboard();
-	const { zoomIn, zoomOut, centerView } = useControls();
+	const { zoomIn, zoomOut, resetTransform } = useControls();
+
+	useHotkey("Mod+0", () => resetTransform());
 
 	const publicUrl = useMemo(() => {
 		if (!session?.user.username || !resume?.slug) return "";
@@ -54,9 +63,9 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 				transition={{ duration: 0.2, ease: "easeOut" }}
 				className="flex items-center rounded-r-full rounded-l-full bg-popover px-2 shadow-xl will-change-[transform,opacity]"
 			>
-				<DockIcon icon={MagnifyingGlassPlusIcon} title={t`Zoom in`} onClick={() => zoomIn(0.1)} />
-				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.1)} />
-				<DockIcon icon={CubeFocusIcon} title={t`Center view`} onClick={() => centerView()} />
+				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.15)} />
+				<ZoomMenu />
+				<DockIcon icon={MagnifyingGlassPlusIcon} title={t`Zoom in`} onClick={() => zoomIn(0.15)} />
 				<DockIcon
 					icon={pageLayout === "horizontal" ? AlignTopIcon : AlignCenterHorizontalIcon}
 					title={t`Toggle page stacking`}
@@ -74,6 +83,37 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
 			</m.div>
 		</div>
+	);
+}
+
+function ZoomMenu() {
+	const scale = useTransformComponent((ctx) => ctx.state.scale);
+	const { centerView, resetTransform } = useControls();
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger
+				render={
+					<Button
+						size="sm"
+						variant="ghost"
+						aria-label={t`Zoom level`}
+						className="h-8 min-w-14 px-2 font-medium text-xs tabular-nums"
+					>
+						{Math.round(scale * 100)}%
+					</Button>
+				}
+			/>
+
+			<DropdownMenuContent side="top" align="center">
+				<DropdownMenuItem onClick={() => centerView(1)}>
+					<Trans>Actual size (100%)</Trans>
+				</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => resetTransform()}>
+					<Trans>Fit to view</Trans>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }
 
