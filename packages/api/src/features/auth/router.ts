@@ -20,6 +20,21 @@ export const authRouter = {
 			}),
 	},
 
+	exportData: protectedProcedure
+		.route({
+			method: "GET",
+			path: "/auth/account/export",
+			tags: ["Authentication"],
+			operationId: "exportAccountData",
+			summary: "Export user account data",
+			description:
+				"Returns a JSON-serializable export of the authenticated user's data, including their public profile fields and all of their resumes. Secrets such as password hashes, tokens, and API keys are never included. Requires authentication.",
+			successDescription: "The user's exported account data.",
+		})
+		.handler(async ({ context }) => {
+			return await authService.exportData({ userId: context.user.id });
+		}),
+
 	deleteAccount: protectedProcedure
 		.route({
 			method: "DELETE",
