@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-04 12:58\n"
+"PO-Revision-Date: 2026-07-04 16:06\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -299,7 +299,7 @@ msgstr "Amharca"
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
-msgstr "Beklenmedik bir hata bu sayfanın yüklenmesini engelledi. Yeniden deneyebilir veya geri dönebilirsiniz."
+msgstr "Beklenmeyen bir hata nedeniyle bu sayfa yüklenemedi. Tekrar deneyebilir veya geri dönebilirsiniz."
 
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
@@ -526,7 +526,7 @@ msgstr "Kenar Kalınlığı"
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
-msgstr "Kendi özgeçmişini oluştur"
+msgstr "Kendi özgeçmişinizi oluşturun"
 
 #. Screen-reader dialog title for the command palette in the resume builder
 #: src/features/command-palette/index.tsx
@@ -738,7 +738,7 @@ msgstr "Bağlı"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connection failed"
-msgstr "Bağlantı başarısız"
+msgstr "Bağlantı başarısız oldu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connection verified — provider is ready to use."
@@ -822,7 +822,7 @@ msgstr "Servis sağlayıcı bağlantısı doğrulanamadı."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Could not verify the connection. Check the API key, model, and base URL."
-msgstr "Bağlantı doğrulanamadı. API anahtarını, modeli ve temel URL'yi kontrol edin."
+msgstr "Bağlantı doğrulanamadı. Lütfen API anahtarını, modeli ve temel URL'yi kontrol edin."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
@@ -971,7 +971,7 @@ msgstr "Özgeçmişiniz oluşturuluyor..."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Crop picture"
-msgstr "Resmi kırp"
+msgstr "Kırpılmış resim"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
@@ -1020,7 +1020,7 @@ msgstr "Karanlık tema"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "Dashboard"
-msgstr "Gösterge Paneli"
+msgstr "Kontrol Paneli"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Data Security"
@@ -1164,7 +1164,7 @@ msgstr "İndir"
 
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
-msgstr "Profiliniz ve tüm özgeçmişleriniz dahil olmak üzere tüm verilerinizin bir kopyasını JSON dosyası olarak indirin."
+msgstr "Profiliniz ve tüm özgeçmişleriniz de dahil olmak üzere tüm verilerinizin bir kopyasını JSON dosyası olarak indirin."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
@@ -1203,7 +1203,7 @@ msgstr "Bölümleri sütunlar arasında taşımak için buraya sürükleyip bır
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
-msgstr "Yeniden konumlandırmak için sürükleyin ve yüklemeden önce yakınlaştırmak için kaydırıcıyı kullanın."
+msgstr "Yüklemeden önce sürükleyerek yeniden konumlandırın ve kaydırıcıyı kullanarak yakınlaştırın."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1238,7 +1238,7 @@ msgstr "Felemenkçe"
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Earlier versions are kept; the builder's undo history is reset."
-msgstr "Önceki sürümler korunur; oluşturucunun geri alma geçmişi sıfırlanır."
+msgstr "Önceki sürümler saklanır; oluşturucunun geri alma geçmişi sıfırlanır."
 
 #: src/components/input/chip-input.tsx
 #: src/routes/builder/$resumeId/route.tsx
@@ -1261,7 +1261,7 @@ msgstr "İçeriği tam ekran modunda düzenleme"
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
 #: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "Edit details"
-msgstr "Ayrıntıları düzenle"
+msgstr "Düzenleme detayları"
 
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
@@ -1269,7 +1269,7 @@ msgstr "Anahtar kelimeyi düzenle"
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
-msgstr "Düzenleme, kilidi açana kadar devre dışıdır."
+msgstr "Kilidi açana kadar düzenleme devre dışı bırakılmıştır."
 
 #: src/components/input/chip-input.tsx
 msgid "Editing keyword..."
@@ -1297,7 +1297,7 @@ msgstr "E-Posta Adresi"
 
 #: src/features/settings/pages/profile.tsx
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
-msgstr "Bu örnekte e-posta teslimi yapılandırılmamıştır, bu nedenle doğrulama devre dışı bırakılmıştır."
+msgstr "Bu örnekte e-posta gönderimi yapılandırılmadığı için doğrulama devre dışı bırakılmıştır."
 
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
@@ -1466,7 +1466,7 @@ msgstr "İki faktörlü kimlik doğrulama etkinleştirilemedi. Lütfen tekrar de
 #. Fallback toast when data export fails
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Failed to export your data. Please try again."
-msgstr "Verileriniz dışa aktarılamadı. Lütfen tekrar deneyin."
+msgstr "Verilerinizin dışa aktarılması başarısız oldu. Lütfen tekrar deneyin."
 
 #. Fallback toast when linking a social authentication provider fails
 #: src/features/settings/authentication/components/hooks.tsx
@@ -1600,7 +1600,7 @@ msgstr "Fince"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Fit to view"
-msgstr "Görünüme sığdır"
+msgstr "Görüntülemeye uygun"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
@@ -1713,7 +1713,7 @@ msgstr "Geri Dön"
 
 #: src/components/layout/not-found-screen.tsx
 msgid "Go home"
-msgstr "Ana sayfaya git"
+msgstr "Eve git"
 
 #: src/components/layout/error-screen.tsx
 #: src/components/layout/not-found-screen.tsx
@@ -1923,7 +1923,7 @@ msgstr "Mevcut bir özgeçmişi içe aktar"
 
 #: src/dialogs/resume/import.tsx
 msgid "Importing from PDF or Word requires a connected AI provider."
-msgstr "PDF veya Word'den içe aktarma işlemi bağlı bir yapay zeka sağlayıcısı gerektirir."
+msgstr "PDF veya Word dosyalarından içe aktarma işlemi için bağlantılı bir yapay zeka sağlayıcısı gereklidir."
 
 #: src/dialogs/resume/import.tsx
 msgid "Importing your resume..."
@@ -2038,7 +2038,7 @@ msgstr "Kanada Dili"
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
-msgstr "Bir arada tut"
+msgstr "Bir arada kalın"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Key"
@@ -2187,7 +2187,7 @@ msgstr "Litvanca"
 #: src/dialogs/resume/template/gallery.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
 msgid "Live preview of your resume in the {0} template"
-msgstr "{0} şablonunda özgeçmişinizin canlı önizlemesi"
+msgstr "Özgeçmişinizin canlı önizlemesi {0} şablonunda"
 
 #: src/routes/agent/$threadId.tsx
 msgid "Loading agent workspace…"
@@ -2388,7 +2388,7 @@ msgstr "Henüz kayıtlı geçiş anahtarı yok."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
-msgstr "Önceki veri yok"
+msgstr "Önceden herhangi bir veri yok."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -2397,7 +2397,7 @@ msgstr "Hiçbir sonuç bulunamadı."
 #: src/routes/dashboard/resumes/-components/grid-view.tsx
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "No resumes match your search."
-msgstr "Aramanızla eşleşen özgeçmiş yok."
+msgstr "Arama kriterlerinize uyan hiçbir özgeçmiş bulunamadı."
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "No saved versions yet."
@@ -2446,7 +2446,7 @@ msgstr "Devam Eden Bakım"
 #. Helper note explaining the keep-together limitation
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Only applies when the section fits on a single page."
-msgstr "Yalnızca bölüm tek bir sayfaya sığdığında geçerlidir."
+msgstr "Bu özellik yalnızca ilgili bölüm tek bir sayfaya sığdığında geçerlidir."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -2461,7 +2461,7 @@ msgstr "Açık yapay zeka ajanı"
 
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "Open AI assistant"
-msgstr "Yapay zeka asistanını aç"
+msgstr "Açık yapay zeka asistanı"
 
 #. Button label to open the user's default email app
 #: src/features/auth/pages/forgot-password.tsx
@@ -2647,7 +2647,7 @@ msgstr "Telefon"
 
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
-msgstr "Bir simge seç"
+msgstr "Bir simge seçin"
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -2713,7 +2713,7 @@ msgstr "Kariyer öykümü değiştirmeden netliği artıracak, daha muhafazakar 
 
 #: src/features/resume/export/use-resume-export.ts
 msgid "Preparing your resume for printing..."
-msgstr "Özgeçmişiniz yazdırmaya hazırlanıyor..."
+msgstr "Özgeçmişinizi yazdırmaya hazırlamak..."
 
 #: src/components/input/color-picker.tsx
 msgid "Presets"
@@ -2828,7 +2828,7 @@ msgstr "Reactive Resume, şirketlerin arkasındaki çalışmaları desteklemeyi 
 #. App version label in footer; includes semantic version variable
 #: src/components/ui/copyright.tsx
 msgid "Reactive Resume v<0>{__APP_VERSION__}</0>"
-msgstr "Reactive Resume v<0>{__APP_VERSION__}</0>"
+msgstr "Reaktif Özgeçmiş v<0>{__APP_VERSION__}</0>"
 
 #. Import source option for legacy Reactive Resume v4 JSON format
 #: src/dialogs/resume/import.tsx
@@ -2849,7 +2849,7 @@ msgstr "Dikdörtgen (Tam Genişlik)"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
-msgstr "Yeniden Yap"
+msgstr "Tekrarla"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -2954,7 +2954,7 @@ msgstr "Bu yamadan önceki haline geri döndür? Bu işlem, bu yamayı ve sonras
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
-msgstr "Bu sürümü geri yükle?"
+msgstr "Bu sürümü geri yüklemek ister misiniz?"
 
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
@@ -3043,7 +3043,7 @@ msgstr "Kaydet"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Save & Test Provider"
-msgstr "Kaydet ve Sağlayıcıyı Test Et"
+msgstr "Kaydet ve Test Et Sağlayıcı"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Save & Upload"
@@ -3091,7 +3091,7 @@ msgstr "Puan Kartı"
 
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "Search"
-msgstr "Ara"
+msgstr "Aramak"
 
 #. Accessible label for command palette search input
 #: src/features/command-palette/index.tsx
@@ -3110,7 +3110,7 @@ msgstr "… için arama yapın"
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Search resumes..."
-msgstr "Özgeçmişleri ara..."
+msgstr "Özgeçmişleri arayın..."
 
 #: src/components/ui/combobox.tsx
 msgid "Search..."
@@ -3190,15 +3190,15 @@ msgstr "Bir sağlayıcı kurun"
 
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "Set up an AI provider"
-msgstr "Bir yapay zeka sağlayıcısı kurun"
+msgstr "Bir yapay zeka sağlayıcısı kurun."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Set up an AI provider before starting a thread."
-msgstr "Bir konu başlatmadan önce bir yapay zeka sağlayıcısı kurun."
+msgstr "Konu açmadan önce bir yapay zeka sağlayıcısı ayarlayın."
 
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "Set up an AI provider to chat about this resume and apply edits automatically."
-msgstr "Bu özgeçmiş hakkında sohbet etmek ve düzeltmeleri otomatik olarak uygulamak için bir yapay zeka sağlayıcısı kurun."
+msgstr "Bu özgeçmiş hakkında sohbet etmek ve düzenlemeleri otomatik olarak uygulamak için bir yapay zeka sağlayıcısı ayarlayın."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Set up an AI provider to get started."
@@ -3273,7 +3273,7 @@ msgstr "Resmi göster"
 #. Layout editor column label for the secondary sidebar area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Sidebar"
-msgstr "Kenar Çubuğu"
+msgstr "<<<<<<< HEAD"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/index.tsx
 msgid "Sidebar Width"
@@ -3372,7 +3372,7 @@ msgstr "Slug"
 
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
-msgstr "Bir şeyler yanlış gitti"
+msgstr "Bir şeyler ters gitti."
 
 #. Fallback error description when resume analysis request fails
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -3451,7 +3451,7 @@ msgstr "Yeni konu başlat"
 #. Layout editor toggle that forces a section to begin on a new page
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
-msgstr "Yeni sayfada başla"
+msgstr "Yeni sayfada başlayın"
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -3613,7 +3613,7 @@ msgstr "İçe aktarılan dosya geçerli bir özgeçmişe ayrıştırılamadı."
 
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
-msgstr "Aradığınız sayfa taşınmış veya artık mevcut olmayabilir."
+msgstr "Aradığınız sayfa taşınmış olabilir veya artık mevcut olmayabilir."
 
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
@@ -3654,7 +3654,7 @@ msgstr "PDF oluşturulurken bir sorun oluştu, lütfen tekrar deneyin."
 
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
-msgstr "Özgeçmişiniz yazdırmaya hazırlanırken bir sorun oluştu, lütfen tekrar deneyin."
+msgstr "Özgeçmişinizin yazdırılması sırasında bir sorun oluştu, lütfen tekrar deneyin."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
@@ -3672,7 +3672,7 @@ msgstr "Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecek."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume remains in your dashboard and can be deleted separately."
-msgstr "Bu işlem geri alınamaz. Konuşma mesajları ve yüklenen ekler kaldırılacak. Çalışma özgeçmişi gösterge panelinizde kalır ve ayrı olarak silinebilir."
+msgstr "Bu işlem geri alınamaz. Konuşma mesajları ve yüklenen ekler silinecektir. Çalışma özgeçmişiniz kontrol panelinizde kalır ve ayrı olarak silinebilir."
 
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "This action cannot be undone. Messages and thread attachments will be removed."
@@ -3688,7 +3688,7 @@ msgstr "Bu asistan açılamadı."
 
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
-msgstr "Bu özellik bağlı bir yapay zeka sağlayıcısı gerektirmektedir. Lütfen ayarlarda bir tane kurun."
+msgstr "Bu özellik için bağlantılı bir yapay zeka sağlayıcısı gereklidir. Lütfen ayarlardan bir tane kurun."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -3700,7 +3700,7 @@ msgstr "Bu, yapay zeka sağlayıcısının yanıtına bağlı olarak birkaç dak
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
-msgstr "Bu özgeçmiş kilitli"
+msgstr "Bu özgeçmiş kilitli."
 
 #: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
@@ -3794,7 +3794,7 @@ msgstr "Hesabınızı silmek için onay metnini girmeniz ve aşağıdaki butona 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-base.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/shared/section-base.tsx
 msgid "Toggle {sectionTitle} section"
-msgstr "{sectionTitle} bölümünü aç/kapat"
+msgstr "{sectionTitle} bölümünü açıp kapat"
 
 #. Screen-reader label for opening or closing the left sidebar in resume builder
 #: src/routes/builder/$resumeId/-components/header.tsx
@@ -3829,7 +3829,7 @@ msgstr "Çeviriler"
 
 #: src/components/layout/error-screen.tsx
 msgid "Try again"
-msgstr "Tekrar dene"
+msgstr "Tekrar deneyin"
 
 #: src/libs/locale.ts
 msgid "Turkish"
@@ -3923,7 +3923,7 @@ msgstr "Altı Çizili"
 #: src/dialogs/resume/template/gallery.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
-msgstr "Geri Al"
+msgstr "Geri al"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -4147,15 +4147,15 @@ msgstr "Gönüllü"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "vs previous 30 days"
-msgstr "önceki 30 günle kıyasla"
+msgstr "önceki 30 güne kıyasla"
 
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
-msgstr "Biçimi otomatik olarak algılayamadık — lütfen yukarıdan seçin."
+msgstr "Formatı otomatik olarak algılayamadık — lütfen yukarıdan seçin."
 
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
-msgstr "O sayfayı bulamadık"
+msgstr "O sayfayı bulamadık."
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
@@ -4309,7 +4309,7 @@ msgstr "Desteğiniz projenin şimdi ve gelecekte ücretsiz ve herkesin erişimin
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Zoom"
-msgstr "Yakınlaştır"
+msgstr "Zoom"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Zoom in"
@@ -4327,3 +4327,4 @@ msgstr "Uzaklaştır"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+
