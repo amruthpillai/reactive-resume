@@ -3,7 +3,7 @@ import type { RouterOutput } from "@/libs/orpc/client";
 import { ORPCError } from "@orpc/client";
 import { createFileRoute, lazyRouteComponent, notFound, redirect } from "@tanstack/react-router";
 import { orpc } from "@/libs/orpc/client";
-import { createNoindexFollowMeta } from "@/libs/seo";
+import { createNoindexFollowMeta, createResumeSocialMeta, getCanonicalRootUrl } from "@/libs/seo";
 
 type LoaderData = Omit<RouterOutput["resume"]["getBySlug"], "data"> & { data: ResumeData };
 
@@ -17,10 +17,34 @@ export const Route = createFileRoute("/$username/$slug")({
 
 		return { resume: resume as LoaderData };
 	},
-	head: ({ loaderData }) => {
+	head: ({ loaderData, params }) => {
 		const resume = loaderData?.resume;
-		const title = resume ? resume.name || resume.data.basics.name || "Resume" : "Reactive Resume";
-		return { meta: [{ title: `${title} - Reactive Resume` }, createNoindexFollowMeta()] };
+		const name = resume ? resume.name || resume.data.basics.name || "Resume" : "Reactive Resume";
+
+		if (!resume) {
+			return { meta: [{ title: `${name} - Reactive Resume` }, createNoindexFollowMeta()] };
+		}
+
+		const { basics, summary, metadata } = resume.data;
+		const socialTitle = basics.headline ? `${name} — ${basics.headline}` : name;
+		const summaryText = summary.content
+			.replace(/<[^>]+>/g, " ")
+			.replace(/\s+/g, " ")
+			.trim();
+		const description = summaryText || basics.headline || name;
+
+		const base = getCanonicalRootUrl(typeof window === "undefined" ? undefined : window.location.origin);
+		const canonicalUrl = `${base}${params.username}/${params.slug}`;
+		const imageUrl = `${base}templates/jpg/${metadata.template}.jpg`;
+
+		return {
+			meta: [
+				{ title: `${name} - Reactive Resume` },
+				createNoindexFollowMeta(),
+				...createResumeSocialMeta({ canonicalUrl, title: socialTitle, description, imageUrl }),
+			],
+			links: [{ rel: "canonical", href: canonicalUrl }],
+		};
 	},
 	onError: (error) => {
 		if (error instanceof ORPCError && error.code === "NEED_PASSWORD") {
