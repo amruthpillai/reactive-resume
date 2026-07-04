@@ -5,6 +5,13 @@ import { AtIcon, PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { profileItemSchema } from "@reactive-resume/schema/resume/data";
 import { Button } from "@reactive-resume/ui/components/button";
+import {
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@reactive-resume/ui/components/dialog";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import {
@@ -14,13 +21,6 @@ import {
 	InputGroupText,
 } from "@reactive-resume/ui/components/input-group";
 import { PopoverTrigger } from "@reactive-resume/ui/components/popover";
-import {
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-} from "@reactive-resume/ui/components/sheet";
 import { Switch } from "@reactive-resume/ui/components/switch";
 import { cn } from "@reactive-resume/utils/style";
 import { ColorPicker } from "@/components/input/color-picker";
@@ -66,17 +66,17 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
-		<SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-md">
-			<SheetHeader>
-				<SheetTitle className="flex items-center gap-x-2">
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
 					<Trans>Create a new profile</Trans>
-				</SheetTitle>
-				<SheetDescription />
-			</SheetHeader>
+				</DialogTitle>
+				<DialogDescription />
+			</DialogHeader>
 
 			<form
-				className="grid gap-4 p-4 sm:grid-cols-2"
+				className="grid gap-4 sm:grid-cols-2"
 				onSubmit={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
@@ -85,7 +85,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 			>
 				<ProfileForm form={form} />
 
-				<SheetFooter className="-mx-4 -mb-4 border-t bg-muted/50 sm:col-span-full sm:flex-row sm:justify-end">
+				<DialogFooter className="sm:col-span-full">
 					<Button variant="ghost" onClick={requestClose}>
 						<Trans>Cancel</Trans>
 					</Button>
@@ -93,9 +93,9 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					<Button type="submit" disabled={isSubmitting}>
 						<Trans>Create</Trans>
 					</Button>
-				</SheetFooter>
+				</DialogFooter>
 			</form>
-		</SheetContent>
+		</DialogContent>
 	);
 }
 
@@ -118,17 +118,17 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
-		<SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-md">
-			<SheetHeader>
-				<SheetTitle className="flex items-center gap-x-2">
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
 					<Trans>Update an existing profile</Trans>
-				</SheetTitle>
-				<SheetDescription />
-			</SheetHeader>
+				</DialogTitle>
+				<DialogDescription />
+			</DialogHeader>
 
 			<form
-				className="grid gap-4 p-4 sm:grid-cols-2"
+				className="grid gap-4 sm:grid-cols-2"
 				onSubmit={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
@@ -137,7 +137,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 			>
 				<ProfileForm form={form} />
 
-				<SheetFooter className="-mx-4 -mb-4 border-t bg-muted/50 sm:col-span-full sm:flex-row sm:justify-end">
+				<DialogFooter className="sm:col-span-full">
 					<Button variant="ghost" onClick={requestClose}>
 						<Trans>Cancel</Trans>
 					</Button>
@@ -145,9 +145,9 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 					<Button type="submit" disabled={isSubmitting}>
 						<Trans>Save Changes</Trans>
 					</Button>
-				</SheetFooter>
+				</DialogFooter>
 			</form>
-		</SheetContent>
+		</DialogContent>
 	);
 }
 

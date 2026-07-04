@@ -5,14 +5,14 @@ import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { projectItemSchema } from "@reactive-resume/schema/resume/data";
 import { Button } from "@reactive-resume/ui/components/button";
-import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import {
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-} from "@reactive-resume/ui/components/sheet";
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@reactive-resume/ui/components/dialog";
+import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Switch } from "@reactive-resume/ui/components/switch";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
@@ -55,17 +55,17 @@ export function CreateProjectDialog({ data }: DialogProps<"resume.sections.proje
 	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
-		<SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-md">
-			<SheetHeader>
-				<SheetTitle className="flex items-center gap-x-2">
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle className="flex items-center gap-x-2">
 					<PlusIcon />
 					<Trans>Create a new project</Trans>
-				</SheetTitle>
-				<SheetDescription />
-			</SheetHeader>
+				</DialogTitle>
+				<DialogDescription />
+			</DialogHeader>
 
 			<form
-				className="grid gap-4 p-4 sm:grid-cols-2"
+				className="grid gap-4 sm:grid-cols-2"
 				onSubmit={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
@@ -74,7 +74,7 @@ export function CreateProjectDialog({ data }: DialogProps<"resume.sections.proje
 			>
 				<ProjectForm form={form} />
 
-				<SheetFooter className="-mx-4 -mb-4 border-t bg-muted/50 sm:col-span-full sm:flex-row sm:justify-end">
+				<DialogFooter className="sm:col-span-full">
 					<Button variant="ghost" onClick={requestClose}>
 						<Trans>Cancel</Trans>
 					</Button>
@@ -82,9 +82,9 @@ export function CreateProjectDialog({ data }: DialogProps<"resume.sections.proje
 					<Button type="submit" disabled={isSubmitting}>
 						<Trans>Create</Trans>
 					</Button>
-				</SheetFooter>
+				</DialogFooter>
 			</form>
-		</SheetContent>
+		</DialogContent>
 	);
 }
 
@@ -107,17 +107,17 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
-		<SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-md">
-			<SheetHeader>
-				<SheetTitle className="flex items-center gap-x-2">
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle className="flex items-center gap-x-2">
 					<PencilSimpleLineIcon />
 					<Trans>Update an existing project</Trans>
-				</SheetTitle>
-				<SheetDescription />
-			</SheetHeader>
+				</DialogTitle>
+				<DialogDescription />
+			</DialogHeader>
 
 			<form
-				className="grid gap-4 p-4 sm:grid-cols-2"
+				className="grid gap-4 sm:grid-cols-2"
 				onSubmit={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
@@ -126,7 +126,7 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 			>
 				<ProjectForm form={form} />
 
-				<SheetFooter className="-mx-4 -mb-4 border-t bg-muted/50 sm:col-span-full sm:flex-row sm:justify-end">
+				<DialogFooter className="sm:col-span-full">
 					<Button variant="ghost" onClick={requestClose}>
 						<Trans>Cancel</Trans>
 					</Button>
@@ -134,9 +134,9 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 					<Button type="submit" disabled={isSubmitting}>
 						<Trans>Save Changes</Trans>
 					</Button>
-				</SheetFooter>
+				</DialogFooter>
 			</form>
-		</SheetContent>
+		</DialogContent>
 	);
 }
 
