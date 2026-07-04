@@ -17,11 +17,12 @@ import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { Switch } from "@reactive-resume/ui/components/switch";
 import { cn } from "@reactive-resume/utils/style";
 import { Combobox } from "@/components/ui/combobox";
+import { useHasUsableAiProvider } from "@/features/settings/integrations/hooks/use-has-usable-ai-provider";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 
 type SavedProvider = RouterOutput["aiProviders"]["list"][number];
-type AIProviderOption = ComboboxOption<AIProvider> & { defaultBaseURL: string };
+type AIProviderOption = ComboboxOption<AIProvider> & { defaultBaseURL: string; defaultModel: string };
 
 type ProviderRowProps = {
 	provider: SavedProvider;
@@ -33,51 +34,66 @@ const providerOptions: AIProviderOption[] = [
 		label: t`OpenAI`,
 		keywords: ["openai", "gpt", "chatgpt"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.openai,
+		defaultModel: "gpt-4.1",
 	},
 	{
 		value: "anthropic",
 		label: t`Anthropic Claude`,
 		keywords: ["anthropic", "claude", "ai"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.anthropic,
+		defaultModel: "claude-3-5-sonnet-latest",
 	},
 	{
 		value: "gemini",
 		label: t`Google Gemini`,
 		keywords: ["gemini", "google"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.gemini,
+		defaultModel: "gemini-2.0-flash",
 	},
 	{
 		value: "vercel-ai-gateway",
 		label: t`Vercel AI Gateway`,
 		keywords: ["vercel", "gateway", "ai"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS["vercel-ai-gateway"],
+		defaultModel: "openai/gpt-4.1",
 	},
 	{
 		value: "openrouter",
 		label: t`OpenRouter`,
 		keywords: ["openrouter", "router"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.openrouter,
+		defaultModel: "openai/gpt-4.1",
 	},
 	{
 		value: "ollama",
 		label: t`Ollama`,
 		keywords: ["ollama", "local"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS.ollama,
+		defaultModel: "llama3.1",
 	},
 	{
 		value: "openai-compatible",
 		label: t`OpenAI-compatible`,
 		keywords: ["compatible", "custom", "gateway"],
 		defaultBaseURL: AI_PROVIDER_DEFAULT_BASE_URLS["openai-compatible"],
+		defaultModel: "",
 	},
 ];
+
+// Prefill Base URL + Model from the provider's known defaults when the provider changes.
+function providerDefaults(provider: AIProvider) {
+	const option = providerOptions.find((entry) => entry.value === provider);
+	return {
+		baseURL: option?.defaultBaseURL ?? AI_PROVIDER_DEFAULT_BASE_URLS[provider] ?? "",
+		model: option?.defaultModel ?? "",
+	};
+}
 
 const emptyForm = {
 	label: "",
 	provider: "openai" as AIProvider,
-	model: "",
-	baseURL: "",
 	apiKey: "",
+	...providerDefaults("openai"),
 };
 
 function statusBadge(provider: SavedProvider) {
@@ -220,15 +236,67 @@ function ProviderRow({ provider }: ProviderRowProps) {
 	);
 }
 
+type SaveResult = { ok: boolean; message: string };
+
 function CreateProviderForm() {
 	const queryClient = useQueryClient();
 	const [form, setForm] = useState(emptyForm);
+	const [result, setResult] = useState<SaveResult | null>(null);
 	const selectedOption = useMemo(
 		() => providerOptions.find((option) => option.value === form.provider),
 		[form.provider],
 	);
-	const canCreate = form.label.trim() && form.model.trim() && form.apiKey.trim();
-	const { mutate: createProvider, isPending } = useMutation(orpc.aiProviders.create.mutationOptions());
+	const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.queryKey() });
+
+	const { mutateAsync: createProvider, isPending: isCreating } = useMutation(orpc.aiProviders.create.mutationOptions());
+	const { mutateAsync: testProvider, isPending: isTesting } = useMutation(orpc.aiProviders.test.mutationOptions());
+	const { mutateAsync: enableProvider, isPending: isEnabling } = useMutation(orpc.aiProviders.update.mutationOptions());
+	const isSaving = isCreating || isTesting || isEnabling;
+
+	// Model/label are prefilled from provider defaults, so step 1 (Provider + API Key) is enough to save.
+	const model = form.model.trim();
+	const label = form.label.trim() || String(selectedOption?.label ?? form.provider);
+	const canSave = Boolean(form.apiKey.trim() && model);
+
+	const save = async () => {
+		setResult(null);
+		try {
+			const created = await createProvider({
+				label,
+				provider: form.provider,
+				model,
+				baseURL: form.baseURL.trim(),
+				apiKey: form.apiKey.trim(),
+			});
+
+			// Test on save: verify the connection immediately instead of leaving it to a manual step.
+			const tested = await testProvider({ id: created.id });
+			if (tested.testStatus === "success") {
+				await enableProvider({ id: created.id, enabled: true });
+				setForm(emptyForm);
+				setResult({ ok: true, message: t`Connection verified — provider is ready to use.` });
+			} else {
+				// ponytail: provider stays persisted on failure so it shows in the list; a re-save creates a new row.
+				setResult({
+					ok: false,
+					message: tested.testError ?? t`Could not verify the connection. Check the API key, model, and base URL.`,
+				});
+			}
+		} catch (error) {
+			setResult({
+				ok: false,
+				message: getOrpcErrorMessage(error, {
+					byCode: {
+						PRECONDITION_FAILED: t`AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured.`,
+						BAD_REQUEST: t`Invalid AI provider configuration.`,
+					},
+					fallback: t`Failed to save AI provider.`,
+				}),
+			});
+		} finally {
+			void invalidate();
+		}
+	};
 
 	return (
 		<div className="rounded-md border bg-card p-4">
@@ -241,19 +309,7 @@ function CreateProviderForm() {
 				</h3>
 			</div>
 
-			<div className="grid gap-4 md:grid-cols-2">
-				<div className="space-y-2">
-					<Label htmlFor="ai-label">
-						<Trans>Label</Trans>
-					</Label>
-					<Input
-						id="ai-label"
-						value={form.label}
-						onChange={(event) => setForm((current) => ({ ...current, label: event.target.value }))}
-						placeholder={t`Work OpenAI`}
-					/>
-				</div>
-
+			<div className="grid gap-4">
 				<div className="space-y-2">
 					<Label htmlFor="ai-provider">
 						<Trans>Provider</Trans>
@@ -265,43 +321,12 @@ function CreateProviderForm() {
 						options={providerOptions}
 						onValueChange={(provider) => {
 							if (!provider) return;
-							setForm((current) => ({ ...current, provider }));
+							setForm((current) => ({ ...current, provider, ...providerDefaults(provider) }));
 						}}
 					/>
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="ai-model">
-						<Trans>Model</Trans>
-					</Label>
-					<Input
-						id="ai-model"
-						value={form.model}
-						onChange={(event) => setForm((current) => ({ ...current, model: event.target.value }))}
-						placeholder={t`gpt-4.1`}
-						autoCorrect="off"
-						autoCapitalize="off"
-						spellCheck="false"
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label htmlFor="ai-base-url">
-						<Trans>Base URL</Trans>
-					</Label>
-					<Input
-						id="ai-base-url"
-						type="url"
-						value={form.baseURL}
-						onChange={(event) => setForm((current) => ({ ...current, baseURL: event.target.value }))}
-						placeholder={selectedOption?.defaultBaseURL || t`https://gateway.example.com/v1`}
-						autoCorrect="off"
-						autoCapitalize="off"
-						spellCheck="false"
-					/>
-				</div>
-
-				<div className="space-y-2 md:col-span-2">
 					<Label htmlFor="ai-api-key">
 						<Trans>API Key</Trans>
 					</Label>
@@ -318,42 +343,81 @@ function CreateProviderForm() {
 						data-1p-ignore="true"
 					/>
 				</div>
+
+				<details className="rounded-md border bg-background/50 px-3 py-2 [&_summary]:cursor-pointer">
+					<summary className="font-medium text-muted-foreground text-sm">
+						<Trans>Advanced</Trans>
+					</summary>
+
+					<div className="mt-3 grid gap-4 md:grid-cols-2">
+						<div className="space-y-2">
+							<Label htmlFor="ai-label">
+								<Trans>Label</Trans>
+							</Label>
+							<Input
+								id="ai-label"
+								value={form.label}
+								onChange={(event) => setForm((current) => ({ ...current, label: event.target.value }))}
+								placeholder={selectedOption?.label ? String(selectedOption.label) : t`Work OpenAI`}
+							/>
+						</div>
+
+						<div className="space-y-2">
+							<Label htmlFor="ai-model">
+								<Trans>Model</Trans>
+							</Label>
+							<Input
+								id="ai-model"
+								value={form.model}
+								onChange={(event) => setForm((current) => ({ ...current, model: event.target.value }))}
+								placeholder={t`gpt-4.1`}
+								autoCorrect="off"
+								autoCapitalize="off"
+								spellCheck="false"
+							/>
+						</div>
+
+						<div className="space-y-2 md:col-span-2">
+							<Label htmlFor="ai-base-url">
+								<Trans>Base URL</Trans>
+							</Label>
+							<Input
+								id="ai-base-url"
+								type="url"
+								value={form.baseURL}
+								onChange={(event) => setForm((current) => ({ ...current, baseURL: event.target.value }))}
+								placeholder={selectedOption?.defaultBaseURL || t`https://gateway.example.com/v1`}
+								autoCorrect="off"
+								autoCapitalize="off"
+								spellCheck="false"
+							/>
+						</div>
+					</div>
+				</details>
 			</div>
 
-			<div className="mt-4 flex justify-end">
-				<Button
-					disabled={!canCreate || isPending}
-					onClick={() =>
-						createProvider(
-							{
-								label: form.label.trim(),
-								provider: form.provider,
-								model: form.model.trim(),
-								baseURL: form.baseURL.trim(),
-								apiKey: form.apiKey.trim(),
-							},
-							{
-								onSuccess: () => {
-									setForm(emptyForm);
-									toast.success(t`AI provider saved. Test it before use.`);
-									void queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.queryKey() });
-								},
-								onError: (error) =>
-									toast.error(
-										getOrpcErrorMessage(error, {
-											byCode: {
-												PRECONDITION_FAILED: t`AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured.`,
-												BAD_REQUEST: t`Invalid AI provider configuration.`,
-											},
-											fallback: t`Failed to save AI provider.`,
-										}),
-									),
-							},
-						)
-					}
+			{result ? (
+				<div
+					className={cn(
+						"mt-4 flex items-start gap-2 rounded-md border p-3 text-sm",
+						result.ok
+							? "border-emerald-300 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/20 dark:text-emerald-200"
+							: "border-rose-300 bg-rose-50 text-rose-950 dark:bg-rose-950/20 dark:text-rose-200",
+					)}
 				>
-					{isPending ? <Spinner /> : <KeyIcon />}
-					<Trans>Save Provider</Trans>
+					{result.ok ? (
+						<CheckCircleIcon className="mt-0.5 shrink-0 text-emerald-600" />
+					) : (
+						<WarningCircleIcon className="mt-0.5 shrink-0 text-rose-600" />
+					)}
+					<span>{result.message}</span>
+				</div>
+			) : null}
+
+			<div className="mt-4 flex justify-end">
+				<Button disabled={!canSave || isSaving} onClick={() => void save()}>
+					{isSaving ? <Spinner /> : <KeyIcon />}
+					{isTesting ? <Trans>Testing…</Trans> : <Trans>Save & Test Provider</Trans>}
 				</Button>
 			</div>
 		</div>
@@ -362,7 +426,7 @@ function CreateProviderForm() {
 
 export function AISettingsSection() {
 	const { data: providers, isLoading, error } = useQuery(orpc.aiProviders.list.queryOptions());
-	const hasUsableProvider = providers?.some((provider) => provider.enabled && provider.testStatus === "success");
+	const { hasUsableProvider } = useHasUsableAiProvider();
 	const isConfigError = isAiProviderConfigError(error);
 
 	return (
