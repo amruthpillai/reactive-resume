@@ -8,6 +8,7 @@ import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
 import { useResumeData } from "../builder/draft";
 import { PdfCanvasDocument, PdfCanvasPage } from "./pdf-canvas";
 import { getResumePreviewGapValue, getResumePreviewPageCount, ResumePreviewLoader } from "./preview.shared";
+import { ResumeAccessibleText } from "./resume-accessible-text";
 
 type PreviewPdf = {
 	file: Blob;
@@ -138,19 +139,23 @@ export function ResumePreviewClient({
 
 	if (!visiblePdf) {
 		return (
-			<ResumePreviewLoader
-				pageCount={getResumePreviewPageCount(resumeData)}
-				pageClassName={pageClassName}
-				pageGap={pageGap}
-				pageLayout={pageLayout}
-				pageScale={pageScale}
-				showPageNumbers={showPageNumbers}
-			/>
+			<>
+				<ResumeAccessibleText data={resumeData} />
+				<ResumePreviewLoader
+					pageCount={getResumePreviewPageCount(resumeData)}
+					pageClassName={pageClassName}
+					pageGap={pageGap}
+					pageLayout={pageLayout}
+					pageScale={pageScale}
+					showPageNumbers={showPageNumbers}
+				/>
+			</>
 		);
 	}
 
 	return (
 		<div className={cn("grid", className)}>
+			<ResumeAccessibleText data={resumeData} />
 			<AnimatePresence initial={false}>
 				{previewLayers.map((visiblePdf) => (
 					<m.div

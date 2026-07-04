@@ -2,7 +2,8 @@
 
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "@lingui/core";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { ResumePreviewClient } from "./preview.browser";
 
@@ -70,6 +71,10 @@ vi.mock("./pdf-canvas", async () => {
 });
 
 describe("ResumePreviewClient", () => {
+	beforeAll(() => {
+		i18n.loadAndActivate({ locale: "en", messages: {} });
+	});
+
 	beforeEach(() => {
 		previewMock.builderResumeData = undefined;
 		previewMock.toBlob.mockReset();
