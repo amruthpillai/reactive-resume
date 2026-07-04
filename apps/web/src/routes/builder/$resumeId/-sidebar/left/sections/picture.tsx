@@ -2,7 +2,14 @@ import type { Area } from "react-easy-crop";
 import type z from "zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { EyeIcon, EyeSlashIcon, TrashSimpleIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import {
+	EyeIcon,
+	EyeSlashIcon,
+	MagnifyingGlassMinusIcon,
+	MagnifyingGlassPlusIcon,
+	TrashSimpleIcon,
+	UploadSimpleIcon,
+} from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
@@ -591,7 +598,7 @@ function PictureSectionForm() {
 					</DialogHeader>
 
 					{cropState && (
-						<div className="relative h-64 w-full overflow-hidden rounded-md bg-secondary">
+						<div className="relative h-64 w-full overflow-hidden rounded-md bg-secondary ring-1 ring-border ring-inset">
 							<Cropper
 								image={cropState.imageSrc}
 								crop={crop}
@@ -606,19 +613,28 @@ function PictureSectionForm() {
 						</div>
 					)}
 
-					<div className="space-y-2">
-						<FormLabel>
-							<Trans>Zoom</Trans>
-						</FormLabel>
-						<Slider
-							min={1}
-							max={3}
-							step={0.01}
-							value={[zoom]}
-							onValueChange={(value) => {
-								setZoom(Array.isArray(value) ? value[0] : value);
-							}}
-						/>
+					<div className="space-y-2.5">
+						<div className="flex items-center justify-between">
+							<FormLabel className="mb-0">
+								<Trans>Zoom</Trans>
+							</FormLabel>
+							<span className="text-muted-foreground text-xs tabular-nums">{zoom.toFixed(1)}×</span>
+						</div>
+						<div className="flex items-center gap-x-3">
+							<MagnifyingGlassMinusIcon className="size-4 shrink-0 text-muted-foreground" />
+							<Slider
+								min={1}
+								max={3}
+								step={0.01}
+								value={[zoom]}
+								aria-label={t`Zoom`}
+								className="flex-1"
+								onValueChange={(value) => {
+									setZoom(Array.isArray(value) ? value[0] : value);
+								}}
+							/>
+							<MagnifyingGlassPlusIcon className="size-4 shrink-0 text-muted-foreground" />
+						</div>
 					</div>
 
 					<DialogFooter>
