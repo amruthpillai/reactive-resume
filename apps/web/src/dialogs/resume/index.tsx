@@ -226,11 +226,19 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 	});
 
 	const name = useStore(form.store, (s) => s.values.name);
+	const slug = useStore(form.store, (s) => s.values.slug);
+	const lastNameRef = useRef(name);
 
+	// Keep the slug linked to the name only while the user hasn't customized it (it still matches the
+	// previous name's slug); once the slug is manually diverged, stop clobbering it on rename. (#30)
 	useEffect(() => {
 		if (!name) return;
-		form.setFieldValue("slug", slugify(name));
-	}, [form, name]);
+		const wasAutoSlug = slug === slugify(lastNameRef.current);
+		lastNameRef.current = name;
+		if (!wasAutoSlug) return;
+		const next = slugify(name);
+		if (next !== slug) form.setFieldValue("slug", next);
+	}, [form, name, slug]);
 
 	useFormBlocker(form);
 
