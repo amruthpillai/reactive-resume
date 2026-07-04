@@ -34,6 +34,7 @@ import {
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import {
+	isEditableElementFocused,
 	useCanRedo,
 	useCanUndo,
 	useCurrentResume,
@@ -58,7 +59,8 @@ export function BuilderHeader() {
 
 	return (
 		<div className="absolute inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b bg-popover px-1.5">
-			<Button size="icon" variant="ghost" onClick={() => toggleSidebar("left")}>
+			{/* Hidden below `md`: on mobile the sidebar panels never mount, so `toggleSidebar` no-ops — the bottom tab bar handles this. */}
+			<Button size="icon" variant="ghost" className="hidden md:flex" onClick={() => toggleSidebar("left")}>
 				<SidebarSimpleIcon />
 				<span className="sr-only">
 					<Trans comment="Screen-reader label for opening or closing the left sidebar in resume builder">
@@ -95,7 +97,7 @@ export function BuilderHeader() {
 			<div className="flex items-center gap-x-1">
 				<ResumeDownloadButton />
 
-				<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
+				<Button size="icon" variant="ghost" className="hidden md:flex" onClick={() => toggleSidebar("right")}>
 					<SidebarSimpleIcon className="-scale-x-100" />
 					<span className="sr-only">
 						<Trans comment="Screen-reader label for opening or closing the right sidebar in resume builder">
@@ -115,12 +117,20 @@ function UndoRedoControls() {
 	const redo = useRedoResume();
 
 	// App-level undo/redo of resume state, scoped to the builder. Mod maps to Cmd (mac) / Ctrl (win/linux).
-	// These are Ctrl/Meta combos, so `@tanstack/react-hotkeys` fires them even while a text field is focused
-	// (and preventDefault suppresses the browser's native input undo). Tradeoff: inside a text field, Cmd+Z
-	// undoes the last resume change rather than the field's own edit history.
-	useHotkey("Mod+Z", () => undo());
-	useHotkey("Mod+Shift+Z", () => redo());
-	useHotkey("Control+Y", () => redo());
+	// Inside a focused text field, let the browser handle native input undo instead — the toolbar
+	// Undo/Redo buttons remain available for resume-level history while editing a field.
+	useHotkey("Mod+Z", () => {
+		if (isEditableElementFocused()) return;
+		undo();
+	});
+	useHotkey("Mod+Shift+Z", () => {
+		if (isEditableElementFocused()) return;
+		redo();
+	});
+	useHotkey("Control+Y", () => {
+		if (isEditableElementFocused()) return;
+		redo();
+	});
 
 	return (
 		<>

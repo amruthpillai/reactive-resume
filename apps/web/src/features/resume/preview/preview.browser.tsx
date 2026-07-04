@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { isRTL } from "@reactive-resume/utils/locale";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
-import { useResumeData } from "../builder/draft";
+import { usePreviewPausedStore, useResumeData } from "../builder/draft";
 import { PdfCanvasDocument, PdfCanvasPage } from "./pdf-canvas";
 import { getResumePreviewGapValue, getResumePreviewPageCount, ResumePreviewLoader } from "./preview.shared";
 import { ResumeAccessibleText } from "./resume-accessible-text";
@@ -94,6 +94,7 @@ export function ResumePreviewClient({
 }: ResolvedResumePreviewProps) {
 	const builderResumeData = useResumeData();
 	const resumeData = data ?? builderResumeData;
+	const paused = usePreviewPausedStore((state) => state.paused);
 
 	const [previewLayers, setPreviewLayers] = useState<PreviewPdf[]>([]);
 
@@ -103,6 +104,8 @@ export function ResumePreviewClient({
 
 	useEffect(() => {
 		if (!resumeData) return;
+		// Mobile hides the preview behind the Edit/Design overlay; skip re-rendering and keep the last PDF shown.
+		if (paused) return;
 
 		let cancelled = false;
 		const requestId = ++requestIdRef.current;
@@ -130,7 +133,7 @@ export function ResumePreviewClient({
 			cancelled = true;
 			window.clearTimeout(timeoutId);
 		};
-	}, [resumeData]);
+	}, [resumeData, paused]);
 
 	if (!resumeData) return null;
 

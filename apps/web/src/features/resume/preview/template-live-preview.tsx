@@ -6,18 +6,29 @@ import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
 import { createPdfFirstPageImageUrl } from "./pdf-thumbnail";
 
-// ponytail: object URLs cached per (data, template) and never revoked. Bounded by hovers within one edit
-// version; the WeakMap drops stale data keys once the resume is edited (new data object). Add explicit
-// revocation only if profiling shows the leak matters.
-const previewCache = new WeakMap<ResumeData, Map<Template, string>>();
+// Bounded FIFO cache of generated object URLs keyed by (data, template) reference. Evicted entries are
+// revoked so blobs don't leak; stale-data entries (a new `data` object after an edit) age out via the cap.
+// ponytail: cap-8 linear scan — trivial for a hover preview; only one card renders at a time.
+const PREVIEW_CACHE_LIMIT = 8;
+type PreviewCacheEntry = { data: ResumeData; template: Template; url: string };
+const previewCache: PreviewCacheEntry[] = [];
 
-const getCachedPreview = (data: ResumeData, template: Template) => previewCache.get(data)?.get(template);
+const getCachedPreview = (data: ResumeData, template: Template) =>
+	previewCache.find((entry) => entry.data === data && entry.template === template)?.url;
 
 const setCachedPreview = (data: ResumeData, template: Template, url: string) => {
-	const templateCache = previewCache.get(data) ?? new Map<Template, string>();
-	templateCache.set(template, url);
-	previewCache.set(data, templateCache);
+	previewCache.push({ data, template, url });
+	while (previewCache.length > PREVIEW_CACHE_LIMIT) {
+		const evicted = previewCache.shift();
+		if (evicted) URL.revokeObjectURL(evicted.url);
+	}
 };
+
+// Single-flight render pipeline shared across every mounted instance: renders run one-at-a-time on the
+// main thread (serialized through `renderQueue`), and only the latest requested render commits its result
+// (`latestRenderRequestId`), so rapid hovers between templates discard superseded work instead of stacking.
+let latestRenderRequestId = 0;
+let renderQueue: Promise<void> = Promise.resolve();
 
 type TemplateLivePreviewProps = {
 	alt: string;
@@ -45,13 +56,23 @@ export function TemplateLivePreview({ alt, className, data, fallbackSrc, templat
 		}
 
 		let cancelled = false;
+		const requestId = ++latestRenderRequestId;
 
-		const generatePreview = async () => {
+		renderQueue = renderQueue.then(async () => {
+			if (cancelled || requestId !== latestRenderRequestId) return;
+
+			// Another instance may have cached this exact preview while we were queued.
+			const existing = getCachedPreview(data, template);
+			if (existing) {
+				setImageUrl(existing);
+				return;
+			}
+
 			try {
 				const blob = await createResumePdfBlob(data, template);
 				const url = await createPdfFirstPageImageUrl(blob);
 
-				if (cancelled) {
+				if (cancelled || requestId !== latestRenderRequestId) {
 					URL.revokeObjectURL(url);
 					return;
 				}
@@ -61,9 +82,7 @@ export function TemplateLivePreview({ alt, className, data, fallbackSrc, templat
 			} catch {
 				if (!cancelled) setHasError(true);
 			}
-		};
-
-		void generatePreview();
+		});
 
 		return () => {
 			cancelled = true;

@@ -36,7 +36,7 @@ describe("BuilderSidebarEdge", () => {
 		expect(wrapper.className).toContain("border-l");
 	});
 
-	it("is hidden on mobile (hidden + sm:flex)", () => {
+	it("is hidden on mobile (hidden + md:flex)", () => {
 		const { container } = render(
 			<BuilderSidebarEdge side="left">
 				<span>x</span>
@@ -44,6 +44,6 @@ describe("BuilderSidebarEdge", () => {
 		);
 		const wrapper = container.firstChild as HTMLElement;
 		expect(wrapper.className).toContain("hidden");
-		expect(wrapper.className).toContain("sm:flex");
+		expect(wrapper.className).toContain("md:flex");
 	});
 });

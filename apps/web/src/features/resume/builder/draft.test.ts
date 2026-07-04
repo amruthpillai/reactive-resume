@@ -353,6 +353,42 @@ describe("builder resume undo/redo", () => {
 		store().undo();
 		expect(store().resume?.data.basics.name).toBe("Editable");
 	});
+
+	it("preserves the undo stack when the server echoes the current data (autosave)", () => {
+		const store = useResumeStore.getState;
+		store().initialize(makeResume("rebase-echo"));
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "Edited";
+		});
+		expect(store().undoStack.length).toBe(1);
+
+		const current = store().resume;
+		if (!current) throw new Error("expected a current resume");
+		// Autosave echo: the server returns data identical to what's already in the store.
+		store().replaceResumeFromServer({ ...current, data: cloneResumeData(current.data) });
+
+		expect(store().undoStack.length).toBe(1);
+		expect(store().canUndo).toBe(true);
+	});
+
+	it("clears the undo stack when the server sends different data (external rebase)", () => {
+		const store = useResumeStore.getState;
+		store().initialize(makeResume("rebase-external"));
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "Edited";
+		});
+		expect(store().undoStack.length).toBe(1);
+
+		const current = store().resume;
+		if (!current) throw new Error("expected a current resume");
+		// External / AI rebase: incoming data differs, so the local undo history no longer applies.
+		store().replaceResumeFromServer(withBasicsName(current, "External Name"));
+
+		expect(store().undoStack.length).toBe(0);
+		expect(store().canUndo).toBe(false);
+	});
 });
 
 describe("resume update stream subscription", () => {

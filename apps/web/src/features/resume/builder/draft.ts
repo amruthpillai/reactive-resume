@@ -110,7 +110,7 @@ function createResumeUpdateEventIterator(resumeId: string) {
 	return streamClient.resume.updates.subscribe({ id: resumeId });
 }
 
-function isEditableElementFocused(): boolean {
+export function isEditableElementFocused(): boolean {
 	if (typeof document === "undefined") return false;
 	const element = document.activeElement as HTMLElement | null;
 	if (!element) return false;
@@ -502,6 +502,19 @@ function applyHistoryStep(get: StoreGet, set: ImmerSet, direction: "undo" | "red
 	getRuntime(currentResume.id).hasPendingLocalChanges = true;
 	syncCurrentResume(currentResume.id);
 }
+
+// Mobile builder keeps the live preview mounted across tabs (to preserve zoom/pan), but pauses its PDF
+// re-render while the Edit/Design overlay covers it — otherwise every keystroke re-renders a hidden PDF.
+// Desktop never pauses. Lives here because it's the SSR-safe module both the shell and preview import.
+type PreviewPausedStore = {
+	paused: boolean;
+	setPaused: (paused: boolean) => void;
+};
+
+export const usePreviewPausedStore = create<PreviewPausedStore>()((set) => ({
+	paused: false,
+	setPaused: (paused) => set({ paused }),
+}));
 
 export function useInitializeResumeStore() {
 	return useResumeStore((state) => state.initialize);

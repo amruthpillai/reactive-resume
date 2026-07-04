@@ -17,6 +17,7 @@ import {
 	useBuilderResumeUpdateSubscription,
 	useInitializeResumeStore,
 	useMergeResumeMetadata,
+	usePreviewPausedStore,
 	useResumeCleanup,
 	useResumeStore,
 } from "@/features/resume/builder/draft";
@@ -107,7 +108,7 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 }
 
 function DesktopBuilderShell({ initialLayout }: BuilderLayoutShellProps) {
-	const isMobile = useMediaQuery("(max-width: 767px)", { initializeWithValue: false });
+	// Only rendered when `BuilderLayoutShell` has already decided we're on desktop, so sidebar sizing is unconditional.
 	const canPersistLayoutRef = useRef(false);
 
 	const leftSidebarRef = usePanelRef();
@@ -143,11 +144,11 @@ function DesktopBuilderShell({ initialLayout }: BuilderLayoutShellProps) {
 		setRightSidebar(rightSidebarRef);
 	}, [leftSidebarRef, rightSidebarRef, setLeftSidebar, setRightSidebar]);
 
-	const sidebarMinSize = isMobile ? "0%" : `${minSidebarSize}px`;
-	const sidebarCollapsedSize = isMobile ? "0%" : `${collapsedSidebarSize}px`;
-	const leftSidebarSize = isMobile ? "0%" : `${initialLayout.left}%`;
-	const rightSidebarSize = isMobile ? "0%" : `${initialLayout.right}%`;
-	const artboardSize = isMobile ? "100%" : `${initialLayout.artboard}%`;
+	const sidebarMinSize = `${minSidebarSize}px`;
+	const sidebarCollapsedSize = `${collapsedSidebarSize}px`;
+	const leftSidebarSize = `${initialLayout.left}%`;
+	const rightSidebarSize = `${initialLayout.right}%`;
+	const artboardSize = `${initialLayout.artboard}%`;
 
 	return (
 		<div className="flex h-svh flex-col">
@@ -204,6 +205,13 @@ type MobileBuilderTab = "edit" | "preview" | "design";
 function MobileBuilderShell() {
 	// Local state is enough — mobile view mode is shell-scoped and doesn't need to persist.
 	const [tab, setTab] = useState<MobileBuilderTab>("edit");
+	const setPreviewPaused = usePreviewPausedStore((state) => state.setPaused);
+
+	// The preview stays mounted under the Edit/Design overlay; pause its render while it's covered.
+	useEffect(() => {
+		setPreviewPaused(tab !== "preview");
+		return () => setPreviewPaused(false);
+	}, [tab, setPreviewPaused]);
 
 	return (
 		<div className="flex min-h-[100dvh] flex-col">

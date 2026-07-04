@@ -34,10 +34,9 @@ function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFo
 	const diffMs = date.getTime() - Date.now();
 	const absMs = Math.abs(diffMs);
 
-	if (absMs < 60_000) return formatter.format(0, "second");
-
+	// No division matches only when the gap is under a minute (the smallest division), so fall back to seconds.
 	const division = RELATIVE_TIME_DIVISIONS.find((candidate) => absMs >= candidate.amount);
-	if (!division) return "";
+	if (!division) return formatter.format(0, "second");
 
 	return formatter.format(Math.round(diffMs / division.amount), division.unit);
 }
@@ -52,10 +51,7 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 	const queryClient = useQueryClient();
 	const replaceResumeFromServer = useResumeStore((state) => state.replaceResumeFromServer);
 
-	const relativeTimeFormatter = useMemo(
-		() => Reflect.construct(Intl.RelativeTimeFormat, [i18n.locale, { numeric: "auto" }]) as Intl.RelativeTimeFormat,
-		[],
-	);
+	const relativeTimeFormatter = useMemo(() => new Intl.RelativeTimeFormat(i18n.locale, { numeric: "auto" }), []);
 
 	const { data: versions, isLoading } = useQuery({
 		...orpc.resume.listVersions.queryOptions({ input: { resumeId } }),
@@ -66,7 +62,7 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 
 	const handleRestore = async (versionId: string) => {
 		const confirmed = await confirm(t`Restore this version?`, {
-			description: t`The current resume becomes a new change you can undo. Earlier versions are kept.`,
+			description: t`Earlier versions are kept; the builder's undo history is reset.`,
 		});
 
 		if (!confirmed) return;

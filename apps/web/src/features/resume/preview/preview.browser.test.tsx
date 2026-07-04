@@ -41,6 +41,7 @@ vi.mock("@/features/resume/export/pdf-document", () => ({
 
 vi.mock("../builder/draft", () => ({
 	useResumeData: () => previewMock.builderResumeData,
+	usePreviewPausedStore: (selector: (state: { paused: boolean }) => unknown) => selector({ paused: false }),
 }));
 
 vi.mock("./pdf-canvas", async () => {
