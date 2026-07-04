@@ -10,6 +10,7 @@ import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
@@ -92,36 +93,38 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 			/>
 
 			<DropdownMenuContent align="start" className="w-64">
-				<DropdownMenuLabel>
-					<Trans>Version history</Trans>
-				</DropdownMenuLabel>
-				<DropdownMenuSeparator />
+				<DropdownMenuGroup>
+					<DropdownMenuLabel>
+						<Trans>Version history</Trans>
+					</DropdownMenuLabel>
+					<DropdownMenuSeparator />
 
-				{isLoading && (
-					<div className="px-2 py-3 text-muted-foreground text-xs">
-						<Trans>Loading…</Trans>
-					</div>
-				)}
+					{isLoading && (
+						<div className="px-2 py-3 text-muted-foreground text-xs">
+							<Trans>Loading…</Trans>
+						</div>
+					)}
 
-				{!isLoading && (!versions || versions.length === 0) && (
-					<div className="px-2 py-3 text-muted-foreground text-xs">
-						<Trans>No saved versions yet.</Trans>
-					</div>
-				)}
+					{!isLoading && (!versions || versions.length === 0) && (
+						<div className="px-2 py-3 text-muted-foreground text-xs">
+							<Trans>No saved versions yet.</Trans>
+						</div>
+					)}
 
-				{versions?.map((version) => (
-					<DropdownMenuItem
-						key={version.id}
-						disabled={isPending}
-						className="flex-col items-start gap-0.5"
-						onClick={() => handleRestore(version.id)}
-					>
-						<span className="font-medium">{version.label}</span>
-						<span className="text-muted-foreground text-xs">
-							{formatRelativeTime(version.createdAt, relativeTimeFormatter)}
-						</span>
-					</DropdownMenuItem>
-				))}
+					{versions?.map((version) => (
+						<DropdownMenuItem
+							key={version.id}
+							disabled={isPending}
+							className="flex-col items-start gap-0.5"
+							onClick={() => handleRestore(version.id)}
+						>
+							<span className="font-medium">{version.label}</span>
+							<span className="text-muted-foreground text-xs">
+								{formatRelativeTime(version.createdAt, relativeTimeFormatter)}
+							</span>
+						</DropdownMenuItem>
+					))}
+				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
