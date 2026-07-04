@@ -1,9 +1,11 @@
 import type { Template } from "@reactive-resume/schema/templates";
 import type { DialogProps } from "@/dialogs/store";
 import type { TemplateMetadata } from "./data";
+import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { SlideshowIcon } from "@phosphor-icons/react";
+import { toast } from "sonner";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@reactive-resume/ui/components/dialog";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@reactive-resume/ui/components/hover-card";
@@ -21,11 +23,29 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 	const updateResumeData = useUpdateResumeData();
 
 	function onSelectTemplate(template: Template) {
+		// Snapshot the only field this switch mutates so the undo action fully reverts it.
+		const previousTemplate = resume.data.metadata.template;
+		if (template === previousTemplate) {
+			closeDialog();
+			return;
+		}
+
 		updateResumeData((draft) => {
 			draft.metadata.template = template;
 		});
 
 		closeDialog();
+
+		toast(t`Switched to the ${templates[template].name} template.`, {
+			action: {
+				label: t`Undo`,
+				onClick: () => {
+					updateResumeData((draft) => {
+						draft.metadata.template = previousTemplate;
+					});
+				},
+			},
+		});
 	}
 
 	return (

@@ -600,3 +600,15 @@ export const sampleResumeData: ResumeData = {
 		styleRules: [],
 	},
 };
+
+/**
+ * Returns the sample resume, optionally overriding `basics.name` so the seeded
+ * content reflects the name the user entered when creating the resume. When no
+ * name is given, the default sample persona is returned unchanged.
+ */
+export const createSampleResumeData = (name?: string): ResumeData => {
+	const trimmed = name?.trim();
+	if (!trimmed) return sampleResumeData;
+
+	return { ...sampleResumeData, basics: { ...sampleResumeData.basics, name: trimmed } };
+};
