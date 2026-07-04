@@ -55,7 +55,7 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 	}, [publicUrl, copyToClipboard]);
 
 	return (
-		<div className="fixed inset-x-0 bottom-4 flex items-center justify-center">
+		<div className="fixed inset-x-0 bottom-20 flex items-center justify-center md:bottom-4">
 			<m.div
 				initial={{ opacity: 0, y: -18 }}
 				animate={{ opacity: 0.6, y: 0 }}
