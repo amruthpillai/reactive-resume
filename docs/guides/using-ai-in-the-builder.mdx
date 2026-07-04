@@ -1,12 +1,12 @@
 ---
 title: "Using AI in the builder"
-description: "Learn how to run resume analysis and use the AI Resume Assistant to review proposed resume changes before applying them."
+description: "Learn how to run resume analysis and chat with the built-in AI assistant to review proposed resume changes before applying them."
 ---
 
 Reactive Resume includes two AI-assisted builder workflows:
 
 - **Resume Analysis** gives you a score, strengths, and prioritized suggestions.
-- **AI Resume Assistant** proposes specific edits that you can accept or reject.
+- The **AI assistant** opens as a side panel in the builder, scoped to the open resume, so you can chat and apply edits inline.
 
 <Info>
   These features require a tested and enabled AI provider in **Dashboard -> Settings -> Integrations**. For setup, see
@@ -44,13 +44,19 @@ Use resume analysis when you want a broad review before making changes.
 
 Use the analysis as guidance, not as a final verdict. The best resume still depends on the job, industry, and audience.
 
-## Open the AI Resume Assistant
+## Open the AI assistant
 
-Click the assistant button in the builder dock to open the assistant.
+Click the **Sparkle** button in the builder header, next to the resume name, to open the assistant.
 
-On desktop, the assistant opens as a movable, resizable panel. On smaller screens, it opens as a full-height sheet.
+The assistant opens as a side panel next to your resume. It uses the same chat interface as the AI Agent workspace, but stays scoped to the resume you are editing — its edits land in the builder immediately, appear in the preview, and are captured in undo history and version history.
 
-If AI is unavailable, the builder shows a link to **Integrations** so you can configure it.
+If AI is unavailable, the panel shows a link to **Integrations** so you can configure a provider.
+
+<Tip>
+  The Sparkle button is the in-builder assistant. The chat-bubble icon on the floating dock opens the full **AI Agent**
+  workspace in a new page — useful for longer, standalone conversations that create their own draft. See [Using the AI
+  Agent Workspace](/guides/using-ai-agent).
+</Tip>
 
 ## Ask for targeted changes
 
@@ -80,6 +86,8 @@ You can:
 - **Reject** one proposal;
 - move between proposals with **Prev** and **Next**;
 - **Accept all** or **Reject all** from the split-button menu.
+
+Accepted edits are saved through the normal update path, so they show up in the preview, in undo history, and in version history. If you change your mind, use `Cmd/Ctrl+Z` or restore an earlier snapshot from the clock menu — see [Undoing changes and version history](/guides/undoing-changes-and-version-history).
 
 <Warning>
   Review AI proposals before accepting them. AI can introduce wording that is inaccurate, too generic, or not aligned

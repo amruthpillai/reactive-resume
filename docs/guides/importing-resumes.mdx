@@ -27,27 +27,29 @@ Reactive Resume can create a new resume from several existing file formats. Use 
     Sign in and go to **Dashboard -> Resumes**.
   </Step>
 
-  <Step title="Click Import an existing resume">
-    Select the **Import an existing resume** card.
+  <Step title="Open the import dialog">
+    Click the **Import** card (or the header button if you already have resumes).
 
     <Frame caption="Import an existing resume dialog">
       <img
         src="/images/guides/importing-resumes/screenshot-1.webp"
-        alt="Import dialog showing supported resume import types"
+        alt="Import dialog showing the file picker and detected import format"
       />
     </Frame>
   </Step>
 
-  <Step title="Choose the import type">
-    Pick the format that matches your file.
-  </Step>
+  <Step title="Choose your file">
+    Select the resume file from your computer. Reactive Resume detects the format automatically from the file's contents
+    and shows the matching import type.
 
-  <Step title="Select the file">
-    Click the file selector and choose the resume file from your computer.
+    If auto-detection is uncertain, or you want to force a specific format, adjust the import type manually before continuing.
   </Step>
 
   <Step title="Import">
     Click **Import**. Reactive Resume creates a new resume and opens it in the builder when the import succeeds.
+
+    For PDF and Microsoft Word files, the dialog checks that you have a working AI provider configured before it starts.
+    If none is available, you'll get a link to **Integrations** to set one up.
   </Step>
 </Steps>
 

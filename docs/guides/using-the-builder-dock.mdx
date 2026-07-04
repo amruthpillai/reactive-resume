@@ -1,41 +1,60 @@
 ---
 title: "Using the builder dock"
-description: "Learn how to use the floating dock in the resume builder for zooming, page layout, sharing, exports, and AI assistance."
+description: "Learn how to use the builder dock for undo and redo, zoom controls, page stacking, opening the AI Agent, and copying the public resume URL."
 ---
 
-The builder dock is the floating toolbar at the bottom of the resume builder. It gives you quick access to preview controls, sharing, exports, and the AI assistant without leaving the resume canvas.
+The builder dock is the floating toolbar at the bottom of the resume builder. It gives you quick access to undo and redo, preview controls, the AI Agent workspace, and the resume's public URL without leaving the resume canvas.
 
 <Frame caption="Resume builder with the floating dock">
   <img
     src="/images/guides/using-the-builder-dock/screenshot-1.webp"
-    alt="Resume builder showing the floating dock with preview controls and download shortcuts"
+    alt="Resume builder showing the floating dock with undo, redo, zoom controls, page stacking toggle, AI agent and copy URL buttons"
   />
 </Frame>
 
-## Preview controls
+## Undo and redo
 
-Use the left side of the dock to control the preview.
+The dock starts with **Undo** and **Redo** buttons. They apply to every change in the builder — typing, drag-and-drop, template switches, layout changes, and AI edits.
+
+You can also use keyboard shortcuts:
+
+| Shortcut | Action |
+| --- | --- |
+| `Cmd/Ctrl+Z` | Undo the last change |
+| `Cmd/Ctrl+Shift+Z` | Redo the last undone change |
+
+Rapid typing collapses into a single undo step, so undo feels natural.
+
+<Tip>
+  When your cursor is inside a text field, the shortcut falls back to your browser's native input undo. Click outside the
+  field, or use the dock buttons, to undo builder-wide changes.
+</Tip>
+
+For longer-range recovery — such as jumping back to a template switch, an import, or an AI edit — see [Undoing changes and version history](/guides/undoing-changes-and-version-history).
+
+## Zoom controls
+
+Use the zoom controls to adjust the preview.
 
 | Control | What it does |
 | --- | --- |
-| **Zoom in** | Increases the preview zoom. |
 | **Zoom out** | Decreases the preview zoom. |
-| **Center view** | Re-centers the resume preview in the canvas. |
-| **Toggle page stacking** | Switches between stacked pages and side-by-side pages. |
+| **Zoom level (%)** | Shows the current zoom. Opens a menu with **Actual size (100%)** and **Fit to view**. |
+| **Zoom in** | Increases the preview zoom. |
 
-These controls only affect the editor preview. They do not change the exported PDF, DOCX, or JSON file.
+Press `Cmd/Ctrl+0` to reset the zoom to fit.
 
-## Open the AI assistant
+Zoom only affects the editor preview. It does not change the exported PDF, DOCX, or JSON file.
 
-Click the assistant button to open or close the **AI Resume Assistant**.
+## Toggle page stacking
 
-The assistant can propose targeted resume changes, such as rewriting a summary, tightening bullet points, adding metrics, or tailoring the resume to a job description. You review proposed changes before they are applied.
+Use the page-stacking button to switch between stacked pages (vertical) and side-by-side pages (horizontal). This only affects the editor preview.
 
-<Info>
-  The assistant requires a tested and enabled AI provider. See
-  [Using Artificial Intelligence](/guides/using-ai) for setup and [Using AI in the builder](/guides/using-ai-in-the-builder)
-  for the builder workflow.
-</Info>
+## Open the AI Agent
+
+Click the chat button to open the **AI Agent** workspace in a new page, pre-scoped to the current resume. Use the agent for larger, standalone conversations that create their own draft.
+
+For chatting about the open resume without leaving the builder, use the AI assistant in the builder header instead. See [Using AI in the builder](/guides/using-ai-in-the-builder).
 
 ## Copy the public URL
 
@@ -52,17 +71,6 @@ https://rxresu.me/{username}/{slug}
   the **Sharing** section of the right sidebar.
 </Warning>
 
-## Download files from the dock
+## Downloading your resume
 
-The dock includes quick download buttons for:
-
-- **JSON** for backups, imports, and structured data workflows;
-- **DOCX** for editing in Microsoft Word or Google Docs;
-- **PDF** for sharing, uploading, and printing.
-
-These are the same export formats available in the right sidebar's **Export** section.
-
-<Tip>
-  Use the dock when you already know which file you need. Use the right sidebar's **Export** section when you want the
-  format descriptions next to each button.
-</Tip>
+Downloads are no longer on the dock. Use the primary **Download PDF** button in the builder header, or open the dropdown next to it for **DOCX**, **JSON**, and **Print**. See [Exporting your resume](/guides/exporting-your-resume).

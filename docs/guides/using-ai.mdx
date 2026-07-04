@@ -26,17 +26,17 @@ Reactive Resume uses AI providers for features such as resume analysis, AI-assis
 
 ## Add a provider
 
-In the **AI Providers** section, fill out the **Add Provider** form.
+In the **AI Providers** section, fill out the **Add Provider** form. The form is staged: pick a **Provider** and paste an **API Key** first — advanced options like **Model** and **Base URL** are collapsed behind an **Advanced settings** toggle and only need changing for gateways, proxies, local providers, or OpenAI-compatible endpoints.
 
 | Field | Description |
 | --- | --- |
 | **Label** | A name that helps you recognize the provider, such as `Work OpenAI` or `Personal OpenRouter`. |
 | **Provider** | The provider type, such as OpenAI, Anthropic Claude, Google Gemini, Vercel AI Gateway, OpenRouter, Ollama, or OpenAI-compatible. |
-| **Model** | The exact model name expected by that provider. |
-| **Base URL** | The provider endpoint. Leave the default unless you use a gateway, proxy, local provider, or OpenAI-compatible endpoint. |
 | **API Key** | The key Reactive Resume should use when sending AI requests to that provider. |
+| **Model** *(advanced)* | The exact model name expected by that provider. |
+| **Base URL** *(advanced)* | The provider endpoint. Leave the default unless you use a gateway, proxy, local provider, or OpenAI-compatible endpoint. |
 
-Click **Save Provider** when the form is complete.
+Click **Save Provider** when the form is complete. Reactive Resume tests the connection automatically as part of the save, so you'll see a success or failure status immediately without a separate click.
 
 <Frame caption="Saved AI provider in Integrations">
   <img

@@ -1,0 +1,94 @@
+---
+title: "Undoing changes and version history"
+description: "Undo and redo edits in the resume builder, and restore an earlier snapshot from the version history menu."
+---
+
+Reactive Resume keeps two layers of change history for every resume:
+
+- **Undo and redo** — a live timeline of the changes you've made in the current builder session.
+- **Version history** — server-side snapshots taken at meaningful moments, kept even after you close the builder.
+
+Use undo for a quick correction. Use version history to jump back to a template switch, an import, or an AI edit you made earlier.
+
+## Undo and redo
+
+Every change in the builder is undoable — typing, drag-and-drop reordering, template and layout switches, and edits applied by the AI assistant.
+
+<Steps>
+  <Step title="Open your resume in the builder">
+    Undo history is scoped to the resume you have open.
+  </Step>
+
+  <Step title="Undo or redo">
+    Use either the toolbar buttons on the floating dock or a keyboard shortcut:
+
+    | Shortcut | Action |
+    | --- | --- |
+    | `Cmd/Ctrl+Z` | Undo the last change |
+    | `Cmd/Ctrl+Shift+Z` | Redo the last undone change |
+
+    Rapid typing collapses into a single step, so undo feels natural.
+  </Step>
+</Steps>
+
+<Tip>
+  When your cursor is inside a text field, `Cmd/Ctrl+Z` falls back to your browser's native input undo, so you can undo
+  just the characters you typed. Click outside the field, or use the dock buttons, to undo builder-wide changes such as
+  a template switch.
+</Tip>
+
+Undo history lives in your browser for the current session. Reloading the builder clears it — use version history for longer-range recovery.
+
+## Version history
+
+Reactive Resume automatically snapshots your resume at key moments:
+
+- when you import a resume;
+- when you switch templates;
+- when the AI assistant applies edits;
+- on periodic saves during editing.
+
+Snapshots are stored on the server, per resume, and are kept across sessions.
+
+### Open version history
+
+Click the **clock** icon in the builder header, next to the resume name, to open the version history menu.
+
+The menu lists recent snapshots newest first, each with a label describing what triggered it and a relative timestamp such as *2 hours ago*.
+
+### Restore a version
+
+<Steps>
+  <Step title="Open the version history menu">
+    Click the clock icon in the builder header.
+  </Step>
+
+  <Step title="Pick a snapshot">
+    Select the entry you want to restore. Reactive Resume asks you to confirm before replacing the current data.
+  </Step>
+
+  <Step title="Confirm the restore">
+    The resume is updated to the snapshot's contents and reloads in the preview.
+  </Step>
+</Steps>
+
+Restoring is **non-destructive**: it writes the older snapshot back through the normal update path, so:
+
+- your previous versions are still listed in the menu;
+- the restore itself becomes a new snapshot;
+- if you change your mind, you can restore the pre-restore version, or press `Cmd/Ctrl+Z` to undo the restore.
+
+<Info>
+  Only the resume owner can list or restore versions. A locked resume cannot be edited or restored until you unlock it
+  from the dashboard.
+</Info>
+
+## Which to use when
+
+| Situation | Use |
+| --- | --- |
+| You typed a wrong word or moved an item you didn't mean to. | Undo (`Cmd/Ctrl+Z`) |
+| You just switched templates and want the old one back. | Undo, or version history if you've kept editing since. |
+| You imported a resume and want to compare with what you had before. | Version history |
+| The AI assistant applied edits you no longer want. | Undo the batch, or restore the pre-AI snapshot. |
+| You closed the browser and want to roll back yesterday's changes. | Version history |
