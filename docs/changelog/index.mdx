@@ -22,6 +22,7 @@ rss: true
 - Fixed page breaks inside PDF lists so the list marker stays with its item. [#3178](https://github.com/amruthpillai/reactive-resume/pull/3178)
 - Fixed PDF text being clipped after a line break by removing an overly aggressive overflow rule from shared text styles. [#3186](https://github.com/amruthpillai/reactive-resume/pull/3186)
 - Fixed the Atlas Cloud sponsor logo so the whole logo reliably opens the sponsor site in a new tab. [#3170](https://github.com/amruthpillai/reactive-resume/pull/3170)
+- Kept the server running through transient Postgres disconnects (for example, idle drops from serverless Postgres providers like Neon) by handling database pool errors and reconnecting on the next query. Thanks to [@helder-mattos](https://github.com/helder-mattos). [#3172](https://github.com/amruthpillai/reactive-resume/pull/3172)
 - Synced the latest translation catalogs from Crowdin. [#3167](https://github.com/amruthpillai/reactive-resume/pull/3167), [#3183](https://github.com/amruthpillai/reactive-resume/pull/3183)
 
 **Full Changelog**: [v5.1.9...main](https://github.com/amruthpillai/reactive-resume/compare/v5.1.9...main)
