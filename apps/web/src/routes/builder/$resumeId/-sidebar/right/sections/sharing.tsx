@@ -139,7 +139,7 @@ export function SharingSectionBuilder() {
 						<div className="flex items-center gap-x-2">
 							<Input readOnly id="sharing-url" value={publicUrl} />
 
-							<Button size="icon" variant="ghost" onClick={onCopyUrl}>
+							<Button size="icon" variant="ghost" aria-label={t`Copy URL`} onClick={onCopyUrl}>
 								<ClipboardIcon />
 							</Button>
 						</div>

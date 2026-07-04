@@ -266,7 +266,7 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger>
+			<DropdownMenuTrigger aria-label={t`Section options`}>
 				<DotsThreeVerticalIcon />
 			</DropdownMenuTrigger>
 

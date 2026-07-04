@@ -1,4 +1,5 @@
 import type { LeftSidebarSection } from "@/libs/resume/section";
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { LockSimpleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
@@ -165,7 +166,7 @@ function SidebarEdge() {
 
 				<UserDropdownMenu>
 					{({ session }) => (
-						<Button size="icon" variant="ghost">
+						<Button size="icon" variant="ghost" aria-label={t`Account menu`}>
 							<Avatar className="size-6">
 								<AvatarImage src={session.user.image ?? undefined} />
 								<AvatarFallback className="text-[0.5rem]">{getInitials(session.user.name)}</AvatarFallback>

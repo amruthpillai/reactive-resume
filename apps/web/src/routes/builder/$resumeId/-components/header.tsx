@@ -242,7 +242,7 @@ function BuilderHeaderDropdown() {
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				render={
-					<Button size="icon" variant="ghost">
+					<Button size="icon" variant="ghost" aria-label={t`Resume options`}>
 						<CaretDownIcon />
 					</Button>
 				}

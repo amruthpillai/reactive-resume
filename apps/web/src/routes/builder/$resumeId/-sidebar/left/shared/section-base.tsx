@@ -1,5 +1,6 @@
 import type { SectionType } from "@reactive-resume/schema/resume/data";
 import type { LeftSidebarSection } from "@/libs/resume/section";
+import { t } from "@lingui/core/macro";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { getDefaultSectionIconName } from "@reactive-resume/schema/resume/section-icons";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@reactive-resume/ui/components/accordion";
@@ -36,6 +37,8 @@ export function SectionBase({ type, className, ...props }: Props) {
 	const fallbackIcon = hasSectionIcon ? getDefaultSectionIconName(type as "summary" | SectionType) : "";
 	const sectionIcon = rawIcon === "none" ? "" : rawIcon || fallbackIcon;
 
+	const sectionTitle = ("title" in section && section.title) || getSectionTitle(type);
+
 	const collapsed = useSectionStore((state) => state.sections[type]?.collapsed ?? false);
 	const toggleCollapsed = useSectionStore((state) => state.toggleCollapsed);
 
@@ -64,7 +67,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 					<AccordionTrigger
 						className="me-2 items-center justify-center"
 						render={
-							<Button size="icon" variant="ghost">
+							<Button size="icon" variant="ghost" aria-label={t`Toggle ${sectionTitle} section`}>
 								<CaretDownIcon className="transition-transform duration-200 group-data-closed/accordion-item:-rotate-90" />
 							</Button>
 						}
@@ -76,9 +79,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 						) : (
 							getSectionIcon(type)
 						)}
-						<h2 className="line-clamp-1 font-semibold text-2xl tracking-tight">
-							{("title" in section && section.title) || getSectionTitle(type)}
-						</h2>
+						<h2 className="line-clamp-1 font-semibold text-2xl tracking-tight">{sectionTitle}</h2>
 					</div>
 
 					{!["picture", "basics", "custom"].includes(type) && (

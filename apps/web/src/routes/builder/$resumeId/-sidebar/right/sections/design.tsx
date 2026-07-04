@@ -1,4 +1,5 @@
 import type z from "zod";
+import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useStore } from "@tanstack/react-form";
 import { AnimatePresence, m } from "motion/react";
@@ -221,6 +222,7 @@ function QuickColorCircle({ color, active, onSelect, className, ...props }: Quic
 	return (
 		<button
 			type="button"
+			aria-label={t`Use color ${color}`}
 			onClick={() => onSelect(color)}
 			className={cn(
 				"relative flex size-8 items-center justify-center rounded-md bg-transparent",

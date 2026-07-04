@@ -87,7 +87,7 @@ export const CustomFieldsSection = withForm({
 										<Popover>
 											<PopoverTrigger
 												render={
-													<Button size="icon" variant="ghost" className="ms-1">
+													<Button size="icon" variant="ghost" aria-label={t`Add link`} className="ms-1">
 														<LinkIcon />
 													</Button>
 												}
@@ -121,6 +121,7 @@ export const CustomFieldsSection = withForm({
 								<Button
 									size="icon"
 									variant="ghost"
+									aria-label={t`Remove custom field`}
 									onClick={() => {
 										customFieldsField.removeValue(index);
 										void form.handleSubmit();
@@ -169,6 +170,7 @@ function CustomFieldItem({ field, children }: CustomFieldItemProps) {
 			<Button
 				size="icon"
 				variant="ghost"
+				aria-label={t`Reorder custom field`}
 				className="me-2 touch-none"
 				onPointerDown={(e) => {
 					e.preventDefault();

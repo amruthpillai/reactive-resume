@@ -121,6 +121,7 @@ function PicturePreviewControls({
 							<Button
 								size="icon"
 								variant="ghost"
+								aria-label={picture.hidden ? t`Show picture` : t`Hide picture`}
 								onClick={() => {
 									form.setFieldValue("hidden", !picture.hidden);
 									onAutoSave();

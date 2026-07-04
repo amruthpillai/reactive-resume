@@ -549,7 +549,13 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					render={
-						<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
+						<Button
+							size={isFullscreen ? "lg" : "sm"}
+							tabIndex={-1}
+							variant="ghost"
+							aria-label={t`Paragraph and heading style`}
+							className="rounded-none"
+						>
 							{match(state)
 								.with({ isParagraph: true }, () => <ParagraphIcon className="size-3.5" />)
 								.with({ isHeading1: true }, () => <TextHOneIcon className="size-3.5" />)
@@ -622,7 +628,13 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					render={
-						<Button size={isFullscreen ? "lg" : "sm"} tabIndex={-1} variant="ghost" className="rounded-none">
+						<Button
+							size={isFullscreen ? "lg" : "sm"}
+							tabIndex={-1}
+							variant="ghost"
+							aria-label={t`Text alignment`}
+							className="rounded-none"
+						>
 							{match(state)
 								.with({ isLeftAlign: true }, () => <TextAlignLeftIcon className="size-3.5" />)
 								.with({ isCenterAlign: true }, () => <TextAlignCenterIcon className="size-3.5" />)
@@ -698,6 +710,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 				tabIndex={-1}
 				variant="ghost"
 				className="rounded-none"
+				title={t`Decrease indent`}
 				disabled={!state.canLiftListItem}
 				onClick={state.liftListItem}
 			>
@@ -709,6 +722,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 				tabIndex={-1}
 				variant="ghost"
 				className="rounded-none"
+				title={t`Increase indent`}
 				disabled={!state.canSinkListItem}
 				onClick={state.sinkListItem}
 			>
@@ -723,6 +737,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 					tabIndex={-1}
 					variant="ghost"
 					className="rounded-none"
+					title={t`Remove link`}
 					onClick={state.unsetLink}
 				>
 					<LinkBreakIcon className="size-3.5" />
@@ -733,6 +748,7 @@ function renderEditorToolbar(state: EditorToolbarState, isFullscreen: boolean) {
 					tabIndex={-1}
 					variant="ghost"
 					className="rounded-none"
+					title={t`Add link`}
 					onClick={state.setLink}
 				>
 					<LinkIcon className="size-3.5" />
