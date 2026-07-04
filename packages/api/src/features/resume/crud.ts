@@ -71,7 +71,11 @@ export const crudRouter = {
 				tags: input.tags,
 				locale: context.locale,
 				userId: context.user.id,
-				...(input.withSampleData ? { data: createSampleResumeData(input.name) } : {}),
+				...(input.data
+					? { data: input.data }
+					: input.withSampleData
+						? { data: createSampleResumeData(input.name) }
+						: {}),
 			});
 		}),
 

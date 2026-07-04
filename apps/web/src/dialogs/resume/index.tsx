@@ -5,8 +5,8 @@ import { Trans } from "@lingui/react/macro";
 import { CaretDownIcon, MagicWandIcon, PencilSimpleLineIcon, PlusIcon, TestTubeIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useParams } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -35,10 +35,11 @@ import {
 import { generateId, generateRandomName, slugify } from "@reactive-resume/utils/string";
 import { ChipInput } from "@/components/input/chip-input";
 import { usePatchResume } from "@/features/resume/builder/draft";
+import { useHasUsableAiProvider } from "@/features/settings/integrations/hooks/use-has-usable-ai-provider";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/libs/auth/client";
 import { getResumeErrorMessage } from "@/libs/error-message";
-import { orpc } from "@/libs/orpc/client";
+import { client, orpc } from "@/libs/orpc/client";
 import { useAppForm, withForm } from "@/libs/tanstack-form";
 import { useDialogStore } from "../store";
 
@@ -65,6 +66,8 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 	const didCreateRef = useRef(false);
 
 	const { mutate: createResume, isPending } = useMutation(orpc.resume.create.mutationOptions());
+	const { hasUsableProvider, isLoading: isLoadingAiProviders } = useHasUsableAiProvider();
+	const [isGenerating, setIsGenerating] = useState(false);
 
 	const form = useAppForm({
 		defaultValues: {
@@ -127,6 +130,42 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 		});
 	};
 
+	// Provider-gated: generate personalized starter content with AI, then create the resume with it.
+	// On any AI/parse failure the server falls back to sample data, so the user is never blocked.
+	const onGenerateWithAi = async () => {
+		if (!hasUsableProvider) return;
+
+		const values = form.state.values;
+		const randomName = generateRandomName();
+		const name = values.name || randomName;
+		const slug = values.slug || slugify(name);
+
+		const toastId = toast.loading(t`Generating your resume with AI...`);
+		setIsGenerating(true);
+
+		const callbacks = {
+			onSuccess: (id: string) => {
+				didCreateRef.current = true;
+				toast.success(t`Your resume has been created successfully.`, { id: toastId });
+				closeDialog();
+				void navigate({ to: "/builder/$resumeId", params: { resumeId: id } });
+			},
+			onError: (error: unknown) => {
+				toast.error(getResumeErrorMessage(error), { id: toastId });
+			},
+		};
+
+		try {
+			const data = await client.ai.generateStarterResume({ name });
+			createResume({ name, slug, tags: values.tags, data }, callbacks);
+		} catch {
+			// Degrade gracefully: fall back to the sample resume so the user still gets editable content.
+			createResume({ name, slug, tags: values.tags, withSampleData: true }, callbacks);
+		} finally {
+			setIsGenerating(false);
+		}
+	};
+
 	return (
 		<DialogContent>
 			<DialogHeader>
@@ -157,14 +196,14 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 						})}
 						className="gap-x-px rtl:flex-row-reverse"
 					>
-						<Button type="submit" disabled={isPending}>
+						<Button type="submit" disabled={isPending || isGenerating}>
 							<Trans>Create</Trans>
 						</Button>
 
 						<DropdownMenu>
 							<DropdownMenuTrigger
 								render={
-									<Button size="icon" disabled={isPending}>
+									<Button size="icon" disabled={isPending || isGenerating}>
 										<CaretDownIcon />
 									</Button>
 								}
@@ -175,6 +214,21 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 									<TestTubeIcon />
 									<Trans>Create a Sample Resume</Trans>
 								</DropdownMenuItem>
+
+								{hasUsableProvider ? (
+									<DropdownMenuItem disabled={isGenerating} onClick={onGenerateWithAi}>
+										<MagicWandIcon />
+										<Trans>Generate with AI</Trans>
+									</DropdownMenuItem>
+								) : (
+									!isLoadingAiProviders && (
+										<div className="px-2 py-1.5 text-muted-foreground text-xs">
+											<Link className="hover:underline" to="/dashboard/settings/integrations">
+												<Trans>Set up an AI provider to generate content</Trans>
+											</Link>
+										</div>
+									)
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</ButtonGroup>
