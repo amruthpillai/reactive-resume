@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "agent_threads_active_in_place_unique" ON "agent_threads" ("user_id","working_resume_id","source_resume_id") WHERE "status" = 'active' and "deleted_at" is null;

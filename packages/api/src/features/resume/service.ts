@@ -203,35 +203,37 @@ const statistics = {
 		const lastDownloadedAt = input.downloads ? sql`now()` : undefined;
 		const today = new Date().toISOString().slice(0, 10);
 
-		await db
-			.insert(schema.resumeStatistics)
-			.values({
-				resumeId: input.id,
-				views,
-				downloads,
-				lastViewedAt,
-				lastDownloadedAt,
-			})
-			.onConflictDoUpdate({
-				target: [schema.resumeStatistics.resumeId],
-				set: {
-					views: sql`${schema.resumeStatistics.views} + ${views}`,
-					downloads: sql`${schema.resumeStatistics.downloads} + ${downloads}`,
+		await db.transaction(async (tx) => {
+			await tx
+				.insert(schema.resumeStatistics)
+				.values({
+					resumeId: input.id,
+					views,
+					downloads,
 					lastViewedAt,
 					lastDownloadedAt,
-				},
-			});
+				})
+				.onConflictDoUpdate({
+					target: [schema.resumeStatistics.resumeId],
+					set: {
+						views: sql`${schema.resumeStatistics.views} + ${views}`,
+						downloads: sql`${schema.resumeStatistics.downloads} + ${downloads}`,
+						lastViewedAt,
+						lastDownloadedAt,
+					},
+				});
 
-		await db
-			.insert(schema.resumeStatisticsDaily)
-			.values({ resumeId: input.id, date: today, views, downloads })
-			.onConflictDoUpdate({
-				target: [schema.resumeStatisticsDaily.resumeId, schema.resumeStatisticsDaily.date],
-				set: {
-					views: sql`${schema.resumeStatisticsDaily.views} + ${views}`,
-					downloads: sql`${schema.resumeStatisticsDaily.downloads} + ${downloads}`,
-				},
-			});
+			await tx
+				.insert(schema.resumeStatisticsDaily)
+				.values({ resumeId: input.id, date: today, views, downloads })
+				.onConflictDoUpdate({
+					target: [schema.resumeStatisticsDaily.resumeId, schema.resumeStatisticsDaily.date],
+					set: {
+						views: sql`${schema.resumeStatisticsDaily.views} + ${views}`,
+						downloads: sql`${schema.resumeStatisticsDaily.downloads} + ${downloads}`,
+					},
+				});
+		});
 	},
 
 	// Returns the last `days` (default 30) of daily view/download counts, zero-filled so the series is continuous.
@@ -392,10 +394,20 @@ export const resumeService = {
 
 			if (!version) throw new ORPCError("NOT_FOUND");
 
+			// Capture the pre-restore state first so the restore itself is undoable.
+			const current = await resumeService.getById({ id: input.resumeId, userId: input.userId });
+			await resumeService.versions.snapshot({
+				resumeId: input.resumeId,
+				userId: input.userId,
+				data: current.data,
+				label: "Before restore",
+			});
+
 			const updated = await resumeService.update({
 				id: input.resumeId,
 				userId: input.userId,
 				data: version.data,
+				skipAutoSnapshot: true,
 			});
 
 			await resumeService.versions.snapshot({
@@ -548,6 +560,7 @@ export const resumeService = {
 		tags?: string[];
 		data?: ResumeData;
 		isPublic?: boolean;
+		skipAutoSnapshot?: boolean;
 	}) => {
 		const [resume] = await db
 			.select({ isLocked: schema.resume.isLocked })
@@ -591,7 +604,7 @@ export const resumeService = {
 
 			// Debounced manual-save milestone: only snapshots data edits, and only when the previous
 			// snapshot is old enough (see SNAPSHOT_THROTTLE_MS). Covers template switches and typing.
-			if (input.data !== undefined) {
+			if (input.data !== undefined && !input.skipAutoSnapshot) {
 				await maybeSnapshotOnSave({
 					resumeId: resume.id,
 					userId: input.userId,
@@ -622,7 +635,7 @@ export const resumeService = {
 	},
 
 	patch: async (input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date }) => {
-		const resume = await applyResumePatchTx(db, input);
+		const resume = await db.transaction((tx) => applyResumePatchTx(tx, input));
 
 		await notifyResumeUpdated({
 			type: "resume.updated",

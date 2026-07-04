@@ -927,9 +927,31 @@ export const agentService = {
 					workingResumeId: input.resumeId,
 					title: "Resume assistant",
 				})
+				.onConflictDoNothing()
 				.returning();
 
-			if (!thread) throw new Error("AGENT_THREAD_CREATE_FAILED");
+			// A concurrent call won the unique partial index race; return its thread instead.
+			if (!thread) {
+				const [raced] = await db
+					.select(threadSummarySelection)
+					.from(schema.agentThread)
+					.leftJoin(schema.resume, eq(schema.agentThread.workingResumeId, schema.resume.id))
+					.leftJoin(schema.aiProvider, eq(schema.agentThread.aiProviderId, schema.aiProvider.id))
+					.where(
+						and(
+							eq(schema.agentThread.userId, input.userId),
+							eq(schema.agentThread.workingResumeId, input.resumeId),
+							eq(schema.agentThread.sourceResumeId, input.resumeId),
+							eq(schema.agentThread.status, "active"),
+							isNull(schema.agentThread.deletedAt),
+						),
+					)
+					.orderBy(desc(schema.agentThread.lastMessageAt))
+					.limit(1);
+
+				if (!raced) throw new Error("AGENT_THREAD_CREATE_FAILED");
+				return toThreadSummary(raced);
+			}
 
 			return toThreadSummary({ ...thread, resumeName: resume.name, providerLabel: selectedProvider.label });
 		},
@@ -961,7 +983,12 @@ export const agentService = {
 				actions: actions.map(toAction),
 				attachments: attachments.map(toAttachment),
 				resume,
-				isReadOnly: thread.status === "archived" || !thread.workingResumeId || !thread.aiProviderId || !resume,
+				isReadOnly:
+					thread.status === "archived" ||
+					!thread.workingResumeId ||
+					!thread.aiProviderId ||
+					!resume ||
+					!!resume.isLocked,
 			};
 		},
 

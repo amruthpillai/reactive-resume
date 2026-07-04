@@ -63,16 +63,15 @@ export const authService = {
 	},
 
 	deleteAccount: async (input: { userId: string }): Promise<void> => {
-		if (!input.userId || input.userId.length === 0) return;
-
 		const storageService = getStorageService();
 
 		// Delete all user files in one call (pictures, screenshots, pdfs)
 		// The storage service delete method supports recursive deletion via prefix
 		try {
 			await storageService.delete(`uploads/${input.userId}`);
-		} catch {
-			// Ignore error and proceed with deleting user
+		} catch (err) {
+			// Log orphaned-file failures (GDPR erasure signal) but proceed with deleting the user.
+			console.error("Failed to delete storage for user %s:", input.userId, err);
 		}
 
 		try {
