@@ -4,6 +4,7 @@ import { match } from "ts-pattern";
 import { Button } from "@reactive-resume/ui/components/button";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 import { Separator } from "@reactive-resume/ui/components/separator";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { Copyright } from "@/components/ui/copyright";
 import { getSectionIcon, getSectionTitle, rightSidebarSections } from "@/libs/resume/section";
 import { BuilderSidebarEdge } from "../../-components/edge";
@@ -43,7 +44,7 @@ export function BuilderSidebarRight() {
 
 	return (
 		<>
-			<SidebarEdge scrollAreaRef={scrollAreaRef} />
+			<SidebarEdge />
 
 			<ScrollArea
 				ref={scrollAreaRef}
@@ -64,22 +65,18 @@ export function BuilderSidebarRight() {
 	);
 }
 
-type SidebarEdgeProps = {
-	scrollAreaRef: React.RefObject<HTMLDivElement | null>;
-};
-
-function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
+function SidebarEdge() {
 	const toggleSidebar = useBuilderSidebar((state) => state.toggleSidebar);
 
 	const scrollToSection = useCallback(
 		(section: RightSidebarSection) => {
-			if (!scrollAreaRef.current) return;
 			toggleSidebar("right", true);
-
-			const sectionElement = scrollAreaRef.current.querySelector(`#sidebar-${section}`);
-			sectionElement?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+			// Section ids are globally unique; document.getElementById reliably resolves the scroll target.
+			document
+				.getElementById(`sidebar-${section}`)
+				?.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
 		},
-		[toggleSidebar, scrollAreaRef],
+		[toggleSidebar],
 	);
 
 	return (
@@ -87,15 +84,23 @@ function SidebarEdge({ scrollAreaRef }: SidebarEdgeProps) {
 			<div className="no-scrollbar min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
 				<div className="flex min-h-full flex-col items-center justify-center gap-y-2">
 					{rightSidebarSections.map((section) => (
-						<Button
-							key={section}
-							size="icon"
-							variant="ghost"
-							title={getSectionTitle(section)}
-							onClick={() => scrollToSection(section)}
-						>
-							{getSectionIcon(section)}
-						</Button>
+						<Tooltip key={section}>
+							<TooltipTrigger
+								render={
+									<Button
+										size="icon"
+										variant="ghost"
+										aria-label={getSectionTitle(section)}
+										onClick={() => scrollToSection(section)}
+									>
+										{getSectionIcon(section)}
+									</Button>
+								}
+							/>
+							<TooltipContent side="left" className="font-medium">
+								{getSectionTitle(section)}
+							</TooltipContent>
+						</Tooltip>
 					))}
 				</div>
 			</div>
