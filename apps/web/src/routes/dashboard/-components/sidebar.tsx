@@ -7,6 +7,7 @@ import {
 	ChatCircleDotsIcon,
 	GearSixIcon,
 	KeyIcon,
+	MagnifyingGlassIcon,
 	ReadCvLogoIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
@@ -16,6 +17,7 @@ import { Link } from "@tanstack/react-router";
 import { AnimatePresence, m } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@reactive-resume/ui/components/avatar";
 import { BrandIcon } from "@reactive-resume/ui/components/brand-icon";
+import { Kbd } from "@reactive-resume/ui/components/kbd";
 import {
 	Sidebar,
 	SidebarContent,
@@ -33,6 +35,7 @@ import {
 } from "@reactive-resume/ui/components/sidebar";
 import { getInitials } from "@reactive-resume/utils/string";
 import { Copyright } from "@/components/ui/copyright";
+import { useCommandPaletteStore } from "@/features/command-palette/store";
 import { UserDropdownMenu } from "@/features/user/dropdown-menu";
 
 type SidebarItem = {
@@ -115,7 +118,27 @@ function SidebarItemList({ items }: SidebarItemListProps) {
 	);
 }
 
+function SidebarSearchButton() {
+	const { i18n } = useLingui();
+	const setOpen = useCommandPaletteStore((state) => state.setOpen);
+
+	const label = i18n.t(msg`Search`);
+
+	return (
+		<SidebarMenuItem>
+			<SidebarMenuButton title={label} tooltip={label} onClick={() => setOpen(true)}>
+				<MagnifyingGlassIcon />
+				<span className="flex-1 text-start transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ms-8 group-data-[collapsible=icon]:opacity-0">
+					{label}
+				</span>
+				<Kbd className="transition-opacity duration-200 ease-in-out group-data-[collapsible=icon]:opacity-0">⌘K</Kbd>
+			</SidebarMenuButton>
+		</SidebarMenuItem>
+	);
+}
+
 export function DashboardSidebar() {
+	const { i18n } = useLingui();
 	const { state } = useSidebarState();
 
 	return (
@@ -133,12 +156,14 @@ export function DashboardSidebar() {
 							}
 						/>
 					</SidebarMenuItem>
+
+					<SidebarSearchButton />
 				</SidebarMenu>
 			</SidebarHeader>
 
 			<SidebarSeparator />
 
-			<SidebarContent>
+			<SidebarContent aria-label={i18n.t(msg`Dashboard`)} role="navigation">
 				<SidebarGroup>
 					<SidebarGroupLabel>
 						<Trans>App</Trans>

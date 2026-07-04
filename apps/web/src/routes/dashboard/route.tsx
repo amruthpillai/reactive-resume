@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-router";
 import { SidebarProvider } from "@reactive-resume/ui/components/sidebar";
 import { createNoindexFollowMeta } from "@/libs/seo";
@@ -30,9 +31,16 @@ function RouteComponent() {
 
 	return (
 		<SidebarProvider open={sidebarState} onOpenChange={handleSidebarOpenChange}>
+			<a
+				href="#main-content"
+				className="sr-only rounded-md bg-popover px-4 py-2 text-sm ring-2 ring-ring focus:not-sr-only focus:absolute focus:inset-s-2 focus:top-2 focus:z-[100]"
+			>
+				<Trans>Skip to main content</Trans>
+			</a>
+
 			<DashboardSidebar />
 
-			<main className="@container flex-1 p-4 md:ps-2">
+			<main id="main-content" className="@container flex-1 p-4 md:ps-2">
 				<Outlet />
 			</main>
 		</SidebarProvider>
