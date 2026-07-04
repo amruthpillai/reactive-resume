@@ -155,7 +155,7 @@ export const RichText = ({ children }: RichTextProps) => {
 						>
 							<View style={{ flexDirection: "row", alignItems: "flex-start" }}>
 								{markerNode}
-								<View style={{ flex: 1 }}>{children}</View>
+								<View style={{ flex: 1, minWidth: 0 }}>{children}</View>
 							</View>
 						</View>
 					);
