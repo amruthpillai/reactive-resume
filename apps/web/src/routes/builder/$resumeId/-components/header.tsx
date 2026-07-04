@@ -1,8 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
-	ArrowUUpLeftIcon,
-	ArrowUUpRightIcon,
 	CaretDownIcon,
 	CheckCircleIcon,
 	CircleNotchIcon,
@@ -19,7 +17,6 @@ import {
 	TrashSimpleIcon,
 	WarningCircleIcon,
 } from "@phosphor-icons/react";
-import { useHotkey } from "@tanstack/react-hotkeys";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -33,16 +30,7 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
-import {
-	isEditableElementFocused,
-	useCanRedo,
-	useCanUndo,
-	useCurrentResume,
-	usePatchResume,
-	useRedoResume,
-	useSaveStatus,
-	useUndoResume,
-} from "@/features/resume/builder/draft";
+import { useCurrentResume, usePatchResume, useSaveStatus } from "@/features/resume/builder/draft";
 import { useResumeExport } from "@/features/resume/export/use-resume-export";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
@@ -57,19 +45,23 @@ export function BuilderHeader() {
 	const isLocked = resume.isLocked;
 	const toggleSidebar = useBuilderSidebar((state) => state.toggleSidebar);
 
+	// Equal-width flex-1 side groups keep the center title group truly centered regardless of the
+	// wider Download button on the right.
 	return (
-		<div className="absolute inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b bg-popover px-1.5">
-			{/* Hidden below `md`: on mobile the sidebar panels never mount, so `toggleSidebar` no-ops — the bottom tab bar handles this. */}
-			<Button size="icon" variant="ghost" className="hidden md:flex" onClick={() => toggleSidebar("left")}>
-				<SidebarSimpleIcon />
-				<span className="sr-only">
-					<Trans comment="Screen-reader label for opening or closing the left sidebar in resume builder">
-						Toggle left sidebar
-					</Trans>
-				</span>
-			</Button>
+		<div className="absolute inset-x-0 top-0 z-50 flex h-14 items-center gap-x-2 border-b bg-popover px-1.5">
+			<div className="flex flex-1 items-center justify-start">
+				{/* Hidden below `md`: on mobile the sidebar panels never mount, so `toggleSidebar` no-ops — the bottom tab bar handles this. */}
+				<Button size="icon" variant="ghost" className="hidden md:flex" onClick={() => toggleSidebar("left")}>
+					<SidebarSimpleIcon />
+					<span className="sr-only">
+						<Trans comment="Screen-reader label for opening or closing the left sidebar in resume builder">
+							Toggle left sidebar
+						</Trans>
+					</span>
+				</Button>
+			</div>
 
-			<div className="flex items-center gap-x-1">
+			<div className="flex min-w-0 items-center gap-x-1">
 				<Button
 					size="icon"
 					variant="ghost"
@@ -85,16 +77,15 @@ export function BuilderHeader() {
 					}
 				/>
 				<span className="me-2.5 text-muted-foreground">/</span>
-				<h2 className="flex-1 truncate font-medium">{name}</h2>
+				<h2 className="min-w-0 truncate font-medium">{name}</h2>
 				{isLocked && <LockSimpleIcon className="ms-2 text-muted-foreground" />}
 				<SaveStatusIndicator />
-				<UndoRedoControls />
 				<BuilderAiAssistant resumeId={resume.id} />
 				<BuilderVersionHistory resumeId={resume.id} />
 				<BuilderHeaderDropdown />
 			</div>
 
-			<div className="flex items-center gap-x-1">
+			<div className="flex flex-1 items-center justify-end gap-x-1">
 				<ResumeDownloadButton />
 
 				<Button size="icon" variant="ghost" className="hidden md:flex" onClick={() => toggleSidebar("right")}>
@@ -107,40 +98,6 @@ export function BuilderHeader() {
 				</Button>
 			</div>
 		</div>
-	);
-}
-
-function UndoRedoControls() {
-	const canUndo = useCanUndo();
-	const canRedo = useCanRedo();
-	const undo = useUndoResume();
-	const redo = useRedoResume();
-
-	// App-level undo/redo of resume state, scoped to the builder. Mod maps to Cmd (mac) / Ctrl (win/linux).
-	// Inside a focused text field, let the browser handle native input undo instead — the toolbar
-	// Undo/Redo buttons remain available for resume-level history while editing a field.
-	useHotkey("Mod+Z", () => {
-		if (isEditableElementFocused()) return;
-		undo();
-	});
-	useHotkey("Mod+Shift+Z", () => {
-		if (isEditableElementFocused()) return;
-		redo();
-	});
-	useHotkey("Control+Y", () => {
-		if (isEditableElementFocused()) return;
-		redo();
-	});
-
-	return (
-		<>
-			<Button size="icon" variant="ghost" disabled={!canUndo} aria-label={t`Undo`} onClick={() => undo()}>
-				<ArrowUUpLeftIcon />
-			</Button>
-			<Button size="icon" variant="ghost" disabled={!canRedo} aria-label={t`Redo`} onClick={() => redo()}>
-				<ArrowUUpRightIcon />
-			</Button>
-		</>
 	);
 }
 

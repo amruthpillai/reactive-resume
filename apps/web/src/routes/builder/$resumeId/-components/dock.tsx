@@ -5,6 +5,8 @@ import { Trans } from "@lingui/react/macro";
 import {
 	AlignCenterHorizontalIcon,
 	AlignTopIcon,
+	ArrowUUpLeftIcon,
+	ArrowUUpRightIcon,
 	ChatCircleDotsIcon,
 	LinkSimpleIcon,
 	MagnifyingGlassMinusIcon,
@@ -26,7 +28,14 @@ import {
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { cn } from "@reactive-resume/utils/style";
-import { useCurrentResume } from "@/features/resume/builder/draft";
+import {
+	isEditableElementFocused,
+	useCanRedo,
+	useCanUndo,
+	useCurrentResume,
+	useRedoResume,
+	useUndoResume,
+} from "@/features/resume/builder/draft";
 import { authClient } from "@/libs/auth/client";
 
 type BuilderDockProps = {
@@ -42,7 +51,27 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const { zoomIn, zoomOut, resetTransform } = useControls();
 
+	const canUndo = useCanUndo();
+	const canRedo = useCanRedo();
+	const undo = useUndoResume();
+	const redo = useRedoResume();
+
 	useHotkey("Mod+0", () => resetTransform());
+	// App-level undo/redo of resume state, scoped to the builder. Mod maps to Cmd (mac) / Ctrl (win/linux).
+	// Inside a focused text field, defer to the browser's native input undo; the dock buttons remain
+	// available for resume-level history while editing a field.
+	useHotkey("Mod+Z", () => {
+		if (isEditableElementFocused()) return;
+		undo();
+	});
+	useHotkey("Mod+Shift+Z", () => {
+		if (isEditableElementFocused()) return;
+		redo();
+	});
+	useHotkey("Control+Y", () => {
+		if (isEditableElementFocused()) return;
+		redo();
+	});
 
 	const publicUrl = useMemo(() => {
 		if (!session?.user.username || !resume?.slug) return "";
@@ -63,6 +92,9 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 				transition={{ duration: 0.2, ease: "easeOut" }}
 				className="flex items-center rounded-r-full rounded-l-full bg-popover px-2 shadow-xl will-change-[transform,opacity]"
 			>
+				<DockIcon icon={ArrowUUpLeftIcon} title={t`Undo`} disabled={!canUndo} onClick={() => undo()} />
+				<DockIcon icon={ArrowUUpRightIcon} title={t`Redo`} disabled={!canRedo} onClick={() => redo()} />
+				<div className="mx-1 h-8 w-px bg-border" />
 				<DockIcon icon={MagnifyingGlassMinusIcon} title={t`Zoom out`} onClick={() => zoomOut(0.15)} />
 				<ZoomMenu />
 				<DockIcon icon={MagnifyingGlassPlusIcon} title={t`Zoom in`} onClick={() => zoomIn(0.15)} />
