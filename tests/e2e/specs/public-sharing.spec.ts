@@ -14,7 +14,7 @@ test("publishes a resume and renders it for an anonymous visitor", async ({ brow
 	const anonymous = await browser.newPage();
 	try {
 		await anonymous.goto(publicUrl);
-		await expect(anonymous.getByRole("button", { name: "Download PDF" })).toBeVisible();
+		await expect(anonymous.getByRole("button", { name: "Download PDF" }).first()).toBeVisible();
 	} finally {
 		await anonymous.close();
 	}

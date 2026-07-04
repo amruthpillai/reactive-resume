@@ -27,7 +27,7 @@ test("password-protects a public resume and unlocks it as a visitor", async ({ b
 		await anonymous.getByRole("button", { name: "Unlock" }).click();
 
 		// The correct password reveals the actual resume
-		await expect(anonymous.getByRole("button", { name: "Download PDF" })).toBeVisible();
+		await expect(anonymous.getByRole("button", { name: "Download PDF" }).first()).toBeVisible();
 	} finally {
 		await anonymous.close();
 	}

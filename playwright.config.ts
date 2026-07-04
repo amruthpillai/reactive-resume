@@ -8,9 +8,9 @@ export default defineConfig({
 	testDir: "./tests/e2e/specs",
 	fullyParallel: true,
 	forbidOnly: isCI,
-	retries: isCI ? 2 : 0,
+	retries: 0,
 	workers: isCI ? 2 : undefined,
-	timeout: 60_000,
+	timeout: 30_000,
 	expect: {
 		timeout: 10_000,
 	},

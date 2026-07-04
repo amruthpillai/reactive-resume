@@ -7,7 +7,7 @@ test("renames, duplicates and deletes a resume from the dashboard", async ({ aut
 	// Rename via the card context menu (resume names are capped at 64 chars, keep it short)
 	const renamedTo = `E2E Renamed ${Date.now().toString(36)}`;
 	await openResumeCardMenu(page, resumeName);
-	await page.getByRole("menuitem", { name: "Update" }).click();
+	await page.getByRole("menuitem", { name: "Edit details" }).click();
 	const updateDialog = page.getByRole("dialog", { name: "Update Resume" });
 	await updateDialog.getByLabel("Name").fill(renamedTo);
 	await updateDialog.getByRole("button", { name: "Save Changes" }).click();

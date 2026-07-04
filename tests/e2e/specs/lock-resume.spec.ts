@@ -17,7 +17,7 @@ test("locks a resume, blocking updates and deletion until unlocked", async ({ au
 	// Locked: the menu now offers Unlock, and destructive/edit actions are disabled
 	await openResumeCardMenu(page, resumeName);
 	await expect(page.getByRole("menuitem", { name: "Unlock" })).toBeVisible();
-	await expect(page.getByRole("menuitem", { name: "Update" })).toBeDisabled();
+	await expect(page.getByRole("menuitem", { name: "Edit details" })).toBeDisabled();
 	await expect(page.getByRole("menuitem", { name: "Delete" })).toBeDisabled();
 
 	// Unlock restores the actions — wait for the mutation to land before re-reading the menu

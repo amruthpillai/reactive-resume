@@ -24,11 +24,11 @@ test("adds an experience item and persists it across reloads", async ({ authPage
 	await savePromise;
 
 	// The new item shows up in the section list with the company as its title
-	await expect(page.getByText(company)).toBeVisible();
+	await expect(page.getByText(company).filter({ visible: true }).first()).toBeVisible();
 
 	// And it survives a full reload
 	await page.reload();
 	await openSidebarSection(page, "Experience");
-	await expect(page.getByText(company)).toBeVisible();
-	await expect(page.getByText(position)).toBeVisible();
+	await expect(page.getByText(company).filter({ visible: true }).first()).toBeVisible();
+	await expect(page.getByText(position).filter({ visible: true }).first()).toBeVisible();
 });

@@ -15,17 +15,18 @@ export async function createSampleResumeFromDashboard(page: Page, testInfo: Test
 	await createGroup.getByRole("button").last().click();
 	await page.getByRole("menuitem", { name: "Create a Sample Resume" }).click();
 
-	const resumeLink = page.getByRole("link", { name: new RegExp(resumeName) });
-	await expect(resumeLink).toBeVisible();
-	await resumeLink.click();
+	// Creating a resume now navigates straight into the builder.
 	await page.waitForURL(/\/builder\/.+/);
 
 	return resumeName;
 }
 
 export async function openSidebarSection(page: Page, title: string) {
-	await page.getByTitle(title, { exact: true }).click();
-	await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible();
+	// Rail nav buttons are labelled with the section title (aria-label); clicking scrolls to the section.
+	await page.getByRole("button", { name: title, exact: true }).first().click();
+	// The visible section heading is exactly the title. Filter to visible because the screen-reader-only
+	// resume mirror in the preview also renders <h2> section headings with the same name.
+	await expect(page.getByRole("heading", { name: title, exact: true }).filter({ visible: true }).first()).toBeVisible();
 }
 
 export async function openResumeCardMenu(page: Page, resumeName: string) {
