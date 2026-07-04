@@ -18,21 +18,6 @@ msgstr ""
 "X-Crowdin-File: /apps/web/locales/en-US.po\n"
 "X-Crowdin-File-ID: 545\n"
 
-#. js-lingui-explicit-id
-#: src/routes/dashboard/resumes/index.tsx
-msgid "Last Updated"
-msgstr "Pēdējo reizi atjaunots"
-
-#. js-lingui-explicit-id
-#: src/routes/dashboard/resumes/index.tsx
-msgid "Created"
-msgstr "Izveidots"
-
-#. js-lingui-explicit-id
-#: src/routes/dashboard/resumes/index.tsx
-msgid "Name"
-msgstr "Nosaukums"
-
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
@@ -48,10 +33,20 @@ msgstr "{0, plural, zero {# ierakstu} one {# ieraksts} other {# ieraksti}}"
 msgid "{0, plural, one {# role} other {# roles}}"
 msgstr "{0, plural, zero {# lomas} one {# loma} other {# lomas}}"
 
+#. Character count readout for the rich-text editor
+#. placeholder {0}: state.characterCount
+#: src/components/input/rich-input.tsx
+msgid "{0} characters"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, zero {# kolonnas} one {# kolonna} other {# kolonnas}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
+msgid "{label} over the last 30 days"
+msgstr ""
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -123,6 +118,14 @@ msgstr "Protams! Jūs varat eksportēt savu CV uz PDF ar vienu klikšķi. Ekspor
 msgid "Access your resumes and data programmatically using the API."
 msgstr "Piekļūstiet saviem CV un datiem programmatiski, izmantojot API."
 
+#: src/routes/builder/$resumeId/-sidebar/left/index.tsx
+msgid "Account menu"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Actual size (100%)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Add a custom field"
 msgstr "Pievienot pielāgotu lauku"
@@ -193,25 +196,18 @@ msgstr "Pievienot jaunu prasmju ierakstu"
 msgid "Add a new volunteer experience"
 msgstr "Pievienot jaunu brīvprātīgo pieredzi"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
-msgid "Add and test a provider before starting a thread."
-msgstr "Pirms pavediena sākšanas pievienojiet un pārbaudiet pakalpojumu sniedzēju."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
 msgstr "Pirms aģenta pavediena sākšanas pievienojiet un pārbaudiet pakalpojumu sniedzēju."
 
-#: src/components/input/rich-input.tsx
-msgid "Add Column After"
-msgstr "Pievienot kolonnu pēc"
-
-#: src/components/input/rich-input.tsx
-msgid "Add Column Before"
-msgstr "Pievienot kolonnu pirms"
-
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Pievienot atslēgvārdu"
+
+#: src/components/input/rich-input.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
+msgid "Add link"
+msgstr ""
 
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Add multiple roles to show career progression at the same company."
@@ -229,17 +225,13 @@ msgstr "Pievienot pakalpojumu sniedzēju"
 msgid "Add Role"
 msgstr "Pievienot lomu"
 
-#: src/components/input/rich-input.tsx
-msgid "Add Row After"
-msgstr "Pievienot rindu pēc"
-
-#: src/components/input/rich-input.tsx
-msgid "Add Row Before"
-msgstr "Pievienot rindu pirms"
-
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
 msgstr "Pielāgojiet CV attālināti strādājošai lomai, kurā tiek vērtēta asinhronā saziņa un atbildības uzņemšanās."
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Advanced"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Afrikaans"
@@ -269,6 +261,10 @@ msgstr "Mākslīgā intelekta aģenta iestatīšana pašlaik nav pieejama. Lūdz
 msgid "AI agent setup is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Mākslīgā intelekta aģenta iestatīšana nav pieejama, kamēr nav konfigurēti REDIS_URL un ENCRYPTION_SECRET."
 
+#: src/routes/builder/$resumeId/-components/ai-assistant.tsx
+msgid "AI assistant"
+msgstr ""
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Mākslīgā intelekta pakalpojumu sniedzēja pārvaldība nav pieejama, kamēr nav konfigurēti REDIS_URL un ENCRYPTION_SECRET."
@@ -276,10 +272,6 @@ msgstr "Mākslīgā intelekta pakalpojumu sniedzēja pārvaldība nav pieejama, 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable. Please try again."
 msgstr "Mākslīgā intelekta pakalpojumu sniedzēja pārvaldība nav pieejama. Lūdzu, mēģiniet vēlreiz."
-
-#: src/features/settings/integrations/components/ai-section.tsx
-msgid "AI provider saved. Test it before use."
-msgstr "Mākslīgā intelekta pakalpojumu sniedzējs ir saglabāts. Pārbaudiet to pirms lietošanas."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
@@ -306,9 +298,8 @@ msgid "Amharic"
 msgstr "Amharu"
 
 #: src/components/layout/error-screen.tsx
-#: src/components/layout/not-found-screen.tsx
-msgid "An error occurred while loading the page."
-msgstr "Ielādējot lapu, radās kļūda."
+msgid "An unexpected error stopped this page from loading. You can try again or head back."
+msgstr ""
 
 #. Fallback toast when importing a resume fails for an unknown reason
 #: src/dialogs/resume/import.tsx
@@ -381,8 +372,8 @@ msgstr "Piemērotie noteikumi"
 msgid "Arabic"
 msgstr "Arābu"
 
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
-#: src/routes/agent/$threadId.tsx
 msgid "Archive"
 msgstr "Arhīvs"
 
@@ -434,7 +425,7 @@ msgstr "Studiju joma"
 msgid "Artificial Intelligence"
 msgstr "Mākslīgais intelekts"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Ask anything about this resume"
 msgstr "Jautājiet jebko par šo CV"
 
@@ -446,11 +437,11 @@ msgstr "Proporcijas"
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud atbalsta Reactive Resume kā projekta sponsoru. Ja jūsu uzņēmums vēlas sponsorēt projektu, rakstiet uz e-pastu <0>{sponsorshipEmail}</0> ."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Attach files"
 msgstr "Pievienot failus"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Attachment uploaded."
 msgstr "Pielikums augšupielādēts."
 
@@ -533,6 +524,10 @@ msgstr "Apmales rādiuss"
 msgid "Border Width"
 msgstr "Apmales platums"
 
+#: src/features/resume/public/public-resume.tsx
+msgid "Build your own resume"
+msgstr ""
+
 #. Screen-reader dialog title for the command palette in the resume builder
 #: src/features/command-palette/index.tsx
 msgid "Builder Command Palette"
@@ -585,13 +580,14 @@ msgstr "Vai varu eksportēt savu CV uz PDF?"
 #: src/features/settings/pages/profile.tsx
 #: src/hooks/use-prompt.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Cancel"
 msgstr "Atcelt"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Cannot restore; the resume has changed since this edit was applied."
 msgstr "Nevar atjaunot; CV ir mainījies kopš šī labojuma piemērošanas."
 
@@ -602,10 +598,6 @@ msgstr "Katalāņu"
 #: src/components/input/rich-input.tsx
 msgid "Center Align"
 msgstr "Centrēt"
-
-#: src/routes/builder/$resumeId/-components/dock.tsx
-msgid "Center view"
-msgstr "Centra skats"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -633,6 +625,7 @@ msgstr "Pārdomājāt? Pārsauciet savu CV par kaut ko aprakstošāku."
 msgid "Changelog"
 msgstr "Izmaiņu žurnāls"
 
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Chat"
 msgstr "Tērzēšana"
@@ -689,9 +682,9 @@ msgstr "Notīrīt atlasi"
 msgid "Click here to select a file to import"
 msgstr "Noklikšķiniet šeit, lai izvēlētos importējamo failu"
 
-#: src/components/input/rich-input.tsx
-msgid "Code Block"
-msgstr "Koda bloks"
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Close AI assistant"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -717,7 +710,7 @@ msgstr "Kopiena"
 msgid "Company"
 msgstr "Uzņēmums"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Compare this resume against this role URL and update keywords while keeping the voice concise and credible."
 msgstr "Salīdziniet šo CV ar šīs vakances URL un atjauniniet atslēgvārdus, vienlaikus saglabājot kodolīgu un ticamu toni."
 
@@ -738,6 +731,18 @@ msgstr "Apstiprināt"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Savienot"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Connected"
+msgstr ""
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Connection failed"
+msgstr ""
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Connection verified — provider is ready to use."
+msgstr ""
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
@@ -765,17 +770,17 @@ msgstr "Turpiniet no vietas, kur pārtraucāt, importējot esošu CV, ko izveido
 msgid "Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly."
 msgstr "Ieguldījumi nodrošina kļūdu labojumus, drošības atjauninājumus un nepārtrauktus uzlabojumus, lai lietotne darbotos vienmērīgi."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Conversation copied."
 msgstr "Saruna nokopēta."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Conversation JSON copied."
 msgstr "Sarunas JSON fails ir nokopēts."
 
 #. Action button to copy two-factor backup codes to clipboard
 #: src/dialogs/auth/enable-two-factor.tsx
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy"
 msgstr "Kopēt"
 
@@ -787,7 +792,7 @@ msgstr "Kopējiet un uzglabājiet šos rezerves kodus gadījumam, ja pazaudējat
 msgid "Copy Backup Codes"
 msgstr "Kopēt rezerves kodus"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Kopēt JSON"
 
@@ -796,6 +801,7 @@ msgid "Copy this secret key and use it in your applications to access your data.
 msgstr "Nokopējiet šo slepeno atslēgu un izmantojiet to savās lietotnēs, lai piekļūtu saviem datiem."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "Kopēt URL"
 
@@ -806,13 +812,21 @@ msgstr "Kopēt URL"
 msgid "Could not reach the AI provider. Please try again."
 msgstr "Nevarēja sazināties ar AI pakalpojumu sniedzēju. Lūdzu, mēģiniet vēlreiz."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Could not restore this patch."
 msgstr "Nevarēja atjaunot šo ielāpu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Could not verify provider connection."
 msgstr "Nevarēja pārbaudīt pakalpojumu sniedzēja savienojumu."
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Could not verify the connection. Check the API key, model, and base URL."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Couldn't save"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -841,6 +855,7 @@ msgstr "Motivācijas vēstule"
 #: src/dialogs/resume/sections/skill.tsx
 #: src/dialogs/resume/sections/summary-item.tsx
 #: src/dialogs/resume/sections/volunteer.tsx
+#: src/routes/dashboard/resumes/index.tsx
 msgid "Create"
 msgstr "Izveidot"
 
@@ -942,6 +957,10 @@ msgstr "Izveidojiet to tagad"
 msgid "Create resume with options"
 msgstr "Izveidot CV ar iespējām"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Created"
+msgstr ""
+
 #: src/dialogs/api-key/create.tsx
 msgid "Creating your API key..."
 msgstr "Tiek izveidota jūsu API atslēga..."
@@ -949,6 +968,10 @@ msgstr "Tiek izveidota jūsu API atslēga..."
 #: src/dialogs/resume/index.tsx
 msgid "Creating your resume..."
 msgstr "Tiek izveidots jūsu CV..."
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Crop picture"
+msgstr ""
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
@@ -995,6 +1018,10 @@ msgstr "Tumšs"
 msgid "Dark theme"
 msgstr "Tumšā tēma"
 
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "Dashboard"
+msgstr ""
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Data Security"
 msgstr "Datu drošība"
@@ -1004,6 +1031,10 @@ msgstr "Datu drošība"
 #: src/dialogs/resume/sections/publication.tsx
 msgid "Date"
 msgstr "Datums"
+
+#: src/components/input/rich-input.tsx
+msgid "Decrease indent"
+msgstr ""
 
 #: src/routes/agent/$threadId.tsx
 msgid "Decrease zoom"
@@ -1021,8 +1052,8 @@ msgstr "Grāds"
 #. Resume card dropdown destructive action to remove a resume
 #: src/features/settings/authentication/components/passkeys.tsx
 #: src/features/settings/pages/api-keys.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
-#: src/routes/agent/$threadId.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
@@ -1034,10 +1065,6 @@ msgstr "Dzēst"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Delete Account"
 msgstr "Dzēst kontu"
-
-#: src/components/input/rich-input.tsx
-msgid "Delete Column"
-msgstr "Dzēst kolonnu"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1051,16 +1078,8 @@ msgstr "Dzēst attēlu"
 msgid "Delete provider"
 msgstr "Dzēst pakalpojumu sniedzēju"
 
-#: src/components/input/rich-input.tsx
-msgid "Delete Row"
-msgstr "Dzēst rindu"
-
-#: src/components/input/rich-input.tsx
-msgid "Delete Table"
-msgstr "Dzēst tabulu"
-
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
-#: src/routes/agent/$threadId.tsx
 msgid "Delete this agent thread?"
 msgstr "Vai dzēst šo aģenta pavedienu?"
 
@@ -1090,6 +1109,7 @@ msgid "Description"
 msgstr "Apraksts"
 
 #: src/libs/resume/section.tsx
+#: src/routes/builder/$resumeId/route.tsx
 msgid "Design"
 msgstr "Dizains"
 
@@ -1142,6 +1162,10 @@ msgstr "Ziedot Reactive Resume"
 msgid "Download"
 msgstr "Lejupielādēt"
 
+#: src/features/settings/pages/danger-zone.tsx
+msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
 msgstr "Lejupielādējiet sava CV kopiju kā Word dokumentu. Izmantojiet šo failu, lai tālāk pielāgotu savu CV programmā Microsoft Word vai Google Docs."
@@ -1154,17 +1178,18 @@ msgstr "Lejupielādējiet sava CV kopiju JSON formātā. Izmantojiet šo failu k
 msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
 msgstr "Lejupielādējiet sava CV kopiju PDF formātā. Izmantojiet šo failu drukāšanai vai lai viegli kopīgotu savu CV ar personāla atlases speciālistiem."
 
-#: src/routes/builder/$resumeId/-components/dock.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download DOCX"
 msgstr "Lejupielādēt DOCX"
 
-#: src/routes/builder/$resumeId/-components/dock.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download JSON"
 msgstr "Lejupielādēt JSON"
 
+#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/dock.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "Lejupielādēt PDF"
 
@@ -1175,6 +1200,10 @@ msgstr "Lejupielādes"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Drag and drop sections here to move them between columns"
 msgstr "Velciet un nometiet sadaļas šeit, lai pārvietotu tās starp kolonnām"
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Drag to reposition and use the slider to zoom before uploading."
+msgstr ""
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1207,7 +1236,12 @@ msgstr "Tiek dublēts jūsu CV..."
 msgid "Dutch"
 msgstr "Holandiešu"
 
+#: src/routes/builder/$resumeId/-components/version-history.tsx
+msgid "Earlier versions are kept; the builder's undo history is reset."
+msgstr ""
+
 #: src/components/input/chip-input.tsx
+#: src/routes/builder/$resumeId/route.tsx
 msgid "Edit"
 msgstr "Rediģēt"
 
@@ -1221,9 +1255,21 @@ msgstr "Rediģēt {chip}"
 msgid "Edit content in fullscreen mode"
 msgstr "Satura rediģēšana pilnekrāna režīmā"
 
+#. Resume card context menu action to edit resume metadata
+#. Resume card dropdown action to edit resume metadata
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+msgid "Edit details"
+msgstr ""
+
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Rediģēt atslēgvārdu"
+
+#: src/routes/builder/$resumeId/-sidebar/left/index.tsx
+msgid "Editing is disabled until you unlock it."
+msgstr ""
 
 #: src/components/input/chip-input.tsx
 msgid "Editing keyword..."
@@ -1249,9 +1295,17 @@ msgstr "E-pasts"
 msgid "Email Address"
 msgstr "E-pasta adrese"
 
+#: src/features/settings/pages/profile.tsx
+msgid "Email delivery isn't configured on this instance, so verification is disabled."
+msgstr ""
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Iespējot 2FA"
+
+#: src/routes/builder/$resumeId/-sidebar/left/index.tsx
+msgid "Enable editing"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enable Two-Factor Authentication"
@@ -1348,20 +1402,20 @@ msgstr "Izpētiet API dokumentāciju, lai uzzinātu, kā integrēt Reactive Resu
 msgid "Export"
 msgstr "Eksports"
 
+#: src/features/settings/pages/danger-zone.tsx
+msgid "Export my data"
+msgstr ""
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
 msgstr "Eksportējiet savu CV PDF formātā acumirklī, bez gaidīšanas vai kavēšanās."
-
-#: src/features/settings/integrations/components/ai-section.tsx
-msgid "Failed"
-msgstr "Neizdevās"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Failed to analyze resume."
 msgstr "Neizdevās analizēt atsākšanu."
 
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
-#: src/routes/agent/$threadId.tsx
 msgid "Failed to archive thread."
 msgstr "Neizdevās arhivēt pavedienu."
 
@@ -1389,8 +1443,8 @@ msgstr "Neizdevās dzēst pakalpojumu sniedzēju."
 msgid "Failed to delete the API key. Please try again."
 msgstr "Neizdevās izdzēst API atslēgu. Lūdzu, mēģiniet vēlreiz."
 
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
-#: src/routes/agent/$threadId.tsx
 msgid "Failed to delete thread."
 msgstr "Neizdevās izdzēst pavedienu."
 
@@ -1408,6 +1462,11 @@ msgstr "Neizdevās atspējot divu faktoru autentifikāciju. Lūdzu, mēģiniet v
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Failed to enable two-factor authentication. Please try again."
 msgstr "Neizdevās iespējot divu faktoru autentifikāciju. Lūdzu, mēģiniet vēlreiz."
+
+#. Fallback toast when data export fails
+#: src/features/settings/pages/danger-zone.tsx
+msgid "Failed to export your data. Please try again."
+msgstr ""
 
 #. Fallback toast when linking a social authentication provider fails
 #: src/features/settings/authentication/components/hooks.tsx
@@ -1470,6 +1529,10 @@ msgstr "Neizdevās izrakstīties. Lūdzu, mēģiniet vēlreiz."
 msgid "Failed to start agent thread."
 msgstr "Neizdevās sākt aģenta pavedienu."
 
+#: src/routes/builder/$resumeId/-components/ai-assistant.tsx
+msgid "Failed to start the AI assistant."
+msgstr ""
+
 #. Fallback toast when unlinking a social authentication provider fails
 #: src/features/settings/authentication/components/hooks.tsx
 msgid "Failed to unlink provider. Please try again."
@@ -1489,7 +1552,7 @@ msgstr "Neizdevās atjaunināt paroli. Lūdzu, mēģiniet vēlreiz."
 msgid "Failed to update your profile. Please try again."
 msgstr "Neizdevās atjaunināt jūsu profilu. Lūdzu, mēģiniet vēlreiz."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Failed to upload attachment."
 msgstr "Neizdevās augšupielādēt pielikumu."
 
@@ -1519,17 +1582,25 @@ msgstr "Jūsu kodu neizdevās pārbaudīt. Lūdzu, mēģiniet vēlreiz."
 msgid "Features"
 msgstr "Funkcijas"
 
+#: src/dialogs/resume/import.tsx
+msgid "File"
+msgstr ""
+
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Filter by"
 msgstr "Filtrēt pēc"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Find weak bullets and rewrite them with stronger outcomes, numbers, scope, and sharper verbs."
 msgstr "Atrodiet vājas aizzīmes un pārrakstiet tās ar spēcīgākiem rezultātiem, skaitļiem, darbības jomu un asākiem darbības vārdiem."
 
 #: src/libs/locale.ts
 msgid "Finnish"
 msgstr "Somu"
+
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Fit to view"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
@@ -1636,11 +1707,16 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
-#: src/components/layout/not-found-screen.tsx
 #: src/features/auth/pages/verify-2fa-backup.tsx
 msgid "Go Back"
 msgstr "Atpakaļ"
 
+#: src/components/layout/not-found-screen.tsx
+msgid "Go home"
+msgstr ""
+
+#: src/components/layout/error-screen.tsx
+#: src/components/layout/not-found-screen.tsx
 #: src/routes/_home/-sections/header.tsx
 msgid "Go to dashboard"
 msgstr "Doties uz vadības paneli"
@@ -1776,6 +1852,10 @@ msgstr "Slēpt saites pasvītrojumu"
 msgid "Hide password"
 msgstr "Paslēpt paroli"
 
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Hide picture"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Hide Section Icons"
 msgstr "Slēpt sadaļu ikonas"
@@ -1826,11 +1906,12 @@ msgstr "Ungāru"
 msgid "Icon"
 msgstr "Ikona"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Nosakiet pretendentu izsekošanas sistēmas nepilnības un izmantojiet tikai augstas uzticamības atslēgvārdu uzlabojumus."
 
 #: src/dialogs/resume/import.tsx
+#: src/routes/dashboard/resumes/index.tsx
 msgid "Import"
 msgstr "Importēt"
 
@@ -1841,12 +1922,20 @@ msgid "Import an existing resume"
 msgstr "Importēt esošu CV"
 
 #: src/dialogs/resume/import.tsx
+msgid "Importing from PDF or Word requires a connected AI provider."
+msgstr ""
+
+#: src/dialogs/resume/import.tsx
 msgid "Importing your resume..."
 msgstr "Tiek importēts jūsu CV..."
 
 #: src/dialogs/resume/import.tsx
 msgid "Importing…"
 msgstr "Importē…"
+
+#: src/components/input/rich-input.tsx
+msgid "Increase indent"
+msgstr ""
 
 #: src/routes/agent/$threadId.tsx
 msgid "Increase zoom"
@@ -1863,10 +1952,6 @@ msgstr "Informācija"
 #: src/components/input/rich-input.tsx
 msgid "Inline Code"
 msgstr "Iekļautais kods"
-
-#: src/components/input/rich-input.tsx
-msgid "Insert Table"
-msgstr "Ievietot tabulu"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -1950,6 +2035,11 @@ msgstr "Izlīdzināt līdz malām"
 msgid "Kannada"
 msgstr "Kannadu"
 
+#. Layout editor toggle that prevents a section from splitting across pages
+#: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
+msgid "Keep together"
+msgstr ""
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Key"
 msgstr "Atslēga"
@@ -2001,6 +2091,10 @@ msgstr "Pēdējo reizi analizēts {updatedAtLabel}"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
 msgstr "Pēdējo reizi lejupielādēts {0}"
+
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Last Updated"
+msgstr ""
 
 #: src/routes/dashboard/resumes/-components/cards/resume-card.tsx
 #: src/routes/dashboard/resumes/-components/list-view.tsx
@@ -2089,6 +2183,12 @@ msgstr "Saraksts"
 msgid "Lithuanian"
 msgstr "Lietuviešu"
 
+#. placeholder {0}: metadata.name
+#: src/dialogs/resume/template/gallery.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/template.tsx
+msgid "Live preview of your resume in the {0} template"
+msgstr ""
+
 #: src/routes/agent/$threadId.tsx
 msgid "Loading agent workspace…"
 msgstr "Notiek aģenta darbvietas ielāde…"
@@ -2112,6 +2212,7 @@ msgid "Loading threads…"
 msgstr "Notiek pavedienu ielāde…"
 
 #: src/components/layout/loading-screen.tsx
+#: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Loading…"
 msgstr "Notiek ielāde…"
 
@@ -2158,7 +2259,7 @@ msgstr "Galvenā"
 msgid "Main navigation"
 msgstr "Galvenā navigācija"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "Padariet pieredzes sadaļu vairāk orientētu uz rezultātiem un noņemiet neskaidrus pienākumus."
 
@@ -2188,6 +2289,7 @@ msgid "Medium"
 msgstr "Vidēja"
 
 #. File format label in import source selector
+#. File format label in import source selector
 #: src/dialogs/resume/import.tsx
 msgid "Microsoft Word"
 msgstr "Microsoft Word"
@@ -2200,7 +2302,16 @@ msgstr "Trūkst darba CV"
 msgid "Model"
 msgstr "Modelis"
 
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "More download options"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
+msgid "Move section to another column or page"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Pārvietot uz"
 
@@ -2223,6 +2334,7 @@ msgstr "Jāuzsāk ar https://"
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
+#: src/routes/dashboard/resumes/index.tsx
 msgid "Name"
 msgstr "Nosaukums"
 
@@ -2243,6 +2355,7 @@ msgid "New Line"
 msgstr "Jauna rinda"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "New Page"
 msgstr "Jauna lapa"
 
@@ -2273,9 +2386,22 @@ msgstr "No AI nodrošinātāja netika saņemti nekādi dati."
 msgid "No passkeys registered yet."
 msgstr "Pagaidām nav reģistrēti pases taustiņi."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
+msgid "No prior data"
+msgstr ""
+
 #: src/components/ui/combobox.tsx
 msgid "No results found."
 msgstr "Rezultāti nav atrasti."
+
+#: src/routes/dashboard/resumes/-components/grid-view.tsx
+#: src/routes/dashboard/resumes/-components/list-view.tsx
+msgid "No resumes match your search."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/version-history.tsx
+msgid "No saved versions yet."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "No style rules yet."
@@ -2292,6 +2418,10 @@ msgstr "Vēl nav pavedienu."
 #: src/libs/locale.ts
 msgid "Norwegian"
 msgstr "Norvēģu"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2313,6 +2443,11 @@ msgstr "Vienas pogas pieslēgšanās"
 msgid "Ongoing Maintenance"
 msgstr "Nepārtraukta uzturēšana"
 
+#. Helper note explaining the keep-together limitation
+#: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
+msgid "Only applies when the section fits on a single page."
+msgstr ""
+
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
 #: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
@@ -2323,6 +2458,10 @@ msgstr "Atvērt"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Open AI agent"
 msgstr "Atvērts mākslīgā intelekta aģents"
+
+#: src/routes/builder/$resumeId/-components/ai-assistant.tsx
+msgid "Open AI assistant"
+msgstr ""
 
 #. Button label to open the user's default email app
 #: src/features/auth/pages/forgot-password.tsx
@@ -2362,6 +2501,10 @@ msgstr "atveras jaunā cilnē"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Pēc izvēles varat iestatīt paroli, lai tikai cilvēki ar paroli varētu skatīt jūsu CV, izmantojot saiti."
 
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
+msgid "Options for {title}"
+msgstr ""
+
 #: src/features/auth/components/social-auth.tsx
 msgctxt "Choose to authenticate with a social provider (Google, GitHub, etc.) instead of email and password"
 msgid "or continue with"
@@ -2385,6 +2528,7 @@ msgstr "Lapa"
 
 #. Layout editor page label with 1-based page number
 #. placeholder {0}: pageIndex + 1
+#. placeholder {0}: targetPageIndex + 1
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Page {0}"
@@ -2393,6 +2537,10 @@ msgstr "Lapa {0}"
 #: src/components/input/rich-input.tsx
 msgid "Paragraph"
 msgstr "Rindkopa"
+
+#: src/components/input/rich-input.tsx
+msgid "Paragraph and heading style"
+msgstr ""
 
 #. Authentication provider display name in account settings
 #. Label for passkey sign-in button
@@ -2447,30 +2595,31 @@ msgstr "Paroles aizsardzība ir deaktivēta."
 msgid "Password protection has been enabled."
 msgstr "Paroles aizsardzība ir aktivēta."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch applied"
 msgstr "Ielāps uzlikts"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch conflicted"
 msgstr "Ielāpa konflikts"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch failed"
 msgstr "Ielāps neizdevās"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch pending"
 msgstr "Ielāps gaida"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch rolled back"
 msgstr "Ielāps ir atsaukts"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch rolled back."
 msgstr "Ielāps atritināts."
 
+#. File format label in import source selector
 #. File format label in import source selector
 #: src/dialogs/resume/import.tsx
 msgid "PDF"
@@ -2496,6 +2645,10 @@ msgstr "Personalizējiet savu CV ar jebkurām krāsām, fontiem vai dizainiem un
 msgid "Phone"
 msgstr "Tālrunis"
 
+#: src/components/input/icon-picker.tsx
+msgid "Pick an icon"
+msgstr ""
+
 #: src/libs/resume/section.tsx
 msgid "Picture"
 msgstr "Attēls"
@@ -2516,9 +2669,8 @@ msgstr "Lūdzu, ievadiet URL, uz kuru vēlaties izveidot saiti:"
 msgid "Please support the project"
 msgstr "Lūdzu, atbalstiet projektu"
 
+#: src/features/resume/export/use-resume-export.ts
 #: src/features/resume/public/public-resume.tsx
-#: src/routes/builder/$resumeId/-components/dock.tsx
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Please wait while your PDF is being generated..."
 msgstr "Lūdzu, uzgaidiet, kamēr tiek ģenerēts jūsu PDF..."
 
@@ -2555,9 +2707,13 @@ msgstr "Amats"
 msgid "Preferences"
 msgstr "Preferences"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Prepare a conservative patch that improves clarity without changing my career narrative."
 msgstr "Sagatavot konservatīvu ielāpu, kas uzlabo skaidrību, nemainot manu karjeras naratīvu."
+
+#: src/features/resume/export/use-resume-export.ts
+msgid "Preparing your resume for printing..."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 msgid "Presets"
@@ -2572,9 +2728,17 @@ msgstr "Nospiediet <0>{RETURN_KEY}</0> vai <1>{COMMA_KEY}</1>, lai pievienotu va
 msgid "Press <0>Enter</0> to open"
 msgstr "Nospiediet <0>Enter</0>, lai atvērtu"
 
+#: src/routes/builder/$resumeId/route.tsx
+msgid "Preview"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Primārā krāsa"
+
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Print"
+msgstr ""
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2663,8 +2827,8 @@ msgstr "Reactive CV joprojām ir bezmaksas, atvērtā koda un neatkarīgs, jo uz
 
 #. App version label in footer; includes semantic version variable
 #: src/components/ui/copyright.tsx
-msgid "Reactive Resume v{__APP_VERSION__}"
-msgstr "Reaktīvais CV pret{__APP_VERSION__}"
+msgid "Reactive Resume v<0>{__APP_VERSION__}</0>"
+msgstr ""
 
 #. Import source option for legacy Reactive Resume v4 JSON format
 #: src/dialogs/resume/import.tsx
@@ -2683,15 +2847,15 @@ msgstr "Taisnstūris"
 msgid "Rectangle (Full Width)"
 msgstr "Taisnstūris (pilns platums)"
 
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Redo"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "References"
 msgstr "Atsauksmes"
-
-#: src/components/layout/error-screen.tsx
-msgid "Refresh"
-msgstr "Atsvaidzināt"
 
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "Register New Device"
@@ -2710,6 +2874,14 @@ msgstr "Noņemt"
 msgid "Remove {chip}"
 msgstr "Noņemt {chip}"
 
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
+msgid "Remove custom field"
+msgstr ""
+
+#: src/components/input/rich-input.tsx
+msgid "Remove link"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Remove Password"
 msgstr "Noņemt paroli"
@@ -2725,6 +2897,10 @@ msgstr "Pārdēvēt"
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Pārkārtot"
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
+msgid "Reorder custom field"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -2768,13 +2944,17 @@ msgstr "Tiek atiestatīta jūsu parole..."
 msgid "Resources"
 msgstr "Resursi"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Restore"
 msgstr "Atjaunot"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
 msgstr "Vai atjaunot CV versiju pirms šī ielāpa? Tādējādi tiks atiestatīts gan šis ielāps, gan visi pēc tā lietotie ielāpi."
+
+#: src/routes/builder/$resumeId/-components/version-history.tsx
+msgid "Restore this version?"
+msgstr ""
 
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
@@ -2788,7 +2968,15 @@ msgstr "CV analīze"
 msgid "Resume analysis complete."
 msgstr "CV analīze pabeigta."
 
-#: src/routes/agent/$threadId.tsx
+#: src/features/resume/preview/resume-accessible-text.tsx
+msgid "Resume content"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Resume options"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Resume patch"
 msgstr "CV ielāps"
 
@@ -2800,19 +2988,19 @@ msgstr "CV ielāps"
 msgid "Resumes"
 msgstr "CV"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Retry"
 msgstr "Mēģināt vēlreiz"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Salīdzini CV ar amata aprakstu un uzdod man jautājumus, pirms maināt neskaidrās sadaļas."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
 msgstr "Pārstrādājiet kopsavilkumu, lai tas būtu paredzēts vecākā inženierzinātņu vadītāja amatam, neizklausoties vispārīgi."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Rewrite this resume for a startup founder-to-product-lead transition with clear business impact."
 msgstr "Pārrakstiet šo CV, lai tas atbilstu jaunuzņēmuma dibinātāja un produkta vadītāja pārejai ar skaidru ietekmi uz uzņēmējdarbību."
 
@@ -2853,6 +3041,14 @@ msgstr "Krievu"
 msgid "Save"
 msgstr "Saglabāt"
 
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Save & Test Provider"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Save & Upload"
+msgstr ""
+
 #: src/dialogs/resume/index.tsx
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
@@ -2873,9 +3069,13 @@ msgstr "Saglabāt"
 msgid "Save Changes"
 msgstr "Saglabāt izmaiņas"
 
-#: src/features/settings/integrations/components/ai-section.tsx
-msgid "Save Provider"
-msgstr "Saglabāt pakalpojumu sniedzēju"
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Saved"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/header.tsx
+msgid "Saving…"
+msgstr ""
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Scan the QR code below with your preferred authenticator app. You can also copy the secret below and paste it into your app."
@@ -2888,6 +3088,10 @@ msgstr "Skola"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Scorecard"
 msgstr "Rezultātu tabula"
+
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "Search"
+msgstr ""
 
 #. Accessible label for command palette search input
 #: src/features/command-palette/index.tsx
@@ -2904,6 +3108,10 @@ msgstr "Meklēt ikonu"
 msgid "Search for…"
 msgstr "Meklēt…"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Search resumes..."
+msgstr ""
+
 #: src/components/ui/combobox.tsx
 msgid "Search..."
 msgstr "Meklēt..."
@@ -2917,6 +3125,11 @@ msgstr "Meklēt…"
 msgid "Secret copied to clipboard."
 msgstr "Noslēpums nokopēts starpliktuvē."
 
+#: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
+msgid "Section options"
+msgstr ""
+
 #: src/dialogs/resume/sections/custom.tsx
 msgid "Section Type"
 msgstr "Sadaļas tips"
@@ -2924,14 +3137,6 @@ msgstr "Sadaļas tips"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Select a resume"
 msgstr "Izvēlieties CV"
-
-#: src/routes/agent/-components/new-thread-setup.tsx
-msgid "Select a tested provider"
-msgstr "Izvēlieties pārbaudītu pakalpojumu sniedzēju"
-
-#: src/routes/agent/-components/new-thread-setup.tsx
-msgid "Select a tested provider before starting a thread."
-msgstr "Pirms pavediena sākšanas izvēlieties pārbaudītu pakalpojumu sniedzēju."
 
 #: src/routes/agent/index.tsx
 msgid "Select a thread"
@@ -2941,6 +3146,10 @@ msgstr "Atlasīt pavedienu"
 msgid "Select an agent model"
 msgstr "Izvēlieties aģenta modeli"
 
+#: src/routes/agent/-components/new-thread-setup.tsx
+msgid "Select an AI provider"
+msgstr ""
+
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "Atlasīt..."
@@ -2949,7 +3158,7 @@ msgstr "Atlasīt..."
 msgid "Self-Host with Docker"
 msgstr "Pašhostēšana ar Docker"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
 msgstr "Sūtīt ziņojumu"
 
@@ -2974,6 +3183,26 @@ msgstr "Serbu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Iestatīt paroli"
+
+#: src/dialogs/resume/import.tsx
+msgid "Set up a provider"
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/ai-assistant.tsx
+msgid "Set up an AI provider"
+msgstr ""
+
+#: src/routes/agent/-components/new-thread-setup.tsx
+msgid "Set up an AI provider before starting a thread."
+msgstr ""
+
+#: src/routes/builder/$resumeId/-components/ai-assistant.tsx
+msgid "Set up an AI provider to chat about this resume and apply edits automatically."
+msgstr ""
+
+#: src/routes/agent/-components/new-thread-setup.tsx
+msgid "Set up an AI provider to get started."
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/routes/agent/-components/new-thread-setup.tsx
@@ -3036,6 +3265,10 @@ msgstr "Rādīt saiti virsrakstā"
 #: src/features/auth/pages/resume-password.tsx
 msgid "Show password"
 msgstr "Rādīt paroli"
+
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Show picture"
+msgstr ""
 
 #. Layout editor column label for the secondary sidebar area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -3120,6 +3353,8 @@ msgid "Skills"
 msgstr "Prasmes"
 
 #: src/routes/_home/route.tsx
+#: src/routes/builder/$resumeId/route.tsx
+#: src/routes/dashboard/route.tsx
 msgid "Skip to main content"
 msgstr "Pāriet uz galveno saturu"
 
@@ -3134,6 +3369,10 @@ msgstr "Slovēņu"
 #: src/dialogs/resume/index.tsx
 msgid "Slug"
 msgstr "Tīmekļa adrese (slug)"
+
+#: src/components/layout/error-screen.tsx
+msgid "Something went wrong"
+msgstr ""
 
 #. Fallback error description when resume analysis request fails
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
@@ -3209,6 +3448,11 @@ msgstr "Sāciet veidot savu CV no nulles"
 msgid "Start new thread"
 msgstr "Sākt jaunu pavedienu"
 
+#. Layout editor toggle that forces a section to begin on a new page
+#: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
+msgid "Start on new page"
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
 msgstr "Sākt pavedienu"
@@ -3221,7 +3465,7 @@ msgstr "Statistika"
 msgid "Stay"
 msgstr "Palikt"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Stop generation"
 msgstr "Apturēt paaudzi"
 
@@ -3270,9 +3514,14 @@ msgstr "Pārslēgt uz tumšo tēmu"
 msgid "Switch to light theme"
 msgstr "Pārslēgt uz gaišo tēmu"
 
-#: src/components/input/rich-input.tsx
-msgid "Table"
-msgstr "Tabula"
+#. placeholder {0}: templates[template].name
+#: src/dialogs/resume/template/gallery.tsx
+msgid "Switched to the {0} template."
+msgstr ""
+
+#: src/features/resume/builder/draft.ts
+msgid "Synced changes made in another tab."
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags"
@@ -3282,7 +3531,7 @@ msgstr "Tagi"
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Tagus var izmantot, lai kategorizētu savu CV pēc atslēgvārdiem."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Tailor this resume to a product manager job description and emphasize roadmap ownership, stakeholder communication, and measurable launch outcomes."
 msgstr "Pielāgojiet šo CV produktu vadītāja amata aprakstam un uzsveriet ceļveža atbildību, ieinteresēto personu komunikāciju un izmērāmus palaišanas rezultātus."
 
@@ -3310,13 +3559,17 @@ msgstr "Veidnes"
 msgid "Test"
 msgstr "Tests"
 
-#: src/features/settings/integrations/components/ai-section.tsx
-msgid "Tested"
-msgstr "Pārbaudīts"
-
 #: src/routes/_home/-sections/testimonials.tsx
 msgid "Testimonials"
 msgstr "Atsauksmes"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Testing…"
+msgstr ""
+
+#: src/components/input/rich-input.tsx
+msgid "Text alignment"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3331,7 +3584,7 @@ msgstr "Taju"
 msgid "Thank you to our sponsors"
 msgstr "Paldies mūsu sponsoriem"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "The agent needs your input."
 msgstr "Aģentam ir nepieciešama jūsu ieguldījums."
 
@@ -3357,6 +3610,10 @@ msgstr "Meklētā komanda neeksistē."
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Importēto failu nav iespējams analizēt kā derīgu atsākumu."
+
+#: src/components/layout/not-found-screen.tsx
+msgid "The page you're looking for may have been moved or no longer exists."
+msgstr ""
 
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
@@ -3385,19 +3642,21 @@ msgstr "Tēma"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Pēc tam ievadiet 6 ciparu kodu, ko nodrošina lietotne, lai turpinātu."
 
-#: src/routes/builder/$resumeId/-components/dock.tsx
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+#: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "DOCX ģenerēšanas laikā radās problēma, lūdzu, mēģiniet vēlreiz."
 
+#: src/features/resume/export/use-resume-export.ts
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/dock.tsx
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "There was a problem while generating the PDF, please try again."
 msgstr "PDF faila ģenerēšanas laikā radās problēma. Lūdzu, mēģiniet vēlreiz."
 
-#: src/routes/agent/$threadId.tsx
+#: src/features/resume/export/use-resume-export.ts
+msgid "There was a problem while preparing your resume for printing, please try again."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "Domāšana"
 
@@ -3411,9 +3670,9 @@ msgstr "Šo darbību nevar atsaukt."
 msgid "This action cannot be undone. All your data will be permanently deleted."
 msgstr "Šo darbību nevar atsaukt. Visi jūsu dati tiks neatgriezeniski dzēsti."
 
-#: src/routes/agent/$threadId.tsx
-msgid "This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume draft remains in your dashboard and can be deleted separately."
-msgstr "Šo darbību nevar atsaukt. Sarunu ziņojumi un augšupielādētie pielikumi tiks noņemti. Darba CV melnraksts paliek jūsu informācijas panelī un to var dzēst atsevišķi."
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume remains in your dashboard and can be deleted separately."
+msgstr ""
 
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "This action cannot be undone. Messages and thread attachments will be removed."
@@ -3423,9 +3682,13 @@ msgstr "Šo darbību nevar atsaukt. Ziņojumi un pavedienu pielikumi tiks noņem
 msgid "This agent thread could not be opened."
 msgstr "Šo aģenta pavedienu nevarēja atvērt."
 
+#: src/routes/builder/$resumeId/-components/ai-assistant.tsx
+msgid "This assistant could not be opened."
+msgstr ""
+
 #: src/dialogs/resume/import.tsx
-msgid "This feature requires a tested AI provider. Please add one in the settings."
-msgstr "Šai funkcijai ir nepieciešams pārbaudīts mākslīgā intelekta pakalpojumu sniedzējs. Lūdzu, pievienojiet to iestatījumos."
+msgid "This feature requires a connected AI provider. Please set one up in the settings."
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -3435,9 +3698,21 @@ msgstr "Tas ir URL-draudzīgs nosaukums jūsu CV."
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Tas var aizņemt dažas minūtes atkarībā no MI pakalpojumu sniedzēja atbildes. Lūdzu, neaizveriet logu un neatjaunojiet lapu."
 
+#: src/routes/builder/$resumeId/-sidebar/left/index.tsx
+msgid "This resume is locked"
+msgstr ""
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume is locked and cannot be updated."
 msgstr "Šis CV ir bloķēts un to nevar atjaunināt."
+
+#: src/features/resume/builder/draft.ts
+msgid "This resume was updated by an AI agent."
+msgstr ""
+
+#: src/features/resume/builder/draft.ts
+msgid "This resume's sharing settings changed elsewhere."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
@@ -3447,15 +3722,15 @@ msgstr "Šī sadaļa ir paredzēta jūsu personīgām piezīmēm par šo CV. Sat
 msgid "This step is optional, but recommended."
 msgstr "Šis solis nav obligāts, taču ieteicams."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "This thread is archived. New messages cannot be sent."
 msgstr "Šī tēma ir arhivēta. Jaunus ziņojumus nevar sūtīt."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "This thread is read-only"
 msgstr "Šis pavediens ir tikai lasāms"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "This thread is read-only because the working resume or AI provider is unavailable."
 msgstr "Šī tēma ir tikai lasāma, jo darba CV vai mākslīgā intelekta nodrošinātājs nav pieejams."
 
@@ -3471,16 +3746,16 @@ msgstr "Tas palīdzēs to identificēt vēlāk, ja plānojat izmantot vairākus 
 msgid "This will remove all items from this section."
 msgstr "Tādējādi no šīs sadaļas tiks noņemti visi elementi."
 
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
-#: src/routes/agent/$threadId.tsx
 msgid "Thread actions"
 msgstr "Pavedienu darbības"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Thread archived."
 msgstr "Tēma arhivēta."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Thread deleted."
 msgstr "Tēma izdzēsta."
 
@@ -3489,7 +3764,7 @@ msgstr "Tēma izdzēsta."
 msgid "Threads"
 msgstr "Vītnes"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Tighten the skills section so it supports the target role instead of reading like a keyword dump."
 msgstr "Saskaņojiet prasmju sadaļu, lai tā atbilstu mērķa lomai, nevis lasītu kā atslēgvārdu izgāztuve."
 
@@ -3516,6 +3791,11 @@ msgstr "Nosaukums"
 msgid "To delete your account, you need to enter the confirmation text and click the button below."
 msgstr "Lai dzēstu savu kontu, jums jāievada apstiprinājuma teksts un jānoklikšķina uz zemāk esošās pogas."
 
+#: src/routes/builder/$resumeId/-sidebar/left/shared/section-base.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/shared/section-base.tsx
+msgid "Toggle {sectionTitle} section"
+msgstr ""
+
 #. Screen-reader label for opening or closing the left sidebar in resume builder
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Toggle left sidebar"
@@ -3525,7 +3805,7 @@ msgstr "Pārslēgt kreiso sānjjoslu"
 msgid "Toggle page stacking"
 msgstr "Pārslēgt lapu sakraušanu"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle resume preview"
 msgstr "Pārslēgt CV priekšskatījumu"
 
@@ -3534,7 +3814,7 @@ msgstr "Pārslēgt CV priekšskatījumu"
 msgid "Toggle right sidebar"
 msgstr "Pārslēgt labo sānjjoslu"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Pārslēgt pavedienus"
 
@@ -3546,6 +3826,10 @@ msgstr "Izsekojiet sava CV skatījumiem un lejupielādēm"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
 msgstr "Tulkojumi"
+
+#: src/components/layout/error-screen.tsx
+msgid "Try again"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Turkish"
@@ -3636,6 +3920,11 @@ msgstr "Ukraiņu"
 msgid "Underline"
 msgstr "Pasvītrot"
 
+#: src/dialogs/resume/template/gallery.tsx
+#: src/routes/builder/$resumeId/-components/dock.tsx
+msgid "Undo"
+msgstr ""
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
 msgstr "Neierobežoti CV"
@@ -3658,21 +3947,12 @@ msgstr "Atbloķēt"
 msgid "Unnamed passkey"
 msgstr "Nenosaukta piekļuves atslēga"
 
-#: src/features/settings/integrations/components/ai-section.tsx
-msgid "Untested"
-msgstr "Nepārbaudīts"
-
 #: src/features/settings/pages/profile.tsx
 msgid "Unverified"
 msgstr "Neverificēts"
 
-#. Resume card context menu action to edit resume metadata
-#. Resume card dropdown action to edit resume metadata
-#: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
 msgid "Update"
 msgstr "Atjaunināt"
 
@@ -3742,7 +4022,7 @@ msgstr "Atjaunināt esošu brīvprātīgo pieredzi"
 msgid "Update Password"
 msgstr "Atjaunināt paroli"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Update project bullets to show leadership, constraints, tradeoffs, and measurable outcomes."
 msgstr "Atjauniniet projekta aizzīmes, lai parādītu vadību, ierobežojumus, kompromisus un izmērāmus rezultātus."
 
@@ -3762,7 +4042,7 @@ msgstr "Tiek atjaunināta jūsu parole..."
 msgid "Updating your resume..."
 msgstr "Tiek atjaunināts jūsu CV..."
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Augšupielādēt pielikumus"
 
@@ -3785,6 +4065,7 @@ msgid "Use"
 msgstr "Lietošana"
 
 #: src/components/input/color-picker.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Izmantojiet krāsu {color}"
 
@@ -3846,6 +4127,10 @@ msgstr "Verificē paroli..."
 msgid "Verifying your email is required when resetting your password."
 msgstr "Paroles atiestatīšanai ir nepieciešama jūsu e-pasta verifikācija."
 
+#: src/routes/builder/$resumeId/-components/version-history.tsx
+msgid "Version history"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "Vjetnamiešu"
@@ -3860,6 +4145,18 @@ msgstr "Skatījumi"
 msgid "Volunteer"
 msgstr "Brīvprātīgais darbs"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
+msgid "vs previous 30 days"
+msgstr ""
+
+#: src/dialogs/resume/import.tsx
+msgid "We couldn't detect the format automatically — please choose it above."
+msgstr ""
+
+#: src/components/layout/not-found-screen.tsx
+msgid "We couldn't find that page"
+msgstr ""
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -3873,7 +4170,7 @@ msgstr "Brīvprātīgais darbs"
 msgid "Website"
 msgstr "Tīmekļa vietne"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Ko tu vēlies darīt?"
 
@@ -3899,7 +4196,7 @@ msgstr "Kad CV ir bloķēts, to nevar atjaunināt vai dzēst."
 msgid "Work OpenAI"
 msgstr "Darbs OpenAI"
 
-#: src/routes/agent/$threadId.tsx
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Working…"
 msgstr "Darbs…"
 
@@ -3948,6 +4245,10 @@ msgstr "Jūsu API atslēga ir nokopēta starpliktuvē."
 msgid "Your changes are saved automatically."
 msgstr "Jūsu izmaiņas tiek saglabātas automātiski."
 
+#: src/features/settings/pages/danger-zone.tsx
+msgid "Your data has been exported successfully."
+msgstr ""
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Your data is secure, and never shared or sold to anyone."
 msgstr "Jūsu dati ir droši un nekad netiek kopīgoti vai pārdoti nevienam."
@@ -3990,6 +4291,10 @@ msgstr "Jūsu CV ir veiksmīgi dublēts."
 msgid "Your resume has been imported successfully."
 msgstr "Jūsu CV ir veiksmīgi importēts."
 
+#: src/routes/builder/$resumeId/-components/version-history.tsx
+msgid "Your resume has been restored to the selected version."
+msgstr ""
+
 #: src/dialogs/resume/index.tsx
 msgid "Your resume has been updated successfully."
 msgstr "Jūsu CV ir veiksmīgi atjaunināts."
@@ -4002,11 +4307,16 @@ msgstr "Jūsu CV publiskā saite pašlaik ir aizsargāta ar paroli. Kopīgojiet 
 msgid "Your support ensures the project remains free and accessible for everyone, now and in the future."
 msgstr "Jūsu atbalsts nodrošina, ka projekts paliek bez maksas un pieejams visiem – tagad un nākotnē."
 
+#: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
+msgid "Zoom"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Zoom in"
 msgstr "Tuvināt"
 
 #: src/routes/agent/$threadId.tsx
+#: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Zoom level"
 msgstr "Tālummaiņas līmenis"
 
@@ -4017,4 +4327,3 @@ msgstr "Tālināt"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-
