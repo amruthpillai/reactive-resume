@@ -44,6 +44,28 @@ export const threadsRouter = {
 			}
 		}),
 
+	getOrCreateForResume: protectedProcedure
+		.route({
+			method: "POST",
+			path: "/agent/threads/for-resume",
+			tags: ["Agent"],
+			operationId: "getOrCreateAgentThreadForResume",
+			summary: "Get or create an in-resume agent thread",
+		})
+		.input(z.object({ resumeId: z.string(), aiProviderId: z.string().optional() }))
+		.handler(async ({ context, input }) => {
+			try {
+				return await agentService.threads.getOrCreateForResume({
+					userId: context.user.id,
+					resumeId: input.resumeId,
+					...(input.aiProviderId ? { aiProviderId: input.aiProviderId } : {}),
+				});
+			} catch (error) {
+				if (isAgentEnvironmentUnavailable(error)) throwUnavailable();
+				throw error;
+			}
+		}),
+
 	get: protectedProcedure
 		.route({
 			method: "GET",

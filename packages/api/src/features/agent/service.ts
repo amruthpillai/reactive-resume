@@ -818,31 +818,33 @@ function createAgent(input: {
 	});
 }
 
+const threadSummarySelection = {
+	id: schema.agentThread.id,
+	userId: schema.agentThread.userId,
+	aiProviderId: schema.agentThread.aiProviderId,
+	sourceResumeId: schema.agentThread.sourceResumeId,
+	workingResumeId: schema.agentThread.workingResumeId,
+	title: schema.agentThread.title,
+	status: schema.agentThread.status,
+	activeRunId: schema.agentThread.activeRunId,
+	activeStreamId: schema.agentThread.activeStreamId,
+	activeRunStartedAt: schema.agentThread.activeRunStartedAt,
+	lastMessageAt: schema.agentThread.lastMessageAt,
+	archivedAt: schema.agentThread.archivedAt,
+	deletedAt: schema.agentThread.deletedAt,
+	createdAt: schema.agentThread.createdAt,
+	updatedAt: schema.agentThread.updatedAt,
+	resumeName: schema.resume.name,
+	providerLabel: schema.aiProvider.label,
+};
+
 export const agentService = {
 	threads: {
 		list: async (input: { userId: string }) => {
 			assertAgentEnvironment();
 
 			const rows = await db
-				.select({
-					id: schema.agentThread.id,
-					userId: schema.agentThread.userId,
-					aiProviderId: schema.agentThread.aiProviderId,
-					sourceResumeId: schema.agentThread.sourceResumeId,
-					workingResumeId: schema.agentThread.workingResumeId,
-					title: schema.agentThread.title,
-					status: schema.agentThread.status,
-					activeRunId: schema.agentThread.activeRunId,
-					activeStreamId: schema.agentThread.activeStreamId,
-					activeRunStartedAt: schema.agentThread.activeRunStartedAt,
-					lastMessageAt: schema.agentThread.lastMessageAt,
-					archivedAt: schema.agentThread.archivedAt,
-					deletedAt: schema.agentThread.deletedAt,
-					createdAt: schema.agentThread.createdAt,
-					updatedAt: schema.agentThread.updatedAt,
-					resumeName: schema.resume.name,
-					providerLabel: schema.aiProvider.label,
-				})
+				.select(threadSummarySelection)
 				.from(schema.agentThread)
 				.leftJoin(schema.resume, eq(schema.agentThread.workingResumeId, schema.resume.id))
 				.leftJoin(schema.aiProvider, eq(schema.agentThread.aiProviderId, schema.aiProvider.id))
@@ -880,6 +882,56 @@ export const agentService = {
 				resumeName: working.title,
 				providerLabel: selectedProvider.label,
 			});
+		},
+
+		// In-resume assistant threads edit the open resume directly (working === source === resumeId), so the
+		// builder's resume-update subscription applies the agent's patches live. Reuses the latest active thread
+		// for that resume rather than accumulating a new thread on every panel open.
+		getOrCreateForResume: async (input: { userId: string; resumeId: string; aiProviderId?: string }) => {
+			assertAgentEnvironment();
+
+			const [existing] = await db
+				.select(threadSummarySelection)
+				.from(schema.agentThread)
+				.leftJoin(schema.resume, eq(schema.agentThread.workingResumeId, schema.resume.id))
+				.leftJoin(schema.aiProvider, eq(schema.agentThread.aiProviderId, schema.aiProvider.id))
+				.where(
+					and(
+						eq(schema.agentThread.userId, input.userId),
+						eq(schema.agentThread.workingResumeId, input.resumeId),
+						eq(schema.agentThread.sourceResumeId, input.resumeId),
+						eq(schema.agentThread.status, "active"),
+						isNull(schema.agentThread.deletedAt),
+					),
+				)
+				.orderBy(desc(schema.agentThread.lastMessageAt))
+				.limit(1);
+
+			if (existing) return toThreadSummary(existing);
+
+			const selectedProvider = input.aiProviderId
+				? await aiProvidersService.getRunnableById({ id: input.aiProviderId, userId: input.userId })
+				: await aiProvidersService.getDefaultRunnable({ userId: input.userId });
+
+			if (!selectedProvider) throw new ORPCError("BAD_REQUEST", { message: "No tested AI provider is available." });
+
+			// Confirms the caller owns the resume (throws otherwise) and provides its name for the summary.
+			const resume = await resumeService.getById({ id: input.resumeId, userId: input.userId });
+
+			const [thread] = await db
+				.insert(schema.agentThread)
+				.values({
+					userId: input.userId,
+					aiProviderId: selectedProvider.id,
+					sourceResumeId: input.resumeId,
+					workingResumeId: input.resumeId,
+					title: "Resume assistant",
+				})
+				.returning();
+
+			if (!thread) throw new Error("AGENT_THREAD_CREATE_FAILED");
+
+			return toThreadSummary({ ...thread, resumeName: resume.name, providerLabel: selectedProvider.label });
 		},
 
 		get: async (input: { id: string; userId: string }) => {
