@@ -35,6 +35,11 @@ type ResumeStoreState = {
 	resumeId?: string;
 	isReady: boolean;
 	saveStatus: SaveStatus;
+	// Client-side undo/redo stacks holding whole-`ResumeData` snapshots (see recordHistory helpers below).
+	undoStack: ResumeData[];
+	redoStack: ResumeData[];
+	canUndo: boolean;
+	canRedo: boolean;
 };
 
 type ResumeStoreActions = {
@@ -46,6 +51,8 @@ type ResumeStoreActions = {
 	patchResume: (fn: (draft: WritableDraft<Resume>) => void) => void;
 	mergeResumeMetadata: (resume: Resume) => void;
 	setSaveStatus: (status: SaveStatus) => void;
+	undo: () => void;
+	redo: () => void;
 };
 
 type ResumeStore = ResumeStoreState & ResumeStoreActions;
@@ -70,7 +77,20 @@ type ResumeUpdateSubscriptionOptions = {
 };
 
 const SAVE_DEBOUNCE_MS = 500;
+// Rapid edits within this window coalesce into a single undo step (e.g. typing a word / dragging).
+const HISTORY_COALESCE_MS = 500;
+// Bounded stacks: keep undo/redo memory (whole-resume snapshots) predictable during a long session.
+const MAX_HISTORY_ENTRIES = 50;
 const runtimes = new Map<string, Runtime>();
+
+// Coalescing bookkeeping. Not reactive — only decides whether the next edit opens a new undo step.
+let historyLastEditAt = 0;
+let historyCanCoalesce = false;
+
+function resetHistoryRuntime() {
+	historyLastEditAt = 0;
+	historyCanCoalesce = false;
+}
 
 let lockedToastId: string | number | undefined;
 
@@ -292,40 +312,74 @@ export const useResumeStore = create<ResumeStore>()(
 		resumeId: undefined,
 		isReady: false,
 		saveStatus: "idle",
+		undoStack: [],
+		redoStack: [],
+		canUndo: false,
+		canRedo: false,
 
 		initialize: (resume) => {
 			if (resume) setRuntimeBaseline(resume);
+			resetHistoryRuntime();
 
 			set((state) => {
 				state.resume = resume;
 				state.resumeId = resume?.id;
 				state.isReady = resume !== null;
+				state.undoStack = [];
+				state.redoStack = [];
+				state.canUndo = false;
+				state.canRedo = false;
 			});
 		},
 
 		reset: () => {
+			resetHistoryRuntime();
+
 			set((state) => {
 				state.resume = null;
 				state.resumeId = undefined;
 				state.isReady = false;
+				state.undoStack = [];
+				state.redoStack = [];
+				state.canUndo = false;
+				state.canRedo = false;
 			});
 		},
 
 		replaceResumeDraft: (resume) => {
+			resetHistoryRuntime();
+
 			set((state) => {
 				state.resume = resume;
 				state.resumeId = resume.id;
 				state.isReady = true;
+				state.undoStack = [];
+				state.redoStack = [];
+				state.canUndo = false;
+				state.canRedo = false;
 			});
 		},
 
 		replaceResumeFromServer: (resume) => {
 			setRuntimeBaseline(resume);
 
+			// This runs both for the echo of our own autosave (identical data → keep history) and for
+			// external/cross-tab/AI rebases (different data → local undo history no longer applies).
+			const current = get().resume;
+			const isRebase = !current || !isEqual(current.data, resume.data);
+			if (isRebase) resetHistoryRuntime();
+
 			set((state) => {
 				state.resume = resume;
 				state.resumeId = resume.id;
 				state.isReady = true;
+
+				if (isRebase) {
+					state.undoStack = [];
+					state.redoStack = [];
+					state.canUndo = false;
+					state.canRedo = false;
+				}
 			});
 		},
 
@@ -367,17 +421,87 @@ export const useResumeStore = create<ResumeStore>()(
 				return;
 			}
 
+			// Coalesce bursts: only the first edit of a burst opens a new undo step by snapshotting the
+			// pre-edit state. Edits within HISTORY_COALESCE_MS of the previous one fold into that step.
+			const now = Date.now();
+			const coalesce = historyCanCoalesce && now - historyLastEditAt < HISTORY_COALESCE_MS;
+			const snapshotBefore = coalesce ? undefined : cloneResumeData(currentResume.data);
+			historyLastEditAt = now;
+			historyCanCoalesce = true;
+
 			set((state) => {
 				if (!state.resume) return;
+
+				if (snapshotBefore) {
+					state.undoStack.push(snapshotBefore);
+					if (state.undoStack.length > MAX_HISTORY_ENTRIES) state.undoStack.shift();
+					// A fresh edit invalidates the redo branch.
+					state.redoStack = [];
+				}
+
 				fn(state.resume.data as WritableDraft<ResumeData>);
 				state.saveStatus = "saving";
+				state.canUndo = state.undoStack.length > 0;
+				state.canRedo = state.redoStack.length > 0;
 			});
 
 			getRuntime(currentResume.id).hasPendingLocalChanges = true;
 			syncCurrentResume(currentResume.id);
 		},
+
+		undo: () => {
+			applyHistoryStep(get, set, "undo");
+		},
+
+		redo: () => {
+			applyHistoryStep(get, set, "redo");
+		},
 	})),
 );
+
+type ImmerSet = (fn: (state: WritableDraft<ResumeStore>) => void) => void;
+type StoreGet = () => ResumeStore;
+
+// Shared undo/redo: move the current data to the opposite stack and install the popped snapshot,
+// then route the change through the normal autosave path so the preview and sync react as usual.
+function applyHistoryStep(get: StoreGet, set: ImmerSet, direction: "undo" | "redo") {
+	const state = get();
+	const currentResume = state.resume;
+	if (!currentResume) return;
+
+	if (currentResume.isLocked) {
+		lockedToastId = toast.error(t`This resume is locked and cannot be updated.`, { id: lockedToastId });
+		return;
+	}
+
+	const source = direction === "undo" ? state.undoStack : state.redoStack;
+	if (source.length === 0) return;
+
+	// The next edit after an undo/redo must start a brand-new undo step.
+	resetHistoryRuntime();
+	const current = cloneResumeData(currentResume.data);
+
+	set((draft) => {
+		if (!draft.resume) return;
+
+		const from = direction === "undo" ? draft.undoStack : draft.redoStack;
+		const to = direction === "undo" ? draft.redoStack : draft.undoStack;
+
+		const snapshot = from.pop();
+		if (snapshot === undefined) return;
+
+		to.push(current as WritableDraft<ResumeData>);
+		if (to.length > MAX_HISTORY_ENTRIES) to.shift();
+
+		draft.resume.data = snapshot;
+		draft.saveStatus = "saving";
+		draft.canUndo = draft.undoStack.length > 0;
+		draft.canRedo = draft.redoStack.length > 0;
+	});
+
+	getRuntime(currentResume.id).hasPendingLocalChanges = true;
+	syncCurrentResume(currentResume.id);
+}
 
 export function useInitializeResumeStore() {
 	return useResumeStore((state) => state.initialize);
@@ -431,6 +555,22 @@ export function useIsResumeLocked(): boolean {
 
 export function useSaveStatus(): SaveStatus {
 	return useResumeStore((state) => state.saveStatus);
+}
+
+export function useCanUndo(): boolean {
+	return useResumeStore((state) => state.canUndo);
+}
+
+export function useCanRedo(): boolean {
+	return useResumeStore((state) => state.canRedo);
+}
+
+export function useUndoResume() {
+	return useResumeStore((state) => state.undo);
+}
+
+export function useRedoResume() {
+	return useResumeStore((state) => state.redo);
 }
 
 export function useUpdateResumeData() {

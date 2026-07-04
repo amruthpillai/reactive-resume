@@ -99,7 +99,7 @@ export const crudRouter = {
 			const name = generateRandomName();
 			const slug = slugify(name);
 
-			return resumeService.create({
+			const id = await resumeService.create({
 				name,
 				slug,
 				tags: [],
@@ -107,6 +107,16 @@ export const crudRouter = {
 				locale: context.locale,
 				userId: context.user.id,
 			});
+
+			// Milestone checkpoint for the imported document (best-effort).
+			await resumeService.versions.snapshot({
+				resumeId: id,
+				userId: context.user.id,
+				data: input.data,
+				label: "Imported",
+			});
+
+			return id;
 		}),
 
 	update: protectedProcedure

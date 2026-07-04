@@ -1,6 +1,8 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
+	ArrowUUpLeftIcon,
+	ArrowUUpRightIcon,
 	CaretDownIcon,
 	CheckCircleIcon,
 	CircleNotchIcon,
@@ -17,6 +19,7 @@ import {
 	TrashSimpleIcon,
 	WarningCircleIcon,
 } from "@phosphor-icons/react";
+import { useHotkey } from "@tanstack/react-hotkeys";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -30,12 +33,21 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
-import { useCurrentResume, usePatchResume, useSaveStatus } from "@/features/resume/builder/draft";
+import {
+	useCanRedo,
+	useCanUndo,
+	useCurrentResume,
+	usePatchResume,
+	useRedoResume,
+	useSaveStatus,
+	useUndoResume,
+} from "@/features/resume/builder/draft";
 import { useResumeExport } from "@/features/resume/export/use-resume-export";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 import { useBuilderSidebar } from "../-store/sidebar";
+import { BuilderVersionHistory } from "./version-history";
 
 export function BuilderHeader() {
 	const resume = useCurrentResume();
@@ -73,6 +85,8 @@ export function BuilderHeader() {
 				<h2 className="flex-1 truncate font-medium">{name}</h2>
 				{isLocked && <LockSimpleIcon className="ms-2 text-muted-foreground" />}
 				<SaveStatusIndicator />
+				<UndoRedoControls />
+				<BuilderVersionHistory resumeId={resume.id} />
 				<BuilderHeaderDropdown />
 			</div>
 
@@ -89,6 +103,32 @@ export function BuilderHeader() {
 				</Button>
 			</div>
 		</div>
+	);
+}
+
+function UndoRedoControls() {
+	const canUndo = useCanUndo();
+	const canRedo = useCanRedo();
+	const undo = useUndoResume();
+	const redo = useRedoResume();
+
+	// App-level undo/redo of resume state, scoped to the builder. Mod maps to Cmd (mac) / Ctrl (win/linux).
+	// These are Ctrl/Meta combos, so `@tanstack/react-hotkeys` fires them even while a text field is focused
+	// (and preventDefault suppresses the browser's native input undo). Tradeoff: inside a text field, Cmd+Z
+	// undoes the last resume change rather than the field's own edit history.
+	useHotkey("Mod+Z", () => undo());
+	useHotkey("Mod+Shift+Z", () => redo());
+	useHotkey("Control+Y", () => redo());
+
+	return (
+		<>
+			<Button size="icon" variant="ghost" disabled={!canUndo} aria-label={t`Undo`} onClick={() => undo()}>
+				<ArrowUUpLeftIcon />
+			</Button>
+			<Button size="icon" variant="ghost" disabled={!canRedo} aria-label={t`Redo`} onClick={() => redo()}>
+				<ArrowUUpRightIcon />
+			</Button>
+		</>
 	);
 }
 

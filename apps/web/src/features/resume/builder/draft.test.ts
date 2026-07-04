@@ -251,6 +251,110 @@ describe("builder resume autosave", () => {
 	});
 });
 
+describe("builder resume undo/redo", () => {
+	beforeEach(() => {
+		vi.useFakeTimers();
+		orpcMocks.updateResume.mockReset();
+		// Echo the submitted data back so the autosave completion doesn't count as an external rebase.
+		orpcMocks.updateResume.mockImplementation((input: { id: string; data: ResumeData }) =>
+			Promise.resolve({ ...makeResume(input.id), data: input.data }),
+		);
+		routerParamsMock.value = {};
+		i18n.loadAndActivate({ locale: "en-US", messages: {} });
+		useResumeStore.getState().reset();
+	});
+
+	afterEach(() => {
+		vi.clearAllTimers();
+		vi.useRealTimers();
+		useResumeStore.getState().reset();
+	});
+
+	it("coalesces rapid edits into a single undo step and restores the pre-burst state", () => {
+		const store = useResumeStore.getState;
+		store().initialize(makeResume("undo-coalesce"));
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "First";
+		});
+		store().updateResumeData((draft) => {
+			draft.basics.name = "Second";
+		});
+
+		expect(store().undoStack.length).toBe(1);
+		expect(store().canUndo).toBe(true);
+		expect(store().canRedo).toBe(false);
+		expect(store().resume?.data.basics.name).toBe("Second");
+
+		store().undo();
+		expect(store().resume?.data.basics.name).toBe(defaultResumeData.basics.name);
+		expect(store().canUndo).toBe(false);
+		expect(store().canRedo).toBe(true);
+
+		store().redo();
+		expect(store().resume?.data.basics.name).toBe("Second");
+		expect(store().canRedo).toBe(false);
+	});
+
+	it("separates edits outside the coalesce window into distinct undo steps", async () => {
+		const store = useResumeStore.getState;
+		store().initialize(makeResume("undo-boundary"));
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "A";
+		});
+
+		// Let the autosave flush (echoes the data back) and advance past the coalesce window.
+		vi.advanceTimersByTime(600);
+		await flushMicrotasks();
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "B";
+		});
+
+		expect(store().undoStack.length).toBe(2);
+
+		store().undo();
+		expect(store().resume?.data.basics.name).toBe("A");
+
+		store().undo();
+		expect(store().resume?.data.basics.name).toBe(defaultResumeData.basics.name);
+	});
+
+	it("clears the redo branch when a new edit follows an undo", () => {
+		const store = useResumeStore.getState;
+		store().initialize(makeResume("undo-redo-clear"));
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "One";
+		});
+		store().undo();
+		expect(store().canRedo).toBe(true);
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "Two";
+		});
+
+		expect(store().canRedo).toBe(false);
+		expect(store().redoStack.length).toBe(0);
+	});
+
+	it("does not undo when the resume is locked", () => {
+		const store = useResumeStore.getState;
+		store().initialize(makeResume("undo-locked"));
+
+		store().updateResumeData((draft) => {
+			draft.basics.name = "Editable";
+		});
+		store().patchResume((resume) => {
+			resume.isLocked = true;
+		});
+
+		store().undo();
+		expect(store().resume?.data.basics.name).toBe("Editable");
+	});
+});
+
 describe("resume update stream subscription", () => {
 	beforeEach(() => {
 		vi.useFakeTimers();

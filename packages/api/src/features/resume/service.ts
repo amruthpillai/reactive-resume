@@ -5,7 +5,7 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import type { ResumeUpdatedEvent } from "./events";
 import { ORPCError } from "@orpc/client";
 import { compare, hash } from "bcrypt";
-import { and, arrayContains, asc, desc, eq, gte, isNotNull, sql } from "drizzle-orm";
+import { and, arrayContains, asc, desc, eq, gte, isNotNull, notInArray, sql } from "drizzle-orm";
 import { get } from "es-toolkit/compat";
 import { match } from "ts-pattern";
 import { db } from "@reactive-resume/db/client";
@@ -28,9 +28,63 @@ function resumeVersionConflict(updatedAt: Date) {
 	});
 }
 
+// Version history: keep a bounded, rolling window of snapshots per resume.
+const MAX_VERSIONS_PER_RESUME = 30;
+// Manual-save milestones are debounced server-side: an autosave only checkpoints if the newest
+// snapshot is older than this. Explicit milestones (import, AI edit, restore) always checkpoint.
+const SNAPSHOT_THROTTLE_MS = 2 * 60 * 1000;
+
+async function writeResumeVersion(
+	client: DbOrTx,
+	input: { resumeId: string; userId: string; data: ResumeData; label: string },
+) {
+	await client.insert(schema.resumeVersion).values({
+		resumeId: input.resumeId,
+		userId: input.userId,
+		data: input.data,
+		label: input.label,
+	});
+
+	// Prune everything beyond the newest N snapshots for this resume.
+	const keep = client
+		.select({ id: schema.resumeVersion.id })
+		.from(schema.resumeVersion)
+		.where(eq(schema.resumeVersion.resumeId, input.resumeId))
+		.orderBy(desc(schema.resumeVersion.createdAt))
+		.limit(MAX_VERSIONS_PER_RESUME);
+
+	await client
+		.delete(schema.resumeVersion)
+		.where(and(eq(schema.resumeVersion.resumeId, input.resumeId), notInArray(schema.resumeVersion.id, keep)));
+}
+
+// Best-effort, throttled snapshot on the autosave/manual-save path. Never blocks or fails the save.
+async function maybeSnapshotOnSave(input: { resumeId: string; userId: string; data: ResumeData; label: string }) {
+	try {
+		const [latest] = await db
+			.select({ createdAt: schema.resumeVersion.createdAt })
+			.from(schema.resumeVersion)
+			.where(eq(schema.resumeVersion.resumeId, input.resumeId))
+			.orderBy(desc(schema.resumeVersion.createdAt))
+			.limit(1);
+
+		if (latest && Date.now() - latest.createdAt.getTime() < SNAPSHOT_THROTTLE_MS) return;
+
+		await writeResumeVersion(db, input);
+	} catch (error) {
+		console.warn("Failed to snapshot resume version:", error);
+	}
+}
+
 async function applyResumePatchTx(
 	client: DbOrTx,
-	input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date },
+	input: {
+		id: string;
+		userId: string;
+		operations: JsonPatchOperation[];
+		expectedUpdatedAt?: Date;
+		versionLabel?: string;
+	},
 ) {
 	const [existing] = await client
 		.select({ data: schema.resume.data, isLocked: schema.resume.isLocked, updatedAt: schema.resume.updatedAt })
@@ -90,6 +144,15 @@ async function applyResumePatchTx(
 		if (input.expectedUpdatedAt) throw resumeVersionConflict(existing.updatedAt);
 		throw new ORPCError("NOT_FOUND");
 	}
+
+	// Checkpoint every patch (AI/API edit) atomically within the same transaction as the edit.
+	// ponytail: a multi-patch agent turn writes one row per patch; the prune cap (30) bounds it.
+	await writeResumeVersion(client, {
+		resumeId: resume.id,
+		userId: input.userId,
+		data: resume.data,
+		label: input.versionLabel ?? "AI edit",
+	});
 
 	return resume;
 }
@@ -282,6 +345,70 @@ export const resumeService = {
 	statistics,
 	analysis,
 
+	versions: {
+		list: async (input: { resumeId: string; userId: string }) => {
+			const [owner] = await db
+				.select({ id: schema.resume.id })
+				.from(schema.resume)
+				.where(and(eq(schema.resume.id, input.resumeId), eq(schema.resume.userId, input.userId)));
+
+			if (!owner) throw new ORPCError("NOT_FOUND");
+
+			return db
+				.select({
+					id: schema.resumeVersion.id,
+					label: schema.resumeVersion.label,
+					createdAt: schema.resumeVersion.createdAt,
+				})
+				.from(schema.resumeVersion)
+				.where(eq(schema.resumeVersion.resumeId, input.resumeId))
+				.orderBy(desc(schema.resumeVersion.createdAt))
+				.limit(MAX_VERSIONS_PER_RESUME);
+		},
+
+		// Best-effort checkpoint used by non-transactional milestones (e.g. import).
+		snapshot: async (input: { resumeId: string; userId: string; data: ResumeData; label: string }) => {
+			try {
+				await writeResumeVersion(db, input);
+			} catch (error) {
+				console.warn("Failed to snapshot resume version:", error);
+			}
+		},
+
+		// Non-destructive restore: writes the snapshot's data back through the normal update path, so
+		// prior versions remain and the restore is itself just another (snapshot-able, undoable) change.
+		restore: async (input: { resumeId: string; versionId: string; userId: string }) => {
+			const [version] = await db
+				.select({ data: schema.resumeVersion.data })
+				.from(schema.resumeVersion)
+				.innerJoin(schema.resume, eq(schema.resumeVersion.resumeId, schema.resume.id))
+				.where(
+					and(
+						eq(schema.resumeVersion.id, input.versionId),
+						eq(schema.resumeVersion.resumeId, input.resumeId),
+						eq(schema.resume.userId, input.userId),
+					),
+				);
+
+			if (!version) throw new ORPCError("NOT_FOUND");
+
+			const updated = await resumeService.update({
+				id: input.resumeId,
+				userId: input.userId,
+				data: version.data,
+			});
+
+			await resumeService.versions.snapshot({
+				resumeId: input.resumeId,
+				userId: input.userId,
+				data: version.data,
+				label: "Restored version",
+			});
+
+			return updated;
+		},
+	},
+
 	list: async (input: { userId: string; tags: string[]; sort: "lastUpdatedAt" | "createdAt" | "name" }) => {
 		return await db
 			.select({
@@ -461,6 +588,17 @@ export const resumeService = {
 				});
 
 			if (!resume) throw new ORPCError("NOT_FOUND");
+
+			// Debounced manual-save milestone: only snapshots data edits, and only when the previous
+			// snapshot is old enough (see SNAPSHOT_THROTTLE_MS). Covers template switches and typing.
+			if (input.data !== undefined) {
+				await maybeSnapshotOnSave({
+					resumeId: resume.id,
+					userId: input.userId,
+					data: resume.data,
+					label: "Manual save",
+				});
+			}
 
 			await notifyResumeUpdated({
 				type: "resume.updated",

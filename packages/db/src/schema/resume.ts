@@ -44,6 +44,30 @@ export const resume = pg.pgTable(
 	],
 );
 
+export const resumeVersion = pg.pgTable(
+	"resume_version",
+	{
+		id: pg
+			.text("id")
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => generateId()),
+		resumeId: pg
+			.text("resume_id")
+			.notNull()
+			.references(() => resume.id, { onDelete: "cascade" }),
+		userId: pg
+			.text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		// Immutable snapshot of the resume data at a milestone (template change, import, AI edit, manual save).
+		data: pg.jsonb("data").notNull().$type<ResumeData>(),
+		label: pg.text("label").notNull(),
+		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	},
+	(t) => [pg.index().on(t.resumeId, t.createdAt.desc())],
+);
+
 export const resumeStatistics = pg.pgTable("resume_statistics", {
 	id: pg
 		.text("id")

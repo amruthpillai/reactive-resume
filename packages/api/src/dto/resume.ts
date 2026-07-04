@@ -105,4 +105,23 @@ export const resumeDto = {
 		input: resumeSchema.pick({ id: true }),
 		output: z.void(),
 	},
+
+	listVersions: {
+		input: z.object({ resumeId: z.string().describe("The ID of the resume whose version history to list.") }),
+		output: z.array(
+			z.object({
+				id: z.string().describe("The ID of the version snapshot."),
+				label: z.string().describe("A short description of what triggered the snapshot."),
+				createdAt: z.date().describe("The date and time the snapshot was taken."),
+			}),
+		),
+	},
+
+	restoreVersion: {
+		input: z.object({
+			resumeId: z.string().describe("The ID of the resume to restore."),
+			versionId: z.string().describe("The ID of the version snapshot to restore."),
+		}),
+		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
+	},
 };

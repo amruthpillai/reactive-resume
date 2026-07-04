@@ -4,6 +4,7 @@ import { updatesRouter } from "./event-router";
 import { sharingRouter } from "./sharing";
 import { resumeStatisticsRouter } from "./statistics";
 import { tagsRouter } from "./tags";
+import { versionsRouter } from "./versions";
 
 export const resumeRouter = {
 	tags: tagsRouter,
@@ -24,4 +25,6 @@ export const resumeRouter = {
 	removePassword: sharingRouter.removePassword,
 	duplicate: crudRouter.duplicate,
 	delete: crudRouter.delete,
+	listVersions: versionsRouter.listVersions,
+	restoreVersion: versionsRouter.restoreVersion,
 };
