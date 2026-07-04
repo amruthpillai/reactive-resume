@@ -13,6 +13,28 @@ import { SectionBase } from "../shared/section-base";
 const TREND_DAYS = 60;
 const WINDOW = 30;
 
+// Percent change of the most recent `window` days vs the `window` days before it.
+// Returns null when the prior period had no activity (division by zero / no baseline).
+export function computeDelta(series: number[], window: number): number | null {
+	const recent = series.slice(-window);
+	const previous = series.slice(-window * 2, -window);
+	const recentSum = recent.reduce((sum, n) => sum + n, 0);
+	const previousSum = previous.reduce((sum, n) => sum + n, 0);
+	if (previousSum === 0) return null;
+	return Math.round(((recentSum - previousSum) / previousSum) * 100);
+}
+
+// Polyline points for the sparkline, or null for degenerate inputs (fewer than two
+// points, or an all-zero series) where there is nothing meaningful to draw.
+export function getSparklinePoints(values: number[], width: number, height: number): string | null {
+	if (values.length < 2 || values.every((n) => n === 0)) return null;
+	const max = Math.max(...values, 1);
+	const step = width / (values.length - 1);
+	return values
+		.map((value, index) => `${(index * step).toFixed(1)},${(height - (value / max) * height).toFixed(1)}`)
+		.join(" ");
+}
+
 export function StatisticsSectionBuilder() {
 	const params = useParams({ from: "/builder/$resumeId" });
 	const { data: statistics } = useQuery(
@@ -83,10 +105,7 @@ type StatisticsItemProps = {
 
 function StatisticsItem({ label, value, series, timestamp }: StatisticsItemProps) {
 	const recent = series.slice(-WINDOW);
-	const previous = series.slice(-WINDOW * 2, -WINDOW);
-	const recentSum = recent.reduce((sum, n) => sum + n, 0);
-	const previousSum = previous.reduce((sum, n) => sum + n, 0);
-	const delta = previousSum === 0 ? null : Math.round(((recentSum - previousSum) / previousSum) * 100);
+	const delta = computeDelta(series, WINDOW);
 
 	return (
 		<div>
@@ -116,15 +135,11 @@ type SparklineProps = {
 };
 
 function Sparkline({ title, values }: SparklineProps) {
-	if (values.length < 2 || values.every((n) => n === 0)) return null;
-
 	const width = 80;
 	const height = 24;
-	const max = Math.max(...values, 1);
-	const step = width / (values.length - 1);
-	const points = values
-		.map((value, index) => `${(index * step).toFixed(1)},${(height - (value / max) * height).toFixed(1)}`)
-		.join(" ");
+	const points = getSparklinePoints(values, width, height);
+
+	if (!points) return null;
 
 	return (
 		<svg className="text-primary" height={height} role="img" viewBox={`0 0 ${width} ${height}`} width={width}>

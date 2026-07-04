@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { msg, t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import {
@@ -72,9 +72,9 @@ function RouteComponent() {
 
 	const sortOptions = useMemo(() => {
 		return [
-			{ value: "lastUpdatedAt", label: i18n.t("Last Updated") },
-			{ value: "createdAt", label: i18n.t("Created") },
-			{ value: "name", label: i18n.t("Name") },
+			{ value: "lastUpdatedAt", label: i18n.t(msg`Last Updated`) },
+			{ value: "createdAt", label: i18n.t(msg`Created`) },
+			{ value: "name", label: i18n.t(msg`Name`) },
 		];
 	}, [i18n]);
 
@@ -173,7 +173,11 @@ function RouteComponent() {
 				</Tabs>
 			</div>
 
-			{view === "list" ? <ListView resumes={filteredResumes} /> : <GridView resumes={filteredResumes} />}
+			{view === "list" ? (
+				<ListView resumes={filteredResumes} hasResumes={(resumes?.length ?? 0) > 0} />
+			) : (
+				<GridView resumes={filteredResumes} hasResumes={(resumes?.length ?? 0) > 0} />
+			)}
 		</div>
 	);
 }

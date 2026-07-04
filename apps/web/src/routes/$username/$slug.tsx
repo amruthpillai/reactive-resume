@@ -19,7 +19,7 @@ export const Route = createFileRoute("/$username/$slug")({
 	},
 	head: ({ loaderData, params }) => {
 		const resume = loaderData?.resume;
-		const name = resume ? resume.name || resume.data.basics.name || "Resume" : "Reactive Resume";
+		const name = resume ? resume.data.basics.name || resume.name || "Resume" : "Reactive Resume";
 
 		if (!resume) {
 			return { meta: [{ title: `${name} - Reactive Resume` }, createNoindexFollowMeta()] };

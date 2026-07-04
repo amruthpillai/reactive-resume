@@ -561,7 +561,7 @@ export function AgentChat({
 
 	const handleDelete = async () => {
 		const confirmation = await confirm(t`Delete this agent thread?`, {
-			description: t`This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume draft remains in your dashboard and can be deleted separately.`,
+			description: t`This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume remains in your dashboard and can be deleted separately.`,
 		});
 
 		if (!confirmation) return;

@@ -1,4 +1,5 @@
 import type { RightSidebarSection } from "@/libs/resume/section";
+import { t } from "@lingui/core/macro";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@reactive-resume/ui/components/accordion";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -13,6 +14,7 @@ type Props = React.ComponentProps<typeof AccordionContent> & {
 export function SectionBase({ type, className, ...props }: Props) {
 	const collapsed = useSectionStore((state) => state.sections[type]?.collapsed ?? false);
 	const toggleCollapsed = useSectionStore((state) => state.toggleCollapsed);
+	const sectionTitle = getSectionTitle(type);
 
 	return (
 		<Accordion
@@ -26,7 +28,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 					<AccordionTrigger
 						className="me-2 items-center justify-center"
 						render={
-							<Button size="icon" variant="ghost">
+							<Button size="icon" variant="ghost" aria-label={t`Toggle ${sectionTitle} section`}>
 								<CaretDownIcon className="transition-transform duration-200 group-data-closed/accordion-item:-rotate-90" />
 							</Button>
 						}
@@ -34,7 +36,7 @@ export function SectionBase({ type, className, ...props }: Props) {
 
 					<div className="flex flex-1 items-center gap-x-4">
 						{getSectionIcon(type)}
-						<h2 className="line-clamp-1 font-semibold text-2xl tracking-tight">{getSectionTitle(type)}</h2>
+						<h2 className="line-clamp-1 font-semibold text-2xl tracking-tight">{sectionTitle}</h2>
 					</div>
 				</div>
 

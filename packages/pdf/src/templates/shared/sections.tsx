@@ -215,6 +215,9 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	// wrap={false} keeps the whole section on one page; break forces it onto a fresh page.
 	// Only set the props when enabled so we never pass undefined (exactOptionalPropertyTypes).
 	const breakProps: { wrap?: false; break?: true } = {};
+	// ponytail: react-pdf ceiling — wrap={false} keeps a section together only if it fits on
+	// one page; a section taller than a full page is clipped, not split. No upgrade path in
+	// react-pdf, so the layout UI warns users this only works for sections that fit one page.
 	if (keepTogether) breakProps.wrap = false;
 	if (startOnNewPage) breakProps.break = true;
 

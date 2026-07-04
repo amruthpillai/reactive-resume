@@ -60,7 +60,9 @@ function IconCellComponent({ columnIndex, rowIndex, style, icons, onChange }: Ic
 			title={icon}
 			style={style}
 			tabIndex={-1}
-			onClick={() => onChange(icon)}
+			onClick={() => {
+				if (icon) onChange(icon);
+			}}
 			className="flex size-full items-center justify-center hover:bg-accent"
 		>
 			{icon ? <i className={cn("ph text-base", `ph-${icon}`)} /> : <ProhibitIcon />}

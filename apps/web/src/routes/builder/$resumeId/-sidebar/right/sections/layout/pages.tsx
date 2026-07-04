@@ -564,6 +564,12 @@ function SectionBreakItems({ id }: SectionBreakItemsProps) {
 				<Trans comment="Layout editor toggle that prevents a section from splitting across pages">Keep together</Trans>
 			</DropdownMenuCheckboxItem>
 
+			<p className="px-2 pb-1 text-muted-foreground text-xs">
+				<Trans comment="Helper note explaining the keep-together limitation">
+					Only applies when the section fits on a single page.
+				</Trans>
+			</p>
+
 			<DropdownMenuCheckboxItem
 				checked={startOnNewPage}
 				onSelect={(event) => event.preventDefault()}

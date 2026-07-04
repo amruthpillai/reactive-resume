@@ -13,14 +13,23 @@ type Resume = RouterOutput["resume"]["list"][number];
 
 type ListViewProps = {
 	resumes: Resume[];
+	hasResumes: boolean;
 };
 
 type ResumeListItemProps = {
 	resume: Resume;
 };
 
-export function ListView({ resumes }: ListViewProps) {
+export function ListView({ resumes, hasResumes }: ListViewProps) {
 	const { openDialog } = useDialogStore();
+
+	if (resumes.length === 0 && hasResumes) {
+		return (
+			<p className="py-8 text-center text-muted-foreground text-sm">
+				<Trans>No resumes match your search.</Trans>
+			</p>
+		);
+	}
 
 	if (resumes.length === 0) {
 		const handleCreateResume = () => {
