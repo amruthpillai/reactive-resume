@@ -5,10 +5,14 @@ import {
 	CheckCircleIcon,
 	CircleNotchIcon,
 	CopySimpleIcon,
+	DownloadSimpleIcon,
+	FileDocIcon,
+	FileJsIcon,
 	HouseSimpleIcon,
 	LockSimpleIcon,
 	LockSimpleOpenIcon,
 	PencilSimpleLineIcon,
+	PrinterIcon,
 	SidebarSimpleIcon,
 	TrashSimpleIcon,
 	WarningCircleIcon,
@@ -27,6 +31,7 @@ import {
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, usePatchResume, useSaveStatus } from "@/features/resume/builder/draft";
+import { useResumeExport } from "@/features/resume/export/use-resume-export";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -71,14 +76,65 @@ export function BuilderHeader() {
 				<BuilderHeaderDropdown />
 			</div>
 
-			<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
-				<SidebarSimpleIcon className="-scale-x-100" />
-				<span className="sr-only">
-					<Trans comment="Screen-reader label for opening or closing the right sidebar in resume builder">
-						Toggle right sidebar
-					</Trans>
-				</span>
+			<div className="flex items-center gap-x-1">
+				<ResumeDownloadButton />
+
+				<Button size="icon" variant="ghost" onClick={() => toggleSidebar("right")}>
+					<SidebarSimpleIcon className="-scale-x-100" />
+					<span className="sr-only">
+						<Trans comment="Screen-reader label for opening or closing the right sidebar in resume builder">
+							Toggle right sidebar
+						</Trans>
+					</span>
+				</Button>
+			</div>
+		</div>
+	);
+}
+
+function ResumeDownloadButton() {
+	const resume = useCurrentResume();
+	const { onDownloadPDF, onDownloadDOCX, onDownloadJSON, onPrint, isExporting } = useResumeExport(resume);
+
+	return (
+		<div className="flex items-center">
+			<Button size="sm" className="rounded-e-none" disabled={isExporting} onClick={onDownloadPDF}>
+				{isExporting ? <CircleNotchIcon className="me-1.5 animate-spin" /> : <DownloadSimpleIcon className="me-1.5" />}
+				<Trans comment="Primary action in the builder header to download the resume as a PDF">Download PDF</Trans>
 			</Button>
+
+			<DropdownMenu>
+				<DropdownMenuTrigger
+					render={
+						<Button
+							size="sm"
+							disabled={isExporting}
+							aria-label={t`More download options`}
+							className="rounded-s-none border-primary-foreground/20 border-s px-1.5"
+						>
+							<CaretDownIcon />
+						</Button>
+					}
+				/>
+
+				<DropdownMenuContent align="end">
+					<DropdownMenuItem onClick={onDownloadDOCX}>
+						<FileDocIcon className="me-2" />
+						<Trans>Download DOCX</Trans>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={onDownloadJSON}>
+						<FileJsIcon className="me-2" />
+						<Trans>Download JSON</Trans>
+					</DropdownMenuItem>
+
+					<DropdownMenuSeparator />
+
+					<DropdownMenuItem onClick={onPrint}>
+						<PrinterIcon className="me-2" />
+						<Trans>Print</Trans>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
 		</div>
 	);
 }

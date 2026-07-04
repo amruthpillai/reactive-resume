@@ -5,28 +5,21 @@ import {
 	AlignCenterHorizontalIcon,
 	AlignTopIcon,
 	ChatCircleDotsIcon,
-	CircleNotchIcon,
 	CubeFocusIcon,
-	FileDocIcon,
-	FileJsIcon,
-	FilePdfIcon,
 	LinkSimpleIcon,
 	MagnifyingGlassMinusIcon,
 	MagnifyingGlassPlusIcon,
 } from "@phosphor-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { m } from "motion/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useControls } from "react-zoom-pan-pinch";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
-import { buildDocx } from "@reactive-resume/docx";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
-import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { cn } from "@reactive-resume/utils/style";
 import { useCurrentResume } from "@/features/resume/builder/draft";
-import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
 import { authClient } from "@/libs/auth/client";
 
 type BuilderDockProps = {
@@ -42,8 +35,6 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const { zoomIn, zoomOut, centerView } = useControls();
 
-	const [isPrinting, setIsPrinting] = useState(false);
-
 	const publicUrl = useMemo(() => {
 		if (!session?.user.username || !resume?.slug) return "";
 		return `${window.location.origin}/${session.user.username}/${resume.slug}`;
@@ -53,46 +44,6 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 		await copyToClipboard(publicUrl);
 		toast.success(t`A link to your resume has been copied to clipboard.`);
 	}, [publicUrl, copyToClipboard]);
-
-	const onDownloadJSON = useCallback(async () => {
-		if (!resume) return;
-		const filename = generateFilename(resume.name, "json");
-		const jsonString = JSON.stringify(resume.data, null, 2);
-		const blob = new Blob([jsonString], { type: "application/json" });
-
-		downloadWithAnchor(blob, filename);
-	}, [resume]);
-
-	const onDownloadDOCX = useCallback(async () => {
-		if (!resume) return;
-		const filename = generateFilename(resume.name, "docx");
-
-		try {
-			const blob = await buildDocx(resume.data);
-			downloadWithAnchor(blob, filename);
-		} catch {
-			toast.error(t`There was a problem while generating the DOCX, please try again.`);
-		}
-	}, [resume]);
-
-	const onDownloadPDF = useCallback(async () => {
-		if (!resume) return;
-
-		const filename = generateFilename(resume.name, "pdf");
-		const toastId = toast.loading(t`Please wait while your PDF is being generated...`);
-
-		setIsPrinting(true);
-
-		try {
-			const blob = await createResumePdfBlob(resume.data);
-			downloadWithAnchor(blob, filename);
-		} catch {
-			toast.error(t`There was a problem while generating the PDF, please try again.`);
-		} finally {
-			setIsPrinting(false);
-			toast.dismiss(toastId);
-		}
-	}, [resume]);
 
 	return (
 		<div className="fixed inset-x-0 bottom-4 flex items-center justify-center">
@@ -121,15 +72,6 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 				/>
 				<div className="mx-1 h-8 w-px bg-border" />
 				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
-				<DockIcon icon={FileJsIcon} title={t`Download JSON`} onClick={() => onDownloadJSON()} />
-				<DockIcon icon={FileDocIcon} title={t`Download DOCX`} onClick={() => onDownloadDOCX()} />
-				<DockIcon
-					title={t`Download PDF`}
-					disabled={isPrinting}
-					onClick={() => onDownloadPDF()}
-					icon={isPrinting ? CircleNotchIcon : FilePdfIcon}
-					iconClassName={cn(isPrinting && "animate-spin")}
-				/>
 			</m.div>
 		</div>
 	);

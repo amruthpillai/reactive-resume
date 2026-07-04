@@ -1,58 +1,13 @@
-import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { CircleNotchIcon, FileDocIcon, FileJsIcon, FilePdfIcon } from "@phosphor-icons/react";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
-import { buildDocx } from "@reactive-resume/docx";
 import { Button } from "@reactive-resume/ui/components/button";
-import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { useResume } from "@/features/resume/builder/draft";
-import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
+import { useResumeExport } from "@/features/resume/export/use-resume-export";
 import { SectionBase } from "../shared/section-base";
 
 export function ExportSectionBuilder() {
-	const resumeData = useResume();
-
-	const [isPrinting, setIsPrinting] = useState(false);
-	const resume = resumeData;
-
-	const onDownloadJSON = useCallback(() => {
-		if (!resume) return;
-		const filename = generateFilename(resume.name, "json");
-		const jsonString = JSON.stringify(resume.data, null, 2);
-		const blob = new Blob([jsonString], { type: "application/json" });
-
-		downloadWithAnchor(blob, filename);
-	}, [resume]);
-
-	const onDownloadDOCX = useCallback(async () => {
-		if (!resume) return;
-		const filename = generateFilename(resume.name, "docx");
-
-		try {
-			const blob = await buildDocx(resume.data);
-			downloadWithAnchor(blob, filename);
-		} catch {
-			toast.error(t`There was a problem while generating the DOCX, please try again.`);
-		}
-	}, [resume]);
-
-	const onDownloadPDF = useCallback(async () => {
-		if (!resume) return;
-		const filename = generateFilename(resume.name, "pdf");
-		const toastId = toast.loading(t`Please wait while your PDF is being generated...`);
-
-		setIsPrinting(true);
-		try {
-			const blob = await createResumePdfBlob(resume.data);
-			downloadWithAnchor(blob, filename);
-		} catch {
-			toast.error(t`There was a problem while generating the PDF, please try again.`);
-		} finally {
-			setIsPrinting(false);
-			toast.dismiss(toastId);
-		}
-	}, [resume]);
+	const resume = useResume();
+	const { onDownloadJSON, onDownloadDOCX, onDownloadPDF, isExporting } = useResumeExport(resume);
 
 	if (!resume) return null;
 
@@ -94,11 +49,11 @@ export function ExportSectionBuilder() {
 
 			<Button
 				variant="outline"
-				disabled={isPrinting}
+				disabled={isExporting}
 				onClick={onDownloadPDF}
 				className="h-auto gap-x-4 whitespace-normal p-4! text-start font-normal active:scale-98"
 			>
-				{isPrinting ? (
+				{isExporting ? (
 					<CircleNotchIcon className="size-6 shrink-0 animate-spin" />
 				) : (
 					<FilePdfIcon className="size-6 shrink-0" />
