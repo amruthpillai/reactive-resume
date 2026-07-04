@@ -1,6 +1,7 @@
 import type React from "react";
 import type { Layout } from "react-resizable-panels";
 import type { BuilderLayout } from "./-store/sidebar";
+import { Trans } from "@lingui/react/macro";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import Cookies from "js-cookie";
@@ -138,6 +139,13 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 
 	return (
 		<div className="flex h-svh flex-col">
+			<a
+				href="#main-content"
+				className="sr-only rounded-md bg-popover px-4 py-2 text-sm ring-2 ring-ring focus:not-sr-only focus:absolute focus:inset-s-2 focus:top-2 focus:z-[100]"
+			>
+				<Trans>Skip to main content</Trans>
+			</a>
+
 			<BuilderHeader />
 
 			<ResizableGroup orientation="horizontal" className="mt-14 flex-1" onLayoutChanged={onLayoutChanged}>
@@ -156,7 +164,9 @@ function BuilderLayoutShell({ initialLayout }: BuilderLayoutShellProps) {
 				</ResizablePanel>
 				<ResizableSeparator withHandle className="z-50 border-s" />
 				<ResizablePanel id="artboard" defaultSize={artboardSize} className="h-[calc(100svh-3.5rem)]">
-					<Outlet />
+					<main id="main-content" className="h-full">
+						<Outlet />
+					</main>
 				</ResizablePanel>
 				<ResizableSeparator withHandle className="z-50 border-e" />
 				<ResizablePanel
