@@ -1,55 +1,55 @@
 ---
 title: "Exporting your resume"
-description: "Download your resume as a PDF, DOCX, or JSON file, or print it directly from the builder header, and learn when to pick each format."
+description: "Download your resume or cover letter from Reactive Resume as PDF, DOCX, Markdown, or JSON, and pick the right format for each situation."
 ---
 
-Reactive Resume can export your resume in three formats and print it directly.
+Reactive Resume can export your resume, and your cover letter separately when you have one, in four formats.
 
 | Format | Best for |
 | --- | --- |
 | **PDF** | Job applications, recruiter emails, printing, and public resume downloads. |
-| **DOCX** | Further editing in Microsoft Word, Google Docs, or another word processor. |
-| **JSON** | Backups, restoring a resume later, importing into another Reactive Resume account, or sharing structured data with an AI assistant. |
-| **Print** | Sending directly to a printer or saving through the browser's print dialog. |
+| **DOCX** | Further editing in Microsoft Word, Google Docs, or Pages. |
+| **Markdown** | Plain-text edits and sharing structured content with AI tools. |
+| **JSON** | Backups, restoring a resume later, or importing into another Reactive Resume account. |
 
-## Download from the builder header
+## Open the download dialog
 
-The primary way to export is the **Download PDF** button in the builder header.
+Every export runs from the same **Download** dialog. You can open it two ways.
 
 <Steps>
   <Step title="Open your resume in the builder">
     Go to the dashboard and open the resume you want to export.
   </Step>
 
-  <Step title="Click Download PDF">
-    The **Download PDF** button is in the top-right of the builder header, next to the sidebar toggle.
-
-    <Frame caption="Download button in the builder header">
-      <img
-        src="/images/guides/exporting-your-resume/screenshot-1.webp"
-        alt="Builder header showing the Download PDF button with a dropdown for more formats"
-      />
-    </Frame>
+  <Step title="Click Download">
+    Select the **Download** button in the top-right of the builder header, next to the sidebar toggle. You can also open the same dialog from the **Export** section of the right sidebar.
   </Step>
 
-  <Step title="Or choose another format">
-    Open the dropdown next to **Download PDF** and pick **Download DOCX**, **Download JSON**, or **Print**.
+  <Step title="Pick what to export">
+    At the top of the dialog, use the tabs to choose **Resume** or **Cover letter**. The **Cover letter** tab is only available when your resume contains a visible cover letter section.
   </Step>
 
-  <Step title="Save the file">
-    Your browser downloads the exported file using the resume name as the filename. **Print** opens your browser's print dialog instead.
+  <Step title="Choose a format">
+    Select **Download** on the format you want. The dialog closes and your browser saves the file using the resume name as the filename.
   </Step>
 </Steps>
 
 <Tip>
-  While an export is running, the button shows a spinner and is disabled until the file is ready.
+  While an export is running, the trigger button and format buttons show a spinner and stay disabled until the file is ready.
 </Tip>
 
-## Export from the right sidebar
+## Export the resume and cover letter separately
 
-You can also export from the right sidebar's **Export** section, which lists each format with a short description.
+If your resume includes a [cover letter section](/guides/adding-a-cover-letter), the download dialog treats the resume and cover letter as two distinct documents.
 
-Use the sidebar when you want the format descriptions next to each button. Use the header button when you already know which file you need.
+- The **Resume** tab exports only your resume content and excludes cover letter sections.
+- The **Cover letter** tab exports only visible cover letter sections, rendered full width on their own page.
+
+You no longer need to reorder pages or hide sections manually to produce a resume-only or cover-letter-only PDF. Select the tab that matches what you want, then pick a format.
+
+<Info>
+  The **Cover letter** tab is disabled when the resume has no cover letter section, or when every cover letter section or item is hidden.
+</Info>
 
 ## Export as PDF
 
@@ -59,7 +59,7 @@ Use PDF for:
 
 - uploading to job applications;
 - emailing recruiters or hiring managers;
-- printing;
+- printing from your browser or a print service;
 - sharing a finished copy outside Reactive Resume.
 
 <Info>
@@ -68,7 +68,7 @@ Use PDF for:
 
 ## Export as DOCX
 
-Choose **DOCX** when you want to continue editing your resume in a word processor.
+Choose **DOCX** when you want to continue editing your resume or cover letter in a word processor.
 
 Use DOCX for:
 
@@ -77,26 +77,40 @@ Use DOCX for:
 - submitting to a system that requires a Word document.
 
 <Warning>
-  DOCX exports are useful for editing, but the visual layout may not match the PDF exactly. Use PDF when exact visual
-  fidelity matters.
+  DOCX exports are useful for editing, but the visual layout may not match the PDF exactly. Use PDF when exact visual fidelity matters.
 </Warning>
+
+## Export as Markdown
+
+Choose **Markdown** when you want a plain-text version of your resume or cover letter that is easy to edit anywhere and easy to feed into AI tools.
+
+Use Markdown for:
+
+- pasting into an AI assistant to review, rewrite, or tailor content;
+- quick edits in any text editor without formatting overhead;
+- storing a lightweight, diff-friendly copy in version control.
+
+Section headings, lists, links, and rich-text formatting from the builder are preserved as standard Markdown.
 
 ## Export as JSON
 
 Choose **JSON** when you want a structured backup of your resume.
 
-The JSON export includes your resume content and settings. You can import it later from the dashboard to restore the resume or create another version.
+The JSON export includes your full resume content and settings. You can import it later from the dashboard to restore the resume or create another version.
 
-JSON is also useful when working with AI assistants. You can export JSON, ask an assistant to review or edit the structured data, then import the revised JSON as a new resume.
+JSON is also useful when working with AI assistants that understand structured data. Export JSON, ask an assistant to review or edit the fields, then import the revised JSON as a new resume.
+
+<Info>
+  JSON export is only available on the **Resume** tab. Cover letters are exported through PDF, DOCX, or Markdown.
+</Info>
 
 <Warning>
-  Review AI-generated changes before importing or using them. AI assistants can make mistakes or add details that do not
-  reflect your experience.
+  Review AI-generated changes before importing or using them. AI assistants can make mistakes or add details that do not reflect your experience.
 </Warning>
 
-## Print
+## Printing your resume
 
-Choose **Print** to open your browser's print dialog with the current resume. Use this to print directly, or to save a copy through your browser's "Save as PDF" option when you need to bypass the built-in PDF export.
+To print, export a **PDF** and print it from your PDF viewer or browser. This gives you the same layout that recruiters see when you send them the file.
 
 ## Public resume downloads
 
