@@ -7,8 +7,10 @@ test("exports and imports a resume JSON backup", async ({ authPage: page }, test
 
 	await openSidebarSection(page, "Export");
 
+	// Downloads now live in a dialog: open it, then trigger the JSON export.
+	await page.getByRole("button", { name: /Choose PDF, DOCX, or JSON/ }).click();
 	const downloadPromise = page.waitForEvent("download");
-	await page.getByRole("button", { name: /^JSON/ }).click();
+	await page.getByRole("button", { name: "Download JSON" }).click();
 	const download = await downloadPromise;
 	expect(download.suggestedFilename()).toMatch(/\.json$/);
 
