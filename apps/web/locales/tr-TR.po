@@ -507,6 +507,10 @@ msgstr "Seçebileceğiniz güzel şablonlar, daha fazlası yolda."
 msgid "Bengali"
 msgstr "Bengalce"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "Boş taslak"
@@ -654,6 +658,10 @@ msgstr "Bir özgeçmiş seçin"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "Yan menüden mevcut bir konuşmayı seçin veya taslak odaklı yeni bir konu başlatın."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "Bağlantı doğrulanamadı. Lütfen API anahtarını, modeli ve temel UR
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "Kaydedilemedi"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "Reaktif Özgeçmiş'e Bağış Yapın"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "İndir"
 
@@ -1157,30 +1173,13 @@ msgstr "İndir"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Profiliniz ve tüm özgeçmişleriniz de dahil olmak üzere tüm verilerinizin bir kopyasını JSON dosyası olarak indirin."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "Özgeçmişinizin bir kopyasını Word belgesi olarak indirin. Özgeçmişinizi Microsoft Word veya Google Docs'ta daha da özelleştirmek için bu dosyayı kullanın."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "Özgeçmişinizin bir kopyasını JSON formatında indirin. Bu dosyayı yedeklemek veya özgeçmişinizi diğer uygulamalara, AI asistanları dahil olmak üzere, aktarmak için kullanabilirsiniz."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "Özgeçmişinizin bir kopyasını PDF formatında indirin. Bu dosyayı yazdırmak veya özgeçmişinizi işverenlerle kolayca paylaşmak için kullanın."
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "İndir DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "JSON indir"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "PDF indir"
 
@@ -1257,6 +1256,10 @@ msgstr "Düzenleme detayları"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Anahtar kelimeyi düzenle"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "Dışa aktar"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "Verilerimi dışa aktar"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "Serbest biçimli"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Fransızca"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "Eksik iş özgeçmişi"
 msgid "Model"
 msgstr "Model"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "Daha fazla indirme seçeneği"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Bölümü başka bir sütuna veya sayfaya taşı"
@@ -2636,6 +2643,10 @@ msgstr "Bir simge seçin"
 msgid "Picture"
 msgstr "Resim"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Hesabınız için yeni bir şifre girin"
@@ -2717,10 +2728,6 @@ msgstr "Önizleme"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Birincil Renk"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "Yazdır"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "Bu yamadan önceki haline geri döndür? Bu işlem, bu yamayı ve sonras
 msgid "Restore this version?"
 msgstr "Bu sürümü geri yüklemek ister misiniz?"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Sürdürmek"
@@ -4308,4 +4316,3 @@ msgstr "Uzaklaştır"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

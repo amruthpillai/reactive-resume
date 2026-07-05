@@ -507,6 +507,10 @@ msgstr "Krásne šablóny, z ktorých si môžeš vybrať, a ďalšie sú na ces
 msgid "Bengali"
 msgstr "Bengálčina"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "Prázdny koncept"
@@ -654,6 +658,10 @@ msgstr "Vyberte si životopis"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "Vyberte existujúcu konverzáciu z bočného panela alebo začnite nové vlákno zamerané na koncept."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "Nepodarilo sa overiť pripojenie. Skontrolujte kľúč API, model a zák
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "Nepodarilo sa uložiť"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "Prispej projektu Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "Stiahnuť"
 
@@ -1157,30 +1173,13 @@ msgstr "Stiahnuť"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Stiahnite si kópiu všetkých svojich údajov vrátane profilu a každého životopisu ako súbor JSON."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "Stiahnite si kópiu svojho životopisu ako dokument programu Word. Tento súbor použite na ďalšie prispôsobenie svojho životopisu v programe Microsoft Word alebo Google Docs."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "Stiahni si kópiu svojho životopisu vo formáte JSON. Tento súbor použi na zálohovanie alebo na import životopisu do iných aplikácií, vrátane AI asistentov."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "Stiahni si kópiu svojho životopisu vo formáte PDF. Tento súbor použi na tlač alebo jednoduché zdieľanie životopisu s náborármi."
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "Stiahnuť DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "Stiahnuť JSON"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "Stiahnuť PDF"
 
@@ -1257,6 +1256,10 @@ msgstr "Upraviť podrobnosti"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Upraviť kľúčové slovo"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "Export"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "Exportovať moje údaje"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "Voľný tvar"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Francúzština"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "Chýbajúci pracovný životopis"
 msgid "Model"
 msgstr "Model"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "Viac možností sťahovania"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Presunúť sekciu do iného stĺpca alebo na inú stranu"
@@ -2636,6 +2643,10 @@ msgstr "Vyberte ikonu"
 msgid "Picture"
 msgstr "Fotografia"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Zadaj, prosím, nové heslo pre svoj účet"
@@ -2717,10 +2728,6 @@ msgstr "Náhľad"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Hlavná farba"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "Tlačiť"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "Obnoviť životopis do stavu pred touto opravou? Táto akcia vráti spä
 msgid "Restore this version?"
 msgstr "Obnoviť túto verziu?"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Životopis"
@@ -4308,4 +4316,3 @@ msgstr "Oddialiť"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

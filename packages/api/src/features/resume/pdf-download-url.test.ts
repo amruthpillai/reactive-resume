@@ -47,6 +47,27 @@ describe("resume PDF signed download URLs", () => {
 		});
 	});
 
+	it("can include the cover letter target without changing token verification", () => {
+		const result = createResumePdfDownloadUrl({
+			resumeId: "resume-1",
+			userId: "user-1",
+			target: "cover-letter",
+			now: new Date("2026-06-01T10:00:00.000Z"),
+		});
+		const url = new URL(result.url);
+		const token = url.searchParams.get("token");
+
+		expect(url.searchParams.get("target")).toBe("cover-letter");
+		if (!token) throw new Error("Expected signed URL token");
+		expect(
+			verifyResumePdfDownloadToken({
+				resumeId: "resume-1",
+				token,
+				now: new Date("2026-06-01T10:01:00.000Z"),
+			}),
+		).toMatchObject({ ok: true });
+	});
+
 	it("rejects expired, tampered, and mismatched tokens", () => {
 		const result = createResumePdfDownloadUrl({
 			resumeId: "resume-1",

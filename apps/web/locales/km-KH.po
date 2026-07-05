@@ -507,6 +507,10 @@ msgstr "គំរូ​ស្អាតៗ​ឲ្យ​ជ្រើសរើស
 msgid "Bengali"
 msgstr "Bengali"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "សេចក្តីព្រាងទទេ"
@@ -654,6 +658,10 @@ msgstr "ជ្រើសរើសប្រវត្តិរូបសង្ខេ
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "ជ្រើសរើសការសន្ទនាដែលមានស្រាប់ពីរបារចំហៀង ឬចាប់ផ្តើមខ្សែស្រឡាយថ្មីដែលផ្តោតលើសេចក្តីព្រាង។"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "មិនអាចផ្ទៀងផ្ទាត់ការតភ្ជ
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "មិនអាចរក្សាទុកបានទេ"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "បរិច្ចាគ​ឲ្យ Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "ទាញយក"
 
@@ -1157,30 +1173,13 @@ msgstr "ទាញយក"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "ទាញយកច្បាប់ចម្លងនៃទិន្នន័យទាំងអស់របស់អ្នក រួមទាំងប្រវត្តិរូប និងប្រវត្តិរូបសង្ខេបនីមួយៗរបស់អ្នក ជាឯកសារ JSON។"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "ទាញយកច្បាប់ចម្លងនៃប្រវត្តិរូបរបស់អ្នកជា​ឯកសារ Word។ ប្រើឯកសារនេះដើម្បីកែតម្រូវប្រវត្តិរូបរបស់អ្នកបន្ថែមទៀតក្នុង Microsoft Word ឬ Google Docs។"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "ទាញយក​ច្បាប់ចម្លង​មួយ​នៃ​ប្រវត្តិរូប​របស់​អ្នក​ជា​ទ្រង់ទ្រាយ JSON។ ប្រើ​ឯកសារ​នេះ​សម្រាប់​បម្រុងទុក ឬ​ដើម្បី​នាំចូល​ប្រវត្តិរូប​របស់​អ្នក​ទៅ​កម្មវិធី​ផ្សេងៗ រួមទាំង​អ្នកជំនួយការ AI ផងដែរ។"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "ទាញយក​ច្បាប់ចម្លង​មួយ​នៃ​ប្រវត្តិរូប​របស់​អ្នក​ជា​ទ្រង់ទ្រាយ PDF។ ប្រើ​ឯកសារ​នេះ​សម្រាប់​បោះពុម្ព ឬ​ដើម្បី​ចែករំលែក​ប្រវត្តិរូប​របស់​អ្នក​ដល់​អ្នក​ជ្រើសរើសបុគ្គលិក​បាន​យ៉ាង​ងាយស្រួល។"
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "ទាញយក DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "ទាញយក JSON"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "ទាញយក PDF"
 
@@ -1257,6 +1256,10 @@ msgstr "កែសម្រួលព័ត៌មានលម្អិត"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "កែសម្រួលពាក្យគន្លឹះ"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "នាំចេញ"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "នាំចេញទិន្នន័យរបស់ខ្ញុំ"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "ទម្រង់សេរី"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "French"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "បាត់ប្រវត្តិរូបសង្ខេបការ
 msgid "Model"
 msgstr "ម៉ូដែល"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "ជម្រើសទាញយកច្រើនទៀត"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "ផ្លាស់ទីផ្នែកទៅជួរឈរ ឬទំព័រផ្សេងទៀត"
@@ -2636,6 +2643,10 @@ msgstr "ជ្រើសរើសរូបតំណាង"
 msgid "Picture"
 msgstr "រូបភាព"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "សូម​បញ្ចូល​ពាក្យសម្ងាត់​ថ្មី​មួយ​សម្រាប់​គណនី​របស់​អ្នក"
@@ -2717,10 +2728,6 @@ msgstr "មើលជាមុន"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "ពណ៌​មូលដ្ឋាន"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "បោះពុម្ព"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "ស្ដារប្រវត្តិរូបសង្ខេបទៅ
 msgid "Restore this version?"
 msgstr "ស្ដារ​កំណែ​នេះ​ឡើង​វិញ?"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "ប្រវត្តិរូបសង្ខេប"
@@ -4308,4 +4316,3 @@ msgstr "បង្រួម"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

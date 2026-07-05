@@ -507,6 +507,10 @@ msgstr "提供多款精美範本供您選擇，並持續增加中。"
 msgid "Bengali"
 msgstr "孟加拉語"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "空白草稿"
@@ -654,6 +658,10 @@ msgstr "選擇一份履歷"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "從側邊欄選擇現有對話，或發起新的以草稿為中心的討論串。"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "連線驗證失敗。請檢查 API 金鑰、模型和基本 URL。"
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "無法保存"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "捐助 Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "下載"
 
@@ -1157,30 +1173,13 @@ msgstr "下載"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "下載包含您的個人資料和所有簡歷在內的所有資料的副本，格式為 JSON 檔案。"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "將您的履歷下載為 Word 文件。使用此檔案在 Microsoft Word 或 Google Docs 中進一步自訂您的簡歷。"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "下載一份 JSON 格式的履歷備份。您可以用這個檔案做備份，或將履歷匯入到其他應用程式（包含 AI 助理）。"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "下載一份 PDF 格式的履歷副本。您可以用這個檔案列印，或輕鬆與招募人員分享您的履歷。"
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "下載 DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "下載 JSON"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "下載 PDF"
 
@@ -1257,6 +1256,10 @@ msgstr "編輯詳情"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "編輯關鍵字"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "導出"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "匯出我的數據"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "自由形式"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "法文"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "缺少工作履歷"
 msgid "Model"
 msgstr "模型"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "更多下載選項"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "將本節內容移至另一列或頁面"
@@ -2636,6 +2643,10 @@ msgstr "選擇一個圖標"
 msgid "Picture"
 msgstr "圖片"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "請為您的帳戶輸入新的密碼"
@@ -2717,10 +2728,6 @@ msgstr "預覽"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "主要顏色"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "列印"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "恢復到此補丁之前的狀態？這將回滾此補丁以及其後套
 msgid "Restore this version?"
 msgstr "恢復此版本？"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "恢復"
@@ -4308,4 +4316,3 @@ msgstr "縮小"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "祖魯語"
-

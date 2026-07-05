@@ -6,13 +6,10 @@ import {
 	CircleNotchIcon,
 	CopySimpleIcon,
 	DownloadSimpleIcon,
-	FileDocIcon,
-	FileJsIcon,
 	HouseSimpleIcon,
 	LockSimpleIcon,
 	LockSimpleOpenIcon,
 	PencilSimpleLineIcon,
-	PrinterIcon,
 	SidebarSimpleIcon,
 	TrashSimpleIcon,
 	WarningCircleIcon,
@@ -31,7 +28,7 @@ import {
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, usePatchResume, useResumeStore } from "@/features/resume/builder/draft";
-import { useResumeExport } from "@/features/resume/export/use-resume-export";
+import { ResumeDownloadDialog } from "@/features/resume/export/download-dialog";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -103,63 +100,31 @@ export function BuilderHeader() {
 
 function ResumeDownloadButton() {
 	const resume = useCurrentResume();
-	const { onDownloadPDF, onDownloadDOCX, onDownloadJSON, onPrint, isExporting } = useResumeExport(resume);
 
 	return (
-		<div className="flex items-center">
-			<Button
-				size="sm"
-				aria-label={t({
-					comment: "Primary action in the builder header to download the resume as a PDF",
-					message: "Download PDF",
-				})}
-				className="rounded-e-none px-2 sm:px-2.5"
-				disabled={isExporting}
-				onClick={onDownloadPDF}
-			>
-				{isExporting ? (
-					<CircleNotchIcon className="animate-spin sm:me-1.5" />
-				) : (
-					<DownloadSimpleIcon className="sm:me-1.5" />
-				)}
-				<span className="hidden sm:inline">
-					<Trans comment="Primary action in the builder header to download the resume as a PDF">Download PDF</Trans>
-				</span>
-			</Button>
-
-			<DropdownMenu>
-				<DropdownMenuTrigger
-					render={
-						<Button
-							size="sm"
-							disabled={isExporting}
-							aria-label={t`More download options`}
-							className="rounded-s-none border-primary-foreground/20 border-s px-1.5"
-						>
-							<CaretDownIcon />
-						</Button>
-					}
-				/>
-
-				<DropdownMenuContent align="end">
-					<DropdownMenuItem onClick={onDownloadDOCX}>
-						<FileDocIcon className="me-2" />
-						<Trans>Download DOCX</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={onDownloadJSON}>
-						<FileJsIcon className="me-2" />
-						<Trans>Download JSON</Trans>
-					</DropdownMenuItem>
-
-					<DropdownMenuSeparator />
-
-					<DropdownMenuItem onClick={onPrint}>
-						<PrinterIcon className="me-2" />
-						<Trans>Print</Trans>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</div>
+		<ResumeDownloadDialog
+			resume={resume}
+			trigger={(disabled) => (
+				<Button
+					size="sm"
+					aria-label={t({
+						comment: "Primary action in the builder header to open resume download options",
+						message: "Download options",
+					})}
+					disabled={disabled}
+					className="px-2 sm:px-2.5"
+				>
+					{disabled ? (
+						<CircleNotchIcon className="animate-spin sm:me-1.5" />
+					) : (
+						<DownloadSimpleIcon className="sm:me-1.5" />
+					)}
+					<span className="hidden sm:inline">
+						<Trans comment="Primary action in the builder header to open resume download options">Download</Trans>
+					</span>
+				</Button>
+			)}
+		/>
 	);
 }
 

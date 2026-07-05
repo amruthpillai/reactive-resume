@@ -1,3 +1,4 @@
+import type { ResumeExportTarget } from "@reactive-resume/resume/export-sections";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "@reactive-resume/env/server";
 
@@ -15,6 +16,7 @@ type CreateResumePdfDownloadUrlInput = {
 	resumeId: string;
 	userId: string;
 	now?: Date;
+	target?: ResumeExportTarget;
 	ttlSeconds?: number;
 };
 
@@ -77,6 +79,7 @@ export function createResumePdfDownloadUrl({
 	resumeId,
 	userId,
 	now = new Date(),
+	target,
 	ttlSeconds,
 }: CreateResumePdfDownloadUrlInput) {
 	const expiresInSeconds = resolveTtlSeconds(ttlSeconds);
@@ -91,6 +94,7 @@ export function createResumePdfDownloadUrl({
 	const token = `${payload}.${sign(payload)}`;
 	const url = new URL(`/api/resumes/${encodeURIComponent(resumeId)}/pdf`, env.APP_URL);
 	url.searchParams.set("token", token);
+	if (target) url.searchParams.set("target", target);
 
 	return {
 		url: url.toString(),

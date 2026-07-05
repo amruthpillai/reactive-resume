@@ -122,23 +122,36 @@ function blendWithWhite(hex: string, opacity: number): string {
 
 // --- Section rendering dispatch ---
 
-function renderSection(sectionId: string, data: ResumeData, colorHex: string): Paragraph[] {
+/** Resolves a section's (usually empty) stored title from its id — locale-aware, supplied by the caller. */
+export type SectionTitleResolver = (sectionId: string) => string | undefined;
+
+function renderSection(
+	sectionId: string,
+	data: ResumeData,
+	colorHex: string,
+	resolveTitle?: SectionTitleResolver,
+): Paragraph[] {
+	const titled = <T extends { title: string }>(section: T): T => ({
+		...section,
+		title: resolveTitle?.(sectionId)?.trim() || section.title,
+	});
+
 	if (sectionId === "summary") {
-		return renderSummary(data.summary, colorHex);
+		return renderSummary(titled(data.summary), colorHex);
 	}
 
 	// ponytail: data.sections keys are the source of truth; no need to maintain a parallel Set
 	if (sectionId in data.sections) {
 		const section = data.sections[sectionId as SectionType];
 		if (section) {
-			return renderBuiltInSection(sectionId as SectionType, section, colorHex);
+			return renderBuiltInSection(sectionId as SectionType, titled(section), colorHex);
 		}
 		return [];
 	}
 
 	const customSection = data.customSections.find((cs) => cs.id === sectionId);
 	if (customSection) {
-		return renderCustomSection(customSection, colorHex);
+		return renderCustomSection(titled(customSection), colorHex);
 	}
 
 	return [];
@@ -352,7 +365,7 @@ function buildTwoColumnTable(
  * - Page margins and fixed DOCX page format from `metadata.page`; free-form exports as A4
  * - Primary, text, and background colors from `metadata.design.colors`
  */
-export function buildDocument(data: ResumeData): Document {
+export function buildDocument(data: ResumeData, resolveTitle?: SectionTitleResolver): Document {
 	const colorHex = getColorHex(data.metadata.design.colors.primary, "DC2626");
 	const textColorHex = getColorHex(data.metadata.design.colors.text, "000000");
 	const bgColorHex = getColorHex(data.metadata.design.colors.background, "FFFFFF");
@@ -414,7 +427,7 @@ export function buildDocument(data: ResumeData): Document {
 		if (isFullWidth) {
 			setRenderConfig(mainConfig);
 			for (const sectionId of [...layoutPage.main, ...layoutPage.sidebar]) {
-				documentChildren.push(...renderSection(sectionId, data, colorHex));
+				documentChildren.push(...renderSection(sectionId, data, colorHex, resolveTitle));
 			}
 		} else {
 			// Render main sections with normal colors
@@ -425,7 +438,7 @@ export function buildDocument(data: ResumeData): Document {
 				mainParagraphs.push(...buildHeader(data, colorHex, textColorHex));
 			}
 			for (const sectionId of layoutPage.main) {
-				mainParagraphs.push(...renderSection(sectionId, data, colorHex));
+				mainParagraphs.push(...renderSection(sectionId, data, colorHex, resolveTitle));
 			}
 
 			// Render sidebar sections with potentially inverted colors
@@ -436,7 +449,7 @@ export function buildDocument(data: ResumeData): Document {
 				sidebarParagraphs.push(...buildHeader(data, sidebarHeadingColorHex, sidebarTextColorHex));
 			}
 			for (const sectionId of layoutPage.sidebar) {
-				sidebarParagraphs.push(...renderSection(sectionId, data, sidebarHeadingColorHex));
+				sidebarParagraphs.push(...renderSection(sectionId, data, sidebarHeadingColorHex, resolveTitle));
 			}
 
 			if (mainParagraphs.length > 0 || sidebarParagraphs.length > 0) {

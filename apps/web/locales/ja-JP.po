@@ -507,6 +507,10 @@ msgstr "選択できる美しいテンプレートを多数用意しており、
 msgid "Bengali"
 msgstr "ベンガル語"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "白紙の下書き"
@@ -654,6 +658,10 @@ msgstr "レジュメを選択してください"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "サイドバーから既存の会話を選択するか、下書きに特化した新しいスレッドを開始してください。"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "接続を確認できませんでした。APIキー、モデル、およ
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "保存できませんでした"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "Reactive Resume に寄付"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "ダウンロード"
 
@@ -1157,30 +1173,13 @@ msgstr "ダウンロード"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "プロフィールや履歴書など、すべてのデータをJSONファイルとしてダウンロードできます。"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "レジュメをWord文書としてダウンロードします。Microsoft WordやGoogle Docsを使用して履歴書を編集できます。"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "レジュメの JSON 形式のコピーをダウンロードします。バックアップとして、または AI アシスタントを含む他のアプリケーションにレジュメをインポートする際に、このファイルを使用できます。"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "レジュメの PDF 形式のコピーをダウンロードします。印刷用や、採用担当者と簡単に共有するために、このファイルを使用できます。"
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "DOCXダウンロード"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "JSON をダウンロード"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "PDF をダウンロード"
 
@@ -1257,6 +1256,10 @@ msgstr "詳細を編集"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "編集キーワード"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "エクスポート"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "データをエクスポートする"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "自由形式"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "フランス語"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "レジュメが選択されていません"
 msgid "Model"
 msgstr "モデル"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "その他のダウンロードオプション"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "セクションを別の列またはページに移動"
@@ -2636,6 +2643,10 @@ msgstr "アイコンを選択してください"
 msgid "Picture"
 msgstr "プロフィール写真"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "アカウント用の新しいパスワードを入力してください。"
@@ -2717,10 +2728,6 @@ msgstr "プレビュー"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "メインカラー"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "印刷"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "このパッチ適用前の状態に復元しますか？これにより
 msgid "Restore this version?"
 msgstr "このバージョンを復元しますか？"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "レジュメ"
@@ -4308,4 +4316,3 @@ msgstr "ズームアウト"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ズールー語"
-

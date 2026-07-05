@@ -507,6 +507,10 @@ msgstr "Pragtige sjablone om van te kies, met meer op pad."
 msgid "Bengali"
 msgstr "Bengaals"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "Leë konsep"
@@ -654,6 +658,10 @@ msgstr "Kies 'n CV"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "Kies 'n bestaande gesprek vanaf die sybalk, of begin 'n nuwe konsep-gefokusde draad."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "Kon nie die verbinding verifieer nie. Kontroleer die API-sleutel, model 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "Kon nie stoor nie"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "Skenk aan Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "Laai af"
 
@@ -1157,30 +1173,13 @@ msgstr "Laai af"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Laai 'n kopie van al jou data, insluitend jou profiel en elke CV, as 'n JSON-lêer af."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "Laai 'n kopie van jou CV af as 'n Word-dokument. Gebruik hierdie lêer om jou CV verder aan te pas in Microsoft Word of Google Docs."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "Laai 'n kopie van jou CV in JSON-formaat af. Gebruik hierdie lêer vir rugsteun of om jou CV in ander toepassings, insluitend KI-assistente, in te voer."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "Laai 'n kopie van jou CV in PDF-formaat af. Gebruik hierdie lêer om te druk of om jou CV maklik met werwers te deel."
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "Laai DOCX af"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "Laai JSON af"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "Laai PDF af"
 
@@ -1257,6 +1256,10 @@ msgstr "Wysig besonderhede"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Bewerk sleutelwoord"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "Uitvoer"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "Voer my data uit"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "Vrye vorm"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Frans"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "Werkende CV ontbreek"
 msgid "Model"
 msgstr "Model"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "Meer aflaai-opsies"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Skuif afdeling na 'n ander kolom of bladsy"
@@ -2636,6 +2643,10 @@ msgstr "Kies 'n ikoon"
 msgid "Picture"
 msgstr "Prent"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Voer asseblief 'n nuwe wagwoord vir jou rekening in"
@@ -2717,10 +2728,6 @@ msgstr "Voorskou"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Primêre kleur"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "Druk"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "Herstel die CV na voor hierdie opdatering? Dit sal hierdie opdatering en
 msgid "Restore this version?"
 msgstr "Herstel hierdie weergawe?"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "CV"
@@ -4308,4 +4316,3 @@ msgstr "Zoem uit"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zoeloe"
-

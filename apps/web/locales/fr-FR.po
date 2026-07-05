@@ -507,6 +507,10 @@ msgstr "Vous avez le choix parmi de magnifiques modèles, et d'autres sont en co
 msgid "Bengali"
 msgstr "Bengali"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "Brouillon vierge"
@@ -654,6 +658,10 @@ msgstr "Choisissez un CV"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "Choisissez une conversation existante dans la barre latérale, ou créez une nouvelle discussion axée sur les brouillons."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "Impossible de vérifier la connexion. Veuillez vérifier la clé API, le
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "Impossible de sauver"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "Faire un don à Reactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "Télécharger"
 
@@ -1157,30 +1173,13 @@ msgstr "Télécharger"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Téléchargez une copie de toutes vos données, y compris votre profil et tous vos CV, sous forme de fichier JSON."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "Téléchargez une copie de votre CV sous forme de document Word. Utilisez ce fichier pour personnaliser davantage votre CV dans Microsoft Word ou Google Docs."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "Téléchargez un exemplaire de votre CV au format JSON. Utilisez ce fichier comme sauvegarde ou pour importer votre CV dans d'autres applications, y compris les assistants IA."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "Téléchargez un exemplaire de votre CV au format PDF. Utilisez ce fichier pour l'imprimer ou pour partager facilement votre CV avec les recruteurs."
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "Télécharger DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "Télécharger le JSON"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "Télécharger le PDF"
 
@@ -1257,6 +1256,10 @@ msgstr "Modifier les détails"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Modifier le mot-clé"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "Exporter"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "Exporter mes données"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "Forme libre"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Français"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "CV professionnel manquant"
 msgid "Model"
 msgstr "Modèle"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "Plus d'options de téléchargement"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Déplacer la section vers une autre colonne ou page"
@@ -2636,6 +2643,10 @@ msgstr "Choisissez une icône"
 msgid "Picture"
 msgstr "Photo"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Veuillez saisir un nouveau mot de passe pour votre compte"
@@ -2717,10 +2728,6 @@ msgstr "Aperçu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Couleur principale"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "Imprimer"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "Restaurer la reprise à un état antérieur à ce correctif ? Cette act
 msgid "Restore this version?"
 msgstr "Restaurer cette version ?"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "CV"
@@ -4308,4 +4316,3 @@ msgstr "Zoom arrière"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zoulou"
-

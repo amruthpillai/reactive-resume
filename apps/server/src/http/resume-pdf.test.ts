@@ -40,7 +40,32 @@ describe("handleResumePdfDownload", () => {
 		expect(response.headers.get("Content-Disposition")).toBe('attachment; filename="Scizor.pdf"');
 		expect(response.headers.get("Cache-Control")).toBe("private, no-store");
 		expect(await response.text()).toBe("%PDF");
-		expect(mocks.createResumePdfDownload).toHaveBeenCalledWith({ id: "resume-1", userId: "user-1" });
+		expect(mocks.createResumePdfDownload).toHaveBeenCalledWith({ id: "resume-1", userId: "user-1", target: "resume" });
+	});
+
+	it("passes the cover letter target through to PDF rendering", async () => {
+		const pdf = new File([new Uint8Array([37, 80, 68, 70])], "Cover Letter.pdf", { type: "application/pdf" });
+		mocks.verifyResumePdfDownloadToken.mockReturnValueOnce({
+			ok: true,
+			resumeId: "resume-1",
+			userId: "user-1",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+		});
+		mocks.createResumePdfDownload.mockResolvedValueOnce({
+			headers: { "content-disposition": 'attachment; filename="Cover Letter.pdf"' },
+			body: pdf,
+		});
+
+		await handleResumePdfDownload(
+			new Request("https://example.com/api/resumes/resume-1/pdf?token=signed&target=cover-letter"),
+			"resume-1",
+		);
+
+		expect(mocks.createResumePdfDownload).toHaveBeenCalledWith({
+			id: "resume-1",
+			userId: "user-1",
+			target: "cover-letter",
+		});
 	});
 
 	it("rejects missing, invalid, and expired tokens before rendering", async () => {

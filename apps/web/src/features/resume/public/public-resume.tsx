@@ -33,7 +33,7 @@ export function PublicResumeRoute() {
 						{basics.name && <h1 className="font-semibold text-2xl tracking-tight">{basics.name}</h1>}
 						{basics.headline && <p className="text-muted-foreground">{basics.headline}</p>}
 					</div>
-					<Button onClick={onDownloadPDF} disabled={isExporting}>
+					<Button onClick={() => void onDownloadPDF()} disabled={isExporting}>
 						{isExporting ? (
 							<CircleNotchIcon className="size-4 animate-spin" />
 						) : (
@@ -62,7 +62,7 @@ export function PublicResumeRoute() {
 				size="icon-lg"
 				variant="outline"
 				disabled={isExporting}
-				onClick={onDownloadPDF}
+				onClick={() => void onDownloadPDF()}
 				aria-label={t`Download PDF`}
 				title={t`Download PDF`}
 				className="fixed right-6 bottom-6 z-50 rounded-full bg-background/95 opacity-70 shadow-lg backdrop-blur transition-opacity hover:opacity-100 print:hidden"

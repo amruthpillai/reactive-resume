@@ -507,6 +507,10 @@ msgstr "Gražūs šablonai, iš kurių galima rinktis, ir dar daugiau pakeliui."
 msgid "Bengali"
 msgstr "Bengalų"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "Tuščias juodraštis"
@@ -654,6 +658,10 @@ msgstr "Pasirinkite gyvenimo aprašymą"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "Šoninėje juostoje pasirinkite esamą pokalbį arba pradėkite naują, į juodraštį orientuotą temą."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "Nepavyko patvirtinti ryšio. Patikrinkite API raktą, modelį ir bazinį
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "Nepavyko išsaugoti"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "Paaukoti „Reactive Resume“"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "Atsisiųsti"
 
@@ -1157,30 +1173,13 @@ msgstr "Atsisiųsti"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Atsisiųskite visų savo duomenų, įskaitant profilį ir kiekvieną gyvenimo aprašymą, kopiją kaip JSON failą."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "Atsisiųskite savo gyvenimo aprašymo kopiją kaip \"Word\" dokumentą. Šį failą naudokite norėdami dar labiau pritaikyti savo gyvenimo aprašymą \"Microsoft Word\" arba \"Google Docs\"."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "Atsisiųskite savo gyvenimo aprašymo kopiją JSON formatu. Naudokite šį failą atsarginėms kopijoms arba importuokite savo gyvenimo aprašymą į kitas programas, įskaitant DI asistentus."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "Atsisiųskite savo gyvenimo aprašymo kopiją PDF formatu. Naudokite šį failą spausdinimui arba lengvam dalijimuisi su personalo atrankos specialistais."
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "Atsisiųsti DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "Atsisiųsti JSON"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "Atsisiųsti PDF"
 
@@ -1257,6 +1256,10 @@ msgstr "Redaguoti informaciją"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Redaguoti raktinį žodį"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "Eksportuoti"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "Eksportuoti mano duomenis"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "Laisva forma"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Prancūzų"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "Trūksta darbo gyvenimo aprašymo"
 msgid "Model"
 msgstr "Modelis"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "Daugiau atsisiuntimo parinkčių"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Perkelti skyrių į kitą stulpelį arba puslapį"
@@ -2636,6 +2643,10 @@ msgstr "Pasirinkite piktogramą"
 msgid "Picture"
 msgstr "Paveikslėlis"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "Įveskite naują slaptažodį savo paskyrai"
@@ -2717,10 +2728,6 @@ msgstr "Peržiūra"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Pagrindinė spalva"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "Spausdinti"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "Atkurti gyvenimo aprašymą į ankstesnę būseną? Tai anuliuos šį ir
 msgid "Restore this version?"
 msgstr "Atkurti šią versiją?"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Gyvenimo aprašymas"
@@ -4308,4 +4316,3 @@ msgstr "Tolinti"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
-

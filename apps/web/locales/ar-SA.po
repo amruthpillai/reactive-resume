@@ -507,6 +507,10 @@ msgstr "قوالب جميلة للاختيار من بينها، مع المزي
 msgid "Bengali"
 msgstr "البنغالية"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Best for applications, sharing, and printing."
+msgstr ""
+
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Blank draft"
 msgstr "مسودة فارغة"
@@ -654,6 +658,10 @@ msgstr "اختر سيرة ذاتية"
 #: src/routes/agent/index.tsx
 msgid "Choose an existing conversation from the sidebar, or start a new draft-focused thread."
 msgstr "اختر محادثة موجودة من الشريط الجانبي، أو ابدأ سلسلة محادثات جديدة تركز على المسودة."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
+msgid "Choose PDF, DOCX, or JSON. Export your resume and cover letter separately when available."
+msgstr ""
 
 #: src/components/level/combobox.tsx
 msgid "Circle"
@@ -818,6 +826,10 @@ msgstr "تعذر التحقق من الاتصال. يرجى التحقق من م
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Couldn't save"
 msgstr "تعذر الحفظ"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Cover letter"
+msgstr ""
 
 #. Fallback title for a custom cover letter item in resume builder when recipient is empty
 #. Fallback title for a custom cover letter item in resume builder when recipient is unavailable
@@ -1149,7 +1161,11 @@ msgid "Donate to Reactive Resume"
 msgstr "تبرع لـReactive Resume"
 
 #. Action button to download two-factor backup codes as a text file
+#. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/resume/export/download-dialog.tsx
+#: src/routes/builder/$resumeId/-components/header.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Download"
 msgstr "تنزيل"
 
@@ -1157,30 +1173,13 @@ msgstr "تنزيل"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "قم بتنزيل نسخة من جميع بياناتك، بما في ذلك ملفك الشخصي وكل سيرة ذاتية، كملف JSON."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume as a Word document. Use this file to further customize your resume in Microsoft Word or Google Docs."
-msgstr "قم بتنزيل نسخة من سيرتك الذاتية كمستند Word. استخدم هذا الملف لتخصيص سيرتك الذاتية بشكل أكبر في Microsoft Word أو محرر مستندات Google."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in JSON format. Use this file for backup or to import your resume into other applications, including AI assistants."
-msgstr "نزّل نسخة من سيرتك الذاتية بصيغة JSON. استخدم هذا الملف للنسخ الاحتياطي أو لاستيراد سيرتك الذاتية إلى تطبيقات أخرى، بما في ذلك مساعدي الذكاء الاصطناعي."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
-msgid "Download a copy of your resume in PDF format. Use this file for printing or to easily share your resume with recruiters."
-msgstr "نزّل نسخة من سيرتك الذاتية بصيغة PDF. استخدم هذا الملف للطباعة أو لمشاركة سيرتك الذاتية بسهولة مع مسؤولي التوظيف."
-
+#. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download DOCX"
-msgstr "تنزيل DOCX"
+msgid "Download options"
+msgstr ""
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Download JSON"
-msgstr "تنزيل JSON"
-
-#. Primary action in the builder header to download the resume as a PDF
 #: src/features/resume/public/public-resume.tsx
 #: src/routes/agent/$threadId.tsx
-#: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download PDF"
 msgstr "تنزيل PDF"
 
@@ -1257,6 +1256,10 @@ msgstr "تعديل التفاصيل"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "تحرير الكلمة الرئيسية"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Editable in Word, Google Docs, and Pages."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "Editing is disabled until you unlock it."
@@ -1396,6 +1399,10 @@ msgstr "تصدير"
 #: src/features/settings/pages/danger-zone.tsx
 msgid "Export my data"
 msgstr "تصدير بياناتي"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Export your resume or cover letter in the format you need."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Export your resume to PDF instantly, without any waiting or delays."
@@ -1652,6 +1659,10 @@ msgstr "حر الشكل"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "الفرنسية"
+
+#: src/features/resume/export/download-dialog.tsx
+msgid "Full resume data for backup or import."
+msgstr ""
 
 #. Layout editor toggle label that makes a page single-column
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2285,10 +2296,6 @@ msgstr "سيرة ذاتية مفقودة"
 msgid "Model"
 msgstr "النموذج"
 
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "More download options"
-msgstr "خيارات تنزيل إضافية"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "انقل القسم إلى عمود أو صفحة أخرى"
@@ -2636,6 +2643,10 @@ msgstr "اختر أيقونة"
 msgid "Picture"
 msgstr "الصورة"
 
+#: src/features/resume/export/download-dialog.tsx
+msgid "Plain text, ideal for AI tools and quick edits."
+msgstr ""
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Please enter a new password for your account"
 msgstr "يُرجى إدخال كلمة مرور جديدة لحسابك"
@@ -2717,10 +2728,6 @@ msgstr "معاينة"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "اللون الأساسي"
-
-#: src/routes/builder/$resumeId/-components/header.tsx
-msgid "Print"
-msgstr "مطبعة"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -2938,6 +2945,7 @@ msgstr "هل تريد استعادة النظام إلى ما قبل هذا ال
 msgid "Restore this version?"
 msgstr "هل تريد استعادة هذه النسخة؟"
 
+#: src/features/resume/export/download-dialog.tsx
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "سيرة ذاتية"
@@ -4308,4 +4316,3 @@ msgstr "تصغير"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "الزولو"
-
