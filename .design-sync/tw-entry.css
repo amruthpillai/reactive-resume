@@ -1,0 +1,4 @@
+/* design-sync Tailwind entry — compiles the UI package's globals.css to static CSS
+   for preview rendering, and also scans authored previews for used utilities. */
+@import "../packages/ui/src/styles/globals.css";
+@source "./previews/*.tsx";
