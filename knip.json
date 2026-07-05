@@ -3,7 +3,7 @@
 	"tags": ["-lintignore"],
 	"workspaces": {
 		".": {
-			"ignoreFiles": [".ncurc.cjs"]
+			"ignoreFiles": [".ncurc.cjs", ".design-sync/**"]
 		},
 		"apps/web": {
 			"entry": ["lingui.config.ts", "vite.config.ts", "vitest.config.ts"],
@@ -34,7 +34,6 @@
 				"cjk-regex",
 				"deepmerge-ts",
 				"drizzle-zod",
-				"es-toolkit",
 				"fast-json-patch",
 				"jsonrepair",
 				"node-html-parser",
