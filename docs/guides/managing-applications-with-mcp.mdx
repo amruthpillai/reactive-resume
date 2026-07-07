@@ -1,0 +1,286 @@
+---
+title: "Managing applications with MCP"
+description: "Use a connected MCP client to track job applications, attach sent PDFs, run Application Copilot, and manage your pipeline with natural-language prompts."
+---
+
+Use this guide when you want an AI client to manage the **Application Tracker** for you. After the Reactive Resume MCP server is connected, the agent can use tools for the same application workflows available in the app: listing applications, creating records, importing rows, updating stages, adding notes, managing follow-ups, attaching documents, and running Application Copilot.
+
+## Prerequisites
+
+<Steps>
+  <Step title="Connect the MCP server">
+    Follow [Using the MCP Server](/guides/using-the-mcp-server) to connect your MCP client with OAuth or an API key.
+  </Step>
+
+  <Step title="Confirm the application tools are visible">
+    Ask your client to list the Reactive Resume tools. You should see tools such as `list_applications`, `create_application`, `update_application`, `attach_application_document`, and `draft_application_message`.
+  </Step>
+
+  <Step title="Decide how destructive actions should be handled">
+    Tell your agent to ask before deleting applications, bulk-updating many records, or replacing attached documents.
+  </Step>
+</Steps>
+
+<Info>
+  Application Copilot tools require the same AI provider setup used by the app. Match scoring and resume tailoring work best when the application has a linked Reactive Resume and a job description.
+</Info>
+
+## Start with a pipeline review
+
+Begin by asking the agent to inspect your current pipeline. This gives the agent valid application IDs and avoids duplicate records.
+
+```text
+List my active applications grouped by stage. Include company, role, tags, follow-up date, linked resume name, and whether a resume or cover-letter PDF is attached.
+```
+
+Useful review prompts:
+
+```text
+Show me applications that need follow-up this week.
+```
+
+```text
+Find applications tagged remote that are still in saved or applied stage.
+```
+
+```text
+Summarize my pipeline stats by stage and source, then point out stale applications.
+```
+
+```text
+List archived applications from the last 90 days.
+```
+
+## Create applications
+
+Use `create_application` when you already know the role details.
+
+```text
+Create an application for Senior Product Engineer at Acme. Stage: saved. Location: Berlin or remote. Source: LinkedIn. Tags: remote, typescript, senior. Add a note that I want to tailor my platform resume before applying.
+```
+
+If you have a job posting, ask the agent to extract details first.
+
+```text
+Use the Reactive Resume application auto-fill tool on this job posting URL, then create a saved application from the extracted company, role, location, salary, and job description. Tag it with remote and backend.
+```
+
+If the posting is private, paste the description into your prompt:
+
+```text
+Create an application from this pasted job description. Use auto-fill if available, keep the stage as saved, and tag it with ai, platform, and high-priority.
+
+[Paste the job description here]
+```
+
+## Import applications
+
+Use `import_applications` when you already have spreadsheet rows. The Application Tracker accepts up to 500 imported rows at a time.
+
+```text
+Import these application rows into Reactive Resume. Normalize the stages to saved, applied, screening, interview, offer, or rejected. Skip rows that do not have both a company and role, and tell me what was skipped.
+
+Company,Role,Stage,Location,Source,Tags
+Acme,Frontend Engineer,applied,Remote,LinkedIn,remote;react
+Globex,Staff Engineer,interview,Berlin,Referral,staff;platform
+```
+
+```text
+I am pasting rows from my spreadsheet. Import them, tag every imported application with migrated-2026, and leave archived as false.
+```
+
+```text
+Import these rejected applications and mark them as archived after import.
+```
+
+## Update stages and notes
+
+Use `update_application` for structured changes and `add_application_note` when you want an activity timeline entry without changing other fields.
+
+```text
+Move my Acme Senior Product Engineer application to interview and add a note: Recruiter screen scheduled for July 12 at 10:00.
+```
+
+```text
+Add a note to the Globex application: Submitted take-home assignment and waiting for review.
+```
+
+```text
+Set a follow-up date for the Stripe application to next Monday, with the note: Ask whether they need more portfolio examples.
+```
+
+```text
+Update the contacts on the Acme application. Recruiter: Priya Shah, priya@example.com. Hiring manager: Jordan Lee, LinkedIn URL https://www.linkedin.com/in/example.
+```
+
+```text
+Archive every rejected application older than 30 days, but show me the list and ask for confirmation before applying the bulk update.
+```
+
+## Attach sent documents
+
+Use document attachment when you want the tracker to store the exact resume PDF or cover-letter PDF you sent for an application.
+
+```text
+Attach this PDF as the sent resume for the Acme application, then confirm the application now has a resume document.
+```
+
+```text
+Attach this cover letter PDF to the Globex Staff Engineer application.
+```
+
+```text
+Replace the resume PDF on the Stripe application with this updated PDF. Add a note that I resent the revised resume.
+```
+
+```text
+Remove the cover-letter PDF from the Acme application, but keep the application record and timeline.
+```
+
+<Info>
+  `attach_application_document` accepts base64-encoded PDF bytes and `contentType: "application/pdf"`. Some MCP clients hide that detail when they can read local files. If your client cannot read local files, upload the PDF from the web app instead.
+</Info>
+
+## Run Application Copilot
+
+Application Copilot tools let an agent use the same AI workflows available in the application detail panel.
+
+```text
+Score the resume linked to my Acme application against the saved job description. Summarize the biggest match gaps and do not change my resume.
+```
+
+```text
+Create a tailored resume copy for the Globex Staff Engineer application. Keep the original resume unchanged, link the tailored copy back to the application, and tell me the new resume name.
+```
+
+```text
+Draft a cover letter for the Stripe application using the linked resume and job description. Keep it concise and specific to the role.
+```
+
+```text
+Draft a follow-up email for the recruiter on the Acme application. Mention that I enjoyed the technical screen and ask about next steps. Do not mark the email as sent.
+```
+
+```text
+Review all interview-stage applications with linked resumes. For each one, score the match and list the top three tailoring opportunities.
+```
+
+<Warning>
+  Review AI-generated resumes, cover letters, and messages before sending them. MCP tools can draft and save context, but you are responsible for the final content.
+</Warning>
+
+## Maintain your pipeline
+
+Ask the agent to do periodic cleanup with explicit confirmation before broad changes.
+
+```text
+Find applications that have not changed in 21 days. Group them by stage and recommend which ones need a follow-up, archive, or no action.
+```
+
+```text
+Add the tag needs-follow-up to every active application with a follow-up date before today. Show me the list before updating.
+```
+
+```text
+Move all applications tagged offer to offer stage, unless they are already archived.
+```
+
+```text
+Archive rejected applications older than 60 days. Ask for confirmation before making changes.
+```
+
+```text
+Delete these duplicate application records after confirming which one has the most complete timeline and documents.
+```
+
+## Prompt library
+
+Use these prompts as starting points. Replace company names, roles, tags, dates, and file references with your own details.
+
+### Daily review
+
+```text
+Give me a daily application tracker brief. Include applications needing follow-up today, interviews coming up, stale saved roles, and any applications missing a linked resume.
+```
+
+```text
+Show my active applications in table form with company, role, stage, source, tags, follow-up date, and last updated time.
+```
+
+```text
+Which applications are missing job descriptions, contacts, sent resume PDFs, or cover-letter PDFs?
+```
+
+### Research and capture
+
+```text
+Create a saved application from this job post. Extract company, role, location, salary, source URL, and job description. Add tags for the main technologies mentioned.
+```
+
+```text
+I am considering this role but have not applied. Add it as saved, link my backend resume, and add a note with the three reasons it looks relevant.
+```
+
+```text
+Add this recruiter contact to the matching application and note that they reached out on LinkedIn today.
+```
+
+### Applying
+
+```text
+Move the Acme application from saved to applied. Set applied date to today, attach the resume PDF I sent, and add a note with the application portal confirmation number.
+```
+
+```text
+I just applied to three roles. Create applications for each one, tag them applied-today, and remind me to follow up in one week.
+```
+
+```text
+Find the best resume to link to this application based on role title and tags. Ask me before updating the application.
+```
+
+### Interviews and follow-ups
+
+```text
+Move the Globex application to screening and add a recruiter screen contact with the recruiter's name and email.
+```
+
+```text
+Add a note that the onsite interview is scheduled for July 18. Set the follow-up date to July 19.
+```
+
+```text
+Draft a short follow-up after my interview. Use the application's company, role, recruiter contact, and timeline notes.
+```
+
+### Reporting
+
+```text
+Summarize my job search this month: number applied, interviews, offers, rejections, top sources, and response rate.
+```
+
+```text
+Which sources are producing interviews? Compare LinkedIn, referrals, company sites, recruiters, and other sources.
+```
+
+```text
+Show applications by stage and tell me where the pipeline is blocked.
+```
+
+## Suggested agent instruction
+
+Add this to your MCP client's project or session instructions when you want the agent to manage applications safely:
+
+```text
+Use Reactive Resume MCP for application tracking. Start by calling list_applications before creating a new record so you do not duplicate existing applications. Confirm before delete_application, bulk_delete_applications, bulk_update_applications, replacing attached documents, or archiving more than five applications. Prefer add_application_note for timeline updates. Use Application Copilot tools only when the application has enough context, and never present AI-generated cover letters or follow-ups as sent messages.
+```
+
+## Troubleshooting
+
+| Issue | What to do |
+| --- | --- |
+| The agent cannot see application tools | Reconnect the MCP server and ask the client to refresh tool discovery. Confirm you are connected to Reactive Resume v5.2.2 or later. |
+| The agent creates duplicates | Ask it to run `list_applications` first and match by company, role, and source URL before creating records. |
+| Document attachment fails | Attach only PDFs. If your MCP client cannot read local files, upload the document from the web app. |
+| Match scoring or tailoring fails | Link a Reactive Resume to the application and add a job description. Confirm your AI provider is configured. |
+| A bulk action changed too much | Use the application list and timeline to inspect what changed. For future sessions, require confirmation before bulk actions. |

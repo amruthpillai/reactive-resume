@@ -4,6 +4,35 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v5.2.2" description="7th July 2026">
+## Highlights
+
+- **Application Tracker REST and MCP parity.** The job application pipeline is now available outside the web app through authenticated REST endpoints and MCP tools, so agents can create records, import rows, move stages, add notes, manage follow-ups, attach sent PDFs, and inspect pipeline health. [2dad27da5](https://github.com/amruthpillai/reactive-resume/commit/2dad27da5), [bf2dc5bbd](https://github.com/amruthpillai/reactive-resume/commit/bf2dc5bbd)
+- **Agent-only application tracking.** MCP clients can now operate the Application Tracker end to end, including Application Copilot actions for job auto-fill, match scoring, tailored resume copies, cover letters, and recruiter follow-ups. [bf2dc5bbd](https://github.com/amruthpillai/reactive-resume/commit/bf2dc5bbd), [93abb1102](https://github.com/amruthpillai/reactive-resume/commit/93abb1102)
+- **New application MCP guide.** The docs now include a dedicated guide with practical prompts for using Reactive Resume MCP to manage applications from an AI client.
+
+## Application Tracker API
+
+- Added public REST coverage for listing, reading, creating, updating, importing, bulk-updating, bulk-deleting, tagging, and summarizing job applications. [2dad27da5](https://github.com/amruthpillai/reactive-resume/commit/2dad27da5)
+- Added authenticated document endpoints for attaching and removing the resume or cover-letter PDF sent with an application. [2dad27da5](https://github.com/amruthpillai/reactive-resume/commit/2dad27da5), [fb3f40244](https://github.com/amruthpillai/reactive-resume/commit/fb3f40244)
+- Added REST endpoints for Application Copilot actions: job posting auto-fill, resume match scoring, tailored resume creation, and message drafting. [2dad27da5](https://github.com/amruthpillai/reactive-resume/commit/2dad27da5)
+- Updated the OpenAPI reference so application endpoints, multipart document uploads, statistics, and tags are visible in the docs. [fb3f40244](https://github.com/amruthpillai/reactive-resume/commit/fb3f40244)
+
+## MCP & Agent Workflows
+
+- Added MCP tools for every Application Tracker workflow available in the app, including create, update, note, import, bulk action, archive, delete, document attachment, document removal, tag, statistics, and Application Copilot tools. [bf2dc5bbd](https://github.com/amruthpillai/reactive-resume/commit/bf2dc5bbd)
+- Improved MCP tool metadata so clients can distinguish safe reads, mutating actions, destructive actions, and AI-powered workflows more reliably. [93abb1102](https://github.com/amruthpillai/reactive-resume/commit/93abb1102)
+- Updated the resume-builder skill instructions so agents are told that Reactive Resume MCP can also manage job applications, not only resumes. [ac8734be3](https://github.com/amruthpillai/reactive-resume/commit/ac8734be3)
+
+## Documentation & Reliability
+
+- Added a parity design note for the Application Tracker REST and MCP surfaces. [3868429ce](https://github.com/amruthpillai/reactive-resume/commit/3868429ce)
+- Documented application MCP automation in the MCP guide, including available tools, prompt examples, and troubleshooting for PDF attachments. [ed83a3f5e](https://github.com/amruthpillai/reactive-resume/commit/ed83a3f5e)
+- Preserved shared application documents when one application removes or replaces a file also referenced by another application. [3c9c5c8c2](https://github.com/amruthpillai/reactive-resume/commit/3c9c5c8c2)
+
+**Full Changelog**: [v5.2.1...v5.2.2](https://github.com/amruthpillai/reactive-resume/compare/v5.2.1...v5.2.2)
+</Update>
+
 <Update label="v5.2.1" description="5th July 2026">
 ## Highlights
 
