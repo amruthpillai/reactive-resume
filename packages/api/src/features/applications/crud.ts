@@ -107,6 +107,21 @@ export const crudRouter = {
 			description:
 				"Uploads and attaches a PDF document to an application. Kind must be either resume or cover-letter. Requires authentication.",
 			successDescription: "The updated application.",
+			spec: (current) => {
+				const requestBody = current.requestBody;
+				if (!requestBody || "$ref" in requestBody) return current;
+
+				const multipart = requestBody.content?.["multipart/form-data"];
+				if (!multipart) return current;
+
+				return {
+					...current,
+					requestBody: {
+						...requestBody,
+						content: { "multipart/form-data": multipart },
+					},
+				};
+			},
 		})
 		.input(applicationDto.attachDocument.input)
 		.use(resumeMutationRateLimit)
