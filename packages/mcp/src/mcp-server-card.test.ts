@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildMcpServerCard } from "./mcp-server-card";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
+import { TOOL_META } from "./tool-meta";
 
 describe("buildMcpServerCard", () => {
 	const card = buildMcpServerCard("1.2.3");
@@ -79,5 +80,42 @@ describe("buildMcpServerCard", () => {
 	it("documents an optional apiKey in the configuration schema", () => {
 		const props = card.configurationSchema.properties as Record<string, unknown>;
 		expect(props.apiKey).toBeDefined();
+	});
+
+	it("matches the create/update application archived contract", () => {
+		const create = TOOL_META[MCP_TOOL_NAME.createApplication].inputSchema;
+		const update = TOOL_META[MCP_TOOL_NAME.updateApplication].inputSchema;
+
+		expect(create.safeParse({ company: "Acme", role: "Engineer", archived: true }).success).toBe(false);
+		expect(update.safeParse({ id: "app-1", archived: true }).success).toBe(true);
+	});
+
+	it("accepts only http/https application source URLs", () => {
+		const create = TOOL_META[MCP_TOOL_NAME.createApplication].inputSchema;
+		const autofill = TOOL_META[MCP_TOOL_NAME.autofillApplicationFromJob].inputSchema;
+
+		expect(create.safeParse({ company: "Acme", role: "Engineer", sourceUrl: "https://example.com/job" }).success).toBe(
+			true,
+		);
+		expect(autofill.safeParse({ sourceUrl: "http://example.com/job" }).success).toBe(true);
+		expect(create.safeParse({ company: "Acme", role: "Engineer", sourceUrl: "ftp://example.com/job" }).success).toBe(
+			false,
+		);
+		expect(autofill.safeParse({ sourceUrl: "javascript:alert(1)" }).success).toBe(false);
+	});
+
+	it("rejects application document payloads above 10MB decoded", () => {
+		const schema = TOOL_META[MCP_TOOL_NAME.attachApplicationDocument].inputSchema;
+		const tooLargePdf = Buffer.alloc(10 * 1024 * 1024 + 1, 0).toString("base64");
+
+		expect(
+			schema.safeParse({
+				id: "app-1",
+				kind: "resume",
+				fileName: "resume.pdf",
+				contentType: "application/pdf",
+				dataBase64: tooLargePdf,
+			}).success,
+		).toBe(false);
 	});
 });

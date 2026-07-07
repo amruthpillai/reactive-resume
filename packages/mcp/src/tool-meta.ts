@@ -8,6 +8,8 @@ import { applicationStatusSchema, contactSchema } from "@reactive-resume/schema/
 import { MCP_TOOL_NAME as T } from "./mcp-tool-names";
 import { TOOL_ANNOTATIONS } from "./tool-annotations";
 
+const MAX_APPLICATION_DOCUMENT_BYTES = 10 * 1024 * 1024;
+
 // ponytail: shared schema fragment; exported so server-card can re-use without re-importing
 const resumeIdSchema = z.string().min(1).describe(`Resume ID. Use \`${T.listResumes}\` to find valid IDs.`);
 const applicationIdSchema = z
@@ -15,20 +17,33 @@ const applicationIdSchema = z
 	.min(1)
 	.describe(`Application ID. Use \`${T.listApplications}\` to find valid IDs.`);
 const applicationDocumentKindSchema = z.enum(["resume", "cover-letter"]);
+const httpUrlSchema = z
+	.string()
+	.trim()
+	.refine((value) => {
+		try {
+			const parsed = new URL(value);
+			return parsed.protocol === "http:" || parsed.protocol === "https:";
+		} catch {
+			return false;
+		}
+	}, "URL must use http or https.");
 const pdfBase64Schema = z
 	.string()
 	.min(1)
-	.describe("Base64-encoded PDF bytes. Only application/pdf documents are accepted.");
+	.refine((value) => Buffer.from(value, "base64").byteLength <= MAX_APPLICATION_DOCUMENT_BYTES, {
+		message: "Decoded PDF must be 10MB or smaller.",
+	})
+	.describe("Base64-encoded PDF bytes. Only application/pdf documents up to 10MB are accepted.");
 
-const applicationEditableSchema = {
+const applicationMutableFieldsSchema = {
 	company: z.string().min(1).optional().describe("Company name."),
 	role: z.string().min(1).optional().describe("Role or job title."),
 	status: applicationStatusSchema.optional().describe("Pipeline stage."),
-	archived: z.boolean().optional().describe("Whether the application is hidden from active views."),
 	location: z.string().nullable().optional(),
 	salary: z.string().nullable().optional(),
 	source: z.string().nullable().optional(),
-	sourceUrl: z.string().url().nullable().optional(),
+	sourceUrl: httpUrlSchema.nullable().optional(),
 	jobDescription: z.string().max(20_000).nullable().optional(),
 	notes: z.string().nullable().optional(),
 	resumeId: z.string().nullable().optional(),
@@ -47,11 +62,13 @@ const applicationEditableSchema = {
 	tags: z.array(z.string()).optional(),
 } as const;
 
-const createApplicationSchema = z.object({
-	...applicationEditableSchema,
-	company: z.string().min(1).describe("Company name."),
-	role: z.string().min(1).describe("Role or job title."),
-});
+const createApplicationSchema = z
+	.object({
+		...applicationMutableFieldsSchema,
+		company: z.string().min(1).describe("Company name."),
+		role: z.string().min(1).describe("Role or job title."),
+	})
+	.strict();
 
 export const TOOL_META = {
 	[T.listResumes]: {
@@ -316,7 +333,11 @@ export const TOOL_META = {
 		title: "Update Application",
 		description:
 			"Update application fields, move stages, archive/unarchive, edit contacts, follow-up, tags, or linked resume.",
-		inputSchema: z.object({ id: applicationIdSchema, ...applicationEditableSchema }),
+		inputSchema: z.object({
+			id: applicationIdSchema,
+			...applicationMutableFieldsSchema,
+			archived: z.boolean().optional().describe("Whether the application is hidden from active views."),
+		}),
 		annotations: TOOL_ANNOTATIONS[T.updateApplication],
 	},
 	[T.addApplicationNote]: {
@@ -377,7 +398,7 @@ export const TOOL_META = {
 		description:
 			"Use AI to extract company, role, location, salary, and job description from a job URL or pasted posting.",
 		inputSchema: z.object({
-			sourceUrl: z.string().url().optional(),
+			sourceUrl: httpUrlSchema.optional(),
 			jobDescription: z.string().max(20_000).optional(),
 		}),
 		annotations: TOOL_ANNOTATIONS[T.autofillApplicationFromJob],
