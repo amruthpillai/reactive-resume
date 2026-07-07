@@ -41,6 +41,15 @@ describe("buildMcpServerCard", () => {
 		expect(tool?.annotations?.readOnlyHint).toBe(true);
 	});
 
+	it("advertises application tracker tools", () => {
+		const names = card.tools.map((tool) => tool.name);
+
+		expect(names).toContain("list_applications");
+		expect(names).toContain("create_application");
+		expect(names).toContain("attach_application_document");
+		expect(names).toContain("tailor_resume_for_application");
+	});
+
 	it("declares a JSON Schema input for every tool", () => {
 		for (const tool of card.tools) {
 			expect(tool.inputSchema, tool.name).toBeDefined();

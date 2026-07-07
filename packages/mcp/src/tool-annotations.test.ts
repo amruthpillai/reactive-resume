@@ -15,6 +15,14 @@ describe("MCP_TOOL_NAME", () => {
 		expect(MCP_TOOL_NAME.patchResume).toBe("apply_resume_patch");
 	});
 
+	it("uses canonical application tool names", () => {
+		expect(MCP_TOOL_NAME.listApplications).toBe("list_applications");
+		expect(MCP_TOOL_NAME.readApplication).toBe("read_application");
+		expect(MCP_TOOL_NAME.createApplication).toBe("create_application");
+		expect(MCP_TOOL_NAME.attachApplicationDocument).toBe("attach_application_document");
+		expect(MCP_TOOL_NAME.autofillApplicationFromJob).toBe("autofill_application_from_job");
+	});
+
 	it("uses unique values for every tool", () => {
 		const values = Object.values(MCP_TOOL_NAME);
 		expect(new Set(values).size).toBe(values.length);
@@ -35,6 +43,10 @@ describe("TOOL_ANNOTATIONS", () => {
 			MCP_TOOL_NAME.getResume,
 			MCP_TOOL_NAME.getResumeAnalysis,
 			MCP_TOOL_NAME.getResumeStatistics,
+			MCP_TOOL_NAME.listApplications,
+			MCP_TOOL_NAME.readApplication,
+			MCP_TOOL_NAME.listApplicationTags,
+			MCP_TOOL_NAME.getApplicationStats,
 		];
 		for (const name of readOnlyTools) {
 			const annotations = TOOL_ANNOTATIONS[name];
@@ -56,6 +68,14 @@ describe("TOOL_ANNOTATIONS", () => {
 		expect(annotations.destructiveHint).toBe(true);
 		expect(annotations.idempotentHint).toBe(true);
 		expect(annotations.readOnlyHint).toBe(false);
+	});
+
+	it("marks application delete tools as destructive", () => {
+		for (const name of [MCP_TOOL_NAME.deleteApplication, MCP_TOOL_NAME.bulkDeleteApplications]) {
+			const annotations = TOOL_ANNOTATIONS[name];
+			expect(annotations.readOnlyHint, name).toBe(false);
+			expect(annotations.destructiveHint, name).toBe(true);
+		}
 	});
 
 	it("marks creation/import/duplicate as non-readonly and non-idempotent", () => {
@@ -82,8 +102,13 @@ describe("TOOL_ANNOTATIONS", () => {
 		}
 	});
 
+	it("marks only job-posting autofill as open-world", () => {
+		expect(TOOL_ANNOTATIONS[MCP_TOOL_NAME.autofillApplicationFromJob].openWorldHint).toBe(true);
+	});
+
 	it("declares no tools as open-world by default", () => {
-		for (const annotations of Object.values(TOOL_ANNOTATIONS)) {
+		for (const [name, annotations] of Object.entries(TOOL_ANNOTATIONS)) {
+			if (name === MCP_TOOL_NAME.autofillApplicationFromJob) continue;
 			expect(annotations.openWorldHint).toBe(false);
 		}
 	});

@@ -4,11 +4,54 @@
  */
 import z from "zod";
 import { resumePatchOperationsSchema } from "@reactive-resume/ai/tools/resume-tool-contracts";
+import { applicationStatusSchema, contactSchema } from "@reactive-resume/schema/applications/data";
 import { MCP_TOOL_NAME as T } from "./mcp-tool-names";
 import { TOOL_ANNOTATIONS } from "./tool-annotations";
 
 // ponytail: shared schema fragment; exported so server-card can re-use without re-importing
 const resumeIdSchema = z.string().min(1).describe(`Resume ID. Use \`${T.listResumes}\` to find valid IDs.`);
+const applicationIdSchema = z
+	.string()
+	.min(1)
+	.describe(`Application ID. Use \`${T.listApplications}\` to find valid IDs.`);
+const applicationDocumentKindSchema = z.enum(["resume", "cover-letter"]);
+const pdfBase64Schema = z
+	.string()
+	.min(1)
+	.describe("Base64-encoded PDF bytes. Only application/pdf documents are accepted.");
+
+const applicationEditableSchema = {
+	company: z.string().min(1).optional().describe("Company name."),
+	role: z.string().min(1).optional().describe("Role or job title."),
+	status: applicationStatusSchema.optional().describe("Pipeline stage."),
+	archived: z.boolean().optional().describe("Whether the application is hidden from active views."),
+	location: z.string().nullable().optional(),
+	salary: z.string().nullable().optional(),
+	source: z.string().nullable().optional(),
+	sourceUrl: z.string().url().nullable().optional(),
+	jobDescription: z.string().max(20_000).nullable().optional(),
+	notes: z.string().nullable().optional(),
+	resumeId: z.string().nullable().optional(),
+	resumeFileUrl: z.string().nullable().optional(),
+	resumeFileName: z.string().nullable().optional(),
+	coverLetterUrl: z.string().nullable().optional(),
+	coverLetterName: z.string().nullable().optional(),
+	followUpAt: z
+		.string()
+		.datetime({ offset: true })
+		.nullable()
+		.optional()
+		.describe("Follow-up timestamp in ISO 8601 format."),
+	followUpNote: z.string().nullable().optional(),
+	contacts: z.array(contactSchema).optional(),
+	tags: z.array(z.string()).optional(),
+} as const;
+
+const createApplicationSchema = z.object({
+	...applicationEditableSchema,
+	company: z.string().min(1).describe("Company name."),
+	role: z.string().min(1).describe("Role or job title."),
+});
 
 export const TOOL_META = {
 	[T.listResumes]: {
@@ -233,5 +276,128 @@ export const TOOL_META = {
 		].join("\n"),
 		inputSchema: z.object({ id: resumeIdSchema }),
 		annotations: TOOL_ANNOTATIONS[T.getResumeStatistics],
+	},
+	[T.listApplications]: {
+		title: "List Applications",
+		description:
+			"List job applications for the authenticated account. Use this before reading or updating existing applications.",
+		inputSchema: z.object({
+			status: applicationStatusSchema.optional(),
+			tags: z.array(z.string()).optional().default([]),
+			includeArchived: z.boolean().optional().default(false),
+		}),
+		annotations: TOOL_ANNOTATIONS[T.listApplications],
+	},
+	[T.readApplication]: {
+		title: "Read Application",
+		description: "Read one full job application, including contacts, document URLs, follow-up details, and timeline.",
+		inputSchema: z.object({ id: applicationIdSchema }),
+		annotations: TOOL_ANNOTATIONS[T.readApplication],
+	},
+	[T.listApplicationTags]: {
+		title: "List Application Tags",
+		description: "Return every distinct tag used across job applications.",
+		inputSchema: z.object({}),
+		annotations: TOOL_ANNOTATIONS[T.listApplicationTags],
+	},
+	[T.getApplicationStats]: {
+		title: "Get Application Stats",
+		description: "Return aggregate application counts by pipeline stage and source for insights.",
+		inputSchema: z.object({}),
+		annotations: TOOL_ANNOTATIONS[T.getApplicationStats],
+	},
+	[T.createApplication]: {
+		title: "Create Application",
+		description: "Create a tracked job application. Company and role are required.",
+		inputSchema: createApplicationSchema,
+		annotations: TOOL_ANNOTATIONS[T.createApplication],
+	},
+	[T.updateApplication]: {
+		title: "Update Application",
+		description:
+			"Update application fields, move stages, archive/unarchive, edit contacts, follow-up, tags, or linked resume.",
+		inputSchema: z.object({ id: applicationIdSchema, ...applicationEditableSchema }),
+		annotations: TOOL_ANNOTATIONS[T.updateApplication],
+	},
+	[T.addApplicationNote]: {
+		title: "Add Application Note",
+		description: "Append a free-text note to an application's timeline.",
+		inputSchema: z.object({ id: applicationIdSchema, text: z.string().min(1) }),
+		annotations: TOOL_ANNOTATIONS[T.addApplicationNote],
+	},
+	[T.deleteApplication]: {
+		title: "Delete Application",
+		description: "Permanently delete one job application and its owned uploaded documents.",
+		inputSchema: z.object({ id: applicationIdSchema }),
+		annotations: TOOL_ANNOTATIONS[T.deleteApplication],
+	},
+	[T.bulkUpdateApplications]: {
+		title: "Bulk Update Applications",
+		description: "Move, archive/unarchive, or add tags to multiple applications.",
+		inputSchema: z.object({
+			ids: z.array(z.string()).min(1),
+			status: applicationStatusSchema.optional(),
+			archived: z.boolean().optional(),
+			addTags: z.array(z.string()).optional(),
+		}),
+		annotations: TOOL_ANNOTATIONS[T.bulkUpdateApplications],
+	},
+	[T.bulkDeleteApplications]: {
+		title: "Bulk Delete Applications",
+		description: "Permanently delete multiple applications.",
+		inputSchema: z.object({ ids: z.array(z.string()).min(1) }),
+		annotations: TOOL_ANNOTATIONS[T.bulkDeleteApplications],
+	},
+	[T.importApplications]: {
+		title: "Import Applications",
+		description: "Bulk-create application rows parsed from CSV or another source. Maximum 500 items.",
+		inputSchema: z.object({ items: z.array(createApplicationSchema).min(1).max(500) }),
+		annotations: TOOL_ANNOTATIONS[T.importApplications],
+	},
+	[T.attachApplicationDocument]: {
+		title: "Attach Application Document",
+		description: "Attach a sent resume or cover-letter PDF to an application using base64-encoded PDF bytes.",
+		inputSchema: z.object({
+			id: applicationIdSchema,
+			kind: applicationDocumentKindSchema,
+			fileName: z.string().min(1),
+			contentType: z.literal("application/pdf"),
+			dataBase64: pdfBase64Schema,
+		}),
+		annotations: TOOL_ANNOTATIONS[T.attachApplicationDocument],
+	},
+	[T.removeApplicationDocument]: {
+		title: "Remove Application Document",
+		description: "Remove a sent resume or cover-letter PDF from an application.",
+		inputSchema: z.object({ id: applicationIdSchema, kind: applicationDocumentKindSchema }),
+		annotations: TOOL_ANNOTATIONS[T.removeApplicationDocument],
+	},
+	[T.autofillApplicationFromJob]: {
+		title: "Autofill Application From Job",
+		description:
+			"Use AI to extract company, role, location, salary, and job description from a job URL or pasted posting.",
+		inputSchema: z.object({
+			sourceUrl: z.string().url().optional(),
+			jobDescription: z.string().max(20_000).optional(),
+		}),
+		annotations: TOOL_ANNOTATIONS[T.autofillApplicationFromJob],
+	},
+	[T.scoreApplicationMatch]: {
+		title: "Score Application Match",
+		description: "Score the linked resume against the application's job description and persist match metadata.",
+		inputSchema: z.object({ id: applicationIdSchema }),
+		annotations: TOOL_ANNOTATIONS[T.scoreApplicationMatch],
+	},
+	[T.tailorResumeForApplication]: {
+		title: "Tailor Resume For Application",
+		description: "Create and link a tailored copy of the application's linked resume.",
+		inputSchema: z.object({ id: applicationIdSchema }),
+		annotations: TOOL_ANNOTATIONS[T.tailorResumeForApplication],
+	},
+	[T.draftApplicationMessage]: {
+		title: "Draft Application Message",
+		description: "Draft either a cover letter or recruiter follow-up from application and resume context.",
+		inputSchema: z.object({ id: applicationIdSchema, kind: z.enum(["cover-letter", "follow-up"]) }),
+		annotations: TOOL_ANNOTATIONS[T.draftApplicationMessage],
 	},
 } as const;

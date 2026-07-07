@@ -16,6 +16,12 @@ const READ_NON_IDEMPOTENT: ToolAnnotations = {
 	idempotentHint: false,
 	openWorldHint: false,
 };
+const READ_OPEN_WORLD_NON_IDEMPOTENT: ToolAnnotations = {
+	readOnlyHint: true,
+	destructiveHint: false,
+	idempotentHint: false,
+	openWorldHint: true,
+};
 const WRITE_NON_IDEMPOTENT: ToolAnnotations = {
 	readOnlyHint: false,
 	destructiveHint: false,
@@ -51,4 +57,21 @@ export const TOOL_ANNOTATIONS: Record<McpRegisteredToolName, ToolAnnotations> = 
 	[MCP_TOOL_NAME.lockResume]: WRITE_IDEMPOTENT,
 	[MCP_TOOL_NAME.unlockResume]: WRITE_IDEMPOTENT,
 	[MCP_TOOL_NAME.getResumeStatistics]: READ_IDEMPOTENT,
+	[MCP_TOOL_NAME.listApplications]: READ_IDEMPOTENT,
+	[MCP_TOOL_NAME.readApplication]: READ_IDEMPOTENT,
+	[MCP_TOOL_NAME.listApplicationTags]: READ_IDEMPOTENT,
+	[MCP_TOOL_NAME.getApplicationStats]: READ_IDEMPOTENT,
+	[MCP_TOOL_NAME.createApplication]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.updateApplication]: WRITE_IDEMPOTENT,
+	[MCP_TOOL_NAME.addApplicationNote]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.deleteApplication]: WRITE_DESTRUCTIVE,
+	[MCP_TOOL_NAME.bulkUpdateApplications]: WRITE_IDEMPOTENT,
+	[MCP_TOOL_NAME.bulkDeleteApplications]: WRITE_DESTRUCTIVE,
+	[MCP_TOOL_NAME.importApplications]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.attachApplicationDocument]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.removeApplicationDocument]: WRITE_IDEMPOTENT,
+	[MCP_TOOL_NAME.autofillApplicationFromJob]: READ_OPEN_WORLD_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.scoreApplicationMatch]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.tailorResumeForApplication]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.draftApplicationMessage]: READ_NON_IDEMPOTENT,
 };
