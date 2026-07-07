@@ -4,6 +4,7 @@ import type { RouterClient } from "@orpc/server";
 import type { resumePatchOperationsSchema } from "@reactive-resume/ai/tools/resume-tool-contracts";
 import type router from "@reactive-resume/api/routers";
 import type z from "zod";
+import { Buffer } from "node:buffer";
 import { resolveUserFromRequestHeaders } from "@reactive-resume/api/context";
 import { createResumePdfDownloadUrl } from "@reactive-resume/api/features/resume/export";
 import { env } from "@reactive-resume/env/server";
@@ -55,6 +56,28 @@ function withErrorHandling<T>(label: string, handler: (params: T) => Promise<Cal
 
 function text(value: string): CallToolResult {
 	return { content: [{ type: "text", text: value }] };
+}
+
+function json(value: unknown): CallToolResult {
+	return text(JSON.stringify(value, null, 2));
+}
+
+function fileFromBase64(input: { fileName: string; contentType: string; dataBase64: string }): File {
+	if (input.contentType !== "application/pdf") throw new Error("Application documents must be PDF files.");
+
+	const bytes = Buffer.from(input.dataBase64, "base64");
+	if (bytes.length === 0) throw new Error("Application document cannot be empty.");
+
+	return new File([bytes], input.fileName, { type: input.contentType });
+}
+
+function coerceFollowUpAt(input: Record<string, unknown>): Record<string, unknown> {
+	if (!("followUpAt" in input)) return input;
+
+	const followUpAt = input.followUpAt;
+	if (followUpAt === undefined || followUpAt === null || followUpAt instanceof Date) return input;
+
+	return { ...input, followUpAt: new Date(String(followUpAt)) };
 }
 
 function buildResumeShareUrl(username: string, slug: string): string {
@@ -338,5 +361,162 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 
 			return text(JSON.stringify(stats, null, 2));
 		}),
+	);
+
+	// ── Applications ──────────────────────────────────────────────
+	server.registerTool(
+		T.listApplications,
+		TOOL_META[T.listApplications],
+		withErrorHandling("listing applications", async (params) => json(await client.applications.list(params as never))),
+	);
+
+	server.registerTool(
+		T.readApplication,
+		TOOL_META[T.readApplication],
+		withErrorHandling("reading application", async ({ id }: { id: string }) =>
+			json(await client.applications.getById({ id })),
+		),
+	);
+
+	server.registerTool(
+		T.listApplicationTags,
+		TOOL_META[T.listApplicationTags],
+		withErrorHandling("listing application tags", async () => json(await client.applications.tags())),
+	);
+
+	server.registerTool(
+		T.getApplicationStats,
+		TOOL_META[T.getApplicationStats],
+		withErrorHandling("getting application stats", async () => json(await client.applications.stats())),
+	);
+
+	server.registerTool(
+		T.createApplication,
+		TOOL_META[T.createApplication],
+		withErrorHandling("creating application", async (params) => {
+			const id = await client.applications.create(coerceFollowUpAt(params as Record<string, unknown>) as never);
+			return json({ id });
+		}),
+	);
+
+	server.registerTool(
+		T.updateApplication,
+		TOOL_META[T.updateApplication],
+		withErrorHandling("updating application", async (params) => {
+			return json(await client.applications.update(coerceFollowUpAt(params as Record<string, unknown>) as never));
+		}),
+	);
+
+	server.registerTool(
+		T.addApplicationNote,
+		TOOL_META[T.addApplicationNote],
+		withErrorHandling("adding application note", async ({ id, text: noteText }: { id: string; text: string }) => {
+			return json(await client.applications.addNote({ id, text: noteText }));
+		}),
+	);
+
+	server.registerTool(
+		T.deleteApplication,
+		TOOL_META[T.deleteApplication],
+		withErrorHandling("deleting application", async ({ id }: { id: string }) => {
+			await client.applications.delete({ id });
+			return text(`Deleted application (${id}).`);
+		}),
+	);
+
+	server.registerTool(
+		T.bulkUpdateApplications,
+		TOOL_META[T.bulkUpdateApplications],
+		withErrorHandling("bulk updating applications", async (params) =>
+			json(await client.applications.bulkUpdate(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.bulkDeleteApplications,
+		TOOL_META[T.bulkDeleteApplications],
+		withErrorHandling("bulk deleting applications", async ({ ids }: { ids: string[] }) => {
+			return json(await client.applications.bulkDelete({ ids }));
+		}),
+	);
+
+	server.registerTool(
+		T.importApplications,
+		TOOL_META[T.importApplications],
+		withErrorHandling("importing applications", async (params) => {
+			const input = params as { items: Array<Record<string, unknown>> };
+			return json(
+				await client.applications.import({ items: input.items.map((item) => coerceFollowUpAt(item)) } as never),
+			);
+		}),
+	);
+
+	server.registerTool(
+		T.attachApplicationDocument,
+		TOOL_META[T.attachApplicationDocument],
+		withErrorHandling(
+			"attaching application document",
+			async ({
+				id,
+				kind,
+				fileName,
+				contentType,
+				dataBase64,
+			}: {
+				id: string;
+				kind: "resume" | "cover-letter";
+				fileName: string;
+				contentType: string;
+				dataBase64: string;
+			}) => {
+				const file = fileFromBase64({ fileName, contentType, dataBase64 });
+				return json(await client.applications.attachDocument({ id, kind, file }));
+			},
+		),
+	);
+
+	server.registerTool(
+		T.removeApplicationDocument,
+		TOOL_META[T.removeApplicationDocument],
+		withErrorHandling(
+			"removing application document",
+			async ({ id, kind }: { id: string; kind: "resume" | "cover-letter" }) => {
+				return json(await client.applications.removeDocument({ id, kind }));
+			},
+		),
+	);
+
+	server.registerTool(
+		T.autofillApplicationFromJob,
+		TOOL_META[T.autofillApplicationFromJob],
+		withErrorHandling("autofilling application from job", async (params) =>
+			json(await client.applications.ai.autofill(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.scoreApplicationMatch,
+		TOOL_META[T.scoreApplicationMatch],
+		withErrorHandling("scoring application match", async ({ id }: { id: string }) => {
+			return json(await client.applications.ai.matchScore({ id }));
+		}),
+	);
+
+	server.registerTool(
+		T.tailorResumeForApplication,
+		TOOL_META[T.tailorResumeForApplication],
+		withErrorHandling("tailoring resume for application", async ({ id }: { id: string }) => {
+			return json(await client.applications.ai.tailorResume({ id }));
+		}),
+	);
+
+	server.registerTool(
+		T.draftApplicationMessage,
+		TOOL_META[T.draftApplicationMessage],
+		withErrorHandling(
+			"drafting application message",
+			async ({ id, kind }: { id: string; kind: "cover-letter" | "follow-up" }) =>
+				json(await client.applications.ai.draftMessage({ id, kind })),
+		),
 	);
 }
