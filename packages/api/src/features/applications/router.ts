@@ -7,6 +7,8 @@ export const applicationsRouter = {
 	create: crudRouter.create,
 	import: crudRouter.import,
 	update: crudRouter.update,
+	attachDocument: crudRouter.attachDocument,
+	removeDocument: crudRouter.removeDocument,
 	addNote: crudRouter.addNote,
 	delete: crudRouter.delete,
 	bulkUpdate: crudRouter.bulkUpdate,

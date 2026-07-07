@@ -9,6 +9,14 @@ import {
 } from "@reactive-resume/schema/applications/data";
 
 const MAX_APPLICATION_JOB_DESCRIPTION_CHARS = 20_000;
+const MAX_APPLICATION_DOCUMENT_BYTES = 10 * 1024 * 1024;
+
+const applicationDocumentKindSchema = z.enum(["resume", "cover-letter"]);
+
+const applicationDocumentFileSchema = z
+	.file()
+	.max(MAX_APPLICATION_DOCUMENT_BYTES, "File size must be less than 10MB")
+	.mime(["application/pdf"], "Application documents must be PDF files.");
 
 const httpUrlSchema = z
 	.string()
@@ -124,6 +132,23 @@ export const applicationDto = {
 		output: applicationSchema.omit({ userId: true }),
 	},
 
+	attachDocument: {
+		input: z.object({
+			id: z.string(),
+			kind: applicationDocumentKindSchema,
+			file: applicationDocumentFileSchema,
+		}),
+		output: applicationSchema.omit({ userId: true }),
+	},
+
+	removeDocument: {
+		input: z.object({
+			id: z.string(),
+			kind: applicationDocumentKindSchema,
+		}),
+		output: applicationSchema.omit({ userId: true }),
+	},
+
 	addNote: {
 		input: z.object({ id: z.string(), text: z.string().trim().min(1) }),
 		output: applicationSchema.omit({ userId: true }),
@@ -166,3 +191,5 @@ export const applicationDto = {
 		output: z.array(z.string()),
 	},
 };
+
+export type ApplicationDocumentKind = z.infer<typeof applicationDocumentKindSchema>;

@@ -9,6 +9,7 @@ const dbMock = vi.hoisted(() => ({
 }));
 const resumeGetByIdMock = vi.hoisted(() => vi.fn());
 const storageDeleteMock = vi.hoisted(() => vi.fn());
+const uploadFileMock = vi.hoisted(() => vi.fn());
 
 vi.mock("@reactive-resume/db/client", () => ({ db: dbMock }));
 vi.mock("@reactive-resume/db/schema", () => ({
@@ -36,6 +37,7 @@ vi.mock("../resume/service", () => ({
 }));
 vi.mock("../storage/service", () => ({
 	getStorageService: () => ({ delete: storageDeleteMock }),
+	uploadFile: uploadFileMock,
 }));
 
 const { applicationService } = await import("./service");
@@ -58,8 +60,13 @@ beforeEach(() => {
 	dbMock.delete.mockReset();
 	resumeGetByIdMock.mockReset();
 	storageDeleteMock.mockReset();
+	uploadFileMock.mockReset();
 	resumeGetByIdMock.mockResolvedValue({ id: "resume-1" });
 	storageDeleteMock.mockResolvedValue(true);
+	uploadFileMock.mockResolvedValue({
+		url: "/api/uploads/user-1/pictures/new.pdf",
+		key: "uploads/user-1/pictures/new.pdf",
+	});
 	// requireOwned: db.select().from().where() resolves to [existing]
 	dbMock.select.mockReturnValue({ from: () => ({ where: () => Promise.resolve([{ ...existing }]) }) });
 });
@@ -132,6 +139,66 @@ describe("applicationService.delete", () => {
 		await applicationService.delete({ id: "app-1", userId: "user-1" });
 
 		expect(storageDeleteMock).toHaveBeenCalledWith("uploads/user-1/pictures/resume.pdf");
+		expect(storageDeleteMock).toHaveBeenCalledWith("uploads/user-1/pictures/cover.pdf");
+	});
+});
+
+describe("applicationService.attachDocument", () => {
+	it("uploads a PDF resume document and stores it on the application", async () => {
+		const set = vi.fn(() => ({ where: () => ({ returning: () => Promise.resolve([{ ...existing }]) }) }));
+		dbMock.update.mockReturnValue({ set });
+
+		await applicationService.attachDocument({
+			id: "app-1",
+			userId: "user-1",
+			kind: "resume",
+			fileName: "sent-resume.pdf",
+			contentType: "application/pdf",
+			data: new Uint8Array([1, 2, 3]),
+		});
+
+		expect(uploadFileMock).toHaveBeenCalledWith({
+			userId: "user-1",
+			contentType: "application/pdf",
+			data: new Uint8Array([1, 2, 3]),
+		});
+		expect(set).toHaveBeenCalledWith(
+			expect.objectContaining({
+				resumeFileUrl: "/api/uploads/user-1/pictures/new.pdf",
+				resumeFileName: "sent-resume.pdf",
+			}),
+		);
+	});
+
+	it("rejects non-PDF documents before upload", async () => {
+		await expect(
+			applicationService.attachDocument({
+				id: "app-1",
+				userId: "user-1",
+				kind: "cover-letter",
+				fileName: "cover.txt",
+				contentType: "text/plain",
+				data: new Uint8Array([1]),
+			}),
+		).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+		expect(uploadFileMock).not.toHaveBeenCalled();
+	});
+});
+
+describe("applicationService.removeDocument", () => {
+	it("clears and deletes an owned cover letter document", async () => {
+		const set = vi.fn(() => ({ where: () => ({ returning: () => Promise.resolve([{ ...existing }]) }) }));
+		dbMock.update.mockReturnValue({ set });
+
+		await applicationService.removeDocument({ id: "app-1", userId: "user-1", kind: "cover-letter" });
+
+		expect(set).toHaveBeenCalledWith(
+			expect.objectContaining({
+				coverLetterUrl: null,
+				coverLetterName: null,
+			}),
+		);
 		expect(storageDeleteMock).toHaveBeenCalledWith("uploads/user-1/pictures/cover.pdf");
 	});
 });

@@ -34,3 +34,42 @@ describe("applicationDto jobDescription", () => {
 		).toThrow();
 	});
 });
+
+describe("applicationDto document uploads", () => {
+	it("accepts PDF application documents", () => {
+		const file = new File(["%PDF-1.4"], "resume.pdf", { type: "application/pdf" });
+
+		const parsed = applicationDto.attachDocument.input.parse({
+			id: "application-1",
+			kind: "resume",
+			file,
+		});
+
+		expect(parsed.kind).toBe("resume");
+		expect(parsed.file.name).toBe("resume.pdf");
+	});
+
+	it("rejects non-PDF application documents", () => {
+		const file = new File(["hello"], "cover.txt", { type: "text/plain" });
+
+		expect(() =>
+			applicationDto.attachDocument.input.parse({
+				id: "application-1",
+				kind: "cover-letter",
+				file,
+			}),
+		).toThrow();
+	});
+
+	it("rejects unknown application document kinds", () => {
+		const file = new File(["%PDF-1.4"], "resume.pdf", { type: "application/pdf" });
+
+		expect(() =>
+			applicationDto.attachDocument.input.parse({
+				id: "application-1",
+				kind: "portfolio",
+				file,
+			}),
+		).toThrow();
+	});
+});

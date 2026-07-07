@@ -97,6 +97,51 @@ export const crudRouter = {
 			return applicationService.update({ userId: context.user.id, ...input });
 		}),
 
+	attachDocument: protectedProcedure
+		.route({
+			method: "POST",
+			path: "/applications/{id}/documents/{kind}",
+			tags: ["Applications"],
+			operationId: "attachApplicationDocument",
+			summary: "Attach an application document",
+			description:
+				"Uploads and attaches a PDF document to an application. Kind must be either resume or cover-letter. Requires authentication.",
+			successDescription: "The updated application.",
+		})
+		.input(applicationDto.attachDocument.input)
+		.use(resumeMutationRateLimit)
+		.output(applicationDto.attachDocument.output)
+		.handler(async ({ input, context }) => {
+			const buffer = await input.file.arrayBuffer();
+
+			return applicationService.attachDocument({
+				id: input.id,
+				userId: context.user.id,
+				kind: input.kind,
+				fileName: input.file.name,
+				contentType: input.file.type,
+				data: new Uint8Array(buffer),
+			});
+		}),
+
+	removeDocument: protectedProcedure
+		.route({
+			method: "DELETE",
+			path: "/applications/{id}/documents/{kind}",
+			tags: ["Applications"],
+			operationId: "removeApplicationDocument",
+			summary: "Remove an application document",
+			description:
+				"Removes a resume or cover-letter PDF from an application and clears the stored document fields. Requires authentication.",
+			successDescription: "The updated application.",
+		})
+		.input(applicationDto.removeDocument.input)
+		.use(resumeMutationRateLimit)
+		.output(applicationDto.removeDocument.output)
+		.handler(async ({ input, context }) => {
+			return applicationService.removeDocument({ id: input.id, userId: context.user.id, kind: input.kind });
+		}),
+
 	addNote: protectedProcedure
 		.route({
 			method: "POST",

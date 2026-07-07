@@ -1,4 +1,5 @@
 import type { ActivityEvent, AiMetadata, ApplicationStatus, Contact } from "@reactive-resume/schema/applications/data";
+import type { ApplicationDocumentKind } from "../../dto/application";
 import { ORPCError } from "@orpc/client";
 import { and, arrayContains, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
@@ -6,7 +7,7 @@ import * as schema from "@reactive-resume/db/schema";
 import { STAGES } from "@reactive-resume/schema/applications/data";
 import { generateId } from "@reactive-resume/utils/string";
 import { resumeService } from "../resume/service";
-import { getStorageService } from "../storage/service";
+import { getStorageService, uploadFile } from "../storage/service";
 
 const stageLabel = (status: ApplicationStatus) => STAGES.find((s) => s.value === status)?.label ?? status;
 
@@ -91,6 +92,18 @@ async function deleteApplicationAttachments(
 	if (keys.length === 0) return;
 	const storageService = getStorageService();
 	await Promise.allSettled(keys.map((key) => storageService.delete(key)));
+}
+
+function documentFields(kind: ApplicationDocumentKind) {
+	return kind === "resume"
+		? ({
+				url: "resumeFileUrl",
+				name: "resumeFileName",
+			} as const)
+		: ({
+				url: "coverLetterUrl",
+				name: "coverLetterName",
+			} as const);
 }
 
 const stripUserId = <T extends { userId: string }>(row: T) => {
@@ -195,6 +208,70 @@ export const applicationService = {
 
 		if (!updated) throw new ORPCError("NOT_FOUND");
 		return stripUserId(updated);
+	},
+
+	attachDocument: async (input: {
+		id: string;
+		userId: string;
+		kind: ApplicationDocumentKind;
+		fileName: string;
+		data: Uint8Array;
+		contentType: string;
+	}) => {
+		if (input.contentType !== "application/pdf") {
+			throw new ORPCError("BAD_REQUEST", { message: "Application documents must be PDF files." });
+		}
+
+		const existing = await requireOwned(input.id, input.userId);
+		const fields = documentFields(input.kind);
+		const uploaded = await uploadFile({
+			userId: input.userId,
+			data: input.data,
+			contentType: input.contentType,
+		});
+
+		try {
+			const updated = await applicationService.update({
+				id: input.id,
+				userId: input.userId,
+				[fields.url]: uploaded.url,
+				[fields.name]: input.fileName,
+			});
+
+			await deleteApplicationAttachments(input.userId, [
+				{
+					resumeFileUrl: fields.url === "resumeFileUrl" ? existing.resumeFileUrl : null,
+					coverLetterUrl: fields.url === "coverLetterUrl" ? existing.coverLetterUrl : null,
+				},
+			]);
+
+			return updated;
+		} catch (error) {
+			await getStorageService()
+				.delete(uploaded.key)
+				.catch(() => false);
+			throw error;
+		}
+	},
+
+	removeDocument: async (input: { id: string; userId: string; kind: ApplicationDocumentKind }) => {
+		const existing = await requireOwned(input.id, input.userId);
+		const fields = documentFields(input.kind);
+		const updated = await applicationService.update({
+			id: input.id,
+			userId: input.userId,
+			[fields.url]: null,
+			[fields.name]: null,
+		});
+
+		await deleteApplicationAttachments(input.userId, [
+			{
+				resumeFileUrl: fields.url === "resumeFileUrl" ? existing.resumeFileUrl : null,
+				coverLetterUrl: fields.url === "coverLetterUrl" ? existing.coverLetterUrl : null,
+			},
+		]);
+
+		return updated;
 	},
 
 	// Persist AI-owned enrichment (match score + freeform metadata). Separate from the editable
