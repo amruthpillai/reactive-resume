@@ -80,7 +80,7 @@ async function deleteApplicationAttachments(
 	userId: string,
 	applications: { resumeFileUrl?: string | null; coverLetterUrl?: string | null }[],
 ) {
-	const keys = [
+	const candidateKeys = [
 		...new Set(
 			applications.flatMap((application) => [
 				storageKeyFromApplicationUrl(userId, application.resumeFileUrl),
@@ -88,6 +88,24 @@ async function deleteApplicationAttachments(
 			]),
 		),
 	].filter((key): key is string => !!key);
+
+	if (candidateKeys.length === 0) return;
+
+	const remainingApplications = await db
+		.select({
+			resumeFileUrl: schema.application.resumeFileUrl,
+			coverLetterUrl: schema.application.coverLetterUrl,
+		})
+		.from(schema.application)
+		.where(eq(schema.application.userId, userId));
+
+	const referencedKeys = new Set(
+		remainingApplications.flatMap((application) => [
+			storageKeyFromApplicationUrl(userId, application.resumeFileUrl),
+			storageKeyFromApplicationUrl(userId, application.coverLetterUrl),
+		]),
+	);
+	const keys = candidateKeys.filter((key) => !referencedKeys.has(key));
 
 	if (keys.length === 0) return;
 	const storageService = getStorageService();
