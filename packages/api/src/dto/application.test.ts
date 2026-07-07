@@ -73,3 +73,13 @@ describe("applicationDto document uploads", () => {
 		).toThrow();
 	});
 });
+
+describe("applicationDto zero-argument inputs", () => {
+	it("normalizes stats input to an empty object", () => {
+		expect(applicationDto.stats.input.parse(undefined)).toEqual({});
+	});
+
+	it("normalizes tags input to an empty object", () => {
+		expect(applicationDto.tags.input.parse(undefined)).toEqual({});
+	});
+});

@@ -178,7 +178,7 @@ export const applicationDto = {
 	// Aggregates for the Insights view. Everything else (funnel, sankey, tiles) is derived
 	// client-side from these raw counts via computeInsights().
 	stats: {
-		input: z.void(),
+		input: z.object({}).optional().default({}),
 		output: z.object({
 			total: z.number(),
 			byStage: z.array(z.object({ status: applicationStatusSchema, count: z.number() })),
@@ -187,7 +187,7 @@ export const applicationDto = {
 	},
 
 	tags: {
-		input: z.void(),
+		input: z.object({}).optional().default({}),
 		output: z.array(z.string()),
 	},
 };

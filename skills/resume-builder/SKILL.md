@@ -16,6 +16,18 @@ Build professional resumes through conversational AI for [Reactive Resume](https
 
 ## Workflow
 
+### MCP Application Tracking
+
+Reactive Resume MCP can manage job applications as well as resumes. When the user wants to track applications through an agent, use the application tools instead of asking them to open the web UI.
+
+- Use `list_applications` before changing existing records.
+- Use `create_application` for one new opportunity or `import_applications` for spreadsheet/CSV rows.
+- Use `update_application` to move stages, archive/unarchive, edit contacts, set follow-ups, link a resume, or update job details.
+- Use `add_application_note` to log timeline activity.
+- Use `attach_application_document` and `remove_application_document` for sent resume or cover-letter PDFs.
+- Use `score_application_match`, `tailor_resume_for_application`, and `draft_application_message` for Application Copilot workflows after a linked resume and job description exist.
+- Review AI-generated cover letters and follow-ups before sending them.
+
 ### Step 1: Gather Basic Information
 
 Ask for essential details first, unless the user has already provided them:
