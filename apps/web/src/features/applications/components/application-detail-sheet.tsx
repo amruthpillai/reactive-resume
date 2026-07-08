@@ -398,7 +398,12 @@ function ApplicationTimeline({
 						const stage = entry.type === "stage" ? stageOf(entry.stage) : null;
 						const isAnchor = entry.id === anchorId;
 						return (
-							<div key={entry.id} className="group relative rounded-lg border border-border bg-card p-3 text-sm">
+							<div
+								key={entry.id}
+								data-timeline-entry={entry.type}
+								data-stage={entry.type === "stage" ? entry.stage : undefined}
+								className="group relative rounded-lg border border-border bg-card p-3 text-sm"
+							>
 								<span
 									className={cn(
 										"absolute start-[-17px] top-4 size-2.5 rounded-full border-2 border-card",
