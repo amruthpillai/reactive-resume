@@ -273,11 +273,19 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 					)}
 
 					<ApplicationTimeline
+						key={current.id}
 						application={current}
 						pending={addNote.isPending || updateTimelineEntry.isPending || deleteTimelineEntry.isPending}
 						onAddNote={(text) => addNote.mutateAsync({ id: current.id, text })}
 						onUpdateEntry={(entryId, input) => updateTimelineEntry.mutateAsync({ id: current.id, entryId, ...input })}
-						onDeleteEntry={(entryId) => deleteTimelineEntry.mutate({ id: current.id, entryId })}
+						onDeleteEntry={(entryId) => {
+							void confirm(t`Delete this timeline entry?`, {
+								description: t`This entry will be permanently deleted. This can't be undone.`,
+								confirmText: t`Delete`,
+							}).then((confirmed) => {
+								if (confirmed) deleteTimelineEntry.mutate({ id: current.id, entryId });
+							});
+						}}
 					/>
 				</div>
 
@@ -356,6 +364,7 @@ function ApplicationTimeline({
 	};
 
 	const add = () => {
+		if (pending) return;
 		const text = note.trim();
 		if (!text) return;
 		void onAddNote(text)
@@ -369,6 +378,7 @@ function ApplicationTimeline({
 				<div className="flex gap-2">
 					<Input
 						value={note}
+						disabled={pending}
 						placeholder={t`Add a note…`}
 						onChange={(event) => setNote(event.target.value)}
 						onKeyDown={(event) => {

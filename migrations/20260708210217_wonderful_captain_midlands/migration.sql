@@ -7,15 +7,17 @@ WITH entries AS (
 		coalesce(nullif(entry.value ->> 'at', ''), a.applied_at::text, a.created_at::text, now()::text) AS entry_at,
 		lower(coalesce(entry.value ->> 'text', '')) AS entry_text
 	FROM "application" a
-	CROSS JOIN LATERAL jsonb_array_elements(a.activity) WITH ORDINALITY AS entry(value, ordinality)
-	WHERE jsonb_typeof(a.activity) = 'array' AND jsonb_array_length(a.activity) > 0
+	CROSS JOIN LATERAL jsonb_array_elements(
+		CASE WHEN jsonb_typeof(a.activity) = 'array' THEN a.activity ELSE '[]'::jsonb END
+	) WITH ORDINALITY AS entry(value, ordinality)
 ),
 normalized AS (
 	SELECT
 		application_id,
 		ordinality,
 		CASE
-			WHEN entry ->> 'type' = 'stage' AND entry ? 'stage' THEN
+			WHEN entry ->> 'type' = 'stage'
+				AND entry ->> 'stage' IN ('saved', 'applied', 'screening', 'interview', 'offer', 'rejected') THEN
 				jsonb_build_object('id', entry_id, 'type', 'stage', 'stage', entry ->> 'stage', 'at', entry_at)
 			WHEN entry ->> 'type' IN ('created', 'stage')
 				AND CASE
@@ -43,7 +45,7 @@ normalized AS (
 				jsonb_build_object(
 					'id', entry_id,
 					'type', 'note',
-					'text', coalesce(nullif(entry ->> 'text', ''), 'Imported timeline entry'),
+					'text', coalesce(nullif(btrim(entry ->> 'text'), ''), 'Imported timeline entry'),
 					'at', entry_at
 				)
 		END AS normalized_entry
@@ -68,20 +70,47 @@ SET activity = jsonb_build_array(
 		'at', coalesce(applied_at::text, created_at::text, now()::text)
 	)
 )
-WHERE jsonb_typeof(activity) <> 'array' OR jsonb_array_length(activity) = 0;
+WHERE jsonb_typeof(activity) IS DISTINCT FROM 'array' OR activity = '[]'::jsonb;
 --> statement-breakpoint
+WITH stage_stats AS (
+	SELECT
+		a.id AS application_id,
+		max((entry.value ->> 'at')::timestamptz) FILTER (WHERE entry.value ->> 'type' = 'stage') AS latest_stage_at,
+		max((entry.value ->> 'at')::timestamptz) FILTER (
+			WHERE entry.value ->> 'type' = 'stage' AND entry.value ->> 'stage' = a.status
+		) AS current_stage_at
+	FROM "application" a
+	CROSS JOIN LATERAL jsonb_array_elements(
+		CASE WHEN jsonb_typeof(a.activity) = 'array' THEN a.activity ELSE '[]'::jsonb END
+	) AS entry(value)
+	GROUP BY a.id
+),
+anchors AS (
+	SELECT
+		a.id,
+		a.status,
+		greatest(
+			coalesce(stage_stats.latest_stage_at, a.applied_at, a.created_at, now()),
+			coalesce(a.applied_at, a.created_at, now())
+		) AS anchor_at,
+		stage_stats.latest_stage_at,
+		stage_stats.current_stage_at
+	FROM "application" a
+	LEFT JOIN stage_stats ON stage_stats.application_id = a.id
+	WHERE jsonb_typeof(a.activity) = 'array'
+)
 UPDATE "application" a
 SET activity = a.activity || jsonb_build_array(
 	jsonb_build_object(
-		'id', md5(a.id || ':stage:' || a.status),
+		'id', md5(a.id || ':stage:' || a.status || ':anchor'),
 		'type', 'stage',
 		'stage', a.status,
-		'at', coalesce(a.applied_at::text, a.created_at::text, now()::text)
+		'at', anchors.anchor_at::text
 	)
 )
-WHERE jsonb_typeof(a.activity) = 'array'
-	AND NOT EXISTS (
-		SELECT 1
-		FROM jsonb_array_elements(a.activity) AS entry(value)
-		WHERE entry.value ->> 'type' = 'stage' AND entry.value ->> 'stage' = a.status
+FROM anchors
+WHERE a.id = anchors.id
+	AND (
+		anchors.current_stage_at IS NULL
+		OR (anchors.latest_stage_at IS NOT NULL AND anchors.current_stage_at < anchors.latest_stage_at)
 	);

@@ -29,7 +29,7 @@ import { FileAttachmentField } from "./file-attachment-field";
 const SOURCE_OPTIONS = ["LinkedIn", "Indeed", "Company Website", "Referral", "Recruiter", "Other"];
 const todayInputValue = () => {
 	const now = new Date();
-	return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+	return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
 };
 
 const emptyForm = () => ({
@@ -281,7 +281,6 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 							<Input
 								type="date"
 								value={form.stageEnteredAt}
-								onInput={(event) => set("stageEnteredAt", event.currentTarget.value)}
 								onChange={(event) => set("stageEnteredAt", event.target.value)}
 							/>
 						</Field>
