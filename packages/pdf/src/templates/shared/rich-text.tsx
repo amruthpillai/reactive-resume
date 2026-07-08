@@ -61,10 +61,6 @@ export const RichText = ({ children }: RichTextProps) => {
 	const { metadata, rtl } = useRender();
 	const rtlTextWrapStyle: Style | undefined = rtl ? { direction: "rtl", textAlign: "right" } : undefined;
 
-	const richListItemMarkerMargin: Style = {
-		marginLeft: rtl ? 4 : 0,
-		marginRight: rtl ? 0 : 4,
-	};
 	const boldStyle = useTemplateStyle("bold");
 	const linkStyle = useTemplateStyle("link");
 	const richParagraphStyle = useTemplateStyle("richParagraph");
@@ -123,7 +119,11 @@ export const RichText = ({ children }: RichTextProps) => {
 					const contentItemStyles = itemStyles.map(stripRichTextVerticalMargins);
 
 					const markerNode = (
-						<PdfText key="marker" style={composeStyles(richListItemMarkerStyle, richListItemMarkerMargin)}>
+						<PdfText
+							key="marker"
+							minPresenceAhead={bodyLineHeight ?? metadata.typography.body.lineHeight}
+							style={composeStyles(richListItemMarkerStyle)}
+						>
 							{marker}
 						</PdfText>
 					);
@@ -153,10 +153,7 @@ export const RichText = ({ children }: RichTextProps) => {
 								safeTextStyle,
 							)}
 						>
-							<View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-								{markerNode}
-								<View style={{ flex: 1, minWidth: 0 }}>{children}</View>
-							</View>
+							{children}
 						</View>
 					);
 
@@ -171,7 +168,7 @@ export const RichText = ({ children }: RichTextProps) => {
 								getRichTextEdgeTrimStyle(element),
 							)}
 						>
-							{rtl ? [contentNode, markerNode] : contentNode}
+							{rtl ? [contentNode, markerNode] : [markerNode, contentNode]}
 						</View>
 					);
 				},

@@ -87,11 +87,12 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 			...bodyText,
 			width: metadata.typography.body.fontSize,
 			textAlign: r.listMarkerTextAlign,
+			flex: "initial",
 		} satisfies Style,
 
 		richListItemContent: {
 			...bodyText,
-			flex: 1,
+			flex: "initial",
 		} satisfies Style,
 
 		splitRow: {
