@@ -410,7 +410,7 @@ function ApplicationTimeline({
 									<div className="min-w-0 flex-1">
 										{entry.type === "stage" ? (
 											<div className="font-medium">
-												{t`Moved to`} {stage?.label ?? entry.stage}
+												<Trans>Moved to</Trans> {stage?.label ?? entry.stage}
 											</div>
 										) : (
 											<button
