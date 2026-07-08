@@ -569,7 +569,44 @@ export const styleRuleSchema = z.strictObject({
 	slots: styleRuleSlotsSchema.describe("The semantic style slots configured by this rule."),
 });
 
-export const styleRulesSchema = z.array(styleRuleSchema).catch([]);
+const filterStyleIntent = (intent: unknown): StyleIntent | undefined => {
+	const styleIntentShape = styleIntentSchema.shape;
+	if (typeof intent !== "object" || intent === null) return undefined;
+	const filteredIntent = Object.entries(intent).filter(([key, value]) => {
+		const fieldSchema = styleIntentSchema.shape[key as keyof typeof styleIntentShape];
+		if (!fieldSchema) return false;
+		return fieldSchema.safeParse(value).success;
+	});
+	return filteredIntent.length > 0 ? (Object.fromEntries(filteredIntent) as StyleIntent) : undefined;
+};
+
+export const styleRulesSchema = z.array(z.unknown()).transform((arr) =>
+	arr
+		.map((item) => {
+			const base = z
+				.strictObject({
+					id: z.string().min(1),
+					label: z.string().catch(""),
+					enabled: z.boolean().catch(true),
+					target: styleRuleTargetSchema,
+					slots: z.record(z.string(), z.unknown()),
+				})
+				.safeParse(item);
+
+			if (!base.success) return undefined;
+
+			const cleanedSlots = Object.fromEntries(
+				Object.entries(base.data.slots)
+					.map(([slot, intent]) => [slot, filterStyleIntent(intent)])
+					.filter((entry): entry is [string, StyleIntent] => entry[1] !== undefined),
+			);
+
+			if (Object.keys(cleanedSlots).length === 0) return undefined;
+
+			return { ...base.data, slots: cleanedSlots };
+		})
+		.filter((rule): rule is StyleRule => rule !== undefined),
+);
 
 export type StyleRule = z.infer<typeof styleRuleSchema>;
 export type StyleRuleTarget = z.infer<typeof styleRuleTargetSchema>;
