@@ -1,4 +1,4 @@
-import type { ApplicationStatus, Contact } from "@reactive-resume/schema/applications/data";
+import type { ApplicationStatus, ApplicationTimelineEntry, Contact } from "@reactive-resume/schema/applications/data";
 import type { Application } from "../types";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -17,8 +17,17 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { STAGES } from "@reactive-resume/schema/applications/data";
 import { Button } from "@reactive-resume/ui/components/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@reactive-resume/ui/components/dialog";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@reactive-resume/ui/components/sheet";
+import { Textarea } from "@reactive-resume/ui/components/textarea";
 import { cn } from "@reactive-resume/utils/style";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/libs/orpc/client";
@@ -27,6 +36,24 @@ import { ApplicationAiCopilot } from "./application-ai-copilot";
 import { FileAttachmentField } from "./file-attachment-field";
 
 const stageIndex = (status: ApplicationStatus) => STAGES.findIndex((s) => s.value === status);
+const stageOf = (status: ApplicationStatus) => STAGES.find((s) => s.value === status);
+
+const dateInputValue = (value: Date | string) => {
+	const date = new Date(value);
+	return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+};
+
+const formatDate = (value: Date | string) =>
+	new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC", year: "numeric" });
+
+const byNewest = (a: ApplicationTimelineEntry, b: ApplicationTimelineEntry) =>
+	new Date(b.at).getTime() - new Date(a.at).getTime();
+
+const currentStageAnchorId = (activity: ApplicationTimelineEntry[], status: ApplicationStatus) =>
+	[...activity].sort(byNewest).find((entry) => entry.type === "stage" && entry.stage === status)?.id;
+
+const latestStageDate = (activity: ApplicationTimelineEntry[], status: ApplicationStatus) =>
+	[...activity].sort(byNewest).find((entry) => entry.type === "stage" && entry.stage === status)?.at;
 
 type Props = {
 	application: Application | null;
@@ -37,16 +64,7 @@ type Props = {
 export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Props) {
 	const queryClient = useQueryClient();
 	const confirm = useConfirm();
-	const [note, setNote] = useState("");
 	const id = application?.id;
-
-	// Reset the draft note when switching to a different application (React's "adjust state during
-	// render" pattern) so typed-but-unsent text doesn't leak across applications.
-	const [noteFor, setNoteFor] = useState(id);
-	if (id !== noteFor) {
-		setNoteFor(id);
-		setNote("");
-	}
 
 	const { data } = useQuery({
 		...orpc.applications.getById.queryOptions({ input: { id: id ?? "" } }),
@@ -71,11 +89,22 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 
 	const addNote = useMutation(
 		orpc.applications.addNote.mutationOptions({
-			onSuccess: () => {
-				setNote("");
-				invalidate();
-			},
+			onSuccess: invalidate,
 			onError: () => toast.error(t`Couldn't save the note.`),
+		}),
+	);
+
+	const updateTimelineEntry = useMutation(
+		orpc.applications.updateTimelineEntry.mutationOptions({
+			onSuccess: invalidate,
+			onError: () => toast.error(t`Couldn't update the timeline entry.`),
+		}),
+	);
+
+	const deleteTimelineEntry = useMutation(
+		orpc.applications.deleteTimelineEntry.mutationOptions({
+			onSuccess: invalidate,
+			onError: () => toast.error(t`Couldn't delete the timeline entry.`),
 		}),
 	);
 
@@ -145,7 +174,10 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 					<dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
 						<Fact label={t`Salary`} value={current.salary} />
 						<Fact label={t`Source`} value={current.source} />
-						<Fact label={t`Applied on`} value={new Date(current.appliedAt).toLocaleDateString()} />
+						<Fact
+							label={t`Applied on`}
+							value={formatDate(latestStageDate(current.activity, "applied") ?? current.appliedAt)}
+						/>
 					</dl>
 
 					{current.sourceUrl && (
@@ -240,40 +272,21 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 						</Section>
 					)}
 
-					{/* activity timeline */}
-					<Section title={t`Timeline & activity`}>
-						<div className="flex flex-col gap-3">
-							{[...current.activity]
-								.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
-								.map((event) => (
-									<div key={event.id} className="flex gap-2.5 text-sm">
-										<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
-										<div className="min-w-0 flex-1">
-											<div>{event.text}</div>
-											<div className="text-muted-foreground text-xs">{new Date(event.at).toLocaleString()}</div>
-										</div>
-									</div>
-								))}
-						</div>
-						<div className="mt-3 flex gap-2">
-							<Input
-								value={note}
-								placeholder={t`Add a note or log activity…`}
-								onChange={(event) => setNote(event.target.value)}
-								onKeyDown={(event) => {
-									if (event.key === "Enter" && note.trim()) addNote.mutate({ id: current.id, text: note.trim() });
-								}}
-							/>
-							<Button
-								type="button"
-								variant="outline"
-								disabled={!note.trim() || addNote.isPending}
-								onClick={() => addNote.mutate({ id: current.id, text: note.trim() })}
-							>
-								<Trans>Add</Trans>
-							</Button>
-						</div>
-					</Section>
+					<ApplicationTimeline
+						key={current.id}
+						application={current}
+						pending={addNote.isPending || updateTimelineEntry.isPending || deleteTimelineEntry.isPending}
+						onAddNote={(text) => addNote.mutateAsync({ id: current.id, text })}
+						onUpdateEntry={(entryId, input) => updateTimelineEntry.mutateAsync({ id: current.id, entryId, ...input })}
+						onDeleteEntry={(entryId) => {
+							void confirm(t`Delete this timeline entry?`, {
+								description: t`This entry will be permanently deleted. This can't be undone.`,
+								confirmText: t`Delete`,
+							}).then((confirmed) => {
+								if (confirmed) deleteTimelineEntry.mutate({ id: current.id, entryId });
+							});
+						}}
+					/>
 				</div>
 
 				<div className="flex items-center gap-1 border-border border-t p-4">
@@ -314,6 +327,206 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 				</div>
 			</SheetContent>
 		</Sheet>
+	);
+}
+
+type ApplicationTimelineProps = {
+	application: Application;
+	pending: boolean;
+	onAddNote: (text: string) => Promise<unknown>;
+	onUpdateEntry: (entryId: string, input: { date?: string; text?: string }) => Promise<unknown>;
+	onDeleteEntry: (entryId: string) => void;
+};
+
+function ApplicationTimeline({
+	application,
+	pending,
+	onAddNote,
+	onUpdateEntry,
+	onDeleteEntry,
+}: ApplicationTimelineProps) {
+	const [note, setNote] = useState("");
+	const [editingDate, setEditingDate] = useState<ApplicationTimelineEntry | null>(null);
+	const [editingNote, setEditingNote] = useState<(ApplicationTimelineEntry & { type: "note" }) | null>(null);
+	const [dateDraft, setDateDraft] = useState("");
+	const [noteDraft, setNoteDraft] = useState("");
+	const anchorId = currentStageAnchorId(application.activity, application.status);
+	const sorted = [...application.activity].sort(byNewest);
+
+	const openDate = (entry: ApplicationTimelineEntry) => {
+		setEditingDate(entry);
+		setDateDraft(dateInputValue(entry.at));
+	};
+
+	const openNote = (entry: ApplicationTimelineEntry & { type: "note" }) => {
+		setEditingNote(entry);
+		setNoteDraft(entry.text);
+	};
+
+	const add = () => {
+		if (pending) return;
+		const text = note.trim();
+		if (!text) return;
+		void onAddNote(text)
+			.then(() => setNote(""))
+			.catch(() => false);
+	};
+
+	return (
+		<Section title={t`Timeline`}>
+			<div className="flex flex-col gap-3">
+				<div className="flex gap-2">
+					<Input
+						data-timeline-note-input
+						value={note}
+						disabled={pending}
+						placeholder={t`Add a note…`}
+						onChange={(event) => setNote(event.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === "Enter" && !event.shiftKey) {
+								event.preventDefault();
+								add();
+							}
+						}}
+					/>
+					<Button type="button" variant="outline" disabled={!note.trim() || pending} onClick={add}>
+						<Trans>Add</Trans>
+					</Button>
+				</div>
+
+				<div className="relative flex flex-col gap-2 ps-4 before:absolute before:inset-y-2 before:start-1 before:w-px before:bg-border">
+					{sorted.map((entry) => {
+						const stage = entry.type === "stage" ? stageOf(entry.stage) : null;
+						const isAnchor = entry.id === anchorId;
+						return (
+							<div
+								key={entry.id}
+								data-timeline-entry={entry.type}
+								data-stage={entry.type === "stage" ? entry.stage : undefined}
+								className="group relative rounded-lg border border-border bg-card p-3 text-sm"
+							>
+								<span
+									className={cn(
+										"absolute start-[-17px] top-4 size-2.5 rounded-full border-2 border-card",
+										entry.type === "note" && "bg-primary/70",
+									)}
+									style={stage ? { background: stage.color } : undefined}
+								/>
+								<div className="flex items-start justify-between gap-2">
+									<div className="min-w-0 flex-1">
+										{entry.type === "stage" ? (
+											<div className="font-medium">
+												<Trans>Moved to</Trans> {stage?.label ?? entry.stage}
+											</div>
+										) : (
+											<button
+												type="button"
+												className="block w-full rounded-sm text-left hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+												onClick={() => openNote(entry)}
+											>
+												{entry.text}
+											</button>
+										)}
+										{isAnchor && (
+											<div className="mt-1 text-muted-foreground text-xs">
+												<Trans>Current stage</Trans>
+											</div>
+										)}
+									</div>
+									<div className="flex shrink-0 items-center gap-1">
+										<button
+											type="button"
+											className="rounded-md border border-border px-2 py-1 text-muted-foreground text-xs hover:bg-muted hover:text-foreground"
+											onClick={() => openDate(entry)}
+										>
+											{formatDate(entry.at)}
+										</button>
+										{!isAnchor && (
+											<button
+												type="button"
+												title={t`Delete timeline entry`}
+												disabled={pending}
+												className="rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive focus-visible:opacity-100 disabled:opacity-40 group-hover:opacity-100"
+												onClick={() => onDeleteEntry(entry.id)}
+											>
+												<TrashIcon className="size-4" />
+											</button>
+										)}
+									</div>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+
+			<Dialog open={!!editingDate} onOpenChange={(open) => !open && setEditingDate(null)}>
+				<DialogContent className="sm:max-w-sm">
+					<DialogHeader>
+						<DialogTitle>
+							<Trans>Edit date</Trans>
+						</DialogTitle>
+						<DialogDescription>
+							<Trans>Update the calendar date for this timeline entry.</Trans>
+						</DialogDescription>
+					</DialogHeader>
+					<Input
+						type="date"
+						value={dateDraft}
+						onInput={(event) => setDateDraft(event.currentTarget.value)}
+						onChange={(event) => setDateDraft(event.target.value)}
+					/>
+					<DialogFooter>
+						<Button type="button" variant="outline" onClick={() => setEditingDate(null)}>
+							<Trans>Cancel</Trans>
+						</Button>
+						<Button
+							type="button"
+							disabled={!dateDraft || pending}
+							onClick={() => {
+								if (!editingDate) return;
+								void onUpdateEntry(editingDate.id, { date: dateDraft })
+									.then(() => setEditingDate(null))
+									.catch(() => false);
+							}}
+						>
+							<Trans>Save</Trans>
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			<Dialog open={!!editingNote} onOpenChange={(open) => !open && setEditingNote(null)}>
+				<DialogContent className="sm:max-w-md">
+					<DialogHeader>
+						<DialogTitle>
+							<Trans>Edit note</Trans>
+						</DialogTitle>
+						<DialogDescription>
+							<Trans>Update this timeline note.</Trans>
+						</DialogDescription>
+					</DialogHeader>
+					<Textarea value={noteDraft} rows={4} onChange={(event) => setNoteDraft(event.target.value)} />
+					<DialogFooter>
+						<Button type="button" variant="outline" onClick={() => setEditingNote(null)}>
+							<Trans>Cancel</Trans>
+						</Button>
+						<Button
+							type="button"
+							disabled={!noteDraft.trim() || pending}
+							onClick={() => {
+								if (!editingNote) return;
+								void onUpdateEntry(editingNote.id, { text: noteDraft.trim() })
+									.then(() => setEditingNote(null))
+									.catch(() => false);
+							}}
+						>
+							<Trans>Save</Trans>
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</Section>
 	);
 }
 

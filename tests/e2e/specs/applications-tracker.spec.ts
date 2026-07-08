@@ -39,9 +39,9 @@ test("adds an application and logs stage changes and notes", async ({ authPage: 
 	await expect(detail.getByText(company)).toBeVisible();
 	await detail.getByRole("button", { name: "Move to Applied" }).click();
 	await expect(detail.getByRole("button", { name: "Move to Screening" })).toBeVisible();
-	await expect(detail.getByText("Moved to Applied")).toBeVisible();
+	await expect(detail.locator('[data-timeline-entry="stage"][data-stage="applied"]')).toBeVisible();
 
-	await detail.getByPlaceholder("Add a note or log activity…").fill(note);
+	await detail.locator("[data-timeline-note-input]").fill(note);
 	await detail.getByRole("button", { name: "Add", exact: true }).click();
 	await expect(detail.getByText(note)).toBeVisible();
 });

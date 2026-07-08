@@ -26,16 +26,24 @@ export const contactSchema = z.object({
 
 export type Contact = z.infer<typeof contactSchema>;
 
-// Timeline events: `stage` entries are auto-appended when an application moves; `note`
-// entries are added manually from the detail panel.
-export const activityEventSchema = z.object({
+const timelineBaseSchema = z.object({
 	id: z.string().min(1),
-	type: z.enum(["stage", "note", "created"]),
-	text: z.string().trim().min(1),
 	at: z.coerce.date(),
 });
 
-export type ActivityEvent = z.infer<typeof activityEventSchema>;
+export const applicationTimelineEntrySchema = z.discriminatedUnion("type", [
+	timelineBaseSchema.extend({
+		type: z.literal("stage"),
+		stage: applicationStatusSchema,
+	}),
+	timelineBaseSchema.extend({
+		type: z.literal("note"),
+		text: z.string().trim().min(1),
+	}),
+]);
+
+export type ApplicationTimelineEntry = z.infer<typeof applicationTimelineEntrySchema>;
+export type ActivityEvent = ApplicationTimelineEntry;
 
 // Reserved for AI enrichment output (autofill / match-score). Free-form so the shape can
 // evolve without a migration. See the AI roadmap in the applications feature.

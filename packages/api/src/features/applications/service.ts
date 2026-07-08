@@ -1,18 +1,87 @@
-import type { ActivityEvent, AiMetadata, ApplicationStatus, Contact } from "@reactive-resume/schema/applications/data";
+import type {
+	AiMetadata,
+	ApplicationStatus,
+	ApplicationTimelineEntry,
+	Contact,
+} from "@reactive-resume/schema/applications/data";
 import type { ApplicationDocumentKind } from "../../dto/application";
 import { ORPCError } from "@orpc/client";
 import { and, arrayContains, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
-import { STAGES } from "@reactive-resume/schema/applications/data";
 import { generateId } from "@reactive-resume/utils/string";
 import { resumeService } from "../resume/service";
 import { getStorageService, uploadFile } from "../storage/service";
 
-const stageLabel = (status: ApplicationStatus) => STAGES.find((s) => s.value === status)?.label ?? status;
+function timelineDate(value: Date | string): Date {
+	return value instanceof Date ? value : new Date(value);
+}
 
-function activityEvent(type: ActivityEvent["type"], text: string): ActivityEvent {
-	return { id: generateId(), type, text, at: new Date() };
+function atFromDateString(date: string, existing?: Date | string): Date {
+	const [year, month, day] = date.split("-").map(Number);
+	if (!year || !month || !day) throw new ORPCError("BAD_REQUEST", { message: "Date must use YYYY-MM-DD format." });
+
+	const existingDate = existing ? timelineDate(existing) : undefined;
+
+	const parsed = new Date(
+		Date.UTC(
+			year,
+			month - 1,
+			day,
+			existingDate?.getUTCHours() ?? 12,
+			existingDate?.getUTCMinutes() ?? 0,
+			existingDate?.getUTCSeconds() ?? 0,
+			existingDate?.getUTCMilliseconds() ?? 0,
+		),
+	);
+	if (timelineDay(parsed) !== date) throw new ORPCError("BAD_REQUEST", { message: "Date must use YYYY-MM-DD format." });
+
+	return parsed;
+}
+
+function stageEntry(stage: ApplicationStatus, date?: string): ApplicationTimelineEntry {
+	return { id: generateId(), type: "stage", stage, at: date ? atFromDateString(date) : new Date() };
+}
+
+function noteEntry(text: string, date?: string): ApplicationTimelineEntry {
+	return { id: generateId(), type: "note", text, at: date ? atFromDateString(date) : new Date() };
+}
+
+function byNewest(a: ApplicationTimelineEntry, b: ApplicationTimelineEntry) {
+	return new Date(b.at).getTime() - new Date(a.at).getTime();
+}
+
+function timelineDay(value: Date | string) {
+	return timelineDate(value).toISOString().slice(0, 10);
+}
+
+function sortTimeline(activity: ApplicationTimelineEntry[]): ApplicationTimelineEntry[] {
+	return [...activity].sort(byNewest);
+}
+
+function currentStageAnchor(activity: ApplicationTimelineEntry[], status: ApplicationStatus) {
+	return sortTimeline(activity).find((entry) => entry.type === "stage" && entry.stage === status);
+}
+
+function assertCurrentStageAnchorLatest(activity: ApplicationTimelineEntry[], status: ApplicationStatus) {
+	const anchor = currentStageAnchor(activity, status);
+	if (!anchor)
+		throw new ORPCError("BAD_REQUEST", { message: "Application timeline is missing its current stage entry." });
+
+	const anchorDay = timelineDay(anchor.at);
+	const newerStage = activity.some((entry) => entry.type === "stage" && timelineDay(entry.at) > anchorDay);
+	if (newerStage) {
+		throw new ORPCError("BAD_REQUEST", {
+			message: "Current stage date cannot be older than another stage entry.",
+		});
+	}
+}
+
+function appliedAtFromTimeline(activity: ApplicationTimelineEntry[], fallback: Date): Date {
+	const sorted = sortTimeline(activity);
+	const applied = sorted.find((entry) => entry.type === "stage" && entry.stage === "applied");
+	const fallbackEntry = sorted.at(-1);
+	return applied ? timelineDate(applied.at) : fallbackEntry ? timelineDate(fallbackEntry.at) : fallback;
 }
 
 // Editable fields shared by create/update. Kept explicit so Drizzle's typed insert/update
@@ -124,9 +193,9 @@ function documentFields(kind: ApplicationDocumentKind) {
 			} as const);
 }
 
-const stripUserId = <T extends { userId: string }>(row: T) => {
+const stripUserId = <T extends { userId: string; activity?: ApplicationTimelineEntry[] }>(row: T) => {
 	const { userId: _userId, ...rest } = row;
-	return rest;
+	return rest.activity ? { ...rest, activity: sortTimeline(rest.activity) } : rest;
 };
 
 export const applicationService = {
@@ -151,18 +220,27 @@ export const applicationService = {
 	},
 
 	create: async (
-		input: EditableFields & { userId: string; company: string; role: string; status?: ApplicationStatus | undefined },
+		input: EditableFields & {
+			userId: string;
+			company: string;
+			role: string;
+			status?: ApplicationStatus | undefined;
+			stageEnteredAt?: string | undefined;
+		},
 	) => {
-		const { userId, status, ...fields } = input;
+		const { userId, status, stageEnteredAt, ...fields } = input;
 		const id = generateId();
+		const initialStatus = status ?? "saved";
+		const activity = [stageEntry(initialStatus, stageEnteredAt)];
 
 		await assertOwnedResume(userId, fields.resumeId);
 
 		await db.insert(schema.application).values({
 			id,
 			userId,
-			status: status ?? "saved",
-			activity: [activityEvent("created", `Added to ${stageLabel(status ?? "saved")}`)],
+			status: initialStatus,
+			activity,
+			appliedAt: appliedAtFromTimeline(activity, new Date()),
 			...fields,
 		});
 
@@ -171,7 +249,12 @@ export const applicationService = {
 
 	importMany: async (input: {
 		userId: string;
-		items: (EditableFields & { company: string; role: string; status?: ApplicationStatus | undefined })[];
+		items: (EditableFields & {
+			company: string;
+			role: string;
+			status?: ApplicationStatus | undefined;
+			stageEnteredAt?: string | undefined;
+		})[];
 	}) => {
 		if (input.items.length === 0) return { imported: 0 };
 
@@ -180,13 +263,18 @@ export const applicationService = {
 			input.items.map((item) => item.resumeId),
 		);
 
-		const values = input.items.map(({ status, ...fields }) => ({
-			id: generateId(),
-			userId: input.userId,
-			status: status ?? ("saved" as ApplicationStatus),
-			activity: [activityEvent("created", `Added to ${stageLabel(status ?? "saved")}`)],
-			...fields,
-		}));
+		const values = input.items.map(({ status, stageEnteredAt, ...fields }) => {
+			const initialStatus = status ?? ("saved" as ApplicationStatus);
+			const activity = [stageEntry(initialStatus, stageEnteredAt)];
+			return {
+				id: generateId(),
+				userId: input.userId,
+				status: initialStatus,
+				activity,
+				appliedAt: appliedAtFromTimeline(activity, new Date()),
+				...fields,
+			};
+		});
 
 		const rows = await db.insert(schema.application).values(values).returning({ id: schema.application.id });
 		return { imported: rows.length };
@@ -205,12 +293,19 @@ export const applicationService = {
 		const { id, userId, status, archived, ...fields } = input;
 		await assertOwnedResume(userId, fields.resumeId);
 
+		const statusEntry = status !== undefined ? stageEntry(status) : undefined;
 		// Append in SQL so concurrent notes/stage events are not overwritten by a stale array.
 		const activityExpr =
-			status !== undefined
+			statusEntry !== undefined
 				? sql`case when ${schema.application.status} <> ${status}
-							then ${schema.application.activity} || ${JSON.stringify([activityEvent("stage", `Moved to ${stageLabel(status)}`)])}::jsonb
-							else ${schema.application.activity} end`
+						then ${schema.application.activity} || ${JSON.stringify([statusEntry])}::jsonb
+						else ${schema.application.activity} end`
+				: undefined;
+		const appliedAtExpr =
+			statusEntry !== undefined && status === "applied"
+				? sql`case when ${schema.application.status} <> ${status}
+						then ${statusEntry.at}
+						else ${schema.application.appliedAt} end`
 				: undefined;
 
 		const [updated] = await db
@@ -218,6 +313,7 @@ export const applicationService = {
 			.set({
 				...fields,
 				...(status !== undefined ? { status } : {}),
+				...(appliedAtExpr ? { appliedAt: appliedAtExpr } : {}),
 				...(archived !== undefined ? { archived } : {}),
 				...(activityExpr ? { activity: activityExpr } : {}),
 			})
@@ -313,10 +409,10 @@ export const applicationService = {
 		return stripUserId(updated);
 	},
 
-	addNote: async (input: { id: string; userId: string; text: string }) => {
+	addNote: async (input: { id: string; userId: string; text: string; date?: string | undefined }) => {
 		// Append in a single statement (activity || [event]) so concurrent notes can't drop each
 		// other via read-then-write; ownership is enforced by the WHERE clause.
-		const event = activityEvent("note", input.text);
+		const event = noteEntry(input.text, input.date);
 		const [updated] = await db
 			.update(schema.application)
 			.set({ activity: sql`${schema.application.activity} || ${JSON.stringify([event])}::jsonb` })
@@ -325,6 +421,96 @@ export const applicationService = {
 
 		if (!updated) throw new ORPCError("NOT_FOUND");
 		return stripUserId(updated);
+	},
+
+	updateTimelineEntry: async (input: {
+		id: string;
+		userId: string;
+		entryId: string;
+		date?: string | undefined;
+		text?: string | undefined;
+	}) => {
+		return db.transaction(async (tx) => {
+			await tx.execute(sql`
+				select 1 from ${schema.application}
+				where ${schema.application.id} = ${input.id} and ${schema.application.userId} = ${input.userId}
+				for update
+			`);
+
+			const [existing] = await tx
+				.select()
+				.from(schema.application)
+				.where(and(eq(schema.application.id, input.id), eq(schema.application.userId, input.userId)));
+			if (!existing) throw new ORPCError("NOT_FOUND");
+
+			const activity = existing.activity.map((entry) => {
+				if (entry.id !== input.entryId) return entry;
+
+				if (entry.type === "stage" && input.text !== undefined) {
+					throw new ORPCError("BAD_REQUEST", { message: "Stage timeline text is derived and cannot be edited." });
+				}
+
+				return {
+					...entry,
+					...(input.date !== undefined ? { at: atFromDateString(input.date, entry.at) } : {}),
+					...(entry.type === "note" && input.text !== undefined ? { text: input.text } : {}),
+				};
+			});
+
+			if (!activity.some((entry) => entry.id === input.entryId)) throw new ORPCError("NOT_FOUND");
+			assertCurrentStageAnchorLatest(activity, existing.status);
+
+			const [updated] = await tx
+				.update(schema.application)
+				.set({
+					activity,
+					appliedAt: appliedAtFromTimeline(activity, existing.appliedAt),
+				})
+				.where(and(eq(schema.application.id, input.id), eq(schema.application.userId, input.userId)))
+				.returning();
+
+			if (!updated) throw new ORPCError("NOT_FOUND");
+			return stripUserId(updated);
+		});
+	},
+
+	deleteTimelineEntry: async (input: { id: string; userId: string; entryId: string }) => {
+		return db.transaction(async (tx) => {
+			await tx.execute(sql`
+				select 1 from ${schema.application}
+				where ${schema.application.id} = ${input.id} and ${schema.application.userId} = ${input.userId}
+				for update
+			`);
+
+			const [existing] = await tx
+				.select()
+				.from(schema.application)
+				.where(and(eq(schema.application.id, input.id), eq(schema.application.userId, input.userId)));
+			if (!existing) throw new ORPCError("NOT_FOUND");
+
+			const entry = existing.activity.find((item) => item.id === input.entryId);
+			if (!entry) throw new ORPCError("NOT_FOUND");
+
+			const anchor = currentStageAnchor(existing.activity, existing.status);
+			if (entry.type === "stage" && anchor?.id === entry.id) {
+				throw new ORPCError("BAD_REQUEST", { message: "The current stage timeline entry cannot be deleted." });
+			}
+
+			const activity = existing.activity.filter((item) => item.id !== input.entryId);
+			assertCurrentStageAnchorLatest(activity, existing.status);
+
+			const [updated] = await tx
+				.update(schema.application)
+				.set({
+					activity,
+					appliedAt: appliedAtFromTimeline(activity, existing.appliedAt),
+				})
+				.where(and(eq(schema.application.id, input.id), eq(schema.application.userId, input.userId)))
+				.returning();
+
+			if (!updated) throw new ORPCError("NOT_FOUND");
+			return stripUserId(updated);
+		});
 	},
 
 	delete: async (input: { id: string; userId: string }) => {
@@ -359,17 +545,25 @@ export const applicationService = {
 
 		// Stage moves must log a timeline event on every row that actually changed — mirror the
 		// single-item update path. Append the event only where the current status differs.
+		const statusEntry = input.status !== undefined ? stageEntry(input.status) : undefined;
 		const activityExpr =
-			input.status !== undefined
+			statusEntry !== undefined
 				? sql`case when ${schema.application.status} <> ${input.status}
-						then ${schema.application.activity} || ${JSON.stringify([activityEvent("stage", `Moved to ${stageLabel(input.status)}`)])}::jsonb
-						else ${schema.application.activity} end`
+					then ${schema.application.activity} || ${JSON.stringify([statusEntry])}::jsonb
+					else ${schema.application.activity} end`
+				: undefined;
+		const appliedAtExpr =
+			statusEntry !== undefined && input.status === "applied"
+				? sql`case when ${schema.application.status} <> ${input.status}
+					then ${statusEntry.at}
+					else ${schema.application.appliedAt} end`
 				: undefined;
 
 		const rows = await db
 			.update(schema.application)
 			.set({
 				...(input.status !== undefined ? { status: input.status } : {}),
+				...(appliedAtExpr ? { appliedAt: appliedAtExpr } : {}),
 				...(activityExpr ? { activity: activityExpr } : {}),
 				...(input.archived !== undefined ? { archived: input.archived } : {}),
 				...(tagsExpr ? { tags: tagsExpr } : {}),

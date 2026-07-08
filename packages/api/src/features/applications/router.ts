@@ -10,6 +10,8 @@ export const applicationsRouter = {
 	attachDocument: crudRouter.attachDocument,
 	removeDocument: crudRouter.removeDocument,
 	addNote: crudRouter.addNote,
+	updateTimelineEntry: crudRouter.updateTimelineEntry,
+	deleteTimelineEntry: crudRouter.deleteTimelineEntry,
 	delete: crudRouter.delete,
 	bulkUpdate: crudRouter.bulkUpdate,
 	bulkDelete: crudRouter.bulkDelete,

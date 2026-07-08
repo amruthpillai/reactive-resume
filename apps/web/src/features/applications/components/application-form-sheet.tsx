@@ -27,8 +27,12 @@ import { FileAttachmentField } from "./file-attachment-field";
 
 // Preset source suggestions surfaced via a <datalist>; the field itself stays free-text.
 const SOURCE_OPTIONS = ["LinkedIn", "Indeed", "Company Website", "Referral", "Recruiter", "Other"];
+const todayInputValue = () => {
+	const now = new Date();
+	return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
+};
 
-const EMPTY = {
+const emptyForm = () => ({
 	company: "",
 	role: "",
 	location: "",
@@ -38,15 +42,16 @@ const EMPTY = {
 	resumeId: "",
 	tags: [] as string[],
 	sourceUrl: "",
+	stageEnteredAt: todayInputValue(),
 	jobDescription: "",
 	followUpAt: "",
 	followUpNote: "",
 	notes: "",
 	resumeFile: null as FileAttachment | null,
 	coverLetter: null as FileAttachment | null,
-};
+});
 
-type FormState = typeof EMPTY;
+type FormState = ReturnType<typeof emptyForm>;
 
 const toAttachment = (url: string | null, name: string | null): FileAttachment | null =>
 	url ? { url, name: name ?? url } : null;
@@ -62,6 +67,7 @@ function toForm(app: Application): FormState {
 		resumeId: app.resumeId ?? "",
 		tags: app.tags,
 		sourceUrl: app.sourceUrl ?? "",
+		stageEnteredAt: "",
 		jobDescription: app.jobDescription ?? "",
 		followUpAt: app.followUpAt ? new Date(app.followUpAt).toISOString().slice(0, 10) : "",
 		followUpNote: app.followUpNote ?? "",
@@ -82,13 +88,13 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 	const queryClient = useQueryClient();
 	const isEditing = !!application;
 
-	const [form, setForm] = useState<FormState>(application ? toForm(application) : EMPTY);
+	const [form, setForm] = useState<FormState>(() => (application ? toForm(application) : emptyForm()));
 
 	// Re-sync the form when the sheet's target changes (a different app, or create ↔ edit).
 	const [syncedId, setSyncedId] = useState(application?.id ?? null);
 	if ((application?.id ?? null) !== syncedId) {
 		setSyncedId(application?.id ?? null);
-		setForm(application ? toForm(application) : EMPTY);
+		setForm(application ? toForm(application) : emptyForm());
 	}
 
 	const { data: resumes } = useQuery(orpc.resume.list.queryOptions());
@@ -115,7 +121,7 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 			onSuccess: () => {
 				invalidate();
 				toast.success(t`Application added to your pipeline.`);
-				setForm(EMPTY);
+				setForm(emptyForm());
 				onOpenChange(false);
 			},
 			onError: () => toast.error(t`Couldn't add the application. Please try again.`),
@@ -174,7 +180,7 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 			coverLetterName: form.coverLetter?.name ?? null,
 		};
 		if (application) update.mutate({ id: application.id, ...payload });
-		else create.mutate(payload);
+		else create.mutate({ ...payload, stageEnteredAt: form.stageEnteredAt || undefined });
 	};
 
 	return (
@@ -269,6 +275,16 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 							/>
 						</Field>
 					</div>
+
+					{!isEditing && (
+						<Field label={t`Stage date`}>
+							<Input
+								type="date"
+								value={form.stageEnteredAt}
+								onChange={(event) => set("stageEnteredAt", event.target.value)}
+							/>
+						</Field>
+					)}
 
 					{/* Resume: link a live Reactive Resume (unlocks AI) or upload the exact PDF you sent. */}
 					<Field label={t`Resume`}>

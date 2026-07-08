@@ -26,24 +26,30 @@ describe("parseCsv", () => {
 
 describe("mapCsvToApplications", () => {
 	it("maps aliased headers and coerces status/tags", () => {
-		const csv = 'Company,Job Title,Stage,Salary,Tags\nStripe,Frontend,Interview,$180k,"remote;react"';
+		const csv =
+			'Company,Job Title,Stage,Stage Date,Salary,Tags\nStripe,Frontend,Interview,2026-07-01,$180k,"remote;react"';
 		const { rows, recognized } = mapCsvToApplications(parseCsv(csv));
 		expect(rows).toHaveLength(1);
 		expect(rows[0]).toMatchObject({
 			company: "Stripe",
 			role: "Frontend",
 			status: "interview",
+			stageEnteredAt: "2026-07-01",
 			salary: "$180k",
 			tags: ["remote", "react"],
 		});
-		expect(recognized).toEqual(expect.arrayContaining(["company", "role", "status", "salary", "tags"]));
+		expect(recognized).toEqual(
+			expect.arrayContaining(["company", "role", "status", "stageEnteredAt", "salary", "tags"]),
+		);
 	});
 
 	it("skips rows missing company or role and drops invalid status", () => {
-		const csv = "company,role,status\nStripe,Eng,bogus\n,NoCompany,applied\nAcme,,saved";
+		const csv =
+			"company,role,status,stage date\nStripe,Eng,bogus,2026-99-99\n,NoCompany,applied,2026-07-01\nAcme,,saved,2026-07-01";
 		const { rows, skipped } = mapCsvToApplications(parseCsv(csv));
 		expect(rows).toHaveLength(1);
 		expect(rows[0]?.status).toBeUndefined(); // "bogus" dropped
+		expect(rows[0]?.stageEnteredAt).toBeUndefined(); // invalid date dropped
 		expect(skipped).toBe(2);
 	});
 });

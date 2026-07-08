@@ -22,7 +22,7 @@ import { applicationsListQueryKey } from "../queries";
 
 const MAX_IMPORT = 500;
 const SAMPLE =
-	"Company,Role,Stage,Location,Salary,Source,Tags\nStripe,Frontend Engineer,applied,Remote,$180k,LinkedIn,remote;react";
+	"Company,Role,Stage,Stage Date,Location,Salary,Source,Tags\nStripe,Frontend Engineer,applied,2026-07-01,Remote,$180k,LinkedIn,remote;react";
 
 type Props = {
 	open: boolean;
@@ -74,7 +74,8 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 					</SheetTitle>
 					<SheetDescription>
 						<Trans>
-							Paste rows or upload a .csv. We map columns like Company, Role, Stage, Salary, Source and Tags.
+							Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and
+							Tags.
 						</Trans>
 					</SheetDescription>
 				</SheetHeader>

@@ -1,4 +1,9 @@
-import type { ActivityEvent, AiMetadata, ApplicationStatus, Contact } from "@reactive-resume/schema/applications/data";
+import type {
+	AiMetadata,
+	ApplicationStatus,
+	ApplicationTimelineEntry,
+	Contact,
+} from "@reactive-resume/schema/applications/data";
 import * as pg from "drizzle-orm/pg-core";
 import { generateId } from "@reactive-resume/utils/string";
 import { user } from "./auth";
@@ -47,7 +52,7 @@ export const application = pg.pgTable(
 		followUpAt: pg.timestamp("follow_up_at", { withTimezone: true }),
 		followUpNote: pg.text("follow_up_note"),
 		contacts: pg.jsonb("contacts").notNull().$type<Contact[]>().default([]),
-		activity: pg.jsonb("activity").notNull().$type<ActivityEvent[]>().default([]),
+		activity: pg.jsonb("activity").notNull().$type<ApplicationTimelineEntry[]>().default([]),
 		appliedAt: pg.timestamp("applied_at", { withTimezone: true }).notNull().defaultNow(),
 		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 		updatedAt: pg

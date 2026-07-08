@@ -61,8 +61,16 @@ type ParsedApplication = {
 	source?: string;
 	notes?: string;
 	sourceUrl?: string;
+	stageEnteredAt?: string;
 	tags?: string[];
 };
+
+function dateOnly(value: string) {
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+	const [year, month, day] = value.split("-").map(Number);
+	const date = new Date(Date.UTC(year ?? 0, (month ?? 1) - 1, day ?? 0));
+	return date.toISOString().slice(0, 10) === value ? value : undefined;
+}
 
 // Header aliases → canonical field. Matched case-insensitively after trimming.
 const HEADER_ALIASES: Record<string, keyof ParsedApplication> = {
@@ -75,6 +83,9 @@ const HEADER_ALIASES: Record<string, keyof ParsedApplication> = {
 	"job title": "role",
 	status: "status",
 	stage: "status",
+	"applied date": "stageEnteredAt",
+	"stage date": "stageEnteredAt",
+	"stage entered at": "stageEnteredAt",
 	location: "location",
 	salary: "salary",
 	"salary range": "salary",
@@ -123,6 +134,8 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 			else if (field === "status") {
 				const parsed = applicationStatusSchema.safeParse(value.toLowerCase());
 				if (parsed.success) record.status = parsed.data;
+			} else if (field === "stageEnteredAt") {
+				record.stageEnteredAt = dateOnly(value);
 			} else record[field] = value as never;
 		});
 
