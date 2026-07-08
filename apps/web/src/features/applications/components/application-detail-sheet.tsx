@@ -377,6 +377,7 @@ function ApplicationTimeline({
 			<div className="flex flex-col gap-3">
 				<div className="flex gap-2">
 					<Input
+						data-timeline-note-input
 						value={note}
 						disabled={pending}
 						placeholder={t`Add a note…`}
