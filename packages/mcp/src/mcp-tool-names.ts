@@ -21,6 +21,8 @@ export const MCP_TOOL_NAME = {
 	createApplication: "create_application",
 	updateApplication: "update_application",
 	addApplicationNote: "add_application_note",
+	updateApplicationTimelineEntry: "update_application_timeline_entry",
+	deleteApplicationTimelineEntry: "delete_application_timeline_entry",
 	deleteApplication: "delete_application",
 	bulkUpdateApplications: "bulk_update_applications",
 	bulkDeleteApplications: "bulk_delete_applications",

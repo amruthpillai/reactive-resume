@@ -16,7 +16,9 @@ const applicationIdSchema = z
 	.string()
 	.min(1)
 	.describe(`Application ID. Use \`${T.listApplications}\` to find valid IDs.`);
+const applicationTimelineEntryIdSchema = z.string().min(1).describe("Timeline entry ID from an application response.");
 const applicationDocumentKindSchema = z.enum(["resume", "cover-letter"]);
+const timelineDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must use YYYY-MM-DD format.");
 const httpUrlSchema = z
 	.string()
 	.trim()
@@ -67,6 +69,7 @@ const createApplicationSchema = z
 		...applicationMutableFieldsSchema,
 		company: z.string().min(1).describe("Company name."),
 		role: z.string().min(1).describe("Role or job title."),
+		stageEnteredAt: timelineDateSchema.optional().describe("Initial stage date in YYYY-MM-DD format."),
 	})
 	.strict();
 
@@ -343,8 +346,31 @@ export const TOOL_META = {
 	[T.addApplicationNote]: {
 		title: "Add Application Note",
 		description: "Append a free-text note to an application's timeline.",
-		inputSchema: z.object({ id: applicationIdSchema, text: z.string().min(1) }),
+		inputSchema: z.object({
+			id: applicationIdSchema,
+			text: z.string().min(1),
+			date: timelineDateSchema.optional().describe("Optional note date in YYYY-MM-DD format."),
+		}),
 		annotations: TOOL_ANNOTATIONS[T.addApplicationNote],
+	},
+	[T.updateApplicationTimelineEntry]: {
+		title: "Update Application Timeline Entry",
+		description: "Update a timeline entry date, or note text for note entries.",
+		inputSchema: z
+			.object({
+				id: applicationIdSchema,
+				entryId: applicationTimelineEntryIdSchema,
+				date: timelineDateSchema.optional().describe("Replacement row date in YYYY-MM-DD format."),
+				text: z.string().min(1).optional().describe("Replacement note text. Only note entries can change text."),
+			})
+			.refine((value) => value.date !== undefined || value.text !== undefined, "Provide date or text to update."),
+		annotations: TOOL_ANNOTATIONS[T.updateApplicationTimelineEntry],
+	},
+	[T.deleteApplicationTimelineEntry]: {
+		title: "Delete Application Timeline Entry",
+		description: "Delete a note or older stage entry. The current stage entry cannot be deleted.",
+		inputSchema: z.object({ id: applicationIdSchema, entryId: applicationTimelineEntryIdSchema }),
+		annotations: TOOL_ANNOTATIONS[T.deleteApplicationTimelineEntry],
 	},
 	[T.deleteApplication]: {
 		title: "Delete Application",

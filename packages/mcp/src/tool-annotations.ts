@@ -64,6 +64,8 @@ export const TOOL_ANNOTATIONS: Record<McpRegisteredToolName, ToolAnnotations> = 
 	[MCP_TOOL_NAME.createApplication]: WRITE_NON_IDEMPOTENT,
 	[MCP_TOOL_NAME.updateApplication]: WRITE_IDEMPOTENT,
 	[MCP_TOOL_NAME.addApplicationNote]: WRITE_NON_IDEMPOTENT,
+	[MCP_TOOL_NAME.updateApplicationTimelineEntry]: WRITE_IDEMPOTENT,
+	[MCP_TOOL_NAME.deleteApplicationTimelineEntry]: WRITE_DESTRUCTIVE,
 	[MCP_TOOL_NAME.deleteApplication]: WRITE_DESTRUCTIVE,
 	[MCP_TOOL_NAME.bulkUpdateApplications]: WRITE_IDEMPOTENT,
 	[MCP_TOOL_NAME.bulkDeleteApplications]: WRITE_DESTRUCTIVE,

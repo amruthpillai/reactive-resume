@@ -171,7 +171,42 @@ export const crudRouter = {
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.addNote.output)
 		.handler(async ({ input, context }) => {
-			return applicationService.addNote({ id: input.id, userId: context.user.id, text: input.text });
+			return applicationService.addNote({ id: input.id, userId: context.user.id, text: input.text, date: input.date });
+		}),
+
+	updateTimelineEntry: protectedProcedure
+		.route({
+			method: "PUT",
+			path: "/applications/{id}/timeline/{entryId}",
+			tags: ["Applications"],
+			operationId: "updateApplicationTimelineEntry",
+			summary: "Update a timeline entry",
+			description: "Updates a timeline entry date, or note text for note entries. Requires authentication.",
+			successDescription: "The updated application.",
+		})
+		.input(applicationDto.updateTimelineEntry.input)
+		.use(resumeMutationRateLimit)
+		.output(applicationDto.updateTimelineEntry.output)
+		.handler(async ({ input, context }) => {
+			return applicationService.updateTimelineEntry({ ...input, userId: context.user.id });
+		}),
+
+	deleteTimelineEntry: protectedProcedure
+		.route({
+			method: "DELETE",
+			path: "/applications/{id}/timeline/{entryId}",
+			tags: ["Applications"],
+			operationId: "deleteApplicationTimelineEntry",
+			summary: "Delete a timeline entry",
+			description:
+				"Deletes a note or older stage entry. The current stage entry cannot be deleted. Requires authentication.",
+			successDescription: "The updated application.",
+		})
+		.input(applicationDto.deleteTimelineEntry.input)
+		.use(resumeMutationRateLimit)
+		.output(applicationDto.deleteTimelineEntry.output)
+		.handler(async ({ input, context }) => {
+			return applicationService.deleteTimelineEntry({ ...input, userId: context.user.id });
 		}),
 
 	delete: protectedProcedure

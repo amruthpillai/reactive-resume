@@ -410,9 +410,31 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 	server.registerTool(
 		T.addApplicationNote,
 		TOOL_META[T.addApplicationNote],
-		withErrorHandling("adding application note", async ({ id, text: noteText }: { id: string; text: string }) => {
-			return json(await client.applications.addNote({ id, text: noteText }));
+		withErrorHandling(
+			"adding application note",
+			async ({ id, text: noteText, date }: { id: string; text: string; date?: string | undefined }) => {
+				return json(await client.applications.addNote({ id, text: noteText, date }));
+			},
+		),
+	);
+
+	server.registerTool(
+		T.updateApplicationTimelineEntry,
+		TOOL_META[T.updateApplicationTimelineEntry],
+		withErrorHandling("updating application timeline entry", async (params) => {
+			return json(await client.applications.updateTimelineEntry(params as never));
 		}),
+	);
+
+	server.registerTool(
+		T.deleteApplicationTimelineEntry,
+		TOOL_META[T.deleteApplicationTimelineEntry],
+		withErrorHandling(
+			"deleting application timeline entry",
+			async ({ id, entryId }: { id: string; entryId: string }) => {
+				return json(await client.applications.deleteTimelineEntry({ id, entryId }));
+			},
+		),
 	);
 
 	server.registerTool(

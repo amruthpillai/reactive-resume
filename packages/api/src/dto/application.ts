@@ -2,9 +2,9 @@ import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
 import * as schema from "@reactive-resume/db/schema";
 import {
-	activityEventSchema,
 	aiMetadataSchema,
 	applicationStatusSchema,
+	applicationTimelineEntrySchema,
 	contactSchema,
 } from "@reactive-resume/schema/applications/data";
 
@@ -12,6 +12,7 @@ const MAX_APPLICATION_JOB_DESCRIPTION_CHARS = 20_000;
 const MAX_APPLICATION_DOCUMENT_BYTES = 10 * 1024 * 1024;
 
 const applicationDocumentKindSchema = z.enum(["resume", "cover-letter"]);
+const timelineDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must use YYYY-MM-DD format.");
 
 const applicationDocumentFileSchema = z
 	.file()
@@ -61,7 +62,7 @@ const applicationSchema = createSelectSchema(schema.application, {
 	followUpNote: z.string().trim().nullable(),
 	tags: z.array(z.string()),
 	contacts: z.array(contactSchema),
-	activity: z.array(activityEventSchema),
+	activity: z.array(applicationTimelineEntrySchema),
 	appliedAt: z.date(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
@@ -94,6 +95,7 @@ const createInputSchema = editableSchema.partial().extend({
 	company: applicationSchema.shape.company,
 	role: applicationSchema.shape.role,
 	status: applicationStatusSchema.optional(),
+	stageEnteredAt: timelineDateSchema.optional(),
 });
 
 export const applicationDto = {
@@ -150,7 +152,24 @@ export const applicationDto = {
 	},
 
 	addNote: {
-		input: z.object({ id: z.string(), text: z.string().trim().min(1) }),
+		input: z.object({ id: z.string(), text: z.string().trim().min(1), date: timelineDateSchema.optional() }),
+		output: applicationSchema.omit({ userId: true }),
+	},
+
+	updateTimelineEntry: {
+		input: z
+			.object({
+				id: z.string(),
+				entryId: z.string(),
+				date: timelineDateSchema.optional(),
+				text: z.string().trim().min(1).optional(),
+			})
+			.refine((value) => value.date !== undefined || value.text !== undefined, "Provide date or text to update."),
+		output: applicationSchema.omit({ userId: true }),
+	},
+
+	deleteTimelineEntry: {
+		input: z.object({ id: z.string(), entryId: z.string() }),
 		output: applicationSchema.omit({ userId: true }),
 	},
 

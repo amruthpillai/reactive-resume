@@ -1,3 +1,4 @@
+import type { ApplicationTimelineEntry } from "@reactive-resume/schema/applications/data";
 import type { Application } from "../types";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -9,13 +10,20 @@ import { Button } from "@reactive-resume/ui/components/button";
 import { orpc } from "@/libs/orpc/client";
 import { computeInsights, computeTimeline } from "../insights";
 
+const byNewest = (a: ApplicationTimelineEntry, b: ApplicationTimelineEntry) =>
+	new Date(b.at).getTime() - new Date(a.at).getTime();
+
+const appliedDate = (app: Application) =>
+	[...app.activity].sort(byNewest).find((entry) => entry.type === "stage" && entry.stage === "applied")?.at ??
+	app.appliedAt;
+
 export function ApplicationInsights({ applications }: { applications: Application[] }) {
 	const { data } = useQuery(orpc.applications.stats.queryOptions({}));
 
 	// Weekly application velocity — derived from the already-loaded list, matching the stats
 	// population (archived excluded), so no extra endpoint is needed.
 	const timeline = useMemo(
-		() => computeTimeline(applications.filter((app) => !app.archived).map((app) => new Date(app.appliedAt))),
+		() => computeTimeline(applications.filter((app) => !app.archived).map((app) => new Date(appliedDate(app)))),
 		[applications],
 	);
 	const maxWeek = Math.max(1, ...timeline.map((bucket) => bucket.count));

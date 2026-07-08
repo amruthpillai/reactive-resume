@@ -1,3 +1,4 @@
+import type { ApplicationStatus, ApplicationTimelineEntry } from "@reactive-resume/schema/applications/data";
 import type { Application } from "../types";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -26,6 +27,12 @@ import { ApplicationActionsMenu } from "./application-actions-menu";
 
 const PAGE_SIZE = 25;
 const stageOf = (status: string) => STAGES.find((s) => s.value === status);
+const byNewest = (a: ApplicationTimelineEntry, b: ApplicationTimelineEntry) =>
+	new Date(b.at).getTime() - new Date(a.at).getTime();
+const latestStageDate = (activity: ApplicationTimelineEntry[], status: ApplicationStatus) =>
+	[...activity].sort(byNewest).find((entry) => entry.type === "stage" && entry.stage === status)?.at;
+const formatDate = (value: Date | string) =>
+	new Date(value).toLocaleDateString(undefined, { month: "numeric", day: "numeric", timeZone: "UTC", year: "numeric" });
 
 type Props = {
 	applications: Application[];
@@ -265,7 +272,7 @@ export function ApplicationTable({ applications, onOpen, onEdit }: Props) {
 									</td>
 									<td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{app.source || "—"}</td>
 									<td className="whitespace-nowrap px-3 py-2 text-muted-foreground">
-										{new Date(app.appliedAt).toLocaleDateString()}
+										{formatDate(latestStageDate(app.activity, "applied") ?? app.appliedAt)}
 									</td>
 									<td className="px-1 py-2">
 										<ApplicationActionsMenu application={app} onEdit={onEdit} />

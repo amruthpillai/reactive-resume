@@ -71,6 +71,8 @@ const clientMock = {
 		create: vi.fn(),
 		update: vi.fn(),
 		addNote: vi.fn(),
+		updateTimelineEntry: vi.fn(),
+		deleteTimelineEntry: vi.fn(),
 		delete: vi.fn(),
 		bulkUpdate: vi.fn(),
 		bulkDelete: vi.fn(),
@@ -182,6 +184,51 @@ describe("registerTools", () => {
 		expect(clientMock.applications.update).toHaveBeenCalledWith({
 			id: "app-1",
 			followUpAt: new Date("2026-07-11T10:15:00.000Z"),
+		});
+	});
+
+	it("adds dated application notes through the router client", async () => {
+		clientMock.applications.addNote.mockResolvedValueOnce({ id: "app-1", company: "Acme" });
+		const { server, registered } = makeFakeServer();
+		registerTools(server as never, clientMock as never, new Headers());
+
+		const tool = registered.find((item) => item.name === "add_application_note")!;
+		await tool.handler({ id: "app-1", text: "Recruiter replied", date: "2026-07-12" });
+
+		expect(clientMock.applications.addNote).toHaveBeenCalledWith({
+			id: "app-1",
+			text: "Recruiter replied",
+			date: "2026-07-12",
+		});
+	});
+
+	it("updates application timeline entries through the router client", async () => {
+		clientMock.applications.updateTimelineEntry.mockResolvedValueOnce({ id: "app-1", company: "Acme" });
+		const { server, registered } = makeFakeServer();
+		registerTools(server as never, clientMock as never, new Headers());
+
+		const tool = registered.find((item) => item.name === "update_application_timeline_entry")!;
+		await tool.handler({ id: "app-1", entryId: "entry-1", date: "2026-07-13", text: "Updated note" });
+
+		expect(clientMock.applications.updateTimelineEntry).toHaveBeenCalledWith({
+			id: "app-1",
+			entryId: "entry-1",
+			date: "2026-07-13",
+			text: "Updated note",
+		});
+	});
+
+	it("deletes application timeline entries through the router client", async () => {
+		clientMock.applications.deleteTimelineEntry.mockResolvedValueOnce({ id: "app-1", company: "Acme" });
+		const { server, registered } = makeFakeServer();
+		registerTools(server as never, clientMock as never, new Headers());
+
+		const tool = registered.find((item) => item.name === "delete_application_timeline_entry")!;
+		await tool.handler({ id: "app-1", entryId: "entry-1" });
+
+		expect(clientMock.applications.deleteTimelineEntry).toHaveBeenCalledWith({
+			id: "app-1",
+			entryId: "entry-1",
 		});
 	});
 

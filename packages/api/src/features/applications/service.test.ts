@@ -6,6 +6,8 @@ const dbMock = vi.hoisted(() => ({
 	insert: vi.fn(),
 	update: vi.fn(),
 	delete: vi.fn(),
+	execute: vi.fn(),
+	transaction: vi.fn(),
 }));
 const resumeGetByIdMock = vi.hoisted(() => vi.fn());
 const storageDeleteMock = vi.hoisted(() => vi.fn());
@@ -17,6 +19,8 @@ vi.mock("@reactive-resume/db/schema", () => ({
 		id: "id",
 		userId: "user_id",
 		status: "status",
+		activity: "activity",
+		appliedAt: "applied_at",
 		updatedAt: "updated_at",
 		resumeFileUrl: "resume_file_url",
 		coverLetterUrl: "cover_letter_url",
@@ -48,7 +52,9 @@ const existing = {
 	company: "Stripe",
 	role: "Engineer",
 	status: "saved" as const,
-	activity: [{ id: "e0", type: "created" as const, text: "Added to Saved", at: new Date() }],
+	activity: [{ id: "e0", type: "stage" as const, stage: "saved" as const, at: new Date("2026-07-01T12:00:00.000Z") }],
+	appliedAt: new Date("2026-07-01T12:00:00.000Z"),
+	createdAt: new Date("2026-07-01T12:00:00.000Z"),
 	resumeFileUrl: "http://localhost:3000/api/uploads/user-1/pictures/resume.pdf",
 	coverLetterUrl: "/api/uploads/user-1/pictures/cover.pdf",
 };
@@ -71,6 +77,9 @@ beforeEach(() => {
 	dbMock.insert.mockReset();
 	dbMock.update.mockReset();
 	dbMock.delete.mockReset();
+	dbMock.execute.mockReset();
+	dbMock.transaction.mockReset();
+	dbMock.transaction.mockImplementation((callback) => callback(dbMock));
 	resumeGetByIdMock.mockReset();
 	storageDeleteMock.mockReset();
 	uploadFileMock.mockReset();
@@ -84,15 +93,22 @@ beforeEach(() => {
 });
 
 describe("applicationService.create", () => {
-	it("seeds a 'created' activity event", async () => {
+	it("seeds an initial stage timeline entry with the chosen date", async () => {
 		const values = vi.fn(() => Promise.resolve());
 		dbMock.insert.mockReturnValue({ values });
 
-		await applicationService.create({ userId: "user-1", company: "Stripe", role: "Engineer", status: "applied" });
+		await applicationService.create({
+			userId: "user-1",
+			company: "Stripe",
+			role: "Engineer",
+			status: "applied",
+			stageEnteredAt: "2026-07-10",
+		} as never);
 
-		const [[inserted]] = values.mock.calls as unknown as [[{ activity: { type: string }[] }]];
+		const [[inserted]] = values.mock.calls as unknown as [[{ activity: { type: string; stage: string; at: Date }[] }]];
 		expect(inserted.activity).toHaveLength(1);
-		expect(inserted.activity.at(0)?.type).toBe("created");
+		expect(inserted.activity.at(0)).toMatchObject({ type: "stage", stage: "applied" });
+		expect(inserted.activity.at(0)?.at.toISOString()).toBe("2026-07-10T12:00:00.000Z");
 	});
 
 	it("checks linked resume ownership before inserting", async () => {
@@ -118,12 +134,17 @@ describe("applicationService.update", () => {
 		return set;
 	};
 
-	it("appends a 'stage' event when the status changes", async () => {
+	const appendedEvent = (activity: { values: unknown[] }) => {
+		const value = activity.values.find((item) => typeof item === "string" && item.includes('"type":"stage"'));
+		return JSON.parse(String(value))[0] as { type: string; stage: string };
+	};
+
+	it("appends a typed stage timeline entry when the status changes", async () => {
 		const set = captureSet();
 		await applicationService.update({ id: "app-1", userId: "user-1", status: "applied" });
 
-		const [[arg]] = set.mock.calls as unknown as [[{ activity: unknown }]];
-		expect(arg.activity).toBeDefined();
+		const [[arg]] = set.mock.calls as unknown as [[{ activity: { values: unknown[] } }]];
+		expect(appendedEvent(arg.activity)).toMatchObject({ type: "stage", stage: "applied" });
 	});
 
 	it("does not rewrite activity when the status is unchanged", async () => {
@@ -139,6 +160,221 @@ describe("applicationService.update", () => {
 		await applicationService.update({ id: "app-1", userId: "user-1", resumeId: "resume-1" });
 
 		expect(resumeGetByIdMock).toHaveBeenCalledWith({ id: "resume-1", userId: "user-1" });
+	});
+});
+
+describe("applicationService timeline entries", () => {
+	const captureSet = (returning = [{ ...existing }]) => {
+		const set = vi.fn(() => ({ where: () => ({ returning: () => Promise.resolve(returning) }) }));
+		dbMock.update.mockReturnValue({ set });
+		return set;
+	};
+
+	it("adds dated note timeline entries", async () => {
+		const set = captureSet();
+
+		await applicationService.addNote({
+			id: "app-1",
+			userId: "user-1",
+			text: "Recruiter replied",
+			date: "2026-07-12",
+		} as never);
+
+		const [[arg]] = set.mock.calls as unknown as [[{ activity: { values: unknown[] } }]];
+		const value = arg.activity.values.find((item) => typeof item === "string" && item.includes('"type":"note"'));
+		const [entry] = JSON.parse(String(value)) as [{ type: string; text: string; at: string }];
+		expect(entry).toMatchObject({ type: "note", text: "Recruiter replied" });
+		expect(new Date(entry.at).toISOString()).toBe("2026-07-12T12:00:00.000Z");
+	});
+
+	it("rejects invalid calendar dates instead of letting Date overflow", async () => {
+		await expect(
+			applicationService.addNote({
+				id: "app-1",
+				userId: "user-1",
+				text: "Impossible date",
+				date: "2026-99-99",
+			} as never),
+		).rejects.toMatchObject({ code: "BAD_REQUEST" });
+	});
+
+	it("updates note text and timeline dates", async () => {
+		const activity = [
+			{ id: "stage-1", type: "stage" as const, stage: "saved" as const, at: new Date("2026-07-01T09:30:00.000Z") },
+			{ id: "note-1", type: "note" as const, text: "Old note", at: new Date("2026-07-02T15:45:00.000Z") },
+		];
+		setSelectResults([{ ...existing, activity }]);
+		const set = captureSet();
+
+		await (
+			applicationService as unknown as {
+				updateTimelineEntry: (input: {
+					id: string;
+					userId: string;
+					entryId: string;
+					date?: string;
+					text?: string;
+				}) => Promise<unknown>;
+			}
+		).updateTimelineEntry({
+			id: "app-1",
+			userId: "user-1",
+			entryId: "note-1",
+			date: "2026-07-10",
+			text: "Updated note",
+		});
+
+		const [[arg]] = set.mock.calls as unknown as [[{ activity: typeof activity }]];
+		expect(arg.activity.find((entry) => entry.id === "note-1")).toMatchObject({
+			text: "Updated note",
+			at: new Date("2026-07-10T15:45:00.000Z"),
+		});
+		expect(dbMock.transaction).toHaveBeenCalled();
+		expect(dbMock.execute).toHaveBeenCalled();
+	});
+
+	it("normalizes JSONB date strings when editing timeline dates", async () => {
+		const activity = [
+			{ id: "stage-1", type: "stage" as const, stage: "saved" as const, at: "2026-07-01T09:30:00.000Z" },
+		];
+		setSelectResults([{ ...existing, activity }]);
+		const set = captureSet();
+
+		await (
+			applicationService as unknown as {
+				updateTimelineEntry: (input: { id: string; userId: string; entryId: string; date: string }) => Promise<unknown>;
+			}
+		).updateTimelineEntry({
+			id: "app-1",
+			userId: "user-1",
+			entryId: "stage-1",
+			date: "2026-07-05",
+		});
+
+		const [[arg]] = set.mock.calls as unknown as [[{ activity: { id: string; at: Date }[] }]];
+		expect(arg.activity.find((entry) => entry.id === "stage-1")?.at.toISOString()).toBe("2026-07-05T09:30:00.000Z");
+	});
+
+	it("allows notes to be newer than the current-stage anchor", async () => {
+		const activity = [
+			{ id: "stage-1", type: "stage" as const, stage: "saved" as const, at: new Date("2026-07-01T12:00:00.000Z") },
+			{ id: "note-1", type: "note" as const, text: "Followed up", at: new Date("2026-07-10T12:00:00.000Z") },
+		];
+		setSelectResults([{ ...existing, activity }]);
+		const set = captureSet();
+
+		await (
+			applicationService as unknown as {
+				updateTimelineEntry: (input: { id: string; userId: string; entryId: string; date: string }) => Promise<unknown>;
+			}
+		).updateTimelineEntry({ id: "app-1", userId: "user-1", entryId: "stage-1", date: "2026-07-02" });
+
+		const [[arg]] = set.mock.calls as unknown as [[{ activity: { id: string; at: Date }[] }]];
+		expect(arg.activity.find((entry) => entry.id === "stage-1")?.at.toISOString()).toBe("2026-07-02T12:00:00.000Z");
+	});
+
+	it("blocks moving the current-stage anchor older than another stage", async () => {
+		setSelectResults([
+			{
+				...existing,
+				status: "screening",
+				activity: [
+					{
+						id: "stage-1",
+						type: "stage" as const,
+						stage: "applied" as const,
+						at: new Date("2026-07-03T12:00:00.000Z"),
+					},
+					{
+						id: "stage-2",
+						type: "stage" as const,
+						stage: "screening" as const,
+						at: new Date("2026-07-04T12:00:00.000Z"),
+					},
+				],
+			},
+		]);
+
+		await expect(
+			(
+				applicationService as unknown as {
+					updateTimelineEntry: (input: {
+						id: string;
+						userId: string;
+						entryId: string;
+						date: string;
+					}) => Promise<unknown>;
+				}
+			).updateTimelineEntry({ id: "app-1", userId: "user-1", entryId: "stage-2", date: "2026-07-01" }),
+		).rejects.toMatchObject({ code: "BAD_REQUEST" });
+	});
+
+	it("blocks deleting the current-stage anchor", async () => {
+		setSelectResults([
+			{
+				...existing,
+				status: "screening",
+				activity: [
+					{
+						id: "stage-1",
+						type: "stage" as const,
+						stage: "applied" as const,
+						at: new Date("2026-07-01T12:00:00.000Z"),
+					},
+					{
+						id: "stage-2",
+						type: "stage" as const,
+						stage: "screening" as const,
+						at: new Date("2026-07-03T12:00:00.000Z"),
+					},
+				],
+			},
+		]);
+
+		await expect(
+			(
+				applicationService as unknown as {
+					deleteTimelineEntry: (input: { id: string; userId: string; entryId: string }) => Promise<unknown>;
+				}
+			).deleteTimelineEntry({ id: "app-1", userId: "user-1", entryId: "stage-2" }),
+		).rejects.toMatchObject({ code: "BAD_REQUEST" });
+		expect(dbMock.transaction).toHaveBeenCalled();
+		expect(dbMock.execute).toHaveBeenCalled();
+	});
+
+	it("deletes older stage entries", async () => {
+		setSelectResults([
+			{
+				...existing,
+				status: "screening",
+				activity: [
+					{
+						id: "stage-1",
+						type: "stage" as const,
+						stage: "applied" as const,
+						at: new Date("2026-07-01T12:00:00.000Z"),
+					},
+					{
+						id: "stage-2",
+						type: "stage" as const,
+						stage: "screening" as const,
+						at: new Date("2026-07-03T12:00:00.000Z"),
+					},
+				],
+			},
+		]);
+		const set = captureSet();
+
+		await (
+			applicationService as unknown as {
+				deleteTimelineEntry: (input: { id: string; userId: string; entryId: string }) => Promise<unknown>;
+			}
+		).deleteTimelineEntry({ id: "app-1", userId: "user-1", entryId: "stage-1" });
+
+		const [[arg]] = set.mock.calls as unknown as [[{ activity: { id: string }[] }]];
+		expect(arg.activity).toEqual([
+			{ id: "stage-2", type: "stage", stage: "screening", at: new Date("2026-07-03T12:00:00.000Z") },
+		]);
 	});
 });
 
