@@ -318,9 +318,73 @@ describe("summarySchema", () => {
 });
 
 describe("styleRulesSchema", () => {
+	const educationHeadingRule = {
+		id: "education-heading",
+		label: "Education heading",
+		enabled: true,
+		target: { scope: "sectionType", sectionType: "education" },
+		slots: { heading: { fontSize: 20 } },
+	};
+
 	it("defaults to an empty rule list on default resume metadata", () => {
 		expect(defaultResumeData.metadata.styleRules).toEqual([]);
 		expect(styleRulesSchema.safeParse(defaultResumeData.metadata.styleRules).success).toBe(true);
+	});
+
+	it("preserves valid rules when another rule has an invalid style intent", () => {
+		expect(
+			styleRulesSchema.parse([
+				educationHeadingRule,
+				{
+					id: "experience-heading",
+					label: "Experience heading",
+					enabled: true,
+					target: { scope: "sectionType", sectionType: "experience" },
+					slots: { heading: { fontSize: -1 } },
+				},
+			]),
+		).toEqual([educationHeadingRule]);
+	});
+
+	it("drops invalid style fields without dropping the whole rule", () => {
+		expect(
+			styleRulesSchema.parse([
+				{
+					id: "partial-heading",
+					label: "Partial heading",
+					enabled: true,
+					target: { scope: "global" },
+					slots: { heading: { color: "rgba(0, 0, 0, 1)", fontSize: -1 } },
+				},
+			]),
+		).toEqual([
+			{
+				id: "partial-heading",
+				label: "Partial heading",
+				enabled: true,
+				target: { scope: "global" },
+				slots: { heading: { color: "rgba(0, 0, 0, 1)" } },
+			},
+		]);
+	});
+
+	it("falls back to an empty rule list for non-array persisted values", () => {
+		expect(styleRulesSchema.parse({})).toEqual([]);
+	});
+
+	it("drops rules with unknown slot keys", () => {
+		expect(
+			styleRulesSchema.parse([
+				{
+					id: "unknown-slot",
+					label: "Unknown slot",
+					enabled: true,
+					target: { scope: "global" },
+					slots: { richListItemMarker: { color: "rgba(0, 0, 0, 1)" } },
+				},
+				educationHeadingRule,
+			]),
+		).toEqual([educationHeadingRule]);
 	});
 
 	it("accepts global, section-type, and section-id targets", () => {

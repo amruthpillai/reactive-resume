@@ -580,33 +580,36 @@ const filterStyleIntent = (intent: unknown): StyleIntent | undefined => {
 	return filteredIntent.length > 0 ? (Object.fromEntries(filteredIntent) as StyleIntent) : undefined;
 };
 
-export const styleRulesSchema = z.array(z.unknown()).transform((arr) =>
-	arr
-		.map((item) => {
-			const base = z
-				.strictObject({
-					id: z.string().min(1),
-					label: z.string().catch(""),
-					enabled: z.boolean().catch(true),
-					target: styleRuleTargetSchema,
-					slots: z.record(z.string(), z.unknown()),
-				})
-				.safeParse(item);
+export const styleRulesSchema = z
+	.array(z.unknown())
+	.transform((arr) =>
+		arr
+			.map((item) => {
+				const base = z
+					.strictObject({
+						id: z.string().min(1),
+						label: z.string().catch(""),
+						enabled: z.boolean().catch(true),
+						target: styleRuleTargetSchema,
+						slots: z.partialRecord(styleSlotSchema, z.unknown()),
+					})
+					.safeParse(item);
 
-			if (!base.success) return undefined;
+				if (!base.success) return undefined;
 
-			const cleanedSlots = Object.fromEntries(
-				Object.entries(base.data.slots)
-					.map(([slot, intent]) => [slot, filterStyleIntent(intent)])
-					.filter((entry): entry is [string, StyleIntent] => entry[1] !== undefined),
-			);
+				const cleanedSlots = Object.fromEntries(
+					Object.entries(base.data.slots)
+						.map(([slot, intent]) => [slot, filterStyleIntent(intent)])
+						.filter((entry): entry is [string, StyleIntent] => entry[1] !== undefined),
+				);
 
-			if (Object.keys(cleanedSlots).length === 0) return undefined;
+				if (Object.keys(cleanedSlots).length === 0) return undefined;
 
-			return { ...base.data, slots: cleanedSlots };
-		})
-		.filter((rule): rule is StyleRule => rule !== undefined),
-);
+				return { ...base.data, slots: cleanedSlots };
+			})
+			.filter((rule): rule is StyleRule => rule !== undefined),
+	)
+	.catch([]);
 
 export type StyleRule = z.infer<typeof styleRuleSchema>;
 export type StyleRuleTarget = z.infer<typeof styleRuleTargetSchema>;
