@@ -87,6 +87,7 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 			...bodyText,
 			width: metadata.typography.body.fontSize,
 			textAlign: r.listMarkerTextAlign,
+			alignSelf: "stretch",
 			flex: "initial",
 		} satisfies Style,
 
