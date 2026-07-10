@@ -26,6 +26,7 @@ export const localeMap = {
 	"en-US": msg`English`,
 	"en-GB": msg`English (United Kingdom)`,
 	"es-ES": msg`Spanish`,
+	"ckb-IQ": msg`Kurdish Sorani`,
 	"fa-IR": msg`Persian`,
 	"fi-FI": msg`Finnish`,
 	"fr-FR": msg`French`,
