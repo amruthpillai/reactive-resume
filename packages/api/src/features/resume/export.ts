@@ -1,7 +1,6 @@
 import type { ResumeExportTarget } from "@reactive-resume/resume/export-sections";
 import { ORPCError } from "@orpc/server";
 import z from "zod";
-import { createResumePdfFile } from "@reactive-resume/pdf/server";
 import { getResumeExportData, resumeHasCoverLetter } from "@reactive-resume/resume/export-sections";
 import { generateFilename } from "@reactive-resume/utils/file";
 import { protectedProcedure } from "../../context";
@@ -30,6 +29,11 @@ export async function createResumePdfDownload(input: CreateResumePdfDownloadInpu
 	const filename = generateFilename(target === "cover-letter" ? `${resume.name} Cover Letter` : resume.name, "pdf");
 
 	try {
+		// Lazy-load the PDF renderer (@reactive-resume/pdf → @react-pdf/renderer +
+		// phosphor-icons-react-pdf, ~10.6k icon modules) only when a PDF is actually
+		// exported, instead of at server boot. Slashes cold-start file I/O on
+		// constrained/slow-disk hosts. See fork perf/lazy-load-pdf.
+		const { createResumePdfFile } = await import("@reactive-resume/pdf/server");
 		const body = await createResumePdfFile({ data: getResumeExportData(resume.data, target), filename });
 
 		return {
