@@ -16,6 +16,7 @@ export const localeSchema = z.enum([
 	"en-US",
 	"en-GB",
 	"es-ES",
+	"ckb-IQ",
 	"fa-IR",
 	"fi-FI",
 	"fr-FR",
@@ -101,6 +102,7 @@ export function getLocaleScript(locale?: Locale): Script | null {
 		case "zh-CN":
 			return "han-simplified";
 		case "ar-SA":
+		case "ckb-IQ":
 		case "fa-IR":
 			return "arabic";
 		case "he-IL":
