@@ -186,7 +186,7 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 			await normalizeExistingUserEmail(existingUser.id, existingUser.email, existingEmail);
 
 			return {
-				...(existingUser.accountId ? { id: existingUser.accountId } : {}),
+				id: existingUser.id,
 				name: existingUser.name,
 				email: existingEmail,
 				image: image ?? existingUser.image,
