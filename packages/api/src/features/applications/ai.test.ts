@@ -104,6 +104,37 @@ describe("fetchJobPostingText", () => {
 		await expect(fetchJobPostingText("https://jobs.example/posting")).resolves.toBe("Senior Engineer");
 		expect(pinnedAddress).toBe("93.184.216.34");
 	});
+
+	it("reads LinkedIn job URLs through the public guest endpoint", async () => {
+		requestMock.mockImplementation((url, _options, callback) => {
+			expect(String(url)).toBe("https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/4426311357");
+			const response = Readable.from([
+				Buffer.from(`
+					<h1 class="top-card-layout__title">Senior Engineer</h1>
+					<a class="topcard__org-name-link">Example &amp; Co</a>
+					<span class="topcard__flavor topcard__flavor--bullet">Remote</span>
+					<div class="show-more-less-html__markup"><p>Build useful products.</p><p>Work with TypeScript.</p></div>
+					<h3 class="description__job-criteria-subheader">Employment type</h3>
+					<span class="description__job-criteria-text">Full-time</span>
+				`),
+			]) as Readable & { statusCode: number; headers: Record<string, string> };
+			response.statusCode = 200;
+			response.headers = { "content-type": "text/html" };
+			callback(response);
+			return { on: vi.fn(), end: vi.fn() };
+		});
+
+		const posting = await fetchJobPostingText("https://www.linkedin.com/jobs/view/senior-engineer-4426311357");
+		expect(posting).toContain("Company: Example & Co");
+		expect(posting).toContain("Build useful products.");
+	});
+
+	it("rejects LinkedIn URLs without a job posting ID", async () => {
+		await expect(fetchJobPostingText("https://www.linkedin.com/jobs/search/?keywords=engineer")).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+		});
+		expect(requestMock).not.toHaveBeenCalled();
+	});
 });
 
 describe("autofillInputSchema", () => {

@@ -4,7 +4,15 @@ import type { RouterOutput } from "@/libs/orpc/client";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
-import { CheckCircleIcon, KeyIcon, PlusIcon, TrashIcon, WarningCircleIcon, XCircleIcon } from "@phosphor-icons/react";
+import {
+	CheckCircleIcon,
+	KeyIcon,
+	PencilIcon,
+	PlusIcon,
+	TrashIcon,
+	WarningCircleIcon,
+	XCircleIcon,
+} from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -202,11 +210,31 @@ function isAiProviderConfigError(error: unknown) {
 
 function ProviderRow({ provider }: ProviderRowProps) {
 	const queryClient = useQueryClient();
+	const [isEditingModel, setIsEditingModel] = useState(false);
+	const [model, setModel] = useState(provider.model);
 	const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.queryKey() });
 	const { mutate: testProvider, isPending: isTesting } = useMutation(orpc.aiProviders.test.mutationOptions());
 	const { mutate: updateProvider, isPending: isUpdating } = useMutation(orpc.aiProviders.update.mutationOptions());
 	const { mutate: deleteProvider, isPending: isDeleting } = useMutation(orpc.aiProviders.delete.mutationOptions());
 	const isMutating = isTesting || isUpdating || isDeleting;
+	const saveModel = () => {
+		const nextModel = model.trim();
+		if (!nextModel || nextModel === provider.model) {
+			setIsEditingModel(false);
+			return;
+		}
+
+		updateProvider(
+			{ id: provider.id, model: nextModel },
+			{
+				onSuccess: () => {
+					setIsEditingModel(false);
+					void invalidate();
+				},
+				onError: (error) => toast.error(getOrpcErrorMessage(error, { fallback: t`Failed to update provider.` })),
+			},
+		);
+	};
 
 	return (
 		<div className="grid gap-4 rounded-md border bg-card p-4 md:grid-cols-[1fr_auto]">
@@ -223,8 +251,29 @@ function ProviderRow({ provider }: ProviderRowProps) {
 
 				<div className="grid gap-1 text-muted-foreground text-sm">
 					<p>
-						{providerLabel(provider.provider)} · {provider.model}
+						{providerLabel(provider.provider)}
+						{isEditingModel ? "" : ` · ${provider.model}`}
 					</p>
+					{isEditingModel ? (
+						<div className="flex max-w-md gap-2">
+							<Input
+								aria-label={t`Provider model`}
+								value={model}
+								disabled={isMutating}
+								onChange={(event) => setModel(event.target.value)}
+								onKeyDown={(event) => {
+									if (event.key === "Enter") saveModel();
+									if (event.key === "Escape") setIsEditingModel(false);
+								}}
+							/>
+							<Button size="sm" disabled={!model.trim() || isMutating} onClick={saveModel}>
+								<Trans>Save model</Trans>
+							</Button>
+							<Button size="sm" variant="ghost" disabled={isMutating} onClick={() => setIsEditingModel(false)}>
+								<Trans>Cancel</Trans>
+							</Button>
+						</div>
+					) : null}
 					<p className="truncate">{provider.baseURL ?? AI_PROVIDER_DEFAULT_BASE_URLS[provider.provider]}</p>
 					<p>
 						<Trans>Key</Trans>: {provider.apiKeyPreview}
@@ -279,6 +328,21 @@ function ProviderRow({ provider }: ProviderRowProps) {
 				>
 					{isTesting ? <Spinner /> : provider.testStatus === "success" ? <CheckCircleIcon /> : <WarningCircleIcon />}
 					<Trans>Test</Trans>
+				</Button>
+
+				<Button
+					size="icon"
+					variant="ghost"
+					disabled={isMutating}
+					onClick={() => {
+						setModel(provider.model);
+						setIsEditingModel(true);
+					}}
+				>
+					<PencilIcon />
+					<span className="sr-only">
+						<Trans>Edit model</Trans>
+					</span>
 				</Button>
 
 				<Button

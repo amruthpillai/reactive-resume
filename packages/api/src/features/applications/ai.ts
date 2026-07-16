@@ -18,7 +18,20 @@ const reserved = { tags: ["Applications", "AI"] } as const;
 const MAX_JOB_POSTING_BYTES = 200_000;
 const MAX_PASTED_JOB_DESCRIPTION_CHARS = 20_000;
 const JOB_POSTING_CONTENT_TYPES = ["text/html", "text/plain", "application/xhtml+xml", "application/xml", "text/xml"];
+const LINKEDIN_JOB_POSTING_URL = "https://www.linkedin.com/jobs-guest/jobs/api/jobPosting";
+const LINKEDIN_FETCH_RETRIES = 3;
 type ValidatedAddress = { address: string; family: 4 | 6 };
+
+type LinkedInJobPosting = {
+	title: string;
+	company: string | null;
+	location: string | null;
+	description: string | null;
+	seniority: string | null;
+	employmentType: string | null;
+	jobFunction: string | null;
+	industries: string | null;
+};
 
 // Resolve the user's default (tested + enabled) AI provider into a ready model instance.
 async function resolveModel(userId: string) {
@@ -172,11 +185,169 @@ function requestJobPosting(parsed: URL, address: ValidatedAddress, signal: Abort
 	});
 }
 
+function decodeLinkedInHtml(text: string) {
+	const numericEntity = (value: string, radix: number) => {
+		const codePoint = Number.parseInt(value, radix);
+		return codePoint >= 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : "";
+	};
+
+	return text
+		.replace(/&amp;/g, "&")
+		.replace(/&lt;/g, "<")
+		.replace(/&gt;/g, ">")
+		.replace(/&quot;/g, '"')
+		.replace(/&#39;/g, "'")
+		.replace(/&nbsp;/g, " ")
+		.replace(/&#(\d+);/g, (_match, decimal: string) => numericEntity(decimal, 10))
+		.replace(/&#[xX]([0-9a-fA-F]+);/g, (_match, hexadecimal: string) => numericEntity(hexadecimal, 16));
+}
+
+function cleanLinkedInHtml(html: string) {
+	return decodeLinkedInHtml(
+		html
+			.replace(/<[^>]+>/g, " ")
+			.replace(/\s+/g, " ")
+			.trim(),
+	);
+}
+
+function linkedInJobId(url: string) {
+	try {
+		const parsed = new URL(url);
+		const hostname = parsed.hostname.toLowerCase();
+		if (hostname !== "linkedin.com" && !hostname.endsWith(".linkedin.com")) return null;
+
+		const slug = parsed.pathname.split("/").filter(Boolean).at(-1) ?? "";
+		return slug.match(/(?:^|-)(\d{6,})$/)?.[1] ?? null;
+	} catch {
+		return null;
+	}
+}
+
+function isLinkedInUrl(url: string) {
+	try {
+		const hostname = new URL(url).hostname.toLowerCase();
+		return hostname === "linkedin.com" || hostname.endsWith(".linkedin.com");
+	} catch {
+		return false;
+	}
+}
+
+function parseLinkedInJobPosting(html: string): LinkedInJobPosting {
+	const title = html.match(/class="(?:top-card-layout__title|topcard__title)[^"]*"[^>]*>([\s\S]*?)<\/h[12]>/i)?.[1];
+	const organization = html.match(/class="topcard__org-name-link[^"]*"[^>]*>([\s\S]*?)<\/a>/i)?.[1];
+	const location = html.match(/class="topcard__flavor topcard__flavor--bullet"[^>]*>([\s\S]*?)<\/span>/i)?.[1];
+	const description = html.match(
+		/class="(?:show-more-less-html__markup|description__text[^"]*)"[^>]*>([\s\S]*?)<\/div>/i,
+	)?.[1];
+	const criteria: Record<string, string> = {};
+	const criteriaPattern =
+		/class="description__job-criteria-subheader"[^>]*>([\s\S]*?)<\/h3>[\s\S]*?class="description__job-criteria-text[^"]*"[^>]*>([\s\S]*?)<\/span>/gi;
+
+	for (const match of html.matchAll(criteriaPattern)) {
+		const [label, value] = [match[1], match[2]];
+		if (!label || !value) continue;
+		criteria[cleanLinkedInHtml(label).toLowerCase()] = cleanLinkedInHtml(value);
+	}
+
+	return {
+		title: title ? cleanLinkedInHtml(title) : "",
+		company: organization ? cleanLinkedInHtml(organization) || null : null,
+		location: location ? cleanLinkedInHtml(location) || null : null,
+		description: description
+			? decodeLinkedInHtml(
+					description
+						.replace(/<\s*br\s*\/?>/gi, "\n")
+						.replace(/<\/(p|li|ul|ol|div|h\d)>/gi, "\n")
+						.replace(/<[^>]+>/g, " "),
+				)
+					.replace(/[ \t]+\n/g, "\n")
+					.replace(/\n{3,}/g, "\n\n")
+					.trim() || null
+			: null,
+		seniority: criteria["seniority level"] ?? null,
+		employmentType: criteria["employment type"] ?? null,
+		jobFunction: criteria["job function"] ?? null,
+		industries: criteria.industries ?? null,
+	};
+}
+
+function linkedInPostingText(posting: LinkedInJobPosting) {
+	return [
+		posting.title,
+		posting.company ? `Company: ${posting.company}` : "",
+		posting.location ? `Location: ${posting.location}` : "",
+		posting.seniority ? `Seniority: ${posting.seniority}` : "",
+		posting.employmentType ? `Employment type: ${posting.employmentType}` : "",
+		posting.jobFunction ? `Job function: ${posting.jobFunction}` : "",
+		posting.industries ? `Industries: ${posting.industries}` : "",
+		posting.description ?? "",
+	]
+		.filter(Boolean)
+		.join("\n\n")
+		.slice(0, 8_000);
+}
+
+async function fetchLinkedInJobPostingText(jobId: string): Promise<string> {
+	const controller = new AbortController();
+	const timeout = setTimeout(() => controller.abort(), 10_000);
+	try {
+		for (let attempt = 0; attempt <= LINKEDIN_FETCH_RETRIES; attempt++) {
+			const response = await new Promise<IncomingMessage>((resolve, reject) => {
+				const request = https.request(
+					new URL(`${LINKEDIN_JOB_POSTING_URL}/${jobId}`),
+					{
+						signal: controller.signal,
+						headers: {
+							"user-agent":
+								"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+							accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+							"accept-language": "en-US,en;q=0.9",
+							"x-requested-with": "XMLHttpRequest",
+						},
+					},
+					resolve,
+				);
+				request.on("error", reject);
+				request.end();
+			});
+
+			if (response.statusCode === 429 || (response.statusCode && response.statusCode >= 500)) {
+				response.resume();
+				if (attempt === LINKEDIN_FETCH_RETRIES) {
+					throw new ORPCError("BAD_REQUEST", { message: "LinkedIn is temporarily unavailable. Try again later." });
+				}
+				await new Promise((resolve) => setTimeout(resolve, 500 * 2 ** attempt));
+				continue;
+			}
+			if (response.statusCode === 404) {
+				throw new ORPCError("BAD_REQUEST", { message: "The LinkedIn job posting was not found." });
+			}
+			if (!response.statusCode || response.statusCode < 200 || response.statusCode >= 300) {
+				throw new ORPCError("BAD_REQUEST", { message: "Couldn't fetch the LinkedIn job posting." });
+			}
+
+			const posting = parseLinkedInJobPosting(await readTextResponse(response));
+			const text = linkedInPostingText(posting);
+			if (!text) throw new ORPCError("BAD_REQUEST", { message: "Couldn't read the LinkedIn job posting." });
+			return text;
+		}
+		throw new ORPCError("BAD_REQUEST", { message: "LinkedIn is temporarily unavailable. Try again later." });
+	} finally {
+		clearTimeout(timeout);
+	}
+}
+
 // Best-effort fetch + strip of a job posting page. http(s) only, size/time capped.
 export async function fetchJobPostingText(url: string): Promise<string> {
 	const controller = new AbortController();
 	const timeout = setTimeout(() => controller.abort(), 10_000);
 	try {
+		const jobId = linkedInJobId(url);
+		if (jobId) return await fetchLinkedInJobPostingText(jobId);
+		if (isLinkedInUrl(url)) {
+			throw new ORPCError("BAD_REQUEST", { message: "The LinkedIn job URL must include a job posting ID." });
+		}
 		const { parsed, address } = await assertPublicHttpUrl(url);
 		const response = await requestJobPosting(parsed, address, controller.signal);
 		if (response.statusCode && response.statusCode >= 300 && response.statusCode < 400) {
