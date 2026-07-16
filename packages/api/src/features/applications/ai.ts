@@ -192,14 +192,14 @@ function decodeLinkedInHtml(text: string) {
 	};
 
 	return text
-		.replace(/&amp;/g, "&")
 		.replace(/&lt;/g, "<")
 		.replace(/&gt;/g, ">")
 		.replace(/&quot;/g, '"')
 		.replace(/&#39;/g, "'")
 		.replace(/&nbsp;/g, " ")
 		.replace(/&#(\d+);/g, (_match, decimal: string) => numericEntity(decimal, 10))
-		.replace(/&#[xX]([0-9a-fA-F]+);/g, (_match, hexadecimal: string) => numericEntity(hexadecimal, 16));
+		.replace(/&#[xX]([0-9a-fA-F]+);/g, (_match, hexadecimal: string) => numericEntity(hexadecimal, 16))
+		.replace(/&amp;/g, "&");
 }
 
 function cleanLinkedInHtml(html: string) {
@@ -340,14 +340,15 @@ async function fetchLinkedInJobPostingText(jobId: string): Promise<string> {
 
 // Best-effort fetch + strip of a job posting page. http(s) only, size/time capped.
 export async function fetchJobPostingText(url: string): Promise<string> {
+	const jobId = linkedInJobId(url);
+	if (jobId) return await fetchLinkedInJobPostingText(jobId);
+	if (isLinkedInUrl(url)) {
+		throw new ORPCError("BAD_REQUEST", { message: "The LinkedIn job URL must include a job posting ID." });
+	}
+
 	const controller = new AbortController();
 	const timeout = setTimeout(() => controller.abort(), 10_000);
 	try {
-		const jobId = linkedInJobId(url);
-		if (jobId) return await fetchLinkedInJobPostingText(jobId);
-		if (isLinkedInUrl(url)) {
-			throw new ORPCError("BAD_REQUEST", { message: "The LinkedIn job URL must include a job posting ID." });
-		}
 		const { parsed, address } = await assertPublicHttpUrl(url);
 		const response = await requestJobPosting(parsed, address, controller.signal);
 		if (response.statusCode && response.statusCode >= 300 && response.statusCode < 400) {

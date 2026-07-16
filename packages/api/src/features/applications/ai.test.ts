@@ -110,7 +110,7 @@ describe("fetchJobPostingText", () => {
 			expect(String(url)).toBe("https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/4426311357");
 			const response = Readable.from([
 				Buffer.from(`
-					<h1 class="top-card-layout__title">Senior Engineer</h1>
+					<h1 class="top-card-layout__title">Senior &amp;lt;Engineer&amp;gt;</h1>
 					<a class="topcard__org-name-link">Example &amp; Co</a>
 					<span class="topcard__flavor topcard__flavor--bullet">Remote</span>
 					<div class="show-more-less-html__markup"><p>Build useful products.</p><p>Work with TypeScript.</p></div>
@@ -126,6 +126,7 @@ describe("fetchJobPostingText", () => {
 
 		const posting = await fetchJobPostingText("https://www.linkedin.com/jobs/view/senior-engineer-4426311357");
 		expect(posting).toContain("Company: Example & Co");
+		expect(posting).toContain("Senior &lt;Engineer&gt;");
 		expect(posting).toContain("Build useful products.");
 	});
 
