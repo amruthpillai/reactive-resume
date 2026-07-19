@@ -311,6 +311,24 @@ describe("CustomStylesSectionBuilder", () => {
 		]);
 	});
 
+	it("keeps intermediate numeric text while the input is focused", () => {
+		styleRules.splice(0, styleRules.length);
+		renderCustomStyles();
+
+		const fontSizeInput = screen.getByLabelText("Font Size");
+		fireEvent.focus(fontSizeInput);
+		fireEvent.change(fontSizeInput, { target: { value: "1" } });
+
+		expect(fontSizeInput).toHaveValue(1);
+
+		fireEvent.change(fontSizeInput, { target: { value: "12" } });
+		expect(fontSizeInput).toHaveValue(12);
+
+		fireEvent.blur(fontSizeInput);
+		expect(fontSizeInput).toHaveValue(12);
+		expect(updateResumeData).toHaveBeenCalledTimes(2);
+	});
+
 	it("stores list slot rules for rich text lists", async () => {
 		styleRules.splice(0, styleRules.length);
 		renderCustomStyles();
