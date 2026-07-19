@@ -329,6 +329,15 @@ type NumberInputProps = {
 	onChange: (value: number | undefined) => void;
 };
 
+function parseBoundedNumberInput(value: string, min: number, max: number): number | undefined {
+	if (value === "") return undefined;
+
+	const number = Number(value);
+	if (!Number.isFinite(number)) return undefined;
+
+	return Math.min(max, Math.max(min, number));
+}
+
 function NumberInput({ label, id, value, min, max, step = 1, onChange }: NumberInputProps) {
 	const inputId = id ?? `style-${label.toLowerCase().replaceAll(" ", "-")}`;
 
@@ -342,10 +351,7 @@ function NumberInput({ label, id, value, min, max, step = 1, onChange }: NumberI
 				min={min}
 				max={max}
 				step={step}
-				onChange={(event) => {
-					const value = event.target.value;
-					onChange(value === "" ? undefined : Number(value));
-				}}
+				onChange={(event) => onChange(parseBoundedNumberInput(event.target.value, min, max))}
 			/>
 		</Field>
 	);
@@ -844,10 +850,7 @@ function CompactNumberInput({
 			min={min}
 			max={max}
 			step={step}
-			onChange={(event) => {
-				const value = event.target.value;
-				onChange(value === "" ? undefined : Number(value));
-			}}
+			onChange={(event) => onChange(parseBoundedNumberInput(event.target.value, min, max))}
 		/>
 	);
 }

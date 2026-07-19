@@ -269,6 +269,48 @@ describe("CustomStylesSectionBuilder", () => {
 		]);
 	});
 
+	it("clamps manually typed style values to the schema bounds", () => {
+		styleRules.splice(0, styleRules.length);
+		renderCustomStyles();
+
+		fireEvent.change(screen.getByLabelText("Margin Top"), { target: { value: "100" } });
+		fireEvent.change(screen.getByLabelText("Font Size"), { target: { value: "2" } });
+
+		expect(updateResumeData).toHaveBeenCalledTimes(2);
+
+		const marginRecipe = updateResumeData.mock.calls[0]?.[0] as (draft: {
+			metadata: { styleRules: unknown[] };
+		}) => void;
+		const marginDraft = { metadata: { styleRules: [] } };
+		marginRecipe(marginDraft);
+
+		expect(marginDraft.metadata.styleRules).toEqual([
+			{
+				id: "style-global-heading",
+				label: "All sections: Section heading",
+				enabled: true,
+				target: { scope: "global" },
+				slots: { heading: { marginTop: 72 } },
+			},
+		]);
+
+		const fontSizeRecipe = updateResumeData.mock.calls[1]?.[0] as (draft: {
+			metadata: { styleRules: unknown[] };
+		}) => void;
+		const fontSizeDraft = { metadata: { styleRules: [] } };
+		fontSizeRecipe(fontSizeDraft);
+
+		expect(fontSizeDraft.metadata.styleRules).toEqual([
+			{
+				id: "style-global-heading",
+				label: "All sections: Section heading",
+				enabled: true,
+				target: { scope: "global" },
+				slots: { heading: { fontSize: 6 } },
+			},
+		]);
+	});
+
 	it("stores list slot rules for rich text lists", async () => {
 		styleRules.splice(0, styleRules.length);
 		renderCustomStyles();
