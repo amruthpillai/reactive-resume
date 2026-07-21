@@ -329,6 +329,34 @@ describe("CustomStylesSectionBuilder", () => {
 		expect(updateResumeData).toHaveBeenCalledTimes(2);
 	});
 
+	it("commits normalized legacy values when the input loses focus", () => {
+		styleRules[0] = {
+			id: "style-global-heading",
+			label: "All sections: Section heading",
+			enabled: true,
+			target: { scope: "global" },
+			slots: { heading: { borderWidth: 100 } },
+		};
+		renderCustomStyles();
+
+		const borderWidthInput = screen.getByLabelText("Border Width");
+		expect(borderWidthInput).toHaveValue(100);
+
+		fireEvent.focus(borderWidthInput);
+		fireEvent.blur(borderWidthInput);
+
+		expect(borderWidthInput).toHaveValue(24);
+		expect(updateResumeData).toHaveBeenCalledTimes(1);
+
+		const recipe = updateResumeData.mock.calls[0]?.[0] as (draft: {
+			metadata: { styleRules: StyleRule[] };
+		}) => void;
+		const draft = { metadata: { styleRules: structuredClone(styleRules) } };
+		recipe(draft);
+
+		expect(draft.metadata.styleRules[0]?.slots.heading?.borderWidth).toBe(24);
+	});
+
 	it("stores list slot rules for rich text lists", async () => {
 		styleRules.splice(0, styleRules.length);
 		renderCustomStyles();

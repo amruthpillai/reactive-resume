@@ -358,7 +358,9 @@ function useBoundedNumberInput(
 		},
 		onBlur: () => {
 			isFocused.current = false;
-			setInputValue((currentValue) => parseBoundedNumberInput(currentValue, min, max)?.toString() ?? "");
+			const normalizedValue = parseBoundedNumberInput(inputValue, min, max);
+			setInputValue(normalizedValue?.toString() ?? "");
+			if (normalizedValue !== value) onChange(normalizedValue);
 		},
 		onInputChange: (nextValue: string) => {
 			setInputValue(nextValue);
