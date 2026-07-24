@@ -104,6 +104,27 @@ describe("fetchJobPostingText", () => {
 		await expect(fetchJobPostingText("https://jobs.example/posting")).resolves.toBe("Senior Engineer");
 		expect(pinnedAddress).toBe("93.184.216.34");
 	});
+
+	it("supports Node lookup calls with all=true", async () => {
+		lookupMock.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
+		let lookupResult: unknown;
+		requestMock.mockImplementation((_url, options, callback) => {
+			options.lookup("jobs.example", { all: true }, (_error: Error | null, result: unknown) => {
+				lookupResult = result;
+			});
+			const response = Readable.from([Buffer.from("<html><body>Senior Engineer</body></html>")]) as Readable & {
+				statusCode: number;
+				headers: Record<string, string>;
+			};
+			response.statusCode = 200;
+			response.headers = { "content-type": "text/html" };
+			callback(response);
+			return { on: vi.fn(), end: vi.fn() };
+		});
+
+		await expect(fetchJobPostingText("https://jobs.example/posting")).resolves.toBe("Senior Engineer");
+		expect(lookupResult).toEqual([{ address: "93.184.216.34", family: 4 }]);
+	});
 });
 
 describe("autofillInputSchema", () => {
