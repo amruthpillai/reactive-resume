@@ -1,3 +1,5 @@
+[![MCP Toplist](https://mcptoplist.com/badge/io.github.amruthpillai%2Freactive-resume.svg)](https://mcptoplist.com/server/io.github.amruthpillai%2Freactive-resume)
+
 <div align="center">
   <a href="https://rxresu.me">
     <img src="apps/web/public/opengraph/banner.jpg" alt="Reactive Resume" />
