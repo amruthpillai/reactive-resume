@@ -75,7 +75,7 @@ const normalizeBoldBoundaryWhitespace = (html: string): string => {
 		previous = normalized;
 		normalized = normalized
 			.replace(
-				/<(strong|b)(\b[^>]*)>([\u0020\u00a0]+)/gi,
+				/<(strong|b)\b((?:[^>"']|"[^"]*"|'[^']*')*)>([\u0020\u00a0]+)/gi,
 				(_match, tag, attributes, whitespace) => `${whitespace}<${tag}${attributes}>`,
 			)
 			.replace(/([\u0020\u00a0]+)<\/(strong|b)>/gi, (_match, whitespace, tag) => `</${tag}>${whitespace}`);

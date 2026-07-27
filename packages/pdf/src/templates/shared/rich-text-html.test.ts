@@ -29,6 +29,12 @@ describe("normalizeRichTextHtml", () => {
 		);
 	});
 
+	it("preserves > characters inside quoted bold-tag attributes", () => {
+		expect(normalizeRichTextHtml('<p>Built<strong title="1 > 0"> and deployed</strong></p>')).toBe(
+			'<p>Built <strong title="1 > 0">and deployed</strong></p>',
+		);
+	});
+
 	it("preserves whitespace inside bold text", () => {
 		expect(normalizeRichTextHtml("<p><strong>two words</strong></p>")).toBe("<p><strong>two words</strong></p>");
 	});
