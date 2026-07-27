@@ -17,6 +17,22 @@ describe("normalizeRichTextHtml", () => {
 		expect(normalizeRichTextHtml("<strong>bold</strong> text")).toBe("<p><strong>bold</strong> text</p>");
 	});
 
+	it("moves trailing whitespace outside bold tags", () => {
+		expect(normalizeRichTextHtml("<p><strong>Built </strong>and deployed</p>")).toBe(
+			"<p><strong>Built</strong> and deployed</p>",
+		);
+	});
+
+	it("moves leading whitespace outside bold tags", () => {
+		expect(normalizeRichTextHtml("<p>Built<strong> and deployed</strong></p>")).toBe(
+			"<p>Built <strong>and deployed</strong></p>",
+		);
+	});
+
+	it("preserves whitespace inside bold text", () => {
+		expect(normalizeRichTextHtml("<p><strong>two words</strong></p>")).toBe("<p><strong>two words</strong></p>");
+	});
+
 	it("preserves block-level <p> as-is", () => {
 		expect(normalizeRichTextHtml("<p>Already wrapped</p>")).toBe("<p>Already wrapped</p>");
 	});

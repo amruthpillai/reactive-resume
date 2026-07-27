@@ -67,6 +67,23 @@ const isMeaningfulNode = (node: Node): boolean =>
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
 
+const normalizeBoldBoundaryWhitespace = (html: string): string => {
+	let normalized = html;
+	let previous: string;
+
+	do {
+		previous = normalized;
+		normalized = normalized
+			.replace(
+				/<(strong|b)(\b[^>]*)>([\u0020\u00a0]+)/gi,
+				(_match, tag, attributes, whitespace) => `${whitespace}<${tag}${attributes}>`,
+			)
+			.replace(/([\u0020\u00a0]+)<\/(strong|b)>/gi, (_match, whitespace, tag) => `</${tag}>${whitespace}`);
+	} while (normalized !== previous);
+
+	return normalized;
+};
+
 const unwrapSingleParagraphListItems = (root: ReturnType<typeof parse>) => {
 	for (const listItem of root.querySelectorAll("li")) {
 		const meaningfulChildren = listItem.childNodes.filter(isMeaningfulNode);
@@ -122,7 +139,7 @@ export const convertPseudoBulletParagraphs = (html: string): string =>
 	});
 
 export const normalizeRichTextHtml = (html: string): string => {
-	const root = parse(html.trim(), { comment: false });
+	const root = parse(normalizeBoldBoundaryWhitespace(html.trim()), { comment: false });
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
 
