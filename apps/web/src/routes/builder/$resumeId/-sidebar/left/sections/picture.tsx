@@ -15,6 +15,7 @@ import { useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import { toast } from "sonner";
 import { pictureSchema } from "@reactive-resume/schema/resume/data";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { Button } from "@reactive-resume/ui/components/button";
 import { ButtonGroup } from "@reactive-resume/ui/components/button-group";
 import {
@@ -471,19 +472,6 @@ function PictureSectionForm() {
 		fileInputRef.current?.click();
 	};
 
-	const defaultPicture: PictureValues = {
-		hidden: false,
-		url: "",
-		size: 80,
-		rotation: 0,
-		aspectRatio: 1,
-		borderRadius: 0,
-		borderColor: "rgba(0, 0, 0, 0.5)",
-		borderWidth: 0,
-		shadowColor: "rgba(0, 0, 0, 0.5)",
-		shadowWidth: 0,
-	};
-
 	const onDeletePicture = () => {
 		if (!picture.url) return;
 
@@ -497,18 +485,8 @@ function PictureSectionForm() {
 		// If the picture is from the same origin, attempt to delete it
 		if (pictureOrigin === appOrigin) deleteFile({ filename });
 
-		// Reset all picture fields and persist
-		form.setFieldValue("url", "");
-		form.setFieldValue("hidden", false);
-		form.setFieldValue("size", 80);
-		form.setFieldValue("rotation", 0);
-		form.setFieldValue("aspectRatio", 1);
-		form.setFieldValue("borderRadius", 0);
-		form.setFieldValue("borderColor", "rgba(0, 0, 0, 0.5)");
-		form.setFieldValue("borderWidth", 0);
-		form.setFieldValue("shadowColor", "rgba(0, 0, 0, 0.5)");
-		form.setFieldValue("shadowWidth", 0);
-		persist(form.state.values);
+		form.reset(defaultResumeData.picture);
+		persist(defaultResumeData.picture);
 	};
 
 	const uploadPictureFile = (file: File) => {
