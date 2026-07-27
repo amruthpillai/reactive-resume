@@ -176,7 +176,14 @@ function requestJobPosting(parsed: URL, address: ValidatedAddress, signal: Abort
 					accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 					"accept-language": "en-US,en;q=0.9",
 				},
-				lookup: (_hostname, _options, callback) => callback(null, address.address, address.family),
+				lookup: (_hostname, options, callback) => {
+					if (options.all) {
+						callback(null, [address]);
+						return;
+					}
+
+					callback(null, address.address, address.family);
+				},
 			},
 			resolve,
 		);

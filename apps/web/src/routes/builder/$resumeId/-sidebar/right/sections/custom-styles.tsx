@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 import type { ComboboxOption } from "@/components/ui/combobox";
 import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, PencilSimpleIcon, TrashSimpleIcon } from "@phosphor-icons/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { sectionTypeSchema } from "@reactive-resume/schema/resume/data";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Input } from "@reactive-resume/ui/components/input";
@@ -329,23 +329,63 @@ type NumberInputProps = {
 	onChange: (value: number | undefined) => void;
 };
 
+function parseBoundedNumberInput(value: string, min: number, max: number): number | undefined {
+	if (value === "") return undefined;
+
+	const number = Number(value);
+	if (!Number.isFinite(number)) return undefined;
+
+	return Math.min(max, Math.max(min, number));
+}
+
+function useBoundedNumberInput(
+	value: number | undefined,
+	min: number,
+	max: number,
+	onChange: (value: number | undefined) => void,
+) {
+	const [inputValue, setInputValue] = useState(value?.toString() ?? "");
+	const isFocused = useRef(false);
+
+	useEffect(() => {
+		if (!isFocused.current) setInputValue(value?.toString() ?? "");
+	}, [value]);
+
+	return {
+		inputValue,
+		onFocus: () => {
+			isFocused.current = true;
+		},
+		onBlur: () => {
+			isFocused.current = false;
+			const normalizedValue = parseBoundedNumberInput(inputValue, min, max);
+			setInputValue(normalizedValue?.toString() ?? "");
+			if (normalizedValue !== value) onChange(normalizedValue);
+		},
+		onInputChange: (nextValue: string) => {
+			setInputValue(nextValue);
+			onChange(parseBoundedNumberInput(nextValue, min, max));
+		},
+	};
+}
+
 function NumberInput({ label, id, value, min, max, step = 1, onChange }: NumberInputProps) {
 	const inputId = id ?? `style-${label.toLowerCase().replaceAll(" ", "-")}`;
+	const boundedInput = useBoundedNumberInput(value, min, max, onChange);
 
 	return (
 		<Field label={label} id={inputId}>
 			<Input
 				id={inputId}
 				className="tabular-nums"
-				value={value ?? ""}
+				value={boundedInput.inputValue}
 				type="number"
 				min={min}
 				max={max}
 				step={step}
-				onChange={(event) => {
-					const value = event.target.value;
-					onChange(value === "" ? undefined : Number(value));
-				}}
+				onFocus={boundedInput.onFocus}
+				onBlur={boundedInput.onBlur}
+				onChange={(event) => boundedInput.onInputChange(event.target.value)}
 			/>
 		</Field>
 	);
@@ -833,21 +873,22 @@ function CompactNumberInput({
 	step = 1,
 	onChange,
 }: CompactNumberInputProps) {
+	const boundedInput = useBoundedNumberInput(value, min, max, onChange);
+
 	return (
 		<Input
 			id={id}
 			aria-label={ariaLabel}
 			className={compactSpacingInputClassName}
-			value={value ?? ""}
+			value={boundedInput.inputValue}
 			placeholder={placeholder}
 			type="number"
 			min={min}
 			max={max}
 			step={step}
-			onChange={(event) => {
-				const value = event.target.value;
-				onChange(value === "" ? undefined : Number(value));
-			}}
+			onFocus={boundedInput.onFocus}
+			onBlur={boundedInput.onBlur}
+			onChange={(event) => boundedInput.onInputChange(event.target.value)}
 		/>
 	);
 }

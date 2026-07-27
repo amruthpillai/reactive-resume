@@ -269,6 +269,92 @@ describe("CustomStylesSectionBuilder", () => {
 		]);
 	});
 
+	it("clamps manually typed style values to the schema bounds", () => {
+		styleRules.splice(0, styleRules.length);
+		renderCustomStyles();
+
+		fireEvent.change(screen.getByLabelText("Margin Top"), { target: { value: "100" } });
+		fireEvent.change(screen.getByLabelText("Font Size"), { target: { value: "2" } });
+
+		expect(updateResumeData).toHaveBeenCalledTimes(2);
+
+		const marginRecipe = updateResumeData.mock.calls[0]?.[0] as (draft: {
+			metadata: { styleRules: unknown[] };
+		}) => void;
+		const marginDraft = { metadata: { styleRules: [] } };
+		marginRecipe(marginDraft);
+
+		expect(marginDraft.metadata.styleRules).toEqual([
+			{
+				id: "style-global-heading",
+				label: "All sections: Section heading",
+				enabled: true,
+				target: { scope: "global" },
+				slots: { heading: { marginTop: 72 } },
+			},
+		]);
+
+		const fontSizeRecipe = updateResumeData.mock.calls[1]?.[0] as (draft: {
+			metadata: { styleRules: unknown[] };
+		}) => void;
+		const fontSizeDraft = { metadata: { styleRules: [] } };
+		fontSizeRecipe(fontSizeDraft);
+
+		expect(fontSizeDraft.metadata.styleRules).toEqual([
+			{
+				id: "style-global-heading",
+				label: "All sections: Section heading",
+				enabled: true,
+				target: { scope: "global" },
+				slots: { heading: { fontSize: 6 } },
+			},
+		]);
+	});
+
+	it("keeps intermediate numeric text while the input is focused", () => {
+		styleRules.splice(0, styleRules.length);
+		renderCustomStyles();
+
+		const fontSizeInput = screen.getByLabelText("Font Size");
+		fireEvent.focus(fontSizeInput);
+		fireEvent.change(fontSizeInput, { target: { value: "1" } });
+
+		expect(fontSizeInput).toHaveValue(1);
+
+		fireEvent.change(fontSizeInput, { target: { value: "12" } });
+		expect(fontSizeInput).toHaveValue(12);
+
+		fireEvent.blur(fontSizeInput);
+		expect(fontSizeInput).toHaveValue(12);
+		expect(updateResumeData).toHaveBeenCalledTimes(2);
+	});
+
+	it("commits normalized legacy values when the input loses focus", () => {
+		styleRules[0] = {
+			id: "style-global-heading",
+			label: "All sections: Section heading",
+			enabled: true,
+			target: { scope: "global" },
+			slots: { heading: { borderWidth: 100 } },
+		};
+		renderCustomStyles();
+
+		const borderWidthInput = screen.getByLabelText("Border Width");
+		expect(borderWidthInput).toHaveValue(100);
+
+		fireEvent.focus(borderWidthInput);
+		fireEvent.blur(borderWidthInput);
+
+		expect(borderWidthInput).toHaveValue(24);
+		expect(updateResumeData).toHaveBeenCalledTimes(1);
+
+		const recipe = updateResumeData.mock.calls[0]?.[0] as (draft: { metadata: { styleRules: StyleRule[] } }) => void;
+		const draft = { metadata: { styleRules: structuredClone(styleRules) } };
+		recipe(draft);
+
+		expect(draft.metadata.styleRules[0]?.slots.heading?.borderWidth).toBe(24);
+	});
+
 	it("stores list slot rules for rich text lists", async () => {
 		styleRules.splice(0, styleRules.length);
 		renderCustomStyles();

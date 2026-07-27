@@ -270,24 +270,43 @@ pnpm run typecheck
 <AccordionGroup>
 	<Accordion title="Port 3000 or 3001 is already in use">
 		The Vite web server uses `PORT` (default `3000`), and the Hono server uses `SERVER_PORT` (default `3001`).
-		Either stop the conflicting process or choose alternate ports: ```bash PORT=3002 SERVER_PORT=3003 pnpm dev ```
+		Either stop the conflicting process or choose alternate ports:
+		```bash
+		PORT=3002 SERVER_PORT=3003 pnpm dev
+		```
 	</Accordion>
 
-    <Accordion title="Database connection refused">
-    	Ensure Docker containers are running: ```bash docker compose -f compose.dev.yml ps docker compose -f compose.dev.yml
-    	up -d ``` Check that PostgreSQL is healthy and accessible on port 5432.
-    </Accordion>
+	<Accordion title="Database connection refused">
+		Ensure Docker containers are running:
+		```bash
+		docker compose -f compose.dev.yml ps
+		docker compose -f compose.dev.yml up -d
+		```
+		Check that PostgreSQL is healthy and accessible on port 5432.
+	</Accordion>
 
-    <Accordion title="S3/Storage errors">
-    	Verify SeaweedFS is running and the bucket exists: ```bash docker compose -f compose.dev.yml logs seaweedfs docker
-    	compose -f compose.dev.yml logs seaweedfs_create_bucket ``` If the bucket wasn't created, restart the bucket
-    	creation service: ```bash docker compose -f compose.dev.yml restart seaweedfs_create_bucket ```
-    </Accordion>
+	<Accordion title="S3/Storage errors">
+		Verify SeaweedFS is running and the bucket exists:
+		```bash
+		docker compose -f compose.dev.yml logs seaweedfs
+		docker compose -f compose.dev.yml logs seaweedfs_create_bucket
+		```
+		If the bucket wasn't created, restart the bucket creation service:
+		```bash
+		docker compose -f compose.dev.yml restart seaweedfs_create_bucket
+		```
+	</Accordion>
 
-    <Accordion title="Type errors after pulling changes">
-    	The route tree may need regeneration. Run the dev server which auto-generates routes: ```bash pnpm run dev ``` Or
-    	run type checking to see specific errors: ```bash pnpm run typecheck ```
-    </Accordion>
+	<Accordion title="Type errors after pulling changes">
+		The route tree may need regeneration. Run the dev server which auto-generates routes:
+		```bash
+		pnpm run dev
+		```
+		Or run type checking to see specific errors:
+		```bash
+		pnpm run typecheck
+		```
+	</Accordion>
 
 </AccordionGroup>
 
