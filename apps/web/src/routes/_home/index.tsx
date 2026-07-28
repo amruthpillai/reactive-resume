@@ -18,7 +18,10 @@ export const Route = createFileRoute("/_home/")({
 		const canonicalUrl = getCanonicalRootUrl(appUrl);
 
 		return {
-			links: [{ rel: "canonical", href: canonicalUrl }],
+			links: [
+				{ rel: "canonical", href: canonicalUrl },
+				{ rel: "preload", href: "/videos/timelapse-v1.webp", as: "image", fetchPriority: "high" },
+			],
 			scripts: [createRootStructuredDataScript(canonicalUrl)],
 		};
 	},

@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const mocks = vi.hoisted(() => ({
+	env: { APP_URL: "https://rxresu.me" },
+	serveStatic: vi.fn((_options?: unknown) => vi.fn()),
+}));
+
 vi.mock("node:fs", () => ({
 	existsSync: vi.fn(() => true),
 }));
@@ -12,10 +17,25 @@ vi.mock("node:fs/promises", () => ({
 }));
 
 vi.mock("@hono/node-server/serve-static", () => ({
-	serveStatic: vi.fn(() => vi.fn()),
+	serveStatic: mocks.serveStatic,
 }));
 
+vi.mock("@reactive-resume/env/server", () => ({
+	env: mocks.env,
+}));
+
+type StaticOptions = {
+	onFound?: (
+		path: string,
+		context: {
+			req: { path: string };
+			header: (name: string, value: string) => void;
+		},
+	) => void | Promise<void>;
+};
+
 const { handleWebApp } = await import("./web");
+const staticOptions = mocks.serveStatic.mock.calls[0]?.[0] as StaticOptions | undefined;
 
 describe("web app fallback classification", () => {
 	beforeEach(() => {
@@ -30,6 +50,56 @@ describe("web app fallback classification", () => {
 		expect(response.headers.get("Content-Type")).toBe("text/html; charset=UTF-8");
 		expect(response.headers.get("X-Robots-Tag")).toBeNull();
 		expect(await response.text()).toBe("<html>app</html>");
+	});
+
+	it("injects canonical metadata and structured data into tracking-parameter root requests only", async () => {
+		vi.mocked(fs.readFile).mockResolvedValue(`
+			<!doctype html>
+			<html>
+				<head>
+					<title>Reactive Resume — A free and open-source resume builder</title>
+					<meta
+						name="description"
+						content="Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
+					>
+				</head>
+				<body><div id="app"></div></body>
+			</html>
+		`);
+
+		const response = await handleWebApp(new Request("http://server.internal/?utm_source=search"));
+		const html = await response.text();
+
+		expect(html).toContain('<link rel="canonical" href="https://rxresu.me/">');
+		expect(html).toContain('<link rel="preload" href="/videos/timelapse-v1.webp" as="image" fetchpriority="high">');
+		expect(html).toContain('<meta property="og:url" content="https://rxresu.me/">');
+		expect(html).toContain('<meta property="og:image" content="https://rxresu.me/opengraph/banner.jpg">');
+		expect(html).toContain('id="reactive-resume-structured-data"');
+		expect(html).toContain('"@type":["SoftwareApplication","WebApplication"]');
+		expect(html).toContain('"url":"https://rxresu.me/"');
+		expect(html).not.toContain("utm_source");
+
+		const dashboardResponse = await handleWebApp(new Request("https://example.com/dashboard"));
+		expect(await dashboardResponse.text()).not.toContain('rel="canonical"');
+	});
+
+	it("caches versioned homepage media immutably", async () => {
+		const headers = new Headers();
+
+		await staticOptions?.onFound?.("", {
+			req: { path: "/videos/timelapse-v1.mp4" },
+			header: (name, value) => headers.set(name, value),
+		});
+
+		expect(headers.get("Cache-Control")).toBe("public, max-age=31536000, immutable");
+
+		const unversionedHeaders = new Headers();
+		await staticOptions?.onFound?.("", {
+			req: { path: "/videos/timelapse.mp4" },
+			header: (name, value) => unversionedHeaders.set(name, value),
+		});
+
+		expect(unversionedHeaders.get("Cache-Control")).toBeNull();
 	});
 
 	it.each(["/", "/alice/resume"])("sets framing and report-only CSP security headers on %s", async (pathname) => {
