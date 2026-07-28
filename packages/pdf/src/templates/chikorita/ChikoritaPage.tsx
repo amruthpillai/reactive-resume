@@ -22,6 +22,7 @@ import { hasTemplatePicture } from "../shared/picture";
 import {
 	Heading,
 	SemanticContactListView,
+	SemanticContactRowView,
 	SemanticHeaderPicture,
 	SemanticHeaderView,
 	SemanticRegionView,
@@ -130,18 +131,18 @@ const Header = ({ styles }: ChikoritaHeaderProps) => {
 				</View>
 
 				<SemanticContactListView style={styles.headerContactList}>
-					<View style={styles.headerContactRow}>
+					<SemanticContactRowView partKey="contact-row-primary" style={styles.headerContactRow}>
 						<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 						<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
 						<LocationContactItem location={basics.location} style={styles.headerContactItem} />
-					</View>
+					</SemanticContactRowView>
 
-					<View style={styles.headerContactRow}>
+					<SemanticContactRowView partKey="contact-row-secondary" style={styles.headerContactRow}>
 						<WebsiteContactItem website={basics.website} style={styles.headerContactItem} />
 						{basics.customFields.map((field) => (
 							<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 						))}
-					</View>
+					</SemanticContactRowView>
 				</SemanticContactListView>
 			</View>
 		</SemanticHeaderView>

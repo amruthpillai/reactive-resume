@@ -51,5 +51,20 @@ export const meowthSemanticManifest = {
 			binding: { type: "primitive", primitive: "View", source: "existing" },
 			route: { parent: "owner", at: "start", take: [{ kind: "field", name: "period" }] },
 		},
+		{
+			name: "education-grade-row",
+			key: "education-grade-row",
+			owner: { kind: "item", key: "item" },
+			binding: { type: "primitive", primitive: "Text", source: "existing" },
+			route: {
+				parent: "owner",
+				at: { after: { kind: "item-header" } },
+				take: [
+					{ kind: "field", name: "grade", sectionTypes: ["education"] },
+					{ kind: "field", name: "location", sectionTypes: ["education"] },
+				],
+				takeFrom: "item-header",
+			},
+		},
 	],
 } as const satisfies TemplateSemanticManifest;

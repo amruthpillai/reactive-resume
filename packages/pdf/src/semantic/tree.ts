@@ -124,19 +124,18 @@ const buildRichTextChildren = (
 		if (kind === "list-item") {
 			const markerKey = semanticNodeKeys.richTextNode(key, "list-marker", 0);
 			const contentKey = semanticNodeKeys.richTextNode(key, "list-item-content", 0);
+			const marker = semanticNode({ key: markerKey, kind: "list-marker", roles: ["decoration"] });
+			const content = semanticNode({
+				key: contentKey,
+				kind: "list-item-content",
+				attributes: { direction },
+				children: buildRichTextChildren(contentKey, child.childNodes, direction),
+			});
 			children.push(
 				semanticNode({
 					key,
 					kind,
-					children: [
-						semanticNode({ key: markerKey, kind: "list-marker", roles: ["decoration"] }),
-						semanticNode({
-							key: contentKey,
-							kind: "list-item-content",
-							attributes: { direction },
-							children: buildRichTextChildren(contentKey, child.childNodes, direction),
-						}),
-					],
+					children: direction === "rtl" ? [content, marker] : [marker, content],
 				}),
 			);
 			continue;
@@ -801,7 +800,7 @@ const applyTemplateManifest = (
 	ancestors: readonly SemanticNode[] = [],
 	index = 0,
 ): SemanticNode => {
-	const children = tree.children.map((child, childIndex) =>
+	let children = tree.children.map((child, childIndex) =>
 		applyTemplateManifest(child, manifest, data, tree, [...ancestors, tree], childIndex),
 	);
 	const ownerParts = manifest.parts.filter((part) =>
@@ -813,6 +812,26 @@ const applyTemplateManifest = (
 		aliases.length > 0 ? { ...tree.attributes, part: [...existingParts, ...aliases].join(" ") } : tree.attributes;
 	const section = tree.kind === "section" ? tree : findSectionAncestor(ancestors);
 	const sectionType = section?.attributes.type as CustomSectionType | undefined;
+	for (const part of ownerParts) {
+		if (!isPrimitivePart(part)) continue;
+		const { route } = part;
+		const selectors = route.take;
+		if (route.takeFrom !== "item-header" || selectors === undefined || selectors === "all") continue;
+		const headerIndex = children.findIndex(({ kind }) => kind === "item-header");
+		const header = children[headerIndex];
+		if (!header) continue;
+		const selected = header.children.filter((child) =>
+			selectors.some((selector) => selectorMatches(child, selector, sectionType)),
+		);
+		if (selected.length === 0) continue;
+		const selectedKeys = new Set(selected.map(({ key }) => key));
+		children = [
+			...children.slice(0, headerIndex),
+			{ ...header, children: header.children.filter(({ key }) => !selectedKeys.has(key)) },
+			...selected,
+			...children.slice(headerIndex + 1),
+		];
+	}
 
 	return {
 		...tree,

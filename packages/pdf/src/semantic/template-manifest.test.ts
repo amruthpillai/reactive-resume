@@ -48,7 +48,35 @@ const EXPECTED_PARTS = {
 			binding: { type: "alias", canonicalKind: "section", token: "interleaved-section-row" },
 		},
 	},
-	chikorita: {},
+	chikorita: {
+		"contact-row-primary": {
+			key: "contact-row-primary",
+			owner: { kind: "contact-list", key: "contact-list" },
+			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: {
+				parent: "owner",
+				at: "start",
+				take: [
+					{ kind: "contact-item", name: "email" },
+					{ kind: "contact-item", name: "phone" },
+					{ kind: "contact-item", name: "location" },
+				],
+			},
+		},
+		"contact-row-secondary": {
+			key: "contact-row-secondary",
+			owner: { kind: "contact-list", key: "contact-list" },
+			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: {
+				parent: "owner",
+				at: "end",
+				take: [
+					{ kind: "contact-item", name: "website" },
+					{ kind: "contact-item", name: "custom" },
+				],
+			},
+		},
+	},
 	ditgar: {
 		"featured-summary": {
 			key: "featured-summary",
@@ -203,6 +231,20 @@ const EXPECTED_PARTS = {
 			},
 			binding: { type: "primitive", primitive: "View", source: "existing" },
 			route: { parent: "owner", at: "start", take: [{ kind: "field", name: "period" }] },
+		},
+		"education-grade-row": {
+			key: "education-grade-row",
+			owner: { kind: "item", key: "item" },
+			binding: { type: "primitive", primitive: "Text", source: "existing" },
+			route: {
+				parent: "owner",
+				at: { after: { kind: "item-header" } },
+				take: [
+					{ kind: "field", name: "grade", sectionTypes: ["education"] },
+					{ kind: "field", name: "location", sectionTypes: ["education"] },
+				],
+				takeFrom: "item-header",
+			},
 		},
 	},
 	onyx: {},
@@ -740,6 +782,9 @@ describe("template semantic manifests", () => {
 			[
 				"contact-item-content",
 				"contact-offset",
+				"contact-row-primary",
+				"contact-row-secondary",
+				"education-grade-row",
 				"featured-summary",
 				"header-band",
 				"header-body",
@@ -763,6 +808,9 @@ describe("template semantic manifests", () => {
 				"contact-item-content:field",
 				"contact-item-content:icon",
 				"contact-item-content:link",
+				"contact-row-primary:contact-item",
+				"contact-row-secondary:contact-item",
+				"education-grade-row:field",
 				"featured-summary:section",
 				"header-band:headline",
 				"header-band:name",
@@ -1203,10 +1251,8 @@ describe("template semantic manifests", () => {
 			pageNumber: 1,
 			showHeader: false,
 		});
-		const itemHeader = (itemId: string) => {
-			const item = findNodes(tree, (node) => node.kind === "item" && node.id === itemId)[0];
-			return item?.children.find((node) => node.kind === "item-header");
-		};
+		const itemFor = (itemId: string) => findNodes(tree, (node) => node.kind === "item" && node.id === itemId)[0];
+		const itemHeader = (itemId: string) => itemFor(itemId)?.children.find((node) => node.kind === "item-header");
 		const partFields = (header: SemanticNode | undefined, name: string) =>
 			(header && findPart(header, name)?.children.map((node) => node.attributes.name)) ?? [];
 		const experience = itemHeader("experience/routing");
@@ -1220,10 +1266,11 @@ describe("template semantic manifests", () => {
 			"inline-item-header-leading",
 			"inline-item-header-middle",
 			"inline-item-header-trailing",
-			"field",
-			"field",
 		]);
-		expect(education?.children.slice(3).map((node) => node.attributes.name)).toEqual(["grade", "location"]);
+		const educationItem = itemFor("education/routing");
+		const gradeRow = educationItem && findPart(educationItem, "education-grade-row");
+		expect(educationItem && childLabels(educationItem).slice(0, 2)).toEqual(["item-header", "education-grade-row"]);
+		expect(gradeRow?.children.map((node) => node.attributes.name)).toEqual(["grade", "location"]);
 	});
 
 	it.each(["bronzor", "scizor"] as const)(

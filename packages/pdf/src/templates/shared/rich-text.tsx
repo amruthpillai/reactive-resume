@@ -6,6 +6,7 @@ import { Link as PdfLink, Text as PdfText, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapter";
 import {
+	projectRenderedChildren,
 	useResolvedNode,
 	useSemanticNodeBindings,
 	useSemanticNodeKey,
@@ -233,12 +234,12 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					const itemResolved = resolvedFor(element);
 					if (!isNodeVisible(nodeKey)) return null;
 					const itemNodeKey = nodeKey;
-					const markerResolved = resolveNode(
-						itemNodeKey ? semanticNodeKeys.richTextNode(itemNodeKey, "list-marker", 0) : undefined,
-					);
-					const contentResolved = resolveNode(
-						itemNodeKey ? semanticNodeKeys.richTextNode(itemNodeKey, "list-item-content", 0) : undefined,
-					);
+					const markerNodeKey = itemNodeKey ? semanticNodeKeys.richTextNode(itemNodeKey, "list-marker", 0) : undefined;
+					const contentNodeKey = itemNodeKey
+						? semanticNodeKeys.richTextNode(itemNodeKey, "list-item-content", 0)
+						: undefined;
+					const markerResolved = resolveNode(markerNodeKey);
+					const contentResolved = resolveNode(contentNodeKey);
 					const isOrderedList = isRichTextElementInsideOrderedList(element);
 					const marker = isOrderedList ? `${element.indexOfType + 1}.` : "•";
 					const itemStyles = toRichTextStyleArray(style);
@@ -289,6 +290,19 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 							{children}
 						</View>
 					);
+					const authoredChildren = rtl
+						? [
+								{ nodeKey: contentNodeKey ?? "content", value: contentNode },
+								{ nodeKey: markerNodeKey ?? "marker", value: markerNode },
+							]
+						: [
+								{ nodeKey: markerNodeKey ?? "marker", value: markerNode },
+								{ nodeKey: contentNodeKey ?? "content", value: contentNode },
+							];
+					const renderedChildren = projectRenderedChildren(
+						renderedChildKeysFor(itemNodeKey),
+						authoredChildren.filter(({ nodeKey }) => isNodeVisible(nodeKey)),
+					);
 
 					// Yoga ignores `flexDirection`/`direction` on rows inside react-pdf-html's <ul>
 					// (works fine for split-row/contact-list). Swap DOM order to position the marker.
@@ -303,7 +317,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 								itemResolved.style,
 							)}
 						>
-							{rtl ? [contentNode, markerNode] : [markerNode, contentNode]}
+							{renderedChildren}
 						</View>
 					);
 				},

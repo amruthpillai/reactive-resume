@@ -27,13 +27,14 @@ import { View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { getResumeSectionIcon } from "../../section-icon";
 import { getResumeSectionTitle } from "../../section-title";
-import { resolvedPdfFlowProps } from "../../semantic/adapter";
+import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapter";
 import {
 	projectRenderedChildren,
 	SemanticItemNodeKeyProvider,
 	SemanticNodeKeyProvider,
 	useRenderedChildKeys,
 	useResolvedNode,
+	useSemanticNodeBindings,
 	useSemanticNodeExists,
 	useSemanticNodeKey,
 	useSemanticNodeVisible,
@@ -164,6 +165,8 @@ type SemanticTextRunsProps = {
 	runs: readonly SemanticTextRun[];
 	separator: string;
 	style?: StyleInput;
+	nodeKey?: string | undefined;
+	fieldOwnerNodeKey?: string | undefined;
 };
 
 const SectionItemsContext = createContext<SectionItemsContextValue>({ itemStyle: undefined, useTimeline: false });
@@ -207,23 +210,37 @@ const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] =>
 
 const useSectionItemsContext = () => use(SectionItemsContext);
 
-export const SemanticTextRuns = ({ runs, separator, style }: SemanticTextRunsProps) => {
-	const visibleRuns = runs.filter(({ value }) => hasSplitRowText(value));
-	if (visibleRuns.length === 0) return null;
+export const SemanticTextRuns = ({ runs, separator, style, nodeKey, fieldOwnerNodeKey }: SemanticTextRunsProps) => {
+	const contextualNodeKey = useSemanticNodeKey();
+	const parentNodeKey = nodeKey ?? contextualNodeKey;
+	const fieldParentNodeKey = fieldOwnerNodeKey ?? contextualNodeKey;
+	const resolved = useResolvedNode(nodeKey);
+	const visible = useSemanticNodeVisible(nodeKey);
+	const renderedChildKeys = useRenderedChildKeys(parentNodeKey);
+	const { isNodeVisible } = useSemanticNodeBindings();
+	const entries = runs.flatMap((run) => {
+		if (!hasSplitRowText(run.value)) return [];
+		const fieldNodeKey = fieldParentNodeKey ? semanticNodeKeys.field(fieldParentNodeKey, run.field) : run.field;
+		return isNodeVisible(fieldNodeKey) ? [{ nodeKey: fieldNodeKey, value: run }] : [];
+	});
+	const visibleRuns = projectRenderedChildren(renderedChildKeys, entries);
+	if (!visible || visibleRuns.length === 0) return null;
 
 	return (
-		<Text bindSemanticNode={false} style={composeStyles(style)}>
-			{visibleRuns.map(({ field, value, prefix = "", suffix = "" }, index) => (
-				<Fragment key={field}>
-					{index === 0 ? "" : separator}
-					<Text semanticField={field}>
-						{prefix}
-						{value}
-						{suffix}
-					</Text>
-				</Fragment>
-			))}
-		</Text>
+		<SemanticNodeKeyProvider nodeKey={fieldParentNodeKey}>
+			<Text bindSemanticNode={false} {...resolvedPdfTextProps(resolved)} style={composeStyles(style, resolved.style)}>
+				{visibleRuns.map(({ field, value, prefix = "", suffix = "" }, index) => (
+					<Fragment key={field}>
+						{index === 0 ? "" : separator}
+						<Text semanticField={field}>
+							{prefix}
+							{value}
+							{suffix}
+						</Text>
+					</Fragment>
+				))}
+			</Text>
+		</SemanticNodeKeyProvider>
 	);
 };
 
@@ -714,16 +731,23 @@ const ProfileSection = ({ sectionId = "profiles", sectionData }: ItemSectionProp
 	);
 };
 
-type ExperienceRolesProps = {
-	roles: ExperienceItem["roles"];
+type ExperienceItemContentProps = {
+	item: ExperienceItem;
+	header: ReactNode;
 	splitRowStyle: StyleInput;
 	alignEndStyle: StyleInput;
 };
 
-const ExperienceRoles = ({ roles, splitRowStyle, alignEndStyle }: ExperienceRolesProps) => {
+const ExperienceItemContent = ({ item, header, splitRowStyle, alignEndStyle }: ExperienceItemContentProps) => {
 	const itemNodeKey = useSemanticNodeKey();
 	const renderedChildKeys = useRenderedChildKeys(itemNodeKey);
-	const entries = roles.map((role) => ({
+	const headerNodeKey = itemNodeKey ? semanticNodeKeys.itemHeader(itemNodeKey) : undefined;
+	const descriptionNodeKey = itemNodeKey ? semanticNodeKeys.field(itemNodeKey, "description") : undefined;
+	const websiteNodeKey = itemNodeKey ? semanticNodeKeys.link(itemNodeKey, "website") : undefined;
+	const headerExists = useSemanticNodeExists(headerNodeKey);
+	const descriptionExists = useSemanticNodeExists(descriptionNodeKey);
+	const websiteExists = useSemanticNodeExists(websiteNodeKey);
+	const roleEntries = item.roles.map((role) => ({
 		nodeKey: itemNodeKey ? semanticNodeKeys.item(itemNodeKey, role.id) : role.id,
 		value: (
 			<SemanticItemNodeKeyProvider key={role.id} itemId={role.id}>
@@ -741,6 +765,36 @@ const ExperienceRoles = ({ roles, splitRowStyle, alignEndStyle }: ExperienceRole
 			</SemanticItemNodeKeyProvider>
 		),
 	}));
+	const entries = [
+		...(headerExists && headerNodeKey
+			? [{ nodeKey: headerNodeKey, value: <Fragment key={headerNodeKey}>{header}</Fragment> }]
+			: []),
+		...roleEntries,
+		...(descriptionExists && descriptionNodeKey
+			? [
+					{
+						nodeKey: descriptionNodeKey,
+						value: (
+							<Fragment key={descriptionNodeKey}>
+								<RichText semanticField="description">{item.description}</RichText>
+							</Fragment>
+						),
+					},
+				]
+			: []),
+		...(websiteExists && websiteNodeKey
+			? [
+					{
+						nodeKey: websiteNodeKey,
+						value: (
+							<Fragment key={websiteNodeKey}>
+								<ItemWebsiteLink website={item.website} />
+							</Fragment>
+						),
+					},
+				]
+			: []),
+	];
 
 	return <>{projectRenderedChildren(renderedChildKeys, entries)}</>;
 };
@@ -823,19 +877,89 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 
 					return (
 						<SectionItem key={item.id} itemId={item.id}>
-							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
-
-							<ExperienceRoles roles={item.roles} splitRowStyle={splitRowStyle} alignEndStyle={alignEndStyle} />
-
-							{item.roles.length === 0 && <RichText semanticField="description">{item.description}</RichText>}
-
-							<ItemWebsiteLink website={item.website} />
+							<ExperienceItemContent
+								item={item}
+								header={
+									<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
+								}
+								splitRowStyle={splitRowStyle}
+								alignEndStyle={alignEndStyle}
+							/>
 						</SectionItem>
 					);
 				})}
 			</SectionItems>
 		</SectionShell>
 	);
+};
+
+type EducationItemContentProps = {
+	item: EducationItem;
+	header: ReactNode;
+};
+
+const EducationItemContent = ({ item, header }: EducationItemContentProps) => {
+	const itemNodeKey = useSemanticNodeKey();
+	const renderedChildKeys = useRenderedChildKeys(itemNodeKey);
+	const headerNodeKey = itemNodeKey ? semanticNodeKeys.itemHeader(itemNodeKey) : undefined;
+	const gradeRowNodeKey = semanticTemplatePartNodeKey(itemNodeKey, "education-grade-row");
+	const descriptionNodeKey = itemNodeKey ? semanticNodeKeys.field(itemNodeKey, "description") : undefined;
+	const websiteNodeKey = itemNodeKey ? semanticNodeKeys.link(itemNodeKey, "website") : undefined;
+	const headerExists = useSemanticNodeExists(headerNodeKey);
+	const gradeRowExists = useSemanticNodeExists(gradeRowNodeKey);
+	const descriptionExists = useSemanticNodeExists(descriptionNodeKey);
+	const websiteExists = useSemanticNodeExists(websiteNodeKey);
+	const entries = [
+		...(headerExists && headerNodeKey
+			? [{ nodeKey: headerNodeKey, value: <Fragment key={headerNodeKey}>{header}</Fragment> }]
+			: []),
+		...(gradeRowExists && gradeRowNodeKey
+			? [
+					{
+						nodeKey: gradeRowNodeKey,
+						value: (
+							<Fragment key={gradeRowNodeKey}>
+								<SemanticTextRuns
+									nodeKey={gradeRowNodeKey}
+									fieldOwnerNodeKey={headerNodeKey}
+									separator=" • "
+									runs={[
+										{ field: "grade", value: item.grade },
+										{ field: "location", value: item.location },
+									]}
+								/>
+							</Fragment>
+						),
+					},
+				]
+			: []),
+		...(descriptionExists && descriptionNodeKey
+			? [
+					{
+						nodeKey: descriptionNodeKey,
+						value: (
+							<Fragment key={descriptionNodeKey}>
+								<RichText semanticField="description">{item.description}</RichText>
+							</Fragment>
+						),
+					},
+				]
+			: []),
+		...(websiteExists && websiteNodeKey
+			? [
+					{
+						nodeKey: websiteNodeKey,
+						value: (
+							<Fragment key={websiteNodeKey}>
+								<ItemWebsiteLink website={item.website} />
+							</Fragment>
+						),
+					},
+				]
+			: []),
+	];
+
+	return <>{projectRenderedChildren(renderedChildKeys, entries)}</>;
 };
 
 const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionProps<EducationItem> = {}) => {
@@ -858,40 +982,29 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 					const hasLocationOrPeriod = hasSplitRowText(item.location) || hasSplitRowText(item.period);
 
 					const renderInlineHeader = () => (
-						<>
-							<InlineItemHeader
-								leading={
-									hasArea || hasDegree ? (
-										<SemanticTextRuns
-											separator=" "
-											runs={[
-												{ field: "area", value: item.area },
-												{ field: "degree", value: item.degree, prefix: "(", suffix: ")" },
-											]}
-										/>
-									) : null
-								}
-								middle={
-									<ItemTitle field="school" website={item.website}>
-										{item.school}
-									</ItemTitle>
-								}
-								trailing={
-									<Text semanticField="period" style={composeStyles(alignEndStyle)}>
-										{item.period}
-									</Text>
-								}
-							/>
-							{(item.grade || item.location) && (
-								<SemanticTextRuns
-									separator=" • "
-									runs={[
-										{ field: "grade", value: item.grade },
-										{ field: "location", value: item.location },
-									]}
-								/>
-							)}
-						</>
+						<InlineItemHeader
+							leading={
+								hasArea || hasDegree ? (
+									<SemanticTextRuns
+										separator=" "
+										runs={[
+											{ field: "area", value: item.area },
+											{ field: "degree", value: item.degree, prefix: "(", suffix: ")" },
+										]}
+									/>
+								) : null
+							}
+							middle={
+								<ItemTitle field="school" website={item.website}>
+									{item.school}
+								</ItemTitle>
+							}
+							trailing={
+								<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+									{item.period}
+								</Text>
+							}
+						/>
 					);
 
 					const renderSplitHeader = () => (
@@ -939,11 +1052,12 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 
 					return (
 						<SectionItem key={item.id} itemId={item.id}>
-							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
-
-							<RichText semanticField="description">{item.description}</RichText>
-
-							<ItemWebsiteLink website={item.website} />
+							<EducationItemContent
+								item={item}
+								header={
+									<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
+								}
+							/>
 						</SectionItem>
 					);
 				})}

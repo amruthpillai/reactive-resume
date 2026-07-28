@@ -90,7 +90,17 @@ const properties = {
 		],
 		{ category: "flexbox", inheritable: false, appliesTo: linkContainerNodes },
 	),
-	...entries(["aspect-ratio", "bottom", "display", "left", "position", "right", "top", "overflow", "z-index"], {
+	...entries(["aspect-ratio", "bottom"], {
+		category: "layout",
+		inheritable: false,
+		appliesTo: linkContainerNodes,
+	}),
+	...entries(["display"], {
+		category: "layout",
+		inheritable: false,
+		appliesTo: [...linkContainerNodes, "list-item-content", "list-marker"],
+	}),
+	...entries(["left", "position", "right", "top", "overflow", "z-index"], {
 		category: "layout",
 		inheritable: false,
 		appliesTo: linkContainerNodes,

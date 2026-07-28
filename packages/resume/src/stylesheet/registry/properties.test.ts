@@ -206,7 +206,17 @@ const expectedPropertyGroups = [
 		inheritable: false,
 	},
 	{
-		names: ["aspect-ratio", "bottom", "display", "left", "position", "right", "top", "overflow", "z-index"],
+		names: ["aspect-ratio", "bottom"],
+		appliesTo: linkContainerNodes,
+		inheritable: false,
+	},
+	{
+		names: ["display"],
+		appliesTo: [...linkContainerNodes, "list-item-content", "list-marker"],
+		inheritable: false,
+	},
+	{
+		names: ["left", "position", "right", "top", "overflow", "z-index"],
 		appliesTo: linkContainerNodes,
 		inheritable: false,
 	},

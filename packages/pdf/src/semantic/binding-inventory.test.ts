@@ -2,6 +2,7 @@ import type { SemanticNode } from "@reactive-resume/resume/stylesheet/types";
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createBindingInventory, SHARED_BINDING_REGISTRY } from "./binding-inventory";
+import { getTemplateSemanticBindingRegistry } from "./template-manifest";
 import { buildSemanticTree } from "./tree";
 
 const node = (key: string, kind: SemanticNode["kind"], children: SemanticNode[] = []): SemanticNode => ({
@@ -363,5 +364,43 @@ describe("semantic binding inventory", () => {
 		expect([linked.key, linkedAlias.key].filter((key) => inventory.bindings[key]?.type === "primitive")).toEqual([
 			linked.key,
 		]);
+	});
+
+	it.each([
+		["chikorita", "contact-row-primary", "View"],
+		["chikorita", "contact-row-secondary", "View"],
+		["meowth", "education-grade-row", "Text"],
+	] as const)("binds %s's %s descriptor to its existing %s host", (template, partName, primitive) => {
+		const data = structuredClone(defaultResumeData);
+		data.basics.email = "ada@example.com";
+		data.sections.education.items = [
+			{
+				id: "education-1",
+				hidden: false,
+				school: "University of London",
+				area: "Mathematics",
+				degree: "BSc",
+				grade: "First",
+				location: "London",
+				period: "1835",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		const tree = buildSemanticTree({
+			data,
+			template,
+			page: { fullWidth: true, main: ["education"], sidebar: [] },
+			pageNumber: 1,
+			showHeader: true,
+		});
+		const part = required(
+			findNode(tree, (candidate) => candidate.kind === "template-part" && candidate.attributes.name === partName),
+			partName,
+		);
+		const inventory = createBindingInventory(tree, getTemplateSemanticBindingRegistry(template));
+
+		expect(inventory.bindings[part.key]).toEqual({ type: "primitive", primitive, source: "existing" });
+		expect(inventory.syntheticWrapperCount).toBe(0);
 	});
 });

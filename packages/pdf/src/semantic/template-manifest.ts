@@ -62,6 +62,7 @@ export type TemplateSemanticPartOwner =
 			key: "item-header";
 			sectionTypes?: readonly CustomSectionType[];
 	  }
+	| { kind: "contact-list"; key: "contact-list" }
 	| { kind: "contact-item"; key: "contact-item"; position?: "last" };
 
 export type TemplateSemanticPartBinding =
@@ -92,6 +93,7 @@ export type TemplateSemanticPartRoute = {
 	parent: "owner" | string;
 	at: "start" | "end" | { before: TemplateSemanticChildSelector } | { after: TemplateSemanticChildSelector };
 	take?: "all" | readonly TemplateSemanticChildSelector[];
+	takeFrom?: "item-header";
 };
 
 export type TemplateSemanticPrimitivePart = {
@@ -136,6 +138,7 @@ const OWNER_KEYS = {
 	"section-items": "section-items",
 	item: "item",
 	"item-header": "item-header",
+	"contact-list": "contact-list",
 	"contact-item": "contact-item",
 } as const satisfies Readonly<Record<TemplateSemanticPartOwner["kind"], string | undefined>>;
 
@@ -227,6 +230,14 @@ function validateTemplateSemanticManifestShape(manifest: TemplateSemanticManifes
 				`${manifest.template}: unknown primitive`,
 			);
 			assert(part.route.parent.length > 0, `${manifest.template}: part ${part.name} has no routing parent`);
+			if (part.route.takeFrom) {
+				assert(part.owner.kind === "item", `${manifest.template}: lifted part ${part.name} must be owned by an item`);
+				assert(
+					part.route.parent === "owner",
+					`${manifest.template}: lifted part ${part.name} must route directly under its owner`,
+				);
+				assert(Array.isArray(part.route.take), `${manifest.template}: lifted part ${part.name} requires selectors`);
+			}
 			const selectors: readonly TemplateSemanticChildSelector[] = [
 				...(Array.isArray(part.route.take) ? part.route.take : []),
 				...(typeof part.route.at === "object"

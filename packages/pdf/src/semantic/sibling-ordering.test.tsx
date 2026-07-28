@@ -1,3 +1,4 @@
+import type { SemanticNode } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
 import { describe, expect, it } from "vitest";
@@ -5,6 +6,7 @@ import { pdf } from "@react-pdf/renderer";
 import { createElement } from "react";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { ResumeDocument } from "../document";
+import { resolveResumeRuntime } from "./resolve";
 
 type HostNode = {
 	type: string;
@@ -16,6 +18,16 @@ const textValues = (node: HostNode): string[] => [
 	...(node.type === "TEXT_INSTANCE" && node.value ? [node.value] : []),
 	...(node.children ?? []).flatMap((child) => textValues(child)),
 ];
+const findSemanticNode = (
+	node: SemanticNode,
+	predicate: (candidate: SemanticNode) => boolean,
+): SemanticNode | undefined => {
+	if (predicate(node)) return node;
+	for (const child of node.children) {
+		const match = findSemanticNode(child, predicate);
+		if (match) return match;
+	}
+};
 
 const renderTextValues = async (data: ResumeData, template: Template): Promise<string[]> => {
 	const element = createElement(ResumeDocument, { data, template }) as unknown as Parameters<typeof pdf>[0];
@@ -42,7 +54,11 @@ const semanticFixture = (rule: string): ResumeData => {
 };
 
 const expectBefore = (values: readonly string[], first: string, second: string) => {
-	expect(values.indexOf(first), `${first} before ${second}`).toBeLessThan(values.indexOf(second));
+	const firstIndex = values.indexOf(first);
+	const secondIndex = values.indexOf(second);
+	expect(firstIndex, `${first} is present`).toBeGreaterThanOrEqual(0);
+	expect(secondIndex, `${second} is present`).toBeGreaterThanOrEqual(0);
+	expect(firstIndex, `${first} before ${second}`).toBeLessThan(secondIndex);
 };
 
 describe("semantic sibling ordering reaches final PDF output", () => {
@@ -62,7 +78,29 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 		expect(values).not.toContain("London");
 	});
 
-	it("projects nested-role hide and order through their item owner", async () => {
+	it("projects Chikorita contacts only within their two existing row hosts", async () => {
+		const data = semanticFixture(`
+			contact-item[name="location"] { display: none; }
+			contact-item[name="phone"] { order: -1; }
+			contact-item[name="custom"] { order: -1; }
+			contact-item[name="website"] { order: -2; }
+		`);
+		data.basics.email = "ada@example.com";
+		data.basics.phone = "+44 123";
+		data.basics.location = "London";
+		data.basics.website = { url: "https://example.com", label: "example.com" };
+		data.basics.customFields = [{ id: "custom-1", icon: "", text: "portfolio.example", link: "" }];
+		data.metadata.layout.pages = [{ fullWidth: true, main: [], sidebar: [] }];
+
+		const values = await renderTextValues(data, "chikorita");
+
+		expectBefore(values, "+44 123", "ada@example.com");
+		expectBefore(values, "example.com", "portfolio.example");
+		expectBefore(values, "ada@example.com", "example.com");
+		expect(values).not.toContain("London");
+	});
+
+	it("projects nested-role hide and order across the complete direct item sequence", async () => {
 		const data = semanticFixture(`
 			item[id="role-2"] { display: none; }
 			item[id="role-3"] { order: -1; }
@@ -75,7 +113,7 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 				position: "",
 				location: "",
 				period: "",
-				website: { url: "", label: "", inlineLink: false },
+				website: { url: "https://example.com/company", label: "Company site", inlineLink: false },
 				description: "",
 				roles: [
 					{ id: "role-1", position: "First role", period: "", description: "" },
@@ -88,7 +126,8 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 
 		const values = await renderTextValues(data, "onyx");
 
-		expectBefore(values, "Last role", "First role");
+		expectBefore(values, "Last role", "Analytical Engines");
+		expectBefore(values, "Company site", "First role");
 		expect(values).not.toContain("Hidden role");
 	});
 
@@ -119,6 +158,34 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 		expect(values).not.toContain("London");
 	});
 
+	it("projects Meowth's education grade row at the item boundary and its fields within that row", async () => {
+		const data = semanticFixture(`
+			template-part[name="education-grade-row"] { order: -1; }
+			field[name="location"] { order: -1; }
+		`);
+		data.sections.education.items = [
+			{
+				id: "education-1",
+				hidden: false,
+				school: "University of London",
+				area: "Mathematics",
+				degree: "BSc",
+				grade: "First",
+				location: "London",
+				period: "1835",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		data.metadata.layout.pages = [{ fullWidth: true, main: ["education"], sidebar: [] }];
+
+		const values = await renderTextValues(data, "meowth");
+
+		expectBefore(values, "London", "First");
+		expectBefore(values, "First", "Mathematics");
+		expectBefore(values, "First", "University of London");
+	});
+
 	it("projects rich-text descendant hide and order before renderer mapping", async () => {
 		const data = semanticFixture(`
 			rich-text > list { display: none; }
@@ -132,4 +199,37 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 		expectBefore(values, "Last run", "First run");
 		expect(values).not.toContain("Hidden run");
 	});
+
+	it.each([
+		["en-US", "list-marker { display: none; }", "List content", "•"],
+		["ar-SA", "list-marker { order: -1; }", "•", "List content"],
+	] as const)(
+		"projects %s rich-list marker/content keys onto the existing row children",
+		async (locale, rule, first, second) => {
+			const data = semanticFixture(rule);
+			data.metadata.page.locale = locale;
+			data.summary.content = "<ul><li>List content</li></ul>";
+			data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
+			const runtime = resolveResumeRuntime({ data, template: "onyx", mode: "semantic" });
+			const renderedItem = findSemanticNode(runtime.renderTree, (node) => node.kind === "list-item");
+
+			expect(runtime.diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
+			expect(renderedItem?.children.map(({ kind }) => kind)).toEqual(
+				rule.includes("display") ? ["list-item-content"] : ["list-marker", "list-item-content"],
+			);
+
+			const values = await renderTextValues(data, "onyx");
+
+			if (rule.includes("display")) {
+				expect(values).toContain(first);
+				expect(values).not.toContain(second);
+			} else {
+				const firstIndex = values.indexOf(first);
+				const secondIndex = values.findIndex((value) => value.includes(second));
+				expect(firstIndex).toBeGreaterThanOrEqual(0);
+				expect(secondIndex).toBeGreaterThanOrEqual(0);
+				expect(firstIndex).toBeLessThan(secondIndex);
+			}
+		},
+	);
 });
