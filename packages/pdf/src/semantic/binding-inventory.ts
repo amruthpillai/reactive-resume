@@ -86,6 +86,7 @@ export type SemanticBindingRegistry = Readonly<
 
 export type BindingInventory = {
 	bindings: Readonly<Record<string, SemanticBinding>>;
+	aliasTokensByNodeKey: Readonly<Record<string, readonly string[]>>;
 	unboundNodeKeys: readonly string[];
 	syntheticWrapperCount: number;
 };
@@ -147,12 +148,15 @@ export function createBindingInventory(
 	registry: SemanticBindingRegistry = SHARED_BINDING_REGISTRY,
 ): BindingInventory {
 	const bindings: Record<string, SemanticBinding> = {};
+	const aliasTokensByNodeKey: Record<string, readonly string[]> = {};
 	const unboundNodeKeys: string[] = [];
 	const nodes = new Map<string, SemanticNode>();
 	let syntheticWrapperCount = 0;
 
 	const visit = (node: SemanticNode, parent?: SemanticNode) => {
 		nodes.set(node.key, node);
+		const aliasTokens = node.attributes.part?.split(" ").filter(Boolean);
+		if (aliasTokens?.length) aliasTokensByNodeKey[node.key] = aliasTokens;
 		const declaration = registry[node.kind];
 		const binding = typeof declaration === "function" ? declaration(node, { parent }) : declaration;
 
@@ -187,5 +191,5 @@ export function createBindingInventory(
 		}
 	}
 
-	return { bindings, unboundNodeKeys, syntheticWrapperCount };
+	return { bindings, aliasTokensByNodeKey, unboundNodeKeys, syntheticWrapperCount };
 }

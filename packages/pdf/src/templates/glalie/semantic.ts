@@ -15,6 +15,7 @@ export const glalieSemanticManifest = {
 			key: "sidebar-background",
 			owner: { kind: "region", key: "sidebar" },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "owner", at: "start" },
 		},
 	],
 } as const satisfies TemplateSemanticManifest;

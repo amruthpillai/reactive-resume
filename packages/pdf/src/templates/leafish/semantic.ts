@@ -15,19 +15,25 @@ export const leafishSemanticManifest = {
 			key: "header-intro",
 			owner: { kind: "header", key: "header" },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: {
+				parent: "owner",
+				at: "start",
+				take: [{ kind: "picture" }, { kind: "name" }, { kind: "headline" }, { kind: "section", name: "summary" }],
+			},
 		},
 		{
 			name: "header-body",
 			key: "header-body",
 			owner: { kind: "header", key: "header" },
-			parentPart: "header-intro",
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "header-intro", at: "start", take: "all" },
 		},
 		{
 			name: "header-contact-band",
 			key: "header-contact-band",
 			owner: { kind: "header", key: "header" },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "owner", at: "end", take: [{ kind: "contact-list" }] },
 		},
 	],
 } as const satisfies TemplateSemanticManifest;

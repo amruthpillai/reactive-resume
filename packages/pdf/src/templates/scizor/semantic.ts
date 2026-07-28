@@ -14,6 +14,7 @@ export const scizorSemanticManifest = {
 			key: "header-name-rule",
 			owner: { kind: "header", key: "header" },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "owner", at: { before: { kind: "headline" } } },
 		},
 	],
 } as const satisfies TemplateSemanticManifest;

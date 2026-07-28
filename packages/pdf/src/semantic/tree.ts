@@ -4,9 +4,11 @@ import type { Template } from "@reactive-resume/schema/templates";
 import type { HTMLElement, Node } from "node-html-parser";
 import type { StandardFieldRole } from "./binding-inventory";
 import type {
+	TemplateSemanticChildSelector,
 	TemplateSemanticManifest,
 	TemplateSemanticPart,
 	TemplateSemanticPlacement,
+	TemplateSemanticPrimitivePart,
 	TemplateSemanticRegion,
 } from "./template-manifest";
 import { NodeType } from "node-html-parser";
@@ -378,7 +380,7 @@ const buildItem = ({
 		kind: "item",
 		id: item.id,
 		children: [
-			...(headerChildren.length > 0
+			...(headerChildren.length > 0 || requireItemHeaderPrimitive
 				? [semanticNode({ key: headerKey, kind: "item-header", children: headerChildren })]
 				: []),
 			...bodyChildren,
@@ -639,6 +641,7 @@ const buildHeader = (
 				roles: ["secondary-text"],
 			}),
 			semanticNode({ key: contactListKey, kind: "contact-list", children: contacts }),
+			...(summary ? [summary] : []),
 		],
 	});
 
@@ -646,7 +649,7 @@ const buildHeader = (
 		key: regionKey,
 		kind: "region",
 		attributes: { placement, region: "header" },
-		children: [header, ...(summary ? [summary] : [])],
+		children: [header],
 	});
 };
 
@@ -722,7 +725,74 @@ const partMatchesOwner = ({
 	return true;
 };
 
-const addTemplateParts = (
+const selectorMatches = (node: SemanticNode, selector: TemplateSemanticChildSelector): boolean =>
+	node.kind === selector.kind &&
+	(selector.name === undefined || node.attributes.name === selector.name || node.id === selector.name);
+const isPrimitivePart = (part: TemplateSemanticPart): part is TemplateSemanticPrimitivePart =>
+	part.binding.type === "primitive";
+
+const routeTemplateParts = ({
+	children,
+	parts,
+	parentPart,
+	parentKey,
+}: {
+	children: readonly SemanticNode[];
+	parts: readonly TemplateSemanticPart[];
+	parentPart: "owner" | string;
+	parentKey: string;
+}): readonly SemanticNode[] => {
+	const directParts = parts.filter(
+		(part): part is TemplateSemanticPrimitivePart => isPrimitivePart(part) && part.route.parent === parentPart,
+	);
+	let remaining = [...children];
+	const routed = directParts.map((part) => {
+		const take = part.route.take;
+		const selected =
+			take === "all"
+				? [...remaining]
+				: take
+					? remaining.filter((child) => take.some((selector) => selectorMatches(child, selector)))
+					: [];
+		const selectedKeys = new Set(selected.map((child) => child.key));
+		remaining = remaining.filter((child) => !selectedKeys.has(child.key));
+		const key = `${parentKey}/template-part-${part.key}`;
+
+		return {
+			part,
+			node: semanticNode({
+				key,
+				kind: "template-part",
+				attributes: { name: part.name },
+				roles: ["decoration"],
+				children: routeTemplateParts({ children: selected, parts, parentPart: part.name, parentKey: key }),
+			}),
+		};
+	});
+	const start = routed.filter(({ part }) => part.route.at === "start").map(({ node }) => node);
+	const end = routed.filter(({ part }) => part.route.at === "end").map(({ node }) => node);
+	const around = remaining.flatMap((child) => [
+		...routed
+			.filter(
+				({ part }) =>
+					typeof part.route.at === "object" &&
+					"before" in part.route.at &&
+					selectorMatches(child, part.route.at.before),
+			)
+			.map(({ node }) => node),
+		child,
+		...routed
+			.filter(
+				({ part }) =>
+					typeof part.route.at === "object" && "after" in part.route.at && selectorMatches(child, part.route.at.after),
+			)
+			.map(({ node }) => node),
+	]);
+
+	return [...start, ...around, ...end];
+};
+
+const applyTemplateManifest = (
 	tree: SemanticNode,
 	manifest: TemplateSemanticManifest,
 	data: ResumeData,
@@ -731,28 +801,20 @@ const addTemplateParts = (
 	index = 0,
 ): SemanticNode => {
 	const children = tree.children.map((child, childIndex) =>
-		addTemplateParts(child, manifest, data, tree, [...ancestors, tree], childIndex),
+		applyTemplateManifest(child, manifest, data, tree, [...ancestors, tree], childIndex),
 	);
 	const ownerParts = manifest.parts.filter((part) =>
 		partMatchesOwner({ part, node: tree, parent, ancestors, index, data }),
 	);
-	const buildPart = (part: TemplateSemanticPart, parentKey: string): SemanticNode => {
-		const key = `${parentKey}/template-part-${part.key}`;
-
-		return semanticNode({
-			key,
-			kind: "template-part",
-			attributes: { name: part.name },
-			roles: ["decoration"],
-			children: ownerParts
-				.filter((candidate) => candidate.parentPart === part.name)
-				.map((child) => buildPart(child, key)),
-		});
-	};
+	const aliases = ownerParts.flatMap((part) => (part.binding.type === "alias" ? [part.binding.token] : []));
+	const existingParts = tree.attributes.part?.split(" ").filter(Boolean) ?? [];
+	const attributes =
+		aliases.length > 0 ? { ...tree.attributes, part: [...existingParts, ...aliases].join(" ") } : tree.attributes;
 
 	return {
 		...tree,
-		children: [...children, ...ownerParts.filter((part) => !part.parentPart).map((part) => buildPart(part, tree.key))],
+		attributes,
+		children: routeTemplateParts({ children, parts: ownerParts, parentPart: "owner", parentKey: tree.key }),
 	};
 };
 
@@ -835,7 +897,7 @@ export function buildSemanticTree({
 		],
 	});
 
-	return addTemplateParts(tree, manifest, data);
+	return applyTemplateManifest(tree, manifest, data);
 }
 
 export type { TemplateSemanticManifest } from "./template-manifest";

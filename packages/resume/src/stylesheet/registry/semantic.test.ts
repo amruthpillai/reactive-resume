@@ -23,21 +23,21 @@ const expectedParents = {
 	page: ["resume"],
 	region: ["page"],
 	header: ["region"],
-	picture: ["header"],
-	name: ["header"],
-	headline: ["header"],
-	"contact-list": ["header"],
+	picture: ["header", "template-part"],
+	name: ["header", "template-part"],
+	headline: ["header", "template-part"],
+	"contact-list": ["header", "template-part"],
 	"contact-item": ["contact-list"],
-	section: ["region"],
+	section: ["region", "template-part"],
 	"section-heading": ["section"],
 	"section-items": ["section"],
-	item: ["section-items", "item"],
-	"item-header": ["item"],
-	field: ["contact-item", "item", "item-header"],
-	link: ["item", "item-header", "rich-text", ...inlineParents],
-	icon: ["contact-item", "section-heading", "item", "item-header", "level"],
-	level: ["item", "item-header"],
-	"rich-text": ["item", "field"],
+	item: ["section-items", "item", "template-part"],
+	"item-header": ["item", "template-part"],
+	field: ["contact-item", "item", "item-header", "template-part"],
+	link: ["item", "item-header", "rich-text", "template-part", ...inlineParents],
+	icon: ["contact-item", "section-heading", "item", "item-header", "level", "template-part"],
+	level: ["item", "item-header", "template-part"],
+	"rich-text": ["item", "field", "template-part"],
 	"rich-heading": ["rich-text"],
 	blockquote: ["rich-text", "list-item-content"],
 	paragraph: ["rich-text", "list-item-content"],
@@ -104,5 +104,15 @@ describe("semantic registry", () => {
 		expect(canContainNode("template-part", "template-part")).toBe(true);
 		expect(canContainNode("contact-list", "template-part")).toBe(false);
 		expect(canContainNode("rich-text", "template-part")).toBe(false);
+	});
+
+	it("allows alias tokens only on canonical owner kinds that use them", () => {
+		expect(SEMANTIC_REGISTRY_V1.region.attributes).toContain("part");
+		expect(SEMANTIC_REGISTRY_V1.section.attributes).toContain("part");
+		expect(SEMANTIC_REGISTRY_V1["item-header"].attributes).toContain("part");
+		expect(SEMANTIC_REGISTRY_V1["contact-item"].attributes).toContain("part");
+		expect(SEMANTIC_REGISTRY_V1.header.attributes).not.toContain("part");
+		expect(SEMANTIC_REGISTRY_V1.item.attributes).not.toContain("part");
+		expect(SEMANTIC_REGISTRY_V1.field.attributes).not.toContain("part");
 	});
 });

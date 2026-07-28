@@ -67,7 +67,13 @@ export type TemplateSemanticPartOwner =
 export type TemplateSemanticPartBinding =
 	| {
 			type: "primitive";
-			primitive: PrimitiveBinding["primitive"];
+			primitive:
+				| PrimitiveBinding["primitive"]
+				| {
+						ownerRole: string;
+						present: PrimitiveBinding["primitive"];
+						absent: PrimitiveBinding["primitive"];
+				  };
 			source: "existing";
 	  }
 	| {
@@ -76,12 +82,38 @@ export type TemplateSemanticPartBinding =
 			token: string;
 	  };
 
-export type TemplateSemanticPart = {
+export type TemplateSemanticChildSelector = {
+	kind: Exclude<SemanticNodeKind, "resume" | "page">;
+	name?: string;
+};
+
+export type TemplateSemanticPartRoute = {
+	parent: "owner" | string;
+	at: "start" | "end" | { before: TemplateSemanticChildSelector } | { after: TemplateSemanticChildSelector };
+	take?: "all" | readonly TemplateSemanticChildSelector[];
+};
+
+export type TemplateSemanticPrimitivePart = {
 	name: string;
 	key: string;
 	owner: TemplateSemanticPartOwner;
-	parentPart?: string;
-	binding: TemplateSemanticPartBinding;
+	binding: Extract<TemplateSemanticPartBinding, { type: "primitive" }>;
+	route: TemplateSemanticPartRoute;
+};
+
+export type TemplateSemanticAliasPart = {
+	name: string;
+	key: string;
+	owner: TemplateSemanticPartOwner;
+	binding: Extract<TemplateSemanticPartBinding, { type: "alias" }>;
+	route?: never;
+};
+
+export type TemplateSemanticPart = TemplateSemanticPrimitivePart | TemplateSemanticAliasPart;
+
+export type TemplateSemanticCanonicalBinding = {
+	kind: Exclude<SemanticNodeKind, "template-part">;
+	binding: PrimitiveBinding;
 };
 
 export type TemplateSemanticManifest = {
@@ -93,25 +125,8 @@ export type TemplateSemanticManifest = {
 	};
 	specialSummary: TemplateSemanticSpecialSummary | null;
 	parts: readonly TemplateSemanticPart[];
+	canonicalBindings?: readonly TemplateSemanticCanonicalBinding[];
 };
-
-const REQUIRED_TEMPLATE_CHROME = {
-	azurill: ["timeline-line", "timeline-dot", "timeline-marker", "timeline-content"],
-	bronzor: ["interleaved-section-row"],
-	chikorita: [],
-	ditgar: ["featured-summary", "sidebar-background", "item-header-border"],
-	ditto: ["header-band", "picture-anchor", "contact-offset"],
-	gengar: ["featured-summary", "sidebar-background"],
-	glalie: ["sidebar-background"],
-	kakuna: [],
-	lapras: [],
-	leafish: ["header-intro", "header-body", "header-contact-band"],
-	meowth: ["inline-item-header-leading", "inline-item-header-middle", "inline-item-header-trailing"],
-	onyx: [],
-	pikachu: ["header-divider"],
-	rhyhorn: ["contact-item-content", "contact-item-last"],
-	scizor: ["header-name-rule"],
-} as const satisfies Readonly<Record<Template, readonly string[]>>;
 
 const OWNER_KEYS = {
 	header: "header",
@@ -126,10 +141,13 @@ const OWNER_KEYS = {
 const PLACEMENTS = new Set<TemplateSemanticPlacement>(["main", "sidebar"]);
 const REGION_NAMES = new Set<TemplateSemanticRegionName>(["header", "main", "sidebar", "featured"]);
 const PRIMITIVES = new Set<PrimitiveBinding["primitive"]>(["Document", "Page", "View", "Text", "Link", "Image", "Svg"]);
+const MAX_PART_DEPTH = 1;
 
 const assert: (condition: unknown, message: string) => asserts condition = (condition, message) => {
 	if (!condition) throw new Error(message);
 };
+const isPrimitivePart = (part: TemplateSemanticPart): part is TemplateSemanticPrimitivePart =>
+	part.binding.type === "primitive";
 
 const deepFreeze = <T>(value: T): Readonly<T> => {
 	if (typeof value !== "object" || value === null || Object.isFrozen(value)) return value;
@@ -138,7 +156,7 @@ const deepFreeze = <T>(value: T): Readonly<T> => {
 	return Object.freeze(value);
 };
 
-export function validateTemplateSemanticManifest(manifest: TemplateSemanticManifest): void {
+function validateTemplateSemanticManifestShape(manifest: TemplateSemanticManifest): void {
 	const regionNames = new Set<string>();
 	const partNames = new Set<string>();
 	const partKeys = new Set<string>();
@@ -192,12 +210,17 @@ export function validateTemplateSemanticManifest(manifest: TemplateSemanticManif
 			assert(PLACEMENTS.has(part.owner.placement), `${manifest.template}: part ${part.name} has an unknown placement`);
 		}
 
-		if (part.binding.type === "primitive") {
+		if (isPrimitivePart(part)) {
 			assert(part.binding.source === "existing", `${manifest.template}: part ${part.name} claims a synthetic wrapper`);
+			const primitives =
+				typeof part.binding.primitive === "string"
+					? [part.binding.primitive]
+					: [part.binding.primitive.present, part.binding.primitive.absent];
 			assert(
-				PRIMITIVES.has(part.binding.primitive),
-				`${manifest.template}: part ${part.name} has an unknown primitive`,
+				primitives.every((primitive) => PRIMITIVES.has(primitive)),
+				`${manifest.template}: unknown primitive`,
 			);
+			assert(part.route.parent.length > 0, `${manifest.template}: part ${part.name} has no routing parent`);
 		} else {
 			assert(
 				part.binding.canonicalKind === part.owner.kind,
@@ -211,17 +234,12 @@ export function validateTemplateSemanticManifest(manifest: TemplateSemanticManif
 	}
 
 	for (const part of manifest.parts) {
-		if (!part.parentPart) continue;
-		const parentPart = manifest.parts.find((candidate) => candidate.name === part.parentPart);
+		if (!isPrimitivePart(part) || part.route.parent === "owner") continue;
+		const parentPart = manifest.parts.find((candidate) => candidate.name === part.route.parent);
 		assert(parentPart, `${manifest.template}: part ${part.name} owns an unknown parent part`);
-		assert(!parentPart.parentPart, `${manifest.template}: nested part ownership is limited to one existing primitive`);
 		assert(
 			parentPart.binding.type === "primitive",
 			`${manifest.template}: nested part ${part.name} requires an existing primitive parent`,
-		);
-		assert(
-			part.binding.type === "primitive",
-			`${manifest.template}: aliases must stay on their canonical semantic owner`,
 		);
 		assert(
 			JSON.stringify(parentPart.owner) === JSON.stringify(part.owner),
@@ -229,12 +247,26 @@ export function validateTemplateSemanticManifest(manifest: TemplateSemanticManif
 		);
 	}
 
-	const expectedParts = [...REQUIRED_TEMPLATE_CHROME[manifest.template]].sort();
-	const actualParts = [...partNames].sort();
-	assert(
-		JSON.stringify(actualParts) === JSON.stringify(expectedParts),
-		`${manifest.template}: registered chrome does not match its existing template parts`,
-	);
+	for (const part of manifest.parts) {
+		if (!isPrimitivePart(part)) continue;
+		const seen = new Set<string>([part.name]);
+		let parent = part.route.parent;
+		let depth = 0;
+		while (parent !== "owner") {
+			assert(!seen.has(parent), `${manifest.template}: cyclic part routing`);
+			seen.add(parent);
+			const parentPart = manifest.parts.find((candidate) => candidate.name === parent);
+			assert(parentPart && isPrimitivePart(parentPart), `${manifest.template}: unknown part routing parent`);
+			depth += 1;
+			assert(depth <= MAX_PART_DEPTH, `${manifest.template}: unsupported part routing depth`);
+			parent = parentPart.route.parent;
+		}
+	}
+
+	for (const override of manifest.canonicalBindings ?? []) {
+		assert(override.binding.source === "existing", `${manifest.template}: canonical binding must be existing`);
+		assert(PRIMITIVES.has(override.binding.primitive), `${manifest.template}: canonical binding has unknown primitive`);
+	}
 }
 
 const TEMPLATE_SEMANTIC_MANIFESTS = {
@@ -255,8 +287,17 @@ const TEMPLATE_SEMANTIC_MANIFESTS = {
 	scizor: scizorSemanticManifest,
 } as const satisfies Readonly<Record<Template, TemplateSemanticManifest>>;
 
-for (const manifest of Object.values(TEMPLATE_SEMANTIC_MANIFESTS)) validateTemplateSemanticManifest(manifest);
+for (const manifest of Object.values(TEMPLATE_SEMANTIC_MANIFESTS)) validateTemplateSemanticManifestShape(manifest);
 deepFreeze(TEMPLATE_SEMANTIC_MANIFESTS);
+
+export function validateTemplateSemanticManifest(manifest: TemplateSemanticManifest): void {
+	validateTemplateSemanticManifestShape(manifest);
+	const expected = TEMPLATE_SEMANTIC_MANIFESTS[manifest.template];
+	assert(
+		JSON.stringify(manifest) === JSON.stringify(expected),
+		`${manifest.template}: manifest differs from its frozen renderer contract`,
+	);
+}
 
 export function getTemplateSemanticManifest(template: Template): TemplateSemanticManifest {
 	return TEMPLATE_SEMANTIC_MANIFESTS[template];
@@ -266,20 +307,26 @@ export function getTemplateSemanticRegistryFingerprintInput(): Readonly<Record<T
 	return TEMPLATE_SEMANTIC_MANIFESTS;
 }
 
-export function getTemplateSemanticBindingRegistry(_template: Template): SemanticBindingRegistry {
-	const manifest = getTemplateSemanticManifest(_template);
+export function getTemplateSemanticBindingRegistry(template: Template): SemanticBindingRegistry {
+	const manifest = getTemplateSemanticManifest(template);
+	const canonicalBindings = Object.fromEntries(
+		(manifest.canonicalBindings ?? []).map(({ kind, binding }) => [kind, binding]),
+	) as SemanticBindingRegistry;
 
 	return {
 		...SHARED_BINDING_REGISTRY,
+		...canonicalBindings,
 		"template-part": (node, { parent }) => {
 			const part = manifest.parts.find((candidate) => candidate.name === node.attributes.name);
-			if (!part) return undefined;
-			if (part.binding.type === "primitive") return part.binding;
-			if (parent?.kind !== part.binding.canonicalKind) return undefined;
+			if (part?.binding.type !== "primitive") return undefined;
+			if (typeof part.binding.primitive === "string") return part.binding as PrimitiveBinding;
 
 			return {
-				...part.binding,
-				canonicalNodeKey: parent.key,
+				type: "primitive",
+				primitive: parent?.roles.includes(part.binding.primitive.ownerRole)
+					? part.binding.primitive.present
+					: part.binding.primitive.absent,
+				source: "existing",
 			};
 		},
 	};

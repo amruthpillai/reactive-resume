@@ -16,6 +16,7 @@ export const gengarSemanticManifest = {
 			key: "featured-summary",
 			owner: { kind: "region", key: "featured" },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "owner", at: "start", take: "all" },
 		},
 		{
 			name: "sidebar-background",

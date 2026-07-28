@@ -17,18 +17,39 @@ export const meowthSemanticManifest = {
 			key: "inline-item-header-leading",
 			owner: { kind: "item-header", key: "item-header", sectionTypes: inlineHeaderSectionTypes },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: {
+				parent: "owner",
+				at: "start",
+				take: [
+					{ kind: "field", name: "position" },
+					{ kind: "field", name: "location" },
+					{ kind: "field", name: "area" },
+					{ kind: "field", name: "degree" },
+				],
+			},
 		},
 		{
 			name: "inline-item-header-middle",
 			key: "inline-item-header-middle",
 			owner: { kind: "item-header", key: "item-header", sectionTypes: inlineHeaderSectionTypes },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: {
+				parent: "owner",
+				at: "start",
+				take: [
+					{ kind: "field", name: "company" },
+					{ kind: "field", name: "school" },
+					{ kind: "field", name: "organization" },
+					{ kind: "link" },
+				],
+			},
 		},
 		{
 			name: "inline-item-header-trailing",
 			key: "inline-item-header-trailing",
 			owner: { kind: "item-header", key: "item-header", sectionTypes: inlineHeaderSectionTypes },
 			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "owner", at: "start", take: [{ kind: "field", name: "period" }] },
 		},
 	],
 } as const satisfies TemplateSemanticManifest;
