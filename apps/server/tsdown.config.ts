@@ -33,7 +33,10 @@ const promptAssetsPlugin: TsdownPlugin = {
 };
 
 export default defineConfig({
-	entry: { index: "src/index.ts" },
+	entry: {
+		index: "src/index.ts",
+		"stylesheet-preflight-worker": "src/workers/stylesheet-preflight.ts",
+	},
 	format: "esm",
 	platform: "node",
 	target: "node24",

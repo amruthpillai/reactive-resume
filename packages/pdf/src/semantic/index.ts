@@ -35,6 +35,7 @@ export type {
 	ResolvedResumeRuntime,
 	ResolveResumePresentationInput,
 } from "./resolve";
+export * from "./preflight-core";
 export {
 	resolveResumePresentation,
 	resolveResumeRuntime,

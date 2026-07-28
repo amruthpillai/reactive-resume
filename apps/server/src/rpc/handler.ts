@@ -3,6 +3,7 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { BatchHandlerPlugin, RequestHeadersPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import router from "@reactive-resume/api/routers";
 import { mergeResponseHeaders } from "../http/headers";
+import { stylesheetPreflightRunner } from "../services/stylesheet-preflight";
 import { getRequestLocale } from "./locale";
 
 const rpcHandler = new RPCHandler(router, {
@@ -18,7 +19,12 @@ export async function handleRpc(request: Request) {
 	const resHeaders = new Headers();
 	const { response } = await rpcHandler.handle(request, {
 		prefix: "/api/rpc",
-		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders },
+		context: {
+			locale: getRequestLocale(request),
+			reqHeaders: request.headers,
+			resHeaders,
+			stylesheetPreflightRunner,
+		},
 	});
 
 	if (!response) return new Response("NOT_FOUND", { status: 404 });
