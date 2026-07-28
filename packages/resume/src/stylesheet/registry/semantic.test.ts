@@ -31,11 +31,11 @@ const expectedParents = {
 	section: ["region"],
 	"section-heading": ["section"],
 	"section-items": ["section"],
-	item: ["section-items"],
+	item: ["section-items", "item"],
 	"item-header": ["item"],
 	field: ["contact-item", "item", "item-header"],
 	link: ["item", "item-header", "rich-text", ...inlineParents],
-	icon: ["contact-item", "section-heading", "item", "item-header"],
+	icon: ["contact-item", "section-heading", "item", "item-header", "level"],
 	level: ["item", "item-header"],
 	"rich-text": ["item", "field"],
 	"rich-heading": ["rich-text"],
@@ -70,7 +70,16 @@ describe("semantic registry", () => {
 		expect(canContainNode("resume", "page")).toBe(true);
 		expect(canContainNode("section", "item")).toBe(false);
 		expect(canContainNode("section-items", "item")).toBe(true);
+		expect(canContainNode("item", "item")).toBe(true);
 		expect(canContainNode("list-item", "list-item-content")).toBe(true);
 		expect(canContainNode("list-item-content", "list-marker")).toBe(false);
+	});
+
+	it("permits only the registered level decoration ancestry and state roles", () => {
+		expect(canContainNode("level", "icon")).toBe(true);
+		expect(canContainNode("level", "field")).toBe(false);
+		expect(SEMANTIC_REGISTRY_V1.icon.attributes).toEqual(["type"]);
+		expect(SEMANTIC_REGISTRY_V1.icon.roles).toEqual(["decoration", "active", "inactive"]);
+		expect(SEMANTIC_REGISTRY_V1.icon.roles).not.toContain("primary-text");
 	});
 });

@@ -1,4 +1,4 @@
-import type { SemanticNodeKind } from "../types";
+import type { SemanticNodeKind } from "../semantic-types";
 
 export type SemanticNodeDefinition = {
 	parents: readonly SemanticNodeKind[];
@@ -81,7 +81,7 @@ export const SEMANTIC_REGISTRY_V1 = {
 	section: { parents: ["region"], attributes: ["type", "placement", "origin"], roles: ["featured-summary"] },
 	"section-heading": { parents: ["section"], attributes: [], roles: ["section-title"] },
 	"section-items": { parents: ["section"], attributes: [], roles: [] },
-	item: { parents: ["section-items"], attributes: [], roles: ["experience-role", "nested-role"] },
+	item: { parents: ["section-items", "item"], attributes: [], roles: ["experience-role", "nested-role"] },
 	"item-header": { parents: ["item"], attributes: [], roles: [] },
 	field: {
 		parents: ["contact-item", "item", "item-header"],
@@ -93,7 +93,11 @@ export const SEMANTIC_REGISTRY_V1 = {
 		attributes: [],
 		roles: ["structured-link"],
 	},
-	icon: { parents: ["contact-item", "section-heading", "item", "item-header"], attributes: [], roles: ["decoration"] },
+	icon: {
+		parents: ["contact-item", "section-heading", "item", "item-header", "level"],
+		attributes: ["type"],
+		roles: ["decoration", "active", "inactive"],
+	},
 	level: { parents: ["item", "item-header"], attributes: [], roles: ["decoration"] },
 	"rich-text": { parents: ["item", "field"], attributes: [], roles: [] },
 	"rich-heading": { parents: ["rich-text"], attributes: ["level"], roles: [] },

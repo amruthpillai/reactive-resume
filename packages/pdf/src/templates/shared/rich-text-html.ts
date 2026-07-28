@@ -153,3 +153,5 @@ export const normalizeRichTextHtml = (html: string): string => {
 
 	return normalized.join("");
 };
+
+export const parseNormalizedRichTextHtml = (html: string) => parse(normalizeRichTextHtml(html), { comment: false });

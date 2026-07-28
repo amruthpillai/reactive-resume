@@ -1,0 +1,609 @@
+import type { SemanticNode, SemanticNodeKind } from "@reactive-resume/resume/stylesheet/types";
+import type { CustomSectionType, LayoutPage, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
+import type { Template } from "@reactive-resume/schema/templates";
+import type { HTMLElement, Node } from "node-html-parser";
+import type { StandardFieldRole } from "./binding-inventory";
+import { NodeType } from "node-html-parser";
+import { getResumeSectionIcon } from "../section-icon";
+import { filterItems, filterSections } from "../templates/shared/filtering";
+import { hasTemplatePicture } from "../templates/shared/picture";
+import { parseNormalizedRichTextHtml, richTextMarkClassName } from "../templates/shared/rich-text-html";
+import { STANDARD_FIELD_REGISTRY } from "./binding-inventory";
+import { semanticNodeKeys } from "./node-keys";
+
+export type BuildSemanticTreeInput = {
+	data: ResumeData;
+	template: Template;
+	page: LayoutPage;
+	pageNumber: number;
+	showHeader: boolean;
+};
+
+type ItemRecord = {
+	id: string;
+	hidden: boolean;
+	[key: string]: unknown;
+};
+
+type SectionRecord = {
+	title: string;
+	icon: string;
+	hidden: boolean;
+	items: ItemRecord[];
+};
+
+type SectionDescriptor = {
+	id: string;
+	type: CustomSectionType;
+	section: SectionRecord;
+};
+
+const ITEM_HEADER_FIELDS = {
+	profiles: ["network"],
+	experience: ["company", "position", "location", "period"],
+	"experience-role": ["position", "period"],
+	education: ["school", "area", "degree", "grade", "location", "period"],
+	projects: ["name", "period"],
+	skills: ["name"],
+	languages: [],
+	interests: ["name"],
+	awards: ["title", "date", "awarder"],
+	certifications: ["title", "date", "issuer"],
+	publications: ["title", "date", "publisher"],
+	volunteer: ["organization", "location", "period"],
+	references: [],
+	summary: [],
+	"cover-letter": [],
+} as const satisfies Readonly<Record<CustomSectionType | "experience-role", readonly string[]>>;
+
+const RICH_TEXT_FIELDS = new Set(["content", "description", "recipient"]);
+const ITEM_ICON_SECTIONS = new Set<CustomSectionType>(["profiles", "skills", "interests"]);
+
+const semanticNode = ({
+	key,
+	kind,
+	id,
+	attributes = {},
+	roles = [],
+	children = [],
+}: {
+	key: string;
+	kind: SemanticNodeKind;
+	id?: string;
+	attributes?: Readonly<Record<string, string>>;
+	roles?: readonly string[];
+	children?: readonly SemanticNode[];
+}): SemanticNode => ({
+	key,
+	kind,
+	...(id === undefined ? {} : { id }),
+	attributes,
+	roles,
+	children,
+});
+
+const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
+
+const richTextKind = (element: HTMLElement): SemanticNodeKind | undefined => {
+	const tag = element.rawTagName.toLowerCase();
+
+	if (/^h[1-6]$/.test(tag)) return "rich-heading";
+	if (tag === "p") return "paragraph";
+	if (tag === "blockquote") return "blockquote";
+	if (tag === "ul" || tag === "ol") return "list";
+	if (tag === "li") return "list-item";
+	if (tag === "a") return "link";
+	if (tag === "strong" || tag === "b") return "strong";
+	if (tag === "em" || tag === "i") return "emphasis";
+	if (tag === "u") return "underline";
+	if (tag === "s" || tag === "strike") return "strike";
+	if (tag === "code") return "code";
+	if (tag === "br") return "hard-break";
+	if (tag === "hr") return "horizontal-rule";
+	if (tag === "mark") return "mark";
+	if (tag === "span") {
+		return element.getAttribute("class")?.split(/\s+/).includes(richTextMarkClassName) ? "mark" : "text-span";
+	}
+
+	return undefined;
+};
+
+const buildRichTextChildren = (parentKey: string, childNodes: readonly Node[]): SemanticNode[] => {
+	const children: SemanticNode[] = [];
+	let elementIndex = 0;
+
+	for (const child of childNodes) {
+		if (!isElement(child)) continue;
+
+		const index = elementIndex++;
+		const kind = richTextKind(child);
+
+		if (!kind) {
+			const ancestryKey = semanticNodeKeys.richTextNode(parentKey, `html-${child.rawTagName.toLowerCase()}`, index);
+			children.push(...buildRichTextChildren(ancestryKey, child.childNodes));
+			continue;
+		}
+
+		const key = semanticNodeKeys.richTextNode(parentKey, kind, index);
+
+		if (kind === "list-item") {
+			const markerKey = semanticNodeKeys.richTextNode(key, "list-marker", 0);
+			const contentKey = semanticNodeKeys.richTextNode(key, "list-item-content", 0);
+			children.push(
+				semanticNode({
+					key,
+					kind,
+					children: [
+						semanticNode({ key: markerKey, kind: "list-marker", roles: ["decoration"] }),
+						semanticNode({
+							key: contentKey,
+							kind: "list-item-content",
+							children: buildRichTextChildren(contentKey, child.childNodes),
+						}),
+					],
+				}),
+			);
+			continue;
+		}
+
+		const attributes = kind === "rich-heading" ? { level: child.rawTagName.slice(1) } : {};
+		children.push(
+			semanticNode({
+				key,
+				kind,
+				attributes,
+				roles: kind === "link" ? ["structured-link"] : [],
+				children: buildRichTextChildren(key, child.childNodes),
+			}),
+		);
+	}
+
+	return children;
+};
+
+const hasValue = (value: unknown): boolean => {
+	if (typeof value === "string") return value.trim().length > 0;
+	if (Array.isArray(value)) return value.length > 0;
+	return value !== undefined && value !== null;
+};
+
+const getFieldRoles = (
+	type: keyof typeof STANDARD_FIELD_REGISTRY,
+	name: string,
+	structuredLink = false,
+): StandardFieldRole[] => {
+	const field = STANDARD_FIELD_REGISTRY[type] as StandardFieldDefinition | undefined;
+	const roles = [...(field?.[name] ?? [])];
+
+	if (structuredLink && !roles.includes("structured-link")) roles.push("structured-link");
+
+	return roles;
+};
+
+type StandardFieldDefinition = Readonly<Record<string, readonly StandardFieldRole[]>>;
+
+const buildField = ({
+	parentKey,
+	type,
+	name,
+	value,
+	structuredLink,
+}: {
+	parentKey: string;
+	type: keyof typeof STANDARD_FIELD_REGISTRY;
+	name: string;
+	value: unknown;
+	structuredLink?: boolean;
+}): SemanticNode | undefined => {
+	if (!hasValue(value)) return undefined;
+
+	const key = semanticNodeKeys.field(parentKey, name);
+	const richTextChildren =
+		RICH_TEXT_FIELDS.has(name) && typeof value === "string"
+			? buildRichTextChildren(semanticNodeKeys.richText(key, name), parseNormalizedRichTextHtml(value).childNodes)
+			: [];
+	const children =
+		RICH_TEXT_FIELDS.has(name) && typeof value === "string" && richTextChildren.length > 0
+			? [
+					semanticNode({
+						key: semanticNodeKeys.richText(key, name),
+						kind: "rich-text",
+						children: richTextChildren,
+					}),
+				]
+			: [];
+
+	return semanticNode({
+		key,
+		kind: "field",
+		attributes: { name },
+		roles: getFieldRoles(type, name, structuredLink),
+		children,
+	});
+};
+
+const buildLevel = (itemKey: string, level: unknown, data: ResumeData): SemanticNode | undefined => {
+	if (typeof level !== "number" || level <= 0) return undefined;
+	if (data.metadata.design.level.type === "hidden") return undefined;
+	if (data.metadata.design.level.type === "icon" && data.metadata.design.level.icon === "") return undefined;
+
+	const key = semanticNodeKeys.level(itemKey);
+	const children = Array.from({ length: 5 }, (_, index) => {
+		const active = index < level;
+
+		return semanticNode({
+			key: semanticNodeKeys.icon(key, `level-${index + 1}`),
+			kind: "icon",
+			attributes: { type: data.metadata.design.level.type },
+			roles: ["decoration", active ? "active" : "inactive"],
+		});
+	});
+
+	return semanticNode({ key, kind: "level", roles: ["decoration"], children });
+};
+
+const itemWebsite = (item: ItemRecord): { url: string; inlineLink: boolean } | undefined => {
+	const website = item.website;
+	if (typeof website !== "object" || website === null) return undefined;
+	const { url, inlineLink } = website as { url?: unknown; inlineLink?: unknown };
+
+	return typeof url === "string" && url ? { url, inlineLink: inlineLink === true } : undefined;
+};
+
+const buildItem = ({
+	item,
+	type,
+	parentKey,
+	data,
+}: {
+	item: ItemRecord;
+	type: keyof typeof STANDARD_FIELD_REGISTRY;
+	parentKey: string;
+	data: ResumeData;
+}): SemanticNode => {
+	const key = semanticNodeKeys.item(parentKey, item.id);
+	const website = itemWebsite(item);
+	const headerKey = semanticNodeKeys.itemHeader(key);
+	const headerChildren: SemanticNode[] = [];
+	const bodyChildren: SemanticNode[] = [];
+	const headerFieldNames = ITEM_HEADER_FIELDS[type];
+
+	if (
+		ITEM_ICON_SECTIONS.has(type as CustomSectionType) &&
+		typeof item.icon === "string" &&
+		item.icon &&
+		!data.metadata.page.hideIcons
+	) {
+		headerChildren.push(
+			semanticNode({
+				key: semanticNodeKeys.icon(headerKey, "item"),
+				kind: "icon",
+				roles: ["decoration"],
+			}),
+		);
+	}
+
+	for (const name of Object.keys(STANDARD_FIELD_REGISTRY[type])) {
+		if (type === "experience" && name === "description" && Array.isArray(item.roles) && item.roles.length > 0) {
+			continue;
+		}
+
+		const parent = headerFieldNames.includes(name as never) ? headerKey : key;
+		const field = buildField({
+			parentKey: parent,
+			type,
+			name,
+			value: item[name],
+			structuredLink: website?.inlineLink === true && name === headerFieldNames[0],
+		});
+
+		if (!field) continue;
+		(parent === headerKey ? headerChildren : bodyChildren).push(field);
+	}
+
+	if (website) {
+		const parent = website.inlineLink ? headerKey : key;
+		(parent === headerKey ? headerChildren : bodyChildren).push(
+			semanticNode({
+				key: semanticNodeKeys.link(parent, website.inlineLink ? "inline-website" : "website"),
+				kind: "link",
+				roles: ["structured-link"],
+			}),
+		);
+	}
+
+	if (type === "profiles" && hasValue(item.username)) {
+		bodyChildren.push(
+			semanticNode({
+				key: semanticNodeKeys.link(key, "profile"),
+				kind: "link",
+				roles: ["structured-link"],
+			}),
+		);
+	}
+
+	if (type === "experience" && Array.isArray(item.roles)) {
+		for (const role of item.roles) {
+			if (typeof role !== "object" || role === null || typeof role.id !== "string") continue;
+			const roleItem = role as ItemRecord;
+			const roleNode = buildItem({
+				item: roleItem,
+				type: "experience-role",
+				parentKey: key,
+				data,
+			});
+			bodyChildren.push({
+				...roleNode,
+				roles: ["experience-role", "nested-role"],
+			});
+		}
+	}
+
+	const level = buildLevel(key, item.level, data);
+	if (level) bodyChildren.push(level);
+
+	return semanticNode({
+		key,
+		kind: "item",
+		id: item.id,
+		children: [
+			...(headerChildren.length > 0
+				? [semanticNode({ key: headerKey, kind: "item-header", children: headerChildren })]
+				: []),
+			...bodyChildren,
+		],
+	});
+};
+
+const resolveSection = (data: ResumeData, sectionId: string): SectionDescriptor | undefined => {
+	if (sectionId === "summary") {
+		return {
+			id: "summary",
+			type: "summary",
+			section: {
+				title: data.summary.title,
+				icon: data.summary.icon,
+				hidden: data.summary.hidden,
+				items: [
+					{
+						id: "content",
+						hidden: data.summary.hidden,
+						content: data.summary.content,
+					},
+				],
+			},
+		};
+	}
+
+	if (sectionId in data.sections) {
+		return {
+			id: sectionId,
+			type: sectionId as SectionType,
+			section: data.sections[sectionId as SectionType] as SectionRecord,
+		};
+	}
+
+	const section = data.customSections.find((candidate) => candidate.id === sectionId);
+	if (!section) return undefined;
+
+	return {
+		id: section.id,
+		type: section.type,
+		section: section as SectionRecord,
+	};
+};
+
+const buildSection = ({
+	data,
+	sectionId,
+	placement,
+	regionKey,
+}: {
+	data: ResumeData;
+	sectionId: string;
+	placement: "main" | "sidebar";
+	regionKey: string;
+}): SemanticNode | undefined => {
+	const descriptor = resolveSection(data, sectionId);
+	if (!descriptor) return undefined;
+
+	const key = semanticNodeKeys.section(regionKey, descriptor.id);
+	const headingKey = semanticNodeKeys.sectionHeading(key);
+	const sectionIcon = getResumeSectionIcon(data, descriptor.id);
+	const heading =
+		descriptor.type === "cover-letter"
+			? undefined
+			: semanticNode({
+					key: headingKey,
+					kind: "section-heading",
+					roles: ["section-title"],
+					children:
+						sectionIcon && !data.metadata.page.hideSectionIcons
+							? [
+									semanticNode({
+										key: semanticNodeKeys.icon(headingKey, "section"),
+										kind: "icon",
+										roles: ["decoration"],
+									}),
+								]
+							: [],
+				});
+	const itemsKey = semanticNodeKeys.sectionItems(key);
+	const items = filterItems(descriptor.section.items, descriptor.type).map((item) =>
+		buildItem({
+			item,
+			type: descriptor.type,
+			parentKey: itemsKey,
+			data,
+		}),
+	);
+
+	return semanticNode({
+		key,
+		kind: "section",
+		id: descriptor.id,
+		attributes: { type: descriptor.type, placement, origin: placement },
+		children: [...(heading ? [heading] : []), semanticNode({ key: itemsKey, kind: "section-items", children: items })],
+	});
+};
+
+const buildRegion = (
+	data: ResumeData,
+	pageKey: string,
+	placement: "main" | "sidebar",
+	sectionIds: string[],
+): SemanticNode => {
+	const key = semanticNodeKeys.region(pageKey, placement);
+	const sections = filterSections(sectionIds, data).flatMap((sectionId) => {
+		const section = buildSection({ data, sectionId, placement, regionKey: key });
+		return section ? [section] : [];
+	});
+
+	return semanticNode({
+		key,
+		kind: "region",
+		attributes: { placement, region: placement },
+		children: sections,
+	});
+};
+
+const buildContactItem = ({
+	contactListKey,
+	name,
+	id,
+	structuredLink,
+	icon,
+}: {
+	contactListKey: string;
+	name: string;
+	id?: string;
+	structuredLink: boolean;
+	icon: boolean;
+}): SemanticNode => {
+	const key = semanticNodeKeys.contactItem(contactListKey, name, id);
+	const fieldKey = semanticNodeKeys.field(key, name);
+
+	return semanticNode({
+		key,
+		kind: "contact-item",
+		...(id === undefined ? {} : { id }),
+		attributes: { name },
+		roles: structuredLink ? ["structured-link"] : [],
+		children: [
+			...(icon
+				? [semanticNode({ key: semanticNodeKeys.icon(key, "contact"), kind: "icon", roles: ["decoration"] })]
+				: []),
+			semanticNode({
+				key: fieldKey,
+				kind: "field",
+				attributes: { name },
+				roles: structuredLink ? ["primary-text", "structured-link"] : ["primary-text"],
+			}),
+		],
+	});
+};
+
+const buildHeader = (data: ResumeData, pageKey: string): SemanticNode => {
+	const regionKey = semanticNodeKeys.region(pageKey, "header");
+	const headerKey = semanticNodeKeys.header(regionKey);
+	const contactListKey = semanticNodeKeys.contactList(headerKey);
+	const showIcons = !data.metadata.page.hideIcons;
+	const contacts: SemanticNode[] = [];
+	const baseContacts = [
+		["email", data.basics.email, true],
+		["phone", data.basics.phone, true],
+		["location", data.basics.location, false],
+		["website", data.basics.website.url, true],
+	] as const;
+
+	for (const [name, value, structuredLink] of baseContacts) {
+		if (!value) continue;
+		contacts.push(
+			buildContactItem({
+				contactListKey,
+				name,
+				structuredLink,
+				icon: showIcons,
+			}),
+		);
+	}
+
+	for (const field of data.basics.customFields) {
+		contacts.push(
+			buildContactItem({
+				contactListKey,
+				name: "custom",
+				id: field.id,
+				structuredLink: Boolean(field.link),
+				icon: showIcons && Boolean(field.icon),
+			}),
+		);
+	}
+
+	const header = semanticNode({
+		key: headerKey,
+		kind: "header",
+		attributes: { region: "header" },
+		children: [
+			...(hasTemplatePicture(data.picture)
+				? [
+						semanticNode({
+							key: semanticNodeKeys.headerPart(headerKey, "picture"),
+							kind: "picture",
+							roles: ["picture"],
+						}),
+					]
+				: []),
+			semanticNode({
+				key: semanticNodeKeys.headerPart(headerKey, "name"),
+				kind: "name",
+				roles: ["primary-text"],
+			}),
+			semanticNode({
+				key: semanticNodeKeys.headerPart(headerKey, "headline"),
+				kind: "headline",
+				roles: ["secondary-text"],
+			}),
+			semanticNode({ key: contactListKey, kind: "contact-list", children: contacts }),
+		],
+	});
+
+	return semanticNode({
+		key: regionKey,
+		kind: "region",
+		attributes: { placement: "main", region: "header" },
+		children: [header],
+	});
+};
+
+export function buildSemanticTree({
+	data,
+	template,
+	page,
+	pageNumber,
+	showHeader,
+}: BuildSemanticTreeInput): SemanticNode {
+	const pageKey = semanticNodeKeys.page(pageNumber);
+	const regions = [
+		...(showHeader ? [buildHeader(data, pageKey)] : []),
+		buildRegion(data, pageKey, "main", page.main),
+		...(!page.fullWidth ? [buildRegion(data, pageKey, "sidebar", page.sidebar)] : []),
+	];
+
+	return semanticNode({
+		key: semanticNodeKeys.resume(),
+		kind: "resume",
+		attributes: { template },
+		children: [
+			semanticNode({
+				key: pageKey,
+				kind: "page",
+				attributes: { "page-number": String(pageNumber) },
+				children: regions,
+			}),
+		],
+	});
+}
+
+export { createBindingInventory, STANDARD_FIELD_REGISTRY, STANDARD_ROLE_REGISTRY } from "./binding-inventory";
+export { semanticNodeKeys } from "./node-keys";
