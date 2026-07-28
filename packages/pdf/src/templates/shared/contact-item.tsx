@@ -2,14 +2,30 @@ import type { Style } from "@react-pdf/types";
 import type { CustomField } from "@reactive-resume/schema/resume/data";
 import type { IconName } from "phosphor-icons-react-pdf/dynamic";
 import { View } from "#react-pdf-renderer";
+import { resolvedPdfFlowProps } from "../../semantic/adapter";
+import { useResolvedNode, useSemanticNodeKey, useSemanticNodeVisible } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { getCustomFieldLinkUrl, getWebsiteDisplayText } from "./contact";
 import { Icon, Link, Text } from "./primitives";
+import { composeStyles } from "./styles";
 
 type ContactStyle = Style | Style[];
 
 type WebsiteDisplay = {
 	url: string;
 	label?: string | undefined;
+};
+
+const useContactNodeKeys = (name: string, id?: string) => {
+	const headerNodeKey = useSemanticNodeKey();
+	const contactListNodeKey = headerNodeKey ? semanticNodeKeys.contactList(headerNodeKey) : undefined;
+	const contactNodeKey = contactListNodeKey ? semanticNodeKeys.contactItem(contactListNodeKey, name, id) : undefined;
+
+	return {
+		contactNodeKey,
+		fieldNodeKey: contactNodeKey ? semanticNodeKeys.field(contactNodeKey, name) : undefined,
+		iconNodeKey: contactNodeKey ? semanticNodeKeys.icon(contactNodeKey, "contact") : undefined,
+	};
 };
 
 type WebsiteContactItemProps = {
@@ -27,34 +43,48 @@ type CustomFieldContactItemProps = {
 };
 
 export const WebsiteContactItem = ({ website, style, textStyle, iconColor }: WebsiteContactItemProps) => {
-	if (!website.url) return null;
+	const keys = useContactNodeKeys("website");
+	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+	if (!website.url || !visible) return null;
 
 	return (
-		<Link src={website.url} {...(style ? { style } : {})}>
-			<Icon name="globe" {...(iconColor ? { color: iconColor } : {})} />
-			<Text {...(textStyle ? { style: textStyle } : {})}>{getWebsiteDisplayText(website)}</Text>
+		<Link nodeKey={keys.contactNodeKey} src={website.url} {...(style ? { style } : {})}>
+			<Icon nodeKey={keys.iconNodeKey} name="globe" {...(iconColor ? { color: iconColor } : {})} />
+			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
+				{getWebsiteDisplayText(website)}
+			</Text>
 		</Link>
 	);
 };
 
 export const CustomFieldContactItem = ({ field, style, textStyle, iconColor }: CustomFieldContactItemProps) => {
 	const linkUrl = getCustomFieldLinkUrl(field);
+	const keys = useContactNodeKeys("custom", field.id);
+	const resolved = useResolvedNode(keys.contactNodeKey);
+	const visible = useSemanticNodeVisible(keys.contactNodeKey);
 	const children = (
 		<>
-			<Icon name={field.icon as IconName} {...(iconColor ? { color: iconColor } : {})} />
-			<Text {...(textStyle ? { style: textStyle } : {})}>{field.text}</Text>
+			<Icon nodeKey={keys.iconNodeKey} name={field.icon as IconName} {...(iconColor ? { color: iconColor } : {})} />
+			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
+				{field.text}
+			</Text>
 		</>
 	);
+	if (!visible) return null;
 
 	if (linkUrl) {
 		return (
-			<Link src={linkUrl} {...(style ? { style } : {})}>
+			<Link nodeKey={keys.contactNodeKey} src={linkUrl} {...(style ? { style } : {})}>
 				{children}
 			</Link>
 		);
 	}
 
-	return <View {...(style ? { style } : {})}>{children}</View>;
+	return (
+		<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(style, resolved.style)}>
+			{children}
+		</View>
+	);
 };
 
 type EmailContactItemProps = {
@@ -73,11 +103,15 @@ export const EmailContactItem = ({
 	iconColor,
 	iconName = "envelope",
 }: EmailContactItemProps) => {
-	if (!email) return null;
+	const keys = useContactNodeKeys("email");
+	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+	if (!email || !visible) return null;
 	return (
-		<Link src={`mailto:${email}`} {...(style ? { style } : {})}>
-			<Icon name={iconName} {...(iconColor ? { color: iconColor } : {})} />
-			<Text {...(textStyle ? { style: textStyle } : {})}>{email}</Text>
+		<Link nodeKey={keys.contactNodeKey} src={`mailto:${email}`} {...(style ? { style } : {})}>
+			<Icon nodeKey={keys.iconNodeKey} name={iconName} {...(iconColor ? { color: iconColor } : {})} />
+			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
+				{email}
+			</Text>
 		</Link>
 	);
 };
@@ -90,11 +124,15 @@ type PhoneContactItemProps = {
 };
 
 export const PhoneContactItem = ({ phone, style, textStyle, iconColor }: PhoneContactItemProps) => {
-	if (!phone) return null;
+	const keys = useContactNodeKeys("phone");
+	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+	if (!phone || !visible) return null;
 	return (
-		<Link src={`tel:${phone}`} {...(style ? { style } : {})}>
-			<Icon name="phone" {...(iconColor ? { color: iconColor } : {})} />
-			<Text {...(textStyle ? { style: textStyle } : {})}>{phone}</Text>
+		<Link nodeKey={keys.contactNodeKey} src={`tel:${phone}`} {...(style ? { style } : {})}>
+			<Icon nodeKey={keys.iconNodeKey} name="phone" {...(iconColor ? { color: iconColor } : {})} />
+			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
+				{phone}
+			</Text>
 		</Link>
 	);
 };
@@ -107,11 +145,16 @@ type LocationContactItemProps = {
 };
 
 export const LocationContactItem = ({ location, style, textStyle, iconColor }: LocationContactItemProps) => {
-	if (!location) return null;
+	const keys = useContactNodeKeys("location");
+	const resolved = useResolvedNode(keys.contactNodeKey);
+	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+	if (!location || !visible) return null;
 	return (
-		<View {...(style ? { style } : {})}>
-			<Icon name="map-pin" {...(iconColor ? { color: iconColor } : {})} />
-			<Text {...(textStyle ? { style: textStyle } : {})}>{location}</Text>
+		<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(style, resolved.style)}>
+			<Icon nodeKey={keys.iconNodeKey} name="map-pin" {...(iconColor ? { color: iconColor } : {})} />
+			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
+				{location}
+			</Text>
 		</View>
 	);
 };

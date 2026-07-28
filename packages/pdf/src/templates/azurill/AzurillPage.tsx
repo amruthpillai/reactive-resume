@@ -9,8 +9,10 @@ import type {
 } from "../shared/types";
 import { Fragment, useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import {
 	CustomFieldContactItem,
@@ -23,7 +25,7 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -56,17 +58,29 @@ const azurillFeatures = {
 	sectionTimeline: true,
 } satisfies TemplateFeatures;
 
-export const AzurillPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: TemplatePageProps) => {
+export const AzurillPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles, featureStyles } = useAzurillTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const sidebarSections = filterSections(page.sidebar, data);
-	const mainSections = filterSections(page.main, data);
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} featureStyles={featureStyles} colors={colors} features={azurillFeatures}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider
+				pageNodeKey={pageNodeKey}
+				styles={styles}
+				featureStyles={featureStyles}
+				colors={colors}
+				features={azurillFeatures}
+			>
 				{showHeader && <Header styles={styles} />}
 
 				<View style={composeStyles(styles.contentRow, { columnGap: metrics.columnGap })}>
@@ -100,8 +114,8 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
+		<SemanticHeaderView style={styles.header}>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
@@ -119,7 +133,7 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 					<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 				))}
 			</View>
-		</View>
+		</SemanticHeaderView>
 	);
 };
 

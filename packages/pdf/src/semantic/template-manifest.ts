@@ -336,6 +336,26 @@ export function getTemplateSemanticBindingRegistry(template: Template): Semantic
 	return {
 		...SHARED_BINDING_REGISTRY,
 		...canonicalBindings,
+		link: (node, context) => {
+			if (context.parent?.kind === "template-part") {
+				const part = manifest.parts.find((candidate) => candidate.name === context.parent?.attributes.name);
+				if (
+					part?.binding.type === "primitive" &&
+					(part.binding.primitive === "Link" ||
+						(typeof part.binding.primitive === "object" && part.binding.primitive.present === "Link"))
+				) {
+					return {
+						type: "alias",
+						canonicalKind: "template-part",
+						canonicalNodeKey: context.parent.key,
+						token: "structured-link",
+					};
+				}
+			}
+
+			const shared = SHARED_BINDING_REGISTRY.link;
+			return typeof shared === "function" ? shared(node, context) : shared;
+		},
 		"template-part": (node, { parent }) => {
 			const part = manifest.parts.find((candidate) => candidate.name === node.attributes.name);
 			if (part?.binding.type !== "primitive") return undefined;

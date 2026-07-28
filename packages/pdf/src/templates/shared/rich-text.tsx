@@ -2,10 +2,19 @@ import type { Style } from "@react-pdf/types";
 import type { ReactElement, ReactNode } from "react";
 import { cloneElement, isValidElement } from "react";
 import { Html } from "react-pdf-html";
-import { Text as PdfText, View } from "#react-pdf-renderer";
+import { Link as PdfLink, Text as PdfText, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapter";
+import {
+	useResolvedNode,
+	useSemanticNodeBindings,
+	useSemanticNodeKey,
+	useSemanticNodeVisible,
+} from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
+import { getRichTextSemanticNodeKey } from "../../semantic/rich-text-keys";
 import { useSectionStyleRule, useTemplateStyle } from "./context";
-import { convertPseudoBulletParagraphs, normalizeRichTextHtml } from "./rich-text-html";
+import { convertPseudoBulletParagraphs, normalizeRichTextHtml, richTextMarkClassName } from "./rich-text-html";
 import { renderRichTextParagraph, toRichTextStyleArray } from "./rich-text-renderers";
 import {
 	createRichTextProseSpacing,
@@ -24,6 +33,7 @@ const richListItemContentStackStyle = {
 
 type RichTextProps = {
 	children: string;
+	semanticField?: string | undefined;
 };
 
 // react-pdf textkit reads BiDi base direction from each run's own `direction` attribute
@@ -57,8 +67,18 @@ const applyRtlDirectionRecursively = (node: ReactNode): ReactNode => {
 	return cloneElement(element, { style: nextStyle }, nextChildren);
 };
 
-export const RichText = ({ children }: RichTextProps) => {
+export const RichText = ({ children, semanticField }: RichTextProps) => {
 	const { metadata, rtl } = useRender();
+	const parentNodeKey = useSemanticNodeKey();
+	const fieldNodeKey =
+		parentNodeKey && semanticField ? semanticNodeKeys.field(parentNodeKey, semanticField) : undefined;
+	const richTextNodeKey =
+		fieldNodeKey && semanticField ? semanticNodeKeys.richText(fieldNodeKey, semanticField) : undefined;
+	const fieldResolved = useResolvedNode(fieldNodeKey);
+	const fieldVisible = useSemanticNodeVisible(fieldNodeKey);
+	const richTextResolved = useResolvedNode(richTextNodeKey);
+	const richTextVisible = useSemanticNodeVisible(richTextNodeKey);
+	const { resolveNode, isNodeVisible } = useSemanticNodeBindings();
 	const rtlTextWrapStyle: Style | undefined = rtl ? { direction: "rtl", textAlign: "right" } : undefined;
 
 	const boldStyle = useTemplateStyle("bold");
@@ -93,18 +113,113 @@ export const RichText = ({ children }: RichTextProps) => {
 			? withBullets.replace(/<(p|li)\b([^>]*)>/gi, (_match, tag, rest) => `<${tag}${rest}>‏`)
 			: withBullets;
 
-	if (!html) return null;
+	if (!html || !fieldVisible || !richTextVisible) return null;
+
+	const keyFor = (element: Parameters<typeof getRichTextSemanticNodeKey>[1]) =>
+		richTextNodeKey ? getRichTextSemanticNodeKey(richTextNodeKey, element, richTextMarkClassName) : undefined;
+	const resolvedFor = (element: Parameters<typeof getRichTextSemanticNodeKey>[1]) => resolveNode(keyFor(element));
+	const renderText = ({
+		element,
+		style,
+		children: textChildren,
+	}: {
+		element: Parameters<typeof getRichTextSemanticNodeKey>[1];
+		style: Style[];
+		children: ReactNode;
+	}) => {
+		const nodeKey = keyFor(element);
+		const resolved = resolveNode(nodeKey);
+		const visible = isNodeVisible(nodeKey);
+		if (!visible) return null;
+		return (
+			<PdfText {...resolvedPdfTextProps(resolved)} style={composeStyles(style, resolved.style, safeTextStyle)}>
+				{textChildren}
+			</PdfText>
+		);
+	};
+	const renderView = ({
+		element,
+		style,
+		children: viewChildren,
+	}: {
+		element: Parameters<typeof getRichTextSemanticNodeKey>[1];
+		style: Style[];
+		children: ReactNode;
+	}) => {
+		const nodeKey = keyFor(element);
+		const resolved = resolveNode(nodeKey);
+		const visible = isNodeVisible(nodeKey);
+		if (!visible) return null;
+		return (
+			<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(style, resolved.style)}>
+				{viewChildren}
+			</View>
+		);
+	};
 
 	return (
 		<Html
 			resetStyles
+			{...resolvedPdfFlowProps(richTextResolved)}
+			style={composeStyles(fieldResolved.style, richTextResolved.style)}
 			renderers={{
-				b: ({ children }) => (
-					<PdfText style={composeStyles(boldStyle, richBoldRuleStyle, safeTextStyle)}>{children}</PdfText>
-				),
+				h1: renderText,
+				h2: renderText,
+				h3: renderText,
+				h4: renderText,
+				h5: renderText,
+				h6: renderText,
+				blockquote: renderView,
+				ul: renderView,
+				ol: renderView,
+				b: renderText,
+				strong: renderText,
+				em: renderText,
+				i: renderText,
+				u: renderText,
+				s: renderText,
+				strike: renderText,
+				code: renderText,
+				span: renderText,
+				mark: renderText,
+				a: ({ element, style, children: linkChildren }) => {
+					const nodeKey = keyFor(element);
+					const resolved = resolvedFor(element);
+					if (!isNodeVisible(nodeKey)) return null;
+					return (
+						<PdfLink
+							{...resolvedPdfTextProps(resolved)}
+							src={element.attributes.href ?? ""}
+							style={composeStyles(style, resolved.style, safeTextStyle)}
+						>
+							{linkChildren}
+						</PdfLink>
+					);
+				},
+				br: ({ element, style }) => {
+					const resolved = resolvedFor(element);
+					return (
+						<PdfText
+							{...resolvedPdfTextProps(resolved)}
+							wrap={false}
+							style={composeStyles(style, resolved.style, safeTextStyle)}
+						>
+							{"\n"}
+						</PdfText>
+					);
+				},
+				hr: ({ element, style }) => {
+					const nodeKey = keyFor(element);
+					const resolved = resolvedFor(element);
+					if (!isNodeVisible(nodeKey)) return null;
+					return <View {...resolvedPdfFlowProps(resolved)} style={composeStyles(style, resolved.style)} />;
+				},
 				p: (props) => {
+					const resolved = resolvedFor(props.element);
 					const paragraphProps = {
 						...props,
+						style: composeStyles(props.style, resolved.style),
+						textProps: resolvedPdfTextProps(resolved),
 						rtl,
 						...(rtlTextWrapStyle ? { rtlTextWrapStyle } : {}),
 						...(rtl ? { applyRtlDirection: applyRtlDirectionRecursively } : {}),
@@ -113,6 +228,16 @@ export const RichText = ({ children }: RichTextProps) => {
 					return renderRichTextParagraph(paragraphProps);
 				},
 				li: ({ element, style, children }) => {
+					const nodeKey = keyFor(element);
+					const itemResolved = resolvedFor(element);
+					if (!isNodeVisible(nodeKey)) return null;
+					const itemNodeKey = nodeKey;
+					const markerResolved = resolveNode(
+						itemNodeKey ? semanticNodeKeys.richTextNode(itemNodeKey, "list-marker", 0) : undefined,
+					);
+					const contentResolved = resolveNode(
+						itemNodeKey ? semanticNodeKeys.richTextNode(itemNodeKey, "list-item-content", 0) : undefined,
+					);
 					const isOrderedList = isRichTextElementInsideOrderedList(element);
 					const marker = isOrderedList ? `${element.indexOfType + 1}.` : "•";
 					const itemStyles = toRichTextStyleArray(style);
@@ -121,8 +246,11 @@ export const RichText = ({ children }: RichTextProps) => {
 					const markerNode = (
 						<PdfText
 							key="marker"
-							minPresenceAhead={bodyLineHeight ?? metadata.typography.body.lineHeight}
-							style={composeStyles(richListItemMarkerStyle)}
+							{...resolvedPdfTextProps(markerResolved)}
+							minPresenceAhead={
+								markerResolved.minPresenceAhead ?? bodyLineHeight ?? metadata.typography.body.lineHeight
+							}
+							style={composeStyles(richListItemMarkerStyle, markerResolved.style)}
 						>
 							{marker}
 						</PdfText>
@@ -132,12 +260,14 @@ export const RichText = ({ children }: RichTextProps) => {
 					const contentNode = rtl ? (
 						<PdfText
 							key="content"
+							{...resolvedPdfTextProps(contentResolved)}
 							style={composeStyles(
 								richListItemContentStyle,
 								richListItemContentRuleStyle,
 								contentItemStyles,
 								safeTextStyle,
 								rtlTextWrapStyle,
+								contentResolved.style,
 							)}
 						>
 							{applyRtlDirectionRecursively(children)}
@@ -145,12 +275,14 @@ export const RichText = ({ children }: RichTextProps) => {
 					) : (
 						<View
 							key="content"
+							{...resolvedPdfFlowProps(contentResolved)}
 							style={composeStyles(
 								richListItemContentStyle,
 								richListItemContentRuleStyle,
 								contentItemStyles,
 								richListItemContentStackStyle,
 								safeTextStyle,
+								contentResolved.style,
 							)}
 						>
 							{children}
@@ -161,11 +293,13 @@ export const RichText = ({ children }: RichTextProps) => {
 					// (works fine for split-row/contact-list). Swap DOM order to position the marker.
 					return (
 						<View
+							{...resolvedPdfFlowProps(itemResolved)}
 							style={composeStyles(
 								richListItemRowStyle,
 								richListItemRowRuleStyle,
 								itemStyles,
 								getRichTextEdgeTrimStyle(element),
+								itemResolved.style,
 							)}
 						>
 							{rtl ? [contentNode, markerNode] : [markerNode, contentNode]}

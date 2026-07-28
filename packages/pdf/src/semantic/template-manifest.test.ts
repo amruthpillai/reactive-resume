@@ -762,6 +762,7 @@ describe("template semantic manifests", () => {
 			[
 				"contact-item-content:field",
 				"contact-item-content:icon",
+				"contact-item-content:link",
 				"featured-summary:section",
 				"header-band:headline",
 				"header-band:name",
@@ -902,6 +903,19 @@ describe("template semantic manifests", () => {
 			{ type: "primitive", primitive: "Link", source: "existing" },
 			{ type: "primitive", primitive: "View", source: "existing" },
 		]);
+		const semanticLink = findNodes(contacts[0] ?? tree, (node) => node.kind === "link")[0];
+		const linkedContent = findPart(contacts[0] ?? tree, "contact-item-content");
+		expect(semanticLink && inventory.bindings[semanticLink.key]).toEqual({
+			type: "alias",
+			canonicalKind: "template-part",
+			canonicalNodeKey: linkedContent?.key,
+			token: "structured-link",
+		});
+		expect(
+			[contacts[0]?.key, linkedContent?.key, semanticLink?.key].filter(
+				(key): key is string => key !== undefined && inventory.bindings[key]?.type === "primitive",
+			),
+		).toEqual([contacts[0]?.key, linkedContent?.key]);
 		expect(contacts[0]?.attributes.part).toBeUndefined();
 		expect(contacts[1]?.attributes.part).toBe("contact-item-last");
 		expect(inventory.aliasTokensByNodeKey[contacts[1]?.key ?? ""]).toEqual(["contact-item-last"]);

@@ -35,7 +35,7 @@ const expectedParents = {
 	item: ["section-items", "item"],
 	"item-header": ["item"],
 	field: ["contact-item", "item", "item-header"],
-	link: ["item", "item-header", "rich-text", ...inlineParents],
+	link: ["item", "item-header", "rich-text", "template-part", ...inlineParents],
 	icon: ["contact-item", "section-heading", "item", "item-header", "level"],
 	level: ["item", "item-header"],
 	"rich-text": ["item", "field"],
@@ -86,7 +86,7 @@ const expectedTemplatePartChildren = {
 	"inline-item-header-middle": ["field", "link"],
 	"inline-item-header-trailing": ["field"],
 	"header-divider": ["name", "headline"],
-	"contact-item-content": ["icon", "field"],
+	"contact-item-content": ["link", "icon", "field"],
 	"header-name-rule": [],
 } as const;
 

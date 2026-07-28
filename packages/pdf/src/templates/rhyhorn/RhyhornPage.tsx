@@ -4,8 +4,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import {
 	CustomFieldContactItem,
@@ -18,7 +20,7 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -46,17 +48,23 @@ type RhyhornHeaderProps = {
 	styles: RhyhornStyles;
 };
 
-export const RhyhornPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: TemplatePageProps) => {
+export const RhyhornPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles } = useRhyhornTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const mainSections = filterSections(page.main, data);
-	const sidebarSections = filterSections(page.sidebar, data);
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
 				<View style={composeStyles(styles.sectionGroup, { rowGap: metrics.sectionGap })}>
@@ -119,7 +127,7 @@ const Header = ({ styles }: RhyhornHeaderProps) => {
 	);
 
 	return (
-		<View style={styles.header}>
+		<SemanticHeaderView style={styles.header}>
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
 					<Heading style={styles.headerName}>{basics.name}</Heading>
@@ -141,8 +149,8 @@ const Header = ({ styles }: RhyhornHeaderProps) => {
 				</View>
 			</View>
 
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
-		</View>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
+		</SemanticHeaderView>
 	);
 };
 

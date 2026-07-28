@@ -305,7 +305,21 @@ describe("semantic binding inventory", () => {
 
 		expect(whitespace.roles).toEqual([]);
 		expect(inventory.bindings[whitespace.key]).toMatchObject({ type: "primitive", primitive: "View" });
+		expect(findNode(whitespace, (candidate) => candidate.kind === "link")).toBeUndefined();
 		expect(linked.roles).toEqual(["structured-link"]);
 		expect(inventory.bindings[linked.key]).toMatchObject({ type: "primitive", primitive: "Link" });
+		const linkedAlias = required(
+			findNode(linked, (candidate) => candidate.kind === "link"),
+			"linked contact semantic link",
+		);
+		expect(inventory.bindings[linkedAlias.key]).toEqual({
+			type: "alias",
+			canonicalKind: "contact-item",
+			canonicalNodeKey: linked.key,
+			token: "structured-link",
+		});
+		expect([linked.key, linkedAlias.key].filter((key) => inventory.bindings[key]?.type === "primitive")).toEqual([
+			linked.key,
+		]);
 	});
 });

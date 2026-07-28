@@ -21,6 +21,7 @@ import { hasTemplatePicture } from "../templates/shared/picture";
 import { parseNormalizedRichTextHtml, richTextMarkClassName } from "../templates/shared/rich-text-html";
 import { STANDARD_FIELD_REGISTRY } from "./binding-inventory";
 import { semanticNodeKeys } from "./node-keys";
+import { getRichTextSemanticKind } from "./rich-text-keys";
 import { getTemplateSemanticManifest } from "./template-manifest";
 
 export type BuildSemanticTreeInput = {
@@ -98,30 +99,6 @@ const semanticNode = ({
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
 
-const richTextKind = (element: HTMLElement): SemanticNodeKind | undefined => {
-	const tag = element.rawTagName.toLowerCase();
-
-	if (/^h[1-6]$/.test(tag)) return "rich-heading";
-	if (tag === "p") return "paragraph";
-	if (tag === "blockquote") return "blockquote";
-	if (tag === "ul" || tag === "ol") return "list";
-	if (tag === "li") return "list-item";
-	if (tag === "a") return "link";
-	if (tag === "strong" || tag === "b") return "strong";
-	if (tag === "em" || tag === "i") return "emphasis";
-	if (tag === "u") return "underline";
-	if (tag === "s" || tag === "strike") return "strike";
-	if (tag === "code") return "code";
-	if (tag === "br") return "hard-break";
-	if (tag === "hr") return "horizontal-rule";
-	if (tag === "mark") return "mark";
-	if (tag === "span") {
-		return element.getAttribute("class")?.split(/\s+/).includes(richTextMarkClassName) ? "mark" : "text-span";
-	}
-
-	return undefined;
-};
-
 const buildRichTextChildren = (
 	parentKey: string,
 	childNodes: readonly Node[],
@@ -134,7 +111,7 @@ const buildRichTextChildren = (
 		if (!isElement(child)) continue;
 
 		const index = elementIndex++;
-		const kind = richTextKind(child);
+		const kind = getRichTextSemanticKind(child, richTextMarkClassName);
 
 		if (!kind) {
 			const ancestryKey = semanticNodeKeys.richTextNode(parentKey, `html-${child.rawTagName.toLowerCase()}`, index);
@@ -561,6 +538,15 @@ const buildContactItem = ({
 		attributes: { name },
 		roles: structuredLink ? ["structured-link"] : [],
 		children: [
+			...(structuredLink
+				? [
+						semanticNode({
+							key: semanticNodeKeys.link(key, "contact"),
+							kind: "link",
+							roles: ["structured-link"],
+						}),
+					]
+				: []),
 			...(icon
 				? [semanticNode({ key: semanticNodeKeys.icon(key, "contact"), kind: "icon", roles: ["decoration"] })]
 				: []),

@@ -1,3 +1,6 @@
+/// <reference path="./css-tree.d.ts" />
+/// <reference path="./specificity.d.ts" />
+
 export type { PropertyDefinition, PropertyRegistry } from "./registry/properties";
 export type { SemanticNodeDefinition, SemanticRegistry } from "./registry/semantic";
 export type { SystemVariableDefinition, SystemVariableRegistry } from "./registry/system-variables";

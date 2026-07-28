@@ -8,6 +8,8 @@ import { useMemo } from "react";
 import { Document } from "#react-pdf-renderer";
 import { RenderProvider } from "./context";
 import { registerFonts, resumeContentContainsCJK, resumeContentScripts } from "./hooks/use-register-fonts";
+import { SemanticRenderProvider } from "./semantic/context";
+import { resolveResumeRuntime, resolveStylesheetMode } from "./semantic/resolve";
 import { getTemplatePage } from "./templates";
 import { shouldShowResumeHeader } from "./templates/shared/cover-letter";
 import { getTemplatePageMinHeightStyle, getTemplatePageSize } from "./templates/shared/page-size";
@@ -17,6 +19,7 @@ export type TemplatePageProps = {
 	pageSize: ReturnType<typeof getTemplatePageSize>;
 	pageMinHeightStyle: ReturnType<typeof getTemplatePageMinHeightStyle>;
 	showHeader: boolean;
+	pageNumber: number;
 };
 
 export type TemplatePage = ComponentType<TemplatePageProps>;
@@ -50,29 +53,42 @@ export const ResumeDocument = ({ data, template, renderOptions, resolveSectionTi
 	const pageSize = getTemplatePageSize(resumeData.metadata.page.format);
 	const pageMinHeightStyle = getTemplatePageMinHeightStyle(resumeData.metadata.page.format);
 	const headerResumeData = renderOptions ? { ...resumeData, renderOptions } : resumeData;
+	const stylesheetMode = resolveStylesheetMode(resumeData);
+	const semanticRuntime = useMemo(
+		() => resolveResumeRuntime({ data: resumeData, template, mode: stylesheetMode }),
+		[resumeData, stylesheetMode, template],
+	);
 
 	return (
-		<RenderProvider data={resumeData} resolveSectionTitle={resolveSectionTitle} renderOptions={renderOptions}>
-			<Document
-				pageMode="useNone"
-				creationDate={creationDate}
-				producer="Reactive Resume"
-				title={resumeData.basics.name}
-				author={resumeData.basics.name}
-				creator={resumeData.basics.name}
-				subject={resumeData.basics.headline}
-				language={resumeData.metadata.page.locale}
-			>
-				{resumeData.metadata.layout.pages.map((page, index) => (
-					<TemplatePageComponent
-						key={getLayoutPageKey(page, index)}
-						page={page}
-						pageSize={pageSize}
-						pageMinHeightStyle={pageMinHeightStyle}
-						showHeader={shouldShowResumeHeader(headerResumeData, index)}
-					/>
-				))}
-			</Document>
-		</RenderProvider>
+		<SemanticRenderProvider
+			presentation={semanticRuntime.presentation}
+			mode={stylesheetMode}
+			sourceTree={semanticRuntime.sourceTree}
+			renderTree={semanticRuntime.renderTree}
+		>
+			<RenderProvider data={resumeData} resolveSectionTitle={resolveSectionTitle} renderOptions={renderOptions}>
+				<Document
+					pageMode="useNone"
+					creationDate={creationDate}
+					producer="Reactive Resume"
+					title={resumeData.basics.name}
+					author={resumeData.basics.name}
+					creator={resumeData.basics.name}
+					subject={resumeData.basics.headline}
+					language={resumeData.metadata.page.locale}
+				>
+					{resumeData.metadata.layout.pages.map((page, index) => (
+						<TemplatePageComponent
+							key={getLayoutPageKey(page, index)}
+							page={page}
+							pageSize={pageSize}
+							pageMinHeightStyle={pageMinHeightStyle}
+							showHeader={shouldShowResumeHeader(headerResumeData, index)}
+							pageNumber={index + 1}
+						/>
+					))}
+				</Document>
+			</RenderProvider>
+		</SemanticRenderProvider>
 	);
 };

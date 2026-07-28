@@ -23,6 +23,7 @@ type RichTextParagraphRendererProps = {
 	rtl?: boolean;
 	rtlTextWrapStyle?: Style | undefined;
 	applyRtlDirection?: (node: ReactNode) => ReactNode;
+	textProps?: Record<string, unknown>;
 };
 
 export const renderRichTextParagraph = ({
@@ -32,6 +33,7 @@ export const renderRichTextParagraph = ({
 	rtl,
 	rtlTextWrapStyle,
 	applyRtlDirection,
+	textProps,
 }: RichTextParagraphRendererProps) => {
 	const paragraphStyles = isRichTextElementInsideListItem(element)
 		? toRichTextStyleArray(style).map(stripRichTextVerticalMargins)
@@ -45,5 +47,5 @@ export const renderRichTextParagraph = ({
 
 	const content = rtl && applyRtlDirection ? applyRtlDirection(children) : children;
 
-	return createElement(PdfText, { style: composedStyle }, content);
+	return createElement(PdfText, { ...textProps, style: composedStyle }, content);
 };

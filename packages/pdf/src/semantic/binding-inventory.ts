@@ -113,7 +113,15 @@ export const SHARED_BINDING_REGISTRY = {
 	item: existing("View"),
 	"item-header": existing("View"),
 	field: (node) => existing(node.children.some((child) => child.kind === "rich-text") ? "View" : "Text"),
-	link: existing("Link"),
+	link: (_node, { parent }) =>
+		parent?.kind === "contact-item"
+			? {
+					type: "alias",
+					canonicalKind: "contact-item",
+					canonicalNodeKey: parent.key,
+					token: "structured-link",
+				}
+			: existing("Link"),
 	icon: (node) => existing(node.attributes.type && node.attributes.type !== "icon" ? "View" : "Svg"),
 	level: existing("View"),
 	"rich-text": (_node, { parent }) =>

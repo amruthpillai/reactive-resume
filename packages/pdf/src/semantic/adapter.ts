@@ -1,0 +1,78 @@
+import type { Style } from "@react-pdf/types";
+import type { ResolvedNodeStyle, ResolvedPageSize } from "@reactive-resume/resume/stylesheet";
+
+export type ResolvedPdfPageSize = ResolvedPageSize;
+
+export type ResolvedPdfNodePresentation = {
+	style?: Style;
+	size?: ResolvedPdfPageSize;
+	break?: true;
+	wrap?: false;
+	fixed?: boolean;
+	minPresenceAhead?: number;
+	orphans?: number;
+	widows?: number;
+};
+
+export type ResolvedPdfFlowProps = Omit<ResolvedPdfNodePresentation, "style" | "size" | "orphans" | "widows">;
+export type ResolvedPdfTextProps = Omit<ResolvedPdfNodePresentation, "style" | "size">;
+
+export const resolvedPdfFlowProps = ({
+	break: breakBefore,
+	wrap,
+	fixed,
+	minPresenceAhead,
+}: ResolvedPdfNodePresentation): ResolvedPdfFlowProps => ({
+	...(breakBefore === undefined ? {} : { break: breakBefore }),
+	...(wrap === undefined ? {} : { wrap }),
+	...(fixed === undefined ? {} : { fixed }),
+	...(minPresenceAhead === undefined ? {} : { minPresenceAhead }),
+});
+
+export const resolvedPdfTextProps = ({
+	orphans,
+	widows,
+	...presentation
+}: ResolvedPdfNodePresentation): ResolvedPdfTextProps => ({
+	...resolvedPdfFlowProps(presentation),
+	...(orphans === undefined ? {} : { orphans }),
+	...(widows === undefined ? {} : { widows }),
+});
+
+const toReactPdfProperty = (property: string) => {
+	if (property === "-rr-shadow-color") return "shadowColor";
+	if (property === "-rr-shadow-width") return "shadowWidth";
+	return property.replace(/-([a-z])/g, (_match, letter: string) => letter.toUpperCase());
+};
+
+const styleDelta = (
+	style: ResolvedNodeStyle["style"],
+	base: ResolvedNodeStyle["style"] | undefined,
+): Style | undefined => {
+	const entries = Object.entries(style).filter(([property, value]) => base?.[property] !== value);
+	if (entries.length === 0) return undefined;
+
+	return Object.freeze(
+		Object.fromEntries(entries.map(([property, value]) => [toReactPdfProperty(property), value])),
+	) as Style;
+};
+
+export function adaptResolvedPdfNode(
+	resolved: ResolvedNodeStyle,
+	base?: ResolvedNodeStyle,
+): ResolvedPdfNodePresentation {
+	const style = styleDelta(resolved.style, base?.style);
+	const { structural } = resolved;
+	const presentation = {
+		...(style ? { style } : {}),
+		...(structural.pageSize === undefined ? {} : { size: structural.pageSize }),
+		...(structural.breakBefore === "page" ? { break: true as const } : {}),
+		...(structural.breakInside === "avoid" ? { wrap: false as const } : {}),
+		...(structural.fixed === undefined ? {} : { fixed: structural.fixed }),
+		...(structural.minPresenceAhead === undefined ? {} : { minPresenceAhead: structural.minPresenceAhead }),
+		...(structural.orphans === undefined ? {} : { orphans: structural.orphans }),
+		...(structural.widows === undefined ? {} : { widows: structural.widows }),
+	} satisfies ResolvedPdfNodePresentation;
+
+	return Object.freeze(presentation);
+}

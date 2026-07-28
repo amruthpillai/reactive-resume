@@ -27,6 +27,17 @@ import { View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { getResumeSectionIcon } from "../../section-icon";
 import { getResumeSectionTitle } from "../../section-title";
+import { resolvedPdfFlowProps } from "../../semantic/adapter";
+import {
+	SemanticItemNodeKeyProvider,
+	SemanticNodeKeyProvider,
+	useRenderedChildKeys,
+	useResolvedNode,
+	useSemanticNodeKey,
+	useSemanticNodeVisible,
+	useSemanticSectionNodeKey,
+} from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { getSectionItemRows, getSectionItemsLayout, shouldUseSectionTimeline } from "./columns";
 import { getWebsiteDisplayText } from "./contact";
 import {
@@ -35,6 +46,7 @@ import {
 	useSectionStyleRule,
 	useTemplateFeature,
 	useTemplateFeatureStyle,
+	useTemplatePageNodeKey,
 	useTemplatePlacement,
 	useTemplateStyle,
 } from "./context";
@@ -67,6 +79,7 @@ type SectionItemsProps = {
 };
 
 type SectionItemProps = {
+	itemId: string;
 	children: ReactNode;
 	style?: StyleInput;
 };
@@ -90,6 +103,7 @@ type ItemWebsite = {
 type ItemTitleProps = {
 	children: ReactNode;
 	website: ItemWebsite;
+	field: string;
 	bold?: boolean;
 };
 
@@ -204,6 +218,10 @@ const getSectionBreaks = (data: ResumeData, sectionId: string): { keepTogether: 
 
 const SectionShell = ({ sectionId, title, showHeading = true, children }: SectionShellProps) => {
 	const data = useRender();
+	const pageNodeKey = useTemplatePageNodeKey();
+	const sectionNodeKey = useSemanticSectionNodeKey(pageNodeKey, sectionId);
+	const resolved = useResolvedNode(sectionNodeKey);
+	const visible = useSemanticNodeVisible(sectionNodeKey);
 	const sectionStyle = useTemplateStyle("section");
 	const sectionRuleStyle = useSectionStyleRule("section");
 	const sectionHeadingStyle = useTemplateStyle("sectionHeading");
@@ -221,44 +239,59 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	// react-pdf, so the layout UI warns users this only works for sections that fit one page.
 	if (keepTogether) breakProps.wrap = false;
 	if (startOnNewPage) breakProps.break = true;
+	const flowProps = { ...breakProps, ...resolvedPdfFlowProps(resolved) };
+	const resolvedSectionStyle = composeStyles(sectionStyle, sectionRuleStyle, resolved.style);
+	if (!visible) return null;
 
 	if (!showIcon) {
 		// No icon: render heading exactly as before (no structural change)
 		return (
-			<View style={composeStyles(sectionStyle, sectionRuleStyle)} {...breakProps}>
-				{showHeading && (
-					<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>{sectionTitle}</Heading>
-				)}
-				{children}
-			</View>
+			<SemanticNodeKeyProvider nodeKey={sectionNodeKey}>
+				<View style={resolvedSectionStyle} {...flowProps}>
+					{showHeading && (
+						<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>{sectionTitle}</Heading>
+					)}
+					{children}
+				</View>
+			</SemanticNodeKeyProvider>
 		);
 	}
 
 	// With icon: wrap in a flex row container that inherits the heading's border/decoration
 	return (
-		<View style={composeStyles(sectionStyle, sectionRuleStyle)} {...breakProps}>
-			{showHeading && (
-				<View
-					style={composeStyles(
-						sectionHeadingStyle,
-						defaultSectionHeadingContainerStyle,
-						sectionHeadingContainerStyle,
-						sectionHeadingRuleStyle,
-					)}
-				>
-					<SectionHeadingIcon name={sectionIcon as IconName} />
-					<Heading style={getSectionHeadingTextStyle(sectionHeadingStyle, sectionHeadingRuleStyle)}>
-						{sectionTitle}
-					</Heading>
-				</View>
-			)}
-			{children}
-		</View>
+		<SemanticNodeKeyProvider nodeKey={sectionNodeKey}>
+			<View style={resolvedSectionStyle} {...flowProps}>
+				{showHeading && (
+					<View
+						style={composeStyles(
+							sectionHeadingStyle,
+							defaultSectionHeadingContainerStyle,
+							sectionHeadingContainerStyle,
+							sectionHeadingRuleStyle,
+						)}
+					>
+						<SectionHeadingIcon
+							nodeKey={semanticNodeKeys.icon(semanticNodeKeys.sectionHeading(sectionNodeKey), "section")}
+							name={sectionIcon as IconName}
+						/>
+						<Heading style={getSectionHeadingTextStyle(sectionHeadingStyle, sectionHeadingRuleStyle)}>
+							{sectionTitle}
+						</Heading>
+					</View>
+				)}
+				{children}
+			</View>
+		</SemanticNodeKeyProvider>
 	);
 };
 
 const SectionItems = ({ children, columns = 1 }: SectionItemsProps) => {
 	const data = useRender();
+	const sectionNodeKey = useSemanticNodeKey();
+	const sectionItemsNodeKey = sectionNodeKey ? semanticNodeKeys.sectionItems(sectionNodeKey) : undefined;
+	const resolved = useResolvedNode(sectionItemsNodeKey);
+	const visible = useSemanticNodeVisible(sectionItemsNodeKey);
+	const renderedChildKeys = useRenderedChildKeys(sectionItemsNodeKey);
 	const placement = useTemplatePlacement();
 	const sectionTimeline = useTemplateFeature("sectionTimeline");
 	const sectionItemsStyle = useTemplateStyle("sectionItems");
@@ -276,46 +309,80 @@ const SectionItems = ({ children, columns = 1 }: SectionItemsProps) => {
 		columns: layout.columns,
 	});
 	const context = { itemStyle: layout.itemStyle, useTimeline };
+	const authoredChildren = Children.toArray(children);
+	const childrenByNodeKey = new Map(
+		authoredChildren.flatMap((child) => {
+			if (!isValidElement<{ itemId?: string }>(child) || !child.props.itemId || !sectionItemsNodeKey) return [];
+			return [[semanticNodeKeys.item(sectionItemsNodeKey, child.props.itemId), child] as const];
+		}),
+	);
+	const resolvedChildren = renderedChildKeys
+		? renderedChildKeys.flatMap((nodeKey) => {
+				const child = childrenByNodeKey.get(nodeKey);
+				return child ? [child] : [];
+			})
+		: authoredChildren;
 	const rtlRowStyle = createRtlStyleHelpers(data.rtl).gridRowStyle;
+	if (!visible) return null;
 
 	if (!useTimeline) {
 		if (layout.isGrid) {
-			const rows = getSectionItemRows(Children.toArray(children), layout.columns);
+			const rows = getSectionItemRows(resolvedChildren, layout.columns);
 
 			return (
-				<SectionItemsContext.Provider value={context}>
-					<View style={composeStyles(layout.containerStyle, sectionItemsStyle)}>
-						{rows.map((row, rowIndex) => (
-							<View key={getRowKey(row, rowIndex)} style={composeStyles(layout.rowStyle, rtlRowStyle)}>
-								{row}
-								{SECTION_ITEM_PLACEHOLDER_KEYS.slice(0, layout.columns - row.length).map((placeholderKey) => (
-									<View key={placeholderKey} style={composeStyles(layout.itemStyle)} />
-								))}
-							</View>
-						))}
-					</View>
-				</SectionItemsContext.Provider>
+				<SemanticNodeKeyProvider nodeKey={sectionItemsNodeKey}>
+					<SectionItemsContext.Provider value={context}>
+						<View
+							{...resolvedPdfFlowProps(resolved)}
+							style={composeStyles(layout.containerStyle, sectionItemsStyle, resolved.style)}
+						>
+							{rows.map((row, rowIndex) => (
+								<View key={getRowKey(row, rowIndex)} style={composeStyles(layout.rowStyle, rtlRowStyle)}>
+									{row}
+									{SECTION_ITEM_PLACEHOLDER_KEYS.slice(0, layout.columns - row.length).map((placeholderKey) => (
+										<View key={placeholderKey} style={composeStyles(layout.itemStyle)} />
+									))}
+								</View>
+							))}
+						</View>
+					</SectionItemsContext.Provider>
+				</SemanticNodeKeyProvider>
 			);
 		}
 
 		return (
-			<SectionItemsContext.Provider value={context}>
-				<View style={composeStyles(layout.containerStyle, sectionItemsStyle)}>{children}</View>
-			</SectionItemsContext.Provider>
+			<SemanticNodeKeyProvider nodeKey={sectionItemsNodeKey}>
+				<SectionItemsContext.Provider value={context}>
+					<View
+						{...resolvedPdfFlowProps(resolved)}
+						style={composeStyles(layout.containerStyle, sectionItemsStyle, resolved.style)}
+					>
+						{resolvedChildren}
+					</View>
+				</SectionItemsContext.Provider>
+			</SemanticNodeKeyProvider>
 		);
 	}
 
 	return (
-		<SectionItemsContext.Provider value={context}>
-			<View style={composeStyles(layout.containerStyle, sectionItemsStyle, timelineItemsStyle)}>
-				<View style={composeStyles(timelineLineStyle)} />
-				{children}
-			</View>
-		</SectionItemsContext.Provider>
+		<SemanticNodeKeyProvider nodeKey={sectionItemsNodeKey}>
+			<SectionItemsContext.Provider value={context}>
+				<View
+					{...resolvedPdfFlowProps(resolved)}
+					style={composeStyles(layout.containerStyle, sectionItemsStyle, timelineItemsStyle, resolved.style)}
+				>
+					<View style={composeStyles(timelineLineStyle)} />
+					{resolvedChildren}
+				</View>
+			</SectionItemsContext.Provider>
+		</SemanticNodeKeyProvider>
 	);
 };
 
-const SectionItem = ({ children, style }: SectionItemProps) => {
+const SectionItem = ({ itemId, children, style }: SectionItemProps) => {
+	const sectionItemsNodeKey = useSemanticNodeKey();
+	const itemNodeKey = sectionItemsNodeKey ? semanticNodeKeys.item(sectionItemsNodeKey, itemId) : undefined;
+	const visible = useSemanticNodeVisible(itemNodeKey);
 	const { itemStyle: sectionItemStyle, useTimeline } = useSectionItemsContext();
 	const itemStyle = useTemplateStyle("item");
 	const itemRuleStyle = useSectionStyleRule("item");
@@ -323,18 +390,29 @@ const SectionItem = ({ children, style }: SectionItemProps) => {
 	const timelineMarkerStyle = useTemplateFeatureStyle("sectionTimeline", "marker");
 	const timelineDotStyle = useTemplateFeatureStyle("sectionTimeline", "dot");
 	const timelineContentStyle = useTemplateFeatureStyle("sectionTimeline", "content");
+	if (!visible) return null;
 
 	if (!useTimeline) {
-		return <Div style={composeStyles(itemStyle, itemRuleStyle, sectionItemStyle, style)}>{children}</Div>;
+		return (
+			<SemanticNodeKeyProvider nodeKey={itemNodeKey}>
+				<Div nodeKey={itemNodeKey} style={composeStyles(itemStyle, itemRuleStyle, sectionItemStyle, style)}>
+					{children}
+				</Div>
+			</SemanticNodeKeyProvider>
+		);
 	}
 
 	return (
-		<View style={composeStyles(timelineItemStyle)}>
-			<View style={composeStyles(timelineMarkerStyle)}>
-				<View style={composeStyles(timelineDotStyle)} />
+		<SemanticNodeKeyProvider nodeKey={itemNodeKey}>
+			<View style={composeStyles(timelineItemStyle)}>
+				<View style={composeStyles(timelineMarkerStyle)}>
+					<View style={composeStyles(timelineDotStyle)} />
+				</View>
+				<Div nodeKey={itemNodeKey} style={composeStyles(itemStyle, itemRuleStyle, timelineContentStyle, style)}>
+					{children}
+				</Div>
 			</View>
-			<Div style={composeStyles(itemStyle, itemRuleStyle, timelineContentStyle, style)}>{children}</Div>
-		</View>
+		</SemanticNodeKeyProvider>
 	);
 };
 
@@ -376,27 +454,46 @@ const useSectionSplitRowStyle = () => {
 };
 
 const SectionItemHeader = ({ children }: SectionItemHeaderProps) => {
+	const itemNodeKey = useSemanticNodeKey();
+	const itemHeaderNodeKey = itemNodeKey ? semanticNodeKeys.itemHeader(itemNodeKey) : undefined;
+	const resolved = useResolvedNode(itemHeaderNodeKey);
 	const mainItemHeaderBorder = useTemplateFeature("mainItemHeaderBorder");
 	const sectionItemHeaderStyle = useTemplateStyle("sectionItemHeader");
 
-	if (!mainItemHeaderBorder) return <>{children}</>;
+	if (!mainItemHeaderBorder) {
+		return <SemanticNodeKeyProvider nodeKey={itemHeaderNodeKey}>{children}</SemanticNodeKeyProvider>;
+	}
 
-	return <View style={composeStyles(sectionItemHeaderStyle)}>{children}</View>;
+	return (
+		<SemanticNodeKeyProvider nodeKey={itemHeaderNodeKey}>
+			<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(sectionItemHeaderStyle, resolved.style)}>
+				{children}
+			</View>
+		</SemanticNodeKeyProvider>
+	);
 };
 
-const ItemTitle = ({ children, website, bold = true }: ItemTitleProps) => {
+const ItemTitle = ({ children, website, field, bold = true }: ItemTitleProps) => {
 	const inlineWebsiteUrl = getInlineItemWebsiteUrl(website);
-	const title = bold ? <Bold>{children}</Bold> : <Text>{children}</Text>;
+	const title = bold ? <Bold semanticField={field}>{children}</Bold> : <Text semanticField={field}>{children}</Text>;
 
 	if (!inlineWebsiteUrl) return title;
 
-	return <Link src={inlineWebsiteUrl}>{title}</Link>;
+	return (
+		<Link semanticRole="inline-website" src={inlineWebsiteUrl}>
+			{title}
+		</Link>
+	);
 };
 
 const ItemWebsiteLink = ({ website }: ItemWebsiteLinkProps) => {
 	if (!shouldRenderSeparateItemWebsite(website)) return null;
 
-	return <Link src={website.url}>{getWebsiteDisplayText(website)}</Link>;
+	return (
+		<Link semanticRole="website" src={website.url}>
+			{getWebsiteDisplayText(website)}
+		</Link>
+	);
 };
 
 const SummarySection = ({ showHeading = true }: SummarySectionProps = {}) => {
@@ -408,8 +505,8 @@ const SummarySection = ({ showHeading = true }: SummarySectionProps = {}) => {
 	return (
 		<SectionShell sectionId="summary" title={summary.title} showHeading={showHeading}>
 			<SectionItems>
-				<SectionItem>
-					<RichText>{summary.content}</RichText>
+				<SectionItem itemId="content">
+					<RichText semanticField="content">{summary.content}</RichText>
 				</SectionItem>
 			</SectionItems>
 		</SectionShell>
@@ -425,8 +522,8 @@ const CustomSummarySection = ({ section, showHeading = true }: CustomSummarySect
 		<SectionShell sectionId={section.id} title={section.title} showHeading={showHeading}>
 			<SectionItems columns={section.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
-						<RichText>{item.content}</RichText>
+					<SectionItem key={item.id} itemId={item.id}>
+						<RichText semanticField="content">{item.content}</RichText>
 					</SectionItem>
 				))}
 			</SectionItems>
@@ -446,14 +543,16 @@ const ProfileSection = ({ sectionId = "profiles", sectionData }: ItemSectionProp
 		<SectionShell sectionId={sectionId} title={profiles.title}>
 			<SectionItems columns={profiles.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
 							<View style={composeStyles(inlineStyle)}>
 								<Icon name={item.icon as IconName} />
-								<Bold>{item.network}</Bold>
+								<Bold semanticField="network">{item.network}</Bold>
 							</View>
 						</SectionItemHeader>
-						<Link src={item.website.url}>{item.username}</Link>
+						<Link semanticRole="profile" src={item.website.url}>
+							<Text semanticField="username">{item.username}</Text>
+						</Link>
 					</SectionItem>
 				))}
 			</SectionItems>
@@ -486,49 +585,71 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 						<InlineItemHeader
 							leading={
 								hasPosition || hasLocation ? (
-									<Text>
+									<Text semanticField="position">
 										{hasPosition ? item.position : ""}
 										{hasPosition && hasLocation ? " " : ""}
 										{hasLocation ? `(${item.location})` : ""}
 									</Text>
 								) : null
 							}
-							middle={<ItemTitle website={item.website}>{item.company}</ItemTitle>}
-							trailing={<Text style={composeStyles(alignEndStyle)}>{item.period}</Text>}
+							middle={
+								<ItemTitle field="company" website={item.website}>
+									{item.company}
+								</ItemTitle>
+							}
+							trailing={
+								<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+									{item.period}
+								</Text>
+							}
 						/>
 					);
 
 					const renderSplitHeader = () => (
 						<>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.company}</ItemTitle>
-								{hasSplitRowText(headerLocation) && <Text style={composeStyles(alignEndStyle)}>{headerLocation}</Text>}
+								<ItemTitle field="company" website={item.website}>
+									{item.company}
+								</ItemTitle>
+								{hasSplitRowText(headerLocation) && (
+									<Text semanticField="location" style={composeStyles(alignEndStyle)}>
+										{headerLocation}
+									</Text>
+								)}
 							</View>
 
 							{(hasPosition || hasSplitRowText(headerPeriod)) && (
 								<View style={composeStyles(splitRowStyle)}>
-									{hasPosition && <Text>{item.position}</Text>}
-									{hasSplitRowText(headerPeriod) && <Text style={composeStyles(alignEndStyle)}>{headerPeriod}</Text>}
+									{hasPosition && <Text semanticField="position">{item.position}</Text>}
+									{hasSplitRowText(headerPeriod) && (
+										<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+											{headerPeriod}
+										</Text>
+									)}
 								</View>
 							)}
 						</>
 					);
 
 					return (
-						<SectionItem key={item.id}>
+						<SectionItem key={item.id} itemId={item.id}>
 							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
 
 							{item.roles.map((role) => (
-								<View key={role.id}>
-									<View style={composeStyles(splitRowStyle)}>
-										<Text>{role.position}</Text>
-										<Text style={composeStyles(alignEndStyle)}>{role.period}</Text>
+								<SemanticItemNodeKeyProvider key={role.id} itemId={role.id}>
+									<View>
+										<View style={composeStyles(splitRowStyle)}>
+											<Text semanticField="position">{role.position}</Text>
+											<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+												{role.period}
+											</Text>
+										</View>
+										<RichText semanticField="description">{role.description}</RichText>
 									</View>
-									<RichText>{role.description}</RichText>
-								</View>
+								</SemanticItemNodeKeyProvider>
 							))}
 
-							{item.roles.length === 0 && <RichText>{item.description}</RichText>}
+							{item.roles.length === 0 && <RichText semanticField="description">{item.description}</RichText>}
 
 							<ItemWebsiteLink website={item.website} />
 						</SectionItem>
@@ -568,34 +689,48 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 							<InlineItemHeader
 								leading={
 									hasArea || hasDegree ? (
-										<Text>
+										<Text semanticField="area">
 											{hasArea ? item.area : ""}
 											{hasArea && hasDegree ? " " : ""}
 											{hasDegree ? `(${item.degree})` : ""}
 										</Text>
 									) : null
 								}
-								middle={<ItemTitle website={item.website}>{item.school}</ItemTitle>}
-								trailing={<Text style={composeStyles(alignEndStyle)}>{item.period}</Text>}
+								middle={
+									<ItemTitle field="school" website={item.website}>
+										{item.school}
+									</ItemTitle>
+								}
+								trailing={
+									<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+										{item.period}
+									</Text>
+								}
 							/>
-							{gradeAndLocation && <Text>{gradeAndLocation}</Text>}
+							{gradeAndLocation && <Text semanticField="grade">{gradeAndLocation}</Text>}
 						</>
 					);
 
 					const renderSplitHeader = () => (
 						<>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.school}</ItemTitle>
+								<ItemTitle field="school" website={item.website}>
+									{item.school}
+								</ItemTitle>
 								{hasSplitRowText(headerDegreeAndGrade) && (
-									<Text style={composeStyles(alignEndStyle)}>{headerDegreeAndGrade}</Text>
+									<Text semanticField="degree" style={composeStyles(alignEndStyle)}>
+										{headerDegreeAndGrade}
+									</Text>
 								)}
 							</View>
 
 							{(hasArea || hasSplitRowText(headerLocationAndPeriod)) && (
 								<View style={composeStyles(splitRowStyle)}>
-									{hasArea && <Text>{item.area}</Text>}
+									{hasArea && <Text semanticField="area">{item.area}</Text>}
 									{hasSplitRowText(headerLocationAndPeriod) && (
-										<Text style={composeStyles(alignEndStyle)}>{headerLocationAndPeriod}</Text>
+										<Text semanticField="location" style={composeStyles(alignEndStyle)}>
+											{headerLocationAndPeriod}
+										</Text>
 									)}
 								</View>
 							)}
@@ -603,10 +738,10 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 					);
 
 					return (
-						<SectionItem key={item.id}>
+						<SectionItem key={item.id} itemId={item.id}>
 							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
 
-							<RichText>{item.description}</RichText>
+							<RichText semanticField="description">{item.description}</RichText>
 
 							<ItemWebsiteLink website={item.website} />
 						</SectionItem>
@@ -630,15 +765,19 @@ const ProjectsSection = ({ sectionId = "projects", sectionData }: ItemSectionPro
 		<SectionShell sectionId={sectionId} title={projects.title}>
 			<SectionItems columns={projects.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.name}</ItemTitle>
-								<Text style={composeStyles(alignEndStyle)}>{item.period}</Text>
+								<ItemTitle field="name" website={item.website}>
+									{item.name}
+								</ItemTitle>
+								<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+									{item.period}
+								</Text>
 							</View>
 						</SectionItemHeader>
 
-						<RichText>{item.description}</RichText>
+						<RichText semanticField="description">{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
 					</SectionItem>
@@ -661,17 +800,19 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 		<SectionShell sectionId={sectionId} title={skills.title}>
 			<SectionItems columns={skills.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id} style={{ rowGap: metrics.gapY(0.25) }}>
+					<SectionItem key={item.id} itemId={item.id} style={{ rowGap: metrics.gapY(0.25) }}>
 						<SectionItemHeader>
 							<View style={composeStyles(inlineStyle)}>
 								<Icon name={item.icon as IconName} />
-								<Bold style={{ flex: 1 }}>{item.name}</Bold>
+								<Bold semanticField="name" style={{ flex: 1 }}>
+									{item.name}
+								</Bold>
 							</View>
 						</SectionItemHeader>
 
 						<View>
-							<Text>{item.proficiency}</Text>
-							<Small>{item.keywords.join(", ")}</Small>
+							<Text semanticField="proficiency">{item.proficiency}</Text>
+							<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
 						</View>
 
 						<LevelDisplay level={item.level} />
@@ -693,10 +834,10 @@ const LanguagesSection = ({ sectionId = "languages", sectionData }: ItemSectionP
 		<SectionShell sectionId={sectionId} title={languages.title}>
 			<SectionItems columns={languages.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
-							<Bold>{item.language}</Bold>
-							<Text>{item.fluency}</Text>
+							<Bold semanticField="language">{item.language}</Bold>
+							<Text semanticField="fluency">{item.fluency}</Text>
 						</SectionItemHeader>
 						<LevelDisplay level={item.level} />
 					</SectionItem>
@@ -718,15 +859,15 @@ const InterestsSection = ({ sectionId = "interests", sectionData }: ItemSectionP
 		<SectionShell sectionId={sectionId} title={interests.title}>
 			<SectionItems columns={interests.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
 							<View style={composeStyles(inlineStyle)}>
 								<Icon name={item.icon as IconName} />
-								<Bold>{item.name}</Bold>
+								<Bold semanticField="name">{item.name}</Bold>
 							</View>
 						</SectionItemHeader>
 
-						<Small>{item.keywords.join(", ")}</Small>
+						<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
 					</SectionItem>
 				))}
 			</SectionItems>
@@ -747,17 +888,19 @@ const AwardsSection = ({ sectionId = "awards", sectionData }: ItemSectionProps<A
 		<SectionShell sectionId={sectionId} title={awards.title}>
 			<SectionItems columns={awards.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
 							<View style={composeStyles(splitRowStyle, awardTitleDateRowStyle)}>
-								<ItemTitle website={item.website} bold={false}>
+								<ItemTitle field="title" website={item.website} bold={false}>
 									{item.title}
 								</ItemTitle>
-								<Text style={composeStyles(alignEndStyle)}>{item.date}</Text>
+								<Text semanticField="date" style={composeStyles(alignEndStyle)}>
+									{item.date}
+								</Text>
 							</View>
-							<Text>{item.awarder}</Text>
+							<Text semanticField="awarder">{item.awarder}</Text>
 						</SectionItemHeader>
-						<RichText>{item.description}</RichText>
+						<RichText semanticField="description">{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
 					</SectionItem>
@@ -783,16 +926,20 @@ const CertificationsSection = ({
 		<SectionShell sectionId={sectionId} title={certifications.title}>
 			<SectionItems columns={certifications.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.title}</ItemTitle>
-								<Text style={composeStyles(alignEndStyle)}>{item.date}</Text>
+								<ItemTitle field="title" website={item.website}>
+									{item.title}
+								</ItemTitle>
+								<Text semanticField="date" style={composeStyles(alignEndStyle)}>
+									{item.date}
+								</Text>
 							</View>
-							<Text>{item.issuer}</Text>
+							<Text semanticField="issuer">{item.issuer}</Text>
 						</SectionItemHeader>
 
-						<RichText>{item.description}</RichText>
+						<RichText semanticField="description">{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
 					</SectionItem>
@@ -815,17 +962,21 @@ const PublicationsSection = ({ sectionId = "publications", sectionData }: ItemSe
 		<SectionShell sectionId={sectionId} title={publications.title}>
 			<SectionItems columns={publications.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
 							<View style={composeStyles(splitRowStyle)}>
-								<ItemTitle website={item.website}>{item.title}</ItemTitle>
-								<Text style={composeStyles(alignEndStyle)}>{item.date}</Text>
+								<ItemTitle field="title" website={item.website}>
+									{item.title}
+								</ItemTitle>
+								<Text semanticField="date" style={composeStyles(alignEndStyle)}>
+									{item.date}
+								</Text>
 							</View>
 
-							<Text>{item.publisher}</Text>
+							<Text semanticField="publisher">{item.publisher}</Text>
 						</SectionItemHeader>
 
-						<RichText>{item.description}</RichText>
+						<RichText semanticField="description">{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
 					</SectionItem>
@@ -850,26 +1001,42 @@ const VolunteerSection = ({ sectionId = "volunteer", sectionData }: ItemSectionP
 			<SectionItems columns={volunteer.columns}>
 				{items.map((item) => {
 					return (
-						<SectionItem key={item.id}>
+						<SectionItem key={item.id} itemId={item.id}>
 							<SectionItemHeader>
 								{inlineItemHeader ? (
 									<InlineItemHeader
-										leading={hasSplitRowText(item.location) ? <Text>{item.location}</Text> : null}
-										middle={<ItemTitle website={item.website}>{item.organization}</ItemTitle>}
-										trailing={<Text style={composeStyles(alignEndStyle)}>{item.period}</Text>}
+										leading={
+											hasSplitRowText(item.location) ? <Text semanticField="location">{item.location}</Text> : null
+										}
+										middle={
+											<ItemTitle field="organization" website={item.website}>
+												{item.organization}
+											</ItemTitle>
+										}
+										trailing={
+											<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+												{item.period}
+											</Text>
+										}
 									/>
 								) : (
 									<>
 										<View style={composeStyles(splitRowStyle)}>
-											<ItemTitle website={item.website}>{item.organization}</ItemTitle>
-											{hasSplitRowText(item.period) && <Text style={composeStyles(alignEndStyle)}>{item.period}</Text>}
+											<ItemTitle field="organization" website={item.website}>
+												{item.organization}
+											</ItemTitle>
+											{hasSplitRowText(item.period) && (
+												<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+													{item.period}
+												</Text>
+											)}
 										</View>
 
-										<Text>{item.location}</Text>
+										<Text semanticField="location">{item.location}</Text>
 									</>
 								)}
 							</SectionItemHeader>
-							<RichText>{item.description}</RichText>
+							<RichText semanticField="description">{item.description}</RichText>
 
 							<ItemWebsiteLink website={item.website} />
 						</SectionItem>
@@ -891,13 +1058,15 @@ const ReferencesSection = ({ sectionId = "references", sectionData }: ItemSectio
 		<SectionShell sectionId={sectionId} title={references.title}>
 			<SectionItems columns={references.columns}>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
+					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
-							<ItemTitle website={item.website}>{item.name}</ItemTitle>
-							<Text>{item.position}</Text>
-							<Text>{item.phone}</Text>
+							<ItemTitle field="name" website={item.website}>
+								{item.name}
+							</ItemTitle>
+							<Text semanticField="position">{item.position}</Text>
+							<Text semanticField="phone">{item.phone}</Text>
 						</SectionItemHeader>
-						<RichText>{item.description}</RichText>
+						<RichText semanticField="description">{item.description}</RichText>
 
 						<ItemWebsiteLink website={item.website} />
 					</SectionItem>
@@ -916,9 +1085,9 @@ const CoverLetterSection = ({ section }: CoverLetterSectionProps) => {
 		<SectionShell sectionId={section.id} title={section.title} showHeading={false}>
 			<SectionItems>
 				{items.map((item) => (
-					<SectionItem key={item.id}>
-						<RichText>{item.recipient}</RichText>
-						<RichText>{item.content}</RichText>
+					<SectionItem key={item.id} itemId={item.id}>
+						<RichText semanticField="recipient">{item.recipient}</RichText>
+						<RichText semanticField="content">{item.content}</RichText>
 					</SectionItem>
 				))}
 			</SectionItems>

@@ -1,0 +1,231 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import { describe, expect, it, vi } from "vitest";
+import { pdf } from "@react-pdf/renderer";
+import { createElement } from "react";
+import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { ResumeDocument } from "../document";
+import { semanticNodeKeys } from "./node-keys";
+import { resolveResumePresentation, resolveStylesheetMode } from "./resolve";
+
+const applied = (text: string) => ({ languageVersion: 1, text });
+
+type HostNode = {
+	type: string;
+	style?: unknown;
+	value?: string;
+	children?: HostNode[];
+};
+
+const nodeText = (node: HostNode): string =>
+	node.value ?? (node.children ?? []).map((child) => nodeText(child)).join("");
+
+const findText = (node: HostNode, text: string): HostNode | undefined => {
+	if (node.type === "TEXT" && nodeText(node) === text) return node;
+	for (const child of node.children ?? []) {
+		const match = findText(child, text);
+		if (match) return match;
+	}
+};
+
+const findPrimitive = (node: HostNode, type: string, text: string): HostNode | undefined => {
+	if (node.type === type && nodeText(node) === text) return node;
+	for (const child of node.children ?? []) {
+		const match = findPrimitive(child, type, text);
+		if (match) return match;
+	}
+};
+
+const mergedStyle = (node: HostNode | undefined): Record<string, unknown> =>
+	Object.assign({}, ...(Array.isArray(node?.style) ? node.style : node?.style ? [node.style] : []));
+
+const containsStyle = (node: HostNode, property: string, value: unknown): boolean =>
+	mergedStyle(node)[property] === value || (node.children ?? []).some((child) => containsStyle(child, property, value));
+
+const textRuns = (node: HostNode): string[] => [
+	...(node.type === "TEXT" ? [nodeText(node)] : []),
+	...(node.children ?? []).flatMap((child) => textRuns(child)),
+];
+
+const buildIssueFixture = (): ResumeData => {
+	const data = structuredClone(defaultResumeData);
+
+	data.basics = {
+		...data.basics,
+		name: "Ada Lovelace",
+		email: "ada@example.com",
+	};
+	data.sections.experience.items = [
+		{
+			id: "item-1",
+			hidden: false,
+			company: "Analytical Engines",
+			position: "Engineer",
+			location: "London",
+			period: "1842",
+			website: { url: "", label: "", inlineLink: false },
+			description: "",
+			roles: [],
+		},
+	];
+	data.sections.skills.items = [
+		{
+			id: "item-1",
+			hidden: false,
+			icon: "",
+			iconColor: "",
+			name: "TypeScript",
+			proficiency: "Expert",
+			level: 3,
+			keywords: [],
+		},
+	];
+	data.metadata.layout.pages = [{ fullWidth: true, main: ["experience", "skills"], sidebar: [] }];
+
+	return data;
+};
+
+const resolveIssueFixture = (text: string) => {
+	const data = buildIssueFixture();
+	return resolveResumePresentation({
+		data,
+		template: "onyx",
+		applied: applied(text),
+		mode: "semantic",
+	});
+};
+
+const pageKey = semanticNodeKeys.page(1);
+const headerKey = semanticNodeKeys.header(semanticNodeKeys.region(pageKey, "header"));
+const sectionItemKey = (section: string) =>
+	semanticNodeKeys.item(
+		semanticNodeKeys.sectionItems(semanticNodeKeys.section(semanticNodeKeys.region(pageKey, "main"), section)),
+		"item-1",
+	);
+
+describe("semantic issue fixtures", () => {
+	it("lets semantic field font weight override template bold defaults (#3146)", () => {
+		const presentation = resolveIssueFixture(`
+			@rr-version 1;
+			section[type="experience"] field[name="company"] { font-weight: 400; }
+		`);
+		const company = semanticNodeKeys.field(semanticNodeKeys.itemHeader(sectionItemKey("experience")), "company");
+
+		expect(presentation[company]?.style?.fontWeight).toBe("400");
+	});
+
+	it("lets semantic link decoration override the builder underline base (#3134)", () => {
+		const presentation = resolveIssueFixture(`
+			@rr-version 1;
+			link { text-decoration: none; }
+		`);
+		const contact = semanticNodeKeys.contactItem(semanticNodeKeys.contactList(headerKey), "email");
+		const link = semanticNodeKeys.link(contact, "contact");
+
+		expect(presentation[link]?.style?.textDecoration).toBe("none");
+		expect(presentation[contact]?.style?.textDecoration).toBe("none");
+	});
+
+	it("styles Basics/header nodes while rejecting unsupported gradients (#3137)", () => {
+		const valid = resolveIssueFixture(`
+			@rr-version 1;
+			header { background-color: #1e293b; }
+			name { color: white; }
+		`);
+		const invalid = compileStylesheet(
+			applied("@rr-version 1; header { background-image: linear-gradient(red, blue); }"),
+		);
+
+		expect(valid[headerKey]?.style?.backgroundColor).toBe("#1e293b");
+		expect(valid[semanticNodeKeys.headerPart(headerKey, "name")]?.style?.color).toBe("white");
+		expect(invalid.program).toBeNull();
+	});
+
+	it("unbolds only skill names and leaves experience titles unchanged (#2223)", () => {
+		const presentation = resolveIssueFixture(`
+			@rr-version 1;
+			section[type="skills"] field[name="name"] { font-weight: 400; }
+		`);
+		const skillName = semanticNodeKeys.field(semanticNodeKeys.itemHeader(sectionItemKey("skills")), "name");
+		const company = semanticNodeKeys.field(semanticNodeKeys.itemHeader(sectionItemKey("experience")), "company");
+
+		expect(presentation[skillName]?.style?.fontWeight).toBe("400");
+		expect(presentation[company]?.style?.fontWeight).not.toBe("400");
+	});
+
+	it("never applies legacy and semantic custom styles together", () => {
+		const semanticData = buildIssueFixture();
+		semanticData.metadata.stylesheet = {
+			mode: "semantic",
+			source: applied("@rr-version 1;"),
+			applied: applied("@rr-version 1;"),
+		};
+		const legacyData = buildIssueFixture();
+
+		expect(resolveStylesheetMode(semanticData)).toBe("semantic");
+		expect(resolveStylesheetMode(legacyData)).toBe("legacy");
+		expect(
+			resolveResumePresentation({
+				data: legacyData,
+				template: "onyx",
+				applied: applied("@rr-version 1; name { color: red; }"),
+				mode: "legacy",
+			}),
+		).toEqual({});
+	});
+
+	it("applies issue-regression styles to the final existing PDF primitives", async () => {
+		const data = buildIssueFixture();
+		const stylesheet = applied(`
+			@rr-version 1;
+			header { background-color: #1e293b; }
+			name { color: white; }
+			link { text-decoration: none; }
+			section[type="experience"] field[name="company"] { font-weight: 400; }
+			section[type="skills"] field[name="name"] { font-weight: 400; }
+			level icon[role~="active"] { opacity: 0.2; }
+		`);
+		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+		const instance = pdf(element);
+		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+		const document = instance.container.document as HostNode;
+
+		expect(mergedStyle(findText(document, "Ada Lovelace"))).toMatchObject({ color: "white" });
+		expect(mergedStyle(findText(document, "Analytical Engines"))).toMatchObject({ fontWeight: "400" });
+		expect(mergedStyle(findText(document, "TypeScript"))).toMatchObject({ fontWeight: "400" });
+		expect(mergedStyle(findPrimitive(document, "LINK", "ada@example.com"))).toMatchObject({
+			textDecoration: "none",
+		});
+		expect(containsStyle(document, "backgroundColor", "#1e293b")).toBe(true);
+		expect(containsStyle(document, "opacity", 0.2)).toBe(true);
+	});
+
+	it("renders descriptor filtering and stable item order instead of remapping raw arrays", async () => {
+		const data = buildIssueFixture();
+		data.sections.skills.items = ["First", "Hidden", "Last"].map((name, index) => ({
+			id: `item-${index + 1}`,
+			hidden: false,
+			icon: "",
+			iconColor: "",
+			name,
+			proficiency: `${name} proficiency`,
+			level: 0,
+			keywords: [],
+		}));
+		data.metadata.layout.pages = [{ fullWidth: true, main: ["skills"], sidebar: [] }];
+		const stylesheet = applied(`
+			@rr-version 1;
+			section[type="skills"] item:nth-child(2) { display: none; }
+			section[type="skills"] item:last-child { order: -1; }
+		`);
+		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+		const instance = pdf(element);
+		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+		const runs = textRuns(instance.container.document as HostNode);
+
+		expect(runs.indexOf("Last")).toBeLessThan(runs.indexOf("First"));
+		expect(runs).not.toContain("Hidden");
+	});
+});

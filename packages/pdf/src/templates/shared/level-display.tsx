@@ -3,6 +3,14 @@ import type { IconName } from "phosphor-icons-react-pdf/dynamic";
 import { resolveLevelDisplaySizes } from "@reactive-resume/schema/resume/level-display-sizes";
 import { View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { resolvedPdfFlowProps } from "../../semantic/adapter";
+import {
+	useResolvedNode,
+	useSemanticNodeBindings,
+	useSemanticNodeKey,
+	useSemanticNodeVisible,
+} from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplateStyle } from "./context";
 import { resolveStyleFontSize } from "./icon-size";
 import { getTemplateMetrics } from "./metrics";
@@ -17,6 +25,11 @@ type LevelDisplayProps = {
 
 export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	const data = useRender();
+	const itemNodeKey = useSemanticNodeKey();
+	const levelNodeKey = itemNodeKey ? semanticNodeKeys.level(itemNodeKey) : undefined;
+	const resolved = useResolvedNode(levelNodeKey);
+	const visible = useSemanticNodeVisible(levelNodeKey);
+	const { resolveNode, isNodeVisible } = useSemanticNodeBindings();
 	const levelDesign = data.metadata.design.level;
 	const metrics = getTemplateMetrics(data.metadata.page);
 	const iconProps = useTemplateIconSlot("icon");
@@ -33,7 +46,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	});
 	const color = typeof iconProps.color === "string" ? iconProps.color : "#000000";
 
-	if (level === 0) return null;
+	if (level === 0 || !visible) return null;
 	if (levelDesign.type === "hidden") return null;
 	if (levelDesign.type === "icon" && levelDesign.icon === "") return null;
 
@@ -49,19 +62,25 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 
 	return (
 		<View
+			{...resolvedPdfFlowProps(resolved)}
 			style={composeStyles(
 				{ flexDirection: "row", alignItems: "center", marginTop: 2, columnGap: gap },
 				levelContainerStyle,
 				levelRuleStyle,
+				resolved.style,
 			)}
 		>
 			{LEVEL_ITEM_KEYS.map((itemKey, index) => {
 				const isActive = index < level;
+				const decorationNodeKey = levelNodeKey ? semanticNodeKeys.icon(levelNodeKey, itemKey) : undefined;
+				const decorationResolved = resolveNode(decorationNodeKey);
+				if (!isNodeVisible(decorationNodeKey)) return null;
 
 				if (levelDesign.type === "icon") {
 					return (
 						<Icon
 							key={itemKey}
+							nodeKey={decorationNodeKey}
 							{...(levelIconExplicitSize === undefined ? {} : { size: levelIconExplicitSize })}
 							name={levelDesign.icon as IconName}
 							style={{ opacity: isActive ? 1 : 0.35 }}
@@ -73,6 +92,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 					return (
 						<View
 							key={itemKey}
+							{...resolvedPdfFlowProps(decorationResolved)}
 							style={composeStyles(
 								{
 									flex: 1,
@@ -83,6 +103,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 								},
 								levelItemStyle,
 								isActive ? levelItemActiveStyle : levelItemInactiveStyle,
+								decorationResolved.style,
 							)}
 						/>
 					);
@@ -108,6 +129,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 				return (
 					<View
 						key={itemKey}
+						{...resolvedPdfFlowProps(decorationResolved)}
 						style={composeStyles(
 							{
 								width,
@@ -120,6 +142,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 							},
 							levelItemStyle,
 							isActive ? levelItemActiveStyle : levelItemInactiveStyle,
+							decorationResolved.style,
 						)}
 					/>
 				);

@@ -3,8 +3,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import { getPrimaryTint as getPrimaryAlpha } from "../shared/color-helpers";
 import {
@@ -18,7 +20,7 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -49,17 +51,29 @@ type LeafishHeaderProps = {
 	styles: LeafishStyles;
 };
 
-export const LeafishPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: TemplatePageProps) => {
+export const LeafishPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles } = useLeafishTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const mainSections = filterSections(page.main, data).filter((section) => section !== "summary");
-	const sidebarSections = filterSections(page.sidebar, data).filter((section) => section !== "summary");
+	const mainSections = useRenderedSectionIds(
+		pageNodeKey,
+		filterSections(page.main, data).filter((section) => section !== "summary"),
+	);
+	const sidebarSections = useRenderedSectionIds(
+		pageNodeKey,
+		filterSections(page.sidebar, data).filter((section) => section !== "summary"),
+	);
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
 				<View style={styles.body}>
@@ -92,10 +106,10 @@ const Header = ({ styles }: LeafishHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
+		<SemanticHeaderView style={styles.header}>
 			<View style={styles.headerIntro}>
 				<View style={styles.headerBody}>
-					{hasPicture && <Image src={picture.url} style={styles.picture} />}
+					{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 					<View style={styles.headerTitle}>
 						<View style={styles.headerIdentity}>
@@ -119,7 +133,7 @@ const Header = ({ styles }: LeafishHeaderProps) => {
 					))}
 				</View>
 			</View>
-		</View>
+		</SemanticHeaderView>
 	);
 };
 

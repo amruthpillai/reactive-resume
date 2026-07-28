@@ -97,7 +97,7 @@ export const SEMANTIC_REGISTRY_V1 = {
 		roles: ["primary-text", "secondary-text", "structured-link"],
 	},
 	link: {
-		parents: ["item", "item-header", "rich-text", ...inlineParents],
+		parents: ["item", "item-header", "rich-text", "template-part", ...inlineParents],
 		attributes: [],
 		roles: ["structured-link"],
 	},
@@ -159,7 +159,7 @@ const templatePartChildKinds = {
 	"inline-item-header-middle": ["field", "link"],
 	"inline-item-header-trailing": ["field"],
 	"header-divider": ["name", "headline"],
-	"contact-item-content": ["icon", "field"],
+	"contact-item-content": ["link", "icon", "field"],
 	"header-name-rule": [],
 } as const satisfies Readonly<Record<string, readonly SemanticNodeKind[]>>;
 
