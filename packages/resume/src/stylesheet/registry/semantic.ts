@@ -69,45 +69,45 @@ export const SEMANTIC_REGISTRY_V1 = {
 	page: { parents: ["resume"], attributes: ["page-number"], roles: [] },
 	region: { parents: ["page"], attributes: ["placement", "region", "part"], roles: [] },
 	header: { parents: ["region"], attributes: ["region"], roles: [] },
-	picture: { parents: ["header", "template-part"], attributes: [], roles: ["picture"] },
-	name: { parents: ["header", "template-part"], attributes: [], roles: ["primary-text"] },
-	headline: { parents: ["header", "template-part"], attributes: [], roles: ["secondary-text"] },
-	"contact-list": { parents: ["header", "template-part"], attributes: [], roles: [] },
+	picture: { parents: ["header"], attributes: [], roles: ["picture"] },
+	name: { parents: ["header"], attributes: [], roles: ["primary-text"] },
+	headline: { parents: ["header"], attributes: [], roles: ["secondary-text"] },
+	"contact-list": { parents: ["header"], attributes: [], roles: [] },
 	"contact-item": {
 		parents: ["contact-list"],
 		attributes: ["name", "part"],
 		roles: ["primary-text", "secondary-text", "structured-link"],
 	},
 	section: {
-		parents: ["region", "template-part"],
+		parents: ["region"],
 		attributes: ["type", "placement", "origin", "part"],
 		roles: ["featured-summary"],
 	},
 	"section-heading": { parents: ["section"], attributes: [], roles: ["section-title"] },
 	"section-items": { parents: ["section"], attributes: [], roles: [] },
 	item: {
-		parents: ["section-items", "item", "template-part"],
+		parents: ["section-items", "item"],
 		attributes: [],
 		roles: ["experience-role", "nested-role"],
 	},
-	"item-header": { parents: ["item", "template-part"], attributes: ["part"], roles: [] },
+	"item-header": { parents: ["item"], attributes: ["part"], roles: [] },
 	field: {
-		parents: ["contact-item", "item", "item-header", "template-part"],
+		parents: ["contact-item", "item", "item-header"],
 		attributes: ["name"],
 		roles: ["primary-text", "secondary-text", "structured-link"],
 	},
 	link: {
-		parents: ["item", "item-header", "rich-text", "template-part", ...inlineParents],
+		parents: ["item", "item-header", "rich-text", ...inlineParents],
 		attributes: [],
 		roles: ["structured-link"],
 	},
 	icon: {
-		parents: ["contact-item", "section-heading", "item", "item-header", "level", "template-part"],
+		parents: ["contact-item", "section-heading", "item", "item-header", "level"],
 		attributes: ["type"],
 		roles: ["decoration", "active", "inactive"],
 	},
-	level: { parents: ["item", "item-header", "template-part"], attributes: [], roles: ["decoration"] },
-	"rich-text": { parents: ["item", "field", "template-part"], attributes: [], roles: [] },
+	level: { parents: ["item", "item-header"], attributes: [], roles: ["decoration"] },
+	"rich-text": { parents: ["item", "field"], attributes: [], roles: [] },
 	"rich-heading": { parents: ["rich-text"], attributes: ["level"], roles: [] },
 	blockquote: { parents: ["rich-text", "list-item-content"], attributes: [], roles: [] },
 	paragraph: { parents: ["rich-text", "list-item-content"], attributes: [], roles: [] },
@@ -142,6 +142,39 @@ export const SEMANTIC_REGISTRY_V1 = {
 	},
 } as const satisfies SemanticRegistry;
 
-export function canContainNode(parent: SemanticNodeKind, child: SemanticNodeKind): boolean {
+const templatePartChildKinds = {
+	"timeline-line": [],
+	"timeline-marker": ["template-part"],
+	"timeline-dot": [],
+	"timeline-content": ["item-header", "field", "link", "item", "level"],
+	"featured-summary": ["section"],
+	"sidebar-background": [],
+	"header-band": ["template-part", "name", "headline"],
+	"picture-anchor": ["picture"],
+	"contact-offset": [],
+	"header-intro": ["template-part"],
+	"header-body": ["picture", "name", "headline", "section"],
+	"header-contact-band": ["contact-list"],
+	"inline-item-header-leading": ["field"],
+	"inline-item-header-middle": ["field", "link"],
+	"inline-item-header-trailing": ["field"],
+	"header-divider": ["name", "headline"],
+	"contact-item-content": ["icon", "field"],
+	"header-name-rule": [],
+} as const satisfies Readonly<Record<string, readonly SemanticNodeKind[]>>;
+
+for (const childKinds of Object.values(templatePartChildKinds)) Object.freeze(childKinds);
+export const TEMPLATE_PART_CHILD_KINDS_V1 = Object.freeze(templatePartChildKinds);
+
+export function canContainNode(parent: SemanticNodeKind, child: SemanticNodeKind, parentPart?: string): boolean {
+	if (parent === "template-part") {
+		if (!parentPart || !(parentPart in TEMPLATE_PART_CHILD_KINDS_V1)) return false;
+		return (
+			TEMPLATE_PART_CHILD_KINDS_V1[
+				parentPart as keyof typeof TEMPLATE_PART_CHILD_KINDS_V1
+			] as readonly SemanticNodeKind[]
+		).includes(child);
+	}
+
 	return (SEMANTIC_REGISTRY_V1[child].parents as readonly SemanticNodeKind[]).includes(parent);
 }

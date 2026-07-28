@@ -36,7 +36,12 @@ export { compileStylesheet } from "./compile";
 export { RRSS_LIMITS_V1 } from "./limits";
 export { parseStylesheet } from "./parse";
 export { PROPERTY_REGISTRY_V1 } from "./registry/properties";
-export { canContainNode, SEMANTIC_NODE_KINDS, SEMANTIC_REGISTRY_V1 } from "./registry/semantic";
+export {
+	canContainNode,
+	SEMANTIC_NODE_KINDS,
+	SEMANTIC_REGISTRY_V1,
+	TEMPLATE_PART_CHILD_KINDS_V1,
+} from "./registry/semantic";
 export { createSystemVariables, SYSTEM_VARIABLE_REGISTRY_V1 } from "./registry/system-variables";
 export { projectPublicRenderData, projectRenderData } from "./render-data";
 export { computeRenderDataHash } from "./render-hash";

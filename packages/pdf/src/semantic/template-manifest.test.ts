@@ -168,10 +168,10 @@ const EXPECTED_PARTS = {
 				parent: "owner",
 				at: "start",
 				take: [
-					{ kind: "field", name: "position" },
-					{ kind: "field", name: "location" },
-					{ kind: "field", name: "area" },
-					{ kind: "field", name: "degree" },
+					{ kind: "field", name: "position", sectionTypes: ["experience", "volunteer"] },
+					{ kind: "field", name: "location", sectionTypes: ["experience", "volunteer"] },
+					{ kind: "field", name: "area", sectionTypes: ["education"] },
+					{ kind: "field", name: "degree", sectionTypes: ["education"] },
 				],
 			},
 		},
@@ -538,6 +538,7 @@ describe("template semantic manifests", () => {
 		const wrongSummary = structuredClone(getTemplateSemanticManifest("leafish")) as TemplateSemanticManifest;
 		const unknownOwner = structuredClone(getTemplateSemanticManifest("bronzor")) as TemplateSemanticManifest;
 		const changedCondition = structuredClone(getTemplateSemanticManifest("azurill")) as TemplateSemanticManifest;
+		const changedSelectorCondition = structuredClone(getTemplateSemanticManifest("meowth")) as TemplateSemanticManifest;
 		const missingChrome = structuredClone(getTemplateSemanticManifest("ditto")) as TemplateSemanticManifest;
 		const extraChrome = structuredClone(getTemplateSemanticManifest("ditto")) as TemplateSemanticManifest;
 
@@ -569,6 +570,11 @@ describe("template semantic manifests", () => {
 		const line = changedCondition.parts.find((part) => part.name === "timeline-line");
 		if (!line || !("columns" in line.owner)) throw new Error("Missing Azurill timeline line");
 		delete (line.owner as { columns?: number }).columns;
+		const leading = changedSelectorCondition.parts.find((part) => part.name === "inline-item-header-leading");
+		if (leading?.binding.type !== "primitive" || !leading.route || !Array.isArray(leading.route.take)) {
+			throw new Error("Missing Meowth leading selectors");
+		}
+		(leading.route.take[0]?.sectionTypes as string[])[0] = "education";
 		(missingChrome.parts as TemplateSemanticManifest["parts"][number][]).pop();
 		const extra = structuredClone(extraChrome.parts[0]);
 		if (!extra) throw new Error("Missing Ditto chrome");
@@ -586,11 +592,35 @@ describe("template semantic manifests", () => {
 			wrongSummary,
 			unknownOwner,
 			changedCondition,
+			changedSelectorCondition,
 			missingChrome,
 			extraChrome,
 		]) {
 			expect(() => validateTemplateSemanticManifest(mutation)).toThrow();
 		}
+	});
+
+	it("rejects empty and unknown selector section conditions before exact-contract comparison", () => {
+		const empty = structuredClone(getTemplateSemanticManifest("meowth")) as TemplateSemanticManifest;
+		const unknown = structuredClone(getTemplateSemanticManifest("meowth")) as TemplateSemanticManifest;
+		const getFirstSelector = (manifest: TemplateSemanticManifest) => {
+			const leading = manifest.parts.find((part) => part.name === "inline-item-header-leading");
+			if (
+				leading?.binding.type !== "primitive" ||
+				!leading.route ||
+				!Array.isArray(leading.route.take) ||
+				!leading.route.take[0]
+			) {
+				throw new Error("Missing Meowth leading selector");
+			}
+			return leading.route.take[0];
+		};
+
+		(getFirstSelector(empty) as { sectionTypes: string[] }).sectionTypes = [];
+		(getFirstSelector(unknown) as { sectionTypes: string[] }).sectionTypes = ["unknown"];
+
+		expect(() => validateTemplateSemanticManifest(empty)).toThrow(/selector section types must not be empty/);
+		expect(() => validateTemplateSemanticManifest(unknown)).toThrow(/selector has an unknown section type/);
 	});
 
 	it("rejects cyclic and unsupported-depth primitive routing before exact-contract comparison", () => {
@@ -621,6 +651,142 @@ describe("template semantic manifests", () => {
 
 		expect(partNames).toEqual(expectedPrimitiveParts);
 		expect(new Set(nodes.map((node) => node.key)).size).toBe(nodes.length);
+	});
+
+	it("routes every registered primitive part through exactly the child kinds used by all template trees", () => {
+		const data = buildFixture();
+		data.basics.phone = "+44 123";
+		data.basics.location = "London";
+		data.basics.website = { url: "https://example.com", label: "Website" };
+		data.sections.education.hidden = false;
+		data.sections.volunteer.hidden = false;
+		data.sections.experience.items = [
+			{
+				id: "experience/inline",
+				hidden: false,
+				company: "Analytical Engines",
+				position: "Engineer",
+				location: "London",
+				period: "1842",
+				website: { url: "https://inline.example.com", label: "Inline", inlineLink: true },
+				description: "<p>Built algorithms.</p>",
+				roles: [],
+			},
+			{
+				id: "experience/nested",
+				hidden: false,
+				company: "Difference Engines",
+				position: "Programmer",
+				location: "London",
+				period: "1843",
+				website: { url: "https://outside.example.com", label: "Outside", inlineLink: false },
+				description: "",
+				roles: [
+					{
+						id: "role/1",
+						position: "Programmer",
+						period: "1843",
+						description: "<p>Published programs.</p>",
+					},
+				],
+			},
+		];
+		data.sections.education.items = [
+			{
+				id: "education/coverage",
+				hidden: false,
+				school: "University",
+				area: "Mathematics",
+				degree: "BSc",
+				grade: "First",
+				location: "Oxford",
+				period: "1835",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		data.sections.volunteer.items = [
+			{
+				id: "volunteer/coverage",
+				hidden: false,
+				organization: "Volunteer Guild",
+				location: "Paris",
+				period: "1840",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		const page = {
+			fullWidth: false,
+			main: ["summary", "experience", "education", "volunteer", "skills"],
+			sidebar: [],
+		};
+		const partNames = new Set<string>();
+		const childPairs = new Set<string>();
+
+		for (const template of templateSchema.options) {
+			const tree = buildSemanticTree({ data, template, page, pageNumber: 1, showHeader: true });
+			for (const part of findNodes(tree, (node) => node.kind === "template-part")) {
+				const name = part.attributes.name;
+				if (!name) throw new Error("Template part is missing its name");
+				partNames.add(name);
+				for (const child of part.children) {
+					childPairs.add(`${name}:${child.kind}`);
+				}
+			}
+		}
+
+		expect([...partNames].sort()).toEqual(
+			[
+				"contact-item-content",
+				"contact-offset",
+				"featured-summary",
+				"header-band",
+				"header-body",
+				"header-contact-band",
+				"header-divider",
+				"header-intro",
+				"header-name-rule",
+				"inline-item-header-leading",
+				"inline-item-header-middle",
+				"inline-item-header-trailing",
+				"picture-anchor",
+				"sidebar-background",
+				"timeline-content",
+				"timeline-dot",
+				"timeline-line",
+				"timeline-marker",
+			].sort(),
+		);
+		expect([...childPairs].sort()).toEqual(
+			[
+				"contact-item-content:field",
+				"contact-item-content:icon",
+				"featured-summary:section",
+				"header-band:headline",
+				"header-band:name",
+				"header-band:template-part",
+				"header-body:headline",
+				"header-body:name",
+				"header-body:picture",
+				"header-body:section",
+				"header-contact-band:contact-list",
+				"header-divider:headline",
+				"header-divider:name",
+				"header-intro:template-part",
+				"inline-item-header-leading:field",
+				"inline-item-header-middle:field",
+				"inline-item-header-middle:link",
+				"inline-item-header-trailing:field",
+				"picture-anchor:picture",
+				"timeline-content:field",
+				"timeline-content:item",
+				"timeline-content:item-header",
+				"timeline-content:level",
+				"timeline-content:link",
+				"timeline-marker:template-part",
+			].sort(),
+		);
 	});
 
 	it("nests Azurill's dot under its existing marker primitive", () => {
@@ -971,6 +1137,79 @@ describe("template semantic manifests", () => {
 			expect(header?.children[1]?.children).toHaveLength(1);
 			expect(header?.children[2]?.children).toEqual([]);
 		}
+	});
+
+	it("routes Meowth header fields by section while leaving education grade and location after the inline parts", () => {
+		const data = buildFixture();
+		data.sections.experience.hidden = false;
+		data.sections.education.hidden = false;
+		data.sections.volunteer.hidden = false;
+		data.sections.experience.items = [
+			{
+				id: "experience/routing",
+				hidden: false,
+				company: "Analytical Engines",
+				position: "Engineer",
+				location: "London",
+				period: "1842",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+				roles: [],
+			},
+		];
+		data.sections.education.items = [
+			{
+				id: "education/routing",
+				hidden: false,
+				school: "University",
+				area: "Mathematics",
+				degree: "BSc",
+				grade: "First",
+				location: "Oxford",
+				period: "1835",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		data.sections.volunteer.items = [
+			{
+				id: "volunteer/routing",
+				hidden: false,
+				organization: "Volunteer Guild",
+				location: "Paris",
+				period: "1840",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		const tree = buildSemanticTree({
+			data,
+			template: "meowth",
+			page: { fullWidth: true, main: ["experience", "education", "volunteer"], sidebar: [] },
+			pageNumber: 1,
+			showHeader: false,
+		});
+		const itemHeader = (itemId: string) => {
+			const item = findNodes(tree, (node) => node.kind === "item" && node.id === itemId)[0];
+			return item?.children.find((node) => node.kind === "item-header");
+		};
+		const partFields = (header: SemanticNode | undefined, name: string) =>
+			(header && findPart(header, name)?.children.map((node) => node.attributes.name)) ?? [];
+		const experience = itemHeader("experience/routing");
+		const education = itemHeader("education/routing");
+		const volunteer = itemHeader("volunteer/routing");
+
+		expect(partFields(experience, "inline-item-header-leading")).toEqual(["position", "location"]);
+		expect(partFields(volunteer, "inline-item-header-leading")).toEqual(["location"]);
+		expect(partFields(education, "inline-item-header-leading")).toEqual(["area", "degree"]);
+		expect(education && childLabels(education)).toEqual([
+			"inline-item-header-leading",
+			"inline-item-header-middle",
+			"inline-item-header-trailing",
+			"field",
+			"field",
+		]);
+		expect(education?.children.slice(3).map((node) => node.attributes.name)).toEqual(["grade", "location"]);
 	});
 
 	it.each(["bronzor", "scizor"] as const)(

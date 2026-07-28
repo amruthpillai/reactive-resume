@@ -18,7 +18,7 @@ import { onyxSemanticManifest } from "../templates/onyx/semantic";
 import { pikachuSemanticManifest } from "../templates/pikachu/semantic";
 import { rhyhornSemanticManifest } from "../templates/rhyhorn/semantic";
 import { scizorSemanticManifest } from "../templates/scizor/semantic";
-import { SHARED_BINDING_REGISTRY } from "./binding-inventory";
+import { SHARED_BINDING_REGISTRY, STANDARD_FIELD_REGISTRY } from "./binding-inventory";
 
 export type TemplateSemanticPlacement = "main" | "sidebar";
 export type TemplateSemanticRegionName = "header" | "main" | "sidebar" | "featured";
@@ -85,6 +85,7 @@ export type TemplateSemanticPartBinding =
 export type TemplateSemanticChildSelector = {
 	kind: Exclude<SemanticNodeKind, "resume" | "page">;
 	name?: string;
+	sectionTypes?: readonly CustomSectionType[];
 };
 
 export type TemplateSemanticPartRoute = {
@@ -141,6 +142,11 @@ const OWNER_KEYS = {
 const PLACEMENTS = new Set<TemplateSemanticPlacement>(["main", "sidebar"]);
 const REGION_NAMES = new Set<TemplateSemanticRegionName>(["header", "main", "sidebar", "featured"]);
 const PRIMITIVES = new Set<PrimitiveBinding["primitive"]>(["Document", "Page", "View", "Text", "Link", "Image", "Svg"]);
+const SECTION_TYPES = new Set<CustomSectionType>(
+	Object.keys(STANDARD_FIELD_REGISTRY).filter(
+		(sectionType) => sectionType !== "experience-role",
+	) as CustomSectionType[],
+);
 const MAX_PART_DEPTH = 1;
 
 const assert: (condition: unknown, message: string) => asserts condition = (condition, message) => {
@@ -221,6 +227,20 @@ function validateTemplateSemanticManifestShape(manifest: TemplateSemanticManifes
 				`${manifest.template}: unknown primitive`,
 			);
 			assert(part.route.parent.length > 0, `${manifest.template}: part ${part.name} has no routing parent`);
+			const selectors: readonly TemplateSemanticChildSelector[] = [
+				...(Array.isArray(part.route.take) ? part.route.take : []),
+				...(typeof part.route.at === "object"
+					? ["before" in part.route.at ? part.route.at.before : part.route.at.after]
+					: []),
+			];
+			for (const selector of selectors) {
+				if (!selector.sectionTypes) continue;
+				assert(selector.sectionTypes.length > 0, `${manifest.template}: selector section types must not be empty`);
+				assert(
+					selector.sectionTypes.every((sectionType) => SECTION_TYPES.has(sectionType)),
+					`${manifest.template}: selector has an unknown section type`,
+				);
+			}
 		} else {
 			assert(
 				part.binding.canonicalKind === part.owner.kind,

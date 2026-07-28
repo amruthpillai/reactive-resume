@@ -725,9 +725,14 @@ const partMatchesOwner = ({
 	return true;
 };
 
-const selectorMatches = (node: SemanticNode, selector: TemplateSemanticChildSelector): boolean =>
+const selectorMatches = (
+	node: SemanticNode,
+	selector: TemplateSemanticChildSelector,
+	sectionType: CustomSectionType | undefined,
+): boolean =>
 	node.kind === selector.kind &&
-	(selector.name === undefined || node.attributes.name === selector.name || node.id === selector.name);
+	(selector.name === undefined || node.attributes.name === selector.name || node.id === selector.name) &&
+	(selector.sectionTypes === undefined || (sectionType !== undefined && selector.sectionTypes.includes(sectionType)));
 const isPrimitivePart = (part: TemplateSemanticPart): part is TemplateSemanticPrimitivePart =>
 	part.binding.type === "primitive";
 
@@ -736,11 +741,13 @@ const routeTemplateParts = ({
 	parts,
 	parentPart,
 	parentKey,
+	sectionType,
 }: {
 	children: readonly SemanticNode[];
 	parts: readonly TemplateSemanticPart[];
 	parentPart: "owner" | string;
 	parentKey: string;
+	sectionType: CustomSectionType | undefined;
 }): readonly SemanticNode[] => {
 	const directParts = parts.filter(
 		(part): part is TemplateSemanticPrimitivePart => isPrimitivePart(part) && part.route.parent === parentPart,
@@ -752,7 +759,7 @@ const routeTemplateParts = ({
 			take === "all"
 				? [...remaining]
 				: take
-					? remaining.filter((child) => take.some((selector) => selectorMatches(child, selector)))
+					? remaining.filter((child) => take.some((selector) => selectorMatches(child, selector, sectionType)))
 					: [];
 		const selectedKeys = new Set(selected.map((child) => child.key));
 		remaining = remaining.filter((child) => !selectedKeys.has(child.key));
@@ -765,7 +772,13 @@ const routeTemplateParts = ({
 				kind: "template-part",
 				attributes: { name: part.name },
 				roles: ["decoration"],
-				children: routeTemplateParts({ children: selected, parts, parentPart: part.name, parentKey: key }),
+				children: routeTemplateParts({
+					children: selected,
+					parts,
+					parentPart: part.name,
+					parentKey: key,
+					sectionType,
+				}),
 			}),
 		};
 	});
@@ -777,14 +790,16 @@ const routeTemplateParts = ({
 				({ part }) =>
 					typeof part.route.at === "object" &&
 					"before" in part.route.at &&
-					selectorMatches(child, part.route.at.before),
+					selectorMatches(child, part.route.at.before, sectionType),
 			)
 			.map(({ node }) => node),
 		child,
 		...routed
 			.filter(
 				({ part }) =>
-					typeof part.route.at === "object" && "after" in part.route.at && selectorMatches(child, part.route.at.after),
+					typeof part.route.at === "object" &&
+					"after" in part.route.at &&
+					selectorMatches(child, part.route.at.after, sectionType),
 			)
 			.map(({ node }) => node),
 	]);
@@ -810,11 +825,19 @@ const applyTemplateManifest = (
 	const existingParts = tree.attributes.part?.split(" ").filter(Boolean) ?? [];
 	const attributes =
 		aliases.length > 0 ? { ...tree.attributes, part: [...existingParts, ...aliases].join(" ") } : tree.attributes;
+	const section = tree.kind === "section" ? tree : findSectionAncestor(ancestors);
+	const sectionType = section?.attributes.type as CustomSectionType | undefined;
 
 	return {
 		...tree,
 		attributes,
-		children: routeTemplateParts({ children, parts: ownerParts, parentPart: "owner", parentKey: tree.key }),
+		children: routeTemplateParts({
+			children,
+			parts: ownerParts,
+			parentPart: "owner",
+			parentKey: tree.key,
+			sectionType,
+		}),
 	};
 };
 
