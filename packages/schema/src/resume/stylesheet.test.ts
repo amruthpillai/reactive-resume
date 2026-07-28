@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { resumeDataSchema } from "./data";
 import { defaultResumeData } from "./default";
-import { semanticStylesheetSchema } from "./stylesheet";
+import { semanticStylesheetSchema, stylesheetSourceSchema } from "./stylesheet";
 
 describe("semanticStylesheetSchema", () => {
 	it("preserves separate editable and applied sources", () => {
@@ -27,5 +27,20 @@ describe("semanticStylesheetSchema", () => {
 				applied: { languageVersion: 1, text: "" },
 			}).success,
 		).toBe(false);
+	});
+
+	it("rejects unknown stylesheet fields", () => {
+		expect(
+			semanticStylesheetSchema.safeParse({
+				mode: "semantic",
+				source: { languageVersion: 1, text: "" },
+				applied: { languageVersion: 1, text: "" },
+				unknown: true,
+			}).success,
+		).toBe(false);
+	});
+
+	it("rejects unknown stylesheet source fields", () => {
+		expect(stylesheetSourceSchema.safeParse({ languageVersion: 1, text: "", unknown: true }).success).toBe(false);
 	});
 });
