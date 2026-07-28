@@ -44,7 +44,7 @@ const workerFailure = (error: Error): PdfPreflightFailure => {
 	const code = (error as NodeJS.ErrnoException).code;
 	return code === "ERR_WORKER_OUT_OF_MEMORY" || /heap out of memory/i.test(error.message)
 		? failure("STYLESHEET_PREFLIGHT_MEMORY_LIMIT", "The PDF preflight worker exceeded its memory limit.")
-		: failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", error.message);
+		: failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", "The PDF preflight worker failed.");
 };
 
 const sourceWorkerExecArgv = () => {
@@ -139,14 +139,9 @@ export function createStylesheetPreflightRunner(
 				const onError = (error: Error) => {
 					void finish(workerFailure(error));
 				};
-				const onExit = (code: number) => {
+				const onExit = () => {
 					if (!settled) {
-						void finish(
-							failure(
-								"STYLESHEET_PREFLIGHT_WORKER_FAILED",
-								`The PDF preflight worker exited before returning a result (code ${code}).`,
-							),
-						);
+						void finish(failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", "The PDF preflight worker failed."));
 					}
 				};
 

@@ -1,8 +1,8 @@
 import type { PdfPreflightPageLimits, PdfPreflightResult, StylesheetPreflightInput } from "@reactive-resume/pdf/server";
 import { parentPort, workerData } from "node:worker_threads";
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import * as React from "react";
 import { renderPreflightPdf } from "@reactive-resume/pdf/server";
+import { inspectPreflightPdf } from "./stylesheet-preflight-inspection";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -20,54 +20,21 @@ const send = (result: PdfPreflightResult) => {
 	parentPort?.postMessage(result);
 };
 
-async function run() {
+async function run(): Promise<PdfPreflightResult> {
 	const { input, limits } = workerData as StylesheetPreflightWorkerData;
 	const rendered = await renderPreflightPdf(input, limits);
-	if (!rendered.ok) {
-		send(rendered);
-		return;
-	}
-
-	if (rendered.bytes.byteLength > limits.maxBytes) {
-		send({
-			ok: false,
-			code: "STYLESHEET_PREFLIGHT_BYTE_LIMIT",
-			message: "The rendered PDF exceeds the preflight byte limit.",
-			diagnostics: rendered.diagnostics,
-		});
-		return;
-	}
-
-	const byteCount = rendered.bytes.byteLength;
-	const loadingTask = getDocument({ data: rendered.bytes });
-	try {
-		const document = await loadingTask.promise;
-		if (document.numPages > limits.maxPages) {
-			send({
-				ok: false,
-				code: "STYLESHEET_PREFLIGHT_PAGE_LIMIT",
-				message: "The rendered PDF exceeds the preflight page limit.",
-				diagnostics: rendered.diagnostics,
-			});
-			return;
-		}
-
-		send({
-			ok: true,
-			pageCount: document.numPages,
-			byteCount,
-			diagnostics: rendered.diagnostics,
-		});
-	} finally {
-		await loadingTask.destroy().catch(() => undefined);
-	}
+	return rendered.ok ? inspectPreflightPdf(rendered, limits) : rendered;
 }
 
-void run().catch((error: unknown) => {
-	send({
-		ok: false,
-		code: "STYLESHEET_PREFLIGHT_RENDER_FAILED",
-		message: error instanceof Error ? error.message : "PDF preflight failed.",
-		diagnostics: [],
-	});
-});
+if (parentPort) {
+	void run()
+		.then(send)
+		.catch(() => {
+			send({
+				ok: false,
+				code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+				message: "The PDF preflight worker failed.",
+				diagnostics: [],
+			});
+		});
+}

@@ -29,6 +29,7 @@ export type PdfPreflightFailureCode =
 	| "STYLESHEET_PREFLIGHT_TIMEOUT"
 	| "STYLESHEET_PREFLIGHT_MEMORY_LIMIT"
 	| "STYLESHEET_PREFLIGHT_RENDER_FAILED"
+	| "STYLESHEET_PREFLIGHT_PARSE_FAILED"
 	| "STYLESHEET_PREFLIGHT_WORKER_FAILED";
 
 export type PdfPreflightFailure = {
@@ -132,11 +133,11 @@ export async function renderPreflightPdf(
 			bytes: new Uint8Array(await blob.arrayBuffer()),
 			diagnostics: inspection.diagnostics,
 		};
-	} catch (error) {
+	} catch {
 		return {
 			ok: false,
 			code: "STYLESHEET_PREFLIGHT_RENDER_FAILED",
-			message: error instanceof Error ? error.message : "PDF rendering failed.",
+			message: "PDF rendering failed.",
 			diagnostics: inspection.diagnostics,
 		};
 	}

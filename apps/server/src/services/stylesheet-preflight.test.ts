@@ -23,6 +23,10 @@ const memoryExhaustionWorker = new URL(
 	`)}`,
 );
 
+const failedWorker = new URL(
+	`data:text/javascript,${encodeURIComponent('throw new Error("sensitive worker details");')}`,
+);
+
 describe("stylesheet PDF preflight worker", () => {
 	it("keeps the production resource policy fixed and immutable", () => {
 		expect(STYLESHEET_PREFLIGHT_LIMITS).toEqual({
@@ -88,4 +92,18 @@ describe("stylesheet PDF preflight worker", () => {
 		expect(result).toEqual(expect.objectContaining({ ok: false, code: "STYLESHEET_PREFLIGHT_MEMORY_LIMIT" }));
 		expect(runner.activeWorkerCount).toBe(0);
 	}, 15_000);
+
+	it("does not expose internal errors from a failed worker", async () => {
+		const runner = createStylesheetPreflightRunner({}, failedWorker);
+
+		const result = await runner.run(input);
+
+		expect(result).toEqual({
+			ok: false,
+			code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+			message: "The PDF preflight worker failed.",
+			diagnostics: [],
+		});
+		expect(runner.activeWorkerCount).toBe(0);
+	});
 });

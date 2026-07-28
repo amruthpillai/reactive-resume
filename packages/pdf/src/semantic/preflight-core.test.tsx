@@ -62,6 +62,28 @@ describe("renderPreflightPdf", () => {
 		expect(rendererMock.pdf).not.toHaveBeenCalled();
 	});
 
+	it("returns a stable public failure when React PDF throws", async () => {
+		rendererMock.pdf.mockReturnValueOnce({
+			toBlob: vi.fn(() => Promise.reject(new Error("sensitive renderer details"))),
+		});
+
+		const result = await renderPreflightPdf(
+			{
+				data: defaultResumeData,
+				template: defaultResumeData.metadata.template,
+				stylesheet: validStylesheet,
+			},
+			pageLimits,
+		);
+
+		expect(result).toMatchObject({
+			ok: false,
+			code: "STYLESHEET_PREFLIGHT_RENDER_FAILED",
+			message: "PDF rendering failed.",
+			diagnostics: [],
+		});
+	});
+
 	it.each([
 		["width", "2001pt 1000pt"],
 		["height", "1000pt 20001pt"],
