@@ -62,6 +62,23 @@ describe("adaptResolvedPdfNode", () => {
 		});
 	});
 
+	it("does not materialize inherited resolver base values onto a host that already inherits from the renderer tree", () => {
+		const base = {
+			style: {},
+			structural: {},
+			hidden: false,
+			order: 0,
+		} satisfies ResolvedNodeStyle;
+		const resolved = {
+			...base,
+			style: { color: "#111111", "font-size": 10 },
+			specifiedStyleProperties: [],
+			hostBaseStyleProperties: [],
+		} satisfies ResolvedNodeStyle;
+
+		expect(adaptResolvedPdfNode(resolved, base)).toEqual({});
+	});
+
 	it("emits explicit flow cancellations when semantic structure clears builder pagination", () => {
 		const base = {
 			style: {},

@@ -48,9 +48,10 @@ const toReactPdfProperty = (property: string) => {
 const styleDelta = (resolved: ResolvedNodeStyle, base: ResolvedNodeStyle["style"] | undefined): Style | undefined => {
 	const specified = new Set(resolved.specifiedStyleProperties);
 	const hostBase = new Set(resolved.hostBaseStyleProperties);
-	const entries: [string, string | number | undefined][] = Object.entries(resolved.style).filter(
-		([property, value]) => !hostBase.has(property) && (specified.has(property) || base?.[property] !== value),
-	);
+	const entries: [string, string | number | undefined][] =
+		base === undefined
+			? Object.entries(resolved.style)
+			: Object.entries(resolved.style).filter(([property]) => !hostBase.has(property) && specified.has(property));
 	for (const property of specified) {
 		if (!hostBase.has(property) && !(property in resolved.style)) entries.push([property, undefined]);
 	}

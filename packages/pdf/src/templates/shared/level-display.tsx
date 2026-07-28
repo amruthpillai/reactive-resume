@@ -42,7 +42,7 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	const { decorationSize, levelIconExplicitSize } = resolveLevelDisplaySizes({
 		bodyFontSize: data.metadata.typography.body.fontSize,
 		iconFontSize: resolveStyleFontSize(iconRuleStyle),
-		levelFontSize: resolveStyleFontSize(levelRuleStyle),
+		levelFontSize: resolveStyleFontSize(levelRuleStyle, resolved.style),
 	});
 	const color = typeof iconProps.color === "string" ? iconProps.color : "#000000";
 

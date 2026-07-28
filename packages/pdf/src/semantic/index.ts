@@ -35,6 +35,8 @@ export type {
 	ResolvedResumeRuntime,
 	ResolveResumePresentationInput,
 } from "./resolve";
+export * from "./legacy-converter";
+export * from "./legacy-parity";
 export * from "./preflight-core";
 export {
 	resolveResumePresentation,

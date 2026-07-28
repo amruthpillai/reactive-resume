@@ -299,15 +299,15 @@ export const Icon = ({
 	const composedStyle = composeStyles(asStyleInput(iconStyle), iconRuleStyle, asStyleInput(style));
 	const templateIconSize =
 		typeof templateSize === "number" || typeof templateSize === "string" ? templateSize : undefined;
-	const resolvedSize =
-		resolveIconSize({
-			size: sizeProp,
-			styles: [iconRuleStyle, asStyleInput(style)],
-		}) ?? templateIconSize;
 	const parentKey = useSemanticNodeKey();
 	const resolvedNodeKey = nodeKey ?? (parentKey ? semanticNodeKeys.icon(parentKey, "item") : undefined);
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
+	const resolvedSize =
+		resolveIconSize({
+			size: sizeProp,
+			styles: [iconRuleStyle, asStyleInput(style), resolved.style],
+		}) ?? templateIconSize;
 
 	if (iconProps.display === "none" || !visible) return null;
 
