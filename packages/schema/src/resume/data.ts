@@ -1,5 +1,6 @@
 import z from "zod";
 import { templateSchema } from "../templates";
+import { semanticStylesheetSchema } from "./stylesheet";
 
 const iconSchema = z
 	.string()
@@ -638,6 +639,7 @@ export const metadataSchema = z.object({
 	styleRules: styleRulesSchema.describe(
 		"Structured style rules that target semantic resume sections and slots for React PDF rendering.",
 	),
+	stylesheet: semanticStylesheetSchema.optional(),
 });
 
 export const resumeDataSchema = z.looseObject({
