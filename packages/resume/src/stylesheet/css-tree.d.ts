@@ -14,6 +14,7 @@ declare module "css-tree" {
 	};
 
 	export type ParseOptions = {
+		context?: string;
 		positions?: boolean;
 		parseCustomProperty?: boolean;
 		onParseError?: (error: unknown, node: CssNode) => void;
@@ -21,6 +22,11 @@ declare module "css-tree" {
 		onToken?: (...args: unknown[]) => void;
 	};
 
+	export const ident: {
+		decode(value: string): string;
+	};
+
+	export function generate(node: CssNode): string;
 	export function parse(source: string, options?: ParseOptions): CssNode;
 	export function walk(node: CssNode, enter: (node: CssNode) => void): void;
 }

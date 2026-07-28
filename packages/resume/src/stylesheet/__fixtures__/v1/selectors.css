@@ -1,0 +1,13 @@
+/* biome-ignore lint/suspicious/noUnknownAtRules: RRSS version directive */
+@rr-version 1;
+
+section[type="experience"] > section-heading {
+	color: red;
+}
+
+/* biome-ignore lint/correctness/noUnknownTypeSelector: RRSS semantic element */
+region[placement="sidebar"] section,
+/* biome-ignore lint/correctness/noUnknownTypeSelector: RRSS semantic element */
+item[role~="nested-role"]:nth-child(2) {
+	color: blue;
+}

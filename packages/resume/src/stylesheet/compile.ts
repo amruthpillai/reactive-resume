@@ -1,7 +1,9 @@
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
+import type { CssNode } from "css-tree";
 import type { CompileStylesheetResult } from "./types";
 import { createDiagnostic } from "./diagnostics";
 import { parseStylesheet } from "./parse";
+import { compileSelector } from "./selector";
 import { getStylesheetCompiler } from "./version";
 
 function isPositiveInteger(value: string): boolean {
@@ -59,6 +61,15 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 					directive.range,
 				),
 			);
+		}
+	}
+
+	for (const rule of stylesheet.rules) {
+		const prelude = (rule as CssNode).prelude as CssNode;
+		const result = compileSelector(prelude);
+		if (!result.selector) {
+			const range = prelude?.loc ? { start: { ...prelude.loc.start }, end: { ...prelude.loc.end } } : undefined;
+			diagnostics.push(createDiagnostic("INVALID_SELECTOR", "error", result.error ?? "Invalid selector.", range));
 		}
 	}
 
