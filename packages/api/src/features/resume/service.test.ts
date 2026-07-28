@@ -129,6 +129,45 @@ const createResumeRow = (data: ResumeData, updatedAt = new Date()) => ({
 	hasPassword: false,
 });
 
+const createRestoreHarness = (currentData: ResumeData, restoredData: ResumeData) => {
+	const currentRow = createResumeRow(currentData);
+	const versionLookup = {
+		from: () => ({
+			innerJoin: () => ({ where: () => Promise.resolve([{ data: restoredData }]) }),
+		}),
+	};
+	const versionRetention = {
+		from: () => ({ where: () => ({ orderBy: () => ({ limit: () => [] }) }) }),
+	};
+	dbMock.select
+		.mockReturnValueOnce(versionLookup)
+		.mockReturnValueOnce(createSelectChain([currentRow]))
+		.mockReturnValueOnce(versionRetention)
+		.mockReturnValueOnce(versionRetention);
+
+	const snapshotValues = vi.fn(() => Promise.resolve());
+	dbMock.insert.mockReturnValue({ values: snapshotValues });
+	dbMock.delete.mockReturnValue({ where: () => Promise.resolve() });
+
+	const lockedSelect = createLockedSelectChain([
+		{ data: currentData, isLocked: false, renderDataVersion: 7, updatedAt: currentRow.updatedAt },
+	]);
+	let persistedData: ResumeData | undefined;
+	const returning = vi.fn(() =>
+		Promise.resolve([createResumeRow(persistedData ?? restoredData, new Date("2026-01-02T00:00:00Z"))]),
+	);
+	const where = vi.fn(() => ({ returning }));
+	const set = vi.fn((values: { data: ResumeData }) => {
+		persistedData = values.data;
+		return { where };
+	});
+	dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+		callback({ select: () => lockedSelect.chain, update: () => ({ set }) }),
+	);
+
+	return { set, snapshotValues };
+};
+
 beforeEach(() => {
 	dbMock.select.mockReset();
 	dbMock.insert.mockReset();
@@ -148,6 +187,49 @@ beforeEach(() => {
 
 it("imports", () => {
 	expect(resumeService).toBeDefined();
+});
+
+describe("versions.restore", () => {
+	it.each([
+		{ name: "changed render data", changeRenderData: true, expectedRenderDataVersion: 8 },
+		{ name: "notes-only data", changeRenderData: false, expectedRenderDataVersion: undefined },
+	])(
+		"preserves canonical stylesheet state and snapshots the returned data for $name",
+		async ({ changeRenderData, expectedRenderDataVersion }) => {
+			const currentData = createSemanticResumeData();
+			const restoredData: ResumeData = structuredClone(defaultResumeData);
+			if (changeRenderData) {
+				restoredData.basics.name = "Restored Name";
+			} else {
+				restoredData.metadata.notes = "Restored private note";
+			}
+
+			const { set, snapshotValues } = createRestoreHarness(currentData, restoredData);
+
+			const result = await resumeService.versions.restore({ resumeId: "r1", versionId: "v1", userId: "u1" });
+
+			expect(set).toHaveBeenCalledTimes(1);
+			expect(result.data.metadata.stylesheet).toEqual(currentData.metadata.stylesheet);
+			const updateValues = set.mock.calls[0]?.[0];
+			if (expectedRenderDataVersion === undefined) {
+				expect(updateValues).not.toHaveProperty("renderDataVersion");
+			} else {
+				expect(updateValues).toHaveProperty("renderDataVersion", expectedRenderDataVersion);
+			}
+			expect(snapshotValues).toHaveBeenNthCalledWith(1, {
+				resumeId: "r1",
+				userId: "u1",
+				data: currentData,
+				label: "Before restore",
+			});
+			expect(snapshotValues).toHaveBeenNthCalledWith(2, {
+				resumeId: "r1",
+				userId: "u1",
+				data: result.data,
+				label: "Restored version",
+			});
+		},
+	);
 });
 
 describe("update", () => {
@@ -307,21 +389,48 @@ describe("patch", () => {
 
 	it.each([
 		{
+			name: "stylesheet descendant target",
 			op: "replace" as const,
 			path: "/metadata/stylesheet/source/text",
 			value: "@rr-version 1;\nresume { color: red; }\n",
 		},
 		{
+			name: "stylesheet descendant copy source",
 			op: "copy" as const,
 			from: "/metadata/stylesheet/applied~1text",
 			path: "/metadata/notes",
 		},
 		{
+			name: "exact stylesheet move source",
 			op: "move" as const,
 			from: "/metadata/stylesheet",
 			path: "/metadata/notes",
 		},
-	])("rejects stylesheet paths and move/copy sources before applying them", async (operation) => {
+		{
+			name: "root target",
+			op: "replace" as const,
+			path: "",
+			value: defaultResumeData,
+		},
+		{
+			name: "metadata ancestor target",
+			op: "replace" as const,
+			path: "/metadata",
+			value: defaultResumeData.metadata,
+		},
+		{
+			name: "root copy source",
+			op: "copy" as const,
+			from: "",
+			path: "/metadata/notes",
+		},
+		{
+			name: "metadata ancestor move source",
+			op: "move" as const,
+			from: "/metadata",
+			path: "/metadata/notes",
+		},
+	])("rejects $name before applying it", async ({ name: _name, ...operation }) => {
 		const data = createSemanticResumeData();
 		const { tx, update } = createPatchTx({
 			data,
@@ -340,6 +449,44 @@ describe("patch", () => {
 			code: "INVALID_PATCH_OPERATIONS",
 			message: expect.stringContaining("server-owned stylesheet"),
 		});
+		expect(update.set).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		{
+			name: "path",
+			operation: { op: "add" as const, path: "/metadata/~2stylesheet", value: "invalid escape" },
+		},
+		{
+			name: "from",
+			operation: {
+				op: "copy" as const,
+				from: "/metadata/notes~",
+				path: "/metadata/notes",
+			},
+		},
+	])("rejects malformed JSON Pointer escapes in $name before applying", async ({ operation }) => {
+		const data = createSemanticResumeData();
+		const { tx, update } = createPatchTx({
+			data,
+			isLocked: false,
+			renderDataVersion: 2,
+			updatedAt: new Date(),
+		});
+
+		const error = await resumeService
+			.patchInTransaction(tx as never, {
+				id: "r1",
+				userId: "u1",
+				operations: [operation],
+			})
+			.catch((caught: unknown) => caught);
+
+		expect(error).toMatchObject({
+			code: "INVALID_PATCH_OPERATIONS",
+			message: expect.stringContaining("valid JSON Pointer"),
+		});
+		expect((error as { data: unknown }).data).toEqual({ index: 0, operation });
 		expect(update.set).not.toHaveBeenCalled();
 	});
 
@@ -365,6 +512,27 @@ describe("patch", () => {
 		expect(update.set).not.toHaveBeenCalled();
 	});
 
+	it.each(["", "/metadata"])("rejects semantic style-rule changes through ancestor path %j", async (path) => {
+		const data = createSemanticResumeData();
+		const changedMetadata = { ...data.metadata, styleRules: [styleRule] };
+		const value = path === "" ? { ...data, metadata: changedMetadata } : changedMetadata;
+		const { tx, update } = createPatchTx({
+			data,
+			isLocked: false,
+			renderDataVersion: 2,
+			updatedAt: new Date(),
+		});
+
+		await expect(
+			resumeService.patchInTransaction(tx as never, {
+				id: "r1",
+				userId: "u1",
+				operations: [{ op: "replace", path, value }],
+			}),
+		).rejects.toMatchObject({ code: "INVALID_PATCH_OPERATIONS" });
+		expect(update.set).not.toHaveBeenCalled();
+	});
+
 	it("allows legacy style-rule changes and increments render-data version once", async () => {
 		const data: ResumeData = structuredClone(defaultResumeData);
 		const { tx, update } = createPatchTx({
@@ -383,9 +551,8 @@ describe("patch", () => {
 		expect(update.set).toHaveBeenCalledWith(expect.objectContaining({ renderDataVersion: 6 }));
 	});
 
-	it("preserves the server stylesheet through an ancestor metadata replacement without bumping render data", async () => {
+	it("allows a harmless sibling operation below metadata while preserving the server stylesheet", async () => {
 		const data = createSemanticResumeData();
-		const { stylesheet: _stylesheet, ...clientMetadata } = data.metadata;
 		const { tx, update } = createPatchTx({
 			data,
 			isLocked: false,
@@ -396,12 +563,15 @@ describe("patch", () => {
 		await resumeService.patchInTransaction(tx as never, {
 			id: "r1",
 			userId: "u1",
-			operations: [{ op: "replace", path: "/metadata", value: clientMetadata }],
+			operations: [{ op: "replace", path: "/metadata/notes", value: "private note" }],
 		});
 
 		expect(update.set).toHaveBeenCalledWith({
 			data: expect.objectContaining({
-				metadata: expect.objectContaining({ stylesheet: data.metadata.stylesheet }),
+				metadata: expect.objectContaining({
+					notes: "private note",
+					stylesheet: data.metadata.stylesheet,
+				}),
 			}),
 		});
 	});

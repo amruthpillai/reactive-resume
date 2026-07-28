@@ -38,13 +38,49 @@ function invalidPatchOperation(message: string, index?: number, operation?: Json
 	return new ORPCError("INVALID_PATCH_OPERATIONS", { status: 400, message });
 }
 
-function targetsServerStylesheet(pointer: string) {
-	if (!pointer.startsWith("/")) return false;
-	const [root, field] = pointer
+type JsonPointerClass = "root" | "metadata" | "stylesheet" | "other";
+
+function classifyJsonPointer(pointer: string): JsonPointerClass | undefined {
+	if (pointer === "") return "root";
+	if (!pointer.startsWith("/")) return undefined;
+
+	const segments = pointer
 		.slice(1)
 		.split("/")
-		.map((segment) => segment.replaceAll("~1", "/").replaceAll("~0", "~"));
-	return root === "metadata" && field === "stylesheet";
+		.map((segment) => {
+			if (/~(?:[^01]|$)/.test(segment)) return undefined;
+			return segment.replace(/~[01]/g, (encoded) => (encoded === "~1" ? "/" : "~"));
+		});
+	if (segments.some((segment) => segment === undefined)) return undefined;
+	if (segments[0] !== "metadata") return "other";
+	if (segments.length === 1) return "metadata";
+	return segments[1] === "stylesheet" ? "stylesheet" : "other";
+}
+
+function assertSafePatchPointers(operation: JsonPatchOperation, index: number) {
+	const pathClass = classifyJsonPointer(operation.path);
+	if (!pathClass) {
+		throw invalidPatchOperation("Operation `path` property is not a valid JSON Pointer string.", index, operation);
+	}
+
+	let fromClass: JsonPointerClass | undefined;
+	if ("from" in operation) {
+		fromClass = classifyJsonPointer(operation.from);
+		if (!fromClass) {
+			throw invalidPatchOperation("Operation `from` property is not a valid JSON Pointer string.", index, operation);
+		}
+	}
+
+	const protectedPath =
+		pathClass === "stylesheet" || (operation.op !== "test" && (pathClass === "root" || pathClass === "metadata"));
+	const protectedSource = fromClass === "stylesheet" || fromClass === "root" || fromClass === "metadata";
+	if (protectedPath || protectedSource) {
+		throw invalidPatchOperation(
+			"The server-owned stylesheet cannot be changed through generic resume patches.",
+			index,
+			operation,
+		);
+	}
 }
 
 // Version history: keep a bounded, rolling window of snapshots per resume.
@@ -122,17 +158,7 @@ async function applyResumePatchTx(
 		throw resumeVersionConflict(existing.updatedAt);
 	}
 
-	const protectedOperationIndex = input.operations.findIndex(
-		(operation) =>
-			targetsServerStylesheet(operation.path) || ("from" in operation && targetsServerStylesheet(operation.from)),
-	);
-	if (protectedOperationIndex !== -1) {
-		throw invalidPatchOperation(
-			"The server-owned stylesheet cannot be changed through generic resume patches.",
-			protectedOperationIndex,
-			input.operations[protectedOperationIndex],
-		);
-	}
+	input.operations.forEach(assertSafePatchPointers);
 
 	let patchedData: ResumeData;
 
