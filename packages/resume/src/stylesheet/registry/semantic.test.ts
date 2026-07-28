@@ -54,7 +54,18 @@ const expectedParents = {
 	mark: inlineParents,
 	"hard-break": inlineParents,
 	"horizontal-rule": ["rich-text", "list-item-content"],
-	"template-part": ["page", "region", "header", "section", "section-heading", "section-items", "item", "item-header"],
+	"template-part": [
+		"page",
+		"region",
+		"header",
+		"section",
+		"section-heading",
+		"section-items",
+		"item",
+		"item-header",
+		"contact-item",
+		"template-part",
+	],
 };
 
 describe("semantic registry", () => {
@@ -86,5 +97,12 @@ describe("semantic registry", () => {
 	it("registers list content direction without broadening unrelated rich-text attributes", () => {
 		expect(SEMANTIC_REGISTRY_V1["list-item-content"].attributes).toEqual(["direction"]);
 		expect(SEMANTIC_REGISTRY_V1["list-item"].attributes).toEqual([]);
+	});
+
+	it("permits truthful contact and nested template parts without broadening unrelated parents", () => {
+		expect(canContainNode("contact-item", "template-part")).toBe(true);
+		expect(canContainNode("template-part", "template-part")).toBe(true);
+		expect(canContainNode("contact-list", "template-part")).toBe(false);
+		expect(canContainNode("rich-text", "template-part")).toBe(false);
 	});
 });
