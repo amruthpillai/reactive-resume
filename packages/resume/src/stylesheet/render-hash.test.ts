@@ -49,6 +49,41 @@ describe("public render hashing", () => {
 		await expect(computeRenderDataHash({ domainVersion: 1, data })).rejects.toThrow("I-JSON");
 	});
 
+	it("rejects array accessors without invoking them", async () => {
+		const data: unknown[] = [];
+		let reads = 0;
+		Object.defineProperty(data, "0", {
+			enumerable: true,
+			get: () => {
+				reads++;
+				return "unsafe";
+			},
+		});
+
+		await expect(computeRenderDataHash({ domainVersion: 1, data })).rejects.toThrow("I-JSON");
+		expect(reads).toBe(0);
+	});
+
+	it.each([
+		() => {
+			const data: unknown[] = [];
+			Reflect.set(data, Symbol("private"), true);
+			return data;
+		},
+		() => {
+			const data: unknown[] = [];
+			Object.defineProperty(data, "private", { value: true });
+			return data;
+		},
+		() => {
+			const data: unknown[] = [];
+			Object.defineProperty(data, "toJSON", { value: () => ["altered"] });
+			return data;
+		},
+	])("rejects non-index array properties", async (createData) => {
+		await expect(computeRenderDataHash({ domainVersion: 1, data: createData() })).rejects.toThrow("I-JSON");
+	});
+
 	it("rejects unknown hash-domain versions", async () => {
 		await expect(computeRenderDataHash({ domainVersion: 2, data: {} })).rejects.toThrow("domain version");
 	});

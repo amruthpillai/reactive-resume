@@ -25,6 +25,22 @@ function hasUnpairedSurrogate(value: string): boolean {
 	return false;
 }
 
+function assertEnumerableDataProperty(
+	descriptor: PropertyDescriptor | undefined,
+): asserts descriptor is PropertyDescriptor & {
+	value: unknown;
+} {
+	if (!descriptor?.enumerable || "get" in descriptor || "set" in descriptor) {
+		throw new Error("I-JSON objects must contain only enumerable data properties");
+	}
+}
+
+function isArrayIndex(key: string, length: number): boolean {
+	if (!/^(0|[1-9]\d*)$/.test(key)) return false;
+	const index = Number(key);
+	return Number.isSafeInteger(index) && index < length && String(index) === key;
+}
+
 function assertIJsonValue(value: unknown, seen = new Set<object>()): void {
 	if (value === null || typeof value === "boolean") return;
 	if (typeof value === "string") {
@@ -46,14 +62,20 @@ function assertIJsonValue(value: unknown, seen = new Set<object>()): void {
 	seen.add(value);
 	try {
 		if (Array.isArray(value)) {
-			for (let index = 0; index < value.length; index++) {
-				if (!Object.hasOwn(value, index)) throw new Error("I-JSON arrays must not contain holes");
-				assertIJsonValue(value[index], seen);
+			for (const symbol of Object.getOwnPropertySymbols(value)) {
+				throw new Error(`I-JSON arrays must not contain symbol keys: ${String(symbol)}`);
 			}
-			for (const key of Object.keys(value)) {
-				if (!/^(0|[1-9]\d*)$/.test(key) || Number(key) >= value.length) {
-					throw new Error("I-JSON arrays must not contain named properties");
-				}
+
+			const descriptors = Object.getOwnPropertyDescriptors(value);
+			for (const [key, descriptor] of Object.entries(descriptors)) {
+				if (key === "length") continue;
+				if (!isArrayIndex(key, value.length)) throw new Error("I-JSON arrays must not contain named properties");
+				assertEnumerableDataProperty(descriptor);
+			}
+			for (let index = 0; index < value.length; index++) {
+				const descriptor = descriptors[index];
+				if (!descriptor) throw new Error("I-JSON arrays must not contain holes");
+				assertIJsonValue(descriptor.value, seen);
 			}
 		} else {
 			for (const symbol of Object.getOwnPropertySymbols(value)) {
@@ -62,10 +84,8 @@ function assertIJsonValue(value: unknown, seen = new Set<object>()): void {
 			for (const key of Object.getOwnPropertyNames(value)) {
 				if (hasUnpairedSurrogate(key)) throw new Error("I-JSON keys must not contain unpaired surrogates");
 				const descriptor = Object.getOwnPropertyDescriptor(value, key);
-				if (!descriptor?.enumerable || "get" in descriptor || "set" in descriptor) {
-					throw new Error("I-JSON objects must contain only enumerable data properties");
-				}
-				assertIJsonValue(value[key as keyof typeof value], seen);
+				assertEnumerableDataProperty(descriptor);
+				assertIJsonValue(descriptor.value, seen);
 			}
 		}
 	} finally {

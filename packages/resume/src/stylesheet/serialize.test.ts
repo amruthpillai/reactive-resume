@@ -9,7 +9,7 @@ describe("generated RRSS serialization", () => {
 				{
 					comment: "Bad */ label",
 					selector: 'section[id="projects"] > section-heading',
-					declarations: { color: "#123456", fontSize: "12pt" },
+					declarations: { fontSize: "12pt", color: "#123456" },
 				},
 			],
 		});

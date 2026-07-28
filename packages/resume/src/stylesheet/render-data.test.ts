@@ -2,6 +2,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { projectPublicRenderData, projectRenderData } from "./render-data";
+import { computeRenderDataHash } from "./render-hash";
 
 const legacyData: ResumeData = {
 	...defaultResumeData,
@@ -70,5 +71,26 @@ describe("render-data projection", () => {
 			expect(projection.metadata).not.toHaveProperty("serverMetadata");
 			expect(projection.picture).not.toHaveProperty("unknownPictureField");
 		}
+	});
+
+	it("keeps public projection hashes invariant to owner-only metadata", async () => {
+		const baseline = projectPublicRenderData(semanticData);
+		const ownerOnlyMutation = {
+			...semanticData,
+			dashboard: { private: true },
+			revisions: { renderDataVersion: 9, stylesheetRevision: 11 },
+			metadata: {
+				...semanticData.metadata,
+				notes: "owner-only note",
+				diagnostics: [{ message: "owner-only diagnostic" }],
+				serverMetadata: { private: true },
+			},
+		} as ResumeData;
+		const mutated = projectPublicRenderData(ownerOnlyMutation);
+
+		expect(mutated).toEqual(baseline);
+		await expect(computeRenderDataHash({ domainVersion: 1, data: mutated })).resolves.toBe(
+			await computeRenderDataHash({ domainVersion: 1, data: baseline }),
+		);
 	});
 });
