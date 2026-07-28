@@ -19,7 +19,15 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	SemanticTemplatePartView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -73,7 +81,8 @@ export const DittoPage = ({ page, pageSize, pageMinHeightStyle, showHeader, page
 				{showHeader && <Header styles={styles} />}
 
 				<View style={composeStyles(styles.contentRow, { paddingTop: metrics.headerGap })}>
-					<View
+					<SemanticRegionView
+						region="sidebar"
 						style={composeStyles(styles.sidebarColumn, {
 							display: page.fullWidth ? "none" : "flex",
 							width: `${metadata.layout.sidebarWidth}%`,
@@ -87,9 +96,10 @@ export const DittoPage = ({ page, pageSize, pageMinHeightStyle, showHeader, page
 								<Section section={section} placement="sidebar" />
 							</Fragment>
 						))}
-					</View>
+					</SemanticRegionView>
 
-					<View
+					<SemanticRegionView
+						region="main"
 						style={composeStyles(styles.mainColumn, {
 							paddingLeft: metrics.columnGap,
 							paddingRight: metrics.page.paddingHorizontal,
@@ -99,7 +109,7 @@ export const DittoPage = ({ page, pageSize, pageMinHeightStyle, showHeader, page
 						{mainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -112,10 +122,10 @@ const Header = ({ styles }: DittoHeaderProps) => {
 
 	return (
 		<SemanticHeaderView style={styles.header}>
-			<View style={styles.headerBand}>
-				<View style={styles.pictureAnchor}>
+			<SemanticTemplatePartView partKeys={["header-band"]} style={styles.headerBand}>
+				<SemanticTemplatePartView partKeys={["header-band", "picture-anchor"]} style={styles.pictureAnchor}>
 					{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
-				</View>
+				</SemanticTemplatePartView>
 
 				<View style={styles.headerTitle}>
 					<View style={styles.headerIdentity}>
@@ -123,12 +133,12 @@ const Header = ({ styles }: DittoHeaderProps) => {
 						<Text style={styles.headerHeadline}>{basics.headline}</Text>
 					</View>
 				</View>
-			</View>
+			</SemanticTemplatePartView>
 
 			<View style={styles.contactRow}>
-				<View style={styles.contactOffset} />
+				<SemanticTemplatePartView partKeys={["contact-offset"]} style={styles.contactOffset} />
 
-				<View style={styles.contactList}>
+				<SemanticContactListView style={styles.contactList}>
 					<EmailContactItem email={basics.email} style={styles.contactItem} />
 					<PhoneContactItem phone={basics.phone} style={styles.contactItem} />
 					<LocationContactItem location={basics.location} style={styles.contactItem} />
@@ -136,7 +146,7 @@ const Header = ({ styles }: DittoHeaderProps) => {
 					{basics.customFields.map((field) => (
 						<CustomFieldContactItem key={field.id} field={field} style={styles.contactItem} />
 					))}
-				</View>
+				</SemanticContactListView>
 			</View>
 		</SemanticHeaderView>
 	);

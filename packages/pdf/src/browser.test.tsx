@@ -56,4 +56,34 @@ describe("createResumePdfBlob", () => {
 		expect(promise).toBeInstanceOf(Promise);
 		await expect(promise).rejects.toThrow("renderer failed");
 	});
+
+	it("returns semantic diagnostics without rendering an invalid applied source", async () => {
+		const data = structuredClone(sampleResumeData);
+		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		const { createResumePdfBlobResult } = await import("./browser");
+
+		const result = await createResumePdfBlobResult({ data });
+
+		expect(result).toMatchObject({
+			ok: false,
+			diagnostics: [expect.objectContaining({ severity: "error" })],
+		});
+		expect(rendererMock.pdf).not.toHaveBeenCalled();
+	});
+
+	it("accepts an optional prior semantic inspection on the result path", async () => {
+		const { createResumePdfBlobResult } = await import("./browser");
+		const inspection = {
+			presentation: {},
+			sourceTree: { key: "resume", kind: "resume", attributes: {}, roles: [], children: [] },
+			renderTree: { key: "resume", kind: "resume", attributes: {}, roles: [], children: [] },
+			diagnostics: [],
+		} as const;
+
+		const result = await createResumePdfBlobResult({ data: sampleResumeData, inspection });
+
+		expect(result).toMatchObject({ ok: true, diagnostics: [] });
+		expect(rendererMock.pdf).toHaveBeenCalledTimes(1);
+	});
 });

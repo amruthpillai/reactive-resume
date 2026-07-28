@@ -121,7 +121,14 @@ export const convertPseudoBulletParagraphs = (html: string): string =>
 		return converted ?? full;
 	});
 
-export const normalizeRichTextHtml = (html: string): string => {
+type NormalizeRichTextHtmlOptions = {
+	direction?: "ltr" | "rtl";
+};
+
+export const normalizeRichTextHtml = (
+	html: string,
+	{ direction = "ltr" }: NormalizeRichTextHtmlOptions = {},
+): string => {
 	const root = parse(html.trim(), { comment: false });
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
@@ -151,7 +158,17 @@ export const normalizeRichTextHtml = (html: string): string => {
 
 	flushInlineNodes();
 
-	return normalized.join("");
+	const normalizedHtml = normalized.join("");
+	if (direction !== "rtl") return normalizedHtml;
+
+	// RTL pseudo-bullets must become real list items before both the semantic
+	// descriptor and renderer traverse the HTML. RLM anchors each independent
+	// react-pdf-html text frame without changing element ancestry or indices.
+	return convertPseudoBulletParagraphs(normalizedHtml).replace(
+		/<(p|li)\b([^>]*)>/gi,
+		(_match, tag, rest) => `<${tag}${rest}>‏`,
+	);
 };
 
-export const parseNormalizedRichTextHtml = (html: string) => parse(normalizeRichTextHtml(html), { comment: false });
+export const parseNormalizedRichTextHtml = (html: string, options?: NormalizeRichTextHtmlOptions) =>
+	parse(normalizeRichTextHtml(html, options), { comment: false });

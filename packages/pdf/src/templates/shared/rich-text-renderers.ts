@@ -7,6 +7,7 @@ import {
 	isRichTextElementInsideListItem,
 	stripRichTextVerticalMargins,
 } from "./rich-text-spacing";
+import { safeTextStyle } from "./safe-text-style";
 import { composeStyles } from "./styles";
 
 export const toRichTextStyleArray = (style: Style | Style[] | undefined): Style[] => {
@@ -20,6 +21,7 @@ type RichTextParagraphRendererProps = {
 	children: ReactNode;
 	element: Parameters<typeof isRichTextElementInsideListItem>[0];
 	style: Style | Style[] | undefined;
+	semanticStyle?: Style | Style[] | undefined;
 	rtl?: boolean;
 	rtlTextWrapStyle?: Style | undefined;
 	applyRtlDirection?: (node: ReactNode) => ReactNode;
@@ -29,6 +31,7 @@ type RichTextParagraphRendererProps = {
 export const renderRichTextParagraph = ({
 	element,
 	style,
+	semanticStyle,
 	children,
 	rtl,
 	rtlTextWrapStyle,
@@ -43,6 +46,8 @@ export const renderRichTextParagraph = ({
 		paragraphStyles,
 		getRichTextEdgeTrimStyle(element),
 		rtl ? rtlTextWrapStyle : undefined,
+		semanticStyle,
+		safeTextStyle,
 	);
 
 	const content = rtl && applyRtlDirection ? applyRtlDirection(children) : children;

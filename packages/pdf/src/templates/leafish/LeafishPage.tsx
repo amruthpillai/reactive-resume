@@ -20,7 +20,15 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	SemanticTemplatePartView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -77,14 +85,15 @@ export const LeafishPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 				{showHeader && <Header styles={styles} />}
 
 				<View style={styles.body}>
-					<View style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
 						{mainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 
 					{!page.fullWidth && (
-						<View
+						<SemanticRegionView
+							region="sidebar"
 							style={composeStyles(styles.sidebarColumn, {
 								width: `${metadata.layout.sidebarWidth}%`,
 								rowGap: metrics.sectionGap,
@@ -93,7 +102,7 @@ export const LeafishPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 							{sidebarSections.map((section) => (
 								<Section key={section} section={section} placement="sidebar" />
 							))}
-						</View>
+						</SemanticRegionView>
 					)}
 				</View>
 			</TemplateProvider>
@@ -107,8 +116,8 @@ const Header = ({ styles }: LeafishHeaderProps) => {
 
 	return (
 		<SemanticHeaderView style={styles.header}>
-			<View style={styles.headerIntro}>
-				<View style={styles.headerBody}>
+			<SemanticTemplatePartView partKeys={["header-intro"]} style={styles.headerIntro}>
+				<SemanticTemplatePartView partKeys={["header-intro", "header-body"]} style={styles.headerBody}>
 					{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 					<View style={styles.headerTitle}>
@@ -119,11 +128,11 @@ const Header = ({ styles }: LeafishHeaderProps) => {
 
 						<Section section="summary" placement="main" showHeading={false} />
 					</View>
-				</View>
-			</View>
+				</SemanticTemplatePartView>
+			</SemanticTemplatePartView>
 
-			<View style={styles.headerContactBand}>
-				<View style={styles.contactList}>
+			<SemanticTemplatePartView partKeys={["header-contact-band"]} style={styles.headerContactBand}>
+				<SemanticContactListView style={styles.contactList}>
 					<EmailContactItem email={basics.email} style={styles.contactItem} />
 					<PhoneContactItem phone={basics.phone} style={styles.contactItem} />
 					<LocationContactItem location={basics.location} style={styles.contactItem} />
@@ -131,8 +140,8 @@ const Header = ({ styles }: LeafishHeaderProps) => {
 					{basics.customFields.map((field) => (
 						<CustomFieldContactItem key={field.id} field={field} style={styles.contactItem} />
 					))}
-				</View>
-			</View>
+				</SemanticContactListView>
+			</SemanticTemplatePartView>
 		</SemanticHeaderView>
 	);
 };

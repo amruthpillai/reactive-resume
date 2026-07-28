@@ -14,7 +14,7 @@ import {
 import { semanticNodeKeys } from "../../semantic/node-keys";
 import { getRichTextSemanticNodeKey } from "../../semantic/rich-text-keys";
 import { useSectionStyleRule, useTemplateStyle } from "./context";
-import { convertPseudoBulletParagraphs, normalizeRichTextHtml, richTextMarkClassName } from "./rich-text-html";
+import { normalizeRichTextHtml, richTextMarkClassName } from "./rich-text-html";
 import { renderRichTextParagraph, toRichTextStyleArray } from "./rich-text-renderers";
 import {
 	createRichTextProseSpacing,
@@ -102,16 +102,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 	);
 	const proseSpacing = createRichTextProseSpacing(bodyLineHeight);
 
-	const normalized = normalizeRichTextHtml(children);
-	// RTL-only: pseudo-bullets share one BiDi paragraph across <br>, causing chars to
-	// bleed between visual lines. Real <li> items are independent BiDi paragraphs.
-	const withBullets = normalized && rtl ? convertPseudoBulletParagraphs(normalized) : normalized;
-	// Inject U+200F (RLM) after each <p>/<li> opener to anchor BiDi base direction
-	// on the inner styleless <Text> frame react-pdf-html creates.
-	const html =
-		withBullets && rtl
-			? withBullets.replace(/<(p|li)\b([^>]*)>/gi, (_match, tag, rest) => `<${tag}${rest}>‏`)
-			: withBullets;
+	const html = normalizeRichTextHtml(children, { direction: rtl ? "rtl" : "ltr" });
 
 	if (!html || !fieldVisible || !richTextVisible) return null;
 
@@ -218,7 +209,8 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					const resolved = resolvedFor(props.element);
 					const paragraphProps = {
 						...props,
-						style: composeStyles(props.style, resolved.style),
+						style: props.style,
+						semanticStyle: resolved.style,
 						textProps: resolvedPdfTextProps(resolved),
 						rtl,
 						...(rtlTextWrapStyle ? { rtlTextWrapStyle } : {}),
@@ -265,9 +257,9 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 								richListItemContentStyle,
 								richListItemContentRuleStyle,
 								contentItemStyles,
+								contentResolved.style,
 								safeTextStyle,
 								rtlTextWrapStyle,
-								contentResolved.style,
 							)}
 						>
 							{applyRtlDirectionRecursively(children)}
@@ -280,9 +272,9 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 								richListItemContentStyle,
 								richListItemContentRuleStyle,
 								contentItemStyles,
+								contentResolved.style,
 								richListItemContentStackStyle,
 								safeTextStyle,
-								contentResolved.style,
 							)}
 						>
 							{children}

@@ -7,7 +7,7 @@ const source = readFileSync(fileURLToPath(new URL("./primitives.tsx", import.met
 describe("Link", () => {
 	it("passes the resume page underline preference to shared link styles", () => {
 		expect(source).toContain("metadata.page.hideLinkUnderline");
-		expect(source).toContain('textDecoration: metadata.page.hideLinkUnderline ? "none" : "underline"');
+		expect(source).toContain("{ hideUnderline: metadata.page.hideLinkUnderline }");
 		expect(source).toContain("resolved.style");
 	});
 });

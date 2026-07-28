@@ -59,13 +59,13 @@ const ITEM_HEADER_FIELDS = {
 	education: ["school", "area", "degree", "grade", "location", "period"],
 	projects: ["name", "period"],
 	skills: ["name"],
-	languages: [],
+	languages: ["language", "fluency"],
 	interests: ["name"],
 	awards: ["title", "date", "awarder"],
 	certifications: ["title", "date", "issuer"],
 	publications: ["title", "date", "publisher"],
 	volunteer: ["organization", "location", "period"],
-	references: [],
+	references: ["name", "position", "phone"],
 	summary: [],
 	"cover-letter": [],
 } as const satisfies Readonly<Record<CustomSectionType | "experience-role", readonly string[]>>;
@@ -200,7 +200,7 @@ const buildField = ({
 		RICH_TEXT_FIELDS.has(name) && typeof value === "string"
 			? buildRichTextChildren(
 					semanticNodeKeys.richText(key, name),
-					parseNormalizedRichTextHtml(value).childNodes,
+					parseNormalizedRichTextHtml(value, { direction }).childNodes,
 					direction,
 				)
 			: [];

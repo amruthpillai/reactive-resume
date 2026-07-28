@@ -126,6 +126,31 @@ describe("semantic issue fixtures", () => {
 		expect(presentation[contact]?.style?.textDecoration).toBe("none");
 	});
 
+	it("cascades contact-link and field-rich-text aliases before selecting winners", () => {
+		const data = buildIssueFixture();
+		const experience = data.sections.experience.items[0];
+		if (!experience) throw new Error("Expected experience fixture.");
+		experience.description = "<p>Description</p>";
+		const contact = semanticNodeKeys.contactItem(semanticNodeKeys.contactList(headerKey), "email");
+		const field = semanticNodeKeys.field(sectionItemKey("experience"), "description");
+
+		const resolve = (text: string) =>
+			resolveResumePresentation({
+				data,
+				template: "onyx",
+				applied: applied(`@rr-version 1;${text}`),
+				mode: "semantic",
+			});
+
+		expect(resolve("contact-item { color: red; } link { color: blue; }")[contact]?.style?.color).toBe("blue");
+		expect(resolve("link { color: blue; } contact-item { color: red; }")[contact]?.style?.color).toBe("red");
+		expect(resolve("field { color: red; } rich-text { color: blue; }")[field]?.style?.color).toBe("blue");
+		expect(resolve("rich-text { color: blue; } field { color: red; }")[field]?.style?.color).toBe("red");
+		expect(resolve("link { color: blue; } contact-item[name='email'] { color: red; }")[contact]?.style?.color).toBe(
+			"red",
+		);
+	});
+
 	it("styles Basics/header nodes while rejecting unsupported gradients (#3137)", () => {
 		const valid = resolveIssueFixture(`
 			@rr-version 1;
@@ -199,6 +224,22 @@ describe("semantic issue fixtures", () => {
 		});
 		expect(containsStyle(document, "backgroundColor", "#1e293b")).toBe(true);
 		expect(containsStyle(document, "opacity", 0.2)).toBe(true);
+	});
+
+	it("unbolds only the final skill-name primitive and preserves the experience title weight (#2223)", async () => {
+		const data = buildIssueFixture();
+		const stylesheet = applied(`
+			@rr-version 1;
+			section[type="skills"] field[name="name"] { font-weight: 400; }
+		`);
+		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+		const instance = pdf(element);
+		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+		const document = instance.container.document as HostNode;
+
+		expect(mergedStyle(findText(document, "TypeScript"))).toMatchObject({ fontWeight: "400" });
+		expect(mergedStyle(findText(document, "Analytical Engines")).fontWeight).not.toBe("400");
 	});
 
 	it("renders descriptor filtering and stable item order instead of remapping raw arrays", async () => {

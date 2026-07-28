@@ -1026,6 +1026,9 @@ importers:
         specifier: ^2.1.5
         version: 2.1.5(@react-pdf/renderer@4.5.1(react@19.2.8))(react@19.2.8)
     devDependencies:
+      '@napi-rs/canvas':
+        specifier: 1.0.2
+        version: 1.0.2
       '@react-pdf/types':
         specifier: ^2.11.1
         version: 2.11.1
@@ -10161,7 +10164,6 @@ snapshots:
       '@napi-rs/canvas-linux-x64-musl': 1.0.2
       '@napi-rs/canvas-win32-arm64-msvc': 1.0.2
       '@napi-rs/canvas-win32-x64-msvc': 1.0.2
-    optional: true
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:

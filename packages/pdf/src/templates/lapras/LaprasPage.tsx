@@ -19,7 +19,14 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -64,18 +71,21 @@ export const LaprasPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
-				<View style={composeStyles(styles.sectionGroup, { rowGap: metrics.gapY(1.5) })}>
+				<SemanticRegionView region="main" style={composeStyles(styles.sectionGroup, { rowGap: metrics.gapY(1.5) })}>
 					{mainSections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
-				</View>
+				</SemanticRegionView>
 
 				{!page.fullWidth && (
-					<View style={composeStyles(styles.sectionGroup, { rowGap: metrics.gapY(1.5) })}>
+					<SemanticRegionView
+						region="sidebar"
+						style={composeStyles(styles.sectionGroup, { rowGap: metrics.gapY(1.5) })}
+					>
 						{sidebarSections.map((section) => (
 							<Section key={section} section={section} placement="sidebar" />
 						))}
-					</View>
+					</SemanticRegionView>
 				)}
 			</TemplateProvider>
 		</Page>
@@ -96,7 +106,7 @@ const Header = ({ styles }: LaprasHeaderProps) => {
 					<Text>{basics.headline}</Text>
 				</View>
 
-				<View style={styles.contactList}>
+				<SemanticContactListView style={styles.contactList}>
 					<EmailContactItem email={basics.email} style={styles.contactItem} />
 					<PhoneContactItem phone={basics.phone} style={styles.contactItem} />
 					<LocationContactItem location={basics.location} style={styles.contactItem} />
@@ -104,7 +114,7 @@ const Header = ({ styles }: LaprasHeaderProps) => {
 					{basics.customFields.map((field) => (
 						<CustomFieldContactItem key={field.id} field={field} style={styles.contactItem} />
 					))}
-				</View>
+				</SemanticContactListView>
 			</View>
 		</SemanticHeaderView>
 	);

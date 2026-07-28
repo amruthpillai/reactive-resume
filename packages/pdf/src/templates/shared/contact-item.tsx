@@ -16,13 +16,14 @@ type WebsiteDisplay = {
 	label?: string | undefined;
 };
 
-const useContactNodeKeys = (name: string, id?: string) => {
+const useContactNodeKeys = (name: string, id?: string, primitiveNodeKey?: string) => {
 	const headerNodeKey = useSemanticNodeKey();
 	const contactListNodeKey = headerNodeKey ? semanticNodeKeys.contactList(headerNodeKey) : undefined;
 	const contactNodeKey = contactListNodeKey ? semanticNodeKeys.contactItem(contactListNodeKey, name, id) : undefined;
 
 	return {
 		contactNodeKey,
+		primitiveNodeKey: primitiveNodeKey ?? contactNodeKey,
 		fieldNodeKey: contactNodeKey ? semanticNodeKeys.field(contactNodeKey, name) : undefined,
 		iconNodeKey: contactNodeKey ? semanticNodeKeys.icon(contactNodeKey, "contact") : undefined,
 	};
@@ -33,6 +34,7 @@ type WebsiteContactItemProps = {
 	style?: ContactStyle;
 	textStyle?: ContactStyle;
 	iconColor?: string;
+	primitiveNodeKey?: string | undefined;
 };
 
 type CustomFieldContactItemProps = {
@@ -40,15 +42,22 @@ type CustomFieldContactItemProps = {
 	style?: ContactStyle;
 	textStyle?: ContactStyle;
 	iconColor?: string;
+	primitiveNodeKey?: string | undefined;
 };
 
-export const WebsiteContactItem = ({ website, style, textStyle, iconColor }: WebsiteContactItemProps) => {
-	const keys = useContactNodeKeys("website");
-	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+export const WebsiteContactItem = ({
+	website,
+	style,
+	textStyle,
+	iconColor,
+	primitiveNodeKey,
+}: WebsiteContactItemProps) => {
+	const keys = useContactNodeKeys("website", undefined, primitiveNodeKey);
+	const visible = useSemanticNodeVisible(keys.primitiveNodeKey);
 	if (!website.url || !visible) return null;
 
 	return (
-		<Link nodeKey={keys.contactNodeKey} src={website.url} {...(style ? { style } : {})}>
+		<Link nodeKey={keys.primitiveNodeKey} src={website.url} {...(style ? { style } : {})}>
 			<Icon nodeKey={keys.iconNodeKey} name="globe" {...(iconColor ? { color: iconColor } : {})} />
 			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
 				{getWebsiteDisplayText(website)}
@@ -57,11 +66,17 @@ export const WebsiteContactItem = ({ website, style, textStyle, iconColor }: Web
 	);
 };
 
-export const CustomFieldContactItem = ({ field, style, textStyle, iconColor }: CustomFieldContactItemProps) => {
+export const CustomFieldContactItem = ({
+	field,
+	style,
+	textStyle,
+	iconColor,
+	primitiveNodeKey,
+}: CustomFieldContactItemProps) => {
 	const linkUrl = getCustomFieldLinkUrl(field);
-	const keys = useContactNodeKeys("custom", field.id);
-	const resolved = useResolvedNode(keys.contactNodeKey);
-	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+	const keys = useContactNodeKeys("custom", field.id, primitiveNodeKey);
+	const resolved = useResolvedNode(keys.primitiveNodeKey);
+	const visible = useSemanticNodeVisible(keys.primitiveNodeKey);
 	const children = (
 		<>
 			<Icon nodeKey={keys.iconNodeKey} name={field.icon as IconName} {...(iconColor ? { color: iconColor } : {})} />
@@ -74,7 +89,7 @@ export const CustomFieldContactItem = ({ field, style, textStyle, iconColor }: C
 
 	if (linkUrl) {
 		return (
-			<Link nodeKey={keys.contactNodeKey} src={linkUrl} {...(style ? { style } : {})}>
+			<Link nodeKey={keys.primitiveNodeKey} src={linkUrl} {...(style ? { style } : {})}>
 				{children}
 			</Link>
 		);
@@ -94,6 +109,7 @@ type EmailContactItemProps = {
 	iconColor?: string;
 	/** Override icon; defaults to "envelope". ditgar uses "at". */
 	iconName?: IconName;
+	primitiveNodeKey?: string | undefined;
 };
 
 export const EmailContactItem = ({
@@ -102,12 +118,13 @@ export const EmailContactItem = ({
 	textStyle,
 	iconColor,
 	iconName = "envelope",
+	primitiveNodeKey,
 }: EmailContactItemProps) => {
-	const keys = useContactNodeKeys("email");
-	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+	const keys = useContactNodeKeys("email", undefined, primitiveNodeKey);
+	const visible = useSemanticNodeVisible(keys.primitiveNodeKey);
 	if (!email || !visible) return null;
 	return (
-		<Link nodeKey={keys.contactNodeKey} src={`mailto:${email}`} {...(style ? { style } : {})}>
+		<Link nodeKey={keys.primitiveNodeKey} src={`mailto:${email}`} {...(style ? { style } : {})}>
 			<Icon nodeKey={keys.iconNodeKey} name={iconName} {...(iconColor ? { color: iconColor } : {})} />
 			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
 				{email}
@@ -121,14 +138,15 @@ type PhoneContactItemProps = {
 	style?: ContactStyle;
 	textStyle?: ContactStyle;
 	iconColor?: string;
+	primitiveNodeKey?: string | undefined;
 };
 
-export const PhoneContactItem = ({ phone, style, textStyle, iconColor }: PhoneContactItemProps) => {
-	const keys = useContactNodeKeys("phone");
-	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+export const PhoneContactItem = ({ phone, style, textStyle, iconColor, primitiveNodeKey }: PhoneContactItemProps) => {
+	const keys = useContactNodeKeys("phone", undefined, primitiveNodeKey);
+	const visible = useSemanticNodeVisible(keys.primitiveNodeKey);
 	if (!phone || !visible) return null;
 	return (
-		<Link nodeKey={keys.contactNodeKey} src={`tel:${phone}`} {...(style ? { style } : {})}>
+		<Link nodeKey={keys.primitiveNodeKey} src={`tel:${phone}`} {...(style ? { style } : {})}>
 			<Icon nodeKey={keys.iconNodeKey} name="phone" {...(iconColor ? { color: iconColor } : {})} />
 			<Text nodeKey={keys.fieldNodeKey} {...(textStyle ? { style: textStyle } : {})}>
 				{phone}
@@ -142,12 +160,19 @@ type LocationContactItemProps = {
 	style?: ContactStyle;
 	textStyle?: ContactStyle;
 	iconColor?: string;
+	primitiveNodeKey?: string | undefined;
 };
 
-export const LocationContactItem = ({ location, style, textStyle, iconColor }: LocationContactItemProps) => {
-	const keys = useContactNodeKeys("location");
-	const resolved = useResolvedNode(keys.contactNodeKey);
-	const visible = useSemanticNodeVisible(keys.contactNodeKey);
+export const LocationContactItem = ({
+	location,
+	style,
+	textStyle,
+	iconColor,
+	primitiveNodeKey,
+}: LocationContactItemProps) => {
+	const keys = useContactNodeKeys("location", undefined, primitiveNodeKey);
+	const resolved = useResolvedNode(keys.primitiveNodeKey);
+	const visible = useSemanticNodeVisible(keys.primitiveNodeKey);
 	if (!location || !visible) return null;
 	return (
 		<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(style, resolved.style)}>

@@ -75,6 +75,8 @@ export type AuthoredPageContext = {
 
 export type ResolvedNodeStyle = {
 	style: Readonly<Record<string, string | number>>;
+	specifiedStyleProperties?: readonly string[];
+	hostBaseStyleProperties?: readonly string[];
 	structural: StructuralPresentation;
 	hidden: boolean;
 	order: number;
@@ -98,6 +100,7 @@ export type ResolveStylesheetInput = {
 	baseStyles: Readonly<Record<string, ResolvedNodeStyle>>;
 	baseSettings: BaseSettingsSnapshot;
 	pages: readonly AuthoredPageContext[];
+	aliases?: Readonly<Record<string, readonly string[]>>;
 };
 
 export type ResolveStylesheetContext = Omit<ResolveStylesheetInput, "program" | "tree">;

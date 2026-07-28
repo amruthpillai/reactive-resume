@@ -614,6 +614,22 @@ export function resolveStylesheet(
 		}
 		matched.set(node.key, rules);
 	}
+	const nodeKinds = new Map(flatNodes.map(({ node }) => [node.key, node.kind]));
+	const cascadeKinds = new Map<string, ReadonlySet<SemanticNode["kind"]>>();
+	for (const [canonicalKey, aliasKeys] of Object.entries(context.aliases ?? {})) {
+		const canonicalKind = nodeKinds.get(canonicalKey);
+		if (!canonicalKind) continue;
+		const kinds = new Set<SemanticNode["kind"]>([canonicalKind]);
+		const rules = [...(matched.get(canonicalKey) ?? [])];
+		for (const aliasKey of aliasKeys) {
+			const aliasKind = nodeKinds.get(aliasKey);
+			if (!aliasKind) continue;
+			kinds.add(aliasKind);
+			rules.push(...(matched.get(aliasKey) ?? []));
+		}
+		matched.set(canonicalKey, rules);
+		cascadeKinds.set(canonicalKey, kinds);
+	}
 	for (const rule of program.rules) {
 		const matchingNodes = flatNodes.filter(({ node }) =>
 			matched.get(node.key)?.some((matchedRule) => matchedRule.rule === rule),
@@ -707,8 +723,17 @@ export function resolveStylesheet(
 		const base = context.baseStyles[node.node.key] ?? { style: {}, structural: {}, hidden: false, order: 0 };
 		const parent = node.parent ? resolved[node.parent.node.key] : undefined;
 		const style: Record<string, string | number> = { ...base.style };
+		const specifiedStyleProperties = new Set<string>();
+		const hostBaseStyleProperties = new Set<string>();
 		for (const [property, definition] of Object.entries(PROPERTY_REGISTRY_V1)) {
-			if (definition?.inheritable && style[property] === undefined && parent?.style[property] !== undefined) {
+			if (!definition?.inheritable) continue;
+			const inheritedFromAuthoredRule = parent?.specifiedStyleProperties?.includes(property) && !winners.has(property);
+			if (inheritedFromAuthoredRule) {
+				specifiedStyleProperties.add(property);
+				if (parent?.hostBaseStyleProperties?.includes(property)) hostBaseStyleProperties.add(property);
+				if (parent?.style[property] === undefined) delete style[property];
+				else style[property] = parent.style[property];
+			} else if (style[property] === undefined && parent?.style[property] !== undefined) {
 				style[property] = parent.style[property];
 			}
 		}
@@ -718,10 +743,18 @@ export function resolveStylesheet(
 			typeof parent?.style["font-size"] === "number"
 				? parent.style["font-size"]
 				: context.baseSettings.typography.body.fontSize;
-		if (fontSizeWinner && PROPERTY_REGISTRY_V1["font-size"]?.appliesTo.includes(node.node.kind)) {
+		const applicableKinds = cascadeKinds.get(node.node.key) ?? new Set([node.node.kind]);
+		if (fontSizeWinner && PROPERTY_REGISTRY_V1["font-size"]?.appliesTo.some((kind) => applicableKinds.has(kind))) {
 			const expanded = fontSizeWinner.declaration.value;
 			const keyword = cssWideKeyword(expanded);
 			if (keyword) {
+				specifiedStyleProperties.add("font-size");
+				if (
+					keyword === "revert" ||
+					((keyword === "inherit" || keyword === "unset") && !parent?.specifiedStyleProperties?.includes("font-size"))
+				) {
+					hostBaseStyleProperties.add("font-size");
+				}
 				const wide = cssWideValue(keyword, "font-size", base.style, parent?.style);
 				if (wide === undefined) delete style["font-size"];
 				else style["font-size"] = wide;
@@ -753,6 +786,7 @@ export function resolveStylesheet(
 							),
 						);
 					} else {
+						specifiedStyleProperties.add("font-size");
 						style["font-size"] = normalized;
 						if (typeof normalized === "number" && (normalized < 4 || normalized > 72)) {
 							diagnostics.push(
@@ -776,7 +810,7 @@ export function resolveStylesheet(
 		for (const [property, winner] of winners) {
 			if (property.startsWith("--") || property === "font-size") continue;
 			const definition = PROPERTY_REGISTRY_V1[property];
-			if (!definition?.appliesTo.includes(node.node.kind)) continue;
+			if (!definition?.appliesTo.some((kind) => applicableKinds.has(kind))) continue;
 			const expanded = winner.declaration.value;
 			if (property === "size") {
 				const resolvedValue = resolvedPageSizeValues.get(node.node.key);
@@ -817,6 +851,15 @@ export function resolveStylesheet(
 				} else if (definition.category === "structural") {
 					applyStructuralCssWide(keyword, property, structural, base, parent, builderPageSize(context, node.node.key));
 				} else {
+					specifiedStyleProperties.add(property);
+					if (
+						keyword === "revert" ||
+						((keyword === "inherit" || keyword === "unset") &&
+							definition.inheritable &&
+							!parent?.specifiedStyleProperties?.includes(property))
+					) {
+						hostBaseStyleProperties.add(property);
+					}
 					const wide = cssWideValue(keyword, property, base.style, parent?.style);
 					if (wide === undefined) delete style[property];
 					else style[property] = wide;
@@ -875,9 +918,17 @@ export function resolveStylesheet(
 				}
 				continue;
 			}
+			specifiedStyleProperties.add(property);
 			style[property] = normalized;
 		}
-		resolved[node.node.key] = { style, structural, hidden, order };
+		resolved[node.node.key] = {
+			style,
+			specifiedStyleProperties: [...specifiedStyleProperties],
+			hostBaseStyleProperties: [...hostBaseStyleProperties],
+			structural,
+			hidden,
+			order,
+		};
 	}
 
 	if (diagnostics.some(({ severity }) => severity === "error")) {

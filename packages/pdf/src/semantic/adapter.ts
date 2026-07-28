@@ -6,8 +6,8 @@ export type ResolvedPdfPageSize = ResolvedPageSize;
 export type ResolvedPdfNodePresentation = {
 	style?: Style;
 	size?: ResolvedPdfPageSize;
-	break?: true;
-	wrap?: false;
+	break?: boolean;
+	wrap?: boolean;
 	fixed?: boolean;
 	minPresenceAhead?: number;
 	orphans?: number;
@@ -45,11 +45,15 @@ const toReactPdfProperty = (property: string) => {
 	return property.replace(/-([a-z])/g, (_match, letter: string) => letter.toUpperCase());
 };
 
-const styleDelta = (
-	style: ResolvedNodeStyle["style"],
-	base: ResolvedNodeStyle["style"] | undefined,
-): Style | undefined => {
-	const entries = Object.entries(style).filter(([property, value]) => base?.[property] !== value);
+const styleDelta = (resolved: ResolvedNodeStyle, base: ResolvedNodeStyle["style"] | undefined): Style | undefined => {
+	const specified = new Set(resolved.specifiedStyleProperties);
+	const hostBase = new Set(resolved.hostBaseStyleProperties);
+	const entries: [string, string | number | undefined][] = Object.entries(resolved.style).filter(
+		([property, value]) => !hostBase.has(property) && (specified.has(property) || base?.[property] !== value),
+	);
+	for (const property of specified) {
+		if (!hostBase.has(property) && !(property in resolved.style)) entries.push([property, undefined]);
+	}
 	if (entries.length === 0) return undefined;
 
 	return Object.freeze(
@@ -61,13 +65,16 @@ export function adaptResolvedPdfNode(
 	resolved: ResolvedNodeStyle,
 	base?: ResolvedNodeStyle,
 ): ResolvedPdfNodePresentation {
-	const style = styleDelta(resolved.style, base?.style);
+	const style = styleDelta(resolved, base?.style);
 	const { structural } = resolved;
+	const breakBefore =
+		structural.breakBefore === "page" ? true : base?.structural.breakBefore === "page" ? false : undefined;
+	const wrap = structural.breakInside === "avoid" ? false : base?.structural.breakInside === "avoid" ? true : undefined;
 	const presentation = {
 		...(style ? { style } : {}),
 		...(structural.pageSize === undefined ? {} : { size: structural.pageSize }),
-		...(structural.breakBefore === "page" ? { break: true as const } : {}),
-		...(structural.breakInside === "avoid" ? { wrap: false as const } : {}),
+		...(breakBefore === undefined ? {} : { break: breakBefore }),
+		...(wrap === undefined ? {} : { wrap }),
 		...(structural.fixed === undefined ? {} : { fixed: structural.fixed }),
 		...(structural.minPresenceAhead === undefined ? {} : { minPresenceAhead: structural.minPresenceAhead }),
 		...(structural.orphans === undefined ? {} : { orphans: structural.orphans }),

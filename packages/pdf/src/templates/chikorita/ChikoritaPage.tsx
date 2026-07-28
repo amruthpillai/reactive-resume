@@ -19,7 +19,14 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -65,7 +72,8 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader, 
 			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
-				<View
+				<SemanticRegionView
+					region="main"
 					style={composeStyles(styles.mainColumn, {
 						paddingTop: metrics.page.paddingVertical,
 						paddingRight: page.fullWidth ? metrics.page.paddingHorizontal : metrics.columnGap,
@@ -79,9 +87,10 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader, 
 					{mainSections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
-				</View>
+				</SemanticRegionView>
 
-				<View
+				<SemanticRegionView
+					region="sidebar"
 					style={composeStyles(styles.sidebarColumn, {
 						display: page.fullWidth ? "none" : "flex",
 						flexBasis: `${metadata.layout.sidebarWidth}%`,
@@ -100,7 +109,7 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader, 
 							<Section section={section} placement="sidebar" />
 						</Fragment>
 					))}
-				</View>
+				</SemanticRegionView>
 			</TemplateProvider>
 		</Page>
 	);
@@ -120,7 +129,7 @@ const Header = ({ styles }: ChikoritaHeaderProps) => {
 					<Text>{basics.headline}</Text>
 				</View>
 
-				<View style={styles.headerContactList}>
+				<SemanticContactListView style={styles.headerContactList}>
 					<View style={styles.headerContactRow}>
 						<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 						<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
@@ -133,7 +142,7 @@ const Header = ({ styles }: ChikoritaHeaderProps) => {
 							<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 						))}
 					</View>
-				</View>
+				</SemanticContactListView>
 			</View>
 		</SemanticHeaderView>
 	);

@@ -20,7 +20,15 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	SemanticTemplatePartView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -73,7 +81,13 @@ export const GlaliePage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors} features={glalieFeatures}>
-				{showSidebar && <View style={styles.sidebarBackground} />}
+				{showSidebar && (
+					<SemanticTemplatePartView
+						ownerNodeKey={semanticNodeKeys.region(pageNodeKey, "sidebar")}
+						partKeys={["sidebar-background"]}
+						style={styles.sidebarBackground}
+					/>
+				)}
 
 				<View style={styles.layout}>
 					{showSidebar && (
@@ -85,21 +99,24 @@ export const GlaliePage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 							{showHeader && <Header styles={styles} />}
 
 							{!page.fullWidth && (
-								<View style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}>
+								<SemanticRegionView
+									region="sidebar"
+									style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}
+								>
 									{sidebarSections.map((section) => (
 										<Section key={section} section={section} placement="sidebar" />
 									))}
-								</View>
+								</SemanticRegionView>
 							)}
 						</View>
 					)}
 
 					<View style={styles.mainColumn}>
-						<View style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
+						<SemanticRegionView region="main" style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
 							{mainSections.map((section) => (
 								<Section key={section} section={section} placement="main" />
 							))}
-						</View>
+						</SemanticRegionView>
 					</View>
 				</View>
 			</TemplateProvider>
@@ -122,7 +139,7 @@ const Header = ({ styles }: GlalieHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.contactList}>
+			<SemanticContactListView style={styles.contactList}>
 				<EmailContactItem email={basics.email} style={styles.contactItem} />
 				<PhoneContactItem phone={basics.phone} style={styles.contactItem} />
 				<LocationContactItem location={basics.location} style={styles.contactItem} />
@@ -130,7 +147,7 @@ const Header = ({ styles }: GlalieHeaderProps) => {
 				{basics.customFields.map((field) => (
 					<CustomFieldContactItem key={field.id} field={field} style={styles.contactItem} />
 				))}
-			</View>
+			</SemanticContactListView>
 		</SemanticHeaderView>
 	);
 };

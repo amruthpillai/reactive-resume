@@ -19,7 +19,14 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -90,11 +97,11 @@ export const BronzorPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
-				<View style={composeStyles(styles.sections, { rowGap: metrics.sectionGap })}>
+				<SemanticRegionView region="main" style={composeStyles(styles.sections, { rowGap: metrics.sectionGap })}>
 					{sections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
-				</View>
+				</SemanticRegionView>
 			</TemplateProvider>
 		</Page>
 	);
@@ -115,7 +122,7 @@ const Header = ({ styles }: BronzorHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.headerContactRow}>
+			<SemanticContactListView style={styles.headerContactRow}>
 				<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 				<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
 				<LocationContactItem location={basics.location} style={styles.headerContactItem} />
@@ -123,7 +130,7 @@ const Header = ({ styles }: BronzorHeaderProps) => {
 				{basics.customFields.map((field) => (
 					<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 				))}
-			</View>
+			</SemanticContactListView>
 		</SemanticHeaderView>
 	);
 };

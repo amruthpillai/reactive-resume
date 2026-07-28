@@ -6,7 +6,7 @@
 	"exports": {
 		"./browser": "./src/browser.tsx",
 		"./document": "./src/document.tsx",
-		"./semantic": "./src/semantic/tree.ts",
+		"./semantic": "./src/semantic/index.ts",
 		"./section-title": "./src/section-title.ts",
 		"./server": "./src/server.tsx"
 	},
@@ -33,6 +33,7 @@
 		"react-pdf-html": "^2.1.5"
 	},
 	"devDependencies": {
+		"@napi-rs/canvas": "1.0.2",
 		"@react-pdf/types": "^2.11.1",
 		"@reactive-resume/config": "workspace:*",
 		"@types/react": "^19.2.17",

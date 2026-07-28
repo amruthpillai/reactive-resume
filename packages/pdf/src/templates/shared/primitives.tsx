@@ -8,6 +8,7 @@ import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapt
 import {
 	SemanticNodeKeyProvider,
 	useResolvedNode,
+	useSemanticNodeExists,
 	useSemanticNodeKey,
 	useSemanticNodeVisible,
 } from "../../semantic/context";
@@ -15,13 +16,15 @@ import { semanticNodeKeys } from "../../semantic/node-keys";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplatePageNodeKey, useTemplateStyle } from "./context";
 import { resolveIconSize } from "./icon-size";
 import { safeTextStyle } from "./safe-text-style";
-import { composeStyles } from "./styles";
+import { composeLinkStyles, composeStyles } from "./styles";
 
 const asStyleInput = (style: unknown): StyleInput => style as StyleInput;
 
 type SemanticProps = {
 	nodeKey?: string | undefined;
 	semanticField?: string | undefined;
+	bindSemanticNode?: boolean | undefined;
+	bindCurrentNode?: boolean | undefined;
 };
 
 type SemanticLinkProps = SemanticProps & {
@@ -34,11 +37,15 @@ const getChildren = (props: object): ReactNode =>
 const usePrimitiveNodeKey = ({
 	nodeKey,
 	semanticField,
+	bindSemanticNode = true,
+	bindCurrentNode = false,
 	children,
 	heading = false,
 }: SemanticProps & { children?: ReactNode; heading?: boolean }) => {
 	const data = useRender();
 	const parentKey = useSemanticNodeKey();
+	if (!bindSemanticNode) return undefined;
+	if (bindCurrentNode) return parentKey;
 	if (nodeKey) return nodeKey;
 	if (semanticField && parentKey) return semanticNodeKeys.field(parentKey, semanticField);
 	if (!parentKey) return undefined;
@@ -55,9 +62,22 @@ const usePrimitiveNodeKey = ({
 	return undefined;
 };
 
-export const Div = ({ style, nodeKey, semanticField, ...props }: ComponentProps<typeof View> & SemanticProps) => {
+export const Div = ({
+	style,
+	nodeKey,
+	semanticField,
+	bindSemanticNode,
+	bindCurrentNode,
+	...props
+}: ComponentProps<typeof View> & SemanticProps) => {
 	const divStyle = useTemplateStyle("div");
-	const resolvedNodeKey = usePrimitiveNodeKey({ nodeKey, semanticField, children: getChildren(props) });
+	const resolvedNodeKey = usePrimitiveNodeKey({
+		nodeKey,
+		semanticField,
+		bindSemanticNode,
+		bindCurrentNode,
+		children: getChildren(props),
+	});
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
 	if (!visible) return null;
@@ -71,10 +91,22 @@ export const Div = ({ style, nodeKey, semanticField, ...props }: ComponentProps<
 	);
 };
 
-export const Text = ({ style, nodeKey, semanticField, ...props }: ComponentProps<typeof PdfText> & SemanticProps) => {
+export const Text = ({
+	style,
+	nodeKey,
+	semanticField,
+	bindSemanticNode,
+	bindCurrentNode: _bindCurrentNode,
+	...props
+}: ComponentProps<typeof PdfText> & SemanticProps) => {
 	const textStyle = useTemplateStyle("text");
 	const textRuleStyle = useSectionStyleRule("text");
-	const resolvedNodeKey = usePrimitiveNodeKey({ nodeKey, semanticField, children: getChildren(props) });
+	const resolvedNodeKey = usePrimitiveNodeKey({
+		nodeKey,
+		semanticField,
+		bindSemanticNode,
+		children: getChildren(props),
+	});
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
 	if (!visible) return null;
@@ -92,11 +124,19 @@ export const Heading = ({
 	style,
 	nodeKey,
 	semanticField,
+	bindSemanticNode,
+	bindCurrentNode: _bindCurrentNode,
 	...props
 }: ComponentProps<typeof PdfText> & SemanticProps) => {
 	const headingStyle = useTemplateStyle("heading");
 	const headingRuleStyle = useSectionStyleRule("heading");
-	const resolvedNodeKey = usePrimitiveNodeKey({ nodeKey, semanticField, children: getChildren(props), heading: true });
+	const resolvedNodeKey = usePrimitiveNodeKey({
+		nodeKey,
+		semanticField,
+		bindSemanticNode,
+		children: getChildren(props),
+		heading: true,
+	});
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
 	if (!visible) return null;
@@ -115,6 +155,8 @@ export const Link = ({
 	nodeKey,
 	semanticField,
 	semanticRole,
+	bindSemanticNode: _bindSemanticNode,
+	bindCurrentNode: _bindCurrentNode,
 	...props
 }: ComponentProps<typeof PdfLink> & SemanticLinkProps) => {
 	const { metadata } = useRender();
@@ -134,10 +176,12 @@ export const Link = ({
 			{...props}
 			{...resolvedPdfTextProps(resolved)}
 			style={composeStyles(
-				{ textDecoration: metadata.page.hideLinkUnderline ? "none" : "underline" },
-				linkStyle,
-				linkRuleStyle,
-				asStyleInput(style),
+				composeLinkStyles(
+					{ hideUnderline: metadata.page.hideLinkUnderline },
+					linkStyle,
+					linkRuleStyle,
+					asStyleInput(style),
+				),
 				resolved.style,
 				safeTextStyle,
 			)}
@@ -145,11 +189,23 @@ export const Link = ({
 	);
 };
 
-export const Small = ({ style, nodeKey, semanticField, ...props }: ComponentProps<typeof PdfText> & SemanticProps) => {
+export const Small = ({
+	style,
+	nodeKey,
+	semanticField,
+	bindSemanticNode,
+	bindCurrentNode: _bindCurrentNode,
+	...props
+}: ComponentProps<typeof PdfText> & SemanticProps) => {
 	const textStyle = useTemplateStyle("text");
 	const smallStyle = useTemplateStyle("small");
 	const secondaryTextRuleStyle = useSectionStyleRule("secondaryText");
-	const resolvedNodeKey = usePrimitiveNodeKey({ nodeKey, semanticField, children: getChildren(props) });
+	const resolvedNodeKey = usePrimitiveNodeKey({
+		nodeKey,
+		semanticField,
+		bindSemanticNode,
+		children: getChildren(props),
+	});
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
 	if (!visible) return null;
@@ -170,11 +226,23 @@ export const Small = ({ style, nodeKey, semanticField, ...props }: ComponentProp
 	);
 };
 
-export const Bold = ({ style, nodeKey, semanticField, ...props }: ComponentProps<typeof PdfText> & SemanticProps) => {
+export const Bold = ({
+	style,
+	nodeKey,
+	semanticField,
+	bindSemanticNode,
+	bindCurrentNode: _bindCurrentNode,
+	...props
+}: ComponentProps<typeof PdfText> & SemanticProps) => {
 	const textStyle = useTemplateStyle("text");
 	const boldStyle = useTemplateStyle("bold");
 	const textRuleStyle = useSectionStyleRule("text");
-	const resolvedNodeKey = usePrimitiveNodeKey({ nodeKey, semanticField, children: getChildren(props) });
+	const resolvedNodeKey = usePrimitiveNodeKey({
+		nodeKey,
+		semanticField,
+		bindSemanticNode,
+		children: getChildren(props),
+	});
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
 	if (!visible) return null;
@@ -204,8 +272,10 @@ export const Icon = ({
 			size: sizeProp,
 			styles: [iconRuleStyle, asStyleInput(style)],
 		}) ?? templateIconSize;
-	const resolved = useResolvedNode(nodeKey);
-	const visible = useSemanticNodeVisible(nodeKey);
+	const parentKey = useSemanticNodeKey();
+	const resolvedNodeKey = nodeKey ?? (parentKey ? semanticNodeKeys.icon(parentKey, "item") : undefined);
+	const resolved = useResolvedNode(resolvedNodeKey);
+	const visible = useSemanticNodeVisible(resolvedNodeKey);
 
 	if (iconProps.display === "none" || !visible) return null;
 
@@ -221,15 +291,94 @@ export const Icon = ({
 
 export const SemanticHeaderView = ({ style, ...props }: ComponentProps<typeof View>) => {
 	const pageNodeKey = useTemplatePageNodeKey();
-	const nodeKey = semanticNodeKeys.header(semanticNodeKeys.region(pageNodeKey, "header"));
+	const regionNodeKey = semanticNodeKeys.region(pageNodeKey, "header");
+	const nodeKey = semanticNodeKeys.header(regionNodeKey);
+	const regionResolved = useResolvedNode(regionNodeKey);
+	const resolved = useResolvedNode(nodeKey);
+	const regionVisible = useSemanticNodeVisible(regionNodeKey);
+	const headerVisible = useSemanticNodeVisible(nodeKey);
+	if (!regionVisible || !headerVisible) return null;
+
+	return (
+		<SemanticNodeKeyProvider nodeKey={nodeKey}>
+			<View
+				{...props}
+				{...resolvedPdfFlowProps(regionResolved)}
+				{...resolvedPdfFlowProps(resolved)}
+				style={composeStyles(asStyleInput(style), regionResolved.style, resolved.style)}
+			/>
+		</SemanticNodeKeyProvider>
+	);
+};
+
+export const SemanticRegionView = ({ region, style, ...props }: ComponentProps<typeof View> & { region: string }) => {
+	const pageNodeKey = useTemplatePageNodeKey();
+	const nodeKey = semanticNodeKeys.region(pageNodeKey, region);
+	const resolved = useResolvedNode(nodeKey);
+	const exists = useSemanticNodeExists(nodeKey);
+	const visible = useSemanticNodeVisible(nodeKey);
+	if (exists && !visible) return null;
+
+	return (
+		<View {...props} {...resolvedPdfFlowProps(resolved)} style={composeStyles(asStyleInput(style), resolved.style)} />
+	);
+};
+
+export const SemanticRegionTemplatePartView = ({
+	region,
+	partKeys,
+	style,
+	...props
+}: ComponentProps<typeof View> & { region: string; partKeys: readonly string[] }) => {
+	const pageNodeKey = useTemplatePageNodeKey();
+	const regionNodeKey = semanticNodeKeys.region(pageNodeKey, region);
+	const partNodeKey = semanticTemplatePartNodeKey(regionNodeKey, ...partKeys);
+	const regionResolved = useResolvedNode(regionNodeKey);
+	const partResolved = useResolvedNode(partNodeKey);
+	const regionVisible = useSemanticNodeVisible(regionNodeKey);
+	const partVisible = useSemanticNodeVisible(partNodeKey);
+	if (!regionVisible || !partVisible) return null;
+
+	return (
+		<View
+			{...props}
+			{...resolvedPdfFlowProps(regionResolved)}
+			{...resolvedPdfFlowProps(partResolved)}
+			style={composeStyles(asStyleInput(style), regionResolved.style, partResolved.style)}
+		/>
+	);
+};
+
+export const SemanticContactListView = ({ style, ...props }: ComponentProps<typeof View>) => {
+	const headerNodeKey = useSemanticNodeKey();
+	const nodeKey = headerNodeKey ? semanticNodeKeys.contactList(headerNodeKey) : undefined;
 	const resolved = useResolvedNode(nodeKey);
 	const visible = useSemanticNodeVisible(nodeKey);
 	if (!visible) return null;
 
 	return (
-		<SemanticNodeKeyProvider nodeKey={nodeKey}>
-			<View {...props} {...resolvedPdfFlowProps(resolved)} style={composeStyles(asStyleInput(style), resolved.style)} />
-		</SemanticNodeKeyProvider>
+		<View {...props} {...resolvedPdfFlowProps(resolved)} style={composeStyles(asStyleInput(style), resolved.style)} />
+	);
+};
+
+export function semanticTemplatePartNodeKey(ownerNodeKey: string | undefined, ...partKeys: string[]) {
+	return ownerNodeKey ? partKeys.reduce((key, part) => `${key}/template-part-${part}`, ownerNodeKey) : undefined;
+}
+
+export const SemanticTemplatePartView = ({
+	ownerNodeKey,
+	partKeys,
+	style,
+	...props
+}: ComponentProps<typeof View> & { ownerNodeKey?: string | undefined; partKeys: readonly string[] }) => {
+	const contextualOwnerNodeKey = useSemanticNodeKey();
+	const nodeKey = semanticTemplatePartNodeKey(ownerNodeKey ?? contextualOwnerNodeKey, ...partKeys);
+	const resolved = useResolvedNode(nodeKey);
+	const visible = useSemanticNodeVisible(nodeKey);
+	if (!visible) return null;
+
+	return (
+		<View {...props} {...resolvedPdfFlowProps(resolved)} style={composeStyles(asStyleInput(style), resolved.style)} />
 	);
 };
 

@@ -19,7 +19,15 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	SemanticTemplatePartView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -86,15 +94,18 @@ export const PikachuPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 								<SemanticHeaderPicture src={picture.url} style={styles.picture} />
 							)}
 
-							<View style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}>
+							<SemanticRegionView
+								region="sidebar"
+								style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}
+							>
 								{sidebarSections.map((section) => (
 									<Section key={section} section={section} placement="sidebar" />
 								))}
-							</View>
+							</SemanticRegionView>
 						</View>
 					)}
 
-					<View style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
 						{showHeader && (
 							<View style={styles.headerRow}>
 								{showHeader && !showSidebar && hasPicture && (
@@ -109,7 +120,7 @@ export const PikachuPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 								<Section key={section} section={section} placement="main" />
 							))}
 						</View>
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -121,14 +132,14 @@ const Header = ({ styles, colors }: PikachuHeaderProps) => {
 
 	return (
 		<SemanticHeaderView style={styles.header}>
-			<View style={styles.headerDivider}>
+			<SemanticTemplatePartView partKeys={["header-divider"]} style={styles.headerDivider}>
 				<View style={styles.headerIdentity}>
 					<Heading style={styles.headerName}>{basics.name}</Heading>
 					<Text style={styles.headerText}>{basics.headline}</Text>
 				</View>
-			</View>
+			</SemanticTemplatePartView>
 
-			<View style={styles.contactList}>
+			<SemanticContactListView style={styles.contactList}>
 				<EmailContactItem
 					email={basics.email}
 					style={styles.contactItem}
@@ -162,7 +173,7 @@ const Header = ({ styles, colors }: PikachuHeaderProps) => {
 						iconColor={colors.background}
 					/>
 				))}
-			</View>
+			</SemanticContactListView>
 		</SemanticHeaderView>
 	);
 };

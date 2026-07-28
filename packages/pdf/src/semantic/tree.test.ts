@@ -458,12 +458,19 @@ describe("buildSemanticTree", () => {
 				(node) => node.kind === "icon" && (node.roles.includes("active") || node.roles.includes("inactive")),
 			).every((node) => node.attributes.type === "circle"),
 		).toBe(true);
-		for (const itemId of ["language/1", "reference/1"]) {
+		for (const [itemId, fields] of [
+			["language/1", ["language", "fluency"]],
+			["reference/1", ["name", "position", "phone"]],
+		] as const) {
 			const item = required(
 				findNode(tree, (node) => node.kind === "item" && node.id === itemId),
 				`${itemId} item`,
 			);
-			expect(findNode(item, (node) => node.kind === "item-header")).toBeUndefined();
+			const header = required(
+				findNode(item, (node) => node.kind === "item-header"),
+				`${itemId} item header`,
+			);
+			expect(header.children.map((node) => node.attributes.name)).toEqual(fields);
 		}
 
 		const richKinds = new Set(

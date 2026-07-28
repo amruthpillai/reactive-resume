@@ -70,27 +70,12 @@ const authoredPageDimensions = (data: ResumeData) => {
 const toPresentation = (
 	resolved: ResolveStylesheetResult["nodes"],
 	base: ReturnType<typeof buildPdfBaseStyles>,
-	tree: SemanticNode,
-	template: Template,
 ): ResolvedResumePresentation => {
-	const presentation = Object.fromEntries(
-		Object.entries(resolved).map(([nodeKey, node]) => [nodeKey, adaptResolvedPdfNode(node, base[nodeKey])]),
-	) as Record<string, ResolvedResumePresentation[string]>;
-	const inventory = createBindingInventory(tree, getTemplateSemanticBindingRegistry(template));
-
-	for (const [aliasKey, binding] of Object.entries(inventory.bindings)) {
-		if (binding.type !== "alias") continue;
-		const alias = presentation[aliasKey];
-		if (!alias) continue;
-		const canonical = presentation[binding.canonicalNodeKey] ?? {};
-		presentation[binding.canonicalNodeKey] = Object.freeze({
-			...canonical,
-			...alias,
-			...(canonical.style || alias.style ? { style: Object.freeze({ ...canonical.style, ...alias.style }) } : {}),
-		});
-	}
-
-	return Object.freeze(presentation);
+	return Object.freeze(
+		Object.fromEntries(
+			Object.entries(resolved).map(([nodeKey, node]) => [nodeKey, adaptResolvedPdfNode(node, base[nodeKey])]),
+		),
+	) as ResolvedResumePresentation;
 };
 
 export function resolveStylesheetMode(data: ResumeData): StylesheetMode {
@@ -119,6 +104,12 @@ export function resolveResumeRuntime({
 	}
 
 	const baseStyles = buildPdfBaseStyles({ data, template, tree: sourceTree });
+	const inventory = createBindingInventory(sourceTree, getTemplateSemanticBindingRegistry(template));
+	const aliases: Record<string, string[]> = {};
+	for (const [aliasKey, binding] of Object.entries(inventory.bindings)) {
+		if (binding.type !== "alias") continue;
+		aliases[binding.canonicalNodeKey] = [...(aliases[binding.canonicalNodeKey] ?? []), aliasKey];
+	}
 	const resolved = resolveStylesheet(compiled.program, sourceTree, {
 		baseStyles,
 		baseSettings: {
@@ -130,6 +121,7 @@ export function resolveResumeRuntime({
 			layout: { sidebarWidth: data.metadata.layout.sidebarWidth },
 		},
 		pages: authoredPageDimensions(data),
+		aliases,
 	});
 	if (resolved.diagnostics.some(({ severity }) => severity === "error")) {
 		return {
@@ -141,7 +133,7 @@ export function resolveResumeRuntime({
 	}
 
 	return {
-		presentation: toPresentation(resolved.nodes, baseStyles, sourceTree, template),
+		presentation: toPresentation(resolved.nodes, baseStyles),
 		sourceTree,
 		renderTree: resolved.renderTree,
 		diagnostics: [...compiled.diagnostics, ...resolved.diagnostics],

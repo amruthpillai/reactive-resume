@@ -111,6 +111,7 @@ const containerNodes = [
 	"contact-list",
 	"contact-item",
 	"section",
+	"section-heading",
 	"section-items",
 	"item",
 	"item-header",

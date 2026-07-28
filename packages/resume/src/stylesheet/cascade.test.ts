@@ -69,6 +69,12 @@ function resolve(source: string, customContext: ResolveStylesheetContext = conte
 	return resolveStylesheet(compiled.program, tree, customContext);
 }
 
+function resolveTree(source: string, semanticTree: SemanticNode, customContext: ResolveStylesheetContext) {
+	const compiled = compileStylesheet({ languageVersion: 1, text: `@rr-version 1;${source}` });
+	if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
+	return resolveStylesheet(compiled.program, semanticTree, customContext);
+}
+
 function find(nodeToSearch: SemanticNode, key: string): SemanticNode | undefined {
 	if (nodeToSearch.key === key) return nodeToSearch;
 	for (const child of nodeToSearch.children) {
@@ -115,6 +121,93 @@ describe("RRSS cascade and structural resolution", () => {
 		`);
 
 		expect(result.nodes["heading-experience"]?.style.color).toBe("blue");
+	});
+
+	it("cascades canonical and alias identities before choosing one winner", () => {
+		const contactTree = node("resume", "resume", {
+			children: [
+				node("page-1", "page", {
+					attributes: { "page-number": "1" },
+					children: [
+						node("contact-list", "contact-list", {
+							children: [
+								node("contact-email", "contact-item", {
+									attributes: { name: "email" },
+									roles: ["structured-link"],
+									children: [node("contact-email-link", "link", { roles: ["structured-link"] })],
+								}),
+							],
+						}),
+					],
+				}),
+			],
+		});
+		const aliasContext = {
+			...context,
+			baseStyles: {},
+			aliases: { "contact-email": ["contact-email-link"] },
+		} satisfies ResolveStylesheetContext;
+
+		const laterAlias = resolveTree("contact-item { color: red; } link { color: blue; }", contactTree, aliasContext);
+		const laterCanonical = resolveTree("link { color: blue; } contact-item { color: red; }", contactTree, aliasContext);
+		const specificCanonical = resolveTree(
+			"contact-item[name='email'] { color: red; } link { color: blue; }",
+			contactTree,
+			aliasContext,
+		);
+		const importantAlias = resolveTree(
+			"contact-item[name='email'] { color: red; } link { color: blue !important; }",
+			contactTree,
+			aliasContext,
+		);
+
+		expect(laterAlias.nodes["contact-email"]?.style.color).toBe("blue");
+		expect(laterCanonical.nodes["contact-email"]?.style.color).toBe("red");
+		expect(specificCanonical.nodes["contact-email"]?.style.color).toBe("red");
+		expect(importantAlias.nodes["contact-email"]?.style.color).toBe("blue");
+	});
+
+	it("applies alias display and order state to the canonical render owner", () => {
+		const contactTree = node("resume", "resume", {
+			children: [
+				node("page-1", "page", {
+					attributes: { "page-number": "1" },
+					children: [
+						node("contact-list", "contact-list", {
+							children: [
+								node("contact-phone", "contact-item", {
+									attributes: { name: "phone" },
+									roles: ["structured-link"],
+									children: [node("contact-phone-link", "link", { roles: ["structured-link"] })],
+								}),
+								node("contact-email", "contact-item", {
+									attributes: { name: "email" },
+									roles: ["structured-link"],
+									children: [node("contact-email-link", "link", { roles: ["structured-link"] })],
+								}),
+							],
+						}),
+					],
+				}),
+			],
+		});
+		const aliasContext = {
+			...context,
+			baseStyles: {},
+			aliases: {
+				"contact-email": ["contact-email-link"],
+				"contact-phone": ["contact-phone-link"],
+			},
+		} satisfies ResolveStylesheetContext;
+		const ordered = resolveTree("contact-item[name='email'] > link { order: -1; }", contactTree, aliasContext);
+		const hidden = resolveTree("contact-item[name='email'] > link { display: none; }", contactTree, aliasContext);
+
+		expect(find(ordered.renderTree, "contact-list")?.children.map(({ key }) => key)).toEqual([
+			"contact-email",
+			"contact-phone",
+		]);
+		expect(find(hidden.renderTree, "contact-list")?.children.map(({ key }) => key)).toEqual(["contact-phone"]);
+		expect(hidden.nodes["contact-email"]?.hidden).toBe(true);
 	});
 
 	it("resolves inherited custom properties, fallbacks, cycles, and CSS-wide keywords", () => {

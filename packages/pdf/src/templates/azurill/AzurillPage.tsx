@@ -25,7 +25,14 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -84,7 +91,8 @@ export const AzurillPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 				{showHeader && <Header styles={styles} />}
 
 				<View style={composeStyles(styles.contentRow, { columnGap: metrics.columnGap })}>
-					<View
+					<SemanticRegionView
+						region="sidebar"
 						style={composeStyles(styles.sidebarColumn, {
 							flexBasis: `${metadata.layout.sidebarWidth}%`,
 							display: page.fullWidth ? "none" : "flex",
@@ -96,13 +104,13 @@ export const AzurillPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 								<Section section={section} placement="sidebar" />
 							</Fragment>
 						))}
-					</View>
+					</SemanticRegionView>
 
-					<View style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
 						{mainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -124,7 +132,7 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.headerContactRow}>
+			<SemanticContactListView style={styles.headerContactRow}>
 				<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 				<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
 				<LocationContactItem location={basics.location} style={styles.headerContactItem} />
@@ -132,7 +140,7 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 				{basics.customFields.map((field) => (
 					<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 				))}
-			</View>
+			</SemanticContactListView>
 		</SemanticHeaderView>
 	);
 };

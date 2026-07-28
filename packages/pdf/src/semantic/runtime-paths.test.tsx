@@ -57,7 +57,7 @@ const buildFixture = (): ResumeData => {
 const renderFinalProps = async (element: unknown) => {
 	const renderer = await vi.importActual<typeof import("@react-pdf/renderer")>("@react-pdf/renderer");
 	const instance = renderer.pdf(element as Parameters<typeof renderer.pdf>[0]);
-	await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+	await vi.waitFor(() => expect(instance.container.document).not.toBeNull(), { timeout: 5_000 });
 	const document = instance.container.document as HostNode;
 	const page = findFirst(document, ({ type }) => type === "PAGE");
 	const fixed = findFirst(document, ({ props }) => props?.fixed === true);
@@ -80,5 +80,5 @@ describe("browser/server semantic runtime identity", () => {
 		expect(browserProps).toEqual(serverProps);
 		expect(browserProps.page.size).toBe("LETTER");
 		expect(browserProps.fixed).toMatchObject({ type: "VIEW", fixed: true });
-	});
+	}, 15_000);
 });

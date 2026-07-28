@@ -46,4 +46,19 @@ describe("createResumePdfFile", () => {
 			}),
 		);
 	});
+
+	it("returns semantic diagnostics without rendering an invalid applied source", async () => {
+		const data = structuredClone(sampleResumeData);
+		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		const { createResumePdfFileResult } = await import("./server");
+
+		const result = await createResumePdfFileResult({ data, filename: "resume.pdf" });
+
+		expect(result).toMatchObject({
+			ok: false,
+			diagnostics: [expect.objectContaining({ severity: "error" })],
+		});
+		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
+	});
 });

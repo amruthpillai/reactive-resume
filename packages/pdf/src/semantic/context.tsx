@@ -20,6 +20,7 @@ const SemanticRenderContext = createContext<{
 	presentation: ResolvedResumePresentation;
 	mode: StylesheetMode;
 	renderedNodeKeys: ReadonlySet<string>;
+	sourceNodeKeys: ReadonlySet<string>;
 	renderedChildKeys: ReadonlyMap<string, readonly string[]>;
 	sourceNodes: readonly SemanticNode[];
 	renderOrder: ReadonlyMap<string, number>;
@@ -66,9 +67,13 @@ export function SemanticRenderProvider({
 }: SemanticRenderProviderProps) {
 	const treeIndex = useMemo(() => indexRenderTree(renderTree), [renderTree]);
 	const sourceNodes = useMemo(() => flattenTree(sourceTree), [sourceTree]);
+	const sourceNodeKeys = useMemo(
+		() => new Set(sourceNodes.map(({ key }) => key)) as ReadonlySet<string>,
+		[sourceNodes],
+	);
 	const value = useMemo(
-		() => ({ presentation, mode, sourceNodes, ...treeIndex }),
-		[mode, presentation, sourceNodes, treeIndex],
+		() => ({ presentation, mode, sourceNodeKeys, sourceNodes, ...treeIndex }),
+		[mode, presentation, sourceNodeKeys, sourceNodes, treeIndex],
 	);
 	return <SemanticRenderContext.Provider value={value}>{children}</SemanticRenderContext.Provider>;
 }
@@ -85,6 +90,11 @@ export const useSemanticNodeVisible = (nodeKey: string | undefined): boolean => 
 	const context = use(SemanticRenderContext);
 	if (context?.mode !== "semantic" || !nodeKey) return true;
 	return context.renderedNodeKeys.has(nodeKey);
+};
+
+export const useSemanticNodeExists = (nodeKey: string | undefined): boolean => {
+	const context = use(SemanticRenderContext);
+	return Boolean(nodeKey && context?.sourceNodeKeys.has(nodeKey));
 };
 
 export const useRenderedChildKeys = (nodeKey: string | undefined): readonly string[] | undefined => {

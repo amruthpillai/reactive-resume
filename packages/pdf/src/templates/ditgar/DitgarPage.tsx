@@ -21,7 +21,15 @@ import { getFeaturedSummaryLayout } from "../shared/featured-summary";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, SemanticHeaderPicture, SemanticHeaderView, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionTemplatePartView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -92,27 +100,34 @@ export const DitgarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 						{showHeader && <Header styles={styles} colors={colors} />}
 
 						{!page.fullWidth && (
-							<View style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}>
+							<SemanticRegionView
+								region="sidebar"
+								style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}
+							>
 								{regularSidebarSections.map((section) => (
 									<Section key={section} section={section} placement="sidebar" />
 								))}
-							</View>
+							</SemanticRegionView>
 						)}
 					</View>
 				)}
 
 				<View style={styles.mainColumn}>
 					{featuredSummarySection && (
-						<View style={styles.specialContainer}>
+						<SemanticRegionTemplatePartView
+							region="featured"
+							partKeys={["featured-summary"]}
+							style={styles.specialContainer}
+						>
 							<Section section={featuredSummarySection} placement="main" showHeading={false} />
-						</View>
+						</SemanticRegionTemplatePartView>
 					)}
 
-					<View style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
 						{regularMainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -134,7 +149,7 @@ const Header = ({ styles, colors }: DitgarHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.contactList}>
+			<SemanticContactListView style={styles.contactList}>
 				<EmailContactItem
 					email={basics.email}
 					style={styles.contactItem}
@@ -169,7 +184,7 @@ const Header = ({ styles, colors }: DitgarHeaderProps) => {
 						iconColor={colors.background}
 					/>
 				))}
-			</View>
+			</SemanticContactListView>
 		</SemanticHeaderView>
 	);
 };
