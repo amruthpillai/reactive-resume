@@ -39,9 +39,30 @@ describe("system-variable registry", () => {
 			"--rr-picture-shadow-width",
 			"--rr-picture-shadow-color",
 		]);
-		expect(variables["--rr-primary-color"]).toBe(baseSettings.design.colors.primary);
-		expect(variables["--rr-sidebar-width"]).toBe(`${baseSettings.layout.sidebarWidth}%`);
-		expect(variables["--rr-page-width"]).toBe("595.28pt");
+		expect(variables).toEqual({
+			"--rr-primary-color": "rgba(220, 38, 38, 1)",
+			"--rr-text-color": "rgba(0, 0, 0, 1)",
+			"--rr-background-color": "rgba(255, 255, 255, 1)",
+			"--rr-body-font-size": "10pt",
+			"--rr-body-line-height": "1.5",
+			"--rr-heading-font-size": "14pt",
+			"--rr-heading-line-height": "1.5",
+			"--rr-page-gap-x": "4pt",
+			"--rr-page-gap-y": "6pt",
+			"--rr-page-margin-x": "14pt",
+			"--rr-page-margin-y": "12pt",
+			"--rr-page-width": "595.28pt",
+			"--rr-page-height": "841.89pt",
+			"--rr-sidebar-width": "35%",
+			"--rr-picture-size": "80pt",
+			"--rr-picture-rotation": "0deg",
+			"--rr-picture-aspect-ratio": "1",
+			"--rr-picture-border-radius": "0pt",
+			"--rr-picture-border-width": "0pt",
+			"--rr-picture-border-color": "rgba(0, 0, 0, 0.5)",
+			"--rr-picture-shadow-width": "0pt",
+			"--rr-picture-shadow-color": "rgba(0, 0, 0, 0.5)",
+		});
 		expect(Object.keys(variables)).not.toContain("--rr-font-family");
 		expect(Object.keys(variables)).not.toContain("--rr-picture-url");
 	});

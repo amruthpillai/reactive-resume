@@ -89,7 +89,7 @@ export const SEMANTIC_REGISTRY_V1 = {
 		roles: ["primary-text", "secondary-text", "structured-link"],
 	},
 	link: {
-		parents: ["contact-item", "item", "item-header", "rich-text", ...inlineParents],
+		parents: ["item", "item-header", "rich-text", ...inlineParents],
 		attributes: [],
 		roles: ["structured-link"],
 	},

@@ -24,6 +24,7 @@ const containerNodes = [
 	"region",
 	"header",
 	"contact-list",
+	"contact-item",
 	"section",
 	"section-items",
 	"item",
@@ -31,16 +32,15 @@ const containerNodes = [
 	"rich-text",
 	"list",
 	"list-item",
+	"horizontal-rule",
 	"template-part",
 ] as const satisfies readonly SemanticNodeKind[];
 
 const textNodes = [
 	"name",
 	"headline",
-	"contact-item",
 	"section-heading",
 	"field",
-	"link",
 	"rich-heading",
 	"blockquote",
 	"paragraph",
@@ -56,9 +56,10 @@ const textNodes = [
 	"hard-break",
 ] as const satisfies readonly SemanticNodeKind[];
 
-const visualNodes = [...SEMANTIC_NODE_KINDS.filter((kind) => kind !== "resume")] as SemanticNodeKind[];
-const layoutNodes = [...containerNodes, "picture", "icon", "level"] as SemanticNodeKind[];
-const boxNodes = [...layoutNodes, ...textNodes, "horizontal-rule"] as SemanticNodeKind[];
+const linkContainerNodes = [...containerNodes, "link"] as SemanticNodeKind[];
+const textAndLinkNodes = [...textNodes, "link"] as SemanticNodeKind[];
+const colorNodes = [...containerNodes, ...textNodes, "link", "icon", "level"] as SemanticNodeKind[];
+const spacingNodes = [...containerNodes, ...textNodes, "link", "picture"] as SemanticNodeKind[];
 const structuralNodes = [...SEMANTIC_NODE_KINDS.filter((kind) => kind !== "resume")] as SemanticNodeKind[];
 
 function entries(
@@ -86,40 +87,43 @@ const properties = {
 			"row-gap",
 			"column-gap",
 		],
-		{ category: "flexbox", inheritable: false, appliesTo: containerNodes },
+		{ category: "flexbox", inheritable: false, appliesTo: linkContainerNodes },
 	),
 	...entries(["aspect-ratio", "bottom", "display", "left", "position", "right", "top", "overflow", "z-index"], {
 		category: "layout",
 		inheritable: false,
-		appliesTo: layoutNodes,
+		appliesTo: linkContainerNodes,
 	}),
 	...entries(["width", "height", "min-width", "min-height", "max-width", "max-height"], {
 		category: "dimension",
 		inheritable: false,
-		appliesTo: boxNodes,
+		appliesTo: [...linkContainerNodes, "picture"],
 	}),
-	...entries(["color"], { category: "color", inheritable: true, appliesTo: visualNodes }),
-	...entries(["background-color", "opacity"], { category: "color", inheritable: false, appliesTo: visualNodes }),
-	...entries(
-		[
-			"direction",
-			"font-size",
-			"font-style",
-			"font-weight",
-			"letter-spacing",
-			"line-height",
-			"max-lines",
-			"text-align",
-			"text-decoration",
-			"text-decoration-color",
-			"text-decoration-style",
-			"text-indent",
-			"text-overflow",
-			"text-transform",
-			"vertical-align",
-		],
-		{ category: "text", inheritable: true, appliesTo: textNodes },
-	),
+	...entries(["color"], { category: "color", inheritable: true, appliesTo: colorNodes }),
+	...entries(["background-color"], { category: "color", inheritable: false, appliesTo: linkContainerNodes }),
+	...entries(["opacity"], { category: "color", inheritable: false, appliesTo: colorNodes }),
+	...entries(["direction"], { category: "text", inheritable: true, appliesTo: textAndLinkNodes }),
+	...entries(["font-size"], {
+		category: "text",
+		inheritable: true,
+		appliesTo: [...textAndLinkNodes, "icon", "level"],
+	}),
+	...entries(["font-style", "font-weight", "letter-spacing", "line-height"], {
+		category: "text",
+		inheritable: true,
+		appliesTo: textAndLinkNodes,
+	}),
+	...entries(["max-lines"], { category: "text", inheritable: false, appliesTo: textAndLinkNodes }),
+	...entries(["text-align"], { category: "text", inheritable: true, appliesTo: textAndLinkNodes }),
+	...entries(["text-decoration", "text-decoration-color", "text-decoration-style"], {
+		category: "text",
+		inheritable: false,
+		appliesTo: textAndLinkNodes,
+	}),
+	...entries(["text-indent"], { category: "text", inheritable: true, appliesTo: textAndLinkNodes }),
+	...entries(["text-overflow"], { category: "text", inheritable: false, appliesTo: textAndLinkNodes }),
+	...entries(["text-transform"], { category: "text", inheritable: true, appliesTo: textAndLinkNodes }),
+	...entries(["vertical-align"], { category: "text", inheritable: false, appliesTo: textAndLinkNodes }),
 	...entries(["object-fit", "object-position"], { category: "image", inheritable: false, appliesTo: ["picture"] }),
 	...entries(["-rr-shadow-color", "-rr-shadow-width"], {
 		category: "image",
@@ -143,7 +147,7 @@ const properties = {
 			"padding-horizontal",
 			"padding-vertical",
 		],
-		{ category: "spacing", inheritable: false, appliesTo: boxNodes },
+		{ category: "spacing", inheritable: false, appliesTo: spacingNodes },
 	),
 	...entries(
 		[
@@ -173,9 +177,13 @@ const properties = {
 			"border-bottom-right-radius",
 			"border-bottom-left-radius",
 		],
-		{ category: "border", inheritable: false, appliesTo: boxNodes },
+		{ category: "border", inheritable: false, appliesTo: [...linkContainerNodes, "picture"] },
 	),
-	...entries(["transform", "transform-origin"], { category: "transform", inheritable: false, appliesTo: boxNodes }),
+	...entries(["transform", "transform-origin"], {
+		category: "transform",
+		inheritable: false,
+		appliesTo: [...linkContainerNodes, "picture"],
+	}),
 	...entries(["order", "break-before", "break-inside"], {
 		category: "structural",
 		inheritable: false,
