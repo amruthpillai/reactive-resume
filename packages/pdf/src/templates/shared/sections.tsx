@@ -167,6 +167,7 @@ type SemanticTextRunsProps = {
 	style?: StyleInput;
 	nodeKey?: string | undefined;
 	fieldOwnerNodeKey?: string | undefined;
+	orderParentNodeKey?: string | undefined;
 };
 
 const SectionItemsContext = createContext<SectionItemsContextValue>({ itemStyle: undefined, useTimeline: false });
@@ -210,13 +211,19 @@ const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] =>
 
 const useSectionItemsContext = () => use(SectionItemsContext);
 
-export const SemanticTextRuns = ({ runs, separator, style, nodeKey, fieldOwnerNodeKey }: SemanticTextRunsProps) => {
+export const SemanticTextRuns = ({
+	runs,
+	separator,
+	style,
+	nodeKey,
+	fieldOwnerNodeKey,
+	orderParentNodeKey,
+}: SemanticTextRunsProps) => {
 	const contextualNodeKey = useSemanticNodeKey();
-	const parentNodeKey = nodeKey ?? contextualNodeKey;
 	const fieldParentNodeKey = fieldOwnerNodeKey ?? contextualNodeKey;
 	const resolved = useResolvedNode(nodeKey);
 	const visible = useSemanticNodeVisible(nodeKey);
-	const renderedChildKeys = useRenderedChildKeys(parentNodeKey);
+	const renderedChildKeys = useRenderedChildKeys(orderParentNodeKey);
 	const { isNodeVisible } = useSemanticNodeBindings();
 	const entries = runs.flatMap((run) => {
 		if (!hasSplitRowText(run.value)) return [];
@@ -922,6 +929,7 @@ const EducationItemContent = ({ item, header }: EducationItemContentProps) => {
 								<SemanticTextRuns
 									nodeKey={gradeRowNodeKey}
 									fieldOwnerNodeKey={headerNodeKey}
+									orderParentNodeKey={gradeRowNodeKey}
 									separator=" • "
 									runs={[
 										{ field: "grade", value: item.grade },

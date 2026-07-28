@@ -80,10 +80,10 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 
 	it("projects Chikorita contacts only within their two existing row hosts", async () => {
 		const data = semanticFixture(`
+			template-part[name="contact-row-secondary"] { order: -1; }
 			contact-item[name="location"] { display: none; }
 			contact-item[name="phone"] { order: -1; }
 			contact-item[name="custom"] { order: -1; }
-			contact-item[name="website"] { order: -2; }
 		`);
 		data.basics.email = "ada@example.com";
 		data.basics.phone = "+44 123";
@@ -94,9 +94,9 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 
 		const values = await renderTextValues(data, "chikorita");
 
+		expectBefore(values, "portfolio.example", "example.com");
+		expectBefore(values, "example.com", "+44 123");
 		expectBefore(values, "+44 123", "ada@example.com");
-		expectBefore(values, "example.com", "portfolio.example");
-		expectBefore(values, "ada@example.com", "example.com");
 		expect(values).not.toContain("London");
 	});
 
@@ -184,6 +184,33 @@ describe("semantic sibling ordering reaches final PDF output", () => {
 		expectBefore(values, "London", "First");
 		expectBefore(values, "First", "Mathematics");
 		expectBefore(values, "First", "University of London");
+	});
+
+	it("reorders Meowth inline-header parts without dropping untouched combined fields", async () => {
+		const data = semanticFixture(`
+			template-part[name="inline-item-header-trailing"] { order: -1; }
+		`);
+		data.sections.education.items = [
+			{
+				id: "education-1",
+				hidden: false,
+				school: "University of London",
+				area: "Mathematics",
+				degree: "BSc",
+				grade: "",
+				location: "",
+				period: "1835",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		data.metadata.layout.pages = [{ fullWidth: true, main: ["education"], sidebar: [] }];
+
+		const values = await renderTextValues(data, "meowth");
+
+		expectBefore(values, "1835", "Mathematics");
+		expectBefore(values, "Mathematics", "BSc");
+		expectBefore(values, "BSc", "University of London");
 	});
 
 	it("projects rich-text descendant hide and order before renderer mapping", async () => {

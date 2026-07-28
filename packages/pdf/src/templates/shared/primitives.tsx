@@ -42,6 +42,7 @@ const contactChildNodeKey = (contactListNodeKey: string, child: ReactNode): stri
 	const props = child.props as Record<string, unknown>;
 	if (typeof props.primitiveNodeKey === "string") return props.primitiveNodeKey;
 	if (typeof props.nodeKey === "string") return props.nodeKey;
+	if (typeof props.partKey === "string") return semanticTemplatePartNodeKey(contactListNodeKey, props.partKey);
 	if ("email" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "email");
 	if ("phone" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "phone");
 	if ("location" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "location");
