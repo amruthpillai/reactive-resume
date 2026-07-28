@@ -2,6 +2,7 @@ import type { SemanticNode } from "./types";
 import { describe, expect, it } from "vitest";
 import { analyzeStylesheet } from "./analyze";
 import { compileStylesheet } from "./compile";
+import { RRSS_LIMITS_V1 } from "./limits";
 
 const tree: SemanticNode = {
 	key: "resume",
@@ -32,6 +33,30 @@ function compile(source: string) {
 	return result.program;
 }
 
+function semanticTreeOfSize(size: number, shape: "deep" | "wide"): SemanticNode {
+	if (shape === "wide") {
+		return {
+			key: "root",
+			kind: "resume",
+			attributes: {},
+			roles: [],
+			children: Array.from({ length: size - 1 }, (_, index) => ({
+				key: `item-${index}`,
+				kind: "item",
+				attributes: {},
+				roles: [],
+				children: [],
+			})),
+		};
+	}
+
+	let root: SemanticNode = { key: "node-0", kind: "item", attributes: {}, roles: [], children: [] };
+	for (let index = 1; index < size; index++) {
+		root = { key: `node-${index}`, kind: "item", attributes: {}, roles: [], children: [root] };
+	}
+	return root;
+}
+
 describe("RRSS semantic analysis", () => {
 	it("warns about selectors that match no immutable semantic node", () => {
 		const program = compile('@rr-version 1; section[type="education"] { color: red; }');
@@ -53,5 +78,16 @@ describe("RRSS semantic analysis", () => {
 		const program = compile("@rr-version 1; name { color: red; }");
 
 		expect(analyzeStylesheet(program, tree)).toEqual([]);
+	});
+
+	it("accepts the exact analysis node budget and rejects deep or wide trees one node over", () => {
+		const program = { languageVersion: 1, rules: [] };
+		expect(analyzeStylesheet(program, semanticTreeOfSize(RRSS_LIMITS_V1.maxSemanticNodes, "wide"))).toEqual([]);
+
+		for (const shape of ["deep", "wide"] as const) {
+			expect(analyzeStylesheet(program, semanticTreeOfSize(RRSS_LIMITS_V1.maxSemanticNodes + 1, shape))).toContainEqual(
+				expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }),
+			);
+		}
 	});
 });

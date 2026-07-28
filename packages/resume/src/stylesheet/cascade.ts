@@ -19,7 +19,13 @@ import { RRSS_LIMITS_V1 } from "./limits";
 import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
 import { createSystemVariables } from "./registry/system-variables";
 import { createSelectorMatcher } from "./selector";
-import { cssFunctionDepth, decodeCssEscapes, RRSS_LENGTH_PROPERTIES, valueSyntaxError } from "./values";
+import {
+	cssFunctionDepth,
+	decodeCssEscapes,
+	expandShorthand,
+	RRSS_LENGTH_PROPERTIES,
+	valueSyntaxError,
+} from "./values";
 
 type FlatNode = {
 	node: SemanticNode;
@@ -44,6 +50,12 @@ type LengthContext = {
 	rootFontSize: number;
 };
 
+type CssWideKeyword = "inherit" | "initial" | "revert" | "unset";
+
+type VariableExpansionBudget = {
+	work: number;
+};
+
 const absoluteUnitToPt = {
 	pt: 1,
 	px: 72 / 96,
@@ -53,6 +65,21 @@ const absoluteUnitToPt = {
 } as const;
 
 const cssWideKeywords = new Set(["inherit", "initial", "revert", "unset"]);
+
+const structuralKeys: Readonly<Record<string, keyof StructuralPresentation>> = {
+	"break-before": "breakBefore",
+	"break-inside": "breakInside",
+	"-rr-fixed": "fixed",
+	"-rr-min-presence-ahead": "minPresenceAhead",
+	orphans: "orphans",
+	widows: "widows",
+	size: "pageSize",
+};
+
+function cssWideKeyword(value: string): CssWideKeyword | null {
+	const keyword = value.toLowerCase();
+	return cssWideKeywords.has(keyword) ? (keyword as CssWideKeyword) : null;
+}
 
 function compareSpecificity(left: Specificity, right: Specificity): number {
 	return left[0] - right[0] || left[1] - right[1] || left[2] - right[2];
@@ -68,7 +95,7 @@ function candidateWins(candidate: Winner, current: Winner | undefined): boolean 
 	);
 }
 
-function flattenTree(root: SemanticNode): FlatNode[] {
+function flattenTree(root: SemanticNode): FlatNode[] | null {
 	const result: FlatNode[] = [];
 	const stack: { node: SemanticNode; parent: FlatNode | null; pageKey: string | null }[] = [
 		{ node: root, parent: null, pageKey: null },
@@ -76,6 +103,7 @@ function flattenTree(root: SemanticNode): FlatNode[] {
 	while (stack.length > 0) {
 		const next = stack.pop();
 		if (!next) break;
+		if (result.length >= RRSS_LIMITS_V1.maxSemanticNodes) return null;
 		const pageKey = next.node.kind === "page" ? next.node.key : next.pageKey;
 		const flat = { node: next.node, parent: next.parent, pageKey };
 		result.push(flat);
@@ -224,13 +252,26 @@ function expandVariables(
 	range: SourceRange,
 	stack: readonly string[] = [],
 	depth = 0,
+	budget: VariableExpansionBudget = { work: 0 },
 ): string | null {
 	if (depth > RRSS_LIMITS_V1.maxVariableExpansionDepth) {
 		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
 		return null;
 	}
+	if (
+		source.length > RRSS_LIMITS_V1.maxVariableExpansionOutputCodeUnits ||
+		source.length > RRSS_LIMITS_V1.maxVariableExpansionWorkCodeUnits - budget.work
+	) {
+		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
+		return null;
+	}
+	budget.work += source.length;
 
 	let value = decodeCssEscapes(source);
+	if (value.length > RRSS_LIMITS_V1.maxVariableExpansionOutputCodeUnits) {
+		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
+		return null;
+	}
 	while (true) {
 		const match = /var\s*\(/i.exec(value);
 		if (!match) break;
@@ -256,8 +297,28 @@ function expandVariables(
 			);
 			return null;
 		}
-		const expanded = expandVariables(replacement, custom, system, diagnostics, range, [...stack, name], depth + 1);
+		const expanded = expandVariables(
+			replacement,
+			custom,
+			system,
+			diagnostics,
+			range,
+			[...stack, name],
+			depth + 1,
+			budget,
+		);
 		if (expanded === null) return null;
+		const nextLength = (match.index ?? 0) + expanded.length + value.length - closing - 1;
+		if (
+			nextLength > RRSS_LIMITS_V1.maxVariableExpansionOutputCodeUnits ||
+			nextLength > RRSS_LIMITS_V1.maxVariableExpansionWorkCodeUnits - budget.work
+		) {
+			diagnostics.push(
+				createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range),
+			);
+			return null;
+		}
+		budget.work += nextLength;
 		value = `${value.slice(0, match.index)}${expanded}${value.slice(closing + 1)}`;
 	}
 
@@ -276,6 +337,66 @@ function expandVariables(
 	return value.trim();
 }
 
+function expandedWinnersFor(
+	matches: readonly MatchedRule[],
+	dimensions: ResolvedPageDimensions,
+	rootFontSize: number,
+	custom: ReadonlyMap<string, string>,
+	system: Readonly<Record<string, string>>,
+	diagnostics: RrssDiagnostic[],
+): Map<string, Winner> {
+	const cascaded = new Map<string, Winner>();
+	for (const { rule, specificity } of matches) {
+		if (!ruleApplies(rule, dimensions, rootFontSize, true)) continue;
+		for (const declaration of rule.declarations) {
+			if (declaration.property.startsWith("--")) continue;
+			const targets = expandShorthand(declaration.property, "inherit") ?? [[declaration.property, "inherit"]];
+			for (const [property] of targets) {
+				const candidate = { declaration, specificity };
+				if (candidateWins(candidate, cascaded.get(property))) cascaded.set(property, candidate);
+			}
+		}
+	}
+
+	const expansions = new Map<CompiledDeclaration, readonly [property: string, value: string][] | null>();
+	const winners = new Map<string, Winner>();
+	for (const [property, winner] of cascaded) {
+		if (property === "size") {
+			winners.set(property, winner);
+			continue;
+		}
+		let declarations = expansions.get(winner.declaration);
+		if (declarations === undefined) {
+			const expandedValue = expandVariables(
+				winner.declaration.value,
+				custom,
+				system,
+				diagnostics,
+				winner.declaration.range,
+			);
+			declarations = expandedValue === null ? null : expandShorthand(winner.declaration.property, expandedValue);
+			if (expandedValue !== null && !declarations) {
+				diagnostics.push(
+					createDiagnostic(
+						"INVALID_VALUE",
+						"error",
+						`Invalid ${winner.declaration.property} shorthand.`,
+						winner.declaration.range,
+					),
+				);
+			}
+			expansions.set(winner.declaration, declarations);
+		}
+		const value = declarations?.find(([expandedProperty]) => expandedProperty === property)?.[1];
+		if (value === undefined) continue;
+		winners.set(property, {
+			declaration: { ...winner.declaration, property, value },
+			specificity: winner.specificity,
+		});
+	}
+	return winners;
+}
+
 function customProperties(
 	winners: ReadonlyMap<string, Winner>,
 	parent: ReadonlyMap<string, string> | undefined,
@@ -283,8 +404,9 @@ function customProperties(
 	let custom: Map<string, string> | undefined;
 	for (const [property, { declaration }] of winners) {
 		if (!property.startsWith("--")) continue;
-		if (declaration.value === "inherit" || declaration.value === "revert" || declaration.value === "unset") continue;
-		if (declaration.value === "initial") {
+		const keyword = cssWideKeyword(declaration.value);
+		if (keyword === "inherit" || keyword === "revert" || keyword === "unset") continue;
+		if (keyword === "initial") {
 			if (parent?.has(property)) {
 				custom ??= new Map(parent);
 				custom.delete(property);
@@ -321,17 +443,24 @@ function dimensionsForSize(size: ResolvedPageSize, authored: ResolvedPageDimensi
 	return { width: size.width, height: size.height ?? authored.height };
 }
 
+function builderPageSize(context: ResolveStylesheetContext, nodeKey: string): ResolvedPageSize {
+	return (
+		context.baseStyles[nodeKey]?.structural.pageSize ??
+		(context.baseSettings.page.format === "letter" ? "LETTER" : "A4")
+	);
+}
+
 function cssWideValue(
-	value: string,
+	keyword: CssWideKeyword,
 	property: string,
 	base: Readonly<Record<string, string | number>>,
 	parent: Readonly<Record<string, string | number>> | undefined,
 ): string | number | undefined {
 	const definition = PROPERTY_REGISTRY_V1[property];
-	if (value === "inherit") return parent?.[property];
-	if (value === "initial") return;
-	if (value === "unset") return definition?.inheritable ? parent?.[property] : undefined;
-	if (value === "revert") return base[property] ?? (definition?.inheritable ? parent?.[property] : undefined);
+	if (keyword === "inherit") return parent?.[property];
+	if (keyword === "initial") return;
+	if (keyword === "unset") return definition?.inheritable ? parent?.[property] : undefined;
+	return base[property] ?? (definition?.inheritable ? parent?.[property] : undefined);
 }
 
 function normalizeValue(property: string, value: string, context: LengthContext): string | number | null {
@@ -343,11 +472,38 @@ function normalizeValue(property: string, value: string, context: LengthContext)
 		}
 		return null;
 	}
-	if (/^(opacity|flex-grow|flex-shrink|line-height|order|orphans|widows|z-index|max-lines)$/i.test(property)) {
+	if (property === "line-height") {
+		if (value.toLowerCase() === "normal") return "normal";
+		return toPoints(value, property, context);
+	}
+	if (/^(opacity|flex-grow|flex-shrink|order|orphans|widows|z-index|max-lines)$/i.test(property)) {
 		const number = Number(value);
-		return Number.isFinite(number) ? number : null;
+		if (!Number.isFinite(number)) return null;
+		if (property === "opacity" && (number < 0 || number > 1)) return null;
+		return number;
 	}
 	return value;
+}
+
+function applyStructuralCssWide(
+	keyword: CssWideKeyword,
+	property: string,
+	structural: StructuralPresentation,
+	base: ResolvedNodeStyle,
+	parent: ResolvedNodeStyle | undefined,
+	revertPageSize: ResolvedPageSize,
+): boolean {
+	const key = structuralKeys[property];
+	if (!key) return false;
+	const value =
+		keyword === "inherit"
+			? parent?.structural[key]
+			: keyword === "revert"
+				? (base.structural[key] ?? (key === "pageSize" ? revertPageSize : undefined))
+				: undefined;
+	if (value === undefined) delete structural[key];
+	else Object.assign(structural, { [key]: value });
+	return true;
 }
 
 function structuralValue(
@@ -416,7 +572,7 @@ export function resolveStylesheet(
 	context: ResolveStylesheetContext,
 ): ResolveStylesheetResult {
 	const flatNodes = flattenTree(tree);
-	if (flatNodes.length > RRSS_LIMITS_V1.maxSemanticNodes) {
+	if (!flatNodes) {
 		return {
 			nodes: {},
 			renderTree: tree,
@@ -483,29 +639,47 @@ export function resolveStylesheet(
 	const rootFontSize = context.baseSettings.typography.body.fontSize;
 	const fallbackDimensions = defaultPageDimensions(context.baseSettings.page.format);
 	const pages = initialPages(flatNodes, context);
+	const resolvedPageSizes = new Map<string, ResolvedPageSize>();
+	const resolvedPageSizeValues = new Map<string, string>();
 	const preliminaryCustom = new Map<string, Map<string, string>>();
 
 	for (const node of flatNodes) {
 		const dimensions = pageFor(node, pages, fallbackDimensions);
-		const winners = winnersFor(matched.get(node.node.key) ?? [], dimensions, rootFontSize, false);
-		const custom = customProperties(winners, node.parent ? preliminaryCustom.get(node.parent.node.key) : undefined);
+		const rawWinners = winnersFor(matched.get(node.node.key) ?? [], dimensions, rootFontSize, false);
+		const custom = customProperties(rawWinners, node.parent ? preliminaryCustom.get(node.parent.node.key) : undefined);
 		preliminaryCustom.set(node.node.key, custom);
 		if (node.node.kind !== "page") continue;
-		const size = winners.get("size");
+		const size = rawWinners.get("size");
 		if (!size) continue;
 		const system = createSystemVariables(context.baseSettings, dimensions);
 		const expanded = expandVariables(size.declaration.value, custom, system, diagnostics, size.declaration.range);
 		if (!expanded) continue;
-		const parsed = parsePageSize(expanded, {
-			page: dimensions,
-			parentFontSize: rootFontSize,
-			fontSize: rootFontSize,
-			rootFontSize,
-		});
+		const keyword = cssWideKeyword(expanded);
+		const parsed =
+			keyword === "revert"
+				? builderPageSize(context, node.node.key)
+				: keyword === "inherit"
+					? node.parent
+						? context.baseStyles[node.parent.node.key]?.structural.pageSize
+						: undefined
+					: keyword
+						? undefined
+						: parsePageSize(expanded, {
+								page: dimensions,
+								parentFontSize: rootFontSize,
+								fontSize: rootFontSize,
+								rootFontSize,
+							});
+		if (keyword && !parsed) {
+			resolvedPageSizeValues.set(node.node.key, expanded);
+			continue;
+		}
 		if (!parsed) {
 			diagnostics.push(createDiagnostic("INVALID_VALUE", "error", "Invalid page size.", size.declaration.range));
 			continue;
 		}
+		resolvedPageSizeValues.set(node.node.key, expanded);
+		resolvedPageSizes.set(node.node.key, parsed);
 		pages.set(node.node.key, dimensionsForSize(parsed, dimensions));
 	}
 
@@ -513,10 +687,18 @@ export function resolveStylesheet(
 	const resolved: Record<string, ResolvedNodeStyle> = {};
 	for (const node of flatNodes) {
 		const dimensions = pageFor(node, pages, fallbackDimensions);
-		const winners = winnersFor(matched.get(node.node.key) ?? [], dimensions, rootFontSize, true);
-		const custom = customProperties(winners, node.parent ? customByNode.get(node.parent.node.key) : undefined);
+		const rawWinners = winnersFor(matched.get(node.node.key) ?? [], dimensions, rootFontSize, true);
+		const custom = customProperties(rawWinners, node.parent ? customByNode.get(node.parent.node.key) : undefined);
 		customByNode.set(node.node.key, custom);
 		const system = createSystemVariables(context.baseSettings, dimensions);
+		const winners = expandedWinnersFor(
+			matched.get(node.node.key) ?? [],
+			dimensions,
+			rootFontSize,
+			custom,
+			system,
+			diagnostics,
+		);
 
 		const base = context.baseStyles[node.node.key] ?? { style: {}, structural: {}, hidden: false, order: 0 };
 		const parent = node.parent ? resolved[node.parent.node.key] : undefined;
@@ -533,18 +715,13 @@ export function resolveStylesheet(
 				? parent.style["font-size"]
 				: context.baseSettings.typography.body.fontSize;
 		if (fontSizeWinner && PROPERTY_REGISTRY_V1["font-size"]?.appliesTo.includes(node.node.kind)) {
-			const expanded = expandVariables(
-				fontSizeWinner.declaration.value,
-				custom,
-				system,
-				diagnostics,
-				fontSizeWinner.declaration.range,
-			);
-			if (expanded && cssWideKeywords.has(expanded)) {
-				const wide = cssWideValue(expanded, "font-size", base.style, parent?.style);
+			const expanded = fontSizeWinner.declaration.value;
+			const keyword = cssWideKeyword(expanded);
+			if (keyword) {
+				const wide = cssWideValue(keyword, "font-size", base.style, parent?.style);
 				if (wide === undefined) delete style["font-size"];
 				else style["font-size"] = wide;
-			} else if (expanded) {
+			} else {
 				const syntaxError = valueSyntaxError("font-size", expanded);
 				if (syntaxError) {
 					diagnostics.push(createDiagnostic("INVALID_VALUE", "error", syntaxError, fontSizeWinner.declaration.range));
@@ -559,7 +736,10 @@ export function resolveStylesheet(
 						diagnostics.push(
 							createDiagnostic("INVALID_VALUE", "error", "Invalid font-size value.", fontSizeWinner.declaration.range),
 						);
-					} else if (typeof normalized === "number" && Math.abs(normalized) > RRSS_LIMITS_V1.maxAbsoluteLengthPt) {
+					} else if (
+						typeof normalized === "number" &&
+						(normalized < 0 || normalized > RRSS_LIMITS_V1.maxAbsoluteLengthPt)
+					) {
 						diagnostics.push(
 							createDiagnostic(
 								"INVALID_VALUE",
@@ -593,12 +773,50 @@ export function resolveStylesheet(
 			if (property.startsWith("--") || property === "font-size") continue;
 			const definition = PROPERTY_REGISTRY_V1[property];
 			if (!definition?.appliesTo.includes(node.node.kind)) continue;
-			const expanded = expandVariables(winner.declaration.value, custom, system, diagnostics, winner.declaration.range);
-			if (!expanded) continue;
-			if (cssWideKeywords.has(expanded)) {
-				const wide = cssWideValue(expanded, property, base.style, parent?.style);
-				if (wide === undefined) delete style[property];
-				else style[property] = wide;
+			const expanded = winner.declaration.value;
+			if (property === "size") {
+				const resolvedValue = resolvedPageSizeValues.get(node.node.key);
+				if (resolvedValue === undefined) continue;
+				const sizeKeyword = cssWideKeyword(resolvedValue);
+				if (sizeKeyword) {
+					applyStructuralCssWide(
+						sizeKeyword,
+						property,
+						structural,
+						base,
+						parent,
+						builderPageSize(context, node.node.key),
+					);
+				} else {
+					const pageSize = resolvedPageSizes.get(node.node.key);
+					if (pageSize) structuralValue(property, resolvedValue, structural, pageSize);
+				}
+				continue;
+			}
+			const keyword = cssWideKeyword(expanded);
+			if (keyword) {
+				if (property === "display") {
+					if (keyword === "inherit") {
+						hidden = parent?.hidden ?? false;
+						if (!hidden && parent?.style.display !== undefined) style.display = parent.style.display;
+						else delete style.display;
+					} else if (keyword === "revert") {
+						hidden = base.hidden;
+						if (base.style.display === undefined) delete style.display;
+						else style.display = base.style.display;
+					} else {
+						hidden = false;
+						delete style.display;
+					}
+				} else if (property === "order") {
+					order = keyword === "inherit" ? (parent?.order ?? 0) : keyword === "revert" ? base.order : 0;
+				} else if (definition.category === "structural") {
+					applyStructuralCssWide(keyword, property, structural, base, parent, builderPageSize(context, node.node.key));
+				} else {
+					const wide = cssWideValue(keyword, property, base.style, parent?.style);
+					if (wide === undefined) delete style[property];
+					else style[property] = wide;
+				}
 				continue;
 			}
 			const syntaxError = valueSyntaxError(property, expanded);
@@ -607,13 +825,6 @@ export function resolveStylesheet(
 				continue;
 			}
 
-			if (property === "size") {
-				const pageSize = parsePageSize(expanded, { page: dimensions, parentFontSize, fontSize, rootFontSize });
-				if (!pageSize)
-					diagnostics.push(createDiagnostic("INVALID_VALUE", "error", "Invalid page size.", winner.declaration.range));
-				else structuralValue(property, expanded, structural, pageSize);
-				continue;
-			}
 			const normalized = normalizeValue(property, expanded, {
 				page: dimensions,
 				parentFontSize,

@@ -54,6 +54,10 @@ const borderStyles = new Set([
 ]);
 const cssWideKeywords = new Set(["inherit", "initial", "revert", "unset"]);
 
+function isCssWideKeyword(value: string): boolean {
+	return cssWideKeywords.has(value.toLowerCase());
+}
+
 export const RRSS_LENGTH_PROPERTIES = new Set([
 	"bottom",
 	"border-bottom-left-radius",
@@ -207,7 +211,7 @@ function fourSides(property: string, values: readonly string[]): readonly [prope
 }
 
 function borderComponents(value: string): readonly [component: string, value: string][] | null {
-	if (cssWideKeywords.has(value)) {
+	if (isCssWideKeyword(value)) {
 		return [
 			["width", value],
 			["style", value],
@@ -237,7 +241,7 @@ function borderComponents(value: string): readonly [component: string, value: st
 	];
 }
 
-function expandShorthand(property: string, value: string): readonly [property: string, value: string][] | null {
+export function expandShorthand(property: string, value: string): readonly [property: string, value: string][] | null {
 	if (!spacingShorthands.has(property)) {
 		if (property.endsWith("-horizontal")) {
 			const prefix = property.slice(0, -"-horizontal".length);
@@ -262,7 +266,7 @@ function expandShorthand(property: string, value: string): readonly [property: s
 			];
 		}
 		if (property === "flex-flow") {
-			if (cssWideKeywords.has(value))
+			if (isCssWideKeyword(value))
 				return [
 					["flex-direction", value],
 					["flex-wrap", value],
@@ -278,7 +282,7 @@ function expandShorthand(property: string, value: string): readonly [property: s
 			];
 		}
 		if (property === "flex") {
-			if (cssWideKeywords.has(value))
+			if (isCssWideKeyword(value))
 				return [
 					["flex-grow", value],
 					["flex-shrink", value],
@@ -309,8 +313,10 @@ function expandShorthand(property: string, value: string): readonly [property: s
 					: null;
 			}
 			const grow = values[0] as string;
-			const shrink = numeric(values[1]) ? (values[1] as string) : "1";
-			const basis = values[numeric(values[1]) ? 2 : 1] ?? "0%";
+			const hasShrink = numeric(values[1]);
+			if (!hasShrink && values.length > 2) return null;
+			const shrink = hasShrink ? (values[1] as string) : "1";
+			const basis = values[hasShrink ? 2 : 1] ?? "0%";
 			return [
 				["flex-grow", grow],
 				["flex-shrink", shrink],
@@ -372,7 +378,12 @@ export function valueSyntaxError(property: string, value: string): string | null
 	if (!normalized) return "Values cannot be empty.";
 	if (cssWideKeywords.has(normalized) || /var\s*\(/i.test(decodeCssEscapes(value))) return null;
 	if (RRSS_LENGTH_PROPERTIES.has(property)) {
-		if (lengthPattern.test(normalized)) return null;
+		if (lengthPattern.test(normalized)) {
+			if (property === "font-size" && Number.parseFloat(normalized) < 0) {
+				return "font-size cannot be negative.";
+			}
+			return null;
+		}
 		if (/^(auto|none|normal|max-content|min-content|fit-content|thin|medium|thick)$/.test(normalized)) return null;
 		return `${property} requires a supported PDF length.`;
 	}
@@ -401,7 +412,10 @@ export function valueSyntaxError(property: string, value: string): string | null
 		return Number.isInteger(number) ? null : `${property} requires an integer.`;
 	}
 	if (property === "opacity" || property === "flex-grow" || property === "flex-shrink") {
-		return Number.isFinite(Number(normalized)) ? null : `${property} requires a finite number.`;
+		const number = Number(normalized);
+		if (!Number.isFinite(number)) return `${property} requires a finite number.`;
+		if (property === "opacity" && (number < 0 || number > 1)) return "opacity must be between 0 and 1.";
+		return null;
 	}
 	if (property === "line-height") {
 		return normalized === "normal" || lengthPattern.test(normalized)
@@ -473,7 +487,12 @@ function splitOutsideParentheses(value: string, separator: "," | "and"): string[
 
 function parseMedia(node: AstNode, diagnostics: RrssDiagnostic[]): readonly CompiledMediaQuery[] | null {
 	const source = node.prelude ? csstree.generate(node.prelude) : "";
-	const queries = splitOutsideParentheses(source, ",").map((query) => {
+	const querySources = splitOutsideParentheses(source, ",");
+	if (querySources.length > RRSS_LIMITS_V1.maxMediaQueryBranches) {
+		diagnostic(diagnostics, "RESOURCE_LIMIT", "The media query list exceeds the RRSS branch limit.", node);
+		return null;
+	}
+	const queries = querySources.map((query) => {
 		const features = splitOutsideParentheses(query, "and").map(parseMediaFeature);
 		return features.every((feature): feature is MediaFeature => feature !== null) ? { features } : null;
 	});
@@ -508,7 +527,9 @@ function parseMedia(node: AstNode, diagnostics: RrssDiagnostic[]): readonly Comp
 function combineMedia(
 	parent: readonly CompiledMediaQuery[],
 	child: readonly CompiledMediaQuery[],
-): readonly CompiledMediaQuery[] {
+): readonly CompiledMediaQuery[] | null {
+	const parentBranches = Math.max(parent.length, 1);
+	if (child.length > Math.floor(RRSS_LIMITS_V1.maxMediaQueryBranches / parentBranches)) return null;
 	if (parent.length === 0) return child;
 	return parent.flatMap((left) => child.map((right) => ({ features: [...left.features, ...right.features] })));
 }
@@ -575,7 +596,10 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 
 			const value =
 				typeof declaration.value === "string" ? declaration.value : csstree.generate(declaration.value as CssNode);
-			const expanded = expandShorthand(property, value.trim());
+			const trimmedValue = value.trim();
+			const expanded = /var\s*\(/i.test(decodeCssEscapes(trimmedValue))
+				? ([[property, trimmedValue]] as const)
+				: expandShorthand(property, trimmedValue);
 			if (!expanded) {
 				diagnostic(diagnostics, "INVALID_VALUE", `Invalid ${property} shorthand.`, declaration);
 				continue;
@@ -625,7 +649,13 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				continue;
 			}
 			const compiledMedia = parseMedia(node, diagnostics);
-			if (compiledMedia) visit(children(node.block), combineMedia(media, compiledMedia), mediaDepth + 1);
+			if (!compiledMedia) continue;
+			const combinedMedia = combineMedia(media, compiledMedia);
+			if (!combinedMedia) {
+				diagnostic(diagnostics, "RESOURCE_LIMIT", "Nested media queries exceed the RRSS branch limit.", node);
+				continue;
+			}
+			visit(children(node.block), combinedMedia, mediaDepth + 1);
 		}
 	};
 

@@ -48,17 +48,8 @@ export class StylesheetCompilationCache {
 
 export const stylesheetCompilationCache = new StylesheetCompilationCache();
 
-export const RRSS_COMPILER_BUILD_ID = "rrss-v1-values-1";
+export const RRSS_COMPILER_BUILD_ID = "rrss-v1-values-2";
 
-export function stylesheetFingerprint(source: string): string {
-	let hash = 2_166_136_261;
-	for (let index = 0; index < source.length; index++) {
-		hash ^= source.charCodeAt(index);
-		hash = Math.imul(hash, 16_777_619);
-	}
-	return `${hash >>> 0}:${source.length}`;
-}
-
-export function stylesheetCacheKey(languageVersion: number, source: string, registryFingerprint: string): string {
-	return `${languageVersion}:${stylesheetFingerprint(source)}:${RRSS_COMPILER_BUILD_ID}:${registryFingerprint}`;
+export function stylesheetCacheKey(languageVersion: number, source: string, registry: string): string {
+	return JSON.stringify([languageVersion, source, RRSS_COMPILER_BUILD_ID, registry]);
 }

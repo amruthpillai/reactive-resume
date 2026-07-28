@@ -1,6 +1,6 @@
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { CompileStylesheetResult } from "./types";
-import { stylesheetCacheKey, stylesheetCompilationCache, stylesheetFingerprint } from "./cache";
+import { stylesheetCacheKey, stylesheetCompilationCache } from "./cache";
 import { createDiagnostic } from "./diagnostics";
 import { RRSS_LIMITS_V1 } from "./limits";
 import { parseStylesheet } from "./parse";
@@ -29,10 +29,8 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		};
 	}
 
-	const registryFingerprint = stylesheetFingerprint(
-		JSON.stringify([PROPERTY_REGISTRY_V1, SEMANTIC_NODE_KINDS, SYSTEM_VARIABLE_REGISTRY_V1]),
-	);
-	const cacheKey = stylesheetCacheKey(source.languageVersion, source.text, registryFingerprint);
+	const registry = JSON.stringify([PROPERTY_REGISTRY_V1, SEMANTIC_NODE_KINDS, SYSTEM_VARIABLE_REGISTRY_V1]);
+	const cacheKey = stylesheetCacheKey(source.languageVersion, source.text, registry);
 	const cached = stylesheetCompilationCache.get(cacheKey);
 	if (cached) return cached;
 

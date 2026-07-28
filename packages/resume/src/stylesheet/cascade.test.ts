@@ -4,6 +4,7 @@ import fc from "fast-check";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { resolveStylesheet } from "./cascade";
 import { compileStylesheet } from "./compile";
+import { RRSS_LIMITS_V1 } from "./limits";
 
 const node = (
 	key: string,
@@ -76,6 +77,18 @@ function find(nodeToSearch: SemanticNode, key: string): SemanticNode | undefined
 	}
 }
 
+function semanticTreeOfSize(size: number, shape: "deep" | "wide"): SemanticNode {
+	if (shape === "wide") {
+		return node("root", "resume", {
+			children: Array.from({ length: size - 1 }, (_, index) => node(`item-${index}`, "item")),
+		});
+	}
+
+	let root = node("node-0", "item");
+	for (let index = 1; index < size; index++) root = node(`node-${index}`, "item", { children: [root] });
+	return root;
+}
+
 describe("RRSS cascade and structural resolution", () => {
 	it("resolves base, normal and important rules by specificity then source order", () => {
 		const result = resolve(`
@@ -126,6 +139,60 @@ describe("RRSS cascade and structural resolution", () => {
 		});
 	});
 
+	it("resolves variables before expanding multi-token shorthands", () => {
+		const result = resolve(`
+			:root {
+				--space: 1pt 2pt 3pt 4pt;
+				--edge: 2pt solid red;
+				--gaps: 5pt 6pt;
+				--flex: 2 3 25%;
+			}
+			section {
+				margin: var(--space);
+				padding: var(--space);
+				border: var(--edge);
+				gap: var(--gaps);
+				flex: var(--flex);
+			}
+		`);
+
+		expect(result.nodes["section-experience"]?.style).toMatchObject({
+			"margin-top": 1,
+			"margin-right": 2,
+			"margin-bottom": 3,
+			"margin-left": 4,
+			"padding-top": 1,
+			"padding-right": 2,
+			"padding-bottom": 3,
+			"padding-left": 4,
+			"border-top-width": 2,
+			"border-top-style": "solid",
+			"border-top-color": "red",
+			"row-gap": 5,
+			"column-gap": 6,
+			"flex-grow": 2,
+			"flex-shrink": 3,
+			"flex-basis": "25%",
+		});
+	});
+
+	it("does not evaluate a losing variable-backed shorthand", () => {
+		const result = resolve(`
+			:root { --invalid-space: 1pt 2pt 3pt 4pt 5pt; }
+			section { margin: var(--invalid-space); margin: 6pt !important; }
+		`);
+
+		expect(result.nodes["section-experience"]?.style).toMatchObject({
+			"margin-top": 6,
+			"margin-right": 6,
+			"margin-bottom": 6,
+			"margin-left": 6,
+		});
+		expect(result.diagnostics).not.toContainEqual(
+			expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
+		);
+	});
+
 	it("warns after variable expansion when a value is extreme but technically renderable", () => {
 		const result = resolve(":root { --tiny: 3pt; } section-heading { font-size: var(--tiny); }");
 
@@ -153,11 +220,32 @@ describe("RRSS cascade and structural resolution", () => {
 		expect(invalid.diagnostics).toContainEqual(expect.objectContaining({ code: "MEDIA_PAGE_SIZE", severity: "error" }));
 	});
 
-	it("bounds adversarial nested variable expansion without throwing", () => {
+	it("resolves a relative authored page size exactly once against authored dimensions", () => {
+		const result = resolve(
+			`
+				:root { --page-size: 50vw 50vh; }
+				page { size: var(--page-size); }
+				@media (width: 400pt) { :root { --page-size: var(--missing); } }
+			`,
+			{
+				...context,
+				pages: [{ pageKey: "page-1", width: 800, height: 600 }],
+			},
+		);
+
+		expect(result.nodes["page-1"]?.structural.pageSize).toEqual({ width: 400, height: 300 });
+		expect(result.diagnostics).not.toContainEqual(
+			expect.objectContaining({ code: "UNRESOLVED_VARIABLE", severity: "error" }),
+		);
+	});
+
+	it("bounds generated branching variable expansion by aggregate work and output", () => {
 		fc.assert(
-			fc.property(fc.integer({ min: 1, max: 36 }), (depth) => {
+			fc.property(fc.integer({ min: 3, max: 4 }), (branches) => {
+				const depth = Math.ceil(Math.log(RRSS_LIMITS_V1.maxSourceBytes) / Math.log(branches)) + 1;
 				const variables = Array.from({ length: depth }, (_, index) => {
-					const next = index === depth - 1 ? "red" : `var(--v${index + 1})`;
+					const next =
+						index === depth - 1 ? "r" : Array.from({ length: branches }, () => `var(--v${index + 1})`).join("");
 					return `--v${index}:${next};`;
 				}).join("");
 				const compiled = compileStylesheet({
@@ -166,14 +254,111 @@ describe("RRSS cascade and structural resolution", () => {
 				});
 				if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
 				const result = resolveStylesheet(compiled.program, tree, context);
-				if (depth <= 32) expect(result.nodes["heading-experience"]?.style.color).toBe("red");
-				else
-					expect(result.diagnostics).toContainEqual(
-						expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }),
-					);
+				expect(result.nodes).toEqual({});
+				expect(result.diagnostics).toContainEqual(
+					expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }),
+				);
 			}),
-			{ numRuns: 36 },
+			{ numRuns: 8 },
 		);
+	});
+
+	it.each([
+		{ keyword: "InItIaL", color: undefined, hidden: false, order: 0, fixed: undefined, breakBefore: undefined },
+		{ keyword: "uNsEt", color: "purple", hidden: false, order: 0, fixed: undefined, breakBefore: undefined },
+		{ keyword: "ReVeRt", color: "navy", hidden: true, order: 7, fixed: true, breakBefore: "page" },
+		{ keyword: "InHeRiT", color: "purple", hidden: true, order: 3, fixed: true, breakBefore: "page" },
+	] as const)(
+		"applies case-insensitive $keyword semantics to style, hidden, order, and structural properties",
+		({ keyword, color, hidden, order, fixed, breakBefore }) => {
+			const customContext: ResolveStylesheetContext = {
+				...context,
+				baseStyles: {
+					...context.baseStyles,
+					resume: {
+						style: {},
+						structural: { fixed: true, breakBefore: "page" },
+						hidden: true,
+						order: 3,
+					},
+					"region-main": {
+						style: { color: "purple" },
+						structural: { fixed: true, breakBefore: "page" },
+						hidden: true,
+						order: 3,
+					},
+					"section-experience": {
+						style: { color: "navy" },
+						structural: { fixed: true, breakBefore: "page" },
+						hidden: true,
+						order: 7,
+					},
+				},
+			};
+			const result = resolve(
+				`section { color: ${keyword}; display: ${keyword}; order: ${keyword}; -rr-fixed: ${keyword}; break-before: ${keyword}; }`,
+				customContext,
+			);
+
+			expect(result.nodes["section-experience"]).toMatchObject({ hidden, order });
+			expect(result.nodes["section-experience"]?.style.color).toBe(color);
+			expect(result.nodes["section-experience"]?.structural.fixed).toBe(fixed);
+			expect(result.nodes["section-experience"]?.structural.breakBefore).toBe(breakBefore);
+		},
+	);
+
+	it("makes size revert expose the builder page size", () => {
+		const result = resolve("page { size: ReVeRt; }", {
+			...context,
+			pages: [{ pageKey: "page-1", width: 800, height: 600 }],
+		});
+
+		expect(result.nodes["page-1"]?.structural.pageSize).toBe("A4");
+	});
+
+	it.each([
+		{ keyword: "initial", expected: undefined },
+		{ keyword: "unset", expected: undefined },
+		{ keyword: "inherit", expected: "LETTER" },
+		{ keyword: "revert", expected: { width: 700, height: 900 } },
+	] as const)("applies $keyword to page size structure", ({ keyword, expected }) => {
+		const result = resolve(`page { size: ${keyword}; }`, {
+			...context,
+			baseStyles: {
+				...context.baseStyles,
+				resume: { ...blankStyle, structural: { pageSize: "LETTER" } },
+				"page-1": { ...blankStyle, structural: { pageSize: { width: 700, height: 900 } } },
+			},
+			pages: [{ pageKey: "page-1", width: 800, height: 600 }],
+		});
+
+		expect(result.nodes["page-1"]?.structural.pageSize).toEqual(expected);
+	});
+
+	it("normalizes supported line-height lengths and enforces font-size and opacity bounds", () => {
+		const valid = resolve("section-heading { line-height: 12pt; font-size: 0; opacity: 0; }");
+		expect(valid.nodes["heading-experience"]?.style).toMatchObject({
+			"line-height": 12,
+			"font-size": 0,
+			opacity: 0,
+		});
+		const upper = resolve("section-heading { opacity: 1; }");
+		expect(upper.nodes["heading-experience"]?.style.opacity).toBe(1);
+
+		for (const declaration of ["font-size: -0.01pt", "opacity: -0.0001", "opacity: 1.0001"]) {
+			const compiled = compileStylesheet({
+				languageVersion: 1,
+				text: `@rr-version 1;section-heading{${declaration}}`,
+			});
+			expect(compiled.program, declaration).toBeNull();
+			expect(compiled.diagnostics, declaration).toContainEqual(
+				expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
+			);
+		}
+
+		const variable = resolve(":root { --bad: 1.0001; } section-heading { opacity: var(--bad); }");
+		expect(variable.nodes).toEqual({});
+		expect(variable.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }));
 	});
 
 	it("matches positional selectors before applying display and stable order exactly once", () => {
@@ -207,16 +392,19 @@ describe("RRSS cascade and structural resolution", () => {
 		expect(result.nodes["section-experience"]?.style["break-before"]).toBeUndefined();
 	});
 
-	it("rejects semantic trees beyond the frozen node budget", () => {
-		let oversized = node("leaf", "item");
-		for (let index = 0; index < 20_001; index++) {
-			oversized = node(`node-${index}`, "item", { children: [oversized] });
-		}
-		const compiled = compileStylesheet({ languageVersion: 1, text: "@rr-version 1; item { color: red; }" });
-		if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
-		const result = resolveStylesheet(compiled.program, oversized, context);
+	it("accepts the exact semantic node budget and rejects deep or wide trees one node over", () => {
+		const program = { languageVersion: 1, rules: [] };
+		const exact = resolveStylesheet(program, semanticTreeOfSize(RRSS_LIMITS_V1.maxSemanticNodes, "wide"), context);
+		expect(Object.keys(exact.nodes)).toHaveLength(RRSS_LIMITS_V1.maxSemanticNodes);
 
-		expect(result.nodes).toEqual({});
-		expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }));
+		for (const shape of ["deep", "wide"] as const) {
+			const result = resolveStylesheet(
+				program,
+				semanticTreeOfSize(RRSS_LIMITS_V1.maxSemanticNodes + 1, shape),
+				context,
+			);
+			expect(result.nodes).toEqual({});
+			expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }));
+		}
 	});
 });

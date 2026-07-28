@@ -7,7 +7,10 @@ export const RRSS_LIMITS_V1 = Object.freeze({
 	maxCombinatorsPerSelector: 16,
 	maxFunctionDepth: 16,
 	maxVariableExpansionDepth: 32,
+	maxVariableExpansionOutputCodeUnits: 128 * 1024,
+	maxVariableExpansionWorkCodeUnits: 512 * 1024,
 	maxMediaNesting: 4,
+	maxMediaQueryBranches: 1_024,
 	maxSemanticNodes: 20_000,
 	maxAbsoluteLengthPt: 100_000,
 } as const);
