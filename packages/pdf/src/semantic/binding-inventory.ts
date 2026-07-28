@@ -67,12 +67,21 @@ export type PrimitiveBinding = {
 export type AliasBinding = {
 	type: "alias";
 	canonicalKind: SemanticNodeKind;
+	canonicalNodeKey: string;
 	token: string;
 };
 
 export type SemanticBinding = PrimitiveBinding | AliasBinding;
+type SemanticBindingContext = {
+	parent: SemanticNode | undefined;
+};
 export type SemanticBindingRegistry = Readonly<
-	Partial<Record<SemanticNodeKind, SemanticBinding | ((node: SemanticNode) => SemanticBinding)>>
+	Partial<
+		Record<
+			SemanticNodeKind,
+			SemanticBinding | ((node: SemanticNode, context: SemanticBindingContext) => SemanticBinding | undefined)
+		>
+	>
 >;
 
 export type BindingInventory = {
@@ -106,13 +115,21 @@ export const SHARED_BINDING_REGISTRY = {
 	link: existing("Link"),
 	icon: (node) => existing(node.attributes.type && node.attributes.type !== "icon" ? "View" : "Svg"),
 	level: existing("View"),
-	"rich-text": existing("View"),
+	"rich-text": (_node, { parent }) =>
+		parent?.kind === "field"
+			? {
+					type: "alias",
+					canonicalKind: "field",
+					canonicalNodeKey: parent.key,
+					token: "rich-text",
+				}
+			: undefined,
 	"rich-heading": existing("Text"),
 	blockquote: existing("View"),
 	paragraph: existing("Text"),
 	list: existing("View"),
 	"list-item": existing("View"),
-	"list-item-content": existing("View"),
+	"list-item-content": (node) => existing(node.attributes.direction === "rtl" ? "Text" : "View"),
 	"list-marker": existing("Text"),
 	strong: existing("Text"),
 	emphasis: existing("Text"),
@@ -131,11 +148,13 @@ export function createBindingInventory(
 ): BindingInventory {
 	const bindings: Record<string, SemanticBinding> = {};
 	const unboundNodeKeys: string[] = [];
+	const nodes = new Map<string, SemanticNode>();
 	let syntheticWrapperCount = 0;
 
-	const visit = (node: SemanticNode) => {
+	const visit = (node: SemanticNode, parent?: SemanticNode) => {
+		nodes.set(node.key, node);
 		const declaration = registry[node.kind];
-		const binding = typeof declaration === "function" ? declaration(node) : declaration;
+		const binding = typeof declaration === "function" ? declaration(node, { parent }) : declaration;
 
 		if (!binding) {
 			unboundNodeKeys.push(node.key);
@@ -148,10 +167,25 @@ export function createBindingInventory(
 			}
 		}
 
-		for (const child of node.children) visit(child);
+		for (const child of node.children) visit(child, node);
 	};
 
 	visit(tree);
+
+	for (const [nodeKey, binding] of Object.entries(bindings)) {
+		if (binding.type !== "alias") continue;
+
+		const canonicalNode = nodes.get(binding.canonicalNodeKey);
+		const canonicalBinding = bindings[binding.canonicalNodeKey];
+		if (
+			canonicalNode?.kind !== binding.canonicalKind ||
+			canonicalBinding?.type !== "primitive" ||
+			canonicalBinding.source !== "existing"
+		) {
+			delete bindings[nodeKey];
+			unboundNodeKeys.push(nodeKey);
+		}
+	}
 
 	return { bindings, unboundNodeKeys, syntheticWrapperCount };
 }

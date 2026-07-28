@@ -4,7 +4,9 @@ import type { Template } from "@reactive-resume/schema/templates";
 import type { HTMLElement, Node } from "node-html-parser";
 import type { StandardFieldRole } from "./binding-inventory";
 import { NodeType } from "node-html-parser";
+import { isRTL } from "@reactive-resume/utils/locale";
 import { getResumeSectionIcon } from "../section-icon";
+import { getCustomFieldLinkUrl } from "../templates/shared/contact";
 import { filterItems, filterSections } from "../templates/shared/filtering";
 import { hasTemplatePicture } from "../templates/shared/picture";
 import { parseNormalizedRichTextHtml, richTextMarkClassName } from "../templates/shared/rich-text-html";
@@ -58,6 +60,7 @@ const ITEM_HEADER_FIELDS = {
 
 const RICH_TEXT_FIELDS = new Set(["content", "description", "recipient"]);
 const ITEM_ICON_SECTIONS = new Set<CustomSectionType>(["profiles", "skills", "interests"]);
+type RichTextDirection = "ltr" | "rtl";
 
 const semanticNode = ({
 	key,
@@ -108,7 +111,11 @@ const richTextKind = (element: HTMLElement): SemanticNodeKind | undefined => {
 	return undefined;
 };
 
-const buildRichTextChildren = (parentKey: string, childNodes: readonly Node[]): SemanticNode[] => {
+const buildRichTextChildren = (
+	parentKey: string,
+	childNodes: readonly Node[],
+	direction: RichTextDirection,
+): SemanticNode[] => {
 	const children: SemanticNode[] = [];
 	let elementIndex = 0;
 
@@ -120,7 +127,7 @@ const buildRichTextChildren = (parentKey: string, childNodes: readonly Node[]): 
 
 		if (!kind) {
 			const ancestryKey = semanticNodeKeys.richTextNode(parentKey, `html-${child.rawTagName.toLowerCase()}`, index);
-			children.push(...buildRichTextChildren(ancestryKey, child.childNodes));
+			children.push(...buildRichTextChildren(ancestryKey, child.childNodes, direction));
 			continue;
 		}
 
@@ -138,7 +145,8 @@ const buildRichTextChildren = (parentKey: string, childNodes: readonly Node[]): 
 						semanticNode({
 							key: contentKey,
 							kind: "list-item-content",
-							children: buildRichTextChildren(contentKey, child.childNodes),
+							attributes: { direction },
+							children: buildRichTextChildren(contentKey, child.childNodes, direction),
 						}),
 					],
 				}),
@@ -153,7 +161,7 @@ const buildRichTextChildren = (parentKey: string, childNodes: readonly Node[]): 
 				kind,
 				attributes,
 				roles: kind === "link" ? ["structured-link"] : [],
-				children: buildRichTextChildren(key, child.childNodes),
+				children: buildRichTextChildren(key, child.childNodes, direction),
 			}),
 		);
 	}
@@ -187,12 +195,14 @@ const buildField = ({
 	type,
 	name,
 	value,
+	direction,
 	structuredLink,
 }: {
 	parentKey: string;
 	type: keyof typeof STANDARD_FIELD_REGISTRY;
 	name: string;
 	value: unknown;
+	direction: RichTextDirection;
 	structuredLink?: boolean;
 }): SemanticNode | undefined => {
 	if (!hasValue(value)) return undefined;
@@ -200,7 +210,11 @@ const buildField = ({
 	const key = semanticNodeKeys.field(parentKey, name);
 	const richTextChildren =
 		RICH_TEXT_FIELDS.has(name) && typeof value === "string"
-			? buildRichTextChildren(semanticNodeKeys.richText(key, name), parseNormalizedRichTextHtml(value).childNodes)
+			? buildRichTextChildren(
+					semanticNodeKeys.richText(key, name),
+					parseNormalizedRichTextHtml(value).childNodes,
+					direction,
+				)
 			: [];
 	const children =
 		RICH_TEXT_FIELDS.has(name) && typeof value === "string" && richTextChildren.length > 0
@@ -267,6 +281,7 @@ const buildItem = ({
 	const headerChildren: SemanticNode[] = [];
 	const bodyChildren: SemanticNode[] = [];
 	const headerFieldNames = ITEM_HEADER_FIELDS[type];
+	const direction = isRTL(data.metadata.page.locale) ? "rtl" : "ltr";
 
 	if (
 		ITEM_ICON_SECTIONS.has(type as CustomSectionType) &&
@@ -294,14 +309,15 @@ const buildItem = ({
 			type,
 			name,
 			value: item[name],
-			structuredLink: website?.inlineLink === true && name === headerFieldNames[0],
+			direction,
+			structuredLink: type !== "profiles" && website?.inlineLink === true && name === headerFieldNames[0],
 		});
 
 		if (!field) continue;
 		(parent === headerKey ? headerChildren : bodyChildren).push(field);
 	}
 
-	if (website) {
+	if (website && type !== "profiles") {
 		const parent = website.inlineLink ? headerKey : key;
 		(parent === headerKey ? headerChildren : bodyChildren).push(
 			semanticNode({
@@ -312,7 +328,7 @@ const buildItem = ({
 		);
 	}
 
-	if (type === "profiles" && hasValue(item.username)) {
+	if (type === "profiles") {
 		bodyChildren.push(
 			semanticNode({
 				key: semanticNodeKeys.link(key, "profile"),
@@ -534,7 +550,7 @@ const buildHeader = (data: ResumeData, pageKey: string): SemanticNode => {
 				contactListKey,
 				name: "custom",
 				id: field.id,
-				structuredLink: Boolean(field.link),
+				structuredLink: Boolean(getCustomFieldLinkUrl(field)),
 				icon: showIcons && Boolean(field.icon),
 			}),
 		);

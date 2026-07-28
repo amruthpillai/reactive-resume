@@ -105,7 +105,7 @@ export const SEMANTIC_REGISTRY_V1 = {
 	paragraph: { parents: ["rich-text", "list-item-content"], attributes: [], roles: [] },
 	list: { parents: ["rich-text", "list-item-content"], attributes: [], roles: [] },
 	"list-item": { parents: ["list"], attributes: [], roles: [] },
-	"list-item-content": { parents: ["list-item"], attributes: [], roles: [] },
+	"list-item-content": { parents: ["list-item"], attributes: ["direction"], roles: [] },
 	"list-marker": { parents: ["list-item"], attributes: [], roles: ["decoration"] },
 	strong: { parents: inlineParents, attributes: [], roles: [] },
 	emphasis: { parents: inlineParents, attributes: [], roles: [] },

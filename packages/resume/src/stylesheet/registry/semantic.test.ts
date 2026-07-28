@@ -82,4 +82,9 @@ describe("semantic registry", () => {
 		expect(SEMANTIC_REGISTRY_V1.icon.roles).toEqual(["decoration", "active", "inactive"]);
 		expect(SEMANTIC_REGISTRY_V1.icon.roles).not.toContain("primary-text");
 	});
+
+	it("registers list content direction without broadening unrelated rich-text attributes", () => {
+		expect(SEMANTIC_REGISTRY_V1["list-item-content"].attributes).toEqual(["direction"]);
+		expect(SEMANTIC_REGISTRY_V1["list-item"].attributes).toEqual([]);
+	});
 });

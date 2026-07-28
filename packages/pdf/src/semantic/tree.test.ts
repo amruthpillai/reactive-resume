@@ -571,4 +571,34 @@ describe("buildSemanticTree", () => {
 		expect(semanticNodeKeys.field(parent, "name/role")).toBe("page-1/region-main/field-name%2Frole");
 		expect(semanticNodeKeys.richTextNode(parent, "paragraph", 2)).toBe("page-1/region-main/paragraph-2");
 	});
+
+	it.each([false, true])("emits exactly one profile link when inlineLink is %s", (inlineLink) => {
+		const data = structuredClone(defaultResumeData);
+		data.sections.profiles.items = [
+			{
+				id: "profile/1",
+				hidden: false,
+				icon: "github-logo",
+				iconColor: "",
+				network: "GitHub",
+				username: "ada",
+				website: { url: "https://github.com/ada", label: "GitHub", inlineLink },
+			},
+		];
+		const tree = buildSemanticTree({
+			data,
+			template: "onyx",
+			page: { fullWidth: true, main: ["profiles"], sidebar: [] },
+			pageNumber: 1,
+			showHeader: false,
+		});
+		const profile = required(
+			findNode(tree, (node) => node.kind === "item" && node.id === "profile/1"),
+			"profile item",
+		);
+
+		expect(findNodes(profile, (node) => node.kind === "link").map((node) => node.key)).toEqual([
+			"page-1/region-main/section-profiles/section-items/item-profile%2F1/link-profile",
+		]);
+	});
 });
