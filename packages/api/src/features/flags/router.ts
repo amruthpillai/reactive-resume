@@ -7,6 +7,8 @@ export type FeatureFlags = {
 	disableEmailAuth: boolean;
 	showSponsors: boolean;
 	smtpEnabled: boolean;
+	semanticCssAuthoring: boolean;
+	semanticCssDefault: boolean;
 };
 
 // Mirrors isSmtpEnabled() in packages/email/src/transport.ts (kept local to avoid an api -> email dependency).
@@ -30,6 +32,8 @@ export const flagsRouter = {
 				disableEmailAuth: z.boolean().describe("Whether email-based authentication is disabled on this instance."),
 				showSponsors: z.boolean().describe("Whether sponsor placements are shown on this instance."),
 				smtpEnabled: z.boolean().describe("Whether outbound email (SMTP) is configured on this instance."),
+				semanticCssAuthoring: z.boolean().describe("Whether Semantic CSS authoring is enabled on this instance."),
+				semanticCssDefault: z.boolean().describe("Whether new resumes start in Semantic CSS mode."),
 			}),
 		)
 		.handler(
@@ -38,6 +42,8 @@ export const flagsRouter = {
 				disableEmailAuth: env.FLAG_DISABLE_EMAIL_AUTH,
 				showSponsors: env.FLAG_SHOW_SPONSORS,
 				smtpEnabled: isSmtpEnabled(),
+				semanticCssAuthoring: env.FLAG_SEMANTIC_CSS_AUTHORING,
+				semanticCssDefault: env.FLAG_SEMANTIC_CSS_DEFAULT,
 			}),
 		),
 };

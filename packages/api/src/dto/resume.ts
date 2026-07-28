@@ -16,6 +16,10 @@ const resumeSchema = createSelectSchema(schema.resume, {
 	userId: z.string().describe("The ID of the user who owns the resume."),
 	createdAt: z.date().describe("The date and time the resume was created."),
 	updatedAt: z.date().describe("The date and time the resume was last updated."),
+}).omit({ stylesheetRevision: true, renderDataVersion: true });
+
+const unavailableStylesheetImportSchema = z.looseObject({
+	metadata: z.looseObject({ stylesheet: z.unknown() }),
 });
 
 export const resumeDto = {
@@ -54,7 +58,7 @@ export const resumeDto = {
 	},
 
 	import: {
-		input: resumeSchema.pick({ data: true }),
+		input: z.object({ data: z.union([resumeDataSchema, unavailableStylesheetImportSchema]) }),
 		output: z.string().describe("The ID of the imported resume."),
 	},
 

@@ -17,6 +17,7 @@ import { getStorageService } from "../storage/service";
 import { grantResumeAccess, hasResumeAccess } from "./access";
 import { assertCanView, isOwner, redactResumeForViewer, shouldCountForStatistics } from "./access-policy";
 import { publishResumeUpdated } from "./events";
+import { hasRenderDataChanged, preserveServerStylesheet } from "./stylesheet-preservation";
 import { clientKeyFromHeaders, shouldCountView } from "./view-dedup";
 
 type DbOrTx = typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -27,6 +28,23 @@ function resumeVersionConflict(updatedAt: Date) {
 		message: "The resume changed after this patch was generated.",
 		data: { updatedAt: updatedAt.toISOString() },
 	});
+}
+
+function invalidPatchOperation(message: string, index?: number, operation?: JsonPatchOperation) {
+	if (index !== undefined && operation !== undefined) {
+		return new ORPCError("INVALID_PATCH_OPERATIONS", { status: 400, message, data: { index, operation } });
+	}
+
+	return new ORPCError("INVALID_PATCH_OPERATIONS", { status: 400, message });
+}
+
+function targetsServerStylesheet(pointer: string) {
+	if (!pointer.startsWith("/")) return false;
+	const [root, field] = pointer
+		.slice(1)
+		.split("/")
+		.map((segment) => segment.replaceAll("~1", "/").replaceAll("~0", "~"));
+	return root === "metadata" && field === "stylesheet";
 }
 
 // Version history: keep a bounded, rolling window of snapshots per resume.
@@ -88,7 +106,12 @@ async function applyResumePatchTx(
 	},
 ) {
 	const [existing] = await client
-		.select({ data: schema.resume.data, isLocked: schema.resume.isLocked, updatedAt: schema.resume.updatedAt })
+		.select({
+			data: schema.resume.data,
+			isLocked: schema.resume.isLocked,
+			renderDataVersion: schema.resume.renderDataVersion,
+			updatedAt: schema.resume.updatedAt,
+		})
 		.from(schema.resume)
 		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
 		.for("update");
@@ -97,6 +120,18 @@ async function applyResumePatchTx(
 	if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
 	if (input.expectedUpdatedAt && existing.updatedAt.getTime() !== input.expectedUpdatedAt.getTime()) {
 		throw resumeVersionConflict(existing.updatedAt);
+	}
+
+	const protectedOperationIndex = input.operations.findIndex(
+		(operation) =>
+			targetsServerStylesheet(operation.path) || ("from" in operation && targetsServerStylesheet(operation.from)),
+	);
+	if (protectedOperationIndex !== -1) {
+		throw invalidPatchOperation(
+			"The server-owned stylesheet cannot be changed through generic resume patches.",
+			protectedOperationIndex,
+			input.operations[protectedOperationIndex],
+		);
 	}
 
 	let patchedData: ResumeData;
@@ -118,9 +153,21 @@ async function applyResumePatchTx(
 		});
 	}
 
+	patchedData = preserveServerStylesheet(existing.data, patchedData);
+	if (
+		existing.data.metadata.stylesheet?.mode === "semantic" &&
+		JSON.stringify(existing.data.metadata.styleRules) !== JSON.stringify(patchedData.metadata.styleRules)
+	) {
+		throw invalidPatchOperation("Legacy style rules cannot be changed while Semantic CSS mode is active.");
+	}
+
+	const renderDataChanged = hasRenderDataChanged(existing.data, patchedData);
 	const [resume] = await client
 		.update(schema.resume)
-		.set({ data: patchedData })
+		.set({
+			data: patchedData,
+			...(renderDataChanged ? { renderDataVersion: existing.renderDataVersion + 1 } : {}),
+		})
 		.where(
 			and(
 				eq(schema.resume.id, input.id),
@@ -411,7 +458,7 @@ export const resumeService = {
 			await resumeService.versions.snapshot({
 				resumeId: input.resumeId,
 				userId: input.userId,
-				data: version.data,
+				data: updated.data,
 				label: "Restored version",
 			});
 
@@ -518,7 +565,7 @@ export const resumeService = {
 		data?: ResumeData;
 	}) => {
 		const id = generateId();
-		const data = input.data ?? defaultResumeData;
+		const data = structuredClone(input.data ?? defaultResumeData);
 		data.metadata.page.locale = input.locale;
 
 		try {
@@ -562,76 +609,88 @@ export const resumeService = {
 		isPublic?: boolean;
 		skipAutoSnapshot?: boolean;
 	}) => {
-		const [resume] = await db
-			.select({ isLocked: schema.resume.isLocked })
-			.from(schema.resume)
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+		const resume = await db
+			.transaction(async (tx) => {
+				const [existing] = await tx
+					.select({
+						data: schema.resume.data,
+						isLocked: schema.resume.isLocked,
+						renderDataVersion: schema.resume.renderDataVersion,
+					})
+					.from(schema.resume)
+					.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+					.for("update");
 
-		if (resume?.isLocked) throw new ORPCError("RESUME_LOCKED");
+				if (!existing) throw new ORPCError("NOT_FOUND");
+				if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
 
-		const updateData: Partial<typeof schema.resume.$inferSelect> = {
-			...(input.name !== undefined ? { name: input.name } : {}),
-			...(input.slug !== undefined ? { slug: input.slug } : {}),
-			...(input.tags !== undefined ? { tags: input.tags } : {}),
-			...(input.data !== undefined ? { data: input.data } : {}),
-			...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
-		};
+				const data = input.data ? preserveServerStylesheet(existing.data, input.data) : undefined;
+				const renderDataChanged = data ? hasRenderDataChanged(existing.data, data) : false;
+				const updateData: Partial<typeof schema.resume.$inferSelect> = {
+					...(input.name !== undefined ? { name: input.name } : {}),
+					...(input.slug !== undefined ? { slug: input.slug } : {}),
+					...(input.tags !== undefined ? { tags: input.tags } : {}),
+					...(data ? { data } : {}),
+					...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
+					...(renderDataChanged ? { renderDataVersion: existing.renderDataVersion + 1 } : {}),
+				};
 
-		try {
-			const [resume] = await db
-				.update(schema.resume)
-				.set(updateData)
-				.where(
-					and(
-						eq(schema.resume.id, input.id),
-						eq(schema.resume.isLocked, false),
-						eq(schema.resume.userId, input.userId),
-					),
-				)
-				.returning({
-					id: schema.resume.id,
-					name: schema.resume.name,
-					slug: schema.resume.slug,
-					tags: schema.resume.tags,
-					data: schema.resume.data,
-					isPublic: schema.resume.isPublic,
-					isLocked: schema.resume.isLocked,
-					updatedAt: schema.resume.updatedAt,
-					hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
-				});
+				const [updated] = await tx
+					.update(schema.resume)
+					.set(updateData)
+					.where(
+						and(
+							eq(schema.resume.id, input.id),
+							eq(schema.resume.isLocked, false),
+							eq(schema.resume.userId, input.userId),
+						),
+					)
+					.returning({
+						id: schema.resume.id,
+						name: schema.resume.name,
+						slug: schema.resume.slug,
+						tags: schema.resume.tags,
+						data: schema.resume.data,
+						isPublic: schema.resume.isPublic,
+						isLocked: schema.resume.isLocked,
+						updatedAt: schema.resume.updatedAt,
+						hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
+					});
 
-			if (!resume) throw new ORPCError("NOT_FOUND");
+				if (!updated) throw new ORPCError("NOT_FOUND");
+				return updated;
+			})
+			.catch((error: unknown) => {
+				if (error instanceof ORPCError) throw error;
 
-			// Debounced manual-save milestone: only snapshots data edits, and only when the previous
-			// snapshot is old enough (see SNAPSHOT_THROTTLE_MS). Covers template switches and typing.
-			if (input.data !== undefined && !input.skipAutoSnapshot) {
-				await maybeSnapshotOnSave({
-					resumeId: resume.id,
-					userId: input.userId,
-					data: resume.data,
-					label: "Manual save",
-				});
-			}
+				if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
+					throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
+				}
 
-			await notifyResumeUpdated({
-				type: "resume.updated",
-				resumeId: resume.id,
-				userId: input.userId,
-				updatedAt: resume.updatedAt.toISOString(),
-				mutation: "update",
+				console.error("Failed to update resume:", error);
+				throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to update resume" });
 			});
 
-			return resume;
-		} catch (error) {
-			if (error instanceof ORPCError) throw error;
-
-			if (get(error, "cause.constraint") === "resume_slug_user_id_unique") {
-				throw new ORPCError("RESUME_SLUG_ALREADY_EXISTS", { status: 400 });
-			}
-
-			console.error("Failed to update resume:", error);
-			throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to update resume" });
+		// Debounced manual-save milestone: only snapshots data edits, and only when the previous
+		// snapshot is old enough (see SNAPSHOT_THROTTLE_MS). Covers template switches and typing.
+		if (input.data !== undefined && !input.skipAutoSnapshot) {
+			await maybeSnapshotOnSave({
+				resumeId: resume.id,
+				userId: input.userId,
+				data: resume.data,
+				label: "Manual save",
+			});
 		}
+
+		await notifyResumeUpdated({
+			type: "resume.updated",
+			resumeId: resume.id,
+			userId: input.userId,
+			updatedAt: resume.updatedAt.toISOString(),
+			mutation: "update",
+		});
+
+		return resume;
 	},
 
 	patch: async (input: { id: string; userId: string; operations: JsonPatchOperation[]; expectedUpdatedAt?: Date }) => {

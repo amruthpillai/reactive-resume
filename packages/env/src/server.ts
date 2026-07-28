@@ -83,6 +83,8 @@ export const env = createEnv({
 		FLAG_SHOW_SPONSORS: z.stringbool().default(false),
 		FLAG_ALLOW_UNSAFE_AI_BASE_URL: z.stringbool().default(false),
 		FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI: z.stringbool().default(false),
+		FLAG_SEMANTIC_CSS_AUTHORING: z.stringbool().default(false),
+		FLAG_SEMANTIC_CSS_DEFAULT: z.stringbool().default(false),
 	},
 	runtimeEnv: process.env,
 	emptyStringAsUndefined: true,

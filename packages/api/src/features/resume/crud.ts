@@ -1,9 +1,11 @@
-import { createSampleResumeData } from "@reactive-resume/schema/resume/sample";
+import { env } from "@reactive-resume/env/server";
+import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { generateRandomName, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
+import { assertResumeImportAvailable, createResumeData } from "./stylesheet-preservation";
 
 export const crudRouter = {
 	list: protectedProcedure
@@ -69,7 +71,12 @@ export const crudRouter = {
 				tags: input.tags,
 				locale: context.locale,
 				userId: context.user.id,
-				...(input.withSampleData ? { data: createSampleResumeData(input.name) } : {}),
+				data: createResumeData({
+					semanticCssDefault: env.FLAG_SEMANTIC_CSS_DEFAULT,
+					withSampleData: input.withSampleData,
+					name: input.name,
+					locale: context.locale,
+				}),
 			}),
 		),
 
@@ -92,8 +99,14 @@ export const crudRouter = {
 				message: "A resume with this slug already exists.",
 				status: 400,
 			},
+			SEMANTIC_STYLESHEET_UNAVAILABLE: {
+				message: "Semantic stylesheets cannot be imported until stylesheet validation is available.",
+				status: 400,
+			},
 		})
 		.handler(async ({ context, input }) => {
+			assertResumeImportAvailable(input.data);
+			const data = resumeDataSchema.parse(input.data);
 			const name = generateRandomName();
 			const slug = slugify(name);
 
@@ -101,7 +114,7 @@ export const crudRouter = {
 				name,
 				slug,
 				tags: [],
-				data: input.data,
+				data,
 				locale: context.locale,
 				userId: context.user.id,
 			});
@@ -110,7 +123,7 @@ export const crudRouter = {
 			await resumeService.versions.snapshot({
 				resumeId: id,
 				userId: context.user.id,
-				data: input.data,
+				data,
 				label: "Imported",
 			});
 
