@@ -22,6 +22,7 @@ const SemanticRenderContext = createContext<{
 	renderedNodeKeys: ReadonlySet<string>;
 	sourceNodeKeys: ReadonlySet<string>;
 	renderedChildKeys: ReadonlyMap<string, readonly string[]>;
+	sourceChildKeys: ReadonlyMap<string, readonly string[]>;
 	sourceNodes: readonly SemanticNode[];
 	renderOrder: ReadonlyMap<string, number>;
 } | null>(null);
@@ -71,9 +72,16 @@ export function SemanticRenderProvider({
 		() => new Set(sourceNodes.map(({ key }) => key)) as ReadonlySet<string>,
 		[sourceNodes],
 	);
+	const sourceChildKeys = useMemo(
+		() =>
+			new Map(
+				sourceNodes.map(({ key, children: sourceChildren }) => [key, sourceChildren.map(({ key }) => key)]),
+			) as ReadonlyMap<string, readonly string[]>,
+		[sourceNodes],
+	);
 	const value = useMemo(
-		() => ({ presentation, mode, sourceNodeKeys, sourceNodes, ...treeIndex }),
-		[mode, presentation, sourceNodeKeys, sourceNodes, treeIndex],
+		() => ({ presentation, mode, sourceNodeKeys, sourceChildKeys, sourceNodes, ...treeIndex }),
+		[mode, presentation, sourceChildKeys, sourceNodeKeys, sourceNodes, treeIndex],
 	);
 	return <SemanticRenderContext.Provider value={value}>{children}</SemanticRenderContext.Provider>;
 }
@@ -100,7 +108,28 @@ export const useSemanticNodeExists = (nodeKey: string | undefined): boolean => {
 export const useRenderedChildKeys = (nodeKey: string | undefined): readonly string[] | undefined => {
 	const context = use(SemanticRenderContext);
 	if (context?.mode !== "semantic" || !nodeKey) return undefined;
-	return context.renderedChildKeys.get(nodeKey) ?? [];
+	const rendered = context.renderedChildKeys.get(nodeKey) ?? [];
+	const source = context.sourceChildKeys.get(nodeKey) ?? [];
+	return rendered.length === source.length && rendered.every((key, index) => key === source[index])
+		? undefined
+		: rendered;
+};
+
+export type RenderedChildEntry<T> = {
+	nodeKey: string;
+	value: T;
+};
+
+export const projectRenderedChildren = <T,>(
+	renderedChildKeys: readonly string[] | undefined,
+	entries: readonly RenderedChildEntry<T>[],
+): T[] => {
+	if (!renderedChildKeys) return entries.map(({ value }) => value);
+	const valuesByNodeKey = new Map(entries.map(({ nodeKey, value }) => [nodeKey, value]));
+	return renderedChildKeys.flatMap((nodeKey) => {
+		const value = valuesByNodeKey.get(nodeKey);
+		return value === undefined ? [] : [value];
+	});
 };
 
 export const useSemanticSectionNodeKey = (pageNodeKey: string, sectionId: string): string => {
@@ -144,6 +173,14 @@ export const useSemanticNodeBindings = () => {
 		isNodeVisible: (nodeKey: string | undefined): boolean => {
 			if (context?.mode !== "semantic" || !nodeKey) return true;
 			return context.renderedNodeKeys.has(nodeKey);
+		},
+		renderedChildKeysFor: (nodeKey: string | undefined): readonly string[] | undefined => {
+			if (context?.mode !== "semantic" || !nodeKey) return undefined;
+			const rendered = context.renderedChildKeys.get(nodeKey) ?? [];
+			const source = context.sourceChildKeys.get(nodeKey) ?? [];
+			return rendered.length === source.length && rendered.every((key, index) => key === source[index])
+				? undefined
+				: rendered;
 		},
 	};
 };

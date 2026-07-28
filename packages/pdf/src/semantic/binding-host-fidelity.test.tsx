@@ -32,7 +32,10 @@ const nodesWithStyle = (node: HostNode, property: string, value: unknown): HostN
 	...(node.children ?? []).flatMap((child) => nodesWithStyle(child, property, value)),
 ];
 
-const buildFixture = (text: string, section: "summary" | "skills" | "experience" = "summary"): ResumeData => {
+const buildFixture = (
+	text: string,
+	section: "summary" | "skills" | "experience" | "languages" | "references" = "summary",
+): ResumeData => {
 	const data = structuredClone(defaultResumeData);
 	data.picture.hidden = true;
 	data.basics.name = "Ada Lovelace";
@@ -74,6 +77,20 @@ const buildFixture = (text: string, section: "summary" | "skills" | "experience"
 					description: "<p>Designed the engine.</p>",
 				},
 			],
+		},
+	];
+	data.sections.languages.items = [
+		{ id: "language-1", hidden: false, language: "English", fluency: "Native", level: 0 },
+	];
+	data.sections.references.items = [
+		{
+			id: "reference-1",
+			hidden: false,
+			name: "Charles Babbage",
+			position: "Inventor",
+			phone: "+44 123",
+			website: { url: "", label: "", inlineLink: false },
+			description: "",
 		},
 	];
 	data.metadata.page.hideSectionIcons = false;
@@ -118,6 +135,28 @@ describe("semantic binding host fidelity", () => {
 		expect(skillPath?.some((node) => mergedStyle(node).backgroundColor === "#404040")).toBe(true);
 		expect(skillPath?.some((node) => mergedStyle(node).backgroundColor === "#101010")).toBe(true);
 		expect(nodesWithStyle(document, "opacity", 0.25).some(({ type }) => type === "SVG")).toBe(true);
+	});
+
+	it.each([
+		["languages", "English"],
+		["references", "Charles Babbage"],
+	] as const)("keeps direct %s Text siblings outside the item-header contract", async (section, text) => {
+		const document = await renderFixture(
+			"onyx",
+			buildFixture(
+				`
+					item-header { display: none; background-color: #414141; break-before: page; }
+					field[role~="primary-text"] { color: #515151; }
+				`,
+				section,
+			),
+		);
+		const textPath = findPath(document, (node) => node.type === "TEXT" && nodeText(node) === text);
+		const textNode = textPath?.at(-1);
+
+		expect(textNode).toBeDefined();
+		expect(textNode && mergedStyle(textNode)).toMatchObject({ color: "#515151" });
+		expect(textPath?.some((node) => mergedStyle(node).backgroundColor === "#414141")).toBe(false);
 	});
 
 	it("binds nested experience-role item and item-header styles to their existing Views", async () => {

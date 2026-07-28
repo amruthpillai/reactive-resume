@@ -466,11 +466,10 @@ describe("buildSemanticTree", () => {
 				findNode(tree, (node) => node.kind === "item" && node.id === itemId),
 				`${itemId} item`,
 			);
-			const header = required(
-				findNode(item, (node) => node.kind === "item-header"),
-				`${itemId} item header`,
+			expect(findNode(item, (node) => node.kind === "item-header")).toBeUndefined();
+			expect(item.children.filter(({ kind }) => kind === "field").map((node) => node.attributes.name)).toEqual(
+				expect.arrayContaining([...fields]),
 			);
-			expect(header.children.map((node) => node.attributes.name)).toEqual(fields);
 		}
 
 		const richKinds = new Set(

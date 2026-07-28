@@ -749,12 +749,7 @@ export function resolveStylesheet(
 			const keyword = cssWideKeyword(expanded);
 			if (keyword) {
 				specifiedStyleProperties.add("font-size");
-				if (
-					keyword === "revert" ||
-					((keyword === "inherit" || keyword === "unset") && !parent?.specifiedStyleProperties?.includes("font-size"))
-				) {
-					hostBaseStyleProperties.add("font-size");
-				}
+				if (keyword === "revert") hostBaseStyleProperties.add("font-size");
 				const wide = cssWideValue(keyword, "font-size", base.style, parent?.style);
 				if (wide === undefined) delete style["font-size"];
 				else style["font-size"] = wide;
@@ -852,14 +847,7 @@ export function resolveStylesheet(
 					applyStructuralCssWide(keyword, property, structural, base, parent, builderPageSize(context, node.node.key));
 				} else {
 					specifiedStyleProperties.add(property);
-					if (
-						keyword === "revert" ||
-						((keyword === "inherit" || keyword === "unset") &&
-							definition.inheritable &&
-							!parent?.specifiedStyleProperties?.includes(property))
-					) {
-						hostBaseStyleProperties.add(property);
-					}
+					if (keyword === "revert") hostBaseStyleProperties.add(property);
 					const wide = cssWideValue(keyword, property, base.style, parent?.style);
 					if (wide === undefined) delete style[property];
 					else style[property] = wide;

@@ -14,7 +14,12 @@ import {
 import { semanticNodeKeys } from "../../semantic/node-keys";
 import { getRichTextSemanticNodeKey } from "../../semantic/rich-text-keys";
 import { useSectionStyleRule, useTemplateStyle } from "./context";
-import { normalizeRichTextHtml, richTextMarkClassName } from "./rich-text-html";
+import {
+	normalizeRichTextHtml,
+	projectNormalizedRichTextHtml,
+	richTextMarkClassName,
+	richTextSemanticNodeKeyAttribute,
+} from "./rich-text-html";
 import { renderRichTextParagraph, toRichTextStyleArray } from "./rich-text-renderers";
 import {
 	createRichTextProseSpacing,
@@ -78,7 +83,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 	const fieldVisible = useSemanticNodeVisible(fieldNodeKey);
 	const richTextResolved = useResolvedNode(richTextNodeKey);
 	const richTextVisible = useSemanticNodeVisible(richTextNodeKey);
-	const { resolveNode, isNodeVisible } = useSemanticNodeBindings();
+	const { resolveNode, isNodeVisible, renderedChildKeysFor } = useSemanticNodeBindings();
 	const rtlTextWrapStyle: Style | undefined = rtl ? { direction: "rtl", textAlign: "right" } : undefined;
 
 	const boldStyle = useTemplateStyle("bold");
@@ -102,12 +107,16 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 	);
 	const proseSpacing = createRichTextProseSpacing(bodyLineHeight);
 
-	const html = normalizeRichTextHtml(children, { direction: rtl ? "rtl" : "ltr" });
+	const normalizedHtml = normalizeRichTextHtml(children, { direction: rtl ? "rtl" : "ltr" });
+	const html = richTextNodeKey
+		? projectNormalizedRichTextHtml(normalizedHtml, richTextNodeKey, renderedChildKeysFor)
+		: normalizedHtml;
 
 	if (!html || !fieldVisible || !richTextVisible) return null;
 
 	const keyFor = (element: Parameters<typeof getRichTextSemanticNodeKey>[1]) =>
-		richTextNodeKey ? getRichTextSemanticNodeKey(richTextNodeKey, element, richTextMarkClassName) : undefined;
+		element.getAttribute(richTextSemanticNodeKeyAttribute) ??
+		(richTextNodeKey ? getRichTextSemanticNodeKey(richTextNodeKey, element, richTextMarkClassName) : undefined);
 	const resolvedFor = (element: Parameters<typeof getRichTextSemanticNodeKey>[1]) => resolveNode(keyFor(element));
 	const renderText = ({
 		element,

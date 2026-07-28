@@ -1,12 +1,19 @@
+import type { Style } from "@react-pdf/types";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
+import type { TemplateStyleSlots } from "../templates/shared/types";
 import { describe, expect, it, vi } from "vitest";
 import { createCanvas } from "@napi-rs/canvas";
 import { pdf } from "@react-pdf/renderer";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createElement } from "react";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { Document, Page } from "#react-pdf-renderer";
+import { RenderProvider } from "../context";
 import { ResumeDocument } from "../document";
+import { TemplateProvider } from "../templates/shared/context";
+import { Text } from "../templates/shared/primitives";
+import { SemanticTextRuns } from "../templates/shared/sections";
 import { createBindingInventory } from "./binding-inventory";
 import { getTemplateSemanticBindingRegistry } from "./template-manifest";
 import { buildSemanticTree } from "./tree";
@@ -96,6 +103,83 @@ const rasterizeFirstPage = async (bytes: Uint8Array): Promise<Buffer> => {
 		viewport,
 	}).promise;
 	return canvas.toBuffer("image/png");
+};
+
+type CombinedFieldRun = {
+	field: string;
+	value: string;
+	prefix?: string;
+	suffix?: string;
+};
+
+type CombinedFieldRasterCase = {
+	name: string;
+	runs: readonly CombinedFieldRun[];
+	separator: string;
+	style?: Style;
+};
+
+const preSplitCombinedText = ({ runs, separator, style }: CombinedFieldRasterCase) => {
+	const text = runs
+		.filter(({ value }) => value.trim().length > 0)
+		.map(({ value, prefix = "", suffix = "" }) => `${prefix}${value}${suffix}`)
+		.join(separator);
+
+	return (
+		<Text bindSemanticNode={false} {...(style === undefined ? {} : { style })}>
+			{text}
+		</Text>
+	);
+};
+
+const rasterFixtureStyles = {
+	text: {
+		fontFamily: "Helvetica",
+		fontSize: 11,
+		fontWeight: "400",
+		lineHeight: 1.25,
+		color: "#111111",
+	},
+} satisfies TemplateStyleSlots;
+
+const CombinedFieldRasterDocument = ({
+	testCase,
+	preSplit,
+}: {
+	testCase: CombinedFieldRasterCase;
+	preSplit: boolean;
+}) => {
+	const data = structuredClone(defaultResumeData);
+
+	return (
+		<Document>
+			<Page size={{ width: 320, height: 96 }} style={{ padding: 18 }}>
+				<RenderProvider data={data}>
+					<TemplateProvider
+						pageNodeKey="page-1"
+						styles={rasterFixtureStyles}
+						colors={{ foreground: "#111111", background: "#ffffff", primary: "#111111" }}
+					>
+						{preSplit ? (
+							preSplitCombinedText(testCase)
+						) : (
+							<SemanticTextRuns runs={testCase.runs} separator={testCase.separator} style={testCase.style} />
+						)}
+					</TemplateProvider>
+				</RenderProvider>
+			</Page>
+		</Document>
+	);
+};
+
+const renderCombinedFieldRaster = async (testCase: CombinedFieldRasterCase, preSplit: boolean): Promise<Buffer> => {
+	const renderer = await vi.importActual<typeof import("@react-pdf/renderer")>("@react-pdf/renderer");
+	const element = createElement(CombinedFieldRasterDocument, {
+		testCase,
+		preSplit,
+	}) as unknown as Parameters<typeof renderer.renderToBuffer>[0];
+	const bytes = new Uint8Array(await renderer.renderToBuffer(element));
+	return rasterizeFirstPage(bytes);
 };
 
 const expectColor = (document: HostNode, text: string, color: string) => {
@@ -191,6 +275,58 @@ describe("combined PDF field bindings", () => {
 			const semantic = await rasterizeFirstPage(await renderPdf(template, fixture("semantic", section)));
 
 			expect(semantic.equals(legacy)).toBe(true);
+		},
+	);
+
+	it.each([
+		{
+			name: "Meowth experience position and location",
+			runs: [
+				{ field: "position", value: "Engineer" },
+				{ field: "location", value: "London", prefix: "(", suffix: ")" },
+			],
+			separator: " ",
+		},
+		{
+			name: "Meowth education area and degree",
+			runs: [
+				{ field: "area", value: "Mathematics" },
+				{ field: "degree", value: "BSc", prefix: "(", suffix: ")" },
+			],
+			separator: " ",
+		},
+		{
+			name: "Meowth education grade and location",
+			runs: [
+				{ field: "grade", value: "First" },
+				{ field: "location", value: "Cambridge" },
+			],
+			separator: " • ",
+		},
+		{
+			name: "Onyx education degree and grade",
+			runs: [
+				{ field: "degree", value: "BSc" },
+				{ field: "grade", value: "First" },
+			],
+			separator: " • ",
+		},
+		{
+			name: "Onyx education location and period",
+			runs: [
+				{ field: "location", value: "Cambridge" },
+				{ field: "period", value: "1835" },
+			],
+			separator: " • ",
+			style: { textAlign: "right" },
+		},
+	] satisfies CombinedFieldRasterCase[])(
+		"keeps the current split $name raster-identical to a test-only pre-split single Text",
+		async (testCase) => {
+			const preSplit = await renderCombinedFieldRaster(testCase, true);
+			const split = await renderCombinedFieldRaster(testCase, false);
+
+			expect(split.equals(preSplit)).toBe(true);
 		},
 	);
 });

@@ -1,12 +1,15 @@
 import type { Style } from "@react-pdf/types";
-import type { ComponentProps, ReactNode } from "react";
+import type { ComponentProps, ReactElement, ReactNode } from "react";
 import type { StyleInput } from "./styles";
 import { Icon as PhosphorIcon } from "phosphor-icons-react-pdf/dynamic";
+import { Children, cloneElement, isValidElement } from "react";
 import { Image, Link as PdfLink, Text as PdfText, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapter";
 import {
+	projectRenderedChildren,
 	SemanticNodeKeyProvider,
+	useRenderedChildKeys,
 	useResolvedNode,
 	useSemanticNodeExists,
 	useSemanticNodeKey,
@@ -33,6 +36,44 @@ type SemanticLinkProps = SemanticProps & {
 
 const getChildren = (props: object): ReactNode =>
 	"children" in props ? (props as { children?: ReactNode }).children : undefined;
+
+const contactChildNodeKey = (contactListNodeKey: string, child: ReactNode): string | undefined => {
+	if (!isValidElement(child)) return;
+	const props = child.props as Record<string, unknown>;
+	if (typeof props.primitiveNodeKey === "string") return props.primitiveNodeKey;
+	if (typeof props.nodeKey === "string") return props.nodeKey;
+	if ("email" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "email");
+	if ("phone" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "phone");
+	if ("location" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "location");
+	if ("website" in props) return semanticNodeKeys.contactItem(contactListNodeKey, "website");
+	if (typeof props.field === "object" && props.field !== null && "id" in props.field) {
+		return semanticNodeKeys.contactItem(contactListNodeKey, "custom", String(props.field.id));
+	}
+};
+
+const projectContactChildren = (
+	children: ReactNode,
+	contactListNodeKey: string,
+	renderedChildKeys: readonly string[],
+): ReactNode => {
+	const authored = Children.toArray(children);
+	const nested = authored.map((child) => {
+		if (!isValidElement(child) || contactChildNodeKey(contactListNodeKey, child)) return child;
+		const element = child as ReactElement<{ children?: ReactNode }>;
+		if (element.props.children === undefined) return child;
+		return cloneElement(
+			element,
+			{},
+			projectContactChildren(element.props.children, contactListNodeKey, renderedChildKeys),
+		);
+	});
+	const entries = nested.flatMap((child) => {
+		const nodeKey = contactChildNodeKey(contactListNodeKey, child);
+		return nodeKey ? [{ nodeKey, value: child }] : [];
+	});
+
+	return entries.length === nested.length ? projectRenderedChildren(renderedChildKeys, entries) : nested;
+};
 
 const usePrimitiveNodeKey = ({
 	nodeKey,
@@ -353,11 +394,16 @@ export const SemanticContactListView = ({ style, ...props }: ComponentProps<type
 	const headerNodeKey = useSemanticNodeKey();
 	const nodeKey = headerNodeKey ? semanticNodeKeys.contactList(headerNodeKey) : undefined;
 	const resolved = useResolvedNode(nodeKey);
+	const renderedChildKeys = useRenderedChildKeys(nodeKey);
 	const visible = useSemanticNodeVisible(nodeKey);
 	if (!visible) return null;
+	const children =
+		nodeKey && renderedChildKeys ? projectContactChildren(props.children, nodeKey, renderedChildKeys) : props.children;
 
 	return (
-		<View {...props} {...resolvedPdfFlowProps(resolved)} style={composeStyles(asStyleInput(style), resolved.style)} />
+		<View {...props} {...resolvedPdfFlowProps(resolved)} style={composeStyles(asStyleInput(style), resolved.style)}>
+			{children}
+		</View>
 	);
 };
 

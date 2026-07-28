@@ -171,6 +171,48 @@ describe("semantic binding inventory", () => {
 		}
 	});
 
+	it("does not claim item-header Views for direct language and reference Text siblings", () => {
+		const data = structuredClone(defaultResumeData);
+		data.sections.languages.items = [
+			{ id: "language-1", hidden: false, language: "English", fluency: "Native", level: 0 },
+		];
+		data.sections.references.items = [
+			{
+				id: "reference-1",
+				hidden: false,
+				name: "Charles Babbage",
+				position: "Inventor",
+				phone: "+44 123",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
+		const tree = buildSemanticTree({
+			data,
+			template: "onyx",
+			page: { fullWidth: true, main: ["languages", "references"], sidebar: [] },
+			pageNumber: 1,
+			showHeader: false,
+		});
+		const inventory = createBindingInventory(tree);
+
+		for (const itemId of ["language-1", "reference-1"]) {
+			const item = required(
+				findNode(tree, (candidate) => candidate.kind === "item" && candidate.id === itemId),
+				`${itemId} item`,
+			);
+
+			expect(item.children.some(({ kind }) => kind === "item-header")).toBe(false);
+			expect(
+				item.children
+					.filter(({ kind }) => kind === "field")
+					.every(
+						({ key }) => inventory.bindings[key]?.type === "primitive" && inventory.bindings[key].primitive === "Text",
+					),
+			).toBe(true);
+		}
+	});
+
 	it("aliases each rich-text identity to its field primitive without claiming a second root View", () => {
 		const data = structuredClone(defaultResumeData);
 		data.summary.content = "<p>Summary</p>";

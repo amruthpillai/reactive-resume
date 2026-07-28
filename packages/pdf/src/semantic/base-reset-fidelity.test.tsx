@@ -66,6 +66,35 @@ const finalTextStyle = async (template: Template, text: string, rule = "") => {
 	return mergedStyle(findText(instance.container.document as HostNode, text));
 };
 
+const finalOnyxCompanyStyle = async (keyword?: "inherit" | "initial" | "revert" | "unset") => {
+	const data = structuredClone(defaultResumeData);
+	data.picture.hidden = true;
+	data.metadata.typography.body.fontWeights = ["400", "500"];
+	data.sections.experience.items = [
+		{
+			id: "experience-1",
+			hidden: false,
+			company: "Analytical Engines",
+			position: "Engineer",
+			location: "London",
+			period: "1842",
+			website: { url: "", label: "", inlineLink: false },
+			description: "",
+			roles: [],
+		},
+	];
+	data.metadata.layout.pages = [{ fullWidth: true, main: ["experience"], sidebar: [] }];
+	const text = `@rr-version 1; ${
+		keyword ? `section[type="experience"] field[name="company"] { font-weight: ${keyword}; }` : ""
+	}`;
+	const stylesheet = { languageVersion: 1, text };
+	data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+	const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+	const instance = pdf(element);
+	await expect.poll(() => instance.container.document).not.toBeNull();
+	return mergedStyle(findText(instance.container.document as HostNode, "Analytical Engines"));
+};
+
 describe("PDF semantic base and reset fidelity", () => {
 	it("keeps Bronzor's first heading weight and lets an explicit last weight override it", async () => {
 		expect(await finalTextStyle("bronzor", "Expertise")).toMatchObject({ fontWeight: "400" });
@@ -96,12 +125,34 @@ describe("PDF semantic base and reset fidelity", () => {
 		});
 	});
 
-	it.each(["inherit", "unset", "revert"])(
-		"resets Chikorita's sidebar field color with %s against the actual placement base",
+	it.each(["inherit", "unset"])(
+		"cancels Chikorita's sidebar field color with %s and emits the inherited parent value",
 		async (keyword) => {
 			expect(
 				await finalTextStyle("chikorita", "TypeScript", `field[name='name'] { color: ${keyword}; }`),
-			).toMatchObject({ color: "#eeeeee" });
+			).toMatchObject({ color: "#111111" });
 		},
 	);
+
+	it("restores Chikorita's sidebar field color with revert", async () => {
+		expect(await finalTextStyle("chikorita", "TypeScript", "field[name='name'] { color: revert; }")).toMatchObject({
+			color: "#eeeeee",
+		});
+	});
+
+	it.each(["inherit", "unset"] as const)(
+		"cancels Onyx's local company weight with %s and emits the inherited parent value",
+		async (keyword) => {
+			expect(await finalOnyxCompanyStyle(keyword)).toMatchObject({ fontWeight: "400" });
+		},
+	);
+
+	it("cancels Onyx's local company weight with initial", async () => {
+		expect(await finalOnyxCompanyStyle("initial")).toMatchObject({ fontWeight: undefined });
+	});
+
+	it("restores Onyx's local company weight with revert", async () => {
+		expect(await finalOnyxCompanyStyle()).toMatchObject({ fontWeight: "500" });
+		expect(await finalOnyxCompanyStyle("revert")).toMatchObject({ fontWeight: "500" });
+	});
 });

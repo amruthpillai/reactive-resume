@@ -29,10 +29,12 @@ import { getResumeSectionIcon } from "../../section-icon";
 import { getResumeSectionTitle } from "../../section-title";
 import { resolvedPdfFlowProps } from "../../semantic/adapter";
 import {
+	projectRenderedChildren,
 	SemanticItemNodeKeyProvider,
 	SemanticNodeKeyProvider,
 	useRenderedChildKeys,
 	useResolvedNode,
+	useSemanticNodeExists,
 	useSemanticNodeKey,
 	useSemanticNodeVisible,
 	useSemanticSectionNodeKey,
@@ -205,7 +207,7 @@ const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] =>
 
 const useSectionItemsContext = () => use(SectionItemsContext);
 
-const SemanticTextRuns = ({ runs, separator, style }: SemanticTextRunsProps) => {
+export const SemanticTextRuns = ({ runs, separator, style }: SemanticTextRunsProps) => {
 	const visibleRuns = runs.filter(({ value }) => hasSplitRowText(value));
 	if (visibleRuns.length === 0) return null;
 
@@ -498,32 +500,54 @@ const InlineItemHeader = ({
 	const trailingStyle = useTemplateStyle("inlineItemHeaderTrailing");
 
 	const resolved = useResolvedNode(nodeKey);
+	const renderedChildKeys = useRenderedChildKeys(nodeKey);
 	const visible = useSemanticNodeVisible(nodeKey);
 	if (!visible) return null;
+	const parts = [
+		{
+			nodeKey: semanticTemplatePartNodeKey(nodeKey, "inline-item-header-leading") ?? "inline-item-header-leading",
+			value: (
+				<SemanticTemplatePartView
+					key="inline-item-header-leading"
+					ownerNodeKey={nodeKey}
+					partKeys={["inline-item-header-leading"]}
+					style={composeStyles(leadingStyle)}
+				>
+					{leading}
+				</SemanticTemplatePartView>
+			),
+		},
+		{
+			nodeKey: semanticTemplatePartNodeKey(nodeKey, "inline-item-header-middle") ?? "inline-item-header-middle",
+			value: (
+				<SemanticTemplatePartView
+					key="inline-item-header-middle"
+					ownerNodeKey={nodeKey}
+					partKeys={["inline-item-header-middle"]}
+					style={composeStyles(middleStyle)}
+				>
+					{middle}
+				</SemanticTemplatePartView>
+			),
+		},
+		{
+			nodeKey: semanticTemplatePartNodeKey(nodeKey, "inline-item-header-trailing") ?? "inline-item-header-trailing",
+			value: (
+				<SemanticTemplatePartView
+					key="inline-item-header-trailing"
+					ownerNodeKey={nodeKey}
+					partKeys={["inline-item-header-trailing"]}
+					style={composeStyles(trailingStyle)}
+				>
+					{trailing}
+				</SemanticTemplatePartView>
+			),
+		},
+	];
 
 	return (
 		<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(inlineItemHeaderStyle, resolved.style)}>
-			<SemanticTemplatePartView
-				ownerNodeKey={nodeKey}
-				partKeys={["inline-item-header-leading"]}
-				style={composeStyles(leadingStyle)}
-			>
-				{leading}
-			</SemanticTemplatePartView>
-			<SemanticTemplatePartView
-				ownerNodeKey={nodeKey}
-				partKeys={["inline-item-header-middle"]}
-				style={composeStyles(middleStyle)}
-			>
-				{middle}
-			</SemanticTemplatePartView>
-			<SemanticTemplatePartView
-				ownerNodeKey={nodeKey}
-				partKeys={["inline-item-header-trailing"]}
-				style={composeStyles(trailingStyle)}
-			>
-				{trailing}
-			</SemanticTemplatePartView>
+			{projectRenderedChildren(renderedChildKeys, parts)}
 		</View>
 	);
 };
@@ -556,7 +580,9 @@ const SectionItemHeader = ({ children }: SectionItemHeaderProps) => {
 	const resolved = useResolvedNode(itemHeaderNodeKey);
 	const mainItemHeaderBorder = useTemplateFeature("mainItemHeaderBorder");
 	const sectionItemHeaderStyle = useTemplateStyle("sectionItemHeader");
+	const exists = useSemanticNodeExists(itemHeaderNodeKey);
 	const visible = useSemanticNodeVisible(itemHeaderNodeKey);
+	if (!exists) return <>{children}</>;
 	if (!visible) return null;
 
 	if (!mainItemHeaderBorder) {
@@ -688,6 +714,37 @@ const ProfileSection = ({ sectionId = "profiles", sectionData }: ItemSectionProp
 	);
 };
 
+type ExperienceRolesProps = {
+	roles: ExperienceItem["roles"];
+	splitRowStyle: StyleInput;
+	alignEndStyle: StyleInput;
+};
+
+const ExperienceRoles = ({ roles, splitRowStyle, alignEndStyle }: ExperienceRolesProps) => {
+	const itemNodeKey = useSemanticNodeKey();
+	const renderedChildKeys = useRenderedChildKeys(itemNodeKey);
+	const entries = roles.map((role) => ({
+		nodeKey: itemNodeKey ? semanticNodeKeys.item(itemNodeKey, role.id) : role.id,
+		value: (
+			<SemanticItemNodeKeyProvider key={role.id} itemId={role.id}>
+				<Div bindCurrentNode>
+					<SectionItemHeader>
+						<View style={composeStyles(splitRowStyle)}>
+							<Text semanticField="position">{role.position}</Text>
+							<Text semanticField="period" style={composeStyles(alignEndStyle)}>
+								{role.period}
+							</Text>
+						</View>
+					</SectionItemHeader>
+					<RichText semanticField="description">{role.description}</RichText>
+				</Div>
+			</SemanticItemNodeKeyProvider>
+		),
+	}));
+
+	return <>{projectRenderedChildren(renderedChildKeys, entries)}</>;
+};
+
 const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectionProps<ExperienceItem> = {}) => {
 	const data = useRender();
 	const experience = sectionData ?? data.sections.experience;
@@ -768,21 +825,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 						<SectionItem key={item.id} itemId={item.id}>
 							<SectionItemHeader>{inlineItemHeader ? renderInlineHeader() : renderSplitHeader()}</SectionItemHeader>
 
-							{item.roles.map((role) => (
-								<SemanticItemNodeKeyProvider key={role.id} itemId={role.id}>
-									<Div bindCurrentNode>
-										<SectionItemHeader>
-											<View style={composeStyles(splitRowStyle)}>
-												<Text semanticField="position">{role.position}</Text>
-												<Text semanticField="period" style={composeStyles(alignEndStyle)}>
-													{role.period}
-												</Text>
-											</View>
-										</SectionItemHeader>
-										<RichText semanticField="description">{role.description}</RichText>
-									</Div>
-								</SemanticItemNodeKeyProvider>
-							))}
+							<ExperienceRoles roles={item.roles} splitRowStyle={splitRowStyle} alignEndStyle={alignEndStyle} />
 
 							{item.roles.length === 0 && <RichText semanticField="description">{item.description}</RichText>}
 
