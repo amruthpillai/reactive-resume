@@ -53,6 +53,7 @@ const borderStyles = new Set([
 	"outset",
 ]);
 const cssWideKeywords = new Set(["inherit", "initial", "revert", "unset"]);
+const maxMediaQueryBranches = RRSS_LIMITS_V1.maxRules;
 
 function isCssWideKeyword(value: string): boolean {
 	return cssWideKeywords.has(value.toLowerCase());
@@ -488,7 +489,7 @@ function splitOutsideParentheses(value: string, separator: "," | "and"): string[
 function parseMedia(node: AstNode, diagnostics: RrssDiagnostic[]): readonly CompiledMediaQuery[] | null {
 	const source = node.prelude ? csstree.generate(node.prelude) : "";
 	const querySources = splitOutsideParentheses(source, ",");
-	if (querySources.length > RRSS_LIMITS_V1.maxMediaQueryBranches) {
+	if (querySources.length > maxMediaQueryBranches) {
 		diagnostic(diagnostics, "RESOURCE_LIMIT", "The media query list exceeds the RRSS branch limit.", node);
 		return null;
 	}
@@ -529,7 +530,7 @@ function combineMedia(
 	child: readonly CompiledMediaQuery[],
 ): readonly CompiledMediaQuery[] | null {
 	const parentBranches = Math.max(parent.length, 1);
-	if (child.length > Math.floor(RRSS_LIMITS_V1.maxMediaQueryBranches / parentBranches)) return null;
+	if (child.length > Math.floor(maxMediaQueryBranches / parentBranches)) return null;
 	if (parent.length === 0) return child;
 	return parent.flatMap((left) => child.map((right) => ({ features: [...left.features, ...right.features] })));
 }

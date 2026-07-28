@@ -89,6 +89,23 @@ function semanticTreeOfSize(size: number, shape: "deep" | "wide"): SemanticNode 
 	return root;
 }
 
+function oversizedFrontierTree(): { tree: SemanticNode; childReads: () => number } {
+	let childReads = 0;
+	const children = new Proxy({} as readonly SemanticNode[], {
+		get: (_target, property) => {
+			if (property === "length") return RRSS_LIMITS_V1.maxSemanticNodes + 1;
+			if (property === Symbol.iterator || (typeof property === "string" && /^\d+$/.test(property))) {
+				childReads++;
+				throw new Error("Oversized frontier entries must not be read.");
+			}
+		},
+	});
+	return {
+		tree: node("oversized-root", "resume", { children }),
+		childReads: () => childReads,
+	};
+}
+
 describe("RRSS cascade and structural resolution", () => {
 	it("resolves base, normal and important rules by specificity then source order", () => {
 		const result = resolve(`
@@ -406,5 +423,14 @@ describe("RRSS cascade and structural resolution", () => {
 			expect(result.nodes).toEqual({});
 			expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }));
 		}
+	});
+
+	it("rejects an oversized root frontier without reading or queueing child entries", () => {
+		const frontier = oversizedFrontierTree();
+		const result = resolveStylesheet({ languageVersion: 1, rules: [] }, frontier.tree, context);
+
+		expect(result.nodes).toEqual({});
+		expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }));
+		expect(frontier.childReads()).toBe(0);
 	});
 });

@@ -12,7 +12,12 @@ function flatten(root: SemanticNode): SemanticNode[] | null {
 		if (!node) break;
 		if (nodes.length >= RRSS_LIMITS_V1.maxSemanticNodes) return null;
 		nodes.push(node);
-		stack.push(...node.children);
+		const childCount = node.children.length;
+		if (childCount > RRSS_LIMITS_V1.maxSemanticNodes - nodes.length - stack.length) return null;
+		for (let index = 0; index < childCount; index++) {
+			const child = node.children[index];
+			if (child) stack.push(child);
+		}
 	}
 	return nodes;
 }

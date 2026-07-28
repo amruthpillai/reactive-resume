@@ -57,6 +57,23 @@ function semanticTreeOfSize(size: number, shape: "deep" | "wide"): SemanticNode 
 	return root;
 }
 
+function oversizedFrontierTree(): { tree: SemanticNode; childReads: () => number } {
+	let childReads = 0;
+	const children = new Proxy({} as readonly SemanticNode[], {
+		get: (_target, property) => {
+			if (property === "length") return RRSS_LIMITS_V1.maxSemanticNodes + 1;
+			if (property === Symbol.iterator || (typeof property === "string" && /^\d+$/.test(property))) {
+				childReads++;
+				throw new Error("Oversized frontier entries must not be read.");
+			}
+		},
+	});
+	return {
+		tree: { key: "oversized-root", kind: "resume", attributes: {}, roles: [], children },
+		childReads: () => childReads,
+	};
+}
+
 describe("RRSS semantic analysis", () => {
 	it("warns about selectors that match no immutable semantic node", () => {
 		const program = compile('@rr-version 1; section[type="education"] { color: red; }');
@@ -89,5 +106,13 @@ describe("RRSS semantic analysis", () => {
 				expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }),
 			);
 		}
+	});
+
+	it("rejects an oversized root frontier without reading or queueing child entries", () => {
+		const frontier = oversizedFrontierTree();
+		const diagnostics = analyzeStylesheet({ languageVersion: 1, rules: [] }, frontier.tree);
+
+		expect(diagnostics).toContainEqual(expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }));
+		expect(frontier.childReads()).toBe(0);
 	});
 });

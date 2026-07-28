@@ -65,6 +65,8 @@ const absoluteUnitToPt = {
 } as const;
 
 const cssWideKeywords = new Set(["inherit", "initial", "revert", "unset"]);
+const maxVariableExpansionOutputCodeUnits = RRSS_LIMITS_V1.maxSourceBytes;
+const maxVariableExpansionWorkCodeUnits = RRSS_LIMITS_V1.maxSourceBytes * 4;
 
 const structuralKeys: Readonly<Record<string, keyof StructuralPresentation>> = {
 	"break-before": "breakBefore",
@@ -107,7 +109,9 @@ function flattenTree(root: SemanticNode): FlatNode[] | null {
 		const pageKey = next.node.kind === "page" ? next.node.key : next.pageKey;
 		const flat = { node: next.node, parent: next.parent, pageKey };
 		result.push(flat);
-		for (let index = next.node.children.length - 1; index >= 0; index--) {
+		const childCount = next.node.children.length;
+		if (childCount > RRSS_LIMITS_V1.maxSemanticNodes - result.length - stack.length) return null;
+		for (let index = childCount - 1; index >= 0; index--) {
 			const child = next.node.children[index];
 			if (child) stack.push({ node: child, parent: flat, pageKey });
 		}
@@ -259,8 +263,8 @@ function expandVariables(
 		return null;
 	}
 	if (
-		source.length > RRSS_LIMITS_V1.maxVariableExpansionOutputCodeUnits ||
-		source.length > RRSS_LIMITS_V1.maxVariableExpansionWorkCodeUnits - budget.work
+		source.length > maxVariableExpansionOutputCodeUnits ||
+		source.length > maxVariableExpansionWorkCodeUnits - budget.work
 	) {
 		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
 		return null;
@@ -268,7 +272,7 @@ function expandVariables(
 	budget.work += source.length;
 
 	let value = decodeCssEscapes(source);
-	if (value.length > RRSS_LIMITS_V1.maxVariableExpansionOutputCodeUnits) {
+	if (value.length > maxVariableExpansionOutputCodeUnits) {
 		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
 		return null;
 	}
@@ -310,8 +314,8 @@ function expandVariables(
 		if (expanded === null) return null;
 		const nextLength = (match.index ?? 0) + expanded.length + value.length - closing - 1;
 		if (
-			nextLength > RRSS_LIMITS_V1.maxVariableExpansionOutputCodeUnits ||
-			nextLength > RRSS_LIMITS_V1.maxVariableExpansionWorkCodeUnits - budget.work
+			nextLength > maxVariableExpansionOutputCodeUnits ||
+			nextLength > maxVariableExpansionWorkCodeUnits - budget.work
 		) {
 			diagnostics.push(
 				createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range),
