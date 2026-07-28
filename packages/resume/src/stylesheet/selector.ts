@@ -1,6 +1,6 @@
 import type { CssNode } from "css-tree";
 import type { SemanticNode } from "./types";
-import { calculateForAST } from "@bramus/specificity";
+import SpecificityCalculator from "@bramus/specificity";
 import * as csstree from "css-tree";
 import { SEMANTIC_NODE_KINDS, SEMANTIC_REGISTRY_V1 } from "./registry/semantic";
 
@@ -204,7 +204,7 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 			return { type: "attribute", name, matcher: matcher ?? null, value };
 		}
 		case "PseudoClassSelector": {
-			const name = astName(node).toLowerCase();
+			const name = astName(node);
 			if (["root", "first-child", "last-child", "only-child"].includes(name)) {
 				if (node.children !== null && node.children !== undefined)
 					throw new Error(`:${name} does not accept arguments.`);
@@ -261,7 +261,7 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 	if (selectors.length === 0 && compounds.length > 0) throw new Error("Selector cannot end with a combinator.");
 	validateCompound(selectors);
 	compounds.push({ selectors });
-	const specificity = calculateForAST(node).toArray();
+	const specificity = SpecificityCalculator.calculateForAST(node).toArray();
 	return { compounds, combinators, specificity: [specificity[0], specificity[1], specificity[2]] };
 }
 

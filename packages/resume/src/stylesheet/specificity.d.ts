@@ -3,5 +3,10 @@ declare module "@bramus/specificity" {
 		toArray(): [number, number, number];
 	};
 
-	export function calculateForAST(selector: object): CalculatedSpecificity;
+	// biome-ignore lint/complexity/noStaticOnlyClass: mirrors the installed dependency's default export
+	class Specificity {
+		static calculateForAST(selector: object): CalculatedSpecificity;
+	}
+
+	export default Specificity;
 }
