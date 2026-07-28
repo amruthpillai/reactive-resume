@@ -1,0 +1,11 @@
+/* biome-ignore lint/suspicious/noUnknownAtRules: RRSS uses a version directive. */
+@rr-version 1;
+
+:root {
+	--accent: var(--rr-primary-color);
+}
+
+section-heading {
+	color: var(--accent);
+	break-inside: avoid;
+}

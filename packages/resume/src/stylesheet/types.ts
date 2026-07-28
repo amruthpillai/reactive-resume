@@ -23,7 +23,37 @@ export type RrssDiagnostic = {
 
 export type StyleProgram = {
 	languageVersion: number;
-	rules: readonly unknown[];
+	rules: readonly CompiledStyleRule[];
+};
+
+export type CompiledDeclaration = {
+	property: string;
+	value: string;
+	important: boolean;
+	sourceOrder: number;
+	range: SourceRange;
+};
+
+export type MediaFeature =
+	| {
+			name: "width" | "height";
+			comparison: "equal" | "min" | "max";
+			value: string;
+	  }
+	| {
+			name: "orientation";
+			value: "landscape" | "portrait";
+	  };
+
+export type CompiledMediaQuery = {
+	features: readonly MediaFeature[];
+};
+
+export type CompiledStyleRule = {
+	selector: import("./selector").CompiledSelector;
+	declarations: readonly CompiledDeclaration[];
+	media: readonly CompiledMediaQuery[];
+	range: SourceRange;
 };
 
 export type SemanticNodeKind =
@@ -79,6 +109,47 @@ export type BaseSettingsSnapshot = Pick<ResumeData, "picture"> & {
 	typography: Typography;
 	page: Page;
 	layout: Pick<Layout, "sidebarWidth">;
+};
+
+export type AuthoredPageContext = {
+	pageKey: string;
+	width: number;
+	height: number;
+};
+
+export type ResolvedNodeStyle = {
+	style: Readonly<Record<string, string | number>>;
+	structural: StructuralPresentation;
+	hidden: boolean;
+	order: number;
+};
+
+export type ResolvedPageSize = "A4" | "LETTER" | { width: number; height?: number };
+
+export type StructuralPresentation = {
+	breakBefore?: "page";
+	breakInside?: "avoid";
+	fixed?: boolean;
+	minPresenceAhead?: number;
+	orphans?: number;
+	widows?: number;
+	pageSize?: ResolvedPageSize;
+};
+
+export type ResolveStylesheetInput = {
+	program: StyleProgram;
+	tree: SemanticNode;
+	baseStyles: Readonly<Record<string, ResolvedNodeStyle>>;
+	baseSettings: BaseSettingsSnapshot;
+	pages: readonly AuthoredPageContext[];
+};
+
+export type ResolveStylesheetContext = Omit<ResolveStylesheetInput, "program" | "tree">;
+
+export type ResolveStylesheetResult = {
+	nodes: Readonly<Record<string, ResolvedNodeStyle>>;
+	renderTree: SemanticNode;
+	diagnostics: readonly RrssDiagnostic[];
 };
 
 export type ResolvedPageDimensions = {

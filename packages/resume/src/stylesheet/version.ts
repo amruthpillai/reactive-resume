@@ -1,11 +1,11 @@
-import type { ParsedStylesheet, StyleProgram } from "./types";
+import type { CompiledStyleRule, StyleProgram } from "./types";
 
 export const SUPPORTED_RRSS_VERSIONS = Object.freeze([1] as const);
 
-type StylesheetCompiler = (stylesheet: ParsedStylesheet) => StyleProgram;
+type StylesheetCompiler = (rules: readonly CompiledStyleRule[]) => StyleProgram;
 
-function compileVersionOne(stylesheet: ParsedStylesheet): StyleProgram {
-	return Object.freeze({ languageVersion: 1, rules: Object.freeze([...stylesheet.rules]) });
+function compileVersionOne(rules: readonly CompiledStyleRule[]): StyleProgram {
+	return Object.freeze({ languageVersion: 1, rules: Object.freeze([...rules]) });
 }
 
 const COMPILERS = Object.freeze({ 1: compileVersionOne } satisfies Record<

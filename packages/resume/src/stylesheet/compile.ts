@@ -1,9 +1,13 @@
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
-import type { CssNode } from "css-tree";
 import type { CompileStylesheetResult } from "./types";
+import { stylesheetCacheKey, stylesheetCompilationCache, stylesheetFingerprint } from "./cache";
 import { createDiagnostic } from "./diagnostics";
+import { RRSS_LIMITS_V1 } from "./limits";
 import { parseStylesheet } from "./parse";
-import { compileSelector } from "./selector";
+import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
+import { SEMANTIC_NODE_KINDS } from "./registry/semantic";
+import { SYSTEM_VARIABLE_REGISTRY_V1 } from "./registry/system-variables";
+import { compileProgram, cssFunctionDepth } from "./values";
 import { getStylesheetCompiler } from "./version";
 
 function isPositiveInteger(value: string): boolean {
@@ -11,6 +15,27 @@ function isPositiveInteger(value: string): boolean {
 }
 
 export function compileStylesheet(source: StylesheetSource): CompileStylesheetResult {
+	if (new TextEncoder().encode(source.text).byteLength > RRSS_LIMITS_V1.maxSourceBytes) {
+		return {
+			program: null,
+			diagnostics: [createDiagnostic("RESOURCE_LIMIT", "error", "The stylesheet source exceeds the RRSS byte limit.")],
+		};
+	}
+
+	if (cssFunctionDepth(source.text) > RRSS_LIMITS_V1.maxFunctionDepth) {
+		return {
+			program: null,
+			diagnostics: [createDiagnostic("RESOURCE_LIMIT", "error", "CSS function nesting exceeds the RRSS limit.")],
+		};
+	}
+
+	const registryFingerprint = stylesheetFingerprint(
+		JSON.stringify([PROPERTY_REGISTRY_V1, SEMANTIC_NODE_KINDS, SYSTEM_VARIABLE_REGISTRY_V1]),
+	);
+	const cacheKey = stylesheetCacheKey(source.languageVersion, source.text, registryFingerprint);
+	const cached = stylesheetCompilationCache.get(cacheKey);
+	if (cached) return cached;
+
 	const stylesheet = parseStylesheet(source.text);
 	const diagnostics = [...stylesheet.diagnostics];
 	const versionDirectives = stylesheet.atRules.filter((atRule) => atRule.name === "rr-version");
@@ -64,15 +89,6 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		}
 	}
 
-	for (const rule of stylesheet.rules) {
-		const prelude = (rule as CssNode).prelude as CssNode;
-		const result = compileSelector(prelude);
-		if (!result.selector) {
-			const range = prelude?.loc ? { start: { ...prelude.loc.start }, end: { ...prelude.loc.end } } : undefined;
-			diagnostics.push(createDiagnostic("INVALID_SELECTOR", "error", result.error ?? "Invalid selector.", range));
-		}
-	}
-
 	const compiler = getStylesheetCompiler(source.languageVersion);
 	if (!compiler) {
 		diagnostics.push(
@@ -84,5 +100,13 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		return { program: null, diagnostics };
 	}
 
-	return { program: compiler(stylesheet), diagnostics };
+	const compiled = compileProgram(stylesheet, source.languageVersion);
+	diagnostics.push(...compiled.diagnostics);
+	if (!compiled.program || diagnostics.some(({ severity }) => severity === "error")) {
+		return { program: null, diagnostics };
+	}
+
+	const result = { program: compiler(compiled.program.rules), diagnostics };
+	stylesheetCompilationCache.set(cacheKey, result);
+	return result;
 }

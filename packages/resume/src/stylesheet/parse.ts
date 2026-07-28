@@ -50,8 +50,9 @@ export function parseStylesheet(source: string): ParsedStylesheet {
 	if (!ast) return { ast: null, atRules: [], rules: [], diagnostics };
 
 	const rawRanges = new Set<number>();
-	csstree.walk(ast, (node: CssNode) => {
+	csstree.walk(ast, function (this: { declaration?: { property?: string } | null }, node: CssNode) {
 		if (node.type !== "Raw") return;
+		if (this.declaration?.property?.startsWith("--")) return;
 
 		const range = rangeFromLocation(node.loc);
 		if (rawRanges.has(range.start.offset)) return;
@@ -69,7 +70,12 @@ export function parseStylesheet(source: string): ParsedStylesheet {
 			: "";
 
 		return [
-			{ name: node.name.toLowerCase(), prelude, hasBlock: node.block !== null, range: rangeFromLocation(node.loc) },
+			{
+				name: csstree.ident.decode(node.name).toLowerCase(),
+				prelude,
+				hasBlock: node.block !== null,
+				range: rangeFromLocation(node.loc),
+			},
 		];
 	});
 

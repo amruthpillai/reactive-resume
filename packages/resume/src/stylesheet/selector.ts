@@ -2,6 +2,7 @@ import type { CssNode } from "css-tree";
 import type { SemanticNode } from "./types";
 import SpecificityCalculator from "@bramus/specificity";
 import * as csstree from "css-tree";
+import { RRSS_LIMITS_V1 } from "./limits";
 import { SEMANTIC_NODE_KINDS, SEMANTIC_REGISTRY_V1 } from "./registry/semantic";
 
 export type Specificity = readonly [ids: number, classes: number, types: number];
@@ -69,11 +70,6 @@ type TreeNode = {
 	parent: TreeNode | null;
 	children: TreeNode[];
 };
-
-const MAX_SELECTOR_CODE_POINTS = 2_048;
-const MAX_SELECTORS = 64;
-const MAX_COMBINATORS = 16;
-const MAX_FUNCTION_DEPTH = 16;
 
 const knownKinds = new Set<string>(SEMANTIC_NODE_KINDS);
 const knownAttributes = new Set([
@@ -211,7 +207,9 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 				return { type: "pseudo", name: name as "root" | "first-child" | "last-child" | "only-child" };
 			}
 			if (["is", "where", "not"].includes(name)) {
-				if (context.depth >= MAX_FUNCTION_DEPTH) throw new Error("Selector function nesting is too deep.");
+				if (context.depth >= RRSS_LIMITS_V1.maxFunctionDepth) {
+					throw new Error("Selector function nesting is too deep.");
+				}
 				const nested = childrenOf(node);
 				if (nested.length !== 1 || nested[0]?.type !== "SelectorList") {
 					throw new Error(`:${name} requires a selector list.`);
@@ -220,7 +218,9 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 				return { type: "pseudo", name: name as "is" | "where" | "not", selectors };
 			}
 			if (name === "nth-child" || name === "nth-of-type") {
-				if (context.depth >= MAX_FUNCTION_DEPTH) throw new Error("Selector function nesting is too deep.");
+				if (context.depth >= RRSS_LIMITS_V1.maxFunctionDepth) {
+					throw new Error("Selector function nesting is too deep.");
+				}
 				return compileNth(node, name, context);
 			}
 			throw new Error(`Unsupported pseudo-class :${name}.`);
@@ -250,7 +250,9 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 			compounds.push({ selectors });
 			selectors = [];
 			combinators.push(name);
-			if (combinators.length > MAX_COMBINATORS) throw new Error("Selector has too many combinators.");
+			if (combinators.length > RRSS_LIMITS_V1.maxCombinatorsPerSelector) {
+				throw new Error("Selector has too many combinators.");
+			}
 			continue;
 		}
 
@@ -268,7 +270,7 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 function compileSelectorList(node: SelectorAst, context: CompileContext): readonly CompiledComplexSelector[] {
 	if (node.type !== "SelectorList") throw new Error("Expected a SelectorList AST.");
 	const selectors = childrenOf(node);
-	if (selectors.length === 0 || selectors.length > MAX_SELECTORS) {
+	if (selectors.length === 0 || selectors.length > RRSS_LIMITS_V1.maxSelectorsPerRule) {
 		throw new Error("Selector list has an unsupported number of selectors.");
 	}
 	return selectors.map((selector) => compileComplex(selector, context));
@@ -277,7 +279,7 @@ function compileSelectorList(node: SelectorAst, context: CompileContext): readon
 export function compileSelector(source: string | CssNode): CompileSelectorResult {
 	try {
 		const text = typeof source === "string" ? source : csstree.generate(source);
-		if (Array.from(text).length > MAX_SELECTOR_CODE_POINTS) throw new Error("Selector is too long.");
+		if (Array.from(text).length > RRSS_LIMITS_V1.maxSelectorCodePoints) throw new Error("Selector is too long.");
 		const ast = (
 			typeof source === "string" ? csstree.parse(source, { context: "selectorList", positions: true }) : source
 		) as SelectorAst;
@@ -291,11 +293,28 @@ export function getSpecificity(_source: string): Specificity | null {
 	return compileSelector(_source).selector?.selectors[0]?.specificity ?? null;
 }
 
-function buildTree(node: SemanticNode, parent: TreeNode | null, nodes: Map<string, TreeNode>): TreeNode {
-	const current: TreeNode = { node, parent, children: [] };
-	nodes.set(node.key, current);
-	current.children = node.children.map((child) => buildTree(child, current, nodes));
-	return current;
+function buildTree(root: SemanticNode): Map<string, TreeNode> {
+	const nodes = new Map<string, TreeNode>();
+	const rootNode: TreeNode = { node: root, parent: null, children: [] };
+	const stack = [{ source: root, target: rootNode }];
+	nodes.set(root.key, rootNode);
+
+	while (stack.length > 0) {
+		const current = stack.pop();
+		if (!current) break;
+		current.target.children = current.source.children.map((child) => {
+			const target: TreeNode = { node: child, parent: current.target, children: [] };
+			nodes.set(child.key, target);
+			return target;
+		});
+		for (let index = current.source.children.length - 1; index >= 0; index--) {
+			const source = current.source.children[index];
+			const target = current.target.children[index];
+			if (source && target) stack.push({ source, target });
+		}
+	}
+
+	return nodes;
 }
 
 function attribute(node: SemanticNode, name: string): string | undefined {
@@ -416,9 +435,14 @@ function matchesComplex(selector: CompiledComplexSelector, target: TreeNode): bo
 	return matchesComplexAt(selector, selector.compounds.length - 1, target);
 }
 
+export function createSelectorMatcher(root: SemanticNode): (selector: CompiledSelector, nodeKey: string) => boolean {
+	const nodes = buildTree(root);
+	return (selector, nodeKey) => {
+		const target = nodes.get(nodeKey);
+		return target ? selector.selectors.some((complex) => matchesComplex(complex, target)) : false;
+	};
+}
+
 export function matchesSelector(selector: CompiledSelector, root: SemanticNode, nodeKey: string): boolean {
-	const nodes = new Map<string, TreeNode>();
-	buildTree(root, null, nodes);
-	const target = nodes.get(nodeKey);
-	return target ? selector.selectors.some((complex) => matchesComplex(complex, target)) : false;
+	return createSelectorMatcher(root)(selector, nodeKey);
 }
