@@ -50,6 +50,68 @@ describe("semantic binding inventory", () => {
 		expect(inventory.unboundNodeKeys).toEqual(["rich"]);
 	});
 
+	it("reports a rich-text alias unbound when its existing canonical node has the wrong kind", () => {
+		const inventory = createBindingInventory(node("owner", "item", [node("rich", "rich-text")]), {
+			item: { type: "primitive", primitive: "View", source: "existing" },
+			"rich-text": {
+				type: "alias",
+				canonicalKind: "field",
+				canonicalNodeKey: "owner",
+				token: "rich-text",
+			},
+		});
+
+		expect(inventory.bindings.rich).toBeUndefined();
+		expect(inventory.unboundNodeKeys).toContain("rich");
+		expect(inventory.unboundNodeKeys).not.toEqual([]);
+	});
+
+	it("reports a rich-text alias unbound when its field owner binding is synthetic or non-primitive", () => {
+		const synthetic = createBindingInventory(node("field", "field", [node("rich-synthetic", "rich-text")]), {
+			field: { type: "primitive", primitive: "View", source: "synthetic" },
+			"rich-text": {
+				type: "alias",
+				canonicalKind: "field",
+				canonicalNodeKey: "field",
+				token: "rich-text",
+			},
+		});
+		const nonPrimitive = createBindingInventory(
+			node("item", "item", [node("field", "field", [node("rich-non-primitive", "rich-text")])]),
+			{
+				item: { type: "primitive", primitive: "View", source: "existing" },
+				field: {
+					type: "alias",
+					canonicalKind: "item",
+					canonicalNodeKey: "item",
+					token: "field",
+				},
+				"rich-text": {
+					type: "alias",
+					canonicalKind: "field",
+					canonicalNodeKey: "field",
+					token: "rich-text",
+				},
+			},
+		);
+
+		expect({
+			syntheticBinding: synthetic.bindings["rich-synthetic"],
+			syntheticAliasUnbound: synthetic.unboundNodeKeys.includes("rich-synthetic"),
+			syntheticInventoryClean: synthetic.unboundNodeKeys.length === 0,
+			nonPrimitiveBinding: nonPrimitive.bindings["rich-non-primitive"],
+			nonPrimitiveAliasUnbound: nonPrimitive.unboundNodeKeys.includes("rich-non-primitive"),
+			nonPrimitiveInventoryClean: nonPrimitive.unboundNodeKeys.length === 0,
+		}).toEqual({
+			syntheticBinding: undefined,
+			syntheticAliasUnbound: true,
+			syntheticInventoryClean: false,
+			nonPrimitiveBinding: undefined,
+			nonPrimitiveAliasUnbound: true,
+			nonPrimitiveInventoryClean: false,
+		});
+	});
+
 	it("resolves conditional bindings to the primitive the existing renderer uses", () => {
 		const heading = node("heading", "section-heading", [node("heading/icon", "icon")]);
 		const shape = { ...node("level/shape", "icon"), attributes: { type: "circle" }, roles: ["active"] };
