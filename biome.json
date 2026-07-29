@@ -112,6 +112,14 @@
 	},
 	"overrides": [
 		{
+			"includes": ["docs/spec.json"],
+			"json": {
+				"formatter": {
+					"expand": "always"
+				}
+			}
+		},
+		{
 			"includes": ["packages/pdf/src/semantic/__fixtures__/**/*.css"],
 			"formatter": {
 				"enabled": false
