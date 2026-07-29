@@ -156,8 +156,8 @@ const textNodes = [
 
 const linkContainerNodes = [...containerNodes, "link"];
 const textAndLinkNodes = [...textNodes, "link"];
-const colorNodes = [...containerNodes, ...textNodes, "link", "icon", "level"];
-const spacingNodes = [...containerNodes, ...textNodes, "link", "picture"];
+const colorNodes = [...new Set([...containerNodes, ...textNodes, "link", "icon", "level"])];
+const spacingNodes = [...new Set([...containerNodes, ...textNodes, "link", "picture"])];
 const structuralNodes = [
 	"page",
 	"region",
@@ -347,6 +347,12 @@ describe("property registry", () => {
 				expect(PROPERTY_REGISTRY_V1[name]?.appliesTo).toEqual(appliesTo);
 				expect(PROPERTY_REGISTRY_V1[name]?.inheritable).toBe(inheritable);
 			}
+		}
+	});
+
+	it("publishes duplicate-free applicability lists", () => {
+		for (const [property, definition] of Object.entries(PROPERTY_REGISTRY_V1)) {
+			expect(definition?.appliesTo, property).toEqual([...new Set(definition?.appliesTo)]);
 		}
 	});
 

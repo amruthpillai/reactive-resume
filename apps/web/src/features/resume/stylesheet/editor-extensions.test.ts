@@ -148,7 +148,9 @@ describe("RRSS editor extensions", () => {
 
 	it("builds hover text from the same registries", () => {
 		expect(getRrssHoverDocumentation("section", metadata)).toMatch(/semantic element.*placement.*featured-summary/i);
-		expect(getRrssHoverDocumentation("color", metadata)).toMatch(/property.*inherited.*field/i);
+		const colorDocumentation = getRrssHoverDocumentation("color", metadata);
+		expect(colorDocumentation).toMatch(/property.*inherited.*field/i);
+		expect(colorDocumentation?.match(/section-heading/g)).toHaveLength(1);
 		expect(getRrssHoverDocumentation("--rr-primary-color", metadata)).toMatch(/read-only.*builder primary color/i);
 		expect(getRrssHoverDocumentation("#section-experience", metadata)).toMatch(/current resume.*section/i);
 		expect(getRrssHoverDocumentation('template-part[name="timeline-line"]', metadata)).toMatch(

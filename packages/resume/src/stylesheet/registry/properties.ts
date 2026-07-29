@@ -187,7 +187,15 @@ function entries(
 	definition: Omit<PropertyDefinition, "units" | "values">,
 ): Readonly<Record<string, PropertyDefinition | undefined>> {
 	return Object.fromEntries(
-		names.map((name) => [name, { ...definition, values: propertyValues(name), units: propertyUnits(name) }]),
+		names.map((name) => [
+			name,
+			{
+				...definition,
+				appliesTo: [...new Set(definition.appliesTo)],
+				values: propertyValues(name),
+				units: propertyUnits(name),
+			},
+		]),
 	);
 }
 

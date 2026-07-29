@@ -295,6 +295,18 @@ it("keeps every committed generated document synchronized", async () => {
 	});
 });
 
+it("distinguishes compiler diagnostic ranges from PDF preflight failures", async () => {
+	const reference = await readFile(defaultDocumentationPaths.rrssReference, "utf8");
+	const authoredDiagnostics = reference.slice(
+		reference.indexOf("## Diagnostics and limits"),
+		reference.indexOf("<!-- RRSS-DIAGNOSTICS:START -->"),
+	);
+
+	expect(authoredDiagnostics).toMatch(/Compiler diagnostics.*source range/s);
+	expect(authoredDiagnostics).toMatch(/PDF preflight\s+failures.*code and message.*may include compiler diagnostics/s);
+	expect(authoredDiagnostics).not.toMatch(/Each diagnostic.*source range/s);
+});
+
 it("generates renderer-safe property-specific value hints", async () => {
 	const { rrssReference } = await buildGeneratedDocumentation(defaultDocumentationPaths);
 	const propertyRows = rrssReference
@@ -305,6 +317,10 @@ it("generates renderer-safe property-specific value hints", async () => {
 		.split("\n");
 	const row = (property: string) => propertyRows.find((line) => line.startsWith(`| \`${property}\` |`)) ?? "";
 
+	for (const propertyRow of propertyRows.filter((line) => line.startsWith("| `"))) {
+		const appliesTo = propertyRow.split("|")[3]?.match(/`[^`]+`/g) ?? [];
+		expect(appliesTo, propertyRow).toEqual([...new Set(appliesTo)]);
+	}
 	expect(row("border-style")).toContain("`dotted`, `dashed`, `solid`");
 	expect(row("border-style")).not.toMatch(/`(?:double|groove|hidden|inset|outset|ridge)`/);
 	for (const property of ["border", "border-top", "border-right", "border-bottom", "border-left"]) {
@@ -316,6 +332,14 @@ it("generates renderer-safe property-specific value hints", async () => {
 	}
 	expect(row("font-size")).not.toMatch(/`(?:none|normal|max-content|min-content|fit-content|thin|medium|thick)`/);
 	expect(row("gap")).not.toMatch(/`(?:none|normal|max-content|min-content|fit-content|thin|medium|thick)`/);
+});
+
+it("generates the complete invalid-media-query action", async () => {
+	const { rrssReference } = await buildGeneratedDocumentation(defaultDocumentationPaths);
+
+	expect(rrssReference).toContain(
+		"| `INVALID_MEDIA_QUERY` | error | The PDF dimension query is malformed or unsupported. | Use orientation: portrait\\|landscape or width, min-width, max-width, height, min-height, or max-height with an RRSS length. |",
+	);
 });
 
 it("keeps the schema guide aligned with the canonical schema contract", async () => {

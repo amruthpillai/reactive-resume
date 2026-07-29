@@ -55,7 +55,8 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	INVALID_MEDIA_QUERY: {
 		severity: "error",
 		meaning: "The PDF dimension query is malformed or unsupported.",
-		action: "Use width, min-width, max-width, height, min-height, or max-height with an RRSS length.",
+		action:
+			"Use orientation: portrait|landscape or width, min-width, max-width, height, min-height, or max-height with an RRSS length.",
 	},
 	MEDIA_PAGE_SIZE: {
 		severity: "error",
