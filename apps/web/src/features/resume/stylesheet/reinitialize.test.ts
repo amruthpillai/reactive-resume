@@ -92,12 +92,12 @@ describe("stylesheet store reinitialization", () => {
 		});
 		storeModule.useStylesheetStore.getState().setSourceText("later edit");
 		expect(storeModule.useStylesheetStore.getState().source.text).toBe("later edit");
-		expect(mocks.workers).toHaveLength(2);
-		expect(mocks.workers[0]?.terminated).toBe(true);
+		expect(mocks.workers).toHaveLength(4);
+		expect(mocks.workers.slice(0, 2).every((worker) => worker.terminated)).toBe(true);
 
 		cleanup();
 
-		expect(mocks.workers[1]?.terminated).toBe(true);
+		expect(mocks.workers.slice(2).every((worker) => worker.terminated)).toBe(true);
 		expect(storeModule.useStylesheetStore.getState().resumeId).toBeUndefined();
 	});
 

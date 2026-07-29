@@ -53,7 +53,18 @@ const textOnlyInheritedProperties = new Set([
 	"textIndent",
 	"textTransform",
 ]);
+const rendererInheritedProperties = new Set([
+	...inheritableProperties,
+	...textOnlyInheritedProperties,
+	"color",
+	"direction",
+]);
 const rendererDefaults: Readonly<Record<string, unknown>> = { fontWeight: 400 };
+const emptyTextResetStyle: Readonly<Record<string, unknown>> = {
+	flexShrink: 1,
+	maxWidth: "100%",
+	minWidth: 0,
+};
 
 const nodeText = (node: LegacyParityHostNode): string =>
 	node.value ?? (node.children ?? []).map((child) => nodeText(child)).join("");
@@ -141,11 +152,11 @@ const collectPrimitiveSnapshots = (
 ): PrimitiveSnapshot[] => {
 	const localStyle = mergedStyle(node.style);
 	const computedStyle: Record<string, unknown> = { ...localStyle };
-	for (const property of inheritableProperties) {
+	for (const property of rendererInheritedProperties) {
 		if (!(property in computedStyle) && property in inheritedStyle) computedStyle[property] = inheritedStyle[property];
 	}
 	const nextInherited = Object.fromEntries(
-		[...inheritableProperties].flatMap((property) =>
+		[...rendererInheritedProperties].flatMap((property) =>
 			property in computedStyle ? [[property, computedStyle[property]]] : [],
 		),
 	);
@@ -159,6 +170,26 @@ const collectPrimitiveSnapshots = (
 	const props = Object.fromEntries(
 		Object.entries(node.props ?? {}).filter(([property]) => property !== "children" && property !== "style"),
 	);
+	const isInheritedOnlyStyle = Object.entries(snapshotStyle).every(([property, value]) =>
+		Object.is(value, inheritedStyle[property]),
+	);
+	const hasCompleteEmptyTextReset =
+		Object.entries(emptyTextResetStyle).every(([property, value]) => Object.is(snapshotStyle[property], value)) &&
+		(snapshotStyle.direction === "ltr" || snapshotStyle.direction === "rtl");
+	const isRendererEmptyTextStyle =
+		hasCompleteEmptyTextReset &&
+		Object.entries(snapshotStyle).every(([property, value]) => {
+			if (property === "direction") return true;
+			if (property in emptyTextResetStyle) return Object.is(value, emptyTextResetStyle[property]);
+			return Object.is(value, inheritedStyle[property]);
+		});
+	const isPresentationNeutralEmptyText =
+		node.type === "TEXT" &&
+		nodeText(node) === "" &&
+		children.length === 0 &&
+		Object.keys(props).length === 0 &&
+		(isInheritedOnlyStyle || isRendererEmptyTextStyle);
+	if (isPresentationNeutralEmptyText) return [];
 	return [
 		{
 			type: node.type,

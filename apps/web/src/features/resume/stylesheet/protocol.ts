@@ -64,6 +64,10 @@ export type PreflightWorkerResponse = {
 	result: BrowserPdfPreflightResult;
 };
 
+export type PreflightWorkerReady = {
+	type: "preflight_ready";
+};
+
 export type StylesheetResumeSnapshot = {
 	data: ResumeData;
 };

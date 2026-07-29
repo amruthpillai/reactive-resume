@@ -20,6 +20,8 @@ const send = (result: PdfPreflightResult) => {
 	parentPort?.postMessage(result);
 };
 
+parentPort?.postMessage({ type: "ready" });
+
 async function run(): Promise<PdfPreflightResult> {
 	const { input, limits } = workerData as StylesheetPreflightWorkerData;
 	const rendered = await renderPreflightPdf(input, limits);

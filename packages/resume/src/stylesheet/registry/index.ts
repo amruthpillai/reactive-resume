@@ -1,3 +1,6 @@
+/// <reference path="../css-tree.d.ts" />
+/// <reference path="../specificity.d.ts" />
+
 export type { RrssDiagnostic, SemanticNode } from "../types";
 export type { PropertyDefinition, PropertyRegistry } from "./properties";
 export type { SemanticNodeDefinition, SemanticRegistry } from "./semantic";

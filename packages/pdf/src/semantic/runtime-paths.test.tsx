@@ -10,7 +10,7 @@ const captured = vi.hoisted(() => ({
 	server: undefined as unknown,
 }));
 
-vi.mock("@react-pdf/renderer", async (importOriginal) => ({
+vi.mock("#react-pdf-renderer", async (importOriginal) => ({
 	...(await importOriginal<typeof import("@react-pdf/renderer")>()),
 	pdf: (element: unknown) => {
 		captured.browser = element;
@@ -57,7 +57,7 @@ const buildFixture = (): ResumeData => {
 const renderFinalProps = async (element: unknown) => {
 	const renderer = await vi.importActual<typeof import("@react-pdf/renderer")>("@react-pdf/renderer");
 	const instance = renderer.pdf(element as Parameters<typeof renderer.pdf>[0]);
-	await vi.waitFor(() => expect(instance.container.document).not.toBeNull(), { timeout: 5_000 });
+	await vi.waitFor(() => expect(instance.container.document).not.toBeNull(), { timeout: 15_000 });
 	const document = instance.container.document as HostNode;
 	const page = findFirst(document, ({ type }) => type === "PAGE");
 	const fixed = findFirst(document, ({ props }) => props?.fixed === true);

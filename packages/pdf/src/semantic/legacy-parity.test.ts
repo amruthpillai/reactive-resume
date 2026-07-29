@@ -1,9 +1,11 @@
 import type { ResumeData, StyleRule } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
+import type { LegacyParityHostNode } from "./legacy-parity";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { styleRulesSchema } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { convertLegacyStyleRules } from "./legacy-converter";
 import { compareLegacyParityHostNodes, compareLegacySemanticPresentation } from "./legacy-parity";
 
@@ -199,6 +201,21 @@ describe("compareLegacySemanticPresentation", () => {
 		expect(comparison.mismatches).toEqual([]);
 	}, 30_000);
 
+	it("matches the real sample on every template for a substantive custom-section rule", async () => {
+		const data = structuredClone(sampleResumeData);
+		data.metadata.styleRules = readRules("custom-section-type");
+		const conversion = convertLegacyStyleRules(data);
+		const comparison = await compareLegacySemanticPresentation({
+			data,
+			convertedSource: conversion.source,
+			templates,
+		});
+
+		expect(comparison.pageCountMismatches).toEqual([]);
+		expect(comparison.primitivePropMismatches).toEqual([]);
+		expect(comparison.mismatches).toEqual([]);
+	}, 30_000);
+
 	it("preserves Scizor template-after Bold color for converted legacy text rules", async () => {
 		const data = buildFixture(readRules("primary-text-bold-3146"));
 		data.metadata.template = "scizor";
@@ -257,6 +274,33 @@ describe("compareLegacySemanticPresentation", () => {
 		],
 	] as const)("detects %s tampering", (_name, legacy, semantic) => {
 		expect(compareLegacyParityHostNodes(legacy, semantic)).not.toEqual([]);
+	});
+
+	it("normalizes only presentation-neutral empty Text artifacts", () => {
+		expect(
+			compareLegacyParityHostNodes(
+				{
+					type: "VIEW",
+					style: { color: "#112233" },
+					children: [{ type: "TEXT" }, { type: "TEXT", value: "same" }],
+				},
+				{
+					type: "VIEW",
+					style: { color: "#112233" },
+					children: [{ type: "TEXT", value: "same" }],
+				},
+			),
+		).toEqual([]);
+
+		for (const meaningfulEmptyText of [
+			{ type: "TEXT", style: { backgroundColor: "#112233" } },
+			{ type: "TEXT", style: { width: 1 } },
+			{ type: "TEXT", props: { id: "semantic-payload" } },
+		] satisfies LegacyParityHostNode[]) {
+			expect(
+				compareLegacyParityHostNodes({ type: "VIEW", children: [meaningfulEmptyText] }, { type: "VIEW", children: [] }),
+			).not.toEqual([]);
+		}
 	});
 
 	it("retains legitimate inheritance and renderer-default equivalence", () => {

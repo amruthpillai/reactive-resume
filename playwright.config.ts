@@ -3,13 +3,16 @@ import { defineConfig, devices } from "@playwright/test";
 const port = Number.parseInt(process.env.PORT ?? "3000", 10);
 const baseURL = process.env.APP_URL ?? `http://localhost:${port}`;
 const isCI = process.env.CI === "true" || process.env.CI === "1";
+const isSemanticCssAuthoringRun = process.env.FLAG_SEMANTIC_CSS_AUTHORING === "true";
 
 export default defineConfig({
 	testDir: "./tests/e2e/specs",
 	fullyParallel: true,
 	forbidOnly: isCI,
 	retries: 0,
-	workers: isCI ? 2 : undefined,
+	// Semantic CSS acceptance includes deterministic PDF preflight and 15 visual renders. Keep it serial so
+	// independent browser workers do not contend for the fixed production preflight deadline.
+	workers: isSemanticCssAuthoringRun ? 1 : isCI ? 2 : undefined,
 	timeout: 30_000,
 	expect: {
 		timeout: 10_000,

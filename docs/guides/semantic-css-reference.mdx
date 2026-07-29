@@ -1,0 +1,276 @@
+---
+title: "Semantic CSS Reference"
+description: "Reference for Reactive Resume Semantic CSS version 1 selectors, properties, variables, and PDF directives."
+---
+
+Reactive Resume Semantic CSS (RRSS) is a versioned, declarative stylesheet language for resume PDFs. It resembles CSS,
+but only the syntax and PDF-safe capabilities documented here are supported.
+
+## Version directive
+
+Start authored stylesheets with:
+
+```css
+@rr-version 1;
+```
+
+Version 1 remains immutable. A missing directive is accepted with a warning and interpreted as version 1; unsupported
+versions are rejected.
+
+## Selectors
+
+RRSS supports semantic type selectors, `#id`, attribute selectors, descendant/child/adjacent/general-sibling
+combinators, selector lists, `:root`, `:is()`, `:where()`, `:not()`, `:first-child`, `:last-child`, `:only-child`,
+`:nth-child()`, and `:nth-of-type()`.
+
+The semantic tree follows source order. Structural declarations such as `display`, `order`, and page-break behavior are
+resolved once without changing the selector tree used by later rules.
+
+Use `[type="experience"]` for portable section-type rules and `[id="…"]` for an exact section or item in one resume.
+Known selectors that are absent from the current resume produce warnings rather than errors.
+
+## Declarations and values
+
+The standard cascade, specificity, source order, inheritance, CSS-wide keywords, custom properties, `var()`, and
+`!important` are supported within the bounded version-1 grammar. Lengths use the units listed in the generated property
+table. Unitless values are accepted only where the property definition allows them.
+
+Pagination maps to React PDF:
+
+- `break-before: page` starts a new page.
+- `break-inside: avoid` keeps a node together where possible.
+- `-rr-min-presence-ahead` reserves space before the next break.
+- `orphans` and `widows` control text line retention.
+- `position: fixed` repeats an existing fixed node; CSS cannot create or re-parent content.
+
+Media queries support authored PDF dimensions such as `@media (max-width: 600pt)`.
+
+## Diagnostics and last-valid behavior
+
+Diagnostics include a stable code, severity, message, and source range. The editable source is saved even when invalid.
+Preview and export use `applied`, the most recent source that compiled and passed bounded PDF preflight. Correcting the
+draft promotes the new source atomically.
+
+## Portability
+
+Shared semantic elements are portable across templates. Template parts are optional manifest entries for visual details
+that have no shared semantic equivalent. Guard them with `resume[template="…"]`; absent parts produce a warning.
+
+## Unsupported capabilities
+
+RRSS cannot choose or load fonts, reference local or remote assets, execute scripts, react to interaction, use browser
+layout APIs, or create new PDF nodes. CSS Grid, pseudo-elements, animations, transitions, filters, arbitrary functions,
+and network-fetching values are unsupported.
+
+Gradients and shadows are not part of version 1. They may be added later only through bounded SVG-backed rendering.
+
+## Generated registry
+
+The following tables are generated from the compiler-free public runtime registry. Run `pnpm docs:semantic-css` after
+changing a registry.
+
+<!-- RRSS-GENERATED:START -->
+### Semantic elements
+
+| Element | Attributes | Roles |
+| --- | --- | --- |
+| `resume` | `template` | — |
+| `page` | `page-number` | — |
+| `region` | `placement`, `region`, `part` | — |
+| `header` | `region` | — |
+| `picture` | — | `picture` |
+| `name` | — | `primary-text` |
+| `headline` | — | `secondary-text` |
+| `contact-list` | — | — |
+| `contact-item` | `name`, `part` | `primary-text`, `secondary-text`, `structured-link` |
+| `section` | `type`, `placement`, `origin`, `part` | `featured-summary` |
+| `section-heading` | — | `section-title` |
+| `section-items` | — | — |
+| `item` | — | `experience-role`, `nested-role` |
+| `item-header` | `part` | — |
+| `combined-text` | `name`, `owner` | — |
+| `field` | `name` | `primary-text`, `secondary-text`, `structured-link` |
+| `link` | — | `structured-link` |
+| `icon` | `type` | `decoration`, `active`, `inactive` |
+| `level` | — | `decoration` |
+| `rich-text` | — | — |
+| `rich-heading` | `level` | — |
+| `blockquote` | — | — |
+| `paragraph` | — | — |
+| `list` | — | — |
+| `list-item` | — | — |
+| `list-item-content` | `direction` | — |
+| `list-marker` | — | `decoration` |
+| `strong` | — | — |
+| `emphasis` | — | — |
+| `underline` | — | — |
+| `strike` | — | — |
+| `code` | — | — |
+| `text-span` | — | — |
+| `mark` | — | — |
+| `hard-break` | — | — |
+| `horizontal-rule` | — | — |
+| `template-part` | `name` | `decoration` |
+
+All semantic elements also accept `id` and `role` selectors when those values exist on the node.
+
+### Properties
+
+| Property | Category | Inherits | Units | Keywords |
+| --- | --- | --- | --- | --- |
+| `-rr-fixed` | structural | no | — | `inherit`, `initial`, `revert`, `unset`, `true`, `false`, `0`, `1` |
+| `-rr-min-presence-ahead` | structural | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `-rr-shadow-color` | image | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `-rr-shadow-width` | image | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `align-content` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `align-items` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `align-self` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `aspect-ratio` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `background-color` | color | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-bottom` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-bottom-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-bottom-left-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-bottom-right-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-bottom-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-bottom-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-left` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-left-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-left-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-left-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-right` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-right-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-right-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-right-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-top` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-top-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-top-left-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-top-right-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-top-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-top-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `border-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `bottom` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `break-before` | structural | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `page` |
+| `break-inside` | structural | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `avoid` |
+| `color` | color | yes | — | `inherit`, `initial`, `revert`, `unset` |
+| `column-gap` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `direction` | text | yes | — | `inherit`, `initial`, `revert`, `unset`, `ltr`, `rtl` |
+| `display` | layout | no | — | `inherit`, `initial`, `revert`, `unset`, `flex`, `none` |
+| `flex` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `auto` |
+| `flex-basis` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `flex-direction` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `row`, `row-reverse`, `column`, `column-reverse` |
+| `flex-flow` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `row`, `row-reverse`, `column`, `column-reverse`, `nowrap`, `wrap`, `wrap-reverse` |
+| `flex-grow` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `flex-shrink` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `flex-wrap` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `nowrap`, `wrap`, `wrap-reverse` |
+| `font-size` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `font-style` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
+| `font-weight` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
+| `gap` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `height` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `justify-content` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `left` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `letter-spacing` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `line-height` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `normal` |
+| `margin` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `margin-bottom` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `margin-horizontal` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `margin-left` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `margin-right` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `margin-top` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `margin-vertical` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `max-height` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `max-lines` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `max-width` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `min-height` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `min-width` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `object-fit` | image | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `object-position` | image | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `opacity` | color | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `order` | structural | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `orphans` | structural | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `overflow` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `padding` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `padding-bottom` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `padding-horizontal` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `padding-left` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `padding-right` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `padding-top` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `padding-vertical` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `position` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `right` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `row-gap` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `size` | structural | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `A4`, `letter` |
+| `text-align` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-decoration` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-decoration-color` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-decoration-style` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-indent` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `text-overflow` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-transform` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
+| `top` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `transform` | transform | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `transform-origin` | transform | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `vertical-align` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `widows` | structural | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `width` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
+| `z-index` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
+
+### Read-only system variables
+
+| Variable | Value |
+| --- | --- |
+| `--rr-primary-color` | Builder primary color. |
+| `--rr-text-color` | Builder text color. |
+| `--rr-background-color` | Builder background color. |
+| `--rr-body-font-size` | Builder body font size. |
+| `--rr-body-line-height` | Builder body line-height multiplier. |
+| `--rr-heading-font-size` | Builder heading font size. |
+| `--rr-heading-line-height` | Builder heading line-height multiplier. |
+| `--rr-page-gap-x` | Builder horizontal page gap. |
+| `--rr-page-gap-y` | Builder vertical page gap. |
+| `--rr-page-margin-x` | Builder horizontal page margin. |
+| `--rr-page-margin-y` | Builder vertical page margin. |
+| `--rr-page-width` | Resolved authored page width. |
+| `--rr-page-height` | Resolved authored page height. |
+| `--rr-sidebar-width` | Builder sidebar width. |
+| `--rr-picture-size` | Builder picture size. |
+| `--rr-picture-rotation` | Builder picture rotation. |
+| `--rr-picture-aspect-ratio` | Builder picture aspect ratio. |
+| `--rr-picture-border-radius` | Builder picture border radius. |
+| `--rr-picture-border-width` | Builder picture border width. |
+| `--rr-picture-border-color` | Builder picture border color. |
+| `--rr-picture-shadow-width` | Builder picture shadow width. |
+| `--rr-picture-shadow-color` | Builder picture shadow color. |
+
+Names beginning with `--rr-` are reserved and cannot be reassigned. Define author variables with another prefix.
+
+### Template-part names
+
+| Part | Allowed semantic children |
+| --- | --- |
+| `timeline-line` | — |
+| `timeline-marker` | `template-part` |
+| `timeline-dot` | — |
+| `timeline-content` | `item-header`, `field`, `link`, `item`, `level` |
+| `featured-summary` | `section` |
+| `sidebar-background` | — |
+| `header-band` | `template-part`, `name`, `headline` |
+| `picture-anchor` | `picture` |
+| `contact-offset` | — |
+| `header-intro` | `template-part` |
+| `header-body` | `picture`, `name`, `headline`, `section` |
+| `header-contact-band` | `contact-list` |
+| `inline-item-header-leading` | `field`, `combined-text` |
+| `inline-item-header-middle` | `field`, `link` |
+| `inline-item-header-trailing` | `field` |
+| `education-grade-row` | `combined-text` |
+| `header-divider` | `name`, `headline` |
+| `contact-item-content` | `link`, `icon`, `field` |
+| `header-name-rule` | — |
+
+A part is selectable only when the current template manifest exposes it.
+<!-- RRSS-GENERATED:END -->

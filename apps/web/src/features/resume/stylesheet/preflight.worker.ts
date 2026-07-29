@@ -2,11 +2,11 @@
 
 import type { PdfPreflightFailure } from "@reactive-resume/pdf/preflight";
 import type { PreflightWorkerRequest, PreflightWorkerResponse } from "./protocol";
-import { GlobalWorkerOptions, getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
-import { renderPreflightPdf } from "@reactive-resume/pdf/preflight";
+import { Buffer } from "buffer";
+import { initializePdfInspection, inspectPdfPageCount } from "./pdf-inspection";
 import { getPreflightTransferables } from "./protocol";
 
-GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
+Object.assign(globalThis, { Buffer });
 
 const failure = (code: PdfPreflightFailure["code"], message: string): PdfPreflightFailure => ({
 	ok: false,
@@ -15,8 +15,12 @@ const failure = (code: PdfPreflightFailure["code"], message: string): PdfPreflig
 	diagnostics: [],
 });
 
+const initialization = Promise.all([import("@reactive-resume/pdf/preflight"), initializePdfInspection()] as const);
+void initialization.then(() => self.postMessage({ type: "preflight_ready" }));
+
 self.addEventListener("message", async ({ data }: MessageEvent<PreflightWorkerRequest>) => {
 	if (data.type !== "preflight") return;
+	const [{ renderPreflightPdf }] = await initialization;
 	const rendered = await renderPreflightPdf(data.input, data.limits);
 	let result: PreflightWorkerResponse["result"];
 
@@ -27,20 +31,18 @@ self.addEventListener("message", async ({ data }: MessageEvent<PreflightWorkerRe
 	} else {
 		try {
 			const pdf = Uint8Array.from(rendered.bytes).buffer;
-			const loadingTask = getDocument({ data: pdf });
-			const document = await loadingTask.promise;
-			if (document.numPages > data.limits.maxPages) {
+			const pageCount = await inspectPdfPageCount(pdf);
+			if (pageCount > data.limits.maxPages) {
 				result = failure("STYLESHEET_PREFLIGHT_PAGE_LIMIT", "The PDF exceeds the preflight page limit.");
 			} else {
 				result = {
 					ok: true,
-					pageCount: document.numPages,
+					pageCount,
 					byteCount: pdf.byteLength,
 					diagnostics: rendered.diagnostics,
 					pdf,
 				};
 			}
-			await loadingTask.destroy();
 		} catch {
 			result = failure("STYLESHEET_PREFLIGHT_PARSE_FAILED", "The generated PDF could not be inspected.");
 		}

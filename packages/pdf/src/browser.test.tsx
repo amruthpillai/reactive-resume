@@ -9,7 +9,7 @@ const rendererMock = vi.hoisted(() => ({
 	})),
 }));
 
-vi.mock("@react-pdf/renderer", async (importOriginal) => ({
+vi.mock("#react-pdf-renderer", async (importOriginal) => ({
 	...(await importOriginal<typeof import("@react-pdf/renderer")>()),
 	pdf: rendererMock.pdf,
 }));

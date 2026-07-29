@@ -1405,8 +1405,8 @@ const ReferencesSection = ({ sectionId = "references", sectionData }: ItemSectio
 							<ItemTitle field="name" website={item.website}>
 								{item.name}
 							</ItemTitle>
-							<Text semanticField="position">{item.position}</Text>
-							<Text semanticField="phone">{item.phone}</Text>
+							{hasSplitRowText(item.position) && <Text semanticField="position">{item.position}</Text>}
+							{hasSplitRowText(item.phone) && <Text semanticField="phone">{item.phone}</Text>}
 						</SectionItemHeader>
 						<RichText semanticField="description">{item.description}</RichText>
 

@@ -3,6 +3,7 @@ import type {
 	CompileWorkerRequest,
 	CompileWorkerResponse,
 	PreflightWorkerInput,
+	PreflightWorkerReady,
 	PreflightWorkerRequest,
 	PreflightWorkerResponse,
 } from "./protocol";
@@ -70,26 +71,39 @@ const timeoutResult = (request: PreflightWorkerRequest): PreflightWorkerResponse
 	},
 });
 
-export function createPreflightWorkerClient(createWorker: () => StylesheetWorker, timeoutMs: number) {
+export function createPreflightWorkerClient(
+	createWorker: () => StylesheetWorker,
+	timeoutMs: number,
+	readinessTimeoutMs = 10_000,
+) {
 	let worker: StylesheetWorker | undefined;
 	let requestId = 0;
-	const pending = new Map<number, Pending<PreflightWorkerResponse> & { timer: ReturnType<typeof setTimeout> }>();
+	let ready = false;
+	let destroyed = false;
+	let readiness:
+		| (Pending<StylesheetWorker> & {
+				promise: Promise<StylesheetWorker>;
+				timer: ReturnType<typeof setTimeout>;
+		  })
+		| undefined;
+	const pending = new Map<number, Pending<PreflightWorkerResponse> & { timer?: ReturnType<typeof setTimeout> }>();
 
 	const onMessage: WorkerListener = ({ data }) => {
+		if ((data as PreflightWorkerReady)?.type === "preflight_ready") {
+			if (!worker || !readiness) return;
+			clearTimeout(readiness.timer);
+			ready = true;
+			readiness.resolve(worker);
+			readiness = undefined;
+			return;
+		}
 		const response = data as PreflightWorkerResponse;
 		if (response?.type !== "preflight_result") return;
 		const request = pending.get(response.requestId);
 		if (!request) return;
-		clearTimeout(request.timer);
+		if (request.timer) clearTimeout(request.timer);
 		pending.delete(response.requestId);
 		request.resolve(response);
-	};
-
-	const getWorker = () => {
-		if (worker) return worker;
-		worker = createWorker();
-		worker.addEventListener("message", onMessage);
-		return worker;
 	};
 
 	const terminate = () => {
@@ -97,33 +111,79 @@ export function createPreflightWorkerClient(createWorker: () => StylesheetWorker
 		worker.removeEventListener("message", onMessage);
 		worker.terminate();
 		worker = undefined;
+		ready = false;
+		if (readiness) {
+			clearTimeout(readiness.timer);
+			readiness.reject(new Error("Stylesheet preflight worker did not become ready."));
+			readiness = undefined;
+		}
+	};
+
+	const getReadyWorker = () => {
+		if (destroyed) return Promise.reject(new Error("Stylesheet preflight worker was terminated."));
+		if (worker && ready) return Promise.resolve(worker);
+		if (readiness) return readiness.promise;
+		worker = createWorker();
+		worker.addEventListener("message", onMessage);
+		let resolve!: (value: StylesheetWorker) => void;
+		let reject!: (error: Error) => void;
+		const promise = new Promise<StylesheetWorker>((resolvePromise, rejectPromise) => {
+			resolve = resolvePromise;
+			reject = rejectPromise;
+		});
+		const timer = setTimeout(() => terminate(), readinessTimeoutMs);
+		readiness = { promise, resolve, reject, timer };
+		return promise;
+	};
+
+	const waitUntilReady = async () => {
+		try {
+			return await getReadyWorker();
+		} catch {
+			return await getReadyWorker();
+		}
 	};
 
 	return {
+		warmup() {
+			void waitUntilReady().catch(() => {});
+		},
 		preflight(input: PreflightWorkerInput): Promise<PreflightWorkerResponse> {
 			if (pending.size > 0) {
 				terminate();
 				for (const stale of pending.values()) {
-					clearTimeout(stale.timer);
+					if (stale.timer) clearTimeout(stale.timer);
 					stale.reject(new Error("Discarded stale stylesheet preflight result."));
 				}
 				pending.clear();
 			}
 			const request: PreflightWorkerRequest = { ...input, type: "preflight", requestId: ++requestId };
 			return new Promise((resolve, reject) => {
-				const timer = setTimeout(() => {
-					pending.delete(request.requestId);
-					terminate();
-					resolve(timeoutResult(request));
-				}, timeoutMs);
-				pending.set(request.requestId, { resolve, reject, timer });
-				getWorker().postMessage(request);
+				pending.set(request.requestId, { resolve, reject });
+				void waitUntilReady()
+					.then((readyWorker) => {
+						const current = pending.get(request.requestId);
+						if (!current) return;
+						current.timer = setTimeout(() => {
+							pending.delete(request.requestId);
+							terminate();
+							resolve(timeoutResult(request));
+						}, timeoutMs);
+						readyWorker.postMessage(request);
+					})
+					.catch((error: unknown) => {
+						const current = pending.get(request.requestId);
+						if (!current) return;
+						pending.delete(request.requestId);
+						reject(error instanceof Error ? error : new Error("Stylesheet preflight worker failed to start."));
+					});
 			});
 		},
 		destroy() {
+			destroyed = true;
 			terminate();
 			for (const request of pending.values()) {
-				clearTimeout(request.timer);
+				if (request.timer) clearTimeout(request.timer);
 				request.reject(new Error("Stylesheet preflight worker was terminated."));
 			}
 			pending.clear();

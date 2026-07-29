@@ -39,6 +39,7 @@ describe("stylesheet worker clients", () => {
 		const client = createPreflightWorkerClient(createWorker, 10);
 
 		const timedOut = client.preflight({ editGeneration: 1 } as never);
+		first.emit({ type: "preflight_ready" });
 		await vi.advanceTimersByTimeAsync(10);
 
 		await expect(timedOut).resolves.toMatchObject({
@@ -47,6 +48,8 @@ describe("stylesheet worker clients", () => {
 		expect(first.terminate).toHaveBeenCalledOnce();
 
 		const next = client.preflight({ editGeneration: 2 } as never);
+		replacement.emit({ type: "preflight_ready" });
+		await vi.advanceTimersByTimeAsync(0);
 		replacement.emit({
 			type: "preflight_result",
 			requestId: 2,
@@ -54,6 +57,72 @@ describe("stylesheet worker clients", () => {
 			result: { ok: true, pageCount: 1, byteCount: 4, diagnostics: [], pdf: new ArrayBuffer(4) },
 		});
 		await expect(next).resolves.toMatchObject({ requestId: 2 });
+		vi.useRealTimers();
+	});
+
+	it("warms the preflight worker before a request starts its deadline", () => {
+		const fake = worker();
+		const createWorker = vi.fn(() => fake);
+		const client = createPreflightWorkerClient(createWorker, 5_000);
+
+		client.warmup();
+
+		expect(createWorker).toHaveBeenCalledOnce();
+		expect(fake.addEventListener).toHaveBeenCalledOnce();
+		expect(fake.postMessage).not.toHaveBeenCalled();
+	});
+
+	it("waits for readiness without consuming the request deadline", async () => {
+		vi.useFakeTimers();
+		const fake = worker();
+		const client = createPreflightWorkerClient(() => fake, 5, 20);
+		const result = client.preflight({ editGeneration: 1 } as never);
+
+		await vi.advanceTimersByTimeAsync(5);
+		expect(fake.terminate).not.toHaveBeenCalled();
+		expect(fake.postMessage).not.toHaveBeenCalled();
+
+		fake.emit({ type: "preflight_ready" });
+		await vi.advanceTimersByTimeAsync(0);
+		expect(fake.postMessage).toHaveBeenCalledOnce();
+		await vi.advanceTimersByTimeAsync(5);
+		await expect(result).resolves.toMatchObject({ result: { code: "STYLESHEET_PREFLIGHT_TIMEOUT" } });
+		vi.useRealTimers();
+	});
+
+	it("bounds readiness, recreates once, and rejects after the retry also times out", async () => {
+		vi.useFakeTimers();
+		const first = worker();
+		const replacement = worker();
+		const client = createPreflightWorkerClient(
+			vi.fn().mockReturnValueOnce(first).mockReturnValueOnce(replacement),
+			5,
+			10,
+		);
+		const result = client.preflight({ editGeneration: 1 } as never);
+		const rejection = expect(result).rejects.toThrow("did not become ready");
+
+		await vi.advanceTimersByTimeAsync(10);
+		expect(first.terminate).toHaveBeenCalledOnce();
+		await vi.advanceTimersByTimeAsync(10);
+
+		await rejection;
+		expect(replacement.terminate).toHaveBeenCalledOnce();
+		vi.useRealTimers();
+	});
+
+	it("does not recreate a warming worker after destroy", async () => {
+		vi.useFakeTimers();
+		const fake = worker();
+		const createWorker = vi.fn(() => fake);
+		const client = createPreflightWorkerClient(createWorker, 5, 10);
+		client.warmup();
+
+		client.destroy();
+		await vi.runAllTimersAsync();
+
+		expect(createWorker).toHaveBeenCalledOnce();
+		expect(fake.terminate).toHaveBeenCalledOnce();
 		vi.useRealTimers();
 	});
 
@@ -65,10 +134,14 @@ describe("stylesheet worker clients", () => {
 			1_000,
 		);
 		const stale = client.preflight({ editGeneration: 1 } as never);
+		first.emit({ type: "preflight_ready" });
+		await Promise.resolve();
 		const staleOutcome = stale.catch((error: unknown) => error);
 		const current = client.preflight({ editGeneration: 2 } as never);
 
 		expect(first.terminate).toHaveBeenCalledOnce();
+		replacement.emit({ type: "preflight_ready" });
+		await Promise.resolve();
 		replacement.emit({
 			type: "preflight_result",
 			requestId: 2,

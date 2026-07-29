@@ -27,6 +27,51 @@ const failedWorker = new URL(
 	`data:text/javascript,${encodeURIComponent('throw new Error("sensitive worker details");')}`,
 );
 
+const delayedSuccessfulWorker = new URL(
+	`data:text/javascript,${encodeURIComponent(`
+		import { parentPort, workerData } from "node:worker_threads";
+		parentPort.postMessage({ type: "ready" });
+		setTimeout(() => {
+			parentPort.postMessage({
+				ok: true,
+				pageCount: 1,
+				byteCount: Number(workerData.input.data.basics.name),
+				diagnostics: [],
+			});
+		}, 300);
+	`)}`,
+);
+
+const delayedReadyWorker = new URL(
+	`data:text/javascript,${encodeURIComponent(`
+		import { parentPort } from "node:worker_threads";
+		setTimeout(() => {
+			parentPort.postMessage({ type: "ready" });
+			setTimeout(() => {
+				parentPort.postMessage({
+					ok: true,
+					pageCount: 1,
+					byteCount: 1,
+					diagnostics: [],
+				});
+			}, 10);
+		}, 50);
+	`)}`,
+);
+
+const synchronousFailureWorker = new URL("https://example.com/stylesheet-preflight.mjs");
+
+const numberedInput = (number: number) => ({
+	...input,
+	data: {
+		...input.data,
+		basics: {
+			...input.data.basics,
+			name: String(number),
+		},
+	},
+});
+
 describe("stylesheet PDF preflight worker", () => {
 	it("keeps the production resource policy fixed and immutable", () => {
 		expect(STYLESHEET_PREFLIGHT_LIMITS).toEqual({
@@ -37,6 +82,8 @@ describe("stylesheet PDF preflight worker", () => {
 			maxPageHeightPt: 20_000,
 			maxPageAreaPt2: 20_000_000,
 			maxOldGenerationMb: 256,
+			maxConcurrentWorkers: 1,
+			maxQueuedRequests: 32,
 		});
 		expect(Object.isFrozen(STYLESHEET_PREFLIGHT_LIMITS)).toBe(true);
 	});
@@ -64,6 +111,14 @@ describe("stylesheet PDF preflight worker", () => {
 		const result = await runner.run(input);
 
 		expect(result).toEqual(expect.objectContaining({ ok: false, code: "STYLESHEET_PREFLIGHT_TIMEOUT" }));
+		expect(runner.activeWorkerCount).toBe(0);
+		expect(runner.queuedPreflightCount).toBe(0);
+	});
+
+	it("starts the authored render deadline after the worker runtime is ready", async () => {
+		const runner = createStylesheetPreflightRunner({ timeoutMs: 20 }, delayedReadyWorker);
+
+		await expect(runner.run(input)).resolves.toEqual(expect.objectContaining({ ok: true, pageCount: 1 }));
 		expect(runner.activeWorkerCount).toBe(0);
 	});
 
@@ -105,5 +160,50 @@ describe("stylesheet PDF preflight worker", () => {
 			diagnostics: [],
 		});
 		expect(runner.activeWorkerCount).toBe(0);
+		expect(runner.queuedPreflightCount).toBe(0);
+	});
+
+	it("bounds concurrent workers and queued requests without charging queue time to the worker deadline", async () => {
+		const runner = createStylesheetPreflightRunner(
+			{
+				timeoutMs: 500,
+				maxConcurrentWorkers: 1,
+				maxQueuedRequests: 2,
+			},
+			delayedSuccessfulWorker,
+		);
+		const completionOrder: number[] = [];
+		const accepted = [1, 2, 3].map((number) =>
+			runner.run(numberedInput(number)).then((result) => {
+				if (result.ok) completionOrder.push(result.byteCount);
+				return result;
+			}),
+		);
+		const rejected = runner.run(numberedInput(4));
+
+		expect(runner.activeWorkerCount).toBe(1);
+		expect(runner.queuedPreflightCount).toBe(2);
+		await expect(rejected).resolves.toEqual(
+			expect.objectContaining({
+				code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+				message: "The PDF preflight queue is full.",
+			}),
+		);
+		const results = await Promise.all(accepted);
+
+		expect(results.every((result) => result.ok)).toBe(true);
+		expect(completionOrder).toEqual([1, 2, 3]);
+		expect(runner.activeWorkerCount).toBe(0);
+		expect(runner.queuedPreflightCount).toBe(0);
+	}, 5_000);
+
+	it("does not leak a slot when the worker constructor throws synchronously", async () => {
+		const runner = createStylesheetPreflightRunner({}, synchronousFailureWorker);
+
+		await expect(runner.run(input)).resolves.toEqual(
+			expect.objectContaining({ ok: false, code: "STYLESHEET_PREFLIGHT_WORKER_FAILED" }),
+		);
+		expect(runner.activeWorkerCount).toBe(0);
+		expect(runner.queuedPreflightCount).toBe(0);
 	});
 });

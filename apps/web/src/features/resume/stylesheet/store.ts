@@ -612,6 +612,7 @@ export function initializeStylesheetStore(input: {
 	activeRuntime?.destroy();
 	const compiler = compilerClient();
 	const preflight = preflightClient();
+	preflight.warmup();
 	const runtime = createStylesheetStoreRuntime({
 		...input,
 		store: useStylesheetStore,
