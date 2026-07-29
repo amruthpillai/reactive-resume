@@ -19,6 +19,7 @@ import {
 	RRSS_CSS_WIDE_KEYWORDS_V1,
 	RRSS_LENGTH_PROPERTIES_V1,
 	RRSS_LENGTH_UNITS_V1,
+	RRSS_LENGTH_VALUE_KEYWORDS_V1,
 } from "./registry/properties";
 import { compileSelector } from "./selector";
 
@@ -49,6 +50,7 @@ const spacingShorthands = new Set(["margin", "padding"]);
 const sides = ["top", "right", "bottom", "left"] as const;
 const borderStyles = new Set<string>(RRSS_BORDER_STYLE_VALUES_V1);
 const cssWideKeywords = new Set<string>(RRSS_CSS_WIDE_KEYWORDS_V1);
+const lengthValueKeywords = new Set<string>(RRSS_LENGTH_VALUE_KEYWORDS_V1);
 const maxMediaQueryBranches = RRSS_LIMITS_V1.maxRules;
 const lengthUnitPattern = RRSS_LENGTH_UNITS_V1.map((unit) => (unit === "%" ? "%" : unit)).join("|");
 const borderWidthPattern = new RegExp(
@@ -359,7 +361,7 @@ export function valueSyntaxError(property: string, value: string): string | null
 			}
 			return null;
 		}
-		if (isRegisteredPropertyValue(property, normalized)) return null;
+		if (lengthValueKeywords.has(normalized)) return null;
 		return `${property} requires a supported PDF length.`;
 	}
 	if (property === "size") {

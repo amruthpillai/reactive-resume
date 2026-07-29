@@ -8,6 +8,7 @@
 		"docs:gen": "tsx semantic-css/generate-reference.ts",
 		"fonts:generate": "tsx fonts/generate.ts",
 		"test": "vitest run --passWithNoTests",
+		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
 		"typecheck": "tsgo --noEmit"
 	},
 	"dependencies": {

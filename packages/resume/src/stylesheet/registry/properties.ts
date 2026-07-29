@@ -131,12 +131,13 @@ const colorNodes = [...containerNodes, ...textNodes, "link", "icon", "level"] as
 const spacingNodes = [...containerNodes, ...textNodes, "link", "picture"] as SemanticNodeKind[];
 const structuralNodes = [...SEMANTIC_NODE_KINDS.filter((kind) => kind !== "resume")] as SemanticNodeKind[];
 const lengthProperties = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
+const numericLengthUnits = RRSS_LENGTH_UNITS_V1.filter((unit) => unit !== "%");
 const borderStyleProperties = /^(?:border-style|border-(?:top|right|bottom|left)-style)$/;
 const borderShorthandProperties = /^(?:border|border-(?:top|right|bottom|left))$/;
 
 function propertyValues(name: string): readonly string[] {
 	let values: readonly string[] = [];
-	if (lengthProperties.has(name)) values = RRSS_LENGTH_VALUE_KEYWORDS_V1;
+	if (lengthProperties.has(name) && name !== "-rr-min-presence-ahead") values = RRSS_LENGTH_VALUE_KEYWORDS_V1;
 	else if (borderStyleProperties.test(name)) values = RRSS_BORDER_STYLE_VALUES_V1;
 	else if (borderShorthandProperties.test(name)) {
 		values = [...RRSS_LENGTH_VALUE_KEYWORDS_V1, ...RRSS_BORDER_STYLE_VALUES_V1];
@@ -162,7 +163,8 @@ function propertyValues(name: string): readonly string[] {
 }
 
 function propertyUnits(name: string): readonly string[] {
-	return lengthProperties.has(name) || name === "line-height" || name === "size" || borderShorthandProperties.test(name)
+	if (name === "size" || name === "-rr-min-presence-ahead") return numericLengthUnits;
+	return lengthProperties.has(name) || name === "line-height" || borderShorthandProperties.test(name)
 		? RRSS_LENGTH_UNITS_V1
 		: [];
 }
