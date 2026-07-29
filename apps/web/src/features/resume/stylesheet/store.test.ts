@@ -287,6 +287,100 @@ describe("stylesheet store runtime", () => {
 		});
 	});
 
+	it("does not requeue an invalidated in-flight candidate after conflict", async () => {
+		let rejectMutation!: (error: unknown) => void;
+		let resolveRepreflight!: (result: {
+			type: "preflight_result";
+			requestId: number;
+			editGeneration: number;
+			result: {
+				ok: true;
+				pageCount: number;
+				byteCount: number;
+				diagnostics: [];
+				pdf: ArrayBuffer;
+			};
+		}) => void;
+		const mutate = vi
+			.fn()
+			.mockReturnValueOnce(new Promise<MutationResult>((_resolve, reject) => (rejectMutation = reject)))
+			.mockResolvedValueOnce({
+				stylesheet: stylesheet("newer"),
+				revision: 11,
+				renderDataVersion: 20,
+				editGeneration: 2,
+				diagnostics: [],
+			});
+		const preflight = vi
+			.fn()
+			.mockImplementationOnce(async ({ editGeneration }) => ({
+				type: "preflight_result",
+				requestId: editGeneration,
+				editGeneration,
+				result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+			}))
+			.mockImplementationOnce(async ({ editGeneration }) => ({
+				type: "preflight_result",
+				requestId: editGeneration,
+				editGeneration,
+				result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+			}))
+			.mockImplementationOnce(
+				() =>
+					new Promise((resolve) => {
+						resolveRepreflight = resolve;
+					}),
+			);
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			debounceMs: 0,
+			compile: async ({ editGeneration }) => ({
+				type: "compile_result",
+				requestId: editGeneration,
+				editGeneration,
+				program: { languageVersion: 1, rules: [] },
+				diagnostics: [],
+			}),
+			preflight,
+			mutate,
+		});
+
+		runtime.store.getState().setSourceText("older");
+		await vi.runAllTimersAsync();
+		runtime.store.getState().setSourceText("newer");
+		await vi.runAllTimersAsync();
+		runtime.replaceResumeSnapshot(defaultResumeData, {
+			stylesheet: stylesheet("remote"),
+			revision: 10,
+			renderDataVersion: 20,
+		});
+		await vi.runAllTimersAsync();
+
+		rejectMutation({
+			code: "STYLESHEET_REVISION_CONFLICT",
+			data: { state: { stylesheet: stylesheet("remote"), revision: 10, renderDataVersion: 20 } },
+		});
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(mutate).toHaveBeenCalledTimes(1);
+
+		resolveRepreflight({
+			type: "preflight_result",
+			requestId: 3,
+			editGeneration: 2,
+			result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+		});
+		await vi.runAllTimersAsync();
+		expect(mutate.mock.calls[1]?.[0]).toMatchObject({
+			source: source("newer"),
+			expectedRevision: 10,
+			expectedRenderDataVersion: 20,
+		});
+	});
+
 	it("reconciles a deferred focused canonical source on blur", () => {
 		const runtime = createStylesheetStoreRuntime({
 			resumeId: "resume-1",

@@ -226,6 +226,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		const candidate = pending;
 		pending = undefined;
 		inFlight = candidate;
+		const requestValidationEpoch = validationEpoch;
 		const state = store.getState();
 		const common = {
 			id: options.resumeId,
@@ -273,7 +274,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 					return;
 				}
 				replaceCanonical(canonical, true);
-				pending ??= candidate;
+				if (requestValidationEpoch === validationEpoch) pending ??= candidate;
 			})
 			.finally(() => {
 				inFlight = undefined;
