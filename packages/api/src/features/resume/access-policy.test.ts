@@ -71,6 +71,25 @@ describe("redactResumeForViewer", () => {
 		expect(result.data.metadata.notes).toBe("");
 	});
 
+	it("strips editable and applied stylesheet source for non-owner", () => {
+		const source = { languageVersion: 1, text: "@rr-version 1;\nresume { color: red; }\n" };
+		const resume = {
+			name: "Title",
+			data: {
+				...defaultResumeData,
+				metadata: {
+					...defaultResumeData.metadata,
+					stylesheet: { mode: "semantic" as const, source, applied: source },
+				},
+			},
+		};
+
+		const result = redactResumeForViewer(resume, false);
+
+		expect(result.data.metadata.stylesheet).toBeUndefined();
+		expect(JSON.stringify(result)).not.toContain("@rr-version");
+	});
+
 	it("preserves resume.data.basics.name (the person's name) for non-owner", () => {
 		const resume = {
 			name: "Dashboard title",

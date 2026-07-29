@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
 	handleUpload: vi.fn(),
 	handleMcp: vi.fn(),
 	handleResumePdfDownload: vi.fn(),
+	handlePublicResumePdf: vi.fn(),
 	handleMcpServerCard: vi.fn(),
 	handleOAuthAuthorizationServer: vi.fn(),
 	handleOAuthProtectedResource: vi.fn(),
@@ -69,6 +70,10 @@ vi.mock("./resume-pdf", () => ({
 	handleResumePdfDownload: mocks.handleResumePdfDownload,
 }));
 
+vi.mock("./public-resume-pdf", () => ({
+	handlePublicResumePdf: mocks.handlePublicResumePdf,
+}));
+
 beforeEach(() => {
 	vi.clearAllMocks();
 	mocks.handleAuth.mockResolvedValue(new Response("auth"));
@@ -79,6 +84,7 @@ beforeEach(() => {
 	mocks.handleUpload.mockResolvedValue(new Response("upload"));
 	mocks.handleMcp.mockResolvedValue(new Response("mcp"));
 	mocks.handleResumePdfDownload.mockResolvedValue(new Response("pdf"));
+	mocks.handlePublicResumePdf.mockResolvedValue(new Response("public-pdf"));
 	mocks.handleMcpServerCard.mockReturnValue(new Response("server-card"));
 	mocks.handleOAuthAuthorizationServer.mockReturnValue(new Response("oauth-authorization-server"));
 	mocks.handleOAuthProtectedResource.mockReturnValue(new Response("oauth-protected-resource"));
@@ -113,6 +119,20 @@ describe("createApp", () => {
 
 		await expect(response.text()).resolves.toBe("pdf");
 		expect(mocks.handleResumePdfDownload).toHaveBeenCalledWith(request, "resume-1");
+		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
+		expect(mocks.handleWebApp).not.toHaveBeenCalled();
+	});
+
+	it("routes public resume PDF fallback separately from signed owner downloads", async () => {
+		const { createApp } = await import("./app");
+		const app = createApp();
+		const request = new Request("http://localhost:3001/api/resumes/jane/resume/pdf?reason=render-data-hash");
+
+		const response = await app.fetch(request);
+
+		await expect(response.text()).resolves.toBe("public-pdf");
+		expect(mocks.handlePublicResumePdf).toHaveBeenCalledWith(request, "jane", "resume");
+		expect(mocks.handleResumePdfDownload).not.toHaveBeenCalled();
 		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
 		expect(mocks.handleWebApp).not.toHaveBeenCalled();
 	});

@@ -38,6 +38,7 @@ export type {
 export * from "./legacy-converter";
 export * from "./legacy-parity";
 export * from "./preflight-core";
+export * from "./public-projection";
 export {
 	resolveResumePresentation,
 	resolveResumeRuntime,

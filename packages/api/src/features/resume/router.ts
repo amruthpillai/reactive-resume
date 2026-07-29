@@ -17,6 +17,7 @@ export const resumeRouter = {
 	list: crudRouter.list,
 	getById: crudRouter.getById,
 	getBySlug: sharingRouter.getBySlug,
+	getStyleProjection: sharingRouter.getStyleProjection,
 	create: crudRouter.create,
 	import: crudRouter.import,
 	update: crudRouter.update,

@@ -2,6 +2,7 @@ import z from "zod";
 import { protectedProcedure, publicProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit, resumePasswordRateLimit } from "../../middleware/rate-limit";
+import { getStyleProjection } from "./public-style-projection";
 import { resumeService } from "./service";
 
 export const sharingRouter = {
@@ -20,6 +21,27 @@ export const sharingRouter = {
 		.output(resumeDto.getBySlug.output)
 		.handler(({ input, context }) =>
 			resumeService.getBySlug({
+				...input,
+				requestHeaders: context.reqHeaders,
+				...(context.user?.id ? { currentUserId: context.user.id } : {}),
+			}),
+		),
+
+	getStyleProjection: publicProcedure
+		.route({
+			method: "GET",
+			path: "/resumes/{username}/{slug}/style-projection",
+			tags: ["Resume Sharing"],
+			operationId: "getResumeStyleProjection",
+			summary: "Get public resume style projection",
+			description:
+				"Returns the source-free resolved semantic PDF style projection after applying public, private-owner, and password access rules.",
+			successDescription: "The validated public style projection.",
+		})
+		.input(resumeDto.getStyleProjection.input)
+		.output(resumeDto.getStyleProjection.output)
+		.handler(({ input, context }) =>
+			getStyleProjection({
 				...input,
 				requestHeaders: context.reqHeaders,
 				...(context.user?.id ? { currentUserId: context.user.id } : {}),

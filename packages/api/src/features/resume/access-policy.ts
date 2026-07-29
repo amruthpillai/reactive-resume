@@ -53,6 +53,7 @@ export function redactResumeForViewer<T extends { name: string; data: ResumeData
 	viewerIsOwner: boolean,
 ): T {
 	if (viewerIsOwner) return resume;
+	const { stylesheet: _stylesheet, ...metadata } = resume.data.metadata;
 
 	return {
 		...resume,
@@ -60,7 +61,7 @@ export function redactResumeForViewer<T extends { name: string; data: ResumeData
 		data: {
 			...resume.data,
 			metadata: {
-				...resume.data.metadata,
+				...metadata,
 				notes: "",
 			},
 		},

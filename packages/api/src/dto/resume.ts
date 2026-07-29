@@ -47,6 +47,29 @@ const stylesheetStateSchema = z.strictObject({
 	revision: z.number().int().nonnegative(),
 	renderDataVersion: z.number().int().nonnegative(),
 });
+const publicPdfPageSizeSchema = z.union([
+	z.enum(["A4", "LETTER"]),
+	z.strictObject({ width: z.number().finite(), height: z.number().finite().optional() }),
+]);
+const publicPdfNodePresentationSchema = z.strictObject({
+	style: z.record(z.string(), z.union([z.string(), z.number().finite(), z.null()])).optional(),
+	size: publicPdfPageSizeSchema.optional(),
+	break: z.boolean().optional(),
+	wrap: z.boolean().optional(),
+	fixed: z.boolean().optional(),
+	minPresenceAhead: z.number().finite().optional(),
+	orphans: z.number().finite().optional(),
+	widows: z.number().finite().optional(),
+});
+const publicStyleProjectionSchema = z.strictObject({
+	formatVersion: z.literal(1),
+	languageVersion: z.number().int().positive(),
+	semanticTreeVersion: z.literal(1),
+	registryFingerprint: z.string().regex(/^[a-f0-9]{64}$/),
+	adapterFingerprint: z.string().regex(/^[a-f0-9]{64}$/),
+	renderDataHash: z.string().regex(/^[a-f0-9]{64}$/),
+	nodes: z.record(z.string(), publicPdfNodePresentationSchema),
+});
 
 export const resumeDto = {
 	list: {
@@ -74,6 +97,11 @@ export const resumeDto = {
 		output: resumeSchema
 			.omit({ name: true, password: true, userId: true, createdAt: true, updatedAt: true })
 			.extend({ name: z.string() }),
+	},
+
+	getStyleProjection: {
+		input: z.strictObject({ username: z.string(), slug: z.string() }),
+		output: publicStyleProjectionSchema,
 	},
 
 	create: {
