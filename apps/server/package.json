@@ -7,6 +7,7 @@
 		"dev": "tsx watch src/index.ts",
 		"build": "tsdown",
 		"start": "node dist/index.mjs",
+		"docs:gen": "tsx src/openapi/generate-spec.ts",
 		"typecheck": "tsgo --noEmit",
 		"test": "vitest run --passWithNoTests",
 		"test:coverage": "vitest run --coverage --passWithNoTests",
