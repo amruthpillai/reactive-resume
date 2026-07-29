@@ -17,7 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useResumeStore } from "@/features/resume/builder/draft";
-import { reinitializeStylesheetStore } from "@/features/resume/stylesheet/store";
+import { captureStylesheetRuntime, replaceStylesheetStoreAfterRestore } from "@/features/resume/stylesheet/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { formatRelativeTime } from "@/libs/locale";
@@ -40,7 +40,7 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 		enabled: open,
 	});
 
-	const { mutate: restoreVersion, isPending } = useMutation(orpc.resume.restoreVersion.mutationOptions());
+	const { mutateAsync: restoreVersion, isPending } = useMutation(orpc.resume.restoreVersion.mutationOptions());
 
 	const handleRestore = async (versionId: string) => {
 		const confirmed = await confirm(t`Restore this version?`, {
@@ -49,19 +49,23 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 
 		if (!confirmed) return;
 
-		restoreVersion(
-			{ resumeId, versionId },
-			{
-				onSuccess: async (restored) => {
-					replaceResumeFromServer(restored as Resume);
-					queryClient.setQueryData(orpc.resume.getById.queryOptions({ input: { id: resumeId } }).queryKey, restored);
-					await reinitializeStylesheetStore(resumeId, restored.data);
-					void queryClient.invalidateQueries({ queryKey: orpc.resume.listVersions.queryKey({ input: { resumeId } }) });
-					toast.success(t`Your resume has been restored to the selected version.`);
-				},
-				onError: (error) => toast.error(getResumeErrorMessage(error)),
-			},
-		);
+		const token = captureStylesheetRuntime(resumeId);
+		try {
+			const restored = await restoreVersion({ resumeId, versionId });
+			const applied = replaceStylesheetStoreAfterRestore({
+				resumeId,
+				resumeData: restored.resume.data,
+				initial: restored.stylesheetState,
+				token,
+			});
+			if (!applied) return;
+			replaceResumeFromServer(restored.resume as Resume);
+			queryClient.setQueryData(orpc.resume.getById.queryOptions({ input: { id: resumeId } }).queryKey, restored.resume);
+			void queryClient.invalidateQueries({ queryKey: orpc.resume.listVersions.queryKey({ input: { resumeId } }) });
+			toast.success(t`Your resume has been restored to the selected version.`);
+		} catch (error) {
+			toast.error(getResumeErrorMessage(error));
+		}
 	};
 
 	return (

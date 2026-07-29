@@ -392,6 +392,7 @@ function toSharedResumeResponse(
 		isLocked: boolean;
 	},
 	hasPassword: boolean,
+	stylesheetMode: "legacy" | "semantic",
 ) {
 	return {
 		id: resume.id,
@@ -402,6 +403,7 @@ function toSharedResumeResponse(
 		isPublic: resume.isPublic,
 		isLocked: resume.isLocked,
 		hasPassword,
+		stylesheetMode,
 	};
 }
 
@@ -593,7 +595,12 @@ export const resumeService = {
 			}
 		}
 
-		return toSharedResumeResponse(redactResumeForViewer(resume, isOwner(resume, viewer)), resume.hasPassword);
+		const stylesheetMode = resume.data.metadata.stylesheet?.mode ?? "legacy";
+		return toSharedResumeResponse(
+			redactResumeForViewer(resume, isOwner(resume, viewer)),
+			resume.hasPassword,
+			stylesheetMode,
+		);
 	},
 
 	create: async (input: {
@@ -705,6 +712,8 @@ export const resumeService = {
 						data: schema.resume.data,
 						isPublic: schema.resume.isPublic,
 						isLocked: schema.resume.isLocked,
+						stylesheetRevision: schema.resume.stylesheetRevision,
+						renderDataVersion: schema.resume.renderDataVersion,
 						updatedAt: schema.resume.updatedAt,
 						hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 					});

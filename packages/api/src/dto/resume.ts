@@ -1,9 +1,18 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
 import * as schema from "@reactive-resume/db/schema";
 import { jsonPatchOperationSchema } from "@reactive-resume/resume/patch";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { semanticStylesheetSchema, stylesheetSourceSchema } from "@reactive-resume/schema/resume/stylesheet";
+
+const importedResumeDataSchema = z.custom<ResumeData>((value) => {
+	if (typeof value !== "object" || value === null) return false;
+	const data = value as Record<string, unknown>;
+	if (typeof data.metadata !== "object" || data.metadata === null) return false;
+	const { stylesheet: _stylesheet, ...metadata } = data.metadata as Record<string, unknown>;
+	return resumeDataSchema.safeParse({ ...data, metadata }).success;
+});
 
 const resumeSchema = createSelectSchema(schema.resume, {
 	id: z.string().describe("The ID of the resume."),
@@ -98,7 +107,7 @@ export const resumeDto = {
 		// the redacted public response passes output validation.
 		output: resumeSchema
 			.omit({ name: true, password: true, userId: true, createdAt: true, updatedAt: true })
-			.extend({ name: z.string() }),
+			.extend({ name: z.string(), stylesheetMode: z.enum(["legacy", "semantic"]) }),
 	},
 
 	getStyleProjection: {
@@ -114,7 +123,7 @@ export const resumeDto = {
 	},
 
 	import: {
-		input: z.object({ data: resumeDataSchema }),
+		input: z.object({ data: importedResumeDataSchema }),
 		output: z.string().describe("The ID of the imported resume."),
 	},
 
@@ -182,7 +191,10 @@ export const resumeDto = {
 			resumeId: z.string().describe("The ID of the resume to restore."),
 			versionId: z.string().describe("The ID of the version snapshot to restore."),
 		}),
-		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
+		output: z.strictObject({
+			resume: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
+			stylesheetState: stylesheetStateSchema,
+		}),
 	},
 
 	stylesheet: {

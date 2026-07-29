@@ -48,26 +48,23 @@ describe("stylesheet store reinitialization", () => {
 
 	afterEach(() => vi.unstubAllGlobals());
 
-	it("replaces the runtime with canonical post-restore state and keeps route cleanup authoritative", async () => {
+	it("uses the synchronous restore response so a later edit cannot be overwritten by a delayed fetch", async () => {
 		const storeModule = await import("./store");
 		const cleanup = storeModule.initializeStylesheetStore({
 			resumeId: "resume-1",
 			initial: { stylesheet: stylesheet("old"), revision: 3, renderDataVersion: 7 },
 			resumeData: defaultResumeData,
 		});
-		mocks.getState.mockResolvedValue({
-			stylesheet: stylesheet("restored"),
-			revision: 9,
-			renderDataVersion: 12,
+		const token = storeModule.captureStylesheetRuntime("resume-1");
+		const replaced = storeModule.replaceStylesheetStoreAfterRestore({
+			resumeId: "resume-1",
+			resumeData: defaultResumeData,
+			initial: { stylesheet: stylesheet("restored"), revision: 9, renderDataVersion: 12 },
+			token,
 		});
 
-		await (
-			storeModule as typeof storeModule & {
-				reinitializeStylesheetStore(resumeId: string, resumeData: typeof defaultResumeData): Promise<void>;
-			}
-		).reinitializeStylesheetStore("resume-1", defaultResumeData);
-
-		expect(mocks.getState).toHaveBeenCalledWith({ id: "resume-1" });
+		expect(replaced).toBe(true);
+		expect(mocks.getState).not.toHaveBeenCalled();
 		expect(storeModule.useStylesheetStore.getState()).toMatchObject({
 			resumeId: "resume-1",
 			source: { text: "restored" },
@@ -75,6 +72,8 @@ describe("stylesheet store reinitialization", () => {
 			revision: 9,
 			renderDataVersion: 12,
 		});
+		storeModule.useStylesheetStore.getState().setSourceText("later edit");
+		expect(storeModule.useStylesheetStore.getState().source.text).toBe("later edit");
 		expect(mocks.workers).toHaveLength(2);
 		expect(mocks.workers[0]?.terminated).toBe(true);
 
@@ -82,5 +81,38 @@ describe("stylesheet store reinitialization", () => {
 
 		expect(mocks.workers[1]?.terminated).toBe(true);
 		expect(storeModule.useStylesheetStore.getState().resumeId).toBeUndefined();
+	});
+
+	it("ignores a stale same-resume restore completion after away-and-back runtime replacement", async () => {
+		const storeModule = await import("./store");
+		const cleanupFirst = storeModule.initializeStylesheetStore({
+			resumeId: "resume-1",
+			initial: { stylesheet: stylesheet("first"), revision: 1, renderDataVersion: 1 },
+			resumeData: defaultResumeData,
+		});
+		const staleToken = storeModule.captureStylesheetRuntime("resume-1");
+
+		cleanupFirst();
+		const cleanupSecond = storeModule.initializeStylesheetStore({
+			resumeId: "resume-1",
+			initial: { stylesheet: stylesheet("second"), revision: 2, renderDataVersion: 2 },
+			resumeData: defaultResumeData,
+		});
+
+		const replaced = storeModule.replaceStylesheetStoreAfterRestore({
+			resumeId: "resume-1",
+			resumeData: defaultResumeData,
+			initial: { stylesheet: stylesheet("stale restore"), revision: 3, renderDataVersion: 3 },
+			token: staleToken,
+		});
+
+		expect(replaced).toBe(false);
+		expect(storeModule.useStylesheetStore.getState()).toMatchObject({
+			source: { text: "second" },
+			revision: 2,
+			renderDataVersion: 2,
+		});
+
+		cleanupSecond();
 	});
 });

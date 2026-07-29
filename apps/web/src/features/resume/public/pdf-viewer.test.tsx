@@ -130,6 +130,7 @@ describe("PdfViewer", () => {
 		render(
 			<PdfViewer
 				data={sampleResumeData}
+				stylesheetMode="semantic"
 				styleProjection={projection}
 				refetchStyleProjection={refetchStyleProjection}
 				publicResume={{ username: "amruth", slug: "sample" }}
@@ -156,6 +157,7 @@ describe("PdfViewer", () => {
 		const view = render(
 			<PdfViewer
 				data={sampleResumeData}
+				stylesheetMode="semantic"
 				styleProjection={mismatchedProjection}
 				refetchStyleProjection={refetchStyleProjection}
 				publicResume={{ username: "amruth", slug: "sample" }}
@@ -171,6 +173,7 @@ describe("PdfViewer", () => {
 		view.rerender(
 			<PdfViewer
 				data={sampleResumeData}
+				stylesheetMode="semantic"
 				styleProjection={{ ...mismatchedProjection, renderDataHash: "1".repeat(64) }}
 				refetchStyleProjection={refetchStyleProjection}
 				publicResume={{ username: "amruth", slug: "sample" }}

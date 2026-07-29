@@ -2,7 +2,8 @@ import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
-import { validateHistoricalStylesheet } from "./stylesheet-preflight";
+import { convertLegacyStylesheet, validateHistoricalStylesheet } from "./stylesheet-preflight";
+import { stylesheetFromSnapshot } from "./stylesheet-service";
 
 export const versionsRouter = {
 	listVersions: protectedProcedure
@@ -46,8 +47,8 @@ export const versionsRouter = {
 				status: 400,
 			},
 		})
-		.handler(({ context, input }) =>
-			resumeService.versions.restore({
+		.handler(async ({ context, input }) => {
+			const resume = await resumeService.versions.restore({
 				resumeId: input.resumeId,
 				versionId: input.versionId,
 				userId: context.user.id,
@@ -67,6 +68,15 @@ export const versionsRouter = {
 						metadata: { ...data.metadata, stylesheet: validated },
 					};
 				},
-			}),
-		),
+			});
+			const stylesheet = await stylesheetFromSnapshot({ ...resume, userId: context.user.id }, convertLegacyStylesheet);
+			return {
+				resume,
+				stylesheetState: {
+					stylesheet,
+					revision: resume.stylesheetRevision,
+					renderDataVersion: resume.renderDataVersion,
+				},
+			};
+		}),
 };

@@ -25,11 +25,19 @@ export function PublicResumeRoute() {
 	const publicResume = useMemo(() => ({ username, slug }), [slug, username]);
 	const refetchStyleProjection = useCallback(async () => {
 		const result = await projectionQuery.refetch();
-		if (!result.data) throw new Error("Public style projection is unavailable");
 		return result.data;
 	}, [projectionQuery.refetch]);
 	const { onDownloadPDF, isExporting } = useResumeExport(resume, {
-		...(styleProjection ? { publicStyleProjection: styleProjection } : {}),
+		...(resume
+			? {
+					publicResumePdf: {
+						stylesheetMode: resume.stylesheetMode,
+						publicResume,
+						refetchStyleProjection,
+						...(styleProjection ? { styleProjection } : {}),
+					},
+				}
+			: {}),
 	});
 
 	if (!resume || projectionQuery.isPending) return <LoadingScreen />;
@@ -61,13 +69,10 @@ export function PublicResumeRoute() {
 					<PdfViewer
 						data={resume.data}
 						className="block w-full"
-						{...(styleProjection
-							? {
-									styleProjection,
-									publicResume,
-									refetchStyleProjection,
-								}
-							: {})}
+						stylesheetMode={resume.stylesheetMode}
+						styleProjection={styleProjection}
+						publicResume={publicResume}
+						refetchStyleProjection={refetchStyleProjection}
 					/>
 				</main>
 

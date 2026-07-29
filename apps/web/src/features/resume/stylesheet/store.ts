@@ -585,6 +585,9 @@ export const useStylesheetStore = create<StylesheetStoreState>(() => ({
 }));
 
 let activeRuntime: ReturnType<typeof createStylesheetStoreRuntime> | undefined;
+declare const stylesheetRuntimeTokenBrand: unique symbol;
+export type StylesheetRuntimeToken = Readonly<{ [stylesheetRuntimeTokenBrand]: true }>;
+let activeRuntimeToken: StylesheetRuntimeToken | undefined;
 
 const compilerClient = () =>
 	createCompileWorkerClient(
@@ -616,18 +619,27 @@ export function initializeStylesheetStore(input: {
 		},
 	});
 	activeRuntime = runtime;
+	activeRuntimeToken = {} as StylesheetRuntimeToken;
 	return () => {
 		if (activeRuntime?.store.getState().resumeId !== input.resumeId) return;
 		activeRuntime.destroy();
 		activeRuntime = undefined;
+		activeRuntimeToken = undefined;
 	};
 }
 
-export async function reinitializeStylesheetStore(resumeId: string, resumeData: ResumeData) {
-	if (activeRuntime?.store.getState().resumeId !== resumeId) return;
-	const canonical = await orpc.resume.stylesheet.getState.call({ id: resumeId });
-	if (activeRuntime?.store.getState().resumeId !== resumeId) return;
-	initializeStylesheetStore({ resumeId, initial: canonical, resumeData });
+export const captureStylesheetRuntime = (resumeId: string): StylesheetRuntimeToken | undefined =>
+	activeRuntime?.store.getState().resumeId === resumeId ? activeRuntimeToken : undefined;
+
+export function replaceStylesheetStoreAfterRestore(input: {
+	resumeId: string;
+	initial: StylesheetCanonicalState;
+	resumeData: ResumeData;
+	token: StylesheetRuntimeToken | undefined;
+}): boolean {
+	if (!input.token || activeRuntimeToken !== input.token) return false;
+	initializeStylesheetStore(input);
+	return true;
 }
 
 export async function refreshStylesheetStore(resumeId: string, resumeData?: ResumeData) {

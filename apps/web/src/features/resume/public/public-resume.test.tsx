@@ -12,8 +12,9 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
+	stylesheetMode?: "legacy" | "semantic";
 	styleProjection?: PublicStyleProjection;
-	refetchStyleProjection?: () => Promise<PublicStyleProjection>;
+	refetchStyleProjection?: () => Promise<PublicStyleProjection | undefined>;
 	publicResume?: { username: string; slug: string };
 };
 
@@ -30,6 +31,11 @@ const publicResumeMock = vi.hoisted(() => ({
 		nodes: { resume: {} },
 	} as PublicStyleProjection,
 	refetchProjection: vi.fn(),
+	projectionResult: {
+		data: undefined as PublicStyleProjection | undefined,
+		isError: false,
+		isPending: false,
+	},
 	useResumeExport: vi.fn(),
 	resume: undefined as
 		| undefined
@@ -37,6 +43,7 @@ const publicResumeMock = vi.hoisted(() => ({
 				data: ResumeData;
 				name: string;
 				slug: string;
+				stylesheetMode: "legacy" | "semantic";
 		  },
 }));
 
@@ -44,7 +51,7 @@ vi.mock("@tanstack/react-query", () => ({
 	useQuery: (options: { query: "resume" | "projection" }) =>
 		options.query === "resume"
 			? { data: publicResumeMock.resume }
-			: { data: publicResumeMock.projection, refetch: publicResumeMock.refetchProjection },
+			: { ...publicResumeMock.projectionResult, refetch: publicResumeMock.refetchProjection },
 }));
 
 vi.mock("@tanstack/react-router", () => ({
@@ -81,6 +88,12 @@ beforeEach(() => {
 		data: sampleResumeData,
 		name: "Sample Resume",
 		slug: "sample",
+		stylesheetMode: "semantic",
+	};
+	publicResumeMock.projectionResult = {
+		data: publicResumeMock.projection,
+		isError: false,
+		isPending: false,
 	};
 	publicResumeMock.PdfViewer.mockClear();
 	publicResumeMock.refetchProjection.mockReset();
@@ -112,8 +125,48 @@ describe("PublicResumeRoute", () => {
 			undefined,
 		);
 		expect(publicResumeMock.useResumeExport).toHaveBeenCalledWith(publicResumeMock.resume, {
-			publicStyleProjection: publicResumeMock.projection,
+			publicResumePdf: expect.objectContaining({
+				stylesheetMode: "semantic",
+				styleProjection: publicResumeMock.projection,
+				publicResume: { username: "amruth", slug: "sample" },
+			}),
 		});
+	});
+
+	it("routes a missing semantic projection to the shared fallback seam", () => {
+		publicResumeMock.projectionResult = { data: undefined, isError: true, isPending: false };
+
+		renderPublicResumeRoute();
+
+		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
+			expect.objectContaining({
+				stylesheetMode: "semantic",
+				styleProjection: undefined,
+				refetchStyleProjection: expect.any(Function),
+				publicResume: { username: "amruth", slug: "sample" },
+			}),
+			undefined,
+		);
+		expect(publicResumeMock.useResumeExport).toHaveBeenCalledWith(
+			publicResumeMock.resume,
+			expect.objectContaining({
+				publicResumePdf: expect.objectContaining({
+					stylesheetMode: "semantic",
+				}),
+			}),
+		);
+	});
+
+	it("keeps missing legacy projections on the local rendering path", () => {
+		if (publicResumeMock.resume) publicResumeMock.resume.stylesheetMode = "legacy";
+		publicResumeMock.projectionResult = { data: undefined, isError: false, isPending: false };
+
+		renderPublicResumeRoute();
+
+		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
+			expect.objectContaining({ stylesheetMode: "legacy", styleProjection: undefined }),
+			undefined,
+		);
 	});
 
 	it("loads the public projection and passes it to the shared viewer", () => {
