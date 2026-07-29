@@ -1264,9 +1264,15 @@ importers:
 
   tooling:
     dependencies:
+      '@reactive-resume/pdf':
+        specifier: workspace:*
+        version: link:../packages/pdf
       '@reactive-resume/resume':
         specifier: workspace:*
         version: link:../packages/resume
+      '@reactive-resume/schema':
+        specifier: workspace:*
+        version: link:../packages/schema
     devDependencies:
       '@reactive-resume/config':
         specifier: workspace:*

@@ -5,12 +5,15 @@
 	"private": true,
 	"scripts": {
 		"db:reset": "tsx database/reset.ts",
+		"docs:gen": "tsx semantic-css/generate-reference.ts",
 		"fonts:generate": "tsx fonts/generate.ts",
 		"test": "vitest run --passWithNoTests",
 		"typecheck": "tsgo --noEmit"
 	},
 	"dependencies": {
-		"@reactive-resume/resume": "workspace:*"
+		"@reactive-resume/pdf": "workspace:*",
+		"@reactive-resume/resume": "workspace:*",
+		"@reactive-resume/schema": "workspace:*"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
