@@ -43,15 +43,47 @@ const createRendererUnsafeResumeData = (): ResumeData => {
 	return data;
 };
 
+const createLegacyRendererSafeResumeData = (): ResumeData =>
+	({
+		...structuredClone(defaultResumeData),
+		customSections: [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: "experience-item",
+						hidden: false,
+						company: "Analytical Engines",
+						position: "Programmer",
+						location: "London",
+						period: "1842–1843",
+						description: "<p>Wrote the first algorithm.</p>",
+						content: "<p>Compatible overlap</p>",
+					},
+				],
+			},
+		],
+	}) as unknown as ResumeData;
+
 describe("renderPreflightPdf", () => {
 	beforeEach(() => {
-		rendererMock.pdf.mockClear();
+		rendererMock.pdf.mockReset();
+		rendererMock.pdf.mockImplementation(() => ({
+			toBlob: vi.fn(async () => new Blob(["%PDF-1.7"], { type: "application/pdf" })),
+		}));
 	});
 
 	it("renders a valid semantic candidate to transferable PDF bytes", async () => {
 		const result = await renderPreflightPdf(
 			{
-				data: defaultResumeData,
+				data: createLegacyRendererSafeResumeData(),
 				template: defaultResumeData.metadata.template,
 				stylesheet: validStylesheet,
 			},
@@ -60,7 +92,25 @@ describe("renderPreflightPdf", () => {
 
 		expect(result).toMatchObject({ ok: true, diagnostics: [] });
 		expect(result.ok && new TextDecoder().decode(result.bytes)).toBe("%PDF-1.7");
-		expect(rendererMock.pdf).toHaveBeenCalledTimes(1);
+		expect(rendererMock.pdf).toHaveBeenCalledWith(
+			expect.objectContaining({
+				props: expect.objectContaining({
+					data: expect.objectContaining({
+						customSections: [
+							expect.objectContaining({
+								items: [
+									expect.objectContaining({
+										content: "<p>Compatible overlap</p>",
+										roles: [],
+										website: { url: "", label: "", inlineLink: false },
+									}),
+								],
+							}),
+						],
+					}),
+				}),
+			}),
+		);
 	});
 
 	it("returns compiler diagnostics without starting the renderer", async () => {
@@ -82,16 +132,19 @@ describe("renderPreflightPdf", () => {
 	});
 
 	it("rejects renderer-unsafe data before semantic inspection or React PDF dispatch", async () => {
-		const error = await renderPreflightPdf(
+		const result = renderPreflightPdf(
 			{
 				data: createRendererUnsafeResumeData(),
 				template: defaultResumeData.metadata.template,
 				stylesheet: validStylesheet,
 			},
 			pageLimits,
-		).catch((caught: unknown) => caught);
+		);
 
-		expect(error).toHaveProperty("issues.0.path", ["customSections", 0, "items", 0, "company"]);
+		await expect(result).rejects.toMatchObject({
+			name: "ZodError",
+			issues: expect.arrayContaining([expect.objectContaining({ path: ["customSections", 0, "items", 0, "company"] })]),
+		});
 		expect(rendererMock.pdf).not.toHaveBeenCalled();
 	});
 

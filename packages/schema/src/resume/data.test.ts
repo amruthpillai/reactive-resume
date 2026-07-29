@@ -1,7 +1,6 @@
 import type { CustomSectionType } from "./data";
 import { describe, expect, it } from "vitest";
 import {
-	assertResumeData,
 	baseSectionSchema,
 	basicsSchema,
 	customFieldSchema,
@@ -10,6 +9,7 @@ import {
 	experienceItemSchema,
 	layoutSchema,
 	pageSchema,
+	parseResumeData,
 	pictureSchema,
 	resumeDataSchema,
 	sectionTypeSchema,
@@ -137,7 +137,11 @@ describe("resumeDataSchema", () => {
 			content: "<p>Also valid summary content</p>",
 		});
 
-		expect(customSectionSchema.safeParse(section).success).toBe(true);
+		expect(customSectionSchema.parse(section).items[0]).toMatchObject({
+			content: "<p>Also valid summary content</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
 	});
 
 	it("rejects a renderer-unsafe custom section before PDF or DOCX dispatch", () => {
@@ -152,7 +156,7 @@ describe("resumeDataSchema", () => {
 		).toBe(false);
 	});
 
-	it("asserts the canonical schema without replacing accepted input", () => {
+	it("returns renderer-safe normalized data without losing compatible overlapping fields", () => {
 		const data = {
 			...structuredClone(defaultResumeData),
 			customSections: [
@@ -162,12 +166,13 @@ describe("resumeDataSchema", () => {
 				}),
 			],
 		};
-		const item = data.customSections[0]?.items[0];
+		const parsed = parseResumeData(data);
 
-		assertResumeData(data);
-
-		expect(data.customSections[0]?.items[0]).toBe(item);
-		expect(data.customSections[0]?.items[0]).toHaveProperty("content", "<p>Preserve this overlapping field</p>");
+		expect(parsed.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Preserve this overlapping field</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
 	});
 });
 

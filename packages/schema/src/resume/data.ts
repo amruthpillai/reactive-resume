@@ -362,20 +362,20 @@ export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
 // Correlation protects renderer requirements; it does not make otherwise-overlapping item shapes exclusive.
 // Keep cover-letter before summary so the overlapping content shapes retain their established precedence.
 export const customSectionItemDefinitionByType = {
-	"cover-letter": { schemaName: "coverLetterItemSchema", schema: coverLetterItemSchema },
-	summary: { schemaName: "summaryItemSchema", schema: summaryItemSchema },
-	profiles: { schemaName: "profileItemSchema", schema: profileItemSchema },
-	experience: { schemaName: "experienceItemSchema", schema: experienceItemSchema },
-	education: { schemaName: "educationItemSchema", schema: educationItemSchema },
-	projects: { schemaName: "projectItemSchema", schema: projectItemSchema },
-	skills: { schemaName: "skillItemSchema", schema: skillItemSchema },
-	languages: { schemaName: "languageItemSchema", schema: languageItemSchema },
-	interests: { schemaName: "interestItemSchema", schema: interestItemSchema },
-	awards: { schemaName: "awardItemSchema", schema: awardItemSchema },
-	certifications: { schemaName: "certificationItemSchema", schema: certificationItemSchema },
-	publications: { schemaName: "publicationItemSchema", schema: publicationItemSchema },
-	volunteer: { schemaName: "volunteerItemSchema", schema: volunteerItemSchema },
-	references: { schemaName: "referenceItemSchema", schema: referenceItemSchema },
+	"cover-letter": { schemaName: "coverLetterItemSchema", schema: coverLetterItemSchema.catchall(z.any()) },
+	summary: { schemaName: "summaryItemSchema", schema: summaryItemSchema.catchall(z.any()) },
+	profiles: { schemaName: "profileItemSchema", schema: profileItemSchema.catchall(z.any()) },
+	experience: { schemaName: "experienceItemSchema", schema: experienceItemSchema.catchall(z.any()) },
+	education: { schemaName: "educationItemSchema", schema: educationItemSchema.catchall(z.any()) },
+	projects: { schemaName: "projectItemSchema", schema: projectItemSchema.catchall(z.any()) },
+	skills: { schemaName: "skillItemSchema", schema: skillItemSchema.catchall(z.any()) },
+	languages: { schemaName: "languageItemSchema", schema: languageItemSchema.catchall(z.any()) },
+	interests: { schemaName: "interestItemSchema", schema: interestItemSchema.catchall(z.any()) },
+	awards: { schemaName: "awardItemSchema", schema: awardItemSchema.catchall(z.any()) },
+	certifications: { schemaName: "certificationItemSchema", schema: certificationItemSchema.catchall(z.any()) },
+	publications: { schemaName: "publicationItemSchema", schema: publicationItemSchema.catchall(z.any()) },
+	volunteer: { schemaName: "volunteerItemSchema", schema: volunteerItemSchema.catchall(z.any()) },
+	references: { schemaName: "referenceItemSchema", schema: referenceItemSchema.catchall(z.any()) },
 } as const satisfies Record<CustomSectionType, { schemaName: string; schema: z.ZodType }>;
 
 export type CustomSectionItem = z.infer<(typeof customSectionItemDefinitionByType)[CustomSectionType]["schema"]>;
@@ -668,14 +668,7 @@ export const resumeDataSchema = z.looseObject({
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
 
-/**
- * Validates an unknown value against the canonical resume schema without replacing it with Zod's parsed output.
- * This keeps accepted extension fields intact at persistence and rendering boundaries.
- */
-export function assertResumeData(data: unknown): asserts data is ResumeData {
-	const result = resumeDataSchema.safeParse(data);
-	if (!result.success) throw result.error;
-}
+export const parseResumeData = (data: unknown): ResumeData => resumeDataSchema.parse(data);
 
 export type LayoutPage = z.infer<typeof pageLayoutSchema>;
 export type Typography = z.infer<typeof typographySchema>;

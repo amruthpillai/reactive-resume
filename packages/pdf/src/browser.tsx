@@ -5,6 +5,7 @@ import type { SectionTitleResolver } from "./section-title";
 import type { ResolvedResumeRuntime, ResumePdfRenderResult } from "./semantic";
 import type { PublicStyleProjection } from "./semantic/public-projection";
 import { createElement } from "react";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { pdf } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
 import { hasSemanticErrors, inspectResumePdf } from "./semantic";
@@ -57,14 +58,15 @@ export const createResumePdfBlobResult = async ({
 	inspection,
 	...options
 }: CreateResumePdfBlobResultOptions): Promise<ResumePdfRenderResult<Blob>> => {
-	const resolvedInspection = inspection ?? inspectResumePdf(options);
+	const normalizedOptions = { ...options, data: parseResumeData(options.data) };
+	const resolvedInspection = inspection ?? inspectResumePdf(normalizedOptions);
 	if (hasSemanticErrors(resolvedInspection)) {
 		return { ok: false, diagnostics: resolvedInspection.diagnostics };
 	}
 
 	return {
 		ok: true,
-		value: await renderResumePdfBlob(options),
+		value: await renderResumePdfBlob(normalizedOptions),
 		diagnostics: resolvedInspection.diagnostics,
 	};
 };

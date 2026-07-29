@@ -56,6 +56,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Run Server and Tooling Tests
+        run: pnpm exec turbo run test:ci --filter=server --filter=@reactive-resume/tooling
+
       - name: Install Playwright Browser
         run: pnpm exec playwright install --with-deps chromium
 

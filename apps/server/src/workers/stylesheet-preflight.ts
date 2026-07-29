@@ -16,8 +16,21 @@ type StylesheetPreflightWorkerData = {
 	limits: StylesheetPreflightWorkerLimits;
 };
 
+type SerializedPreflightCause = {
+	name: string;
+	message: string;
+	issues: readonly unknown[];
+};
+
 const send = (result: PdfPreflightResult) => {
 	parentPort?.postMessage(result);
+};
+
+const serializeZodCause = (cause: unknown): SerializedPreflightCause | undefined => {
+	if (!(cause instanceof Error) || cause.name !== "ZodError" || !("issues" in cause) || !Array.isArray(cause.issues)) {
+		return;
+	}
+	return { name: cause.name, message: cause.message, issues: cause.issues };
 };
 
 parentPort?.postMessage({ type: "ready" });
@@ -31,7 +44,12 @@ async function run(): Promise<PdfPreflightResult> {
 if (parentPort) {
 	void run()
 		.then(send)
-		.catch(() => {
+		.catch((cause: unknown) => {
+			const serializedCause = serializeZodCause(cause);
+			if (serializedCause) {
+				parentPort?.postMessage({ type: "preflight_error", cause: serializedCause });
+				return;
+			}
 			send({
 				ok: false,
 				code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",

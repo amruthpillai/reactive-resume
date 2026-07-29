@@ -3,7 +3,7 @@ import type { Template } from "@reactive-resume/schema/templates";
 import type { SectionTitleResolver } from "./section-title";
 import type { ResolvedResumeRuntime, ResumePdfRenderResult } from "./semantic";
 import { createElement } from "react";
-import { assertResumeData } from "@reactive-resume/schema/resume/data";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { renderToBuffer } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
 import { hasSemanticErrors, inspectResumePdf } from "./semantic";
@@ -46,15 +46,15 @@ export const createResumePdfFileResult = async ({
 	inspection,
 	...options
 }: CreateResumePdfFileResultOptions): Promise<ResumePdfRenderResult<File>> => {
-	assertResumeData(options.data);
-	const resolvedInspection = inspection ?? inspectResumePdf(options);
+	const normalizedOptions = { ...options, data: parseResumeData(options.data) };
+	const resolvedInspection = inspection ?? inspectResumePdf(normalizedOptions);
 	if (hasSemanticErrors(resolvedInspection)) {
 		return { ok: false, diagnostics: resolvedInspection.diagnostics };
 	}
 
 	return {
 		ok: true,
-		value: await renderResumePdfFile(options),
+		value: await renderResumePdfFile(normalizedOptions),
 		diagnostics: resolvedInspection.diagnostics,
 	};
 };

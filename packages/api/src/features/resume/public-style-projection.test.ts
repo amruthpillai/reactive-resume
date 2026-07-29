@@ -85,6 +85,58 @@ describe("getStyleProjection", () => {
 		expect(consume).toHaveBeenCalledWith({ trustedClient: "203.0.113.9", resumeId: "resume-1" });
 	});
 
+	it("normalizes stored data before public projection", async () => {
+		const resume = buildResume();
+		resume.data.customSections = [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: "experience-item",
+						hidden: false,
+						company: "Analytical Engines",
+						position: "Programmer",
+						location: "London",
+						period: "1842–1843",
+						description: "<p>Wrote the first algorithm.</p>",
+						content: "<p>Compatible overlap</p>",
+					},
+				],
+			} as never,
+		];
+		const projection = {
+			formatVersion: 1,
+			languageVersion: 1,
+			semanticTreeVersion: 1,
+			registryFingerprint: "registry",
+			adapterFingerprint: "adapter",
+			renderDataHash: "render-hash",
+			nodes: {},
+		} satisfies PublicStyleProjection;
+		const createProjection = vi.fn().mockResolvedValue(projection);
+
+		await getStyleProjection(input, {
+			findResume: vi.fn().mockResolvedValue(resume),
+			hasPasswordAccess: vi.fn(),
+			rateLimiter: { consume: vi.fn() },
+			createProjection,
+			cache: new Map(),
+		});
+
+		expect(createProjection.mock.calls[0]?.[0].data.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Compatible overlap</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
+	});
+
 	it("caches only authorized projections by renderDataHash", async () => {
 		const projection = {
 			formatVersion: 1,

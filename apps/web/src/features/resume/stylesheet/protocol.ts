@@ -63,6 +63,19 @@ export type PreflightWorkerResponse = {
 	result: BrowserPdfPreflightResult;
 };
 
+export type SerializedPreflightCause = {
+	name: string;
+	message: string;
+	issues: readonly unknown[];
+};
+
+export type PreflightWorkerError = {
+	type: "preflight_error";
+	requestId: number;
+	editGeneration: number;
+	cause: SerializedPreflightCause;
+};
+
 export type PreflightWorkerReady = {
 	type: "preflight_ready";
 };

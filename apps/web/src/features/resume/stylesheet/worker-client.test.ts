@@ -90,6 +90,35 @@ describe("stylesheet worker clients", () => {
 		vi.useRealTimers();
 	});
 
+	it("rejects structured resume-data failures without waiting for the timeout", async () => {
+		vi.useFakeTimers();
+		const fake = worker();
+		const client = createPreflightWorkerClient(() => fake, 5_000);
+		const pending = client.preflight({ editGeneration: 1 } as never);
+		const outcome = pending.catch((error: unknown) => error);
+
+		fake.emit({ type: "preflight_ready" });
+		await vi.advanceTimersByTimeAsync(0);
+		fake.emit({
+			type: "preflight_error",
+			requestId: 1,
+			editGeneration: 1,
+			cause: {
+				name: "ZodError",
+				message: "Invalid resume data",
+				issues: [{ path: ["customSections", 0, "items", 0, "company"] }],
+			},
+		});
+
+		expect(await outcome).toMatchObject({
+			name: "ZodError",
+			issues: [{ path: ["customSections", 0, "items", 0, "company"] }],
+		});
+		await vi.advanceTimersByTimeAsync(5_000);
+		expect(fake.terminate).not.toHaveBeenCalled();
+		vi.useRealTimers();
+	});
+
 	it("bounds readiness, recreates once, and rejects after the retry also times out", async () => {
 		vi.useFakeTimers();
 		const first = worker();

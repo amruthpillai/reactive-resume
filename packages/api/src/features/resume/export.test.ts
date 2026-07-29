@@ -37,6 +37,35 @@ const createRendererUnsafeResumeData = (): ResumeData => {
 	return data;
 };
 
+const createLegacyRendererSafeResumeData = (): ResumeData =>
+	({
+		...structuredClone(defaultResumeData),
+		customSections: [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: "experience-item",
+						hidden: false,
+						company: "Analytical Engines",
+						position: "Programmer",
+						location: "London",
+						period: "1842–1843",
+						description: "<p>Wrote the first algorithm.</p>",
+						content: "<p>Compatible overlap</p>",
+					},
+				],
+			},
+		],
+	}) as unknown as ResumeData;
+
 describe("createResumePdfDownload", () => {
 	beforeEach(() => {
 		mocks.getById.mockReset();
@@ -62,11 +91,15 @@ describe("createResumePdfDownload", () => {
 		mocks.getById.mockResolvedValue({
 			id: "resume-1",
 			name: "Resume",
-			data: structuredClone(defaultResumeData),
+			data: createLegacyRendererSafeResumeData(),
 		});
 		mocks.renderPdf.mockResolvedValue(body);
 
 		await expect(createResumePdfDownload({ id: "resume-1", userId: "user-1" })).resolves.toMatchObject({ body });
-		expect(mocks.renderPdf).toHaveBeenCalledTimes(1);
+		expect(mocks.renderPdf.mock.calls[0]?.[0].data.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Compatible overlap</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
 	});
 });

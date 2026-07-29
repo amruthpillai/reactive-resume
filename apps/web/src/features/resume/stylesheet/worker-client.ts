@@ -2,6 +2,7 @@ import type {
 	CompileWorkerInput,
 	CompileWorkerRequest,
 	CompileWorkerResponse,
+	PreflightWorkerError,
 	PreflightWorkerInput,
 	PreflightWorkerReady,
 	PreflightWorkerRequest,
@@ -95,6 +96,20 @@ export function createPreflightWorkerClient(
 			ready = true;
 			readiness.resolve(worker);
 			readiness = undefined;
+			return;
+		}
+		const workerError = data as PreflightWorkerError;
+		if (workerError?.type === "preflight_error") {
+			const request = pending.get(workerError.requestId);
+			if (!request) return;
+			if (request.timer) clearTimeout(request.timer);
+			pending.delete(workerError.requestId);
+			request.reject(
+				Object.assign(new Error(workerError.cause.message), {
+					name: workerError.cause.name,
+					issues: workerError.cause.issues,
+				}),
+			);
 			return;
 		}
 		const response = data as PreflightWorkerResponse;

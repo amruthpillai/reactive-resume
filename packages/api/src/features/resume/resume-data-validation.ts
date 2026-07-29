@@ -1,9 +1,10 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { ORPCError } from "@orpc/client";
-import { assertResumeData } from "@reactive-resume/schema/resume/data";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
 
-function assertApiResumeData(data: unknown, code: "BAD_REQUEST" | "INTERNAL_SERVER_ERROR", message: string) {
+function parseApiResumeData(data: unknown, code: "BAD_REQUEST" | "INTERNAL_SERVER_ERROR", message: string): ResumeData {
 	try {
-		assertResumeData(data);
+		return parseResumeData(data);
 	} catch (cause) {
 		throw new ORPCError(code, {
 			status: code === "BAD_REQUEST" ? 400 : 500,
@@ -13,10 +14,8 @@ function assertApiResumeData(data: unknown, code: "BAD_REQUEST" | "INTERNAL_SERV
 	}
 }
 
-export function assertWritableResumeData(data: unknown) {
-	assertApiResumeData(data, "BAD_REQUEST", "Resume data does not match the canonical schema.");
-}
+export const parseWritableResumeData = (data: unknown) =>
+	parseApiResumeData(data, "BAD_REQUEST", "Resume data does not match the canonical schema.");
 
-export function assertStoredResumeData(data: unknown) {
-	assertApiResumeData(data, "INTERNAL_SERVER_ERROR", "Stored resume data does not match the canonical schema.");
-}
+export const parseStoredResumeData = (data: unknown) =>
+	parseApiResumeData(data, "INTERNAL_SERVER_ERROR", "Stored resume data does not match the canonical schema.");

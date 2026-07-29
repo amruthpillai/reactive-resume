@@ -17,7 +17,7 @@ import { getStorageService } from "../storage/service";
 import { grantResumeAccess, hasResumeAccess } from "./access";
 import { assertCanView, isOwner, redactResumeForViewer, shouldCountForStatistics } from "./access-policy";
 import { publishResumeUpdated } from "./events";
-import { assertWritableResumeData } from "./resume-data-validation";
+import { parseStoredResumeData, parseWritableResumeData } from "./resume-data-validation";
 import { hasRenderDataChanged, preserveServerStylesheet } from "./stylesheet-preservation";
 import { clientKeyFromHeaders, shouldCountView } from "./view-dedup";
 
@@ -94,12 +94,12 @@ async function writeResumeVersion(
 	client: DbOrTx,
 	input: { resumeId: string; userId: string; data: ResumeData; label: string },
 ) {
-	assertWritableResumeData(input.data);
+	const data = parseWritableResumeData(input.data);
 
 	await client.insert(schema.resumeVersion).values({
 		resumeId: input.resumeId,
 		userId: input.userId,
-		data: input.data,
+		data,
 		label: input.label,
 	});
 
@@ -182,7 +182,7 @@ async function applyResumePatchTx(
 		});
 	}
 
-	patchedData = preserveServerStylesheet(existing.data, patchedData);
+	patchedData = parseWritableResumeData(preserveServerStylesheet(existing.data, patchedData));
 	if (
 		existing.data.metadata.stylesheet?.mode === "semantic" &&
 		JSON.stringify(existing.data.metadata.styleRules) !== JSON.stringify(patchedData.metadata.styleRules)
@@ -478,11 +478,11 @@ export const resumeService = {
 				);
 
 			if (!version) throw new ORPCError("NOT_FOUND");
-			assertWritableResumeData(version.data);
+			const versionData = parseStoredResumeData(version.data);
 
 			// Capture the pre-restore state first so the restore itself is undoable.
 			const restoredData = await input.prepareData({
-				data: version.data,
+				data: versionData,
 				stylesheetRevision: current.stylesheetRevision,
 			});
 			await resumeService.versions.snapshot({
@@ -617,8 +617,7 @@ export const resumeService = {
 		data?: ResumeData;
 	}) => {
 		const id = input.id ?? generateId();
-		const data = structuredClone(input.data ?? defaultResumeData);
-		assertWritableResumeData(data);
+		const data = parseWritableResumeData(structuredClone(input.data ?? defaultResumeData));
 		data.metadata.page.locale = input.locale;
 
 		try {
@@ -678,16 +677,18 @@ export const resumeService = {
 
 				if (!existing) throw new ORPCError("NOT_FOUND");
 				if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
-				if (input.data) assertWritableResumeData(input.data);
+				const inputData = input.data ? parseWritableResumeData(input.data) : undefined;
 
-				const data = input.data
+				const data = inputData
 					? input.restoreStylesheet
-						? input.data
-						: preserveServerStylesheet(existing.data, input.data)
+						? inputData
+						: preserveServerStylesheet(existing.data, inputData)
 					: undefined;
-				if (data) assertWritableResumeData(data);
+				const normalizedData = data ? parseWritableResumeData(data) : undefined;
 				const dataForRenderComparison =
-					data && input.restoreStylesheet ? preserveServerStylesheet(existing.data, data) : data;
+					normalizedData && input.restoreStylesheet
+						? preserveServerStylesheet(existing.data, normalizedData)
+						: normalizedData;
 				const renderDataChanged = dataForRenderComparison
 					? hasRenderDataChanged(existing.data, dataForRenderComparison)
 					: false;
@@ -695,7 +696,7 @@ export const resumeService = {
 					...(input.name !== undefined ? { name: input.name } : {}),
 					...(input.slug !== undefined ? { slug: input.slug } : {}),
 					...(input.tags !== undefined ? { tags: input.tags } : {}),
-					...(data ? { data } : {}),
+					...(normalizedData ? { data: normalizedData } : {}),
 					...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
 					...(input.restoreStylesheet ? { stylesheetRevision: existing.stylesheetRevision + 1 } : {}),
 					...(renderDataChanged ? { renderDataVersion: existing.renderDataVersion + 1 } : {}),

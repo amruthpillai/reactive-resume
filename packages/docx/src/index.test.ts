@@ -52,4 +52,36 @@ describe("buildDocx", () => {
 
 		expect(error).toHaveProperty("issues.0.path", ["customSections", 0, "items", 0, "company"]);
 	});
+
+	it("normalizes valid legacy data before DOCX building", async () => {
+		const data = {
+			...structuredClone(defaultResumeData),
+			customSections: [
+				{
+					id: "custom-experience",
+					type: "experience",
+					title: "Experience",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [
+						{
+							id: "experience-item",
+							hidden: false,
+							company: "Analytical Engines",
+							position: "Programmer",
+							location: "London",
+							period: "1842–1843",
+							description: "<p>Wrote the first algorithm.</p>",
+							content: "<p>Compatible overlap</p>",
+						},
+					],
+				},
+			],
+		} as unknown as ResumeData;
+
+		await expect(buildDocx(data)).resolves.toBeInstanceOf(Blob);
+	});
 });
