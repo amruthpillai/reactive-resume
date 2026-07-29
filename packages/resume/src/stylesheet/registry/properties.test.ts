@@ -344,4 +344,30 @@ describe("property registry", () => {
 		expect(PROPERTY_REGISTRY_V1["background-image"]).toBeUndefined();
 		expect(PROPERTY_REGISTRY_V1["box-shadow"]).toBeUndefined();
 	});
+
+	it("publishes property-specific fixed value hints", () => {
+		expect(PROPERTY_REGISTRY_V1["border-style"]?.values).toEqual([
+			"inherit",
+			"initial",
+			"revert",
+			"unset",
+			"dotted",
+			"dashed",
+			"solid",
+		]);
+		expect(PROPERTY_REGISTRY_V1["object-fit"]?.values).toEqual([
+			"inherit",
+			"initial",
+			"revert",
+			"unset",
+			"contain",
+			"cover",
+			"fill",
+			"none",
+			"scale-down",
+		]);
+		expect(PROPERTY_REGISTRY_V1["font-size"]?.values).toEqual(["inherit", "initial", "revert", "unset"]);
+		expect(PROPERTY_REGISTRY_V1.gap?.values).toEqual(["inherit", "initial", "revert", "unset"]);
+		expect(PROPERTY_REGISTRY_V1.border?.values).toEqual(["inherit", "initial", "revert", "unset"]);
+	});
 });

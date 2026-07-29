@@ -113,6 +113,19 @@ describe("RRSS value compilation", () => {
 		},
 	);
 
+	it.each(["none", "hidden", "double", "groove", "ridge", "inset", "outset"])(
+		"rejects the undocumented border style %s",
+		(value) => {
+			const result = compileStylesheet({
+				languageVersion: 1,
+				text: `@rr-version 1; section { border-style: ${value}; }`,
+			});
+
+			expect(result.program).toBeNull();
+			expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }));
+		},
+	);
+
 	it.each([
 		{
 			name: "source bytes",

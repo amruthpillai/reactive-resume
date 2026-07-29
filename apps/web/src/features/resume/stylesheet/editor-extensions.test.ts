@@ -100,8 +100,10 @@ describe("RRSS editor extensions", () => {
 
 		expect(displayLabels).toEqual(expect.arrayContaining(["flex", "none", "inherit"]));
 		expect(displayLabels).not.toEqual(expect.arrayContaining(["portrait", "dashed", "pt"]));
-		expect(borderStyleLabels).toEqual(expect.arrayContaining(["dashed", "dotted", "double"]));
+		expect(borderStyleLabels).toEqual(expect.arrayContaining(["dashed", "dotted", "solid"]));
+		expect(borderStyleLabels).not.toContain("double");
 		expect(fontSizeLabels).toEqual(expect.arrayContaining(["pt", "rem"]));
+		expect(fontSizeLabels).not.toEqual(expect.arrayContaining(["none", "normal", "max-content"]));
 	});
 
 	it("escapes dynamic IDs and attribute values before inserting selectors", () => {

@@ -244,6 +244,22 @@ it("keeps every committed generated document synchronized", async () => {
 	});
 });
 
+it("generates renderer-safe property-specific value hints", async () => {
+	const { rrssReference } = await buildGeneratedDocumentation(defaultDocumentationPaths);
+	const propertyRows = rrssReference
+		.slice(
+			rrssReference.indexOf("<!-- RRSS-PROPERTIES:START -->"),
+			rrssReference.indexOf("<!-- RRSS-PROPERTIES:END -->"),
+		)
+		.split("\n");
+	const row = (property: string) => propertyRows.find((line) => line.startsWith(`| \`${property}\` |`)) ?? "";
+
+	expect(row("border-style")).toContain("`dotted`, `dashed`, `solid`");
+	expect(row("border-style")).not.toMatch(/`(?:double|groove|hidden|inset|outset|ridge)`/);
+	expect(row("font-size")).not.toMatch(/`(?:none|normal|max-content|min-content|fit-content|thin|medium|thick)`/);
+	expect(row("gap")).not.toMatch(/`(?:none|normal|max-content|min-content|fit-content|thin|medium|thick)`/);
+});
+
 it("keeps the schema guide aligned with the canonical schema contract", async () => {
 	const guide = await readFile(defaultDocumentationPaths.jsonSchemaGuide, "utf8");
 	const authoredGuide = guide.slice(0, guide.indexOf("<!-- RESUME-JSON-SCHEMA:START -->"));

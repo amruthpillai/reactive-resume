@@ -23,18 +23,7 @@ export type PropertyRegistry = Readonly<Record<string, PropertyDefinition | unde
 
 export const RRSS_CSS_WIDE_KEYWORDS_V1 = ["inherit", "initial", "revert", "unset"] as const;
 export const RRSS_LENGTH_UNITS_V1 = ["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"] as const;
-export const RRSS_BORDER_STYLE_VALUES_V1 = [
-	"none",
-	"hidden",
-	"dotted",
-	"dashed",
-	"solid",
-	"double",
-	"groove",
-	"ridge",
-	"inset",
-	"outset",
-] as const;
+export const RRSS_BORDER_STYLE_VALUES_V1 = ["dotted", "dashed", "solid"] as const;
 export const RRSS_LENGTH_VALUE_KEYWORDS_V1 = [
 	"auto",
 	"none",
@@ -134,31 +123,55 @@ const lengthProperties = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
 const numericLengthUnits = RRSS_LENGTH_UNITS_V1.filter((unit) => unit !== "%");
 const borderStyleProperties = /^(?:border-style|border-(?:top|right|bottom|left)-style)$/;
 const borderShorthandProperties = /^(?:border|border-(?:top|right|bottom|left))$/;
+const propertyValueHints = {
+	"align-content": ["flex-start", "flex-end", "center", "stretch", "space-between", "space-around", "space-evenly"],
+	"align-items": ["flex-start", "flex-end", "center", "stretch", "baseline"],
+	"align-self": ["auto", "flex-start", "flex-end", "center", "stretch", "baseline"],
+	flex: ["none", "auto"],
+	"flex-direction": ["row", "row-reverse", "column", "column-reverse"],
+	"flex-wrap": ["nowrap", "wrap", "wrap-reverse"],
+	"flex-flow": ["row", "row-reverse", "column", "column-reverse", "nowrap", "wrap", "wrap-reverse"],
+	"justify-content": ["flex-start", "flex-end", "center", "space-between", "space-around", "space-evenly"],
+	display: ["flex", "none"],
+	position: ["absolute", "relative", "static"],
+	overflow: ["hidden"],
+	direction: ["ltr", "rtl"],
+	"font-style": ["normal", "italic"],
+	"font-weight": [
+		"thin",
+		"hairline",
+		"ultralight",
+		"extralight",
+		"light",
+		"normal",
+		"medium",
+		"semibold",
+		"demibold",
+		"bold",
+		"ultrabold",
+		"extrabold",
+		"heavy",
+		"black",
+	],
+	"line-height": ["normal"],
+	"text-align": ["left", "right", "center", "justify"],
+	"text-decoration": ["none", "underline", "line-through", "line-through underline", "underline line-through"],
+	"text-overflow": ["ellipsis"],
+	"text-transform": ["none", "capitalize", "lowercase", "uppercase", "upperfirst"],
+	"vertical-align": ["sub", "super"],
+	"object-fit": ["contain", "cover", "fill", "none", "scale-down"],
+	"object-position": ["left", "right", "top", "bottom", "center"],
+	"transform-origin": ["left", "right", "top", "bottom", "center"],
+	"break-before": ["auto", "page"],
+	"break-inside": ["auto", "avoid"],
+	size: ["A4", "letter"],
+	"-rr-fixed": ["true", "false", "0", "1"],
+} as const satisfies Readonly<Record<string, readonly string[]>>;
 
 function propertyValues(name: string): readonly string[] {
-	let values: readonly string[] = [];
-	if (lengthProperties.has(name) && name !== "-rr-min-presence-ahead") values = RRSS_LENGTH_VALUE_KEYWORDS_V1;
-	else if (borderStyleProperties.test(name)) values = RRSS_BORDER_STYLE_VALUES_V1;
-	else if (borderShorthandProperties.test(name)) {
-		values = [...RRSS_LENGTH_VALUE_KEYWORDS_V1, ...RRSS_BORDER_STYLE_VALUES_V1];
-	} else {
-		values =
-			(
-				{
-					display: ["flex", "none"],
-					direction: ["ltr", "rtl"],
-					"break-before": ["auto", "page"],
-					"break-inside": ["auto", "avoid"],
-					"-rr-fixed": ["true", "false", "0", "1"],
-					size: ["A4", "letter"],
-					"line-height": ["normal"],
-					flex: ["none", "auto"],
-					"flex-direction": ["row", "row-reverse", "column", "column-reverse"],
-					"flex-wrap": ["nowrap", "wrap", "wrap-reverse"],
-					"flex-flow": ["row", "row-reverse", "column", "column-reverse", "nowrap", "wrap", "wrap-reverse"],
-				} satisfies Readonly<Record<string, readonly string[]>>
-			)[name] ?? [];
-	}
+	const values = borderStyleProperties.test(name)
+		? RRSS_BORDER_STYLE_VALUES_V1
+		: (propertyValueHints[name as keyof typeof propertyValueHints] ?? []);
 	return [...RRSS_CSS_WIDE_KEYWORDS_V1, ...values];
 }
 

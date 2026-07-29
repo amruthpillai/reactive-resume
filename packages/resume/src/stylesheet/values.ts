@@ -375,6 +375,9 @@ export function valueSyntaxError(property: string, value: string): string | null
 		return isRegisteredPropertyValue(property, normalized) ? null : "display supports flex or none.";
 	if (property === "direction")
 		return isRegisteredPropertyValue(property, normalized) ? null : "direction supports ltr or rtl.";
+	if (/^(?:border-style|border-(?:top|right|bottom|left)-style)$/.test(property)) {
+		return isRegisteredPropertyValue(property, normalized) ? null : "border styles support dotted, dashed, or solid.";
+	}
 	if (property === "break-before")
 		return isRegisteredPropertyValue(property, normalized) ? null : "break-before supports auto or page.";
 	if (property === "break-inside")
