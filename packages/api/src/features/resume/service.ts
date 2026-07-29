@@ -450,7 +450,12 @@ export const resumeService = {
 
 		// Non-destructive restore: writes the snapshot's data back through the normal update path, so
 		// prior versions remain and the restore is itself just another (snapshot-able, undoable) change.
-		restore: async (input: { resumeId: string; versionId: string; userId: string }) => {
+		restore: async (input: {
+			resumeId: string;
+			versionId: string;
+			userId: string;
+			prepareData(input: { data: ResumeData; stylesheetRevision: number }): Promise<ResumeData>;
+		}) => {
 			const [version] = await db
 				.select({ data: schema.resumeVersion.data })
 				.from(schema.resumeVersion)
@@ -467,6 +472,10 @@ export const resumeService = {
 
 			// Capture the pre-restore state first so the restore itself is undoable.
 			const current = await resumeService.getById({ id: input.resumeId, userId: input.userId });
+			const restoredData = await input.prepareData({
+				data: version.data,
+				stylesheetRevision: current.stylesheetRevision,
+			});
 			await resumeService.versions.snapshot({
 				resumeId: input.resumeId,
 				userId: input.userId,
@@ -477,7 +486,8 @@ export const resumeService = {
 			const updated = await resumeService.update({
 				id: input.resumeId,
 				userId: input.userId,
-				data: version.data,
+				data: restoredData,
+				restoreStylesheet: true,
 				skipAutoSnapshot: true,
 			});
 
@@ -531,6 +541,7 @@ export const resumeService = {
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
+				stylesheetRevision: schema.resume.stylesheetRevision,
 				updatedAt: schema.resume.updatedAt,
 				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 			})
@@ -583,6 +594,7 @@ export const resumeService = {
 	},
 
 	create: async (input: {
+		id?: string;
 		userId: string;
 		name: string;
 		slug: string;
@@ -590,7 +602,7 @@ export const resumeService = {
 		locale: Locale;
 		data?: ResumeData;
 	}) => {
-		const id = generateId();
+		const id = input.id ?? generateId();
 		const data = structuredClone(input.data ?? defaultResumeData);
 		data.metadata.page.locale = input.locale;
 
@@ -633,6 +645,7 @@ export const resumeService = {
 		tags?: string[];
 		data?: ResumeData;
 		isPublic?: boolean;
+		restoreStylesheet?: boolean;
 		skipAutoSnapshot?: boolean;
 	}) => {
 		const resume = await db
@@ -641,6 +654,7 @@ export const resumeService = {
 					.select({
 						data: schema.resume.data,
 						isLocked: schema.resume.isLocked,
+						stylesheetRevision: schema.resume.stylesheetRevision,
 						renderDataVersion: schema.resume.renderDataVersion,
 					})
 					.from(schema.resume)
@@ -650,7 +664,11 @@ export const resumeService = {
 				if (!existing) throw new ORPCError("NOT_FOUND");
 				if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
 
-				const data = input.data ? preserveServerStylesheet(existing.data, input.data) : undefined;
+				const data = input.data
+					? input.restoreStylesheet
+						? input.data
+						: preserveServerStylesheet(existing.data, input.data)
+					: undefined;
 				const renderDataChanged = data ? hasRenderDataChanged(existing.data, data) : false;
 				const updateData: Partial<typeof schema.resume.$inferSelect> = {
 					...(input.name !== undefined ? { name: input.name } : {}),
@@ -658,6 +676,7 @@ export const resumeService = {
 					...(input.tags !== undefined ? { tags: input.tags } : {}),
 					...(data ? { data } : {}),
 					...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
+					...(input.restoreStylesheet ? { stylesheetRevision: existing.stylesheetRevision + 1 } : {}),
 					...(renderDataChanged ? { renderDataVersion: existing.renderDataVersion + 1 } : {}),
 				};
 

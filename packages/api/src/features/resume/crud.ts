@@ -1,11 +1,12 @@
 import { env } from "@reactive-resume/env/server";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
-import { generateRandomName, slugify } from "@reactive-resume/utils/string";
+import { generateId, generateRandomName, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
-import { assertResumeImportAvailable, createResumeData } from "./stylesheet-preservation";
+import { prepareImportedResumeData } from "./stylesheet-preflight";
+import { createResumeData } from "./stylesheet-preservation";
 
 export const crudRouter = {
 	list: protectedProcedure
@@ -100,17 +101,27 @@ export const crudRouter = {
 				status: 400,
 			},
 			SEMANTIC_STYLESHEET_UNAVAILABLE: {
-				message: "Semantic stylesheets cannot be imported until stylesheet validation is available.",
+				message: "Semantic stylesheet PDF preflight is unavailable.",
+				status: 503,
+			},
+			STYLESHEET_VALIDATION_FAILED: {
+				message: "The imported stylesheet failed validation.",
 				status: 400,
 			},
 		})
 		.handler(async ({ context, input }) => {
-			assertResumeImportAvailable(input.data);
-			const data = resumeDataSchema.parse(input.data);
+			const id = generateId();
+			const data = await prepareImportedResumeData({
+				data: resumeDataSchema.parse(input.data),
+				resumeId: id,
+				revision: 0,
+				...(context.stylesheetPreflightRunner ? { runner: context.stylesheetPreflightRunner } : {}),
+			});
 			const name = generateRandomName();
 			const slug = slugify(name);
 
-			const id = await resumeService.create({
+			await resumeService.create({
+				id,
 				name,
 				slug,
 				tags: [],

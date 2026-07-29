@@ -1,12 +1,7 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import {
-	assertResumeImportAvailable,
-	createResumeData,
-	hasRenderDataChanged,
-	preserveServerStylesheet,
-} from "./stylesheet-preservation";
+import { createResumeData, hasRenderDataChanged, preserveServerStylesheet } from "./stylesheet-preservation";
 
 const cloneData = (): ResumeData => structuredClone(defaultResumeData);
 
@@ -124,20 +119,5 @@ describe("createResumeData", () => {
 		expect(defaultResumeData.basics.name).toBe("");
 		expect(defaultResumeData.metadata.page.locale).not.toBe("de-DE");
 		expect(sample.basics.name).toBe("Sample Person");
-	});
-});
-
-describe("assertResumeImportAvailable", () => {
-	it.each(["legacy", "semantic"] as const)("rejects imports containing a %s stylesheet", (mode) => {
-		const data = cloneData();
-		data.metadata.stylesheet = { ...semanticStylesheet, mode };
-
-		expect(() => assertResumeImportAvailable(data)).toThrow(
-			expect.objectContaining({ code: "SEMANTIC_STYLESHEET_UNAVAILABLE" }),
-		);
-	});
-
-	it("allows imports without a stylesheet", () => {
-		expect(() => assertResumeImportAvailable(cloneData())).not.toThrow();
 	});
 });

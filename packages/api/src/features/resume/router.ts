@@ -3,6 +3,7 @@ import { crudRouter } from "./crud";
 import { updatesRouter } from "./event-router";
 import { sharingRouter } from "./sharing";
 import { resumeStatisticsRouter } from "./statistics";
+import { stylesheetRouter } from "./stylesheet";
 import { tagsRouter } from "./tags";
 import { versionsRouter } from "./versions";
 
@@ -11,6 +12,7 @@ export const resumeRouter = {
 	statistics: resumeStatisticsRouter,
 	analysis: analysisRouter,
 	updates: updatesRouter,
+	stylesheet: stylesheetRouter,
 
 	list: crudRouter.list,
 	getById: crudRouter.getById,

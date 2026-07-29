@@ -3,6 +3,7 @@ import z from "zod";
 import * as schema from "@reactive-resume/db/schema";
 import { jsonPatchOperationSchema } from "@reactive-resume/resume/patch";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { semanticStylesheetSchema, stylesheetSourceSchema } from "@reactive-resume/schema/resume/stylesheet";
 
 const resumeSchema = createSelectSchema(schema.resume, {
 	id: z.string().describe("The ID of the resume."),
@@ -18,8 +19,33 @@ const resumeSchema = createSelectSchema(schema.resume, {
 	updatedAt: z.date().describe("The date and time the resume was last updated."),
 }).omit({ stylesheetRevision: true, renderDataVersion: true });
 
-const unavailableStylesheetImportSchema = z.looseObject({
-	metadata: z.looseObject({ stylesheet: z.unknown() }),
+const stylesheetMutationCommon = {
+	id: z.string().describe("The ID of the resume."),
+	expectedRevision: z.number().int().nonnegative(),
+	expectedRenderDataVersion: z.number().int().nonnegative(),
+	editGeneration: z.number().int().nonnegative(),
+};
+const stylesheetDiagnosticSchema = z.strictObject({
+	code: z.string(),
+	severity: z.enum(["error", "warning"]),
+	message: z.string(),
+	range: z.strictObject({
+		start: z.strictObject({
+			line: z.number().int().positive(),
+			column: z.number().int().positive(),
+			offset: z.number().int().nonnegative(),
+		}),
+		end: z.strictObject({
+			line: z.number().int().positive(),
+			column: z.number().int().positive(),
+			offset: z.number().int().nonnegative(),
+		}),
+	}),
+});
+const stylesheetStateSchema = z.strictObject({
+	stylesheet: semanticStylesheetSchema,
+	revision: z.number().int().nonnegative(),
+	renderDataVersion: z.number().int().nonnegative(),
 });
 
 export const resumeDto = {
@@ -58,7 +84,7 @@ export const resumeDto = {
 	},
 
 	import: {
-		input: z.object({ data: z.union([resumeDataSchema, unavailableStylesheetImportSchema]) }),
+		input: z.object({ data: resumeDataSchema }),
 		output: z.string().describe("The ID of the imported resume."),
 	},
 
@@ -127,5 +153,43 @@ export const resumeDto = {
 			versionId: z.string().describe("The ID of the version snapshot to restore."),
 		}),
 		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
+	},
+
+	stylesheet: {
+		getState: {
+			input: z.strictObject({ id: z.string().describe("The ID of the resume.") }),
+			output: stylesheetStateSchema,
+		},
+		mutate: {
+			input: z.discriminatedUnion("transition", [
+				z.strictObject({
+					...stylesheetMutationCommon,
+					transition: z.literal("edit_source"),
+					source: stylesheetSourceSchema,
+				}),
+				z.strictObject({
+					...stylesheetMutationCommon,
+					transition: z.literal("activate"),
+					source: stylesheetSourceSchema,
+				}),
+				z.strictObject({
+					...stylesheetMutationCommon,
+					transition: z.literal("deactivate"),
+				}),
+				z.strictObject({
+					...stylesheetMutationCommon,
+					transition: z.literal("restore_history"),
+					restore: z.strictObject({
+						mode: z.enum(["legacy", "semantic"]),
+						source: stylesheetSourceSchema,
+						applied: stylesheetSourceSchema,
+					}),
+				}),
+			]),
+			output: stylesheetStateSchema.extend({
+				editGeneration: z.number().int().nonnegative(),
+				diagnostics: z.array(stylesheetDiagnosticSchema),
+			}),
+		},
 	},
 };

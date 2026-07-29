@@ -2,6 +2,7 @@ import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
+import { validateHistoricalStylesheet } from "./stylesheet-preflight";
 
 export const versionsRouter = {
 	listVersions: protectedProcedure
@@ -35,11 +36,37 @@ export const versionsRouter = {
 		.input(resumeDto.restoreVersion.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.restoreVersion.output)
+		.errors({
+			SEMANTIC_STYLESHEET_UNAVAILABLE: {
+				message: "Semantic stylesheet PDF preflight is unavailable.",
+				status: 503,
+			},
+			STYLESHEET_VALIDATION_FAILED: {
+				message: "The historical stylesheet failed validation.",
+				status: 400,
+			},
+		})
 		.handler(({ context, input }) =>
 			resumeService.versions.restore({
 				resumeId: input.resumeId,
 				versionId: input.versionId,
 				userId: context.user.id,
+				prepareData: async ({ data, stylesheetRevision }) => {
+					const stylesheet = data.metadata.stylesheet;
+					if (!stylesheet) return data;
+
+					const validated = await validateHistoricalStylesheet({
+						data,
+						resumeId: input.resumeId,
+						revision: stylesheetRevision,
+						stylesheet,
+						...(context.stylesheetPreflightRunner ? { runner: context.stylesheetPreflightRunner } : {}),
+					});
+					return {
+						...data,
+						metadata: { ...data.metadata, stylesheet: validated },
+					};
+				},
 			}),
 		),
 };

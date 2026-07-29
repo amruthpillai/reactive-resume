@@ -130,7 +130,7 @@ const createResumeRow = (data: ResumeData, updatedAt = new Date()) => ({
 });
 
 const createRestoreHarness = (currentData: ResumeData, restoredData: ResumeData) => {
-	const currentRow = createResumeRow(currentData);
+	const currentRow = { ...createResumeRow(currentData), stylesheetRevision: 3 };
 	const versionLookup = {
 		from: () => ({
 			innerJoin: () => ({ where: () => Promise.resolve([{ data: restoredData }]) }),
@@ -150,7 +150,13 @@ const createRestoreHarness = (currentData: ResumeData, restoredData: ResumeData)
 	dbMock.delete.mockReturnValue({ where: () => Promise.resolve() });
 
 	const lockedSelect = createLockedSelectChain([
-		{ data: currentData, isLocked: false, renderDataVersion: 7, updatedAt: currentRow.updatedAt },
+		{
+			data: currentData,
+			isLocked: false,
+			stylesheetRevision: 3,
+			renderDataVersion: 7,
+			updatedAt: currentRow.updatedAt,
+		},
 	]);
 	let persistedData: ResumeData | undefined;
 	const returning = vi.fn(() =>
@@ -189,6 +195,33 @@ it("imports", () => {
 	expect(resumeService).toBeDefined();
 });
 
+describe("create", () => {
+	it("copies stylesheet content while leaving both concurrency versions at database defaults", async () => {
+		const data = createSemanticResumeData();
+		const values = vi.fn((_input: unknown) => Promise.resolve());
+		dbMock.insert.mockReturnValueOnce({ values });
+
+		await resumeService.create({
+			userId: "u1",
+			name: "Copy",
+			slug: "copy",
+			tags: [],
+			locale: "en-US",
+			data,
+		});
+
+		expect(values).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					metadata: expect.objectContaining({ stylesheet: data.metadata.stylesheet }),
+				}),
+			}),
+		);
+		expect(values.mock.calls[0]?.[0]).not.toHaveProperty("stylesheetRevision");
+		expect(values.mock.calls[0]?.[0]).not.toHaveProperty("renderDataVersion");
+	});
+});
+
 describe("versions.restore", () => {
 	it.each([
 		{ name: "changed render data", changeRenderData: true, expectedRenderDataVersion: 8 },
@@ -200,17 +233,31 @@ describe("versions.restore", () => {
 			const restoredData: ResumeData = structuredClone(defaultResumeData);
 			if (changeRenderData) {
 				restoredData.basics.name = "Restored Name";
+				restoredData.metadata.stylesheet = {
+					mode: "semantic",
+					source: { languageVersion: 1, text: "@rr-version 1;\nsection { color: #123456; }\n" },
+					applied: { languageVersion: 1, text: "@rr-version 1;\nsection { color: #123456; }\n" },
+				};
 			} else {
 				restoredData.metadata.notes = "Restored private note";
+				restoredData.metadata.stylesheet = structuredClone(currentData.metadata.stylesheet);
 			}
 
 			const { set, snapshotValues } = createRestoreHarness(currentData, restoredData);
+			const prepareData = vi.fn(async ({ data }: { data: ResumeData }) => data);
 
-			const result = await resumeService.versions.restore({ resumeId: "r1", versionId: "v1", userId: "u1" });
+			const result = await resumeService.versions.restore({
+				resumeId: "r1",
+				versionId: "v1",
+				userId: "u1",
+				prepareData,
+			});
 
 			expect(set).toHaveBeenCalledTimes(1);
-			expect(result.data.metadata.stylesheet).toEqual(currentData.metadata.stylesheet);
+			expect(prepareData).toHaveBeenCalledWith({ data: restoredData, stylesheetRevision: 3 });
+			expect(result.data.metadata.stylesheet).toEqual(restoredData.metadata.stylesheet);
 			const updateValues = set.mock.calls[0]?.[0];
+			expect(updateValues).toHaveProperty("stylesheetRevision", 4);
 			if (expectedRenderDataVersion === undefined) {
 				expect(updateValues).not.toHaveProperty("renderDataVersion");
 			} else {

@@ -144,6 +144,31 @@ describe("subscribeResumeUpdated", () => {
 		await iterator.next();
 	});
 
+	it("accepts stylesheet invalidations and ignores unknown mutation names", async () => {
+		const client = makeFakeClient();
+		pool.connect.mockResolvedValueOnce(client);
+
+		const controller = new AbortController();
+		const iterator = subscribeResumeUpdated({
+			resumeId: "r1",
+			userId: "u1",
+			signal: controller.signal,
+		});
+		const resultP = iterator.next();
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+
+		client.__notify("resume_updated", JSON.stringify({ ...exampleEvent, mutation: "forged" }));
+		client.__notify("resume_updated", JSON.stringify({ ...exampleEvent, mutation: "stylesheet" }));
+
+		const result = await resultP;
+		expect(result.value?.mutation).toBe("stylesheet");
+
+		controller.abort();
+		await iterator.next();
+	});
+
 	it("terminates immediately if signal is already aborted", async () => {
 		const client = makeFakeClient();
 		pool.connect.mockResolvedValueOnce(client);
