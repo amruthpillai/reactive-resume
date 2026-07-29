@@ -1,8 +1,27 @@
 // @vitest-environment happy-dom
 
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { buildDocx } from "./index";
+
+const createRendererUnsafeResumeData = (): ResumeData => {
+	const data = structuredClone(defaultResumeData);
+	data.customSections = [
+		{
+			id: "custom-experience",
+			type: "experience",
+			title: "Experience",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+		} as never,
+	];
+	return data;
+};
 
 describe("buildDocx", () => {
 	it("returns a Blob for the default resume", async () => {
@@ -26,5 +45,11 @@ describe("buildDocx", () => {
 
 		expect(promise).toBeInstanceOf(Promise);
 		await expect(promise).rejects.toThrow();
+	});
+
+	it("rejects renderer-unsafe data before DOCX builder dispatch", async () => {
+		const error = await buildDocx(createRendererUnsafeResumeData()).catch((caught: unknown) => caught);
+
+		expect(error).toHaveProperty("issues.0.path", ["customSections", 0, "items", 0, "company"]);
 	});
 });

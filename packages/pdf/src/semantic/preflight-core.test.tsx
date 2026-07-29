@@ -1,3 +1,4 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { renderPreflightPdf } from "./preflight-core";
@@ -23,6 +24,24 @@ const pageLimits = {
 	maxPageHeightPt: 20_000,
 	maxPageAreaPt2: 20_000_000,
 } as const;
+
+const createRendererUnsafeResumeData = (): ResumeData => {
+	const data = structuredClone(defaultResumeData);
+	data.customSections = [
+		{
+			id: "custom-experience",
+			type: "experience",
+			title: "Experience",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+		} as never,
+	];
+	return data;
+};
 
 describe("renderPreflightPdf", () => {
 	beforeEach(() => {
@@ -59,6 +78,20 @@ describe("renderPreflightPdf", () => {
 			code: "STYLESHEET_PREFLIGHT_INVALID",
 			diagnostics: [expect.objectContaining({ severity: "error" })],
 		});
+		expect(rendererMock.pdf).not.toHaveBeenCalled();
+	});
+
+	it("rejects renderer-unsafe data before semantic inspection or React PDF dispatch", async () => {
+		const error = await renderPreflightPdf(
+			{
+				data: createRendererUnsafeResumeData(),
+				template: defaultResumeData.metadata.template,
+				stylesheet: validStylesheet,
+			},
+			pageLimits,
+		).catch((caught: unknown) => caught);
+
+		expect(error).toHaveProperty("issues.0.path", ["customSections", 0, "items", 0, "company"]);
 		expect(rendererMock.pdf).not.toHaveBeenCalled();
 	});
 

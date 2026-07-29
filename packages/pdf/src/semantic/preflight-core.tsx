@@ -4,6 +4,7 @@ import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet
 import type { Template } from "@reactive-resume/schema/templates";
 import type { PdfPreflightFailureCode } from "./preflight-reference";
 import { createElement } from "react";
+import { assertResumeData } from "@reactive-resume/schema/resume/data";
 import { pdf } from "#react-pdf-renderer";
 import { ResumeDocument } from "../document";
 import { getTemplatePageSize } from "../templates/shared/page-size";
@@ -87,6 +88,7 @@ export async function renderPreflightPdf(
 	input: StylesheetPreflightInput,
 	pageLimits: PdfPreflightPageLimits,
 ): Promise<RenderPreflightPdfResult> {
+	assertResumeData(input.data);
 	const data = {
 		...input.data,
 		metadata: {

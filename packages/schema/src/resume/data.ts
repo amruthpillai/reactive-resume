@@ -359,8 +359,8 @@ export const sectionTypeSchema = z.enum([
 
 export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
 
+// Correlation protects renderer requirements; it does not make otherwise-overlapping item shapes exclusive.
 // Keep cover-letter before summary so the overlapping content shapes retain their established precedence.
-// The section discriminator now selects the matching item schema before parsing its items.
 export const customSectionItemDefinitionByType = {
 	"cover-letter": { schemaName: "coverLetterItemSchema", schema: coverLetterItemSchema },
 	summary: { schemaName: "summaryItemSchema", schema: summaryItemSchema },
@@ -667,6 +667,16 @@ export const resumeDataSchema = z.looseObject({
 });
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
+
+/**
+ * Validates an unknown value against the canonical resume schema without replacing it with Zod's parsed output.
+ * This keeps accepted extension fields intact at persistence and rendering boundaries.
+ */
+export function assertResumeData(data: unknown): asserts data is ResumeData {
+	const result = resumeDataSchema.safeParse(data);
+	if (!result.success) throw result.error;
+}
+
 export type LayoutPage = z.infer<typeof pageLayoutSchema>;
 export type Typography = z.infer<typeof typographySchema>;
 export type Design = z.infer<typeof designSchema>;

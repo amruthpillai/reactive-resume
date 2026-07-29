@@ -17,6 +17,7 @@ import { getStorageService } from "../storage/service";
 import { grantResumeAccess, hasResumeAccess } from "./access";
 import { assertCanView, isOwner, redactResumeForViewer, shouldCountForStatistics } from "./access-policy";
 import { publishResumeUpdated } from "./events";
+import { assertWritableResumeData } from "./resume-data-validation";
 import { hasRenderDataChanged, preserveServerStylesheet } from "./stylesheet-preservation";
 import { clientKeyFromHeaders, shouldCountView } from "./view-dedup";
 
@@ -93,6 +94,8 @@ async function writeResumeVersion(
 	client: DbOrTx,
 	input: { resumeId: string; userId: string; data: ResumeData; label: string },
 ) {
+	assertWritableResumeData(input.data);
+
 	await client.insert(schema.resumeVersion).values({
 		resumeId: input.resumeId,
 		userId: input.userId,
@@ -475,6 +478,7 @@ export const resumeService = {
 				);
 
 			if (!version) throw new ORPCError("NOT_FOUND");
+			assertWritableResumeData(version.data);
 
 			// Capture the pre-restore state first so the restore itself is undoable.
 			const restoredData = await input.prepareData({
@@ -614,6 +618,7 @@ export const resumeService = {
 	}) => {
 		const id = input.id ?? generateId();
 		const data = structuredClone(input.data ?? defaultResumeData);
+		assertWritableResumeData(data);
 		data.metadata.page.locale = input.locale;
 
 		try {
@@ -673,12 +678,14 @@ export const resumeService = {
 
 				if (!existing) throw new ORPCError("NOT_FOUND");
 				if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
+				if (input.data) assertWritableResumeData(input.data);
 
 				const data = input.data
 					? input.restoreStylesheet
 						? input.data
 						: preserveServerStylesheet(existing.data, input.data)
 					: undefined;
+				if (data) assertWritableResumeData(data);
 				const dataForRenderComparison =
 					data && input.restoreStylesheet ? preserveServerStylesheet(existing.data, data) : data;
 				const renderDataChanged = dataForRenderComparison

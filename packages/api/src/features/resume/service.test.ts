@@ -123,6 +123,53 @@ const createStylesheetResumeData = (mode: "legacy" | "semantic"): ResumeData => 
 	return data;
 };
 
+const createRendererUnsafeResumeData = (): ResumeData =>
+	({
+		...structuredClone(defaultResumeData),
+		customSections: [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+			},
+		],
+	}) as unknown as ResumeData;
+
+const createOverlappingRendererSafeResumeData = (): ResumeData =>
+	({
+		...structuredClone(defaultResumeData),
+		customSections: [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: "experience-item",
+						hidden: false,
+						company: "Analytical Engines",
+						position: "Programmer",
+						location: "London",
+						period: "1842–1843",
+						description: "<p>Wrote the first algorithm.</p>",
+						content: "<p>Renderer-irrelevant overlap must survive.</p>",
+					},
+				],
+			},
+		],
+	}) as unknown as ResumeData;
+
 const createResumeRow = (data: ResumeData, updatedAt = new Date()) => ({
 	id: "r1",
 	name: "Resume",
@@ -225,6 +272,45 @@ describe("create", () => {
 		);
 		expect(values.mock.calls[0]?.[0]).not.toHaveProperty("stylesheetRevision");
 		expect(values.mock.calls[0]?.[0]).not.toHaveProperty("renderDataVersion");
+	});
+
+	it("rejects renderer-unsafe data from direct and duplicate callers before insertion", async () => {
+		const values = vi.fn(() => Promise.resolve());
+		dbMock.insert.mockReturnValueOnce({ values });
+
+		const error = await resumeService
+			.create({
+				userId: "u1",
+				name: "Unsafe copy",
+				slug: "unsafe-copy",
+				tags: [],
+				locale: "en-US",
+				data: createRendererUnsafeResumeData(),
+			})
+			.catch((caught: unknown) => caught);
+
+		expect(error).toMatchObject({ code: "BAD_REQUEST", status: 400 });
+		expect(error).toHaveProperty("cause.issues.0.path", ["customSections", 0, "items", 0, "company"]);
+		expect(values).not.toHaveBeenCalled();
+	});
+
+	it("validates but does not normalize renderer-safe overlapping data", async () => {
+		const values = vi.fn((_input: unknown) => Promise.resolve());
+		dbMock.insert.mockReturnValueOnce({ values });
+
+		await resumeService.create({
+			userId: "u1",
+			name: "Compatible",
+			slug: "compatible",
+			tags: [],
+			locale: "en-US",
+			data: createOverlappingRendererSafeResumeData(),
+		});
+
+		expect(values.mock.calls[0]?.[0]).toHaveProperty(
+			"data.customSections.0.items.0.content",
+			"<p>Renderer-irrelevant overlap must survive.</p>",
+		);
 	});
 });
 
@@ -405,6 +491,26 @@ describe("versions.restore", () => {
 		expect(dbMock.insert).not.toHaveBeenCalled();
 		expect(dbMock.transaction).not.toHaveBeenCalled();
 	});
+
+	it("rejects a renderer-unsafe historical snapshot before preparation, snapshots, or update", async () => {
+		const currentData = createSemanticResumeData();
+		const { set, snapshotValues } = createRestoreHarness(currentData, createRendererUnsafeResumeData());
+		const prepareData = vi.fn(async ({ data }: { data: ResumeData }) => data);
+
+		await expect(
+			resumeService.versions.restore({
+				resumeId: "r1",
+				versionId: "v1",
+				userId: "u1",
+				prepareData,
+			}),
+		).rejects.toMatchObject({ code: "BAD_REQUEST", status: 400 });
+
+		expect(prepareData).not.toHaveBeenCalled();
+		expect(snapshotValues).not.toHaveBeenCalled();
+		expect(set).not.toHaveBeenCalled();
+		expect(dbMock.transaction).not.toHaveBeenCalled();
+	});
 });
 
 describe("update", () => {
@@ -528,6 +634,28 @@ describe("update", () => {
 		await resumeService.update({ id: "r1", userId: "u1", data: clientData, skipAutoSnapshot: true });
 
 		expect(update.set).toHaveBeenCalledWith(expect.not.objectContaining({ renderDataVersion: expect.anything() }));
+	});
+
+	it("rejects renderer-unsafe data before updating the JSONB column", async () => {
+		const select = createLockedSelectChain([
+			{ data: defaultResumeData, isLocked: false, renderDataVersion: 3, updatedAt: new Date() },
+		]);
+		const update = createUpdateChain([createResumeRow(defaultResumeData)]);
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ select: () => select.chain, update: () => update.chain }),
+		);
+
+		await expect(
+			resumeService.update({
+				id: "r1",
+				userId: "u1",
+				data: createRendererUnsafeResumeData(),
+				skipAutoSnapshot: true,
+			}),
+		).rejects.toMatchObject({ code: "BAD_REQUEST", status: 400 });
+
+		expect(update.set).not.toHaveBeenCalled();
+		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
 	});
 });
 

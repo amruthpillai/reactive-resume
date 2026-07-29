@@ -1,3 +1,4 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { SectionTitleResolver } from "./section-title";
 import { Buffer } from "node:buffer";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,6 +7,24 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 const rendererMock = vi.hoisted(() => ({
 	renderToBuffer: vi.fn(async () => Buffer.from("%PDF")),
 }));
+
+const createRendererUnsafeResumeData = (): ResumeData => {
+	const data = structuredClone(sampleResumeData);
+	data.customSections = [
+		{
+			id: "custom-experience",
+			type: "experience",
+			title: "Experience",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+		} as never,
+	];
+	return data;
+};
 
 vi.mock("#react-pdf-renderer", async (importOriginal) => ({
 	...(await importOriginal<typeof import("@react-pdf/renderer")>()),
@@ -71,6 +90,18 @@ describe("createResumePdfFile", () => {
 		await expect(createResumePdfFile({ data, filename: "resume.pdf" })).rejects.toMatchObject({
 			cause: [expect.objectContaining({ severity: "error" })],
 		});
+		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
+	});
+
+	it("rejects renderer-unsafe data at the server boundary before React PDF dispatch", async () => {
+		const { createResumePdfFile } = await import("./server");
+
+		const error = await createResumePdfFile({
+			data: createRendererUnsafeResumeData(),
+			filename: "resume.pdf",
+		}).catch((caught: unknown) => caught);
+
+		expect(error).toHaveProperty("issues.0.path", ["customSections", 0, "items", 0, "company"]);
 		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
 	});
 });

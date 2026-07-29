@@ -5,6 +5,7 @@ import { getResumeExportData, resumeHasCoverLetter } from "@reactive-resume/resu
 import { generateFilename } from "@reactive-resume/utils/file";
 import { protectedProcedure } from "../../context";
 import { pdfExportRateLimit } from "../../middleware/rate-limit";
+import { assertStoredResumeData } from "./resume-data-validation";
 import { resumeService } from "./service";
 
 export {
@@ -21,6 +22,7 @@ type CreateResumePdfDownloadInput = {
 
 export async function createResumePdfDownload(input: CreateResumePdfDownloadInput) {
 	const resume = await resumeService.getById({ id: input.id, userId: input.userId });
+	assertStoredResumeData(resume.data);
 	const target = input.target ?? "resume";
 	if (target === "cover-letter" && !resumeHasCoverLetter(resume.data)) {
 		throw new ORPCError("NOT_FOUND", { message: "No cover letter found for this resume" });
