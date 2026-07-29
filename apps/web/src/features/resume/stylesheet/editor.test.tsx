@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { EditorView } from "@codemirror/view";
 import { i18n } from "@lingui/core";
@@ -120,6 +120,33 @@ describe("StylesheetCodeEditor", () => {
 		unmount();
 		expect(destroy).toHaveBeenCalledOnce();
 		destroy.mockRestore();
+	});
+
+	it("reuses one React color picker for compiler-confirmed swatches", async () => {
+		const source = "section { color: #f00; background-color: #fff; }";
+		const first = source.indexOf("#f00");
+		const second = source.indexOf("#fff");
+		const { container } = render(
+			<StylesheetCodeEditor
+				value={source}
+				diagnostics={[]}
+				colorTokens={[
+					{ from: first, to: first + 4, value: "#f00" },
+					{ from: second, to: second + 4, value: "#fff" },
+				]}
+				theme="light"
+				onChange={vi.fn()}
+				onUndo={vi.fn()}
+				onRedo={vi.fn()}
+			/>,
+		);
+		const swatches = container.querySelectorAll<HTMLButtonElement>(".rrss-color-swatch");
+		expect(swatches).toHaveLength(2);
+
+		swatches[0]?.click();
+		await waitFor(() => expect(container.querySelectorAll("[data-rrss-color-picker-trigger]")).toHaveLength(1));
+		swatches[1]?.click();
+		await waitFor(() => expect(container.querySelectorAll("[data-rrss-color-picker-trigger]")).toHaveLength(1));
 	});
 });
 

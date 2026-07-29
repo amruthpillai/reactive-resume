@@ -2,6 +2,7 @@
 
 import type { CompileWorkerRequest, CompileWorkerResponse } from "./protocol";
 import { analyzeStylesheet, compileStylesheet } from "@reactive-resume/resume/stylesheet";
+import { collectCompiledColorTokens } from "./color-tokens";
 
 self.addEventListener("message", ({ data }: MessageEvent<CompileWorkerRequest>) => {
 	if (data.type !== "compile") return;
@@ -15,6 +16,7 @@ self.addEventListener("message", ({ data }: MessageEvent<CompileWorkerRequest>) 
 		editGeneration: data.editGeneration,
 		program: compiled.program,
 		diagnostics,
+		colorTokens: collectCompiledColorTokens(data.source.text, compiled.program),
 	};
 	self.postMessage(response);
 });

@@ -6,9 +6,11 @@ import {
 	ArrowUUpLeftIcon,
 	ArrowUUpRightIcon,
 	CopyIcon,
+	MagicWandIcon,
 } from "@phosphor-icons/react";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
+import { copySourceToClipboard } from "./editor-extensions";
 
 type ToolbarButtonProps = {
 	label: string;
@@ -39,6 +41,7 @@ export type StylesheetToolbarProps = {
 	focused: boolean;
 	onUndo(): void;
 	onRedo(): void;
+	onFormat(): void;
 	onReset(): void;
 	onFocusToggle(): void;
 };
@@ -50,6 +53,7 @@ export function StylesheetToolbar({
 	focused,
 	onUndo,
 	onRedo,
+	onFormat,
 	onReset,
 	onFocusToggle,
 }: StylesheetToolbarProps) {
@@ -61,8 +65,11 @@ export function StylesheetToolbar({
 			<ToolbarButton label={t`Redo stylesheet edit`} disabled={!canRedo} onClick={onRedo}>
 				<ArrowUUpRightIcon data-icon="inline-start" />
 			</ToolbarButton>
-			<ToolbarButton label={t`Copy stylesheet`} onClick={() => void navigator.clipboard?.writeText(source)}>
+			<ToolbarButton label={t`Copy stylesheet`} onClick={() => void copySourceToClipboard(source)}>
 				<CopyIcon data-icon="inline-start" />
+			</ToolbarButton>
+			<ToolbarButton label={t`Format stylesheet`} onClick={onFormat}>
+				<MagicWandIcon data-icon="inline-start" />
 			</ToolbarButton>
 			<ToolbarButton label={t`Reset to applied stylesheet`} onClick={onReset}>
 				<ArrowCounterClockwiseIcon data-icon="inline-start" />

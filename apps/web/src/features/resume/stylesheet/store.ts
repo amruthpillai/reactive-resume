@@ -2,15 +2,22 @@ import type { RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/style
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { SemanticStylesheet, StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { StoreApi } from "zustand/vanilla";
+import type { RrssColorToken } from "./color-tokens";
 import type {
 	CompileWorkerInput,
 	CompileWorkerResponse,
 	PreflightWorkerInput,
 	PreflightWorkerResponse,
+	RrssEditorMetadata,
 } from "./protocol";
 import { create } from "zustand/react";
 import { createStore } from "zustand/vanilla";
-import { buildSemanticTree, semanticNodeKeys, shouldShowResumeHeader } from "@reactive-resume/pdf/semantic-tree";
+import {
+	buildSemanticTree,
+	getTemplateSemanticManifest,
+	semanticNodeKeys,
+	shouldShowResumeHeader,
+} from "@reactive-resume/pdf/semantic-tree";
 import { orpc } from "@/libs/orpc/client";
 import { createCompileWorkerClient, createPreflightWorkerClient } from "./worker-client";
 
@@ -62,6 +69,8 @@ export type StylesheetStoreState = {
 	renderDataVersion: number;
 	editGeneration: number;
 	diagnostics: readonly RrssDiagnostic[];
+	colorTokens: readonly RrssColorToken[];
+	editorMetadata: RrssEditorMetadata;
 	status: "idle" | "compiling" | "preflighting" | "saving" | "applied" | "error";
 	focused: boolean;
 	canUndo: boolean;
@@ -74,6 +83,7 @@ export type StylesheetStoreState = {
 	deactivate(): void;
 	undo(): void;
 	redo(): void;
+	refreshIntelligence(): void;
 };
 
 type RuntimeDependencies = {
@@ -92,12 +102,19 @@ type CreateStylesheetStoreRuntimeOptions = RuntimeDependencies & {
 };
 
 const emptySource = (): StylesheetSource => ({ languageVersion: 1, text: "@rr-version 1;\n" });
+const emptySemanticTree = (): SemanticNode => ({
+	key: "resume",
+	kind: "resume",
+	attributes: {},
+	roles: [],
+	children: [],
+});
 const HISTORY_COALESCE_MS = 500;
 const MAX_HISTORY_ENTRIES = 50;
 
 const inactiveState = (): Omit<
 	StylesheetStoreState,
-	"setSourceText" | "setFocused" | "activate" | "deactivate" | "undo" | "redo"
+	"setSourceText" | "setFocused" | "activate" | "deactivate" | "undo" | "redo" | "refreshIntelligence"
 > => ({
 	resumeId: undefined,
 	mode: "legacy",
@@ -107,6 +124,8 @@ const inactiveState = (): Omit<
 	renderDataVersion: 0,
 	editGeneration: 0,
 	diagnostics: [],
+	colorTokens: [],
+	editorMetadata: { semanticTree: emptySemanticTree(), templateParts: [] },
 	status: "idle",
 	focused: false,
 	canUndo: false,
@@ -137,7 +156,7 @@ const pageDimensions = (data: ResumeData) => {
 	}));
 };
 
-const compileInput = (data: ResumeData, source: StylesheetSource, editGeneration: number): CompileWorkerInput => {
+const createEditorMetadata = (data: ResumeData): RrssEditorMetadata => {
 	const pages = data.metadata.layout.pages.map((page, index) =>
 		buildSemanticTree({
 			data,
@@ -154,6 +173,18 @@ const compileInput = (data: ResumeData, source: StylesheetSource, editGeneration
 		roles: [],
 		children: pages.flatMap(({ children }) => children),
 	};
+	return {
+		semanticTree,
+		templateParts: getTemplateSemanticManifest(data.metadata.template).parts.map(({ name }) => name),
+	};
+};
+
+const compileInput = (
+	data: ResumeData,
+	source: StylesheetSource,
+	editGeneration: number,
+	semanticTree: SemanticNode,
+): CompileWorkerInput => {
 	return {
 		editGeneration,
 		source,
@@ -190,6 +221,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 	const abortController = new AbortController();
 	const debounceMs = options.debounceMs ?? 180;
 	const initial = options.initial.stylesheet;
+	let editorMetadata = createEditorMetadata(resumeData);
 	const store =
 		options.store ??
 		createStore<StylesheetStoreState>(() => ({
@@ -200,6 +232,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			deactivate: () => {},
 			undo: () => {},
 			redo: () => {},
+			refreshIntelligence: () => {},
 		}));
 
 	const patch = (next: Partial<StylesheetStoreState>) => store.setState(next);
@@ -299,13 +332,15 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		patch({ status: "compiling" });
 		let compiled: CompileWorkerResponse;
 		try {
-			compiled = await options.compile(compileInput(resumeData, source, candidate.generation));
+			compiled = await options.compile(
+				compileInput(resumeData, source, candidate.generation, editorMetadata.semanticTree),
+			);
 		} catch {
 			return;
 		}
 		if (candidateValidationEpoch !== validationEpoch) return;
 		if (destroyed || compiled.editGeneration !== store.getState().editGeneration) return;
-		patch({ diagnostics: compiled.diagnostics });
+		patch({ diagnostics: compiled.diagnostics, colorTokens: compiled.colorTokens ?? [] });
 
 		if (!compiled.program) {
 			if (candidate.transition === "edit_source") queue(candidate);
@@ -383,6 +418,8 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		renderDataVersion: options.initial.renderDataVersion,
 		editGeneration: 0,
 		diagnostics: [],
+		colorTokens: [],
+		editorMetadata,
 		status: "idle",
 		focused: false,
 		undoStack: [],
@@ -457,6 +494,16 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		redo() {
 			restore(currentStylesheet(store.getState()), "redoStack");
 		},
+		refreshIntelligence() {
+			const state = store.getState();
+			const generation = state.editGeneration;
+			void options
+				.compile(compileInput(resumeData, state.source, generation, editorMetadata.semanticTree))
+				.then((compiled) => {
+					if (destroyed || store.getState().editGeneration !== generation) return;
+					patch({ diagnostics: compiled.diagnostics, colorTokens: compiled.colorTokens ?? [] });
+				});
+		},
 	});
 
 	return {
@@ -464,6 +511,8 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		replaceResumeSnapshot(data: ResumeData, canonical: StylesheetCanonicalState) {
 			const candidate = latestCandidate;
 			resumeData = structuredClone(data);
+			editorMetadata = createEditorMetadata(resumeData);
+			patch({ editorMetadata });
 			const renderDataChanged = canonical.renderDataVersion > store.getState().renderDataVersion;
 			const preserveSource = store.getState().focused || isEditorFocused() || candidate !== undefined;
 			replaceCanonical(canonical, preserveSource);
@@ -507,6 +556,7 @@ export const useStylesheetStore = create<StylesheetStoreState>(() => ({
 	deactivate: () => {},
 	undo: () => {},
 	redo: () => {},
+	refreshIntelligence: () => {},
 }));
 
 let activeRuntime: ReturnType<typeof createStylesheetStoreRuntime> | undefined;

@@ -12,6 +12,12 @@ import type {
 } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
+import type { RrssColorToken } from "./color-tokens";
+
+export type RrssEditorMetadata = {
+	semanticTree: SemanticNode;
+	templateParts: readonly string[];
+};
 
 export type CompileWorkerInput = {
 	editGeneration: number;
@@ -32,6 +38,7 @@ export type CompileWorkerResponse = {
 	editGeneration: number;
 	program: StyleProgram | null;
 	diagnostics: readonly RrssDiagnostic[];
+	colorTokens?: readonly RrssColorToken[];
 };
 
 export type PreflightLimits = PdfPreflightPageLimits & {
