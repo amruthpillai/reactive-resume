@@ -4,6 +4,28 @@ import { redactResumeForViewer } from "../features/resume/access-policy";
 import { resumeDto } from "./resume";
 
 describe("resume DTO output validation", () => {
+	it("rejects renderer-unsafe custom sections before update or import persistence", () => {
+		const data = {
+			...defaultResumeData,
+			customSections: [
+				{
+					id: "custom-experience",
+					type: "experience",
+					title: "Experience",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [{ id: "summary-item", hidden: false, content: "<p>Not an experience item</p>" }],
+				},
+			],
+		};
+
+		expect(resumeDto.update.input.safeParse({ id: "resume-id", data }).success).toBe(false);
+		expect(resumeDto.import.input.safeParse({ data }).success).toBe(false);
+	});
+
 	it("defers imported stylesheet validation to the stable unavailable-feature error", () => {
 		expect(
 			resumeDto.import.input.safeParse({

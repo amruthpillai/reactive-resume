@@ -1683,67 +1683,52 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 		"customSections": {
 			"type": "array",
 			"items": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "The title of the section."
-					},
-					"icon": {
-						"default": "",
-						"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
-						"type": "string"
-					},
-					"columns": {
-						"default": 1,
-						"description": "The number of columns the section should span across.",
-						"type": "integer",
-						"minimum": 1,
-						"maximum": 6
-					},
-					"hidden": {
-						"type": "boolean",
-						"description": "Whether to hide the section from the resume."
-					},
-					"keepTogether": {
-						"default": false,
-						"description": "If true, the section is kept on a single page instead of splitting across a page break.",
-						"type": "boolean"
-					},
-					"startOnNewPage": {
-						"default": false,
-						"description": "If true, the section always begins on a new page.",
-						"type": "boolean"
-					},
-					"id": {
-						"type": "string",
-						"description": "The unique identifier for the custom section. Usually generated as a UUID."
-					},
-					"type": {
-						"type": "string",
-						"enum": [
-							"summary",
-							"profiles",
-							"experience",
-							"education",
-							"projects",
-							"skills",
-							"languages",
-							"interests",
-							"awards",
-							"certifications",
-							"publications",
-							"volunteer",
-							"references",
-							"cover-letter"
-						],
-						"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
-					},
-					"items": {
-						"type": "array",
-						"items": {
-							"anyOf": [
-								{
+				"oneOf": [
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "cover-letter",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -1770,7 +1755,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"content"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "summary",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -1792,7 +1832,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"content"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "profiles",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -1858,7 +1953,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"username"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "experience",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -1961,7 +2111,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "education",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2042,7 +2247,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "projects",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2103,7 +2363,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "skills",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2156,7 +2471,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"proficiency"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "languages",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2191,7 +2561,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"fluency"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "interests",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2232,7 +2657,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"name"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "awards",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2298,7 +2778,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "certifications",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2364,7 +2899,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "publications",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2430,7 +3020,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "volunteer",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2496,7 +3141,62 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"description"
 									]
 								},
-								{
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
+						},
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "The title of the section."
+							},
+							"icon": {
+								"default": "",
+								"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+								"type": "string"
+							},
+							"columns": {
+								"default": 1,
+								"description": "The number of columns the section should span across.",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 6
+							},
+							"hidden": {
+								"type": "boolean",
+								"description": "Whether to hide the section from the resume."
+							},
+							"keepTogether": {
+								"default": false,
+								"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
+							},
+							"startOnNewPage": {
+								"default": false,
+								"description": "If true, the section always begins on a new page.",
+								"type": "boolean"
+							},
+							"id": {
+								"type": "string",
+								"description": "The unique identifier for the custom section. Usually generated as a UUID."
+							},
+							"type": {
+								"type": "string",
+								"const": "references",
+								"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
+							},
+							"items": {
+								"type": "array",
+								"items": {
 									"type": "object",
 									"properties": {
 										"id": {
@@ -2561,18 +3261,18 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 										"phone",
 										"description"
 									]
-								}
-							]
+								},
+								"description": "The items to display in the custom section. Items follow the schema of the section type."
+							}
 						},
-						"description": "The items to display in the custom section. Items follow the schema of the section type."
+						"required": [
+							"title",
+							"hidden",
+							"id",
+							"type",
+							"items"
+						]
 					}
-				},
-				"required": [
-					"title",
-					"hidden",
-					"id",
-					"type",
-					"items"
 				]
 			},
 			"description": "Custom sections of the resume, such as a custom section for notes, etc."

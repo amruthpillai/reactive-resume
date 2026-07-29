@@ -359,9 +359,8 @@ export const sectionTypeSchema = z.enum([
 
 export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
 
-// coverLetterItemSchema must come before summaryItemSchema because both have 'content',
-// but coverLetterItemSchema also requires 'recipient'. If summaryItemSchema is first,
-// cover letter items will match it and lose the 'recipient' field.
+// Keep cover-letter before summary so the overlapping content shapes retain their established precedence.
+// The section discriminator now selects the matching item schema before parsing its items.
 export const customSectionItemDefinitionByType = {
 	"cover-letter": { schemaName: "coverLetterItemSchema", schema: coverLetterItemSchema },
 	summary: { schemaName: "summaryItemSchema", schema: summaryItemSchema },
@@ -379,19 +378,27 @@ export const customSectionItemDefinitionByType = {
 	references: { schemaName: "referenceItemSchema", schema: referenceItemSchema },
 } as const satisfies Record<CustomSectionType, { schemaName: string; schema: z.ZodType }>;
 
-const customSectionItemSchema = z.union(Object.values(customSectionItemDefinitionByType).map(({ schema }) => schema));
+export type CustomSectionItem = z.infer<(typeof customSectionItemDefinitionByType)[CustomSectionType]["schema"]>;
 
-export type CustomSectionItem = z.infer<typeof customSectionItemSchema>;
+const customSectionSchemaOptions = Object.entries(customSectionItemDefinitionByType).map(([type, { schema }]) =>
+	baseSectionSchema.extend({
+		id: z.string().describe("The unique identifier for the custom section. Usually generated as a UUID."),
+		type: z
+			.literal(type as CustomSectionType)
+			.describe("The type of items this custom section contains. Determines which item schema and form fields to use."),
+		items: z
+			.array(schema)
+			.describe("The items to display in the custom section. Items follow the schema of the section type."),
+	}),
+);
 
-export const customSectionSchema = baseSectionSchema.extend({
-	id: z.string().describe("The unique identifier for the custom section. Usually generated as a UUID."),
-	type: sectionTypeSchema.describe(
-		"The type of items this custom section contains. Determines which item schema and form fields to use.",
-	),
-	items: z
-		.array(customSectionItemSchema)
-		.describe("The items to display in the custom section. Items follow the schema of the section type."),
-});
+const [firstCustomSectionSchema, ...remainingCustomSectionSchemas] = customSectionSchemaOptions;
+if (!firstCustomSectionSchema) throw new Error("At least one custom section schema is required.");
+
+export const customSectionSchema = z.discriminatedUnion("type", [
+	firstCustomSectionSchema,
+	...remainingCustomSectionSchemas,
+]);
 
 export type CustomSection = z.infer<typeof customSectionSchema>;
 

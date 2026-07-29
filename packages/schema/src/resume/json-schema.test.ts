@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import z from "zod";
 import { sectionTypeSchema } from "./data";
+import { defaultResumeData } from "./default";
 import { createCustomSectionItemJsonSchemas, createResumeDataJsonSchema } from "./json-schema";
 
 describe("createResumeDataJsonSchema", () => {
@@ -17,6 +19,33 @@ describe("createResumeDataJsonSchema", () => {
 				metadata: { type: "object" },
 			},
 		});
+	});
+
+	it("enforces the custom-section type and item correlation", () => {
+		const generatedSchema = z.fromJSONSchema(createResumeDataJsonSchema());
+		const valid = {
+			...defaultResumeData,
+			customSections: [
+				{
+					id: "custom-summary",
+					type: "summary",
+					title: "Summary",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [{ id: "summary-item", hidden: false, content: "<p>Summary</p>" }],
+				},
+			],
+		};
+		const mismatched = {
+			...valid,
+			customSections: valid.customSections.map((section) => ({ ...section, type: "experience" })),
+		};
+
+		expect(generatedSchema.safeParse(valid).success).toBe(true);
+		expect(generatedSchema.safeParse(mismatched).success).toBe(false);
 	});
 });
 

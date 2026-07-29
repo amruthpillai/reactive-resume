@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import z from "zod";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
 
 type GeneratedSpecView = {
@@ -81,6 +83,29 @@ describe("generateOpenApiSpec", () => {
 				data: { $ref: "#/components/schemas/ResumeData" },
 			},
 		});
+	});
+
+	it("publishes the custom-section type and item correlation", async () => {
+		const spec = (await generateSpec()) as GeneratedSpecView;
+		const schema = z.fromJSONSchema(spec.components?.schemas?.ResumeData as Parameters<typeof z.fromJSONSchema>[0]);
+		const mismatched = {
+			...defaultResumeData,
+			customSections: [
+				{
+					id: "custom-experience",
+					type: "experience",
+					title: "Experience",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [{ id: "summary-item", hidden: false, content: "<p>Not an experience item</p>" }],
+				},
+			],
+		};
+
+		expect(schema.safeParse(mismatched).success).toBe(false);
 	});
 
 	it("does not publish impossible request schemas", async () => {

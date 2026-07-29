@@ -246,15 +246,15 @@ it("names every custom-section item shape by its type key", () => {
 	};
 
 	for (const [type, schemaName] of Object.entries(expectedSchemas)) {
-		expect(reference).toContain(`| \`customSections[].items[]\` | \`${type}\` | \`${schemaName}\` |`);
+		expect(reference).toContain(`| \`customSections[]\` | \`${type}\` | \`${schemaName}\` |`);
 	}
 	expect(reference).toContain(
-		"| `customSections[].items[]` | `experience` | `experienceItemSchema` | `{ id, hidden, company, position, location, period, description }` |",
+		"| `customSections[]` | `experience` | `experienceItemSchema` | `{ id, hidden, company, position, location, period, description }` |",
 	);
 	expect(reference).toContain(
-		"| `customSections[].items[].company` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) |",
+		"| `customSections[].items[].company` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) |",
 	);
-	expect(reference).not.toMatch(/\| `customSections\[\]\.items\[\]` \| variant \d+/);
+	expect(reference).not.toMatch(/\| `customSections\[\]` \| variant \d+/);
 });
 
 it("derives top-level required fields and renders canonical exclusive minimum constraints", () => {

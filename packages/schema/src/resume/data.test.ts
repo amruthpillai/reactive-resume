@@ -1,3 +1,4 @@
+import type { CustomSectionType } from "./data";
 import { describe, expect, it } from "vitest";
 import {
 	baseSectionSchema,
@@ -18,6 +19,86 @@ import {
 	websiteSchema,
 } from "./data";
 import { defaultResumeData } from "./default";
+
+const representativeCustomSectionItemByType = {
+	summary: { id: "summary-item", hidden: false, content: "<p>Summary</p>" },
+	profiles: { id: "profile-item", hidden: false, icon: "", network: "GitHub", username: "ada" },
+	experience: {
+		id: "experience-item",
+		hidden: false,
+		company: "Analytical Engines",
+		position: "Programmer",
+		location: "London",
+		period: "1842–1843",
+		description: "<p>Wrote the first algorithm.</p>",
+	},
+	education: {
+		id: "education-item",
+		hidden: false,
+		school: "University of London",
+		degree: "Mathematics",
+		area: "Mathematics",
+		grade: "",
+		location: "London",
+		period: "1830",
+		description: "",
+	},
+	projects: { id: "project-item", hidden: false, name: "Bernoulli Notes", period: "1843", description: "" },
+	skills: { id: "skill-item", hidden: false, icon: "", name: "Mathematics", proficiency: "Expert" },
+	languages: { id: "language-item", hidden: false, language: "English", fluency: "Native" },
+	interests: { id: "interest-item", hidden: false, icon: "", name: "Poetry" },
+	awards: { id: "award-item", hidden: false, title: "Medal", awarder: "Society", date: "1843", description: "" },
+	certifications: {
+		id: "certification-item",
+		hidden: false,
+		title: "Certificate",
+		issuer: "Society",
+		date: "1843",
+		description: "",
+	},
+	publications: {
+		id: "publication-item",
+		hidden: false,
+		title: "Notes",
+		publisher: "Scientific Memoirs",
+		date: "1843",
+		description: "",
+	},
+	volunteer: {
+		id: "volunteer-item",
+		hidden: false,
+		organization: "Society",
+		location: "London",
+		period: "1843",
+		description: "",
+	},
+	references: {
+		id: "reference-item",
+		hidden: false,
+		name: "Charles Babbage",
+		position: "Inventor",
+		phone: "",
+		description: "",
+	},
+	"cover-letter": {
+		id: "cover-letter-item",
+		hidden: false,
+		recipient: "<p>Charles Babbage</p>",
+		content: "<p>Dear Charles,</p>",
+	},
+} as const satisfies Record<CustomSectionType, Record<string, unknown>>;
+
+const customSectionFixture = (type: CustomSectionType, item: Record<string, unknown>) => ({
+	id: `custom-${type}`,
+	type,
+	title: "Custom section",
+	icon: "",
+	columns: 1,
+	hidden: false,
+	keepTogether: false,
+	startOnNewPage: false,
+	items: [item],
+});
 
 describe("resumeDataSchema", () => {
 	it("validates the default resume", () => {
@@ -48,6 +129,18 @@ describe("resumeDataSchema", () => {
 
 		expect(result.items[0]).toMatchObject({ recipient: "Ada Lovelace", content: "<p>Hello</p>" });
 	});
+
+	it("rejects a renderer-unsafe custom section before PDF or DOCX dispatch", () => {
+		const rendererUnsafeSection = customSectionFixture("experience", representativeCustomSectionItemByType.summary);
+
+		expect(customSectionSchema.safeParse(rendererUnsafeSection).success).toBe(false);
+		expect(
+			resumeDataSchema.safeParse({
+				...defaultResumeData,
+				customSections: [rendererUnsafeSection],
+			}).success,
+		).toBe(false);
+	});
 });
 
 describe("customSectionItemDefinitionByType", () => {
@@ -72,6 +165,22 @@ describe("customSectionItemDefinitionByType", () => {
 			references: "referenceItemSchema",
 			"cover-letter": "coverLetterItemSchema",
 		});
+	});
+
+	it.each(sectionTypeSchema.options)("accepts the representative %s item shape", (type) => {
+		const section = customSectionFixture(type, representativeCustomSectionItemByType[type]);
+
+		expect(customSectionSchema.safeParse(section).success).toBe(true);
+	});
+
+	it.each(sectionTypeSchema.options)("rejects an item shape that does not match %s", (type) => {
+		const mismatchedItem =
+			type === "summary"
+				? representativeCustomSectionItemByType.experience
+				: representativeCustomSectionItemByType.summary;
+		const section = customSectionFixture(type, mismatchedItem);
+
+		expect(customSectionSchema.safeParse(section).success).toBe(false);
 	});
 });
 

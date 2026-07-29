@@ -14,20 +14,20 @@ Choose one coherent shape for each union value. Required fields are local to tha
 
 | Path | Type/variant | Item schema | Representative required shape |
 | --- | --- | --- | --- |
-| `customSections[].items[]` | `summary` | `summaryItemSchema` | `{ id, hidden, content }` |
-| `customSections[].items[]` | `profiles` | `profileItemSchema` | `{ id, hidden, icon, network, username }` |
-| `customSections[].items[]` | `experience` | `experienceItemSchema` | `{ id, hidden, company, position, location, period, description }` |
-| `customSections[].items[]` | `education` | `educationItemSchema` | `{ id, hidden, school, degree, area, grade, location, period, description }` |
-| `customSections[].items[]` | `projects` | `projectItemSchema` | `{ id, hidden, name, period, description }` |
-| `customSections[].items[]` | `skills` | `skillItemSchema` | `{ id, hidden, icon, name, proficiency }` |
-| `customSections[].items[]` | `languages` | `languageItemSchema` | `{ id, hidden, language, fluency }` |
-| `customSections[].items[]` | `interests` | `interestItemSchema` | `{ id, hidden, icon, name }` |
-| `customSections[].items[]` | `awards` | `awardItemSchema` | `{ id, hidden, title, awarder, date, description }` |
-| `customSections[].items[]` | `certifications` | `certificationItemSchema` | `{ id, hidden, title, issuer, date, description }` |
-| `customSections[].items[]` | `publications` | `publicationItemSchema` | `{ id, hidden, title, publisher, date, description }` |
-| `customSections[].items[]` | `volunteer` | `volunteerItemSchema` | `{ id, hidden, organization, location, period, description }` |
-| `customSections[].items[]` | `references` | `referenceItemSchema` | `{ id, hidden, name, position, phone, description }` |
-| `customSections[].items[]` | `cover-letter` | `coverLetterItemSchema` | `{ id, hidden, recipient, content }` |
+| `customSections[]` | `summary` | `summaryItemSchema` | `{ id, hidden, content }` |
+| `customSections[]` | `profiles` | `profileItemSchema` | `{ id, hidden, icon, network, username }` |
+| `customSections[]` | `experience` | `experienceItemSchema` | `{ id, hidden, company, position, location, period, description }` |
+| `customSections[]` | `education` | `educationItemSchema` | `{ id, hidden, school, degree, area, grade, location, period, description }` |
+| `customSections[]` | `projects` | `projectItemSchema` | `{ id, hidden, name, period, description }` |
+| `customSections[]` | `skills` | `skillItemSchema` | `{ id, hidden, icon, name, proficiency }` |
+| `customSections[]` | `languages` | `languageItemSchema` | `{ id, hidden, language, fluency }` |
+| `customSections[]` | `interests` | `interestItemSchema` | `{ id, hidden, icon, name }` |
+| `customSections[]` | `awards` | `awardItemSchema` | `{ id, hidden, title, awarder, date, description }` |
+| `customSections[]` | `certifications` | `certificationItemSchema` | `{ id, hidden, title, issuer, date, description }` |
+| `customSections[]` | `publications` | `publicationItemSchema` | `{ id, hidden, title, publisher, date, description }` |
+| `customSections[]` | `volunteer` | `volunteerItemSchema` | `{ id, hidden, organization, location, period, description }` |
+| `customSections[]` | `references` | `referenceItemSchema` | `{ id, hidden, name, position, phone, description }` |
+| `customSections[]` | `cover-letter` | `coverLetterItemSchema` | `{ id, hidden, recipient, content }` |
 
 ## Field catalog
 
@@ -297,158 +297,288 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.references.items[].phone` | `string` | yes | — | The phone number of the reference. |
 | `sections.references.items[].description` | `string` | yes | — | The description of the reference. Can be used to display a quote, a testimonial, etc. This should be a HTML-formatted string. |
 | `customSections` | `array` | yes | — | Custom sections of the resume, such as a custom section for notes, etc. |
-| `customSections[]` | `object` | — | — | — |
-| `customSections[].title` | `string` | yes | — | The title of the section. |
-| `customSections[].icon` | `string` | no | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
-| `customSections[].columns` | `integer` | no | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
-| `customSections[].hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
-| `customSections[].keepTogether` | `boolean` | no | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
-| `customSections[].startOnNewPage` | `boolean` | no | default: false | If true, the section always begins on a new page. |
-| `customSections[].id` | `string` | yes | — | The unique identifier for the custom section. Usually generated as a UUID. |
-| `customSections[].type` | `string` | yes | enum: ["summary","profiles","experience","education","projects","skills","languages","interests","awards","certifications","publications","volunteer","references","cover-letter"] | The type of items this custom section contains. Determines which item schema and form fields to use. |
-| `customSections[].items` | `array` | yes | — | The items to display in the custom section. Items follow the schema of the section type. |
-| `customSections[].items[]` | `object or object or object or object or object or object or object or object or object or object or object or object or object or object` | — | — | — |
-| `customSections[].items[]` | `object` | — (type summary, schema summaryItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type summary, schema summaryItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].content` | `string` | yes (type summary, schema summaryItemSchema at customSections[].items[]) | — | The rich text content of the summary item. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type profiles, schema profileItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].icon` | `string` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
-| `customSections[].items[].iconColor` | `string` | no (type profiles, schema profileItemSchema at customSections[].items[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
-| `customSections[].items[].network` | `string` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | minLength: 1 | The name of the network or platform. |
-| `customSections[].items[].username` | `string` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | — | The username of the author on the network or platform. |
-| `customSections[].items[].website` | `object` | no (type profiles, schema profileItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the profile of the author on the network or platform, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type profiles, schema profileItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type profiles, schema profileItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[]` | `object` | — (type experience, schema experienceItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].company` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | minLength: 1 | The name of the company or organization. |
-| `customSections[].items[].position` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The position held at the company or organization. Used when there is only a single role. If multiple roles are provided in the 'roles' field, this serves as a summary title or can be left blank. |
-| `customSections[].items[].location` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The location of the company or organization. |
-| `customSections[].items[].period` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The overall period of time at the company. When multiple roles are used, this should reflect the total tenure. |
-| `customSections[].items[].website` | `object` | no (type experience, schema experienceItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the company or organization, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type experience, schema experienceItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The description of the experience. This should be a HTML-formatted string. |
-| `customSections[].items[].roles` | `array` | no (type experience, schema experienceItemSchema at customSections[].items[]) | default: [] | List of individual roles held at this company to show career progression. |
-| `customSections[].items[].roles[]` | `object` | — (type experience, schema experienceItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].roles[].id` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The unique identifier for the role. Usually generated as a UUID. |
-| `customSections[].items[].roles[].position` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The position or job title for this role. |
-| `customSections[].items[].roles[].period` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The period of time this role was held. |
-| `customSections[].items[].roles[].description` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) | — | The description of this specific role. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type education, schema educationItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].school` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | minLength: 1 | The name of the school or institution. |
-| `customSections[].items[].degree` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The degree or qualification obtained. |
-| `customSections[].items[].area` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The area of study or specialization. |
-| `customSections[].items[].grade` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The grade or score achieved. |
-| `customSections[].items[].location` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The location of the school or institution. |
-| `customSections[].items[].period` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The period of time the education was obtained over. |
-| `customSections[].items[].website` | `object` | no (type education, schema educationItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the school or institution, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type education, schema educationItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type education, schema educationItemSchema at customSections[].items[]) | — | The description of the education. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type projects, schema projectItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type projects, schema projectItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type projects, schema projectItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].name` | `string` | yes (type projects, schema projectItemSchema at customSections[].items[]) | minLength: 1 | The name of the project. |
-| `customSections[].items[].period` | `string` | yes (type projects, schema projectItemSchema at customSections[].items[]) | — | The period of time the project was worked on. |
-| `customSections[].items[].website` | `object` | no (type projects, schema projectItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the project, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type projects, schema projectItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type projects, schema projectItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type projects, schema projectItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type projects, schema projectItemSchema at customSections[].items[]) | — | The description of the project. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type skills, schema skillItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type skills, schema skillItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type skills, schema skillItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].icon` | `string` | yes (type skills, schema skillItemSchema at customSections[].items[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
-| `customSections[].items[].iconColor` | `string` | no (type skills, schema skillItemSchema at customSections[].items[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
-| `customSections[].items[].name` | `string` | yes (type skills, schema skillItemSchema at customSections[].items[]) | minLength: 1 | The name of the skill. |
-| `customSections[].items[].proficiency` | `string` | yes (type skills, schema skillItemSchema at customSections[].items[]) | — | The proficiency level of the skill. Can be any text, such as 'Beginner', 'Intermediate', 'Advanced', etc. |
-| `customSections[].items[].level` | `number` | no (type skills, schema skillItemSchema at customSections[].items[]) | minimum: 0; maximum: 5; default: 0 | The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
-| `customSections[].items[].keywords` | `array` | no (type skills, schema skillItemSchema at customSections[].items[]) | default: [] | The keywords associated with the skill, if any. These are displayed as tags below the name. |
-| `customSections[].items[].keywords[]` | `string` | — (type skills, schema skillItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[]` | `object` | — (type languages, schema languageItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type languages, schema languageItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type languages, schema languageItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].language` | `string` | yes (type languages, schema languageItemSchema at customSections[].items[]) | minLength: 1 | The name of the language the author knows. |
-| `customSections[].items[].fluency` | `string` | yes (type languages, schema languageItemSchema at customSections[].items[]) | — | The fluency level of the language. Can be any text, such as 'Native', 'Fluent', 'Conversational', etc. or can also be a CEFR level (A1, A2, B1, B2, C1, C2). |
-| `customSections[].items[].level` | `number` | no (type languages, schema languageItemSchema at customSections[].items[]) | minimum: 0; maximum: 5; default: 0 | The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
-| `customSections[].items[]` | `object` | — (type interests, schema interestItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type interests, schema interestItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type interests, schema interestItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].icon` | `string` | yes (type interests, schema interestItemSchema at customSections[].items[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
-| `customSections[].items[].iconColor` | `string` | no (type interests, schema interestItemSchema at customSections[].items[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
-| `customSections[].items[].name` | `string` | yes (type interests, schema interestItemSchema at customSections[].items[]) | minLength: 1 | The name of the interest/hobby. |
-| `customSections[].items[].keywords` | `array` | no (type interests, schema interestItemSchema at customSections[].items[]) | default: [] | The keywords associated with the interest/hobby, if any. These are displayed as tags below the name. |
-| `customSections[].items[].keywords[]` | `string` | — (type interests, schema interestItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[]` | `object` | — (type awards, schema awardItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].title` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | minLength: 1 | The title of the award. |
-| `customSections[].items[].awarder` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | The awarder of the award. |
-| `customSections[].items[].date` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | The date when the award was received. |
-| `customSections[].items[].website` | `object` | no (type awards, schema awardItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the award, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type awards, schema awardItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type awards, schema awardItemSchema at customSections[].items[]) | — | The description of the award. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type certifications, schema certificationItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].title` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | minLength: 1 | The title of the certification. |
-| `customSections[].items[].issuer` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | The issuer of the certification. |
-| `customSections[].items[].date` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | The date when the certification was received. |
-| `customSections[].items[].website` | `object` | no (type certifications, schema certificationItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the certification, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type certifications, schema certificationItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type certifications, schema certificationItemSchema at customSections[].items[]) | — | The description of the certification. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type publications, schema publicationItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].title` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | minLength: 1 | The title of the publication. |
-| `customSections[].items[].publisher` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | The publisher of the publication. |
-| `customSections[].items[].date` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | The date when the publication was published. |
-| `customSections[].items[].website` | `object` | no (type publications, schema publicationItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the publication, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type publications, schema publicationItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type publications, schema publicationItemSchema at customSections[].items[]) | — | The description of the publication. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].organization` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | minLength: 1 | The name of the organization or company. |
-| `customSections[].items[].location` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | The location of the organization or company. |
-| `customSections[].items[].period` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | The period of time the author was volunteered at the organization or company. |
-| `customSections[].items[].website` | `object` | no (type volunteer, schema volunteerItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the organization or company, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type volunteer, schema volunteerItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].description` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[].items[]) | — | The description of the volunteer experience. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type references, schema referenceItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].name` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | minLength: 1 | The name of the reference, or a note such as 'Available upon request'. |
-| `customSections[].items[].position` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | The position or job title of the reference. |
-| `customSections[].items[].website` | `object` | no (type references, schema referenceItemSchema at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website or LinkedIn profile of the reference, if any. |
-| `customSections[].items[].website.url` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no (type references, schema referenceItemSchema at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].phone` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | The phone number of the reference. |
-| `customSections[].items[].description` | `string` | yes (type references, schema referenceItemSchema at customSections[].items[]) | — | The description of the reference. Can be used to display a quote, a testimonial, etc. This should be a HTML-formatted string. |
-| `customSections[].items[]` | `object` | — (type cover-letter, schema coverLetterItemSchema at customSections[].items[]) | — | — |
-| `customSections[].items[].id` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[].items[]) | — | Whether to hide the item from the resume. |
-| `customSections[].items[].recipient` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[].items[]) | — | The recipient's address block as HTML (name, title, company, address, email). |
-| `customSections[].items[].content` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[].items[]) | — | The cover letter body as HTML (salutation, paragraphs, closing, signature). |
+| `customSections[]` | `object or object or object or object or object or object or object or object or object or object or object or object or object or object` | — | — | — |
+| `customSections[]` | `object` | — (type summary, schema summaryItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type summary, schema summaryItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type summary, schema summaryItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type summary, schema summaryItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type summary, schema summaryItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type summary, schema summaryItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].content` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The rich text content of the summary item. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type profiles, schema profileItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type profiles, schema profileItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type profiles, schema profileItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type profiles, schema profileItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].icon` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
+| `customSections[].items[].iconColor` | `string` | no (type profiles, schema profileItemSchema at customSections[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
+| `customSections[].items[].network` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | minLength: 1 | The name of the network or platform. |
+| `customSections[].items[].username` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The username of the author on the network or platform. |
+| `customSections[].items[].website` | `object` | no (type profiles, schema profileItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The link to the profile of the author on the network or platform, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[]` | `object` | — (type experience, schema experienceItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type experience, schema experienceItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type experience, schema experienceItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type experience, schema experienceItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].company` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | minLength: 1 | The name of the company or organization. |
+| `customSections[].items[].position` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The position held at the company or organization. Used when there is only a single role. If multiple roles are provided in the 'roles' field, this serves as a summary title or can be left blank. |
+| `customSections[].items[].location` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The location of the company or organization. |
+| `customSections[].items[].period` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The overall period of time at the company. When multiple roles are used, this should reflect the total tenure. |
+| `customSections[].items[].website` | `object` | no (type experience, schema experienceItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The website of the company or organization, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The description of the experience. This should be a HTML-formatted string. |
+| `customSections[].items[].roles` | `array` | no (type experience, schema experienceItemSchema at customSections[]) | default: [] | List of individual roles held at this company to show career progression. |
+| `customSections[].items[].roles[]` | `object` | — (type experience, schema experienceItemSchema at customSections[]) | — | — |
+| `customSections[].items[].roles[].id` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The unique identifier for the role. Usually generated as a UUID. |
+| `customSections[].items[].roles[].position` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The position or job title for this role. |
+| `customSections[].items[].roles[].period` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The period of time this role was held. |
+| `customSections[].items[].roles[].description` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The description of this specific role. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type education, schema educationItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type education, schema educationItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type education, schema educationItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type education, schema educationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type education, schema educationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type education, schema educationItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type education, schema educationItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].school` | `string` | yes (type education, schema educationItemSchema at customSections[]) | minLength: 1 | The name of the school or institution. |
+| `customSections[].items[].degree` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The degree or qualification obtained. |
+| `customSections[].items[].area` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The area of study or specialization. |
+| `customSections[].items[].grade` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The grade or score achieved. |
+| `customSections[].items[].location` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The location of the school or institution. |
+| `customSections[].items[].period` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The period of time the education was obtained over. |
+| `customSections[].items[].website` | `object` | no (type education, schema educationItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The website of the school or institution, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type education, schema educationItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The description of the education. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type projects, schema projectItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type projects, schema projectItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type projects, schema projectItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type projects, schema projectItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type projects, schema projectItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].name` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | minLength: 1 | The name of the project. |
+| `customSections[].items[].period` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The period of time the project was worked on. |
+| `customSections[].items[].website` | `object` | no (type projects, schema projectItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The link to the project, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The description of the project. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type skills, schema skillItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type skills, schema skillItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type skills, schema skillItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type skills, schema skillItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type skills, schema skillItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type skills, schema skillItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type skills, schema skillItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].icon` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
+| `customSections[].items[].iconColor` | `string` | no (type skills, schema skillItemSchema at customSections[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
+| `customSections[].items[].name` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | minLength: 1 | The name of the skill. |
+| `customSections[].items[].proficiency` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The proficiency level of the skill. Can be any text, such as 'Beginner', 'Intermediate', 'Advanced', etc. |
+| `customSections[].items[].level` | `number` | no (type skills, schema skillItemSchema at customSections[]) | minimum: 0; maximum: 5; default: 0 | The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
+| `customSections[].items[].keywords` | `array` | no (type skills, schema skillItemSchema at customSections[]) | default: [] | The keywords associated with the skill, if any. These are displayed as tags below the name. |
+| `customSections[].items[].keywords[]` | `string` | — (type skills, schema skillItemSchema at customSections[]) | — | — |
+| `customSections[]` | `object` | — (type languages, schema languageItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type languages, schema languageItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type languages, schema languageItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type languages, schema languageItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type languages, schema languageItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type languages, schema languageItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type languages, schema languageItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].language` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | minLength: 1 | The name of the language the author knows. |
+| `customSections[].items[].fluency` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The fluency level of the language. Can be any text, such as 'Native', 'Fluent', 'Conversational', etc. or can also be a CEFR level (A1, A2, B1, B2, C1, C2). |
+| `customSections[].items[].level` | `number` | no (type languages, schema languageItemSchema at customSections[]) | minimum: 0; maximum: 5; default: 0 | The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
+| `customSections[]` | `object` | — (type interests, schema interestItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type interests, schema interestItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type interests, schema interestItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type interests, schema interestItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type interests, schema interestItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type interests, schema interestItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type interests, schema interestItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].icon` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
+| `customSections[].items[].iconColor` | `string` | no (type interests, schema interestItemSchema at customSections[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
+| `customSections[].items[].name` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | minLength: 1 | The name of the interest/hobby. |
+| `customSections[].items[].keywords` | `array` | no (type interests, schema interestItemSchema at customSections[]) | default: [] | The keywords associated with the interest/hobby, if any. These are displayed as tags below the name. |
+| `customSections[].items[].keywords[]` | `string` | — (type interests, schema interestItemSchema at customSections[]) | — | — |
+| `customSections[]` | `object` | — (type awards, schema awardItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type awards, schema awardItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type awards, schema awardItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type awards, schema awardItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type awards, schema awardItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].title` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | minLength: 1 | The title of the award. |
+| `customSections[].items[].awarder` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The awarder of the award. |
+| `customSections[].items[].date` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The date when the award was received. |
+| `customSections[].items[].website` | `object` | no (type awards, schema awardItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The website of the award, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The description of the award. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type certifications, schema certificationItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type certifications, schema certificationItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type certifications, schema certificationItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type certifications, schema certificationItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].title` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | minLength: 1 | The title of the certification. |
+| `customSections[].items[].issuer` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The issuer of the certification. |
+| `customSections[].items[].date` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The date when the certification was received. |
+| `customSections[].items[].website` | `object` | no (type certifications, schema certificationItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The website of the certification, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The description of the certification. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type publications, schema publicationItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type publications, schema publicationItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type publications, schema publicationItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type publications, schema publicationItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].title` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | minLength: 1 | The title of the publication. |
+| `customSections[].items[].publisher` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The publisher of the publication. |
+| `customSections[].items[].date` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The date when the publication was published. |
+| `customSections[].items[].website` | `object` | no (type publications, schema publicationItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The link to the publication, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The description of the publication. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type volunteer, schema volunteerItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type volunteer, schema volunteerItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type volunteer, schema volunteerItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type volunteer, schema volunteerItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].organization` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | minLength: 1 | The name of the organization or company. |
+| `customSections[].items[].location` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The location of the organization or company. |
+| `customSections[].items[].period` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The period of time the author was volunteered at the organization or company. |
+| `customSections[].items[].website` | `object` | no (type volunteer, schema volunteerItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The link to the organization or company, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The description of the volunteer experience. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type references, schema referenceItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type references, schema referenceItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type references, schema referenceItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type references, schema referenceItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type references, schema referenceItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].name` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | minLength: 1 | The name of the reference, or a note such as 'Available upon request'. |
+| `customSections[].items[].position` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The position or job title of the reference. |
+| `customSections[].items[].website` | `object` | no (type references, schema referenceItemSchema at customSections[]) | default: {"url":"","label":"","inlineLink":false} | The website or LinkedIn profile of the reference, if any. |
+| `customSections[].items[].website.url` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].phone` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The phone number of the reference. |
+| `customSections[].items[].description` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The description of the reference. Can be used to display a quote, a testimonial, etc. This should be a HTML-formatted string. |
+| `customSections[]` | `object` | — (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | — |
+| `customSections[].title` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The title of the section. |
+| `customSections[].icon` | `string` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
+| `customSections[].columns` | `integer` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
+| `customSections[].hidden` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].keepTogether` | `boolean` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
+| `customSections[].startOnNewPage` | `boolean` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].id` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
+| `customSections[].type` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
+| `customSections[].items` | `array` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
+| `customSections[].items[]` | `object` | — (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].recipient` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The recipient's address block as HTML (name, title, company, address, email). |
+| `customSections[].items[].content` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The cover letter body as HTML (salutation, paragraphs, closing, signature). |
 | `metadata` | `object` | yes | — | Metadata for the resume, such as template, layout, typography, etc. This section describes the overall design and appearance of the resume. |
 | `metadata.template` | `string` | no | enum: ["azurill","bronzor","chikorita","ditgar","ditto","gengar","glalie","kakuna","lapras","leafish","meowth","onyx","pikachu","rhyhorn","scizor"]; default: "onyx" | The template to use for the resume. Determines the overall design and appearance of the resume. |
 | `metadata.layout` | `object` | yes | — | The layout of the resume. Determines the structure and arrangement of the sections on the resume. |

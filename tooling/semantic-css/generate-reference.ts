@@ -34,6 +34,7 @@ export type JsonSchema = {
 	anyOf?: readonly JsonSchema[];
 	oneOf?: readonly JsonSchema[];
 	enum?: readonly unknown[];
+	const?: unknown;
 	minimum?: number;
 	exclusiveMinimum?: number;
 	maximum?: number;
@@ -232,14 +233,18 @@ export function renderSchemaReference(schema: JsonSchema) {
 		}
 		if (node.items) visit(node.items, `${path}[]`, null, variants);
 		const union = node.anyOf ?? node.oneOf ?? [];
-		if (path === "customSections[].items[]" && union.length > 0) {
+		if (path === "customSections[]" && union.length > 0) {
 			for (const [type, item] of Object.entries(customSectionItemSchemas)) {
-				const itemSchema = item.schema as JsonSchema;
+				const branch = union.find((candidate) => candidate.properties?.type?.const === type);
+				const itemSchema = branch?.properties?.items?.items;
+				if (!branch || !itemSchema) {
+					throw new Error(`Missing correlated custom section schema for type: ${type}`);
+				}
 				const shape =
 					itemSchema.type === "object" ? `{ ${(itemSchema.required ?? []).join(", ")} }` : schemaType(itemSchema);
 				const label = `type ${type}, schema ${item.schemaName}`;
 				variantRows.push(`| ${code(path)} | ${code(type)} | ${code(item.schemaName)} | ${code(shape)} |`);
-				visit(itemSchema, path, required, [...variants, { label, path }]);
+				visit(branch, path, required, [...variants, { label, path }]);
 			}
 			return;
 		}
