@@ -221,6 +221,19 @@ describe("RRSS value compilation", () => {
 		}
 	});
 
+	it("preserves CSS-wide identifiers inside custom-property token streams", () => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: "@rr-version 1;:root{--tokens:row inherit}",
+		});
+
+		expect(result.program).not.toBeNull();
+		expect(result.program?.rules[0]?.declarations).toContainEqual(
+			expect.objectContaining({ property: "--tokens", value: "row inherit" }),
+		);
+		expect(result.diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
+	});
+
 	it("expands generated one-to-four-token shorthands with CSS side semantics", () => {
 		fc.assert(
 			fc.property(

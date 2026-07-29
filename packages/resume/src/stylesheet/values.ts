@@ -214,7 +214,7 @@ function borderComponents(value: string): readonly [component: string, value: st
 
 export function expandShorthand(property: string, value: string): readonly [property: string, value: string][] | null {
 	const valueParts = splitValue(value);
-	if (valueParts.length > 1 && valueParts.some(isCssWideKeyword)) return null;
+	if (PROPERTY_REGISTRY_V1[property] && valueParts.length > 1 && valueParts.some(isCssWideKeyword)) return null;
 
 	if (!spacingShorthands.has(property)) {
 		if (property.endsWith("-horizontal")) {
