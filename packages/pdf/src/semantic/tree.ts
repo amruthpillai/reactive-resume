@@ -141,7 +141,8 @@ const buildRichTextChildren = (
 			continue;
 		}
 
-		const attributes = kind === "rich-heading" ? { level: child.rawTagName.slice(1) } : {};
+		const attributes: Readonly<Record<string, string>> =
+			kind === "rich-heading" ? { level: child.rawTagName.slice(1) } : {};
 		children.push(
 			semanticNode({
 				key,
@@ -991,6 +992,7 @@ export function buildSemanticTree({
 }
 
 export type { TemplateSemanticManifest } from "./template-manifest";
+export { shouldShowResumeHeader } from "../templates/shared/cover-letter";
 export { createBindingInventory, STANDARD_FIELD_REGISTRY, STANDARD_ROLE_REGISTRY } from "./binding-inventory";
 export { semanticNodeKeys } from "./node-keys";
 export {

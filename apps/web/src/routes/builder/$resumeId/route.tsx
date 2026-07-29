@@ -1,9 +1,10 @@
 import type { BuilderLayout } from "./-store/sidebar";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useBuilderResumeUpdateSubscription, useResumeCleanup, useResumeStore } from "@/features/resume/builder/draft";
+import { initializeStylesheetStore, useStylesheetStore } from "@/features/resume/stylesheet/store";
 import { orpc } from "@/libs/orpc/client";
 import { createNoindexFollowMeta } from "@/libs/seo";
 import { DesktopBuilderShell } from "./-components/desktop-builder-shell";
@@ -20,6 +21,9 @@ export const Route = createFileRoute("/builder/$resumeId")({
 		const [layout, resume] = await Promise.all([
 			getBuilderLayout(),
 			context.queryClient.ensureQueryData(orpc.resume.getById.queryOptions({ input: { id: params.resumeId } })),
+			context.queryClient.ensureQueryData(
+				orpc.resume.stylesheet.getState.queryOptions({ input: { id: params.resumeId } }),
+			),
 		]);
 
 		return { layout, name: resume.name };
@@ -36,11 +40,17 @@ function RouteComponent() {
 
 	const { resumeId } = Route.useParams();
 	const { data: resume } = useSuspenseQuery(orpc.resume.getById.queryOptions({ input: { id: resumeId } }));
+	const { data: stylesheet } = useSuspenseQuery(
+		orpc.resume.stylesheet.getState.queryOptions({ input: { id: resumeId } }),
+	);
 	const initializeResumeStore = useResumeStore((state) => state.initialize);
 	const mergeResumeMetadata = useResumeStore((state) => state.mergeResumeMetadata);
 	const isReady = useResumeStore((state) => state.isReady);
 	const initializedResumeId = useResumeStore((state) => state.resumeId);
 	const isInitialized = isReady && initializedResumeId === resumeId;
+	const isStylesheetInitialized = useStylesheetStore((state) => state.resumeId === resumeId);
+	const stylesheetInitialization = useRef({ resume, stylesheet });
+	stylesheetInitialization.current = { resume, stylesheet };
 
 	useResumeCleanup();
 	useBuilderResumeUpdateSubscription();
@@ -49,6 +59,16 @@ function RouteComponent() {
 		if (isInitialized) return;
 		initializeResumeStore(resume);
 	}, [initializeResumeStore, isInitialized, resume]);
+
+	useEffect(() => {
+		if (!isInitialized) return;
+		const initial = stylesheetInitialization.current;
+		return initializeStylesheetStore({
+			resumeId,
+			initial: initial.stylesheet,
+			resumeData: initial.resume.data,
+		});
+	}, [isInitialized, resumeId]);
 
 	useEffect(() => {
 		mergeResumeMetadata(resume);
@@ -65,7 +85,7 @@ function RouteComponent() {
 		resume,
 	]);
 
-	if (!isInitialized) return null;
+	if (!isInitialized || !isStylesheetInitialized) return null;
 
 	return <BuilderLayoutShell initialLayout={initialLayout} />;
 }

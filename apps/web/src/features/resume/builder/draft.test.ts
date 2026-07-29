@@ -6,7 +6,12 @@ import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { useBuilderResumeUpdateSubscription, useResumeStore, useResumeUpdateSubscription } from "./draft";
+import {
+	isEditableElementFocused,
+	useBuilderResumeUpdateSubscription,
+	useResumeStore,
+	useResumeUpdateSubscription,
+} from "./draft";
 
 const orpcMocks = vi.hoisted(() => ({
 	getResumeById: vi.fn(),
@@ -28,6 +33,10 @@ const routerParamsMock = vi.hoisted(() => ({
 const toastMocks = vi.hoisted(() => ({
 	dismiss: vi.fn(),
 	error: vi.fn(() => "sync-error-toast"),
+}));
+
+const stylesheetMocks = vi.hoisted(() => ({
+	refresh: vi.fn(),
 }));
 
 vi.mock("@orpc/client", () => ({
@@ -70,6 +79,10 @@ vi.mock("@/libs/orpc/client", () => ({
 
 vi.mock("sonner", () => ({
 	toast: toastMocks,
+}));
+
+vi.mock("@/features/resume/stylesheet/store", () => ({
+	refreshStylesheetStore: stylesheetMocks.refresh,
 }));
 
 function cloneResumeData(data: ResumeData): ResumeData {
@@ -122,6 +135,7 @@ describe("builder resume autosave", () => {
 		i18n.loadAndActivate({ locale: "en-US", messages: {} });
 		toastMocks.dismiss.mockClear();
 		toastMocks.error.mockClear();
+		stylesheetMocks.refresh.mockReset();
 		useResumeStore.getState().reset();
 	});
 
@@ -248,6 +262,21 @@ describe("builder resume autosave", () => {
 			expect.objectContaining({ duration: Number.POSITIVE_INFINITY }),
 		);
 		expect(orpcMocks.patchResume).not.toHaveBeenCalled();
+	});
+});
+
+describe("editable focus detection", () => {
+	it("treats CodeMirror descendants as editable", () => {
+		const editor = document.createElement("div");
+		editor.className = "cm-editor";
+		const content = document.createElement("div");
+		content.tabIndex = 0;
+		editor.append(content);
+		document.body.append(editor);
+		content.focus();
+
+		expect(isEditableElementFocused()).toBe(true);
+		editor.remove();
 	});
 });
 
@@ -476,5 +505,38 @@ describe("resume update stream subscription", () => {
 
 		expect(queryClientMock.setQueryData).toHaveBeenCalledWith(["resume", "getById", initial.id], remote);
 		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Local Name");
+	});
+
+	it("refetches canonical stylesheet state for stylesheet SSE events", async () => {
+		const initial = makeResume("resume-stylesheet");
+		consumeEventIteratorMock.mockReturnValue(vi.fn().mockResolvedValue(undefined));
+		routerParamsMock.value = { resumeId: initial.id };
+		useResumeStore.getState().initialize(initial);
+
+		renderHook(() => useBuilderResumeUpdateSubscription());
+		const handlers = consumeEventIteratorMock.mock.calls[0]?.[1] as {
+			onEvent: (event: { mutation: string }) => Promise<void>;
+		};
+		await act(async () => handlers.onEvent({ mutation: "stylesheet" }));
+
+		expect(stylesheetMocks.refresh).toHaveBeenCalledWith(initial.id);
+		expect(orpcMocks.getResumeById).not.toHaveBeenCalled();
+	});
+
+	it("refreshes the render-data version after content SSE events", async () => {
+		const initial = makeResume("resume-content");
+		const remote = withBasicsName(initial, "Remote");
+		consumeEventIteratorMock.mockReturnValue(vi.fn().mockResolvedValue(undefined));
+		orpcMocks.getResumeById.mockResolvedValue(remote);
+		routerParamsMock.value = { resumeId: initial.id };
+		useResumeStore.getState().initialize(initial);
+
+		renderHook(() => useBuilderResumeUpdateSubscription());
+		const handlers = consumeEventIteratorMock.mock.calls[0]?.[1] as {
+			onEvent: (event: { mutation: string }) => Promise<void>;
+		};
+		await act(async () => handlers.onEvent({ mutation: "update" }));
+
+		expect(stylesheetMocks.refresh).toHaveBeenCalledWith(initial.id, remote.data);
 	});
 });
