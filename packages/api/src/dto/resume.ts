@@ -156,6 +156,17 @@ export const resumeDto = {
 	},
 
 	stylesheet: {
+		errors: {
+			validation: z.strictObject({
+				diagnostics: z.array(stylesheetDiagnosticSchema),
+			}),
+			parity: z.strictObject({
+				mismatches: z.array(z.string()),
+			}),
+			revisionConflict: z.strictObject({
+				state: stylesheetStateSchema,
+			}),
+		},
 		getState: {
 			input: z.strictObject({ id: z.string().describe("The ID of the resume.") }),
 			output: stylesheetStateSchema,

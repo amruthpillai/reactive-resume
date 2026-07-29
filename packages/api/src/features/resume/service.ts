@@ -456,6 +456,10 @@ export const resumeService = {
 			userId: string;
 			prepareData(input: { data: ResumeData; stylesheetRevision: number }): Promise<ResumeData>;
 		}) => {
+			// Check lock state before loading or validating historical data so locked resumes fail without expensive work.
+			const current = await resumeService.getById({ id: input.resumeId, userId: input.userId });
+			if (current.isLocked) throw new ORPCError("RESUME_LOCKED");
+
 			const [version] = await db
 				.select({ data: schema.resumeVersion.data })
 				.from(schema.resumeVersion)
@@ -471,7 +475,6 @@ export const resumeService = {
 			if (!version) throw new ORPCError("NOT_FOUND");
 
 			// Capture the pre-restore state first so the restore itself is undoable.
-			const current = await resumeService.getById({ id: input.resumeId, userId: input.userId });
 			const restoredData = await input.prepareData({
 				data: version.data,
 				stylesheetRevision: current.stylesheetRevision,
@@ -669,7 +672,11 @@ export const resumeService = {
 						? input.data
 						: preserveServerStylesheet(existing.data, input.data)
 					: undefined;
-				const renderDataChanged = data ? hasRenderDataChanged(existing.data, data) : false;
+				const dataForRenderComparison =
+					data && input.restoreStylesheet ? preserveServerStylesheet(existing.data, data) : data;
+				const renderDataChanged = dataForRenderComparison
+					? hasRenderDataChanged(existing.data, dataForRenderComparison)
+					: false;
 				const updateData: Partial<typeof schema.resume.$inferSelect> = {
 					...(input.name !== undefined ? { name: input.name } : {}),
 					...(input.slug !== undefined ? { slug: input.slug } : {}),

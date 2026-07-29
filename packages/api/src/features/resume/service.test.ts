@@ -117,6 +117,12 @@ const createSemanticResumeData = (): ResumeData => {
 	return data;
 };
 
+const createStylesheetResumeData = (mode: "legacy" | "semantic"): ResumeData => {
+	const data = createSemanticResumeData();
+	if (data.metadata.stylesheet) data.metadata.stylesheet.mode = mode;
+	return data;
+};
+
 const createResumeRow = (data: ResumeData, updatedAt = new Date()) => ({
 	id: "r1",
 	name: "Resume",
@@ -140,8 +146,8 @@ const createRestoreHarness = (currentData: ResumeData, restoredData: ResumeData)
 		from: () => ({ where: () => ({ orderBy: () => ({ limit: () => [] }) }) }),
 	};
 	dbMock.select
-		.mockReturnValueOnce(versionLookup)
 		.mockReturnValueOnce(createSelectChain([currentRow]))
+		.mockReturnValueOnce(versionLookup)
 		.mockReturnValueOnce(versionRetention)
 		.mockReturnValueOnce(versionRetention);
 
@@ -277,6 +283,128 @@ describe("versions.restore", () => {
 			});
 		},
 	);
+
+	it.each([
+		{ currentMode: "legacy" as const, historicalMode: "semantic" as const },
+		{ currentMode: "semantic" as const, historicalMode: "legacy" as const },
+	])(
+		"does not increment render-data version for a stylesheet-only $currentMode to $historicalMode restore",
+		async ({ currentMode, historicalMode }) => {
+			const currentData = createStylesheetResumeData(currentMode);
+			const restoredData = structuredClone(currentData);
+			if (restoredData.metadata.stylesheet) restoredData.metadata.stylesheet.mode = historicalMode;
+			const { set } = createRestoreHarness(currentData, restoredData);
+
+			await resumeService.versions.restore({
+				resumeId: "r1",
+				versionId: "v1",
+				userId: "u1",
+				prepareData: ({ data }) => Promise.resolve(data),
+			});
+
+			expect(set.mock.calls[0]?.[0]).toEqual(
+				expect.objectContaining({
+					data: expect.objectContaining({
+						metadata: expect.objectContaining({
+							stylesheet: expect.objectContaining({ mode: historicalMode }),
+						}),
+					}),
+					stylesheetRevision: 4,
+				}),
+			);
+			expect(set.mock.calls[0]?.[0]).not.toHaveProperty("renderDataVersion");
+		},
+	);
+
+	it("increments render-data version for a real restored content change", async () => {
+		const currentData = createStylesheetResumeData("semantic");
+		const restoredData = structuredClone(currentData);
+		restoredData.basics.name = "Historical Name";
+		const { set } = createRestoreHarness(currentData, restoredData);
+
+		await resumeService.versions.restore({
+			resumeId: "r1",
+			versionId: "v1",
+			userId: "u1",
+			prepareData: ({ data }) => Promise.resolve(data),
+		});
+
+		expect(set.mock.calls[0]?.[0]).toEqual(expect.objectContaining({ stylesheetRevision: 4, renderDataVersion: 8 }));
+	});
+
+	it("increments render-data version when active restored legacy rules change", async () => {
+		const currentData = createStylesheetResumeData("legacy");
+		const restoredData = structuredClone(currentData);
+		restoredData.metadata.styleRules = [
+			{
+				id: "restored-rule",
+				label: "Restored",
+				enabled: true,
+				target: { scope: "global" },
+				slots: { heading: { color: "#123456" } },
+			},
+		];
+		const { set } = createRestoreHarness(currentData, restoredData);
+
+		await resumeService.versions.restore({
+			resumeId: "r1",
+			versionId: "v1",
+			userId: "u1",
+			prepareData: ({ data }) => Promise.resolve(data),
+		});
+
+		expect(set.mock.calls[0]?.[0]).toEqual(expect.objectContaining({ stylesheetRevision: 4, renderDataVersion: 8 }));
+	});
+
+	it("rejects a currently locked resume before version lookup, preparation, or snapshots", async () => {
+		const callOrder: string[] = [];
+		const currentRow = {
+			...createResumeRow(createStylesheetResumeData("semantic")),
+			isLocked: true,
+			stylesheetRevision: 3,
+		};
+		const currentLookup = {
+			from: () => ({
+				where: () => {
+					callOrder.push("getById");
+					return Promise.resolve([currentRow]);
+				},
+			}),
+		};
+		const versionLookup = {
+			from: () => ({
+				innerJoin: () => ({
+					where: () => {
+						callOrder.push("versionLookup");
+						return Promise.resolve([{ data: createStylesheetResumeData("semantic") }]);
+					},
+				}),
+			}),
+		};
+		dbMock.select.mockImplementation((selection: Record<string, unknown>) =>
+			Object.hasOwn(selection, "isLocked") ? currentLookup : versionLookup,
+		);
+		const prepareData = vi.fn(() => {
+			callOrder.push("prepareData");
+			return Promise.reject(
+				Object.assign(new Error("runner unavailable"), { code: "SEMANTIC_STYLESHEET_UNAVAILABLE" }),
+			);
+		});
+
+		await expect(
+			resumeService.versions.restore({
+				resumeId: "r1",
+				versionId: "v1",
+				userId: "u1",
+				prepareData,
+			}),
+		).rejects.toMatchObject({ code: "RESUME_LOCKED" });
+
+		expect(callOrder).toEqual(["getById"]);
+		expect(prepareData).not.toHaveBeenCalled();
+		expect(dbMock.insert).not.toHaveBeenCalled();
+		expect(dbMock.transaction).not.toHaveBeenCalled();
+	});
 });
 
 describe("update", () => {
