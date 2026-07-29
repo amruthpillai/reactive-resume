@@ -41,7 +41,8 @@ Pagination maps to React PDF:
 - `break-inside: avoid` keeps a node together where possible.
 - `-rr-min-presence-ahead` reserves space before the next break.
 - `orphans` and `widows` control text line retention.
-- `position: fixed` repeats an existing fixed node; CSS cannot create or re-parent content.
+- `-rr-fixed: true` repeats an existing semantic node on subsequent pages. The standard CSS declaration
+  `position: fixed` is unsupported; RRSS cannot create or re-parent content.
 
 Media queries support authored PDF dimensions such as `@media (max-width: 600pt)`.
 
@@ -62,7 +63,9 @@ RRSS cannot choose or load fonts, reference local or remote assets, execute scri
 layout APIs, or create new PDF nodes. CSS Grid, pseudo-elements, animations, transitions, filters, arbitrary functions,
 and network-fetching values are unsupported.
 
-Gradients and shadows are not part of version 1. They may be added later only through bounded SVG-backed rendering.
+Gradients and general shadows such as `box-shadow` and `text-shadow` are not part of version 1. Picture nodes support the
+bounded `-rr-shadow-color` and `-rr-shadow-width` extension properties; their builder defaults are exposed through
+`--rr-picture-shadow-color` and `--rr-picture-shadow-width`.
 
 ## Generated registry
 
