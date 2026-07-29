@@ -7,7 +7,7 @@ import { EditorView } from "@codemirror/view";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { TooltipProvider } from "@reactive-resume/ui/components/tooltip";
-import { StylesheetCodeEditor, StylesheetEditorShell } from "./editor";
+import StylesheetEditorShell, { StylesheetCodeEditor } from "./editor";
 import { LegacyStylesheetBanner } from "./legacy-banner";
 import { StylesheetStatus } from "./status";
 import { useStylesheetStore } from "./store";

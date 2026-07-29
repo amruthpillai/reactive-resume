@@ -15,7 +15,7 @@ export type ResumePdfPresentation =
 	| { stylesheet: Pick<SemanticStylesheet, "mode"> & { applied: StylesheetSource } }
 	| { publicStyleProjection: PublicStyleProjection };
 
-export const withAppliedStylesheet = (data: ResumeData, presentation?: ResumePdfPresentation): ResumeData => {
+const withAppliedStylesheet = (data: ResumeData, presentation?: ResumePdfPresentation): ResumeData => {
 	if (!presentation || !("stylesheet" in presentation)) return data;
 	const { mode, applied } = presentation.stylesheet;
 	return {

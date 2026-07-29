@@ -12,7 +12,7 @@ const START = "<!-- RRSS-GENERATED:START -->";
 const END = "<!-- RRSS-GENERATED:END -->";
 const cell = (values: readonly string[]) => (values.length ? values.map((value) => `\`${value}\``).join(", ") : "—");
 
-export function renderSemanticCssReference() {
+function renderSemanticCssReference() {
 	const semanticRows = SEMANTIC_NODE_KINDS.map((kind) => {
 		const definition = SEMANTIC_REGISTRY_V1[kind];
 		return `| \`${kind}\` | ${cell(definition.attributes)} | ${cell(definition.roles)} |`;

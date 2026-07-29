@@ -21,7 +21,7 @@ import { scizorSemanticManifest } from "../templates/scizor/semantic";
 import { SHARED_BINDING_REGISTRY, STANDARD_FIELD_REGISTRY } from "./binding-inventory";
 
 export type TemplateSemanticPlacement = "main" | "sidebar";
-export type TemplateSemanticRegionName = "header" | "main" | "sidebar" | "featured";
+type TemplateSemanticRegionName = "header" | "main" | "sidebar" | "featured";
 
 export type TemplateSemanticRegion = {
 	name: TemplateSemanticRegionName;
@@ -30,13 +30,13 @@ export type TemplateSemanticRegion = {
 	flow?: "sequential" | "interleaved";
 };
 
-export type TemplateSemanticSpecialSummary = {
+type TemplateSemanticSpecialSummary = {
 	region: "header" | "featured";
 	placement: TemplateSemanticPlacement;
 	source: "always" | "main-with-header";
 };
 
-export type TemplateSemanticPartOwner =
+type TemplateSemanticPartOwner =
 	| { kind: "header"; key: "header" }
 	| { kind: "region"; key: TemplateSemanticRegionName }
 	| {
@@ -65,7 +65,7 @@ export type TemplateSemanticPartOwner =
 	| { kind: "contact-list"; key: "contact-list" }
 	| { kind: "contact-item"; key: "contact-item"; position?: "last" };
 
-export type TemplateSemanticPartBinding =
+type TemplateSemanticPartBinding =
 	| {
 			type: "primitive";
 			primitive:
@@ -89,7 +89,7 @@ export type TemplateSemanticChildSelector = {
 	sectionTypes?: readonly CustomSectionType[];
 };
 
-export type TemplateSemanticPartRoute = {
+type TemplateSemanticPartRoute = {
 	parent: "owner" | string;
 	at: "start" | "end" | { before: TemplateSemanticChildSelector } | { after: TemplateSemanticChildSelector };
 	take?: "all" | readonly TemplateSemanticChildSelector[];
@@ -104,7 +104,7 @@ export type TemplateSemanticPrimitivePart = {
 	route: TemplateSemanticPartRoute;
 };
 
-export type TemplateSemanticAliasPart = {
+type TemplateSemanticAliasPart = {
 	name: string;
 	key: string;
 	owner: TemplateSemanticPartOwner;
@@ -114,7 +114,7 @@ export type TemplateSemanticAliasPart = {
 
 export type TemplateSemanticPart = TemplateSemanticPrimitivePart | TemplateSemanticAliasPart;
 
-export type TemplateSemanticCanonicalBinding = {
+type TemplateSemanticCanonicalBinding = {
 	kind: Exclude<SemanticNodeKind, "template-part">;
 	binding: PrimitiveBinding;
 };

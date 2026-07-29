@@ -64,14 +64,14 @@ export type PrimitiveBinding = {
 	source: "existing" | "synthetic";
 };
 
-export type AliasBinding = {
+type AliasBinding = {
 	type: "alias";
 	canonicalKind: SemanticNodeKind;
 	canonicalNodeKey: string;
 	token: string;
 };
 
-export type SemanticBinding = PrimitiveBinding | AliasBinding;
+type SemanticBinding = PrimitiveBinding | AliasBinding;
 type SemanticBindingContext = {
 	parent: SemanticNode | undefined;
 };

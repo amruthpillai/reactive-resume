@@ -141,7 +141,7 @@ export async function activateStylesheet(page: Page) {
 	await waitForStylesheetStatus(page, "Applied");
 }
 
-export async function firstPreviewPage(page: Page): Promise<Locator> {
+async function firstPreviewPage(page: Page): Promise<Locator> {
 	const canvas = page.locator('canvas[aria-label^="Resume page 1 of"]').filter({ visible: true }).first();
 	await expect(canvas).toBeVisible({ timeout: 30_000 });
 	return canvas;

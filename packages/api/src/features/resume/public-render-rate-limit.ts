@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/server";
 
-export type PublicRenderRateLimitInput = {
+type PublicRenderRateLimitInput = {
 	/** Sanitized transport identity supplied by the server adapter, never by request headers. */
 	trustedClient: string;
 	resumeId: string;
@@ -57,6 +57,3 @@ export function createPublicRenderRateLimiter(
 }
 
 export const publicRenderRateLimiter = createPublicRenderRateLimiter();
-
-export const consumePublicRenderBudget = (input: PublicRenderRateLimitInput): void =>
-	publicRenderRateLimiter.consume(input);

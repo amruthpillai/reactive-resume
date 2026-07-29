@@ -313,7 +313,7 @@ export type StylesheetEditorShellProps = {
 	readOnly?: boolean;
 };
 
-export function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps) {
+function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps) {
 	const { theme } = useTheme();
 	const isMobile = useMediaQuery("(max-width: 767px)", { initializeWithValue: false });
 	const [focusOpen, setFocusOpen] = useState(false);

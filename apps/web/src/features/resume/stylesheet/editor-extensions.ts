@@ -327,4 +327,4 @@ export async function copySourceToClipboard(source: string): Promise<void> {
 	await navigator.clipboard.writeText(source);
 }
 
-export type { EditorViewType as EditorView, RrssEditorMetadata };
+export type { RrssEditorMetadata };

@@ -1,7 +1,7 @@
 import type { Template } from "@reactive-resume/schema/templates";
 import { createHash } from "node:crypto";
 
-export type SemanticCssEventName =
+type SemanticCssEventName =
 	| "semantic_css.compile"
 	| "semantic_css.preflight"
 	| "semantic_css.convert_legacy"

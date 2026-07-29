@@ -10,7 +10,6 @@ import type {
 	SemanticNode,
 	StyleProgram,
 } from "@reactive-resume/resume/stylesheet";
-import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { RrssColorToken } from "./color-tokens";
 
@@ -41,7 +40,7 @@ export type CompileWorkerResponse = {
 	colorTokens?: readonly RrssColorToken[];
 };
 
-export type PreflightLimits = PdfPreflightPageLimits & {
+type PreflightLimits = PdfPreflightPageLimits & {
 	maxPages: number;
 	maxBytes: number;
 };
@@ -66,10 +65,6 @@ export type PreflightWorkerResponse = {
 
 export type PreflightWorkerReady = {
 	type: "preflight_ready";
-};
-
-export type StylesheetResumeSnapshot = {
-	data: ResumeData;
 };
 
 export function getPreflightTransferables(response: PreflightWorkerResponse): Transferable[] {

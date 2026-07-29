@@ -5,7 +5,7 @@ import { createPublicStyleProjection } from "@reactive-resume/pdf/public-project
 import { assertCanView, isOwner } from "./access-policy";
 import { publicRenderRateLimiter } from "./public-render-rate-limit";
 
-export type PublicRenderResume = {
+type PublicRenderResume = {
 	id: string;
 	userId: string;
 	name: string;

@@ -1,7 +1,7 @@
 import type { Style } from "@react-pdf/types";
 import type { ResolvedNodeStyle, ResolvedPageSize } from "@reactive-resume/resume/stylesheet";
 
-export type ResolvedPdfPageSize = ResolvedPageSize;
+type ResolvedPdfPageSize = ResolvedPageSize;
 
 export type ResolvedPdfNodePresentation = {
 	style?: Style;

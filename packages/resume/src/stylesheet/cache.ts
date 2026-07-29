@@ -48,7 +48,7 @@ export class StylesheetCompilationCache {
 
 export const stylesheetCompilationCache = new StylesheetCompilationCache();
 
-export const RRSS_COMPILER_BUILD_ID = "rrss-v1-values-2";
+const RRSS_COMPILER_BUILD_ID = "rrss-v1-values-2";
 
 export function stylesheetCacheKey(languageVersion: number, source: string, registry: string): string {
 	return JSON.stringify([languageVersion, source, RRSS_COMPILER_BUILD_ID, registry]);
