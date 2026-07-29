@@ -370,6 +370,10 @@ describe("buildSemanticTree", () => {
 		const nodes = flattenTree(first);
 		const section = findNode(first, (node) => node.key === "page-1/region-main/section-experience");
 		const role = findNode(first, (node) => node.id === "role/item");
+		const rolePosition = findNode(
+			required(role, "nested role"),
+			(node) => node.kind === "field" && node.attributes.name === "position",
+		);
 		const company = findNode(first, (node) => node.kind === "field" && node.attributes.name === "company");
 		const listItem = findNode(first, (node) => node.kind === "list-item");
 
@@ -379,6 +383,7 @@ describe("buildSemanticTree", () => {
 		expect(company?.roles).toContain("primary-text");
 		expect(role?.kind).toBe("item");
 		expect(role?.roles).toEqual(expect.arrayContaining(["experience-role", "nested-role"]));
+		expect(rolePosition?.roles).toEqual(expect.arrayContaining(["primary-text", "experience-role", "nested-role"]));
 		expect(findNode(required(role, "nested role"), (node) => node.kind === "strong")).toBeDefined();
 		expect(listItem?.children.map((node) => node.kind)).toEqual(["list-marker", "list-item-content"]);
 		expect(new Set(nodes.map((node) => node.key)).size).toBe(nodes.length);

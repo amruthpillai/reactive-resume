@@ -29,6 +29,22 @@ const templates = [
 	"scizor",
 ] as const satisfies readonly Template[];
 
+const fixtureNames = [
+	"all-templates-smoke",
+	"array-order-tie",
+	"award-unbold",
+	"clamped-spacing",
+	"custom-section-type",
+	"disabled-rules",
+	"icon-level-size",
+	"link-underline-3134",
+	"merge-specificity",
+	"primary-text-bold-3146",
+	"rich-text-all-slots",
+	"sanitized-intent-3199",
+	"section-id-uuid",
+] as const;
+
 const readRules = (name: string): StyleRule[] =>
 	styleRulesSchema.parse(
 		JSON.parse(readFileSync(new URL(`./__fixtures__/legacy/${name}.json`, import.meta.url), "utf8")),
@@ -55,6 +71,26 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			keywords: ["Analysis"],
 		},
 	];
+	data.sections.experience.items = [
+		{
+			id: "experience",
+			hidden: false,
+			company: "Analytical Engines",
+			position: "Engineer",
+			location: "London",
+			period: "1842",
+			website: { url: "", label: "", inlineLink: false },
+			description: "<p>Built engines.</p>",
+			roles: [
+				{
+					id: "role-1",
+					position: "Senior Engineer",
+					period: "1843",
+					description: "<p>Led the engine team.</p>",
+				},
+			],
+		},
+	];
 	data.sections.awards.items = [
 		{
 			id: "award-1",
@@ -66,7 +102,38 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			description: "<p>First programmer.</p>",
 		},
 	];
-	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary", "skills", "awards"], sidebar: [] }];
+	data.customSections = [
+		{
+			id: "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37",
+			type: "experience",
+			title: "Consulting",
+			icon: "briefcase",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [
+				{
+					id: "custom-experience-1",
+					hidden: false,
+					company: "Difference Engines",
+					position: "Consultant",
+					location: "London",
+					period: "1844",
+					website: { url: "", label: "", inlineLink: false },
+					description: "<p>Advised builders.</p>",
+					roles: [],
+				},
+			],
+		},
+	];
+	data.metadata.layout.pages = [
+		{
+			fullWidth: true,
+			main: ["summary", "experience", "skills", "awards", "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"],
+			sidebar: [],
+		},
+	];
 	data.metadata.styleRules = [...rules];
 	return data;
 };
@@ -126,7 +193,7 @@ const comparePdfRasters = async (legacy: Uint8Array, semantic: Uint8Array): Prom
 };
 
 describe("legacy activation raster parity", () => {
-	it.each(["rich-text-all-slots", "icon-level-size", "award-unbold", "link-underline-3134"] as const)(
+	it.each(fixtureNames)(
 		"has zero real-PDF pixel drift for %s",
 		async (fixture) => {
 			const legacy = buildFixture(readRules(fixture));

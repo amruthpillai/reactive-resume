@@ -224,7 +224,7 @@ export const SemanticTextRuns = ({
 	const resolved = useResolvedNode(nodeKey);
 	const visible = useSemanticNodeVisible(nodeKey);
 	const renderedChildKeys = useRenderedChildKeys(orderParentNodeKey);
-	const { isNodeVisible, resolveNode } = useSemanticNodeBindings();
+	const { isNodeVisible } = useSemanticNodeBindings();
 	const entries = runs.flatMap((run) => {
 		if (!hasSplitRowText(run.value)) return [];
 		const fieldNodeKey = fieldParentNodeKey ? semanticNodeKeys.field(fieldParentNodeKey, run.field) : run.field;
@@ -232,22 +232,9 @@ export const SemanticTextRuns = ({
 	});
 	const visibleRuns = projectRenderedChildren(renderedChildKeys, entries);
 	if (!visible || visibleRuns.length === 0) return null;
-	const resolvedRunStyles = visibleRuns.map(
-		({ field }) => resolveNode(fieldParentNodeKey ? semanticNodeKeys.field(fieldParentNodeKey, field) : field).style,
-	);
-	const commonResolvedStyle = Object.fromEntries(
-		Object.entries(resolvedRunStyles[0] ?? {}).filter(([property, value]) =>
-			resolvedRunStyles.every((runStyle) => runStyle?.[property as keyof typeof runStyle] === value),
-		),
-	);
-
 	return (
 		<SemanticNodeKeyProvider nodeKey={fieldParentNodeKey}>
-			<Text
-				bindSemanticNode={false}
-				{...resolvedPdfTextProps(resolved)}
-				style={composeStyles(style, commonResolvedStyle, resolved.style)}
-			>
+			<Text bindSemanticNode={false} {...resolvedPdfTextProps(resolved)} style={composeStyles(style, resolved.style)}>
 				{visibleRuns.map(({ field, value, prefix = "", suffix = "" }, index) => (
 					<Fragment key={field}>
 						{index === 0 ? "" : separator}

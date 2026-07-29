@@ -25,6 +25,7 @@ describe("convertLegacyStyleRules", () => {
 			languageVersion: 1,
 			text: readExpected("merge-specificity"),
 		});
+		expect(converted.sanitizedRules.map(({ id }) => id)).toEqual(["id", "type", "global"]);
 		expect(tie.source.text.indexOf("/* First */")).toBeLessThan(tie.source.text.indexOf("/* Second */"));
 		expect(compileStylesheet(converted.source).program).not.toBeNull();
 	});
@@ -77,6 +78,13 @@ describe("convertLegacyStyleRules", () => {
 		expect(award).toContain('section[type="awards"] field[name="title"]');
 	});
 
+	it("applies legacy text weight to a nested role position without overriding real Bold hosts", () => {
+		const source = convertLegacyStyleRules(dataWithRules("primary-text-bold-3146")).source.text;
+
+		expect(source).toContain('field[role~="nested-role"][name="position"]');
+		expect(source).toContain('[role~="primary-text"]:not([role~="nested-role"])');
+	});
+
 	it("translates icon and level font sizes to explicit geometry", () => {
 		const source = convertLegacyStyleRules(dataWithRules("icon-level-size")).source.text;
 
@@ -89,7 +97,7 @@ describe("convertLegacyStyleRules", () => {
 		const custom = convertLegacyStyleRules(dataWithRules("custom-section-type")).source.text;
 		const uuid = convertLegacyStyleRules(dataWithRules("section-id-uuid")).source.text;
 
-		expect(custom).toContain('section[type="experience"] item');
+		expect(custom).toContain('section[type="experience"] > section-items > item');
 		expect(uuid).toContain('section[id="1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"] > section-heading');
 	});
 

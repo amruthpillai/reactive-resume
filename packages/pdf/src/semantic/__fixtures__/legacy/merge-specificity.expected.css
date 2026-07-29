@@ -6,7 +6,7 @@ section field:not([name="content"]):not([name="description"]):not([name="recipie
 }
 
 /* Global text: Scizor Bold final color */
-resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"] {
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"]:not([role~="nested-role"]) {
 	color: #000000;
 }
 
@@ -16,7 +16,7 @@ section[type="experience"] field:not([name="content"]):not([name="description"])
 }
 
 /* Experience text: Scizor Bold final color */
-resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"] {
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"]:not([role~="nested-role"]) {
 	color: #000000;
 }
 
@@ -26,6 +26,6 @@ section[id="experience"] field:not([name="content"]):not([name="description"]):n
 }
 
 /* One section: Scizor Bold final color */
-resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"] {
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"]:not([role~="nested-role"]) {
 	color: #000000;
 }

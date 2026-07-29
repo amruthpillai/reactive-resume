@@ -51,7 +51,7 @@ const lengthProperties = new Set<keyof StyleIntent>([
 const slotSelectors = {
 	section: "",
 	heading: " > section-heading",
-	item: " item",
+	item: " > section-items > item",
 	text: ' field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])',
 	secondaryText: ' field[name="keywords"]',
 	link: " item > link",
@@ -129,6 +129,7 @@ const appliesToAwards = (data: ResumeData, rule: StyleRule): boolean => {
 const textWeightSelector = (data: ResumeData, rule: StyleRule, base: string): string => {
 	const selectors = [
 		`${base} field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"]):not([role~="primary-text"])`,
+		`${base} field[role~="nested-role"][name="position"]`,
 	];
 	if (appliesToAwards(data, rule)) selectors.push(`${base} field[name="title"]`);
 	return selectors.join(",\n");
@@ -147,7 +148,7 @@ const scizorBoldColorSelector = (data: ResumeData, rule: StyleRule, base: string
 		rule.target.scope === "global"
 			? 'resume[template="scizor"] section:not([type="awards"])'
 			: `resume[template="scizor"] ${base}`;
-	return `${scopedBase}${slotSelectors.text}[role~="primary-text"]`;
+	return `${scopedBase}${slotSelectors.text}[role~="primary-text"]:not([role~="nested-role"])`;
 };
 
 const levelDecorationDeclarations = (
@@ -231,7 +232,15 @@ export function convertLegacyStyleRules(data: ResumeData): LegacyStyleConversion
 		...data,
 		metadata: { ...data.metadata, styleRules: sanitizedRules },
 	};
-	const chunks = sanitizedRules.flatMap((rule) => {
+	const scopePrecedence = { global: 0, sectionType: 1, sectionId: 2 } as const;
+	const orderedRules = sanitizedRules
+		.map((rule, index) => ({ rule, index }))
+		.sort(
+			(left, right) =>
+				scopePrecedence[left.rule.target.scope] - scopePrecedence[right.rule.target.scope] || left.index - right.index,
+		)
+		.map(({ rule }) => rule);
+	const chunks = orderedRules.flatMap((rule) => {
 		if (!rule.enabled) return [disabledRuleChunk(sanitizedData, rule)];
 		return styleSlots.flatMap((slot) => (rule.slots[slot] ? activeSlotChunks(sanitizedData, rule, slot) : []));
 	});

@@ -244,6 +244,25 @@ describe("combined PDF field bindings", () => {
 		expectColor(await renderHost("onyx", educationData), "1835", "#660000");
 	});
 
+	it("keeps non-inheritable split-field styles on their final field hosts", async () => {
+		const document = await renderHost(
+			"meowth",
+			fixture(
+				"semantic",
+				"experience",
+				'field[name="position"] { opacity: 0.6; } field[name="location"] { margin-left: 3pt; }',
+			),
+		);
+		const combined = findTexts(document, "Engineer (London)");
+		const position = findTexts(document, "Engineer");
+		const location = findTexts(document, "(London)");
+
+		expect(combined.some((node) => mergedStyle(node).opacity === 0.6)).toBe(false);
+		expect(combined.some((node) => mergedStyle(node).marginLeft === 3)).toBe(false);
+		expect(position.map(mergedStyle)).toContainEqual(expect.objectContaining({ opacity: 0.6 }));
+		expect(location.map(mergedStyle)).toContainEqual(expect.objectContaining({ marginLeft: 3 }));
+	});
+
 	it("publishes one existing Text binding for every split field key", () => {
 		const data = fixture("semantic", "education");
 		const tree = buildSemanticTree({

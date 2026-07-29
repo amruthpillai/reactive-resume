@@ -218,7 +218,10 @@ const buildField = ({
 		key,
 		kind: "field",
 		attributes: { name },
-		roles: getFieldRoles(type, name, structuredLink),
+		roles: [
+			...getFieldRoles(type, name, structuredLink),
+			...(type === "experience-role" ? ["experience-role", "nested-role"] : []),
+		],
 		children,
 	});
 };

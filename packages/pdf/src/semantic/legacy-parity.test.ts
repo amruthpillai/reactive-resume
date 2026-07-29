@@ -5,7 +5,23 @@ import { describe, expect, it } from "vitest";
 import { styleRulesSchema } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { convertLegacyStyleRules } from "./legacy-converter";
-import { compareLegacySemanticPresentation } from "./legacy-parity";
+import { compareLegacyParityHostNodes, compareLegacySemanticPresentation } from "./legacy-parity";
+
+const fixtureNames = [
+	"all-templates-smoke",
+	"array-order-tie",
+	"award-unbold",
+	"clamped-spacing",
+	"custom-section-type",
+	"disabled-rules",
+	"icon-level-size",
+	"link-underline-3134",
+	"merge-specificity",
+	"primary-text-bold-3146",
+	"rich-text-all-slots",
+	"sanitized-intent-3199",
+	"section-id-uuid",
+] as const;
 
 const templates = [
 	"azurill",
@@ -55,7 +71,14 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			period: "1842",
 			website: { url: "https://example.com/work", label: "Work", inlineLink: true },
 			description: "<p>Built engines.</p>",
-			roles: [],
+			roles: [
+				{
+					id: "role-1",
+					position: "Senior Engineer",
+					period: "1843",
+					description: "<p>Led the engine team.</p>",
+				},
+			],
 		},
 	];
 	data.sections.skills.items = [
@@ -81,19 +104,59 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			description: "<p>First programmer.</p>",
 		},
 	];
-	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary", "experience", "skills", "awards"], sidebar: [] }];
+	data.customSections = [
+		{
+			id: "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37",
+			type: "experience",
+			title: "Consulting",
+			icon: "briefcase",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [
+				{
+					id: "custom-experience-1",
+					hidden: false,
+					company: "Difference Engines",
+					position: "Consultant",
+					location: "London",
+					period: "1844",
+					website: { url: "", label: "", inlineLink: false },
+					description: "<p>Advised builders.</p>",
+					roles: [],
+				},
+			],
+		},
+	];
+	data.metadata.layout.pages = [
+		{
+			fullWidth: true,
+			main: ["summary", "experience", "skills", "awards", "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"],
+			sidebar: [],
+		},
+	];
 	data.metadata.styleRules = rules;
 	return data;
 };
 
 describe("compareLegacySemanticPresentation", () => {
-	it.each([
-		"link-underline-3134",
-		"rich-text-all-slots",
-		"icon-level-size",
-		"award-unbold",
-		"primary-text-bold-3146",
-	] as const)("matches final primitive props for %s", async (fixture) => {
+	it("renders the mandatory target shapes in the shared parity document", () => {
+		const data = buildFixture([]);
+
+		expect(data.sections.experience.items[0]?.roles[0]?.position).toBe("Senior Engineer");
+		expect(data.customSections).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					id: "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37",
+					type: "experience",
+				}),
+			]),
+		);
+		expect(data.metadata.layout.pages[0]?.main).toContain("1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37");
+	});
+
+	it.each(fixtureNames)("matches final primitive props for %s", async (fixture) => {
 		const data = buildFixture(readRules(fixture));
 		const conversion = convertLegacyStyleRules(data);
 		const comparison = await compareLegacySemanticPresentation({
@@ -134,5 +197,35 @@ describe("compareLegacySemanticPresentation", () => {
 		expect(comparison.pageCountMismatches).toEqual([]);
 		expect(comparison.primitivePropMismatches).toEqual([]);
 		expect(comparison.mismatches).toEqual([]);
+	});
+
+	it.each([
+		["text", { type: "TEXT", value: "legacy" }, { type: "TEXT", value: "semantic" }],
+		[
+			"props",
+			{ type: "LINK", props: { src: "https://legacy.example" } },
+			{ type: "LINK", props: { src: "https://semantic.example" } },
+		],
+		["alpha", { type: "TEXT", style: { color: "#11223380" } }, { type: "TEXT", style: { color: "#112233" } }],
+		["transparent", { type: "TEXT", style: { color: "transparent" } }, { type: "TEXT", style: { color: "black" } }],
+		["unsupported color", { type: "TEXT", style: { color: "brand-ink" } }, { type: "TEXT", style: { color: "black" } }],
+		["units", { type: "TEXT", style: { fontSize: "12pt" } }, { type: "TEXT", style: { fontSize: "12px" } }],
+		["hierarchy", { type: "VIEW", children: [{ type: "TEXT", value: "same" }] }, { type: "TEXT", value: "same" }],
+		["geometry", { type: "VIEW", style: { width: 10 } }, { type: "VIEW", style: { width: 11 } }],
+	] as const)("detects %s tampering", (_name, legacy, semantic) => {
+		expect(compareLegacyParityHostNodes(legacy, semantic)).not.toEqual([]);
+	});
+
+	it("retains legitimate inheritance and renderer-default equivalence", () => {
+		expect(
+			compareLegacyParityHostNodes(
+				{
+					type: "TEXT",
+					style: { color: "rgb(18, 52, 86)", fontWeight: 400 },
+					children: [{ type: "TEXT", value: "same" }],
+				},
+				{ type: "TEXT", style: { color: "#123456" }, children: [{ type: "TEXT", value: "same" }] },
+			),
+		).toEqual([]);
 	});
 });
