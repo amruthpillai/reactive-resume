@@ -54,6 +54,24 @@ const buildFixture = (): ResumeData => {
 	return data;
 };
 
+const buildNodeBudgetFixture = (mode: "legacy" | "semantic"): ResumeData => {
+	const data = structuredClone(defaultResumeData);
+	const applied = { languageVersion: 1, text: "@rr-version 1;\n" };
+	data.metadata.layout.pages = [{ fullWidth: true, main: ["skills"], sidebar: [] }];
+	data.metadata.stylesheet = { mode, source: applied, applied };
+	data.sections.skills.items = Array.from({ length: 2_000 }, (_, index) => ({
+		id: `skill-${index}`,
+		hidden: false,
+		icon: "",
+		iconColor: "",
+		name: `Skill ${index}`,
+		proficiency: "Advanced",
+		level: 5,
+		keywords: ["TypeScript"],
+	}));
+	return data;
+};
+
 const renderFinalProps = async (element: unknown) => {
 	const renderer = await vi.importActual<typeof import("@react-pdf/renderer")>("@react-pdf/renderer");
 	const instance = renderer.pdf(element as Parameters<typeof renderer.pdf>[0]);
@@ -80,5 +98,39 @@ describe("browser/server semantic runtime identity", () => {
 		expect(browserProps).toEqual(serverProps);
 		expect(browserProps.page.size).toBe("LETTER");
 		expect(browserProps.fixed).toMatchObject({ type: "VIEW", fixed: true });
+	}, 30_000);
+
+	it("rejects a valid stylesheet when later content exceeds the RRSS node budget", async () => {
+		const data = buildNodeBudgetFixture("semantic");
+
+		const results = await Promise.allSettled([
+			createResumePdfBlob({ data, template: "onyx" }),
+			createResumePdfFile({ data, filename: "resume.pdf", template: "onyx" }),
+		]);
+
+		expect(results).toEqual([
+			expect.objectContaining({
+				status: "rejected",
+				reason: expect.objectContaining({
+					cause: expect.arrayContaining([expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" })]),
+				}),
+			}),
+			expect.objectContaining({
+				status: "rejected",
+				reason: expect.objectContaining({
+					cause: expect.arrayContaining([expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" })]),
+				}),
+			}),
+		]);
+	}, 15_000);
+
+	it("keeps legacy PDF rendering unaffected by the semantic node budget", async () => {
+		const data = buildNodeBudgetFixture("legacy");
+
+		const blob = await createResumePdfBlob({ data, template: "onyx" });
+		const file = await createResumePdfFile({ data, filename: "resume.pdf", template: "onyx" });
+
+		expect(blob.type).toBe("application/pdf");
+		expect(file.type).toBe("application/pdf");
 	}, 15_000);
 });

@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
 	createResumePdfBlob: vi.fn(async () => new Blob(["local"], { type: "application/pdf" })),
 	downloadWithAnchor: vi.fn(),
 	fetch: vi.fn(async (_input: string | URL) => new Response(new Blob(["server"], { type: "application/pdf" }))),
+	toastError: vi.fn(),
 }));
 
 vi.mock("./pdf-document", () => ({
@@ -32,7 +33,7 @@ vi.mock("@/features/resume/stylesheet/store", () => ({
 vi.mock("sonner", () => ({
 	toast: {
 		loading: vi.fn(() => "toast"),
-		error: vi.fn(),
+		error: mocks.toastError,
 		dismiss: vi.fn(),
 	},
 }));
@@ -43,6 +44,7 @@ beforeEach(() => {
 	mocks.createResumePdfBlob.mockClear();
 	mocks.downloadWithAnchor.mockClear();
 	mocks.fetch.mockClear();
+	mocks.toastError.mockClear();
 	vi.stubGlobal("fetch", mocks.fetch);
 });
 
@@ -75,5 +77,19 @@ describe("useResumeExport public PDF", () => {
 		expect(mocks.createResumePdfBlob).not.toHaveBeenCalled();
 		const blob = mocks.downloadWithAnchor.mock.calls[0]?.[0] as Blob;
 		expect(await blob.text()).toBe("server");
+	});
+
+	it("does not download an unstyled PDF when semantic rendering rejects", async () => {
+		mocks.createResumePdfBlob.mockRejectedValueOnce(
+			new Error("The semantic stylesheet could not be rendered.", {
+				cause: [{ code: "RESOURCE_LIMIT", severity: "error" }],
+			}),
+		);
+		const { result } = renderHook(() => useResumeExport({ name: "Sample", slug: "sample", data: sampleResumeData }));
+
+		await act(() => result.current.onDownloadPDF());
+
+		expect(mocks.downloadWithAnchor).not.toHaveBeenCalled();
+		expect(mocks.toastError).toHaveBeenCalledTimes(1);
 	});
 });

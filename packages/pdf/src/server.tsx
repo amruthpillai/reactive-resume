@@ -28,12 +28,7 @@ export type CreateResumePdfFileResultOptions = CreateResumePdfFileOptions & {
 	inspection?: ResolvedResumeRuntime | undefined;
 };
 
-export const createResumePdfFile = async ({
-	data,
-	filename,
-	template,
-	resolveSectionTitle,
-}: CreateResumePdfFileOptions) => {
+const renderResumePdfFile = async ({ data, filename, template, resolveSectionTitle }: CreateResumePdfFileOptions) => {
 	const document = createElement(ResumeDocument, {
 		data,
 		template: template ?? data.metadata.template,
@@ -57,7 +52,15 @@ export const createResumePdfFileResult = async ({
 
 	return {
 		ok: true,
-		value: await createResumePdfFile(options),
+		value: await renderResumePdfFile(options),
 		diagnostics: resolvedInspection.diagnostics,
 	};
+};
+
+export const createResumePdfFile = async (options: CreateResumePdfFileOptions): Promise<File> => {
+	const result = await createResumePdfFileResult(options);
+	if (!result.ok) {
+		throw new Error("The semantic stylesheet could not be rendered.", { cause: result.diagnostics });
+	}
+	return result.value;
 };

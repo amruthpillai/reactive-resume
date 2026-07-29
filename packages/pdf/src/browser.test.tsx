@@ -98,6 +98,18 @@ describe("createResumePdfBlob", () => {
 		expect(rendererMock.pdf).not.toHaveBeenCalled();
 	});
 
+	it("rejects unchecked rendering instead of producing an unstyled PDF for semantic errors", async () => {
+		const data = structuredClone(sampleResumeData);
+		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		const { createResumePdfBlob } = await import("./browser");
+
+		await expect(createResumePdfBlob({ data })).rejects.toMatchObject({
+			cause: [expect.objectContaining({ severity: "error" })],
+		});
+		expect(rendererMock.pdf).not.toHaveBeenCalled();
+	});
+
 	it("accepts an optional prior semantic inspection on the result path", async () => {
 		const { createResumePdfBlobResult } = await import("./browser");
 		const inspection = {

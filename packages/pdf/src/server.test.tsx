@@ -61,4 +61,16 @@ describe("createResumePdfFile", () => {
 		});
 		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
 	});
+
+	it("rejects unchecked rendering instead of producing an unstyled PDF for semantic errors", async () => {
+		const data = structuredClone(sampleResumeData);
+		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		const { createResumePdfFile } = await import("./server");
+
+		await expect(createResumePdfFile({ data, filename: "resume.pdf" })).rejects.toMatchObject({
+			cause: [expect.objectContaining({ severity: "error" })],
+		});
+		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
+	});
 });

@@ -32,7 +32,7 @@ export type CreateResumePdfBlobResultOptions = CreateResumePdfBlobOptions & {
 	inspection?: ResolvedResumeRuntime | undefined;
 };
 
-export const createResumePdfBlob = async ({
+const renderResumePdfBlob = async ({
 	data,
 	template,
 	renderOptions,
@@ -64,7 +64,15 @@ export const createResumePdfBlobResult = async ({
 
 	return {
 		ok: true,
-		value: await createResumePdfBlob(options),
+		value: await renderResumePdfBlob(options),
 		diagnostics: resolvedInspection.diagnostics,
 	};
+};
+
+export const createResumePdfBlob = async (options: CreateResumePdfBlobOptions): Promise<Blob> => {
+	const result = await createResumePdfBlobResult(options);
+	if (!result.ok) {
+		throw new Error("The semantic stylesheet could not be rendered.", { cause: result.diagnostics });
+	}
+	return result.value;
 };

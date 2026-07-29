@@ -159,7 +159,7 @@ describe("ResumePreviewClient", () => {
 		expect(previewMock.toBlob).toHaveBeenCalledTimes(1);
 	});
 
-	it("keeps the active PDF visible and reports a later render failure", async () => {
+	it("keeps the active PDF visible and reports later semantic render diagnostics", async () => {
 		previewMock.builderResumeId = "resume-1";
 		previewMock.builderResumeData = sampleResumeData;
 		previewMock.stylesheet = {
@@ -171,7 +171,11 @@ describe("ResumePreviewClient", () => {
 		const view = render(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
 		expect(await screen.findByRole("img", { name: "Resume page 1 of 1" })).toBeTruthy();
 
-		previewMock.toBlob.mockRejectedValueOnce(new Error("render failed"));
+		previewMock.toBlob.mockRejectedValueOnce(
+			new Error("The semantic stylesheet could not be rendered.", {
+				cause: [{ code: "RESOURCE_LIMIT", severity: "error" }],
+			}),
+		);
 		previewMock.stylesheet.applied = {
 			languageVersion: 1,
 			text: "@rr-version 1;\nname { color: #654321; }\n",

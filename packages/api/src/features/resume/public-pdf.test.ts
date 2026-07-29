@@ -180,6 +180,34 @@ describe("createPublicResumePdf", () => {
 		expect(publicResult.body).toBe(body);
 	});
 
+	it("propagates semantic diagnostics instead of returning an unstyled fallback PDF", async () => {
+		const observe = vi.fn();
+		const semanticError = new Error("The semantic stylesheet could not be rendered.", {
+			cause: [{ code: "RESOURCE_LIMIT", severity: "error" }],
+		});
+		const renderPdf = vi.fn().mockRejectedValue(semanticError);
+
+		await expect(
+			createPublicResumePdf(input, {
+				findResume: vi.fn().mockResolvedValue(buildResume()),
+				hasPasswordAccess: vi.fn(),
+				resolveCurrentUserId: vi.fn().mockResolvedValue(undefined),
+				rateLimiter: { consume: vi.fn() },
+				renderPdf,
+				getFingerprints: vi.fn().mockResolvedValue({
+					registryFingerprint: "0".repeat(64),
+					adapterFingerprint: "1".repeat(64),
+				}),
+				now: () => 10,
+				observe,
+			}),
+		).rejects.toBe(semanticError);
+
+		expect(renderPdf).toHaveBeenCalledTimes(1);
+		expect(observe).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
+		expect(observe).not.toHaveBeenCalledWith(expect.objectContaining({ success: true }));
+	});
+
 	it("emits source-free, hashed fallback metadata", async () => {
 		const sensitive = "Ada <ada@example.test> /* source */";
 		const observe = vi.fn();
