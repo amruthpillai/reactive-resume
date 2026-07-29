@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 import type { ComboboxOption } from "@/components/ui/combobox";
 import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, PencilSimpleIcon, TrashSimpleIcon } from "@phosphor-icons/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { sectionTypeSchema } from "@reactive-resume/schema/resume/data";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Input } from "@reactive-resume/ui/components/input";
@@ -20,8 +20,13 @@ import { cn } from "@reactive-resume/utils/style";
 import { ColorPicker } from "@/components/input/color-picker";
 import { Combobox } from "@/components/ui/combobox";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
+import { SemanticStylesheetReadOnlyNotice } from "@/features/resume/stylesheet/legacy-banner";
+import { useStylesheetStore } from "@/features/resume/stylesheet/store";
 import { getSectionTitle } from "@/libs/resume/section";
+import { useSectionStore } from "../../../-store/section";
 import { SectionBase } from "../shared/section-base";
+
+const StylesheetEditorShell = lazy(() => import("@/features/resume/stylesheet/editor"));
 
 type TargetScope = StyleRuleTarget["scope"];
 
@@ -100,15 +105,36 @@ const exactFourControlGridClassName = "grid grid-cols-1 gap-3 @min-[20rem]:grid-
 const compactSpacingInputClassName =
 	"h-8 w-18 max-w-18 min-w-0 px-1.5 text-center text-xs tabular-nums placeholder:text-[0.68rem] placeholder:uppercase placeholder:tracking-wide";
 
-export function CustomStylesSectionBuilder() {
+export type CustomStylesSectionBuilderProps = {
+	authoringEnabled?: boolean;
+};
+
+export function CustomStylesSectionBuilder({ authoringEnabled = false }: CustomStylesSectionBuilderProps) {
+	const mode = useStylesheetStore((state) => state.mode);
+	const collapsed = useSectionStore((state) => state.sections.styles?.collapsed ?? false);
+
 	return (
 		<SectionBase type="styles" className="space-y-4">
-			<CustomStylesSectionForm />
+			{authoringEnabled ? (
+				collapsed ? null : (
+					<Suspense
+						fallback={
+							<div role="status" className="h-72 animate-pulse rounded-md bg-muted" aria-label="Loading editor" />
+						}
+					>
+						<StylesheetEditorShell />
+					</Suspense>
+				)
+			) : mode === "semantic" ? (
+				<SemanticStylesheetReadOnlyNotice />
+			) : (
+				<LegacyCustomStylesSectionForm />
+			)}
 		</SectionBase>
 	);
 }
 
-function CustomStylesSectionForm() {
+function LegacyCustomStylesSectionForm() {
 	const resume = useCurrentResume();
 	const data = resume.data;
 	const updateResumeData = useUpdateResumeData();

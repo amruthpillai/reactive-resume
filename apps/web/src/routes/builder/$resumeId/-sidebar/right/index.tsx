@@ -1,4 +1,5 @@
 import type { RightSidebarSection } from "@/libs/resume/section";
+import { useRouteContext } from "@tanstack/react-router";
 import { Fragment, useCallback, useRef } from "react";
 import { match } from "ts-pattern";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -22,13 +23,13 @@ import { StatisticsSectionBuilder } from "./sections/statistics";
 import { TemplateSectionBuilder } from "./sections/template";
 import { TypographySectionBuilder } from "./sections/typography";
 
-function getSectionComponent(type: RightSidebarSection) {
+function getSectionComponent(type: RightSidebarSection, semanticCssAuthoring: boolean) {
 	return match(type)
 		.with("template", () => <TemplateSectionBuilder />)
 		.with("layout", () => <LayoutSectionBuilder />)
 		.with("typography", () => <TypographySectionBuilder />)
 		.with("design", () => <DesignSectionBuilder />)
-		.with("styles", () => <CustomStylesSectionBuilder />)
+		.with("styles", () => <CustomStylesSectionBuilder authoringEnabled={semanticCssAuthoring} />)
 		.with("page", () => <PageSectionBuilder />)
 		.with("notes", () => <NotesSectionBuilder />)
 		.with("sharing", () => <SharingSectionBuilder />)
@@ -41,6 +42,8 @@ function getSectionComponent(type: RightSidebarSection) {
 
 export function BuilderSidebarRight() {
 	const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+	const context = useRouteContext({ strict: false });
+	const semanticCssAuthoring = context.flags?.semanticCssAuthoring ?? false;
 
 	return (
 		<>
@@ -53,7 +56,7 @@ export function BuilderSidebarRight() {
 				<div className="space-y-4 p-4">
 					{rightSidebarSections.map((section) => (
 						<Fragment key={section}>
-							{getSectionComponent(section)}
+							{getSectionComponent(section, semanticCssAuthoring)}
 							<Separator />
 						</Fragment>
 					))}

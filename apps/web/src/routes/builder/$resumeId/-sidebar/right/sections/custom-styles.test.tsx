@@ -40,8 +40,13 @@ vi.mock("@/features/resume/builder/draft", () => ({
 	useUpdateResumeData: () => updateResumeData,
 }));
 
+vi.mock("@/features/resume/stylesheet/editor", () => ({
+	default: () => <div data-testid="rrss-editor-shell">Semantic CSS editor</div>,
+}));
+
 const { CustomStylesSectionBuilder } = await import("./custom-styles");
 const { getSectionIcon, getSectionTitle } = await import("@/libs/resume/section");
+const { useStylesheetStore } = await import("@/features/resume/stylesheet/store");
 
 beforeAll(() => {
 	i18n.loadAndActivate({ locale: "en", messages: {} });
@@ -49,12 +54,13 @@ beforeAll(() => {
 
 beforeEach(() => {
 	updateResumeData.mockClear();
+	useStylesheetStore.setState({ mode: "legacy" });
 });
 
-const renderCustomStyles = () =>
+const renderCustomStyles = (authoringEnabled = false) =>
 	render(
 		<I18nProvider i18n={i18n}>
-			<CustomStylesSectionBuilder />
+			<CustomStylesSectionBuilder authoringEnabled={authoringEnabled} />
 		</I18nProvider>,
 	);
 
@@ -73,6 +79,21 @@ describe("CustomStylesSectionBuilder", () => {
 			target: { scope: "global" },
 			slots: { heading: { color: "rgba(220, 38, 38, 1)" } },
 		});
+	});
+
+	it("loads the RRSS shell only when authoring is enabled", async () => {
+		renderCustomStyles(true);
+
+		expect(await screen.findByTestId("rrss-editor-shell")).toBeInTheDocument();
+		expect(screen.queryByLabelText("Target Scope")).not.toBeInTheDocument();
+	});
+
+	it("shows a read-only notice for active Semantic CSS when authoring is disabled", () => {
+		useStylesheetStore.setState({ mode: "semantic" });
+		renderCustomStyles();
+
+		expect(screen.getByText(/semantic styles remain active/i)).toBeInTheDocument();
+		expect(screen.queryByLabelText("Target Scope")).not.toBeInTheDocument();
 	});
 
 	it("renders structured style rule controls", async () => {
