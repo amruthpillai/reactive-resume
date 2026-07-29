@@ -65,6 +65,10 @@ function isRegisteredPropertyValue(property: string, value: string): boolean {
 	);
 }
 
+function isRegisteredShorthandComponent(property: string, value: string): boolean {
+	return !isCssWideKeyword(value) && isRegisteredPropertyValue(property, value);
+}
+
 export const RRSS_LENGTH_PROPERTIES = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
 
 function range(location: CssLocation | null | undefined): SourceRange {
@@ -209,6 +213,9 @@ function borderComponents(value: string): readonly [component: string, value: st
 }
 
 export function expandShorthand(property: string, value: string): readonly [property: string, value: string][] | null {
+	const valueParts = splitValue(value);
+	if (valueParts.length > 1 && valueParts.some(isCssWideKeyword)) return null;
+
 	if (!spacingShorthands.has(property)) {
 		if (property.endsWith("-horizontal")) {
 			const prefix = property.slice(0, -"-horizontal".length);
@@ -240,8 +247,8 @@ export function expandShorthand(property: string, value: string): readonly [prop
 				];
 			const values = splitValue(value);
 			if (values.length < 1 || values.length > 2) return null;
-			const direction = values.find((part) => isRegisteredPropertyValue("flex-direction", part)) ?? "row";
-			const wrap = values.find((part) => isRegisteredPropertyValue("flex-wrap", part)) ?? "nowrap";
+			const direction = values.find((part) => isRegisteredShorthandComponent("flex-direction", part)) ?? "row";
+			const wrap = values.find((part) => isRegisteredShorthandComponent("flex-wrap", part)) ?? "nowrap";
 			if (values.some((part) => part !== direction && part !== wrap)) return null;
 			return [
 				["flex-direction", direction],

@@ -194,6 +194,33 @@ describe("RRSS value compilation", () => {
 		);
 	});
 
+	it("accepts CSS-wide keywords only as whole shorthand declarations", () => {
+		const accepted = compileStylesheet({
+			languageVersion: 1,
+			text: "@rr-version 1;section{flex-flow:inherit}",
+		});
+		expect(accepted.program).not.toBeNull();
+
+		for (const declaration of [
+			"flex-flow:row inherit",
+			"flex:1 inherit",
+			"gap:1pt inherit",
+			"margin:1pt inherit",
+			"border:1pt solid inherit",
+			"border-style:solid inherit",
+		]) {
+			const rejected = compileStylesheet({
+				languageVersion: 1,
+				text: `@rr-version 1;section{${declaration}}`,
+			});
+
+			expect(rejected.program, declaration).toBeNull();
+			expect(rejected.diagnostics, declaration).toContainEqual(
+				expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
+			);
+		}
+	});
+
 	it("expands generated one-to-four-token shorthands with CSS side semantics", () => {
 		fc.assert(
 			fc.property(

@@ -135,6 +135,8 @@ const inactiveState = (): Omit<
 });
 
 const sourceFromText = (source: StylesheetSource, text: string): StylesheetSource => ({ ...source, text });
+const sourcesEqual = (left: StylesheetSource, right: StylesheetSource) =>
+	left.languageVersion === right.languageVersion && left.text === right.text;
 const isEditorFocused = () =>
 	typeof document !== "undefined" && document.activeElement instanceof HTMLElement
 		? document.activeElement.closest(".cm-editor") !== null
@@ -215,6 +217,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 	let latestCandidate: Candidate | undefined;
 	let deferredCanonical: StylesheetCanonicalState | undefined;
 	let validationEpoch = 0;
+	let intelligenceEpoch = 0;
 	let historyLastEditAt = 0;
 	let historyCanCoalesce = false;
 	let destroyed = false;
@@ -247,7 +250,10 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			const nextSource = preserveSource ? state.source : canonical.stylesheet.source;
 			next.source = nextSource;
 			next.applied = canonical.stylesheet.applied;
-			if (nextSource.text !== state.source.text) next.colorTokens = [];
+			if (!sourcesEqual(nextSource, state.source)) {
+				intelligenceEpoch += 1;
+				next.colorTokens = [];
+			}
 		}
 		patch(next);
 	};
@@ -291,7 +297,8 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 				});
 				if (result.editGeneration !== store.getState().editGeneration) return;
 				if (staleStylesheet) return;
-				const sourceChanged = result.stylesheet.source.text !== state.source.text;
+				const sourceChanged = !sourcesEqual(result.stylesheet.source, state.source);
+				if (sourceChanged) intelligenceEpoch += 1;
 				patch({
 					mode: result.stylesheet.mode,
 					source: result.stylesheet.source,
@@ -505,10 +512,20 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		refreshIntelligence() {
 			const state = store.getState();
 			const generation = state.editGeneration;
+			const source = structuredClone(state.source);
+			const requestEpoch = ++intelligenceEpoch;
 			void options
-				.compile(compileInput(resumeData, state.source, generation, editorMetadata.semanticTree))
+				.compile(compileInput(resumeData, source, generation, editorMetadata.semanticTree))
 				.then((compiled) => {
-					if (destroyed || store.getState().editGeneration !== generation) return;
+					const current = store.getState();
+					if (
+						destroyed ||
+						requestEpoch !== intelligenceEpoch ||
+						current.editGeneration !== generation ||
+						!sourcesEqual(current.source, source)
+					) {
+						return;
+					}
 					patch({ diagnostics: compiled.diagnostics, colorTokens: compiled.colorTokens ?? [] });
 				});
 		},

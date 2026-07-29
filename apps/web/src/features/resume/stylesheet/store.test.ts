@@ -45,6 +45,68 @@ describe("stylesheet store runtime", () => {
 		expect(runtime.store.getState().colorTokens).toEqual([]);
 	});
 
+	it("rejects delayed editor intelligence for a canonically replaced source", async () => {
+		let resolveCompile!: (value: {
+			type: "compile_result";
+			requestId: number;
+			editGeneration: number;
+			program: { languageVersion: number; rules: [] };
+			diagnostics: [
+				{
+					code: string;
+					severity: "error";
+					message: string;
+					range: {
+						start: { line: number; column: number; offset: number };
+						end: { line: number; column: number; offset: number };
+					};
+				},
+			];
+			colorTokens: [{ from: number; to: number; value: string }];
+		}) => void;
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial: { ...initial, stylesheet: stylesheet("section { color: red; }") },
+			resumeData: defaultResumeData,
+			compile: () => new Promise((resolve) => (resolveCompile = resolve)),
+			preflight: vi.fn(),
+			mutate: vi.fn(),
+		});
+
+		runtime.store.getState().refreshIntelligence();
+		runtime.rebaseCanonical({
+			stylesheet: stylesheet("section { color: blue; }"),
+			revision: 4,
+			renderDataVersion: 7,
+		});
+		resolveCompile({
+			type: "compile_result",
+			requestId: 1,
+			editGeneration: 0,
+			program: { languageVersion: 1, rules: [] },
+			diagnostics: [
+				{
+					code: "OLD_SOURCE",
+					severity: "error",
+					message: "Old source diagnostic",
+					range: {
+						start: { line: 1, column: 1, offset: 0 },
+						end: { line: 1, column: 2, offset: 1 },
+					},
+				},
+			],
+			colorTokens: [{ from: 17, to: 20, value: "red" }],
+		});
+		await Promise.resolve();
+		await Promise.resolve();
+
+		expect(runtime.store.getState()).toMatchObject({
+			source: source("section { color: blue; }"),
+			diagnostics: [],
+			colorTokens: [],
+		});
+	});
+
 	it("consumes stale acknowledgements before saving the replaceable pending edit", async () => {
 		const resolvers: Array<(value: MutationResult) => void> = [];
 		const mutate = vi.fn(
