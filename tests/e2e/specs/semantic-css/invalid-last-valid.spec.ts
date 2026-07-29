@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { readSemanticCssFixture } from "../../fixtures/db";
 import {
@@ -11,6 +12,16 @@ import {
 import { expect, test } from "../../fixtures/test";
 
 test.setTimeout(120_000);
+
+const renderedPdfFingerprint = (pdf: Buffer) => {
+	const stablePdf = pdf
+		.toString("latin1")
+		.replace(/D:\d{14}Z/g, "D:00000000000000Z")
+		.replace(/[A-Z]{6}\+/g, "SUBSET+")
+		.replace(/\/ID \[<[\da-f]+> <[\da-f]+>\]/gi, "/ID [<ID> <ID>]");
+
+	return createHash("sha256").update(stablePdf, "latin1").digest("hex");
+};
 
 test("@semantic-css keeps preview and export on the last valid source", async ({ authPage: page }, testInfo) => {
 	const resumeId = await createSemanticCssResume(page, testInfo);
@@ -31,6 +42,7 @@ test("@semantic-css keeps preview and export on the last valid source", async ({
 	const invalidDownload = await downloadPdf(page);
 	const invalidPdf = await readFile(await invalidDownload.path());
 	expect(invalidPdf.subarray(0, 4).toString()).toBe("%PDF");
+	expect(renderedPdfFingerprint(invalidPdf)).toBe(renderedPdfFingerprint(validPdf));
 	await expect
 		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet)
 		.toMatchObject({
@@ -45,7 +57,9 @@ test("@semantic-css keeps preview and export on the last valid source", async ({
 		.not.toBe(validPreview);
 	await waitForStablePreview(page);
 	const fixedDownload = await downloadPdf(page);
-	expect((await readFile(await fixedDownload.path())).subarray(0, 4).toString()).toBe("%PDF");
+	const fixedPdf = await readFile(await fixedDownload.path());
+	expect(fixedPdf.subarray(0, 4).toString()).toBe("%PDF");
+	expect(renderedPdfFingerprint(fixedPdf)).not.toBe(renderedPdfFingerprint(validPdf));
 	await expect
 		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet?.applied.text)
 		.toBe("@rr-version 1;\nname { color: #2563eb; }\n");

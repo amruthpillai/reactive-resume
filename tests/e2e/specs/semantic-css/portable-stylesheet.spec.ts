@@ -1,60 +1,213 @@
 import { readSemanticCssFixture } from "../../fixtures/db";
 import {
 	createSemanticCssResume,
-	firstPreviewPage,
 	openSemanticCssEditor,
 	PORTABLE_STYLESHEET,
 	replaceStylesheet,
 	seedSemanticCssResume,
 	switchTemplate,
-	waitForStylesheetStatus,
+	waitForStablePreview,
 } from "../../fixtures/semantic-css";
 import { expect, test } from "../../fixtures/test";
 
-test.setTimeout(120_000);
+test.setTimeout(180_000);
 
-const PORTABLE_PAGE_COLOR = [18, 52, 86, 255];
+const PORTABLE_MARKERS = {
+	exactItemField: [161, 193, 129, 255],
+	exactSection: [254, 215, 102, 255],
+	groupSelector: [42, 183, 202, 255],
+	header: [254, 74, 73, 255],
+	mediaQuery: [110, 231, 183, 255],
+	pagination: [212, 165, 165, 255],
+	placement: [247, 140, 107, 255],
+	richText: [179, 136, 235, 255],
+	systemVariable: [0, 132, 209, 255],
+	templatePart: [255, 0, 255, 255],
+} as const;
 
-async function countPortablePageColorPixels(page: Parameters<typeof firstPreviewPage>[0]) {
-	const canvas = await firstPreviewPage(page);
-	return canvas.evaluate((element, color) => {
-		const context = (element as HTMLCanvasElement).getContext("2d");
-		if (!context) throw new Error("Expected a 2D preview canvas.");
-		const pixels = context.getImageData(0, 0, element.width, element.height).data;
-		let matches = 0;
-		for (let index = 0; index < pixels.length; index += 4) {
-			if (
-				pixels[index] === color[0] &&
-				pixels[index + 1] === color[1] &&
-				pixels[index + 2] === color[2] &&
-				pixels[index + 3] === color[3]
-			) {
-				matches += 1;
-			}
-		}
-		return matches;
-	}, PORTABLE_PAGE_COLOR);
+const PORTABLE_ACCEPTANCE_STYLESHEET = `${PORTABLE_STYLESHEET}
+
+page {
+	background-color: var(--accent);
 }
 
-test("@semantic-css applies one portable stylesheet across Azurill, Pikachu, and Scizor", async ({
+header {
+	background-color: rgb(254, 74, 73);
+}
+
+section:is([type="experience"], [type="education"]) > section-heading {
+	background-color: rgb(42, 183, 202);
+}
+
+section[id="projects"] > section-items > item {
+	background-color: rgb(254, 215, 102);
+}
+
+section[id="experience"] item[id="experience-item-2"] field[name="period"] {
+	color: rgb(161, 193, 129);
+}
+
+rich-text list-item > list-item-content {
+	color: rgb(179, 136, 235);
+}
+
+region[placement="sidebar"] section {
+	background-color: rgb(247, 140, 107);
+}
+
+section[type="projects"] {
+	background-color: rgb(212, 165, 165);
+	padding: 12pt;
+}
+
+@media (max-width: 600pt) {
+	region[placement="sidebar"] section-heading {
+		background-color: rgb(110, 231, 183);
+	}
+}
+
+resume[template="azurill"] template-part[name="timeline-dot"] {
+	background-color: rgb(255, 0, 255);
+}
+`;
+
+type PortableMarker = keyof typeof PORTABLE_MARKERS;
+
+const PAGINATION_DIRECTIVES = "\tbreak-inside: avoid;\n\t-rr-min-presence-ahead: 24pt;\n";
+
+const GENERIC_PORTABLE_MARKERS = [
+	"exactItemField",
+	"exactSection",
+	"groupSelector",
+	"header",
+	"mediaQuery",
+	"pagination",
+	"placement",
+	"richText",
+] as const satisfies readonly PortableMarker[];
+
+async function countPortableMarkersByPage(page: Parameters<typeof waitForStablePreview>[0]) {
+	await waitForStablePreview(page);
+	return page.locator('canvas[aria-label^="Resume page "]').evaluateAll((elements, markers) => {
+		const markerEntries = Object.entries(markers) as Array<[PortableMarker, readonly number[]]>;
+		const markerByColor = new Map(
+			markerEntries.map(([name, color]) => [
+				(((color[0] << 24) | (color[1] << 16) | (color[2] << 8) | color[3]) >>> 0).toString(),
+				name,
+			]),
+		);
+
+		return elements
+			.filter((element) => !element.closest('[aria-hidden="true"]'))
+			.map((element) => {
+				const canvas = element as HTMLCanvasElement;
+				const context = canvas.getContext("2d");
+				if (!context) throw new Error("Expected a 2D preview canvas.");
+				const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+				const counts = Object.fromEntries(markerEntries.map(([name]) => [name, 0])) as Record<PortableMarker, number>;
+
+				for (let index = 0; index < pixels.length; index += 4) {
+					const key =
+						((pixels[index] << 24) | (pixels[index + 1] << 16) | (pixels[index + 2] << 8) | pixels[index + 3]) >>> 0;
+					const marker = markerByColor.get(key.toString());
+					if (marker) counts[marker] += 1;
+				}
+
+				return counts;
+			});
+	}, PORTABLE_MARKERS);
+}
+
+async function waitForPortableApplied(page: Parameters<typeof waitForStablePreview>[0]) {
+	await expect(
+		page
+			.getByText(/^Applied(?: with warnings)?$/)
+			.filter({ visible: true })
+			.last(),
+	).toBeVisible({
+		timeout: 30_000,
+	});
+}
+
+async function applyPortableStylesheet(
+	page: Parameters<typeof waitForStablePreview>[0],
+	resumeId: string,
+	source: string,
+) {
+	await openSemanticCssEditor(page);
+	await replaceStylesheet(page, source);
+	await expect
+		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet?.applied.text, { timeout: 30_000 })
+		.toBe(source);
+	await waitForPortableApplied(page);
+}
+
+test("@semantic-css applies every portable selector behavior across Onyx, Azurill, and Ditto", async ({
 	authPage: page,
 }, testInfo) => {
 	const resumeId = await createSemanticCssResume(page, testInfo);
-	await seedSemanticCssResume(page, resumeId, { experienceItemId: "experience-item-2" });
-	await replaceStylesheet(page, PORTABLE_STYLESHEET);
-	await waitForStylesheetStatus(page, "Applied");
-	await expect
-		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet?.applied.text, { timeout: 30_000 })
-		.toBe(PORTABLE_STYLESHEET);
+	await seedSemanticCssResume(page, resumeId, {
+		portableLayout: "balanced",
+		experienceItemId: "experience-item-2",
+		hidePicture: true,
+	});
+	await applyPortableStylesheet(page, resumeId, PORTABLE_ACCEPTANCE_STYLESHEET);
 	await page.reload();
 	await openSemanticCssEditor(page);
-	await waitForStylesheetStatus(page, "Applied");
+	await waitForPortableApplied(page);
 
-	for (const template of ["Azurill", "Pikachu", "Scizor"]) {
+	for (const template of ["Onyx", "Azurill", "Ditto"]) {
 		await switchTemplate(page, template);
+		const pages = await countPortableMarkersByPage(page);
+		console.info(`PORTABLE_MARKER_EVIDENCE ${template} ${JSON.stringify(pages)}`);
+		for (const marker of GENERIC_PORTABLE_MARKERS) {
+			expect(
+				pages.reduce((total, page) => total + page[marker], 0),
+				`${template} should render the ${marker} sentinel`,
+			).toBeGreaterThan(20);
+		}
 		expect(
-			await countPortablePageColorPixels(page),
-			`${template} should render the portable page background rule`,
-		).toBeGreaterThan(1_000);
+			pages.reduce((total, page) => total + page.systemVariable, 0),
+			`${template} should resolve the system variable sentinel`,
+		).toBeGreaterThan(10_000);
+		if (template === "Azurill") {
+			expect(
+				pages.reduce((total, page) => total + page.templatePart, 0),
+				"Azurill should render the template-part sentinel",
+			).toBeGreaterThan(5);
+		}
 	}
+});
+
+test("@semantic-css pagination directives keep a portable project section together", async ({
+	authPage: page,
+}, testInfo) => {
+	const resumeId = await createSemanticCssResume(page, testInfo);
+	await seedSemanticCssResume(page, resumeId, {
+		portableLayout: "pagination-stress",
+		experienceItemId: "experience-item-2",
+		hidePicture: true,
+	});
+	await applyPortableStylesheet(page, resumeId, PORTABLE_ACCEPTANCE_STYLESHEET);
+	await switchTemplate(page, "Onyx");
+
+	const withPagination = await countPortableMarkersByPage(page);
+	expect(withPagination.reduce((total, page) => total + page.pagination, 0)).toBeGreaterThan(20);
+	const withPaginationDistribution = withPagination.map((page) => page.pagination);
+
+	await applyPortableStylesheet(page, resumeId, PORTABLE_ACCEPTANCE_STYLESHEET.replace(PAGINATION_DIRECTIVES, ""));
+	await expect
+		.poll(async () => (await countPortableMarkersByPage(page)).map((page) => page.pagination), {
+			timeout: 30_000,
+		})
+		.not.toEqual(withPaginationDistribution);
+
+	const withoutPaginationDistribution = (await countPortableMarkersByPage(page)).map((page) => page.pagination);
+	expect(withoutPaginationDistribution).not.toEqual(withPaginationDistribution);
+	console.info(
+		`PORTABLE_PAGINATION_EVIDENCE ${JSON.stringify({
+			withPagination: withPaginationDistribution,
+			withoutPagination: withoutPaginationDistribution,
+		})}`,
+	);
 });

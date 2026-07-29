@@ -38,6 +38,7 @@ export async function updateSemanticCssFixture(
 	update: {
 		stylesheet?: SemanticStylesheetSeed;
 		bumpRevision?: boolean;
+		portableLayout?: "balanced" | "pagination-stress";
 		experienceItemId?: string;
 		legacyStyleRule?: boolean;
 		hidePicture?: boolean;
@@ -65,6 +66,58 @@ export async function updateSemanticCssFixture(
 			item.id = update.experienceItemId;
 			if (!experience.items[1]) experience.items.push(item);
 		}
+		if (update.portableLayout) {
+			const sections = data.sections as Record<string, { items: Array<Record<string, unknown>> }>;
+			const experience = sections.experience;
+			const education = sections.education;
+			const projects = sections.projects;
+			const profiles = sections.profiles;
+			const skills = sections.skills;
+			if (
+				!experience?.items[0] ||
+				!experience.items[1] ||
+				!education?.items[0] ||
+				!projects?.items[0] ||
+				!profiles?.items[0] ||
+				!skills?.items[0]
+			) {
+				throw new Error("The portable semantic CSS fixture requires standard sample sections.");
+			}
+
+			experience.items = experience.items.slice(0, 2);
+			experience.items[0].description = "<ul><li><p>Portable rich text marker one.</p></li></ul>";
+			experience.items[1].description = "<ul><li><p>Portable rich text marker two.</p></li></ul>";
+			education.items = education.items.slice(0, 1);
+			education.items[0].description = Array.from(
+				{ length: update.portableLayout === "pagination-stress" ? 30 : 12 },
+				(_, index) =>
+					`<p>Education pagination spacer ${index + 1}: deterministic content places the next section near the page boundary.</p>`,
+			).join("");
+			projects.items = projects.items.slice(0, 1);
+			projects.items[0].description = Array.from(
+				{ length: 5 },
+				(_, index) =>
+					`<p>Project pagination marker ${index + 1}: this section fits on a fresh page and must stay together.</p>`,
+			).join("");
+			profiles.items = profiles.items.slice(0, 1);
+			skills.items = skills.items.slice(0, 1);
+
+			const metadata = data.metadata as {
+				layout: { pages: Array<{ fullWidth: boolean; main: string[]; sidebar: string[] }> };
+			};
+			metadata.layout.pages = [
+				{
+					fullWidth: false,
+					main: ["experience"],
+					sidebar: ["profiles", "skills"],
+				},
+				{
+					fullWidth: true,
+					main: ["education", "projects"],
+					sidebar: [],
+				},
+			];
+		}
 		if (update.legacyStyleRule) {
 			const metadata = data.metadata as Record<string, unknown>;
 			metadata.styleRules = structuredClone(legacyParityRules);
@@ -91,6 +144,7 @@ export async function updateSemanticCssFixture(
 				data,
 				update.bumpRevision || update.stylesheet || update.legacyStyleRule ? 1 : 0,
 				update.stylesheet ||
+				update.portableLayout ||
 				update.experienceItemId ||
 				update.legacyStyleRule ||
 				update.hidePicture ||

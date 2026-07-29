@@ -82,6 +82,7 @@ export async function seedSemanticCssResume(
 	resumeId: string,
 	{
 		basicsName,
+		portableLayout,
 		experienceItemId,
 		hidePicture = false,
 		stylesheet = {
@@ -91,6 +92,7 @@ export async function seedSemanticCssResume(
 		},
 	}: {
 		basicsName?: string;
+		portableLayout?: "balanced" | "pagination-stress";
 		experienceItemId?: string;
 		hidePicture?: boolean;
 		stylesheet?: SemanticStylesheetSeed;
@@ -98,6 +100,7 @@ export async function seedSemanticCssResume(
 ) {
 	await updateSemanticCssFixture(resumeId, {
 		basicsName,
+		portableLayout,
 		experienceItemId,
 		hidePicture,
 		stylesheet,
