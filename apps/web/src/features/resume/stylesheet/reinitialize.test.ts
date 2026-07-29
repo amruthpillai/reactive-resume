@@ -48,21 +48,38 @@ describe("stylesheet store reinitialization", () => {
 
 	afterEach(() => vi.unstubAllGlobals());
 
-	it("uses the synchronous restore response so a later edit cannot be overwritten by a delayed fetch", async () => {
+	it("suspends edits while a delayed restore is pending, then atomically installs the restored state", async () => {
 		const storeModule = await import("./store");
 		const cleanup = storeModule.initializeStylesheetStore({
 			resumeId: "resume-1",
 			initial: { stylesheet: stylesheet("old"), revision: 3, renderDataVersion: 7 },
 			resumeData: defaultResumeData,
 		});
-		const token = storeModule.captureStylesheetRuntime("resume-1");
-		const replaced = storeModule.replaceStylesheetStoreAfterRestore({
-			resumeId: "resume-1",
-			resumeData: defaultResumeData,
-			initial: { stylesheet: stylesheet("restored"), revision: 9, renderDataVersion: 12 },
-			token,
+		let finishRestore: (() => void) | undefined;
+		const delayedRestore = new Promise<void>((resolve) => {
+			finishRestore = resolve;
 		});
+		const restore = async () => {
+			const token = storeModule.lockStylesheetStoreForRestore("resume-1");
+			await delayedRestore;
+			return storeModule.replaceStylesheetStoreAfterRestore({
+				resumeId: "resume-1",
+				resumeData: defaultResumeData,
+				initial: { stylesheet: stylesheet("restored"), revision: 9, renderDataVersion: 12 },
+				token,
+			});
+		};
 
+		const pendingRestore = restore();
+		expect(storeModule.useStylesheetStore.getState().restoreLocked).toBe(true);
+		const editGeneration = storeModule.useStylesheetStore.getState().editGeneration;
+		storeModule.useStylesheetStore.getState().setSourceText("edit while restoring");
+		storeModule.useStylesheetStore.getState().deactivate();
+		storeModule.useStylesheetStore.getState().undo();
+		expect(storeModule.useStylesheetStore.getState().source.text).toBe("old");
+		expect(storeModule.useStylesheetStore.getState().editGeneration).toBe(editGeneration);
+		finishRestore?.();
+		const replaced = await pendingRestore;
 		expect(replaced).toBe(true);
 		expect(mocks.getState).not.toHaveBeenCalled();
 		expect(storeModule.useStylesheetStore.getState()).toMatchObject({
@@ -71,6 +88,7 @@ describe("stylesheet store reinitialization", () => {
 			applied: { text: "restored" },
 			revision: 9,
 			renderDataVersion: 12,
+			restoreLocked: false,
 		});
 		storeModule.useStylesheetStore.getState().setSourceText("later edit");
 		expect(storeModule.useStylesheetStore.getState().source.text).toBe("later edit");
@@ -83,6 +101,25 @@ describe("stylesheet store reinitialization", () => {
 		expect(storeModule.useStylesheetStore.getState().resumeId).toBeUndefined();
 	});
 
+	it("unlocks interaction after a restore request fails", async () => {
+		const storeModule = await import("./store");
+		const cleanup = storeModule.initializeStylesheetStore({
+			resumeId: "resume-1",
+			initial: { stylesheet: stylesheet("old"), revision: 3, renderDataVersion: 7 },
+			resumeData: defaultResumeData,
+		});
+
+		const token = storeModule.lockStylesheetStoreForRestore("resume-1");
+		expect(storeModule.useStylesheetStore.getState().restoreLocked).toBe(true);
+		expect(storeModule.unlockStylesheetStoreAfterRestore(token)).toBe(true);
+		expect(storeModule.useStylesheetStore.getState().restoreLocked).toBe(false);
+
+		storeModule.useStylesheetStore.getState().setSourceText("edit after failure");
+		expect(storeModule.useStylesheetStore.getState().source.text).toBe("edit after failure");
+
+		cleanup();
+	});
+
 	it("ignores a stale same-resume restore completion after away-and-back runtime replacement", async () => {
 		const storeModule = await import("./store");
 		const cleanupFirst = storeModule.initializeStylesheetStore({
@@ -90,7 +127,7 @@ describe("stylesheet store reinitialization", () => {
 			initial: { stylesheet: stylesheet("first"), revision: 1, renderDataVersion: 1 },
 			resumeData: defaultResumeData,
 		});
-		const staleToken = storeModule.captureStylesheetRuntime("resume-1");
+		const staleToken = storeModule.lockStylesheetStoreForRestore("resume-1");
 
 		cleanupFirst();
 		const cleanupSecond = storeModule.initializeStylesheetStore({

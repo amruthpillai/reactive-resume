@@ -151,6 +151,38 @@ describe("StylesheetCodeEditor", () => {
 });
 
 describe("StylesheetEditorShell", () => {
+	it("makes the editor and mutation controls read-only while a restore is pending", () => {
+		media.mobile = false;
+		useStylesheetStore.setState({
+			mode: "legacy",
+			source: { languageVersion: 1, text: "@rr-version 1;\n" },
+			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			diagnostics: [],
+			status: "idle",
+			canUndo: true,
+			canRedo: true,
+			restoreLocked: true,
+		});
+
+		render(
+			<I18nProvider i18n={i18n}>
+				<TooltipProvider>
+					<StylesheetEditorShell />
+				</TooltipProvider>
+			</I18nProvider>,
+		);
+
+		expect(screen.getByRole("textbox", { name: "Semantic CSS stylesheet" })).toHaveAttribute(
+			"contenteditable",
+			"false",
+		);
+		expect(screen.getByRole("button", { name: "Activate Semantic CSS" })).toBeDisabled();
+		expect(screen.getByRole("button", { name: "Undo stylesheet edit" })).toBeDisabled();
+		expect(screen.getByRole("button", { name: "Redo stylesheet edit" })).toBeDisabled();
+		expect(screen.getByRole("button", { name: "Format stylesheet" })).toBeDisabled();
+		expect(screen.getByRole("button", { name: "Reset to applied stylesheet" })).toBeDisabled();
+	});
+
 	it("moves the only visible editor into a titled mobile sheet", async () => {
 		media.mobile = true;
 		useStylesheetStore.setState({
@@ -159,6 +191,7 @@ describe("StylesheetEditorShell", () => {
 			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
 			diagnostics: [{ ...error, severity: "warning" }],
 			status: "idle",
+			restoreLocked: false,
 		});
 
 		const { container } = render(

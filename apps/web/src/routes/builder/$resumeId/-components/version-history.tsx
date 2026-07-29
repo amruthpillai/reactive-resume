@@ -17,7 +17,11 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useResumeStore } from "@/features/resume/builder/draft";
-import { captureStylesheetRuntime, replaceStylesheetStoreAfterRestore } from "@/features/resume/stylesheet/store";
+import {
+	lockStylesheetStoreForRestore,
+	replaceStylesheetStoreAfterRestore,
+	unlockStylesheetStoreAfterRestore,
+} from "@/features/resume/stylesheet/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { formatRelativeTime } from "@/libs/locale";
@@ -49,7 +53,8 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 
 		if (!confirmed) return;
 
-		const token = captureStylesheetRuntime(resumeId);
+		const token = lockStylesheetStoreForRestore(resumeId);
+		if (!token) return;
 		try {
 			const restored = await restoreVersion({ resumeId, versionId });
 			const applied = replaceStylesheetStoreAfterRestore({
@@ -58,12 +63,16 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 				initial: restored.stylesheetState,
 				token,
 			});
-			if (!applied) return;
+			if (!applied) {
+				unlockStylesheetStoreAfterRestore(token);
+				return;
+			}
 			replaceResumeFromServer(restored.resume as Resume);
 			queryClient.setQueryData(orpc.resume.getById.queryOptions({ input: { id: resumeId } }).queryKey, restored.resume);
 			void queryClient.invalidateQueries({ queryKey: orpc.resume.listVersions.queryKey({ input: { resumeId } }) });
 			toast.success(t`Your resume has been restored to the selected version.`);
 		} catch (error) {
+			unlockStylesheetStoreAfterRestore(token);
 			toast.error(getResumeErrorMessage(error));
 		}
 	};

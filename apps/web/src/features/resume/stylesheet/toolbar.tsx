@@ -39,6 +39,7 @@ export type StylesheetToolbarProps = {
 	canUndo: boolean;
 	canRedo: boolean;
 	focused: boolean;
+	disabled?: boolean;
 	onUndo(): void;
 	onRedo(): void;
 	onFormat(): void;
@@ -51,6 +52,7 @@ export function StylesheetToolbar({
 	canUndo,
 	canRedo,
 	focused,
+	disabled = false,
 	onUndo,
 	onRedo,
 	onFormat,
@@ -59,19 +61,19 @@ export function StylesheetToolbar({
 }: StylesheetToolbarProps) {
 	return (
 		<div className="flex flex-wrap items-center gap-1" role="toolbar" aria-label={t`Stylesheet editor`}>
-			<ToolbarButton label={t`Undo stylesheet edit`} disabled={!canUndo} onClick={onUndo}>
+			<ToolbarButton label={t`Undo stylesheet edit`} disabled={disabled || !canUndo} onClick={onUndo}>
 				<ArrowUUpLeftIcon data-icon="inline-start" />
 			</ToolbarButton>
-			<ToolbarButton label={t`Redo stylesheet edit`} disabled={!canRedo} onClick={onRedo}>
+			<ToolbarButton label={t`Redo stylesheet edit`} disabled={disabled || !canRedo} onClick={onRedo}>
 				<ArrowUUpRightIcon data-icon="inline-start" />
 			</ToolbarButton>
 			<ToolbarButton label={t`Copy stylesheet`} onClick={() => void copySourceToClipboard(source)}>
 				<CopyIcon data-icon="inline-start" />
 			</ToolbarButton>
-			<ToolbarButton label={t`Format stylesheet`} onClick={onFormat}>
+			<ToolbarButton label={t`Format stylesheet`} disabled={disabled} onClick={onFormat}>
 				<MagicWandIcon data-icon="inline-start" />
 			</ToolbarButton>
-			<ToolbarButton label={t`Reset to applied stylesheet`} onClick={onReset}>
+			<ToolbarButton label={t`Reset to applied stylesheet`} disabled={disabled} onClick={onReset}>
 				<ArrowCounterClockwiseIcon data-icon="inline-start" />
 			</ToolbarButton>
 			<ToolbarButton label={focused ? t`Exit focus mode` : t`Open focus mode`} onClick={onFocusToggle}>

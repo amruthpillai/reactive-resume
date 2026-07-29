@@ -72,6 +72,7 @@ export type StylesheetStoreState = {
 	colorTokens: readonly RrssColorToken[];
 	editorMetadata: RrssEditorMetadata;
 	status: "idle" | "compiling" | "preflighting" | "saving" | "applied" | "error";
+	restoreLocked: boolean;
 	focused: boolean;
 	canUndo: boolean;
 	canRedo: boolean;
@@ -127,6 +128,7 @@ const inactiveState = (): Omit<
 	colorTokens: [],
 	editorMetadata: { semanticTree: emptySemanticTree(), templateParts: [] },
 	status: "idle",
+	restoreLocked: false,
 	focused: false,
 	canUndo: false,
 	canRedo: false,
@@ -433,6 +435,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		colorTokens: [],
 		editorMetadata,
 		status: "idle",
+		restoreLocked: false,
 		focused: false,
 		undoStack: [],
 		redoStack: [],
@@ -440,7 +443,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		canRedo: false,
 		setSourceText(text) {
 			const state = store.getState();
-			if (text === state.source.text) return;
+			if (state.restoreLocked || text === state.source.text) return;
 			const generation = state.editGeneration + 1;
 			const nextSource = sourceFromText(state.source, text);
 			const now = Date.now();
@@ -475,7 +478,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		},
 		activate() {
 			const state = store.getState();
-			if (state.mode === "semantic") return;
+			if (state.restoreLocked || state.mode === "semantic") return;
 			const generation = state.editGeneration + 1;
 			resetHistoryCoalescing();
 			patch({
@@ -490,7 +493,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		},
 		deactivate() {
 			const state = store.getState();
-			if (state.mode === "legacy") return;
+			if (state.restoreLocked || state.mode === "legacy") return;
 			const generation = state.editGeneration + 1;
 			resetHistoryCoalescing();
 			patch({
@@ -504,9 +507,11 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			queue({ generation, transition: "deactivate" });
 		},
 		undo() {
+			if (store.getState().restoreLocked) return;
 			restore(currentStylesheet(store.getState()), "undoStack");
 		},
 		redo() {
+			if (store.getState().restoreLocked) return;
 			restore(currentStylesheet(store.getState()), "redoStack");
 		},
 		refreshIntelligence() {
@@ -628,8 +633,19 @@ export function initializeStylesheetStore(input: {
 	};
 }
 
-export const captureStylesheetRuntime = (resumeId: string): StylesheetRuntimeToken | undefined =>
-	activeRuntime?.store.getState().resumeId === resumeId ? activeRuntimeToken : undefined;
+export function lockStylesheetStoreForRestore(resumeId: string): StylesheetRuntimeToken | undefined {
+	if (!activeRuntime || !activeRuntimeToken) return;
+	const state = activeRuntime.store.getState();
+	if (state.resumeId !== resumeId || state.restoreLocked) return;
+	activeRuntime.store.setState({ restoreLocked: true });
+	return activeRuntimeToken;
+}
+
+export function unlockStylesheetStoreAfterRestore(token: StylesheetRuntimeToken | undefined): boolean {
+	if (!activeRuntime || !token || activeRuntimeToken !== token) return false;
+	activeRuntime.store.setState({ restoreLocked: false });
+	return true;
+}
 
 export function replaceStylesheetStoreAfterRestore(input: {
 	resumeId: string;
@@ -637,7 +653,15 @@ export function replaceStylesheetStoreAfterRestore(input: {
 	resumeData: ResumeData;
 	token: StylesheetRuntimeToken | undefined;
 }): boolean {
-	if (!input.token || activeRuntimeToken !== input.token) return false;
+	if (
+		!activeRuntime ||
+		!input.token ||
+		activeRuntimeToken !== input.token ||
+		activeRuntime.store.getState().resumeId !== input.resumeId ||
+		!activeRuntime.store.getState().restoreLocked
+	) {
+		return false;
+	}
 	initializeStylesheetStore(input);
 	return true;
 }

@@ -325,6 +325,7 @@ export function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShel
 	const colorTokens = useStylesheetStore((state) => state.colorTokens);
 	const metadata = useStylesheetStore((state) => state.editorMetadata);
 	const status = useStylesheetStore((state) => state.status);
+	const restoreLocked = useStylesheetStore((state) => state.restoreLocked);
 	const canUndo = useStylesheetStore((state) => state.canUndo);
 	const canRedo = useStylesheetStore((state) => state.canRedo);
 	const setSourceText = useStylesheetStore((state) => state.setSourceText);
@@ -377,7 +378,7 @@ export function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShel
 			colorTokens={colorTokens}
 			metadata={metadata}
 			theme={theme}
-			readOnly={readOnly}
+			readOnly={readOnly || restoreLocked}
 			label={t`Semantic CSS stylesheet`}
 			onChange={setSourceText}
 			onFocusChange={setFocused}
@@ -390,13 +391,16 @@ export function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShel
 	);
 	const editorChrome = (
 		<div className="space-y-3">
-			{mode === "legacy" && <LegacyStylesheetBanner disabled={hasErrors || isChecking} onActivate={activate} />}
+			{mode === "legacy" && (
+				<LegacyStylesheetBanner disabled={restoreLocked || hasErrors || isChecking} onActivate={activate} />
+			)}
 
 			<StylesheetToolbar
 				source={source}
 				canUndo={canUndo}
 				canRedo={canRedo}
 				focused={focusOpen}
+				disabled={restoreLocked}
 				onUndo={undo}
 				onRedo={redo}
 				onFormat={() => {
