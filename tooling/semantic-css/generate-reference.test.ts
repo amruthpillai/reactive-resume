@@ -1,12 +1,16 @@
+import type { SemanticNode } from "@reactive-resume/resume/stylesheet/types";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, expect, it } from "vitest";
 import { getTemplateSemanticRegistryFingerprintInput } from "@reactive-resume/pdf/semantic-manifest";
-import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
+import { buildSemanticTree } from "@reactive-resume/pdf/semantic-tree";
+import { compileSelector, compileStylesheet, matchesSelector } from "@reactive-resume/resume/stylesheet";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import {
 	buildGeneratedDocumentation,
+	renderSchemaReference,
 	renderTemplateParts,
 	replaceGeneratedBlock,
 	updateGeneratedDocumentation,
@@ -37,6 +41,7 @@ afterEach(async () => {
 
 const readTargets = (paths: typeof defaultDocumentationPaths) =>
 	Promise.all(Object.values(paths).map((path) => readFile(path, "utf8")));
+const flattenTree = (node: SemanticNode): SemanticNode[] => [node, ...node.children.flatMap(flattenTree)];
 
 function extractRrssExamples(source: string): RrssExample[] {
 	const examples: RrssExample[] = [];
@@ -109,21 +114,113 @@ it("builds identical output twice", async () => {
 	expect(await buildGeneratedDocumentation(paths)).toEqual(await buildGeneratedDocumentation(paths));
 });
 
-it("documents every manifest part with its real selector form", () => {
+it("emits selectors that match every runtime alias on manifest-applied semantic trees", () => {
+	const manifests = getTemplateSemanticRegistryFingerprintInput();
+	const table = renderTemplateParts(manifests);
+	const data = structuredClone(defaultResumeData);
+	data.basics = {
+		name: "Ada Lovelace",
+		headline: "Engineer",
+		email: "ada@example.com",
+		phone: "",
+		location: "London",
+		website: { url: "", label: "" },
+		customFields: [],
+	};
+	data.sections.experience.items = [
+		{
+			id: "experience/1",
+			hidden: false,
+			company: "Analytical Engines",
+			position: "Engineer",
+			location: "London",
+			period: "1842",
+			website: { url: "", label: "", inlineLink: false },
+			description: "<p>Built algorithms.</p>",
+			roles: [],
+		},
+	];
+
+	for (const [template, manifest] of Object.entries(manifests)) {
+		const tree = buildSemanticTree({
+			data,
+			template: manifest.template,
+			page: { fullWidth: false, main: ["experience"], sidebar: ["skills"] },
+			pageNumber: 1,
+			showHeader: true,
+		});
+		for (const part of manifest.parts) {
+			const binding = part.binding;
+			if (binding.type === "primitive") continue;
+			const row = table.split("\n").find((line) => line.startsWith(`| \`${template}\` | \`${part.name}\` |`));
+			const selectorSource = row?.split(" | ")[2]?.slice(1, -1);
+			const owner = flattenTree(tree).find(
+				(node) =>
+					node.kind === binding.canonicalKind && node.attributes.part?.split(" ").includes(binding.token) === true,
+			);
+			const compiled = selectorSource ? compileSelector(selectorSource) : { selector: null };
+
+			expect(selectorSource).toBe(`${binding.canonicalKind}[part~="${binding.token}"]`);
+			expect(compiled.selector, `${template}:${part.name}`).not.toBeNull();
+			expect(owner, `${template}:${part.name}`).toBeDefined();
+			expect(
+				compiled.selector && owner ? matchesSelector(compiled.selector, tree, owner.key) : false,
+				`${template}:${part.name}`,
+			).toBe(true);
+		}
+	}
+});
+
+it("includes every template in the matrix even when it has no template-specific parts", () => {
 	const manifests = getTemplateSemanticRegistryFingerprintInput();
 	const table = renderTemplateParts(manifests);
 
 	for (const [template, manifest] of Object.entries(manifests)) {
-		for (const part of manifest.parts) {
-			const selector =
-				part.binding.type === "primitive"
-					? `template-part[name="${part.name}"]`
-					: `${part.binding.canonicalKind}[role~="${part.binding.token}"]`;
-			expect(table).toContain(`| \`${template}\``);
-			expect(table).toContain(`\`${part.name}\``);
-			expect(table).toContain(`\`${selector}\``);
+		expect(table).toContain(`| \`${template}\` |`);
+		if (manifest.parts.length === 0) {
+			expect(table).toContain(`| \`${template}\` | no template-specific parts | — | — | — |`);
 		}
 	}
+});
+
+it("labels union requiredness by variant and emits representative variant shapes", () => {
+	const reference = renderSchemaReference({
+		type: "object",
+		properties: {
+			items: {
+				type: "array",
+				items: {
+					anyOf: [
+						{
+							type: "object",
+							properties: {
+								company: { type: "string" },
+								position: { type: "string" },
+							},
+							required: ["company"],
+						},
+						{
+							type: "object",
+							properties: {
+								school: { type: "string" },
+								degree: { type: "string" },
+							},
+							required: ["school"],
+						},
+					],
+				},
+			},
+		},
+		required: ["items"],
+	});
+
+	expect(reference).toContain("Required fields are local to that variant");
+	expect(reference).toContain("| `items[]` | variant 1 | `{ company }` |");
+	expect(reference).toContain("| `items[]` | variant 2 | `{ school }` |");
+	expect(reference).toContain("| `items[].company` | `string` | yes (variant 1 at items[]) |");
+	expect(reference).toContain("| `items[].position` | `string` | no (variant 1 at items[]) |");
+	expect(reference).toContain("| `items[].school` | `string` | yes (variant 2 at items[]) |");
+	expect(reference).not.toContain("| `items[].school` | `string` | yes |");
 });
 
 it("does not write any output when one source is invalid", async () => {
@@ -136,9 +233,13 @@ it("does not write any output when one source is invalid", async () => {
 });
 
 it("keeps every committed generated document synchronized", async () => {
-	const before = await readTargets(defaultDocumentationPaths);
-	await updateGeneratedDocumentation(defaultDocumentationPaths);
-	expect(await readTargets(defaultDocumentationPaths)).toEqual(before);
+	const [rrssReference, jsonSchemaGuide, skillSchemaReference] = await readTargets(defaultDocumentationPaths);
+
+	expect(await buildGeneratedDocumentation(defaultDocumentationPaths)).toEqual({
+		rrssReference,
+		jsonSchemaGuide,
+		skillSchemaReference,
+	});
 });
 
 it("compiles every marked RRSS example", async () => {

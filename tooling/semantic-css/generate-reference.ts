@@ -23,7 +23,7 @@ export type DocumentationPaths = {
 	skillSchemaReference: string;
 };
 
-type JsonSchema = {
+export type JsonSchema = {
 	type?: string | readonly string[];
 	properties?: Readonly<Record<string, JsonSchema>>;
 	required?: readonly string[];
@@ -119,22 +119,24 @@ function renderOwner(owner: TemplateSemanticManifest["parts"][number]["owner"]) 
 export function renderTemplateParts(manifests: Readonly<Record<string, TemplateSemanticManifest>>): string {
 	const rows = Object.entries(manifests)
 		.flatMap(([template, manifest]) =>
-			manifest.parts.map((part) => {
-				const selector =
-					part.binding.type === "primitive"
-						? `template-part[name="${part.name}"]`
-						: `${part.binding.canonicalKind}[role~="${part.binding.token}"]`;
-				let children = "canonical node";
+			manifest.parts.length === 0
+				? [`| ${code(template)} | no template-specific parts | — | — | — |`]
+				: manifest.parts.map((part) => {
+						const selector =
+							part.binding.type === "primitive"
+								? `template-part[name="${part.name}"]`
+								: `${part.binding.canonicalKind}[part~="${part.binding.token}"]`;
+						let children = "canonical node";
 
-				if (part.binding.type === "primitive") {
-					if (!Object.hasOwn(TEMPLATE_PART_CHILD_KINDS_V1, part.name)) {
-						throw new Error(`Missing template-part child coverage for ${template}:${part.name}.`);
-					}
-					children = list(TEMPLATE_PART_CHILD_KINDS_V1[part.name as keyof typeof TEMPLATE_PART_CHILD_KINDS_V1]);
-				}
+						if (part.binding.type === "primitive") {
+							if (!Object.hasOwn(TEMPLATE_PART_CHILD_KINDS_V1, part.name)) {
+								throw new Error(`Missing template-part child coverage for ${template}:${part.name}.`);
+							}
+							children = list(TEMPLATE_PART_CHILD_KINDS_V1[part.name as keyof typeof TEMPLATE_PART_CHILD_KINDS_V1]);
+						}
 
-				return `| ${code(template)} | ${code(part.name)} | ${code(selector)} | ${renderOwner(part.owner)} | ${children} |`;
-			}),
+						return `| ${code(template)} | ${code(part.name)} | ${code(selector)} | ${renderOwner(part.owner)} | ${children} |`;
+					}),
 		)
 		.sort();
 
@@ -184,26 +186,46 @@ function schemaConstraints(schema: JsonSchema) {
 	return markdown(constraints.join("; ") || "—");
 }
 
-function renderSchemaReference(schema: JsonSchema) {
+type VariantContext = {
+	index: number;
+	path: string;
+};
+
+const variantLabel = ({ index, path }: VariantContext) => `variant ${index} at ${path}`;
+
+export function renderSchemaReference(schema: JsonSchema) {
 	const rows: string[] = [];
 	const seen = new Set<string>();
+	const variantRows: string[] = [];
 
-	const visit = (node: JsonSchema, path: string, required: boolean | null) => {
+	const visit = (
+		node: JsonSchema,
+		path: string,
+		required: boolean | null,
+		variants: readonly VariantContext[] = [],
+	) => {
 		const type = schemaType(node);
-		const key = `${path}\0${type}`;
+		const key = `${path}\0${type}\0${variants.map(variantLabel).join("\0")}`;
 		if (!seen.has(key)) {
 			seen.add(key);
+			const requiredness = required === null ? "—" : required ? "yes" : "no";
+			const variant = variants.map(variantLabel).join("; ");
 			rows.push(
-				`| ${code(path)} | ${code(type)} | ${required === null ? "—" : required ? "yes" : "no"} | ${schemaConstraints(node)} | ${markdown(node.description ?? "—")} |`,
+				`| ${code(path)} | ${code(type)} | ${requiredness}${variant ? ` (${variant})` : ""} | ${schemaConstraints(node)} | ${markdown(node.description ?? "—")} |`,
 			);
 		}
 
 		const requiredProperties = new Set(node.required ?? []);
 		for (const [name, property] of Object.entries(node.properties ?? {})) {
-			visit(property, path ? `${path}.${name}` : name, requiredProperties.has(name));
+			visit(property, path ? `${path}.${name}` : name, requiredProperties.has(name), variants);
 		}
-		if (node.items) visit(node.items, `${path}[]`, null);
-		for (const branch of node.anyOf ?? node.oneOf ?? []) visit(branch, path, required);
+		if (node.items) visit(node.items, `${path}[]`, null, variants);
+		for (const [branchIndex, branch] of (node.anyOf ?? node.oneOf ?? []).entries()) {
+			const variant = { index: branchIndex + 1, path };
+			const shape = branch.type === "object" ? `{ ${(branch.required ?? []).join(", ")} }` : schemaType(branch);
+			variantRows.push(`| ${code(path)} | variant ${variant.index} | ${code(shape)} |`);
+			visit(branch, path, required, [...variants, variant]);
+		}
 	};
 
 	for (const [name, property] of Object.entries(schema.properties ?? {})) {
@@ -220,6 +242,12 @@ function renderSchemaReference(schema: JsonSchema) {
 		"## Required top-level fields",
 		"",
 		"`picture`, `basics`, `summary`, `sections`, `customSections`, and `metadata`",
+		"",
+		"## Union variant shapes",
+		"",
+		"Choose one coherent shape for each union value. Required fields are local to that variant; optional fields remain in the field catalog.",
+		"",
+		table(["Path", "Variant", "Representative required shape"], variantRows),
 		"",
 		"## Field catalog",
 		"",

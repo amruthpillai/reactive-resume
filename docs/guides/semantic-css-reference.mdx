@@ -323,18 +323,20 @@ The generated selector column is canonical. Some manifests bind a name to an exi
 | `azurill` | `timeline-dot` | `template-part[name="timeline-dot"]` | owner: item; placement: main; columns: 1 | — |
 | `azurill` | `timeline-line` | `template-part[name="timeline-line"]` | owner: section-items; placement: main; columns: 1 | — |
 | `azurill` | `timeline-marker` | `template-part[name="timeline-marker"]` | owner: item; placement: main; columns: 1 | `template-part` |
-| `bronzor` | `interleaved-section-row` | `section[role~="interleaved-section-row"]` | owner: section; placement: main | canonical node |
+| `bronzor` | `interleaved-section-row` | `section[part~="interleaved-section-row"]` | owner: section; placement: main | canonical node |
 | `chikorita` | `contact-row-primary` | `template-part[name="contact-row-primary"]` | owner: contact-list | `contact-item` |
 | `chikorita` | `contact-row-secondary` | `template-part[name="contact-row-secondary"]` | owner: contact-list | `contact-item` |
 | `ditgar` | `featured-summary` | `template-part[name="featured-summary"]` | owner: region (featured) | `section` |
-| `ditgar` | `item-header-border` | `item-header[role~="item-header-border"]` | owner: item-header; section types: profiles, experience, education, projects, skills, languages, interests, awards, certifications, publications, volunteer, references | canonical node |
-| `ditgar` | `sidebar-background` | `region[role~="sidebar-background"]` | owner: region (sidebar) | canonical node |
+| `ditgar` | `item-header-border` | `item-header[part~="item-header-border"]` | owner: item-header; section types: profiles, experience, education, projects, skills, languages, interests, awards, certifications, publications, volunteer, references | canonical node |
+| `ditgar` | `sidebar-background` | `region[part~="sidebar-background"]` | owner: region (sidebar) | canonical node |
 | `ditto` | `contact-offset` | `template-part[name="contact-offset"]` | owner: header | — |
 | `ditto` | `header-band` | `template-part[name="header-band"]` | owner: header | `template-part`, `name`, `headline` |
 | `ditto` | `picture-anchor` | `template-part[name="picture-anchor"]` | owner: header | `picture` |
 | `gengar` | `featured-summary` | `template-part[name="featured-summary"]` | owner: region (featured) | `section` |
-| `gengar` | `sidebar-background` | `region[role~="sidebar-background"]` | owner: region (sidebar) | canonical node |
+| `gengar` | `sidebar-background` | `region[part~="sidebar-background"]` | owner: region (sidebar) | canonical node |
 | `glalie` | `sidebar-background` | `template-part[name="sidebar-background"]` | owner: region (sidebar) | — |
+| `kakuna` | no template-specific parts | — | — | — |
+| `lapras` | no template-specific parts | — | — | — |
 | `leafish` | `header-body` | `template-part[name="header-body"]` | owner: header | `picture`, `name`, `headline`, `section` |
 | `leafish` | `header-contact-band` | `template-part[name="header-contact-band"]` | owner: header | `contact-list` |
 | `leafish` | `header-intro` | `template-part[name="header-intro"]` | owner: header | `template-part` |
@@ -342,9 +344,10 @@ The generated selector column is canonical. Some manifests bind a name to an exi
 | `meowth` | `inline-item-header-leading` | `template-part[name="inline-item-header-leading"]` | owner: item-header; section types: experience, education, volunteer | `field`, `combined-text` |
 | `meowth` | `inline-item-header-middle` | `template-part[name="inline-item-header-middle"]` | owner: item-header; section types: experience, education, volunteer | `field`, `link` |
 | `meowth` | `inline-item-header-trailing` | `template-part[name="inline-item-header-trailing"]` | owner: item-header; section types: experience, education, volunteer | `field` |
+| `onyx` | no template-specific parts | — | — | — |
 | `pikachu` | `header-divider` | `template-part[name="header-divider"]` | owner: header | `name`, `headline` |
 | `rhyhorn` | `contact-item-content` | `template-part[name="contact-item-content"]` | owner: contact-item | `link`, `icon`, `field` |
-| `rhyhorn` | `contact-item-last` | `contact-item[role~="contact-item-last"]` | owner: contact-item; last item only | canonical node |
+| `rhyhorn` | `contact-item-last` | `contact-item[part~="contact-item-last"]` | owner: contact-item; last item only | canonical node |
 | `scizor` | `header-name-rule` | `template-part[name="header-name-rule"]` | owner: header | — |
 <!-- RRSS-TEMPLATE-PARTS:END -->
 

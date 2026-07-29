@@ -8,6 +8,27 @@ Canonical schema: https://rxresu.me/schema.json
 
 `picture`, `basics`, `summary`, `sections`, `customSections`, and `metadata`
 
+## Union variant shapes
+
+Choose one coherent shape for each union value. Required fields are local to that variant; optional fields remain in the field catalog.
+
+| Path | Variant | Representative required shape |
+| --- | --- | --- |
+| `customSections[].items[]` | variant 1 | `{ id, hidden, recipient, content }` |
+| `customSections[].items[]` | variant 2 | `{ id, hidden, content }` |
+| `customSections[].items[]` | variant 3 | `{ id, hidden, icon, network, username }` |
+| `customSections[].items[]` | variant 4 | `{ id, hidden, company, position, location, period, description }` |
+| `customSections[].items[]` | variant 5 | `{ id, hidden, school, degree, area, grade, location, period, description }` |
+| `customSections[].items[]` | variant 6 | `{ id, hidden, name, period, description }` |
+| `customSections[].items[]` | variant 7 | `{ id, hidden, icon, name, proficiency }` |
+| `customSections[].items[]` | variant 8 | `{ id, hidden, language, fluency }` |
+| `customSections[].items[]` | variant 9 | `{ id, hidden, icon, name }` |
+| `customSections[].items[]` | variant 10 | `{ id, hidden, title, awarder, date, description }` |
+| `customSections[].items[]` | variant 11 | `{ id, hidden, title, issuer, date, description }` |
+| `customSections[].items[]` | variant 12 | `{ id, hidden, title, publisher, date, description }` |
+| `customSections[].items[]` | variant 13 | `{ id, hidden, organization, location, period, description }` |
+| `customSections[].items[]` | variant 14 | `{ id, hidden, name, position, phone, description }` |
+
 ## Field catalog
 
 | Path | Type | Required | Constraints and default | Description |
@@ -287,48 +308,147 @@ Canonical schema: https://rxresu.me/schema.json
 | `customSections[].type` | `string` | yes | enum: ["summary","profiles","experience","education","projects","skills","languages","interests","awards","certifications","publications","volunteer","references","cover-letter"] | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes | — | The items to display in the custom section. Items follow the schema of the section type. |
 | `customSections[].items[]` | `object or object or object or object or object or object or object or object or object or object or object or object or object or object` | — | — | — |
-| `customSections[].items[]` | `object` | — | — | — |
-| `customSections[].items[].id` | `string` | yes | — | The unique identifier for the item. Usually generated as a UUID. |
-| `customSections[].items[].hidden` | `boolean` | yes | — | Whether to hide the item from the resume. |
-| `customSections[].items[].recipient` | `string` | yes | — | The recipient's address block as HTML (name, title, company, address, email). |
-| `customSections[].items[].content` | `string` | yes | — | The cover letter body as HTML (salutation, paragraphs, closing, signature). |
-| `customSections[].items[].icon` | `string` | yes | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
-| `customSections[].items[].iconColor` | `string` | no | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
-| `customSections[].items[].network` | `string` | yes | minLength: 1 | The name of the network or platform. |
-| `customSections[].items[].username` | `string` | yes | — | The username of the author on the network or platform. |
-| `customSections[].items[].website` | `object` | no | default: {"url":"","label":"","inlineLink":false} | The link to the profile of the author on the network or platform, if any. |
-| `customSections[].items[].website.url` | `string` | yes | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
-| `customSections[].items[].website.label` | `string` | yes | — | The label to display for the URL. Leave blank to display the URL as-is. |
-| `customSections[].items[].website.inlineLink` | `boolean` | no | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
-| `customSections[].items[].company` | `string` | yes | minLength: 1 | The name of the company or organization. |
-| `customSections[].items[].position` | `string` | yes | — | The position held at the company or organization. Used when there is only a single role. If multiple roles are provided in the 'roles' field, this serves as a summary title or can be left blank. |
-| `customSections[].items[].location` | `string` | yes | — | The location of the company or organization. |
-| `customSections[].items[].period` | `string` | yes | — | The overall period of time at the company. When multiple roles are used, this should reflect the total tenure. |
-| `customSections[].items[].description` | `string` | yes | — | The description of the experience. This should be a HTML-formatted string. |
-| `customSections[].items[].roles` | `array` | no | default: [] | List of individual roles held at this company to show career progression. |
-| `customSections[].items[].roles[]` | `object` | — | — | — |
-| `customSections[].items[].roles[].id` | `string` | yes | — | The unique identifier for the role. Usually generated as a UUID. |
-| `customSections[].items[].roles[].position` | `string` | yes | — | The position or job title for this role. |
-| `customSections[].items[].roles[].period` | `string` | yes | — | The period of time this role was held. |
-| `customSections[].items[].roles[].description` | `string` | yes | — | The description of this specific role. This should be a HTML-formatted string. |
-| `customSections[].items[].school` | `string` | yes | minLength: 1 | The name of the school or institution. |
-| `customSections[].items[].degree` | `string` | yes | — | The degree or qualification obtained. |
-| `customSections[].items[].area` | `string` | yes | — | The area of study or specialization. |
-| `customSections[].items[].grade` | `string` | yes | — | The grade or score achieved. |
-| `customSections[].items[].name` | `string` | yes | minLength: 1 | The name of the project. |
-| `customSections[].items[].proficiency` | `string` | yes | — | The proficiency level of the skill. Can be any text, such as 'Beginner', 'Intermediate', 'Advanced', etc. |
-| `customSections[].items[].level` | `number` | no | minimum: 0; maximum: 5; default: 0 | The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
-| `customSections[].items[].keywords` | `array` | no | default: [] | The keywords associated with the skill, if any. These are displayed as tags below the name. |
-| `customSections[].items[].keywords[]` | `string` | — | — | — |
-| `customSections[].items[].language` | `string` | yes | minLength: 1 | The name of the language the author knows. |
-| `customSections[].items[].fluency` | `string` | yes | — | The fluency level of the language. Can be any text, such as 'Native', 'Fluent', 'Conversational', etc. or can also be a CEFR level (A1, A2, B1, B2, C1, C2). |
-| `customSections[].items[].title` | `string` | yes | minLength: 1 | The title of the award. |
-| `customSections[].items[].awarder` | `string` | yes | — | The awarder of the award. |
-| `customSections[].items[].date` | `string` | yes | — | The date when the award was received. |
-| `customSections[].items[].issuer` | `string` | yes | — | The issuer of the certification. |
-| `customSections[].items[].publisher` | `string` | yes | — | The publisher of the publication. |
-| `customSections[].items[].organization` | `string` | yes | minLength: 1 | The name of the organization or company. |
-| `customSections[].items[].phone` | `string` | yes | — | The phone number of the reference. |
+| `customSections[].items[]` | `object` | — (variant 1 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 1 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 1 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].recipient` | `string` | yes (variant 1 at customSections[].items[]) | — | The recipient's address block as HTML (name, title, company, address, email). |
+| `customSections[].items[].content` | `string` | yes (variant 1 at customSections[].items[]) | — | The cover letter body as HTML (salutation, paragraphs, closing, signature). |
+| `customSections[].items[]` | `object` | — (variant 2 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 2 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 2 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].content` | `string` | yes (variant 2 at customSections[].items[]) | — | The rich text content of the summary item. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 3 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 3 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 3 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].icon` | `string` | yes (variant 3 at customSections[].items[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
+| `customSections[].items[].iconColor` | `string` | no (variant 3 at customSections[].items[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
+| `customSections[].items[].network` | `string` | yes (variant 3 at customSections[].items[]) | minLength: 1 | The name of the network or platform. |
+| `customSections[].items[].username` | `string` | yes (variant 3 at customSections[].items[]) | — | The username of the author on the network or platform. |
+| `customSections[].items[].website` | `object` | no (variant 3 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the profile of the author on the network or platform, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 3 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 3 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 3 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[]` | `object` | — (variant 4 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 4 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 4 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].company` | `string` | yes (variant 4 at customSections[].items[]) | minLength: 1 | The name of the company or organization. |
+| `customSections[].items[].position` | `string` | yes (variant 4 at customSections[].items[]) | — | The position held at the company or organization. Used when there is only a single role. If multiple roles are provided in the 'roles' field, this serves as a summary title or can be left blank. |
+| `customSections[].items[].location` | `string` | yes (variant 4 at customSections[].items[]) | — | The location of the company or organization. |
+| `customSections[].items[].period` | `string` | yes (variant 4 at customSections[].items[]) | — | The overall period of time at the company. When multiple roles are used, this should reflect the total tenure. |
+| `customSections[].items[].website` | `object` | no (variant 4 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the company or organization, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 4 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 4 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 4 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 4 at customSections[].items[]) | — | The description of the experience. This should be a HTML-formatted string. |
+| `customSections[].items[].roles` | `array` | no (variant 4 at customSections[].items[]) | default: [] | List of individual roles held at this company to show career progression. |
+| `customSections[].items[].roles[]` | `object` | — (variant 4 at customSections[].items[]) | — | — |
+| `customSections[].items[].roles[].id` | `string` | yes (variant 4 at customSections[].items[]) | — | The unique identifier for the role. Usually generated as a UUID. |
+| `customSections[].items[].roles[].position` | `string` | yes (variant 4 at customSections[].items[]) | — | The position or job title for this role. |
+| `customSections[].items[].roles[].period` | `string` | yes (variant 4 at customSections[].items[]) | — | The period of time this role was held. |
+| `customSections[].items[].roles[].description` | `string` | yes (variant 4 at customSections[].items[]) | — | The description of this specific role. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 5 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 5 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 5 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].school` | `string` | yes (variant 5 at customSections[].items[]) | minLength: 1 | The name of the school or institution. |
+| `customSections[].items[].degree` | `string` | yes (variant 5 at customSections[].items[]) | — | The degree or qualification obtained. |
+| `customSections[].items[].area` | `string` | yes (variant 5 at customSections[].items[]) | — | The area of study or specialization. |
+| `customSections[].items[].grade` | `string` | yes (variant 5 at customSections[].items[]) | — | The grade or score achieved. |
+| `customSections[].items[].location` | `string` | yes (variant 5 at customSections[].items[]) | — | The location of the school or institution. |
+| `customSections[].items[].period` | `string` | yes (variant 5 at customSections[].items[]) | — | The period of time the education was obtained over. |
+| `customSections[].items[].website` | `object` | no (variant 5 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the school or institution, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 5 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 5 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 5 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 5 at customSections[].items[]) | — | The description of the education. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 6 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 6 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 6 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].name` | `string` | yes (variant 6 at customSections[].items[]) | minLength: 1 | The name of the project. |
+| `customSections[].items[].period` | `string` | yes (variant 6 at customSections[].items[]) | — | The period of time the project was worked on. |
+| `customSections[].items[].website` | `object` | no (variant 6 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the project, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 6 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 6 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 6 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 6 at customSections[].items[]) | — | The description of the project. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 7 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 7 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 7 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].icon` | `string` | yes (variant 7 at customSections[].items[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
+| `customSections[].items[].iconColor` | `string` | no (variant 7 at customSections[].items[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
+| `customSections[].items[].name` | `string` | yes (variant 7 at customSections[].items[]) | minLength: 1 | The name of the skill. |
+| `customSections[].items[].proficiency` | `string` | yes (variant 7 at customSections[].items[]) | — | The proficiency level of the skill. Can be any text, such as 'Beginner', 'Intermediate', 'Advanced', etc. |
+| `customSections[].items[].level` | `number` | no (variant 7 at customSections[].items[]) | minimum: 0; maximum: 5; default: 0 | The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
+| `customSections[].items[].keywords` | `array` | no (variant 7 at customSections[].items[]) | default: [] | The keywords associated with the skill, if any. These are displayed as tags below the name. |
+| `customSections[].items[].keywords[]` | `string` | — (variant 7 at customSections[].items[]) | — | — |
+| `customSections[].items[]` | `object` | — (variant 8 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 8 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 8 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].language` | `string` | yes (variant 8 at customSections[].items[]) | minLength: 1 | The name of the language the author knows. |
+| `customSections[].items[].fluency` | `string` | yes (variant 8 at customSections[].items[]) | — | The fluency level of the language. Can be any text, such as 'Native', 'Fluent', 'Conversational', etc. or can also be a CEFR level (A1, A2, B1, B2, C1, C2). |
+| `customSections[].items[].level` | `number` | no (variant 8 at customSections[].items[]) | minimum: 0; maximum: 5; default: 0 | The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
+| `customSections[].items[]` | `object` | — (variant 9 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 9 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 9 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].icon` | `string` | yes (variant 9 at customSections[].items[]) | — | The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available. |
+| `customSections[].items[].iconColor` | `string` | no (variant 9 at customSections[].items[]) | default: "" | Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color. |
+| `customSections[].items[].name` | `string` | yes (variant 9 at customSections[].items[]) | minLength: 1 | The name of the interest/hobby. |
+| `customSections[].items[].keywords` | `array` | no (variant 9 at customSections[].items[]) | default: [] | The keywords associated with the interest/hobby, if any. These are displayed as tags below the name. |
+| `customSections[].items[].keywords[]` | `string` | — (variant 9 at customSections[].items[]) | — | — |
+| `customSections[].items[]` | `object` | — (variant 10 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 10 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 10 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].title` | `string` | yes (variant 10 at customSections[].items[]) | minLength: 1 | The title of the award. |
+| `customSections[].items[].awarder` | `string` | yes (variant 10 at customSections[].items[]) | — | The awarder of the award. |
+| `customSections[].items[].date` | `string` | yes (variant 10 at customSections[].items[]) | — | The date when the award was received. |
+| `customSections[].items[].website` | `object` | no (variant 10 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the award, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 10 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 10 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 10 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 10 at customSections[].items[]) | — | The description of the award. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 11 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 11 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 11 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].title` | `string` | yes (variant 11 at customSections[].items[]) | minLength: 1 | The title of the certification. |
+| `customSections[].items[].issuer` | `string` | yes (variant 11 at customSections[].items[]) | — | The issuer of the certification. |
+| `customSections[].items[].date` | `string` | yes (variant 11 at customSections[].items[]) | — | The date when the certification was received. |
+| `customSections[].items[].website` | `object` | no (variant 11 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website of the certification, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 11 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 11 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 11 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 11 at customSections[].items[]) | — | The description of the certification. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 12 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 12 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 12 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].title` | `string` | yes (variant 12 at customSections[].items[]) | minLength: 1 | The title of the publication. |
+| `customSections[].items[].publisher` | `string` | yes (variant 12 at customSections[].items[]) | — | The publisher of the publication. |
+| `customSections[].items[].date` | `string` | yes (variant 12 at customSections[].items[]) | — | The date when the publication was published. |
+| `customSections[].items[].website` | `object` | no (variant 12 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the publication, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 12 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 12 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 12 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 12 at customSections[].items[]) | — | The description of the publication. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 13 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 13 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 13 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].organization` | `string` | yes (variant 13 at customSections[].items[]) | minLength: 1 | The name of the organization or company. |
+| `customSections[].items[].location` | `string` | yes (variant 13 at customSections[].items[]) | — | The location of the organization or company. |
+| `customSections[].items[].period` | `string` | yes (variant 13 at customSections[].items[]) | — | The period of time the author was volunteered at the organization or company. |
+| `customSections[].items[].website` | `object` | no (variant 13 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The link to the organization or company, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 13 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 13 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 13 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].description` | `string` | yes (variant 13 at customSections[].items[]) | — | The description of the volunteer experience. This should be a HTML-formatted string. |
+| `customSections[].items[]` | `object` | — (variant 14 at customSections[].items[]) | — | — |
+| `customSections[].items[].id` | `string` | yes (variant 14 at customSections[].items[]) | — | The unique identifier for the item. Usually generated as a UUID. |
+| `customSections[].items[].hidden` | `boolean` | yes (variant 14 at customSections[].items[]) | — | Whether to hide the item from the resume. |
+| `customSections[].items[].name` | `string` | yes (variant 14 at customSections[].items[]) | minLength: 1 | The name of the reference, or a note such as 'Available upon request'. |
+| `customSections[].items[].position` | `string` | yes (variant 14 at customSections[].items[]) | — | The position or job title of the reference. |
+| `customSections[].items[].website` | `object` | no (variant 14 at customSections[].items[]) | default: {"url":"","label":"","inlineLink":false} | The website or LinkedIn profile of the reference, if any. |
+| `customSections[].items[].website.url` | `string` | yes (variant 14 at customSections[].items[]) | — | The URL to show as a link. Must be a valid URL with a protocol (http:// or https://). |
+| `customSections[].items[].website.label` | `string` | yes (variant 14 at customSections[].items[]) | — | The label to display for the URL. Leave blank to display the URL as-is. |
+| `customSections[].items[].website.inlineLink` | `boolean` | no (variant 14 at customSections[].items[]) | default: false | If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom. |
+| `customSections[].items[].phone` | `string` | yes (variant 14 at customSections[].items[]) | — | The phone number of the reference. |
+| `customSections[].items[].description` | `string` | yes (variant 14 at customSections[].items[]) | — | The description of the reference. Can be used to display a quote, a testimonial, etc. This should be a HTML-formatted string. |
 | `metadata` | `object` | yes | — | Metadata for the resume, such as template, layout, typography, etc. This section describes the overall design and appearance of the resume. |
 | `metadata.template` | `string` | no | enum: ["azurill","bronzor","chikorita","ditgar","ditto","gengar","glalie","kakuna","lapras","leafish","meowth","onyx","pikachu","rhyhorn","scizor"]; default: "onyx" | The template to use for the resume. Determines the overall design and appearance of the resume. |
 | `metadata.layout` | `object` | yes | — | The layout of the resume. Determines the structure and arrangement of the sections on the resume. |
