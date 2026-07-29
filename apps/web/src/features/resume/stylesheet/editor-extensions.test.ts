@@ -53,6 +53,7 @@ const metadata = {
 	semanticTree,
 	templateParts: ["timeline-line", "timeline-marker"],
 } as const;
+const borderShorthands = ["border", "border-top", "border-right", "border-bottom", "border-left"] as const;
 
 const views: EditorView[] = [];
 
@@ -104,6 +105,14 @@ describe("RRSS editor extensions", () => {
 		expect(borderStyleLabels).not.toContain("double");
 		expect(fontSizeLabels).toEqual(expect.arrayContaining(["pt", "rem"]));
 		expect(fontSizeLabels).not.toEqual(expect.arrayContaining(["none", "normal", "max-content"]));
+	});
+
+	it.each(borderShorthands)("offers complete %s shorthand values instead of bare units", (property) => {
+		const source = `section { ${property}: `;
+		const labels = getRrssCompletionLabels(source, source.length, metadata);
+
+		expect(labels).toEqual(expect.arrayContaining(["1pt dotted", "1pt dashed", "1pt solid"]));
+		expect(labels).not.toEqual(expect.arrayContaining(["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"]));
 	});
 
 	it("escapes dynamic IDs and attribute values before inserting selectors", () => {

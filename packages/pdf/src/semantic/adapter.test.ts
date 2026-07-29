@@ -13,6 +13,16 @@ import { adaptResolvedPdfNode, resolvedPdfFlowProps, resolvedPdfTextProps } from
 
 const pictureFixture =
 	"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+const borderShorthands = ["border", "border-top", "border-right", "border-bottom", "border-left"] as const;
+const borderShorthandHints = [
+	"inherit",
+	"initial",
+	"revert",
+	"unset",
+	"1pt dotted",
+	"1pt dashed",
+	"1pt solid",
+] as const;
 const blankStyle: ResolvedNodeStyle = { style: {}, structural: {}, hidden: false, order: 0 };
 const baseSettings: BaseSettingsSnapshot = {
 	picture: defaultResumeData.picture,
@@ -87,6 +97,12 @@ const definitionIsText = (property: string) =>
 
 describe("adaptResolvedPdfNode", () => {
 	it("renders every published fixed value hint through cascade and the React PDF adapter", async () => {
+		for (const property of borderShorthands) {
+			expect(fixedValueHints.filter((hint) => hint.property === property).map(({ value }) => value)).toEqual(
+				borderShorthandHints,
+			);
+		}
+
 		for (const { property, kind, value } of fixedValueHints) {
 			await renderFixedValueHint(property, kind, value);
 		}

@@ -171,15 +171,15 @@ const propertyValueHints = {
 function propertyValues(name: string): readonly string[] {
 	const values = borderStyleProperties.test(name)
 		? RRSS_BORDER_STYLE_VALUES_V1
-		: (propertyValueHints[name as keyof typeof propertyValueHints] ?? []);
+		: borderShorthandProperties.test(name)
+			? RRSS_BORDER_STYLE_VALUES_V1.map((style) => `1pt ${style}`)
+			: (propertyValueHints[name as keyof typeof propertyValueHints] ?? []);
 	return [...RRSS_CSS_WIDE_KEYWORDS_V1, ...values];
 }
 
 function propertyUnits(name: string): readonly string[] {
 	if (name === "size" || name === "-rr-min-presence-ahead") return numericLengthUnits;
-	return lengthProperties.has(name) || name === "line-height" || borderShorthandProperties.test(name)
-		? RRSS_LENGTH_UNITS_V1
-		: [];
+	return lengthProperties.has(name) || name === "line-height" ? RRSS_LENGTH_UNITS_V1 : [];
 }
 
 function entries(

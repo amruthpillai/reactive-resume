@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { PROPERTY_REGISTRY_V1 } from "./properties";
 
+const borderShorthands = ["border", "border-top", "border-right", "border-bottom", "border-left"] as const;
+const borderShorthandHints = [
+	"inherit",
+	"initial",
+	"revert",
+	"unset",
+	"1pt dotted",
+	"1pt dashed",
+	"1pt solid",
+] as const;
+
 const expectedProperties = [
 	"align-content",
 	"align-items",
@@ -368,6 +379,10 @@ describe("property registry", () => {
 		]);
 		expect(PROPERTY_REGISTRY_V1["font-size"]?.values).toEqual(["inherit", "initial", "revert", "unset"]);
 		expect(PROPERTY_REGISTRY_V1.gap?.values).toEqual(["inherit", "initial", "revert", "unset"]);
-		expect(PROPERTY_REGISTRY_V1.border?.values).toEqual(["inherit", "initial", "revert", "unset"]);
+	});
+
+	it.each(borderShorthands)("publishes only complete value hints for the %s shorthand", (property) => {
+		expect(PROPERTY_REGISTRY_V1[property]?.units).toEqual([]);
+		expect(PROPERTY_REGISTRY_V1[property]?.values).toEqual(borderShorthandHints);
 	});
 });

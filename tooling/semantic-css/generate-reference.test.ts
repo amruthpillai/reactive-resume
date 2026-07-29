@@ -307,6 +307,13 @@ it("generates renderer-safe property-specific value hints", async () => {
 
 	expect(row("border-style")).toContain("`dotted`, `dashed`, `solid`");
 	expect(row("border-style")).not.toMatch(/`(?:double|groove|hidden|inset|outset|ridge)`/);
+	for (const property of ["border", "border-top", "border-right", "border-bottom", "border-left"]) {
+		const cells = row(property)
+			.split("|")
+			.map((cell) => cell.trim());
+		expect(cells[5], `${property} units`).toBe("—");
+		expect(cells[6], `${property} hints`).toContain("`1pt dotted`, `1pt dashed`, `1pt solid`");
+	}
 	expect(row("font-size")).not.toMatch(/`(?:none|normal|max-content|min-content|fit-content|thin|medium|thick)`/);
 	expect(row("gap")).not.toMatch(/`(?:none|normal|max-content|min-content|fit-content|thin|medium|thick)`/);
 });
