@@ -1,7 +1,8 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { renderPreflightPdf } from "./preflight-core";
+
+let renderPreflightPdf: typeof import("./preflight-core").renderPreflightPdf;
 
 const rendererMock = vi.hoisted(() => ({
 	pdf: vi.fn(() => ({
@@ -13,6 +14,16 @@ vi.mock("#react-pdf-renderer", async (importOriginal) => ({
 	...(await importOriginal<typeof import("@react-pdf/renderer")>()),
 	pdf: rendererMock.pdf,
 }));
+
+beforeAll(async () => {
+	vi.resetModules();
+	({ renderPreflightPdf } = await import("./preflight-core"));
+});
+
+afterAll(() => {
+	vi.doUnmock("#react-pdf-renderer");
+	vi.resetModules();
+});
 
 const validStylesheet = {
 	languageVersion: 1,
