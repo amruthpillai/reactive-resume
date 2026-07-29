@@ -218,10 +218,7 @@ const buildField = ({
 		key,
 		kind: "field",
 		attributes: { name },
-		roles: [
-			...getFieldRoles(type, name, structuredLink),
-			...(type === "experience-role" ? ["experience-role", "nested-role"] : []),
-		],
+		roles: getFieldRoles(type, name, structuredLink),
 		children,
 	});
 };
@@ -849,6 +846,68 @@ const applyTemplateManifest = (
 	};
 };
 
+const wrapCombinedFields = (
+	parentKey: string,
+	children: readonly SemanticNode[],
+	fieldNames: readonly string[],
+	name: Parameters<typeof semanticNodeKeys.combinedText>[1],
+	owner?: "parent",
+): readonly SemanticNode[] => {
+	const selected = children.filter(
+		(child) => child.kind === "field" && fieldNames.includes(child.attributes.name ?? ""),
+	);
+	if (selected.length === 0) return children;
+
+	const selectedKeys = new Set(selected.map(({ key }) => key));
+	const firstIndex = children.findIndex(({ key }) => selectedKeys.has(key));
+	const combinedText = semanticNode({
+		key: semanticNodeKeys.combinedText(parentKey, name),
+		kind: "combined-text",
+		attributes: { name, ...(owner ? { owner } : {}) },
+		children: selected,
+	});
+
+	return children.flatMap((child, index) => {
+		if (index === firstIndex) return [combinedText];
+		return selectedKeys.has(child.key) ? [] : [child];
+	});
+};
+
+const addCombinedTextHosts = (
+	node: SemanticNode,
+	template: Template,
+	sectionType?: CustomSectionType,
+): SemanticNode => {
+	const currentSectionType = node.kind === "section" ? (node.attributes.type as CustomSectionType) : sectionType;
+	let children = node.children.map((child) => addCombinedTextHosts(child, template, currentSectionType));
+
+	if (node.kind === "template-part" && node.attributes.name === "inline-item-header-leading") {
+		if (currentSectionType === "experience") {
+			children = [...wrapCombinedFields(node.key, children, ["position", "location"], "experience-position-location")];
+		}
+		if (currentSectionType === "education") {
+			children = [...wrapCombinedFields(node.key, children, ["area", "degree"], "education-area-degree")];
+		}
+	}
+
+	if (node.kind === "template-part" && node.attributes.name === "education-grade-row") {
+		children = [...wrapCombinedFields(node.key, children, ["grade", "location"], "education-grade-location", "parent")];
+	}
+
+	if (node.kind === "item-header" && template !== "meowth") {
+		if (currentSectionType === "experience") {
+			children = [...wrapCombinedFields(node.key, children, ["location"], "experience-location")];
+			children = [...wrapCombinedFields(node.key, children, ["period"], "experience-period")];
+		}
+		if (currentSectionType === "education") {
+			children = [...wrapCombinedFields(node.key, children, ["degree", "grade"], "education-degree-grade")];
+			children = [...wrapCombinedFields(node.key, children, ["location", "period"], "education-location-period")];
+		}
+	}
+
+	return { ...node, children };
+};
+
 export function buildSemanticTree({
 	data,
 	template,
@@ -928,7 +987,7 @@ export function buildSemanticTree({
 		],
 	});
 
-	return applyTemplateManifest(tree, manifest, data);
+	return addCombinedTextHosts(applyTemplateManifest(tree, manifest, data), template);
 }
 
 export type { TemplateSemanticManifest } from "./template-manifest";

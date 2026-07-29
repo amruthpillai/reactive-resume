@@ -20,6 +20,7 @@ import type {
 } from "@reactive-resume/schema/resume/data";
 import type { IconName } from "phosphor-icons-react-pdf/dynamic";
 import type { ReactElement, ReactNode } from "react";
+import type { CombinedTextName } from "../../semantic/node-keys";
 import type { StyleInput, TemplatePlacement } from "./styles";
 import type { CustomItemSection, ItemSection } from "./types";
 import { Children, cloneElement, createContext, Fragment, isValidElement, use } from "react";
@@ -164,10 +165,10 @@ type SemanticTextRun = {
 type SemanticTextRunsProps = {
 	runs: readonly SemanticTextRun[];
 	separator: string;
+	host: CombinedTextName;
 	style?: StyleInput;
 	nodeKey?: string | undefined;
 	fieldOwnerNodeKey?: string | undefined;
-	orderParentNodeKey?: string | undefined;
 };
 
 const SectionItemsContext = createContext<SectionItemsContextValue>({ itemStyle: undefined, useTimeline: false });
@@ -214,16 +215,25 @@ const useSectionItemsContext = () => use(SectionItemsContext);
 export const SemanticTextRuns = ({
 	runs,
 	separator,
+	host,
 	style,
 	nodeKey,
 	fieldOwnerNodeKey,
-	orderParentNodeKey,
 }: SemanticTextRunsProps) => {
 	const contextualNodeKey = useSemanticNodeKey();
 	const fieldParentNodeKey = fieldOwnerNodeKey ?? contextualNodeKey;
-	const resolved = useResolvedNode(nodeKey);
-	const visible = useSemanticNodeVisible(nodeKey);
-	const renderedChildKeys = useRenderedChildKeys(orderParentNodeKey);
+	const combinedTextOwnerNodeKey =
+		host === "experience-position-location" || host === "education-area-degree"
+			? semanticTemplatePartNodeKey(fieldParentNodeKey, "inline-item-header-leading")
+			: (nodeKey ?? fieldParentNodeKey);
+	const combinedTextNodeKey = combinedTextOwnerNodeKey
+		? semanticNodeKeys.combinedText(combinedTextOwnerNodeKey, host)
+		: undefined;
+	const ownerResolved = useResolvedNode(nodeKey);
+	const combinedTextResolved = useResolvedNode(combinedTextNodeKey);
+	const ownerVisible = useSemanticNodeVisible(nodeKey);
+	const combinedTextVisible = useSemanticNodeVisible(combinedTextNodeKey);
+	const renderedChildKeys = useRenderedChildKeys(combinedTextNodeKey);
 	const { isNodeVisible } = useSemanticNodeBindings();
 	const entries = runs.flatMap((run) => {
 		if (!hasSplitRowText(run.value)) return [];
@@ -231,10 +241,15 @@ export const SemanticTextRuns = ({
 		return isNodeVisible(fieldNodeKey) ? [{ nodeKey: fieldNodeKey, value: run }] : [];
 	});
 	const visibleRuns = projectRenderedChildren(renderedChildKeys, entries);
-	if (!visible || visibleRuns.length === 0) return null;
+	if (!ownerVisible || !combinedTextVisible || visibleRuns.length === 0) return null;
 	return (
 		<SemanticNodeKeyProvider nodeKey={fieldParentNodeKey}>
-			<Text bindSemanticNode={false} {...resolvedPdfTextProps(resolved)} style={composeStyles(style, resolved.style)}>
+			<Text
+				bindSemanticNode={false}
+				{...resolvedPdfTextProps(ownerResolved)}
+				{...resolvedPdfTextProps(combinedTextResolved)}
+				style={composeStyles(style, ownerResolved.style, combinedTextResolved.style)}
+			>
 				{visibleRuns.map(({ field, value, prefix = "", suffix = "" }, index) => (
 					<Fragment key={field}>
 						{index === 0 ? "" : separator}
@@ -830,6 +845,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 							leading={
 								hasPosition || hasLocation ? (
 									<SemanticTextRuns
+										host="experience-position-location"
 										separator=" "
 										runs={[
 											{ field: "position", value: item.position },
@@ -859,6 +875,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 								</ItemTitle>
 								{hasSplitRowText(headerLocation) && (
 									<SemanticTextRuns
+										host={headerLocationField === "location" ? "experience-location" : "experience-period"}
 										separator=""
 										runs={[{ field: headerLocationField, value: headerLocation }]}
 										style={composeStyles(alignEndStyle)}
@@ -871,6 +888,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 									{hasPosition && <Text semanticField="position">{item.position}</Text>}
 									{hasSplitRowText(headerPeriod) && (
 										<SemanticTextRuns
+											host="experience-period"
 											separator=""
 											runs={[{ field: "period", value: headerPeriod }]}
 											style={composeStyles(alignEndStyle)}
@@ -926,9 +944,9 @@ const EducationItemContent = ({ item, header }: EducationItemContentProps) => {
 						value: (
 							<Fragment key={gradeRowNodeKey}>
 								<SemanticTextRuns
+									host="education-grade-location"
 									nodeKey={gradeRowNodeKey}
 									fieldOwnerNodeKey={headerNodeKey}
-									orderParentNodeKey={gradeRowNodeKey}
 									separator=" • "
 									runs={[
 										{ field: "grade", value: item.grade },
@@ -993,6 +1011,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 							leading={
 								hasArea || hasDegree ? (
 									<SemanticTextRuns
+										host="education-area-degree"
 										separator=" "
 										runs={[
 											{ field: "area", value: item.area },
@@ -1022,6 +1041,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 								</ItemTitle>
 								{(hasDegreeOrGrade || hasLocationOrPeriod) && (
 									<SemanticTextRuns
+										host={hasDegreeOrGrade ? "education-degree-grade" : "education-location-period"}
 										separator=" • "
 										runs={
 											hasDegreeOrGrade
@@ -1044,6 +1064,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 									{hasArea && <Text semanticField="area">{item.area}</Text>}
 									{hasDegreeOrGrade && hasLocationOrPeriod && (
 										<SemanticTextRuns
+											host="education-location-period"
 											separator=" • "
 											runs={[
 												{ field: "location", value: item.location },

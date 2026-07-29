@@ -810,7 +810,7 @@ describe("template semantic manifests", () => {
 				"contact-item-content:link",
 				"contact-row-primary:contact-item",
 				"contact-row-secondary:contact-item",
-				"education-grade-row:field",
+				"education-grade-row:combined-text",
 				"featured-summary:section",
 				"header-band:headline",
 				"header-band:name",
@@ -823,6 +823,7 @@ describe("template semantic manifests", () => {
 				"header-divider:headline",
 				"header-divider:name",
 				"header-intro:template-part",
+				"inline-item-header-leading:combined-text",
 				"inline-item-header-leading:field",
 				"inline-item-header-middle:field",
 				"inline-item-header-middle:link",
@@ -1254,7 +1255,11 @@ describe("template semantic manifests", () => {
 		const itemFor = (itemId: string) => findNodes(tree, (node) => node.kind === "item" && node.id === itemId)[0];
 		const itemHeader = (itemId: string) => itemFor(itemId)?.children.find((node) => node.kind === "item-header");
 		const partFields = (header: SemanticNode | undefined, name: string) =>
-			(header && findPart(header, name)?.children.map((node) => node.attributes.name)) ?? [];
+			(header &&
+				findPart(header, name)?.children.flatMap((node) =>
+					node.kind === "combined-text" ? node.children.map((child) => child.attributes.name) : [node.attributes.name],
+				)) ??
+			[];
 		const experience = itemHeader("experience/routing");
 		const education = itemHeader("education/routing");
 		const volunteer = itemHeader("volunteer/routing");
@@ -1270,7 +1275,9 @@ describe("template semantic manifests", () => {
 		const educationItem = itemFor("education/routing");
 		const gradeRow = educationItem && findPart(educationItem, "education-grade-row");
 		expect(educationItem && childLabels(educationItem).slice(0, 2)).toEqual(["item-header", "education-grade-row"]);
-		expect(gradeRow?.children.map((node) => node.attributes.name)).toEqual(["grade", "location"]);
+		expect(gradeRow?.children).toHaveLength(1);
+		expect(gradeRow?.children[0]?.kind).toBe("combined-text");
+		expect(gradeRow?.children[0]?.children.map((node) => node.attributes.name)).toEqual(["grade", "location"]);
 	});
 
 	it.each(["bronzor", "scizor"] as const)(

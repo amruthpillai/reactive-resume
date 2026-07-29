@@ -12,6 +12,7 @@ const fixtureNames = [
 	"array-order-tie",
 	"award-unbold",
 	"clamped-spacing",
+	"combined-text-host",
 	"custom-section-type",
 	"disabled-rules",
 	"icon-level-size",
@@ -81,6 +82,20 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			],
 		},
 	];
+	data.sections.education.items = [
+		{
+			id: "education-1",
+			hidden: false,
+			school: "University of London",
+			degree: "BSc",
+			area: "Mathematics",
+			grade: "First",
+			location: "London",
+			period: "1835",
+			website: { url: "", label: "", inlineLink: false },
+			description: "<p>Studied analytical engines.</p>",
+		},
+	];
 	data.sections.skills.items = [
 		{
 			id: "skill-1",
@@ -132,7 +147,7 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 	data.metadata.layout.pages = [
 		{
 			fullWidth: true,
-			main: ["summary", "experience", "skills", "awards", "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"],
+			main: ["summary", "experience", "education", "skills", "awards", "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"],
 			sidebar: [],
 		},
 	];
@@ -199,6 +214,21 @@ describe("compareLegacySemanticPresentation", () => {
 		expect(comparison.mismatches).toEqual([]);
 	});
 
+	it.each(["onyx", "meowth"] as const)(
+		"matches combined separator and box-style primitives on %s",
+		async (template) => {
+			const data = buildFixture(readRules("combined-text-host"));
+			const conversion = convertLegacyStyleRules(data);
+			const comparison = await compareLegacySemanticPresentation({
+				data,
+				convertedSource: conversion.source,
+				templates: [template],
+			});
+
+			expect(comparison.mismatches).toEqual([]);
+		},
+	);
+
 	it.each([
 		["text", { type: "TEXT", value: "legacy" }, { type: "TEXT", value: "semantic" }],
 		[
@@ -212,6 +242,19 @@ describe("compareLegacySemanticPresentation", () => {
 		["units", { type: "TEXT", style: { fontSize: "12pt" } }, { type: "TEXT", style: { fontSize: "12px" } }],
 		["hierarchy", { type: "VIEW", children: [{ type: "TEXT", value: "same" }] }, { type: "TEXT", value: "same" }],
 		["geometry", { type: "VIEW", style: { width: 10 } }, { type: "VIEW", style: { width: 11 } }],
+		[
+			"split wrapper inherited style",
+			{
+				type: "TEXT",
+				style: { color: "#112233" },
+				children: [{ type: "TEXT", style: { color: "#112233" }, value: "A" }],
+			},
+			{
+				type: "TEXT",
+				style: { color: "#000000" },
+				children: [{ type: "TEXT", style: { color: "#112233" }, value: "A" }],
+			},
+		],
 	] as const)("detects %s tampering", (_name, legacy, semantic) => {
 		expect(compareLegacyParityHostNodes(legacy, semantic)).not.toEqual([]);
 	});

@@ -13,6 +13,7 @@ export type SemanticNodeKind =
 	| "section-items"
 	| "item"
 	| "item-header"
+	| "combined-text"
 	| "field"
 	| "link"
 	| "icon"

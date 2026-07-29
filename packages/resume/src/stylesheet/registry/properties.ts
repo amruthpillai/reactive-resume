@@ -41,6 +41,7 @@ const textNodes = [
 	"name",
 	"headline",
 	"section-heading",
+	"combined-text",
 	"field",
 	"rich-heading",
 	"blockquote",

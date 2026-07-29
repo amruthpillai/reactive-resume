@@ -12,6 +12,7 @@ const textKinds = new Set([
 	"name",
 	"headline",
 	"section-heading",
+	"combined-text",
 	"field",
 	"link",
 	"rich-heading",

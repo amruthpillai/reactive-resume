@@ -112,6 +112,15 @@ export const SHARED_BINDING_REGISTRY = {
 	"section-items": existing("View"),
 	item: existing("View"),
 	"item-header": existing("View"),
+	"combined-text": (node, { parent }) =>
+		node.attributes.owner === "parent" && parent
+			? {
+					type: "alias",
+					canonicalKind: parent.kind,
+					canonicalNodeKey: parent.key,
+					token: "combined-text",
+				}
+			: existing("Text"),
 	field: (node) => existing(node.children.some((child) => child.kind === "rich-text") ? "View" : "Text"),
 	link: (_node, { parent }) =>
 		parent?.kind === "contact-item"

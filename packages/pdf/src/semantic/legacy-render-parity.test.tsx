@@ -34,6 +34,7 @@ const fixtureNames = [
 	"array-order-tie",
 	"award-unbold",
 	"clamped-spacing",
+	"combined-text-host",
 	"custom-section-type",
 	"disabled-rules",
 	"icon-level-size",
@@ -91,6 +92,20 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			],
 		},
 	];
+	data.sections.education.items = [
+		{
+			id: "education-1",
+			hidden: false,
+			school: "University of London",
+			degree: "BSc",
+			area: "Mathematics",
+			grade: "First",
+			location: "London",
+			period: "1835",
+			website: { url: "", label: "", inlineLink: false },
+			description: "<p>Studied analytical engines.</p>",
+		},
+	];
 	data.sections.awards.items = [
 		{
 			id: "award-1",
@@ -130,7 +145,7 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 	data.metadata.layout.pages = [
 		{
 			fullWidth: true,
-			main: ["summary", "experience", "skills", "awards", "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"],
+			main: ["summary", "experience", "education", "skills", "awards", "1d7312cb-9ba2-4d42-9ca8-2a9ca05f9f37"],
 			sidebar: [],
 		},
 	];
@@ -211,6 +226,20 @@ describe("legacy activation raster parity", () => {
 		"smoke-renders %s without activation pixel drift",
 		async (template) => {
 			const legacy = buildFixture(readRules("all-templates-smoke"));
+			const semantic = semanticData(legacy);
+
+			expect(await comparePdfRasters(await render(legacy, template), await render(semantic, template))).toEqual({
+				pixelDiffRatio: 0,
+				mismatches: [],
+			});
+		},
+		30_000,
+	);
+
+	it.each(["onyx", "meowth"] as const)(
+		"has zero combined-separator and box-style pixel drift on %s",
+		async (template) => {
+			const legacy = buildFixture(readRules("combined-text-host"));
 			const semantic = semanticData(legacy);
 
 			expect(await comparePdfRasters(await render(legacy, template), await render(semantic, template))).toEqual({

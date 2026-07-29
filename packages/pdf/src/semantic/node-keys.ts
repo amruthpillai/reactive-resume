@@ -1,3 +1,12 @@
+export type CombinedTextName =
+	| "experience-position-location"
+	| "experience-location"
+	| "experience-period"
+	| "education-area-degree"
+	| "education-degree-grade"
+	| "education-location-period"
+	| "education-grade-location";
+
 export type SemanticNodeKeyFactory = {
 	resume: () => string;
 	page: (pageNumber: number) => string;
@@ -11,6 +20,7 @@ export type SemanticNodeKeyFactory = {
 	sectionItems: (sectionKey: string) => string;
 	item: (parentKey: string, id: string) => string;
 	itemHeader: (itemKey: string) => string;
+	combinedText: (parentKey: string, name: CombinedTextName) => string;
 	field: (parentKey: string, name: string) => string;
 	link: (parentKey: string, role: string) => string;
 	icon: (parentKey: string, role: string) => string;
@@ -36,6 +46,7 @@ export const semanticNodeKeys: SemanticNodeKeyFactory = {
 	sectionItems: (sectionKey) => childKey(sectionKey, "section-items"),
 	item: (parentKey, id) => childKey(parentKey, `item-${encodeKeyPart(id)}`),
 	itemHeader: (itemKey) => childKey(itemKey, "item-header"),
+	combinedText: (parentKey, name) => childKey(parentKey, `combined-text-${encodeKeyPart(name)}`),
 	field: (parentKey, name) => childKey(parentKey, `field-${encodeKeyPart(name)}`),
 	link: (parentKey, role) => childKey(parentKey, `link-${encodeKeyPart(role)}`),
 	icon: (parentKey, role) => childKey(parentKey, `icon-${encodeKeyPart(role)}`),

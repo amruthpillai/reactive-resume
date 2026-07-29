@@ -129,7 +129,7 @@ const appliesToAwards = (data: ResumeData, rule: StyleRule): boolean => {
 const textWeightSelector = (data: ResumeData, rule: StyleRule, base: string): string => {
 	const selectors = [
 		`${base} field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"]):not([role~="primary-text"])`,
-		`${base} field[role~="nested-role"][name="position"]`,
+		`${base} item[role~="nested-role"] > item-header > field[name="position"]`,
 	];
 	if (appliesToAwards(data, rule)) selectors.push(`${base} field[name="title"]`);
 	return selectors.join(",\n");
@@ -148,7 +148,9 @@ const scizorBoldColorSelector = (data: ResumeData, rule: StyleRule, base: string
 		rule.target.scope === "global"
 			? 'resume[template="scizor"] section:not([type="awards"])'
 			: `resume[template="scizor"] ${base}`;
-	return `${scopedBase}${slotSelectors.text}[role~="primary-text"]:not([role~="nested-role"])`;
+	return ["company", "school", "name", "language", "network", "organization", "title"]
+		.map((name) => `${scopedBase}${slotSelectors.text}[role~="primary-text"][name=${escapeCssString(name)}]`)
+		.join(",\n");
 };
 
 const levelDecorationDeclarations = (
@@ -165,6 +167,7 @@ const activeSlotChunks = (data: ResumeData, rule: StyleRule, slot: StyleSlot): s
 	const base = ruleBaseSelector(rule);
 	const selector = selectorForSlot(base, slot);
 	const declarations = declarationsFromStyle(resolvedRuleStyle(data, rule, slot));
+	const combinedTextDeclarations = slot === "text" ? { ...declarations } : undefined;
 	const chunks: string[] = [];
 	const comments: string[] = [];
 
@@ -189,6 +192,12 @@ const activeSlotChunks = (data: ResumeData, rule: StyleRule, slot: StyleSlot): s
 		}
 		if (Object.keys(declarations).length > 0)
 			chunks.push(serializeBlock(selector, declarations, rule.label || rule.id));
+	}
+
+	if (combinedTextDeclarations && Object.keys(combinedTextDeclarations).length > 0) {
+		chunks.push(
+			serializeBlock(`${base} combined-text`, combinedTextDeclarations, `${rule.label || rule.id}: combined text host`),
+		);
 	}
 
 	if (slot === "text" && declarations.color !== undefined) {
@@ -219,7 +228,11 @@ const disabledRuleChunk = (data: ResumeData, rule: StyleRule): string => {
 		if (!rule.slots[slot]) return [];
 		const declarations = declarationsFromStyle(resolvedRuleStyle(data, { ...rule, enabled: true }, slot));
 		if (Object.keys(declarations).length === 0) return [];
-		return [serializeBlock(selectorForSlot(ruleBaseSelector(rule), slot), declarations)];
+		const base = ruleBaseSelector(rule);
+		return [
+			serializeBlock(selectorForSlot(base, slot), declarations),
+			...(slot === "text" ? [serializeBlock(`${base} combined-text`, declarations)] : []),
+		];
 	});
 	const label = escapeCssComment(rule.label || rule.id);
 	const body = escapeCssComment(blocks.join("\n\n"));

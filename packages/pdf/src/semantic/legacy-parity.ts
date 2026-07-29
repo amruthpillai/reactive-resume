@@ -151,15 +151,9 @@ const collectPrimitiveSnapshots = (
 	);
 	const children = (node.children ?? []).flatMap((child) => collectPrimitiveSnapshots(child, nextInherited));
 	if (!primitiveTypes.has(node.type)) return children;
-	const isSplitFieldTextWrapper =
-		node.type === "TEXT" &&
-		(node.children ?? []).some((child) => child.type === "TEXT") &&
-		(node.children ?? []).every((child) => child.type === "TEXT" || child.type === "TEXT_INSTANCE");
 	const snapshotStyle = Object.fromEntries(
 		Object.entries(computedStyle).filter(
-			([property]) =>
-				(!isSplitFieldTextWrapper || !inheritableProperties.has(property)) &&
-				(textPrimitiveTypes.has(node.type) || !textOnlyInheritedProperties.has(property)),
+			([property]) => textPrimitiveTypes.has(node.type) || !textOnlyInheritedProperties.has(property),
 		),
 	);
 	const props = Object.fromEntries(

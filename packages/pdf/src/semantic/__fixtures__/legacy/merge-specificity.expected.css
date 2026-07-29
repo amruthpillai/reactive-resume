@@ -5,8 +5,19 @@ section field:not([name="content"]):not([name="description"]):not([name="recipie
 	color: #111111;
 }
 
+/* Global text: combined text host */
+section combined-text {
+	color: #111111;
+}
+
 /* Global text: Scizor Bold final color */
-resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"]:not([role~="nested-role"]) {
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="company"],
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="school"],
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="name"],
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="language"],
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="network"],
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="organization"],
+resume[template="scizor"] section:not([type="awards"]) field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="title"] {
 	color: #000000;
 }
 
@@ -15,8 +26,19 @@ section[type="experience"] field:not([name="content"]):not([name="description"])
 	color: #222222;
 }
 
+/* Experience text: combined text host */
+section[type="experience"] combined-text {
+	color: #222222;
+}
+
 /* Experience text: Scizor Bold final color */
-resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"]:not([role~="nested-role"]) {
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="company"],
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="school"],
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="name"],
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="language"],
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="network"],
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="organization"],
+resume[template="scizor"] section[type="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="title"] {
 	color: #000000;
 }
 
@@ -25,7 +47,18 @@ section[id="experience"] field:not([name="content"]):not([name="description"]):n
 	color: #333333;
 }
 
+/* One section: combined text host */
+section[id="experience"] combined-text {
+	color: #333333;
+}
+
 /* One section: Scizor Bold final color */
-resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"]:not([role~="nested-role"]) {
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="company"],
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="school"],
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="name"],
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="language"],
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="network"],
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="organization"],
+resume[template="scizor"] section[id="experience"] field:not([name="content"]):not([name="description"]):not([name="recipient"]):not([name="keywords"])[role~="primary-text"][name="title"] {
 	color: #000000;
 }

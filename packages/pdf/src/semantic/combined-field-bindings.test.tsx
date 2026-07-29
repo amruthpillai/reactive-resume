@@ -163,7 +163,12 @@ const CombinedFieldRasterDocument = ({
 						{preSplit ? (
 							preSplitCombinedText(testCase)
 						) : (
-							<SemanticTextRuns runs={testCase.runs} separator={testCase.separator} style={testCase.style} />
+							<SemanticTextRuns
+								host="education-degree-grade"
+								runs={testCase.runs}
+								separator={testCase.separator}
+								style={testCase.style}
+							/>
 						)}
 					</TemplateProvider>
 				</RenderProvider>
@@ -187,6 +192,77 @@ const expectColor = (document: HostNode, text: string, color: string) => {
 };
 
 describe("combined PDF field bindings", () => {
+	it("binds each Onyx and Meowth combined Text identity once without widening field styles to its host", async () => {
+		const semanticRule = `
+			combined-text { color: #334455; font-size: 14pt; opacity: 0.6; margin-left: 3pt; }
+			field[name="degree"] { opacity: 0.4; }
+		`;
+		const onyxData = fixture("semantic", "education", semanticRule);
+		const meowthData = fixture("semantic", "education", semanticRule);
+		const onyxTree = buildSemanticTree({
+			data: onyxData,
+			template: "onyx",
+			page: onyxData.metadata.layout.pages[0] as NonNullable<(typeof onyxData.metadata.layout.pages)[number]>,
+			pageNumber: 1,
+			showHeader: true,
+		});
+		const meowthTree = buildSemanticTree({
+			data: meowthData,
+			template: "meowth",
+			page: meowthData.metadata.layout.pages[0] as NonNullable<(typeof meowthData.metadata.layout.pages)[number]>,
+			pageNumber: 1,
+			showHeader: true,
+		});
+		const combinedNodes = (root: Parameters<typeof createBindingInventory>[0]) => {
+			const matches: (typeof root)[] = [];
+			const visit = (node: typeof root) => {
+				if ((node.kind as string) === "combined-text") matches.push(node);
+				for (const child of node.children) visit(child);
+			};
+			visit(root);
+			return matches;
+		};
+
+		for (const [tree, template] of [
+			[onyxTree, "onyx"],
+			[meowthTree, "meowth"],
+		] as const) {
+			const inventory = createBindingInventory(tree, getTemplateSemanticBindingRegistry(template));
+			const combined = combinedNodes(tree);
+			expect(combined).not.toEqual([]);
+			expect(
+				combined.filter(({ key }) => inventory.bindings[key]?.type === "primitive").map(({ key }) => key),
+			).toHaveLength(new Set(combined.map(({ key }) => key)).size - (template === "meowth" ? 1 : 0));
+			const aliases = combined.flatMap(({ key }) => {
+				const binding = inventory.bindings[key];
+				return binding?.type === "alias" ? [{ key, binding }] : [];
+			});
+			if (template === "meowth") {
+				expect(aliases).toHaveLength(1);
+				expect(aliases[0]?.binding).toEqual({
+					type: "alias",
+					canonicalKind: "template-part",
+					canonicalNodeKey: aliases[0]?.key.replace(/\/combined-text-education-grade-location$/, ""),
+					token: "combined-text",
+				});
+			} else {
+				expect(aliases).toEqual([]);
+			}
+			expect(inventory.syntheticWrapperCount).toBe(0);
+		}
+
+		for (const [template, data, text] of [
+			["onyx", onyxData, "BSc • First"],
+			["meowth", meowthData, "Mathematics (BSc)"],
+		] as const) {
+			const document = await renderHost(template, data);
+			const outer = findTexts(document, text).map(mergedStyle);
+			expect(outer).toContainEqual(
+				expect.objectContaining({ color: "#334455", fontSize: 14, opacity: 0.6, marginLeft: 3 }),
+			);
+		}
+	});
+
 	it("splits all five combined variants into separately styleable existing Text runs", async () => {
 		const colors = `
 			field[name="position"] { color: #110000; }

@@ -81,8 +81,18 @@ describe("convertLegacyStyleRules", () => {
 	it("applies legacy text weight to a nested role position without overriding real Bold hosts", () => {
 		const source = convertLegacyStyleRules(dataWithRules("primary-text-bold-3146")).source.text;
 
-		expect(source).toContain('field[role~="nested-role"][name="position"]');
-		expect(source).toContain('[role~="primary-text"]:not([role~="nested-role"])');
+		expect(source).toContain('item[role~="nested-role"] > item-header > field[name="position"]');
+		expect(source).not.toContain('field[role~="nested-role"]');
+	});
+
+	it("emits legacy text declarations for the combined outer Text without widening field selectors", () => {
+		const source = convertLegacyStyleRules(dataWithRules("combined-text-host")).source.text;
+
+		expect(source).toContain("combined-text");
+		expect(source).toContain("font-size: 14pt;");
+		expect(source).toContain("opacity: 0.65;");
+		expect(source).toContain("padding-left: 2pt;");
+		expect(source).toContain('field:not([name="content"])');
 	});
 
 	it("translates icon and level font sizes to explicit geometry", () => {

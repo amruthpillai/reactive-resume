@@ -383,7 +383,7 @@ describe("buildSemanticTree", () => {
 		expect(company?.roles).toContain("primary-text");
 		expect(role?.kind).toBe("item");
 		expect(role?.roles).toEqual(expect.arrayContaining(["experience-role", "nested-role"]));
-		expect(rolePosition?.roles).toEqual(expect.arrayContaining(["primary-text", "experience-role", "nested-role"]));
+		expect(rolePosition?.roles).toEqual(["primary-text"]);
 		expect(findNode(required(role, "nested role"), (node) => node.kind === "strong")).toBeDefined();
 		expect(listItem?.children.map((node) => node.kind)).toEqual(["list-marker", "list-item-content"]);
 		expect(new Set(nodes.map((node) => node.key)).size).toBe(nodes.length);
@@ -682,7 +682,9 @@ describe("buildSemanticTree", () => {
 			"inline-item-header-trailing",
 		]);
 		expect(gradeRow.kind).toBe("template-part");
-		expect(gradeRow.children.map(({ attributes }) => attributes.name)).toEqual(["grade", "location"]);
+		expect(gradeRow.children.map(({ attributes }) => attributes.name)).toEqual(["education-grade-location"]);
+		expect(gradeRow.children[0]?.kind).toBe("combined-text");
+		expect(gradeRow.children[0]?.children.map(({ attributes }) => attributes.name)).toEqual(["grade", "location"]);
 	});
 
 	it.each([
