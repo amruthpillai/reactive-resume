@@ -42,6 +42,8 @@ region[placement="sidebar"] section-heading {
 
 RRSS supports the universal selector, semantic type selectors, IDs, attributes, selector lists, and the descendant
 (` `), child (`>`), adjacent-sibling (`+`), and general-sibling (`~`) combinators.
+Semantic type and pseudo-class names must use their exact lowercase RRSS catalog spellings; namespace selectors are
+unsupported and rejected.
 
 <!-- RRSS-EXAMPLE:valid -->
 ```css
@@ -239,8 +241,9 @@ Flex alignment accepts the PDF renderer's fixed keyword sets:
 - `flex-direction`: `row`, `row-reverse`, `column`, or `column-reverse`; and
 - `flex-wrap`: `nowrap`, `wrap`, or `wrap-reverse`.
 
-`flex` accepts `none`, `auto`, one basis value, one grow number, `grow basis`, or `grow shrink basis`. `flex-flow`
-accepts one direction, one wrap mode, or one of each.
+`flex` accepts `none`, `auto`, one basis value, one grow number, `grow basis`, `grow shrink`, or `grow shrink basis`.
+The two-number `grow shrink` form uses an implicit `0%` basis. `flex-flow` accepts one direction, one wrap mode, or one
+of each.
 
 <!-- RRSS-EXAMPLE:valid FLEX_VALUES -->
 ```css
@@ -254,7 +257,7 @@ section-items {
 }
 
 item {
-	flex: 1 1 0%;
+	flex: 2 3;
 	align-self: stretch;
 }
 

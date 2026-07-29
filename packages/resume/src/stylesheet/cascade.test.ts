@@ -156,6 +156,16 @@ describe("RRSS cascade and structural resolution", () => {
 		},
 	);
 
+	it("resolves two-number flex as grow and shrink with an implicit basis", () => {
+		const result = resolve("item { flex: 2 3; }");
+
+		expect(result.nodes["item-1"]?.style).toMatchObject({
+			"flex-grow": 2,
+			"flex-shrink": 3,
+			"flex-basis": "0%",
+		});
+	});
+
 	it("resolves base, normal and important rules by specificity then source order", () => {
 		const result = resolve(`
 			section-heading { color: red; }
