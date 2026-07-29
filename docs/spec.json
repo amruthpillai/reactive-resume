@@ -162,6 +162,7 @@
 											"description": "The text to display for the custom field."
 										},
 										"link": {
+											"default": "",
 											"type": "string",
 											"description": "If the custom field should be a link, the URL to link to."
 										}
@@ -169,8 +170,7 @@
 									"required": [
 										"id",
 										"icon",
-										"text",
-										"link"
+										"text"
 									]
 								},
 								"description": "The custom fields to display on the resume."
@@ -195,26 +195,30 @@
 								"description": "The title of the summary of the resume."
 							},
 							"icon": {
-								"type": "string",
-								"description": "Phosphor icon name to display before the summary section title in the PDF output. Empty string uses the default summary icon; 'none' hides the icon."
+								"default": "",
+								"description": "Phosphor icon name to display before the summary section title in the PDF output. Empty string uses the default summary icon; 'none' hides the icon.",
+								"type": "string"
 							},
 							"columns": {
+								"default": 1,
+								"description": "The number of columns the summary should span across.",
 								"type": "integer",
 								"minimum": 1,
-								"maximum": 6,
-								"description": "The number of columns the summary should span across."
+								"maximum": 6
 							},
 							"hidden": {
 								"type": "boolean",
 								"description": "Whether to hide the summary from the resume."
 							},
 							"keepTogether": {
-								"type": "boolean",
-								"description": "If true, the summary is kept on a single page instead of splitting across a page break."
+								"default": false,
+								"description": "If true, the summary is kept on a single page instead of splitting across a page break.",
+								"type": "boolean"
 							},
 							"startOnNewPage": {
-								"type": "boolean",
-								"description": "If true, the summary always begins on a new page."
+								"default": false,
+								"description": "If true, the summary always begins on a new page.",
+								"type": "boolean"
 							},
 							"content": {
 								"type": "string",
@@ -223,11 +227,7 @@
 						},
 						"required": [
 							"title",
-							"icon",
-							"columns",
 							"hidden",
-							"keepTogether",
-							"startOnNewPage",
 							"content"
 						],
 						"description": "Summary section of the resume, useful for a short bio or introduction"
@@ -243,26 +243,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -282,8 +286,9 @@
 													"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 												},
 												"iconColor": {
-													"type": "string",
-													"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color."
+													"default": "",
+													"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+													"type": "string"
 												},
 												"network": {
 													"type": "string",
@@ -295,6 +300,12 @@
 													"description": "The username of the author on the network or platform."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The link to the profile of the author on the network or platform, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -306,26 +317,23 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The link to the profile of the author on the network or platform, if any."
+														"label"
+													]
 												}
 											},
 											"required": [
 												"id",
 												"hidden",
 												"icon",
-												"iconColor",
 												"network",
-												"username",
-												"website"
+												"username"
 											]
 										},
 										"description": "The items to display in the profiles section."
@@ -333,11 +341,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the profiles of the author."
@@ -350,26 +354,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -402,6 +410,12 @@
 													"description": "The overall period of time at the company. When multiple roles are used, this should reflect the total tenure."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The website of the company or organization, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -413,22 +427,23 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The website of the company or organization, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
 													"description": "The description of the experience. This should be a HTML-formatted string."
 												},
 												"roles": {
+													"default": [],
+													"description": "List of individual roles held at this company to show career progression.",
 													"type": "array",
 													"items": {
 														"type": "object",
@@ -456,8 +471,7 @@
 															"period",
 															"description"
 														]
-													},
-													"description": "List of individual roles held at this company to show career progression."
+													}
 												}
 											},
 											"required": [
@@ -467,9 +481,7 @@
 												"position",
 												"location",
 												"period",
-												"website",
-												"description",
-												"roles"
+												"description"
 											]
 										},
 										"description": "The items to display in the experience section."
@@ -477,11 +489,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the experience of the author."
@@ -494,26 +502,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -554,6 +566,12 @@
 													"description": "The period of time the education was obtained over."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The website of the school or institution, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -565,16 +583,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The website of the school or institution, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
@@ -590,7 +607,6 @@
 												"grade",
 												"location",
 												"period",
-												"website",
 												"description"
 											]
 										},
@@ -599,11 +615,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the education of the author."
@@ -616,26 +628,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -660,6 +676,12 @@
 													"description": "The period of time the project was worked on."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The link to the project, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -671,16 +693,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The link to the project, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
@@ -692,7 +713,6 @@
 												"hidden",
 												"name",
 												"period",
-												"website",
 												"description"
 											]
 										},
@@ -701,11 +721,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the projects of the author."
@@ -718,26 +734,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -757,8 +777,9 @@
 													"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 												},
 												"iconColor": {
-													"type": "string",
-													"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color."
+													"default": "",
+													"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+													"type": "string"
 												},
 												"name": {
 													"type": "string",
@@ -770,28 +791,27 @@
 													"description": "The proficiency level of the skill. Can be any text, such as 'Beginner', 'Intermediate', 'Advanced', etc."
 												},
 												"level": {
+													"default": 0,
+													"description": "The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden.",
 													"type": "number",
 													"minimum": 0,
-													"maximum": 5,
-													"description": "The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden."
+													"maximum": 5
 												},
 												"keywords": {
+													"default": [],
+													"description": "The keywords associated with the skill, if any. These are displayed as tags below the name.",
 													"type": "array",
 													"items": {
 														"type": "string"
-													},
-													"description": "The keywords associated with the skill, if any. These are displayed as tags below the name."
+													}
 												}
 											},
 											"required": [
 												"id",
 												"hidden",
 												"icon",
-												"iconColor",
 												"name",
-												"proficiency",
-												"level",
-												"keywords"
+												"proficiency"
 											]
 										},
 										"description": "The items to display in the skills section."
@@ -799,11 +819,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the skills of the author."
@@ -816,26 +832,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -860,18 +880,18 @@
 													"description": "The fluency level of the language. Can be any text, such as 'Native', 'Fluent', 'Conversational', etc. or can also be a CEFR level (A1, A2, B1, B2, C1, C2)."
 												},
 												"level": {
+													"default": 0,
+													"description": "The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden.",
 													"type": "number",
 													"minimum": 0,
-													"maximum": 5,
-													"description": "The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden."
+													"maximum": 5
 												}
 											},
 											"required": [
 												"id",
 												"hidden",
 												"language",
-												"fluency",
-												"level"
+												"fluency"
 											]
 										},
 										"description": "The items to display in the languages section."
@@ -879,11 +899,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the languages of the author."
@@ -896,26 +912,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -935,8 +955,9 @@
 													"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 												},
 												"iconColor": {
-													"type": "string",
-													"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color."
+													"default": "",
+													"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+													"type": "string"
 												},
 												"name": {
 													"type": "string",
@@ -944,20 +965,19 @@
 													"description": "The name of the interest/hobby."
 												},
 												"keywords": {
+													"default": [],
+													"description": "The keywords associated with the interest/hobby, if any. These are displayed as tags below the name.",
 													"type": "array",
 													"items": {
 														"type": "string"
-													},
-													"description": "The keywords associated with the interest/hobby, if any. These are displayed as tags below the name."
+													}
 												}
 											},
 											"required": [
 												"id",
 												"hidden",
 												"icon",
-												"iconColor",
-												"name",
-												"keywords"
+												"name"
 											]
 										},
 										"description": "The items to display in the interests section."
@@ -965,11 +985,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the interests of the author."
@@ -982,26 +998,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -1030,6 +1050,12 @@
 													"description": "The date when the award was received."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The website of the award, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -1041,16 +1067,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The website of the award, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
@@ -1063,7 +1088,6 @@
 												"title",
 												"awarder",
 												"date",
-												"website",
 												"description"
 											]
 										},
@@ -1072,11 +1096,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the awards of the author."
@@ -1089,26 +1109,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -1137,6 +1161,12 @@
 													"description": "The date when the certification was received."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The website of the certification, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -1148,16 +1178,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The website of the certification, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
@@ -1170,7 +1199,6 @@
 												"title",
 												"issuer",
 												"date",
-												"website",
 												"description"
 											]
 										},
@@ -1179,11 +1207,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the certifications of the author."
@@ -1196,26 +1220,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -1244,6 +1272,12 @@
 													"description": "The date when the publication was published."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The link to the publication, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -1255,16 +1289,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The link to the publication, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
@@ -1277,7 +1310,6 @@
 												"title",
 												"publisher",
 												"date",
-												"website",
 												"description"
 											]
 										},
@@ -1286,11 +1318,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the publications of the author."
@@ -1303,26 +1331,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -1351,6 +1383,12 @@
 													"description": "The period of time the author was volunteered at the organization or company."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The link to the organization or company, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -1362,16 +1400,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The link to the organization or company, if any."
+														"label"
+													]
 												},
 												"description": {
 													"type": "string",
@@ -1384,7 +1421,6 @@
 												"organization",
 												"location",
 												"period",
-												"website",
 												"description"
 											]
 										},
@@ -1393,11 +1429,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the volunteer experience of the author."
@@ -1410,26 +1442,30 @@
 										"description": "The title of the section."
 									},
 									"icon": {
-										"type": "string",
-										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+										"default": "",
+										"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+										"type": "string"
 									},
 									"columns": {
+										"default": 1,
+										"description": "The number of columns the section should span across.",
 										"type": "integer",
 										"minimum": 1,
-										"maximum": 6,
-										"description": "The number of columns the section should span across."
+										"maximum": 6
 									},
 									"hidden": {
 										"type": "boolean",
 										"description": "Whether to hide the section from the resume."
 									},
 									"keepTogether": {
-										"type": "boolean",
-										"description": "If true, the section is kept on a single page instead of splitting across a page break."
+										"default": false,
+										"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+										"type": "boolean"
 									},
 									"startOnNewPage": {
-										"type": "boolean",
-										"description": "If true, the section always begins on a new page."
+										"default": false,
+										"description": "If true, the section always begins on a new page.",
+										"type": "boolean"
 									},
 									"items": {
 										"type": "array",
@@ -1454,6 +1490,12 @@
 													"description": "The position or job title of the reference."
 												},
 												"website": {
+													"default": {
+														"url": "",
+														"label": "",
+														"inlineLink": false
+													},
+													"description": "The website or LinkedIn profile of the reference, if any.",
 													"type": "object",
 													"properties": {
 														"url": {
@@ -1465,16 +1507,15 @@
 															"description": "The label to display for the URL. Leave blank to display the URL as-is."
 														},
 														"inlineLink": {
-															"type": "boolean",
-															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+															"default": false,
+															"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+															"type": "boolean"
 														}
 													},
 													"required": [
 														"url",
-														"label",
-														"inlineLink"
-													],
-													"description": "The website or LinkedIn profile of the reference, if any."
+														"label"
+													]
 												},
 												"phone": {
 													"type": "string",
@@ -1490,7 +1531,6 @@
 												"hidden",
 												"name",
 												"position",
-												"website",
 												"phone",
 												"description"
 											]
@@ -1500,11 +1540,7 @@
 								},
 								"required": [
 									"title",
-									"icon",
-									"columns",
 									"hidden",
-									"keepTogether",
-									"startOnNewPage",
 									"items"
 								],
 								"description": "The section to display the references of the author."
@@ -1536,32 +1572,37 @@
 									"description": "The title of the section."
 								},
 								"icon": {
-									"type": "string",
-									"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon."
+									"default": "",
+									"description": "Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon.",
+									"type": "string"
 								},
 								"columns": {
+									"default": 1,
+									"description": "The number of columns the section should span across.",
 									"type": "integer",
 									"minimum": 1,
-									"maximum": 6,
-									"description": "The number of columns the section should span across."
+									"maximum": 6
 								},
 								"hidden": {
 									"type": "boolean",
 									"description": "Whether to hide the section from the resume."
 								},
 								"keepTogether": {
-									"type": "boolean",
-									"description": "If true, the section is kept on a single page instead of splitting across a page break."
+									"default": false,
+									"description": "If true, the section is kept on a single page instead of splitting across a page break.",
+									"type": "boolean"
 								},
 								"startOnNewPage": {
-									"type": "boolean",
-									"description": "If true, the section always begins on a new page."
+									"default": false,
+									"description": "If true, the section always begins on a new page.",
+									"type": "boolean"
 								},
 								"id": {
 									"type": "string",
 									"description": "The unique identifier for the custom section. Usually generated as a UUID."
 								},
 								"type": {
+									"type": "string",
 									"enum": [
 										"summary",
 										"profiles",
@@ -1578,7 +1619,6 @@
 										"references",
 										"cover-letter"
 									],
-									"type": "string",
 									"description": "The type of items this custom section contains. Determines which item schema and form fields to use."
 								},
 								"items": {
@@ -1650,8 +1690,9 @@
 														"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 													},
 													"iconColor": {
-														"type": "string",
-														"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color."
+														"default": "",
+														"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+														"type": "string"
 													},
 													"network": {
 														"type": "string",
@@ -1663,6 +1704,12 @@
 														"description": "The username of the author on the network or platform."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The link to the profile of the author on the network or platform, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -1674,26 +1721,23 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The link to the profile of the author on the network or platform, if any."
+															"label"
+														]
 													}
 												},
 												"required": [
 													"id",
 													"hidden",
 													"icon",
-													"iconColor",
 													"network",
-													"username",
-													"website"
+													"username"
 												]
 											},
 											{
@@ -1725,6 +1769,12 @@
 														"description": "The overall period of time at the company. When multiple roles are used, this should reflect the total tenure."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The website of the company or organization, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -1736,22 +1786,23 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The website of the company or organization, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
 														"description": "The description of the experience. This should be a HTML-formatted string."
 													},
 													"roles": {
+														"default": [],
+														"description": "List of individual roles held at this company to show career progression.",
 														"type": "array",
 														"items": {
 															"type": "object",
@@ -1779,8 +1830,7 @@
 																"period",
 																"description"
 															]
-														},
-														"description": "List of individual roles held at this company to show career progression."
+														}
 													}
 												},
 												"required": [
@@ -1790,9 +1840,7 @@
 													"position",
 													"location",
 													"period",
-													"website",
-													"description",
-													"roles"
+													"description"
 												]
 											},
 											{
@@ -1832,6 +1880,12 @@
 														"description": "The period of time the education was obtained over."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The website of the school or institution, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -1843,16 +1897,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The website of the school or institution, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
@@ -1868,7 +1921,6 @@
 													"grade",
 													"location",
 													"period",
-													"website",
 													"description"
 												]
 											},
@@ -1893,6 +1945,12 @@
 														"description": "The period of time the project was worked on."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The link to the project, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -1904,16 +1962,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The link to the project, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
@@ -1925,7 +1982,6 @@
 													"hidden",
 													"name",
 													"period",
-													"website",
 													"description"
 												]
 											},
@@ -1945,8 +2001,9 @@
 														"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 													},
 													"iconColor": {
-														"type": "string",
-														"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color."
+														"default": "",
+														"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+														"type": "string"
 													},
 													"name": {
 														"type": "string",
@@ -1958,28 +2015,27 @@
 														"description": "The proficiency level of the skill. Can be any text, such as 'Beginner', 'Intermediate', 'Advanced', etc."
 													},
 													"level": {
+														"default": 0,
+														"description": "The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden.",
 														"type": "number",
 														"minimum": 0,
-														"maximum": 5,
-														"description": "The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden."
+														"maximum": 5
 													},
 													"keywords": {
+														"default": [],
+														"description": "The keywords associated with the skill, if any. These are displayed as tags below the name.",
 														"type": "array",
 														"items": {
 															"type": "string"
-														},
-														"description": "The keywords associated with the skill, if any. These are displayed as tags below the name."
+														}
 													}
 												},
 												"required": [
 													"id",
 													"hidden",
 													"icon",
-													"iconColor",
 													"name",
-													"proficiency",
-													"level",
-													"keywords"
+													"proficiency"
 												]
 											},
 											{
@@ -2003,18 +2059,18 @@
 														"description": "The fluency level of the language. Can be any text, such as 'Native', 'Fluent', 'Conversational', etc. or can also be a CEFR level (A1, A2, B1, B2, C1, C2)."
 													},
 													"level": {
+														"default": 0,
+														"description": "The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden.",
 														"type": "number",
 														"minimum": 0,
-														"maximum": 5,
-														"description": "The proficiency level of the language, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden."
+														"maximum": 5
 													}
 												},
 												"required": [
 													"id",
 													"hidden",
 													"language",
-													"fluency",
-													"level"
+													"fluency"
 												]
 											},
 											{
@@ -2033,8 +2089,9 @@
 														"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 													},
 													"iconColor": {
-														"type": "string",
-														"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color."
+														"default": "",
+														"description": "Custom color for the icon, defined as rgba(r, g, b, a). Leave blank to use the template default icon color.",
+														"type": "string"
 													},
 													"name": {
 														"type": "string",
@@ -2042,20 +2099,19 @@
 														"description": "The name of the interest/hobby."
 													},
 													"keywords": {
+														"default": [],
+														"description": "The keywords associated with the interest/hobby, if any. These are displayed as tags below the name.",
 														"type": "array",
 														"items": {
 															"type": "string"
-														},
-														"description": "The keywords associated with the interest/hobby, if any. These are displayed as tags below the name."
+														}
 													}
 												},
 												"required": [
 													"id",
 													"hidden",
 													"icon",
-													"iconColor",
-													"name",
-													"keywords"
+													"name"
 												]
 											},
 											{
@@ -2083,6 +2139,12 @@
 														"description": "The date when the award was received."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The website of the award, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -2094,16 +2156,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The website of the award, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
@@ -2116,7 +2177,6 @@
 													"title",
 													"awarder",
 													"date",
-													"website",
 													"description"
 												]
 											},
@@ -2145,6 +2205,12 @@
 														"description": "The date when the certification was received."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The website of the certification, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -2156,16 +2222,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The website of the certification, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
@@ -2178,7 +2243,6 @@
 													"title",
 													"issuer",
 													"date",
-													"website",
 													"description"
 												]
 											},
@@ -2207,6 +2271,12 @@
 														"description": "The date when the publication was published."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The link to the publication, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -2218,16 +2288,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The link to the publication, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
@@ -2240,7 +2309,6 @@
 													"title",
 													"publisher",
 													"date",
-													"website",
 													"description"
 												]
 											},
@@ -2269,6 +2337,12 @@
 														"description": "The period of time the author was volunteered at the organization or company."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The link to the organization or company, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -2280,16 +2354,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The link to the organization or company, if any."
+															"label"
+														]
 													},
 													"description": {
 														"type": "string",
@@ -2302,7 +2375,6 @@
 													"organization",
 													"location",
 													"period",
-													"website",
 													"description"
 												]
 											},
@@ -2327,6 +2399,12 @@
 														"description": "The position or job title of the reference."
 													},
 													"website": {
+														"default": {
+															"url": "",
+															"label": "",
+															"inlineLink": false
+														},
+														"description": "The website or LinkedIn profile of the reference, if any.",
 														"type": "object",
 														"properties": {
 															"url": {
@@ -2338,16 +2416,15 @@
 																"description": "The label to display for the URL. Leave blank to display the URL as-is."
 															},
 															"inlineLink": {
-																"type": "boolean",
-																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom."
+																"default": false,
+																"description": "If true, the website URL is rendered as a hyperlink on the title instead of a separate link at the bottom.",
+																"type": "boolean"
 															}
 														},
 														"required": [
 															"url",
-															"label",
-															"inlineLink"
-														],
-														"description": "The website or LinkedIn profile of the reference, if any."
+															"label"
+														]
 													},
 													"phone": {
 														"type": "string",
@@ -2363,7 +2440,6 @@
 													"hidden",
 													"name",
 													"position",
-													"website",
 													"phone",
 													"description"
 												]
@@ -2375,11 +2451,7 @@
 							},
 							"required": [
 								"title",
-								"icon",
-								"columns",
 								"hidden",
-								"keepTogether",
-								"startOnNewPage",
 								"id",
 								"type",
 								"items"
@@ -2391,6 +2463,9 @@
 						"type": "object",
 						"properties": {
 							"template": {
+								"default": "onyx",
+								"description": "The template to use for the resume. Determines the overall design and appearance of the resume.",
+								"type": "string",
 								"enum": [
 									"azurill",
 									"bronzor",
@@ -2407,18 +2482,17 @@
 									"pikachu",
 									"rhyhorn",
 									"scizor"
-								],
-								"type": "string",
-								"description": "The template to use for the resume. Determines the overall design and appearance of the resume."
+								]
 							},
 							"layout": {
 								"type": "object",
 								"properties": {
 									"sidebarWidth": {
+										"default": 35,
+										"description": "The width of the sidebar column, defined as a percentage of the page width.",
 										"type": "number",
 										"minimum": 10,
-										"maximum": 50,
-										"description": "The width of the sidebar column, defined as a percentage of the page width."
+										"maximum": 50
 									},
 									"pages": {
 										"type": "array",
@@ -2454,7 +2528,6 @@
 									}
 								},
 								"required": [
-									"sidebarWidth",
 									"pages"
 								],
 								"description": "The layout of the resume. Determines the structure and arrangement of the sections on the resume."
@@ -2483,27 +2556,32 @@
 										"description": "The vertical margin of the page, defined in points (pt)."
 									},
 									"format": {
+										"default": "a4",
+										"type": "string",
 										"enum": [
 											"a4",
 											"letter",
 											"free-form"
 										],
-										"type": "string",
 										"description": "The format of the page. Can be 'a4', 'letter', or 'free-form'."
 									},
 									"locale": {
+										"default": "en-US",
 										"type": "string",
 										"description": "The locale of the page. Used for displaying pre-translated section headings, if not overridden."
 									},
 									"hideLinkUnderline": {
+										"default": false,
 										"type": "boolean",
 										"description": "Whether to hide the underlines of the links."
 									},
 									"hideIcons": {
+										"default": false,
 										"type": "boolean",
 										"description": "Whether to hide the item-level icons (skills, profiles, interests)."
 									},
 									"hideSectionIcons": {
+										"default": true,
 										"type": "boolean",
 										"description": "Whether to hide the section heading icons displayed before section titles."
 									}
@@ -2512,12 +2590,7 @@
 									"gapX",
 									"gapY",
 									"marginX",
-									"marginY",
-									"format",
-									"locale",
-									"hideLinkUnderline",
-									"hideIcons",
-									"hideSectionIcons"
+									"marginY"
 								],
 								"description": "The page settings of the resume. Determines the margins, format, and locale of the resume."
 							},
@@ -2532,6 +2605,7 @@
 												"description": "The icon to display for the custom field. Must be a valid icon name from @phosphor-icons/web icon set, or an empty string to hide. Default to '' (empty string) when unsure which icons are available."
 											},
 											"type": {
+												"type": "string",
 												"enum": [
 													"hidden",
 													"circle",
@@ -2541,7 +2615,6 @@
 													"progress-bar",
 													"icon"
 												],
-												"type": "string",
 												"description": "The type of the level design. 'hidden' will hide the level design, 'circle' will display a circle, 'square' will display a square, 'rectangle' will display a rectangle, 'rectangle-full' will display a full rectangle, 'progress-bar' will display a progress bar, and 'icon' will display an icon. If 'icon' is selected, the icon to display should be specified in the 'icon' field."
 											}
 										},
@@ -2590,8 +2663,13 @@
 												"description": "The family of the font to use. Must be a supported resume font."
 											},
 											"fontWeights": {
+												"default": [
+													"400"
+												],
+												"description": "The weight of the font, defined as a number between 100 and 900. Default to 400 when unsure if the weight is available in the font.",
 												"type": "array",
 												"items": {
+													"type": "string",
 													"enum": [
 														"100",
 														"200",
@@ -2602,29 +2680,26 @@
 														"700",
 														"800",
 														"900"
-													],
-													"type": "string"
-												},
-												"description": "The weight of the font, defined as a number between 100 and 900. Default to 400 when unsure if the weight is available in the font."
+													]
+												}
 											},
 											"fontSize": {
+												"default": 11,
+												"description": "The size of the font to use, defined in points (pt).",
 												"type": "number",
 												"minimum": 6,
-												"maximum": 24,
-												"description": "The size of the font to use, defined in points (pt)."
+												"maximum": 24
 											},
 											"lineHeight": {
+												"default": 1.5,
+												"description": "The line height of the font to use, defined as a multiplier of the font size (e.g. 1.5 for 1.5x).",
 												"type": "number",
 												"minimum": 0.5,
-												"maximum": 4,
-												"description": "The line height of the font to use, defined as a multiplier of the font size (e.g. 1.5 for 1.5x)."
+												"maximum": 4
 											}
 										},
 										"required": [
-											"fontFamily",
-											"fontWeights",
-											"fontSize",
-											"lineHeight"
+											"fontFamily"
 										],
 										"description": "The typography for the body of the resume."
 									},
@@ -2636,8 +2711,13 @@
 												"description": "The family of the font to use. Must be a supported resume font."
 											},
 											"fontWeights": {
+												"default": [
+													"400"
+												],
+												"description": "The weight of the font, defined as a number between 100 and 900. Default to 400 when unsure if the weight is available in the font.",
 												"type": "array",
 												"items": {
+													"type": "string",
 													"enum": [
 														"100",
 														"200",
@@ -2648,29 +2728,26 @@
 														"700",
 														"800",
 														"900"
-													],
-													"type": "string"
-												},
-												"description": "The weight of the font, defined as a number between 100 and 900. Default to 400 when unsure if the weight is available in the font."
+													]
+												}
 											},
 											"fontSize": {
+												"default": 11,
+												"description": "The size of the font to use, defined in points (pt).",
 												"type": "number",
 												"minimum": 6,
-												"maximum": 24,
-												"description": "The size of the font to use, defined in points (pt)."
+												"maximum": 24
 											},
 											"lineHeight": {
+												"default": 1.5,
+												"description": "The line height of the font to use, defined as a multiplier of the font size (e.g. 1.5 for 1.5x).",
 												"type": "number",
 												"minimum": 0.5,
-												"maximum": 4,
-												"description": "The line height of the font to use, defined as a multiplier of the font size (e.g. 1.5 for 1.5x)."
+												"maximum": 4
 											}
 										},
 										"required": [
-											"fontFamily",
-											"fontWeights",
-											"fontSize",
-											"lineHeight"
+											"fontFamily"
 										],
 										"description": "The typography for the headings of the resume."
 									}
@@ -2686,28 +2763,28 @@
 								"description": "Personal notes for the resume. Can be used to add any additional information or instructions for the resume. These notes are not displayed on the resume, they are only visible to the author of the resume when editing the resume. This should be a HTML-formatted string."
 							},
 							"styleRules": {
+								"default": [],
+								"description": "Structured style rules that target semantic resume sections and slots for React PDF rendering.",
 								"type": "array",
-								"items": {},
-								"description": "Structured style rules that target semantic resume sections and slots for React PDF rendering."
+								"items": {}
 							},
 							"stylesheet": {
 								"type": "object",
 								"properties": {
 									"mode": {
+										"type": "string",
 										"enum": [
 											"legacy",
 											"semantic"
-										],
-										"type": "string"
+										]
 									},
 									"source": {
 										"type": "object",
 										"properties": {
 											"languageVersion": {
 												"type": "integer",
-												"minimum": -9007199254740991,
-												"maximum": 9007199254740991,
-												"exclusiveMinimum": 0
+												"exclusiveMinimum": 0,
+												"maximum": 9007199254740991
 											},
 											"text": {
 												"type": "string"
@@ -2724,9 +2801,8 @@
 										"properties": {
 											"languageVersion": {
 												"type": "integer",
-												"minimum": -9007199254740991,
-												"maximum": 9007199254740991,
-												"exclusiveMinimum": 0
+												"exclusiveMinimum": 0,
+												"maximum": 9007199254740991
 											},
 											"text": {
 												"type": "string"
@@ -2748,13 +2824,11 @@
 							}
 						},
 						"required": [
-							"template",
 							"layout",
 							"page",
 							"design",
 							"typography",
-							"notes",
-							"styleRules"
+							"notes"
 						],
 						"description": "Metadata for the resume, such as template, layout, typography, etc. This section describes the overall design and appearance of the resume."
 					}
@@ -4626,9 +4700,7 @@
 									"threadId": {
 										"type": "string"
 									},
-									"message": {
-										"not": {}
-									},
+									"message": {},
 									"attachmentIds": {
 										"type": "array",
 										"maxItems": 10,
@@ -4682,9 +4754,7 @@
 									"threadId": {
 										"type": "string"
 									},
-									"partialMessage": {
-										"not": {}
-									}
+									"partialMessage": {}
 								},
 								"required": [
 									"threadId"
@@ -22481,7 +22551,7 @@
 								"type": "object",
 								"properties": {
 									"data": {
-										"not": {}
+										"$ref": "#/components/schemas/ResumeData"
 									}
 								},
 								"required": [

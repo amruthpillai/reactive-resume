@@ -1,8 +1,9 @@
 import { OpenAPIGenerator } from "@orpc/openapi";
-import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { JSON_SCHEMA_INPUT_REGISTRY, ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { downloadResumePdfProcedure } from "@reactive-resume/api/features/resume/export";
 import router from "@reactive-resume/api/routers";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
 
 export const openAPIRouter = {
 	...router,
@@ -12,8 +13,36 @@ export const openAPIRouter = {
 	},
 };
 
+const { $schema: _dialect, ...resumeDataInputSchema } = createResumeDataJsonSchema();
+type ResumeDataInputJsonSchema = Parameters<typeof JSON_SCHEMA_INPUT_REGISTRY.add<typeof resumeDataSchema>>[1];
+JSON_SCHEMA_INPUT_REGISTRY.add(resumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
+const importResumeInputSchema = openAPIRouter.resume.import["~orpc"].inputSchema;
+if (importResumeInputSchema) {
+	JSON_SCHEMA_INPUT_REGISTRY.add(importResumeInputSchema, {
+		type: "object",
+		properties: {
+			data: { $ref: "#/components/schemas/ResumeData" },
+		},
+		required: ["data"],
+	});
+}
+
 const openAPIGenerator = new OpenAPIGenerator({
-	schemaConverters: [new ZodToJsonSchemaConverter()],
+	schemaConverters: [
+		new ZodToJsonSchemaConverter({
+			interceptors: [
+				({ options, next }) => {
+					const [required, schema] = next();
+					const impossible =
+						Object.keys(schema).length === 1 &&
+						typeof schema.not === "object" &&
+						schema.not !== null &&
+						Object.keys(schema.not).length === 0;
+					return options.strategy === "input" && impossible ? [required, {}] : [required, schema];
+				},
+			],
+		}),
+	],
 });
 
 type GenerateOpenApiSpecOptions = {
@@ -33,7 +62,7 @@ export async function generateOpenApiSpec({ appUrl, version }: GenerateOpenApiSp
 		servers: [{ url: `${appUrl}/api/openapi` }],
 		externalDocs: { url: "https://docs.rxresu.me", description: "Reactive Resume Documentation" },
 		commonSchemas: {
-			ResumeData: { schema: resumeDataSchema },
+			ResumeData: { schema: resumeDataSchema, strategy: "input" },
 		},
 		components: {
 			securitySchemes: {
