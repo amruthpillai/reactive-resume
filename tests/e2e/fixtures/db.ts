@@ -167,14 +167,24 @@ export async function readSemanticCssFixture(resumeId: string) {
 				basics?: { headline?: string };
 				metadata?: { stylesheet?: SemanticStylesheetSeed };
 			};
+			slug: string;
 			stylesheet_revision: number;
-		}>('select data, stylesheet_revision from "resume" where id = $1', [resumeId]);
+			username: string;
+		}>(
+			`select r.data, r.slug, r.stylesheet_revision, u.username
+			 from "resume" r
+			 inner join "user" u on u.id = r.user_id
+			 where r.id = $1`,
+			[resumeId],
+		);
 		const row = result.rows[0];
 		if (!row) throw new Error(`Resume ${resumeId} was not found.`);
 		return {
 			stylesheet: row.data.metadata?.stylesheet,
 			headline: row.data.basics?.headline,
 			revision: row.stylesheet_revision,
+			slug: row.slug,
+			username: row.username,
 		};
 	} finally {
 		await pool.end();
