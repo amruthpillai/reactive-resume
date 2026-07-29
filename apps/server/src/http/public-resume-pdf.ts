@@ -21,7 +21,12 @@ const fingerprint = (value: string | null): string | undefined => {
 	return /^[a-f0-9]{64}$/.test(value) ? value : undefined;
 };
 
-export async function handlePublicResumePdf(request: Request, username: string, slug: string): Promise<Response> {
+export async function handlePublicResumePdf(
+	request: Request,
+	username: string,
+	slug: string,
+	trustedClient = "unknown",
+): Promise<Response> {
 	const searchParams = new URL(request.url).searchParams;
 	const rawReason = searchParams.get("reason") ?? "missing-projection";
 	if (!PUBLIC_RESUME_PDF_MISMATCH_REASONS.includes(rawReason as PublicResumePdfMismatchReason)) {
@@ -43,6 +48,7 @@ export async function handlePublicResumePdf(request: Request, username: string, 
 			username,
 			slug,
 			requestHeaders: request.headers,
+			trustedClient,
 			mismatchReason: rawReason as PublicResumePdfMismatchReason,
 			...(clientRegistryFingerprint ? { clientRegistryFingerprint } : {}),
 			...(clientAdapterFingerprint ? { clientAdapterFingerprint } : {}),
@@ -52,7 +58,7 @@ export async function handlePublicResumePdf(request: Request, username: string, 
 			headers: {
 				"Content-Type": result.body.type || "application/pdf",
 				"Content-Disposition": `inline; filename="${result.filename.replaceAll('"', "")}"`,
-				"Cache-Control": result.cacheControl,
+				"Cache-Control": "private, no-store",
 				"X-Content-Type-Options": "nosniff",
 			},
 		});

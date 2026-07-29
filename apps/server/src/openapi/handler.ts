@@ -40,7 +40,7 @@ const openAPIGenerator = new OpenAPIGenerator({
 	schemaConverters: [new ZodToJsonSchemaConverter()],
 });
 
-export async function handleOpenApi(request: Request) {
+export async function handleOpenApi(request: Request, trustedClient = "unknown") {
 	if (request.method === "GET" && (request.url.endsWith("/spec.json") || request.url.endsWith("/spec"))) {
 		const spec = await openAPIGenerator.generate(openAPIRouter, {
 			info: {
@@ -75,7 +75,7 @@ export async function handleOpenApi(request: Request) {
 	const resHeaders = new Headers();
 	const { response } = await openAPIHandler.handle(request, {
 		prefix: "/api/openapi",
-		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders },
+		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders, trustedClient },
 	});
 
 	if (!response) return new Response("NOT_FOUND", { status: 404 });

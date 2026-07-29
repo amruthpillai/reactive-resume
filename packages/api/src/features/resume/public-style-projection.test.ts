@@ -28,6 +28,7 @@ const input = {
 	username: "jane",
 	slug: "resume",
 	requestHeaders: new Headers({ "x-forwarded-for": "203.0.113.7" }),
+	trustedClient: "203.0.113.9",
 };
 
 describe("getStyleProjection", () => {
@@ -81,7 +82,7 @@ describe("getStyleProjection", () => {
 		expect(result).toEqual(expect.objectContaining({ formatVersion: 1, nodes: expect.any(Object) }));
 		expect(JSON.stringify(result)).not.toContain("@rr-version");
 		expect(consume).toHaveBeenCalledOnce();
-		expect(consume).toHaveBeenCalledWith({ requestHeaders: input.requestHeaders, resumeId: "resume-1" });
+		expect(consume).toHaveBeenCalledWith({ trustedClient: "203.0.113.9", resumeId: "resume-1" });
 	});
 
 	it("caches only authorized projections by renderDataHash", async () => {

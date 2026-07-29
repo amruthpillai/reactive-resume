@@ -15,7 +15,7 @@ const rpcHandler = new RPCHandler(router, {
 	],
 });
 
-export async function handleRpc(request: Request) {
+export async function handleRpc(request: Request, trustedClient = "unknown") {
 	const resHeaders = new Headers();
 	const { response } = await rpcHandler.handle(request, {
 		prefix: "/api/rpc",
@@ -23,6 +23,7 @@ export async function handleRpc(request: Request) {
 			locale: getRequestLocale(request),
 			reqHeaders: request.headers,
 			resHeaders,
+			trustedClient,
 			stylesheetPreflightRunner,
 		},
 	});

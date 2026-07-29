@@ -40,13 +40,15 @@ export const sharingRouter = {
 		})
 		.input(resumeDto.getStyleProjection.input)
 		.output(resumeDto.getStyleProjection.output)
-		.handler(({ input, context }) =>
-			getStyleProjection({
+		.handler(({ input, context }) => {
+			context.resHeaders?.set("Cache-Control", "private, no-store");
+			return getStyleProjection({
 				...input,
 				requestHeaders: context.reqHeaders,
+				trustedClient: context.trustedClient ?? "unknown",
 				...(context.user?.id ? { currentUserId: context.user.id } : {}),
-			}),
-		),
+			});
+		}),
 
 	setPassword: protectedProcedure
 		.route({

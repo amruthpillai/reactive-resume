@@ -1,8 +1,8 @@
 import { ORPCError } from "@orpc/server";
-import { clientKeyFromHeaders } from "./view-dedup";
 
 export type PublicRenderRateLimitInput = {
-	requestHeaders: Headers;
+	/** Sanitized transport identity supplied by the server adapter, never by request headers. */
+	trustedClient: string;
 	resumeId: string;
 };
 
@@ -31,7 +31,8 @@ export function createPublicRenderRateLimiter(
 	return {
 		consume(input) {
 			const currentTime = now();
-			const key = `${clientKeyFromHeaders(input.requestHeaders)}:${input.resumeId}`;
+			const trustedClient = input.trustedClient.trim() || "unknown";
+			const key = `${trustedClient}:${input.resumeId}`;
 			const previous = buckets.get(key) ?? { tokens: capacity, updatedAt: currentTime };
 			const elapsed = Math.max(0, currentTime - previous.updatedAt);
 			const tokens = Math.min(capacity, previous.tokens + (elapsed * capacity) / refillWindowMs);

@@ -19,13 +19,14 @@ export type GetStyleProjectionInput = {
 	username: string;
 	slug: string;
 	requestHeaders: Headers;
+	trustedClient: string;
 	currentUserId?: string;
 };
 
 export type PublicStyleProjectionDependencies = {
 	findResume(input: Pick<GetStyleProjectionInput, "username" | "slug">): Promise<PublicRenderResume | null>;
 	hasPasswordAccess(requestHeaders: Headers, resumeId: string, passwordHash: string | null): boolean | Promise<boolean>;
-	rateLimiter: { consume(input: { requestHeaders: Headers; resumeId: string }): void };
+	rateLimiter: { consume(input: { trustedClient: string; resumeId: string }): void };
 	createProjection(input: { data: ResumeData }): Promise<PublicStyleProjection>;
 	cache: Map<string, PublicStyleProjection>;
 };
@@ -113,7 +114,7 @@ export async function getStyleProjection(
 	dependencies: PublicStyleProjectionDependencies = defaultDependencies,
 ): Promise<PublicStyleProjection> {
 	const resume = await loadAuthorizedPublicRenderResume(input, dependencies);
-	dependencies.rateLimiter.consume({ requestHeaders: input.requestHeaders, resumeId: resume.id });
+	dependencies.rateLimiter.consume({ trustedClient: input.trustedClient, resumeId: resume.id });
 	const candidate = await dependencies.createProjection({ data: resume.data });
 	const cached = dependencies.cache.get(candidate.renderDataHash);
 	if (cached) return cached;

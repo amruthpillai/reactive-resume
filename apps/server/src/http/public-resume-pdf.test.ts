@@ -19,6 +19,7 @@ vi.mock("@reactive-resume/api/features/resume/public-pdf", () => ({
 }));
 
 const { handlePublicResumePdf } = await import("./public-resume-pdf");
+const trustedClient = "203.0.113.9";
 
 describe("handlePublicResumePdf", () => {
 	beforeEach(() => vi.clearAllMocks());
@@ -37,18 +38,19 @@ describe("handlePublicResumePdf", () => {
 			{ headers: { "x-forwarded-for": "203.0.113.7" } },
 		);
 
-		const response = await handlePublicResumePdf(request, "jane", "resume");
+		const response = await handlePublicResumePdf(request, "jane", "resume", trustedClient);
 
 		expect(response.status).toBe(200);
 		expect(response.headers.get("Content-Type")).toBe("application/pdf");
 		expect(response.headers.get("Content-Disposition")).toBe('inline; filename="Ada_Lovelace.pdf"');
-		expect(response.headers.get("Cache-Control")).toBe("public, max-age=300");
+		expect(response.headers.get("Cache-Control")).toBe("private, no-store");
 		expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
 		expect(await response.text()).toBe("%PDF");
 		expect(mocks.createPublicResumePdf).toHaveBeenCalledWith({
 			username: "jane",
 			slug: "resume",
 			requestHeaders: request.headers,
+			trustedClient,
 			mismatchReason: "render-data-hash",
 			clientRegistryFingerprint: registry,
 			clientAdapterFingerprint: adapter,
@@ -63,7 +65,7 @@ describe("handlePublicResumePdf", () => {
 		});
 		const request = new Request("https://example.com/api/resumes/jane/resume/pdf");
 
-		const response = await handlePublicResumePdf(request, "jane", "resume");
+		const response = await handlePublicResumePdf(request, "jane", "resume", trustedClient);
 
 		expect(response.headers.get("Cache-Control")).toBe("private, no-store");
 		expect(mocks.createPublicResumePdf).toHaveBeenCalledWith(
@@ -84,6 +86,7 @@ describe("handlePublicResumePdf", () => {
 			new Request("https://example.com/api/resumes/jane/resume/pdf"),
 			"jane",
 			"resume",
+			trustedClient,
 		);
 
 		expect(response.status).toBe(status);
@@ -97,6 +100,7 @@ describe("handlePublicResumePdf", () => {
 				new Request(`https://example.com/api/resumes/jane/resume/pdf${search}`),
 				"jane",
 				"resume",
+				trustedClient,
 			);
 
 			expect(response.status).toBe(400);

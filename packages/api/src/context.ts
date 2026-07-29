@@ -11,6 +11,7 @@ interface ORPCContext {
 	locale: Locale;
 	reqHeaders: Headers;
 	resHeaders?: Headers;
+	trustedClient?: string;
 	stylesheetPreflightRunner?: StylesheetPreflightRunner;
 }
 

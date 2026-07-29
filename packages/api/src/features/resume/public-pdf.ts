@@ -31,7 +31,7 @@ export type CreatePublicResumePdfInput = {
 	username: string;
 	slug: string;
 	requestHeaders: Headers;
-	currentUserId?: string;
+	trustedClient: string;
 	mismatchReason: PublicResumePdfMismatchReason;
 	clientRegistryFingerprint?: string;
 	clientAdapterFingerprint?: string;
@@ -39,7 +39,7 @@ export type CreatePublicResumePdfInput = {
 
 export type PublicResumePdfDependencies = PublicRenderAccessDependencies & {
 	resolveCurrentUserId(requestHeaders: Headers): Promise<string | undefined>;
-	rateLimiter: { consume(input: { requestHeaders: Headers; resumeId: string }): void };
+	rateLimiter: { consume(input: { trustedClient: string; resumeId: string }): void };
 	renderPdf(input: { data: ResumeData; filename: string }): Promise<File>;
 	getFingerprints(): Promise<{ registryFingerprint: string; adapterFingerprint: string }>;
 	now(): number;
@@ -70,12 +70,18 @@ export async function createPublicResumePdf(
 	) {
 		throw new ORPCError("BAD_REQUEST", { status: 400, message: "Invalid public PDF fallback metadata." });
 	}
-	const currentUserId = input.currentUserId ?? (await dependencies.resolveCurrentUserId(input.requestHeaders));
+	const currentUserId = await dependencies.resolveCurrentUserId(input.requestHeaders);
 	const resume = await loadAuthorizedPublicRenderResume(
-		{ ...input, ...(currentUserId ? { currentUserId } : {}) },
+		{
+			username: input.username,
+			slug: input.slug,
+			requestHeaders: input.requestHeaders,
+			trustedClient: input.trustedClient,
+			...(currentUserId ? { currentUserId } : {}),
+		},
 		dependencies,
 	);
-	dependencies.rateLimiter.consume({ requestHeaders: input.requestHeaders, resumeId: resume.id });
+	dependencies.rateLimiter.consume({ trustedClient: input.trustedClient, resumeId: resume.id });
 	const startedAt = dependencies.now();
 	const fingerprints = await dependencies.getFingerprints();
 	const event = (success: boolean) => {
@@ -98,7 +104,7 @@ export async function createPublicResumePdf(
 		return {
 			body,
 			filename,
-			cacheControl: resume.isPublic && !resume.hasPassword ? "public, max-age=300" : "private, no-store",
+			cacheControl: "private, no-store",
 		};
 	} catch (error) {
 		event(false);

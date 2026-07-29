@@ -9,6 +9,7 @@ const input = {
 	username: "jane",
 	slug: "resume",
 	requestHeaders,
+	trustedClient: "203.0.113.9",
 	mismatchReason: "render-data-hash" as const,
 };
 
@@ -87,8 +88,16 @@ describe("createPublicResumePdf", () => {
 		const limiter = createPublicRenderRateLimiter({ capacity: 1, refillWindowMs: 60_000, now: () => 0 });
 		const findResume = vi.fn().mockResolvedValue(buildResume());
 		const hasPasswordAccess = vi.fn();
+		const projectionInput = {
+			...input,
+			requestHeaders: new Headers({ "x-forwarded-for": "198.51.100.1" }),
+		};
+		const pdfInput = {
+			...input,
+			requestHeaders: new Headers({ "x-forwarded-for": "198.51.100.2" }),
+		};
 
-		await getStyleProjection(input, {
+		await getStyleProjection(projectionInput, {
 			findResume,
 			hasPasswordAccess,
 			rateLimiter: limiter,
@@ -105,7 +114,7 @@ describe("createPublicResumePdf", () => {
 		});
 
 		await expect(
-			createPublicResumePdf(input, {
+			createPublicResumePdf(pdfInput, {
 				findResume,
 				hasPasswordAccess,
 				resolveCurrentUserId: vi.fn().mockResolvedValue(undefined),
@@ -118,33 +127,57 @@ describe("createPublicResumePdf", () => {
 		).rejects.toMatchObject({ code: "RATE_LIMIT_EXCEEDED" });
 	});
 
-	it.each([
-		[{ isPublic: true, passwordHash: null }, "public, max-age=300"],
-		[{ isPublic: true, passwordHash: "hash" }, "private, no-store"],
-		[{ isPublic: false, passwordHash: null }, "private, no-store"],
-	] as const)("returns the correct cache policy for public/password/private access", async (access, cacheControl) => {
-		const body = new File(["%PDF"], "resume.pdf", { type: "application/pdf" });
-		const resume = buildResume(access);
-		const currentUserId = access.isPublic ? undefined : "owner-1";
-		const result = await createPublicResumePdf(
-			{ ...input, ...(currentUserId ? { currentUserId } : {}) },
-			{
-				findResume: vi.fn().mockResolvedValue(resume),
-				hasPasswordAccess: vi.fn().mockReturnValue(true),
-				resolveCurrentUserId: vi.fn().mockResolvedValue(currentUserId),
+	it("does not accept a caller-supplied owner identity for a private resume", async () => {
+		const forgedInput = { ...input, currentUserId: "owner-1" };
+
+		await expect(
+			createPublicResumePdf(forgedInput, {
+				findResume: vi.fn().mockResolvedValue(buildResume({ isPublic: false })),
+				hasPasswordAccess: vi.fn(),
+				resolveCurrentUserId: vi.fn().mockResolvedValue(undefined),
 				rateLimiter: { consume: vi.fn() },
-				renderPdf: vi.fn().mockResolvedValue(body),
+				renderPdf: vi.fn().mockResolvedValue(new File(["%PDF"], "resume.pdf")),
 				getFingerprints: vi.fn().mockResolvedValue({
 					registryFingerprint: "0".repeat(64),
 					adapterFingerprint: "1".repeat(64),
 				}),
-				now: () => 10,
+				now: () => 0,
 				observe: vi.fn(),
-			},
-		);
+			}),
+		).rejects.toMatchObject({ code: "NOT_FOUND" });
+	});
 
-		expect(result.body).toBe(body);
-		expect(result.cacheControl).toBe(cacheControl);
+	it("never makes fallback shared-cache eligible across public-to-private and password state changes", async () => {
+		const body = new File(["%PDF"], "resume.pdf", { type: "application/pdf" });
+		const findResume = vi
+			.fn()
+			.mockResolvedValueOnce(buildResume({ isPublic: true, passwordHash: null }))
+			.mockResolvedValueOnce(buildResume({ isPublic: false, passwordHash: null }))
+			.mockResolvedValueOnce(buildResume({ isPublic: true, passwordHash: "hash" }));
+		const dependencies = {
+			findResume,
+			hasPasswordAccess: vi.fn().mockReturnValue(true),
+			resolveCurrentUserId: vi.fn().mockResolvedValue("owner-1"),
+			rateLimiter: { consume: vi.fn() },
+			renderPdf: vi.fn().mockResolvedValue(body),
+			getFingerprints: vi.fn().mockResolvedValue({
+				registryFingerprint: "0".repeat(64),
+				adapterFingerprint: "1".repeat(64),
+			}),
+			now: () => 10,
+			observe: vi.fn(),
+		};
+
+		const publicResult = await createPublicResumePdf(input, dependencies);
+		const privateResult = await createPublicResumePdf(input, dependencies);
+		const passwordResult = await createPublicResumePdf(input, dependencies);
+
+		expect([publicResult.cacheControl, privateResult.cacheControl, passwordResult.cacheControl]).toEqual([
+			"private, no-store",
+			"private, no-store",
+			"private, no-store",
+		]);
+		expect(publicResult.body).toBe(body);
 	});
 
 	it("emits source-free, hashed fallback metadata", async () => {
