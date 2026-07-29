@@ -60,10 +60,10 @@ Attribute selectors support presence selectors such as `[type]` and all six valu
 `[TYPE="experience"]` is invalid and `[type="Experience"]` does not match the lowercase runtime value. Attribute
 selector flags, custom classes, and pseudo-elements are rejected.
 
-Selectors use standard CSS escaping for type, attribute, and ID names. An identifier that starts with a digit must
-escape that digit; a hexadecimal escape ends with whitespace when the following character could be read as another
-hexadecimal digit. Prefer quoted attribute selectors for UUID-bearing IDs because `[id="…"]` avoids those identifier
-escaping rules.
+RRSS accepts digit-leading ID selectors such as `#229ad766-cb9a-4f16-aaf0-fdd8394a9b95`. Standard CSS escaping is
+also supported for type, attribute, and ID names; a hexadecimal escape ends with whitespace when the following
+character could be read as another hexadecimal digit. For portability across CSS tools and unambiguous authoring,
+prefer quoted `[id="…"]` selectors for UUID-bearing IDs.
 
 <!-- RRSS-EXAMPLE:valid SELECTOR_ESCAPING -->
 ```css
