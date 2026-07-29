@@ -1,12 +1,16 @@
+import type { SemanticNode } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ResolvedPdfNodePresentation } from "./adapter";
+import type { ResolvedResumeRuntime } from "./resolve";
 import {
 	computeRenderDataHash,
 	PROPERTY_REGISTRY_V1,
 	projectPublicRenderData,
 	SEMANTIC_REGISTRY_V1,
+	SUPPORTED_RRSS_VERSIONS,
 	TEMPLATE_PART_CHILD_KINDS_V1,
 } from "@reactive-resume/resume/stylesheet";
+import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { resolveResumeRuntime, resolveStylesheetMode } from "./resolve";
 import { getTemplateSemanticRegistryFingerprintInput } from "./template-manifest";
 
@@ -27,6 +31,8 @@ export type PublicPdfNodePresentation = {
 	minPresenceAhead?: number;
 	orphans?: number;
 	widows?: number;
+	hidden?: boolean;
+	order?: number;
 };
 
 export type PublicStyleProjection = {
@@ -64,7 +70,18 @@ const isPageSize = (value: unknown): value is PublicPdfPageSize => {
 const isPublicNode = (value: unknown): value is PublicPdfNodePresentation => {
 	if (
 		!isPlainObject(value) ||
-		!hasExactKeys(value, ["style", "size", "break", "wrap", "fixed", "minPresenceAhead", "orphans", "widows"])
+		!hasExactKeys(value, [
+			"style",
+			"size",
+			"break",
+			"wrap",
+			"fixed",
+			"minPresenceAhead",
+			"orphans",
+			"widows",
+			"hidden",
+			"order",
+		])
 	) {
 		return false;
 	}
@@ -83,6 +100,8 @@ const isPublicNode = (value: unknown): value is PublicPdfNodePresentation => {
 	for (const key of ["minPresenceAhead", "orphans", "widows"] as const) {
 		if (value[key] !== undefined && !finiteNumber(value[key])) return false;
 	}
+	if (value.hidden !== undefined && typeof value.hidden !== "boolean") return false;
+	if (value.order !== undefined && (!Number.isInteger(value.order) || (value.order as number) < 0)) return false;
 	return true;
 };
 
@@ -112,7 +131,12 @@ const isProjectionShape = (value: unknown): value is PublicStyleProjection => {
 	return Object.values(value.nodes).every(isPublicNode);
 };
 
-const toPublicNode = (presentation: ResolvedPdfNodePresentation): PublicPdfNodePresentation => ({
+type PublicNodeStructure = Pick<PublicPdfNodePresentation, "hidden" | "order">;
+
+const toPublicNode = (
+	presentation: ResolvedPdfNodePresentation,
+	structure: PublicNodeStructure,
+): PublicPdfNodePresentation => ({
 	...(presentation.style
 		? {
 				style: Object.freeze(
@@ -132,7 +156,42 @@ const toPublicNode = (presentation: ResolvedPdfNodePresentation): PublicPdfNodeP
 	...(presentation.minPresenceAhead === undefined ? {} : { minPresenceAhead: presentation.minPresenceAhead }),
 	...(presentation.orphans === undefined ? {} : { orphans: presentation.orphans }),
 	...(presentation.widows === undefined ? {} : { widows: presentation.widows }),
+	...(structure.hidden === undefined ? {} : { hidden: structure.hidden }),
+	...(structure.order === undefined ? {} : { order: structure.order }),
 });
+
+const indexChildren = (tree: SemanticNode) => {
+	const children = new Map<string, readonly string[]>();
+	const visit = (node: SemanticNode) => {
+		children.set(
+			node.key,
+			node.children.map(({ key }) => key),
+		);
+		for (const child of node.children) visit(child);
+	};
+	visit(tree);
+	return children;
+};
+
+const projectNodeStructure = (
+	sourceTree: SemanticNode,
+	renderTree: SemanticNode,
+): Readonly<Record<string, PublicNodeStructure>> => {
+	const renderedChildren = indexChildren(renderTree);
+	const structure: Record<string, PublicNodeStructure> = {};
+	const visit = (node: SemanticNode) => {
+		const rendered = renderedChildren.get(node.key) ?? [];
+		const order = new Map(rendered.map((key, index) => [key, index]));
+		for (const [sourceIndex, child] of node.children.entries()) {
+			const renderedIndex = order.get(child.key);
+			structure[child.key] =
+				renderedIndex === undefined ? { hidden: true } : renderedIndex === sourceIndex ? {} : { order: renderedIndex };
+			visit(child);
+		}
+	};
+	visit(sourceTree);
+	return structure;
+};
 
 const fingerprints = Promise.all([
 	computeRenderDataHash({
@@ -161,9 +220,23 @@ const getFingerprints = async () => {
 
 export const getPublicStyleProjectionFingerprints = getFingerprints;
 
-const projectionFingerprints = async (data: ResumeData): Promise<ProjectionFingerprints> => ({
+const dataForPublicProjection = (data: ResumeData, languageVersion: number): ResumeData => {
+	if (data.metadata.stylesheet?.mode === "semantic") return data;
+	const source = { languageVersion, text: EMPTY_RRSS_SOURCE };
+	return {
+		...data,
+		metadata: {
+			...data.metadata,
+			stylesheet: { mode: "semantic", source, applied: source },
+		},
+	};
+};
+
+const projectionFingerprints = async (data: ResumeData, languageVersion?: number): Promise<ProjectionFingerprints> => ({
 	formatVersion: PUBLIC_STYLE_PROJECTION_FORMAT_VERSION,
-	languageVersion: data.metadata.stylesheet?.mode === "semantic" ? data.metadata.stylesheet.applied.languageVersion : 1,
+	languageVersion:
+		languageVersion ??
+		(data.metadata.stylesheet?.mode === "semantic" ? data.metadata.stylesheet.applied.languageVersion : 1),
 	semanticTreeVersion: SEMANTIC_TREE_VERSION,
 	...(await getFingerprints()),
 });
@@ -190,9 +263,13 @@ export async function createPublicStyleProjection(input: { data: ResumeData }): 
 		throw new Error("Applied semantic stylesheet cannot be projected");
 	}
 
+	const structure = projectNodeStructure(runtime.sourceTree, runtime.renderTree);
 	const nodes = Object.freeze(
 		Object.fromEntries(
-			Object.entries(runtime.presentation).map(([nodeKey, presentation]) => [nodeKey, toPublicNode(presentation)]),
+			Object.entries(runtime.presentation).map(([nodeKey, presentation]) => [
+				nodeKey,
+				toPublicNode(presentation, structure[nodeKey] ?? {}),
+			]),
 		),
 	);
 	const projection = await projectionFingerprints(input.data);
@@ -208,7 +285,15 @@ export async function validatePublicStyleProjection(
 	projection: PublicStyleProjection,
 ): Promise<boolean> {
 	if (!isProjectionShape(projection)) return false;
-	const expected = await projectionFingerprints(data);
+	if (!SUPPORTED_RRSS_VERSIONS.includes(projection.languageVersion as 1)) return false;
+	if (
+		data.metadata.stylesheet?.mode === "semantic" &&
+		projection.languageVersion !== data.metadata.stylesheet.applied.languageVersion
+	) {
+		return false;
+	}
+	const projectionData = dataForPublicProjection(data, projection.languageVersion);
+	const expected = await projectionFingerprints(projectionData, projection.languageVersion);
 	if (
 		projection.formatVersion !== expected.formatVersion ||
 		projection.languageVersion !== expected.languageVersion ||
@@ -220,8 +305,65 @@ export async function validatePublicStyleProjection(
 	}
 
 	try {
-		return projection.renderDataHash === (await hashProjection(data, projection.nodes, expected));
+		return projection.renderDataHash === (await hashProjection(projectionData, projection.nodes, expected));
 	} catch {
 		return false;
 	}
+}
+
+const toResolvedPresentation = (
+	nodes: PublicStyleProjection["nodes"],
+): Readonly<Record<string, ResolvedPdfNodePresentation>> =>
+	Object.freeze(
+		Object.fromEntries(
+			Object.entries(nodes).map(([nodeKey, { hidden: _hidden, order: _order, style, ...presentation }]) => [
+				nodeKey,
+				{
+					...presentation,
+					...(style
+						? {
+								style: Object.fromEntries(
+									Object.entries(style).map(([property, value]) => [property, value === null ? undefined : value]),
+								) as NonNullable<ResolvedPdfNodePresentation["style"]>,
+							}
+						: {}),
+				},
+			]),
+		),
+	);
+
+const applyProjectedStructure = (node: SemanticNode, nodes: PublicStyleProjection["nodes"]): SemanticNode => ({
+	...node,
+	attributes: { ...node.attributes },
+	roles: [...node.roles],
+	children: node.children
+		.map((child, sourceIndex) => ({ child, sourceIndex, structure: nodes[child.key] }))
+		.filter(({ structure }) => !structure?.hidden)
+		.sort(
+			(left, right) =>
+				(left.structure?.order ?? left.sourceIndex) - (right.structure?.order ?? right.sourceIndex) ||
+				left.sourceIndex - right.sourceIndex,
+		)
+		.map(({ child }) => applyProjectedStructure(child, nodes)),
+});
+
+export async function resolvePublicStyleProjectionRuntime(
+	data: ResumeData,
+	projection: PublicStyleProjection,
+): Promise<ResolvedResumeRuntime> {
+	if (!(await validatePublicStyleProjection(data, projection))) {
+		throw new Error("Public style projection does not match the resume render data");
+	}
+	const projectionData = dataForPublicProjection(data, projection.languageVersion);
+	const base = resolveResumeRuntime({
+		data: projectionData,
+		template: projectionData.metadata.template,
+		mode: "legacy",
+	});
+	return {
+		presentation: toResolvedPresentation(projection.nodes),
+		sourceTree: base.sourceTree,
+		renderTree: applyProjectedStructure(base.sourceTree, projection.nodes),
+		diagnostics: [],
+	};
 }

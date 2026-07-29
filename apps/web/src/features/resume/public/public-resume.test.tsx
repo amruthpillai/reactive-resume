@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import type { PublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
@@ -11,13 +12,25 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
+	styleProjection?: PublicStyleProjection;
+	refetchStyleProjection?: () => Promise<PublicStyleProjection>;
+	publicResume?: { username: string; slug: string };
 };
 
 const publicResumeMock = vi.hoisted(() => ({
-	createResumePdfBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
-	downloadWithAnchor: vi.fn(),
-	generateFilename: vi.fn((name: string, extension: string) => `${name}.${extension}`),
+	onDownloadPDF: vi.fn(),
 	PdfViewer: vi.fn<(_props: PdfViewerProps) => ReactNode>(() => null),
+	projection: {
+		formatVersion: 1,
+		languageVersion: 1,
+		semanticTreeVersion: 1,
+		registryFingerprint: "1".repeat(64),
+		adapterFingerprint: "2".repeat(64),
+		renderDataHash: "3".repeat(64),
+		nodes: { resume: {} },
+	} as PublicStyleProjection,
+	refetchProjection: vi.fn(),
+	useResumeExport: vi.fn(),
 	resume: undefined as
 		| undefined
 		| {
@@ -28,7 +41,10 @@ const publicResumeMock = vi.hoisted(() => ({
 }));
 
 vi.mock("@tanstack/react-query", () => ({
-	useQuery: () => ({ data: publicResumeMock.resume }),
+	useQuery: (options: { query: "resume" | "projection" }) =>
+		options.query === "resume"
+			? { data: publicResumeMock.resume }
+			: { data: publicResumeMock.projection, refetch: publicResumeMock.refetchProjection },
 }));
 
 vi.mock("@tanstack/react-router", () => ({
@@ -37,21 +53,21 @@ vi.mock("@tanstack/react-router", () => ({
 	}),
 }));
 
-vi.mock("@reactive-resume/utils/file", () => ({
-	downloadWithAnchor: publicResumeMock.downloadWithAnchor,
-	generateFilename: publicResumeMock.generateFilename,
-}));
-
 vi.mock("./pdf-viewer", () => ({
 	PdfViewer: publicResumeMock.PdfViewer,
 }));
 
 vi.mock("@/libs/orpc/client", () => ({
-	orpc: { resume: { getBySlug: { queryOptions: () => ({}) } } },
+	orpc: {
+		resume: {
+			getBySlug: { queryOptions: () => ({ query: "resume" }) },
+			getStyleProjection: { queryOptions: () => ({ query: "projection" }) },
+		},
+	},
 }));
 
-vi.mock("@/features/resume/export/pdf-document", () => ({
-	createResumePdfBlob: publicResumeMock.createResumePdfBlob,
+vi.mock("@/features/resume/export/use-resume-export", () => ({
+	useResumeExport: publicResumeMock.useResumeExport,
 }));
 
 const { PublicResumeRoute } = await import("./public-resume");
@@ -67,6 +83,13 @@ beforeEach(() => {
 		slug: "sample",
 	};
 	publicResumeMock.PdfViewer.mockClear();
+	publicResumeMock.refetchProjection.mockReset();
+	publicResumeMock.refetchProjection.mockResolvedValue({ data: publicResumeMock.projection });
+	publicResumeMock.useResumeExport.mockReset();
+	publicResumeMock.useResumeExport.mockReturnValue({
+		onDownloadPDF: publicResumeMock.onDownloadPDF,
+		isExporting: false,
+	});
 	publicResumeMock.PdfViewer.mockImplementation(({ className }) => (
 		<div className={className} data-testid="pdf-viewer" />
 	));
@@ -86,6 +109,22 @@ describe("PublicResumeRoute", () => {
 		expect(screen.getByTestId("pdf-viewer")).toHaveClass("block", "w-full");
 		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
 			expect.objectContaining({ data: sampleResumeData }),
+			undefined,
+		);
+		expect(publicResumeMock.useResumeExport).toHaveBeenCalledWith(publicResumeMock.resume, {
+			publicStyleProjection: publicResumeMock.projection,
+		});
+	});
+
+	it("loads the public projection and passes it to the shared viewer", () => {
+		renderPublicResumeRoute();
+
+		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
+			expect.objectContaining({
+				styleProjection: publicResumeMock.projection,
+				refetchStyleProjection: expect.any(Function),
+				publicResume: { username: "amruth", slug: "sample" },
+			}),
 			undefined,
 		);
 	});

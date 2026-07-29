@@ -1,4 +1,6 @@
+import type { PublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { SemanticStylesheet, StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { Template } from "@reactive-resume/schema/templates";
 import { useMemo } from "react";
 import { createResumePdfBlob as createPdfBlob } from "@reactive-resume/pdf/browser";
@@ -7,6 +9,22 @@ import { createSectionTitleResolverForLocale, useSectionTitleResolver } from "@/
 
 type ResumePdfRenderOptions = {
 	includeCoverLetterHeader?: boolean;
+};
+
+export type ResumePdfPresentation =
+	| { stylesheet: Pick<SemanticStylesheet, "mode"> & { applied: StylesheetSource } }
+	| { publicStyleProjection: PublicStyleProjection };
+
+export const withAppliedStylesheet = (data: ResumeData, presentation?: ResumePdfPresentation): ResumeData => {
+	if (!presentation || !("stylesheet" in presentation)) return data;
+	const { mode, applied } = presentation.stylesheet;
+	return {
+		...data,
+		metadata: {
+			...data.metadata,
+			stylesheet: { mode, source: applied, applied },
+		},
+	};
 };
 
 export const useLocalizedResumeDocument = (data?: ResumeData, template?: Template) => {
@@ -29,13 +47,17 @@ export const createResumePdfBlob = async (
 	data: ResumeData,
 	template?: Template,
 	renderOptions?: ResumePdfRenderOptions,
+	presentation?: ResumePdfPresentation,
 ) => {
 	const sectionTitleResolver = await createSectionTitleResolverForLocale(data.metadata.page.locale);
 
 	return createPdfBlob({
-		data,
+		data: withAppliedStylesheet(data, presentation),
 		template,
 		...(renderOptions ? { renderOptions } : {}),
+		...(presentation && "publicStyleProjection" in presentation
+			? { publicStyleProjection: presentation.publicStyleProjection }
+			: {}),
 		resolveSectionTitle: sectionTitleResolver,
 	});
 };

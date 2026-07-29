@@ -617,10 +617,17 @@ export function initializeStylesheetStore(input: {
 	});
 	activeRuntime = runtime;
 	return () => {
-		if (activeRuntime !== runtime) return;
-		runtime.destroy();
+		if (activeRuntime?.store.getState().resumeId !== input.resumeId) return;
+		activeRuntime.destroy();
 		activeRuntime = undefined;
 	};
+}
+
+export async function reinitializeStylesheetStore(resumeId: string, resumeData: ResumeData) {
+	if (activeRuntime?.store.getState().resumeId !== resumeId) return;
+	const canonical = await orpc.resume.stylesheet.getState.call({ id: resumeId });
+	if (activeRuntime?.store.getState().resumeId !== resumeId) return;
+	initializeStylesheetStore({ resumeId, initial: canonical, resumeData });
 }
 
 export async function refreshStylesheetStore(resumeId: string, resumeData?: ResumeData) {

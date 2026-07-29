@@ -1,8 +1,15 @@
+import type { PublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { PDFDocumentLoadingTask, PDFDocumentProxy } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { AnnotationMode, GlobalWorkerOptions, getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { EventBus, LinkTarget, PDFLinkService, PDFViewer } from "pdfjs-dist/legacy/web/pdf_viewer.mjs";
 import { useEffect, useReducer, useRef } from "react";
+import {
+	getPublicStyleProjectionFingerprints,
+	PUBLIC_STYLE_PROJECTION_FORMAT_VERSION,
+	SEMANTIC_TREE_VERSION,
+	validatePublicStyleProjection,
+} from "@reactive-resume/pdf/public-projection";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
@@ -14,6 +21,12 @@ GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
+	styleProjection?: PublicStyleProjection;
+	refetchStyleProjection?: () => Promise<PublicStyleProjection>;
+	publicResume?: {
+		username: string;
+		slug: string;
+	};
 };
 
 type PdfViewerOptions = ConstructorParameters<typeof PDFViewer>[0] & {
@@ -67,11 +80,38 @@ function pdfViewerReducer(state: PdfViewerState, action: PdfViewerAction): PdfVi
 	}
 }
 
-export function PdfViewer({ className, data }: PdfViewerProps) {
+type ProjectionMismatchReason =
+	| "format-version"
+	| "language-version"
+	| "semantic-tree-version"
+	| "registry-fingerprint"
+	| "adapter-fingerprint"
+	| "render-data-hash"
+	| "invalid-projection";
+
+async function projectionMismatchReason(
+	data: ResumeData,
+	projection: PublicStyleProjection,
+): Promise<ProjectionMismatchReason | null> {
+	if (projection.formatVersion !== PUBLIC_STYLE_PROJECTION_FORMAT_VERSION) return "format-version";
+	const languageVersion =
+		data.metadata.stylesheet?.mode === "semantic" ? data.metadata.stylesheet.applied.languageVersion : 1;
+	if (projection.languageVersion !== languageVersion) return "language-version";
+	if (projection.semanticTreeVersion !== SEMANTIC_TREE_VERSION) return "semantic-tree-version";
+	const fingerprints = await getPublicStyleProjectionFingerprints();
+	if (projection.registryFingerprint !== fingerprints.registryFingerprint) return "registry-fingerprint";
+	if (projection.adapterFingerprint !== fingerprints.adapterFingerprint) return "adapter-fingerprint";
+	return (await validatePublicStyleProjection(data, projection)) ? null : "render-data-hash";
+}
+
+export function PdfViewer({ className, data, styleProjection, refetchStyleProjection, publicResume }: PdfViewerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewerRef = useRef<HTMLDivElement>(null);
 	const fileRef = useRef<Blob | null>(null);
+	const projectionRetryRef = useRef<{ data?: ResumeData; publicKey?: string; retried: boolean }>({
+		retried: false,
+	});
 	const [{ error, fileVersion, isReady, viewerHeight }, dispatch] = useReducer(
 		pdfViewerReducer,
 		INITIAL_PDF_VIEWER_STATE,
@@ -83,7 +123,40 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 		fileRef.current = null;
 		dispatch({ type: "resetForData" });
 
-		void createResumePdfBlob(data)
+		const createPdf = async () => {
+			if (!styleProjection || !publicResume) return createResumePdfBlob(data);
+
+			let projection = styleProjection;
+			let reason = await projectionMismatchReason(data, projection).catch(() => "invalid-projection" as const);
+			const publicKey = `${publicResume.username}/${publicResume.slug}`;
+			if (projectionRetryRef.current.data !== data || projectionRetryRef.current.publicKey !== publicKey) {
+				projectionRetryRef.current = { data, publicKey, retried: false };
+			}
+			if (reason && refetchStyleProjection && !projectionRetryRef.current.retried) {
+				projectionRetryRef.current.retried = true;
+				try {
+					projection = await refetchStyleProjection();
+					reason = await projectionMismatchReason(data, projection).catch(() => "invalid-projection" as const);
+				} catch {
+					// The original mismatch still requires the authorized server-rendered fallback.
+				}
+			}
+			if (!reason) return createResumePdfBlob(data, undefined, undefined, { publicStyleProjection: projection });
+
+			const search = new URLSearchParams({
+				reason,
+				registryFingerprint: projection.registryFingerprint,
+				adapterFingerprint: projection.adapterFingerprint,
+			});
+			const response = await fetch(
+				`/api/resumes/${encodeURIComponent(publicResume.username)}/${encodeURIComponent(publicResume.slug)}/pdf?${search}`,
+				{ credentials: "include" },
+			);
+			if (!response.ok) throw new Error(`Public PDF fallback failed with ${response.status}`);
+			return response.blob();
+		};
+
+		void createPdf()
 			.then((blob) => {
 				if (isCancelled) return;
 
@@ -100,7 +173,7 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 		return () => {
 			isCancelled = true;
 		};
-	}, [data]);
+	}, [data, publicResume, refetchStyleProjection, styleProjection]);
 
 	useEffect(() => {
 		void fileVersion;

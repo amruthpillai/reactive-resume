@@ -1,6 +1,7 @@
 import type { SectionTitleResolver } from "./section-title";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
+import { createPublicStyleProjection } from "./semantic/public-projection";
 
 const rendererMock = vi.hoisted(() => ({
 	pdf: vi.fn(() => ({
@@ -55,6 +56,31 @@ describe("createResumePdfBlob", () => {
 
 		expect(promise).toBeInstanceOf(Promise);
 		await expect(promise).rejects.toThrow("renderer failed");
+	});
+
+	it("renders a source-free public projection through the semantic runtime", async () => {
+		const semanticData = structuredClone(sampleResumeData);
+		const applied = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+		const projection = await createPublicStyleProjection({ data: semanticData });
+		const publicData = structuredClone(semanticData);
+		delete publicData.metadata.stylesheet;
+		const { createResumePdfBlob } = await import("./browser");
+
+		await createResumePdfBlob({ data: publicData, publicStyleProjection: projection });
+
+		expect(rendererMock.pdf).toHaveBeenCalledWith(
+			expect.objectContaining({
+				props: expect.objectContaining({
+					data: publicData,
+					semanticRuntime: expect.objectContaining({
+						presentation: expect.objectContaining({
+							"page-1/region-header/header/name": { style: { color: "#123456" } },
+						}),
+					}),
+				}),
+			}),
+		);
 	});
 
 	it("returns semantic diagnostics without rendering an invalid applied source", async () => {

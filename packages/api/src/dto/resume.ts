@@ -60,6 +60,8 @@ const publicPdfNodePresentationSchema = z.strictObject({
 	minPresenceAhead: z.number().finite().optional(),
 	orphans: z.number().finite().optional(),
 	widows: z.number().finite().optional(),
+	hidden: z.boolean().optional(),
+	order: z.number().int().nonnegative().optional(),
 });
 const publicStyleProjectionSchema = z.strictObject({
 	formatVersion: z.literal(1),

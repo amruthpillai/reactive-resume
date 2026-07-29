@@ -8,7 +8,15 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { ResumePreviewClient } from "./preview.browser";
 
 const previewMock = vi.hoisted(() => ({
+	builderResumeId: undefined as string | undefined,
 	builderResumeData: undefined as ResumeData | undefined,
+	stylesheet: {
+		resumeId: undefined as string | undefined,
+		mode: "legacy" as "legacy" | "semantic",
+		source: { languageVersion: 1, text: "@rr-version 1;\n" },
+		applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+	},
+	toastError: vi.fn(),
 	toBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
 }));
 
@@ -39,9 +47,26 @@ vi.mock("@/features/resume/export/pdf-document", () => ({
 	createResumePdfBlob: previewMock.toBlob,
 }));
 
+vi.mock("sonner", () => ({
+	toast: { error: previewMock.toastError },
+}));
+
 vi.mock("../builder/draft", () => ({
 	useResumeData: () => previewMock.builderResumeData,
+	useResumeStore: (selector: (state: { resumeId?: string }) => unknown) =>
+		selector({ resumeId: previewMock.builderResumeId }),
 	usePreviewPausedStore: (selector: (state: { paused: boolean }) => unknown) => selector({ paused: false }),
+}));
+
+vi.mock("@/features/resume/stylesheet/store", () => ({
+	useStylesheetStore: (
+		selector: (state: {
+			resumeId?: string;
+			mode: "legacy" | "semantic";
+			source: { languageVersion: number; text: string };
+			applied: { languageVersion: number; text: string };
+		}) => unknown,
+	) => selector(previewMock.stylesheet),
 }));
 
 vi.mock("./pdf-canvas", async () => {
@@ -52,7 +77,7 @@ vi.mock("./pdf-canvas", async () => {
 		PdfCanvasDocument: ({ children, onLoadSuccess }: PdfCanvasDocumentProps) => {
 			React.useEffect(() => {
 				onLoadSuccess(pdfDocument);
-			}, [onLoadSuccess]);
+			}, []);
 
 			return React.createElement(React.Fragment, null, children(pdfDocument));
 		},
@@ -60,7 +85,7 @@ vi.mock("./pdf-canvas", async () => {
 			React.useEffect(() => {
 				onLoadSuccess(pageNumber, { height: 200, width: 100 });
 				onRenderSuccess?.();
-			}, [onLoadSuccess, onRenderSuccess, pageNumber]);
+			}, [pageNumber]);
 
 			return React.createElement(
 				"div",
@@ -77,9 +102,17 @@ describe("ResumePreviewClient", () => {
 	});
 
 	beforeEach(() => {
+		previewMock.builderResumeId = undefined;
 		previewMock.builderResumeData = undefined;
+		previewMock.stylesheet = {
+			resumeId: undefined,
+			mode: "legacy",
+			source: { languageVersion: 1, text: "@rr-version 1;\n" },
+			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+		};
 		previewMock.toBlob.mockReset();
 		previewMock.toBlob.mockImplementation(async () => new Blob(["%PDF"], { type: "application/pdf" }));
+		previewMock.toastError.mockReset();
 	});
 
 	it("renders a loading placeholder for each builder layout page while the PDF is generated", () => {
@@ -102,6 +135,51 @@ describe("ResumePreviewClient", () => {
 			expect(previewMock.toBlob).toHaveBeenCalledTimes(1);
 		});
 
-		expect(previewMock.toBlob).toHaveBeenCalledWith(sampleResumeData);
+		expect(previewMock.toBlob).toHaveBeenCalledWith(sampleResumeData, undefined, undefined, undefined);
+	});
+
+	it("renders the canonical applied stylesheet and ignores invalid editable source", async () => {
+		const validApplied = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		previewMock.builderResumeId = "resume-1";
+		previewMock.builderResumeData = sampleResumeData;
+		previewMock.stylesheet = {
+			resumeId: "resume-1",
+			mode: "semantic",
+			source: { languageVersion: 1, text: "section {" },
+			applied: validApplied,
+		};
+
+		render(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
+
+		await waitFor(() => expect(previewMock.toBlob).toHaveBeenCalledTimes(1));
+		expect(previewMock.toBlob).toHaveBeenCalledWith(sampleResumeData, undefined, undefined, {
+			stylesheet: { mode: "semantic", applied: validApplied },
+		});
+
+		expect(previewMock.toBlob).toHaveBeenCalledTimes(1);
+	});
+
+	it("keeps the active PDF visible and reports a later render failure", async () => {
+		previewMock.builderResumeId = "resume-1";
+		previewMock.builderResumeData = sampleResumeData;
+		previewMock.stylesheet = {
+			resumeId: "resume-1",
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@rr-version 1;\n" },
+			applied: { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" },
+		};
+		const view = render(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
+		expect(await screen.findByRole("img", { name: "Resume page 1 of 1" })).toBeTruthy();
+
+		previewMock.toBlob.mockRejectedValueOnce(new Error("render failed"));
+		previewMock.stylesheet.applied = {
+			languageVersion: 1,
+			text: "@rr-version 1;\nname { color: #654321; }\n",
+		};
+		view.rerender(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
+
+		await waitFor(() => expect(previewMock.toBlob).toHaveBeenCalledTimes(2));
+		await waitFor(() => expect(previewMock.toastError).toHaveBeenCalledTimes(1));
+		expect(screen.getByRole("img", { name: "Resume page 1 of 1" })).toBeTruthy();
 	});
 });

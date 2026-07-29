@@ -41,6 +41,29 @@ describe("public semantic style projection", () => {
 		expect(serialized).not.toContain("undefined");
 	});
 
+	it("carries final sibling visibility and order without stylesheet source", async () => {
+		const data = buildData();
+		data.basics.email = "ada@example.com";
+		data.basics.phone = "+44 123";
+		data.basics.location = "London";
+		const applied = {
+			languageVersion: 1,
+			text: `@rr-version 1;
+				contact-item[name="location"] { display: none; }
+				contact-item[name="phone"] { order: -1; }
+			`,
+		};
+		data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+
+		const projection = await createPublicStyleProjection({ data });
+
+		expect(projection.nodes["page-1/region-header/header/contact-list/contact-location"]).toMatchObject({
+			hidden: true,
+		});
+		expect(projection.nodes["page-1/region-header/header/contact-list/contact-phone"]).toMatchObject({ order: 0 });
+		expect(projection.nodes["page-1/region-header/header/contact-list/contact-email"]).toMatchObject({ order: 1 });
+	});
+
 	it("rejects changed nodes and every version or fingerprint mismatch", async () => {
 		const data = buildData();
 		const valid = await createPublicStyleProjection({ data });

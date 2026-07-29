@@ -4,6 +4,7 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import type { ComponentType } from "react";
 import type { ResumeRenderOptions } from "./context";
 import type { SectionTitleResolver } from "./section-title";
+import type { ResolvedResumeRuntime } from "./semantic";
 import { useMemo } from "react";
 import { Document } from "#react-pdf-renderer";
 import { RenderProvider } from "./context";
@@ -29,12 +30,19 @@ type ResumeDocumentProps = {
 	template: Template;
 	renderOptions?: ResumeRenderOptions | undefined;
 	resolveSectionTitle?: SectionTitleResolver | undefined;
+	semanticRuntime?: ResolvedResumeRuntime | undefined;
 };
 
 const getLayoutPageKey = (page: LayoutPage, pageIndex: number) =>
 	`${page.fullWidth ? "full" : "split"}:${page.main.join(",")}:${page.sidebar.join(",")}:${pageIndex}`;
 
-export const ResumeDocument = ({ data, template, renderOptions, resolveSectionTitle }: ResumeDocumentProps) => {
+export const ResumeDocument = ({
+	data,
+	template,
+	renderOptions,
+	resolveSectionTitle,
+	semanticRuntime,
+}: ResumeDocumentProps) => {
 	const TemplatePageComponent = getTemplatePage(template);
 	const creationDate = useMemo(() => new Date(), []);
 	const hasCjkContent = useMemo(() => resumeContentContainsCJK(data), [data]);
@@ -54,17 +62,18 @@ export const ResumeDocument = ({ data, template, renderOptions, resolveSectionTi
 	const pageMinHeightStyle = getTemplatePageMinHeightStyle(resumeData.metadata.page.format);
 	const headerResumeData = renderOptions ? { ...resumeData, renderOptions } : resumeData;
 	const stylesheetMode = resolveStylesheetMode(resumeData);
-	const semanticRuntime = useMemo(
-		() => resolveResumeRuntime({ data: resumeData, template, mode: stylesheetMode }),
-		[resumeData, stylesheetMode, template],
+	const runtime = useMemo(
+		() => semanticRuntime ?? resolveResumeRuntime({ data: resumeData, template, mode: stylesheetMode }),
+		[resumeData, semanticRuntime, stylesheetMode, template],
 	);
+	const semanticMode = semanticRuntime ? "semantic" : stylesheetMode;
 
 	return (
 		<SemanticRenderProvider
-			presentation={semanticRuntime.presentation}
-			mode={stylesheetMode}
-			sourceTree={semanticRuntime.sourceTree}
-			renderTree={semanticRuntime.renderTree}
+			presentation={runtime.presentation}
+			mode={semanticMode}
+			sourceTree={runtime.sourceTree}
+			renderTree={runtime.renderTree}
 		>
 			<RenderProvider data={resumeData} resolveSectionTitle={resolveSectionTitle} renderOptions={renderOptions}>
 				<Document

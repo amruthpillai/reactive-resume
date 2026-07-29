@@ -17,6 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { useResumeStore } from "@/features/resume/builder/draft";
+import { reinitializeStylesheetStore } from "@/features/resume/stylesheet/store";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { formatRelativeTime } from "@/libs/locale";
@@ -51,9 +52,10 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 		restoreVersion(
 			{ resumeId, versionId },
 			{
-				onSuccess: (restored) => {
+				onSuccess: async (restored) => {
 					replaceResumeFromServer(restored as Resume);
 					queryClient.setQueryData(orpc.resume.getById.queryOptions({ input: { id: resumeId } }).queryKey, restored);
+					await reinitializeStylesheetStore(resumeId, restored.data);
 					void queryClient.invalidateQueries({ queryKey: orpc.resume.listVersions.queryKey({ input: { resumeId } }) });
 					toast.success(t`Your resume has been restored to the selected version.`);
 				},
