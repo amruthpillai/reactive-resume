@@ -281,8 +281,7 @@ export function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShel
 			onRedo={redo}
 		/>
 	);
-
-	return (
+	const editorChrome = (
 		<div className="space-y-3">
 			{mode === "legacy" && <LegacyStylesheetBanner disabled={hasErrors || isChecking} onActivate={activate} />}
 
@@ -297,16 +296,21 @@ export function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShel
 				onFocusToggle={toggleFocus}
 			/>
 
-			{!(isMobile && focusOpen) && <div className={focusOpen ? "h-[calc(100svh-14rem)]" : "h-72"}>{editor}</div>}
+			<div className={focusOpen ? (isMobile ? "h-[55svh]" : "h-[calc(100svh-14rem)]") : "h-72"}>{editor}</div>
 
-			<StylesheetStatus status={status} diagnostics={diagnostics} />
+			<StylesheetStatus mode={mode} status={status} diagnostics={diagnostics} />
+		</div>
+	);
 
+	return (
+		<div>
+			{!(isMobile && focusOpen) && editorChrome}
 			<Sheet open={isMobile && focusOpen} onOpenChange={setFocusOpen}>
-				<SheetContent side="right" className="w-full max-w-full gap-3 p-4 sm:max-w-full">
+				<SheetContent side="right" className="w-full max-w-full gap-3 overflow-hidden p-4 sm:max-w-full">
 					<SheetTitle>
 						<Trans>Semantic CSS stylesheet</Trans>
 					</SheetTitle>
-					<div className="min-h-0 flex-1">{isMobile && focusOpen ? editor : null}</div>
+					<div className="min-h-0 flex-1 overflow-y-auto">{isMobile && focusOpen ? editorChrome : null}</div>
 				</SheetContent>
 			</Sheet>
 		</div>

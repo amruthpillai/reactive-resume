@@ -6,11 +6,12 @@ import { Badge } from "@reactive-resume/ui/components/badge";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 
 export type StylesheetStatusProps = {
+	mode: "legacy" | "semantic";
 	status: "idle" | "compiling" | "preflighting" | "saving" | "applied" | "error";
 	diagnostics: readonly RrssDiagnostic[];
 };
 
-export function StylesheetStatus({ status, diagnostics }: StylesheetStatusProps) {
+export function StylesheetStatus({ mode, status, diagnostics }: StylesheetStatusProps) {
 	const errors = diagnostics.filter(({ severity }) => severity === "error");
 	const warnings = diagnostics.filter(({ severity }) => severity === "warning");
 	const hasErrors = status === "error" || errors.length > 0;
@@ -23,14 +24,16 @@ export function StylesheetStatus({ status, diagnostics }: StylesheetStatusProps)
 					<WarningCircleIcon data-icon="inline-start" />
 					<Trans>Error</Trans>
 				</Badge>
+			) : isPending ? (
+				<Badge variant="outline">{mode === "legacy" ? <Trans>Checking draft</Trans> : <Trans>Checking</Trans>}</Badge>
 			) : warnings.length > 0 ? (
 				<Badge variant="secondary">
 					<WarningIcon data-icon="inline-start" />
-					<Trans>Applied with warnings</Trans>
+					{mode === "legacy" ? <Trans>Ready to activate with warnings</Trans> : <Trans>Applied with warnings</Trans>}
 				</Badge>
 			) : (
-				<Badge variant={isPending ? "outline" : "secondary"}>
-					{isPending ? <Trans>Checking</Trans> : <Trans>Applied</Trans>}
+				<Badge variant="secondary">
+					{mode === "legacy" ? <Trans>Ready to activate</Trans> : <Trans>Applied</Trans>}
 				</Badge>
 			)}
 
