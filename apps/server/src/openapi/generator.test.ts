@@ -42,6 +42,20 @@ function containsImpossibleSchema(value: unknown): boolean {
 	return Object.values(object).some(containsImpossibleSchema);
 }
 
+function findImpossibleRequestSchemas(spec: GeneratedSpecView) {
+	const impossibleRequests: string[] = [];
+	for (const [path, operations] of Object.entries(spec.paths ?? {})) {
+		for (const [method, operation] of Object.entries(operations)) {
+			for (const [mediaType, content] of Object.entries(operation.requestBody?.content ?? {})) {
+				if (containsImpossibleSchema(content.schema)) {
+					impossibleRequests.push(`${method.toUpperCase()} ${path} (${mediaType})`);
+				}
+			}
+		}
+	}
+	return impossibleRequests;
+}
+
 describe("generateOpenApiSpec", () => {
 	it("uses caller-provided application URL and version", async () => {
 		const spec = await generateSpec();
@@ -71,16 +85,27 @@ describe("generateOpenApiSpec", () => {
 
 	it("does not publish impossible request schemas", async () => {
 		const spec = (await generateSpec()) as GeneratedSpecView;
-		const impossibleRequests: string[] = [];
 
-		for (const [path, operations] of Object.entries(spec.paths ?? {})) {
-			for (const [method, operation] of Object.entries(operations)) {
-				const requestSchema = operation.requestBody?.content?.["application/json"]?.schema;
-				if (containsImpossibleSchema(requestSchema)) impossibleRequests.push(`${method.toUpperCase()} ${path}`);
-			}
-		}
+		expect(findImpossibleRequestSchemas(spec)).toEqual([]);
+	});
 
-		expect(impossibleRequests).toEqual([]);
+	it("checks every request body media type for impossible schemas", () => {
+		const spec: GeneratedSpecView = {
+			paths: {
+				"/documents": {
+					post: {
+						requestBody: {
+							content: {
+								"application/json": { schema: { type: "object" } },
+								"multipart/form-data": { schema: { not: {} } },
+							},
+						},
+					},
+				},
+			},
+		};
+
+		expect(findImpossibleRequestSchemas(spec)).toEqual(["POST /documents (multipart/form-data)"]);
 	});
 
 	it("documents imported data as an accepted ResumeData input", async () => {

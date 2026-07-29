@@ -3,11 +3,14 @@ import {
 	baseSectionSchema,
 	basicsSchema,
 	customFieldSchema,
+	customSectionItemDefinitionByType,
+	customSectionSchema,
 	experienceItemSchema,
 	layoutSchema,
 	pageSchema,
 	pictureSchema,
 	resumeDataSchema,
+	sectionTypeSchema,
 	skillItemSchema,
 	styleRuleSchema,
 	styleRulesSchema,
@@ -28,6 +31,47 @@ describe("resumeDataSchema", () => {
 	it("rejects missing top-level keys", () => {
 		const partial = { ...defaultResumeData, basics: undefined };
 		expect(resumeDataSchema.safeParse(partial).success).toBe(false);
+	});
+
+	it("preserves cover-letter fields when parsing the overlapping content shape", () => {
+		const result = customSectionSchema.parse({
+			id: "cover-letter",
+			type: "cover-letter",
+			title: "Cover Letter",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "item", hidden: false, recipient: "Ada Lovelace", content: "<p>Hello</p>" }],
+		});
+
+		expect(result.items[0]).toMatchObject({ recipient: "Ada Lovelace", content: "<p>Hello</p>" });
+	});
+});
+
+describe("customSectionItemDefinitionByType", () => {
+	it("maps every custom section type to its named item schema", () => {
+		expect(
+			Object.fromEntries(
+				sectionTypeSchema.options.map((type) => [type, customSectionItemDefinitionByType[type].schemaName]),
+			),
+		).toEqual({
+			summary: "summaryItemSchema",
+			profiles: "profileItemSchema",
+			experience: "experienceItemSchema",
+			education: "educationItemSchema",
+			projects: "projectItemSchema",
+			skills: "skillItemSchema",
+			languages: "languageItemSchema",
+			interests: "interestItemSchema",
+			awards: "awardItemSchema",
+			certifications: "certificationItemSchema",
+			publications: "publicationItemSchema",
+			volunteer: "volunteerItemSchema",
+			references: "referenceItemSchema",
+			"cover-letter": "coverLetterItemSchema",
+		});
 	});
 });
 

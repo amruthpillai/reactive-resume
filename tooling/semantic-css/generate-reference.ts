@@ -15,7 +15,10 @@ import {
 	SYSTEM_VARIABLE_REGISTRY_V1,
 	TEMPLATE_PART_CHILD_KINDS_V1,
 } from "@reactive-resume/resume/stylesheet";
-import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
+import {
+	createCustomSectionItemJsonSchemas,
+	createResumeDataJsonSchema,
+} from "@reactive-resume/schema/resume/json-schema";
 
 export type DocumentationPaths = {
 	rrssReference: string;
@@ -32,6 +35,7 @@ export type JsonSchema = {
 	oneOf?: readonly JsonSchema[];
 	enum?: readonly unknown[];
 	minimum?: number;
+	exclusiveMinimum?: number;
 	maximum?: number;
 	minLength?: number;
 	maxLength?: number;
@@ -48,6 +52,11 @@ const defaultPaths: DocumentationPaths = {
 const markdown = (value: unknown) => String(value).replaceAll("|", "\\|").replaceAll(/\r?\n/g, " ");
 const code = (value: unknown) => `\`${markdown(value)}\``;
 const list = (values: readonly unknown[]) => (values.length ? values.map(code).join(", ") : "—");
+const sentenceList = (values: readonly unknown[]) => {
+	if (values.length < 2) return list(values);
+	if (values.length === 2) return `${code(values[0])} and ${code(values[1])}`;
+	return `${values.slice(0, -1).map(code).join(", ")}, and ${code(values.at(-1))}`;
+};
 const table = (headers: readonly string[], rows: readonly string[]) =>
 	[`| ${headers.join(" | ")} |`, `| ${headers.map(() => "---").join(" | ")} |`, ...rows].join("\n");
 const sortedEntries = <T>(record: Readonly<Record<string, T>>) =>
@@ -178,6 +187,7 @@ function schemaConstraints(schema: JsonSchema) {
 	const constraints = [
 		schema.enum && `enum: ${JSON.stringify(schema.enum)}`,
 		schema.minimum !== undefined && `minimum: ${schema.minimum}`,
+		schema.exclusiveMinimum !== undefined && `exclusiveMinimum: ${schema.exclusiveMinimum}`,
 		schema.maximum !== undefined && `maximum: ${schema.maximum}`,
 		schema.minLength !== undefined && `minLength: ${schema.minLength}`,
 		schema.maxLength !== undefined && `maxLength: ${schema.maxLength}`,
@@ -187,16 +197,17 @@ function schemaConstraints(schema: JsonSchema) {
 }
 
 type VariantContext = {
-	index: number;
+	label: string;
 	path: string;
 };
 
-const variantLabel = ({ index, path }: VariantContext) => `variant ${index} at ${path}`;
+const variantLabel = ({ label, path }: VariantContext) => `${label} at ${path}`;
 
 export function renderSchemaReference(schema: JsonSchema) {
 	const rows: string[] = [];
 	const seen = new Set<string>();
 	const variantRows: string[] = [];
+	const customSectionItemSchemas = createCustomSectionItemJsonSchemas();
 
 	const visit = (
 		node: JsonSchema,
@@ -220,11 +231,23 @@ export function renderSchemaReference(schema: JsonSchema) {
 			visit(property, path ? `${path}.${name}` : name, requiredProperties.has(name), variants);
 		}
 		if (node.items) visit(node.items, `${path}[]`, null, variants);
-		for (const [branchIndex, branch] of (node.anyOf ?? node.oneOf ?? []).entries()) {
-			const variant = { index: branchIndex + 1, path };
+		const union = node.anyOf ?? node.oneOf ?? [];
+		if (path === "customSections[].items[]" && union.length > 0) {
+			for (const [type, item] of Object.entries(customSectionItemSchemas)) {
+				const itemSchema = item.schema as JsonSchema;
+				const shape =
+					itemSchema.type === "object" ? `{ ${(itemSchema.required ?? []).join(", ")} }` : schemaType(itemSchema);
+				const label = `type ${type}, schema ${item.schemaName}`;
+				variantRows.push(`| ${code(path)} | ${code(type)} | ${code(item.schemaName)} | ${code(shape)} |`);
+				visit(itemSchema, path, required, [...variants, { label, path }]);
+			}
+			return;
+		}
+		for (const [branchIndex, branch] of union.entries()) {
+			const label = `variant ${branchIndex + 1}`;
 			const shape = branch.type === "object" ? `{ ${(branch.required ?? []).join(", ")} }` : schemaType(branch);
-			variantRows.push(`| ${code(path)} | variant ${variant.index} | ${code(shape)} |`);
-			visit(branch, path, required, [...variants, variant]);
+			variantRows.push(`| ${code(path)} | ${label} | — | ${code(shape)} |`);
+			visit(branch, path, required, [...variants, { label, path }]);
 		}
 	};
 
@@ -241,13 +264,13 @@ export function renderSchemaReference(schema: JsonSchema) {
 		"",
 		"## Required top-level fields",
 		"",
-		"`picture`, `basics`, `summary`, `sections`, `customSections`, and `metadata`",
+		sentenceList(schema.required ?? []),
 		"",
 		"## Union variant shapes",
 		"",
 		"Choose one coherent shape for each union value. Required fields are local to that variant; optional fields remain in the field catalog.",
 		"",
-		table(["Path", "Variant", "Representative required shape"], variantRows),
+		table(["Path", "Type/variant", "Item schema", "Representative required shape"], variantRows),
 		"",
 		"## Field catalog",
 		"",

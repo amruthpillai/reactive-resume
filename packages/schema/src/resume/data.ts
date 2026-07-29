@@ -359,25 +359,27 @@ export const sectionTypeSchema = z.enum([
 
 export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
 
-const customSectionItemSchema = z.union([
-	// coverLetterItemSchema must come before summaryItemSchema because both have 'content',
-	// but coverLetterItemSchema also requires 'recipient'. If summaryItemSchema is first,
-	// cover letter items will match it and lose the 'recipient' field.
-	coverLetterItemSchema,
-	summaryItemSchema,
-	profileItemSchema,
-	experienceItemSchema,
-	educationItemSchema,
-	projectItemSchema,
-	skillItemSchema,
-	languageItemSchema,
-	interestItemSchema,
-	awardItemSchema,
-	certificationItemSchema,
-	publicationItemSchema,
-	volunteerItemSchema,
-	referenceItemSchema,
-]);
+// coverLetterItemSchema must come before summaryItemSchema because both have 'content',
+// but coverLetterItemSchema also requires 'recipient'. If summaryItemSchema is first,
+// cover letter items will match it and lose the 'recipient' field.
+export const customSectionItemDefinitionByType = {
+	"cover-letter": { schemaName: "coverLetterItemSchema", schema: coverLetterItemSchema },
+	summary: { schemaName: "summaryItemSchema", schema: summaryItemSchema },
+	profiles: { schemaName: "profileItemSchema", schema: profileItemSchema },
+	experience: { schemaName: "experienceItemSchema", schema: experienceItemSchema },
+	education: { schemaName: "educationItemSchema", schema: educationItemSchema },
+	projects: { schemaName: "projectItemSchema", schema: projectItemSchema },
+	skills: { schemaName: "skillItemSchema", schema: skillItemSchema },
+	languages: { schemaName: "languageItemSchema", schema: languageItemSchema },
+	interests: { schemaName: "interestItemSchema", schema: interestItemSchema },
+	awards: { schemaName: "awardItemSchema", schema: awardItemSchema },
+	certifications: { schemaName: "certificationItemSchema", schema: certificationItemSchema },
+	publications: { schemaName: "publicationItemSchema", schema: publicationItemSchema },
+	volunteer: { schemaName: "volunteerItemSchema", schema: volunteerItemSchema },
+	references: { schemaName: "referenceItemSchema", schema: referenceItemSchema },
+} as const satisfies Record<CustomSectionType, { schemaName: string; schema: z.ZodType }>;
+
+const customSectionItemSchema = z.union(Object.values(customSectionItemDefinitionByType).map(({ schema }) => schema));
 
 export type CustomSectionItem = z.infer<typeof customSectionItemSchema>;
 

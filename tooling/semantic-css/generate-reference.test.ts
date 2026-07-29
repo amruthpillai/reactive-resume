@@ -1,4 +1,5 @@
 import type { SemanticNode } from "@reactive-resume/resume/stylesheet/types";
+import type { JsonSchema } from "./generate-reference";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -217,12 +218,62 @@ it("labels union requiredness by variant and emits representative variant shapes
 	});
 
 	expect(reference).toContain("Required fields are local to that variant");
-	expect(reference).toContain("| `items[]` | variant 1 | `{ company }` |");
-	expect(reference).toContain("| `items[]` | variant 2 | `{ school }` |");
+	expect(reference).toContain("| `items[]` | variant 1 | — | `{ company }` |");
+	expect(reference).toContain("| `items[]` | variant 2 | — | `{ school }` |");
 	expect(reference).toContain("| `items[].company` | `string` | yes (variant 1 at items[]) |");
 	expect(reference).toContain("| `items[].position` | `string` | no (variant 1 at items[]) |");
 	expect(reference).toContain("| `items[].school` | `string` | yes (variant 2 at items[]) |");
 	expect(reference).not.toContain("| `items[].school` | `string` | yes |");
+});
+
+it("names every custom-section item shape by its type key", () => {
+	const reference = renderSchemaReference(createResumeDataJsonSchema() as JsonSchema);
+	const expectedSchemas = {
+		summary: "summaryItemSchema",
+		profiles: "profileItemSchema",
+		experience: "experienceItemSchema",
+		education: "educationItemSchema",
+		projects: "projectItemSchema",
+		skills: "skillItemSchema",
+		languages: "languageItemSchema",
+		interests: "interestItemSchema",
+		awards: "awardItemSchema",
+		certifications: "certificationItemSchema",
+		publications: "publicationItemSchema",
+		volunteer: "volunteerItemSchema",
+		references: "referenceItemSchema",
+		"cover-letter": "coverLetterItemSchema",
+	};
+
+	for (const [type, schemaName] of Object.entries(expectedSchemas)) {
+		expect(reference).toContain(`| \`customSections[].items[]\` | \`${type}\` | \`${schemaName}\` |`);
+	}
+	expect(reference).toContain(
+		"| `customSections[].items[]` | `experience` | `experienceItemSchema` | `{ id, hidden, company, position, location, period, description }` |",
+	);
+	expect(reference).toContain(
+		"| `customSections[].items[].company` | `string` | yes (type experience, schema experienceItemSchema at customSections[].items[]) |",
+	);
+	expect(reference).not.toMatch(/\| `customSections\[\]\.items\[\]` \| variant \d+/);
+});
+
+it("derives top-level required fields and renders canonical exclusive minimum constraints", () => {
+	const reference = renderSchemaReference({
+		type: "object",
+		properties: {
+			languageVersion: { type: "integer", exclusiveMinimum: 0, maximum: 1 },
+			optional: { type: "string" },
+		},
+		required: ["languageVersion"],
+	});
+	const requiredSection = reference.slice(
+		reference.indexOf("## Required top-level fields"),
+		reference.indexOf("## Union variant shapes"),
+	);
+
+	expect(requiredSection).toContain("`languageVersion`");
+	expect(requiredSection).not.toContain("`picture`");
+	expect(reference).toContain("| `languageVersion` | `integer` | yes | exclusiveMinimum: 0; maximum: 1 |");
 });
 
 it("does not write any output when one source is invalid", async () => {
@@ -271,6 +322,7 @@ it("keeps the schema guide aligned with the canonical schema contract", async ()
 	expect(authoredGuide).toContain("Resume documents do not include a top-level `version` property.");
 	expect(authoredGuide).not.toMatch(/draft 0?7/i);
 	expect(authoredGuide).not.toMatch(/"version"\s*:/);
+	expect(authoredGuide).not.toMatch(/custom sections.*arbitrary content/is);
 });
 
 it("compiles every marked RRSS example", async () => {
