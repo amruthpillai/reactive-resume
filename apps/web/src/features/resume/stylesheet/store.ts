@@ -92,6 +92,8 @@ type CreateStylesheetStoreRuntimeOptions = RuntimeDependencies & {
 };
 
 const emptySource = (): StylesheetSource => ({ languageVersion: 1, text: "@rr-version 1;\n" });
+const HISTORY_COALESCE_MS = 500;
+const MAX_HISTORY_ENTRIES = 50;
 
 const inactiveState = (): Omit<
 	StylesheetStoreState,
@@ -123,6 +125,8 @@ const currentStylesheet = (state: StylesheetStoreState): SemanticStylesheet => (
 	source: structuredClone(state.source),
 	applied: structuredClone(state.applied),
 });
+const appendHistory = (stack: SemanticStylesheet[], value: SemanticStylesheet) =>
+	[...stack, value].slice(-MAX_HISTORY_ENTRIES);
 
 const pageDimensions = (data: ResumeData) => {
 	const format = data.metadata.page.format;
@@ -175,9 +179,13 @@ const conflictState = (error: unknown): StylesheetCanonicalState | undefined => 
 export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRuntimeOptions) {
 	let resumeData = structuredClone(options.resumeData);
 	let timer: ReturnType<typeof setTimeout> | undefined;
-	let scheduled: Candidate | undefined;
 	let inFlight: Candidate | undefined;
 	let pending: Candidate | undefined;
+	let latestCandidate: Candidate | undefined;
+	let deferredCanonical: StylesheetCanonicalState | undefined;
+	let validationEpoch = 0;
+	let historyLastEditAt = 0;
+	let historyCanCoalesce = false;
 	let destroyed = false;
 	const abortController = new AbortController();
 	const debounceMs = options.debounceMs ?? 180;
@@ -196,14 +204,21 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 
 	const patch = (next: Partial<StylesheetStoreState>) => store.setState(next);
 	const replaceCanonical = (canonical: StylesheetCanonicalState, preserveSource: boolean) => {
-		const visibleSource = preserveSource ? store.getState().source : canonical.stylesheet.source;
-		patch({
-			mode: canonical.stylesheet.mode,
-			source: visibleSource,
-			applied: canonical.stylesheet.applied,
-			revision: canonical.revision,
-			renderDataVersion: canonical.renderDataVersion,
-		});
+		const state = store.getState();
+		const next: Partial<StylesheetStoreState> = {
+			revision: Math.max(state.revision, canonical.revision),
+			renderDataVersion: Math.max(state.renderDataVersion, canonical.renderDataVersion),
+		};
+		if (canonical.revision >= state.revision) {
+			next.mode = canonical.stylesheet.mode;
+			next.source = preserveSource ? state.source : canonical.stylesheet.source;
+			next.applied = canonical.stylesheet.applied;
+		}
+		patch(next);
+	};
+	const resetHistoryCoalescing = () => {
+		historyLastEditAt = 0;
+		historyCanCoalesce = false;
 	};
 
 	const startNext = () => {
@@ -232,8 +247,14 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			.mutate(input, abortController.signal)
 			.then((result) => {
 				if (destroyed) return;
-				patch({ revision: result.revision, renderDataVersion: result.renderDataVersion });
+				const state = store.getState();
+				const staleStylesheet = result.revision < state.revision;
+				patch({
+					revision: Math.max(state.revision, result.revision),
+					renderDataVersion: Math.max(state.renderDataVersion, result.renderDataVersion),
+				});
 				if (result.editGeneration !== store.getState().editGeneration) return;
+				if (staleStylesheet) return;
 				patch({
 					mode: result.stylesheet.mode,
 					source: result.stylesheet.source,
@@ -241,6 +262,8 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 					diagnostics: result.diagnostics,
 					status: result.diagnostics.some(({ severity }) => severity === "error") ? "error" : "applied",
 				});
+				if (latestCandidate?.generation === result.editGeneration) latestCandidate = undefined;
+				if (deferredCanonical && result.revision >= deferredCanonical.revision) deferredCanonical = undefined;
 			})
 			.catch((error: unknown) => {
 				if (destroyed) return;
@@ -259,12 +282,14 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 	};
 
 	const queue = (candidate: Candidate) => {
+		latestCandidate = candidate;
 		pending = candidate;
 		startNext();
 	};
 
 	const processCandidate = async (candidate: Candidate) => {
 		if (destroyed || candidate.generation !== store.getState().editGeneration) return;
+		const candidateValidationEpoch = validationEpoch;
 		if (candidate.transition === "deactivate") {
 			queue(candidate);
 			return;
@@ -277,6 +302,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		} catch {
 			return;
 		}
+		if (candidateValidationEpoch !== validationEpoch) return;
 		if (destroyed || compiled.editGeneration !== store.getState().editGeneration) return;
 		patch({ diagnostics: compiled.diagnostics });
 
@@ -302,11 +328,13 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 					},
 				});
 			} catch {
+				if (candidateValidationEpoch !== validationEpoch) return;
 				if (candidate.generation !== store.getState().editGeneration) return;
 				patch({ status: "error" });
 				if (candidate.transition === "edit_source") queue(candidate);
 				return;
 			}
+			if (candidateValidationEpoch !== validationEpoch) return;
 			if (destroyed || preflight.editGeneration !== store.getState().editGeneration) return;
 			if (!preflight.result.ok) {
 				patch({ diagnostics: [...compiled.diagnostics, ...preflight.result.diagnostics], status: "error" });
@@ -319,10 +347,9 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 
 	const schedule = (candidate: Candidate) => {
 		if (timer) clearTimeout(timer);
-		scheduled = candidate;
+		latestCandidate = candidate;
 		timer = setTimeout(() => {
 			timer = undefined;
-			scheduled = undefined;
 			void processCandidate(candidate);
 		}, debounceMs);
 	};
@@ -334,11 +361,12 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		if (!previous) return;
 		const generation = state.editGeneration + 1;
 		const other = opposite === "undoStack" ? "redoStack" : "undoStack";
+		resetHistoryCoalescing();
 		patch({
 			source: previous.source,
 			editGeneration: generation,
 			[opposite]: stack.slice(0, -1),
-			[other]: [...state[other], target],
+			[other]: appendHistory(state[other], target),
 			canUndo: opposite === "redoStack" || stack.length > 1,
 			canRedo: opposite === "undoStack" || stack.length > 1,
 		});
@@ -365,10 +393,17 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			if (text === state.source.text) return;
 			const generation = state.editGeneration + 1;
 			const nextSource = sourceFromText(state.source, text);
+			const now = Date.now();
+			const undoStack =
+				historyCanCoalesce && now - historyLastEditAt <= HISTORY_COALESCE_MS
+					? state.undoStack
+					: appendHistory(state.undoStack, currentStylesheet(state));
+			historyLastEditAt = now;
+			historyCanCoalesce = true;
 			patch({
 				source: nextSource,
 				editGeneration: generation,
-				undoStack: [...state.undoStack, currentStylesheet(state)],
+				undoStack,
 				redoStack: [],
 				canUndo: true,
 				canRedo: false,
@@ -377,14 +412,24 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		},
 		setFocused(focused) {
 			patch({ focused });
+			if (focused || !deferredCanonical) return;
+			const canonical = deferredCanonical;
+			deferredCanonical = undefined;
+			const candidate = latestCandidate;
+			const hasLocalDraft =
+				candidate !== undefined && store.getState().source.text !== canonical.stylesheet.source.text;
+			replaceCanonical(canonical, hasLocalDraft);
+			if (hasLocalDraft && candidate) schedule(candidate);
+			else resetHistoryCoalescing();
 		},
 		activate() {
 			const state = store.getState();
 			if (state.mode === "semantic") return;
 			const generation = state.editGeneration + 1;
+			resetHistoryCoalescing();
 			patch({
 				editGeneration: generation,
-				undoStack: [...state.undoStack, currentStylesheet(state)],
+				undoStack: appendHistory(state.undoStack, currentStylesheet(state)),
 				redoStack: [],
 				canUndo: true,
 				canRedo: false,
@@ -395,9 +440,10 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			const state = store.getState();
 			if (state.mode === "legacy") return;
 			const generation = state.editGeneration + 1;
+			resetHistoryCoalescing();
 			patch({
 				editGeneration: generation,
-				undoStack: [...state.undoStack, currentStylesheet(state)],
+				undoStack: appendHistory(state.undoStack, currentStylesheet(state)),
 				redoStack: [],
 				canUndo: true,
 				canRedo: false,
@@ -415,28 +461,37 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 	return {
 		store,
 		replaceResumeSnapshot(data: ResumeData, canonical: StylesheetCanonicalState) {
-			const candidate = scheduled ?? pending ?? inFlight;
+			const candidate = latestCandidate;
 			resumeData = structuredClone(data);
-			const renderDataChanged = canonical.renderDataVersion !== store.getState().renderDataVersion;
+			const renderDataChanged = canonical.renderDataVersion > store.getState().renderDataVersion;
 			const preserveSource = store.getState().focused || isEditorFocused() || candidate !== undefined;
 			replaceCanonical(canonical, preserveSource);
-			if (renderDataChanged && candidate) schedule(candidate);
+			if (renderDataChanged) {
+				validationEpoch += 1;
+				pending = undefined;
+				if (candidate) schedule(candidate);
+			}
 		},
 		rebaseCanonical(canonical: StylesheetCanonicalState) {
-			const candidate = scheduled ?? pending ?? inFlight;
+			const candidate = latestCandidate;
 			const hasLocalDraft =
 				candidate !== undefined && store.getState().source.text !== canonical.stylesheet.source.text;
-			const preserveSource = store.getState().focused || isEditorFocused() || hasLocalDraft;
+			const focused = store.getState().focused || isEditorFocused();
+			const sourceChanged = store.getState().source.text !== canonical.stylesheet.source.text;
+			if (focused && sourceChanged && canonical.revision >= store.getState().revision) deferredCanonical = canonical;
+			const preserveSource = (focused && sourceChanged) || hasLocalDraft;
 			replaceCanonical(canonical, preserveSource);
 			if (hasLocalDraft && candidate) schedule(candidate);
+			else if (!preserveSource) resetHistoryCoalescing();
 		},
 		destroy() {
 			destroyed = true;
 			abortController.abort();
 			if (timer) clearTimeout(timer);
 			timer = undefined;
-			scheduled = undefined;
 			pending = undefined;
+			latestCandidate = undefined;
+			deferredCanonical = undefined;
 			options.destroy?.();
 			store.setState(inactiveState());
 		},

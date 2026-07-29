@@ -187,6 +187,137 @@ describe("stylesheet store runtime", () => {
 		});
 	});
 
+	it("invalidates pending preflight eligibility on content changes and keeps versions monotonic", async () => {
+		let resolveMutation!: (result: MutationResult) => void;
+		let resolveRepreflight!: (result: {
+			type: "preflight_result";
+			requestId: number;
+			editGeneration: number;
+			result: {
+				ok: true;
+				pageCount: number;
+				byteCount: number;
+				diagnostics: [];
+				pdf: ArrayBuffer;
+			};
+		}) => void;
+		const mutate = vi
+			.fn()
+			.mockReturnValueOnce(new Promise<MutationResult>((resolve) => (resolveMutation = resolve)))
+			.mockResolvedValueOnce({
+				stylesheet: stylesheet("newer"),
+				revision: 11,
+				renderDataVersion: 20,
+				editGeneration: 2,
+				diagnostics: [],
+			});
+		const preflight = vi
+			.fn()
+			.mockImplementationOnce(async ({ editGeneration }) => ({
+				type: "preflight_result",
+				requestId: editGeneration,
+				editGeneration,
+				result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+			}))
+			.mockImplementationOnce(async ({ editGeneration }) => ({
+				type: "preflight_result",
+				requestId: editGeneration,
+				editGeneration,
+				result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+			}))
+			.mockImplementationOnce(
+				() =>
+					new Promise((resolve) => {
+						resolveRepreflight = resolve;
+					}),
+			);
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			debounceMs: 0,
+			compile: async ({ editGeneration }) => ({
+				type: "compile_result",
+				requestId: editGeneration,
+				editGeneration,
+				program: { languageVersion: 1, rules: [] },
+				diagnostics: [],
+			}),
+			preflight,
+			mutate,
+		});
+
+		runtime.store.getState().setSourceText("older");
+		await vi.runAllTimersAsync();
+		runtime.store.getState().setSourceText("newer");
+		await vi.runAllTimersAsync();
+		expect(mutate).toHaveBeenCalledTimes(1);
+
+		runtime.replaceResumeSnapshot(defaultResumeData, {
+			stylesheet: stylesheet("remote"),
+			revision: 10,
+			renderDataVersion: 20,
+		});
+		await vi.runAllTimersAsync();
+		expect(preflight).toHaveBeenCalledTimes(3);
+
+		resolveMutation({
+			stylesheet: stylesheet("older"),
+			revision: 4,
+			renderDataVersion: 7,
+			editGeneration: 1,
+			diagnostics: [],
+		});
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(runtime.store.getState()).toMatchObject({ revision: 10, renderDataVersion: 20 });
+		expect(mutate).toHaveBeenCalledTimes(1);
+
+		resolveRepreflight({
+			type: "preflight_result",
+			requestId: 3,
+			editGeneration: 2,
+			result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+		});
+		await vi.runAllTimersAsync();
+		expect(mutate.mock.calls[1]?.[0]).toMatchObject({
+			source: source("newer"),
+			expectedRevision: 10,
+			expectedRenderDataVersion: 20,
+		});
+	});
+
+	it("reconciles a deferred focused canonical source on blur", () => {
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			compile: vi.fn(),
+			preflight: vi.fn(),
+			mutate: vi.fn(),
+		});
+
+		runtime.store.getState().setFocused(true);
+		runtime.rebaseCanonical({
+			stylesheet: stylesheet("remote"),
+			revision: 8,
+			renderDataVersion: 11,
+		});
+
+		expect(runtime.store.getState()).toMatchObject({
+			source: source("generation zero"),
+			applied: source("remote"),
+			revision: 8,
+			renderDataVersion: 11,
+		});
+
+		runtime.store.getState().setFocused(false);
+		expect(runtime.store.getState()).toMatchObject({
+			source: source("remote"),
+			applied: source("remote"),
+		});
+	});
+
 	it("persists invalid source while preserving applied and restores stylesheet history separately", async () => {
 		const mutate = vi
 			.fn()
@@ -458,5 +589,27 @@ describe("stylesheet store runtime", () => {
 		expect(destroy).toHaveBeenCalledOnce();
 		expect(mutationSignal?.aborted).toBe(true);
 		expect(runtime.store.getState().resumeId).toBeUndefined();
+	});
+
+	it("coalesces rapid source edits and bounds stylesheet history", () => {
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			debounceMs: 1_000_000,
+			compile: vi.fn(),
+			preflight: vi.fn(),
+			mutate: vi.fn(),
+		});
+
+		for (let index = 0; index < 10; index++) runtime.store.getState().setSourceText(`rapid ${index}`);
+		expect(runtime.store.getState().undoStack).toHaveLength(1);
+		expect(runtime.store.getState().undoStack[0]).toEqual(stylesheet("generation zero"));
+
+		for (let index = 0; index < 60; index++) {
+			vi.advanceTimersByTime(501);
+			runtime.store.getState().setSourceText(`separate ${index}`);
+		}
+		expect(runtime.store.getState().undoStack).toHaveLength(50);
 	});
 });
