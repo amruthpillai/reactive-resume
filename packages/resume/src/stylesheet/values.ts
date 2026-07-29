@@ -12,7 +12,13 @@ import type {
 import * as csstree from "css-tree";
 import { createDiagnostic, EMPTY_SOURCE_RANGE } from "./diagnostics";
 import { RRSS_LIMITS_V1 } from "./limits";
-import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
+import {
+	PROPERTY_REGISTRY_V1,
+	RRSS_BORDER_STYLE_VALUES_V1,
+	RRSS_CSS_WIDE_KEYWORDS_V1,
+	RRSS_LENGTH_PROPERTIES_V1,
+	RRSS_LENGTH_UNITS_V1,
+} from "./registry/properties";
 import { compileSelector } from "./selector";
 
 export type CompileProgramResult = {
@@ -40,64 +46,26 @@ const absoluteUnitToPt = {
 
 const spacingShorthands = new Set(["margin", "padding"]);
 const sides = ["top", "right", "bottom", "left"] as const;
-const borderStyles = new Set([
-	"none",
-	"hidden",
-	"dotted",
-	"dashed",
-	"solid",
-	"double",
-	"groove",
-	"ridge",
-	"inset",
-	"outset",
-]);
-const cssWideKeywords = new Set(["inherit", "initial", "revert", "unset"]);
+const borderStyles = new Set<string>(RRSS_BORDER_STYLE_VALUES_V1);
+const cssWideKeywords = new Set<string>(RRSS_CSS_WIDE_KEYWORDS_V1);
 const maxMediaQueryBranches = RRSS_LIMITS_V1.maxRules;
+const lengthUnitPattern = RRSS_LENGTH_UNITS_V1.map((unit) => (unit === "%" ? "%" : unit)).join("|");
+const borderWidthPattern = new RegExp(
+	`^(?:thin|medium|thick|[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?(?:${lengthUnitPattern})?)$`,
+	"i",
+);
 
 function isCssWideKeyword(value: string): boolean {
 	return cssWideKeywords.has(value.toLowerCase());
 }
 
-export const RRSS_LENGTH_PROPERTIES = new Set([
-	"bottom",
-	"border-bottom-left-radius",
-	"border-bottom-right-radius",
-	"border-bottom-width",
-	"border-left-width",
-	"border-radius",
-	"border-right-width",
-	"border-top-left-radius",
-	"border-top-right-radius",
-	"border-top-width",
-	"border-width",
-	"column-gap",
-	"flex-basis",
-	"font-size",
-	"gap",
-	"height",
-	"left",
-	"letter-spacing",
-	"margin-bottom",
-	"margin-left",
-	"margin-right",
-	"margin-top",
-	"max-height",
-	"max-width",
-	"min-height",
-	"min-width",
-	"padding-bottom",
-	"padding-left",
-	"padding-right",
-	"padding-top",
-	"right",
-	"row-gap",
-	"text-indent",
-	"top",
-	"width",
-	"-rr-min-presence-ahead",
-	"-rr-shadow-width",
-]);
+function isRegisteredPropertyValue(property: string, value: string): boolean {
+	return (
+		PROPERTY_REGISTRY_V1[property]?.values.some((candidate) => candidate.toLowerCase() === value.toLowerCase()) ?? false
+	);
+}
+
+export const RRSS_LENGTH_PROPERTIES = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
 
 function range(location: CssLocation | null | undefined): SourceRange {
 	return location ? { start: { ...location.start }, end: { ...location.end } } : EMPTY_SOURCE_RANGE;
@@ -224,9 +192,7 @@ function borderComponents(value: string): readonly [component: string, value: st
 	let style = "none";
 	let color = "currentcolor";
 	for (const part of values) {
-		if (
-			/^(?:thin|medium|thick|[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?(?:pt|px|in|mm|cm|%|vw|vh|em|rem)?)$/i.test(part)
-		) {
+		if (borderWidthPattern.test(part)) {
 			if (width !== "medium") return null;
 			width = part;
 		} else if (borderStyles.has(part.toLowerCase())) {
@@ -274,8 +240,8 @@ export function expandShorthand(property: string, value: string): readonly [prop
 				];
 			const values = splitValue(value);
 			if (values.length < 1 || values.length > 2) return null;
-			const direction = values.find((part) => /^(row|row-reverse|column|column-reverse)$/i.test(part)) ?? "row";
-			const wrap = values.find((part) => /^(nowrap|wrap|wrap-reverse)$/i.test(part)) ?? "nowrap";
+			const direction = values.find((part) => isRegisteredPropertyValue("flex-direction", part)) ?? "row";
+			const wrap = values.find((part) => isRegisteredPropertyValue("flex-wrap", part)) ?? "nowrap";
 			if (values.some((part) => part !== direction && part !== wrap)) return null;
 			return [
 				["flex-direction", direction],
@@ -372,7 +338,7 @@ function parseAbsoluteLength(value: string): number | null {
 	return number * absoluteUnitToPt[unit];
 }
 
-const lengthPattern = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?(?:pt|px|in|mm|cm|%|vw|vh|em|rem)?$/i;
+const lengthPattern = new RegExp(`^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?(?:${lengthUnitPattern})?$`, "i");
 
 export function valueSyntaxError(property: string, value: string): string | null {
 	const normalized = value.trim().toLowerCase();
@@ -385,23 +351,26 @@ export function valueSyntaxError(property: string, value: string): string | null
 			}
 			return null;
 		}
-		if (/^(auto|none|normal|max-content|min-content|fit-content|thin|medium|thick)$/.test(normalized)) return null;
+		if (isRegisteredPropertyValue(property, normalized)) return null;
 		return `${property} requires a supported PDF length.`;
 	}
 	if (property === "size") {
 		const parts = splitValue(normalized);
-		return /^(a4|letter)$/.test(normalized) ||
+		return isRegisteredPropertyValue(property, normalized) ||
 			(parts.length >= 1 && parts.length <= 2 && parts.every((part) => lengthPattern.test(part)))
 			? null
 			: "size requires A4, letter, or one or two PDF lengths.";
 	}
-	if (property === "display") return /^(flex|none)$/.test(normalized) ? null : "display supports flex or none.";
-	if (property === "direction") return /^(ltr|rtl)$/.test(normalized) ? null : "direction supports ltr or rtl.";
+	if (property === "display")
+		return isRegisteredPropertyValue(property, normalized) ? null : "display supports flex or none.";
+	if (property === "direction")
+		return isRegisteredPropertyValue(property, normalized) ? null : "direction supports ltr or rtl.";
 	if (property === "break-before")
-		return /^(auto|page)$/.test(normalized) ? null : "break-before supports auto or page.";
+		return isRegisteredPropertyValue(property, normalized) ? null : "break-before supports auto or page.";
 	if (property === "break-inside")
-		return /^(auto|avoid)$/.test(normalized) ? null : "break-inside supports auto or avoid.";
-	if (property === "-rr-fixed") return /^(true|false|0|1)$/.test(normalized) ? null : "-rr-fixed requires a boolean.";
+		return isRegisteredPropertyValue(property, normalized) ? null : "break-inside supports auto or avoid.";
+	if (property === "-rr-fixed")
+		return isRegisteredPropertyValue(property, normalized) ? null : "-rr-fixed requires a boolean.";
 	if (
 		property === "order" ||
 		property === "orphans" ||
@@ -419,7 +388,7 @@ export function valueSyntaxError(property: string, value: string): string | null
 		return null;
 	}
 	if (property === "line-height") {
-		return normalized === "normal" || lengthPattern.test(normalized)
+		return isRegisteredPropertyValue(property, normalized) || lengthPattern.test(normalized)
 			? null
 			: "line-height requires a number or PDF length.";
 	}

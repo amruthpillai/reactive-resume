@@ -2,7 +2,7 @@ import type { Completion, CompletionContext, CompletionResult, CompletionSource 
 import type { Diagnostic } from "@codemirror/lint";
 import type { EditorState, Extension } from "@codemirror/state";
 import type { DecorationSet, EditorView as EditorViewType, ViewUpdate } from "@codemirror/view";
-import type { RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
+import type { RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet/registry";
 import type { RrssColorToken } from "./color-tokens";
 import type { RrssEditorMetadata } from "./protocol";
 import { autocompletion } from "@codemirror/autocomplete";
@@ -10,42 +10,16 @@ import { linter, lintGutter } from "@codemirror/lint";
 import { search, searchKeymap } from "@codemirror/search";
 import { Decoration, EditorView, hoverTooltip, keymap, ViewPlugin, WidgetType } from "@codemirror/view";
 import {
+	escapeCssIdentifier,
+	escapeCssString,
 	PROPERTY_REGISTRY_V1,
 	SEMANTIC_NODE_KINDS,
 	SEMANTIC_REGISTRY_V1,
 	SYSTEM_VARIABLE_REGISTRY_V1,
-} from "@reactive-resume/resume/stylesheet";
+} from "@reactive-resume/resume/stylesheet/registry";
 
 export type RrssColorSelection = (token: RrssColorToken, rect: DOMRect) => void;
 
-const valueKeywords = [
-	"auto",
-	"avoid",
-	"column",
-	"column-reverse",
-	"currentcolor",
-	"false",
-	"flex",
-	"inherit",
-	"initial",
-	"landscape",
-	"ltr",
-	"none",
-	"normal",
-	"page",
-	"portrait",
-	"revert",
-	"row",
-	"row-reverse",
-	"rtl",
-	"solid",
-	"transparent",
-	"true",
-	"unset",
-	"wrap",
-	"wrap-reverse",
-] as const;
-const units = ["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"] as const;
 const directives = ["@media", "@rr-version 1;"] as const;
 
 function walk(root: SemanticNode): SemanticNode[] {
@@ -75,11 +49,15 @@ function selectorLabels(metadata: RrssEditorMetadata): string[] {
 	return unique([
 		...SEMANTIC_NODE_KINDS,
 		"*",
-		...nodes.flatMap((node) => (node.id ? [`#${node.id}`] : [])),
-		...attributes.map((attribute) => `[${attribute}]`),
-		...nodes.flatMap((node) => Object.entries(node.attributes).map(([name, value]) => `[${name}="${value}"]`)),
-		...roles.map((role) => `[role~="${role}"]`),
-		...metadata.templateParts.map((name) => `template-part[name="${name}"]`),
+		...nodes.flatMap((node) => (node.id ? [`#${escapeCssIdentifier(node.id)}`] : [])),
+		...attributes.map((attribute) => `[${escapeCssIdentifier(attribute)}]`),
+		...nodes.flatMap((node) =>
+			Object.entries(node.attributes).map(
+				([name, value]) => `[${escapeCssIdentifier(name)}=${escapeCssString(value)}]`,
+			),
+		),
+		...roles.map((role) => `[role~=${escapeCssString(role)}]`),
+		...metadata.templateParts.map((name) => `template-part[name=${escapeCssString(name)}]`),
 		":root",
 		":first-child",
 		":last-child",
@@ -107,6 +85,18 @@ function completionKind(source: string, position: number): "directive" | "proper
 	return declaration.includes(":") ? "value" : "property";
 }
 
+function declarationProperty(source: string, position: number): string | undefined {
+	const before = source.slice(0, position);
+	const open = before.lastIndexOf("{");
+	const close = before.lastIndexOf("}");
+	if (open <= close) return;
+	const declaration = before.slice(Math.max(open, before.lastIndexOf(";")) + 1);
+	const colon = declaration.indexOf(":");
+	if (colon < 0) return;
+	const property = declaration.slice(0, colon).trim().toLowerCase();
+	return property || undefined;
+}
+
 function completionLabels(source: string, position: number, metadata: RrssEditorMetadata): string[] {
 	switch (completionKind(source, position)) {
 		case "directive":
@@ -117,13 +107,16 @@ function completionLabels(source: string, position: number, metadata: RrssEditor
 			return selectorLabels(metadata);
 		case "system":
 			return Object.keys(SYSTEM_VARIABLE_REGISTRY_V1);
-		case "value":
+		case "value": {
+			const property = declarationProperty(source, position);
+			const definition = property ? PROPERTY_REGISTRY_V1[property] : undefined;
 			return unique([
-				...valueKeywords,
-				...units,
+				...(definition?.values ?? []),
+				...(definition?.units ?? []),
 				...userVariables(source),
 				...Object.keys(SYSTEM_VARIABLE_REGISTRY_V1),
 			]);
+		}
 	}
 }
 

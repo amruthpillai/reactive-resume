@@ -15,9 +15,76 @@ export type PropertyDefinition = {
 		| "structural";
 	inheritable: boolean;
 	appliesTo: readonly SemanticNodeKind[];
+	values: readonly string[];
+	units: readonly string[];
 };
 
 export type PropertyRegistry = Readonly<Record<string, PropertyDefinition | undefined>>;
+
+export const RRSS_CSS_WIDE_KEYWORDS_V1 = ["inherit", "initial", "revert", "unset"] as const;
+export const RRSS_LENGTH_UNITS_V1 = ["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"] as const;
+export const RRSS_BORDER_STYLE_VALUES_V1 = [
+	"none",
+	"hidden",
+	"dotted",
+	"dashed",
+	"solid",
+	"double",
+	"groove",
+	"ridge",
+	"inset",
+	"outset",
+] as const;
+export const RRSS_LENGTH_VALUE_KEYWORDS_V1 = [
+	"auto",
+	"none",
+	"normal",
+	"max-content",
+	"min-content",
+	"fit-content",
+	"thin",
+	"medium",
+	"thick",
+] as const;
+export const RRSS_LENGTH_PROPERTIES_V1 = [
+	"bottom",
+	"border-bottom-left-radius",
+	"border-bottom-right-radius",
+	"border-bottom-width",
+	"border-left-width",
+	"border-radius",
+	"border-right-width",
+	"border-top-left-radius",
+	"border-top-right-radius",
+	"border-top-width",
+	"border-width",
+	"column-gap",
+	"flex-basis",
+	"font-size",
+	"gap",
+	"height",
+	"left",
+	"letter-spacing",
+	"margin-bottom",
+	"margin-left",
+	"margin-right",
+	"margin-top",
+	"max-height",
+	"max-width",
+	"min-height",
+	"min-width",
+	"padding-bottom",
+	"padding-left",
+	"padding-right",
+	"padding-top",
+	"right",
+	"row-gap",
+	"text-indent",
+	"top",
+	"width",
+	"-rr-min-presence-ahead",
+	"-rr-shadow-width",
+] as const;
 
 const containerNodes = [
 	"page",
@@ -63,12 +130,50 @@ const textAndLinkNodes = [...textNodes, "link"] as SemanticNodeKind[];
 const colorNodes = [...containerNodes, ...textNodes, "link", "icon", "level"] as SemanticNodeKind[];
 const spacingNodes = [...containerNodes, ...textNodes, "link", "picture"] as SemanticNodeKind[];
 const structuralNodes = [...SEMANTIC_NODE_KINDS.filter((kind) => kind !== "resume")] as SemanticNodeKind[];
+const lengthProperties = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
+const borderStyleProperties = /^(?:border-style|border-(?:top|right|bottom|left)-style)$/;
+const borderShorthandProperties = /^(?:border|border-(?:top|right|bottom|left))$/;
+
+function propertyValues(name: string): readonly string[] {
+	let values: readonly string[] = [];
+	if (lengthProperties.has(name)) values = RRSS_LENGTH_VALUE_KEYWORDS_V1;
+	else if (borderStyleProperties.test(name)) values = RRSS_BORDER_STYLE_VALUES_V1;
+	else if (borderShorthandProperties.test(name)) {
+		values = [...RRSS_LENGTH_VALUE_KEYWORDS_V1, ...RRSS_BORDER_STYLE_VALUES_V1];
+	} else {
+		values =
+			(
+				{
+					display: ["flex", "none"],
+					direction: ["ltr", "rtl"],
+					"break-before": ["auto", "page"],
+					"break-inside": ["auto", "avoid"],
+					"-rr-fixed": ["true", "false", "0", "1"],
+					size: ["A4", "letter"],
+					"line-height": ["normal"],
+					flex: ["none", "auto"],
+					"flex-direction": ["row", "row-reverse", "column", "column-reverse"],
+					"flex-wrap": ["nowrap", "wrap", "wrap-reverse"],
+					"flex-flow": ["row", "row-reverse", "column", "column-reverse", "nowrap", "wrap", "wrap-reverse"],
+				} satisfies Readonly<Record<string, readonly string[]>>
+			)[name] ?? [];
+	}
+	return [...RRSS_CSS_WIDE_KEYWORDS_V1, ...values];
+}
+
+function propertyUnits(name: string): readonly string[] {
+	return lengthProperties.has(name) || name === "line-height" || name === "size" || borderShorthandProperties.test(name)
+		? RRSS_LENGTH_UNITS_V1
+		: [];
+}
 
 function entries(
 	names: readonly string[],
-	definition: PropertyDefinition,
+	definition: Omit<PropertyDefinition, "units" | "values">,
 ): Readonly<Record<string, PropertyDefinition | undefined>> {
-	return Object.fromEntries(names.map((name) => [name, definition]));
+	return Object.fromEntries(
+		names.map((name) => [name, { ...definition, values: propertyValues(name), units: propertyUnits(name) }]),
+	);
 }
 
 const properties = {

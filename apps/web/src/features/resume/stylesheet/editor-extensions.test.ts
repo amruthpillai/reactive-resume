@@ -64,7 +64,6 @@ describe("RRSS editor extensions", () => {
 	it("uses only RRSS registries and the current resume for completion", async () => {
 		const selectorLabels = await getRrssCompletionLabels("", 0, metadata);
 		const propertyLabels = await getRrssCompletionLabels("section {\n\tco", 13, metadata);
-		const valueLabels = await getRrssCompletionLabels("section { display: f", 20, metadata);
 		const variableSource = "resume { --brand-accent: #f00; color: var(--br";
 		const variableLabels = await getRrssCompletionLabels(variableSource, variableSource.length, metadata);
 		const systemLabels = await getRrssCompletionLabels("--rr-", 5, metadata);
@@ -84,11 +83,56 @@ describe("RRSS editor extensions", () => {
 		expect(propertyLabels).toContain("-rr-fixed");
 		expect(propertyLabels).not.toContain("cursor");
 		expect(propertyLabels).not.toContain("font-family");
-		expect(valueLabels).toEqual(expect.arrayContaining(["flex", "pt"]));
 		expect(variableLabels).toEqual(expect.arrayContaining(["--brand-accent", "--rr-primary-color"]));
 		expect(systemLabels).toEqual(expect.arrayContaining(["--rr-primary-color", "--rr-sidebar-width"]));
 		expect(systemLabels).not.toContain("--rr-font-family");
 		expect(directiveLabels).toEqual(expect.arrayContaining(["@media", "@rr-version 1;"]));
+	});
+
+	it("offers only the current property's registered compiler vocabulary", () => {
+		const displaySource = "section { display: f";
+		const borderStyleSource = "section { border-style: d";
+		const fontSizeSource = "section { font-size: 1";
+
+		const displayLabels = getRrssCompletionLabels(displaySource, displaySource.length, metadata);
+		const borderStyleLabels = getRrssCompletionLabels(borderStyleSource, borderStyleSource.length, metadata);
+		const fontSizeLabels = getRrssCompletionLabels(fontSizeSource, fontSizeSource.length, metadata);
+
+		expect(displayLabels).toEqual(expect.arrayContaining(["flex", "none", "inherit"]));
+		expect(displayLabels).not.toEqual(expect.arrayContaining(["portrait", "dashed", "pt"]));
+		expect(borderStyleLabels).toEqual(expect.arrayContaining(["dashed", "dotted", "double"]));
+		expect(fontSizeLabels).toEqual(expect.arrayContaining(["pt", "rem"]));
+	});
+
+	it("escapes dynamic IDs and attribute values before inserting selectors", () => {
+		const unsafeMetadata = {
+			semanticTree: {
+				...semanticTree,
+				children: [
+					{
+						key: "unsafe",
+						kind: "field",
+						id: "123 current#item",
+						attributes: { name: 'company"lead\n' },
+						roles: [],
+						children: [],
+					},
+				],
+			},
+			templateParts: ['timeline"marker\n'],
+		} as const;
+
+		const labels = getRrssCompletionLabels("", 0, unsafeMetadata);
+
+		expect(labels).toEqual(
+			expect.arrayContaining([
+				"#\\31 23\\ current\\#item",
+				'[name="company\\"lead\\a "]',
+				'template-part[name="timeline\\"marker\\a "]',
+			]),
+		);
+		expect(labels).not.toContain("#123 current#item");
+		expect(labels).not.toContain('[name="company"lead\n"]');
 	});
 
 	it("builds hover text from the same registries", () => {

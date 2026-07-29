@@ -27,6 +27,24 @@ type MutationResult = {
 describe("stylesheet store runtime", () => {
 	beforeEach(() => vi.useFakeTimers());
 
+	it("clears compiler-confirmed color tokens synchronously when same-length source text changes", () => {
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial: { ...initial, stylesheet: stylesheet("section { color: red; }") },
+			resumeData: defaultResumeData,
+			debounceMs: 1_000_000,
+			compile: vi.fn(),
+			preflight: vi.fn(),
+			mutate: vi.fn(),
+		});
+		runtime.store.setState({ colorTokens: [{ from: 17, to: 20, value: "red" }] });
+
+		runtime.store.getState().setSourceText("section { color: var; }");
+
+		expect(runtime.store.getState().source.text).toBe("section { color: var; }");
+		expect(runtime.store.getState().colorTokens).toEqual([]);
+	});
+
 	it("consumes stale acknowledgements before saving the replaceable pending edit", async () => {
 		const resolvers: Array<(value: MutationResult) => void> = [];
 		const mutate = vi.fn(

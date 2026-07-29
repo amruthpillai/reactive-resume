@@ -244,8 +244,10 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		};
 		if (canonical.revision >= state.revision) {
 			next.mode = canonical.stylesheet.mode;
-			next.source = preserveSource ? state.source : canonical.stylesheet.source;
+			const nextSource = preserveSource ? state.source : canonical.stylesheet.source;
+			next.source = nextSource;
 			next.applied = canonical.stylesheet.applied;
+			if (nextSource.text !== state.source.text) next.colorTokens = [];
 		}
 		patch(next);
 	};
@@ -289,11 +291,13 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 				});
 				if (result.editGeneration !== store.getState().editGeneration) return;
 				if (staleStylesheet) return;
+				const sourceChanged = result.stylesheet.source.text !== state.source.text;
 				patch({
 					mode: result.stylesheet.mode,
 					source: result.stylesheet.source,
 					applied: result.stylesheet.applied,
 					diagnostics: result.diagnostics,
+					colorTokens: sourceChanged ? [] : state.colorTokens,
 					status: result.diagnostics.some(({ severity }) => severity === "error") ? "error" : "applied",
 				});
 				if (latestCandidate?.generation === result.editGeneration) latestCandidate = undefined;
@@ -401,6 +405,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 		patch({
 			source: previous.source,
 			editGeneration: generation,
+			colorTokens: [],
 			[opposite]: stack.slice(0, -1),
 			[other]: appendHistory(state[other], target),
 			canUndo: opposite === "redoStack" || stack.length > 1,
@@ -441,6 +446,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			patch({
 				source: nextSource,
 				editGeneration: generation,
+				colorTokens: [],
 				undoStack,
 				redoStack: [],
 				canUndo: true,
@@ -467,6 +473,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			resetHistoryCoalescing();
 			patch({
 				editGeneration: generation,
+				colorTokens: [],
 				undoStack: appendHistory(state.undoStack, currentStylesheet(state)),
 				redoStack: [],
 				canUndo: true,
@@ -481,6 +488,7 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			resetHistoryCoalescing();
 			patch({
 				editGeneration: generation,
+				colorTokens: [],
 				undoStack: appendHistory(state.undoStack, currentStylesheet(state)),
 				redoStack: [],
 				canUndo: true,
