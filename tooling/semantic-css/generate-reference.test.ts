@@ -8,6 +8,7 @@ import { getTemplateSemanticRegistryFingerprintInput } from "@reactive-resume/pd
 import { buildSemanticTree } from "@reactive-resume/pdf/semantic-tree";
 import { compileSelector, compileStylesheet, matchesSelector } from "@reactive-resume/resume/stylesheet";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
 import {
 	buildGeneratedDocumentation,
 	renderSchemaReference,
@@ -32,7 +33,7 @@ const defaultDocumentationPaths = {
 };
 
 type RrssExample =
-	| { kind: "valid"; label: string; source: string }
+	| { kind: "valid"; label: string; markerLabel?: string; source: string }
 	| { kind: "invalid"; label: string; source: string; expectedCode: string };
 
 afterEach(async () => {
@@ -46,16 +47,17 @@ const flattenTree = (node: SemanticNode): SemanticNode[] => [node, ...node.child
 function extractRrssExamples(source: string): RrssExample[] {
 	const examples: RrssExample[] = [];
 	const matches = source.matchAll(
-		/<!-- RRSS-EXAMPLE:(valid|invalid ([A-Z][A-Z0-9_]*)) -->\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
+		/<!-- RRSS-EXAMPLE:(valid|invalid)(?: ([A-Z][A-Z0-9_]*))? -->\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
 	);
 
-	for (const [, marker, expectedCode, example] of matches) {
+	for (const [, marker, markerLabel, example] of matches) {
 		if (!marker || !example) throw new Error("Invalid RRSS example marker.");
-		const label = `${marker} example ${examples.length + 1}`;
-		if (marker === "valid") examples.push({ kind: "valid", label, source: example });
-		else {
-			if (!expectedCode) throw new Error(`Missing diagnostic code for ${label}.`);
-			examples.push({ kind: "invalid", label, source: example, expectedCode });
+		const label = markerLabel ?? `${marker} example ${examples.length + 1}`;
+		if (marker === "valid") {
+			examples.push({ kind: "valid", label, ...(markerLabel ? { markerLabel } : {}), source: example });
+		} else {
+			if (!markerLabel) throw new Error(`Missing diagnostic code for ${label}.`);
+			examples.push({ kind: "invalid", label, source: example, expectedCode: markerLabel });
 		}
 	}
 
@@ -242,11 +244,37 @@ it("keeps every committed generated document synchronized", async () => {
 	});
 });
 
+it("keeps the schema guide aligned with the canonical schema contract", async () => {
+	const guide = await readFile(defaultDocumentationPaths.jsonSchemaGuide, "utf8");
+	const authoredGuide = guide.slice(0, guide.indexOf("<!-- RESUME-JSON-SCHEMA:START -->"));
+	const schema = createResumeDataJsonSchema();
+
+	expect(schema.$schema).toBe("https://json-schema.org/draft/2020-12/schema");
+	expect(schema.properties).not.toHaveProperty("version");
+	expect(authoredGuide).toContain("draft 2020-12");
+	expect(authoredGuide).toContain("Resume documents do not include a top-level `version` property.");
+	expect(authoredGuide).not.toMatch(/draft 0?7/i);
+	expect(authoredGuide).not.toMatch(/"version"\s*:/);
+});
+
 it("compiles every marked RRSS example", async () => {
 	const source = await readFile(defaultDocumentationPaths.rrssReference, "utf8");
 	const examples = extractRrssExamples(source);
 	expect(examples.some(({ kind }) => kind === "valid")).toBe(true);
 	expect(examples.some(({ kind }) => kind === "invalid")).toBe(true);
+	expect(
+		examples.flatMap((example) => (example.kind === "valid" && example.markerLabel ? [example.markerLabel] : [])),
+	).toEqual(
+		expect.arrayContaining([
+			"SELECTOR_ESCAPING",
+			"FLEX_VALUES",
+			"IMAGE_VALUES",
+			"TRANSFORM_VALUES",
+			"COLOR_FUNCTIONS",
+			"SHORTHANDS",
+			"PROPERTY_VALUES",
+		]),
+	);
 
 	for (const example of examples) {
 		const result = compileStylesheet({ languageVersion: 1, text: example.source });

@@ -24,25 +24,26 @@ The Reactive Resume JSON Schema is publicly available at:
 
 <Info>[https://rxresu.me/schema.json](https://rxresu.me/schema.json)</Info>
 
-This endpoint returns a complete JSON Schema (draft 07 compatible) that describes the structure of a Reactive Resume document. It includes:
+This endpoint returns a complete JSON Schema using the draft 2020-12 dialect. It describes the structure of a Reactive Resume document and includes:
 
 - **All resume sections**: basics, summary, experience, education, projects, skills, languages, interests, awards, certifications, publications, volunteer work, and references
 - **Custom sections**: user-defined sections with arbitrary content
 - **Metadata**: template, layout, typography, colors, page settings, and custom CSS
 - **Full descriptions**: every field is documented with its purpose and expected format
 
-## Schema Versioning
+## Schema Dialect and Document Shape
 
-The schema includes a `version` field to track compatibility:
+The schema document declares its JSON Schema dialect in its own `$schema` field:
 
 ```json
 {
-  "$schema": "https://rxresu.me/schema.json",
-  "version": "5.0.0"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object"
 }
 ```
 
-When importing resumes, Reactive Resume uses this version to handle migrations and ensure backward compatibility.
+Resume documents do not include a top-level `version` property. They also do not include the schema document's
+`$schema` field. Validate the exported resume object directly against the canonical schema endpoint.
 
 ## Using the Schema
 
@@ -51,9 +52,9 @@ When importing resumes, Reactive Resume uses this version to handle migrations a
 You can use the schema to validate resume JSON files in any language that supports JSON Schema validation:
 
 ```javascript
-import Ajv from "ajv";
+import Ajv2020 from "ajv/dist/2020.js";
 
-const ajv = new Ajv();
+const ajv = new Ajv2020();
 const schema = await fetch("https://rxresu.me/schema.json").then((r) => r.json());
 const validate = ajv.compile(schema);
 
@@ -65,17 +66,20 @@ if (!isValid) {
 
 ### IDE Autocompletion
 
-Add the `$schema` property to your resume JSON files to get autocompletion and validation in editors like VS Code:
+Associate exported resume files with the canonical schema in VS Code's `settings.json`:
 
 ```json
 {
-  "$schema": "https://rxresu.me/schema.json",
-  "version": "5.0.0",
-  "basics": {
-    "name": "John Doe"
-  }
+  "json.schemas": [
+    {
+      "fileMatch": ["reactive-resume*.json"],
+      "url": "https://rxresu.me/schema.json"
+    }
+  ]
 }
 ```
+
+This keeps editor configuration outside the resume data and avoids adding unsupported top-level properties.
 
 ### Building Integrations
 
@@ -92,8 +96,6 @@ The resume data is organized into these top-level sections:
 
 | Section          | Description                                     |
 | ---------------- | ----------------------------------------------- |
-| `$schema`        | URL to the JSON Schema for validation           |
-| `version`        | Schema version (currently `5.0.0`)              |
 | `picture`        | Profile photo configuration                     |
 | `basics`         | Name, headline, contact info, custom fields     |
 | `summary`        | Professional summary or bio                     |
@@ -110,9 +112,19 @@ Each section within `sections` follows a consistent structure:
   "hidden": false,
   "items": [
     {
-      "id": "uuid",
-      "hidden": false
-      // ... section-specific fields
+      "id": "229ad766-cb9a-4f16-aaf0-fdd8394a9b95",
+      "hidden": false,
+      "company": "Analytical Engines",
+      "position": "Engineer",
+      "location": "London",
+      "period": "1842",
+      "website": {
+        "url": "",
+        "label": "",
+        "inlineLink": false
+      },
+      "description": "<p>Built algorithms.</p>",
+      "roles": []
     }
   ]
 }
@@ -125,7 +137,7 @@ If you're building a job portal, HR system, or any service that handles resumes,
 - **Zero parsing errors**: structured data means no OCR or PDF parsing mistakes
 - **Complete information**: all resume data is preserved, including links and metadata
 - **Easy integration**: JSON is universally supported across all platforms
-- **Future-proof**: versioned schema with migration support
+- **Canonical contract**: one public schema endpoint tracks the current Reactive Resume data model
 
 Want to integrate? The schema is open and freely available. You can fetch it programmatically or reference it in your systems.
 

@@ -55,8 +55,36 @@ section:is([type="experience"], [type="education"]) { break-inside: avoid; }
 item:not(:last-child) { margin-bottom: 6pt; }
 ```
 
-Attribute selectors support all six matchers: `=`, `~=`, `|=`, `^=`, `$=`, and `*=`. Attribute selector flags,
-custom classes, and pseudo-elements are rejected.
+Attribute selectors support presence selectors such as `[type]` and all six value matchers: `=`, `~=`, `|=`, `^=`,
+`$=`, and `*=`. Attribute names and values are ASCII case-sensitive: `[type="experience"]` can match, while
+`[TYPE="experience"]` is invalid and `[type="Experience"]` does not match the lowercase runtime value. Attribute
+selector flags, custom classes, and pseudo-elements are rejected.
+
+Selectors use standard CSS escaping for type, attribute, and ID names. An identifier that starts with a digit must
+escape that digit; a hexadecimal escape ends with whitespace when the following character could be read as another
+hexadecimal digit. Prefer quoted attribute selectors for UUID-bearing IDs because `[id="…"]` avoids those identifier
+escaping rules.
+
+<!-- RRSS-EXAMPLE:valid SELECTOR_ESCAPING -->
+```css
+@rr-version 1;
+
+[type] {
+	opacity: 1;
+}
+
+[id="229ad766-cb9a-4f16-aaf0-fdd8394a9b95"] {
+	break-inside: avoid;
+}
+
+sect\69 on[\74 ype="experience"] > section-heading {
+	color: #2563eb;
+}
+
+#\31 abc {
+	break-before: page;
+}
+```
 
 Supported pseudo-classes and restrictions:
 
@@ -186,6 +214,165 @@ These values expose the resolved builder and page settings to authored declarati
 The generated table is the complete version-1 property catalog. `Applies to` identifies the semantic nodes accepted by
 each property. Known keywords are completion hints rather than the full value grammar; property-specific parsers also
 accept the documented numbers, colors, functions, and shorthands.
+
+### Value grammar
+
+RRSS value families are:
+
+- **CSS-wide keywords:** `inherit`, `initial`, `unset`, and `revert` must be the complete property value. They cannot be
+  mixed into a multi-token shorthand.
+- **Variables:** `var(--name)` and nested fallbacks such as `var(--name, var(--fallback, #2563eb))` are supported.
+  General CSS math functions such as `calc()`, `min()`, `max()`, and `clamp()` are not part of version 1.
+- **Numbers:** `opacity` accepts a finite number from `0` to `1`; `flex-grow` and `flex-shrink` accept finite numbers.
+  `order`, `orphans`, `widows`, `z-index`, and `max-lines` accept integers. `orphans` and `widows` must be at least `1`.
+- **Lengths:** a finite number followed by `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, or `rem`. An omitted
+  unit means points. `line-height` also accepts a unitless multiplier or `normal`.
+- **Colors:** CSS named colors, `transparent`, hexadecimal colors, `rgb()`, `rgba()`, `hsl()`, and `hsla()`.
+- **Booleans:** `-rr-fixed` accepts `true`, `false`, `1`, or `0`.
+
+Flex alignment accepts the PDF renderer's fixed keyword sets:
+
+- `align-content`: `flex-start`, `flex-end`, `center`, `stretch`, `space-between`, `space-around`, or `space-evenly`;
+- `align-items`: `flex-start`, `flex-end`, `center`, `stretch`, or `baseline`;
+- `align-self`: `auto`, `flex-start`, `flex-end`, `center`, `stretch`, or `baseline`;
+- `justify-content`: `flex-start`, `flex-end`, `center`, `space-between`, `space-around`, or `space-evenly`;
+- `flex-direction`: `row`, `row-reverse`, `column`, or `column-reverse`; and
+- `flex-wrap`: `nowrap`, `wrap`, or `wrap-reverse`.
+
+`flex` accepts `none`, `auto`, one basis value, one grow number, `grow basis`, or `grow shrink basis`. `flex-flow`
+accepts one direction, one wrap mode, or one of each.
+
+<!-- RRSS-EXAMPLE:valid FLEX_VALUES -->
+```css
+@rr-version 1;
+
+section-items {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: stretch;
+	gap: 8pt;
+}
+
+item {
+	flex: 1 1 0%;
+	align-self: stretch;
+}
+
+item-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+```
+
+For pictures, `object-fit` accepts `contain`, `cover`, `fill`, `none`, or `scale-down`. `object-position` accepts one or
+two horizontal/vertical keywords (`left`, `right`, `top`, `bottom`, or `center`), percentages, or lengths.
+
+<!-- RRSS-EXAMPLE:valid IMAGE_VALUES -->
+```css
+@rr-version 1;
+
+picture {
+	width: 96pt;
+	height: 96pt;
+	aspect-ratio: 1;
+	object-fit: cover;
+	object-position: center 25%;
+	border-radius: 48pt;
+	-rr-shadow-color: rgba(15, 23, 42, 0.2);
+	-rr-shadow-width: 3pt;
+}
+```
+
+`transform` accepts `translate()`, `translateX()`, `translateY()`, `rotate()`, `scale()`, `scaleX()`, `scaleY()`,
+`skew()`, `skewX()`, `skewY()`, and six-number `matrix()`. Rotation and skew angles accept degrees or radians.
+`transform-origin` accepts one or two position keywords, percentages, or lengths.
+
+<!-- RRSS-EXAMPLE:valid TRANSFORM_VALUES -->
+```css
+@rr-version 1;
+
+picture {
+	transform: translateX(3) rotate(4deg) scale(1.02);
+	transform-origin: center center;
+}
+```
+
+Color functions and `var()` may be combined, including nested fallbacks. `url()` and resource-loading functions remain
+forbidden.
+
+<!-- RRSS-EXAMPLE:valid COLOR_FUNCTIONS -->
+```css
+@rr-version 1;
+
+:root {
+	--accent: hsl(217, 91%, 60%);
+	--surface: rgba(37, 99, 235, 0.08);
+	--border: rgb(203, 213, 225);
+}
+
+name {
+	color: var(--accent, #2563eb);
+}
+
+section {
+	background-color: var(--surface);
+	border-color: var(--border);
+}
+
+field[role~="secondary-text"] {
+	color: navy;
+}
+```
+
+`margin`, `padding`, `border-width`, `border-style`, `border-color`, and `border-radius` accept one to four values using
+CSS top/right/bottom/left expansion. `gap` accepts one or two lengths. `border` and per-side border shorthands accept
+width, style, and color in any order; use the renderer-supported `solid`, `dashed`, or `dotted` border styles.
+Slash-separated elliptical border radii are not supported.
+
+<!-- RRSS-EXAMPLE:valid SHORTHANDS -->
+```css
+@rr-version 1;
+
+section {
+	margin: 6pt 0 10pt;
+	padding: 8pt 12pt;
+	border: 1pt solid #cbd5e1;
+	border-radius: 6pt;
+}
+
+section-items {
+	gap: 6pt 10pt;
+	flex-flow: column nowrap;
+}
+```
+
+Common constrained text values are:
+
+- `font-style`: `normal`, `italic`, or `oblique`;
+- `font-weight`: a numeric weight or `thin`, `hairline`, `ultralight`, `extralight`, `light`, `normal`, `medium`,
+  `semibold`, `demibold`, `bold`, `ultrabold`, `extrabold`, `heavy`, or `black`;
+- `text-align`: `left`, `right`, `center`, or `justify`;
+- `text-decoration`: `none`, `underline`, `line-through`, or both line values;
+- `text-transform`: `none`, `capitalize`, `lowercase`, `uppercase`, or `upperfirst`;
+- `text-overflow`: `ellipsis`; and
+- `vertical-align`: `sub` or `super`.
+
+<!-- RRSS-EXAMPLE:valid PROPERTY_VALUES -->
+```css
+@rr-version 1;
+
+field {
+	font-size: 10pt;
+	font-style: italic;
+	font-weight: 600;
+	line-height: 1.35;
+	text-align: left;
+	text-decoration: underline;
+	text-transform: uppercase;
+	opacity: 0.85;
+}
+```
 
 <!-- RRSS-PROPERTIES:START -->
 | Property | Category | Applies to | Inherits | Units | Known keywords |
