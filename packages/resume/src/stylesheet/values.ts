@@ -1,4 +1,5 @@
 import type { CssLocation, CssNode } from "css-tree";
+import type { RrssCompilerDiagnosticCode } from "./diagnostics";
 import type {
 	CompiledDeclaration,
 	CompiledMediaQuery,
@@ -138,7 +139,7 @@ function children(node: AstNode | null | undefined): AstNode[] {
 
 function diagnostic(
 	diagnostics: RrssDiagnostic[],
-	code: string,
+	code: RrssCompilerDiagnosticCode,
 	message: string,
 	node?: AstNode,
 	severity: RrssDiagnostic["severity"] = "error",

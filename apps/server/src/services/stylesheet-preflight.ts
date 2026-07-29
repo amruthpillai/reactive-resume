@@ -6,6 +6,9 @@ import type {
 } from "@reactive-resume/pdf/server";
 import { fileURLToPath } from "node:url";
 import { Worker } from "node:worker_threads";
+import { STYLESHEET_PREFLIGHT_LIMITS } from "@reactive-resume/pdf/preflight-reference";
+
+export { STYLESHEET_PREFLIGHT_LIMITS } from "@reactive-resume/pdf/preflight-reference";
 
 type StylesheetPreflightLimits = {
 	timeoutMs: number;
@@ -18,18 +21,6 @@ type StylesheetPreflightLimits = {
 	maxConcurrentWorkers: number;
 	maxQueuedRequests: number;
 };
-
-export const STYLESHEET_PREFLIGHT_LIMITS: Readonly<StylesheetPreflightLimits> = Object.freeze({
-	timeoutMs: 5_000,
-	maxPages: 20,
-	maxBytes: 10_000_000,
-	maxPageWidthPt: 2_000,
-	maxPageHeightPt: 20_000,
-	maxPageAreaPt2: 20_000_000,
-	maxOldGenerationMb: 256,
-	maxConcurrentWorkers: 1,
-	maxQueuedRequests: 32,
-});
 
 const SOURCE_WORKER_LOADER_HEAP_MB = 256;
 const WORKER_STARTUP_TIMEOUT_MS = 15_000;

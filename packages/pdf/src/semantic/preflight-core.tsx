@@ -2,12 +2,15 @@ import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { Template } from "@reactive-resume/schema/templates";
+import type { PdfPreflightFailureCode } from "./preflight-reference";
 import { createElement } from "react";
 import { pdf } from "#react-pdf-renderer";
 import { ResumeDocument } from "../document";
 import { getTemplatePageSize } from "../templates/shared/page-size";
 import { semanticNodeKeys } from "./node-keys";
 import { resolveResumeRuntime } from "./resolve";
+
+export type { PdfPreflightFailureCode } from "./preflight-reference";
 
 export type StylesheetPreflightInput = {
 	data: ResumeData;
@@ -20,17 +23,6 @@ export type PdfPreflightPageLimits = {
 	maxPageHeightPt: number;
 	maxPageAreaPt2: number;
 };
-
-export type PdfPreflightFailureCode =
-	| "STYLESHEET_PREFLIGHT_INVALID"
-	| "STYLESHEET_PREFLIGHT_PAGE_SIZE_LIMIT"
-	| "STYLESHEET_PREFLIGHT_BYTE_LIMIT"
-	| "STYLESHEET_PREFLIGHT_PAGE_LIMIT"
-	| "STYLESHEET_PREFLIGHT_TIMEOUT"
-	| "STYLESHEET_PREFLIGHT_MEMORY_LIMIT"
-	| "STYLESHEET_PREFLIGHT_RENDER_FAILED"
-	| "STYLESHEET_PREFLIGHT_PARSE_FAILED"
-	| "STYLESHEET_PREFLIGHT_WORKER_FAILED";
 
 export type PdfPreflightFailure = {
 	ok: false;

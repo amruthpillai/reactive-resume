@@ -3,6 +3,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
 import type { TemplateSemanticManifest } from "./template-manifest";
 import { describe, expect, it } from "vitest";
+import { TEMPLATE_PART_CHILD_KINDS_V1 } from "@reactive-resume/resume/stylesheet";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { templateSchema } from "@reactive-resume/schema/templates";
 import { createBindingInventory } from "./binding-inventory";
@@ -484,6 +485,15 @@ const buildFixtureTree = (template: Template, showHeader = true): SemanticNode =
 describe("template semantic manifests", () => {
 	it.each(templateSchema.options)("%s publishes a semantic manifest", (template) => {
 		expect(getTemplateSemanticManifest(template)).toBeDefined();
+	});
+
+	it("registers child kinds for every primitive template part", () => {
+		for (const manifest of Object.values(getTemplateSemanticRegistryFingerprintInput())) {
+			for (const part of manifest.parts) {
+				if (part.binding.type === "alias") continue;
+				expect(TEMPLATE_PART_CHILD_KINDS_V1, `${manifest.template}:${part.name}`).toHaveProperty(part.name);
+			}
+		}
 	});
 
 	it.each(templateSchema.options)("%s declares only its exact existing parts and owner bindings", (template) => {
