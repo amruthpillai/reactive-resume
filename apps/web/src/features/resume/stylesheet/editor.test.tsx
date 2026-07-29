@@ -33,6 +33,15 @@ const error: RrssDiagnostic = {
 	},
 };
 
+const referenceName = /browse the semantic css language reference.*opens in new tab/i;
+
+const expectReferenceLink = (root: HTMLElement) => {
+	const link = within(root).getByRole("link", { name: referenceName });
+	expect(link).toHaveAttribute("href", "https://docs.rxresu.me/guides/semantic-css-reference");
+	expect(link).toHaveAttribute("target", "_blank");
+	expect(link).toHaveAttribute("rel", "noopener noreferrer");
+};
+
 beforeAll(() => {
 	i18n.loadAndActivate({ locale: "en", messages: {} });
 	Object.defineProperty(Element.prototype, "getAnimations", { configurable: true, value: () => [] });
@@ -151,6 +160,19 @@ describe("StylesheetCodeEditor", () => {
 });
 
 describe("StylesheetEditorShell", () => {
+	it("links desktop editor help to the Semantic CSS language reference", () => {
+		media.mobile = false;
+		const { container } = render(
+			<I18nProvider i18n={i18n}>
+				<TooltipProvider>
+					<StylesheetEditorShell />
+				</TooltipProvider>
+			</I18nProvider>,
+		);
+
+		expectReferenceLink(container);
+	});
+
 	it("makes the editor and mutation controls read-only while a restore is pending", () => {
 		media.mobile = false;
 		useStylesheetStore.setState({
@@ -211,6 +233,7 @@ describe("StylesheetEditorShell", () => {
 		expect(within(sheet).getByRole("toolbar", { name: "Stylesheet editor" })).toBeInTheDocument();
 		expect(within(sheet).getByText("Ready to activate with warnings")).toBeInTheDocument();
 		expect(within(sheet).getByText("Unknown property")).toBeInTheDocument();
+		expectReferenceLink(sheet);
 		expect(document.querySelectorAll(".cm-editor")).toHaveLength(1);
 		media.mobile = false;
 	});
