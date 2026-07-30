@@ -165,21 +165,20 @@ export async function waitForStablePreview(page: Page, selector = ACTIVE_PREVIEW
 export async function switchTemplate(page: Page, template: string) {
 	await openSidebarSection(page, "Template");
 	const section = page.getByRole("region", { name: "Toggle Template section" });
-	if (await section.getByRole("heading", { name: template, exact: true }).isVisible()) {
-		await waitForStablePreview(page);
-		return;
+	const targetPreview = activePreviewPageSelector(template.toLowerCase());
+	if (!(await section.getByRole("heading", { name: template, exact: true }).isVisible())) {
+		await section.getByRole("button").first().click();
+		const gallery = page.getByRole("dialog", { name: "Template Gallery" });
+		await expect(gallery).toBeVisible();
+		const save = page.waitForResponse((response) => {
+			const body = response.request().postData() ?? "";
+			return response.url().includes("/api/rpc") && response.ok() && body.includes(template.toLowerCase());
+		});
+		await gallery.getByRole("img", { name: template, exact: true }).click();
+		await save;
+		await page.keyboard.press("Escape");
 	}
-	await section.getByRole("button").first().click();
-	const gallery = page.getByRole("dialog", { name: "Template Gallery" });
-	await expect(gallery).toBeVisible();
-	const save = page.waitForResponse((response) => {
-		const body = response.request().postData() ?? "";
-		return response.url().includes("/api/rpc") && response.ok() && body.includes(template.toLowerCase());
-	});
-	await gallery.getByRole("img", { name: template, exact: true }).click();
-	await save;
-	await page.keyboard.press("Escape");
-	await waitForStablePreview(page, activePreviewPageSelector(template.toLowerCase()));
+	await waitForStablePreview(page, targetPreview);
 }
 
 export async function downloadPdf(page: Page): Promise<Download> {
