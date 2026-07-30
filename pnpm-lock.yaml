@@ -1264,12 +1264,6 @@ importers:
 
   tooling:
     dependencies:
-      '@reactive-resume/pdf':
-        specifier: workspace:*
-        version: link:../packages/pdf
-      '@reactive-resume/resume':
-        specifier: workspace:*
-        version: link:../packages/resume
       '@reactive-resume/schema':
         specifier: workspace:*
         version: link:../packages/schema
@@ -1280,6 +1274,9 @@ importers:
       '@reactive-resume/env':
         specifier: workspace:*
         version: link:../packages/env
+      '@reactive-resume/resume':
+        specifier: workspace:*
+        version: link:../packages/resume
       '@types/pg':
         specifier: ^8.20.0
         version: 8.20.0

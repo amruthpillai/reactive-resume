@@ -1,27 +1,11 @@
-import type { TemplateSemanticManifest } from "@reactive-resume/pdf/semantic-manifest";
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import {
-	PDF_PREFLIGHT_DIAGNOSTIC_CATALOG,
-	STYLESHEET_PREFLIGHT_LIMITS,
-} from "@reactive-resume/pdf/preflight-reference";
-import { getTemplateSemanticRegistryFingerprintInput } from "@reactive-resume/pdf/semantic-manifest";
-import {
-	PROPERTY_REGISTRY_V1,
-	RRSS_DIAGNOSTIC_CATALOG_V1,
-	RRSS_LIMITS_V1,
-	SEMANTIC_NODE_KINDS,
-	SEMANTIC_REGISTRY_V1,
-	SYSTEM_VARIABLE_REGISTRY_V1,
-	TEMPLATE_PART_CHILD_KINDS_V1,
-} from "@reactive-resume/resume/stylesheet";
 import {
 	createCustomSectionItemJsonSchemas,
 	createResumeDataJsonSchema,
 } from "@reactive-resume/schema/resume/json-schema";
 
 export type DocumentationPaths = {
-	rrssReference: string;
 	jsonSchemaGuide: string;
 	skillSchemaReference: string;
 };
@@ -45,7 +29,6 @@ export type JsonSchema = {
 };
 
 const defaultPaths: DocumentationPaths = {
-	rrssReference: fileURLToPath(new URL("../../docs/guides/semantic-css-reference.mdx", import.meta.url)),
 	jsonSchemaGuide: fileURLToPath(new URL("../../docs/guides/json-resume-schema.mdx", import.meta.url)),
 	skillSchemaReference: fileURLToPath(new URL("../../skills/resume-builder/references/schema.md", import.meta.url)),
 };
@@ -60,8 +43,6 @@ const sentenceList = (values: readonly unknown[]) => {
 };
 const table = (headers: readonly string[], rows: readonly string[]) =>
 	[`| ${headers.join(" | ")} |`, `| ${headers.map(() => "---").join(" | ")} |`, ...rows].join("\n");
-const sortedEntries = <T>(record: Readonly<Record<string, T>>) =>
-	Object.entries(record).sort(([left], [right]) => left.localeCompare(right));
 
 export function replaceGeneratedBlock(source: string, name: string, body: string, path: string): string {
 	const start = `<!-- ${name}:START -->`;
@@ -77,105 +58,6 @@ export function replaceGeneratedBlock(source: string, name: string, body: string
 	if (endIndex < startIndex) throw new Error(`Generated markers ${name} are out of order in ${path}.`);
 
 	return `${source.slice(0, startIndex)}${start}\n${body}\n${end}${source.slice(endIndex + end.length)}`;
-}
-
-function renderSemanticElements() {
-	const rows = [...SEMANTIC_NODE_KINDS].sort().map((kind) => {
-		const definition = SEMANTIC_REGISTRY_V1[kind];
-		const attributeValues: Readonly<Record<string, readonly string[]>> =
-			"attributeValues" in definition ? definition.attributeValues : {};
-		const knownValues = Object.entries(attributeValues).map(
-			([attribute, values]) => `${code(attribute)}: ${list(values)}`,
-		);
-		return `| ${code(kind)} | ${list(definition.parents)} | ${list(definition.attributes)} | ${knownValues.join("; ") || "—"} | ${list(definition.roles)} |`;
-	});
-
-	return table(["Element", "Parents", "Attributes", "Known values", "Roles"], rows);
-}
-
-function renderProperties() {
-	const rows = Object.entries(PROPERTY_REGISTRY_V1)
-		.filter((entry): entry is [string, NonNullable<(typeof entry)[1]>] => entry[1] !== undefined)
-		.sort(([left], [right]) => left.localeCompare(right))
-		.map(
-			([name, definition]) =>
-				`| ${code(name)} | ${markdown(definition.category)} | ${list(definition.appliesTo)} | ${definition.inheritable ? "yes" : "no"} | ${list(definition.units)} | ${list(definition.values)} |`,
-		);
-
-	return [
-		table(["Property", "Category", "Applies to", "Inherits", "Units", "Known keywords"], rows),
-		"",
-		"Known keywords are completion hints, not a complete value grammar; use the property examples and value rules above for accepted numbers, colors, functions, and shorthands.",
-	].join("\n");
-}
-
-function renderSystemVariables() {
-	const rows = sortedEntries(SYSTEM_VARIABLE_REGISTRY_V1).map(
-		([name, definition]) => `| ${code(name)} | ${markdown(definition.description)} |`,
-	);
-	return table(["Variable", "Runtime value"], rows);
-}
-
-function renderOwner(owner: TemplateSemanticManifest["parts"][number]["owner"]) {
-	const details = [`owner: ${owner.kind}${owner.kind === "region" ? ` (${owner.key})` : ""}`];
-	if ("placement" in owner && owner.placement) details.push(`placement: ${owner.placement}`);
-	if ("origin" in owner && owner.origin) details.push(`origin: ${owner.origin}`);
-	if ("sectionTypes" in owner && owner.sectionTypes) details.push(`section types: ${owner.sectionTypes.join(", ")}`);
-	if ("columns" in owner && owner.columns) details.push(`columns: ${owner.columns}`);
-	if ("position" in owner && owner.position === "last") details.push("last item only");
-	return markdown(details.join("; "));
-}
-
-export function renderTemplateParts(manifests: Readonly<Record<string, TemplateSemanticManifest>>): string {
-	const rows = Object.entries(manifests)
-		.flatMap(([template, manifest]) =>
-			manifest.parts.length === 0
-				? [`| ${code(template)} | no template-specific parts | — | — | — |`]
-				: manifest.parts.map((part) => {
-						const selector =
-							part.binding.type === "primitive"
-								? `template-part[name="${part.name}"]`
-								: `${part.binding.canonicalKind}[part~="${part.binding.token}"]`;
-						let children = "canonical node";
-
-						if (part.binding.type === "primitive") {
-							if (!Object.hasOwn(TEMPLATE_PART_CHILD_KINDS_V1, part.name)) {
-								throw new Error(`Missing template-part child coverage for ${template}:${part.name}.`);
-							}
-							children = list(TEMPLATE_PART_CHILD_KINDS_V1[part.name as keyof typeof TEMPLATE_PART_CHILD_KINDS_V1]);
-						}
-
-						return `| ${code(template)} | ${code(part.name)} | ${code(selector)} | ${renderOwner(part.owner)} | ${children} |`;
-					}),
-		)
-		.sort();
-
-	return table(["Template", "Name", "Selector", "Owner/condition", "Allowed children"], rows);
-}
-
-function renderDiagnostics() {
-	const rows = [
-		...sortedEntries(RRSS_DIAGNOSTIC_CATALOG_V1).map(
-			([codeName, diagnostic]) =>
-				`| ${code(codeName)} | ${diagnostic.severity} | ${markdown(diagnostic.meaning)} | ${markdown(diagnostic.action)} |`,
-		),
-		...sortedEntries(PDF_PREFLIGHT_DIAGNOSTIC_CATALOG).map(
-			([codeName, diagnostic]) =>
-				`| ${code(codeName)} | error | ${markdown(diagnostic.meaning)} | ${markdown(diagnostic.action)} |`,
-		),
-	].sort();
-
-	return table(["Code", "Severity", "Meaning", "What to do"], rows);
-}
-
-function renderLimits() {
-	const rows = [
-		...sortedEntries(RRSS_LIMITS_V1).map(([name, value]) => `| Compiler | ${code(name)} | ${markdown(value)} |`),
-		...sortedEntries(STYLESHEET_PREFLIGHT_LIMITS).map(
-			([name, value]) => `| PDF preflight | ${code(name)} | ${markdown(value)} |`,
-		),
-	];
-	return table(["Stage", "Limit", "Value"], rows);
 }
 
 function schemaType(schema: JsonSchema): string {
@@ -286,30 +168,13 @@ export function renderSchemaReference(schema: JsonSchema) {
 
 export async function buildGeneratedDocumentation(paths: Partial<DocumentationPaths> = {}) {
 	const resolvedPaths = { ...defaultPaths, ...paths };
-	const [rrssSource, jsonSchemaSource] = await Promise.all([
-		readFile(resolvedPaths.rrssReference, "utf8"),
-		readFile(resolvedPaths.jsonSchemaGuide, "utf8"),
-		readFile(resolvedPaths.skillSchemaReference, "utf8"),
-	]);
+	const jsonSchemaSource = await readFile(resolvedPaths.jsonSchemaGuide, "utf8");
 	const schema = createResumeDataJsonSchema() as JsonSchema;
-	const rrssBlocks = {
-		"RRSS-SEMANTIC-ELEMENTS": renderSemanticElements(),
-		"RRSS-PROPERTIES": renderProperties(),
-		"RRSS-SYSTEM-VARIABLES": renderSystemVariables(),
-		"RRSS-TEMPLATE-PARTS": renderTemplateParts(getTemplateSemanticRegistryFingerprintInput()),
-		"RRSS-DIAGNOSTICS": renderDiagnostics(),
-		"RRSS-LIMITS": renderLimits(),
-	};
-	let rrssReference = rrssSource;
-	for (const [name, body] of Object.entries(rrssBlocks)) {
-		rrssReference = replaceGeneratedBlock(rrssReference, name, body, resolvedPaths.rrssReference);
-	}
 	const fullSchemaBlock = ["```json /schema.json lines expandable", JSON.stringify(schema, null, "\t"), "```"].join(
 		"\n",
 	);
 
 	return {
-		rrssReference,
 		jsonSchemaGuide: replaceGeneratedBlock(
 			jsonSchemaSource,
 			"RESUME-JSON-SCHEMA",

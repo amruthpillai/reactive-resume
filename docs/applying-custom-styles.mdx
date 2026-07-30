@@ -1,0 +1,346 @@
+---
+title: "Applying Custom Styles"
+description: "Use Reactive Resume Semantic CSS to make safe, targeted, and portable changes to your resume PDF."
+---
+
+Custom Styles let you make focused changes that are not available in the regular **Design**, **Typography**, **Layout**,
+**Page**, and **Picture** settings. They use Reactive Resume Semantic CSS (RRSS), a CSS-like language designed for
+resume PDFs.
+
+<Note>
+  RRSS styles the PDF output, not the browser interface. It cannot load fonts, images, scripts, or other resources, and
+  it cannot create new resume content.
+</Note>
+
+## Convert existing Custom Styles
+
+If a resume still uses the previous Custom Styles form, Reactive Resume creates a converted stylesheet draft. Your
+current rules remain active while you review it.
+
+<Steps>
+  <Step title="Open Custom Styles">
+    Open the resume in the builder, select **Design**, then select **Custom Styles**.
+  </Step>
+  <Step title="Review the converted draft">
+    Check the preview and warnings below the editor. The draft starts with `@rr-version 1;`.
+  </Step>
+  <Step title="Activate Semantic CSS">
+    Select **Activate Semantic CSS** only after the preview matches the legacy result. Reactive Resume never applies both
+    systems at once, and keeps the original legacy rules available for rollback.
+  </Step>
+</Steps>
+
+## Make your first change
+
+Open the resume you want to style, select **Design**, then select **Custom Styles**. Start with a complete stylesheet:
+
+<!-- RRSS-EXAMPLE:valid FIRST_CHANGE -->
+```css
+@rr-version 1;
+
+section[type="experience"] > section-heading {
+	color: #0f766e;
+	text-transform: uppercase;
+}
+```
+
+The first line tells Reactive Resume which language version the stylesheet uses. Keep `@rr-version 1;` at the start of
+every stylesheet.
+
+<Steps>
+  <Step title="Paste one focused rule">
+    Add the stylesheet to the editor. Start with one visual change so it is easy to review in the preview.
+  </Step>
+  <Step title="Wait for Applied">
+    Reactive Resume checks the source and the PDF result. When the status changes to **Applied**, compare the preview
+    and export if you are ready to share the resume.
+  </Step>
+  <Step title="Build on the working rule">
+    Add one related change at a time. The editor keeps your draft, undo history, and last valid stylesheet separately.
+  </Step>
+</Steps>
+
+## Target the right part of your resume
+
+RRSS selectors describe resume content rather than a template's internal HTML. Selector and attribute names are
+lowercase and case-sensitive. Prefer semantic selectors when you want a style to work across resumes and templates.
+
+### Start with the resume structure
+
+| Selector | Targets | Typical use |
+| --- | --- | --- |
+| `resume` | The complete resume | Scope a rule to one template. |
+| `page` | A rendered PDF page | Set a page size. |
+| `region` | Header, main, sidebar, or featured region | Style a layout area. |
+| `header` | The resume header | Style the identity and contact area. |
+| `section` | A resume section | Target a section type or placement. |
+| `section-heading` | A section title | Change heading typography or decoration. |
+| `section-items` | The items in a section | Adjust item layout and gaps. |
+| `item` | One resume item | Control spacing or pagination for an experience, project, or similar item. |
+| `item-header` | An item's summary row | Align the title, company, dates, or similar details. |
+
+### Target header and item content
+
+| Selector | Targets | Typical use |
+| --- | --- | --- |
+| `picture` | The profile picture | Change dimensions, crop, border, or picture shadow. |
+| `name`, `headline` | Header name and headline | Change the main identity typography. |
+| `contact-list`, `contact-item` | Header contact details | Space or restyle contact details. |
+| `combined-text` | A template-combined value | Style an item value that combines fields. |
+| `field` | A named content field | Target a position, company, date, or other field. |
+| `link` | A structured link | Change linked text or layout. |
+| `icon`, `level` | An icon or level indicator | Restyle decorative elements. |
+
+### Target rich text and lists
+
+| Selector | Targets |
+| --- | --- |
+| `rich-text`, `rich-heading`, `blockquote`, `paragraph` | Rich-text blocks in descriptions and summaries. |
+| `list`, `list-item`, `list-marker`, `list-item-content` | Lists, the outer item row, its bullet or number, and its content. |
+| `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | Inline rich-text formatting. |
+| `hard-break`, `horizontal-rule` | A forced line break or horizontal rule. |
+| `template-part` | A template-provided extension point. Use only with a template guard. |
+
+### Narrow a selector with attributes
+
+Use attributes to make a rule specific without relying on a template layout.
+
+| Attribute | Use it with | Example |
+| --- | --- | --- |
+| `type` | `section` | `section[type="experience"]` |
+| `placement` | `region` and `section` | `region[placement="sidebar"]` |
+| `region` | `region` | `region[region="sidebar"]` |
+| `origin` | `section` | `section[origin="main"]` |
+| `part` | `region`, `section`, `contact-item`, and `item-header` | `region[part~="sidebar-background"]` |
+| `template` | `resume` | `resume[template="azurill"]` |
+| `name` | `field` and `template-part` | `field[name="position"]` |
+| `level` | `rich-heading` | `rich-heading[level="2"]` |
+| `direction` | `list-item-content` | `list-item-content[direction="rtl"]` |
+| `id` | Any semantic node when present | `section[id="projects"]` |
+| `role` | Any semantic node when present | `field[role~="secondary-text"]` |
+
+RRSS supports selector lists, descendant (` `), child (`>`), adjacent sibling (`+`), and general sibling (`~`)
+combinators. It also supports `:root`, `:first-child`, `:last-child`, `:only-child`, `:is()`, `:where()`, `:not()`,
+`:nth-child()`, and `:nth-of-type()`.
+
+<!-- RRSS-EXAMPLE:valid TARGETING -->
+```css
+@rr-version 1;
+
+section[type="experience"] > section-heading {
+	border-bottom: 1pt solid #0f766e;
+}
+
+region[placement="sidebar"] {
+	background-color: #f8fafc;
+	padding: 18pt;
+}
+
+section[id="projects"] {
+	break-inside: avoid;
+}
+```
+
+Use an exact `id` only for a resume-specific adjustment. A type, placement, role, or field name is usually a better
+choice when you expect to copy the stylesheet to another resume.
+
+## Reuse your builder settings
+
+RRSS exposes the resolved builder settings as read-only `--rr-*` variables. Define your own variables in `:root`, then
+reuse the builder values instead of duplicating colors or dimensions.
+
+<!-- RRSS-EXAMPLE:valid BUILDER_VALUES -->
+```css
+@rr-version 1;
+
+:root {
+	--accent: var(--rr-primary-color);
+	--rule: #cbd5e1;
+}
+
+section-heading {
+	color: var(--accent);
+	border-bottom: 1pt solid var(--rule);
+	font-size: 11pt;
+	font-weight: 600;
+	letter-spacing: 0.4pt;
+}
+```
+
+Changing the primary color or related setting in the builder updates the corresponding variable automatically. Do not
+assign a value to a `--rr-*` variable; create an author variable such as `--accent` instead.
+
+| Builder setting | Read-only variables |
+| --- | --- |
+| Colors | `--rr-primary-color`, `--rr-text-color`, `--rr-background-color` |
+| Typography | `--rr-body-font-size`, `--rr-body-line-height`, `--rr-heading-font-size`, `--rr-heading-line-height` |
+| Page and layout | `--rr-page-gap-x`, `--rr-page-gap-y`, `--rr-page-margin-x`, `--rr-page-margin-y`, `--rr-page-width`, `--rr-page-height`, `--rr-sidebar-width` |
+| Picture | `--rr-picture-size`, `--rr-picture-rotation`, `--rr-picture-aspect-ratio`, `--rr-picture-border-radius`, `--rr-picture-border-width`, `--rr-picture-border-color`, `--rr-picture-shadow-width`, `--rr-picture-shadow-color` |
+
+Use `pt` for predictable PDF spacing and type sizes. RRSS also accepts `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`,
+and `rem` where the property supports a length.
+
+## Style common resume content
+
+The most useful declarations usually fall into a few groups:
+
+| Goal | Common declarations |
+| --- | --- |
+| Typography | `color`, `font-size`, `font-style`, `font-weight`, `letter-spacing`, `line-height`, `text-align`, `text-decoration`, `text-transform` |
+| Spacing and layout | `margin`, `padding`, `gap`, `width`, `height`, `display`, `flex`, `flex-direction`, `justify-content`, `align-items`, `order` |
+| Visual treatment | `background-color`, `border`, `border-radius`, `opacity`, `transform` |
+| Picture treatment | `object-fit`, `object-position`, `-rr-shadow-color`, `-rr-shadow-width` |
+| PDF structure | `break-before`, `break-inside`, `orphans`, `widows`, `-rr-min-presence-ahead`, `size` |
+
+Use `display: none` only to hide an existing semantic node. RRSS cannot add, remove, duplicate, or re-parent resume
+data.
+
+### Style rich-text lists
+
+`list-item` is the outer row that holds a marker and its content. Use it for row layout and spacing. Use `list-marker`
+for the bullet or number, and `list-item-content` for the text flow.
+
+<!-- RRSS-EXAMPLE:valid RICH_TEXT_LISTS -->
+```css
+@rr-version 1;
+
+rich-text list-item {
+	gap: 4pt;
+}
+
+list-marker {
+	color: var(--rr-primary-color);
+}
+
+list-item-content {
+	line-height: 1.35;
+}
+```
+
+### Style fields inside an item
+
+Named fields let you make a focused change without styling every item value. Use the selector only where that field
+exists in the selected resume and template.
+
+<!-- RRSS-EXAMPLE:valid ITEM_FIELDS -->
+```css
+@rr-version 1;
+
+section[type="experience"] field[name="position"] {
+	font-weight: 600;
+}
+
+section[type="experience"] field[name="company"] {
+	color: var(--rr-primary-color);
+}
+```
+
+## Use template-specific parts carefully
+
+Template parts expose optional visual details that are not shared by every template. Always guard a template-part rule
+with `resume[template="..."]`; otherwise the selector may match nothing after a template change.
+
+<!-- RRSS-EXAMPLE:valid TEMPLATE_PART -->
+```css
+@rr-version 1;
+
+resume[template="azurill"] template-part[name="timeline-line"] {
+	background-color: #94a3b8;
+}
+```
+
+Some template parts are wrappers, while others are attributes on an existing semantic node. Use the matching selector
+below.
+
+| Template | Available selectors |
+| --- | --- |
+| Azurill | `template-part[name="timeline-content"]`, `template-part[name="timeline-dot"]`, `template-part[name="timeline-line"]`, `template-part[name="timeline-marker"]` |
+| Bronzor | `section[part~="interleaved-section-row"]` |
+| Chikorita | `template-part[name="contact-row-primary"]`, `template-part[name="contact-row-secondary"]` |
+| Ditgar | `template-part[name="featured-summary"]`, `item-header[part~="item-header-border"]`, `region[part~="sidebar-background"]` |
+| Ditto | `template-part[name="contact-offset"]`, `template-part[name="header-band"]`, `template-part[name="picture-anchor"]` |
+| Gengar | `template-part[name="featured-summary"]`, `region[part~="sidebar-background"]` |
+| Glalie | `region[part~="sidebar-background"]` |
+| Leafish | `template-part[name="header-body"]`, `template-part[name="header-contact-band"]`, `template-part[name="header-intro"]` |
+| Meowth | `template-part[name="education-grade-row"]`, `template-part[name="inline-item-header-leading"]`, `template-part[name="inline-item-header-middle"]`, `template-part[name="inline-item-header-trailing"]` |
+| Pikachu | `template-part[name="header-divider"]` |
+| Rhyhorn | `template-part[name="contact-item-content"]`, `contact-item[part~="contact-item-last"]` |
+| Scizor | `template-part[name="header-name-rule"]` |
+
+Kakuna, Lapras, and Onyx do not expose template-specific parts. Use shared semantic selectors for portable styles.
+
+## Control pagination and PDF dimensions
+
+Use structural declarations sparingly and review the exported PDF after each change. You can keep an item together,
+leave space before a section, or set a custom page size.
+
+<!-- RRSS-EXAMPLE:valid PDF_LAYOUT -->
+```css
+@rr-version 1;
+
+page {
+	size: 210mm 297mm;
+}
+
+section {
+	-rr-min-presence-ahead: 72pt;
+}
+
+item {
+	break-inside: avoid;
+}
+```
+
+`size` applies only to `page` and must be outside `@media`. PDF media queries use the authored PDF dimensions, not the
+browser viewport.
+
+<!-- RRSS-EXAMPLE:valid PDF_MEDIA_QUERY -->
+```css
+@rr-version 1;
+
+@media (max-width: 600pt) {
+	region[placement="sidebar"] {
+		padding: 12pt;
+	}
+}
+```
+
+Supported media features are `width`, `min-width`, `max-width`, `height`, `min-height`, `max-height`, and
+`orientation: portrait` or `orientation: landscape`.
+
+## Apply, diagnose, and recover safely
+
+The editor saves your draft even when it has an error. The preview and PDF export continue using the last stylesheet
+that compiled and passed PDF checks, so a mistake does not replace a working result.
+
+If a rule does not work:
+
+1. Read the status below the editor. Errors include a line and column number when available.
+2. Check the selector's spelling, attribute value, placement, and template guard. A **selector matches nothing**
+   warning usually means the resume does not contain that semantic node.
+3. Simplify the rule to one selector and one declaration, then wait for **Applied** before adding more.
+4. Use **Reset to applied stylesheet** to discard the current draft, or use the stylesheet undo and redo controls to
+   restore an earlier source and applied pair.
+
+Select **Open focus mode** when you need a taller editor. On mobile, it opens a full-width sheet; switch to
+**Preview** to inspect the result.
+
+<Warning>
+  Review the PDF preview before exporting or sharing a resume with Custom Styles. PDF pagination and template-specific
+  details can make a valid stylesheet look different from what you intended.
+</Warning>
+
+## Keep styles portable
+
+When you copy a stylesheet to another resume, semantic section types, placements, roles, and fields are the safest
+starting point. Exact IDs and template parts are intentionally specific to a resume or template.
+
+1. Select **Copy stylesheet** in the source resume.
+2. Open **Design -> Custom Styles** in the destination resume.
+3. Paste the stylesheet and review any warnings.
+4. Replace or remove exact IDs and template-part rules that do not apply.
+5. Wait for **Applied**, then compare the preview and exported PDF.
+
+RRSS does not support classes, pseudo-elements, CSS Grid, arbitrary at-rules, `@import`, `@font-face`, `url()`,
+browser APIs, animations, filters, gradients, general box shadows, or external assets. Use the normal builder settings
+when you need a font, image, or broader layout change.

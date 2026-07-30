@@ -33,11 +33,11 @@ const error: RrssDiagnostic = {
 	},
 };
 
-const referenceName = /browse the semantic css language reference.*opens in new tab/i;
+const guideName = /read the applying custom styles guide.*opens in new tab/i;
 
-const expectReferenceLink = (root: HTMLElement) => {
-	const link = within(root).getByRole("link", { name: referenceName });
-	expect(link).toHaveAttribute("href", "https://docs.rxresu.me/guides/semantic-css-reference");
+const expectGuideLink = (root: HTMLElement) => {
+	const link = within(root).getByRole("link", { name: guideName });
+	expect(link).toHaveAttribute("href", "https://docs.rxresu.me/applying-custom-styles");
 	expect(link).toHaveAttribute("target", "_blank");
 	expect(link).toHaveAttribute("rel", "noopener noreferrer");
 };
@@ -170,7 +170,7 @@ describe("StylesheetEditorShell", () => {
 			</I18nProvider>,
 		);
 
-		expectReferenceLink(container);
+		expectGuideLink(container);
 	});
 
 	it("makes the editor and mutation controls read-only while a restore is pending", () => {
@@ -233,7 +233,7 @@ describe("StylesheetEditorShell", () => {
 		expect(within(sheet).getByRole("toolbar", { name: "Stylesheet editor" })).toBeInTheDocument();
 		expect(within(sheet).getByText("Ready to activate with warnings")).toBeInTheDocument();
 		expect(within(sheet).getByText("Unknown property")).toBeInTheDocument();
-		expectReferenceLink(sheet);
+		expectGuideLink(sheet);
 		expect(document.querySelectorAll(".cm-editor")).toHaveLength(1);
 		media.mobile = false;
 	});

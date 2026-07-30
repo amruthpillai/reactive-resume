@@ -418,11 +418,11 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 					<Trans>Not sure what to write?</Trans>{" "}
 					<a
 						className="text-primary underline underline-offset-4"
-						href="https://docs.rxresu.me/guides/semantic-css-reference"
+						href="https://docs.rxresu.me/applying-custom-styles"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<Trans>Browse the Semantic CSS language reference.</Trans>
+						<Trans>Read the Applying Custom Styles guide.</Trans>
 						<span className="sr-only">
 							{" "}
 							(<Trans>opens in new tab</Trans>)
