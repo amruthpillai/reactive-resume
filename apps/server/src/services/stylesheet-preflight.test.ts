@@ -72,6 +72,24 @@ const numberedInput = (number: number) => ({
 	},
 });
 
+const invalidInput = () => {
+	const data = structuredClone(defaultResumeData);
+	data.customSections = [
+		{
+			id: "custom-experience",
+			type: "experience",
+			title: "Experience",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+		} as never,
+	];
+	return { ...input, data };
+};
+
 describe("stylesheet PDF preflight worker", () => {
 	it("keeps the production resource policy fixed and immutable", () => {
 		expect(STYLESHEET_PREFLIGHT_LIMITS).toEqual({
@@ -103,6 +121,19 @@ describe("stylesheet PDF preflight worker", () => {
 		if (!result.ok) throw new Error(`Expected successful preflight, received ${result.code}.`);
 		expect(result.byteCount).toBeGreaterThan(0);
 		expect(runner.activeWorkerCount).toBe(0);
+	}, 20_000);
+
+	it("preserves structured resume-data failures across the worker boundary", async () => {
+		const runner = createStylesheetPreflightRunner({ timeoutMs: 15_000 });
+
+		const result = runner.run(invalidInput());
+
+		await expect(result).rejects.toMatchObject({
+			name: "ZodError",
+			issues: expect.arrayContaining([expect.objectContaining({ path: ["customSections", 0, "items", 0, "company"] })]),
+		});
+		expect(runner.activeWorkerCount).toBe(0);
+		expect(runner.queuedPreflightCount).toBe(0);
 	}, 20_000);
 
 	it("terminates a real worker when the render exceeds its deadline", async () => {

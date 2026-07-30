@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { sectionTypeSchema } from "@reactive-resume/schema/resume/data";
+import { templateSchema } from "@reactive-resume/schema/templates";
 import * as semanticRegistry from "./semantic";
-import { canContainNode, SEMANTIC_NODE_KINDS, SEMANTIC_REGISTRY_V1 } from "./semantic";
+import { canContainNode, SEMANTIC_NODE_KINDS, SEMANTIC_REGISTRY_V1, TEMPLATE_PART_CHILD_KINDS_V1 } from "./semantic";
 
 const inlineParents = [
 	"contact-item",
@@ -65,6 +67,7 @@ const expectedParents = {
 		"section-items",
 		"item",
 		"item-header",
+		"contact-list",
 		"contact-item",
 		"template-part",
 	],
@@ -90,6 +93,8 @@ const expectedTemplatePartChildren = {
 	"header-divider": ["name", "headline"],
 	"contact-item-content": ["link", "icon", "field"],
 	"header-name-rule": [],
+	"contact-row-primary": ["contact-item"],
+	"contact-row-secondary": ["contact-item"],
 } as const;
 
 describe("semantic registry", () => {
@@ -123,12 +128,27 @@ describe("semantic registry", () => {
 		expect(SEMANTIC_REGISTRY_V1["list-item"].attributes).toEqual([]);
 	});
 
+	it("publishes finite semantic attribute domains", () => {
+		expect(SEMANTIC_REGISTRY_V1.resume.attributeValues?.template).toEqual(templateSchema.options);
+		expect(SEMANTIC_REGISTRY_V1.section.attributeValues).toMatchObject({
+			type: sectionTypeSchema.options,
+			placement: ["main", "sidebar"],
+			origin: ["main", "sidebar"],
+		});
+	});
+
 	it("permits truthful contact and nested template parts without broadening unrelated parents", () => {
 		expect(canContainNode("contact-item", "template-part")).toBe(true);
 		expect(canContainNode("template-part", "template-part")).toBe(false);
 		expect(canContainNode("template-part", "template-part", "timeline-marker")).toBe(true);
-		expect(canContainNode("contact-list", "template-part")).toBe(false);
+		expect(canContainNode("contact-list", "template-part")).toBe(true);
 		expect(canContainNode("rich-text", "template-part")).toBe(false);
+	});
+
+	it("registers contact-list template parts and their child contracts", () => {
+		expect(SEMANTIC_REGISTRY_V1["template-part"].parents).toContain("contact-list");
+		expect(TEMPLATE_PART_CHILD_KINDS_V1["contact-row-primary"]).toEqual(["contact-item"]);
+		expect(TEMPLATE_PART_CHILD_KINDS_V1["contact-row-secondary"]).toEqual(["contact-item"]);
 	});
 
 	it("freezes the exact child-kind allowlist for every existing primitive template part", () => {

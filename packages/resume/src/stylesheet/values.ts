@@ -1,4 +1,5 @@
 import type { CssLocation, CssNode } from "css-tree";
+import type { RrssCompilerDiagnosticCode } from "./diagnostics";
 import type {
 	CompiledDeclaration,
 	CompiledMediaQuery,
@@ -18,6 +19,7 @@ import {
 	RRSS_CSS_WIDE_KEYWORDS_V1,
 	RRSS_LENGTH_PROPERTIES_V1,
 	RRSS_LENGTH_UNITS_V1,
+	RRSS_LENGTH_VALUE_KEYWORDS_V1,
 } from "./registry/properties";
 import { compileSelector } from "./selector";
 
@@ -48,6 +50,7 @@ const spacingShorthands = new Set(["margin", "padding"]);
 const sides = ["top", "right", "bottom", "left"] as const;
 const borderStyles = new Set<string>(RRSS_BORDER_STYLE_VALUES_V1);
 const cssWideKeywords = new Set<string>(RRSS_CSS_WIDE_KEYWORDS_V1);
+const lengthValueKeywords = new Set<string>(RRSS_LENGTH_VALUE_KEYWORDS_V1);
 const maxMediaQueryBranches = RRSS_LIMITS_V1.maxRules;
 const lengthUnitPattern = RRSS_LENGTH_UNITS_V1.map((unit) => (unit === "%" ? "%" : unit)).join("|");
 const borderWidthPattern = new RegExp(
@@ -138,7 +141,7 @@ function children(node: AstNode | null | undefined): AstNode[] {
 
 function diagnostic(
 	diagnostics: RrssDiagnostic[],
-	code: string,
+	code: RrssCompilerDiagnosticCode,
 	message: string,
 	node?: AstNode,
 	severity: RrssDiagnostic["severity"] = "error",
@@ -358,7 +361,7 @@ export function valueSyntaxError(property: string, value: string): string | null
 			}
 			return null;
 		}
-		if (isRegisteredPropertyValue(property, normalized)) return null;
+		if (lengthValueKeywords.has(normalized)) return null;
 		return `${property} requires a supported PDF length.`;
 	}
 	if (property === "size") {
@@ -372,6 +375,9 @@ export function valueSyntaxError(property: string, value: string): string | null
 		return isRegisteredPropertyValue(property, normalized) ? null : "display supports flex or none.";
 	if (property === "direction")
 		return isRegisteredPropertyValue(property, normalized) ? null : "direction supports ltr or rtl.";
+	if (/^(?:border-style|border-(?:top|right|bottom|left)-style)$/.test(property)) {
+		return isRegisteredPropertyValue(property, normalized) ? null : "border styles support dotted, dashed, or solid.";
+	}
 	if (property === "break-before")
 		return isRegisteredPropertyValue(property, normalized) ? null : "break-before supports auto or page.";
 	if (property === "break-inside")

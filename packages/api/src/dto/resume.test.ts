@@ -4,6 +4,67 @@ import { redactResumeForViewer } from "../features/resume/access-policy";
 import { resumeDto } from "./resume";
 
 describe("resume DTO output validation", () => {
+	it("normalizes ordinary PUT data without losing compatible custom-section overlap", () => {
+		const parsed = resumeDto.update.input.parse({
+			id: "resume-id",
+			data: {
+				...structuredClone(defaultResumeData),
+				customSections: [
+					{
+						id: "custom-experience",
+						type: "experience",
+						title: "Experience",
+						icon: "",
+						columns: 1,
+						hidden: false,
+						keepTogether: false,
+						startOnNewPage: false,
+						items: [
+							{
+								id: "experience-item",
+								hidden: false,
+								company: "Analytical Engines",
+								position: "Programmer",
+								location: "London",
+								period: "1842–1843",
+								description: "<p>Wrote the first algorithm.</p>",
+								content: "<p>Compatible overlap</p>",
+							},
+						],
+					},
+				],
+			},
+		});
+
+		expect(parsed.data?.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Compatible overlap</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
+	});
+
+	it("rejects renderer-unsafe custom sections before update or import persistence", () => {
+		const data = {
+			...defaultResumeData,
+			customSections: [
+				{
+					id: "custom-experience",
+					type: "experience",
+					title: "Experience",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [{ id: "summary-item", hidden: false, content: "<p>Not an experience item</p>" }],
+				},
+			],
+		};
+
+		expect(resumeDto.update.input.safeParse({ id: "resume-id", data }).success).toBe(false);
+		expect(resumeDto.import.input.safeParse({ data }).success).toBe(false);
+	});
+
 	it("defers imported stylesheet validation to the stable unavailable-feature error", () => {
 		expect(
 			resumeDto.import.input.safeParse({

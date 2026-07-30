@@ -23,6 +23,24 @@ const buildResume = (overrides: Partial<{ isPublic: boolean; passwordHash: strin
 	passwordHash: overrides.passwordHash ?? null,
 });
 
+const buildRendererUnsafeResume = () => {
+	const resume = buildResume();
+	resume.data.customSections = [
+		{
+			id: "custom-experience",
+			type: "experience",
+			title: "Experience",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+		} as never,
+	];
+	return resume;
+};
+
 describe("createPublicResumePdf", () => {
 	it("rejects unbounded mismatch metadata before access or rendering", async () => {
 		const findResume = vi.fn();
@@ -81,6 +99,29 @@ describe("createPublicResumePdf", () => {
 			}),
 		).rejects.toMatchObject({ code: "NEED_PASSWORD" });
 		expect(consume).not.toHaveBeenCalled();
+		expect(renderPdf).not.toHaveBeenCalled();
+	});
+
+	it("rejects renderer-unsafe stored data before budget, projection metadata, or rendering", async () => {
+		const consume = vi.fn();
+		const renderPdf = vi.fn();
+		const getFingerprints = vi.fn();
+
+		await expect(
+			createPublicResumePdf(input, {
+				findResume: vi.fn().mockResolvedValue(buildRendererUnsafeResume()),
+				hasPasswordAccess: vi.fn(),
+				resolveCurrentUserId: vi.fn().mockResolvedValue(undefined),
+				rateLimiter: { consume },
+				renderPdf,
+				getFingerprints,
+				now: () => 0,
+				observe: vi.fn(),
+			}),
+		).rejects.toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+
+		expect(consume).not.toHaveBeenCalled();
+		expect(getFingerprints).not.toHaveBeenCalled();
 		expect(renderPdf).not.toHaveBeenCalled();
 	});
 

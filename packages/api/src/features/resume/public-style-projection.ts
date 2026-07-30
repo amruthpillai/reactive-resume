@@ -4,6 +4,7 @@ import { ORPCError } from "@orpc/server";
 import { createPublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import { assertCanView, isOwner } from "./access-policy";
 import { publicRenderRateLimiter } from "./public-render-rate-limit";
+import { parseStoredResumeData } from "./resume-data-validation";
 
 type PublicRenderResume = {
 	id: string;
@@ -101,9 +102,11 @@ export async function loadAuthorizedPublicRenderResume(
 			data: { username: input.username, slug: input.slug },
 		});
 	}
+	const data = parseStoredResumeData(resume.data);
 
 	return {
 		...resume,
+		data,
 		viewerIsOwner: isOwner(resume, viewer),
 		hasPassword: resume.passwordHash !== null,
 	};

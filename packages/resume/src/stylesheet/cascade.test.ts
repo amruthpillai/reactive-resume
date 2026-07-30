@@ -5,6 +5,7 @@ import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { resolveStylesheet } from "./cascade";
 import { compileStylesheet } from "./compile";
 import { RRSS_LIMITS_V1 } from "./limits";
+import { PROPERTY_REGISTRY_V1, SEMANTIC_NODE_KINDS } from "./registry";
 
 const node = (
 	key: string,
@@ -63,6 +64,26 @@ const context: ResolveStylesheetContext = {
 	pages: [{ pageKey: "page-1", width: 595.28, height: 841.89 }],
 };
 
+const registryTree = node("resume", "resume", {
+	children: SEMANTIC_NODE_KINDS.filter((kind) => kind !== "resume").map((kind) => node(kind, kind)),
+});
+
+const registryContext: ResolveStylesheetContext = {
+	...context,
+	baseStyles: {},
+	pages: [{ pageKey: "page", width: 595.28, height: 841.89 }],
+};
+
+const advertisedPropertyHints = Object.entries(PROPERTY_REGISTRY_V1).flatMap(([property, definition]) => {
+	if (!definition) return [];
+	const kind = definition.appliesTo[0];
+	if (!kind) return [];
+	return [
+		...definition.values.map((value) => ({ property, kind, hint: `keyword ${value}`, value })),
+		...definition.units.map((unit) => ({ property, kind, hint: `unit ${unit}`, value: `1${unit}` })),
+	];
+});
+
 function resolve(source: string, customContext: ResolveStylesheetContext = context) {
 	const compiled = compileStylesheet({ languageVersion: 1, text: `@rr-version 1;${source}` });
 	if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
@@ -113,6 +134,38 @@ function oversizedFrontierTree(): { tree: SemanticNode; childReads: () => number
 }
 
 describe("RRSS cascade and structural resolution", () => {
+	it.each(advertisedPropertyHints)(
+		"accepts the advertised $hint for $property through cascade resolution",
+		({ property, kind, value }) => {
+			const compiled = compileStylesheet({
+				languageVersion: 1,
+				text: `@rr-version 1; ${kind} { ${property}: ${value}; }`,
+			});
+			expect(
+				compiled.diagnostics.filter(({ severity }) => severity === "error"),
+				`${property}: ${value} failed compilation`,
+			).toEqual([]);
+			expect(compiled.program, `${property}: ${value} did not compile`).not.toBeNull();
+			if (!compiled.program) return;
+
+			const resolved = resolveStylesheet(compiled.program, registryTree, registryContext);
+			expect(
+				resolved.diagnostics.filter(({ severity }) => severity === "error"),
+				`${property}: ${value} failed cascade resolution`,
+			).toEqual([]);
+		},
+	);
+
+	it("resolves two-number flex as grow and shrink with an implicit basis", () => {
+		const result = resolve("item { flex: 2 3; }");
+
+		expect(result.nodes["item-1"]?.style).toMatchObject({
+			"flex-grow": 2,
+			"flex-shrink": 3,
+			"flex-basis": "0%",
+		});
+	});
+
 	it("resolves base, normal and important rules by specificity then source order", () => {
 		const result = resolve(`
 			section-heading { color: red; }
@@ -500,6 +553,16 @@ describe("RRSS cascade and structural resolution", () => {
 			order: 4,
 		});
 		expect(result.nodes["section-experience"]?.style["break-before"]).toBeUndefined();
+	});
+
+	it.each([
+		["0", false],
+		["1", true],
+	] as const)("maps the accepted -rr-fixed value %s to %s", (value, expected) => {
+		const result = resolve(`section { -rr-fixed: ${value}; }`);
+
+		expect(result.nodes["section-experience"]?.structural.fixed).toBe(expected);
+		expect(result.diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
 	});
 
 	it("accepts the exact semantic node budget and rejects deep or wide trees one node over", () => {

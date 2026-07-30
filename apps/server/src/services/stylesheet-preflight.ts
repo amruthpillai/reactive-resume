@@ -6,6 +6,9 @@ import type {
 } from "@reactive-resume/pdf/server";
 import { fileURLToPath } from "node:url";
 import { Worker } from "node:worker_threads";
+import { STYLESHEET_PREFLIGHT_LIMITS } from "@reactive-resume/pdf/preflight-reference";
+
+export { STYLESHEET_PREFLIGHT_LIMITS } from "@reactive-resume/pdf/preflight-reference";
 
 type StylesheetPreflightLimits = {
 	timeoutMs: number;
@@ -19,22 +22,19 @@ type StylesheetPreflightLimits = {
 	maxQueuedRequests: number;
 };
 
-export const STYLESHEET_PREFLIGHT_LIMITS: Readonly<StylesheetPreflightLimits> = Object.freeze({
-	timeoutMs: 5_000,
-	maxPages: 20,
-	maxBytes: 10_000_000,
-	maxPageWidthPt: 2_000,
-	maxPageHeightPt: 20_000,
-	maxPageAreaPt2: 20_000_000,
-	maxOldGenerationMb: 256,
-	maxConcurrentWorkers: 1,
-	maxQueuedRequests: 32,
-});
-
 const SOURCE_WORKER_LOADER_HEAP_MB = 256;
 const WORKER_STARTUP_TIMEOUT_MS = 15_000;
 
-type StylesheetPreflightWorkerMessage = PdfPreflightResult | { type: "ready" };
+type SerializedPreflightCause = {
+	name: string;
+	message: string;
+	issues: readonly unknown[];
+};
+
+type StylesheetPreflightWorkerMessage =
+	| PdfPreflightResult
+	| { type: "ready" }
+	| { type: "preflight_error"; cause: SerializedPreflightCause };
 
 export type NodeStylesheetPreflightRunner = StylesheetPreflightRunner & {
 	readonly activeWorkerCount: number;
@@ -96,9 +96,14 @@ export function createStylesheetPreflightRunner(
 	const queue: Array<{
 		input: StylesheetPreflightInput;
 		resolve: (result: PdfPreflightResult) => void;
+		reject: (cause: unknown) => void;
 	}> = [];
 
-	const runWorker = (input: StylesheetPreflightInput, resolve: (result: PdfPreflightResult) => void): boolean => {
+	const runWorker = (
+		input: StylesheetPreflightInput,
+		resolve: (result: PdfPreflightResult) => void,
+		reject: (cause: unknown) => void,
+	): boolean => {
 		// The URL seam is internal to the server package and keeps worker failure tests independent from the PDF renderer.
 		const location = testWorkerUrl ? { source: false, url: testWorkerUrl } : workerLocation();
 		let worker: Worker;
@@ -140,17 +145,28 @@ export function createStylesheetPreflightRunner(
 			resolve(result);
 			drainQueue();
 		};
+		const fail = async (cause: SerializedPreflightCause) => {
+			if (settled) return;
+			settled = true;
+			await worker.terminate().catch(() => undefined);
+			cleanup();
+			reject(Object.assign(new Error(cause.message), { name: cause.name, issues: cause.issues }));
+			drainQueue();
+		};
 
 		const onMessage = (message: StylesheetPreflightWorkerMessage) => {
-			if ("ok" in message) {
-				void finish(message);
+			if ("type" in message) {
+				if (message.type === "preflight_error") {
+					void fail(message.cause);
+					return;
+				}
+				if (startupTimer) clearTimeout(startupTimer);
+				renderTimer = setTimeout(() => {
+					void finish(failure("STYLESHEET_PREFLIGHT_TIMEOUT", "The PDF preflight exceeded its deadline."));
+				}, limits.timeoutMs);
 				return;
 			}
-
-			if (startupTimer) clearTimeout(startupTimer);
-			renderTimer = setTimeout(() => {
-				void finish(failure("STYLESHEET_PREFLIGHT_TIMEOUT", "The PDF preflight exceeded its deadline."));
-			}, limits.timeoutMs);
+			void finish(message);
 		};
 		const onError = (error: Error) => {
 			void finish(workerFailure(error));
@@ -174,7 +190,7 @@ export function createStylesheetPreflightRunner(
 		while (activeWorkerCount < limits.maxConcurrentWorkers && queue.length > 0) {
 			const next = queue.shift();
 			if (!next) return;
-			runWorker(next.input, next.resolve);
+			runWorker(next.input, next.resolve, next.reject);
 		}
 	}
 
@@ -187,16 +203,16 @@ export function createStylesheetPreflightRunner(
 		},
 
 		run(input: StylesheetPreflightInput): Promise<PdfPreflightResult> {
-			return new Promise<PdfPreflightResult>((resolve) => {
+			return new Promise<PdfPreflightResult>((resolve, reject) => {
 				if (activeWorkerCount < limits.maxConcurrentWorkers) {
-					runWorker(input, resolve);
+					runWorker(input, resolve, reject);
 					return;
 				}
 				if (queue.length >= limits.maxQueuedRequests) {
 					resolve(failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", "The PDF preflight queue is full."));
 					return;
 				}
-				queue.push({ input, resolve });
+				queue.push({ input, resolve, reject });
 			});
 		},
 	};

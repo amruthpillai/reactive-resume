@@ -1,6 +1,7 @@
 /// <reference path="./css-tree.d.ts" />
 /// <reference path="./specificity.d.ts" />
 
+export type { RrssCompilerDiagnosticCode } from "./diagnostics";
 export type { PropertyDefinition, PropertyRegistry } from "./registry/properties";
 export type { SemanticNodeDefinition, SemanticRegistry } from "./registry/semantic";
 export type { SystemVariableDefinition, SystemVariableRegistry } from "./registry/system-variables";
@@ -36,6 +37,7 @@ export type {
 export { analyzeStylesheet } from "./analyze";
 export { resolveStylesheet } from "./cascade";
 export { compileStylesheet } from "./compile";
+export { RRSS_DIAGNOSTIC_CATALOG_V1 } from "./diagnostics";
 export { RRSS_LIMITS_V1 } from "./limits";
 export { parseStylesheet } from "./parse";
 export { PROPERTY_REGISTRY_V1 } from "./registry/properties";

@@ -359,37 +359,46 @@ export const sectionTypeSchema = z.enum([
 
 export type CustomSectionType = z.infer<typeof sectionTypeSchema>;
 
-const customSectionItemSchema = z.union([
-	// coverLetterItemSchema must come before summaryItemSchema because both have 'content',
-	// but coverLetterItemSchema also requires 'recipient'. If summaryItemSchema is first,
-	// cover letter items will match it and lose the 'recipient' field.
-	coverLetterItemSchema,
-	summaryItemSchema,
-	profileItemSchema,
-	experienceItemSchema,
-	educationItemSchema,
-	projectItemSchema,
-	skillItemSchema,
-	languageItemSchema,
-	interestItemSchema,
-	awardItemSchema,
-	certificationItemSchema,
-	publicationItemSchema,
-	volunteerItemSchema,
-	referenceItemSchema,
+// Correlation protects renderer requirements; it does not make otherwise-overlapping item shapes exclusive.
+// Keep cover-letter before summary so the overlapping content shapes retain their established precedence.
+export const customSectionItemDefinitionByType = {
+	"cover-letter": { schemaName: "coverLetterItemSchema", schema: coverLetterItemSchema.catchall(z.any()) },
+	summary: { schemaName: "summaryItemSchema", schema: summaryItemSchema.catchall(z.any()) },
+	profiles: { schemaName: "profileItemSchema", schema: profileItemSchema.catchall(z.any()) },
+	experience: { schemaName: "experienceItemSchema", schema: experienceItemSchema.catchall(z.any()) },
+	education: { schemaName: "educationItemSchema", schema: educationItemSchema.catchall(z.any()) },
+	projects: { schemaName: "projectItemSchema", schema: projectItemSchema.catchall(z.any()) },
+	skills: { schemaName: "skillItemSchema", schema: skillItemSchema.catchall(z.any()) },
+	languages: { schemaName: "languageItemSchema", schema: languageItemSchema.catchall(z.any()) },
+	interests: { schemaName: "interestItemSchema", schema: interestItemSchema.catchall(z.any()) },
+	awards: { schemaName: "awardItemSchema", schema: awardItemSchema.catchall(z.any()) },
+	certifications: { schemaName: "certificationItemSchema", schema: certificationItemSchema.catchall(z.any()) },
+	publications: { schemaName: "publicationItemSchema", schema: publicationItemSchema.catchall(z.any()) },
+	volunteer: { schemaName: "volunteerItemSchema", schema: volunteerItemSchema.catchall(z.any()) },
+	references: { schemaName: "referenceItemSchema", schema: referenceItemSchema.catchall(z.any()) },
+} as const satisfies Record<CustomSectionType, { schemaName: string; schema: z.ZodType }>;
+
+export type CustomSectionItem = z.infer<(typeof customSectionItemDefinitionByType)[CustomSectionType]["schema"]>;
+
+const customSectionSchemaOptions = Object.entries(customSectionItemDefinitionByType).map(([type, { schema }]) =>
+	baseSectionSchema.extend({
+		id: z.string().describe("The unique identifier for the custom section. Usually generated as a UUID."),
+		type: z
+			.literal(type as CustomSectionType)
+			.describe("The type of items this custom section contains. Determines which item schema and form fields to use."),
+		items: z
+			.array(schema)
+			.describe("The items to display in the custom section. Items follow the schema of the section type."),
+	}),
+);
+
+const [firstCustomSectionSchema, ...remainingCustomSectionSchemas] = customSectionSchemaOptions;
+if (!firstCustomSectionSchema) throw new Error("At least one custom section schema is required.");
+
+export const customSectionSchema = z.discriminatedUnion("type", [
+	firstCustomSectionSchema,
+	...remainingCustomSectionSchemas,
 ]);
-
-export type CustomSectionItem = z.infer<typeof customSectionItemSchema>;
-
-export const customSectionSchema = baseSectionSchema.extend({
-	id: z.string().describe("The unique identifier for the custom section. Usually generated as a UUID."),
-	type: sectionTypeSchema.describe(
-		"The type of items this custom section contains. Determines which item schema and form fields to use.",
-	),
-	items: z
-		.array(customSectionItemSchema)
-		.describe("The items to display in the custom section. Items follow the schema of the section type."),
-});
 
 export type CustomSection = z.infer<typeof customSectionSchema>;
 
@@ -658,6 +667,9 @@ export const resumeDataSchema = z.looseObject({
 });
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
+
+export const parseResumeData = (data: unknown): ResumeData => resumeDataSchema.parse(data);
+
 export type LayoutPage = z.infer<typeof pageLayoutSchema>;
 export type Typography = z.infer<typeof typographySchema>;
 export type Design = z.infer<typeof designSchema>;

@@ -90,7 +90,7 @@ const { resumeService } = await import("./service");
 const createUpdateChain = (rows: unknown[]) => {
 	const returning = vi.fn(() => Promise.resolve(rows));
 	const where = vi.fn(() => ({ returning }));
-	const set = vi.fn(() => ({ where }));
+	const set = vi.fn((_input: unknown) => ({ where }));
 	return { chain: { set }, set, where, returning };
 };
 
@@ -122,6 +122,53 @@ const createStylesheetResumeData = (mode: "legacy" | "semantic"): ResumeData => 
 	if (data.metadata.stylesheet) data.metadata.stylesheet.mode = mode;
 	return data;
 };
+
+const createRendererUnsafeResumeData = (): ResumeData =>
+	({
+		...structuredClone(defaultResumeData),
+		customSections: [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+			},
+		],
+	}) as unknown as ResumeData;
+
+const createOverlappingRendererSafeResumeData = (): ResumeData =>
+	({
+		...structuredClone(defaultResumeData),
+		customSections: [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: "experience-item",
+						hidden: false,
+						company: "Analytical Engines",
+						position: "Programmer",
+						location: "London",
+						period: "1842–1843",
+						description: "<p>Wrote the first algorithm.</p>",
+						content: "<p>Renderer-irrelevant overlap must survive.</p>",
+					},
+				],
+			},
+		],
+	}) as unknown as ResumeData;
 
 const createResumeRow = (data: ResumeData, updatedAt = new Date()) => ({
 	id: "r1",
@@ -225,6 +272,87 @@ describe("create", () => {
 		);
 		expect(values.mock.calls[0]?.[0]).not.toHaveProperty("stylesheetRevision");
 		expect(values.mock.calls[0]?.[0]).not.toHaveProperty("renderDataVersion");
+	});
+
+	it("rejects renderer-unsafe data from direct and duplicate callers before insertion", async () => {
+		const values = vi.fn(() => Promise.resolve());
+		dbMock.insert.mockReturnValueOnce({ values });
+
+		const error = await resumeService
+			.create({
+				userId: "u1",
+				name: "Unsafe copy",
+				slug: "unsafe-copy",
+				tags: [],
+				locale: "en-US",
+				data: createRendererUnsafeResumeData(),
+			})
+			.catch((caught: unknown) => caught);
+
+		expect(error).toMatchObject({ code: "BAD_REQUEST", status: 400 });
+		expect(error).toHaveProperty("cause.issues.0.path", ["customSections", 0, "items", 0, "company"]);
+		expect(values).not.toHaveBeenCalled();
+	});
+
+	it("persists normalized renderer-safe overlapping data", async () => {
+		const values = vi.fn((_input: unknown) => Promise.resolve());
+		dbMock.insert.mockReturnValueOnce({ values });
+
+		await resumeService.create({
+			userId: "u1",
+			name: "Compatible",
+			slug: "compatible",
+			tags: [],
+			locale: "en-US",
+			data: createOverlappingRendererSafeResumeData(),
+		});
+
+		expect(values.mock.calls[0]?.[0]).toHaveProperty(
+			"data.customSections.0.items.0.content",
+			"<p>Renderer-irrelevant overlap must survive.</p>",
+		);
+		expect(values.mock.calls[0]?.[0]).toHaveProperty("data.customSections.0.items.0.roles", []);
+		expect(values.mock.calls[0]?.[0]).toHaveProperty("data.customSections.0.items.0.website", {
+			url: "",
+			label: "",
+			inlineLink: false,
+		});
+	});
+});
+
+describe("versions.snapshot", () => {
+	it("persists normalized data in version snapshots", async () => {
+		const values = vi.fn((_input: unknown) => Promise.resolve());
+		dbMock.insert.mockReturnValueOnce({ values });
+		dbMock.select.mockReturnValueOnce({
+			from: () => ({ where: () => ({ orderBy: () => ({ limit: () => [] }) }) }),
+		});
+		dbMock.delete.mockReturnValueOnce({ where: () => Promise.resolve() });
+
+		await resumeService.versions.snapshot({
+			resumeId: "r1",
+			userId: "u1",
+			data: createOverlappingRendererSafeResumeData(),
+			label: "Manual",
+		});
+
+		expect(values).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					customSections: [
+						expect.objectContaining({
+							items: [
+								expect.objectContaining({
+									content: "<p>Renderer-irrelevant overlap must survive.</p>",
+									roles: [],
+									website: { url: "", label: "", inlineLink: false },
+								}),
+							],
+						}),
+					],
+				}),
+			}),
+		);
 	});
 });
 
@@ -405,6 +533,51 @@ describe("versions.restore", () => {
 		expect(dbMock.insert).not.toHaveBeenCalled();
 		expect(dbMock.transaction).not.toHaveBeenCalled();
 	});
+
+	it("rejects a renderer-unsafe historical snapshot before preparation, snapshots, or update", async () => {
+		const currentData = createSemanticResumeData();
+		const { set, snapshotValues } = createRestoreHarness(currentData, createRendererUnsafeResumeData());
+		const prepareData = vi.fn(async ({ data }: { data: ResumeData }) => data);
+
+		await expect(
+			resumeService.versions.restore({
+				resumeId: "r1",
+				versionId: "v1",
+				userId: "u1",
+				prepareData,
+			}),
+		).rejects.toMatchObject({ code: "INTERNAL_SERVER_ERROR", status: 500 });
+
+		expect(prepareData).not.toHaveBeenCalled();
+		expect(snapshotValues).not.toHaveBeenCalled();
+		expect(set).not.toHaveBeenCalled();
+		expect(dbMock.transaction).not.toHaveBeenCalled();
+	});
+
+	it("normalizes a valid historical snapshot before preparation and persistence", async () => {
+		const currentData = createSemanticResumeData();
+		const restoredData = createOverlappingRendererSafeResumeData();
+		const { set } = createRestoreHarness(currentData, restoredData);
+		const prepareData = vi.fn(async ({ data }: { data: ResumeData }) => data);
+
+		await resumeService.versions.restore({
+			resumeId: "r1",
+			versionId: "v1",
+			userId: "u1",
+			prepareData,
+		});
+
+		expect(prepareData.mock.calls[0]?.[0].data.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Renderer-irrelevant overlap must survive.</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
+		expect(set.mock.calls[0]?.[0].data.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Renderer-irrelevant overlap must survive.</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
+	});
 });
 
 describe("update", () => {
@@ -528,6 +701,59 @@ describe("update", () => {
 		await resumeService.update({ id: "r1", userId: "u1", data: clientData, skipAutoSnapshot: true });
 
 		expect(update.set).toHaveBeenCalledWith(expect.not.objectContaining({ renderDataVersion: expect.anything() }));
+	});
+
+	it("rejects renderer-unsafe data before updating the JSONB column", async () => {
+		const select = createLockedSelectChain([
+			{ data: defaultResumeData, isLocked: false, renderDataVersion: 3, updatedAt: new Date() },
+		]);
+		const update = createUpdateChain([createResumeRow(defaultResumeData)]);
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ select: () => select.chain, update: () => update.chain }),
+		);
+
+		await expect(
+			resumeService.update({
+				id: "r1",
+				userId: "u1",
+				data: createRendererUnsafeResumeData(),
+				skipAutoSnapshot: true,
+			}),
+		).rejects.toMatchObject({ code: "BAD_REQUEST", status: 400 });
+
+		expect(update.set).not.toHaveBeenCalled();
+		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
+	});
+
+	it("persists normalized renderer-safe overlapping data", async () => {
+		const clientData = createOverlappingRendererSafeResumeData();
+		const select = createLockedSelectChain([
+			{ data: defaultResumeData, isLocked: false, renderDataVersion: 3, updatedAt: new Date() },
+		]);
+		const update = createUpdateChain([createResumeRow(clientData)]);
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ select: () => select.chain, update: () => update.chain }),
+		);
+
+		await resumeService.update({ id: "r1", userId: "u1", data: clientData, skipAutoSnapshot: true });
+
+		expect(update.set).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					customSections: [
+						expect.objectContaining({
+							items: [
+								expect.objectContaining({
+									content: "<p>Renderer-irrelevant overlap must survive.</p>",
+									roles: [],
+									website: { url: "", label: "", inlineLink: false },
+								}),
+							],
+						}),
+					],
+				}),
+			}),
+		);
 	});
 });
 

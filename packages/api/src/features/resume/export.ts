@@ -5,6 +5,7 @@ import { getResumeExportData, resumeHasCoverLetter } from "@reactive-resume/resu
 import { generateFilename } from "@reactive-resume/utils/file";
 import { protectedProcedure } from "../../context";
 import { pdfExportRateLimit } from "../../middleware/rate-limit";
+import { parseStoredResumeData } from "./resume-data-validation";
 import { resumeService } from "./service";
 
 export {
@@ -21,8 +22,9 @@ type CreateResumePdfDownloadInput = {
 
 export async function createResumePdfDownload(input: CreateResumePdfDownloadInput) {
 	const resume = await resumeService.getById({ id: input.id, userId: input.userId });
+	const data = parseStoredResumeData(resume.data);
 	const target = input.target ?? "resume";
-	if (target === "cover-letter" && !resumeHasCoverLetter(resume.data)) {
+	if (target === "cover-letter" && !resumeHasCoverLetter(data)) {
 		throw new ORPCError("NOT_FOUND", { message: "No cover letter found for this resume" });
 	}
 
@@ -34,7 +36,7 @@ export async function createResumePdfDownload(input: CreateResumePdfDownloadInpu
 		// exported, instead of at server boot. Slashes cold-start file I/O on
 		// constrained/slow-disk hosts. See fork perf/lazy-load-pdf.
 		const { createResumePdfFile } = await import("@reactive-resume/pdf/server");
-		const body = await createResumePdfFile({ data: getResumeExportData(resume.data, target), filename });
+		const body = await createResumePdfFile({ data: getResumeExportData(data, target), filename });
 
 		return {
 			headers: {

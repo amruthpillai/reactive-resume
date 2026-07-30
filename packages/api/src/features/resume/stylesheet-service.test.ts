@@ -141,14 +141,11 @@ const createHarness = (options: HarnessOptions = {}) => {
 						callOrder.push("lock");
 						return Promise.resolve(structuredClone(options.locked ?? persisted));
 					},
-					update: ({ stylesheet }) => {
+					update: ({ data }) => {
 						callOrder.push("update");
 						persisted = {
 							...persisted,
-							data: {
-								...persisted.data,
-								metadata: { ...persisted.data.metadata, stylesheet },
-							},
+							data,
 							stylesheetRevision: persisted.stylesheetRevision + 1,
 						};
 						return Promise.resolve(structuredClone(persisted));
@@ -381,6 +378,70 @@ describe("stylesheet service", () => {
 		expect(harness.compile).not.toHaveBeenCalled();
 		expect(harness.parity).not.toHaveBeenCalled();
 		expect(harness.preflight).not.toHaveBeenCalled();
+	});
+
+	it("does not rewrite invalid stored resume data during deactivation", async () => {
+		const initial = snapshot();
+		initial.data.customSections = [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [{ id: "summary-item", hidden: false, content: "<p>Missing company</p>" }],
+			} as never,
+		];
+		const harness = createHarness({ initial });
+
+		const error = await harness.service
+			.mutate({ ...commonMutationInput, transition: "deactivate" })
+			.catch((caught: unknown) => caught);
+
+		expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR", status: 500 });
+		expect(error).toHaveProperty("cause.issues.0.path", ["customSections", 0, "items", 0, "company"]);
+		expect(harness.callOrder).not.toContain("update");
+		expect(harness.publish).not.toHaveBeenCalled();
+	});
+
+	it("normalizes valid stored resume data during deactivation", async () => {
+		const initial = snapshot();
+		initial.data.customSections = [
+			{
+				id: "custom-experience",
+				type: "experience",
+				title: "Experience",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: "experience-item",
+						hidden: false,
+						company: "Analytical Engines",
+						position: "Programmer",
+						location: "London",
+						period: "1842–1843",
+						description: "<p>Wrote the first algorithm.</p>",
+						content: "<p>Compatible overlap</p>",
+					},
+				],
+			} as never,
+		];
+		const harness = createHarness({ initial });
+
+		await harness.service.mutate({ ...commonMutationInput, transition: "deactivate" });
+
+		expect(harness.persisted().data.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Compatible overlap</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
 	});
 
 	it("validates and preflights restored applied source independently from invalid editable source", async () => {

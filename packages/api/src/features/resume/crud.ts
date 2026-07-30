@@ -4,6 +4,7 @@ import { generateId, generateRandomName, slugify } from "@reactive-resume/utils/
 import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
+import { parseStoredResumeData } from "./resume-data-validation";
 import { resumeService } from "./service";
 import { prepareImportedResumeData } from "./stylesheet-preflight";
 import { createResumeData } from "./stylesheet-preservation";
@@ -244,6 +245,7 @@ export const crudRouter = {
 		.output(resumeDto.duplicate.output)
 		.handler(async ({ context, input }) => {
 			const original = await resumeService.getById({ id: input.id, userId: context.user.id });
+			const data = parseStoredResumeData(original.data);
 
 			return resumeService.create({
 				userId: context.user.id,
@@ -251,7 +253,7 @@ export const crudRouter = {
 				slug: input.slug ?? original.slug,
 				tags: input.tags ?? original.tags,
 				locale: context.locale,
-				data: original.data,
+				data,
 			});
 		}),
 

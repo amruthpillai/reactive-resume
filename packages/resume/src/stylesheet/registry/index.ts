@@ -1,11 +1,13 @@
 /// <reference path="../css-tree.d.ts" />
 /// <reference path="../specificity.d.ts" />
 
+export type { RrssCompilerDiagnosticCode } from "../diagnostics";
 export type { RrssDiagnostic, SemanticNode } from "../types";
 export type { PropertyDefinition, PropertyRegistry } from "./properties";
 export type { SemanticNodeDefinition, SemanticRegistry } from "./semantic";
 export type { SystemVariableDefinition, SystemVariableRegistry } from "./system-variables";
 export { escapeCssIdentifier, escapeCssString } from "../css-escape";
+export { RRSS_DIAGNOSTIC_CATALOG_V1 } from "../diagnostics";
 export {
 	PROPERTY_REGISTRY_V1,
 	RRSS_BORDER_STYLE_VALUES_V1,

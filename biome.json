@@ -112,6 +112,17 @@
 	},
 	"overrides": [
 		{
+			"includes": ["docs/spec.json"],
+			"files": {
+				"maxSize": 2097152
+			},
+			"json": {
+				"formatter": {
+					"expand": "always"
+				}
+			}
+		},
+		{
 			"includes": ["packages/pdf/src/semantic/__fixtures__/**/*.css"],
 			"formatter": {
 				"enabled": false

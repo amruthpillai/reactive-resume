@@ -10,6 +10,7 @@ import * as schema from "@reactive-resume/db/schema";
 import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
 import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { publishResumeUpdated } from "./events";
+import { parseStoredResumeData } from "./resume-data-validation";
 import { recordSemanticCssEvent } from "./stylesheet-observability";
 import { checkLegacyStylesheetParity, convertLegacyStylesheet } from "./stylesheet-preflight";
 
@@ -59,7 +60,7 @@ export type StylesheetMutationResult = StylesheetState & {
 
 type StylesheetTransaction = {
 	lock(input: { id: string; userId: string }): Promise<StylesheetSnapshot>;
-	update(input: { snapshot: StylesheetSnapshot; stylesheet: SemanticStylesheet }): Promise<StylesheetSnapshot>;
+	update(input: { snapshot: StylesheetSnapshot; data: ResumeData }): Promise<StylesheetSnapshot>;
 };
 
 type StylesheetServiceDependencies = {
@@ -317,7 +318,11 @@ export function createStylesheetService(dependencies: StylesheetServiceDependenc
 					const locked = await transaction.lock(input);
 					if (locked.isLocked) throw new ORPCError("RESUME_LOCKED");
 					if (!(await dependencies.compare(locked, input))) throw new StylesheetRevisionConflict(locked);
-					return transaction.update({ snapshot: locked, stylesheet: next });
+					const data = parseStoredResumeData({
+						...locked.data,
+						metadata: { ...locked.data.metadata, stylesheet: next },
+					});
+					return transaction.update({ snapshot: locked, data });
 				});
 
 				await dependencies.publish(updated);
@@ -405,11 +410,7 @@ export function createDatabaseStylesheetService(options: DatabaseStylesheetServi
 						if (!snapshot) throw new ORPCError("NOT_FOUND");
 						return snapshot;
 					},
-					update: async ({ snapshot, stylesheet }) => {
-						const data: ResumeData = {
-							...snapshot.data,
-							metadata: { ...snapshot.data.metadata, stylesheet },
-						};
+					update: async ({ snapshot, data }) => {
 						const [updated] = await transaction
 							.update(schema.resume)
 							.set({

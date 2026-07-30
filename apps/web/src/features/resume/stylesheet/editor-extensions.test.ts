@@ -53,6 +53,7 @@ const metadata = {
 	semanticTree,
 	templateParts: ["timeline-line", "timeline-marker"],
 } as const;
+const borderShorthands = ["border", "border-top", "border-right", "border-bottom", "border-left"] as const;
 
 const views: EditorView[] = [];
 
@@ -100,8 +101,18 @@ describe("RRSS editor extensions", () => {
 
 		expect(displayLabels).toEqual(expect.arrayContaining(["flex", "none", "inherit"]));
 		expect(displayLabels).not.toEqual(expect.arrayContaining(["portrait", "dashed", "pt"]));
-		expect(borderStyleLabels).toEqual(expect.arrayContaining(["dashed", "dotted", "double"]));
+		expect(borderStyleLabels).toEqual(expect.arrayContaining(["dashed", "dotted", "solid"]));
+		expect(borderStyleLabels).not.toContain("double");
 		expect(fontSizeLabels).toEqual(expect.arrayContaining(["pt", "rem"]));
+		expect(fontSizeLabels).not.toEqual(expect.arrayContaining(["none", "normal", "max-content"]));
+	});
+
+	it.each(borderShorthands)("offers complete %s shorthand values instead of bare units", (property) => {
+		const source = `section { ${property}: `;
+		const labels = getRrssCompletionLabels(source, source.length, metadata);
+
+		expect(labels).toEqual(expect.arrayContaining(["1pt dotted", "1pt dashed", "1pt solid"]));
+		expect(labels).not.toEqual(expect.arrayContaining(["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"]));
 	});
 
 	it("escapes dynamic IDs and attribute values before inserting selectors", () => {
@@ -137,7 +148,9 @@ describe("RRSS editor extensions", () => {
 
 	it("builds hover text from the same registries", () => {
 		expect(getRrssHoverDocumentation("section", metadata)).toMatch(/semantic element.*placement.*featured-summary/i);
-		expect(getRrssHoverDocumentation("color", metadata)).toMatch(/property.*inherited.*field/i);
+		const colorDocumentation = getRrssHoverDocumentation("color", metadata);
+		expect(colorDocumentation).toMatch(/property.*inherited.*field/i);
+		expect(colorDocumentation?.match(/section-heading/g)).toHaveLength(1);
 		expect(getRrssHoverDocumentation("--rr-primary-color", metadata)).toMatch(/read-only.*builder primary color/i);
 		expect(getRrssHoverDocumentation("#section-experience", metadata)).toMatch(/current resume.*section/i);
 		expect(getRrssHoverDocumentation('template-part[name="timeline-line"]', metadata)).toMatch(

@@ -1,233 +1,192 @@
 ---
 title: "Semantic CSS Reference"
-description: "Reference for Reactive Resume Semantic CSS version 1 selectors, properties, variables, and PDF directives."
+description: "Reference for Reactive Resume Semantic CSS version 1 selectors, properties, variables, and PDF behavior."
 ---
 
-Reactive Resume Semantic CSS (RRSS) is a versioned, declarative stylesheet language for resume PDFs. It resembles CSS,
-but only the syntax and PDF-safe capabilities documented here are supported.
+Reactive Resume Semantic CSS (RRSS) is the versioned stylesheet language for styling resume PDFs. It resembles CSS,
+but supports only the semantic selectors, values, properties, and PDF behavior documented on this page.
 
-## Version directive
+## RRSS in one minute
 
-Start authored stylesheets with:
+Start every authored stylesheet with `@rr-version 1;`. Version 1 is immutable: a missing directive is accepted with a
+warning and interpreted as version 1, while unsupported versions are rejected.
 
+RRSS selectors target the semantic resume tree rather than template markup. Prefer section types, placements, roles,
+and semantic element names for portable styles. Use IDs when a rule should target one node in one resume.
+
+<!-- RRSS-EXAMPLE:valid -->
 ```css
 @rr-version 1;
+
+:root {
+	--accent: #2563eb;
+}
+
+section-heading {
+	color: var(--accent);
+	border-bottom: 1pt solid var(--accent);
+	padding-bottom: 3pt;
+}
+
+section[type="experience"] > section-items > item + item {
+	margin-top: 8pt;
+}
+
+region[placement="sidebar"] section-heading {
+	font-size: 10pt;
+	text-transform: uppercase;
+}
 ```
 
-Version 1 remains immutable. A missing directive is accepted with a warning and interpreted as version 1; unsupported
-versions are rejected.
+## Selector grammar
 
-## Selectors
+RRSS supports the universal selector, semantic type selectors, IDs, attributes, selector lists, and the descendant
+(` `), child (`>`), adjacent-sibling (`+`), and general-sibling (`~`) combinators.
+Semantic type and pseudo-class names must use their exact lowercase RRSS catalog spellings; namespace selectors are
+unsupported and rejected.
 
-RRSS supports semantic type selectors, `#id`, attribute selectors, descendant/child/adjacent/general-sibling
-combinators, selector lists, `:root`, `:is()`, `:where()`, `:not()`, `:first-child`, `:last-child`, `:only-child`,
-`:nth-child()`, and `:nth-of-type()`.
+<!-- RRSS-EXAMPLE:valid -->
+```css
+* { opacity: 1; }
+section { margin-bottom: 8pt; }
+#experience { break-before: page; }
+[role~="primary-text"] { font-weight: 700; }
+section[type="experience"] > section-items > item:first-child { margin-top: 0; }
+field[name="company"], field[name="position"] { color: #111827; }
+section:is([type="experience"], [type="education"]) { break-inside: avoid; }
+item:not(:last-child) { margin-bottom: 6pt; }
+```
 
-The semantic tree follows source order. Structural declarations such as `display`, `order`, and page-break behavior are
-resolved once without changing the selector tree used by later rules.
+Attribute selectors support presence selectors such as `[type]` and all six value matchers: `=`, `~=`, `|=`, `^=`,
+`$=`, and `*=`. Attribute names and values are ASCII case-sensitive: `[type="experience"]` can match, while
+`[TYPE="experience"]` is invalid and `[type="Experience"]` does not match the lowercase runtime value. Attribute
+selector flags, custom classes, and pseudo-elements are rejected.
 
-Use `[type="experience"]` for portable section-type rules and `[id="…"]` for an exact section or item in one resume.
-Known selectors that are absent from the current resume produce warnings rather than errors.
+RRSS accepts digit-leading ID selectors such as `#229ad766-cb9a-4f16-aaf0-fdd8394a9b95`. Standard CSS escaping is
+also supported for type, attribute, and ID names; a hexadecimal escape ends with whitespace when the following
+character could be read as another hexadecimal digit. For portability across CSS tools and unambiguous authoring,
+prefer quoted `[id="…"]` selectors for UUID-bearing IDs.
 
-## Declarations and values
+<!-- RRSS-EXAMPLE:valid SELECTOR_ESCAPING -->
+```css
+@rr-version 1;
 
-The standard cascade, specificity, source order, inheritance, CSS-wide keywords, custom properties, `var()`, and
-`!important` are supported within the bounded version-1 grammar. Lengths use the units listed in the generated property
-table. Unitless values are accepted only where the property definition allows them.
+[type] {
+	opacity: 1;
+}
 
-Pagination maps to React PDF:
+[id="229ad766-cb9a-4f16-aaf0-fdd8394a9b95"] {
+	break-inside: avoid;
+}
 
-- `break-before: page` starts a new page.
-- `break-inside: avoid` keeps a node together where possible.
-- `-rr-min-presence-ahead` reserves space before the next break.
-- `orphans` and `widows` control text line retention.
-- `-rr-fixed: true` repeats an existing semantic node on subsequent pages. The standard CSS declaration
-  `position: fixed` is unsupported; RRSS cannot create or re-parent content.
+sect\69 on[\74 ype="experience"] > section-heading {
+	color: #2563eb;
+}
 
-Media queries support authored PDF dimensions such as `@media (max-width: 600pt)`.
+#\31 abc {
+	break-before: page;
+}
+```
 
-## Diagnostics and last-valid behavior
+Supported pseudo-classes and restrictions:
 
-Diagnostics include a stable code, severity, message, and source range. The editable source is saved even when invalid.
-Preview and export use `applied`, the most recent source that compiled and passed bounded PDF preflight. Correcting the
-draft promotes the new source atomically.
+- `:root`, `:first-child`, `:last-child`, and `:only-child` take no arguments.
+- `:is()`, `:where()`, and `:not()` require a selector list.
+- `:nth-child()` and `:nth-of-type()` accept integer `An+B`, `odd`, and `even`.
+- `:nth-child()` may use an `of <selector-list>` clause.
+- `:nth-of-type()` does not accept an `of` clause.
+- A compound selector may contain only one semantic type selector.
+- Selector functions, selector lists, selector length, and combinators are bounded by the generated limits.
 
-## Portability
+Media queries use comma-separated OR branches and `and`-combined features. Supported features are `width`,
+`min-width`, `max-width`, `height`, `min-height`, `max-height`, and `orientation: portrait|landscape`. Dimensions
+accept finite numbers with `pt`, `px`, `in`, `mm`, `cm`, `vw`, `vh`, `em`, or `rem`; omitted units resolve as points.
+Media rules evaluate against authored PDF dimensions, may nest up to the generated limit, and cannot contain `size`.
 
-Shared semantic elements are portable across templates. Template parts are optional manifest entries for visual details
-that have no shared semantic equivalent. Guard them with `resume[template="…"]`; absent parts produce a warning.
+## Semantic element catalog
 
-## Unsupported capabilities
+The generated catalog is the complete version-1 semantic tree contract. `Parents` lists where an element can appear.
+All semantic elements may also expose `id` and `role` when those values exist on the node.
 
-RRSS cannot choose or load fonts, reference local or remote assets, execute scripts, react to interaction, use browser
-layout APIs, or create new PDF nodes. CSS Grid, pseudo-elements, animations, transitions, filters, arbitrary functions,
-and network-fetching values are unsupported.
+The rich-text list seams are intentionally distinct. `list-item` is the outer row, corresponding to the
+`richListItemRow` layout slot; it owns row layout and spacing between the marker and content. `list-item-content` is the
+inner content container, corresponding to `richListItemContent`; it owns the text and nested rich-text flow. Use
+`list-marker` for the bullet or number itself.
 
-Gradients and general shadows such as `box-shadow` and `text-shadow` are not part of version 1. Picture nodes support the
-bounded `-rr-shadow-color` and `-rr-shadow-width` extension properties; their builder defaults are exposed through
-`--rr-picture-shadow-color` and `--rr-picture-shadow-width`.
-
-## Generated registry
-
-The following tables are generated from the compiler-free public runtime registry. Run `pnpm docs:semantic-css` after
-changing a registry.
-
-<!-- RRSS-GENERATED:START -->
-### Semantic elements
-
-| Element | Attributes | Roles |
-| --- | --- | --- |
-| `resume` | `template` | — |
-| `page` | `page-number` | — |
-| `region` | `placement`, `region`, `part` | — |
-| `header` | `region` | — |
-| `picture` | — | `picture` |
-| `name` | — | `primary-text` |
-| `headline` | — | `secondary-text` |
-| `contact-list` | — | — |
-| `contact-item` | `name`, `part` | `primary-text`, `secondary-text`, `structured-link` |
-| `section` | `type`, `placement`, `origin`, `part` | `featured-summary` |
-| `section-heading` | — | `section-title` |
-| `section-items` | — | — |
-| `item` | — | `experience-role`, `nested-role` |
-| `item-header` | `part` | — |
-| `combined-text` | `name`, `owner` | — |
-| `field` | `name` | `primary-text`, `secondary-text`, `structured-link` |
-| `link` | — | `structured-link` |
-| `icon` | `type` | `decoration`, `active`, `inactive` |
-| `level` | — | `decoration` |
-| `rich-text` | — | — |
-| `rich-heading` | `level` | — |
-| `blockquote` | — | — |
-| `paragraph` | — | — |
-| `list` | — | — |
-| `list-item` | — | — |
-| `list-item-content` | `direction` | — |
-| `list-marker` | — | `decoration` |
-| `strong` | — | — |
-| `emphasis` | — | — |
-| `underline` | — | — |
-| `strike` | — | — |
-| `code` | — | — |
-| `text-span` | — | — |
-| `mark` | — | — |
-| `hard-break` | — | — |
-| `horizontal-rule` | — | — |
-| `template-part` | `name` | `decoration` |
-
-All semantic elements also accept `id` and `role` selectors when those values exist on the node.
-
-### Properties
-
-| Property | Category | Inherits | Units | Keywords |
+<!-- RRSS-SEMANTIC-ELEMENTS:START -->
+| Element | Parents | Attributes | Known values | Roles |
 | --- | --- | --- | --- | --- |
-| `-rr-fixed` | structural | no | — | `inherit`, `initial`, `revert`, `unset`, `true`, `false`, `0`, `1` |
-| `-rr-min-presence-ahead` | structural | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `-rr-shadow-color` | image | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `-rr-shadow-width` | image | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `align-content` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `align-items` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `align-self` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `aspect-ratio` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `background-color` | color | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `border` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-bottom` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-bottom-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `border-bottom-left-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-bottom-right-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-bottom-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-bottom-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `border-left` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-left-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `border-left-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-left-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-right` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-right-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `border-right-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-right-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-top` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-top-color` | border | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `border-top-left-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-top-right-radius` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-top-style` | border | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `hidden`, `dotted`, `dashed`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| `border-top-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `border-width` | border | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `bottom` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `break-before` | structural | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `page` |
-| `break-inside` | structural | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `avoid` |
-| `color` | color | yes | — | `inherit`, `initial`, `revert`, `unset` |
-| `column-gap` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `direction` | text | yes | — | `inherit`, `initial`, `revert`, `unset`, `ltr`, `rtl` |
-| `display` | layout | no | — | `inherit`, `initial`, `revert`, `unset`, `flex`, `none` |
-| `flex` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `auto` |
-| `flex-basis` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `flex-direction` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `row`, `row-reverse`, `column`, `column-reverse` |
-| `flex-flow` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `row`, `row-reverse`, `column`, `column-reverse`, `nowrap`, `wrap`, `wrap-reverse` |
-| `flex-grow` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `flex-shrink` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `flex-wrap` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset`, `nowrap`, `wrap`, `wrap-reverse` |
-| `font-size` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `font-style` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
-| `font-weight` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
-| `gap` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `height` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `justify-content` | flexbox | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `left` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `letter-spacing` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `line-height` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `normal` |
-| `margin` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `margin-bottom` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `margin-horizontal` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `margin-left` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `margin-right` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `margin-top` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `margin-vertical` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `max-height` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `max-lines` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `max-width` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `min-height` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `min-width` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `object-fit` | image | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `object-position` | image | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `opacity` | color | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `order` | structural | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `orphans` | structural | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `overflow` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `padding` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `padding-bottom` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `padding-horizontal` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `padding-left` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `padding-right` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `padding-top` | spacing | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `padding-vertical` | spacing | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `position` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `right` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `row-gap` | flexbox | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `size` | structural | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `A4`, `letter` |
-| `text-align` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
-| `text-decoration` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `text-decoration-color` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `text-decoration-style` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `text-indent` | text | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `text-overflow` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `text-transform` | text | yes | — | `inherit`, `initial`, `revert`, `unset` |
-| `top` | layout | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `transform` | transform | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `transform-origin` | transform | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `vertical-align` | text | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `widows` | structural | no | — | `inherit`, `initial`, `revert`, `unset` |
-| `width` | dimension | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `auto`, `none`, `normal`, `max-content`, `min-content`, `fit-content`, `thin`, `medium`, `thick` |
-| `z-index` | layout | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `blockquote` | `rich-text`, `list-item-content` | — | — | — |
+| `code` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `combined-text` | `item-header`, `template-part` | `name`, `owner` | — | — |
+| `contact-item` | `contact-list` | `name`, `part` | — | `primary-text`, `secondary-text`, `structured-link` |
+| `contact-list` | `header` | — | — | — |
+| `emphasis` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `field` | `contact-item`, `item`, `item-header`, `combined-text` | `name` | — | `primary-text`, `secondary-text`, `structured-link` |
+| `hard-break` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `header` | `region` | `region` | — | — |
+| `headline` | `header` | — | — | `secondary-text` |
+| `horizontal-rule` | `rich-text`, `list-item-content` | — | — | — |
+| `icon` | `contact-item`, `section-heading`, `item`, `item-header`, `level` | `type` | — | `decoration`, `active`, `inactive` |
+| `item` | `section-items`, `item` | — | — | `experience-role`, `nested-role` |
+| `item-header` | `item` | `part` | — | — |
+| `level` | `item`, `item-header` | — | — | `decoration` |
+| `link` | `item`, `item-header`, `rich-text`, `template-part`, `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | `structured-link` |
+| `list` | `rich-text`, `list-item-content` | — | — | — |
+| `list-item` | `list` | — | — | — |
+| `list-item-content` | `list-item` | `direction` | `direction`: `ltr`, `rtl` | — |
+| `list-marker` | `list-item` | — | — | `decoration` |
+| `mark` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `name` | `header` | — | — | `primary-text` |
+| `page` | `resume` | `page-number` | — | — |
+| `paragraph` | `rich-text`, `list-item-content` | — | — | — |
+| `picture` | `header` | — | — | `picture` |
+| `region` | `page` | `placement`, `region`, `part` | `placement`: `main`, `sidebar`; `region`: `header`, `main`, `sidebar`, `featured` | — |
+| `resume` | — | `template` | `template`: `azurill`, `bronzor`, `chikorita`, `ditgar`, `ditto`, `gengar`, `glalie`, `kakuna`, `lapras`, `leafish`, `meowth`, `onyx`, `pikachu`, `rhyhorn`, `scizor` | — |
+| `rich-heading` | `rich-text` | `level` | `level`: `1`, `2`, `3`, `4`, `5`, `6` | — |
+| `rich-text` | `item`, `field` | — | — | — |
+| `section` | `region` | `type`, `placement`, `origin`, `part` | `type`: `summary`, `profiles`, `experience`, `education`, `projects`, `skills`, `languages`, `interests`, `awards`, `certifications`, `publications`, `volunteer`, `references`, `cover-letter`; `placement`: `main`, `sidebar`; `origin`: `main`, `sidebar` | `featured-summary` |
+| `section-heading` | `section` | — | — | `section-title` |
+| `section-items` | `section` | — | — | — |
+| `strike` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `strong` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `template-part` | `page`, `region`, `header`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `contact-list`, `contact-item`, `template-part` | `name` | — | `decoration` |
+| `text-span` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+| `underline` | `contact-item`, `field`, `link`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark` | — | — | — |
+<!-- RRSS-SEMANTIC-ELEMENTS:END -->
+
+## Cascade and values
+
+The cascade resolves declarations in this order:
+
+1. `!important` wins first.
+2. Higher specificity wins next.
+3. Later source order breaks the remaining tie.
+
+For a selector list, RRSS uses the highest-specificity branch that actually matches the node. `:where()` contributes
+zero specificity; `:is()` and `:not()` use their most specific nested selector.
+
+CSS-wide keywords resolve against the semantic tree and the template/builder base:
+
+- `inherit` reads the semantic parent's resolved value.
+- `initial` removes the authored value.
+- `unset` inherits inherited properties and removes non-inherited properties.
+- `revert` restores the template/builder base value.
+
+Author custom properties inherit through the semantic tree, and `var()` supports nested fallbacks. A missing variable
+without a fallback and a variable cycle are errors. Names beginning with `--rr-` are read-only runtime values; author
+variables must use another prefix.
+
+Units resolve against PDF points, authored page dimensions, the root font size, or the current or parent font size as
+appropriate.
 
 ### Read-only system variables
 
-| Variable | Value |
+These values expose the resolved builder and page settings to authored declarations.
+
+<!-- RRSS-SYSTEM-VARIABLES:START -->
+| Variable | Runtime value |
 | --- | --- |
-| `--rr-primary-color` | Builder primary color. |
-| `--rr-text-color` | Builder text color. |
 | `--rr-background-color` | Builder background color. |
 | `--rr-body-font-size` | Builder body font size. |
 | `--rr-body-line-height` | Builder body line-height multiplier. |
@@ -235,45 +194,570 @@ All semantic elements also accept `id` and `role` selectors when those values ex
 | `--rr-heading-line-height` | Builder heading line-height multiplier. |
 | `--rr-page-gap-x` | Builder horizontal page gap. |
 | `--rr-page-gap-y` | Builder vertical page gap. |
+| `--rr-page-height` | Resolved authored page height. |
 | `--rr-page-margin-x` | Builder horizontal page margin. |
 | `--rr-page-margin-y` | Builder vertical page margin. |
 | `--rr-page-width` | Resolved authored page width. |
-| `--rr-page-height` | Resolved authored page height. |
-| `--rr-sidebar-width` | Builder sidebar width. |
-| `--rr-picture-size` | Builder picture size. |
-| `--rr-picture-rotation` | Builder picture rotation. |
 | `--rr-picture-aspect-ratio` | Builder picture aspect ratio. |
+| `--rr-picture-border-color` | Builder picture border color. |
 | `--rr-picture-border-radius` | Builder picture border radius. |
 | `--rr-picture-border-width` | Builder picture border width. |
-| `--rr-picture-border-color` | Builder picture border color. |
-| `--rr-picture-shadow-width` | Builder picture shadow width. |
+| `--rr-picture-rotation` | Builder picture rotation. |
 | `--rr-picture-shadow-color` | Builder picture shadow color. |
+| `--rr-picture-shadow-width` | Builder picture shadow width. |
+| `--rr-picture-size` | Builder picture size. |
+| `--rr-primary-color` | Builder primary color. |
+| `--rr-sidebar-width` | Builder sidebar width. |
+| `--rr-text-color` | Builder text color. |
+<!-- RRSS-SYSTEM-VARIABLES:END -->
 
-Names beginning with `--rr-` are reserved and cannot be reassigned. Define author variables with another prefix.
+## Property reference
 
-### Template-part names
+The generated table is the complete version-1 property catalog. `Applies to` identifies the semantic nodes accepted by
+each property. Known keywords are completion hints rather than the full value grammar; property-specific parsers also
+accept the documented numbers, colors, functions, and shorthands.
 
-| Part | Allowed semantic children |
-| --- | --- |
-| `timeline-line` | — |
-| `timeline-marker` | `template-part` |
-| `timeline-dot` | — |
-| `timeline-content` | `item-header`, `field`, `link`, `item`, `level` |
-| `featured-summary` | `section` |
-| `sidebar-background` | — |
-| `header-band` | `template-part`, `name`, `headline` |
-| `picture-anchor` | `picture` |
-| `contact-offset` | — |
-| `header-intro` | `template-part` |
-| `header-body` | `picture`, `name`, `headline`, `section` |
-| `header-contact-band` | `contact-list` |
-| `inline-item-header-leading` | `field`, `combined-text` |
-| `inline-item-header-middle` | `field`, `link` |
-| `inline-item-header-trailing` | `field` |
-| `education-grade-row` | `combined-text` |
-| `header-divider` | `name`, `headline` |
-| `contact-item-content` | `link`, `icon`, `field` |
-| `header-name-rule` | — |
+### Value grammar
 
-A part is selectable only when the current template manifest exposes it.
-<!-- RRSS-GENERATED:END -->
+RRSS value families are:
+
+- **CSS-wide keywords:** `inherit`, `initial`, `unset`, and `revert` must be the complete property value. They cannot be
+  mixed into a multi-token shorthand.
+- **Variables:** `var(--name)` and nested fallbacks such as `var(--name, var(--fallback, #2563eb))` are supported.
+  General CSS math functions such as `calc()`, `min()`, `max()`, and `clamp()` are not part of version 1.
+- **Numbers:** `opacity` accepts a finite number from `0` to `1`; `flex-grow` and `flex-shrink` accept finite numbers.
+  `order`, `orphans`, `widows`, `z-index`, and `max-lines` accept integers. `orphans` and `widows` must be at least `1`.
+- **Lengths:** a finite number followed by `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, or `rem`. An omitted
+  unit means points. `line-height` also accepts a unitless multiplier or `normal`.
+- **Colors:** CSS named colors, `transparent`, hexadecimal colors, `rgb()`, `rgba()`, `hsl()`, and `hsla()`.
+- **Booleans:** `-rr-fixed` accepts `true`, `false`, `1`, or `0`.
+
+Flex alignment accepts the PDF renderer's fixed keyword sets:
+
+- `align-content`: `flex-start`, `flex-end`, `center`, `stretch`, `space-between`, `space-around`, or `space-evenly`;
+- `align-items`: `flex-start`, `flex-end`, `center`, `stretch`, or `baseline`;
+- `align-self`: `auto`, `flex-start`, `flex-end`, `center`, `stretch`, or `baseline`;
+- `justify-content`: `flex-start`, `flex-end`, `center`, `space-between`, `space-around`, or `space-evenly`;
+- `flex-direction`: `row`, `row-reverse`, `column`, or `column-reverse`; and
+- `flex-wrap`: `nowrap`, `wrap`, or `wrap-reverse`.
+
+`flex` accepts `none`, `auto`, one basis value, one grow number, `grow basis`, `grow shrink`, or `grow shrink basis`.
+The two-number `grow shrink` form uses an implicit `0%` basis. `flex-flow` accepts one direction, one wrap mode, or one
+of each.
+
+<!-- RRSS-EXAMPLE:valid FLEX_VALUES -->
+```css
+@rr-version 1;
+
+section-items {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: stretch;
+	gap: 8pt;
+}
+
+item {
+	flex: 2 3;
+	align-self: stretch;
+}
+
+item-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+```
+
+For pictures, `object-fit` accepts `contain`, `cover`, `fill`, `none`, or `scale-down`. `object-position` accepts one or
+two horizontal/vertical keywords (`left`, `right`, `top`, `bottom`, or `center`), percentages, or lengths.
+
+<!-- RRSS-EXAMPLE:valid IMAGE_VALUES -->
+```css
+@rr-version 1;
+
+picture {
+	width: 96pt;
+	height: 96pt;
+	aspect-ratio: 1;
+	object-fit: cover;
+	object-position: center 25%;
+	border-radius: 48pt;
+	-rr-shadow-color: rgba(15, 23, 42, 0.2);
+	-rr-shadow-width: 3pt;
+}
+```
+
+`transform` accepts `translate()`, `translateX()`, `translateY()`, `rotate()`, `scale()`, `scaleX()`, `scaleY()`,
+`skew()`, `skewX()`, `skewY()`, and six-number `matrix()`. Rotation and skew angles accept degrees or radians.
+`transform-origin` accepts one or two position keywords, percentages, or lengths.
+
+<!-- RRSS-EXAMPLE:valid TRANSFORM_VALUES -->
+```css
+@rr-version 1;
+
+picture {
+	transform: translateX(3) rotate(4deg) scale(1.02);
+	transform-origin: center center;
+}
+```
+
+Color functions and `var()` may be combined, including nested fallbacks. `url()` and resource-loading functions remain
+forbidden.
+
+<!-- RRSS-EXAMPLE:valid COLOR_FUNCTIONS -->
+```css
+@rr-version 1;
+
+:root {
+	--accent: hsl(217, 91%, 60%);
+	--surface: rgba(37, 99, 235, 0.08);
+	--border: rgb(203, 213, 225);
+}
+
+name {
+	color: var(--accent, #2563eb);
+}
+
+section {
+	background-color: var(--surface);
+	border-color: var(--border);
+}
+
+field[role~="secondary-text"] {
+	color: navy;
+}
+```
+
+`margin`, `padding`, `border-width`, `border-style`, `border-color`, and `border-radius` accept one to four values using
+CSS top/right/bottom/left expansion. `gap` accepts one or two lengths. `border` and per-side border shorthands accept
+width, style, and color in any order; use the renderer-supported `solid`, `dashed`, or `dotted` border styles.
+Slash-separated elliptical border radii are not supported.
+
+<!-- RRSS-EXAMPLE:valid SHORTHANDS -->
+```css
+@rr-version 1;
+
+section {
+	margin: 6pt 0 10pt;
+	padding: 8pt 12pt;
+	border: 1pt solid #cbd5e1;
+	border-radius: 6pt;
+}
+
+section-items {
+	gap: 6pt 10pt;
+	flex-flow: column nowrap;
+}
+```
+
+Common constrained text values are:
+
+- `font-style`: `normal` or `italic`;
+- `font-weight`: a numeric weight or `thin`, `hairline`, `ultralight`, `extralight`, `light`, `normal`, `medium`,
+  `semibold`, `demibold`, `bold`, `ultrabold`, `extrabold`, `heavy`, or `black`;
+- `text-align`: `left`, `right`, `center`, or `justify`;
+- `text-decoration`: `none`, `underline`, `line-through`, or both line values;
+- `text-transform`: `none`, `capitalize`, `lowercase`, `uppercase`, or `upperfirst`;
+- `text-overflow`: `ellipsis`; and
+- `vertical-align`: `sub` or `super`.
+
+<!-- RRSS-EXAMPLE:valid PROPERTY_VALUES -->
+```css
+@rr-version 1;
+
+field {
+	font-size: 10pt;
+	font-style: italic;
+	font-weight: 600;
+	line-height: 1.35;
+	text-align: left;
+	text-decoration: underline;
+	text-transform: uppercase;
+	opacity: 0.85;
+}
+```
+
+<!-- RRSS-PROPERTIES:START -->
+| Property | Category | Applies to | Inherits | Units | Known keywords |
+| --- | --- | --- | --- | --- | --- |
+| `-rr-fixed` | structural | `page`, `region`, `header`, `picture`, `name`, `headline`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `combined-text`, `field`, `link`, `icon`, `level`, `rich-text`, `rich-heading`, `blockquote`, `paragraph`, `list`, `list-item`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `horizontal-rule`, `template-part` | no | — | `inherit`, `initial`, `revert`, `unset`, `true`, `false`, `0`, `1` |
+| `-rr-min-presence-ahead` | structural | `page`, `region`, `header`, `picture`, `name`, `headline`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `combined-text`, `field`, `link`, `icon`, `level`, `rich-text`, `rich-heading`, `blockquote`, `paragraph`, `list`, `list-item`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `horizontal-rule`, `template-part` | no | `pt`, `px`, `in`, `mm`, `cm`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `-rr-shadow-color` | image | `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `-rr-shadow-width` | image | `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `align-content` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `flex-start`, `flex-end`, `center`, `stretch`, `space-between`, `space-around`, `space-evenly` |
+| `align-items` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `flex-start`, `flex-end`, `center`, `stretch`, `baseline` |
+| `align-self` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `flex-start`, `flex-end`, `center`, `stretch`, `baseline` |
+| `aspect-ratio` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `background-color` | color | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `1pt dotted`, `1pt dashed`, `1pt solid` |
+| `border-bottom` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `1pt dotted`, `1pt dashed`, `1pt solid` |
+| `border-bottom-color` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-bottom-left-radius` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-bottom-right-radius` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-bottom-style` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `dotted`, `dashed`, `solid` |
+| `border-bottom-width` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-color` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-left` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `1pt dotted`, `1pt dashed`, `1pt solid` |
+| `border-left-color` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-left-style` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `dotted`, `dashed`, `solid` |
+| `border-left-width` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-radius` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-right` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `1pt dotted`, `1pt dashed`, `1pt solid` |
+| `border-right-color` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-right-style` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `dotted`, `dashed`, `solid` |
+| `border-right-width` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-style` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `dotted`, `dashed`, `solid` |
+| `border-top` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `1pt dotted`, `1pt dashed`, `1pt solid` |
+| `border-top-color` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `border-top-left-radius` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-top-right-radius` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-top-style` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `dotted`, `dashed`, `solid` |
+| `border-top-width` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `border-width` | border | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `bottom` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `break-before` | structural | `page`, `region`, `header`, `picture`, `name`, `headline`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `combined-text`, `field`, `link`, `icon`, `level`, `rich-text`, `rich-heading`, `blockquote`, `paragraph`, `list`, `list-item`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `horizontal-rule`, `template-part` | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `page` |
+| `break-inside` | structural | `page`, `region`, `header`, `picture`, `name`, `headline`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `combined-text`, `field`, `link`, `icon`, `level`, `rich-text`, `rich-heading`, `blockquote`, `paragraph`, `list`, `list-item`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `horizontal-rule`, `template-part` | no | — | `inherit`, `initial`, `revert`, `unset`, `auto`, `avoid` |
+| `color` | color | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `icon`, `level` | yes | — | `inherit`, `initial`, `revert`, `unset` |
+| `column-gap` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `direction` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | — | `inherit`, `initial`, `revert`, `unset`, `ltr`, `rtl` |
+| `display` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `list-item-content`, `list-marker` | no | — | `inherit`, `initial`, `revert`, `unset`, `flex`, `none` |
+| `flex` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `auto` |
+| `flex-basis` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `flex-direction` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `row`, `row-reverse`, `column`, `column-reverse` |
+| `flex-flow` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `row`, `row-reverse`, `column`, `column-reverse`, `nowrap`, `wrap`, `wrap-reverse` |
+| `flex-grow` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `flex-shrink` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `flex-wrap` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `nowrap`, `wrap`, `wrap-reverse` |
+| `font-size` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `icon`, `level` | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `font-style` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | — | `inherit`, `initial`, `revert`, `unset`, `normal`, `italic` |
+| `font-weight` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | — | `inherit`, `initial`, `revert`, `unset`, `thin`, `hairline`, `ultralight`, `extralight`, `light`, `normal`, `medium`, `semibold`, `demibold`, `bold`, `ultrabold`, `extrabold`, `heavy`, `black` |
+| `gap` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `height` | dimension | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `justify-content` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `flex-start`, `flex-end`, `center`, `space-between`, `space-around`, `space-evenly` |
+| `left` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `letter-spacing` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `line-height` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `normal` |
+| `margin` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `margin-bottom` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `margin-horizontal` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `margin-left` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `margin-right` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `margin-top` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `margin-vertical` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `max-height` | dimension | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `max-lines` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `max-width` | dimension | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `min-height` | dimension | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `min-width` | dimension | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `object-fit` | image | `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `contain`, `cover`, `fill`, `none`, `scale-down` |
+| `object-position` | image | `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `left`, `right`, `top`, `bottom`, `center` |
+| `opacity` | color | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `icon`, `level` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `order` | structural | `page`, `region`, `header`, `picture`, `name`, `headline`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `combined-text`, `field`, `link`, `icon`, `level`, `rich-text`, `rich-heading`, `blockquote`, `paragraph`, `list`, `list-item`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `horizontal-rule`, `template-part` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `orphans` | structural | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `overflow` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `hidden` |
+| `padding` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `padding-bottom` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `padding-horizontal` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `padding-left` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `padding-right` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `padding-top` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `padding-vertical` | spacing | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `name`, `headline`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `position` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `absolute`, `relative`, `static` |
+| `right` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `row-gap` | flexbox | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `size` | structural | `page` | no | `pt`, `px`, `in`, `mm`, `cm`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset`, `A4`, `letter` |
+| `text-align` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | — | `inherit`, `initial`, `revert`, `unset`, `left`, `right`, `center`, `justify` |
+| `text-decoration` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `none`, `underline`, `line-through`, `line-through underline`, `underline line-through` |
+| `text-decoration-color` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-decoration-style` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `text-indent` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `text-overflow` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `ellipsis` |
+| `text-transform` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | yes | — | `inherit`, `initial`, `revert`, `unset`, `none`, `capitalize`, `lowercase`, `uppercase`, `upperfirst` |
+| `top` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `transform` | transform | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `transform-origin` | transform | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | — | `inherit`, `initial`, `revert`, `unset`, `left`, `right`, `top`, `bottom`, `center` |
+| `vertical-align` | text | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break`, `link` | no | — | `inherit`, `initial`, `revert`, `unset`, `sub`, `super` |
+| `widows` | structural | `name`, `headline`, `section-heading`, `combined-text`, `field`, `rich-heading`, `blockquote`, `paragraph`, `list-item-content`, `list-marker`, `strong`, `emphasis`, `underline`, `strike`, `code`, `text-span`, `mark`, `hard-break` | no | — | `inherit`, `initial`, `revert`, `unset` |
+| `width` | dimension | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link`, `picture` | no | `pt`, `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`, `rem` | `inherit`, `initial`, `revert`, `unset` |
+| `z-index` | layout | `page`, `region`, `header`, `contact-list`, `contact-item`, `section`, `section-heading`, `section-items`, `item`, `item-header`, `rich-text`, `list`, `list-item`, `horizontal-rule`, `template-part`, `link` | no | — | `inherit`, `initial`, `revert`, `unset` |
+
+Known keywords are completion hints, not a complete value grammar; use the property examples and value rules above for accepted numbers, colors, functions, and shorthands.
+<!-- RRSS-PROPERTIES:END -->
+
+## PDF behavior
+
+RRSS applies styles to existing semantic PDF nodes:
+
+- `display: none` hides an existing semantic node; RRSS never deletes source data.
+- `order` changes stable sibling render order, with original semantic order as the tie-breaker.
+- `break-before`, `break-inside`, `-rr-min-presence-ahead`, `orphans`, `widows`, and `-rr-fixed` map to bounded React
+  PDF behavior.
+- `size` applies only to `page` outside `@media`; one or two lengths create a custom page size.
+- RRSS cannot create, re-parent, or duplicate arbitrary nodes. Fixed content repeats only an existing semantic node.
+
+Invalid editable source remains saved, while preview and export keep the last source that compiled and passed PDF
+preflight.
+
+## Template-specific selectors
+
+Template parts are optional extension points. A portable stylesheet must not assume that another template exposes the
+same part. Guard template-specific rules with `resume[template="..."]`.
+
+The generated selector column is canonical. Some manifests bind a name to an existing semantic node, so no
+`template-part` wrapper exists for that entry.
+
+<!-- RRSS-TEMPLATE-PARTS:START -->
+| Template | Name | Selector | Owner/condition | Allowed children |
+| --- | --- | --- | --- | --- |
+| `azurill` | `timeline-content` | `template-part[name="timeline-content"]` | owner: item; placement: main; columns: 1 | `item-header`, `field`, `link`, `item`, `level` |
+| `azurill` | `timeline-dot` | `template-part[name="timeline-dot"]` | owner: item; placement: main; columns: 1 | — |
+| `azurill` | `timeline-line` | `template-part[name="timeline-line"]` | owner: section-items; placement: main; columns: 1 | — |
+| `azurill` | `timeline-marker` | `template-part[name="timeline-marker"]` | owner: item; placement: main; columns: 1 | `template-part` |
+| `bronzor` | `interleaved-section-row` | `section[part~="interleaved-section-row"]` | owner: section; placement: main | canonical node |
+| `chikorita` | `contact-row-primary` | `template-part[name="contact-row-primary"]` | owner: contact-list | `contact-item` |
+| `chikorita` | `contact-row-secondary` | `template-part[name="contact-row-secondary"]` | owner: contact-list | `contact-item` |
+| `ditgar` | `featured-summary` | `template-part[name="featured-summary"]` | owner: region (featured) | `section` |
+| `ditgar` | `item-header-border` | `item-header[part~="item-header-border"]` | owner: item-header; section types: profiles, experience, education, projects, skills, languages, interests, awards, certifications, publications, volunteer, references | canonical node |
+| `ditgar` | `sidebar-background` | `region[part~="sidebar-background"]` | owner: region (sidebar) | canonical node |
+| `ditto` | `contact-offset` | `template-part[name="contact-offset"]` | owner: header | — |
+| `ditto` | `header-band` | `template-part[name="header-band"]` | owner: header | `template-part`, `name`, `headline` |
+| `ditto` | `picture-anchor` | `template-part[name="picture-anchor"]` | owner: header | `picture` |
+| `gengar` | `featured-summary` | `template-part[name="featured-summary"]` | owner: region (featured) | `section` |
+| `gengar` | `sidebar-background` | `region[part~="sidebar-background"]` | owner: region (sidebar) | canonical node |
+| `glalie` | `sidebar-background` | `template-part[name="sidebar-background"]` | owner: region (sidebar) | — |
+| `kakuna` | no template-specific parts | — | — | — |
+| `lapras` | no template-specific parts | — | — | — |
+| `leafish` | `header-body` | `template-part[name="header-body"]` | owner: header | `picture`, `name`, `headline`, `section` |
+| `leafish` | `header-contact-band` | `template-part[name="header-contact-band"]` | owner: header | `contact-list` |
+| `leafish` | `header-intro` | `template-part[name="header-intro"]` | owner: header | `template-part` |
+| `meowth` | `education-grade-row` | `template-part[name="education-grade-row"]` | owner: item | `combined-text` |
+| `meowth` | `inline-item-header-leading` | `template-part[name="inline-item-header-leading"]` | owner: item-header; section types: experience, education, volunteer | `field`, `combined-text` |
+| `meowth` | `inline-item-header-middle` | `template-part[name="inline-item-header-middle"]` | owner: item-header; section types: experience, education, volunteer | `field`, `link` |
+| `meowth` | `inline-item-header-trailing` | `template-part[name="inline-item-header-trailing"]` | owner: item-header; section types: experience, education, volunteer | `field` |
+| `onyx` | no template-specific parts | — | — | — |
+| `pikachu` | `header-divider` | `template-part[name="header-divider"]` | owner: header | `name`, `headline` |
+| `rhyhorn` | `contact-item-content` | `template-part[name="contact-item-content"]` | owner: contact-item | `link`, `icon`, `field` |
+| `rhyhorn` | `contact-item-last` | `contact-item[part~="contact-item-last"]` | owner: contact-item; last item only | canonical node |
+| `scizor` | `header-name-rule` | `template-part[name="header-name-rule"]` | owner: header | — |
+<!-- RRSS-TEMPLATE-PARTS:END -->
+
+## Diagnostics and limits
+
+Compiler diagnostics have a stable code, severity, source range, explanation, and suggested action. PDF preflight
+failures guarantee a code and message and may include compiler diagnostics with source ranges. Compiler errors prevent
+a new stylesheet from becoming the applied source. Warnings identify non-fatal portability or matching issues.
+
+<!-- RRSS-DIAGNOSTICS:START -->
+| Code | Severity | Meaning | What to do |
+| --- | --- | --- | --- |
+| `CSS_PARSE_ERROR` | error | The stylesheet is not valid parseable CSS syntax. | Fix the syntax at the reported source range. |
+| `CSS_RAW_SYNTAX` | error | The parser encountered unsupported raw CSS syntax. | Rewrite the declaration or selector using documented RRSS syntax. |
+| `DUPLICATE_RR_VERSION_DIRECTIVE` | error | More than one @rr-version directive was found. | Keep exactly one version directive. |
+| `EXTREME_VALUE` | warning | A value is valid but likely to produce unusable output. | Reduce the value unless the effect is intentional. |
+| `FORBIDDEN_AT_RULE` | error | The at-rule can load resources or execute unsupported CSS behavior. | Remove the at-rule. |
+| `FORBIDDEN_CSS_VALUE` | error | The value attempts to use an external resource or forbidden CSS capability. | Use a PDF-safe local value. |
+| `INVALID_MEDIA_QUERY` | error | The PDF dimension query is malformed or unsupported. | Use orientation: portrait\|landscape or width, min-width, max-width, height, min-height, or max-height with an RRSS length. |
+| `INVALID_RR_VERSION` | error | The version directive is not one positive integer without a block. | Use @rr-version 1;. |
+| `INVALID_SELECTOR` | error | The selector uses unsupported syntax or exceeds selector limits. | Rewrite it using documented RRSS selectors and combinators. |
+| `INVALID_VALUE` | error | The value does not match the supported grammar for the property. | Use the documented property value form. |
+| `MEDIA_PAGE_SIZE` | error | A media rule attempts to change the page size it is evaluated against. | Move the page size declaration outside @media. |
+| `MISSING_VERSION_DIRECTIVE` | warning | The stylesheet omitted @rr-version. | Add @rr-version 1; as the first statement. |
+| `PROPERTY_NOT_APPLICABLE` | warning | The property cannot affect any matched semantic node kind. | Target a node listed in the property's Applies to column. |
+| `RESOURCE_LIMIT` | error | Compilation, matching, values, variables, or semantic nodes exceeded a bounded RRSS limit. | Reduce stylesheet or resume complexity. |
+| `RR_VERSION_MISMATCH` | error | The directive and stored language version disagree. | Set both to version 1. |
+| `SELECTOR_NO_MATCH` | warning | The selector matches no node in the current resume and template. | Check the ID, attribute value, placement, or template guard. |
+| `STYLESHEET_PREFLIGHT_BYTE_LIMIT` | error | The rendered PDF exceeds the byte budget. | Reduce pages, images, or styled content. |
+| `STYLESHEET_PREFLIGHT_INVALID` | error | The stylesheet has compiler or semantic errors. | Fix the accompanying RRSS diagnostics. |
+| `STYLESHEET_PREFLIGHT_MEMORY_LIMIT` | error | PDF preflight exceeded its memory budget. | Reduce document, image, or layout complexity. |
+| `STYLESHEET_PREFLIGHT_PAGE_LIMIT` | error | The rendered PDF exceeds the page-count budget. | Reduce content or pagination. |
+| `STYLESHEET_PREFLIGHT_PAGE_SIZE_LIMIT` | error | An authored page exceeds the PDF dimension or area budget. | Use a smaller page size. |
+| `STYLESHEET_PREFLIGHT_PARSE_FAILED` | error | The rendered PDF could not be inspected. | Retry after simplifying the candidate. |
+| `STYLESHEET_PREFLIGHT_RENDER_FAILED` | error | The PDF renderer could not render the candidate stylesheet. | Simplify the candidate and inspect accompanying diagnostics. |
+| `STYLESHEET_PREFLIGHT_TIMEOUT` | error | PDF preflight exceeded its deadline. | Reduce stylesheet or document complexity and retry. |
+| `STYLESHEET_PREFLIGHT_WORKER_FAILED` | error | The isolated PDF preflight worker failed or its queue was full. | Retry; simplify the candidate if the failure repeats. |
+| `SYSTEM_VARIABLE_READONLY` | error | An author attempted to assign a reserved --rr-* variable. | Read the system variable or rename the author variable. |
+| `UNRESOLVED_VARIABLE` | error | A var() reference has neither a value nor a usable fallback. | Define the variable or add a fallback. |
+| `UNSUPPORTED_AT_RULE` | error | The at-rule is not part of RRSS version 1. | Use only @rr-version and documented @media queries. |
+| `UNSUPPORTED_PROPERTY` | error | The property is not in the RRSS property registry. | Choose a property from the property reference. |
+| `UNSUPPORTED_RR_VERSION` | error | The requested RRSS version is not implemented. | Use @rr-version 1;. |
+| `VARIABLE_CYCLE` | error | Custom properties form a var() reference cycle. | Break the cycle or provide a non-cyclic fallback. |
+<!-- RRSS-DIAGNOSTICS:END -->
+
+Compiler and PDF preflight limits bound source size, selector work, nesting, generated nodes, and layout work. These
+limits are part of the version-1 safety contract.
+
+<!-- RRSS-LIMITS:START -->
+| Stage | Limit | Value |
+| --- | --- | --- |
+| Compiler | `maxAbsoluteLengthPt` | 100000 |
+| Compiler | `maxCombinatorsPerSelector` | 16 |
+| Compiler | `maxDeclarations` | 8192 |
+| Compiler | `maxFunctionDepth` | 16 |
+| Compiler | `maxMediaNesting` | 4 |
+| Compiler | `maxRules` | 1024 |
+| Compiler | `maxSelectorCodePoints` | 2048 |
+| Compiler | `maxSelectorsPerRule` | 64 |
+| Compiler | `maxSemanticNodes` | 20000 |
+| Compiler | `maxSourceBytes` | 131072 |
+| Compiler | `maxVariableExpansionDepth` | 32 |
+| PDF preflight | `maxBytes` | 10000000 |
+| PDF preflight | `maxConcurrentWorkers` | 1 |
+| PDF preflight | `maxOldGenerationMb` | 256 |
+| PDF preflight | `maxPageAreaPt2` | 20000000 |
+| PDF preflight | `maxPageHeightPt` | 20000 |
+| PDF preflight | `maxPages` | 20 |
+| PDF preflight | `maxPageWidthPt` | 2000 |
+| PDF preflight | `maxQueuedRequests` | 32 |
+| PDF preflight | `timeoutMs` | 5000 |
+<!-- RRSS-LIMITS:END -->
+
+## Copy-paste recipes
+
+Each recipe is a complete version-1 stylesheet.
+
+### Style one section type
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* One section type */
+@rr-version 1;
+
+section[type="experience"] section-heading {
+	color: #0f766e;
+}
+```
+
+### Target one resume-specific node
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* One resume-specific node */
+@rr-version 1;
+
+#experience-item-uuid {
+	break-inside: avoid;
+}
+```
+
+### Style sidebar content
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* Sidebar content */
+@rr-version 1;
+
+region[placement="sidebar"] {
+	background-color: #f8fafc;
+	padding: 18pt;
+}
+```
+
+### Style a rich-text list row and its content
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* Rich-text list row versus content */
+@rr-version 1;
+
+list-item {
+	gap: 4pt;
+}
+
+list-marker {
+	color: var(--rr-primary-color);
+}
+
+list-item-content {
+	line-height: 1.35;
+}
+```
+
+### Set authored page dimensions
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* Authored page dimensions */
+@rr-version 1;
+
+page {
+	size: 210mm 297mm;
+}
+```
+
+### Control pagination
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* Pagination */
+@rr-version 1;
+
+section {
+	-rr-min-presence-ahead: 72pt;
+}
+
+item {
+	break-inside: avoid;
+}
+```
+
+### Style template decoration
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* Template decoration */
+@rr-version 1;
+
+resume[template="azurill"] template-part[name="timeline-line"] {
+	background-color: #94a3b8;
+}
+```
+
+### Query PDF dimensions
+
+<!-- RRSS-EXAMPLE:valid -->
+```css
+/* PDF dimension query */
+@rr-version 1;
+
+@media (max-width: 600pt) {
+	region[placement="sidebar"] {
+		padding: 12pt;
+	}
+}
+```
+
+## Unsupported capabilities and portability checklist
+
+Before sharing a stylesheet across resumes or templates, check that it:
+
+- starts with `@rr-version 1;`;
+- targets semantic types, attributes, roles, or stable IDs rather than template implementation details;
+- guards every template part with `resume[template="..."]`;
+- uses only properties and values in the generated reference;
+- stays within the generated compiler and PDF preflight limits; and
+- does not depend on creating or loading content.
+
+The following capabilities are unsupported:
+
+- class selectors and pseudo-elements;
+- CSS Grid;
+- `@import`, `@font-face`, `@supports`, and arbitrary at-rules;
+- `url()`, external or local assets, and font loading;
+- scripts and browser layout APIs;
+- interaction states, animations, and transitions;
+- filters and gradients;
+- general `box-shadow` and `text-shadow`; and
+- node creation, arbitrary duplication, and re-parenting.
+
+Picture shadows are available only through `-rr-shadow-color` and `-rr-shadow-width`.
+
+<!-- RRSS-EXAMPLE:invalid INVALID_SELECTOR -->
+```css
+@rr-version 1;
+
+section::before {
+	content: "Unsupported";
+}
+```
+
+Pseudo-elements are rejected because RRSS cannot create PDF nodes.

@@ -527,8 +527,8 @@ function structuralValue(
 		else return false;
 	}
 	if (property === "-rr-fixed") {
-		if (value === "true" || value === 1) structural.fixed = true;
-		else if (value === "false" || value === 0) structural.fixed = false;
+		if (value === "true" || value === "1" || value === 1) structural.fixed = true;
+		else if (value === "false" || value === "0" || value === 0) structural.fixed = false;
 		else return false;
 	}
 	if (property === "-rr-min-presence-ahead") {
