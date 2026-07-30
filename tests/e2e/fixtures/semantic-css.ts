@@ -20,10 +20,6 @@ export const PORTABLE_STYLESHEET = `@rr-version 1;
 	--accent: var(--rr-primary-color);
 }
 
-page {
-	background-color: #123456;
-}
-
 header > name {
 	color: var(--accent);
 }
