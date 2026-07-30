@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 10:39\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -162,6 +162,10 @@ msgstr "アカウントメニュー"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "操作"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "週ごとの応募送信数（直近8週間）"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "応募済み"
 
@@ -492,6 +497,10 @@ msgstr "応募日"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "適用中のルール"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "パスワードをリセットするリンクを記載したメールを
 msgid "Check your email for a link to verify your account."
 msgstr "アカウントを認証するリンクを記載したメールを確認してください。"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "中国語（簡体字）"
@@ -966,6 +983,10 @@ msgstr "会話内容をコピーしました。"
 msgid "Conversation JSON copied."
 msgstr "会話のJSONデータがコピーされました。"
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "クリップボードにコピーしました。"
@@ -988,6 +1009,10 @@ msgstr "バックアップコードをコピー"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSONをコピー"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr ""
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "編集 {chip}"
 msgid "Edit application"
 msgstr "応募を編集"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr ""
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "二要素認証を設定することを確定するために、パスワ
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "二要素認証を無効にするには、パスワードを入力してください。2FA を無効化すると、アカウントのセキュリティレベルは下がります。"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr ""
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "すべてのご支援は、大きくても小さくても、このプロジェクトにとって大きな力になります。<0/>ご支援ありがとうございます。"
@@ -1681,6 +1715,10 @@ msgstr "すべてのご支援は、大きくても小さくても、このプロ
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "プロフェッショナルな履歴書・職務経歴書を作成・カスタマイズ・共有するために必要な機能がすべて揃っています。プライバシーを重視して設計され、オープンソースによって支えられ、そして完全に無料で利用できます。"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "パスワードをお忘れですか？"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "フォーマット"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "ライト"
 msgid "Light theme"
 msgstr "ライトテーマ"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "行の高さ"
@@ -2968,6 +3016,10 @@ msgstr "OpenAIアシスタント"
 msgid "Open Email Client"
 msgstr "メールクライアントを開く"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr ""
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "ビルダーで開く"
@@ -3267,6 +3319,10 @@ msgstr "<0>Enter</0>キーを押して開く"
 msgid "Preview"
 msgstr "プレビュー"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "メインカラー"
@@ -3378,6 +3434,14 @@ msgstr "Reactive Resume v4 (JSON)"
 msgid "Reading…"
 msgstr "読み込み中…"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr ""
+
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
 msgstr "宛先"
@@ -3393,6 +3457,10 @@ msgstr "長方形（全幅）"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "やり直し"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3562,10 @@ msgstr "パスワードをリセット"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "スタイルをリセット"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr ""
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3862,14 @@ msgstr "選択済み"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Docker でセルフホスト"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr ""
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4232,14 @@ msgstr "取り消し線"
 msgid "Strong fit"
 msgstr "高い適合度"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr ""
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4396,10 @@ msgstr "お探しのページは移動されたか、既に存在しない可能
 msgid "The password you entered is incorrect"
 msgstr "入力されたパスワードが正しくありません。"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr ""
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "アクセスしようとしているレジュメはパスワードで保護されています"
@@ -4380,6 +4472,10 @@ msgstr "この項目は完全に削除されます。元に戻すことはでき
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "この機能を使用するには、AIプロバイダーとの接続が必要です。設定画面でプロバイダーを設定してください。"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4734,10 @@ msgstr "下線"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "元に戻す"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5112,10 @@ msgstr "あなたのデータは安全に保存され、第三者と共有され
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "最新の変更内容を保存できませんでした。"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr ""
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

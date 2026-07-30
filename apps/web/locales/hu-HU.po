@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 10:39\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "Fiók menü"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Műveletek"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Hetente elküldött jelentkezések (az elmúlt 8 hét)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Jelentkezve"
 
@@ -492,6 +497,10 @@ msgstr "Jelentkezés dátuma"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Alkalmazott szabályok"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr ""
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Ellenőrizd az e‑mailedet a jelszó visszaállításához szükséges 
 msgid "Check your email for a link to verify your account."
 msgstr "Ellenőrizd az e‑mailedet a fiókod megerősítéséhez szükséges linkért."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "kínai (egyszerűsített)"
@@ -966,6 +983,10 @@ msgstr "Beszélgetés másolva."
 msgid "Conversation JSON copied."
 msgstr "A beszélgetés JSON-fájlja másolva."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "A vágólapra másolva."
@@ -988,6 +1009,10 @@ msgstr "Biztonsági kódok másolása"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON másolása"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr ""
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Szerkesztés {chip}"
 msgid "Edit application"
 msgstr "Jelentkezés szerkesztése"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr ""
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Add meg a jelszavadat a kétlépcsős hitelesítés beállításának me
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Add meg a jelszavadat a kétlépcsős hitelesítés kikapcsolásához. A fiókod kevésbé lesz biztonságos 2FA nélkül."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr ""
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Minden hozzájárulás – legyen kicsi vagy nagy – hatalmas különbséget jelent a projekt számára.<0/>Köszönjük a támogatásodat!"
@@ -1681,6 +1715,10 @@ msgstr "Minden hozzájárulás – legyen kicsi vagy nagy – hatalmas különbs
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Minden, amire szükséged van professzionális önéletrajzok létrehozásához, testreszabásához és megosztásához. Adatvédelemre tervezve, nyílt forráskóddal működve és teljesen ingyen, örökre."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Elfelejtette a jelszavát?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Formátum"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Világos"
 msgid "Light theme"
 msgstr "Világos téma"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Sorköz"
@@ -2968,6 +3016,10 @@ msgstr "Nyílt AI asszisztens"
 msgid "Open Email Client"
 msgstr "E‑mail kliens megnyitása"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr ""
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Megnyitás a szerkesztőben"
@@ -3267,6 +3319,10 @@ msgstr "Nyomja meg az <0>Entert</0> a megnyitáshoz"
 msgid "Preview"
 msgstr "Előnézet"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Elsődleges szín"
@@ -3378,6 +3434,14 @@ msgstr "Reaktív önéletrajz v4 (JSON)"
 msgid "Reading…"
 msgstr "Olvasás…"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr ""
+
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
 msgstr "Címzett"
@@ -3393,6 +3457,10 @@ msgstr "Téglalap (teljes szélesség)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Újra"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr ""
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3562,10 @@ msgstr "Jelszó visszaállítása"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Stílus visszaállítása"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr ""
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3862,14 @@ msgstr "kijelölve"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Önálló hosztolás Dockerrel"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr ""
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4232,14 @@ msgstr "Áthúzás"
 msgid "Strong fit"
 msgstr "Erős illeszkedés"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr ""
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4396,10 @@ msgstr "Lehetséges, hogy a keresett oldal áthelyeződött, vagy már nem léte
 msgid "The password you entered is incorrect"
 msgstr "A megadott jelszó helytelen"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr ""
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "A megnyitni kívánt önéletrajz jelszóval védett"
@@ -4380,6 +4472,10 @@ msgstr "Ez a bejegyzés véglegesen törlődik. Ezt nem lehet visszavonni."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ehhez a funkcióhoz csatlakoztatott MI-szolgáltató szükséges. Kérjük, állítson be egyet a beállításokban."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr ""
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4734,10 @@ msgstr "Aláhúzás"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Visszavonás"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5112,10 @@ msgstr "Az adataid biztonságosan tároljuk, és soha nem osztjuk meg harmadik f
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "A legutóbbi módosításokat nem sikerült menteni."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr ""
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
