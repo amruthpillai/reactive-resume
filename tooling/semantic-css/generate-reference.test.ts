@@ -31,13 +31,11 @@ const readTargets = (paths: typeof defaultDocumentationPaths) =>
 
 function extractSemanticCssExamples(source: string): SemanticCssExample[] {
 	const examples: SemanticCssExample[] = [];
-	const matches = source.matchAll(
-		/\{\/\* SEMANTIC-CSS-EXAMPLE:valid(?: ([A-Z][A-Z0-9_]*))? \*\/\}\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
-	);
+	const matches = source.matchAll(/```css\r?\n([\s\S]*?)\r?\n```/g);
 
-	for (const [, markerLabel, example] of matches) {
-		if (!example) throw new Error("Invalid Semantic CSS example marker.");
-		examples.push({ label: markerLabel ?? `valid example ${examples.length + 1}`, source: example });
+	for (const [, example] of matches) {
+		if (!example) throw new Error("Invalid Semantic CSS example.");
+		examples.push({ label: `example ${examples.length + 1}`, source: example });
 	}
 
 	return examples;
@@ -212,7 +210,7 @@ it("keeps the schema guide aligned with the canonical schema contract", async ()
 	expect(authoredGuide).not.toMatch(/custom sections.*arbitrary content/is);
 });
 
-it("compiles every marked valid Semantic CSS example", async () => {
+it("compiles every Semantic CSS example in the public guide", async () => {
 	const source = await readFile(applyingCustomStylesGuide, "utf8");
 	const examples = extractSemanticCssExamples(source);
 	expect(examples).not.toEqual([]);
