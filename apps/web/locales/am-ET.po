@@ -8,7 +8,7 @@ msgstr ""
 "Language: am\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 10:39\n"
+"PO-Revision-Date: 2026-07-30 10:57\n"
 "Last-Translator: \n"
 "Language-Team: Amharic\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -165,7 +165,7 @@ msgstr "እርምጃዎች"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Activate Semantic CSS"
-msgstr ""
+msgstr "የሴማንቲክ CSS ን ያግብሩ"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -500,7 +500,7 @@ msgstr "የተተገበሩ ህጎች"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
-msgstr ""
+msgstr "ከማስጠንቀቂያዎች ጋር ተተግብሯል"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -811,11 +811,11 @@ msgstr "መለያዎን ለማረጋገጥ አገናኝ በኢሜልዎ ውስ�
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
-msgstr ""
+msgstr "ፍተሻ"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
-msgstr ""
+msgstr "ረቂቅን በመፈተሽ ላይ"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -985,7 +985,7 @@ msgstr "ውይይት JSON ተገልብጧል።"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Converted stylesheet draft"
-msgstr ""
+msgstr "የተቀየረ የቅጥ ሉህ ረቂቅ"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
@@ -1012,7 +1012,7 @@ msgstr "JSONን ይቅዱ"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
-msgstr ""
+msgstr "የቅጥ ሉህን ቅዳ"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1573,7 +1573,7 @@ msgstr "መተግበሪያን ያርትዑ"
 #. placeholder {0}: selectedColor.token.value
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Edit color {0}"
-msgstr ""
+msgstr "ቀለምን አርትዕ {0}"
 
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
@@ -1706,7 +1706,7 @@ msgstr "ሁለት-ደረጃ ማረጋገጫን ለማቦዘን የይለፍ ቃ�
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Error"
-msgstr ""
+msgstr "ስህተት"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1718,7 +1718,7 @@ msgstr "ሙያዊ የየታሪክ ማቅረቢያዎችን ለመፍጠር፣ �
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Exit focus mode"
-msgstr ""
+msgstr "ከትኩረት ሁነታ ውጣ"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2041,7 +2041,7 @@ msgstr "ቅርጸት"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Format stylesheet"
-msgstr ""
+msgstr "የቅርጸት ቅጥ ሉህ"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2630,7 +2630,7 @@ msgstr "ብርሃን ገጽታ"
 #. placeholder {1}: diagnostic.range.start.column
 #: src/features/resume/stylesheet/status.tsx
 msgid "Line {0}, column {1}"
-msgstr ""
+msgstr "መስመር {0}፣ አምድ {1}"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
@@ -2966,6 +2966,10 @@ msgstr "ኖርዌጂያንኛ"
 msgid "Not connected"
 msgstr "አልተገናኘም"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr ""
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3018,7 +3022,7 @@ msgstr "የኢሜል ደንበኛን ክፈት"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Open focus mode"
-msgstr ""
+msgstr "የትኩረት ሁነታን ክፈት"
 
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
@@ -3044,6 +3048,7 @@ msgstr "ከ OpenAI ጋር ተኳሃኝ"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3321,7 +3326,7 @@ msgstr "ቅድመ እይታ"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export use the last valid version."
-msgstr ""
+msgstr "ቅድመ እይታ እና ወደ ውጭ መላክ የመጨረሻውን ትክክለኛ ስሪት ይጠቀሙ።"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3430,17 +3435,21 @@ msgstr "ምላሽ ሰጪ የስራ ልምድ v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reactive Resume v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr ""
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "ንባብ…"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
-msgstr ""
+msgstr "ለማግበር ዝግጁ"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
-msgstr ""
+msgstr "ከማስጠንቀቂያዎች ጋር ለማግበር ዝግጁ"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3460,7 +3469,7 @@ msgstr "ድገም"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo stylesheet edit"
-msgstr ""
+msgstr "የቅጥ ሉህ አርትዖትን ድገም"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3565,7 +3574,7 @@ msgstr "ቅጥን ዳግም አስጀምር"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
-msgstr ""
+msgstr "ወደ ተተገበረ የቅጥ ሉህ ዳግም አስጀምር"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3865,11 +3874,11 @@ msgstr "በ Docker ራስህን አስተናግድ"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
-msgstr ""
+msgstr "የትርጓሜ CSS የቅጥ ሉህ"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Semantic styles remain active"
-msgstr ""
+msgstr "የትርጓሜ ቅጦች ንቁ ሆነው ይቆያሉ"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4234,11 +4243,11 @@ msgstr "ጠንካራ መገጣጠም"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Stylesheet editor"
-msgstr ""
+msgstr "የቅጥ ሉህ አርታኢ"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Stylesheet has errors"
-msgstr ""
+msgstr "የቅጥ ሉህ ስህተቶች አሉት"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -4398,7 +4407,7 @@ msgstr "ያስገቡት የይለፍ ቃል ትክክል አይደለም"
 
 #: src/features/resume/preview/preview.browser.tsx
 msgid "The resume preview could not be updated. The last valid preview is still shown."
-msgstr ""
+msgstr "የሪሴምዩ ቅድመ እይታ ሊዘመን አልቻለም። የመጨረሻው ትክክለኛ ቅድመ እይታ አሁንም ይታያል።"
 
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
@@ -4475,7 +4484,7 @@ msgstr "ይህ ባህሪ የተገናኘ የAI አቅራቢ ያስፈልገዋ�
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "This instance does not currently allow Semantic CSS editing."
-msgstr ""
+msgstr "ይህ አጋጣሚ በአሁኑ ጊዜ የሴማንቲክ CSS አርትዖትን አይፈቅድም።"
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4737,7 +4746,7 @@ msgstr "ቀልብስ"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Undo stylesheet edit"
-msgstr ""
+msgstr "የቅጥ ሉህ አርትዖትን ቀልብስ"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5115,7 +5124,7 @@ msgstr "የቅርብ ጊዜ ለውጦችዎ ሊቀመጡ አልቻሉም።"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
-msgstr ""
+msgstr "የቆዩ ቅጦችዎ ይህንን የሴማንቲክ CSS ረቂቅ በግልጽ እስኪያነቁ ድረስ ንቁ ሆነው ይቆያሉ።"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

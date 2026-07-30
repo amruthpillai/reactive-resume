@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 10:39\n"
+"PO-Revision-Date: 2026-07-30 10:57\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -165,7 +165,7 @@ msgstr "動作"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Activate Semantic CSS"
-msgstr ""
+msgstr "啟用語意化 CSS"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -500,7 +500,7 @@ msgstr "應用規則"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
-msgstr ""
+msgstr "附帶警告"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -811,11 +811,11 @@ msgstr "請到電子郵件收件匣查看用於驗證帳戶的連結。"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
-msgstr ""
+msgstr "檢查"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
-msgstr ""
+msgstr "檢查草稿"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -985,7 +985,7 @@ msgstr "對話JSON已複製。"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Converted stylesheet draft"
-msgstr ""
+msgstr "已轉換的樣式表草稿"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
@@ -1012,7 +1012,7 @@ msgstr "複製 JSON"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
-msgstr ""
+msgstr "複製樣式表"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1573,7 +1573,7 @@ msgstr "編輯應徵紀錄"
 #. placeholder {0}: selectedColor.token.value
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Edit color {0}"
-msgstr ""
+msgstr "編輯顏色 {0}"
 
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
@@ -1706,7 +1706,7 @@ msgstr "請輸入您的密碼以停用雙因子驗證。停用後，您的帳戶
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Error"
-msgstr ""
+msgstr "錯誤"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1718,7 +1718,7 @@ msgstr "建立、客製化與分享專業履歷所需的一切功能一應俱全
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Exit focus mode"
-msgstr ""
+msgstr "退出對焦模式"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2041,7 +2041,7 @@ msgstr "格式"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Format stylesheet"
-msgstr ""
+msgstr "格式樣式表"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2630,7 +2630,7 @@ msgstr "淺色主題"
 #. placeholder {1}: diagnostic.range.start.column
 #: src/features/resume/stylesheet/status.tsx
 msgid "Line {0}, column {1}"
-msgstr ""
+msgstr "行 {0}，列 {1}"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
@@ -2966,6 +2966,10 @@ msgstr "挪威語"
 msgid "Not connected"
 msgstr "未連接"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr ""
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3018,7 +3022,7 @@ msgstr "開啟電子郵件用戶端"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Open focus mode"
-msgstr ""
+msgstr "開啟對焦模式"
 
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
@@ -3044,6 +3048,7 @@ msgstr "相容 OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3321,7 +3326,7 @@ msgstr "預覽"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export use the last valid version."
-msgstr ""
+msgstr "預覽和匯出時請使用最新有效版本。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3430,17 +3435,21 @@ msgstr "響應式恢復 v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "反應式履歷 v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr ""
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "正在讀取…"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
-msgstr ""
+msgstr "準備啟用"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
-msgstr ""
+msgstr "準備啟動並發出警告"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3460,7 +3469,7 @@ msgstr "重做"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo stylesheet edit"
-msgstr ""
+msgstr "重新編輯樣式表"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3565,7 +3574,7 @@ msgstr "重設樣式"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
-msgstr ""
+msgstr "重設為已套用的樣式表"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3865,11 +3874,11 @@ msgstr "使用 Docker 自行託管"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
-msgstr ""
+msgstr "語意化 CSS 樣式表"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Semantic styles remain active"
-msgstr ""
+msgstr "語義風格仍然活躍"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4234,11 +4243,11 @@ msgstr "高度適配"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Stylesheet editor"
-msgstr ""
+msgstr "樣式表編輯器"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Stylesheet has errors"
-msgstr ""
+msgstr "樣式表存在錯誤"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -4398,7 +4407,7 @@ msgstr "您輸入的密碼不正確"
 
 #: src/features/resume/preview/preview.browser.tsx
 msgid "The resume preview could not be updated. The last valid preview is still shown."
-msgstr ""
+msgstr "履歷預覽無法更新，仍顯示上次有效的預覽版本。"
 
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
@@ -4475,7 +4484,7 @@ msgstr "此功能需要連接人工智慧服務提供者。請在設定中進行
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "This instance does not currently allow Semantic CSS editing."
-msgstr ""
+msgstr "此實例目前不支援語義化 CSS 編輯。"
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4737,7 +4746,7 @@ msgstr "撤銷"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Undo stylesheet edit"
-msgstr ""
+msgstr "撤銷樣式表編輯"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5115,7 +5124,7 @@ msgstr "您所做的最新變更未能儲存。"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
-msgstr ""
+msgstr "在您明確啟動此語意化 CSS 草稿之前，您的舊版樣式仍將保持有效。"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 10:39\n"
+"PO-Revision-Date: 2026-07-30 10:57\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -165,7 +165,7 @@ msgstr "Veiksmai"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Activate Semantic CSS"
-msgstr ""
+msgstr "Semantinio CSS aktyvavimas"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -500,7 +500,7 @@ msgstr "Taikomos taisyklės"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
-msgstr ""
+msgstr "Taikoma su įspėjimais"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -811,11 +811,11 @@ msgstr "Patikrinkite el. paštą – ten rasite nuorodą paskyrai patvirtinti."
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
-msgstr ""
+msgstr "Tikrinama"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
-msgstr ""
+msgstr "Tikrinamas juodraštis"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -985,7 +985,7 @@ msgstr "Pokalbio JSON nukopijuotas."
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Converted stylesheet draft"
-msgstr ""
+msgstr "Konvertuotas stilių lapo juodraštis"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
@@ -1012,7 +1012,7 @@ msgstr "Kopijuoti JSON"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
-msgstr ""
+msgstr "Kopijuoti stiliaus lapą"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1573,7 +1573,7 @@ msgstr "Redaguoti paraišką"
 #. placeholder {0}: selectedColor.token.value
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Edit color {0}"
-msgstr ""
+msgstr "Redaguoti spalvą {0}"
 
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
@@ -1706,7 +1706,7 @@ msgstr "Įveskite slaptažodį, kad išjungtumėte dviejų veiksnių tapatumo pa
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Error"
-msgstr ""
+msgstr "Klaida"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1718,7 +1718,7 @@ msgstr "Viskas, ko reikia sukurti, pritaikyti ir bendrinti profesionalius gyveni
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Exit focus mode"
-msgstr ""
+msgstr "Išeiti iš fokusavimo režimo"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2041,7 +2041,7 @@ msgstr "Formatas"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Format stylesheet"
-msgstr ""
+msgstr "Formatuoti stiliaus lapą"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2630,7 +2630,7 @@ msgstr "Šviesi tema"
 #. placeholder {1}: diagnostic.range.start.column
 #: src/features/resume/stylesheet/status.tsx
 msgid "Line {0}, column {1}"
-msgstr ""
+msgstr "Eilutė {0}, stulpelis {1}"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
@@ -2966,6 +2966,10 @@ msgstr "Norvegų"
 msgid "Not connected"
 msgstr "Nesusijungta"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr ""
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3018,7 +3022,7 @@ msgstr "Atidaryti el. pašto programą"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Open focus mode"
-msgstr ""
+msgstr "Atidaryti fokusavimo režimą"
 
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
@@ -3044,6 +3048,7 @@ msgstr "Suderinamas su OpenAI"
 msgid "OpenRouter"
 msgstr "\"OpenRouter\""
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3321,7 +3326,7 @@ msgstr "Peržiūra"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export use the last valid version."
-msgstr ""
+msgstr "Peržiūrai ir eksportui naudokite paskutinę galiojančią versiją."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3430,17 +3435,21 @@ msgstr "Reaktyvus gyvenimo aprašymas v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktyvusis CV v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr ""
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Skaitoma…"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
-msgstr ""
+msgstr "Paruošta aktyvuoti"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
-msgstr ""
+msgstr "Paruošta aktyvuoti su įspėjimais"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3460,7 +3469,7 @@ msgstr "Pakartoti"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo stylesheet edit"
-msgstr ""
+msgstr "Grąžinti stiliaus lapo redagavimą"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3565,7 +3574,7 @@ msgstr "Atstatyti stilių"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
-msgstr ""
+msgstr "Atkurti pritaikytą stiliaus lapą"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3865,11 +3874,11 @@ msgstr "Savarankiškas talpinimas naudojant Docker"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
-msgstr ""
+msgstr "Semantinis CSS stiliaus lapas"
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Semantic styles remain active"
-msgstr ""
+msgstr "Semantiniai stiliai išlieka aktyvūs"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4234,11 +4243,11 @@ msgstr "Stiprus atitikimas"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Stylesheet editor"
-msgstr ""
+msgstr "Stilių lapų redaktorius"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Stylesheet has errors"
-msgstr ""
+msgstr "Stiliaus lape yra klaidų"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -4398,7 +4407,7 @@ msgstr "Neteisingas slaptažodis"
 
 #: src/features/resume/preview/preview.browser.tsx
 msgid "The resume preview could not be updated. The last valid preview is still shown."
-msgstr ""
+msgstr "Nepavyko atnaujinti gyvenimo aprašymo peržiūros. Vis dar rodoma paskutinė galiojanti peržiūra."
 
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
@@ -4475,7 +4484,7 @@ msgstr "Šiai funkcijai reikalingas prijungtas dirbtinio intelekto teikėjas. Nu
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "This instance does not currently allow Semantic CSS editing."
-msgstr ""
+msgstr "Šiuo metu šis egzempliorius neleidžia redaguoti semantinio CSS."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4737,7 +4746,7 @@ msgstr "Atšaukti"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Undo stylesheet edit"
-msgstr ""
+msgstr "Atšaukti stiliaus lapo redagavimą"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5115,7 +5124,7 @@ msgstr "Nepavyko išsaugoti naujausių pakeitimų."
 
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
-msgstr ""
+msgstr "Jūsų seni stiliai liks aktyvūs, kol aiškiai neaktyvuosite šio semantinio CSS juodraščio."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
