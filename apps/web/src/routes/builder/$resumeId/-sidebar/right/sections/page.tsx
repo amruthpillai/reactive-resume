@@ -29,6 +29,11 @@ const formSchema = pageSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
+const CLAMP_MIN = 0;
+const CLAMP_MAX = 100;
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
 function PageSectionForm() {
 	const resume = useResume();
 	const page = resume?.data.metadata.page;
@@ -50,12 +55,17 @@ function PageSectionForm() {
 	useSyncFormValues(form, page);
 
 	const handleAutoSave = <K extends keyof FormValues>(name: K, value: FormValues[K]) => {
-		persist({ ...form.state.values, [name]: value });
+		const next = { ...form.state.values, [name]: value };
+		// Keep last-saved numeric page fields when the form holds a transient empty/NaN value
+		for (const key of ["marginX", "marginY", "gapX", "gapY"] as const) {
+			if (!Number.isFinite(next[key])) next[key] = page?.[key] ?? 0;
+		}
+		persist(next);
 	};
 
 	const pageNumberFields = [
-		{ name: "marginX" as const, label: <Trans>Margin (Horizontal)</Trans>, min: 0, max: 100 as number | undefined },
-		{ name: "marginY" as const, label: <Trans>Margin (Vertical)</Trans>, min: 0, max: 100 as number | undefined },
+		{ name: "marginX" as const, label: <Trans>Margin (Horizontal)</Trans>, min: CLAMP_MIN, max: CLAMP_MAX },
+		{ name: "marginY" as const, label: <Trans>Margin (Vertical)</Trans>, min: CLAMP_MIN, max: CLAMP_MAX },
 		{ name: "gapX" as const, label: <Trans>Spacing (Horizontal)</Trans>, min: 0, max: undefined },
 		{ name: "gapY" as const, label: <Trans>Spacing (Vertical)</Trans>, min: 0, max: undefined },
 	];
@@ -143,7 +153,7 @@ function PageSectionForm() {
 									render={
 										<InputGroupInput
 											name={field.name}
-											value={field.state.value}
+											value={Number.isFinite(field.state.value) ? field.state.value : ""}
 											min={min}
 											{...(max !== undefined ? { max } : {})}
 											step={1}
@@ -151,7 +161,16 @@ function PageSectionForm() {
 											onBlur={field.handleBlur}
 											onChange={(e) => {
 												const v = e.target.value;
-												const num = v === "" ? ("" as unknown as number) : Number(v);
+												if (v === "") {
+													// Allow clearing the controlled input without persisting invalid metadata
+													field.handleChange(Number.NaN);
+													return;
+												}
+
+												const raw = Number(v);
+												if (!Number.isFinite(raw)) return;
+
+												const num = max !== undefined ? clamp(raw, min ?? 0, max) : Math.max(raw, min ?? 0);
 												field.handleChange(num);
 												handleAutoSave(name, num);
 											}}

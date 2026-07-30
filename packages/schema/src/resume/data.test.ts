@@ -446,6 +446,19 @@ describe("pageSchema", () => {
 		expect(pageSchema.safeParse(invalid).success).toBe(false);
 	});
 
+	it("falls back to default margins when out of range via .catch", () => {
+		const result = pageSchema.safeParse({
+			...defaultResumeData.metadata.page,
+			marginX: 1224,
+			marginY: 999,
+		});
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.marginX).toBe(14);
+			expect(result.data.marginY).toBe(12);
+		}
+	});
+
 	it("falls back to 'a4' for unknown format via .catch", () => {
 		const invalid = { ...defaultResumeData.metadata.page, format: "huge" };
 		const result = pageSchema.safeParse(invalid);
