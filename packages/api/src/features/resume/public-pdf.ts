@@ -61,7 +61,7 @@ const defaultDependencies: PublicResumePdfDependencies = {
 export async function createPublicResumePdf(
 	input: CreatePublicResumePdfInput,
 	dependencies: PublicResumePdfDependencies = defaultDependencies,
-): Promise<{ body: File; filename: string; cacheControl: string }> {
+): Promise<{ body: File; filename: string }> {
 	const fingerprintPattern = /^[a-f0-9]{64}$/;
 	if (
 		!PUBLIC_RESUME_PDF_MISMATCH_REASONS.includes(input.mismatchReason) ||
@@ -104,7 +104,6 @@ export async function createPublicResumePdf(
 		return {
 			body,
 			filename,
-			cacheControl: "private, no-store",
 		};
 	} catch (error) {
 		event(false);

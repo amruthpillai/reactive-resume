@@ -25,11 +25,10 @@ describe("handlePublicResumePdf", () => {
 	beforeEach(() => vi.clearAllMocks());
 
 	it("returns the authorized fallback PDF with strict mismatch metadata and cache policy", async () => {
-		const body = new File(["%PDF"], "Ada_Lovelace.pdf", { type: "application/pdf" });
+		const body = new File(["%PDF"], "Ada_Lovelace.pdf", { type: "text/plain" });
 		mocks.createPublicResumePdf.mockResolvedValueOnce({
 			body,
 			filename: "Ada_Lovelace.pdf",
-			cacheControl: "public, max-age=300",
 		});
 		const registry = "0".repeat(64);
 		const adapter = "1".repeat(64);
@@ -61,7 +60,6 @@ describe("handlePublicResumePdf", () => {
 		mocks.createPublicResumePdf.mockResolvedValueOnce({
 			body: new File(["%PDF"], "resume.pdf", { type: "application/pdf" }),
 			filename: "resume.pdf",
-			cacheControl: "private, no-store",
 		});
 		const request = new Request("https://example.com/api/resumes/jane/resume/pdf");
 

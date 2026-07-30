@@ -56,7 +56,7 @@ export async function handlePublicResumePdf(
 
 		return new Response(result.body, {
 			headers: {
-				"Content-Type": result.body.type || "application/pdf",
+				"Content-Type": "application/pdf",
 				"Content-Disposition": `inline; filename="${result.filename.replaceAll('"', "")}"`,
 				"Cache-Control": "private, no-store",
 				"X-Content-Type-Options": "nosniff",

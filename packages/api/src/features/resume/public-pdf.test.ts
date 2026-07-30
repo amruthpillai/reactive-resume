@@ -188,39 +188,6 @@ describe("createPublicResumePdf", () => {
 		).rejects.toMatchObject({ code: "NOT_FOUND" });
 	});
 
-	it("never makes fallback shared-cache eligible across public-to-private and password state changes", async () => {
-		const body = new File(["%PDF"], "resume.pdf", { type: "application/pdf" });
-		const findResume = vi
-			.fn()
-			.mockResolvedValueOnce(buildResume({ isPublic: true, passwordHash: null }))
-			.mockResolvedValueOnce(buildResume({ isPublic: false, passwordHash: null }))
-			.mockResolvedValueOnce(buildResume({ isPublic: true, passwordHash: "hash" }));
-		const dependencies = {
-			findResume,
-			hasPasswordAccess: vi.fn().mockReturnValue(true),
-			resolveCurrentUserId: vi.fn().mockResolvedValue("owner-1"),
-			rateLimiter: { consume: vi.fn() },
-			renderPdf: vi.fn().mockResolvedValue(body),
-			getFingerprints: vi.fn().mockResolvedValue({
-				registryFingerprint: "0".repeat(64),
-				adapterFingerprint: "1".repeat(64),
-			}),
-			now: () => 10,
-			observe: vi.fn(),
-		};
-
-		const publicResult = await createPublicResumePdf(input, dependencies);
-		const privateResult = await createPublicResumePdf(input, dependencies);
-		const passwordResult = await createPublicResumePdf(input, dependencies);
-
-		expect([publicResult.cacheControl, privateResult.cacheControl, passwordResult.cacheControl]).toEqual([
-			"private, no-store",
-			"private, no-store",
-			"private, no-store",
-		]);
-		expect(publicResult.body).toBe(body);
-	});
-
 	it("propagates semantic diagnostics instead of returning an unstyled fallback PDF", async () => {
 		const observe = vi.fn();
 		const semanticError = new Error("The semantic stylesheet could not be rendered.", {
