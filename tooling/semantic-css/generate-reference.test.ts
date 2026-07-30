@@ -32,7 +32,7 @@ const readTargets = (paths: typeof defaultDocumentationPaths) =>
 function extractSemanticCssExamples(source: string): SemanticCssExample[] {
 	const examples: SemanticCssExample[] = [];
 	const matches = source.matchAll(
-		/<!-- SEMANTIC-CSS-EXAMPLE:valid(?: ([A-Z][A-Z0-9_]*))? -->\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
+		/\{\/\* SEMANTIC-CSS-EXAMPLE:valid(?: ([A-Z][A-Z0-9_]*))? \*\/\}\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
 	);
 
 	for (const [, markerLabel, example] of matches) {

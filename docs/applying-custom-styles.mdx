@@ -34,7 +34,7 @@ current rules remain active while you review it.
 
 Open the resume you want to style, select **Design**, then select **Custom Styles**. Start with a complete stylesheet:
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid FIRST_CHANGE -->
+{/* SEMANTIC-CSS-EXAMPLE:valid FIRST_CHANGE */}
 ```css
 @version 1;
 
@@ -123,7 +123,7 @@ Semantic CSS supports selector lists, descendant (` `), child (`>`), adjacent si
 combinators. It also supports `:root`, `:first-child`, `:last-child`, `:only-child`, `:is()`, `:where()`, `:not()`,
 `:nth-child()`, and `:nth-of-type()`.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid TARGETING -->
+{/* SEMANTIC-CSS-EXAMPLE:valid TARGETING */}
 ```css
 @version 1;
 
@@ -149,7 +149,7 @@ choice when you expect to copy the stylesheet to another resume.
 Semantic CSS exposes the resolved builder settings as read-only `--resume-*` variables. Define your own variables in `:root`, then
 reuse the builder values instead of duplicating colors or dimensions.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid BUILDER_VALUES -->
+{/* SEMANTIC-CSS-EXAMPLE:valid BUILDER_VALUES */}
 ```css
 @version 1;
 
@@ -200,7 +200,7 @@ data.
 `list-item` is the outer row that holds a marker and its content. Use it for row layout and spacing. Use `list-marker`
 for the bullet or number, and `list-item-content` for the text flow.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid RICH_TEXT_LISTS -->
+{/* SEMANTIC-CSS-EXAMPLE:valid RICH_TEXT_LISTS */}
 ```css
 @version 1;
 
@@ -222,7 +222,7 @@ list-item-content {
 Named fields let you make a focused change without styling every item value. Use the selector only where that field
 exists in the selected resume and template.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid ITEM_FIELDS -->
+{/* SEMANTIC-CSS-EXAMPLE:valid ITEM_FIELDS */}
 ```css
 @version 1;
 
@@ -240,7 +240,7 @@ section[type="experience"] field[name="company"] {
 Template parts expose optional visual details that are not shared by every template. Always guard a template-part rule
 with `resume[template="..."]`; otherwise the selector may match nothing after a template change.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid TEMPLATE_PART -->
+{/* SEMANTIC-CSS-EXAMPLE:valid TEMPLATE_PART */}
 ```css
 @version 1;
 
@@ -274,7 +274,7 @@ Kakuna, Lapras, and Onyx do not expose template-specific parts. Use shared seman
 Use structural declarations sparingly and review the exported PDF after each change. You can keep an item together,
 leave space before a section, or set a custom page size.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid PDF_LAYOUT -->
+{/* SEMANTIC-CSS-EXAMPLE:valid PDF_LAYOUT */}
 ```css
 @version 1;
 
@@ -294,7 +294,7 @@ item {
 `size` applies only to `page` and must be outside `@media`. PDF media queries use the authored PDF dimensions, not the
 browser viewport.
 
-<!-- SEMANTIC-CSS-EXAMPLE:valid PDF_MEDIA_QUERY -->
+{/* SEMANTIC-CSS-EXAMPLE:valid PDF_MEDIA_QUERY */}
 ```css
 @version 1;
 
