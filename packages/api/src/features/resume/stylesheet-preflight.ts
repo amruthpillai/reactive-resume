@@ -124,7 +124,7 @@ const validApplied = async (input: PrepareImportedResumeDataInput, stylesheet: S
 
 export async function prepareImportedResumeData(input: PrepareImportedResumeDataInput): Promise<ResumeData> {
 	const stylesheet = input.data.metadata.stylesheet;
-	if (!stylesheet) return input.data;
+	if (stylesheet?.mode !== "semantic") return input.data;
 
 	let applied = stylesheet.source;
 	if (!(await validApplied(input, stylesheet.source))) {

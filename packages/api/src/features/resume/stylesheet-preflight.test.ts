@@ -73,6 +73,17 @@ describe("stylesheet persistence preparation", () => {
 		});
 	});
 
+	it("returns a legacy stylesheet unchanged without PDF preflight", async () => {
+		const data = resumeData();
+		data.metadata.stylesheet = { mode: "legacy", source: validSource, applied: validApplied };
+		const runner = createRunner();
+
+		await expect(prepareImportedResumeData({ data, resumeId: "import-legacy", revision: 0, runner })).resolves.toBe(
+			data,
+		);
+		expect(runner.run).not.toHaveBeenCalled();
+	});
+
 	it("preserves invalid imported source and independently validates the imported applied source", async () => {
 		const runner = createRunner();
 
