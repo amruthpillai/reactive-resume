@@ -1,7 +1,7 @@
 import type { Download, Locator, Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
 import { updateSemanticCssFixture } from "./db";
-import { ACTIVE_PREVIEW_PAGE_SELECTOR, readPreviewPageDataUrl } from "./preview";
+import { ACTIVE_PREVIEW_PAGE_SELECTOR, activePreviewPageSelector, readPreviewPageDataUrl } from "./preview";
 import { createSampleResumeFromDashboard, openSidebarSection } from "./resume";
 
 const EMPTY_SEMANTIC_STYLESHEET = {
@@ -138,20 +138,20 @@ export async function activateStylesheet(page: Page) {
 	await waitForStylesheetStatus(page, "Applied");
 }
 
-async function firstPreviewPage(page: Page): Promise<Locator> {
-	const canvas = page.locator(ACTIVE_PREVIEW_PAGE_SELECTOR).filter({ visible: true }).first();
+async function firstPreviewPage(page: Page, selector = ACTIVE_PREVIEW_PAGE_SELECTOR): Promise<Locator> {
+	const canvas = page.locator(selector).filter({ visible: true }).first();
 	await expect(canvas).toBeVisible({ timeout: 30_000 });
 	return canvas;
 }
 
-export async function waitForStablePreview(page: Page): Promise<Locator> {
-	const canvas = await firstPreviewPage(page);
+export async function waitForStablePreview(page: Page, selector = ACTIVE_PREVIEW_PAGE_SELECTOR): Promise<Locator> {
+	const canvas = await firstPreviewPage(page, selector);
 	let previous: string | undefined;
 	let stableSamples = 0;
 	await expect
 		.poll(
 			async () => {
-				const current = await page.evaluate(readPreviewPageDataUrl, ACTIVE_PREVIEW_PAGE_SELECTOR);
+				const current = await page.evaluate(readPreviewPageDataUrl, selector);
 				stableSamples = previous === current ? stableSamples + 1 : 0;
 				previous = current;
 				return stableSamples >= 1;
@@ -172,7 +172,6 @@ export async function switchTemplate(page: Page, template: string) {
 	await section.getByRole("button").first().click();
 	const gallery = page.getByRole("dialog", { name: "Template Gallery" });
 	await expect(gallery).toBeVisible();
-	const previousPreview = await page.evaluate(readPreviewPageDataUrl, ACTIVE_PREVIEW_PAGE_SELECTOR);
 	const save = page.waitForResponse((response) => {
 		const body = response.request().postData() ?? "";
 		return response.url().includes("/api/rpc") && response.ok() && body.includes(template.toLowerCase());
@@ -180,10 +179,7 @@ export async function switchTemplate(page: Page, template: string) {
 	await gallery.getByRole("img", { name: template, exact: true }).click();
 	await save;
 	await page.keyboard.press("Escape");
-	await expect
-		.poll(() => page.evaluate(readPreviewPageDataUrl, ACTIVE_PREVIEW_PAGE_SELECTOR), { timeout: 15_000 })
-		.not.toBe(previousPreview);
-	await waitForStablePreview(page);
+	await waitForStablePreview(page, activePreviewPageSelector(template.toLowerCase()));
 }
 
 export async function downloadPdf(page: Page): Promise<Download> {
