@@ -741,6 +741,97 @@ describe("stylesheet store runtime", () => {
 		);
 	});
 
+	it("does not leave Checking stuck when compile rejects for the current edit", async () => {
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			debounceMs: 0,
+			compile: () => Promise.reject(new Error("Discarded stale stylesheet compiler result.")),
+			preflight: vi.fn(),
+			mutate: vi.fn(),
+		});
+
+		runtime.store.getState().setSourceText("edited source");
+		await vi.runAllTimersAsync();
+
+		expect(runtime.store.getState().status).not.toBe("compiling");
+		expect(runtime.store.getState().status).toBe("error");
+	});
+
+	it("finishes an edit when refreshIntelligence interleaves through the shared compile client", async () => {
+		const { createCompileWorkerClient } = await import("./worker-client");
+		const listeners = new Map<string, Set<EventListener>>();
+		const fake = {
+			postMessage: vi.fn(),
+			terminate: vi.fn(),
+			addEventListener: vi.fn((type: string, listener: EventListener) => {
+				const bucket = listeners.get(type) ?? new Set();
+				bucket.add(listener);
+				listeners.set(type, bucket);
+			}),
+			removeEventListener: vi.fn((type: string, listener: EventListener) => {
+				listeners.get(type)?.delete(listener);
+			}),
+			emit(data: unknown) {
+				for (const listener of listeners.get("message") ?? []) {
+					(listener as (event: MessageEvent) => void)(new MessageEvent("message", { data }));
+				}
+			},
+		};
+		const client = createCompileWorkerClient(() => fake);
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			debounceMs: 0,
+			compile: client.compile,
+			preflight: async ({ editGeneration }) => ({
+				type: "preflight_result",
+				requestId: editGeneration,
+				editGeneration,
+				result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [], pdf: new ArrayBuffer(1) },
+			}),
+			mutate: async ({ editGeneration }) => ({
+				stylesheet: stylesheet("edited source"),
+				revision: 4,
+				renderDataVersion: 7,
+				editGeneration,
+				diagnostics: [],
+			}),
+		});
+
+		runtime.store.getState().setSourceText("edited source");
+		await vi.runAllTimersAsync();
+		expect(runtime.store.getState().status).toBe("compiling");
+		expect(fake.postMessage).toHaveBeenCalledTimes(1);
+
+		// Mobile Design remount / accordion reopen refreshes intelligence while the edit is compiling.
+		runtime.store.getState().refreshIntelligence();
+		expect(fake.postMessage).toHaveBeenCalledTimes(2);
+
+		fake.emit({
+			type: "compile_result",
+			requestId: 1,
+			editGeneration: 1,
+			program: { languageVersion: 1, rules: [] },
+			diagnostics: [],
+			colorTokens: [],
+		});
+		fake.emit({
+			type: "compile_result",
+			requestId: 2,
+			editGeneration: 1,
+			program: { languageVersion: 1, rules: [] },
+			diagnostics: [],
+			colorTokens: [],
+		});
+		await vi.runAllTimersAsync();
+
+		expect(runtime.store.getState().status).toBe("applied");
+		expect(runtime.store.getState().applied.text).toBe("edited source");
+	});
+
 	it("terminates both worker clients and clears the store on cleanup", () => {
 		const destroy = vi.fn();
 		let mutationSignal: AbortSignal | undefined;

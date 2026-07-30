@@ -349,6 +349,9 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 				compileInput(resumeData, source, candidate.generation, editorMetadata.semanticTree),
 			);
 		} catch {
+			if (candidateValidationEpoch !== validationEpoch) return;
+			if (destroyed || candidate.generation !== store.getState().editGeneration) return;
+			patch({ status: "error" });
 			return;
 		}
 		if (candidateValidationEpoch !== validationEpoch) return;

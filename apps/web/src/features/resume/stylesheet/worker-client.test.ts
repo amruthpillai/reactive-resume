@@ -5,20 +5,33 @@ import { createCompileWorkerClient, createPreflightWorkerClient } from "./worker
 type Listener = (event: MessageEvent) => void;
 
 function worker() {
-	const listeners = new Set<Listener>();
+	const listeners = new Map<string, Set<EventListener>>();
 	return {
 		postMessage: vi.fn(),
 		terminate: vi.fn(),
-		addEventListener: vi.fn((_type: string, listener: Listener) => listeners.add(listener)),
-		removeEventListener: vi.fn((_type: string, listener: Listener) => listeners.delete(listener)),
+		addEventListener: vi.fn((type: string, listener: EventListener) => {
+			const bucket = listeners.get(type) ?? new Set();
+			bucket.add(listener);
+			listeners.set(type, bucket);
+		}),
+		removeEventListener: vi.fn((type: string, listener: EventListener) => {
+			listeners.get(type)?.delete(listener);
+		}),
 		emit(data: unknown) {
-			for (const listener of listeners) listener(new MessageEvent("message", { data }));
+			for (const listener of listeners.get("message") ?? []) {
+				(listener as Listener)(new MessageEvent("message", { data }));
+			}
+		},
+		emitError(event: ErrorEvent) {
+			for (const listener of listeners.get("error") ?? []) {
+				listener(event);
+			}
 		},
 	};
 }
 
 describe("stylesheet worker clients", () => {
-	it("rejects stale compiler results by request id", async () => {
+	it("resolves older compiler results so callers can generation-check without aborting", async () => {
 		const fake = worker();
 		const client = createCompileWorkerClient(() => fake);
 		const first = client.compile({ editGeneration: 1 } as never);
@@ -27,8 +40,18 @@ describe("stylesheet worker clients", () => {
 		fake.emit({ type: "compile_result", requestId: 1, editGeneration: 1, program: null, diagnostics: [] });
 		fake.emit({ type: "compile_result", requestId: 2, editGeneration: 2, program: null, diagnostics: [] });
 
-		await expect(first).rejects.toThrow("stale");
-		await expect(second).resolves.toMatchObject({ requestId: 2 });
+		await expect(first).resolves.toMatchObject({ requestId: 1, editGeneration: 1 });
+		await expect(second).resolves.toMatchObject({ requestId: 2, editGeneration: 2 });
+	});
+
+	it("rejects pending compiles when the worker reports an error", async () => {
+		const fake = worker();
+		const client = createCompileWorkerClient(() => fake);
+		const pending = client.compile({ editGeneration: 1 } as never);
+
+		fake.emitError({ message: "Failed to load compiler worker" } as ErrorEvent);
+
+		await expect(pending).rejects.toThrow("Failed to load compiler worker");
 	});
 
 	it("terminates and recreates a timed-out preflight worker", async () => {
@@ -68,7 +91,9 @@ describe("stylesheet worker clients", () => {
 		client.warmup();
 
 		expect(createWorker).toHaveBeenCalledOnce();
-		expect(fake.addEventListener).toHaveBeenCalledOnce();
+		expect(fake.addEventListener).toHaveBeenCalledTimes(2);
+		expect(fake.addEventListener).toHaveBeenCalledWith("message", expect.any(Function));
+		expect(fake.addEventListener).toHaveBeenCalledWith("error", expect.any(Function));
 		expect(fake.postMessage).not.toHaveBeenCalled();
 	});
 

@@ -10,12 +10,15 @@ import type {
 } from "./protocol";
 
 type WorkerListener = (event: MessageEvent<unknown>) => void;
+type WorkerErrorListener = (event: ErrorEvent) => void;
 
 export type StylesheetWorker = {
 	postMessage(message: unknown, transfer?: Transferable[]): void;
 	terminate(): void;
 	addEventListener(type: "message", listener: WorkerListener): void;
+	addEventListener(type: "error", listener: WorkerErrorListener): void;
 	removeEventListener(type: "message", listener: WorkerListener): void;
+	removeEventListener(type: "error", listener: WorkerErrorListener): void;
 };
 
 type Pending<T> = {
@@ -34,13 +37,17 @@ export function createCompileWorkerClient(createWorker: () => StylesheetWorker) 
 		const request = pending.get(response.requestId);
 		if (!request) return;
 		pending.delete(response.requestId);
-		if (response.requestId !== latestRequestId) {
-			request.reject(new Error("Discarded stale stylesheet compiler result."));
-			return;
-		}
+		// Resolve every in-flight compile. Callers already generation-check; rejecting "stale"
+		// results aborts the edit pipeline and can leave the editor stuck on Checking.
 		request.resolve(response);
 	};
+	const onError: WorkerErrorListener = (event) => {
+		const error = new Error(event.message || "Stylesheet compiler worker failed to load.");
+		for (const request of pending.values()) request.reject(error);
+		pending.clear();
+	};
 	worker.addEventListener("message", onMessage);
+	worker.addEventListener("error", onError);
 
 	return {
 		compile(input: CompileWorkerInput): Promise<CompileWorkerResponse> {
@@ -53,6 +60,7 @@ export function createCompileWorkerClient(createWorker: () => StylesheetWorker) 
 		},
 		destroy() {
 			worker.removeEventListener("message", onMessage);
+			worker.removeEventListener("error", onError);
 			worker.terminate();
 			for (const request of pending.values()) request.reject(new Error("Stylesheet compiler worker was terminated."));
 			pending.clear();
@@ -120,10 +128,14 @@ export function createPreflightWorkerClient(
 		pending.delete(response.requestId);
 		request.resolve(response);
 	};
+	const onError: WorkerErrorListener = () => {
+		terminate();
+	};
 
 	const terminate = () => {
 		if (!worker) return;
 		worker.removeEventListener("message", onMessage);
+		worker.removeEventListener("error", onError);
 		worker.terminate();
 		worker = undefined;
 		ready = false;
@@ -140,6 +152,7 @@ export function createPreflightWorkerClient(
 		if (readiness) return readiness.promise;
 		worker = createWorker();
 		worker.addEventListener("message", onMessage);
+		worker.addEventListener("error", onError);
 		let resolve!: (value: StylesheetWorker) => void;
 		let reject!: (error: Error) => void;
 		const promise = new Promise<StylesheetWorker>((resolvePromise, rejectPromise) => {
