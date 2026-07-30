@@ -3378,14 +3378,18 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 							"description": "The vertical gap between the sections of the page, defined in points (pt)."
 						},
 						"marginX": {
+							"default": 14,
+							"description": "The horizontal margin of the page, defined in points (pt).",
 							"type": "number",
 							"minimum": 0,
-							"description": "The horizontal margin of the page, defined in points (pt)."
+							"maximum": 100
 						},
 						"marginY": {
+							"default": 12,
+							"description": "The vertical margin of the page, defined in points (pt).",
 							"type": "number",
 							"minimum": 0,
-							"description": "The vertical margin of the page, defined in points (pt)."
+							"maximum": 100
 						},
 						"format": {
 							"default": "a4",
@@ -3420,9 +3424,7 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 					},
 					"required": [
 						"gapX",
-						"gapY",
-						"marginX",
-						"marginY"
+						"gapY"
 					],
 					"description": "The page settings of the resume. Determines the margins, format, and locale of the resume."
 				},

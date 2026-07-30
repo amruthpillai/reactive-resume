@@ -593,8 +593,8 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `metadata.page` | `object` | yes | — | The page settings of the resume. Determines the margins, format, and locale of the resume. |
 | `metadata.page.gapX` | `number` | yes | minimum: 0 | The horizontal gap between the sections of the page, defined in points (pt). |
 | `metadata.page.gapY` | `number` | yes | minimum: 0 | The vertical gap between the sections of the page, defined in points (pt). |
-| `metadata.page.marginX` | `number` | yes | minimum: 0 | The horizontal margin of the page, defined in points (pt). |
-| `metadata.page.marginY` | `number` | yes | minimum: 0 | The vertical margin of the page, defined in points (pt). |
+| `metadata.page.marginX` | `number` | no | minimum: 0; maximum: 100; default: 14 | The horizontal margin of the page, defined in points (pt). |
+| `metadata.page.marginY` | `number` | no | minimum: 0; maximum: 100; default: 12 | The vertical margin of the page, defined in points (pt). |
 | `metadata.page.format` | `string` | no | enum: ["a4","letter","free-form"]; default: "a4" | The format of the page. Can be 'a4', 'letter', or 'free-form'. |
 | `metadata.page.locale` | `string` | no | default: "en-US" | The locale of the page. Used for displaying pre-translated section headings, if not overridden. |
 | `metadata.page.hideLinkUnderline` | `boolean` | no | default: false | Whether to hide the underlines of the links. |
