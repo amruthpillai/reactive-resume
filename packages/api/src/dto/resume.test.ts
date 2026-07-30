@@ -139,7 +139,7 @@ describe("resume DTO output validation", () => {
 	});
 
 	it("exposes only the safe public stylesheet mode discriminator", () => {
-		const source = { languageVersion: 1, text: "@rr-version 1;\nresume { color: red; }\n" };
+		const source = { languageVersion: 1, text: "@version 1;\nresume { color: red; }\n" };
 		const parsed = resumeDto.getBySlug.output.parse({
 			id: "019e128d-0598-75d2-ae6a-771e2eb84614",
 			name: "Resume",
@@ -165,7 +165,7 @@ describe("resume DTO output validation", () => {
 		});
 
 		expect(parsed.stylesheetMode).toBe("semantic");
-		expect(JSON.stringify(parsed)).not.toContain("@rr-version");
+		expect(JSON.stringify(parsed)).not.toContain("@version");
 		expect(JSON.stringify(parsed)).not.toContain("stylesheetRevision");
 	});
 
@@ -183,8 +183,8 @@ describe("resume DTO output validation", () => {
 		};
 		const stylesheet = {
 			mode: "semantic" as const,
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 		};
 
 		expect(

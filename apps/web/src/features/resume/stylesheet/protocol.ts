@@ -6,14 +6,14 @@ import type {
 import type {
 	AuthoredPageContext,
 	BaseSettingsSnapshot,
-	RrssDiagnostic,
+	SemanticCssDiagnostic,
 	SemanticNode,
 	StyleProgram,
 } from "@reactive-resume/resume/stylesheet";
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
-import type { RrssColorToken } from "./color-tokens";
+import type { SemanticCssColorToken } from "./color-tokens";
 
-export type RrssEditorMetadata = {
+export type SemanticCssEditorMetadata = {
 	semanticTree: SemanticNode;
 	templateParts: readonly string[];
 };
@@ -36,8 +36,8 @@ export type CompileWorkerResponse = {
 	requestId: number;
 	editGeneration: number;
 	program: StyleProgram | null;
-	diagnostics: readonly RrssDiagnostic[];
-	colorTokens?: readonly RrssColorToken[];
+	diagnostics: readonly SemanticCssDiagnostic[];
+	colorTokens?: readonly SemanticCssColorToken[];
 };
 
 type PreflightLimits = PdfPreflightPageLimits & {

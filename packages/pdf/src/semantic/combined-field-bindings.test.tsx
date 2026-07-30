@@ -70,7 +70,7 @@ const fixture = (mode: "legacy" | "semantic", section: "experience" | "education
 	];
 	data.metadata.layout.pages = [{ fullWidth: true, main: [section], sidebar: [] }];
 	if (mode === "semantic") {
-		const stylesheet = { languageVersion: 1, text: `@rr-version 1; ${rule}` };
+		const stylesheet = { languageVersion: 1, text: `@version 1; ${rule}` };
 		data.metadata.stylesheet = { mode, source: stylesheet, applied: stylesheet };
 	}
 	return data;

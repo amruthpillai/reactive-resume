@@ -4,11 +4,11 @@ description: "Use Reactive Resume Semantic CSS to make safe, targeted, and porta
 ---
 
 Custom Styles let you make focused changes that are not available in the regular **Design**, **Typography**, **Layout**,
-**Page**, and **Picture** settings. They use Reactive Resume Semantic CSS (RRSS), a CSS-like language designed for
+**Page**, and **Picture** settings. They use Semantic CSS, a CSS-like language designed for
 resume PDFs.
 
 <Note>
-  RRSS styles the PDF output, not the browser interface. It cannot load fonts, images, scripts, or other resources, and
+  Semantic CSS styles the PDF output, not the browser interface. It cannot load fonts, images, scripts, or other resources, and
   it cannot create new resume content.
 </Note>
 
@@ -22,7 +22,7 @@ current rules remain active while you review it.
     Open the resume in the builder, select **Design**, then select **Custom Styles**.
   </Step>
   <Step title="Review the converted draft">
-    Check the preview and warnings below the editor. The draft starts with `@rr-version 1;`.
+    Check the preview and warnings below the editor. The draft starts with `@version 1;`.
   </Step>
   <Step title="Activate Semantic CSS">
     Select **Activate Semantic CSS** only after the preview matches the legacy result. Reactive Resume never applies both
@@ -34,9 +34,9 @@ current rules remain active while you review it.
 
 Open the resume you want to style, select **Design**, then select **Custom Styles**. Start with a complete stylesheet:
 
-<!-- RRSS-EXAMPLE:valid FIRST_CHANGE -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid FIRST_CHANGE -->
 ```css
-@rr-version 1;
+@version 1;
 
 section[type="experience"] > section-heading {
 	color: #0f766e;
@@ -44,7 +44,7 @@ section[type="experience"] > section-heading {
 }
 ```
 
-The first line tells Reactive Resume which language version the stylesheet uses. Keep `@rr-version 1;` at the start of
+The first line tells Reactive Resume which language version the stylesheet uses. Keep `@version 1;` at the start of
 every stylesheet.
 
 <Steps>
@@ -62,7 +62,7 @@ every stylesheet.
 
 ## Target the right part of your resume
 
-RRSS selectors describe resume content rather than a template's internal HTML. Selector and attribute names are
+Semantic CSS selectors describe resume content rather than a template's internal HTML. Selector and attribute names are
 lowercase and case-sensitive. Prefer semantic selectors when you want a style to work across resumes and templates.
 
 ### Start with the resume structure
@@ -119,13 +119,13 @@ Use attributes to make a rule specific without relying on a template layout.
 | `id` | Any semantic node when present | `section[id="projects"]` |
 | `role` | Any semantic node when present | `field[role~="secondary-text"]` |
 
-RRSS supports selector lists, descendant (` `), child (`>`), adjacent sibling (`+`), and general sibling (`~`)
+Semantic CSS supports selector lists, descendant (` `), child (`>`), adjacent sibling (`+`), and general sibling (`~`)
 combinators. It also supports `:root`, `:first-child`, `:last-child`, `:only-child`, `:is()`, `:where()`, `:not()`,
 `:nth-child()`, and `:nth-of-type()`.
 
-<!-- RRSS-EXAMPLE:valid TARGETING -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid TARGETING -->
 ```css
-@rr-version 1;
+@version 1;
 
 section[type="experience"] > section-heading {
 	border-bottom: 1pt solid #0f766e;
@@ -146,15 +146,15 @@ choice when you expect to copy the stylesheet to another resume.
 
 ## Reuse your builder settings
 
-RRSS exposes the resolved builder settings as read-only `--rr-*` variables. Define your own variables in `:root`, then
+Semantic CSS exposes the resolved builder settings as read-only `--resume-*` variables. Define your own variables in `:root`, then
 reuse the builder values instead of duplicating colors or dimensions.
 
-<!-- RRSS-EXAMPLE:valid BUILDER_VALUES -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid BUILDER_VALUES -->
 ```css
-@rr-version 1;
+@version 1;
 
 :root {
-	--accent: var(--rr-primary-color);
+	--accent: var(--resume-primary-color);
 	--rule: #cbd5e1;
 }
 
@@ -168,16 +168,16 @@ section-heading {
 ```
 
 Changing the primary color or related setting in the builder updates the corresponding variable automatically. Do not
-assign a value to a `--rr-*` variable; create an author variable such as `--accent` instead.
+assign a value to a `--resume-*` variable; create an author variable such as `--accent` instead.
 
 | Builder setting | Read-only variables |
 | --- | --- |
-| Colors | `--rr-primary-color`, `--rr-text-color`, `--rr-background-color` |
-| Typography | `--rr-body-font-size`, `--rr-body-line-height`, `--rr-heading-font-size`, `--rr-heading-line-height` |
-| Page and layout | `--rr-page-gap-x`, `--rr-page-gap-y`, `--rr-page-margin-x`, `--rr-page-margin-y`, `--rr-page-width`, `--rr-page-height`, `--rr-sidebar-width` |
-| Picture | `--rr-picture-size`, `--rr-picture-rotation`, `--rr-picture-aspect-ratio`, `--rr-picture-border-radius`, `--rr-picture-border-width`, `--rr-picture-border-color`, `--rr-picture-shadow-width`, `--rr-picture-shadow-color` |
+| Colors | `--resume-primary-color`, `--resume-text-color`, `--resume-background-color` |
+| Typography | `--resume-body-font-size`, `--resume-body-line-height`, `--resume-heading-font-size`, `--resume-heading-line-height` |
+| Page and layout | `--resume-page-gap-x`, `--resume-page-gap-y`, `--resume-page-margin-x`, `--resume-page-margin-y`, `--resume-page-width`, `--resume-page-height`, `--resume-sidebar-width` |
+| Picture | `--resume-picture-size`, `--resume-picture-rotation`, `--resume-picture-aspect-ratio`, `--resume-picture-border-radius`, `--resume-picture-border-width`, `--resume-picture-border-color`, `--resume-picture-shadow-width`, `--resume-picture-shadow-color` |
 
-Use `pt` for predictable PDF spacing and type sizes. RRSS also accepts `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`,
+Use `pt` for predictable PDF spacing and type sizes. Semantic CSS also accepts `px`, `in`, `mm`, `cm`, `%`, `vw`, `vh`, `em`,
 and `rem` where the property supports a length.
 
 ## Style common resume content
@@ -189,10 +189,10 @@ The most useful declarations usually fall into a few groups:
 | Typography | `color`, `font-size`, `font-style`, `font-weight`, `letter-spacing`, `line-height`, `text-align`, `text-decoration`, `text-transform` |
 | Spacing and layout | `margin`, `padding`, `gap`, `width`, `height`, `display`, `flex`, `flex-direction`, `justify-content`, `align-items`, `order` |
 | Visual treatment | `background-color`, `border`, `border-radius`, `opacity`, `transform` |
-| Picture treatment | `object-fit`, `object-position`, `-rr-shadow-color`, `-rr-shadow-width` |
-| PDF structure | `break-before`, `break-inside`, `orphans`, `widows`, `-rr-min-presence-ahead`, `size` |
+| Picture treatment | `object-fit`, `object-position`, `-resume-shadow-color`, `-resume-shadow-width` |
+| PDF structure | `break-before`, `break-inside`, `orphans`, `widows`, `-resume-min-presence-ahead`, `size` |
 
-Use `display: none` only to hide an existing semantic node. RRSS cannot add, remove, duplicate, or re-parent resume
+Use `display: none` only to hide an existing semantic node. Semantic CSS cannot add, remove, duplicate, or re-parent resume
 data.
 
 ### Style rich-text lists
@@ -200,16 +200,16 @@ data.
 `list-item` is the outer row that holds a marker and its content. Use it for row layout and spacing. Use `list-marker`
 for the bullet or number, and `list-item-content` for the text flow.
 
-<!-- RRSS-EXAMPLE:valid RICH_TEXT_LISTS -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid RICH_TEXT_LISTS -->
 ```css
-@rr-version 1;
+@version 1;
 
 rich-text list-item {
 	gap: 4pt;
 }
 
 list-marker {
-	color: var(--rr-primary-color);
+	color: var(--resume-primary-color);
 }
 
 list-item-content {
@@ -222,16 +222,16 @@ list-item-content {
 Named fields let you make a focused change without styling every item value. Use the selector only where that field
 exists in the selected resume and template.
 
-<!-- RRSS-EXAMPLE:valid ITEM_FIELDS -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid ITEM_FIELDS -->
 ```css
-@rr-version 1;
+@version 1;
 
 section[type="experience"] field[name="position"] {
 	font-weight: 600;
 }
 
 section[type="experience"] field[name="company"] {
-	color: var(--rr-primary-color);
+	color: var(--resume-primary-color);
 }
 ```
 
@@ -240,9 +240,9 @@ section[type="experience"] field[name="company"] {
 Template parts expose optional visual details that are not shared by every template. Always guard a template-part rule
 with `resume[template="..."]`; otherwise the selector may match nothing after a template change.
 
-<!-- RRSS-EXAMPLE:valid TEMPLATE_PART -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid TEMPLATE_PART -->
 ```css
-@rr-version 1;
+@version 1;
 
 resume[template="azurill"] template-part[name="timeline-line"] {
 	background-color: #94a3b8;
@@ -274,16 +274,16 @@ Kakuna, Lapras, and Onyx do not expose template-specific parts. Use shared seman
 Use structural declarations sparingly and review the exported PDF after each change. You can keep an item together,
 leave space before a section, or set a custom page size.
 
-<!-- RRSS-EXAMPLE:valid PDF_LAYOUT -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid PDF_LAYOUT -->
 ```css
-@rr-version 1;
+@version 1;
 
 page {
 	size: 210mm 297mm;
 }
 
 section {
-	-rr-min-presence-ahead: 72pt;
+	-resume-min-presence-ahead: 72pt;
 }
 
 item {
@@ -294,9 +294,9 @@ item {
 `size` applies only to `page` and must be outside `@media`. PDF media queries use the authored PDF dimensions, not the
 browser viewport.
 
-<!-- RRSS-EXAMPLE:valid PDF_MEDIA_QUERY -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid PDF_MEDIA_QUERY -->
 ```css
-@rr-version 1;
+@version 1;
 
 @media (max-width: 600pt) {
 	region[placement="sidebar"] {
@@ -341,6 +341,6 @@ starting point. Exact IDs and template parts are intentionally specific to a res
 4. Replace or remove exact IDs and template-part rules that do not apply.
 5. Wait for **Applied**, then compare the preview and exported PDF.
 
-RRSS does not support classes, pseudo-elements, CSS Grid, arbitrary at-rules, `@import`, `@font-face`, `url()`,
+Semantic CSS does not support classes, pseudo-elements, CSS Grid, arbitrary at-rules, `@import`, `@font-face`, `url()`,
 browser APIs, animations, filters, gradients, general box shadows, or external assets. Use the normal builder settings
 when you need a font, image, or broader layout change.

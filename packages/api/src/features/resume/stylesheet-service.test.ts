@@ -12,19 +12,19 @@ vi.mock("@reactive-resume/db/client", () => ({ db: {}, getPool: vi.fn() }));
 
 const validSource = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nsection { color: #112233; }\n",
+	text: "@version 1;\nsection { color: #112233; }\n",
 } satisfies StylesheetSource;
 const invalidSource = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nsection {",
+	text: "@version 1;\nsection {",
 } satisfies StylesheetSource;
 const previousSource = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nsection { color: #445566; }\n",
+	text: "@version 1;\nsection { color: #445566; }\n",
 } satisfies StylesheetSource;
 const previousApplied = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nsection { color: #778899; }\n",
+	text: "@version 1;\nsection { color: #778899; }\n",
 } satisfies StylesheetSource;
 const previousStylesheet = {
 	mode: "semantic",
@@ -124,7 +124,7 @@ const createHarness = (options: HarnessOptions = {}) => {
 		},
 		convertLegacy: () => {
 			callOrder.push("convertLegacy");
-			return { languageVersion: 1, text: "@rr-version 1;\n" };
+			return { languageVersion: 1, text: "@version 1;\n" };
 		},
 		compile,
 		preflight:
@@ -447,7 +447,7 @@ describe("stylesheet service", () => {
 	});
 
 	it("validates and preflights restored applied source independently from invalid editable source", async () => {
-		const restoredApplied = { ...validSource, text: "@rr-version 1;\nresume { color: #abcdef; }\n" };
+		const restoredApplied = { ...validSource, text: "@version 1;\nresume { color: #abcdef; }\n" };
 		const compile = vi.fn((source: StylesheetSource) =>
 			source === restoredApplied ? successfulCompile : failedCompile,
 		);
@@ -508,7 +508,7 @@ describe("stylesheet service", () => {
 					renderDataVersion: 9,
 					stylesheet: expect.objectContaining({
 						mode: "legacy",
-						source: { languageVersion: 1, text: "@rr-version 1;\n" },
+						source: { languageVersion: 1, text: "@version 1;\n" },
 					}),
 				}),
 			},

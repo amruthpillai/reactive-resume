@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import type { RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Transaction } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
@@ -9,9 +9,9 @@ import { collectCompiledColorTokens } from "./color-tokens";
 import {
 	compositionAwareDocumentListener,
 	copySourceToClipboard,
-	createRrssEditorExtensions,
-	getRrssCompletionLabels,
-	getRrssHoverDocumentation,
+	createSemanticCssEditorExtensions,
+	getSemanticCssCompletionLabels,
+	getSemanticCssHoverDocumentation,
 	mapCompilerDiagnostics,
 } from "./editor-extensions";
 
@@ -61,14 +61,14 @@ afterEach(() => {
 	for (const view of views.splice(0)) view.destroy();
 });
 
-describe("RRSS editor extensions", () => {
-	it("uses only RRSS registries and the current resume for completion", async () => {
-		const selectorLabels = await getRrssCompletionLabels("", 0, metadata);
-		const propertyLabels = await getRrssCompletionLabels("section {\n\tco", 13, metadata);
+describe("Semantic CSS editor extensions", () => {
+	it("uses only Semantic CSS registries and the current resume for completion", async () => {
+		const selectorLabels = await getSemanticCssCompletionLabels("", 0, metadata);
+		const propertyLabels = await getSemanticCssCompletionLabels("section {\n\tco", 13, metadata);
 		const variableSource = "resume { --brand-accent: #f00; color: var(--br";
-		const variableLabels = await getRrssCompletionLabels(variableSource, variableSource.length, metadata);
-		const systemLabels = await getRrssCompletionLabels("--rr-", 5, metadata);
-		const directiveLabels = await getRrssCompletionLabels("@", 1, metadata);
+		const variableLabels = await getSemanticCssCompletionLabels(variableSource, variableSource.length, metadata);
+		const systemLabels = await getSemanticCssCompletionLabels("--resume-", 5, metadata);
+		const directiveLabels = await getSemanticCssCompletionLabels("@", 1, metadata);
 
 		expect(selectorLabels).toEqual(
 			expect.arrayContaining([
@@ -81,13 +81,13 @@ describe("RRSS editor extensions", () => {
 			]),
 		);
 		expect(propertyLabels).toContain("color");
-		expect(propertyLabels).toContain("-rr-fixed");
+		expect(propertyLabels).toContain("-resume-fixed");
 		expect(propertyLabels).not.toContain("cursor");
 		expect(propertyLabels).not.toContain("font-family");
-		expect(variableLabels).toEqual(expect.arrayContaining(["--brand-accent", "--rr-primary-color"]));
-		expect(systemLabels).toEqual(expect.arrayContaining(["--rr-primary-color", "--rr-sidebar-width"]));
-		expect(systemLabels).not.toContain("--rr-font-family");
-		expect(directiveLabels).toEqual(expect.arrayContaining(["@media", "@rr-version 1;"]));
+		expect(variableLabels).toEqual(expect.arrayContaining(["--brand-accent", "--resume-primary-color"]));
+		expect(systemLabels).toEqual(expect.arrayContaining(["--resume-primary-color", "--resume-sidebar-width"]));
+		expect(systemLabels).not.toContain("--resume-font-family");
+		expect(directiveLabels).toEqual(expect.arrayContaining(["@media", "@version 1;"]));
 	});
 
 	it("offers only the current property's registered compiler vocabulary", () => {
@@ -95,9 +95,9 @@ describe("RRSS editor extensions", () => {
 		const borderStyleSource = "section { border-style: d";
 		const fontSizeSource = "section { font-size: 1";
 
-		const displayLabels = getRrssCompletionLabels(displaySource, displaySource.length, metadata);
-		const borderStyleLabels = getRrssCompletionLabels(borderStyleSource, borderStyleSource.length, metadata);
-		const fontSizeLabels = getRrssCompletionLabels(fontSizeSource, fontSizeSource.length, metadata);
+		const displayLabels = getSemanticCssCompletionLabels(displaySource, displaySource.length, metadata);
+		const borderStyleLabels = getSemanticCssCompletionLabels(borderStyleSource, borderStyleSource.length, metadata);
+		const fontSizeLabels = getSemanticCssCompletionLabels(fontSizeSource, fontSizeSource.length, metadata);
 
 		expect(displayLabels).toEqual(expect.arrayContaining(["flex", "none", "inherit"]));
 		expect(displayLabels).not.toEqual(expect.arrayContaining(["portrait", "dashed", "pt"]));
@@ -109,7 +109,7 @@ describe("RRSS editor extensions", () => {
 
 	it.each(borderShorthands)("offers complete %s shorthand values instead of bare units", (property) => {
 		const source = `section { ${property}: `;
-		const labels = getRrssCompletionLabels(source, source.length, metadata);
+		const labels = getSemanticCssCompletionLabels(source, source.length, metadata);
 
 		expect(labels).toEqual(expect.arrayContaining(["1pt dotted", "1pt dashed", "1pt solid"]));
 		expect(labels).not.toEqual(expect.arrayContaining(["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"]));
@@ -133,7 +133,7 @@ describe("RRSS editor extensions", () => {
 			templateParts: ['timeline"marker\n'],
 		} as const;
 
-		const labels = getRrssCompletionLabels("", 0, unsafeMetadata);
+		const labels = getSemanticCssCompletionLabels("", 0, unsafeMetadata);
 
 		expect(labels).toEqual(
 			expect.arrayContaining([
@@ -147,19 +147,23 @@ describe("RRSS editor extensions", () => {
 	});
 
 	it("builds hover text from the same registries", () => {
-		expect(getRrssHoverDocumentation("section", metadata)).toMatch(/semantic element.*placement.*featured-summary/i);
-		const colorDocumentation = getRrssHoverDocumentation("color", metadata);
+		expect(getSemanticCssHoverDocumentation("section", metadata)).toMatch(
+			/semantic element.*placement.*featured-summary/i,
+		);
+		const colorDocumentation = getSemanticCssHoverDocumentation("color", metadata);
 		expect(colorDocumentation).toMatch(/property.*inherited.*field/i);
 		expect(colorDocumentation?.match(/section-heading/g)).toHaveLength(1);
-		expect(getRrssHoverDocumentation("--rr-primary-color", metadata)).toMatch(/read-only.*builder primary color/i);
-		expect(getRrssHoverDocumentation("#section-experience", metadata)).toMatch(/current resume.*section/i);
-		expect(getRrssHoverDocumentation('template-part[name="timeline-line"]', metadata)).toMatch(
+		expect(getSemanticCssHoverDocumentation("--resume-primary-color", metadata)).toMatch(
+			/read-only.*builder primary color/i,
+		);
+		expect(getSemanticCssHoverDocumentation("#section-experience", metadata)).toMatch(/current resume.*section/i);
+		expect(getSemanticCssHoverDocumentation('template-part[name="timeline-line"]', metadata)).toMatch(
 			/current template part/i,
 		);
 	});
 
 	it("maps compiler offsets and only decorates compiler-confirmed color values", () => {
-		const source = "@rr-version 1;\nsection { color: #ff0000; background-color: rgb(0 0 0); }\n";
+		const source = "@version 1;\nsection { color: #ff0000; background-color: rgb(0 0 0); }\n";
 		const compiled = compileStylesheet({ languageVersion: 1, text: source });
 		expect(compiled.program).not.toBeNull();
 		const tokens = collectCompiledColorTokens(source, compiled.program);
@@ -172,7 +176,7 @@ describe("RRSS editor extensions", () => {
 			},
 		]);
 
-		const diagnostic: RrssDiagnostic = {
+		const diagnostic: SemanticCssDiagnostic = {
 			code: "INVALID_VALUE",
 			severity: "error",
 			message: "Bad value",
@@ -188,7 +192,7 @@ describe("RRSS editor extensions", () => {
 		const selected = vi.fn();
 		const view = new EditorView({
 			doc: source,
-			extensions: createRrssEditorExtensions({
+			extensions: createSemanticCssEditorExtensions({
 				metadata,
 				diagnostics: [],
 				colorTokens: tokens,
@@ -196,7 +200,7 @@ describe("RRSS editor extensions", () => {
 			}),
 		});
 		views.push(view);
-		const swatches = view.dom.querySelectorAll<HTMLButtonElement>(".rrss-color-swatch");
+		const swatches = view.dom.querySelectorAll<HTMLButtonElement>(".semantic-css-color-swatch");
 		expect(swatches).toHaveLength(2);
 		swatches[0]?.click();
 		expect(selected).toHaveBeenCalledWith(tokens[0], expect.any(DOMRect));
@@ -205,7 +209,7 @@ describe("RRSS editor extensions", () => {
 	it("preserves exact clipboard text and emits one change for an IME composition", async () => {
 		const writeText = vi.fn().mockResolvedValue(undefined);
 		Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
-		const source = "@rr-version 1;\n/*  exact spacing  */\n";
+		const source = "@version 1;\n/*  exact spacing  */\n";
 		await copySourceToClipboard(source);
 		expect(writeText).toHaveBeenCalledWith(source);
 
@@ -235,7 +239,7 @@ describe("RRSS editor extensions", () => {
 	it("opens the built-in search and replace panel", () => {
 		const view = new EditorView({
 			doc: "section { color: red; }",
-			extensions: createRrssEditorExtensions({
+			extensions: createSemanticCssEditorExtensions({
 				metadata,
 				diagnostics: [],
 				colorTokens: [],

@@ -1,5 +1,5 @@
 import type { CssLocation, CssNode } from "css-tree";
-import type { ParsedAtRule, ParsedStylesheet, RrssDiagnostic, SourceRange } from "./types";
+import type { ParsedAtRule, ParsedStylesheet, SemanticCssDiagnostic, SourceRange } from "./types";
 import * as csstree from "css-tree";
 import { createDiagnostic, EMPTY_SOURCE_RANGE } from "./diagnostics";
 
@@ -30,7 +30,7 @@ function topLevelNodes(stylesheet: CssNode): CssNode[] {
 }
 
 export function parseStylesheet(source: string): ParsedStylesheet {
-	const diagnostics: RrssDiagnostic[] = [];
+	const diagnostics: SemanticCssDiagnostic[] = [];
 	let ast: CssNode | null = null;
 
 	try {

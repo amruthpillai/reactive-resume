@@ -22,8 +22,8 @@ const resumeMock = vi.hoisted(() => ({
 	stylesheet: {
 		resumeId: "r1" as string | undefined,
 		mode: "semantic" as "legacy" | "semantic",
-		source: { languageVersion: 1, text: "@rr-version 1;\nname {" },
-		applied: { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" },
+		source: { languageVersion: 1, text: "@version 1;\nname {" },
+		applied: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
 		revision: 42,
 		renderDataVersion: 7,
 	},
@@ -65,8 +65,8 @@ beforeEach(() => {
 	resumeMock.stylesheet = {
 		resumeId: "r1",
 		mode: "semantic",
-		source: { languageVersion: 1, text: "@rr-version 1;\nname {" },
-		applied: { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" },
+		source: { languageVersion: 1, text: "@version 1;\nname {" },
+		applied: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
 		revision: 42,
 		renderDataVersion: 7,
 	};

@@ -53,7 +53,7 @@ const buildFixture = (template: Template, rule = ""): ResumeData => {
 			? [{ fullWidth: false, main: [], sidebar: ["skills"] }]
 			: [{ fullWidth: true, main: ["skills"], sidebar: [] }];
 
-	const stylesheet = { languageVersion: 1, text: `@rr-version 1; ${rule}` };
+	const stylesheet = { languageVersion: 1, text: `@version 1; ${rule}` };
 	data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
 	return data;
 };
@@ -84,7 +84,7 @@ const finalOnyxCompanyStyle = async (keyword?: "inherit" | "initial" | "revert" 
 		},
 	];
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["experience"], sidebar: [] }];
-	const text = `@rr-version 1; ${
+	const text = `@version 1; ${
 		keyword ? `section[type="experience"] field[name="company"] { font-weight: ${keyword}; }` : ""
 	}`;
 	const stylesheet = { languageVersion: 1, text };

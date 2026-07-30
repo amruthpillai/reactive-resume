@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { EditorView } from "@codemirror/view";
@@ -23,8 +23,8 @@ vi.mock("@/features/theme/provider", () => ({
 	useTheme: () => ({ theme: "light" }),
 }));
 
-const error: RrssDiagnostic = {
-	code: "RRSS_UNKNOWN_PROPERTY",
+const error: SemanticCssDiagnostic = {
+	code: "SEMANTIC_CSS_UNKNOWN_PROPERTY",
 	severity: "error",
 	message: "Unknown property",
 	range: {
@@ -91,7 +91,7 @@ describe("StylesheetCodeEditor", () => {
 		};
 		const { container, rerender, unmount } = render(
 			<div style={{ height: 200 }}>
-				<StylesheetCodeEditor value="@rr-version 1;\n" {...props} />
+				<StylesheetCodeEditor value="@version 1;\n" {...props} />
 			</div>,
 		);
 
@@ -101,7 +101,7 @@ describe("StylesheetCodeEditor", () => {
 
 		rerender(
 			<div style={{ height: 200 }}>
-				<StylesheetCodeEditor value={"@rr-version 1;\nsection { color: red; }\n"} {...props} />
+				<StylesheetCodeEditor value={"@version 1;\nsection { color: red; }\n"} {...props} />
 			</div>,
 		);
 
@@ -111,7 +111,7 @@ describe("StylesheetCodeEditor", () => {
 		rerender(
 			<div style={{ height: 200 }}>
 				<StylesheetCodeEditor
-					value={"@rr-version 1;\nsection { color: red; }\n"}
+					value={"@version 1;\nsection { color: red; }\n"}
 					{...props}
 					diagnostics={[error]}
 					theme="dark"
@@ -149,13 +149,13 @@ describe("StylesheetCodeEditor", () => {
 				onRedo={vi.fn()}
 			/>,
 		);
-		const swatches = container.querySelectorAll<HTMLButtonElement>(".rrss-color-swatch");
+		const swatches = container.querySelectorAll<HTMLButtonElement>(".semantic-css-color-swatch");
 		expect(swatches).toHaveLength(2);
 
 		swatches[0]?.click();
-		await waitFor(() => expect(container.querySelectorAll("[data-rrss-color-picker-trigger]")).toHaveLength(1));
+		await waitFor(() => expect(container.querySelectorAll("[data-semantic-css-color-picker-trigger]")).toHaveLength(1));
 		swatches[1]?.click();
-		await waitFor(() => expect(container.querySelectorAll("[data-rrss-color-picker-trigger]")).toHaveLength(1));
+		await waitFor(() => expect(container.querySelectorAll("[data-semantic-css-color-picker-trigger]")).toHaveLength(1));
 	});
 });
 
@@ -177,8 +177,8 @@ describe("StylesheetEditorShell", () => {
 		media.mobile = false;
 		useStylesheetStore.setState({
 			mode: "legacy",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 			diagnostics: [],
 			status: "idle",
 			canUndo: true,
@@ -209,8 +209,8 @@ describe("StylesheetEditorShell", () => {
 		media.mobile = true;
 		useStylesheetStore.setState({
 			mode: "legacy",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 			diagnostics: [{ ...error, severity: "warning" }],
 			status: "idle",
 			restoreLocked: false,

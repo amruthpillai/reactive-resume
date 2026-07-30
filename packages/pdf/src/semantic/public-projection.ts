@@ -7,10 +7,10 @@ import {
 	PROPERTY_REGISTRY_V1,
 	projectPublicRenderData,
 	SEMANTIC_REGISTRY_V1,
-	SUPPORTED_RRSS_VERSIONS,
+	SUPPORTED_SEMANTIC_CSS_VERSIONS,
 	TEMPLATE_PART_CHILD_KINDS_V1,
 } from "@reactive-resume/resume/stylesheet";
-import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
+import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { resolveResumeRuntime, resolveStylesheetMode } from "./resolve";
 import { getTemplateSemanticRegistryFingerprintInput } from "./template-manifest";
 
@@ -222,7 +222,7 @@ export const getPublicStyleProjectionFingerprints = getFingerprints;
 
 const dataForPublicProjection = (data: ResumeData, languageVersion: number): ResumeData => {
 	if (data.metadata.stylesheet?.mode === "semantic") return data;
-	const source = { languageVersion, text: EMPTY_RRSS_SOURCE };
+	const source = { languageVersion, text: EMPTY_SEMANTIC_CSS_SOURCE };
 	return {
 		...data,
 		metadata: {
@@ -285,7 +285,7 @@ export async function validatePublicStyleProjection(
 	projection: PublicStyleProjection,
 ): Promise<boolean> {
 	if (!isProjectionShape(projection)) return false;
-	if (!SUPPORTED_RRSS_VERSIONS.includes(projection.languageVersion as 1)) return false;
+	if (!SUPPORTED_SEMANTIC_CSS_VERSIONS.includes(projection.languageVersion as 1)) return false;
 	if (
 		data.metadata.stylesheet?.mode === "semantic" &&
 		projection.languageVersion !== data.metadata.stylesheet.applied.languageVersion

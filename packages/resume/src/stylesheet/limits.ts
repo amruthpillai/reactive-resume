@@ -1,4 +1,4 @@
-export const RRSS_LIMITS_V1 = Object.freeze({
+export const SEMANTIC_CSS_LIMITS_V1 = Object.freeze({
 	maxSourceBytes: 128 * 1024,
 	maxRules: 1_024,
 	maxDeclarations: 8_192,

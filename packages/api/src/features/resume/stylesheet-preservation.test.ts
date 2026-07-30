@@ -7,8 +7,8 @@ const cloneData = (): ResumeData => structuredClone(defaultResumeData);
 
 const semanticStylesheet = {
 	mode: "semantic",
-	source: { languageVersion: 1, text: "@rr-version 1;\nresume { color: red; }\n" },
-	applied: { languageVersion: 1, text: "@rr-version 1;\nresume { color: red; }\n" },
+	source: { languageVersion: 1, text: "@version 1;\nresume { color: red; }\n" },
+	applied: { languageVersion: 1, text: "@version 1;\nresume { color: red; }\n" },
 } as const;
 
 describe("preserveServerStylesheet", () => {
@@ -28,8 +28,8 @@ describe("preserveServerStylesheet", () => {
 		const clientData = cloneData();
 		clientData.metadata.stylesheet = {
 			mode: "legacy",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 		};
 
 		expect(preserveServerStylesheet(serverData, clientData).metadata.stylesheet).toEqual(semanticStylesheet);
@@ -64,8 +64,8 @@ describe("hasRenderDataChanged", () => {
 		const changedStylesheet = structuredClone(before);
 		changedStylesheet.metadata.stylesheet = {
 			...semanticStylesheet,
-			source: { languageVersion: 1, text: "@rr-version 1;\nresume { color: blue; }\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\nresume { color: blue; }\n" },
+			source: { languageVersion: 1, text: "@version 1;\nresume { color: blue; }\n" },
+			applied: { languageVersion: 1, text: "@version 1;\nresume { color: blue; }\n" },
 		};
 
 		expect(hasRenderDataChanged(before, changedNotes)).toBe(false);
@@ -98,8 +98,8 @@ describe("createResumeData", () => {
 	it("seeds empty semantic source only for the default-enabled cohort", () => {
 		expect(createResumeData({ semanticCssDefault: true }).metadata.stylesheet).toEqual({
 			mode: "semantic",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 		});
 		expect(createResumeData({ semanticCssDefault: false }).metadata.stylesheet).toBeUndefined();
 	});

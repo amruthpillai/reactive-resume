@@ -27,7 +27,7 @@ afterAll(() => {
 
 const validStylesheet = {
 	languageVersion: 1,
-	text: "@rr-version 1;",
+	text: "@version 1;",
 } as const;
 
 const pageLimits = {
@@ -129,7 +129,7 @@ describe("renderPreflightPdf", () => {
 			{
 				data: defaultResumeData,
 				template: defaultResumeData.metadata.template,
-				stylesheet: { languageVersion: 1, text: "@rr-version 1; page { color: ; }" },
+				stylesheet: { languageVersion: 1, text: "@version 1; page { color: ; }" },
 			},
 			pageLimits,
 		);
@@ -190,7 +190,7 @@ describe("renderPreflightPdf", () => {
 			{
 				data: defaultResumeData,
 				template: defaultResumeData.metadata.template,
-				stylesheet: { languageVersion: 1, text: `@rr-version 1; page { size: ${size}; }` },
+				stylesheet: { languageVersion: 1, text: `@version 1; page { size: ${size}; }` },
 			},
 			pageLimits,
 		);

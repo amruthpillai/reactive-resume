@@ -367,7 +367,7 @@ primitive props rather than style properties:
 ```css
 section[type="experience"] {
   break-inside: avoid;
-  -rr-min-presence-ahead: 24pt;
+  -resume-min-presence-ahead: 24pt;
 }
 
 page {
@@ -375,7 +375,7 @@ page {
 }
 
 header {
-  -rr-fixed: true;
+  -resume-fixed: true;
 }
 ```
 
@@ -386,8 +386,8 @@ Supported structural declarations include:
 - `break-before: page`.
 - `break-inside: avoid`.
 - `orphans` and `widows`.
-- `-rr-fixed`.
-- `-rr-min-presence-ahead`.
+- `-resume-fixed`.
+- `-resume-min-presence-ahead`.
 - `size` on page nodes.
 
 Structural declarations are resolved while preparing semantic child descriptors, before the React component tree is

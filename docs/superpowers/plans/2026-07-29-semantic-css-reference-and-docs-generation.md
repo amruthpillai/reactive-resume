@@ -1,10 +1,10 @@
-# RRSS Author Reference and Unified Documentation Generation Implementation Plan
+# Semantic CSS Author Reference and Unified Documentation Generation Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Publish a canonical author-facing RRSS language reference, link it from Custom Styles, and make `pnpm docs:gen` regenerate every RRSS, Resume JSON Schema, and OpenAPI documentation artifact.
+**Goal:** Publish a canonical author-facing Semantic CSS language reference, link it from Custom Styles, and make `pnpm docs:gen` regenerate every Semantic CSS, Resume JSON Schema, and OpenAPI documentation artifact.
 
-**Architecture:** Keep runtime registries and PDF template manifests authoritative, adding only the missing structured metadata needed for documentation. A tooling-owned generator updates RRSS and Resume JSON Schema Markdown from those sources, while a server-owned generator reuses the runtime OpenAPI builder for `docs/spec.json`; the root command runs both. Generated Markdown is marker-delimited, deterministic, and tested against the committed artifacts.
+**Architecture:** Keep runtime registries and PDF template manifests authoritative, adding only the missing structured metadata needed for documentation. A tooling-owned generator updates Semantic CSS and Resume JSON Schema Markdown from those sources, while a server-owned generator reuses the runtime OpenAPI builder for `docs/spec.json`; the root command runs both. Generated Markdown is marker-delimited, deterministic, and tested against the committed artifacts.
 
 **Tech Stack:** TypeScript, pnpm workspaces, Zod 4 JSON Schema conversion, oRPC OpenAPI, Vitest, React 19, Lingui, Mintlify MDX.
 
@@ -16,7 +16,7 @@
 - `pnpm docs:gen` regenerates `docs/guides/semantic-css-reference.mdx`, `skills/resume-builder/references/schema.md`, `docs/guides/json-resume-schema.mdx`, and `docs/spec.json`.
 - The checked-in OpenAPI document uses `https://rxresu.me/api/openapi` and the root package version.
 - Runtime `/schema.json`, the skill schema reference, and the JSON schema guide use one canonical input-side JSON Schema created from `resumeDataSchema`.
-- Complete RRSS examples marked as valid must compile; selected invalid examples must emit their documented code.
+- Complete Semantic CSS examples marked as valid must compile; selected invalid examples must emit their documented code.
 - Preserve distinct `list-item` row, `list-item-content`, and `list-marker` author semantics.
 - Do not add a shared docs-link component, URL registry, documentation playground, or contributor/compiler architecture page.
 - Do not add a general file-transaction framework; compute each generator's complete output set before its first write.
@@ -36,7 +36,7 @@
 - Modify `apps/server/src/openapi/handler.ts`: delegate spec generation while retaining request handling.
 - Modify `apps/server/package.json`: expose the server-side docs generation command.
 
-### RRSS reference metadata
+### Semantic CSS reference metadata
 
 - Modify `packages/resume/src/stylesheet/diagnostics.ts`: add the typed compiler diagnostic catalog.
 - Modify `packages/resume/src/stylesheet/values.ts`: constrain the internal diagnostic helper to catalog codes.
@@ -55,14 +55,14 @@
 ### Documentation generation and content
 
 - Modify `tooling/package.json`: add schema/PDF workspace dependencies and a package-local `docs:gen` script.
-- Modify `tooling/semantic-css/generate-reference.ts`: render all RRSS and Resume JSON Schema outputs.
+- Modify `tooling/semantic-css/generate-reference.ts`: render all Semantic CSS and Resume JSON Schema outputs.
 - Modify `tooling/semantic-css/generate-reference.test.ts`: verify markers, determinism, manifest coverage, examples, and committed output synchronization.
 - Modify `package.json`: replace `docs:semantic-css` with the root `docs:gen` orchestration.
-- Rewrite `docs/guides/semantic-css-reference.mdx`: the author-facing RRSS reference with generated sections and recipes.
+- Rewrite `docs/guides/semantic-css-reference.mdx`: the author-facing Semantic CSS reference with generated sections and recipes.
 - Modify `docs/guides/json-resume-schema.mdx`: replace the hand-copied schema with one generated block.
 - Regenerate `skills/resume-builder/references/schema.md`: compact field-path reference for AI authors.
 - Regenerate `docs/spec.json`: current version and production server URL.
-- Modify `docs/docs.json`: add the RRSS reference after Using Custom Styles.
+- Modify `docs/docs.json`: add the Semantic CSS reference after Using Custom Styles.
 
 ### Custom Styles hint
 
@@ -333,7 +333,7 @@ git commit -m "refactor: share OpenAPI documentation generator"
 
 ---
 
-### Task 3: Structured RRSS Reference Metadata
+### Task 3: Structured Semantic CSS Reference Metadata
 
 **Files:**
 - Modify: `packages/resume/src/stylesheet/diagnostics.ts`
@@ -350,7 +350,7 @@ git commit -m "refactor: share OpenAPI documentation generator"
 - Modify: `apps/server/src/services/stylesheet-preflight.ts`
 
 **Interfaces:**
-- Produces: `RRSS_DIAGNOSTIC_CATALOG_V1`, keyed by every compiler diagnostic code.
+- Produces: `SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1`, keyed by every compiler diagnostic code.
 - Produces: `attributeValues?: Readonly<Record<string, readonly string[]>>` on semantic definitions.
 - Produces: `PDF_PREFLIGHT_DIAGNOSTIC_CATALOG`, keyed by every `PdfPreflightFailureCode`, without importing the PDF renderer.
 - Produces: `STYLESHEET_PREFLIGHT_LIMITS`, shared by docs and the server runner.
@@ -464,36 +464,36 @@ Define:
 
 ```ts
 type DiagnosticReference = {
-	severity: RrssDiagnostic["severity"];
+	severity: SemanticCssDiagnostic["severity"];
 	meaning: string;
 	action: string;
 };
 
-export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
+export const SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1 = {
 	MISSING_VERSION_DIRECTIVE: {
 		severity: "warning",
-		meaning: "The stylesheet omitted @rr-version.",
-		action: "Add @rr-version 1; as the first statement.",
+		meaning: "The stylesheet omitted @version.",
+		action: "Add @version 1; as the first statement.",
 	},
-	DUPLICATE_RR_VERSION_DIRECTIVE: {
+	DUPLICATE_VERSION_DIRECTIVE: {
 		severity: "error",
-		meaning: "More than one @rr-version directive was found.",
+		meaning: "More than one @version directive was found.",
 		action: "Keep exactly one version directive.",
 	},
-	INVALID_RR_VERSION: {
+	INVALID_VERSION: {
 		severity: "error",
 		meaning: "The version directive is not one positive integer without a block.",
-		action: "Use @rr-version 1;.",
+		action: "Use @version 1;.",
 	},
-	RR_VERSION_MISMATCH: {
+	VERSION_MISMATCH: {
 		severity: "error",
 		meaning: "The directive and stored language version disagree.",
 		action: "Set both to version 1.",
 	},
-	UNSUPPORTED_RR_VERSION: {
+	UNSUPPORTED_VERSION: {
 		severity: "error",
-		meaning: "The requested RRSS version is not implemented.",
-		action: "Use @rr-version 1;.",
+		meaning: "The requested Semantic CSS version is not implemented.",
+		action: "Use @version 1;.",
 	},
 	CSS_PARSE_ERROR: {
 		severity: "error",
@@ -503,7 +503,7 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	CSS_RAW_SYNTAX: {
 		severity: "error",
 		meaning: "The parser encountered unsupported raw CSS syntax.",
-		action: "Rewrite the declaration or selector using documented RRSS syntax.",
+		action: "Rewrite the declaration or selector using documented Semantic CSS syntax.",
 	},
 	FORBIDDEN_AT_RULE: {
 		severity: "error",
@@ -512,13 +512,13 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	},
 	UNSUPPORTED_AT_RULE: {
 		severity: "error",
-		meaning: "The at-rule is not part of RRSS version 1.",
-		action: "Use only @rr-version and documented @media queries.",
+		meaning: "The at-rule is not part of Semantic CSS version 1.",
+		action: "Use only @version and documented @media queries.",
 	},
 	INVALID_MEDIA_QUERY: {
 		severity: "error",
 		meaning: "The PDF dimension query is malformed or unsupported.",
-		action: "Use width, min-width, max-width, height, min-height, or max-height with an RRSS length.",
+		action: "Use width, min-width, max-width, height, min-height, or max-height with a Semantic CSS length.",
 	},
 	MEDIA_PAGE_SIZE: {
 		severity: "error",
@@ -528,16 +528,16 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	INVALID_SELECTOR: {
 		severity: "error",
 		meaning: "The selector uses unsupported syntax or exceeds selector limits.",
-		action: "Rewrite it using documented RRSS selectors and combinators.",
+		action: "Rewrite it using documented Semantic CSS selectors and combinators.",
 	},
 	UNSUPPORTED_PROPERTY: {
 		severity: "error",
-		meaning: "The property is not in the RRSS property registry.",
+		meaning: "The property is not in the Semantic CSS property registry.",
 		action: "Choose a property from the property reference.",
 	},
 	SYSTEM_VARIABLE_READONLY: {
 		severity: "error",
-		meaning: "An author attempted to assign a reserved --rr-* variable.",
+		meaning: "An author attempted to assign a reserved --resume-* variable.",
 		action: "Read the system variable or rename the author variable.",
 	},
 	FORBIDDEN_CSS_VALUE: {
@@ -577,15 +577,15 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	},
 	RESOURCE_LIMIT: {
 		severity: "error",
-		meaning: "Compilation, matching, values, variables, or semantic nodes exceeded a bounded RRSS limit.",
+		meaning: "Compilation, matching, values, variables, or semantic nodes exceeded a bounded Semantic CSS limit.",
 		action: "Reduce stylesheet or resume complexity.",
 	},
 } as const satisfies Readonly<Record<string, DiagnosticReference>>;
 
-export type RrssCompilerDiagnosticCode = keyof typeof RRSS_DIAGNOSTIC_CATALOG_V1;
+export type SemanticCssCompilerDiagnosticCode = keyof typeof SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1;
 ```
 
-Change `createDiagnostic` and the private `values.ts` helper to accept `RrssCompilerDiagnosticCode`. Export the catalog through `@reactive-resume/resume/stylesheet`.
+Change `createDiagnostic` and the private `values.ts` helper to accept `SemanticCssCompilerDiagnosticCode`. Export the catalog through `@reactive-resume/resume/stylesheet`.
 
 - [ ] **Step 5: Add exhaustive PDF preflight metadata and shared limits**
 
@@ -595,7 +595,7 @@ Create `preflight-reference.ts` so documentation generation does not load React 
 export const PDF_PREFLIGHT_DIAGNOSTIC_CATALOG = {
 	STYLESHEET_PREFLIGHT_INVALID: {
 		meaning: "The stylesheet has compiler or semantic errors.",
-		action: "Fix the accompanying RRSS diagnostics.",
+		action: "Fix the accompanying Semantic CSS diagnostics.",
 	},
 	STYLESHEET_PREFLIGHT_PAGE_SIZE_LIMIT: {
 		meaning: "An authored page exceeds the PDF dimension or area budget.",
@@ -688,12 +688,12 @@ Stage only the task's hunks, especially in already-modified PDF files:
 git add -p packages/resume/src/stylesheet packages/pdf/src apps/server/src/services/stylesheet-preflight.ts packages/pdf/package.json
 git diff --cached --check
 git diff --cached
-git commit -m "feat: expose RRSS reference metadata"
+git commit -m "feat: expose Semantic CSS reference metadata"
 ```
 
 ---
 
-### Task 4: Unified RRSS and Resume Schema Markdown Generator
+### Task 4: Unified Semantic CSS and Resume Schema Markdown Generator
 
 **Files:**
 - Modify: `tooling/package.json`
@@ -703,7 +703,7 @@ git commit -m "feat: expose RRSS reference metadata"
 - Modify: `docs/guides/json-resume-schema.mdx`
 
 **Interfaces:**
-- Consumes: canonical Resume JSON Schema, RRSS registries/catalogs/limits, PDF preflight catalogs/limits, and actual template manifests.
+- Consumes: canonical Resume JSON Schema, Semantic CSS registries/catalogs/limits, PDF preflight catalogs/limits, and actual template manifests.
 - Produces: `updateGeneratedDocumentation(paths?: Partial<DocumentationPaths>): Promise<void>`.
 - Produces: root `pnpm docs:gen`.
 
@@ -713,7 +713,7 @@ Define targets:
 
 ```ts
 export type DocumentationPaths = {
-	rrssReference: string;
+	semanticCssReference: string;
 	jsonSchemaGuide: string;
 	skillSchemaReference: string;
 };
@@ -723,13 +723,13 @@ Tests must cover:
 
 ```ts
 it("rejects missing and duplicate generated markers", () => {
-	expect(() => replaceGeneratedBlock("plain text", "RRSS-ELEMENTS", "body", "reference.mdx")).toThrow(
+	expect(() => replaceGeneratedBlock("plain text", "SEMANTIC-CSS-ELEMENTS", "body", "reference.mdx")).toThrow(
 		/Missing generated markers/,
 	);
 	expect(() =>
 		replaceGeneratedBlock(
-			"<!-- RRSS-ELEMENTS:START --><!-- RRSS-ELEMENTS:END --><!-- RRSS-ELEMENTS:START --><!-- RRSS-ELEMENTS:END -->",
-			"RRSS-ELEMENTS",
+			"<!-- SEMANTIC-CSS-ELEMENTS:START --><!-- SEMANTIC-CSS-ELEMENTS:END --><!-- SEMANTIC-CSS-ELEMENTS:START --><!-- SEMANTIC-CSS-ELEMENTS:END -->",
+			"SEMANTIC-CSS-ELEMENTS",
 			"body",
 			"reference.mdx",
 		),
@@ -785,16 +785,16 @@ export function replaceGeneratedBlock(source: string, name: string, body: string
 
 `buildGeneratedDocumentation` reads every source, creates the canonical schema once, applies all blocks in memory, and returns the three complete output strings. `updateGeneratedDocumentation` calls it once and only then writes all three files with `Promise.all`. The determinism test uses temporary source files containing one of every required marker; the committed-output synchronization assertion is added after the real reference page is written in Task 5.
 
-- [ ] **Step 4: Render the RRSS factual blocks**
+- [ ] **Step 4: Render the Semantic CSS factual blocks**
 
 Use stable sort order and these marker names:
 
-- `RRSS-SEMANTIC-ELEMENTS`
-- `RRSS-PROPERTIES`
-- `RRSS-SYSTEM-VARIABLES`
-- `RRSS-TEMPLATE-PARTS`
-- `RRSS-DIAGNOSTICS`
-- `RRSS-LIMITS`
+- `SEMANTIC-CSS-SEMANTIC-ELEMENTS`
+- `SEMANTIC-CSS-PROPERTIES`
+- `SEMANTIC-CSS-SYSTEM-VARIABLES`
+- `SEMANTIC-CSS-TEMPLATE-PARTS`
+- `SEMANTIC-CSS-DIAGNOSTICS`
+- `SEMANTIC-CSS-LIMITS`
 
 Required table columns:
 
@@ -923,13 +923,13 @@ git commit -m "feat: generate documentation artifacts"
 
 **Interfaces:**
 - Consumes: the marker contracts and `pnpm docs:gen` from Task 4.
-- Produces: the canonical public RRSS reference route and all synchronized generated artifacts.
+- Produces: the canonical public Semantic CSS reference route and all synchronized generated artifacts.
 
-- [ ] **Step 1: Write the RRSS page around the generated markers**
+- [ ] **Step 1: Write the Semantic CSS page around the generated markers**
 
 Use the approved ten-section structure:
 
-1. RRSS in one minute
+1. Semantic CSS in one minute
 2. Selector grammar
 3. Semantic element catalog
 4. Cascade and values
@@ -943,9 +943,9 @@ Use the approved ten-section structure:
 Include this complete portable example and mark it for compiler verification:
 
 ````mdx
-<!-- RRSS-EXAMPLE:valid -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid -->
 ```css
-@rr-version 1;
+@version 1;
 
 :root {
 	--accent: #2563eb;
@@ -1004,27 +1004,27 @@ State the cascade and value behavior precisely:
 - `revert` restores the template/builder base value.
 - Author custom properties inherit through the semantic tree; `var()` supports nested fallbacks.
 - Missing variables without fallbacks and variable cycles are errors.
-- `--rr-*` variables are read-only runtime values; author variables must use another prefix.
+- `--resume-*` variables are read-only runtime values; author variables must use another prefix.
 - Units resolve against PDF points, authored page dimensions, the root font size, or the current/parent font size as appropriate.
 
 State PDF and lifecycle behavior precisely:
 
-- `display: none` hides an existing semantic node; RRSS never deletes source data.
+- `display: none` hides an existing semantic node; Semantic CSS never deletes source data.
 - `order` changes stable sibling render order, with original semantic order as the tie-breaker.
-- `break-before`, `break-inside`, `-rr-min-presence-ahead`, `orphans`, `widows`, and `-rr-fixed` map to bounded React PDF behavior.
+- `break-before`, `break-inside`, `-resume-min-presence-ahead`, `orphans`, `widows`, and `-resume-fixed` map to bounded React PDF behavior.
 - `size` applies only to `page` outside `@media`; one or two lengths create a custom page size.
-- RRSS cannot create, re-parent, or duplicate arbitrary nodes; fixed content repeats only an existing semantic node.
+- Semantic CSS cannot create, re-parent, or duplicate arbitrary nodes; fixed content repeats only an existing semantic node.
 - Invalid editable source remains saved, while preview and export keep the last source that compiled and passed PDF preflight.
 - Template-part selectors are optional and must be guarded with `resume[template="..."]` when portability matters.
 
-End with an explicit unsupported checklist: class selectors, pseudo-elements, CSS Grid, `@import`, `@font-face`, `@supports`, arbitrary at-rules, `url()`, external/local assets, font loading, scripts, interaction states, animations, transitions, filters, gradients, general `box-shadow`/`text-shadow`, browser layout APIs, and node creation are unsupported. Note that picture shadows are available only through `-rr-shadow-color` and `-rr-shadow-width`.
+End with an explicit unsupported checklist: class selectors, pseudo-elements, CSS Grid, `@import`, `@font-face`, `@supports`, arbitrary at-rules, `url()`, external/local assets, font loading, scripts, interaction states, animations, transitions, filters, gradients, general `box-shadow`/`text-shadow`, browser layout APIs, and node creation are unsupported. Note that picture shadows are available only through `-resume-shadow-color` and `-resume-shadow-width`.
 
 Mark one invalid complete example:
 
 ````mdx
-<!-- RRSS-EXAMPLE:invalid INVALID_SELECTOR -->
+<!-- SEMANTIC-CSS-EXAMPLE:invalid INVALID_SELECTOR -->
 ```css
-@rr-version 1;
+@version 1;
 
 section::before {
 	content: "Unsupported";
@@ -1039,19 +1039,19 @@ Explain that pseudo-elements cannot create PDF nodes.
 Place each exact marker pair once:
 
 ```md
-<!-- RRSS-SEMANTIC-ELEMENTS:START -->
-<!-- RRSS-SEMANTIC-ELEMENTS:END -->
+<!-- SEMANTIC-CSS-SEMANTIC-ELEMENTS:START -->
+<!-- SEMANTIC-CSS-SEMANTIC-ELEMENTS:END -->
 ```
 
 Repeat for properties, system variables, template parts, diagnostics, and limits. Keep manual explanations immediately before or after their table, not inside generated blocks.
 
 - [ ] **Step 3: Add exact author recipes**
 
-Each recipe starts with `@rr-version 1;` and is independently copyable:
+Each recipe starts with `@version 1;` and is independently copyable:
 
 ```css
 /* One section type */
-@rr-version 1;
+@version 1;
 
 section[type="experience"] section-heading {
 	color: #0f766e;
@@ -1060,7 +1060,7 @@ section[type="experience"] section-heading {
 
 ```css
 /* One resume-specific node */
-@rr-version 1;
+@version 1;
 
 #experience-item-uuid {
 	break-inside: avoid;
@@ -1069,7 +1069,7 @@ section[type="experience"] section-heading {
 
 ```css
 /* Sidebar content */
-@rr-version 1;
+@version 1;
 
 region[placement="sidebar"] {
 	background-color: #f8fafc;
@@ -1079,14 +1079,14 @@ region[placement="sidebar"] {
 
 ```css
 /* Rich-text list row versus content */
-@rr-version 1;
+@version 1;
 
 list-item {
 	gap: 4pt;
 }
 
 list-marker {
-	color: var(--rr-primary-color);
+	color: var(--resume-primary-color);
 }
 
 list-item-content {
@@ -1096,7 +1096,7 @@ list-item-content {
 
 ```css
 /* Authored page dimensions */
-@rr-version 1;
+@version 1;
 
 page {
 	size: 210mm 297mm;
@@ -1105,10 +1105,10 @@ page {
 
 ```css
 /* Pagination */
-@rr-version 1;
+@version 1;
 
 section {
-	-rr-min-presence-ahead: 72pt;
+	-resume-min-presence-ahead: 72pt;
 }
 
 item {
@@ -1118,7 +1118,7 @@ item {
 
 ```css
 /* Template decoration */
-@rr-version 1;
+@version 1;
 
 resume[template="azurill"] template-part[name="timeline-line"] {
 	background-color: #94a3b8;
@@ -1127,7 +1127,7 @@ resume[template="azurill"] template-part[name="timeline-line"] {
 
 ```css
 /* PDF dimension query */
-@rr-version 1;
+@version 1;
 
 @media (max-width: 600pt) {
 	region[placement="sidebar"] {
@@ -1136,7 +1136,7 @@ resume[template="azurill"] template-part[name="timeline-line"] {
 }
 ```
 
-Prefix each complete recipe fence with `<!-- RRSS-EXAMPLE:valid -->`; leave only deliberately incomplete syntax fragments unmarked.
+Prefix each complete recipe fence with `<!-- SEMANTIC-CSS-EXAMPLE:valid -->`; leave only deliberately incomplete syntax fragments unmarked.
 
 - [ ] **Step 4: Test examples directly from the page**
 
@@ -1153,8 +1153,8 @@ it("keeps every committed generated document synchronized", async () => {
 Then extract fenced CSS immediately following:
 
 ```text
-<!-- RRSS-EXAMPLE:valid -->
-<!-- RRSS-EXAMPLE:invalid CODE -->
+<!-- SEMANTIC-CSS-EXAMPLE:valid -->
+<!-- SEMANTIC-CSS-EXAMPLE:invalid CODE -->
 ```
 
 For valid examples:
@@ -1218,7 +1218,7 @@ Expected: PASS.
 git add docs/guides/semantic-css-reference.mdx docs/guides/json-resume-schema.mdx skills/resume-builder/references/schema.md docs/spec.json docs/docs.json tooling/semantic-css/generate-reference.test.ts
 git diff --cached --check
 git diff --cached
-git commit -m "docs: publish the RRSS author reference"
+git commit -m "docs: publish the Semantic CSS author reference"
 ```
 
 ---
@@ -1312,7 +1312,7 @@ Both files already have worktree changes, so use interactive staging and inspect
 git add -p apps/web/src/features/resume/stylesheet/editor.tsx apps/web/src/features/resume/stylesheet/editor.test.tsx
 git diff --cached --check
 git diff --cached
-git commit -m "feat: link Custom Styles to RRSS reference"
+git commit -m "feat: link Custom Styles to Semantic CSS reference"
 ```
 
 ---
@@ -1366,7 +1366,7 @@ Expected: PASS.
 
 ```bash
 pnpm exec biome check packages/schema/src/resume/json-schema.ts packages/schema/src/resume/json-schema.test.ts apps/server/src/static/schema.ts apps/server/src/openapi apps/server/src/services/stylesheet-preflight.ts packages/resume/src/stylesheet packages/pdf/src/semantic packages/pdf/src/server.tsx tooling/semantic-css apps/web/src/features/resume/stylesheet/editor.tsx apps/web/src/features/resume/stylesheet/editor.test.tsx
-pnpm exec markdownlint-cli2 docs/guides/semantic-css-reference.mdx docs/guides/json-resume-schema.mdx skills/resume-builder/references/schema.md docs/superpowers/plans/2026-07-29-rrss-reference-and-docs-generation.md
+pnpm exec markdownlint-cli2 docs/guides/semantic-css-reference.mdx docs/guides/json-resume-schema.mdx skills/resume-builder/references/schema.md docs/superpowers/plans/2026-07-29-semantic-css-reference-and-docs-generation.md
 git diff --check
 ```
 

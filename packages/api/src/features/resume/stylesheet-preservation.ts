@@ -3,7 +3,7 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import { projectRenderData } from "@reactive-resume/resume/stylesheet/render-data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createSampleResumeData } from "@reactive-resume/schema/resume/sample";
-import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
+import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 
 type CreateResumeDataOptions = {
 	semanticCssDefault: boolean;
@@ -33,8 +33,8 @@ export function createResumeData(options: CreateResumeDataOptions): ResumeData {
 	if (options.semanticCssDefault) {
 		data.metadata.stylesheet = {
 			mode: "semantic",
-			source: { languageVersion: 1, text: EMPTY_RRSS_SOURCE },
-			applied: { languageVersion: 1, text: EMPTY_RRSS_SOURCE },
+			source: { languageVersion: 1, text: EMPTY_SEMANTIC_CSS_SOURCE },
+			applied: { languageVersion: 1, text: EMPTY_SEMANTIC_CSS_SOURCE },
 		};
 	}
 

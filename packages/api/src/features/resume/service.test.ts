@@ -111,8 +111,8 @@ const createSemanticResumeData = (): ResumeData => {
 	const data: ResumeData = structuredClone(defaultResumeData);
 	data.metadata.stylesheet = {
 		mode: "semantic",
-		source: { languageVersion: 1, text: "@rr-version 1;\n" },
-		applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+		source: { languageVersion: 1, text: "@version 1;\n" },
+		applied: { languageVersion: 1, text: "@version 1;\n" },
 	};
 	return data;
 };
@@ -369,8 +369,8 @@ describe("versions.restore", () => {
 				restoredData.basics.name = "Restored Name";
 				restoredData.metadata.stylesheet = {
 					mode: "semantic",
-					source: { languageVersion: 1, text: "@rr-version 1;\nsection { color: #123456; }\n" },
-					applied: { languageVersion: 1, text: "@rr-version 1;\nsection { color: #123456; }\n" },
+					source: { languageVersion: 1, text: "@version 1;\nsection { color: #123456; }\n" },
+					applied: { languageVersion: 1, text: "@version 1;\nsection { color: #123456; }\n" },
 				};
 			} else {
 				restoredData.metadata.notes = "Restored private note";
@@ -793,7 +793,7 @@ describe("patch", () => {
 			name: "stylesheet descendant target",
 			op: "replace" as const,
 			path: "/metadata/stylesheet/source/text",
-			value: "@rr-version 1;\nresume { color: red; }\n",
+			value: "@version 1;\nresume { color: red; }\n",
 		},
 		{
 			name: "stylesheet descendant copy source",

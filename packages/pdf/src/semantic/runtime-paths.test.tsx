@@ -42,9 +42,9 @@ const buildFixture = (): ResumeData => {
 	const applied = {
 		languageVersion: 1,
 		text: `
-			@rr-version 1;
+			@version 1;
 			page { size: LETTER; }
-			header { -rr-fixed: true; background-color: #1e293b; }
+			header { -resume-fixed: true; background-color: #1e293b; }
 		`,
 	};
 	data.picture.hidden = true;
@@ -56,7 +56,7 @@ const buildFixture = (): ResumeData => {
 
 const buildNodeBudgetFixture = (mode: "legacy" | "semantic"): ResumeData => {
 	const data = structuredClone(defaultResumeData);
-	const applied = { languageVersion: 1, text: "@rr-version 1;\n" };
+	const applied = { languageVersion: 1, text: "@version 1;\n" };
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["skills"], sidebar: [] }];
 	data.metadata.stylesheet = { mode, source: applied, applied };
 	data.sections.skills.items = Array.from({ length: 2_000 }, (_, index) => ({
@@ -100,7 +100,7 @@ describe("browser/server semantic runtime identity", () => {
 		expect(browserProps.fixed).toMatchObject({ type: "VIEW", fixed: true });
 	}, 30_000);
 
-	it("rejects a valid stylesheet when later content exceeds the RRSS node budget", async () => {
+	it("rejects a valid stylesheet when later content exceeds the Semantic CSS node budget", async () => {
 		const data = buildNodeBudgetFixture("semantic");
 
 		const results = await Promise.allSettled([

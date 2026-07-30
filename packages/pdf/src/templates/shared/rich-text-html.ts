@@ -4,7 +4,7 @@ import { isDarkColor } from "@reactive-resume/utils/color";
 import { getRichTextSemanticKind, getRichTextSemanticNodeKey } from "../../semantic/rich-text-keys";
 
 export const richTextMarkClassName = "rr-pdf-mark";
-export const richTextSemanticNodeKeyAttribute = "data-rr-semantic-node-key";
+export const richTextSemanticNodeKeyAttribute = "data-resume-semantic-node-key";
 
 const inlineTags = new Set([
 	"a",

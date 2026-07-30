@@ -7,7 +7,7 @@ import { getStyleProjection } from "./public-style-projection";
 
 const source = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nname { color: #123456; }\n",
+	text: "@version 1;\nname { color: #123456; }\n",
 };
 
 const buildResume = () => {
@@ -80,7 +80,7 @@ describe("getStyleProjection", () => {
 		});
 
 		expect(result).toEqual(expect.objectContaining({ formatVersion: 1, nodes: expect.any(Object) }));
-		expect(JSON.stringify(result)).not.toContain("@rr-version");
+		expect(JSON.stringify(result)).not.toContain("@version");
 		expect(consume).toHaveBeenCalledOnce();
 		expect(consume).toHaveBeenCalledWith({ trustedClient: "203.0.113.9", resumeId: "resume-1" });
 	});

@@ -75,7 +75,7 @@ resume[template="azurill"] template-part[name="timeline-dot"] {
 type PortableMarker = keyof typeof PORTABLE_MARKERS;
 
 const BREAK_INSIDE_DIRECTIVE = "\tbreak-inside: avoid;\n";
-const MIN_PRESENCE_AHEAD_DIRECTIVE = "\t-rr-min-presence-ahead: 24pt;\n";
+const MIN_PRESENCE_AHEAD_DIRECTIVE = "\t-resume-min-presence-ahead: 24pt;\n";
 const WITHOUT_PAGINATION_DIRECTIVES = PORTABLE_ACCEPTANCE_STYLESHEET.replace(BREAK_INSIDE_DIRECTIVE, "").replace(
 	MIN_PRESENCE_AHEAD_DIRECTIVE,
 	"",
@@ -244,6 +244,6 @@ test("@semantic-css pagination directives keep a portable project section togeth
 	expect(withoutMinPresenceAhead, "the no-directive control must omit minPresenceAhead").toBeUndefined();
 	expect(
 		minPresenceAheadOnly,
-		"-rr-min-presence-ahead: 24pt must independently reach the project pagination props",
+		"-resume-min-presence-ahead: 24pt must independently reach the project pagination props",
 	).toBe(24);
 });

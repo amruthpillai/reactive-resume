@@ -61,9 +61,9 @@ const overflowingFixture = (pageSize: "A4" | "LETTER"): ResumeData => {
 	const applied = {
 		languageVersion: 1,
 		text: `
-			@rr-version 1;
+			@version 1;
 			page[page-number="1"] { size: ${pageSize}; }
-			header { -rr-fixed: true; }
+			header { -resume-fixed: true; }
 			@media (max-width: 600pt) { section-heading { font-size: 9pt; } }
 		`,
 	};
@@ -98,7 +98,7 @@ describe("semantic pagination bindings", () => {
 		const data = structuredClone(defaultResumeData);
 		const applied = {
 			languageVersion: 1,
-			text: '@rr-version 1;\npage[page-number="1"] { size: LETTER; }',
+			text: '@version 1;\npage[page-number="1"] { size: LETTER; }',
 		};
 		data.picture.hidden = true;
 		data.basics.name = "Ada Lovelace";

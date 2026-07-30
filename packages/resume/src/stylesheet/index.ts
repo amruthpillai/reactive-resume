@@ -1,7 +1,7 @@
 /// <reference path="./css-tree.d.ts" />
 /// <reference path="./specificity.d.ts" />
 
-export type { RrssCompilerDiagnosticCode } from "./diagnostics";
+export type { SemanticCssCompilerDiagnosticCode } from "./diagnostics";
 export type { PropertyDefinition, PropertyRegistry } from "./registry/properties";
 export type { SemanticNodeDefinition, SemanticRegistry } from "./registry/semantic";
 export type { SystemVariableDefinition, SystemVariableRegistry } from "./registry/system-variables";
@@ -26,7 +26,7 @@ export type {
 	ResolveStylesheetContext,
 	ResolveStylesheetInput,
 	ResolveStylesheetResult,
-	RrssDiagnostic,
+	SemanticCssDiagnostic,
 	SemanticNode,
 	SemanticNodeKind,
 	SourcePosition,
@@ -37,8 +37,8 @@ export type {
 export { analyzeStylesheet } from "./analyze";
 export { resolveStylesheet } from "./cascade";
 export { compileStylesheet } from "./compile";
-export { RRSS_DIAGNOSTIC_CATALOG_V1 } from "./diagnostics";
-export { RRSS_LIMITS_V1 } from "./limits";
+export { SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1 } from "./diagnostics";
+export { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 export { parseStylesheet } from "./parse";
 export { PROPERTY_REGISTRY_V1 } from "./registry/properties";
 export {
@@ -52,4 +52,4 @@ export { projectPublicRenderData, projectRenderData } from "./render-data";
 export { computeRenderDataHash } from "./render-hash";
 export { compileSelector, createSelectorMatcher, getSpecificity, matchesSelector } from "./selector";
 export { escapeCssComment, escapeCssString, serializeGeneratedStylesheet } from "./serialize";
-export { SUPPORTED_RRSS_VERSIONS } from "./version";
+export { SUPPORTED_SEMANTIC_CSS_VERSIONS } from "./version";

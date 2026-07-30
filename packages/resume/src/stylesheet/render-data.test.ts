@@ -26,8 +26,8 @@ const semanticData: ResumeData = {
 		...legacyData.metadata,
 		stylesheet: {
 			mode: "semantic",
-			source: { languageVersion: 1, text: "@rr-version 1;\nfield { color: red; }" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\nfield { color: blue; }" },
+			source: { languageVersion: 1, text: "@version 1;\nfield { color: red; }" },
+			applied: { languageVersion: 1, text: "@version 1;\nfield { color: blue; }" },
 		},
 	},
 };

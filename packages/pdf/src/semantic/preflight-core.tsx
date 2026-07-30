@@ -1,4 +1,4 @@
-import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { Template } from "@reactive-resume/schema/templates";
@@ -29,7 +29,7 @@ export type PdfPreflightFailure = {
 	ok: false;
 	code: PdfPreflightFailureCode;
 	message: string;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 export type PdfPreflightResult =
@@ -37,7 +37,7 @@ export type PdfPreflightResult =
 			ok: true;
 			pageCount: number;
 			byteCount: number;
-			diagnostics: readonly RrssDiagnostic[];
+			diagnostics: readonly SemanticCssDiagnostic[];
 	  }
 	| PdfPreflightFailure;
 
@@ -45,7 +45,7 @@ export type RenderPreflightPdfResult =
 	| {
 			ok: true;
 			bytes: Uint8Array;
-			diagnostics: readonly RrssDiagnostic[];
+			diagnostics: readonly SemanticCssDiagnostic[];
 	  }
 	| PdfPreflightFailure;
 

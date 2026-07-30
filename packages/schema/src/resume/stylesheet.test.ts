@@ -7,8 +7,8 @@ describe("semanticStylesheetSchema", () => {
 	it("preserves separate editable and applied sources", () => {
 		const result = semanticStylesheetSchema.parse({
 			mode: "semantic",
-			source: { languageVersion: 1, text: "@rr-version 1;\nsection {" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\nsection { color: red; }\n" },
+			source: { languageVersion: 1, text: "@version 1;\nsection {" },
+			applied: { languageVersion: 1, text: "@version 1;\nsection { color: red; }\n" },
 		});
 
 		expect(result.source.text).toContain("section {");

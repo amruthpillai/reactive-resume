@@ -50,7 +50,7 @@ const buildFixture = (): ResumeData => {
 	const applied = {
 		languageVersion: 1,
 		text: `
-			@rr-version 1;
+			@version 1;
 			paragraph { color: #123456; }
 			strong { color: #654321; }
 			list-marker { color: #abcdef; }

@@ -41,13 +41,13 @@ describe("convertLegacyStyleRules", () => {
 		expect(clamped.source.text).toContain("border-radius: 72pt;");
 	});
 
-	it("comments disabled and final-host no-effect declarations without inventing @rr-disabled", () => {
+	it("comments disabled and final-host no-effect declarations without inventing @resume-disabled", () => {
 		const disabled = convertLegacyStyleRules(dataWithRules("disabled-rules")).source.text;
 		const links = convertLegacyStyleRules(dataWithRules("link-underline-3134")).source.text;
 
 		expect(disabled).toContain("Disabled legacy rule");
 		expect(disabled).toContain("Disabled *\\/ cannot escape");
-		expect(disabled).not.toContain("@rr-disabled");
+		expect(disabled).not.toContain("@resume-disabled");
 		expect(links).toContain("color: #2255aa;");
 		expect(links).toContain("No effect in legacy rendering: text-decoration");
 		expect(links).not.toMatch(/^[^/]*\btext-decoration:/m);

@@ -53,7 +53,7 @@ const node = (kind: SemanticNode["kind"]): SemanticNode => ({
 async function renderFixedValueHint(property: string, kind: SemanticNode["kind"], value: string) {
 	const compiled = compileStylesheet({
 		languageVersion: 1,
-		text: `@rr-version 1; ${kind} { ${property}: ${value}; }`,
+		text: `@version 1; ${kind} { ${property}: ${value}; }`,
 	});
 	expect(
 		compiled.diagnostics.filter(({ severity }) => severity === "error"),

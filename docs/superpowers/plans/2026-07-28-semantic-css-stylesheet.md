@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
 > superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the structured Custom Styles form with RRSS, a copy-pastable Semantic CSS language that can style
+**Goal:** Replace the structured Custom Styles form with Semantic CSS, a copy-pastable Semantic CSS language that can style
 every registered PDF template part while preserving builder-owned content and the last valid rendered stylesheet.
 
 **Architecture:** A universal compiler under `@reactive-resume/resume/stylesheet` parses real CSS syntax into a
@@ -23,18 +23,18 @@ CSSTree, `@bramus/specificity`, CodeMirror 6, Prettier standalone, RFC 8785 `can
 - Put the universal compiler in `packages/resume` per the repository placement rules; do not create a parallel domain
   package and do not put compiler behavior in `packages/utils`.
 - Add dependencies with `@latest` through pnpm, then commit the resolved lockfile.
-- RRSS affects PDF preview, public PDF rendering, and PDF export only. DOCX and Markdown remain unchanged.
-- Design, Typography, Layout, Page, and Picture controls remain the base layer. RRSS overrides exposed visual output.
+- Semantic CSS affects PDF preview, public PDF rendering, and PDF export only. DOCX and Markdown remain unchanged.
+- Design, Typography, Layout, Page, and Picture controls remain the base layer. Semantic CSS overrides exposed visual output.
 - Typography remains the only font-family selector. Reject `font-family`, `@font-face`, `@import`, `url()`, generated
   content, executable expressions, browser interaction states, animations, CSS Grid, and remote assets.
 - Store exact editable source and last-valid applied source. Never persist a compiled AST.
 - Treat the stylesheet atomically: any compiler error preserves the previous applied source. Do not apply valid fragments
   from an otherwise invalid candidate.
-- Generated/default source begins with `@rr-version 1;`. A missing directive is a v1 warning for hand-written input;
+- Generated/default source begins with `@version 1;`. A missing directive is a v1 warning for hand-written input;
   duplicate, malformed, unsupported, or metadata-mismatched directives are errors.
-- Expose builder values through read-only `--rr-*` system variables. User declarations using the reserved prefix are
+- Expose builder values through read-only `--resume-*` system variables. User declarations using the reserved prefix are
   errors.
-- Never double-apply legacy `styleRules` and RRSS. Persisted `mode` selects exactly one custom-style path.
+- Never double-apply legacy `styleRules` and Semantic CSS. Persisted `mode` selects exactly one custom-style path.
 - Legacy conversion stays inactive until explicit activation and must pass behavioral parity and bounded PDF preflight.
 - Semantic instrumentation must not add React PDF layout wrappers. Bind node keys and resolved presentation to existing
   `Page`, `View`, `Text`, `Image`, `Link`, HTML-renderer, and icon nodes.
@@ -65,7 +65,7 @@ CSSTree, `@bramus/specificity`, CodeMirror 6, Prettier standalone, RFC 8785 `can
 | Editor | Use CodeMirror 6 directly, without a React wrapper. Lazy-load the editor when Custom Styles opens. |
 | Formatter | Lazy-load `prettier/standalone` and `prettier/plugins/postcss` only when the user selects **Format**. Use `formatWithCursor`; never format on save or paste. |
 | Expanded editor | Resize the existing desktop right panel toward its 45% maximum and restore the prior layout on exit. Use `Sheet` only on mobile, where the preview already lives in a separate tab. |
-| Shared tokens | Inject read-only colors, typography metrics, page metrics, sidebar width, picture metrics, and final page dimensions through `--rr-*`. Do not expose font family or picture URL. |
+| Shared tokens | Inject read-only colors, typography metrics, page metrics, sidebar width, picture metrics, and final page dimensions through `--resume-*`. Do not expose font family or picture URL. |
 | No-wrapper API | Resolve structural behavior before React rendering; use a leaf `useResolvedNode(nodeKey)` hook only to apply styles/primitive props to existing nodes. |
 | Acceptance fixtures | Turn issues #3146, #3134, #3137, #2223, and #3199 into named compiler/PDF/editor regression fixtures. |
 | Future graphics | Record gradients and general box shadows as a later SVG-backed extension. They are not part of the v1 property adapter. |
@@ -95,13 +95,13 @@ are green.
 
 - Create `packages/resume/src/stylesheet/types.ts`: diagnostics, semantic node, compiled program, resolved style, public
   projection, and base-setting types.
-- Create `packages/resume/src/stylesheet/version.ts`: `@rr-version` parsing contract and immutable compiler dispatch.
+- Create `packages/resume/src/stylesheet/version.ts`: `@version` parsing contract and immutable compiler dispatch.
 - Create `packages/resume/src/stylesheet/parse.ts`: CSSTree adapter and source-range normalization.
 - Create `packages/resume/src/stylesheet/registry/semantic.ts`: node kinds, parentage, attributes, roles, fields, and
   registry fingerprint input.
 - Create `packages/resume/src/stylesheet/registry/properties.ts`: supported property grammar, inheritance,
   applicability, shorthands, structural props, and hard technical bounds.
-- Create `packages/resume/src/stylesheet/registry/system-variables.ts`: read-only `--rr-*` catalog and injection.
+- Create `packages/resume/src/stylesheet/registry/system-variables.ts`: read-only `--resume-*` catalog and injection.
 - Create `packages/resume/src/stylesheet/selector.ts`: selector validation, specificity, and immutable-tree matching.
 - Create `packages/resume/src/stylesheet/values.ts`: variables, colors, dimensions, shorthands, and forbidden functions.
 - Create `packages/resume/src/stylesheet/limits.ts`: immutable v1 resource limits and failure codes.
@@ -109,7 +109,7 @@ are green.
 - Create `packages/resume/src/stylesheet/compile.ts`: versioned parse/validate/compile entrypoint.
 - Create `packages/resume/src/stylesheet/cascade.ts`: media, inheritance, source order, `!important`, structural pass.
 - Create `packages/resume/src/stylesheet/analyze.ts`: no-match, ineffective-property, and extreme-value warnings.
-- Create `packages/resume/src/stylesheet/serialize.ts`: deterministic escaping and generated RRSS output.
+- Create `packages/resume/src/stylesheet/serialize.ts`: deterministic escaping and generated Semantic CSS output.
 - Create `packages/resume/src/stylesheet/render-hash.ts`: RFC 8785 canonicalization and SHA-256.
 - Create `packages/resume/src/stylesheet/render-data.ts`: private render projection for versioning/preflight plus redacted
   public render projection for browser-verifiable hashing.
@@ -175,7 +175,7 @@ are green.
 
 ### Documentation and E2E
 
-- Replace `docs/guides/using-custom-styles.mdx` with RRSS authoring/migration guidance.
+- Replace `docs/guides/using-custom-styles.mdx` with Semantic CSS authoring/migration guidance.
 - Create `docs/guides/semantic-css-reference.mdx` from registry-backed generated content.
 - Create Playwright specs under `tests/e2e/specs/semantic-css/`.
 
@@ -186,16 +186,16 @@ each property and its allowed semantic/primitive kinds; PDF adapter tests fail w
 
 | Category | Properties |
 | --- | --- |
-| Flexbox | `align-content`, `align-items`, `align-self`, `flex`, `flex-direction`, `flex-wrap`, `flex-flow`, `flex-grow`, `flex-shrink`, `flex-basis`, `justify-content`, `gap`, `row-gap`, `column-gap`; RRSS `order` is resolved structurally before rendering. |
+| Flexbox | `align-content`, `align-items`, `align-self`, `flex`, `flex-direction`, `flex-wrap`, `flex-flow`, `flex-grow`, `flex-shrink`, `flex-basis`, `justify-content`, `gap`, `row-gap`, `column-gap`; Semantic CSS `order` is resolved structurally before rendering. |
 | Layout/position | `aspect-ratio`, `bottom`, `display`, `left`, `position`, `right`, `top`, `overflow`, `z-index`. |
 | Dimensions | `width`, `height`, `min-width`, `min-height`, `max-width`, `max-height`. |
 | Color | `color`, `background-color`, `opacity`. |
 | Text | `direction`, `font-size`, `font-style`, `font-weight`, `letter-spacing`, `line-height`, `max-lines`, `text-align`, `text-decoration`, `text-decoration-color`, `text-decoration-style`, `text-indent`, `text-overflow`, `text-transform`, `vertical-align`. `font-family` is deliberately rejected. |
-| Image | `object-fit`, `object-position`; picture-only `-rr-shadow-color` and `-rr-shadow-width` map the renderer properties already used by the template base styles. |
+| Image | `object-fit`, `object-position`; picture-only `-resume-shadow-color` and `-resume-shadow-width` map the renderer properties already used by the template base styles. |
 | Margin/padding | `margin`, `margin-top/right/bottom/left`, `margin-horizontal`, `margin-vertical`, `padding`, `padding-top/right/bottom/left`, `padding-horizontal`, `padding-vertical`. |
 | Borders | `border`, `border-color/style/width`, every per-side color/style/width, and every corner radius. |
 | Transform | `transform` functions `rotate`, `scale`, `scale-x/y`, `translate`, `translate-x/y`, `skew`, `skew-x/y`, `matrix`, plus `transform-origin`. |
-| Pagination/structure | `display: none`, `order`, `break-before`, `break-inside`, `orphans`, `widows`, page `size`, `-rr-fixed`, `-rr-min-presence-ahead`. |
+| Pagination/structure | `display: none`, `order`, `break-before`, `break-inside`, `orphans`, `widows`, page `size`, `-resume-fixed`, `-resume-min-presence-ahead`. |
 
 Applicability rules:
 
@@ -223,7 +223,7 @@ filters, blend modes, gradients, general `box-shadow`, animations, transitions, 
 
 **Interfaces:**
 - Produces: `StylesheetSource`, `SemanticStylesheet`, `StylesheetMode`,
-  `stylesheetSourceSchema`, `semanticStylesheetSchema`, `EMPTY_RRSS_SOURCE`.
+  `stylesheetSourceSchema`, `semanticStylesheetSchema`, `EMPTY_SEMANTIC_CSS_SOURCE`.
 - Consumed by: compiler, API, PDF mode selection, web store, import/export.
 
 - [ ] **Step 1: Write failing schema tests**
@@ -238,8 +238,8 @@ describe("semanticStylesheetSchema", () => {
 	it("preserves separate editable and applied sources", () => {
 		const result = semanticStylesheetSchema.parse({
 			mode: "semantic",
-			source: { languageVersion: 1, text: "@rr-version 1;\nsection {" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\nsection { color: red; }\n" },
+			source: { languageVersion: 1, text: "@version 1;\nsection {" },
+			applied: { languageVersion: 1, text: "@version 1;\nsection { color: red; }\n" },
 		});
 
 		expect(result.source.text).toContain("section {");
@@ -274,7 +274,7 @@ Expected: FAIL on the `Not implemented` schema shell or the first stylesheet ass
 // packages/schema/src/resume/stylesheet.ts
 import { z } from "zod";
 
-export const EMPTY_RRSS_SOURCE = "@rr-version 1;\n";
+export const EMPTY_SEMANTIC_CSS_SOURCE = "@version 1;\n";
 
 export const stylesheetSourceSchema = z.strictObject({
 	languageVersion: z.number().int().positive(),
@@ -330,8 +330,8 @@ git commit -m "feat(schema): add semantic stylesheet contracts"
 - Modify: `pnpm-lock.yaml`
 
 **Interfaces:**
-- Produces: `compileStylesheet(source): CompileStylesheetResult`, `RrssDiagnostic`, `SourceRange`,
-  `SUPPORTED_RRSS_VERSIONS`.
+- Produces: `compileStylesheet(source): CompileStylesheetResult`, `SemanticCssDiagnostic`, `SourceRange`,
+  `SUPPORTED_SEMANTIC_CSS_VERSIONS`.
 - Consumes: `StylesheetSource` from Task 1.
 
 - [ ] **Step 1: Install direct parser and specificity dependencies**
@@ -356,7 +356,7 @@ describe("compileStylesheet", () => {
 	it("compiles canonical version-one source", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1;\nsection { color: #123456; }\n",
+			text: "@version 1;\nsection { color: #123456; }\n",
 		});
 
 		expect(result.program?.languageVersion).toBe(1);
@@ -372,16 +372,16 @@ describe("compileStylesheet", () => {
 	});
 
 	it("rejects a directive that disagrees with persisted metadata", () => {
-		const result = compileStylesheet({ languageVersion: 1, text: "@rr-version 2;" });
+		const result = compileStylesheet({ languageVersion: 1, text: "@version 2;" });
 
 		expect(result.program).toBeNull();
 		expect(result.diagnostics).toContainEqual(
-			expect.objectContaining({ code: "RR_VERSION_MISMATCH", severity: "error" }),
+			expect.objectContaining({ code: "VERSION_MISMATCH", severity: "error" }),
 		);
 	});
 
 	it("returns exact ranges for malformed declarations and keeps a recoverable parse tree", () => {
-		const result = parseStylesheet("@rr-version 1;\nsection { color red; }\nitem { opacity: .5; }");
+		const result = parseStylesheet("@version 1;\nsection { color red; }\nitem { opacity: .5; }");
 
 		expect(result.diagnostics[0]?.range.start.line).toBe(2);
 		expect(result.rules).toHaveLength(2);
@@ -411,7 +411,7 @@ export type SourceRange = {
 	end: SourcePosition;
 };
 
-export type RrssDiagnostic = {
+export type SemanticCssDiagnostic = {
 	code: string;
 	severity: DiagnosticSeverity;
 	message: string;
@@ -420,12 +420,12 @@ export type RrssDiagnostic = {
 
 export type CompileStylesheetResult = {
 	program: StyleProgram | null;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 ```
 
 Configure CSSTree with `positions: true`, `parseCustomProperty: true`, `onParseError`, and token/comment callbacks.
-Convert `Raw` nodes into errors without replacing raw source. Parse `@rr-version` as a top-level at-rule: generated
+Convert `Raw` nodes into errors without replacing raw source. Parse `@version` as a top-level at-rule: generated
 source has exactly one directive; v1 hand-written source without one compiles with a warning; duplicates, non-positive
 values, unsupported values, and metadata mismatches block the program.
 
@@ -444,7 +444,7 @@ Expected: PASS; diagnostics use one-based line/column and zero-based offsets con
 
 ```bash
 git add packages/resume/package.json packages/resume/src/stylesheet pnpm-lock.yaml
-git commit -m "feat(resume): add RRSS parser and versioning"
+git commit -m "feat(resume): add Semantic CSS parser and versioning"
 ```
 
 ---
@@ -472,11 +472,11 @@ git commit -m "feat(resume): add RRSS parser and versioning"
 it("injects builder values without exposing fonts or assets", () => {
 	const variables = createSystemVariables(baseSettings, { width: 595.28, height: 841.89 });
 
-	expect(variables["--rr-primary-color"]).toBe(baseSettings.design.colors.primary);
-	expect(variables["--rr-sidebar-width"]).toBe(`${baseSettings.layout.sidebarWidth}%`);
-	expect(variables["--rr-page-width"]).toBe("595.28pt");
-	expect(Object.keys(variables)).not.toContain("--rr-font-family");
-	expect(Object.keys(variables)).not.toContain("--rr-picture-url");
+	expect(variables["--resume-primary-color"]).toBe(baseSettings.design.colors.primary);
+	expect(variables["--resume-sidebar-width"]).toBe(`${baseSettings.layout.sidebarWidth}%`);
+	expect(variables["--resume-page-width"]).toBe("595.28pt");
+	expect(Object.keys(variables)).not.toContain("--resume-font-family");
+	expect(Object.keys(variables)).not.toContain("--resume-picture-url");
 });
 
 it("registers every stable semantic node and relationship", () => {
@@ -548,33 +548,33 @@ export type SemanticNodeKind =
 
 The property registry covers React PDF-supported Flexbox, layout, dimensions, colors, text properties except
 `font-family`, spacing, borders, transforms, object fit/position, and the structural properties `display`, `order`,
-`break-before`, `break-inside`, `orphans`, `widows`, `size`, `-rr-fixed`, and `-rr-min-presence-ahead`.
+`break-before`, `break-inside`, `orphans`, `widows`, `size`, `-resume-fixed`, and `-resume-min-presence-ahead`.
 
 Inject exactly these v1 reserved variables:
 
 ```text
---rr-primary-color
---rr-text-color
---rr-background-color
---rr-body-font-size
---rr-body-line-height
---rr-heading-font-size
---rr-heading-line-height
---rr-page-gap-x
---rr-page-gap-y
---rr-page-margin-x
---rr-page-margin-y
---rr-page-width
---rr-page-height
---rr-sidebar-width
---rr-picture-size
---rr-picture-rotation
---rr-picture-aspect-ratio
---rr-picture-border-radius
---rr-picture-border-width
---rr-picture-border-color
---rr-picture-shadow-width
---rr-picture-shadow-color
+--resume-primary-color
+--resume-text-color
+--resume-background-color
+--resume-body-font-size
+--resume-body-line-height
+--resume-heading-font-size
+--resume-heading-line-height
+--resume-page-gap-x
+--resume-page-gap-y
+--resume-page-margin-x
+--resume-page-margin-y
+--resume-page-width
+--resume-page-height
+--resume-sidebar-width
+--resume-picture-size
+--resume-picture-rotation
+--resume-picture-aspect-ratio
+--resume-picture-border-radius
+--resume-picture-border-width
+--resume-picture-border-color
+--resume-picture-shadow-width
+--resume-picture-shadow-color
 ```
 
 - [ ] **Step 4: Verify registries and export-map boundaries**
@@ -593,7 +593,7 @@ Expected: PASS; `packages/resume` remains `runtime:universal` and `role:domain`.
 
 ```bash
 git add packages/resume/src/stylesheet
-git commit -m "feat(resume): define RRSS registries and system tokens"
+git commit -m "feat(resume): define Semantic CSS registries and system tokens"
 ```
 
 ---
@@ -644,7 +644,7 @@ sibling combinators, the `:root` alias for the `resume` node, `:is`, `:where`, `
 `:only-child`, `:nth-child`, and `:nth-of-type`. Reject pseudo-elements, interactive pseudo-classes, custom classes,
 unknown elements/attributes/roles, and nested complexity beyond registry limits.
 
-Use `calculateForAST` only after RRSS validation. Store specificity as a plain `[ids, classes, types]` tuple so the
+Use `calculateForAST` only after Semantic CSS validation. Store specificity as a plain `[ids, classes, types]` tuple so the
 compiled program remains structured-clone-safe and independent of library classes.
 
 - [ ] **Step 4: Verify selector behavior and dependency compatibility**
@@ -693,7 +693,7 @@ git commit -m "feat(resume): add semantic selector matching"
 ```ts
 it("resolves template base, normal rules, important rules, specificity, and source order", () => {
 	const result = resolveFixture(`
-		@rr-version 1;
+		@version 1;
 		section-heading { color: red; }
 		section[type="experience"] > section-heading { color: blue !important; }
 		section#experience > section-heading { color: green; }
@@ -704,7 +704,7 @@ it("resolves template base, normal rules, important rules, specificity, and sour
 
 it("keeps positional selectors based on source order before hiding and ordering", () => {
 	const result = resolveFixture(`
-		@rr-version 1;
+		@version 1;
 		item:nth-child(2) { display: none; }
 		item:last-child { order: -1; }
 	`);
@@ -714,8 +714,8 @@ it("keeps positional selectors based on source order before hiding and ordering"
 
 it("resolves read-only system variables in an otherwise valid program", () => {
 	const result = resolveFixture(`
-		@rr-version 1;
-		:root { --accent: var(--rr-primary-color); }
+		@version 1;
+		:root { --accent: var(--resume-primary-color); }
 		name { color: var(--accent); }
 	`);
 
@@ -725,7 +725,7 @@ it("resolves read-only system variables in an otherwise valid program", () => {
 it("blocks the entire program when reserved system variables are reassigned", () => {
 	const result = compileStylesheet({
 		languageVersion: 1,
-		text: "@rr-version 1; :root { --rr-primary-color: red; } name { color: blue; }",
+		text: "@version 1; :root { --resume-primary-color: red; } name { color: blue; }",
 	});
 
 	expect(result.program).toBeNull();
@@ -737,7 +737,7 @@ it("blocks the entire program when reserved system variables are reassigned", ()
 it("allows small but technically renderable values and leaves aesthetics to warnings", () => {
 	const result = compileStylesheet({
 		languageVersion: 1,
-		text: "@rr-version 1; field { font-size: 3pt; }",
+		text: "@version 1; field { font-size: 3pt; }",
 	});
 
 	expect(result.program).not.toBeNull();
@@ -784,7 +784,7 @@ export type ResolveStylesheetInput = {
 export type ResolveStylesheetResult = {
 	nodes: Readonly<Record<string, ResolvedNodeStyle>>;
 	renderTree: SemanticNode;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 ```
 
@@ -822,7 +822,7 @@ export type BaseSettingsSnapshot = Pick<ResumeData, "picture"> & {
 Freeze these v1 technical limits in `limits.ts` and return `RESOURCE_LIMIT` diagnostics when exceeded:
 
 ```ts
-export const RRSS_LIMITS_V1 = {
+export const SEMANTIC_CSS_LIMITS_V1 = {
 	maxSourceBytes: 128 * 1024,
 	maxRules: 1_024,
 	maxDeclarations: 8_192,
@@ -858,7 +858,7 @@ resource limits, cache eviction, attack corpus, fuzz properties, and no-match wa
 
 ```bash
 git add packages/resume/src/stylesheet
-git commit -m "feat(resume): resolve RRSS cascade and structure"
+git commit -m "feat(resume): resolve Semantic CSS cascade and structure"
 ```
 
 ---
@@ -882,7 +882,7 @@ git commit -m "feat(resume): resolve RRSS cascade and structure"
 - [ ] **Step 1: Write failing serializer/hash tests**
 
 ```ts
-it("serializes generated RRSS deterministically and safely", () => {
+it("serializes generated Semantic CSS deterministically and safely", () => {
 	const output = serializeGeneratedStylesheet({
 		languageVersion: 1,
 		blocks: [
@@ -895,7 +895,7 @@ it("serializes generated RRSS deterministically and safely", () => {
 	});
 
 	expect(output).toBe(
-		'@rr-version 1;\n\n/* Bad *\\/ label */\nsection[id="projects"] > section-heading {\n\tcolor: #123456;\n\tfont-size: 12pt;\n}\n',
+		'@version 1;\n\n/* Bad *\\/ label */\nsection[id="projects"] > section-heading {\n\tcolor: #123456;\n\tfont-size: 12pt;\n}\n',
 	);
 });
 
@@ -964,7 +964,7 @@ mismatch cases.
 
 ```bash
 git add packages/resume/src/stylesheet
-git commit -m "feat(resume): serialize and hash RRSS output"
+git commit -m "feat(resume): serialize and hash Semantic CSS output"
 ```
 
 ---
@@ -1015,8 +1015,8 @@ it("keeps server concurrency columns out of ordinary resume DTOs", () => {
 it("seeds empty semantic source only for the default-enabled cohort", () => {
 	expect(createResumeData({ semanticCssDefault: true }).metadata.stylesheet).toEqual({
 		mode: "semantic",
-		source: { languageVersion: 1, text: "@rr-version 1;\n" },
-		applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+		source: { languageVersion: 1, text: "@version 1;\n" },
+		applied: { languageVersion: 1, text: "@version 1;\n" },
 	});
 	expect(createResumeData({ semanticCssDefault: false }).metadata.stylesheet).toBeUndefined();
 });
@@ -1089,7 +1089,7 @@ pnpm --filter @reactive-resume/db typecheck
 pnpm exec turbo boundaries
 ```
 
-Expected: PASS; old-client updates cannot remove stylesheet state and no client can activate RRSS yet.
+Expected: PASS; old-client updates cannot remove stylesheet state and no client can activate Semantic CSS yet.
 
 - [ ] **Step 7: Commit**
 
@@ -1372,7 +1372,7 @@ git commit -m "feat(pdf): register semantic template manifests"
 ```ts
 it("lets semantic field font weight override template bold defaults", () => {
 	const presentation = resolveIssueFixture("#3146", `
-		@rr-version 1;
+		@version 1;
 		section[type="experience"] field[name="company"] { font-weight: 400; }
 	`);
 
@@ -1381,7 +1381,7 @@ it("lets semantic field font weight override template bold defaults", () => {
 
 it("lets semantic link decoration override the builder underline base", () => {
 	const presentation = resolveIssueFixture("#3134", `
-		@rr-version 1;
+		@version 1;
 		link { text-decoration: none; }
 	`);
 
@@ -1390,13 +1390,13 @@ it("lets semantic link decoration override the builder underline base", () => {
 
 it("styles Basics/header nodes while rejecting unsupported gradients", () => {
 	const valid = resolveIssueFixture("#3137", `
-		@rr-version 1;
+		@version 1;
 		header { background-color: #1e293b; }
 		name { color: white; }
 	`);
 	const invalid = compileStylesheet({
 		languageVersion: 1,
-		text: "@rr-version 1; header { background-image: linear-gradient(red, blue); }",
+		text: "@version 1; header { background-image: linear-gradient(red, blue); }",
 	});
 
 	expect(valid["header"]?.style.backgroundColor).toBe("#1e293b");
@@ -1405,7 +1405,7 @@ it("styles Basics/header nodes while rejecting unsupported gradients", () => {
 
 it("unbolds only skill names and leaves experience titles unchanged", () => {
 	const presentation = resolveIssueFixture("#2223", `
-		@rr-version 1;
+		@version 1;
 		section[type="skills"] field[name="name"] { font-weight: 400; }
 	`);
 
@@ -1420,9 +1420,9 @@ it("never applies legacy and semantic custom styles together", () => {
 
 it("uses authored page context for wrapped physical subpages and repeats fixed nodes", async () => {
 	const result = await renderPaginationFixture(`
-		@rr-version 1;
+		@version 1;
 		page[page-number="1"] { size: A4; }
-		header { -rr-fixed: true; }
+		header { -resume-fixed: true; }
 		@media (max-width: 600pt) { section-heading { font-size: 9pt; } }
 	`);
 
@@ -1712,8 +1712,8 @@ Sanitize with `styleRulesSchema`, then evaluate effective legacy output includin
 - rich-text paragraph/list/link/bold/mark paths;
 - award `bold={false}` and template feature exceptions.
 
-Emit `@rr-version 1;`, safe comments, quoted UUID selectors, explicit point units, and commented disabled/no-effect blocks.
-Never emit `@rr-disabled`. Compare final mocked primitive props after every existing inline/template/safety layer, then
+Emit `@version 1;`, safe comments, quoted UUID selectors, explicit point units, and commented disabled/no-effect blocks.
+Never emit `@resume-disabled`. Compare final mocked primitive props after every existing inline/template/safety layer, then
 render and raster-compare the legacy and semantic PDFs for the migration fixtures. Presentation-map equality alone does
 not satisfy activation parity.
 
@@ -1751,7 +1751,7 @@ changes.
 
 ```bash
 git add packages/pdf pnpm-lock.yaml
-git commit -m "feat(pdf): convert legacy styles to RRSS"
+git commit -m "feat(pdf): convert legacy styles to Semantic CSS"
 ```
 
 ---
@@ -1816,7 +1816,7 @@ it("requires explicit parity-checked activation", async () => {
 	expect(result.renderDataVersion).toBe(8);
 });
 
-it("deactivates to legacy without deleting either RRSS source", async () => {
+it("deactivates to legacy without deleting either Semantic CSS source", async () => {
 	const result = await mutateStylesheet({ ...commonMutationInput, transition: "deactivate" });
 
 	expect(result.stylesheet.mode).toBe("legacy");
@@ -1872,7 +1872,7 @@ Implement the same discriminated union in Zod so extra/missing fields fail at th
 `editGeneration`, both expected versions, and only the payload allowed by their transition.
 
 Normal edits ignore client `applied`. Activation runs compiler, parity, and preflight. Deactivation changes only mode to
-legacy and retains both RRSS sources for reactivation/rollback. Restore independently validates and preflights historical
+legacy and retains both Semantic CSS sources for reactivation/rollback. Restore independently validates and preflights historical
 applied source. Import validates imported applied; duplicate copies content with revision zero; version restore restores
 content but increments current revision.
 
@@ -1965,7 +1965,7 @@ it("returns a projection through the public route without stylesheet sources", a
 	const result = await getStyleProjection({ username: "jane", slug: "resume", requestHeaders });
 
 	expect(result).toEqual(expect.objectContaining({ formatVersion: 1, nodes: expect.any(Object) }));
-	expect(JSON.stringify(result)).not.toContain("@rr-version");
+	expect(JSON.stringify(result)).not.toContain("@version");
 });
 
 it("shares an IP-and-resume render budget across projection and PDF fallback", async () => {
@@ -2130,7 +2130,7 @@ rebase, cross-tab SSE, failed browser preflight, invalid source retention, histo
 
 ```bash
 git add apps/web/src/features/resume/stylesheet apps/web/src/routes/builder apps/web/src/features/resume/builder
-git commit -m "feat(web): add RRSS editor state and worker"
+git commit -m "feat(web): add Semantic CSS editor state and worker"
 ```
 
 ---
@@ -2236,7 +2236,7 @@ Do not add replacement shadcn components; all required components already exist.
 When authoring is off and mode is legacy, keep the existing legacy form during compatibility rollout. When authoring is
 off and mode is semantic, show a read-only `Alert` explaining that semantic styles remain active but this instance does
 not allow editing; never show a legacy form that would attempt ignored/rejected changes. When authoring is on, render the
-RRSS shell. Do not delete legacy schema/PDF behavior. Conversion fills an inactive draft and shows explicit activation.
+Semantic CSS shell. Do not delete legacy schema/PDF behavior. Conversion fills an inactive draft and shows explicit activation.
 
 - [ ] **Step 7: Verify compact/focus/mobile/accessibility behavior**
 
@@ -2254,7 +2254,7 @@ CodeMirror chunk before opening Custom Styles.
 
 ```bash
 git add apps/web/package.json apps/web/src pnpm-lock.yaml
-git commit -m "feat(web): replace custom style form with RRSS editor"
+git commit -m "feat(web): replace custom style form with Semantic CSS editor"
 ```
 
 ---
@@ -2270,22 +2270,22 @@ git commit -m "feat(web): replace custom style form with RRSS editor"
 - Modify: `apps/web/src/features/resume/stylesheet/toolbar.tsx`
 
 **Interfaces:**
-- Produces lint mapping, completion, hover, search, color swatches, and `formatRrss`.
+- Produces lint mapping, completion, hover, search, color swatches, and `formatSemanticCss`.
 - Consumes compiler diagnostics and registries.
 
 - [ ] **Step 1: Write failing extension/formatter tests**
 
 ```ts
 it("completes semantic selectors, current IDs, properties, directives, and system variables", async () => {
-	const labels = await getCompletionLabels(contextAt("--rr-"));
+	const labels = await getCompletionLabels(contextAt("--resume-"));
 
-	expect(labels).toContain("--rr-primary-color");
-	expect(labels).toContain("--rr-sidebar-width");
-	expect(labels).not.toContain("--rr-font-family");
+	expect(labels).toContain("--resume-primary-color");
+	expect(labels).toContain("--resume-sidebar-width");
+	expect(labels).not.toContain("--resume-font-family");
 });
 
 it("formats only on command and preserves comments and cursor", async () => {
-	const result = await formatRrss("/* keep */ section{color:red}", 18);
+	const result = await formatSemanticCss("/* keep */ section{color:red}", 18);
 
 	expect(result.formatted).toContain("/* keep */");
 	expect(result.cursorOffset).toBeGreaterThan(0);
@@ -2318,8 +2318,8 @@ Expected: FAIL on the extension/formatter sentinel or completion/transaction ass
 - [ ] **Step 3: Implement registry-only completions and hover**
 
 Override unrestricted browser-CSS completion. Complete semantic elements/attributes/roles, current section/item IDs,
-field names, current-template parts, registered properties/values/units, `@media`, `@rr-version 1`, user variables,
-read-only `--rr-*`, and structural `-rr-*`. Hover docs come from the same registries used by compiler validation.
+field names, current-template parts, registered properties/values/units, `@media`, `@version 1`, user variables,
+read-only `--resume-*`, and structural `-resume-*`. Hover docs come from the same registries used by compiler validation.
 
 - [ ] **Step 4: Implement diagnostics, search, and color widgets**
 
@@ -2348,7 +2348,7 @@ formatting; build output has separate lazy chunks for CodeMirror/compiler/prefli
 
 ```bash
 git add apps/web/src/features/resume/stylesheet apps/web/package.json pnpm-lock.yaml
-git commit -m "feat(web): add RRSS editor intelligence"
+git commit -m "feat(web): add Semantic CSS editor intelligence"
 ```
 
 ---
@@ -2432,7 +2432,7 @@ Expected: PASS; browser preview, browser export, public viewer, and server expor
 
 ```bash
 git add apps/web packages/pdf packages/api
-git commit -m "feat: integrate RRSS rendering surfaces"
+git commit -m "feat: integrate Semantic CSS rendering surfaces"
 ```
 
 ---
@@ -2469,10 +2469,10 @@ git commit -m "feat: integrate RRSS rendering surfaces"
 The portable fixture must include:
 
 ```css
-@rr-version 1;
+@version 1;
 
 :root {
-	--accent: var(--rr-primary-color);
+	--accent: var(--resume-primary-color);
 }
 
 header > name {
@@ -2501,7 +2501,7 @@ region[placement="sidebar"] section {
 
 section[type="projects"] {
 	break-inside: avoid;
-	-rr-min-presence-ahead: 24pt;
+	-resume-min-presence-ahead: 24pt;
 }
 
 @media (max-width: 600pt) {
@@ -2533,17 +2533,17 @@ FLAG_SEMANTIC_CSS_AUTHORING=true FLAG_SEMANTIC_CSS_DEFAULT=false pnpm exec playw
 pnpm --filter @reactive-resume/pdf test -- src/semantic/all-templates-smoke.test.tsx
 ```
 
-Expected: FAIL on visible RRSS behavior, screenshot, or documentation-staleness assertions; module/configuration errors
+Expected: FAIL on visible Semantic CSS behavior, screenshot, or documentation-staleness assertions; module/configuration errors
 must be fixed before continuing.
 
 - [ ] **Step 3: Write migration and language documentation**
 
 Document:
 
-- RRSS vs browser CSS;
-- `@rr-version`;
+- Semantic CSS vs browser CSS;
+- `@version`;
 - semantic tree/selectors and exact IDs;
-- read-only `--rr-*` tokens;
+- read-only `--resume-*` tokens;
 - supported property matrix and units;
 - structural/pagination directives;
 - diagnostics and last-valid behavior;
@@ -2578,7 +2578,7 @@ pnpm exec playwright test tests/e2e/specs/semantic-css/template-visual.spec.ts -
 ```
 
 Registry coverage asserts every semantic kind, conditional field, role, and template part is exercised. The existing
-E2E workflow already uploads Playwright reports; extend its commands so RRSS tests run under explicit flag states:
+E2E workflow already uploads Playwright reports; extend its commands so Semantic CSS tests run under explicit flag states:
 
 ```bash
 FLAG_SEMANTIC_CSS_AUTHORING=false FLAG_SEMANTIC_CSS_DEFAULT=false pnpm exec playwright test --grep-invert "@semantic-css"
@@ -2597,7 +2597,7 @@ FLAG_SEMANTIC_CSS_AUTHORING=false FLAG_SEMANTIC_CSS_DEFAULT=false pnpm exec play
 Document those commands in `tests/e2e/README.md`. The default-on test asserts a new resume starts semantic; the dormant
 test asserts the legacy form/render path and old-client update preservation remain available. The flag-off-semantic test
 seeds an active semantic resume, verifies semantic rendering remains active, and verifies Custom Styles shows a
-read-only unavailable notice instead of the legacy form. Tag every RRSS test title with `@semantic-css` so the baseline
+read-only unavailable notice instead of the legacy form. Tag every Semantic CSS test title with `@semantic-css` so the baseline
 flag-off run excludes only this feature suite.
 
 - [ ] **Step 5: Perform manual GUI walkthrough and record evidence**
@@ -2659,7 +2659,7 @@ Test:
 
 ```bash
 git add docs tests/e2e packages/pdf tooling package.json pnpm-lock.yaml .github/workflows/e2e.yml
-git commit -m "docs: add RRSS reference and acceptance coverage"
+git commit -m "docs: add Semantic CSS reference and acceptance coverage"
 ```
 
 ---
@@ -2668,8 +2668,8 @@ git commit -m "docs: add RRSS reference and acceptance coverage"
 
 - [ ] Every production behavior was introduced by a test that first failed for the expected reason.
 - [ ] Compiler v1 is immutable and selected by persisted version.
-- [ ] Generated/default source contains `@rr-version 1;`; missing hand-written directive only warns in v1.
-- [ ] Reserved `--rr-*` variables expose base visual settings but not font family or assets.
+- [ ] Generated/default source contains `@version 1;`; missing hand-written directive only warns in v1.
+- [ ] Reserved `--resume-*` variables expose base visual settings but not font family or assets.
 - [ ] Compiler, worker protocol, and public projection contain only structured-clone/JSON-safe plain values.
 - [ ] Generic updates and patches cannot overwrite server-owned stylesheet state.
 - [ ] Preflight happens outside locks; short CAS checks stylesheet revision and render-data version.

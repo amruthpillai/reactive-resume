@@ -160,13 +160,13 @@ describe("semantic selector compilation", () => {
 		const fixture = readFileSync(new URL("./__fixtures__/v1/selectors.css", import.meta.url), "utf8");
 		expect(compileStylesheet({ languageVersion: 1, text: fixture }).program).not.toBeNull();
 
-		const invalid = compileStylesheet({ languageVersion: 1, text: "@rr-version 1;\nsection:hover { color: red; }" });
+		const invalid = compileStylesheet({ languageVersion: 1, text: "@version 1;\nsection:hover { color: red; }" });
 		expect(invalid.program).toBeNull();
 		expect(invalid.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_SELECTOR" }));
 	});
 
 	it("rejects uppercase pseudo names while compiling a stylesheet", () => {
-		const result = compileStylesheet({ languageVersion: 1, text: "@rr-version 1;\n:ROOT { color: red; }" });
+		const result = compileStylesheet({ languageVersion: 1, text: "@version 1;\n:ROOT { color: red; }" });
 		expect(result.program).toBeNull();
 		expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_SELECTOR" }));
 	});

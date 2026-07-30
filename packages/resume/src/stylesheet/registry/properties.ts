@@ -21,10 +21,10 @@ export type PropertyDefinition = {
 
 export type PropertyRegistry = Readonly<Record<string, PropertyDefinition | undefined>>;
 
-export const RRSS_CSS_WIDE_KEYWORDS_V1 = ["inherit", "initial", "revert", "unset"] as const;
-export const RRSS_LENGTH_UNITS_V1 = ["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"] as const;
-export const RRSS_BORDER_STYLE_VALUES_V1 = ["dotted", "dashed", "solid"] as const;
-export const RRSS_LENGTH_VALUE_KEYWORDS_V1 = [
+export const SEMANTIC_CSS_CSS_WIDE_KEYWORDS_V1 = ["inherit", "initial", "revert", "unset"] as const;
+export const SEMANTIC_CSS_LENGTH_UNITS_V1 = ["pt", "px", "in", "mm", "cm", "%", "vw", "vh", "em", "rem"] as const;
+export const SEMANTIC_CSS_BORDER_STYLE_VALUES_V1 = ["dotted", "dashed", "solid"] as const;
+export const SEMANTIC_CSS_LENGTH_VALUE_KEYWORDS_V1 = [
 	"auto",
 	"none",
 	"normal",
@@ -35,7 +35,7 @@ export const RRSS_LENGTH_VALUE_KEYWORDS_V1 = [
 	"medium",
 	"thick",
 ] as const;
-export const RRSS_LENGTH_PROPERTIES_V1 = [
+export const SEMANTIC_CSS_LENGTH_PROPERTIES_V1 = [
 	"bottom",
 	"border-bottom-left-radius",
 	"border-bottom-right-radius",
@@ -71,8 +71,8 @@ export const RRSS_LENGTH_PROPERTIES_V1 = [
 	"text-indent",
 	"top",
 	"width",
-	"-rr-min-presence-ahead",
-	"-rr-shadow-width",
+	"-resume-min-presence-ahead",
+	"-resume-shadow-width",
 ] as const;
 
 const containerNodes = [
@@ -119,8 +119,8 @@ const textAndLinkNodes = [...textNodes, "link"] as SemanticNodeKind[];
 const colorNodes = [...containerNodes, ...textNodes, "link", "icon", "level"] as SemanticNodeKind[];
 const spacingNodes = [...containerNodes, ...textNodes, "link", "picture"] as SemanticNodeKind[];
 const structuralNodes = [...SEMANTIC_NODE_KINDS.filter((kind) => kind !== "resume")] as SemanticNodeKind[];
-const lengthProperties = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
-const numericLengthUnits = RRSS_LENGTH_UNITS_V1.filter((unit) => unit !== "%");
+const lengthProperties = new Set<string>(SEMANTIC_CSS_LENGTH_PROPERTIES_V1);
+const numericLengthUnits = SEMANTIC_CSS_LENGTH_UNITS_V1.filter((unit) => unit !== "%");
 const borderStyleProperties = /^(?:border-style|border-(?:top|right|bottom|left)-style)$/;
 const borderShorthandProperties = /^(?:border|border-(?:top|right|bottom|left))$/;
 const propertyValueHints = {
@@ -165,21 +165,21 @@ const propertyValueHints = {
 	"break-before": ["auto", "page"],
 	"break-inside": ["auto", "avoid"],
 	size: ["A4", "letter"],
-	"-rr-fixed": ["true", "false", "0", "1"],
+	"-resume-fixed": ["true", "false", "0", "1"],
 } as const satisfies Readonly<Record<string, readonly string[]>>;
 
 function propertyValues(name: string): readonly string[] {
 	const values = borderStyleProperties.test(name)
-		? RRSS_BORDER_STYLE_VALUES_V1
+		? SEMANTIC_CSS_BORDER_STYLE_VALUES_V1
 		: borderShorthandProperties.test(name)
-			? RRSS_BORDER_STYLE_VALUES_V1.map((style) => `1pt ${style}`)
+			? SEMANTIC_CSS_BORDER_STYLE_VALUES_V1.map((style) => `1pt ${style}`)
 			: (propertyValueHints[name as keyof typeof propertyValueHints] ?? []);
-	return [...RRSS_CSS_WIDE_KEYWORDS_V1, ...values];
+	return [...SEMANTIC_CSS_CSS_WIDE_KEYWORDS_V1, ...values];
 }
 
 function propertyUnits(name: string): readonly string[] {
-	if (name === "size" || name === "-rr-min-presence-ahead") return numericLengthUnits;
-	return lengthProperties.has(name) || name === "line-height" ? RRSS_LENGTH_UNITS_V1 : [];
+	if (name === "size" || name === "-resume-min-presence-ahead") return numericLengthUnits;
+	return lengthProperties.has(name) || name === "line-height" ? SEMANTIC_CSS_LENGTH_UNITS_V1 : [];
 }
 
 function entries(
@@ -265,7 +265,7 @@ const properties = {
 	...entries(["text-transform"], { category: "text", inheritable: true, appliesTo: textAndLinkNodes }),
 	...entries(["vertical-align"], { category: "text", inheritable: false, appliesTo: textAndLinkNodes }),
 	...entries(["object-fit", "object-position"], { category: "image", inheritable: false, appliesTo: ["picture"] }),
-	...entries(["-rr-shadow-color", "-rr-shadow-width"], {
+	...entries(["-resume-shadow-color", "-resume-shadow-width"], {
 		category: "image",
 		inheritable: false,
 		appliesTo: ["picture"],
@@ -331,8 +331,8 @@ const properties = {
 	}),
 	...entries(["orphans", "widows"], { category: "structural", inheritable: false, appliesTo: textNodes }),
 	...entries(["size"], { category: "structural", inheritable: false, appliesTo: ["page"] }),
-	...entries(["-rr-fixed"], { category: "structural", inheritable: false, appliesTo: structuralNodes }),
-	...entries(["-rr-min-presence-ahead"], {
+	...entries(["-resume-fixed"], { category: "structural", inheritable: false, appliesTo: structuralNodes }),
+	...entries(["-resume-min-presence-ahead"], {
 		category: "structural",
 		inheritable: false,
 		appliesTo: structuralNodes,

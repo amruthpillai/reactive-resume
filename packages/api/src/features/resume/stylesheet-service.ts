@@ -1,5 +1,5 @@
 import type { PdfPreflightResult, StylesheetPreflightRunner } from "@reactive-resume/pdf/server";
-import type { CompileStylesheetResult, RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { CompileStylesheetResult, SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { SemanticStylesheet, StylesheetMode, StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { SemanticCssEventInput } from "./stylesheet-observability";
@@ -8,7 +8,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
-import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
+import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { publishResumeUpdated } from "./events";
 import { parseStoredResumeData } from "./resume-data-validation";
 import { recordSemanticCssEvent } from "./stylesheet-observability";
@@ -55,7 +55,7 @@ export type StylesheetState = {
 
 export type StylesheetMutationResult = StylesheetState & {
 	editGeneration: number;
-	diagnostics: RrssDiagnostic[];
+	diagnostics: SemanticCssDiagnostic[];
 };
 
 type StylesheetTransaction = {
@@ -87,7 +87,7 @@ class StylesheetRevisionConflict extends Error {
 	}
 }
 
-const emptySource = (): StylesheetSource => ({ languageVersion: 1, text: EMPTY_RRSS_SOURCE });
+const emptySource = (): StylesheetSource => ({ languageVersion: 1, text: EMPTY_SEMANTIC_CSS_SOURCE });
 
 export async function stylesheetFromSnapshot(
 	snapshot: StylesheetSnapshot,
@@ -112,7 +112,7 @@ const stateFromSnapshot = async (
 	renderDataVersion: snapshot.renderDataVersion,
 });
 
-const preflightDiagnostic = (result: Extract<PdfPreflightResult, { ok: false }>): RrssDiagnostic => ({
+const preflightDiagnostic = (result: Extract<PdfPreflightResult, { ok: false }>): SemanticCssDiagnostic => ({
 	code: result.code,
 	severity: "error",
 	message: result.message,
@@ -122,7 +122,7 @@ const preflightDiagnostic = (result: Extract<PdfPreflightResult, { ok: false }>)
 	},
 });
 
-const validationError = (message: string, diagnostics: readonly RrssDiagnostic[]) =>
+const validationError = (message: string, diagnostics: readonly SemanticCssDiagnostic[]) =>
 	new ORPCError("STYLESHEET_VALIDATION_FAILED", {
 		status: 400,
 		message,
@@ -214,7 +214,7 @@ export function createStylesheetService(dependencies: StylesheetServiceDependenc
 
 		mutate: async (input) => {
 			const snapshot = await dependencies.readSnapshot(input);
-			let diagnostics: RrssDiagnostic[] = [];
+			let diagnostics: SemanticCssDiagnostic[] = [];
 			let activationPageCount: number | null = null;
 			const activationStartedAt = performance.now();
 			const observeActivation = (success: boolean, revision: number) => {

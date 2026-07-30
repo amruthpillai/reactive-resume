@@ -122,7 +122,7 @@ describe("PdfViewer", () => {
 
 	it("renders a valid public projection through the shared PDF entrypoint", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const applied = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		const applied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
 		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
 		const projection = await createPublicStyleProjection({ data: semanticData });
 		const refetchStyleProjection = vi.fn();
@@ -148,7 +148,7 @@ describe("PdfViewer", () => {
 
 	it("refetches a mismatched projection once before using the authorized PDF fallback", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const applied = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		const applied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
 		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
 		const projection = await createPublicStyleProjection({ data: semanticData });
 		const mismatchedProjection = { ...projection, renderDataHash: "0".repeat(64) };

@@ -1,36 +1,36 @@
-import type { RrssDiagnostic, SourceRange } from "./types";
+import type { SemanticCssDiagnostic, SourceRange } from "./types";
 
 type DiagnosticReference = {
-	severity: RrssDiagnostic["severity"];
+	severity: SemanticCssDiagnostic["severity"];
 	meaning: string;
 	action: string;
 };
 
-export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
+export const SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1 = {
 	MISSING_VERSION_DIRECTIVE: {
 		severity: "warning",
-		meaning: "The stylesheet omitted @rr-version.",
-		action: "Add @rr-version 1; as the first statement.",
+		meaning: "The stylesheet omitted @version.",
+		action: "Add @version 1; as the first statement.",
 	},
-	DUPLICATE_RR_VERSION_DIRECTIVE: {
+	DUPLICATE_VERSION_DIRECTIVE: {
 		severity: "error",
-		meaning: "More than one @rr-version directive was found.",
+		meaning: "More than one @version directive was found.",
 		action: "Keep exactly one version directive.",
 	},
-	INVALID_RR_VERSION: {
+	INVALID_VERSION: {
 		severity: "error",
 		meaning: "The version directive is not one positive integer without a block.",
-		action: "Use @rr-version 1;.",
+		action: "Use @version 1;.",
 	},
-	RR_VERSION_MISMATCH: {
+	VERSION_MISMATCH: {
 		severity: "error",
 		meaning: "The directive and stored language version disagree.",
 		action: "Set both to version 1.",
 	},
-	UNSUPPORTED_RR_VERSION: {
+	UNSUPPORTED_VERSION: {
 		severity: "error",
-		meaning: "The requested RRSS version is not implemented.",
-		action: "Use @rr-version 1;.",
+		meaning: "The requested Semantic CSS version is not implemented.",
+		action: "Use @version 1;.",
 	},
 	CSS_PARSE_ERROR: {
 		severity: "error",
@@ -40,7 +40,7 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	CSS_RAW_SYNTAX: {
 		severity: "error",
 		meaning: "The parser encountered unsupported raw CSS syntax.",
-		action: "Rewrite the declaration or selector using documented RRSS syntax.",
+		action: "Rewrite the declaration or selector using documented Semantic CSS syntax.",
 	},
 	FORBIDDEN_AT_RULE: {
 		severity: "error",
@@ -49,14 +49,14 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	},
 	UNSUPPORTED_AT_RULE: {
 		severity: "error",
-		meaning: "The at-rule is not part of RRSS version 1.",
-		action: "Use only @rr-version and documented @media queries.",
+		meaning: "The at-rule is not part of Semantic CSS version 1.",
+		action: "Use only @version and documented @media queries.",
 	},
 	INVALID_MEDIA_QUERY: {
 		severity: "error",
 		meaning: "The PDF dimension query is malformed or unsupported.",
 		action:
-			"Use orientation: portrait|landscape or width, min-width, max-width, height, min-height, or max-height with an RRSS length.",
+			"Use orientation: portrait|landscape or width, min-width, max-width, height, min-height, or max-height with a Semantic CSS length.",
 	},
 	MEDIA_PAGE_SIZE: {
 		severity: "error",
@@ -66,16 +66,16 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	INVALID_SELECTOR: {
 		severity: "error",
 		meaning: "The selector uses unsupported syntax or exceeds selector limits.",
-		action: "Rewrite it using documented RRSS selectors and combinators.",
+		action: "Rewrite it using documented Semantic CSS selectors and combinators.",
 	},
 	UNSUPPORTED_PROPERTY: {
 		severity: "error",
-		meaning: "The property is not in the RRSS property registry.",
+		meaning: "The property is not in the Semantic CSS property registry.",
 		action: "Choose a property from the property reference.",
 	},
 	SYSTEM_VARIABLE_READONLY: {
 		severity: "error",
-		meaning: "An author attempted to assign a reserved --rr-* variable.",
+		meaning: "An author attempted to assign a reserved --resume-* variable.",
 		action: "Read the system variable or rename the author variable.",
 	},
 	FORBIDDEN_CSS_VALUE: {
@@ -115,12 +115,12 @@ export const RRSS_DIAGNOSTIC_CATALOG_V1 = {
 	},
 	RESOURCE_LIMIT: {
 		severity: "error",
-		meaning: "Compilation, matching, values, variables, or semantic nodes exceeded a bounded RRSS limit.",
+		meaning: "Compilation, matching, values, variables, or semantic nodes exceeded a bounded Semantic CSS limit.",
 		action: "Reduce stylesheet or resume complexity.",
 	},
 } as const satisfies Readonly<Record<string, DiagnosticReference>>;
 
-export type RrssCompilerDiagnosticCode = keyof typeof RRSS_DIAGNOSTIC_CATALOG_V1;
+export type SemanticCssCompilerDiagnosticCode = keyof typeof SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1;
 
 export const EMPTY_SOURCE_RANGE: SourceRange = {
 	start: { line: 1, column: 1, offset: 0 },
@@ -128,10 +128,10 @@ export const EMPTY_SOURCE_RANGE: SourceRange = {
 };
 
 export function createDiagnostic(
-	code: RrssCompilerDiagnosticCode,
-	severity: RrssDiagnostic["severity"],
+	code: SemanticCssCompilerDiagnosticCode,
+	severity: SemanticCssDiagnostic["severity"],
 	message: string,
 	range: SourceRange = EMPTY_SOURCE_RANGE,
-): RrssDiagnostic {
+): SemanticCssDiagnostic {
 	return { code, severity, message, range };
 }

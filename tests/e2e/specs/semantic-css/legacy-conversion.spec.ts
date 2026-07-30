@@ -20,7 +20,7 @@ test("@semantic-css converts legacy rules into an inactive draft before activati
 	await openSemanticCssEditor(page);
 
 	await expect(page.getByText("Converted stylesheet draft", { exact: true })).toBeVisible();
-	await expect(page.getByRole("textbox", { name: "Semantic CSS stylesheet" })).toContainText("@rr-version 1;");
+	await expect(page.getByRole("textbox", { name: "Semantic CSS stylesheet" })).toContainText("@version 1;");
 	await expect(page.getByRole("textbox", { name: "Semantic CSS stylesheet" })).toContainText(
 		'section[type="experience"]',
 	);

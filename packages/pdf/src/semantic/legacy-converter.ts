@@ -117,7 +117,7 @@ const serializeBlock = (
 		languageVersion: 1,
 		blocks: [{ selector, declarations, ...(comment === undefined ? {} : { comment }) }],
 	})
-		.replace(/^@rr-version 1;\n\n/, "")
+		.replace(/^@version 1;\n\n/, "")
 		.trimEnd();
 
 const appliesToAwards = (data: ResumeData, rule: StyleRule): boolean => {
@@ -257,7 +257,7 @@ export function convertLegacyStyleRules(data: ResumeData): LegacyStyleConversion
 		if (!rule.enabled) return [disabledRuleChunk(sanitizedData, rule)];
 		return styleSlots.flatMap((slot) => (rule.slots[slot] ? activeSlotChunks(sanitizedData, rule, slot) : []));
 	});
-	const text = `@rr-version 1;\n${chunks.length > 0 ? `\n${chunks.join("\n\n")}\n` : ""}`;
+	const text = `@version 1;\n${chunks.length > 0 ? `\n${chunks.join("\n\n")}\n` : ""}`;
 
 	return {
 		source: { languageVersion: 1, text },

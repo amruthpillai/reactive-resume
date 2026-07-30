@@ -1,14 +1,14 @@
-import type { RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { SemanticStylesheet, StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { StoreApi } from "zustand/vanilla";
-import type { RrssColorToken } from "./color-tokens";
+import type { SemanticCssColorToken } from "./color-tokens";
 import type {
 	CompileWorkerInput,
 	CompileWorkerResponse,
 	PreflightWorkerInput,
 	PreflightWorkerResponse,
-	RrssEditorMetadata,
+	SemanticCssEditorMetadata,
 } from "./protocol";
 import { create } from "zustand/react";
 import { createStore } from "zustand/vanilla";
@@ -29,7 +29,7 @@ export type StylesheetCanonicalState = {
 
 type StylesheetMutationResult = StylesheetCanonicalState & {
 	editGeneration: number;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 type EditMutation = {
@@ -68,9 +68,9 @@ export type StylesheetStoreState = {
 	revision: number;
 	renderDataVersion: number;
 	editGeneration: number;
-	diagnostics: readonly RrssDiagnostic[];
-	colorTokens: readonly RrssColorToken[];
-	editorMetadata: RrssEditorMetadata;
+	diagnostics: readonly SemanticCssDiagnostic[];
+	colorTokens: readonly SemanticCssColorToken[];
+	editorMetadata: SemanticCssEditorMetadata;
 	status: "idle" | "compiling" | "preflighting" | "saving" | "applied" | "error";
 	restoreLocked: boolean;
 	focused: boolean;
@@ -102,7 +102,7 @@ type CreateStylesheetStoreRuntimeOptions = RuntimeDependencies & {
 	store?: StoreApi<StylesheetStoreState>;
 };
 
-const emptySource = (): StylesheetSource => ({ languageVersion: 1, text: "@rr-version 1;\n" });
+const emptySource = (): StylesheetSource => ({ languageVersion: 1, text: "@version 1;\n" });
 const emptySemanticTree = (): SemanticNode => ({
 	key: "resume",
 	kind: "resume",
@@ -160,7 +160,7 @@ const pageDimensions = (data: ResumeData) => {
 	}));
 };
 
-const createEditorMetadata = (data: ResumeData): RrssEditorMetadata => {
+const createEditorMetadata = (data: ResumeData): SemanticCssEditorMetadata => {
 	const pages = data.metadata.layout.pages.map((page, index) =>
 		buildSemanticTree({
 			data,
@@ -596,11 +596,13 @@ let activeRuntimeToken: StylesheetRuntimeToken | undefined;
 
 const compilerClient = () =>
 	createCompileWorkerClient(
-		() => new Worker(new URL("./stylesheet.worker.ts", import.meta.url), { type: "module", name: "rrss-compiler" }),
+		() =>
+			new Worker(new URL("./stylesheet.worker.ts", import.meta.url), { type: "module", name: "semantic-css-compiler" }),
 	);
 const preflightClient = () =>
 	createPreflightWorkerClient(
-		() => new Worker(new URL("./preflight.worker.ts", import.meta.url), { type: "module", name: "rrss-preflight" }),
+		() =>
+			new Worker(new URL("./preflight.worker.ts", import.meta.url), { type: "module", name: "semantic-css-preflight" }),
 		5_000,
 	);
 

@@ -50,7 +50,7 @@ describe("resolvePublicResumePdfBlob", () => {
 
 	it("refetches a mismatched projection once before returning the authorized server blob", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const source = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
 		semanticData.metadata.stylesheet = { mode: "semantic", source, applied: source };
 		const projection = await createPublicStyleProjection({ data: semanticData });
 		const mismatchedProjection = { ...projection, renderDataHash: "0".repeat(64) };

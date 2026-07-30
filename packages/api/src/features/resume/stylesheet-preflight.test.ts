@@ -2,7 +2,7 @@ import type { StylesheetPreflightRunner } from "@reactive-resume/pdf/server";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
+import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import {
 	checkLegacyStylesheetParity,
 	prepareImportedResumeData,
@@ -17,15 +17,15 @@ vi.mock("@reactive-resume/pdf/semantic", () => semanticPdfMocks);
 
 const validSource = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nsection { color: #123456; }\n",
+	text: "@version 1;\nsection { color: #123456; }\n",
 };
 const validApplied = {
 	languageVersion: 1,
-	text: "@rr-version 1;\nsection-heading { color: #654321; }\n",
+	text: "@version 1;\nsection-heading { color: #654321; }\n",
 };
 const invalidSource = {
 	languageVersion: 99,
-	text: "@rr-version 99;\n/* preserved future source */\n",
+	text: "@version 99;\n/* preserved future source */\n",
 };
 
 const resumeData = (source = validSource, applied = validApplied): ResumeData => {
@@ -37,7 +37,7 @@ const resumeData = (source = validSource, applied = validApplied): ResumeData =>
 const createRunner = () => {
 	const run = vi.fn<StylesheetPreflightRunner["run"]>(async ({ stylesheet }) => ({
 		ok: true,
-		pageCount: stylesheet.text === EMPTY_RRSS_SOURCE ? 1 : 2,
+		pageCount: stylesheet.text === EMPTY_SEMANTIC_CSS_SOURCE ? 1 : 2,
 		byteCount: 100,
 		diagnostics: [],
 	}));
@@ -116,10 +116,10 @@ describe("stylesheet persistence preparation", () => {
 		expect(result.metadata.stylesheet).toEqual({
 			mode: "semantic",
 			source: invalidSource,
-			applied: { languageVersion: 1, text: EMPTY_RRSS_SOURCE },
+			applied: { languageVersion: 1, text: EMPTY_SEMANTIC_CSS_SOURCE },
 		});
 		expect(runner.run).toHaveBeenCalledTimes(1);
-		expect(runner.run.mock.calls[0]?.[0].stylesheet.text).toBe(EMPTY_RRSS_SOURCE);
+		expect(runner.run.mock.calls[0]?.[0].stylesheet.text).toBe(EMPTY_SEMANTIC_CSS_SOURCE);
 	});
 
 	it("reports a controlled unavailable error when imported stylesheet preflight has no runner", async () => {

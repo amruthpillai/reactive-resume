@@ -26,7 +26,7 @@ const renderedPdfFingerprint = (pdf: Buffer) => {
 test("@semantic-css keeps preview and export on the last valid source", async ({ authPage: page }, testInfo) => {
 	const resumeId = await createSemanticCssResume(page, testInfo);
 	await seedSemanticCssResume(page, resumeId);
-	await replaceStylesheet(page, "@rr-version 1;\nname { color: #dc2626; }\n");
+	await replaceStylesheet(page, "@version 1;\nname { color: #dc2626; }\n");
 	await waitForStylesheetStatus(page, "Applied");
 
 	const canvas = await waitForStablePreview(page);
@@ -35,7 +35,7 @@ test("@semantic-css keeps preview and export on the last valid source", async ({
 	const validPdf = await readFile(await validDownload.path());
 	expect(validPdf.subarray(0, 4).toString()).toBe("%PDF");
 
-	await replaceStylesheet(page, "@rr-version 1;\nname { color: ; }\n");
+	await replaceStylesheet(page, "@version 1;\nname { color: ; }\n");
 	await waitForStylesheetStatus(page, "Error");
 	await expect(page.getByText("Preview and export use the last valid version.", { exact: true })).toBeVisible();
 	await expect.poll(() => canvas.evaluate((element) => (element as HTMLCanvasElement).toDataURL())).toBe(validPreview);
@@ -46,11 +46,11 @@ test("@semantic-css keeps preview and export on the last valid source", async ({
 	await expect
 		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet)
 		.toMatchObject({
-			source: { text: "@rr-version 1;\nname { color: ; }\n" },
-			applied: { text: "@rr-version 1;\nname { color: #dc2626; }\n" },
+			source: { text: "@version 1;\nname { color: ; }\n" },
+			applied: { text: "@version 1;\nname { color: #dc2626; }\n" },
 		});
 
-	await replaceStylesheet(page, "@rr-version 1;\nname { color: #2563eb; }\n");
+	await replaceStylesheet(page, "@version 1;\nname { color: #2563eb; }\n");
 	await waitForStylesheetStatus(page, "Applied");
 	await expect
 		.poll(() => canvas.evaluate((element) => (element as HTMLCanvasElement).toDataURL()))
@@ -62,5 +62,5 @@ test("@semantic-css keeps preview and export on the last valid source", async ({
 	expect(renderedPdfFingerprint(fixedPdf)).not.toBe(renderedPdfFingerprint(validPdf));
 	await expect
 		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet?.applied.text)
-		.toBe("@rr-version 1;\nname { color: #2563eb; }\n");
+		.toBe("@version 1;\nname { color: #2563eb; }\n");
 });

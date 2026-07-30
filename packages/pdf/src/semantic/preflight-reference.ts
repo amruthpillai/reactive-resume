@@ -1,7 +1,7 @@
 export const PDF_PREFLIGHT_DIAGNOSTIC_CATALOG = {
 	STYLESHEET_PREFLIGHT_INVALID: {
 		meaning: "The stylesheet has compiler or semantic errors.",
-		action: "Fix the accompanying RRSS diagnostics.",
+		action: "Fix the accompanying Semantic CSS diagnostics.",
 	},
 	STYLESHEET_PREFLIGHT_PAGE_SIZE_LIMIT: {
 		meaning: "An authored page exceeds the PDF dimension or area budget.",

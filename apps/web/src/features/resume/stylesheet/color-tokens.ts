@@ -1,7 +1,7 @@
 import type { StyleProgram } from "@reactive-resume/resume/stylesheet";
 import { PROPERTY_REGISTRY_V1 } from "@reactive-resume/resume/stylesheet";
 
-export type RrssColorToken = {
+export type SemanticCssColorToken = {
 	from: number;
 	to: number;
 	value: string;
@@ -14,9 +14,12 @@ const isColorProperty = (property: string) =>
 	PROPERTY_REGISTRY_V1[property] !== undefined &&
 	(PROPERTY_REGISTRY_V1[property]?.category === "color" || property.endsWith("-color"));
 
-export function collectCompiledColorTokens(source: string, program: StyleProgram | null): readonly RrssColorToken[] {
+export function collectCompiledColorTokens(
+	source: string,
+	program: StyleProgram | null,
+): readonly SemanticCssColorToken[] {
 	if (!program) return [];
-	const tokens = new Map<string, RrssColorToken>();
+	const tokens = new Map<string, SemanticCssColorToken>();
 
 	for (const rule of program.rules) {
 		for (const declaration of rule.declarations) {

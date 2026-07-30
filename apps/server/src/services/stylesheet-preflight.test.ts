@@ -4,7 +4,7 @@ import { createStylesheetPreflightRunner, STYLESHEET_PREFLIGHT_LIMITS } from "./
 
 const validStylesheet = {
 	languageVersion: 1,
-	text: "@rr-version 1;",
+	text: "@version 1;",
 } as const;
 
 const input = {

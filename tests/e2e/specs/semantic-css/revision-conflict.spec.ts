@@ -15,11 +15,11 @@ test("@semantic-css rebases a stale revision without dropping the focused draft"
 }, testInfo) => {
 	const resumeId = await createSemanticCssResume(page, testInfo);
 	await seedSemanticCssResume(page, resumeId);
-	await replaceStylesheet(page, "@rr-version 1;\nname { color: #dc2626; }\n");
+	await replaceStylesheet(page, "@version 1;\nname { color: #dc2626; }\n");
 	await waitForStylesheetStatus(page, "Applied");
 
 	await updateSemanticCssFixture(resumeId, { bumpRevision: true });
-	const latest = "@rr-version 1;\nname { color: #2563eb; }\n";
+	const latest = "@version 1;\nname { color: #2563eb; }\n";
 	await replaceStylesheet(page, latest);
 	await waitForStylesheetStatus(page, "Applied");
 	await expect.poll(() => readStylesheetSource(page)).toBe(latest);

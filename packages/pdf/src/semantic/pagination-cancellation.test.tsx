@@ -55,7 +55,7 @@ const buildFixture = (value: string): ResumeData => {
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
 	const source = {
 		languageVersion: 1,
-		text: `@rr-version 1; section[type="summary"] { break-before: ${value}; break-inside: ${value}; }`,
+		text: `@version 1; section[type="summary"] { break-before: ${value}; break-inside: ${value}; }`,
 	};
 	data.metadata.stylesheet = { mode: "semantic", source, applied: source };
 	return data;

@@ -62,8 +62,8 @@ const expectedProperties = [
 	"vertical-align",
 	"object-fit",
 	"object-position",
-	"-rr-shadow-color",
-	"-rr-shadow-width",
+	"-resume-shadow-color",
+	"-resume-shadow-width",
 	"margin",
 	"margin-top",
 	"margin-right",
@@ -111,8 +111,8 @@ const expectedProperties = [
 	"orphans",
 	"widows",
 	"size",
-	"-rr-fixed",
-	"-rr-min-presence-ahead",
+	"-resume-fixed",
+	"-resume-min-presence-ahead",
 ];
 
 const containerNodes = [
@@ -260,7 +260,7 @@ const expectedPropertyGroups = [
 	{ names: ["text-transform"], appliesTo: textAndLinkNodes, inheritable: true },
 	{ names: ["vertical-align"], appliesTo: textAndLinkNodes, inheritable: false },
 	{
-		names: ["object-fit", "object-position", "-rr-shadow-color", "-rr-shadow-width"],
+		names: ["object-fit", "object-position", "-resume-shadow-color", "-resume-shadow-width"],
 		appliesTo: ["picture"],
 		inheritable: false,
 	},
@@ -324,12 +324,12 @@ const expectedPropertyGroups = [
 	{ names: ["orphans", "widows"], appliesTo: textNodes, inheritable: false },
 	{ names: ["size"], appliesTo: ["page"], inheritable: false },
 	{
-		names: ["-rr-fixed"],
+		names: ["-resume-fixed"],
 		appliesTo: structuralNodes,
 		inheritable: false,
 	},
 	{
-		names: ["-rr-min-presence-ahead"],
+		names: ["-resume-min-presence-ahead"],
 		appliesTo: structuralNodes,
 		inheritable: false,
 	},

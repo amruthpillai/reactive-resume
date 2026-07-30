@@ -1,5 +1,5 @@
 import type { InferSchemaOutput, Schema } from "@orpc/server";
-import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import type z from "zod";
 import type { resumeDto } from "../../dto/resume";
 import { describe, expect, expectTypeOf, it, vi } from "vitest";
@@ -21,7 +21,7 @@ type ErrorData<TKey extends keyof MutateErrorMap> = MutateErrorMap[TKey] extends
 	: never;
 type StylesheetState = z.infer<typeof resumeDto.stylesheet.getState.output>;
 
-const source = { languageVersion: 1, text: "@rr-version 1;\n" };
+const source = { languageVersion: 1, text: "@version 1;\n" };
 const state = {
 	stylesheet: { mode: "semantic" as const, source, applied: source },
 	revision: 4,
@@ -52,7 +52,7 @@ describe("resume stylesheet route error contract", () => {
 		expect(schema.safeParse({ diagnostics: [diagnostic], source }).success).toBe(false);
 		expect(schema.safeParse({ diagnostics: [{ ...diagnostic, source }] }).success).toBe(false);
 		expectTypeOf<ErrorData<"STYLESHEET_VALIDATION_FAILED">>().toEqualTypeOf<{
-			diagnostics: RrssDiagnostic[];
+			diagnostics: SemanticCssDiagnostic[];
 		}>();
 	});
 

@@ -5,7 +5,7 @@ const loadPdfModule = () => (pdfModule ??= import("pdfjs-dist/legacy/build/pdf.m
 const createNestedWorker = () =>
 	new Worker(new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url), {
 		type: "module",
-		name: "rrss-pdfjs",
+		name: "semantic-css-pdfjs",
 	});
 
 export async function initializePdfInspection(): Promise<void> {

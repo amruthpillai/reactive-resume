@@ -1,6 +1,6 @@
 import type { CompiledStyleRule, StyleProgram } from "./types";
 
-export const SUPPORTED_RRSS_VERSIONS = Object.freeze([1] as const);
+export const SUPPORTED_SEMANTIC_CSS_VERSIONS = Object.freeze([1] as const);
 
 type StylesheetCompiler = (rules: readonly CompiledStyleRule[]) => StyleProgram;
 
@@ -9,7 +9,7 @@ function compileVersionOne(rules: readonly CompiledStyleRule[]): StyleProgram {
 }
 
 const COMPILERS = Object.freeze({ 1: compileVersionOne } satisfies Record<
-	(typeof SUPPORTED_RRSS_VERSIONS)[number],
+	(typeof SUPPORTED_SEMANTIC_CSS_VERSIONS)[number],
 	StylesheetCompiler
 >);
 

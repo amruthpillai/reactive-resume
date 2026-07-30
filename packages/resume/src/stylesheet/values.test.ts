@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import { StylesheetCompilationCache, stylesheetCacheKey } from "./cache";
 import { compileStylesheet } from "./compile";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 
 function escapedIdentifier(identifier: string, escaped: readonly boolean[], uppercase: readonly boolean[]): string {
 	return [...identifier]
@@ -40,7 +40,7 @@ function expectedSides(tokens: readonly number[]): readonly [number, number, num
 	}
 }
 
-describe("RRSS value compilation", () => {
+describe("Semantic CSS value compilation", () => {
 	it("compiles and caches the portable version-one fixture as plain data", () => {
 		const text = readFileSync(new URL("./__fixtures__/v1/portable-theme.css", import.meta.url), "utf8");
 		const first = compileStylesheet({ languageVersion: 1, text });
@@ -54,7 +54,7 @@ describe("RRSS value compilation", () => {
 	it("rejects assignments to reserved system variables", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1; :root { --rr-primary-color: red; } name { color: blue; }",
+			text: "@version 1; :root { --resume-primary-color: red; } name { color: blue; }",
 		});
 
 		expect(result.program).toBeNull();
@@ -67,7 +67,7 @@ describe("RRSS value compilation", () => {
 		for (const value of ["url('https://example.com/x')", "URL(x)", "u\\72l(x)"]) {
 			const result = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1; :root { --asset: ${value}; } picture { background-color: var(--asset); }`,
+				text: `@version 1; :root { --asset: ${value}; } picture { background-color: var(--asset); }`,
 			});
 
 			expect(result.program, value).toBeNull();
@@ -80,7 +80,7 @@ describe("RRSS value compilation", () => {
 	it("allows technically renderable values and warns about extreme aesthetics", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1; field { font-size: 3pt; }",
+			text: "@version 1; field { font-size: 3pt; }",
 		});
 
 		expect(result.program).not.toBeNull();
@@ -91,7 +91,7 @@ describe("RRSS value compilation", () => {
 		for (const value of ["100001pt", "1e309pt"]) {
 			const result = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1; field { margin-top: ${value}; }`,
+				text: `@version 1; field { margin-top: ${value}; }`,
 			});
 			expect(result.program, value).toBeNull();
 			expect(result.diagnostics, value).toContainEqual(
@@ -105,7 +105,7 @@ describe("RRSS value compilation", () => {
 		(value) => {
 			const result = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1; section { -rr-min-presence-ahead: ${value}; }`,
+				text: `@version 1; section { -resume-min-presence-ahead: ${value}; }`,
 			});
 
 			expect(result.program).not.toBeNull();
@@ -118,7 +118,7 @@ describe("RRSS value compilation", () => {
 		(value) => {
 			const result = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1; section { border-style: ${value}; }`,
+				text: `@version 1; section { border-style: ${value}; }`,
 			});
 
 			expect(result.program).toBeNull();
@@ -130,41 +130,41 @@ describe("RRSS value compilation", () => {
 		{
 			name: "source bytes",
 			exact: (() => {
-				const prefix = "@rr-version 1;";
-				return prefix + " ".repeat(RRSS_LIMITS_V1.maxSourceBytes - new TextEncoder().encode(prefix).byteLength);
+				const prefix = "@version 1;";
+				return prefix + " ".repeat(SEMANTIC_CSS_LIMITS_V1.maxSourceBytes - new TextEncoder().encode(prefix).byteLength);
 			})(),
 			oneOver: (() => {
-				const prefix = "@rr-version 1;";
-				return `${prefix}${" ".repeat(RRSS_LIMITS_V1.maxSourceBytes - new TextEncoder().encode(prefix).byteLength)} `;
+				const prefix = "@version 1;";
+				return `${prefix}${" ".repeat(SEMANTIC_CSS_LIMITS_V1.maxSourceBytes - new TextEncoder().encode(prefix).byteLength)} `;
 			})(),
 			expectedRules: 0,
 			expectedDeclarations: undefined,
 		},
 		{
 			name: "rule count",
-			exact: `@rr-version 1;${"field{color:red}".repeat(RRSS_LIMITS_V1.maxRules)}`,
-			oneOver: `@rr-version 1;${"field{color:red}".repeat(RRSS_LIMITS_V1.maxRules + 1)}`,
-			expectedRules: RRSS_LIMITS_V1.maxRules,
+			exact: `@version 1;${"field{color:red}".repeat(SEMANTIC_CSS_LIMITS_V1.maxRules)}`,
+			oneOver: `@version 1;${"field{color:red}".repeat(SEMANTIC_CSS_LIMITS_V1.maxRules + 1)}`,
+			expectedRules: SEMANTIC_CSS_LIMITS_V1.maxRules,
 			expectedDeclarations: 1,
 		},
 		{
 			name: "declaration count",
-			exact: `@rr-version 1;field{${"color:red;".repeat(RRSS_LIMITS_V1.maxDeclarations)}}`,
-			oneOver: `@rr-version 1;field{${"color:red;".repeat(RRSS_LIMITS_V1.maxDeclarations + 1)}}`,
+			exact: `@version 1;field{${"color:red;".repeat(SEMANTIC_CSS_LIMITS_V1.maxDeclarations)}}`,
+			oneOver: `@version 1;field{${"color:red;".repeat(SEMANTIC_CSS_LIMITS_V1.maxDeclarations + 1)}}`,
 			expectedRules: 1,
-			expectedDeclarations: RRSS_LIMITS_V1.maxDeclarations,
+			expectedDeclarations: SEMANTIC_CSS_LIMITS_V1.maxDeclarations,
 		},
 		{
 			name: "function nesting",
-			exact: `@rr-version 1;field{color:${"rgb(".repeat(RRSS_LIMITS_V1.maxFunctionDepth)}0${")".repeat(RRSS_LIMITS_V1.maxFunctionDepth)}}`,
-			oneOver: `@rr-version 1;field{color:${"rgb(".repeat(RRSS_LIMITS_V1.maxFunctionDepth + 1)}0${")".repeat(RRSS_LIMITS_V1.maxFunctionDepth + 1)}}`,
+			exact: `@version 1;field{color:${"rgb(".repeat(SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth)}0${")".repeat(SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth)}}`,
+			oneOver: `@version 1;field{color:${"rgb(".repeat(SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth + 1)}0${")".repeat(SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth + 1)}}`,
 			expectedRules: 1,
 			expectedDeclarations: 1,
 		},
 		{
 			name: "media nesting",
-			exact: `@rr-version 1;${"@media (width: 1pt){".repeat(RRSS_LIMITS_V1.maxMediaNesting)}field{color:red}${"}".repeat(RRSS_LIMITS_V1.maxMediaNesting)}`,
-			oneOver: `@rr-version 1;${"@media (width: 1pt){".repeat(RRSS_LIMITS_V1.maxMediaNesting + 1)}field{color:red}${"}".repeat(RRSS_LIMITS_V1.maxMediaNesting + 1)}`,
+			exact: `@version 1;${"@media (width: 1pt){".repeat(SEMANTIC_CSS_LIMITS_V1.maxMediaNesting)}field{color:red}${"}".repeat(SEMANTIC_CSS_LIMITS_V1.maxMediaNesting)}`,
+			oneOver: `@version 1;${"@media (width: 1pt){".repeat(SEMANTIC_CSS_LIMITS_V1.maxMediaNesting + 1)}field{color:red}${"}".repeat(SEMANTIC_CSS_LIMITS_V1.maxMediaNesting + 1)}`,
 			expectedRules: 1,
 			expectedDeclarations: 1,
 		},
@@ -191,7 +191,7 @@ describe("RRSS value compilation", () => {
 				const queries = mediaList(branchCount);
 				const result = compileStylesheet({
 					languageVersion: 1,
-					text: `@rr-version 1;@media ${queries}{@media ${queries}{field{color:red}}}`,
+					text: `@version 1;@media ${queries}{@media ${queries}{field{color:red}}}`,
 				});
 
 				expect(result.program).toBeNull();
@@ -208,7 +208,7 @@ describe("RRSS value compilation", () => {
 			fc.property(fc.integer({ min: 0, max: 10 }), fc.stringMatching(/^[a-z]{1,6}$/), (grow, trailing) => {
 				const result = compileStylesheet({
 					languageVersion: 1,
-					text: `@rr-version 1;section{flex:${grow} auto ${trailing}}`,
+					text: `@version 1;section{flex:${grow} auto ${trailing}}`,
 				});
 
 				expect(result.program).toBeNull();
@@ -223,7 +223,7 @@ describe("RRSS value compilation", () => {
 	it("accepts CSS-wide keywords only as whole shorthand declarations", () => {
 		const accepted = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1;section{flex-flow:inherit}",
+			text: "@version 1;section{flex-flow:inherit}",
 		});
 		expect(accepted.program).not.toBeNull();
 
@@ -237,7 +237,7 @@ describe("RRSS value compilation", () => {
 		]) {
 			const rejected = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1;section{${declaration}}`,
+				text: `@version 1;section{${declaration}}`,
 			});
 
 			expect(rejected.program, declaration).toBeNull();
@@ -250,7 +250,7 @@ describe("RRSS value compilation", () => {
 	it("preserves CSS-wide identifiers inside custom-property token streams", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1;:root{--tokens:row inherit}",
+			text: "@version 1;:root{--tokens:row inherit}",
 		});
 
 		expect(result.program).not.toBeNull();
@@ -269,7 +269,7 @@ describe("RRSS value compilation", () => {
 					const values = tokens.map((token) => `${token}pt`).join(" ");
 					const result = compileStylesheet({
 						languageVersion: 1,
-						text: `@rr-version 1;section{${property}:${values}}`,
+						text: `@version 1;section{${property}:${values}}`,
 					});
 					if (!result.program) throw new Error(result.diagnostics.map(({ code }) => code).join(","));
 					const [top, right, bottom, left] = expectedSides(tokens);
@@ -309,7 +309,7 @@ describe("RRSS value compilation", () => {
 
 	it("uses a bounded least-recently-used cache by entry count and aggregate bytes", () => {
 		const cache = new StylesheetCompilationCache();
-		const result = compileStylesheet({ languageVersion: 1, text: "@rr-version 1;" });
+		const result = compileStylesheet({ languageVersion: 1, text: "@version 1;" });
 
 		cache.set("first", result);
 		for (let index = 0; index < 128; index++) cache.set(`next-${index}`, result);
@@ -360,7 +360,7 @@ describe("RRSS value compilation", () => {
 			fc.property(
 				fc.string({ unit: fc.integer({ min: 0, max: 0xffff }).map((codeUnit) => String.fromCharCode(codeUnit)) }),
 				(body) => {
-					expect(() => compileStylesheet({ languageVersion: 1, text: `@rr-version 1;${body}` })).not.toThrow();
+					expect(() => compileStylesheet({ languageVersion: 1, text: `@version 1;${body}` })).not.toThrow();
 				},
 			),
 			{ numRuns: 100 },
@@ -405,7 +405,7 @@ describe("RRSS value compilation", () => {
 		);
 		fc.assert(
 			fc.property(forbiddenBody, ({ body, code }) => {
-				const result = compileStylesheet({ languageVersion: 1, text: `@rr-version 1;${body}` });
+				const result = compileStylesheet({ languageVersion: 1, text: `@version 1;${body}` });
 				expect(result.program).toBeNull();
 				expect(result.diagnostics).toContainEqual(expect.objectContaining({ code, severity: "error" }));
 			}),
@@ -414,7 +414,7 @@ describe("RRSS value compilation", () => {
 	});
 
 	it("publishes the exact frozen version-one limits contract", () => {
-		expect(RRSS_LIMITS_V1).toEqual({
+		expect(SEMANTIC_CSS_LIMITS_V1).toEqual({
 			maxSourceBytes: 128 * 1024,
 			maxRules: 1_024,
 			maxDeclarations: 8_192,
@@ -427,7 +427,7 @@ describe("RRSS value compilation", () => {
 			maxSemanticNodes: 20_000,
 			maxAbsoluteLengthPt: 100_000,
 		});
-		expect(Object.isFrozen(RRSS_LIMITS_V1)).toBe(true);
+		expect(Object.isFrozen(SEMANTIC_CSS_LIMITS_V1)).toBe(true);
 	});
 
 	it("keeps every successful compiled program structured-clone-safe", () => {
@@ -435,7 +435,7 @@ describe("RRSS value compilation", () => {
 			fc.property(fc.constantFrom("red", "#123456", "rgb(1, 2, 3)", "var(--accent, blue)"), (color) => {
 				const result = compileStylesheet({
 					languageVersion: 1,
-					text: `@rr-version 1; name { color: ${color}; }`,
+					text: `@version 1; name { color: ${color}; }`,
 				});
 				expect(result.program).not.toBeNull();
 				expect(() => structuredClone(result.program)).not.toThrow();

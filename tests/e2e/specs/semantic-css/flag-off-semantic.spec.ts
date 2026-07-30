@@ -9,7 +9,7 @@ test("@semantic-css keeps persisted semantic rendering active when authoring is 
 	await createSampleResumeFromDashboard(page, testInfo);
 	const beforeCanvas = await waitForStablePreview(page);
 	const before = await beforeCanvas.evaluate((element) => (element as HTMLCanvasElement).toDataURL());
-	const source = { languageVersion: 1, text: "@rr-version 1;\nname { color: #2563eb; font-size: 30pt; }\n" };
+	const source = { languageVersion: 1, text: "@version 1;\nname { color: #2563eb; font-size: 30pt; }\n" };
 	await updateSemanticCssFixture(resumeIdFromPage(page), {
 		stylesheet: { mode: "semantic", source, applied: source },
 	});

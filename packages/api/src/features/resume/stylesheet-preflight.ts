@@ -5,7 +5,7 @@ import type { SemanticStylesheet, StylesheetSource } from "@reactive-resume/sche
 import type { StylesheetSnapshot } from "./stylesheet-service";
 import { ORPCError } from "@orpc/client";
 import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
-import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
+import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { templateSchema } from "@reactive-resume/schema/templates";
 import { recordSemanticCssEvent } from "./stylesheet-observability";
 
@@ -130,7 +130,7 @@ export async function prepareImportedResumeData(input: PrepareImportedResumeData
 	if (!(await validApplied(input, stylesheet.source))) {
 		applied = stylesheet.applied;
 		if (!(await validApplied(input, stylesheet.applied))) {
-			applied = { languageVersion: 1, text: EMPTY_RRSS_SOURCE };
+			applied = { languageVersion: 1, text: EMPTY_SEMANTIC_CSS_SOURCE };
 			if (!(await validApplied(input, applied))) {
 				throw validationError("The empty stylesheet failed PDF preflight.");
 			}

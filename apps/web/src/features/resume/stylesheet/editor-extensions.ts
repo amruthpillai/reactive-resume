@@ -2,9 +2,9 @@ import type { Completion, CompletionContext, CompletionResult, CompletionSource 
 import type { Diagnostic } from "@codemirror/lint";
 import type { EditorState, Extension } from "@codemirror/state";
 import type { DecorationSet, EditorView as EditorViewType, ViewUpdate } from "@codemirror/view";
-import type { RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet/registry";
-import type { RrssColorToken } from "./color-tokens";
-import type { RrssEditorMetadata } from "./protocol";
+import type { SemanticCssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet/registry";
+import type { SemanticCssColorToken } from "./color-tokens";
+import type { SemanticCssEditorMetadata } from "./protocol";
 import { autocompletion } from "@codemirror/autocomplete";
 import { linter, lintGutter } from "@codemirror/lint";
 import { search, searchKeymap } from "@codemirror/search";
@@ -18,9 +18,9 @@ import {
 	SYSTEM_VARIABLE_REGISTRY_V1,
 } from "@reactive-resume/resume/stylesheet/registry";
 
-export type RrssColorSelection = (token: RrssColorToken, rect: DOMRect) => void;
+export type SemanticCssColorSelection = (token: SemanticCssColorToken, rect: DOMRect) => void;
 
-const directives = ["@media", "@rr-version 1;"] as const;
+const directives = ["@media", "@version 1;"] as const;
 
 function walk(root: SemanticNode): SemanticNode[] {
 	const nodes: SemanticNode[] = [];
@@ -38,7 +38,7 @@ function unique(values: readonly string[]): string[] {
 	return [...new Set(values)];
 }
 
-function selectorLabels(metadata: RrssEditorMetadata): string[] {
+function selectorLabels(metadata: SemanticCssEditorMetadata): string[] {
 	const nodes = walk(metadata.semanticTree);
 	const attributes = unique([
 		"id",
@@ -71,12 +71,12 @@ function selectorLabels(metadata: RrssEditorMetadata): string[] {
 }
 
 function userVariables(source: string): string[] {
-	return unique([...source.matchAll(/(--(?!rr-)[-_a-zA-Z0-9]+)\s*:/g)].map((match) => match[1] as string));
+	return unique([...source.matchAll(/(--(?!resume-)[-_a-zA-Z0-9]+)\s*:/g)].map((match) => match[1] as string));
 }
 
 function completionKind(source: string, position: number): "directive" | "property" | "selector" | "system" | "value" {
 	const before = source.slice(0, position);
-	if (/--rr-[-\w]*$/.test(before)) return "system";
+	if (/--resume-[-\w]*$/.test(before)) return "system";
 	if (/@[-\w]*$/.test(before)) return "directive";
 	const open = before.lastIndexOf("{");
 	const close = before.lastIndexOf("}");
@@ -97,7 +97,7 @@ function declarationProperty(source: string, position: number): string | undefin
 	return property || undefined;
 }
 
-function completionLabels(source: string, position: number, metadata: RrssEditorMetadata): string[] {
+function completionLabels(source: string, position: number, metadata: SemanticCssEditorMetadata): string[] {
 	switch (completionKind(source, position)) {
 		case "directive":
 			return [...directives];
@@ -120,25 +120,28 @@ function completionLabels(source: string, position: number, metadata: RrssEditor
 	}
 }
 
-export function getRrssCompletionLabels(
+export function getSemanticCssCompletionLabels(
 	source: string,
 	position: number,
-	metadata: RrssEditorMetadata,
+	metadata: SemanticCssEditorMetadata,
 ): readonly string[] {
 	return completionLabels(source, position, metadata);
 }
 
-export function getRrssHoverDocumentation(label: string, metadata: RrssEditorMetadata): string | undefined {
+export function getSemanticCssHoverDocumentation(
+	label: string,
+	metadata: SemanticCssEditorMetadata,
+): string | undefined {
 	const semantic = SEMANTIC_REGISTRY_V1[label as keyof typeof SEMANTIC_REGISTRY_V1];
 	if (semantic) {
 		return `Semantic element ${label}. Attributes: ${semantic.attributes.join(", ") || "none"}. Roles: ${semantic.roles.join(", ") || "none"}.`;
 	}
 	const property = PROPERTY_REGISTRY_V1[label];
 	if (property) {
-		return `RRSS ${property.category} property ${label}. ${property.inheritable ? "Inherited" : "Not inherited"}. Applies to: ${property.appliesTo.join(", ")}.`;
+		return `Semantic CSS ${property.category} property ${label}. ${property.inheritable ? "Inherited" : "Not inherited"}. Applies to: ${property.appliesTo.join(", ")}.`;
 	}
 	const systemVariable = SYSTEM_VARIABLE_REGISTRY_V1[label as keyof typeof SYSTEM_VARIABLE_REGISTRY_V1];
-	if (systemVariable) return `Read-only RRSS system variable. ${systemVariable.description}`;
+	if (systemVariable) return `Read-only Semantic CSS system variable. ${systemVariable.description}`;
 	const normalized = label.startsWith("#") ? label.slice(1) : label;
 	const currentNode = walk(metadata.semanticTree).find((node) => node.id === normalized);
 	if (currentNode) return `Current resume ${currentNode.kind} ID.`;
@@ -149,7 +152,7 @@ export function getRrssHoverDocumentation(label: string, metadata: RrssEditorMet
 
 export function mapCompilerDiagnostics(
 	docLength: number,
-	diagnostics: readonly RrssDiagnostic[],
+	diagnostics: readonly SemanticCssDiagnostic[],
 ): readonly Diagnostic[] {
 	return diagnostics.map(({ message, severity, range, code }) => ({
 		from: Math.max(0, Math.min(docLength, range.start.offset)),
@@ -183,7 +186,7 @@ export function compositionAwareDocumentListener(
 	];
 }
 
-function completionSource(metadata: RrssEditorMetadata): CompletionSource {
+function completionSource(metadata: SemanticCssEditorMetadata): CompletionSource {
 	return (context: CompletionContext): CompletionResult | null => {
 		const source = context.state.doc.toString();
 		const labels = completionLabels(source, context.pos, metadata);
@@ -206,11 +209,11 @@ function tokenAt(state: EditorState, position: number): { from: number; to: numb
 	return { from, to: position + after.length, label: `${before}${after}` };
 }
 
-function hoverExtension(metadata: RrssEditorMetadata): Extension {
+function hoverExtension(metadata: SemanticCssEditorMetadata): Extension {
 	return hoverTooltip((view, position) => {
 		const token = tokenAt(view.state, position);
 		if (!token) return null;
-		const documentation = getRrssHoverDocumentation(token.label, metadata);
+		const documentation = getSemanticCssHoverDocumentation(token.label, metadata);
 		if (!documentation) return null;
 		return {
 			pos: token.from,
@@ -218,7 +221,7 @@ function hoverExtension(metadata: RrssEditorMetadata): Extension {
 			above: true,
 			create() {
 				const dom = document.createElement("div");
-				dom.className = "cm-rrss-hover";
+				dom.className = "cm-semantic-css-hover";
 				dom.textContent = documentation;
 				return { dom };
 			},
@@ -228,8 +231,8 @@ function hoverExtension(metadata: RrssEditorMetadata): Extension {
 
 class ColorSwatch extends WidgetType {
 	constructor(
-		private readonly token: RrssColorToken,
-		private readonly onSelect: RrssColorSelection,
+		private readonly token: SemanticCssColorToken,
+		private readonly onSelect: SemanticCssColorSelection,
 	) {
 		super();
 	}
@@ -243,7 +246,7 @@ class ColorSwatch extends WidgetType {
 	toDOM(): HTMLElement {
 		const button = document.createElement("button");
 		button.type = "button";
-		button.className = "rrss-color-swatch";
+		button.className = "semantic-css-color-swatch";
 		button.title = `Edit color ${this.token.value}`;
 		button.setAttribute("aria-label", button.title);
 		button.style.backgroundColor = this.token.value;
@@ -258,8 +261,8 @@ class ColorSwatch extends WidgetType {
 
 function colorDecorations(
 	view: EditorViewType,
-	tokens: readonly RrssColorToken[],
-	onSelect: RrssColorSelection,
+	tokens: readonly SemanticCssColorToken[],
+	onSelect: SemanticCssColorSelection,
 ): DecorationSet {
 	const ranges = tokens
 		.filter(
@@ -272,10 +275,10 @@ function colorDecorations(
 	return Decoration.set(ranges, true);
 }
 
-function colorExtension(tokens: readonly RrssColorToken[], onSelect: RrssColorSelection): Extension {
+function colorExtension(tokens: readonly SemanticCssColorToken[], onSelect: SemanticCssColorSelection): Extension {
 	return [
 		EditorView.baseTheme({
-			".rrss-color-swatch": {
+			".semantic-css-color-swatch": {
 				display: "inline-block",
 				width: "0.75rem",
 				height: "0.75rem",
@@ -306,11 +309,11 @@ function colorExtension(tokens: readonly RrssColorToken[], onSelect: RrssColorSe
 	];
 }
 
-export function createRrssEditorExtensions(input: {
-	metadata: RrssEditorMetadata;
-	diagnostics: readonly RrssDiagnostic[];
-	colorTokens: readonly RrssColorToken[];
-	onColorSelect: RrssColorSelection;
+export function createSemanticCssEditorExtensions(input: {
+	metadata: SemanticCssEditorMetadata;
+	diagnostics: readonly SemanticCssDiagnostic[];
+	colorTokens: readonly SemanticCssColorToken[];
+	onColorSelect: SemanticCssColorSelection;
 }): Extension {
 	return [
 		autocompletion({ override: [completionSource(input.metadata)] }),
@@ -327,4 +330,4 @@ export async function copySourceToClipboard(source: string): Promise<void> {
 	await navigator.clipboard.writeText(source);
 }
 
-export type { RrssEditorMetadata };
+export type { SemanticCssEditorMetadata };

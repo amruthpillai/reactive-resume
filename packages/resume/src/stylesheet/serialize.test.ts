@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { escapeCssComment, escapeCssString, serializeGeneratedStylesheet } from "./serialize";
 
-describe("generated RRSS serialization", () => {
-	it("serializes generated RRSS deterministically and safely", () => {
+describe("generated Semantic CSS serialization", () => {
+	it("serializes generated Semantic CSS deterministically and safely", () => {
 		const output = serializeGeneratedStylesheet({
 			languageVersion: 1,
 			blocks: [
@@ -15,7 +15,7 @@ describe("generated RRSS serialization", () => {
 		});
 
 		expect(output).toBe(
-			'@rr-version 1;\n\n/* Bad *\\/ label */\nsection[id="projects"] > section-heading {\n\tcolor: #123456;\n\tfont-size: 12pt;\n}\n',
+			'@version 1;\n\n/* Bad *\\/ label */\nsection[id="projects"] > section-heading {\n\tcolor: #123456;\n\tfont-size: 12pt;\n}\n',
 		);
 	});
 

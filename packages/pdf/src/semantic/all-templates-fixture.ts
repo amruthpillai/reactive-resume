@@ -3,15 +3,15 @@ import { createSampleResumeData } from "@reactive-resume/schema/resume/sample";
 
 export const comprehensiveStylesheet = {
 	languageVersion: 1,
-	text: `@rr-version 1;
-:root { --accent: var(--rr-primary-color); }
+	text: `@version 1;
+:root { --accent: var(--resume-primary-color); }
 header > name { color: var(--accent); }
 section:is([type="experience"], [type="education"]) > section-heading { text-transform: uppercase; }
 section[id="projects"] > section-items > item { padding: 6pt; }
 section[id="experience"] item[id="experience-item-2"] field[name="period"] { color: var(--accent); }
 rich-text list-item > list-item-content { line-height: 1.25; }
 region[placement="sidebar"] section { background-color: rgba(0, 0, 0, 0.04); }
-section[type="projects"] { break-inside: avoid; -rr-min-presence-ahead: 24pt; }
+section[type="projects"] { break-inside: avoid; -resume-min-presence-ahead: 24pt; }
 @media (max-width: 600pt) { region[placement="sidebar"] section-heading { font-size: 9pt; } }
 resume[template="azurill"] template-part[name="timeline-dot"] { background-color: var(--accent); }
 `,

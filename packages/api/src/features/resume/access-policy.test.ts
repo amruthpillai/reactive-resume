@@ -72,7 +72,7 @@ describe("redactResumeForViewer", () => {
 	});
 
 	it("strips editable and applied stylesheet source for non-owner", () => {
-		const source = { languageVersion: 1, text: "@rr-version 1;\nresume { color: red; }\n" };
+		const source = { languageVersion: 1, text: "@version 1;\nresume { color: red; }\n" };
 		const resume = {
 			name: "Title",
 			data: {
@@ -87,7 +87,7 @@ describe("redactResumeForViewer", () => {
 		const result = redactResumeForViewer(resume, false);
 
 		expect(result.data.metadata.stylesheet).toBeUndefined();
-		expect(JSON.stringify(result)).not.toContain("@rr-version");
+		expect(JSON.stringify(result)).not.toContain("@version");
 	});
 
 	it("preserves resume.data.basics.name (the person's name) for non-owner", () => {

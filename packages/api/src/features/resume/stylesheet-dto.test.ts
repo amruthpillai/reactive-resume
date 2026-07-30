@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { resumeDto } from "../../dto/resume";
 
-const source = { languageVersion: 1, text: "@rr-version 1;\n" };
+const source = { languageVersion: 1, text: "@version 1;\n" };
 const common = {
 	id: "resume-1",
 	expectedRevision: 3,

@@ -1,6 +1,6 @@
-import type { RrssDiagnostic, SemanticNode, StyleProgram } from "./types";
+import type { SemanticCssDiagnostic, SemanticNode, StyleProgram } from "./types";
 import { createDiagnostic } from "./diagnostics";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
 import { createSelectorMatcher } from "./selector";
 
@@ -10,10 +10,10 @@ function flatten(root: SemanticNode): SemanticNode[] | null {
 	while (stack.length > 0) {
 		const node = stack.pop();
 		if (!node) break;
-		if (nodes.length >= RRSS_LIMITS_V1.maxSemanticNodes) return null;
+		if (nodes.length >= SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes) return null;
 		nodes.push(node);
 		const childCount = node.children.length;
-		if (childCount > RRSS_LIMITS_V1.maxSemanticNodes - nodes.length - stack.length) return null;
+		if (childCount > SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes - nodes.length - stack.length) return null;
 		for (let index = 0; index < childCount; index++) {
 			const child = node.children[index];
 			if (child) stack.push(child);
@@ -22,11 +22,11 @@ function flatten(root: SemanticNode): SemanticNode[] | null {
 	return nodes;
 }
 
-export function analyzeStylesheet(program: StyleProgram, tree: SemanticNode): readonly RrssDiagnostic[] {
-	const diagnostics: RrssDiagnostic[] = [];
+export function analyzeStylesheet(program: StyleProgram, tree: SemanticNode): readonly SemanticCssDiagnostic[] {
+	const diagnostics: SemanticCssDiagnostic[] = [];
 	const nodes = flatten(tree);
 	if (!nodes) {
-		return [createDiagnostic("RESOURCE_LIMIT", "error", "The semantic tree exceeds the RRSS node limit.")];
+		return [createDiagnostic("RESOURCE_LIMIT", "error", "The semantic tree exceeds the Semantic CSS node limit.")];
 	}
 	const matchesSelector = createSelectorMatcher(tree);
 	for (const rule of program.rules) {

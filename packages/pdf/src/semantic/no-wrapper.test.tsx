@@ -18,7 +18,7 @@ type HostNode = {
 	value?: string;
 };
 
-const semanticSource = (text = "@rr-version 1;\n") => ({
+const semanticSource = (text = "@version 1;\n") => ({
 	languageVersion: 1,
 	text,
 });

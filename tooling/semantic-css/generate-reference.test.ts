@@ -20,7 +20,7 @@ const defaultDocumentationPaths = {
 };
 const applyingCustomStylesGuide = fileURLToPath(new URL("../../docs/applying-custom-styles.mdx", import.meta.url));
 
-type RrssExample = { label: string; source: string };
+type SemanticCssExample = { label: string; source: string };
 
 afterEach(async () => {
 	await Promise.all(temporaryDirectories.splice(0).map((path) => rm(path, { recursive: true, force: true })));
@@ -29,14 +29,14 @@ afterEach(async () => {
 const readTargets = (paths: typeof defaultDocumentationPaths) =>
 	Promise.all(Object.values(paths).map((path) => readFile(path, "utf8")));
 
-function extractRrssExamples(source: string): RrssExample[] {
-	const examples: RrssExample[] = [];
+function extractSemanticCssExamples(source: string): SemanticCssExample[] {
+	const examples: SemanticCssExample[] = [];
 	const matches = source.matchAll(
-		/<!-- RRSS-EXAMPLE:valid(?: ([A-Z][A-Z0-9_]*))? -->\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
+		/<!-- SEMANTIC-CSS-EXAMPLE:valid(?: ([A-Z][A-Z0-9_]*))? -->\r?\n```css\r?\n([\s\S]*?)\r?\n```/g,
 	);
 
 	for (const [, markerLabel, example] of matches) {
-		if (!example) throw new Error("Invalid RRSS example marker.");
+		if (!example) throw new Error("Invalid Semantic CSS example marker.");
 		examples.push({ label: markerLabel ?? `valid example ${examples.length + 1}`, source: example });
 	}
 
@@ -63,21 +63,21 @@ async function createDocumentationPaths() {
 }
 
 it("rejects missing, duplicate, and out-of-order generated markers", () => {
-	expect(() => replaceGeneratedBlock("plain text", "RRSS-ELEMENTS", "body", "reference.mdx")).toThrow(
+	expect(() => replaceGeneratedBlock("plain text", "SEMANTIC-CSS-ELEMENTS", "body", "reference.mdx")).toThrow(
 		/Missing generated markers/,
 	);
 	expect(() =>
 		replaceGeneratedBlock(
-			"<!-- RRSS-ELEMENTS:START --><!-- RRSS-ELEMENTS:END --><!-- RRSS-ELEMENTS:START --><!-- RRSS-ELEMENTS:END -->",
-			"RRSS-ELEMENTS",
+			"<!-- SEMANTIC-CSS-ELEMENTS:START --><!-- SEMANTIC-CSS-ELEMENTS:END --><!-- SEMANTIC-CSS-ELEMENTS:START --><!-- SEMANTIC-CSS-ELEMENTS:END -->",
+			"SEMANTIC-CSS-ELEMENTS",
 			"body",
 			"reference.mdx",
 		),
 	).toThrow(/Duplicate generated markers/);
 	expect(() =>
 		replaceGeneratedBlock(
-			"<!-- RRSS-ELEMENTS:END --><!-- RRSS-ELEMENTS:START -->",
-			"RRSS-ELEMENTS",
+			"<!-- SEMANTIC-CSS-ELEMENTS:END --><!-- SEMANTIC-CSS-ELEMENTS:START -->",
+			"SEMANTIC-CSS-ELEMENTS",
 			"body",
 			"reference.mdx",
 		),
@@ -212,9 +212,9 @@ it("keeps the schema guide aligned with the canonical schema contract", async ()
 	expect(authoredGuide).not.toMatch(/custom sections.*arbitrary content/is);
 });
 
-it("compiles every marked valid RRSS example", async () => {
+it("compiles every marked valid Semantic CSS example", async () => {
 	const source = await readFile(applyingCustomStylesGuide, "utf8");
-	const examples = extractRrssExamples(source);
+	const examples = extractSemanticCssExamples(source);
 	expect(examples).not.toEqual([]);
 
 	for (const example of examples) {

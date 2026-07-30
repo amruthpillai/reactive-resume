@@ -26,8 +26,8 @@ vi.mock("@/features/resume/stylesheet/store", () => ({
 		selector({
 			resumeId: undefined,
 			mode: "legacy",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 		}),
 }));
 vi.mock("sonner", () => ({
@@ -51,7 +51,7 @@ beforeEach(() => {
 describe("useResumeExport public PDF", () => {
 	it("downloads the authorized server blob after one mismatched-projection refetch", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const source = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
 		semanticData.metadata.stylesheet = { mode: "semantic", source, applied: source };
 		const projection = await createPublicStyleProjection({ data: semanticData });
 		const mismatchedProjection = { ...projection, renderDataHash: "0".repeat(64) };

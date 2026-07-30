@@ -106,7 +106,7 @@ const sectionItemKey = (section: string) =>
 describe("semantic issue fixtures", () => {
 	it("lets semantic field font weight override template bold defaults (#3146)", () => {
 		const presentation = resolveIssueFixture(`
-			@rr-version 1;
+			@version 1;
 			section[type="experience"] field[name="company"] { font-weight: 400; }
 		`);
 		const company = semanticNodeKeys.field(semanticNodeKeys.itemHeader(sectionItemKey("experience")), "company");
@@ -116,7 +116,7 @@ describe("semantic issue fixtures", () => {
 
 	it("lets semantic link decoration override the builder underline base (#3134)", () => {
 		const presentation = resolveIssueFixture(`
-			@rr-version 1;
+			@version 1;
 			link { text-decoration: none; }
 		`);
 		const contact = semanticNodeKeys.contactItem(semanticNodeKeys.contactList(headerKey), "email");
@@ -138,7 +138,7 @@ describe("semantic issue fixtures", () => {
 			resolveResumePresentation({
 				data,
 				template: "onyx",
-				applied: applied(`@rr-version 1;${text}`),
+				applied: applied(`@version 1;${text}`),
 				mode: "semantic",
 			});
 
@@ -153,13 +153,11 @@ describe("semantic issue fixtures", () => {
 
 	it("styles Basics/header nodes while rejecting unsupported gradients (#3137)", () => {
 		const valid = resolveIssueFixture(`
-			@rr-version 1;
+			@version 1;
 			header { background-color: #1e293b; }
 			name { color: white; }
 		`);
-		const invalid = compileStylesheet(
-			applied("@rr-version 1; header { background-image: linear-gradient(red, blue); }"),
-		);
+		const invalid = compileStylesheet(applied("@version 1; header { background-image: linear-gradient(red, blue); }"));
 
 		expect(valid[headerKey]?.style?.backgroundColor).toBe("#1e293b");
 		expect(valid[semanticNodeKeys.headerPart(headerKey, "name")]?.style?.color).toBe("white");
@@ -168,7 +166,7 @@ describe("semantic issue fixtures", () => {
 
 	it("unbolds only skill names and leaves experience titles unchanged (#2223)", () => {
 		const presentation = resolveIssueFixture(`
-			@rr-version 1;
+			@version 1;
 			section[type="skills"] field[name="name"] { font-weight: 400; }
 		`);
 		const skillName = semanticNodeKeys.field(semanticNodeKeys.itemHeader(sectionItemKey("skills")), "name");
@@ -182,8 +180,8 @@ describe("semantic issue fixtures", () => {
 		const semanticData = buildIssueFixture();
 		semanticData.metadata.stylesheet = {
 			mode: "semantic",
-			source: applied("@rr-version 1;"),
-			applied: applied("@rr-version 1;"),
+			source: applied("@version 1;"),
+			applied: applied("@version 1;"),
 		};
 		const legacyData = buildIssueFixture();
 
@@ -193,7 +191,7 @@ describe("semantic issue fixtures", () => {
 			resolveResumePresentation({
 				data: legacyData,
 				template: "onyx",
-				applied: applied("@rr-version 1; name { color: red; }"),
+				applied: applied("@version 1; name { color: red; }"),
 				mode: "legacy",
 			}),
 		).toEqual({});
@@ -202,7 +200,7 @@ describe("semantic issue fixtures", () => {
 	it("applies issue-regression styles to the final existing PDF primitives", async () => {
 		const data = buildIssueFixture();
 		const stylesheet = applied(`
-			@rr-version 1;
+			@version 1;
 			header { background-color: #1e293b; }
 			name { color: white; }
 			link { text-decoration: none; }
@@ -229,7 +227,7 @@ describe("semantic issue fixtures", () => {
 	it("unbolds only the final skill-name primitive and preserves the experience title weight (#2223)", async () => {
 		const data = buildIssueFixture();
 		const stylesheet = applied(`
-			@rr-version 1;
+			@version 1;
 			section[type="skills"] field[name="name"] { font-weight: 400; }
 		`);
 		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
@@ -256,7 +254,7 @@ describe("semantic issue fixtures", () => {
 		}));
 		data.metadata.layout.pages = [{ fullWidth: true, main: ["skills"], sidebar: [] }];
 		const stylesheet = applied(`
-			@rr-version 1;
+			@version 1;
 			section[type="skills"] item:nth-child(2) { display: none; }
 			section[type="skills"] item:last-child { order: -1; }
 		`);

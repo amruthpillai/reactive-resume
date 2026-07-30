@@ -13,8 +13,8 @@ const previewMock = vi.hoisted(() => ({
 	stylesheet: {
 		resumeId: undefined as string | undefined,
 		mode: "legacy" as "legacy" | "semantic",
-		source: { languageVersion: 1, text: "@rr-version 1;\n" },
-		applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+		source: { languageVersion: 1, text: "@version 1;\n" },
+		applied: { languageVersion: 1, text: "@version 1;\n" },
 	},
 	toastError: vi.fn(),
 	toBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
@@ -107,8 +107,8 @@ describe("ResumePreviewClient", () => {
 		previewMock.stylesheet = {
 			resumeId: undefined,
 			mode: "legacy",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\n" },
 		};
 		previewMock.toBlob.mockReset();
 		previewMock.toBlob.mockImplementation(async () => new Blob(["%PDF"], { type: "application/pdf" }));
@@ -160,7 +160,7 @@ describe("ResumePreviewClient", () => {
 	});
 
 	it("renders the canonical applied stylesheet and ignores invalid editable source", async () => {
-		const validApplied = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		const validApplied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
 		previewMock.builderResumeId = "resume-1";
 		previewMock.builderResumeData = sampleResumeData;
 		previewMock.stylesheet = {
@@ -186,8 +186,8 @@ describe("ResumePreviewClient", () => {
 		previewMock.stylesheet = {
 			resumeId: "resume-1",
 			mode: "semantic",
-			source: { languageVersion: 1, text: "@rr-version 1;\n" },
-			applied: { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" },
+			source: { languageVersion: 1, text: "@version 1;\n" },
+			applied: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
 		};
 		const view = render(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
 		expect(await screen.findByRole("img", { name: "Resume page 1 of 1" })).toBeTruthy();
@@ -199,7 +199,7 @@ describe("ResumePreviewClient", () => {
 		);
 		previewMock.stylesheet.applied = {
 			languageVersion: 1,
-			text: "@rr-version 1;\nname { color: #654321; }\n",
+			text: "@version 1;\nname { color: #654321; }\n",
 		};
 		view.rerender(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
 

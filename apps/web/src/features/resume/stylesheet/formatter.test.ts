@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { formatEditorDocument, formatRrss } from "./formatter";
+import { formatEditorDocument, formatSemanticCss } from "./formatter";
 
 const views: EditorView[] = [];
 
@@ -11,9 +11,9 @@ afterEach(() => {
 	for (const view of views.splice(0)) view.destroy();
 });
 
-describe("RRSS formatter", () => {
+describe("Semantic CSS formatter", () => {
 	it("preserves comments and translates the cursor", async () => {
-		const result = await formatRrss("/* keep */ section{color:red}", 18);
+		const result = await formatSemanticCss("/* keep */ section{color:red}", 18);
 
 		expect(result.formatted).toContain("/* keep */");
 		expect(result.formatted).toContain("section {");

@@ -41,7 +41,7 @@ vi.mock("@/features/resume/builder/draft", () => ({
 }));
 
 vi.mock("@/features/resume/stylesheet/editor", () => ({
-	default: () => <div data-testid="rrss-editor-shell">Semantic CSS editor</div>,
+	default: () => <div data-testid="semantic-css-editor-shell">Semantic CSS editor</div>,
 }));
 
 const { CustomStylesSectionBuilder } = await import("./custom-styles");
@@ -81,10 +81,10 @@ describe("CustomStylesSectionBuilder", () => {
 		});
 	});
 
-	it("loads the RRSS shell only when authoring is enabled", async () => {
+	it("loads the Semantic CSS shell only when authoring is enabled", async () => {
 		renderCustomStyles(true);
 
-		expect(await screen.findByTestId("rrss-editor-shell")).toBeInTheDocument();
+		expect(await screen.findByTestId("semantic-css-editor-shell")).toBeInTheDocument();
 		expect(screen.queryByLabelText("Target Scope")).not.toBeInTheDocument();
 	});
 

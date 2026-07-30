@@ -12,7 +12,7 @@ const buildData = () => {
 	const data = structuredClone(defaultResumeData);
 	const applied = {
 		languageVersion: 1,
-		text: "@rr-version 1;\nname { color: #123456; }\n",
+		text: "@version 1;\nname { color: #123456; }\n",
 	};
 	data.basics.name = "Ada Lovelace";
 	data.metadata.layout.pages = [{ fullWidth: true, main: [], sidebar: [] }];
@@ -36,7 +36,7 @@ describe("public semantic style projection", () => {
 		expect(projection.nodes["page-1/region-header/header/name"]).toEqual({
 			style: { color: "#123456" },
 		});
-		expect(serialized).not.toContain("@rr-version");
+		expect(serialized).not.toContain("@version");
 		expect(serialized).not.toMatch(/source|comment|diagnostic|selector|variable|range/i);
 		expect(serialized).not.toContain("undefined");
 	});
@@ -48,7 +48,7 @@ describe("public semantic style projection", () => {
 		data.basics.location = "London";
 		const applied = {
 			languageVersion: 1,
-			text: `@rr-version 1;
+			text: `@version 1;
 				contact-item[name="location"] { display: none; }
 				contact-item[name="phone"] { order: -1; }
 			`,
@@ -104,7 +104,7 @@ describe("public semantic style projection", () => {
 		const blue = buildData();
 		const blueApplied = {
 			languageVersion: 1,
-			text: "@rr-version 1;\nname { color: #654321; }\n",
+			text: "@version 1;\nname { color: #654321; }\n",
 		};
 		blue.metadata.stylesheet = { mode: "semantic", source: blueApplied, applied: blueApplied };
 

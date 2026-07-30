@@ -6,7 +6,7 @@ import { createSampleResumeFromDashboard, openSidebarSection } from "./resume";
 
 const EMPTY_SEMANTIC_STYLESHEET = {
 	languageVersion: 1,
-	text: "@rr-version 1;\n",
+	text: "@version 1;\n",
 } as const;
 
 type SemanticStylesheetSeed = {
@@ -15,10 +15,10 @@ type SemanticStylesheetSeed = {
 	applied: { languageVersion: number; text: string };
 };
 
-export const PORTABLE_STYLESHEET = `@rr-version 1;
+export const PORTABLE_STYLESHEET = `@version 1;
 
 :root {
-	--accent: var(--rr-primary-color);
+	--accent: var(--resume-primary-color);
 }
 
 header > name {
@@ -47,7 +47,7 @@ region[placement="sidebar"] section {
 
 section[type="projects"] {
 	break-inside: avoid;
-	-rr-min-presence-ahead: 24pt;
+	-resume-min-presence-ahead: 24pt;
 }
 
 @media (max-width: 600pt) {

@@ -48,8 +48,8 @@ export class StylesheetCompilationCache {
 
 export const stylesheetCompilationCache = new StylesheetCompilationCache();
 
-const RRSS_COMPILER_BUILD_ID = "rrss-v1-values-2";
+const SEMANTIC_CSS_COMPILER_BUILD_ID = "semantic-css-v1-values-2";
 
 export function stylesheetCacheKey(languageVersion: number, source: string, registry: string): string {
-	return JSON.stringify([languageVersion, source, RRSS_COMPILER_BUILD_ID, registry]);
+	return JSON.stringify([languageVersion, source, SEMANTIC_CSS_COMPILER_BUILD_ID, registry]);
 }

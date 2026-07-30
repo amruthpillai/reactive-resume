@@ -1,31 +1,31 @@
 import type { CssLocation, CssNode } from "css-tree";
-import type { RrssCompilerDiagnosticCode } from "./diagnostics";
+import type { SemanticCssCompilerDiagnosticCode } from "./diagnostics";
 import type {
 	CompiledDeclaration,
 	CompiledMediaQuery,
 	CompiledStyleRule,
 	MediaFeature,
 	ParsedStylesheet,
-	RrssDiagnostic,
+	SemanticCssDiagnostic,
 	SourceRange,
 	StyleProgram,
 } from "./types";
 import * as csstree from "css-tree";
 import { createDiagnostic, EMPTY_SOURCE_RANGE } from "./diagnostics";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import {
 	PROPERTY_REGISTRY_V1,
-	RRSS_BORDER_STYLE_VALUES_V1,
-	RRSS_CSS_WIDE_KEYWORDS_V1,
-	RRSS_LENGTH_PROPERTIES_V1,
-	RRSS_LENGTH_UNITS_V1,
-	RRSS_LENGTH_VALUE_KEYWORDS_V1,
+	SEMANTIC_CSS_BORDER_STYLE_VALUES_V1,
+	SEMANTIC_CSS_CSS_WIDE_KEYWORDS_V1,
+	SEMANTIC_CSS_LENGTH_PROPERTIES_V1,
+	SEMANTIC_CSS_LENGTH_UNITS_V1,
+	SEMANTIC_CSS_LENGTH_VALUE_KEYWORDS_V1,
 } from "./registry/properties";
 import { compileSelector } from "./selector";
 
 export type CompileProgramResult = {
 	program: StyleProgram | null;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 type AstNode = CssNode & {
@@ -48,11 +48,11 @@ const absoluteUnitToPt = {
 
 const spacingShorthands = new Set(["margin", "padding"]);
 const sides = ["top", "right", "bottom", "left"] as const;
-const borderStyles = new Set<string>(RRSS_BORDER_STYLE_VALUES_V1);
-const cssWideKeywords = new Set<string>(RRSS_CSS_WIDE_KEYWORDS_V1);
-const lengthValueKeywords = new Set<string>(RRSS_LENGTH_VALUE_KEYWORDS_V1);
-const maxMediaQueryBranches = RRSS_LIMITS_V1.maxRules;
-const lengthUnitPattern = RRSS_LENGTH_UNITS_V1.map((unit) => (unit === "%" ? "%" : unit)).join("|");
+const borderStyles = new Set<string>(SEMANTIC_CSS_BORDER_STYLE_VALUES_V1);
+const cssWideKeywords = new Set<string>(SEMANTIC_CSS_CSS_WIDE_KEYWORDS_V1);
+const lengthValueKeywords = new Set<string>(SEMANTIC_CSS_LENGTH_VALUE_KEYWORDS_V1);
+const maxMediaQueryBranches = SEMANTIC_CSS_LIMITS_V1.maxRules;
+const lengthUnitPattern = SEMANTIC_CSS_LENGTH_UNITS_V1.map((unit) => (unit === "%" ? "%" : unit)).join("|");
 const borderWidthPattern = new RegExp(
 	`^(?:thin|medium|thick|[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?(?:${lengthUnitPattern})?)$`,
 	"i",
@@ -72,7 +72,7 @@ function isRegisteredShorthandComponent(property: string, value: string): boolea
 	return !isCssWideKeyword(value) && isRegisteredPropertyValue(property, value);
 }
 
-export const RRSS_LENGTH_PROPERTIES = new Set<string>(RRSS_LENGTH_PROPERTIES_V1);
+export const SEMANTIC_CSS_LENGTH_PROPERTIES = new Set<string>(SEMANTIC_CSS_LENGTH_PROPERTIES_V1);
 
 function range(location: CssLocation | null | undefined): SourceRange {
 	return location ? { start: { ...location.start }, end: { ...location.end } } : EMPTY_SOURCE_RANGE;
@@ -140,11 +140,11 @@ function children(node: AstNode | null | undefined): AstNode[] {
 }
 
 function diagnostic(
-	diagnostics: RrssDiagnostic[],
-	code: RrssCompilerDiagnosticCode,
+	diagnostics: SemanticCssDiagnostic[],
+	code: SemanticCssCompilerDiagnosticCode,
 	message: string,
 	node?: AstNode,
-	severity: RrssDiagnostic["severity"] = "error",
+	severity: SemanticCssDiagnostic["severity"] = "error",
 ): void {
 	diagnostics.push(createDiagnostic(code, severity, message, range(node?.loc)));
 }
@@ -354,7 +354,7 @@ export function valueSyntaxError(property: string, value: string): string | null
 	const normalized = value.trim().toLowerCase();
 	if (!normalized) return "Values cannot be empty.";
 	if (cssWideKeywords.has(normalized) || /var\s*\(/i.test(decodeCssEscapes(value))) return null;
-	if (RRSS_LENGTH_PROPERTIES.has(property)) {
+	if (SEMANTIC_CSS_LENGTH_PROPERTIES.has(property)) {
 		if (lengthPattern.test(normalized)) {
 			if (property === "font-size" && Number.parseFloat(normalized) < 0) {
 				return "font-size cannot be negative.";
@@ -382,8 +382,8 @@ export function valueSyntaxError(property: string, value: string): string | null
 		return isRegisteredPropertyValue(property, normalized) ? null : "break-before supports auto or page.";
 	if (property === "break-inside")
 		return isRegisteredPropertyValue(property, normalized) ? null : "break-inside supports auto or avoid.";
-	if (property === "-rr-fixed")
-		return isRegisteredPropertyValue(property, normalized) ? null : "-rr-fixed requires a boolean.";
+	if (property === "-resume-fixed")
+		return isRegisteredPropertyValue(property, normalized) ? null : "-resume-fixed requires a boolean.";
 	if (
 		property === "order" ||
 		property === "orphans" ||
@@ -408,7 +408,7 @@ export function valueSyntaxError(property: string, value: string): string | null
 	return null;
 }
 
-function validateValue(property: string, value: string, node: AstNode, diagnostics: RrssDiagnostic[]): void {
+function validateValue(property: string, value: string, node: AstNode, diagnostics: SemanticCssDiagnostic[]): void {
 	const decoded = decodeCssEscapes(value).toLowerCase();
 	if (property === "src" || /\burl\s*\(/i.test(decoded)) {
 		diagnostic(diagnostics, "FORBIDDEN_CSS_VALUE", "External CSS resources are not supported.", node);
@@ -419,8 +419,13 @@ function validateValue(property: string, value: string, node: AstNode, diagnosti
 		/(^|[\s,(])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)\s*(pt|px|in|mm|cm)(?=$|[\s,)])/gi,
 	)) {
 		const points = parseAbsoluteLength(`${match[2]}${match[3]}`);
-		if (points === null || !Number.isFinite(points) || Math.abs(points) > RRSS_LIMITS_V1.maxAbsoluteLengthPt) {
-			diagnostic(diagnostics, "INVALID_VALUE", "Absolute lengths must be finite and within the RRSS limit.", node);
+		if (points === null || !Number.isFinite(points) || Math.abs(points) > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt) {
+			diagnostic(
+				diagnostics,
+				"INVALID_VALUE",
+				"Absolute lengths must be finite and within the Semantic CSS limit.",
+				node,
+			);
 			return;
 		}
 		if (property === "font-size" && (points < 4 || points > 72)) {
@@ -468,11 +473,11 @@ function splitOutsideParentheses(value: string, separator: "," | "and"): string[
 	return parts;
 }
 
-function parseMedia(node: AstNode, diagnostics: RrssDiagnostic[]): readonly CompiledMediaQuery[] | null {
+function parseMedia(node: AstNode, diagnostics: SemanticCssDiagnostic[]): readonly CompiledMediaQuery[] | null {
 	const source = node.prelude ? csstree.generate(node.prelude) : "";
 	const querySources = splitOutsideParentheses(source, ",");
 	if (querySources.length > maxMediaQueryBranches) {
-		diagnostic(diagnostics, "RESOURCE_LIMIT", "The media query list exceeds the RRSS branch limit.", node);
+		diagnostic(diagnostics, "RESOURCE_LIMIT", "The media query list exceeds the Semantic CSS branch limit.", node);
 		return null;
 	}
 	const queries = querySources.map((query) => {
@@ -491,7 +496,8 @@ function parseMedia(node: AstNode, diagnostics: RrssDiagnostic[]): readonly Comp
 			if (!Number.isFinite(Number(match[1]))) return true;
 			const absolute = parseAbsoluteLength(feature.value);
 			return (
-				absolute !== null && (!Number.isFinite(absolute) || Math.abs(absolute) > RRSS_LIMITS_V1.maxAbsoluteLengthPt)
+				absolute !== null &&
+				(!Number.isFinite(absolute) || Math.abs(absolute) > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt)
 			);
 		}),
 	);
@@ -499,7 +505,7 @@ function parseMedia(node: AstNode, diagnostics: RrssDiagnostic[]): readonly Comp
 		diagnostic(
 			diagnostics,
 			"INVALID_MEDIA_QUERY",
-			"RRSS media queries support only width, height, and orientation.",
+			"Semantic CSS media queries support only width, height, and orientation.",
 			node,
 		);
 		return null;
@@ -518,15 +524,15 @@ function combineMedia(
 }
 
 export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: number): CompileProgramResult {
-	const diagnostics: RrssDiagnostic[] = [];
+	const diagnostics: SemanticCssDiagnostic[] = [];
 	const rules: CompiledStyleRule[] = [];
 	let ruleCount = 0;
 	let declarationCount = 0;
 	let sourceOrder = 0;
 
 	const compileRule = (node: AstNode, media: readonly CompiledMediaQuery[]) => {
-		if (++ruleCount > RRSS_LIMITS_V1.maxRules) {
-			if (ruleCount === RRSS_LIMITS_V1.maxRules + 1) {
+		if (++ruleCount > SEMANTIC_CSS_LIMITS_V1.maxRules) {
+			if (ruleCount === SEMANTIC_CSS_LIMITS_V1.maxRules + 1) {
 				diagnostic(diagnostics, "RESOURCE_LIMIT", "The stylesheet has too many rules.", node);
 			}
 			return;
@@ -544,8 +550,8 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 		const declarations: CompiledDeclaration[] = [];
 		for (const declaration of children(node.block)) {
 			if (declaration.type !== "Declaration" || !declaration.property) continue;
-			if (++declarationCount > RRSS_LIMITS_V1.maxDeclarations) {
-				if (declarationCount === RRSS_LIMITS_V1.maxDeclarations + 1) {
+			if (++declarationCount > SEMANTIC_CSS_LIMITS_V1.maxDeclarations) {
+				if (declarationCount === SEMANTIC_CSS_LIMITS_V1.maxDeclarations + 1) {
 					diagnostic(diagnostics, "RESOURCE_LIMIT", "The stylesheet has too many declarations.", declaration);
 				}
 				continue;
@@ -554,11 +560,11 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 			const decodedProperty = identifier(declaration.property);
 			const property = decodedProperty.startsWith("--") ? decodedProperty : decodedProperty.toLowerCase();
 			const lowerProperty = property.toLowerCase();
-			if (lowerProperty.startsWith("--rr-")) {
+			if (lowerProperty.startsWith("--resume-")) {
 				diagnostic(
 					diagnostics,
 					"SYSTEM_VARIABLE_READONLY",
-					"System variables beginning with --rr- are read-only.",
+					"System variables beginning with --resume- are read-only.",
 					declaration,
 				);
 				continue;
@@ -567,7 +573,7 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				diagnostic(
 					diagnostics,
 					property === "src" ? "FORBIDDEN_CSS_VALUE" : "UNSUPPORTED_PROPERTY",
-					`The ${property} property is not supported by RRSS.`,
+					`The ${property} property is not supported by Semantic CSS.`,
 					declaration,
 				);
 				continue;
@@ -617,25 +623,25 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 			}
 			if (node.type !== "Atrule" || !node.name) continue;
 			const name = identifier(node.name).toLowerCase();
-			if (name === "rr-version") continue;
+			if (name === "version") continue;
 			if (name !== "media") {
 				diagnostic(
 					diagnostics,
 					name === "import" || name === "font-face" ? "FORBIDDEN_AT_RULE" : "UNSUPPORTED_AT_RULE",
-					`@${name} is not supported by RRSS.`,
+					`@${name} is not supported by Semantic CSS.`,
 					node,
 				);
 				continue;
 			}
-			if (mediaDepth >= RRSS_LIMITS_V1.maxMediaNesting) {
-				diagnostic(diagnostics, "RESOURCE_LIMIT", "Media nesting exceeds the RRSS limit.", node);
+			if (mediaDepth >= SEMANTIC_CSS_LIMITS_V1.maxMediaNesting) {
+				diagnostic(diagnostics, "RESOURCE_LIMIT", "Media nesting exceeds the Semantic CSS limit.", node);
 				continue;
 			}
 			const compiledMedia = parseMedia(node, diagnostics);
 			if (!compiledMedia) continue;
 			const combinedMedia = combineMedia(media, compiledMedia);
 			if (!combinedMedia) {
-				diagnostic(diagnostics, "RESOURCE_LIMIT", "Nested media queries exceed the RRSS branch limit.", node);
+				diagnostic(diagnostics, "RESOURCE_LIMIT", "Nested media queries exceed the Semantic CSS branch limit.", node);
 				continue;
 			}
 			visit(children(node.block), combinedMedia, mediaDepth + 1);

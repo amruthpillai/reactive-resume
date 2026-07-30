@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const EMPTY_RRSS_SOURCE = "@rr-version 1;\n";
+export const EMPTY_SEMANTIC_CSS_SOURCE = "@version 1;\n";
 
 export const stylesheetSourceSchema = z.strictObject({
 	languageVersion: z.number().int().positive(),

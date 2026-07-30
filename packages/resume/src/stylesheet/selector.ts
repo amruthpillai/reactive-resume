@@ -2,7 +2,7 @@ import type { CssNode } from "css-tree";
 import type { SemanticNode } from "./types";
 import SpecificityCalculator from "@bramus/specificity";
 import * as csstree from "css-tree";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { SEMANTIC_NODE_KINDS, SEMANTIC_REGISTRY_V1 } from "./registry/semantic";
 
 export type Specificity = readonly [ids: number, classes: number, types: number];
@@ -207,7 +207,7 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 				return { type: "pseudo", name: name as "root" | "first-child" | "last-child" | "only-child" };
 			}
 			if (["is", "where", "not"].includes(name)) {
-				if (context.depth >= RRSS_LIMITS_V1.maxFunctionDepth) {
+				if (context.depth >= SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth) {
 					throw new Error("Selector function nesting is too deep.");
 				}
 				const nested = childrenOf(node);
@@ -218,7 +218,7 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 				return { type: "pseudo", name: name as "is" | "where" | "not", selectors };
 			}
 			if (name === "nth-child" || name === "nth-of-type") {
-				if (context.depth >= RRSS_LIMITS_V1.maxFunctionDepth) {
+				if (context.depth >= SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth) {
 					throw new Error("Selector function nesting is too deep.");
 				}
 				return compileNth(node, name, context);
@@ -250,7 +250,7 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 			compounds.push({ selectors });
 			selectors = [];
 			combinators.push(name);
-			if (combinators.length > RRSS_LIMITS_V1.maxCombinatorsPerSelector) {
+			if (combinators.length > SEMANTIC_CSS_LIMITS_V1.maxCombinatorsPerSelector) {
 				throw new Error("Selector has too many combinators.");
 			}
 			continue;
@@ -270,7 +270,7 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 function compileSelectorList(node: SelectorAst, context: CompileContext): readonly CompiledComplexSelector[] {
 	if (node.type !== "SelectorList") throw new Error("Expected a SelectorList AST.");
 	const selectors = childrenOf(node);
-	if (selectors.length === 0 || selectors.length > RRSS_LIMITS_V1.maxSelectorsPerRule) {
+	if (selectors.length === 0 || selectors.length > SEMANTIC_CSS_LIMITS_V1.maxSelectorsPerRule) {
 		throw new Error("Selector list has an unsupported number of selectors.");
 	}
 	return selectors.map((selector) => compileComplex(selector, context));
@@ -279,7 +279,8 @@ function compileSelectorList(node: SelectorAst, context: CompileContext): readon
 export function compileSelector(source: string | CssNode): CompileSelectorResult {
 	try {
 		const text = typeof source === "string" ? source : csstree.generate(source);
-		if (Array.from(text).length > RRSS_LIMITS_V1.maxSelectorCodePoints) throw new Error("Selector is too long.");
+		if (Array.from(text).length > SEMANTIC_CSS_LIMITS_V1.maxSelectorCodePoints)
+			throw new Error("Selector is too long.");
 		const ast = (
 			typeof source === "string" ? csstree.parse(source, { context: "selectorList", positions: true }) : source
 		) as SelectorAst;

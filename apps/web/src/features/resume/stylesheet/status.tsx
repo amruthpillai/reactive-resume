@@ -1,4 +1,4 @@
-import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import { Trans } from "@lingui/react/macro";
 import { WarningCircleIcon, WarningIcon } from "@phosphor-icons/react";
 import { Alert, AlertDescription, AlertTitle } from "@reactive-resume/ui/components/alert";
@@ -8,7 +8,7 @@ import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 export type StylesheetStatusProps = {
 	mode: "legacy" | "semantic";
 	status: "idle" | "compiling" | "preflighting" | "saving" | "applied" | "error";
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 export function StylesheetStatus({ mode, status, diagnostics }: StylesheetStatusProps) {

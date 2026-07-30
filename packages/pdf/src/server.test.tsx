@@ -110,7 +110,7 @@ describe("createResumePdfFile", () => {
 
 	it("returns semantic diagnostics without rendering an invalid applied source", async () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
 		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
 		const { createResumePdfFileResult } = await import("./server");
 
@@ -125,7 +125,7 @@ describe("createResumePdfFile", () => {
 
 	it("rejects unchecked rendering instead of producing an unstyled PDF for semantic errors", async () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
 		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
 		const { createResumePdfFile } = await import("./server");
 

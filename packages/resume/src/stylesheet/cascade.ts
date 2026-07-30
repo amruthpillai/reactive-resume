@@ -8,14 +8,14 @@ import type {
 	ResolvedPageSize,
 	ResolveStylesheetContext,
 	ResolveStylesheetResult,
-	RrssDiagnostic,
+	SemanticCssDiagnostic,
 	SemanticNode,
 	SourceRange,
 	StructuralPresentation,
 	StyleProgram,
 } from "./types";
 import { createDiagnostic } from "./diagnostics";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
 import { createSystemVariables } from "./registry/system-variables";
 import { createSelectorMatcher } from "./selector";
@@ -23,7 +23,7 @@ import {
 	cssFunctionDepth,
 	decodeCssEscapes,
 	expandShorthand,
-	RRSS_LENGTH_PROPERTIES,
+	SEMANTIC_CSS_LENGTH_PROPERTIES,
 	valueSyntaxError,
 } from "./values";
 
@@ -65,14 +65,14 @@ const absoluteUnitToPt = {
 } as const;
 
 const cssWideKeywords = new Set(["inherit", "initial", "revert", "unset"]);
-const maxVariableExpansionOutputCodeUnits = RRSS_LIMITS_V1.maxSourceBytes;
-const maxVariableExpansionWorkCodeUnits = RRSS_LIMITS_V1.maxSourceBytes * 4;
+const maxVariableExpansionOutputCodeUnits = SEMANTIC_CSS_LIMITS_V1.maxSourceBytes;
+const maxVariableExpansionWorkCodeUnits = SEMANTIC_CSS_LIMITS_V1.maxSourceBytes * 4;
 
 const structuralKeys: Readonly<Record<string, keyof StructuralPresentation>> = {
 	"break-before": "breakBefore",
 	"break-inside": "breakInside",
-	"-rr-fixed": "fixed",
-	"-rr-min-presence-ahead": "minPresenceAhead",
+	"-resume-fixed": "fixed",
+	"-resume-min-presence-ahead": "minPresenceAhead",
 	orphans: "orphans",
 	widows: "widows",
 	size: "pageSize",
@@ -105,12 +105,12 @@ function flattenTree(root: SemanticNode): FlatNode[] | null {
 	while (stack.length > 0) {
 		const next = stack.pop();
 		if (!next) break;
-		if (result.length >= RRSS_LIMITS_V1.maxSemanticNodes) return null;
+		if (result.length >= SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes) return null;
 		const pageKey = next.node.kind === "page" ? next.node.key : next.pageKey;
 		const flat = { node: next.node, parent: next.parent, pageKey };
 		result.push(flat);
 		const childCount = next.node.children.length;
-		if (childCount > RRSS_LIMITS_V1.maxSemanticNodes - result.length - stack.length) return null;
+		if (childCount > SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes - result.length - stack.length) return null;
 		for (let index = childCount - 1; index >= 0; index--) {
 			const child = next.node.children[index];
 			if (child) stack.push({ node: child, parent: flat, pageKey });
@@ -252,28 +252,34 @@ function expandVariables(
 	source: string,
 	custom: ReadonlyMap<string, string>,
 	system: Readonly<Record<string, string>>,
-	diagnostics: RrssDiagnostic[],
+	diagnostics: SemanticCssDiagnostic[],
 	range: SourceRange,
 	stack: readonly string[] = [],
 	depth = 0,
 	budget: VariableExpansionBudget = { work: 0 },
 ): string | null {
-	if (depth > RRSS_LIMITS_V1.maxVariableExpansionDepth) {
-		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
+	if (depth > SEMANTIC_CSS_LIMITS_V1.maxVariableExpansionDepth) {
+		diagnostics.push(
+			createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the Semantic CSS limit.", range),
+		);
 		return null;
 	}
 	if (
 		source.length > maxVariableExpansionOutputCodeUnits ||
 		source.length > maxVariableExpansionWorkCodeUnits - budget.work
 	) {
-		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
+		diagnostics.push(
+			createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the Semantic CSS limit.", range),
+		);
 		return null;
 	}
 	budget.work += source.length;
 
 	let value = decodeCssEscapes(source);
 	if (value.length > maxVariableExpansionOutputCodeUnits) {
-		diagnostics.push(createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range));
+		diagnostics.push(
+			createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the Semantic CSS limit.", range),
+		);
 		return null;
 	}
 	while (true) {
@@ -318,7 +324,7 @@ function expandVariables(
 			nextLength > maxVariableExpansionWorkCodeUnits - budget.work
 		) {
 			diagnostics.push(
-				createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the RRSS limit.", range),
+				createDiagnostic("RESOURCE_LIMIT", "error", "Variable expansion exceeds the Semantic CSS limit.", range),
 			);
 			return null;
 		}
@@ -332,9 +338,9 @@ function expandVariables(
 		);
 		return null;
 	}
-	if (cssFunctionDepth(value) > RRSS_LIMITS_V1.maxFunctionDepth) {
+	if (cssFunctionDepth(value) > SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth) {
 		diagnostics.push(
-			createDiagnostic("RESOURCE_LIMIT", "error", "CSS function nesting exceeds the RRSS limit.", range),
+			createDiagnostic("RESOURCE_LIMIT", "error", "CSS function nesting exceeds the Semantic CSS limit.", range),
 		);
 		return null;
 	}
@@ -347,7 +353,7 @@ function expandedWinnersFor(
 	rootFontSize: number,
 	custom: ReadonlyMap<string, string>,
 	system: Readonly<Record<string, string>>,
-	diagnostics: RrssDiagnostic[],
+	diagnostics: SemanticCssDiagnostic[],
 ): Map<string, Winner> {
 	const cascaded = new Map<string, Winner>();
 	for (const { rule, specificity } of matches) {
@@ -433,8 +439,8 @@ function parsePageSize(value: string, lengthContext: LengthContext): ResolvedPag
 	if (typeof width !== "number" || (height !== undefined && typeof height !== "number")) return null;
 	if (
 		width <= 0 ||
-		Math.abs(width) > RRSS_LIMITS_V1.maxAbsoluteLengthPt ||
-		(height !== undefined && (height <= 0 || Math.abs(height) > RRSS_LIMITS_V1.maxAbsoluteLengthPt))
+		Math.abs(width) > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt ||
+		(height !== undefined && (height <= 0 || Math.abs(height) > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt))
 	) {
 		return null;
 	}
@@ -468,7 +474,7 @@ function cssWideValue(
 }
 
 function normalizeValue(property: string, value: string, context: LengthContext): string | number | null {
-	if (RRSS_LENGTH_PROPERTIES.has(property)) {
+	if (SEMANTIC_CSS_LENGTH_PROPERTIES.has(property)) {
 		const length = toPoints(value, property, context);
 		if (length !== null) return length;
 		if (/^(auto|none|normal|max-content|min-content|fit-content|thin|medium|thick)$/i.test(value)) {
@@ -526,12 +532,12 @@ function structuralValue(
 		else if (value === "auto") delete structural.breakInside;
 		else return false;
 	}
-	if (property === "-rr-fixed") {
+	if (property === "-resume-fixed") {
 		if (value === "true" || value === "1" || value === 1) structural.fixed = true;
 		else if (value === "false" || value === "0" || value === 0) structural.fixed = false;
 		else return false;
 	}
-	if (property === "-rr-min-presence-ahead") {
+	if (property === "-resume-min-presence-ahead") {
 		if (typeof value === "number" && value >= 0) structural.minPresenceAhead = value;
 		else return false;
 	}
@@ -580,7 +586,9 @@ export function resolveStylesheet(
 		return {
 			nodes: {},
 			renderTree: tree,
-			diagnostics: [createDiagnostic("RESOURCE_LIMIT", "error", "The semantic tree exceeds the RRSS node limit.")],
+			diagnostics: [
+				createDiagnostic("RESOURCE_LIMIT", "error", "The semantic tree exceeds the Semantic CSS node limit."),
+			],
 		};
 	}
 	if (
@@ -590,8 +598,8 @@ export function resolveStylesheet(
 				!Number.isFinite(height) ||
 				width <= 0 ||
 				height <= 0 ||
-				width > RRSS_LIMITS_V1.maxAbsoluteLengthPt ||
-				height > RRSS_LIMITS_V1.maxAbsoluteLengthPt,
+				width > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt ||
+				height > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt,
 		)
 	) {
 		return {
@@ -602,7 +610,7 @@ export function resolveStylesheet(
 			],
 		};
 	}
-	const diagnostics: RrssDiagnostic[] = [];
+	const diagnostics: SemanticCssDiagnostic[] = [];
 
 	const matched = new Map<string, MatchedRule[]>();
 	const selectorMatches = createSelectorMatcher(tree);
@@ -770,13 +778,13 @@ export function resolveStylesheet(
 						);
 					} else if (
 						typeof normalized === "number" &&
-						(normalized < 0 || normalized > RRSS_LIMITS_V1.maxAbsoluteLengthPt)
+						(normalized < 0 || normalized > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt)
 					) {
 						diagnostics.push(
 							createDiagnostic(
 								"INVALID_VALUE",
 								"error",
-								"font-size exceeds the RRSS length limit.",
+								"font-size exceeds the Semantic CSS length limit.",
 								fontSizeWinner.declaration.range,
 							),
 						);
@@ -872,12 +880,12 @@ export function resolveStylesheet(
 				);
 				continue;
 			}
-			if (typeof normalized === "number" && Math.abs(normalized) > RRSS_LIMITS_V1.maxAbsoluteLengthPt) {
+			if (typeof normalized === "number" && Math.abs(normalized) > SEMANTIC_CSS_LIMITS_V1.maxAbsoluteLengthPt) {
 				diagnostics.push(
 					createDiagnostic(
 						"INVALID_VALUE",
 						"error",
-						`${property} exceeds the RRSS length limit.`,
+						`${property} exceeds the Semantic CSS length limit.`,
 						winner.declaration.range,
 					),
 				);

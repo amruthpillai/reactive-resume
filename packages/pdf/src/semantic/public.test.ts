@@ -5,7 +5,7 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 describe("@reactive-resume/pdf/semantic", () => {
 	it("publicly exposes invalid applied-source diagnostics", () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
 		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
 
 		const inspection = inspectResumePdf({ data });

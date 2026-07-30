@@ -16,10 +16,10 @@ databaseTest("stylesheet PostgreSQL compare-and-swap", () => {
 		const secondConnection = await getPool().connect();
 		const userId = `stylesheet-user-${randomUUID()}`;
 		const resumeId = `stylesheet-resume-${randomUUID()}`;
-		const initialSource = { languageVersion: 1, text: "@rr-version 1;\n" };
+		const initialSource = { languageVersion: 1, text: "@version 1;\n" };
 		const candidateSource = {
 			languageVersion: 1,
-			text: "@rr-version 1;\nsection { color: #123456; }\n",
+			text: "@version 1;\nsection { color: #123456; }\n",
 		};
 		const data: ResumeData = structuredClone(defaultResumeData);
 		data.metadata.stylesheet = {

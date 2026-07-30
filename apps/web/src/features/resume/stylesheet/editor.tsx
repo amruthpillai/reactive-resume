@@ -1,7 +1,7 @@
 import type { Extension } from "@codemirror/state";
-import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
-import type { RrssColorToken } from "./color-tokens";
-import type { RrssEditorMetadata } from "./protocol";
+import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssColorToken } from "./color-tokens";
+import type { SemanticCssEditorMetadata } from "./protocol";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
 import { css } from "@codemirror/lang-css";
 import { defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
@@ -24,7 +24,7 @@ import { Sheet, SheetContent, SheetTitle } from "@reactive-resume/ui/components/
 import { ColorPicker } from "@/components/input/color-picker";
 import { useTheme } from "@/features/theme/provider";
 import { useBuilderSidebarStore } from "@/routes/builder/$resumeId/-store/sidebar";
-import { compositionAwareDocumentListener, createRrssEditorExtensions } from "./editor-extensions";
+import { compositionAwareDocumentListener, createSemanticCssEditorExtensions } from "./editor-extensions";
 import { enterStylesheetFocusMode } from "./focus-mode";
 import { formatEditorDocument } from "./formatter";
 import { LegacyStylesheetBanner } from "./legacy-banner";
@@ -33,7 +33,7 @@ import { useStylesheetStore } from "./store";
 import { StylesheetToolbar } from "./toolbar";
 
 const externalReplacement = Annotation.define<boolean>();
-const emptyMetadata: RrssEditorMetadata = {
+const emptyMetadata: SemanticCssEditorMetadata = {
 	semanticTree: { key: "resume", kind: "resume", attributes: {}, roles: [], children: [] },
 	templateParts: [],
 };
@@ -78,9 +78,9 @@ const readOnlyExtensions = (readOnly: boolean): Extension => [
 
 export type StylesheetCodeEditorProps = {
 	value: string;
-	diagnostics: readonly RrssDiagnostic[];
-	colorTokens?: readonly RrssColorToken[];
-	metadata?: RrssEditorMetadata;
+	diagnostics: readonly SemanticCssDiagnostic[];
+	colorTokens?: readonly SemanticCssColorToken[];
+	metadata?: SemanticCssEditorMetadata;
 	theme: "light" | "dark";
 	readOnly?: boolean;
 	label?: string;
@@ -117,11 +117,11 @@ export function StylesheetCodeEditor({
 	const onUndoRef = useRef(onUndo);
 	const onRedoRef = useRef(onRedo);
 	const [selectedColor, setSelectedColor] = useState<{
-		token: RrssColorToken;
+		token: SemanticCssColorToken;
 		left: number;
 		top: number;
 	} | null>(null);
-	const selectColor = useCallback((token: RrssColorToken, rect: DOMRect) => {
+	const selectColor = useCallback((token: SemanticCssColorToken, rect: DOMRect) => {
 		const hostRect = hostRef.current?.getBoundingClientRect();
 		if (!hostRect) return;
 		openColorPickerRef.current = true;
@@ -198,7 +198,7 @@ export function StylesheetCodeEditor({
 				compartments.theme.of(editorTheme(initial.theme === "dark")),
 				compartments.readOnly.of(readOnlyExtensions(initial.readOnly)),
 				compartments.intelligence.of(
-					createRrssEditorExtensions({
+					createSemanticCssEditorExtensions({
 						metadata: initial.metadata,
 						diagnostics: initial.diagnostics,
 						colorTokens: initial.colorTokens,
@@ -238,7 +238,7 @@ export function StylesheetCodeEditor({
 		if (!view || !compartments) return;
 		view.dispatch({
 			effects: compartments.intelligence.reconfigure(
-				createRrssEditorExtensions({
+				createSemanticCssEditorExtensions({
 					metadata,
 					diagnostics,
 					colorTokens,
@@ -293,7 +293,7 @@ export function StylesheetCodeEditor({
 								render={
 									<button
 										ref={colorTriggerRef}
-										data-rrss-color-picker-trigger=""
+										data-semantic-css-color-picker-trigger=""
 										type="button"
 										title={t`Edit color ${selectedColor.token.value}`}
 										aria-label={t`Edit color ${selectedColor.token.value}`}

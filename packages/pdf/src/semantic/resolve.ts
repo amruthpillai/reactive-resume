@@ -1,10 +1,10 @@
-import type { ResolveStylesheetResult, RrssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
+import type { ResolveStylesheetResult, SemanticCssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { StylesheetMode, StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { Template } from "@reactive-resume/schema/templates";
 import type { ResolvedResumePresentation } from "./context";
 import { compileStylesheet, resolveStylesheet } from "@reactive-resume/resume/stylesheet";
-import { EMPTY_RRSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
+import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { shouldShowResumeHeader } from "../templates/shared/cover-letter";
 import { getTemplatePageSize } from "../templates/shared/page-size";
 import { adaptResolvedPdfNode } from "./adapter";
@@ -25,7 +25,7 @@ export type ResolvedResumeRuntime = {
 	presentation: ResolvedResumePresentation;
 	sourceTree: SemanticNode;
 	renderTree: SemanticNode;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 const EMPTY_PRESENTATION = Object.freeze({}) satisfies ResolvedResumePresentation;
@@ -96,7 +96,7 @@ export function resolveResumeRuntime({
 	const source = applied ??
 		data.metadata.stylesheet?.applied ?? {
 			languageVersion: 1,
-			text: EMPTY_RRSS_SOURCE,
+			text: EMPTY_SEMANTIC_CSS_SOURCE,
 		};
 	const compiled = compileStylesheet(source);
 	if (!compiled.program) {

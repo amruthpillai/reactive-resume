@@ -2,7 +2,7 @@ import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet
 import type { CompileStylesheetResult } from "./types";
 import { stylesheetCacheKey, stylesheetCompilationCache } from "./cache";
 import { createDiagnostic } from "./diagnostics";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { parseStylesheet } from "./parse";
 import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
 import { SEMANTIC_NODE_KINDS } from "./registry/semantic";
@@ -15,17 +15,21 @@ function isPositiveInteger(value: string): boolean {
 }
 
 export function compileStylesheet(source: StylesheetSource): CompileStylesheetResult {
-	if (new TextEncoder().encode(source.text).byteLength > RRSS_LIMITS_V1.maxSourceBytes) {
+	if (new TextEncoder().encode(source.text).byteLength > SEMANTIC_CSS_LIMITS_V1.maxSourceBytes) {
 		return {
 			program: null,
-			diagnostics: [createDiagnostic("RESOURCE_LIMIT", "error", "The stylesheet source exceeds the RRSS byte limit.")],
+			diagnostics: [
+				createDiagnostic("RESOURCE_LIMIT", "error", "The stylesheet source exceeds the Semantic CSS byte limit."),
+			],
 		};
 	}
 
-	if (cssFunctionDepth(source.text) > RRSS_LIMITS_V1.maxFunctionDepth) {
+	if (cssFunctionDepth(source.text) > SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth) {
 		return {
 			program: null,
-			diagnostics: [createDiagnostic("RESOURCE_LIMIT", "error", "CSS function nesting exceeds the RRSS limit.")],
+			diagnostics: [
+				createDiagnostic("RESOURCE_LIMIT", "error", "CSS function nesting exceeds the Semantic CSS limit."),
+			],
 		};
 	}
 
@@ -36,15 +40,11 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 
 	const stylesheet = parseStylesheet(source.text);
 	const diagnostics = [...stylesheet.diagnostics];
-	const versionDirectives = stylesheet.atRules.filter((atRule) => atRule.name === "rr-version");
+	const versionDirectives = stylesheet.atRules.filter((atRule) => atRule.name === "version");
 
 	if (versionDirectives.length === 0 && source.languageVersion === 1) {
 		diagnostics.push(
-			createDiagnostic(
-				"MISSING_VERSION_DIRECTIVE",
-				"warning",
-				"Version-one stylesheets should start with @rr-version 1;",
-			),
+			createDiagnostic("MISSING_VERSION_DIRECTIVE", "warning", "Version-one stylesheets should start with @version 1;"),
 		);
 	}
 
@@ -52,9 +52,9 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		for (const directive of versionDirectives.slice(1)) {
 			diagnostics.push(
 				createDiagnostic(
-					"DUPLICATE_RR_VERSION_DIRECTIVE",
+					"DUPLICATE_VERSION_DIRECTIVE",
 					"error",
-					"A stylesheet can contain only one @rr-version directive.",
+					"A stylesheet can contain only one @version directive.",
 					directive.range,
 				),
 			);
@@ -65,9 +65,9 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		if (directive.hasBlock || !isPositiveInteger(directive.prelude)) {
 			diagnostics.push(
 				createDiagnostic(
-					"INVALID_RR_VERSION",
+					"INVALID_VERSION",
 					"error",
-					"@rr-version must contain one positive integer and no block.",
+					"@version must contain one positive integer and no block.",
 					directive.range,
 				),
 			);
@@ -78,9 +78,9 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		if (version !== source.languageVersion) {
 			diagnostics.push(
 				createDiagnostic(
-					"RR_VERSION_MISMATCH",
+					"VERSION_MISMATCH",
 					"error",
-					"@rr-version must match the stylesheet language version.",
+					"@version must match the stylesheet language version.",
 					directive.range,
 				),
 			);
@@ -90,7 +90,11 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 	const compiler = getStylesheetCompiler(source.languageVersion);
 	if (!compiler) {
 		diagnostics.push(
-			createDiagnostic("UNSUPPORTED_RR_VERSION", "error", `RRSS version ${source.languageVersion} is not supported.`),
+			createDiagnostic(
+				"UNSUPPORTED_VERSION",
+				"error",
+				`Semantic CSS version ${source.languageVersion} is not supported.`,
+			),
 		);
 	}
 

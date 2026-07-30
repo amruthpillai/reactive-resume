@@ -40,8 +40,8 @@ export const resolvedPdfTextProps = ({
 });
 
 const toReactPdfProperty = (property: string) => {
-	if (property === "-rr-shadow-color") return "shadowColor";
-	if (property === "-rr-shadow-width") return "shadowWidth";
+	if (property === "-resume-shadow-color") return "shadowColor";
+	if (property === "-resume-shadow-width") return "shadowWidth";
 	return property.replace(/-([a-z])/g, (_match, letter: string) => letter.toUpperCase());
 };
 

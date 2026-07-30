@@ -17,7 +17,7 @@ export type SourceRange = {
 	end: SourcePosition;
 };
 
-export type RrssDiagnostic = {
+export type SemanticCssDiagnostic = {
 	code: string;
 	severity: DiagnosticSeverity;
 	message: string;
@@ -108,7 +108,7 @@ export type ResolveStylesheetContext = Omit<ResolveStylesheetInput, "program" | 
 export type ResolveStylesheetResult = {
 	nodes: Readonly<Record<string, ResolvedNodeStyle>>;
 	renderTree: SemanticNode;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 export type ResolvedPageDimensions = {
@@ -127,10 +127,10 @@ export type ParsedStylesheet = {
 	ast: unknown;
 	atRules: readonly ParsedAtRule[];
 	rules: readonly unknown[];
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
 export type CompileStylesheetResult = {
 	program: StyleProgram | null;
-	diagnostics: readonly RrssDiagnostic[];
+	diagnostics: readonly SemanticCssDiagnostic[];
 };

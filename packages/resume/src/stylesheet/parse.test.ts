@@ -3,7 +3,7 @@ import { parseStylesheet } from "./parse";
 
 describe("parseStylesheet", () => {
 	it("returns exact ranges for malformed declarations and keeps a recoverable parse tree", () => {
-		const result = parseStylesheet("@rr-version 1;\nsection { color red; }\nitem { opacity: .5; }");
+		const result = parseStylesheet("@version 1;\nsection { color red; }\nitem { opacity: .5; }");
 
 		expect(result.diagnostics[0]?.range).toEqual({
 			start: { line: 2, column: 17, offset: 31 },

@@ -12,7 +12,7 @@ type HostNode = {
 	children?: HostNode[];
 };
 
-const emptyStylesheet = { languageVersion: 1, text: "@rr-version 1;" };
+const emptyStylesheet = { languageVersion: 1, text: "@version 1;" };
 
 const buildFixture = (
 	mode: "missing" | "legacy" | "semantic",
@@ -67,7 +67,7 @@ describe("PDF link decoration fidelity", () => {
 	});
 
 	it("lets semantic none override an underlined builder baseline (#3134)", async () => {
-		const data = buildFixture("semantic", false, "@rr-version 1; link { text-decoration: none; }");
+		const data = buildFixture("semantic", false, "@version 1; link { text-decoration: none; }");
 
 		expect(await finalLinkDecoration(data)).toBe("none");
 	});

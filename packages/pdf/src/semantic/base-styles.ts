@@ -97,8 +97,8 @@ export function buildPdfBaseStyles({
 				"border-radius": data.picture.borderRadius,
 				"border-color": data.picture.borderColor,
 				"border-width": data.picture.borderWidth,
-				"-rr-shadow-color": data.picture.shadowColor,
-				"-rr-shadow-width": data.picture.shadowWidth,
+				"-resume-shadow-color": data.picture.shadowColor,
+				"-resume-shadow-width": data.picture.shadowWidth,
 				transform: `rotate(${data.picture.rotation}deg)`,
 			});
 		}

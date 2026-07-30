@@ -122,7 +122,7 @@ describe("createResumePdfBlob", () => {
 
 	it("renders a source-free public projection through the semantic runtime", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const applied = { languageVersion: 1, text: "@rr-version 1;\nname { color: #123456; }\n" };
+		const applied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
 		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
 		const projection = await createPublicStyleProjection({ data: semanticData });
 		const publicData = structuredClone(semanticData);
@@ -147,7 +147,7 @@ describe("createResumePdfBlob", () => {
 
 	it("returns semantic diagnostics without rendering an invalid applied source", async () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
 		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
 		const { createResumePdfBlobResult } = await import("./browser");
 
@@ -162,7 +162,7 @@ describe("createResumePdfBlob", () => {
 
 	it("rejects unchecked rendering instead of producing an unstyled PDF for semantic errors", async () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@rr-version 1; section { color: ; }" };
+		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
 		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
 		const { createResumePdfBlob } = await import("./browser");
 

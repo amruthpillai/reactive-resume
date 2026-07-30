@@ -4,7 +4,7 @@ import fc from "fast-check";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { resolveStylesheet } from "./cascade";
 import { compileStylesheet } from "./compile";
-import { RRSS_LIMITS_V1 } from "./limits";
+import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { PROPERTY_REGISTRY_V1, SEMANTIC_NODE_KINDS } from "./registry";
 
 const node = (
@@ -85,13 +85,13 @@ const advertisedPropertyHints = Object.entries(PROPERTY_REGISTRY_V1).flatMap(([p
 });
 
 function resolve(source: string, customContext: ResolveStylesheetContext = context) {
-	const compiled = compileStylesheet({ languageVersion: 1, text: `@rr-version 1;${source}` });
+	const compiled = compileStylesheet({ languageVersion: 1, text: `@version 1;${source}` });
 	if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
 	return resolveStylesheet(compiled.program, tree, customContext);
 }
 
 function resolveTree(source: string, semanticTree: SemanticNode, customContext: ResolveStylesheetContext) {
-	const compiled = compileStylesheet({ languageVersion: 1, text: `@rr-version 1;${source}` });
+	const compiled = compileStylesheet({ languageVersion: 1, text: `@version 1;${source}` });
 	if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
 	return resolveStylesheet(compiled.program, semanticTree, customContext);
 }
@@ -120,7 +120,7 @@ function oversizedFrontierTree(): { tree: SemanticNode; childReads: () => number
 	let childReads = 0;
 	const children = new Proxy({} as readonly SemanticNode[], {
 		get: (_target, property) => {
-			if (property === "length") return RRSS_LIMITS_V1.maxSemanticNodes + 1;
+			if (property === "length") return SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes + 1;
 			if (property === Symbol.iterator || (typeof property === "string" && /^\d+$/.test(property))) {
 				childReads++;
 				throw new Error("Oversized frontier entries must not be read.");
@@ -133,13 +133,13 @@ function oversizedFrontierTree(): { tree: SemanticNode; childReads: () => number
 	};
 }
 
-describe("RRSS cascade and structural resolution", () => {
+describe("Semantic CSS cascade and structural resolution", () => {
 	it.each(advertisedPropertyHints)(
 		"accepts the advertised $hint for $property through cascade resolution",
 		({ property, kind, value }) => {
 			const compiled = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1; ${kind} { ${property}: ${value}; }`,
+				text: `@version 1; ${kind} { ${property}: ${value}; }`,
 			});
 			expect(
 				compiled.diagnostics.filter(({ severity }) => severity === "error"),
@@ -265,7 +265,7 @@ describe("RRSS cascade and structural resolution", () => {
 
 	it("resolves inherited custom properties, fallbacks, cycles, and CSS-wide keywords", () => {
 		const valid = resolve(`
-			:root { --accent: var(--rr-primary-color); color: red; }
+			:root { --accent: var(--resume-primary-color); color: red; }
 			section { color: inherit; }
 			section-heading { color: var(--missing, var(--accent)); }
 		`);
@@ -276,7 +276,7 @@ describe("RRSS cascade and structural resolution", () => {
 
 		const compiled = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1; :root { --a: var(--b); --b: var(--a); } section { color: var(--a); }",
+			text: "@version 1; :root { --a: var(--b); --b: var(--a); } section { color: var(--a); }",
 		});
 		if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
 		const cycled = resolveStylesheet(compiled.program, tree, context);
@@ -366,7 +366,7 @@ describe("RRSS cascade and structural resolution", () => {
 	it("resolves authored size before media and rejects size inside media", () => {
 		const result = resolve(
 			`
-				page { size: 400pt 600pt; padding-top: var(--rr-page-width); }
+				page { size: 400pt 600pt; padding-top: var(--resume-page-width); }
 				@media (min-width: 390pt) and (orientation: portrait) { page { margin-top: 10pt; } }
 			`,
 			{ ...context, pages: [{ pageKey: "page-1", width: 800, height: 400 }] },
@@ -377,7 +377,7 @@ describe("RRSS cascade and structural resolution", () => {
 
 		const invalid = compileStylesheet({
 			languageVersion: 1,
-			text: "@rr-version 1; @media (width: 400pt) { page { size: A4; } }",
+			text: "@version 1; @media (width: 400pt) { page { size: A4; } }",
 		});
 		expect(invalid.program).toBeNull();
 		expect(invalid.diagnostics).toContainEqual(expect.objectContaining({ code: "MEDIA_PAGE_SIZE", severity: "error" }));
@@ -405,7 +405,7 @@ describe("RRSS cascade and structural resolution", () => {
 	it("bounds generated branching variable expansion by aggregate work and output", () => {
 		fc.assert(
 			fc.property(fc.integer({ min: 3, max: 4 }), (branches) => {
-				const depth = Math.ceil(Math.log(RRSS_LIMITS_V1.maxSourceBytes) / Math.log(branches)) + 1;
+				const depth = Math.ceil(Math.log(SEMANTIC_CSS_LIMITS_V1.maxSourceBytes) / Math.log(branches)) + 1;
 				const variables = Array.from({ length: depth }, (_, index) => {
 					const next =
 						index === depth - 1 ? "r" : Array.from({ length: branches }, () => `var(--v${index + 1})`).join("");
@@ -413,7 +413,7 @@ describe("RRSS cascade and structural resolution", () => {
 				}).join("");
 				const compiled = compileStylesheet({
 					languageVersion: 1,
-					text: `@rr-version 1;:root{${variables}}section-heading{color:var(--v0);}`,
+					text: `@version 1;:root{${variables}}section-heading{color:var(--v0);}`,
 				});
 				if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
 				const result = resolveStylesheet(compiled.program, tree, context);
@@ -459,7 +459,7 @@ describe("RRSS cascade and structural resolution", () => {
 				},
 			};
 			const result = resolve(
-				`section { color: ${keyword}; display: ${keyword}; order: ${keyword}; -rr-fixed: ${keyword}; break-before: ${keyword}; }`,
+				`section { color: ${keyword}; display: ${keyword}; order: ${keyword}; -resume-fixed: ${keyword}; break-before: ${keyword}; }`,
 				customContext,
 			);
 
@@ -511,7 +511,7 @@ describe("RRSS cascade and structural resolution", () => {
 		for (const declaration of ["font-size: -0.01pt", "opacity: -0.0001", "opacity: 1.0001"]) {
 			const compiled = compileStylesheet({
 				languageVersion: 1,
-				text: `@rr-version 1;section-heading{${declaration}}`,
+				text: `@version 1;section-heading{${declaration}}`,
 			});
 			expect(compiled.program, declaration).toBeNull();
 			expect(compiled.diagnostics, declaration).toContainEqual(
@@ -541,7 +541,7 @@ describe("RRSS cascade and structural resolution", () => {
 
 	it("maps structural declarations without mixing them into renderer styles", () => {
 		const result = resolve(`
-			section { break-before: page; break-inside: avoid; -rr-fixed: true; -rr-min-presence-ahead: 12pt; }
+			section { break-before: page; break-inside: avoid; -resume-fixed: true; -resume-min-presence-ahead: 12pt; }
 			section-heading { orphans: 2; widows: 3; order: 4; }
 		`);
 
@@ -558,8 +558,8 @@ describe("RRSS cascade and structural resolution", () => {
 	it.each([
 		["0", false],
 		["1", true],
-	] as const)("maps the accepted -rr-fixed value %s to %s", (value, expected) => {
-		const result = resolve(`section { -rr-fixed: ${value}; }`);
+	] as const)("maps the accepted -resume-fixed value %s to %s", (value, expected) => {
+		const result = resolve(`section { -resume-fixed: ${value}; }`);
 
 		expect(result.nodes["section-experience"]?.structural.fixed).toBe(expected);
 		expect(result.diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
@@ -567,13 +567,17 @@ describe("RRSS cascade and structural resolution", () => {
 
 	it("accepts the exact semantic node budget and rejects deep or wide trees one node over", () => {
 		const program = { languageVersion: 1, rules: [] };
-		const exact = resolveStylesheet(program, semanticTreeOfSize(RRSS_LIMITS_V1.maxSemanticNodes, "wide"), context);
-		expect(Object.keys(exact.nodes)).toHaveLength(RRSS_LIMITS_V1.maxSemanticNodes);
+		const exact = resolveStylesheet(
+			program,
+			semanticTreeOfSize(SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes, "wide"),
+			context,
+		);
+		expect(Object.keys(exact.nodes)).toHaveLength(SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes);
 
 		for (const shape of ["deep", "wide"] as const) {
 			const result = resolveStylesheet(
 				program,
-				semanticTreeOfSize(RRSS_LIMITS_V1.maxSemanticNodes + 1, shape),
+				semanticTreeOfSize(SEMANTIC_CSS_LIMITS_V1.maxSemanticNodes + 1, shape),
 				context,
 			);
 			expect(result.nodes).toEqual({});

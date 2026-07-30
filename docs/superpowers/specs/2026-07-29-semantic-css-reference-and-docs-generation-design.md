@@ -1,11 +1,11 @@
-# RRSS Author Reference and Unified Documentation Generation
+# Semantic CSS Author Reference and Unified Documentation Generation
 
 **Date:** 2026-07-29
 **Status:** Approved
 
 ## Summary
 
-Reactive Resume will provide one canonical, author-facing reference for Reactive Resume Semantic CSS (RRSS) at:
+Reactive Resume will provide one canonical, author-facing Semantic CSS reference at:
 
 `https://docs.rxresu.me/guides/semantic-css-reference`
 
@@ -17,14 +17,14 @@ The Custom Styles editor will include a compact, accessible help hint linking di
 
 A new root command, `pnpm docs:gen`, will replace `pnpm docs:semantic-css` and regenerate:
 
-1. RRSS reference tables.
+1. Semantic CSS reference tables.
 2. The resume-builder skill schema reference.
 3. The complete JSON Schema embedded in the public schema guide.
 4. The checked-in OpenAPI specification.
 
 ## Audience and goals
 
-The reference is for resume authors who write RRSS in the builder. It must let an author:
+The reference is for resume authors who write Semantic CSS in the builder. It must let an author:
 
 - Discover what selectors, properties, values, and directives exist.
 - Understand which semantic nodes and template parts can be targeted.
@@ -39,9 +39,9 @@ internal adapter names, and package ownership stay out of the public page.
 
 The reference is organized for lookup rather than linear reading.
 
-### 1. RRSS in one minute
+### 1. Semantic CSS in one minute
 
-- The `@rr-version 1;` directive.
+- The `@version 1;` directive.
 - One complete, portable stylesheet.
 - The relationship between editable source, applied source, preview, and export.
 
@@ -67,9 +67,9 @@ The reference is organized for lookup rather than linear reading.
 ### 4. Cascade and values
 
 - Specificity, source order, selector-list specificity, inheritance, and `!important`.
-- RRSS behavior for `initial`, `inherit`, `unset`, and `revert`.
+- Semantic CSS behavior for `initial`, `inherit`, `unset`, and `revert`.
 - Author custom properties, nested `var()` fallbacks, unresolved variables, and cycles.
-- Reserved read-only `--rr-*` system variables.
+- Reserved read-only `--resume-*` system variables.
 - Numbers, lengths, units, colors, functions, and shorthands.
 
 ### 5. Property reference
@@ -140,9 +140,9 @@ pnpm docs:gen
 The existing `docs:semantic-css` command is replaced by `docs:gen`, leaving one canonical documentation-generation
 entrypoint.
 
-### RRSS reference data
+### Semantic CSS reference data
 
-Generated RRSS sections consume existing authoritative sources:
+Generated Semantic CSS sections consume existing authoritative sources:
 
 - Supported versions and compile limits.
 - Semantic element registry.
@@ -208,7 +208,7 @@ The generator computes all output text before writing any target. It does not ad
 
 ## Custom Styles help hint
 
-The RRSS editor's shared chrome displays this hint directly above the code editor:
+The Semantic CSS editor's shared chrome displays this hint directly above the code editor:
 
 > **Not sure what to write?** Browse the Semantic CSS language reference.
 
@@ -277,21 +277,21 @@ Chrome verification is not required.
 ## Out of scope
 
 - Contributor/compiler architecture documentation.
-- A second RRSS reference route.
+- A second Semantic CSS reference route.
 - Splitting the reference across multiple pages.
 - Interactive documentation playgrounds.
 - New editor completion or hover features.
-- New RRSS syntax or rendering behavior, except for correcting factual registry inconsistencies required to generate an
+- New Semantic CSS syntax or rendering behavior, except for correcting factual registry inconsistencies required to generate an
   accurate reference.
 - General documentation URL centralization.
 
 ## Acceptance criteria
 
-- The canonical reference documents every author-facing RRSS selector, semantic element, property, variable, directive,
+- The canonical reference documents every author-facing Semantic CSS selector, semantic element, property, variable, directive,
   value family, template part, diagnostic family, limit, and unsupported syntax category.
 - The reference contains copy-paste examples for common author goals.
 - Generated facts come from authoritative runtime metadata and have staleness coverage.
-- `pnpm docs:gen` refreshes the RRSS tables, both Resume JSON Schema references, and `docs/spec.json`.
+- `pnpm docs:gen` refreshes the Semantic CSS tables, both Resume JSON Schema references, and `docs/spec.json`.
 - Runtime and checked-in OpenAPI output share one generator.
 - The reference is visible in documentation navigation.
 - The Custom Styles editor links to the exact public reference route on desktop and mobile.
