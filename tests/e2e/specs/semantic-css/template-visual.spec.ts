@@ -1,3 +1,4 @@
+import { ACTIVE_PREVIEW_PAGE_SELECTOR, readPreviewPageDataUrl } from "../../fixtures/preview";
 import {
 	createSemanticCssResume,
 	PORTABLE_STYLESHEET,
@@ -31,31 +32,7 @@ async function previewClip(page: Parameters<typeof createSemanticCssResume>[0]) 
 	await expect
 		.poll(
 			async () => {
-				const current = await page.evaluate(() => {
-					const source = Array.from(
-						document.querySelectorAll<HTMLCanvasElement>('canvas[aria-label^="Resume page 1 of"]'),
-					)
-						.filter((element) => {
-							for (let current: Element | null = element; current; current = current.parentElement) {
-								const style = getComputedStyle(current);
-								if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
-									return false;
-								}
-							}
-							return true;
-						})
-						.sort((left, right) => {
-							const intersection = (element: Element) => {
-								const rect = element.getBoundingClientRect();
-								const width = Math.max(0, Math.min(rect.right, innerWidth) - Math.max(rect.left, 0));
-								const height = Math.max(0, Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0));
-								return width * height;
-							};
-							return intersection(right) - intersection(left);
-						})[0];
-					if (!source) throw new Error("Expected a visible first-page canvas.");
-					return source.toDataURL();
-				});
+				const current = await page.evaluate(readPreviewPageDataUrl, ACTIVE_PREVIEW_PAGE_SELECTOR);
 				const stable = current === previous;
 				previous = current;
 				return stable;
@@ -63,25 +40,9 @@ async function previewClip(page: Parameters<typeof createSemanticCssResume>[0]) 
 			{ intervals: [250], timeout: 15_000 },
 		)
 		.toBe(true);
-	const dimensions = await page.evaluate(() => {
-		const source = Array.from(document.querySelectorAll<HTMLCanvasElement>('canvas[aria-label^="Resume page 1 of"]'))
-			.filter((element) => {
-				for (let current: Element | null = element; current; current = current.parentElement) {
-					const style = getComputedStyle(current);
-					if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
-				}
-				return true;
-			})
-			.sort((left, right) => {
-				const intersection = (element: Element) => {
-					const rect = element.getBoundingClientRect();
-					const width = Math.max(0, Math.min(rect.right, innerWidth) - Math.max(rect.left, 0));
-					const height = Math.max(0, Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0));
-					return width * height;
-				};
-				return intersection(right) - intersection(left);
-			})[0];
-		if (!source) throw new Error("Expected a visible first-page canvas.");
+	const dimensions = await page.evaluate((selector) => {
+		const source = document.querySelector<HTMLCanvasElement>(selector);
+		if (!source) throw new Error("Expected an active first-page canvas.");
 		const box = source.getBoundingClientRect();
 		const width = Math.ceil(box.width);
 		const height = Math.ceil(box.height);
@@ -108,7 +69,7 @@ async function previewClip(page: Parameters<typeof createSemanticCssResume>[0]) 
 		surface.append(snapshot);
 		document.body.append(surface);
 		return { width, height };
-	});
+	}, ACTIVE_PREVIEW_PAGE_SELECTOR);
 	const { width, height } = dimensions;
 	expect({ width, height }).toEqual({ width: 447, height: 632 });
 	const surface = page.locator("[data-semantic-css-visual-page]");
