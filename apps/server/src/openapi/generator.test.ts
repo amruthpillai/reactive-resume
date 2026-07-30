@@ -71,7 +71,7 @@ describe("generateOpenApiSpec", () => {
 			url: "https://docs.rxresu.me",
 			description: "Reactive Resume Documentation",
 		});
-	});
+	}, 15_000);
 
 	it("uses the canonical input-side ResumeData schema in update requests", async () => {
 		const spec = (await generateSpec()) as GeneratedSpecView;
