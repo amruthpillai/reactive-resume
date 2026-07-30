@@ -2,8 +2,16 @@ import type { InferSchemaOutput, Schema } from "@orpc/server";
 import type { RrssDiagnostic } from "@reactive-resume/resume/stylesheet";
 import type z from "zod";
 import type { resumeDto } from "../../dto/resume";
-import { describe, expect, expectTypeOf, it } from "vitest";
-import { stylesheetRouter } from "./stylesheet";
+import { describe, expect, expectTypeOf, it, vi } from "vitest";
+
+vi.mock("../../context", async () => {
+	const { os } = await vi.importActual<typeof import("@orpc/server")>("@orpc/server");
+	return { protectedProcedure: os.$context() };
+});
+
+vi.mock("./stylesheet-service", () => ({ createDatabaseStylesheetService: vi.fn() }));
+
+const { stylesheetRouter } = await import("./stylesheet");
 
 type MutateErrorMap = (typeof stylesheetRouter.mutate)["~orpc"]["errorMap"];
 type ErrorData<TKey extends keyof MutateErrorMap> = MutateErrorMap[TKey] extends {

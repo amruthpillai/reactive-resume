@@ -8,6 +8,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createStylesheetService } from "./stylesheet-service";
 
+vi.mock("@reactive-resume/db/client", () => ({ db: {}, getPool: vi.fn() }));
+
 const validSource = {
 	languageVersion: 1,
 	text: "@rr-version 1;\nsection { color: #112233; }\n",

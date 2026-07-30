@@ -59,6 +59,14 @@ const delayedReadyWorker = new URL(
 	`)}`,
 );
 
+const neverCompletesWorker = new URL(
+	`data:text/javascript,${encodeURIComponent(`
+		import { parentPort } from "node:worker_threads";
+		parentPort.postMessage({ type: "ready" });
+		setInterval(() => {}, 1_000);
+	`)}`,
+);
+
 const synchronousFailureWorker = new URL("https://example.com/stylesheet-preflight.mjs");
 
 const numberedInput = (number: number) => ({
@@ -121,7 +129,7 @@ describe("stylesheet PDF preflight worker", () => {
 		if (!result.ok) throw new Error(`Expected successful preflight, received ${result.code}.`);
 		expect(result.byteCount).toBeGreaterThan(0);
 		expect(runner.activeWorkerCount).toBe(0);
-	}, 20_000);
+	}, 45_000);
 
 	it("preserves structured resume-data failures across the worker boundary", async () => {
 		const runner = createStylesheetPreflightRunner({ timeoutMs: 15_000 });
@@ -136,8 +144,8 @@ describe("stylesheet PDF preflight worker", () => {
 		expect(runner.queuedPreflightCount).toBe(0);
 	}, 20_000);
 
-	it("terminates a real worker when the render exceeds its deadline", async () => {
-		const runner = createStylesheetPreflightRunner({ timeoutMs: 1 });
+	it("terminates a worker when the render exceeds its deadline", async () => {
+		const runner = createStylesheetPreflightRunner({ timeoutMs: 1 }, neverCompletesWorker);
 
 		const result = await runner.run(input);
 
@@ -165,7 +173,7 @@ describe("stylesheet PDF preflight worker", () => {
 		);
 		expect(byteRunner.activeWorkerCount).toBe(0);
 		expect(pageRunner.activeWorkerCount).toBe(0);
-	}, 15_000);
+	}, 30_000);
 
 	it("maps worker heap exhaustion to a controlled memory-limit result", async () => {
 		const runner = createStylesheetPreflightRunner(

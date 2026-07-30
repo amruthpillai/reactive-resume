@@ -2,14 +2,16 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { getPool } from "@reactive-resume/db/client";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { createDatabaseStylesheetService } from "./stylesheet-service";
 
 const databaseTest = process.env.DATABASE_URL ? describe : describe.skip;
 
 databaseTest("stylesheet PostgreSQL compare-and-swap", () => {
 	it("rejects a preflighted candidate when render data changes on a second connection", async () => {
+		const [{ getPool }, { createDatabaseStylesheetService }] = await Promise.all([
+			import("@reactive-resume/db/client"),
+			import("./stylesheet-service"),
+		]);
 		const firstConnection = await getPool().connect();
 		const secondConnection = await getPool().connect();
 		const userId = `stylesheet-user-${randomUUID()}`;

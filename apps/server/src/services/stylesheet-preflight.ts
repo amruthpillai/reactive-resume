@@ -23,6 +23,7 @@ type StylesheetPreflightLimits = {
 };
 
 const SOURCE_WORKER_LOADER_HEAP_MB = 256;
+const SOURCE_WORKER_STARTUP_TIMEOUT_MS = 30_000;
 const WORKER_STARTUP_TIMEOUT_MS = 15_000;
 
 type SerializedPreflightCause = {
@@ -180,9 +181,12 @@ export function createStylesheetPreflightRunner(
 		worker.on("message", onMessage);
 		worker.once("error", onError);
 		worker.once("exit", onExit);
-		startupTimer = setTimeout(() => {
-			void finish(failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", "The PDF preflight worker failed."));
-		}, WORKER_STARTUP_TIMEOUT_MS);
+		startupTimer = setTimeout(
+			() => {
+				void finish(failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", "The PDF preflight worker failed."));
+			},
+			location.source ? SOURCE_WORKER_STARTUP_TIMEOUT_MS : WORKER_STARTUP_TIMEOUT_MS,
+		);
 		return true;
 	};
 
