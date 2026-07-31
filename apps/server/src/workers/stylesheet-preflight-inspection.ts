@@ -1,4 +1,8 @@
-import type { PdfPreflightPageLimits, PdfPreflightResult, RenderPreflightPdfResult } from "@reactive-resume/pdf/server";
+import type {
+	PdfPreflightPageLimits,
+	PdfPreflightResult,
+	RenderPreflightPdfResult,
+} from "@reactive-resume/pdf/preflight";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
 type StylesheetPreflightInspectionLimits = PdfPreflightPageLimits & {

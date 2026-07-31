@@ -75,9 +75,10 @@ const workerLocation = () => {
 		url: source
 			? new URL("../workers/stylesheet-preflight.ts", import.meta.url)
 			: new URL("./stylesheet-preflight-worker.mjs", import.meta.url),
+		// Production must not inherit parent execArgv (e.g. --import/--input-type); source workers need tsx.
+		execArgv: source ? sourceWorkerExecArgv() : [],
 		...(source
 			? {
-					execArgv: sourceWorkerExecArgv(),
 					env: {
 						...process.env,
 						TSX_TSCONFIG_PATH: fileURLToPath(new URL("../../tsconfig.json", import.meta.url)),
@@ -106,7 +107,7 @@ export function createStylesheetPreflightRunner(
 		reject: (cause: unknown) => void,
 	): boolean => {
 		// The URL seam is internal to the server package and keeps worker failure tests independent from the PDF renderer.
-		const location = testWorkerUrl ? { source: false, url: testWorkerUrl } : workerLocation();
+		const location = testWorkerUrl ? { source: false, url: testWorkerUrl, execArgv: [] as string[] } : workerLocation();
 		let worker: Worker;
 		try {
 			worker = new Worker(location.url, {
@@ -116,7 +117,7 @@ export function createStylesheetPreflightRunner(
 					// The source-only tsx compiler heap is outside the production render budget.
 					maxOldGenerationSizeMb: limits.maxOldGenerationMb + (location.source ? SOURCE_WORKER_LOADER_HEAP_MB : 0),
 				},
-				...("execArgv" in location ? { execArgv: location.execArgv } : {}),
+				execArgv: location.execArgv,
 				...("env" in location ? { env: location.env } : {}),
 			});
 		} catch (error) {

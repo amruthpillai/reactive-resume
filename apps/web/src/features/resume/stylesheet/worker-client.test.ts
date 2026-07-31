@@ -115,6 +115,20 @@ describe("stylesheet worker clients", () => {
 		vi.useRealTimers();
 	});
 
+	it("rejects pending preflight work when the worker emits an error event", async () => {
+		const fake = worker();
+		const client = createPreflightWorkerClient(() => fake, 5_000);
+		const pending = client.preflight({ editGeneration: 1 } as never);
+		const outcome = pending.catch((error: unknown) => error);
+
+		fake.emit({ type: "preflight_ready" });
+		await Promise.resolve();
+		fake.emitError({ message: "Worker crashed" } as ErrorEvent);
+
+		expect(await outcome).toMatchObject({ message: "Worker crashed" });
+		expect(fake.terminate).toHaveBeenCalled();
+	});
+
 	it("rejects structured resume-data failures without waiting for the timeout", async () => {
 		vi.useFakeTimers();
 		const fake = worker();

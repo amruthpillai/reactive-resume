@@ -187,7 +187,7 @@ describe("stylesheet PDF preflight worker", () => {
 		expect(runner.activeWorkerCount).toBe(0);
 	}, 15_000);
 
-	it("does not expose internal errors from a failed worker", async () => {
+	it("does not expose internal errors from a failed worker bootstrap", async () => {
 		const runner = createStylesheetPreflightRunner({}, failedWorker);
 
 		const result = await runner.run(input);
@@ -200,6 +200,31 @@ describe("stylesheet PDF preflight worker", () => {
 		});
 		expect(runner.activeWorkerCount).toBe(0);
 		expect(runner.queuedPreflightCount).toBe(0);
+	});
+
+	it("surfaces sanitized render failures from inside the worker catch path", async () => {
+		const throwingWorker = new URL(
+			`data:text/javascript,${encodeURIComponent(`
+				import { parentPort } from "node:worker_threads";
+				parentPort.postMessage({ type: "ready" });
+				parentPort.postMessage({
+					ok: false,
+					code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+					message: "The PDF preflight worker failed. (Error: Canvas is already closed)",
+					diagnostics: [],
+				});
+			`)}`,
+		);
+		const runner = createStylesheetPreflightRunner({ timeoutMs: 5_000 }, throwingWorker);
+
+		const result = await runner.run(input);
+
+		expect(result).toEqual({
+			ok: false,
+			code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+			message: "The PDF preflight worker failed. (Error: Canvas is already closed)",
+			diagnostics: [],
+		});
 	});
 
 	it("bounds concurrent workers and queued requests without charging queue time to the worker deadline", async () => {

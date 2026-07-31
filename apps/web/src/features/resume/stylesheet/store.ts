@@ -113,6 +113,18 @@ const emptySemanticTree = (): SemanticNode => ({
 const HISTORY_COALESCE_MS = 500;
 const MAX_HISTORY_ENTRIES = 50;
 
+const preflightFailureDiagnostic = (
+	result: Extract<PreflightWorkerResponse["result"], { ok: false }>,
+): SemanticCssDiagnostic => ({
+	code: result.code,
+	severity: "error",
+	message: result.message,
+	range: {
+		start: { line: 1, column: 1, offset: 0 },
+		end: { line: 1, column: 1, offset: 0 },
+	},
+});
+
 const inactiveState = (): Omit<
 	StylesheetStoreState,
 	"setSourceText" | "setFocused" | "activate" | "deactivate" | "undo" | "redo" | "refreshIntelligence"
@@ -389,7 +401,14 @@ export function createStylesheetStoreRuntime(options: CreateStylesheetStoreRunti
 			if (candidateValidationEpoch !== validationEpoch) return;
 			if (destroyed || preflight.editGeneration !== store.getState().editGeneration) return;
 			if (!preflight.result.ok) {
-				patch({ diagnostics: [...compiled.diagnostics, ...preflight.result.diagnostics], status: "error" });
+				patch({
+					diagnostics: [
+						...compiled.diagnostics,
+						...preflight.result.diagnostics,
+						preflightFailureDiagnostic(preflight.result),
+					],
+					status: "error",
+				});
 				if (candidate.transition !== "edit_source") return;
 			}
 		}

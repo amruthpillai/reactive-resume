@@ -55,4 +55,42 @@ describe("stylesheet preflight worker", () => {
 			cause: { name: "ZodError", message: "Invalid resume data", issues },
 		});
 	});
+
+	it("includes a sanitized cause when PDF preflight throws an unexpected error", async () => {
+		let handler: ((event: MessageEvent<PreflightWorkerRequest>) => Promise<void>) | undefined;
+		const postMessage = vi.fn();
+		vi.stubGlobal("self", {
+			postMessage,
+			addEventListener: vi.fn((_type, listener) => {
+				handler = listener as typeof handler;
+			}),
+		});
+		mocks.renderPreflightPdf.mockRejectedValueOnce(new Error("Canvas is already closed"));
+		vi.resetModules();
+		await import("./preflight.worker");
+
+		await handler?.({
+			data: {
+				type: "preflight",
+				requestId: 8,
+				editGeneration: 4,
+				input: {} as never,
+				limits: {} as never,
+			},
+		} as unknown as MessageEvent<PreflightWorkerRequest>);
+
+		expect(postMessage).toHaveBeenCalledWith(
+			expect.objectContaining({
+				type: "preflight_result",
+				requestId: 8,
+				editGeneration: 4,
+				result: expect.objectContaining({
+					ok: false,
+					code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+					message: expect.stringContaining("Canvas is already closed"),
+					diagnostics: [],
+				}),
+			}),
+		);
+	});
 });

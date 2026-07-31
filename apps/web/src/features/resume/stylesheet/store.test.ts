@@ -759,6 +759,66 @@ describe("stylesheet store runtime", () => {
 		expect(runtime.store.getState().status).toBe("error");
 	});
 
+	it("surfaces browser preflight failures as diagnostics when the worker returns an empty list", async () => {
+		let resolveMutate!: (value: MutationResult & { diagnostics: never[] }) => void;
+		const mutate = vi.fn(
+			() =>
+				new Promise<MutationResult & { diagnostics: never[] }>((resolve) => {
+					resolveMutate = resolve;
+				}),
+		);
+		const runtime = createStylesheetStoreRuntime({
+			resumeId: "resume-1",
+			initial,
+			resumeData: defaultResumeData,
+			debounceMs: 0,
+			compile: async ({ editGeneration }) => ({
+				type: "compile_result",
+				requestId: editGeneration,
+				editGeneration,
+				program: { languageVersion: 1, rules: [] },
+				diagnostics: [],
+			}),
+			preflight: async ({ editGeneration }) => ({
+				type: "preflight_result",
+				requestId: editGeneration,
+				editGeneration,
+				result: {
+					ok: false,
+					code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+					message: "The PDF preflight worker failed.",
+					diagnostics: [],
+				},
+			}),
+			mutate,
+		});
+
+		runtime.store.getState().setSourceText("@version 1;\nsection { color: teal; }");
+		await vi.runAllTimersAsync();
+
+		expect(runtime.store.getState().diagnostics).toEqual([
+			expect.objectContaining({
+				code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+				severity: "error",
+				message: "The PDF preflight worker failed.",
+				range: {
+					start: { line: 1, column: 1, offset: 0 },
+					end: { line: 1, column: 1, offset: 0 },
+				},
+			}),
+		]);
+		expect(runtime.store.getState().diagnostics.some(({ severity }) => severity === "error")).toBe(true);
+		expect(mutate).toHaveBeenCalled();
+		resolveMutate({
+			stylesheet: stylesheet("@version 1;\n"),
+			revision: 4,
+			renderDataVersion: 7,
+			editGeneration: 1,
+			diagnostics: [],
+		});
+		await Promise.resolve();
+	});
+
 	it("finishes an edit when refreshIntelligence interleaves through the shared compile client", async () => {
 		const { createCompileWorkerClient } = await import("./worker-client");
 		const listeners = new Map<string, Set<EventListener>>();

@@ -20,6 +20,13 @@ const failure = (code: PdfPreflightFailure["code"], message: string): PdfPreflig
 	diagnostics: [],
 });
 
+const sanitizeWorkerCause = (cause: unknown): string => {
+	if (!(cause instanceof Error)) return "The PDF preflight worker failed.";
+	const detail = cause.message.replace(/\s+/g, " ").trim().slice(0, 200);
+	if (!detail) return "The PDF preflight worker failed.";
+	return `The PDF preflight worker failed. (${cause.name}: ${detail})`;
+};
+
 const serializeZodCause = (cause: unknown): SerializedPreflightCause | undefined => {
 	if (!(cause instanceof Error) || cause.name !== "ZodError" || !("issues" in cause) || !Array.isArray(cause.issues)) {
 		return;
@@ -49,7 +56,7 @@ self.addEventListener("message", async ({ data }: MessageEvent<PreflightWorkerRe
 			self.postMessage(response);
 			return;
 		}
-		const result = failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", "The PDF preflight worker failed.");
+		const result = failure("STYLESHEET_PREFLIGHT_WORKER_FAILED", sanitizeWorkerCause(cause));
 		const response: PreflightWorkerResponse = {
 			type: "preflight_result",
 			requestId: data.requestId,

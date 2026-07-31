@@ -128,8 +128,18 @@ export function createPreflightWorkerClient(
 		pending.delete(response.requestId);
 		request.resolve(response);
 	};
-	const onError: WorkerErrorListener = () => {
+	const failPending = (error: Error) => {
+		for (const request of pending.values()) {
+			if (request.timer) clearTimeout(request.timer);
+			request.reject(error);
+		}
+		pending.clear();
+	};
+
+	const onError: WorkerErrorListener = (event) => {
+		const error = new Error(event.message || "Stylesheet preflight worker failed.");
 		terminate();
+		failPending(error);
 	};
 
 	const terminate = () => {
