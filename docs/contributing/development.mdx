@@ -62,7 +62,13 @@ This guide walks you through setting up Reactive Resume for local development. W
   
   <Step title="Configure Environment Variables">
     Copy `.env.example` to `.env.local` in the project root:
-    
+
+    ```bash
+    cp .env.example .env.local
+    ```
+
+    Then edit `.env.local` as needed — for local development on the host, set at minimum:
+
     ```bash
     # Application
     PORT=3000
