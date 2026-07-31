@@ -61,7 +61,7 @@ This guide walks you through setting up Reactive Resume for local development. W
   </Step>
   
   <Step title="Configure Environment Variables">
-    Create a `.env` file in the project root:
+    Copy `.env.example` to `.env.local` in the project root:
     
     ```bash
     # Application
@@ -100,16 +100,16 @@ This guide walks you through setting up Reactive Resume for local development. W
   
   <Step title="Run Database Migrations If Needed">
     The server startup path runs migrations before serving traffic. To apply migrations manually without starting the app,
-    export `DATABASE_URL` because Drizzle Kit reads directly from `process.env`:
+    load `.env.local` with `dotenvx` because Drizzle Kit reads directly from `process.env`:
     
     ```bash
-    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres" pnpm run db:migrate
+    dotenvx run -f .env.local -- pnpm run db:migrate
     ```
   </Step>
   
   <Step title="Start the Development Server">
     ```bash
-    pnpm run dev
+    dotenvx run -f .env.local -- pnpm run dev
     ```
     
     Your local Reactive Resume instance will be available at [http://localhost:3000](http://localhost:3000).
@@ -184,7 +184,7 @@ reactive-resume/
 Use Drizzle Studio to explore and manage your database:
 
 ```bash
-pnpm run db:studio
+dotenvx run -f .env.local -- pnpm run db:studio
 ```
 
 This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizzle.studio).
@@ -194,11 +194,11 @@ This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizz
 1. Edit the schema in `packages/db/src/schema/*`
 2. Generate a migration:
    ```bash
-   pnpm run db:generate
+   dotenvx run -f .env.local -- pnpm run db:generate
    ```
 3. Apply the migration:
    ```bash
-   pnpm run db:migrate
+   dotenvx run -f .env.local -- pnpm run db:migrate
    ```
 
 <Warning>Always review generated migrations before applying them, especially when working with existing data.</Warning>
