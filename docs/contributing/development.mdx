@@ -61,8 +61,14 @@ This guide walks you through setting up Reactive Resume for local development. W
   </Step>
   
   <Step title="Configure Environment Variables">
-    Create a `.env` file in the project root:
-    
+    Copy `.env.example` to `.env.local` in the project root:
+
+    ```bash
+    cp .env.example .env.local
+    ```
+
+    Then edit `.env.local` as needed — for local development on the host, set at minimum:
+
     ```bash
     # Application
     PORT=3000
@@ -100,16 +106,16 @@ This guide walks you through setting up Reactive Resume for local development. W
   
   <Step title="Run Database Migrations If Needed">
     The server startup path runs migrations before serving traffic. To apply migrations manually without starting the app,
-    export `DATABASE_URL` because Drizzle Kit reads directly from `process.env`:
+    load `.env.local` with `dotenvx` because Drizzle Kit reads directly from `process.env`:
     
     ```bash
-    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres" pnpm run db:migrate
+    dotenvx run -f .env.local -- pnpm run db:migrate
     ```
   </Step>
   
   <Step title="Start the Development Server">
     ```bash
-    pnpm run dev
+    dotenvx run -f .env.local -- pnpm run dev
     ```
     
     Your local Reactive Resume instance will be available at [http://localhost:3000](http://localhost:3000).
@@ -126,7 +132,7 @@ Here are the most commonly used scripts during development:
 
 | Command                        | Description                                                 |
 | ------------------------------ | ----------------------------------------------------------- |
-| `pnpm dev`                     | Start the web and server development processes              |
+| `dotenvx run -f .env.local -- pnpm dev` | Start the web and server development processes   |
 | `pnpm build`                   | Build the production web bundle and server bundle           |
 | `pnpm start`                   | Start the built production server                           |
 | `pnpm typecheck`               | Run TypeScript type checking                                |
@@ -139,9 +145,9 @@ Here are the most commonly used scripts during development:
 
 | Command                | Description                                  |
 | ---------------------- | -------------------------------------------- |
-| `pnpm run db:generate` | Generate migration files from schema changes |
-| `pnpm run db:migrate`  | Apply pending migrations                     |
-| `pnpm run db:studio`   | Open Drizzle Studio (database GUI)           |
+| `dotenvx run -f .env.local -- pnpm run db:generate` | Generate migration files from schema changes |
+| `dotenvx run -f .env.local -- pnpm run db:migrate`  | Apply pending migrations                     |
+| `dotenvx run -f .env.local -- pnpm run db:studio`   | Open Drizzle Studio (database GUI)           |
 
 ### Internationalization
 
@@ -184,7 +190,7 @@ reactive-resume/
 Use Drizzle Studio to explore and manage your database:
 
 ```bash
-pnpm run db:studio
+dotenvx run -f .env.local -- pnpm run db:studio
 ```
 
 This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizzle.studio).
@@ -194,11 +200,11 @@ This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizz
 1. Edit the schema in `packages/db/src/schema/*`
 2. Generate a migration:
    ```bash
-   pnpm run db:generate
+   dotenvx run -f .env.local -- pnpm run db:generate
    ```
 3. Apply the migration:
    ```bash
-   pnpm run db:migrate
+   dotenvx run -f .env.local -- pnpm run db:migrate
    ```
 
 <Warning>Always review generated migrations before applying them, especially when working with existing data.</Warning>
@@ -272,7 +278,7 @@ pnpm run typecheck
 		The Vite web server uses `PORT` (default `3000`), and the Hono server uses `SERVER_PORT` (default `3001`).
 		Either stop the conflicting process or choose alternate ports:
 		```bash
-		PORT=3002 SERVER_PORT=3003 pnpm dev
+		PORT=3002 SERVER_PORT=3003 dotenvx run -f .env.local -- pnpm dev
 		```
 	</Accordion>
 
@@ -300,7 +306,7 @@ pnpm run typecheck
 	<Accordion title="Type errors after pulling changes">
 		The route tree may need regeneration. Run the dev server which auto-generates routes:
 		```bash
-		pnpm run dev
+		dotenvx run -f .env.local -- pnpm run dev
 		```
 		Or run type checking to see specific errors:
 		```bash
