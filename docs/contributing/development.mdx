@@ -132,7 +132,7 @@ Here are the most commonly used scripts during development:
 
 | Command                        | Description                                                 |
 | ------------------------------ | ----------------------------------------------------------- |
-| `pnpm dev`                     | Start the web and server development processes              |
+| `dotenvx run -f .env.local -- pnpm dev` | Start the web and server development processes   |
 | `pnpm build`                   | Build the production web bundle and server bundle           |
 | `pnpm start`                   | Start the built production server                           |
 | `pnpm typecheck`               | Run TypeScript type checking                                |
@@ -145,9 +145,9 @@ Here are the most commonly used scripts during development:
 
 | Command                | Description                                  |
 | ---------------------- | -------------------------------------------- |
-| `pnpm run db:generate` | Generate migration files from schema changes |
-| `pnpm run db:migrate`  | Apply pending migrations                     |
-| `pnpm run db:studio`   | Open Drizzle Studio (database GUI)           |
+| `dotenvx run -f .env.local -- pnpm run db:generate` | Generate migration files from schema changes |
+| `dotenvx run -f .env.local -- pnpm run db:migrate`  | Apply pending migrations                     |
+| `dotenvx run -f .env.local -- pnpm run db:studio`   | Open Drizzle Studio (database GUI)           |
 
 ### Internationalization
 
@@ -278,7 +278,7 @@ pnpm run typecheck
 		The Vite web server uses `PORT` (default `3000`), and the Hono server uses `SERVER_PORT` (default `3001`).
 		Either stop the conflicting process or choose alternate ports:
 		```bash
-		PORT=3002 SERVER_PORT=3003 pnpm dev
+		PORT=3002 SERVER_PORT=3003 dotenvx run -f .env.local -- pnpm dev
 		```
 	</Accordion>
 
@@ -306,7 +306,7 @@ pnpm run typecheck
 	<Accordion title="Type errors after pulling changes">
 		The route tree may need regeneration. Run the dev server which auto-generates routes:
 		```bash
-		pnpm run dev
+		dotenvx run -f .env.local -- pnpm run dev
 		```
 		Or run type checking to see specific errors:
 		```bash
