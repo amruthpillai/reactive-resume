@@ -12,7 +12,7 @@ Internal packages are source-consumed through `package.json` export maps that po
 
 - **Node.js 24** (matches Dockerfile `ARG NODE_VERSION=24`). Use `nvm install 24 && nvm use 24` if needed.
 - **Docker** is required to run PostgreSQL. Start it with `sudo dockerd &` if the daemon isn't running.
-- **pnpm 11.17.0** is managed via corepack (`corepack enable`).
+- **pnpm 11.18.0** is managed via corepack (`corepack enable`).
 
 ### Codebase map
 
