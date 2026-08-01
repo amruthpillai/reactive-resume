@@ -292,6 +292,19 @@ describe("compareLegacySemanticPresentation", () => {
 			),
 		).toEqual([]);
 
+		expect(
+			compareLegacyParityHostNodes(
+				{
+					type: "VIEW",
+					children: [
+						{ type: "TEXT", style: { fontSize: 9 }, value: "" },
+						{ type: "TEXT", value: "same" },
+					],
+				},
+				{ type: "VIEW", children: [{ type: "TEXT", value: "same" }] },
+			),
+		).toEqual([]);
+
 		for (const meaningfulEmptyText of [
 			{ type: "TEXT", style: { backgroundColor: "#112233" } },
 			{ type: "TEXT", style: { width: 1 } },
