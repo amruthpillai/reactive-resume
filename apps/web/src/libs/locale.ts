@@ -93,9 +93,12 @@ const regionalDefaultLocale: Partial<Record<string, Locale>> = {
 
 const localeBySubtag = new Map<string, Locale>();
 
+// First declaration wins so a bare subtag resolves to the first-listed regional
+// variant ("en" → "en-US", "pt" → "pt-BR", "zh" → "zh-CN"), consistent with
+// regionalDefaultLocale; a later duplicate never silently overrides it.
 for (const locale of localeSchema.options) {
 	const subtag = locale.split("-")[0];
-	if (subtag) localeBySubtag.set(subtag.toLowerCase(), locale);
+	if (subtag && !localeBySubtag.has(subtag.toLowerCase())) localeBySubtag.set(subtag.toLowerCase(), locale);
 }
 
 // Resolves the first supported locale from a browser language list, falling back
