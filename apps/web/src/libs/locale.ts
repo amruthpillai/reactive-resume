@@ -85,6 +85,46 @@ export const resolveLocale = (locale: string): Locale => {
 	return isLocale(locale) ? locale : defaultLocale;
 };
 
+const regionalDefaultLocale: Partial<Record<string, Locale>> = {
+	en: "en-US",
+	pt: "pt-BR",
+	zh: "zh-CN",
+};
+
+const localeBySubtag = new Map<string, Locale>();
+
+// First declaration wins so a bare subtag resolves to the first-listed regional
+// variant ("en" → "en-US", "pt" → "pt-BR", "zh" → "zh-CN"), consistent with
+// regionalDefaultLocale; a later duplicate never silently overrides it.
+for (const locale of localeSchema.options) {
+	const subtag = locale.split("-")[0];
+	if (subtag && !localeBySubtag.has(subtag.toLowerCase())) localeBySubtag.set(subtag.toLowerCase(), locale);
+}
+
+// Resolves the first supported locale from a browser language list, falling back
+// to the default when nothing matches. Exact tags win; bare subtags map to their
+// canonical regional variant (e.g. "de" → "de-DE", "zh" → "zh-CN").
+export const getBrowserLocale = (languages: readonly string[]): Locale => {
+	for (const language of languages) {
+		const normalized = language.trim().replaceAll("_", "-");
+		if (!normalized) continue;
+
+		const exactMatch = localeSchema.options.find((candidate) => candidate.toLowerCase() === normalized.toLowerCase());
+		if (exactMatch) return exactMatch;
+
+		const subtag = normalized.split("-")[0]?.toLowerCase();
+		if (!subtag) continue;
+
+		const regionalDefault = regionalDefaultLocale[subtag];
+		if (regionalDefault) return regionalDefault;
+
+		const subtagMatch = localeBySubtag.get(subtag);
+		if (subtagMatch) return subtagMatch;
+	}
+
+	return defaultLocale;
+};
+
 export function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFormat, invalidFallback?: string) {
 	const date = value instanceof Date ? value : new Date(value);
 	const diffMs = date.getTime() - Date.now();
@@ -134,4 +174,17 @@ export const changeLocale = (value: string | null) => {
 	if (!value || !isLocale(value)) return;
 	Cookies.set(storageKey, value);
 	window.location.reload();
+};
+
+// Applies the browser-detected language once when no preference is stored, so
+// returning visitors keep their manual choice. Mirrors changeLocale by persisting
+// the cookie and reloading; skipped when detection yields the English default.
+export const applyAutoDetectedLocale = () => {
+	if (typeof navigator === "undefined") return;
+	if (Cookies.get(storageKey)) return;
+
+	const languages = navigator.languages.length > 0 ? navigator.languages : [navigator.language];
+	const detectedLocale = getBrowserLocale(languages);
+
+	if (detectedLocale !== defaultLocale) changeLocale(detectedLocale);
 };
