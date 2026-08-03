@@ -2,10 +2,18 @@
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import Cookies from "js-cookie";
-import { changeLocale, formatRelativeTime, isLocale, resolveLocale } from "./locale";
+import {
+	applyAutoDetectedLocale,
+	changeLocale,
+	formatRelativeTime,
+	getBrowserLocale,
+	isLocale,
+	resolveLocale,
+} from "./locale";
 
 afterEach(() => {
 	vi.restoreAllMocks();
+	vi.unstubAllGlobals();
 	vi.useRealTimers();
 	Cookies.remove("locale");
 });
@@ -76,6 +84,84 @@ describe("changeLocale", () => {
 		const reload = vi.spyOn(window.location, "reload").mockImplementation(() => undefined);
 
 		changeLocale("de-DE");
+
+		expect(Cookies.get("locale")).toBe("de-DE");
+		expect(reload).toHaveBeenCalledOnce();
+	});
+});
+
+describe("getBrowserLocale", () => {
+	it("returns the exact supported locale when the tag matches", () => {
+		expect(getBrowserLocale(["zh-CN"])).toBe("zh-CN");
+		expect(getBrowserLocale(["en-GB"])).toBe("en-GB");
+		expect(getBrowserLocale(["pt-BR"])).toBe("pt-BR");
+	});
+
+	it("matches case-insensitively and normalizes underscores", () => {
+		expect(getBrowserLocale(["zh-cn"])).toBe("zh-CN");
+		expect(getBrowserLocale(["ZH_CN"])).toBe("zh-CN");
+	});
+
+	it("resolves a bare language subtag to its regional variant", () => {
+		expect(getBrowserLocale(["de"])).toBe("de-DE");
+		expect(getBrowserLocale(["ja"])).toBe("ja-JP");
+		expect(getBrowserLocale(["fr"])).toBe("fr-FR");
+	});
+
+	it("prefers the canonical regional variant for ambiguous subtags", () => {
+		expect(getBrowserLocale(["en"])).toBe("en-US");
+		expect(getBrowserLocale(["zh"])).toBe("zh-CN");
+		expect(getBrowserLocale(["pt"])).toBe("pt-BR");
+	});
+
+	it("honors the first matching entry in the preference order", () => {
+		expect(getBrowserLocale(["xx-YY", "fr-FR", "de"])).toBe("fr-FR");
+		expect(getBrowserLocale(["en", "de-DE"])).toBe("en-US");
+	});
+
+	it("falls back to English for unsupported or empty languages", () => {
+		expect(getBrowserLocale(["xx-YY"])).toBe("en-US");
+		expect(getBrowserLocale([""])).toBe("en-US");
+		expect(getBrowserLocale([])).toBe("en-US");
+	});
+});
+
+describe("applyAutoDetectedLocale", () => {
+	it("respects an existing stored locale preference", () => {
+		Cookies.set("locale", "de-DE");
+		const reload = vi.spyOn(window.location, "reload").mockImplementation(() => undefined);
+
+		applyAutoDetectedLocale();
+
+		expect(Cookies.get("locale")).toBe("de-DE");
+		expect(reload).not.toHaveBeenCalled();
+	});
+
+	it("persists the detected locale and reloads when it differs from the default", () => {
+		vi.stubGlobal("navigator", { language: "zh-CN", languages: ["zh-CN"] });
+		const reload = vi.spyOn(window.location, "reload").mockImplementation(() => undefined);
+
+		applyAutoDetectedLocale();
+
+		expect(Cookies.get("locale")).toBe("zh-CN");
+		expect(reload).toHaveBeenCalledOnce();
+	});
+
+	it("skips reloading when the detected locale is the English default", () => {
+		vi.stubGlobal("navigator", { language: "en-US", languages: ["en-US"] });
+		const reload = vi.spyOn(window.location, "reload").mockImplementation(() => undefined);
+
+		applyAutoDetectedLocale();
+
+		expect(Cookies.get("locale")).toBeUndefined();
+		expect(reload).not.toHaveBeenCalled();
+	});
+
+	it("falls back to navigator.language when the languages list is empty", () => {
+		vi.stubGlobal("navigator", { language: "de", languages: [] });
+		const reload = vi.spyOn(window.location, "reload").mockImplementation(() => undefined);
+
+		applyAutoDetectedLocale();
 
 		expect(Cookies.get("locale")).toBe("de-DE");
 		expect(reload).toHaveBeenCalledOnce();

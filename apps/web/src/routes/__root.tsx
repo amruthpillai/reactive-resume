@@ -27,7 +27,7 @@ import { ThemeProvider } from "@/features/theme/provider";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { getSession } from "@/libs/auth/session";
-import { getLocale, isRTL, loadLocale } from "@/libs/locale";
+import { applyAutoDetectedLocale, getLocale, isRTL, loadLocale } from "@/libs/locale";
 import { client } from "@/libs/orpc/client";
 import { getTheme } from "@/libs/theme";
 
@@ -113,6 +113,11 @@ function RootComponent() {
 		document.documentElement.dir = dir;
 		document.documentElement.classList.toggle("dark", theme === "dark");
 	}, [dir, locale, theme]);
+
+	// Detect the browser language once on first visit; changeLocale persists the choice and reloads.
+	useEffect(() => {
+		applyAutoDetectedLocale();
+	}, []);
 
 	return (
 		<>
