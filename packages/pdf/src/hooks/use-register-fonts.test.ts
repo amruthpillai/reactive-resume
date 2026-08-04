@@ -51,8 +51,8 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "zh-CN");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC"]);
-		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC", "Noto Serif"]);
+		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC", "Noto Serif"]);
 
 		expect(registerSpy).toHaveBeenCalledWith(
 			expect.objectContaining({
@@ -78,8 +78,13 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "ko-KR");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC"]);
-		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC", "Noto Serif"]);
+		expect(pdfTypography.heading.fontFamily).toEqual([
+			"IBM Plex Serif",
+			"Noto Serif KR",
+			"Noto Serif SC",
+			"Noto Serif",
+		]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif KR" }));
 	});
 
@@ -90,7 +95,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "ja-JP");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif JP", "Noto Serif SC"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif JP", "Noto Serif SC", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif JP" }));
 	});
 
@@ -101,7 +106,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "zh-TW");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif TC", "Noto Serif SC"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif TC", "Noto Serif SC", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif TC" }));
 	});
 
@@ -112,7 +117,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "en-US", true, new Set(["hangul"]));
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif KR", "Noto Serif SC", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif KR" }));
 	});
 
@@ -123,7 +128,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "fa-IR");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Naskh Arabic"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Naskh Arabic", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Naskh Arabic" }));
 	});
 
@@ -134,7 +139,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "en-US", false, new Set(["arabic"]));
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Naskh Arabic"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Naskh Arabic", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Naskh Arabic" }));
 	});
 
@@ -145,7 +150,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "he-IL");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Sans Hebrew"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Sans Hebrew", "Noto Serif"]);
 		expect(registerSpy).not.toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif SC" }));
 	});
 
@@ -156,7 +161,7 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "th-TH");
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Sans Thai"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Sans Thai", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Sans Thai" }));
 	});
 
@@ -225,16 +230,16 @@ describe("registerFonts", () => {
 		);
 	});
 
-	it("skips CJK PDF fallbacks for Latin locale and Latin content", async () => {
+	it("registers a punctuation fallback for Latin locale and Latin content (#3190)", async () => {
 		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
 		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
 		const { registerFonts } = await import("./use-register-fonts");
 
 		const pdfTypography = registerFonts(typography, "en-US");
 
-		expect(pdfTypography.body.fontFamily).toBe("IBM Plex Serif");
-		expect(pdfTypography.heading.fontFamily).toBe("IBM Plex Serif");
-		expect(registerSpy).not.toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif SC" }));
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif"]);
+		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif" }));
 	});
 
 	it("registers CJK PDF fallbacks for Latin locale when resume content contains CJK text", async () => {
@@ -244,8 +249,8 @@ describe("registerFonts", () => {
 
 		const pdfTypography = registerFonts(typography, "en-US", true);
 
-		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC"]);
-		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC"]);
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC", "Noto Serif"]);
+		expect(pdfTypography.heading.fontFamily).toEqual(["IBM Plex Serif", "Noto Serif SC", "Noto Serif"]);
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif SC" }));
 	});
 
