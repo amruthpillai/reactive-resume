@@ -227,7 +227,8 @@ const transformLayoutColumn = (column: string[]): string[] => {
 		.map(transformLayoutSectionId);
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	typeof value === "object" && value !== null && !Array.isArray(value);
 
 // A genuine v4 export always carries object-typed basics, sections, and metadata.
 // Checking this up front turns "not a v4 file" into a clear error instead of the
@@ -660,6 +661,9 @@ export function parseReactiveResumeV4JSON(json: string): ResumeData {
 		// mismatch that slipped past the guard) as "not a valid v4 export" rather
 		// than leaking a raw TypeError to the user.
 		if (error instanceof SyntaxError) throw error;
+		// The hasV4Shape guard above already throws NOT_V4_MESSAGE; reuse that
+		// instance instead of allocating a duplicate.
+		if (error instanceof Error && error.message === NOT_V4_MESSAGE) throw error;
 		throw new Error(NOT_V4_MESSAGE);
 	}
 }

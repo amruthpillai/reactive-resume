@@ -418,4 +418,9 @@ describe("parseReactiveResumeV4JSON – rejects non-v4 input gracefully", () => 
 		};
 		expect(() => parseReactiveResumeV4JSON(JSON.stringify(currentFormat))).toThrow(/v4/i);
 	});
+
+	it("throws when basics, sections, or metadata are arrays rather than objects", () => {
+		const arrayBranches = JSON.stringify({ basics: [], sections: [], metadata: [] });
+		expect(() => parseReactiveResumeV4JSON(arrayBranches)).toThrow(/v4/i);
+	});
 });

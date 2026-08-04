@@ -17,7 +17,11 @@ const summarizeZodError = (error: ZodError): string => {
 	const remaining = error.issues.length - MAX_LISTED_ISSUES;
 	const suffix = remaining > 0 ? `, and ${remaining} more field${remaining === 1 ? "" : "s"}` : "";
 
-	return `The file could not be read as a valid resume. Problem fields: ${listed}${suffix}.`;
+	// Root-level issues have an empty path (rendered as "the document"); use a
+	// singular label for them so the sentence stays grammatical.
+	const allAtRoot = error.issues.slice(0, MAX_LISTED_ISSUES).every((issue) => issue.path.length === 0);
+	const prefix = allAtRoot ? "Problem" : "Problem fields";
+	return `The file could not be read as a valid resume. ${prefix}: ${listed}${suffix}.`;
 };
 
 /** Rethrows a ZodError as a human-readable import error; re-throws other errors as-is. */
