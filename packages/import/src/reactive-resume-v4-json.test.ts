@@ -394,3 +394,33 @@ describe("parseReactiveResumeV4JSON – language level scaling (v4: 0-10 → v5:
 		expect(result.sections.languages.items[0]?.level).toBe(3);
 	});
 });
+
+// ─── Guard: non-v4 JSON must fail with a readable error, not a raw TypeError ───
+
+describe("parseReactiveResumeV4JSON – rejects non-v4 input gracefully", () => {
+	it("throws a readable error (not a TypeError) for an empty object", () => {
+		expect(() => parseReactiveResumeV4JSON("{}")).toThrow(/v4/i);
+	});
+
+	it("throws for a JSON Resume shaped file (basics but no sections/metadata)", () => {
+		expect(() => parseReactiveResumeV4JSON(JSON.stringify({ basics: { name: "Jane" } }))).toThrow(/v4/i);
+	});
+
+	it("throws for a top-level JSON array", () => {
+		expect(() => parseReactiveResumeV4JSON("[]")).toThrow(/v4/i);
+	});
+
+	it("throws for a current-format export whose metadata.layout is not a v4 array", () => {
+		const currentFormat = {
+			basics: { name: "Jane" },
+			sections: {},
+			metadata: { layout: { sidebarWidth: 35, pages: [] } },
+		};
+		expect(() => parseReactiveResumeV4JSON(JSON.stringify(currentFormat))).toThrow(/v4/i);
+	});
+
+	it("throws when basics, sections, or metadata are arrays rather than objects", () => {
+		const arrayBranches = JSON.stringify({ basics: [], sections: [], metadata: [] });
+		expect(() => parseReactiveResumeV4JSON(arrayBranches)).toThrow(/v4/i);
+	});
+});
