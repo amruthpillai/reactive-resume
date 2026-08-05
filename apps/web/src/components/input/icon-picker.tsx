@@ -58,7 +58,7 @@ function IconCellComponent({ columnIndex, rowIndex, style, icons, onChange }: Ic
 			style={style}
 			tabIndex={-1}
 			onClick={() => {
-				if (icon) onChange(icon);
+				if (typeof icon === "string") onChange(icon);
 			}}
 			className="flex size-full items-center justify-center hover:bg-accent"
 		>
