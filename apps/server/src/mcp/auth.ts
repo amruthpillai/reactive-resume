@@ -13,8 +13,9 @@ export async function authenticateRequest(request: Request): Promise<void> {
 		try {
 			const payload = await verifyOAuthToken(authHeader.slice(7));
 			if (payload?.sub) return;
-		} catch {
-			// Invalid or expired token; fall through to API key auth.
+			console.warn("[MCP] OAuth token verified but missing `sub` claim");
+		} catch (error) {
+			console.warn("[MCP] OAuth token verification failed:", error);
 		}
 	}
 
