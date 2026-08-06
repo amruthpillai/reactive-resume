@@ -69,21 +69,26 @@ const isMeaningfulNode = (node: Node): boolean =>
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
 
-const normalizeBoldBoundaryWhitespace = (html: string): string => {
-	let normalized = html;
-	let previous: string;
+const normalizeBoldBoundaryWhitespace = (root: ReturnType<typeof parse>) => {
+	for (const bold of root.querySelectorAll("strong,b").reverse()) {
+		const firstChild = bold.childNodes[0];
+		if (firstChild?.nodeType === NodeType.TEXT_NODE) {
+			const whitespace = firstChild.rawText.match(/^[\u0020\u00a0]+/)?.[0];
+			if (whitespace) {
+				firstChild.rawText = firstChild.rawText.slice(whitespace.length);
+				bold.insertAdjacentHTML("beforebegin", whitespace);
+			}
+		}
 
-	do {
-		previous = normalized;
-		normalized = normalized
-			.replace(
-				/<(strong|b)\b((?:[^>"']|"[^"]*"|'[^']*')*)>([\u0020\u00a0]+)/gi,
-				(_match, tag, attributes, whitespace) => `${whitespace}<${tag}${attributes}>`,
-			)
-			.replace(/([\u0020\u00a0]+)<\/(strong|b)>/gi, (_match, whitespace, tag) => `</${tag}>${whitespace}`);
-	} while (normalized !== previous);
-
-	return normalized;
+		const lastChild = bold.childNodes[bold.childNodes.length - 1];
+		if (lastChild?.nodeType === NodeType.TEXT_NODE) {
+			const whitespace = lastChild.rawText.match(/[\u0020\u00a0]+$/)?.[0];
+			if (whitespace) {
+				lastChild.rawText = lastChild.rawText.slice(0, -whitespace.length);
+				bold.insertAdjacentHTML("afterend", whitespace);
+			}
+		}
+	}
 };
 
 const unwrapSingleParagraphListItems = (root: ReturnType<typeof parse>) => {
@@ -148,10 +153,11 @@ export const normalizeRichTextHtml = (
 	html: string,
 	{ direction = "ltr" }: NormalizeRichTextHtmlOptions = {},
 ): string => {
-	const root = parse(normalizeBoldBoundaryWhitespace(html.trim()), { comment: false });
+	const root = parse(html.trim(), { comment: false });
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
 
+	normalizeBoldBoundaryWhitespace(root);
 	normalizeMarkElements(root);
 	unwrapSingleParagraphListItems(root);
 

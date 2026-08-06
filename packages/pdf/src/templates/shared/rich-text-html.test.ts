@@ -35,6 +35,12 @@ describe("normalizeRichTextHtml", () => {
 		);
 	});
 
+	it("preserves closing bold tags inside quoted attributes", () => {
+		expect(normalizeRichTextHtml('<p><strong title="Use </strong> here">Built </strong>next</p>')).toBe(
+			'<p><strong title="Use </strong> here">Built</strong> next</p>',
+		);
+	});
+
 	it("preserves whitespace inside bold text", () => {
 		expect(normalizeRichTextHtml("<p><strong>two words</strong></p>")).toBe("<p><strong>two words</strong></p>");
 	});
