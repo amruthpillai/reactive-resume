@@ -3,8 +3,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateFeatures, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import { getPrimaryTint } from "../shared/color-helpers";
 import {
@@ -18,7 +20,15 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	SemanticTemplatePartView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -53,19 +63,31 @@ const glalieFeatures = {
 	stackSidebarItemHeader: true,
 } satisfies TemplateFeatures;
 
-export const GlaliePage = ({ page, pageSize, pageMinHeightStyle, showHeader }: TemplatePageProps) => {
+export const GlaliePage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles } = useGlalieTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
 	const showSidebar = !page.fullWidth || showHeader;
-	const mainSections = filterSections(page.main, data);
-	const sidebarSections = filterSections(page.sidebar, data);
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors} features={glalieFeatures}>
-				{showSidebar && <View style={styles.sidebarBackground} />}
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors} features={glalieFeatures}>
+				{showSidebar && (
+					<SemanticTemplatePartView
+						ownerNodeKey={semanticNodeKeys.region(pageNodeKey, "sidebar")}
+						partKeys={["sidebar-background"]}
+						style={styles.sidebarBackground}
+					/>
+				)}
 
 				<View style={styles.layout}>
 					{showSidebar && (
@@ -77,21 +99,24 @@ export const GlaliePage = ({ page, pageSize, pageMinHeightStyle, showHeader }: T
 							{showHeader && <Header styles={styles} />}
 
 							{!page.fullWidth && (
-								<View style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}>
+								<SemanticRegionView
+									region="sidebar"
+									style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}
+								>
 									{sidebarSections.map((section) => (
 										<Section key={section} section={section} placement="sidebar" />
 									))}
-								</View>
+								</SemanticRegionView>
 							)}
 						</View>
 					)}
 
 					<View style={styles.mainColumn}>
-						<View style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
+						<SemanticRegionView region="main" style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
 							{mainSections.map((section) => (
 								<Section key={section} section={section} placement="main" />
 							))}
-						</View>
+						</SemanticRegionView>
 					</View>
 				</View>
 			</TemplateProvider>
@@ -104,8 +129,8 @@ const Header = ({ styles }: GlalieHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
+		<SemanticHeaderView style={styles.header}>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
@@ -114,7 +139,7 @@ const Header = ({ styles }: GlalieHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.contactList}>
+			<SemanticContactListView style={styles.contactList}>
 				<EmailContactItem email={basics.email} style={styles.contactItem} />
 				<PhoneContactItem phone={basics.phone} style={styles.contactItem} />
 				<LocationContactItem location={basics.location} style={styles.contactItem} />
@@ -122,8 +147,8 @@ const Header = ({ styles }: GlalieHeaderProps) => {
 				{basics.customFields.map((field) => (
 					<CustomFieldContactItem key={field.id} field={field} style={styles.contactItem} />
 				))}
-			</View>
-		</View>
+			</SemanticContactListView>
+		</SemanticHeaderView>
 	);
 };
 

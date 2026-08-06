@@ -4,6 +4,67 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v5.2.5" description="30th July 2026">
+## Highlights
+
+- **Custom Styles are now Semantic CSS.** Custom Styles use a new CSS-like language built for resume PDFs. Selectors describe resume content — `section[type="experience"]`, `region[placement="sidebar"]`, `field[name="position"]`, `list-marker` — instead of a template's internal markup, so a stylesheet keeps working across templates and can be copied between resumes. Builder settings are exposed as read-only `--resume-*` variables, and the editor keeps your draft, status, undo history, and last valid stylesheet separate so a broken rule never replaces a working PDF. [d2ffbf961](https://github.com/amruthpillai/reactive-resume/commit/d2ffbf961)
+- **Editable application timeline.** Application history is now a real timeline you can curate: add a note with its own date, edit or delete an entry, and see which stage each entry belongs to, alongside a stage-entered date. Available in the app and through MCP. [18d0c14aa](https://github.com/amruthpillai/reactive-resume/commit/18d0c14aa)
+- **LinkedIn job posting auto-fill.** Pasting a LinkedIn job URL into an application now fills in the title, company, location, and description directly from the posting. [47349e7ab](https://github.com/amruthpillai/reactive-resume/commit/47349e7ab)
+- **A faster homepage.** Homepage SEO metadata is rendered by the server on the first response, and the hero video no longer sits on the largest-contentful-paint path. [418c7887e](https://github.com/amruthpillai/reactive-resume/commit/418c7887e), [1e665fbe7](https://github.com/amruthpillai/reactive-resume/commit/1e665fbe7)
+
+## Custom Styles (Semantic CSS)
+
+- Added the Semantic CSS editor under **Design → Custom Styles**, with live status, error line and column numbers, "selector matches nothing" warnings, stylesheet undo and redo, **Reset to applied stylesheet**, **Copy stylesheet**, and a focus mode that opens full-width on mobile. [d2ffbf961](https://github.com/amruthpillai/reactive-resume/commit/d2ffbf961)
+- Resumes still using the previous Custom Styles form get a converted stylesheet draft to review; the original legacy rules stay active until you select **Activate Semantic CSS**, and remain available for rollback. [d2ffbf961](https://github.com/amruthpillai/reactive-resume/commit/d2ffbf961)
+- Added semantic selectors, attributes, and template-specific parts for all 15 templates, plus pagination and page-size controls (`break-inside`, `orphans`, `widows`, `-resume-min-presence-ahead`, `size`) and PDF-dimension media queries. [d2ffbf961](https://github.com/amruthpillai/reactive-resume/commit/d2ffbf961)
+- New resumes start in Semantic CSS mode automatically, while existing legacy styles remain active until their converted draft is explicitly activated.
+- Invalid style intents are now filtered out instead of discarding the whole rule set, so one bad entry no longer drops your valid custom styles. [689e7e24d](https://github.com/amruthpillai/reactive-resume/commit/689e7e24d)
+- Custom style numeric inputs are clamped to their supported ranges. [2a0782517](https://github.com/amruthpillai/reactive-resume/commit/2a0782517)
+- Award titles can now be un-bolded through custom styles. [08d859010](https://github.com/amruthpillai/reactive-resume/commit/08d859010)
+
+## Application Tracker
+
+- Added timeline entry creation with a custom date, plus update and delete for individual entries, across the API, the detail sheet, and MCP tools. [18d0c14aa](https://github.com/amruthpillai/reactive-resume/commit/18d0c14aa)
+- Job posting fetches now work with HTTPS postings that previously failed to load. [d4cf260ae](https://github.com/amruthpillai/reactive-resume/commit/d4cf260ae)
+
+## AI & Integrations
+
+- The model for a saved AI provider can now be edited inline from settings, instead of deleting and re-adding the provider. [47349e7ab](https://github.com/amruthpillai/reactive-resume/commit/47349e7ab)
+- Fixed the OAuth protected-resource metadata so MCP clients receive the correct authorization server list. [1124d3dfd](https://github.com/amruthpillai/reactive-resume/commit/1124d3dfd)
+
+## Resume Builder & PDF Exports
+
+- Fixed rich-text editing in the builder, where `Enter` and list editing had stopped working. [b303b8975](https://github.com/amruthpillai/reactive-resume/commit/b303b8975)
+- Page margin values are clamped to 0–100, so pasting an out-of-range value no longer crashes the builder. [4ac19f81b](https://github.com/amruthpillai/reactive-resume/commit/4ac19f81b)
+- The profile picture delete icon now clears the image correctly. [0eb9ce012](https://github.com/amruthpillai/reactive-resume/commit/0eb9ce012)
+- Fixed list markers and bullet indentation when a list splits across a page break in the exported PDF. [ed5d10c49](https://github.com/amruthpillai/reactive-resume/commit/ed5d10c49), [d536b1921](https://github.com/amruthpillai/reactive-resume/commit/d536b1921)
+- Fixed skill name sizing so long skill names lay out correctly in PDF exports. [e34e7be6e](https://github.com/amruthpillai/reactive-resume/commit/e34e7be6e)
+
+## Performance & SEO
+
+- The homepage now ships SEO metadata in the initial server response, resolved against the instance's public URL. [418c7887e](https://github.com/amruthpillai/reactive-resume/commit/418c7887e), [50f50b267](https://github.com/amruthpillai/reactive-resume/commit/50f50b267)
+- The homepage hero now loads a poster image first and takes the video off the LCP path. [1e665fbe7](https://github.com/amruthpillai/reactive-resume/commit/1e665fbe7)
+- The PDF renderer is loaded lazily on the server, cutting cold-start time for instances that are not exporting a PDF yet. [bb1fb3a7d](https://github.com/amruthpillai/reactive-resume/commit/bb1fb3a7d)
+
+## Reliability & Self-Hosting
+
+- Fixed OAuth sign-in mapping the session to the account id instead of the user id. [34c03b1f7](https://github.com/amruthpillai/reactive-resume/commit/34c03b1f7)
+- Limited immutable cache headers to hashed media assets so mutable uploads are no longer cached indefinitely. [dd0531091](https://github.com/amruthpillai/reactive-resume/commit/dd0531091)
+- Preserved the Cloudflare Rocket Loader exclusion and the bootstrap script attribute order through the production build. [93c06934b](https://github.com/amruthpillai/reactive-resume/commit/93c06934b), [048eab3b4](https://github.com/amruthpillai/reactive-resume/commit/048eab3b4)
+- Simplified URL security checks, shared template styles, and test fixtures, removing roughly 1,000 lines of redundant code. [9110e8699](https://github.com/amruthpillai/reactive-resume/commit/9110e8699)
+- Refreshed workspace dependencies. [326606682](https://github.com/amruthpillai/reactive-resume/commit/326606682), [164a27930](https://github.com/amruthpillai/reactive-resume/commit/164a27930)
+
+## Documentation & Localization
+
+- Rewrote the Custom Styles guide as **Applying Custom Styles**, covering conversion, selectors, builder variables, pagination, diagnosis, and portability. The JSON Resume schema guide and the resume-builder skill schema reference are now generated from the schema so they stay in sync. [d2ffbf961](https://github.com/amruthpillai/reactive-resume/commit/d2ffbf961)
+- Added 17 comparison pages covering Reactive Resume against mainstream resume builders, AI and ATS tools, design editors, and career and template services. [9d6426b2e](https://github.com/amruthpillai/reactive-resume/commit/9d6426b2e)
+- Canonicalized the getting started routes and fixed the contributing guide's troubleshooting code blocks. [a4897c20d](https://github.com/amruthpillai/reactive-resume/commit/a4897c20d), [e6b4733c5](https://github.com/amruthpillai/reactive-resume/commit/e6b4733c5)
+- Pinned the v4 migration script checkout in the self-hosting migration guide, and aligned the documented pnpm version with the `packageManager` field. [ac9813909](https://github.com/amruthpillai/reactive-resume/commit/ac9813909), [15f8bce98](https://github.com/amruthpillai/reactive-resume/commit/15f8bce98)
+- Synced Crowdin translation catalogs, including strings for the application timeline. [9085a199c](https://github.com/amruthpillai/reactive-resume/commit/9085a199c), [79e4a3ddc](https://github.com/amruthpillai/reactive-resume/commit/79e4a3ddc), [d50948dde](https://github.com/amruthpillai/reactive-resume/commit/d50948dde)
+
+**Full Changelog**: [v5.2.3...v5.2.5](https://github.com/amruthpillai/reactive-resume/compare/v5.2.3...v5.2.5)
+</Update>
+
 <Update label="v5.2.3" description="8th July 2026">
 ## Highlights
 

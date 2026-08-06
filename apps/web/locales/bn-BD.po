@@ -8,7 +8,7 @@ msgstr ""
 "Language: bn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "অ্যাকাউন্ট মেনু"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "অ্যাকশন"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "সিমান্টিক CSS সক্রিয় করুন"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "প্রতি সপ্তাহে পাঠানো আবেদন (শেষ 8 সপ্তাহ)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "আবেদন করা হয়েছে"
 
@@ -492,6 +497,10 @@ msgstr "প্রয়োগ করা হয়েছে"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "প্রয়োগকৃত নিয়মাবলী"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "সতর্কতাসহ প্রয়োগ করা হয়েছে"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "আপনার পাসওয়ার্ড রিসেট করা
 msgid "Check your email for a link to verify your account."
 msgstr "আপনার অ্যাকাউন্ট যাচাই করার লিঙ্কের জন্য ইমেইল চেক করুন।"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "চেকিং"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "খসড়া পরীক্ষা করা হচ্ছে"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "চীনা (সরলীকৃত)"
@@ -966,6 +983,10 @@ msgstr "কথোপকথনটি অনুলিপি করা হয়ে
 msgid "Conversation JSON copied."
 msgstr "কথোপকথনের JSON কপি করা হয়েছে।"
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "রূপান্তরিত স্টাইলশীট খসড়া"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "ক্লিপবোর্ডে কপি করা হয়েছে।"
@@ -988,6 +1009,10 @@ msgstr "ব্যাকআপ কোড কপি করুন"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON কপি করুন"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "স্টাইলশিট কপি করুন"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "সম্পাদনা {chip}"
 msgid "Edit application"
 msgstr "অ্যাপ্লিকেশন সম্পাদনা করুন"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "রঙ সম্পাদনা করুন {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "টু‑ফ্যাক্টর প্রমাণীকরণ সে�
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "টু‑ফ্যাক্টর প্রমাণীকরণ বন্ধ করতে আপনার পাসওয়ার্ড লিখুন। 2FA বন্ধ করলে আপনার অ্যাকাউন্ট কম সুরক্ষিত থাকবে।"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "ত্রুটি"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "প্রতিটি অবদান, বড় বা ছোট, প্রজেক্টটিতে বিশাল পরিবর্তন আনে।<0/>আপনার সহায়তার জন্য ধন্যবাদ!"
@@ -1681,6 +1715,10 @@ msgstr "প্রতিটি অবদান, বড় বা ছোট, প�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "পেশাদার জীবনবৃত্তান্ত তৈরি, কাস্টমাইজ এবং শেয়ার করার জন্য যা যা প্রয়োজন সবই এখানে আছে। গোপনীয়তা মাথায় রেখে তৈরি, মুক্ত উৎস দ্বারা চালিত এবং চিরদিনের জন্য সম্পূর্ণ বিনামূল্যে।"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "ফোকাস মোড থেকে প্রস্থান করুন"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "আপনি কি পাসওয়ার্ড ভুলে গি�
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "রূপ"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "ফরম্যাট স্টাইলশিট"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "লাইট"
 msgid "Light theme"
 msgstr "লাইট থিম"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "লাইন {0}, কলাম {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "লাইন হাইট"
@@ -2918,6 +2966,10 @@ msgstr "নরওয়েজিয়ান"
 msgid "Not connected"
 msgstr "সংযুক্ত নয়"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "কী লিখবেন বুঝতে পারছেন না?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "ওপেন এআই অ্যাসিস্ট্যান্ট"
 msgid "Open Email Client"
 msgstr "ইমেইল ক্লায়েন্ট খুলুন"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "ফোকাস মোড খুলুন"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "বিল্ডারে খুলুন"
@@ -2992,6 +3048,7 @@ msgstr "ওপেনএআই-সামঞ্জস্যপূর্ণ"
 msgid "OpenRouter"
 msgstr "ওপেনরাউটার"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "খুলতে <0>এন্টার</0> চাপুন"
 msgid "Preview"
 msgstr "প্রিভিউ"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "প্রিভিউ এবং এক্সপোর্টের জন্য সর্বশেষ বৈধ সংস্করণটি ব্যবহার করা হয়।"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "প্রাথমিক রঙ"
@@ -3374,9 +3435,21 @@ msgstr "প্রতিক্রিয়াশীল জীবনবৃত্�
 msgid "Reactive Resume v4 (JSON)"
 msgstr "প্রতিক্রিয়াশীল রিজ্যুম v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "কাস্টম স্টাইল প্রয়োগ করার নির্দেশিকাটি পড়ুন।"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "পড়া…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "সক্রিয় করার জন্য প্রস্তুত"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "সতর্কতা সহ সক্রিয় করার জন্য প্রস্তুত"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "আয়তক্ষেত্র (পূর্ণ প্রস্থ)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "পুনরায় করুন"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "স্টাইলশীট সম্পাদনা পুনরায় করুন"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "পাসওয়ার্ড রিসেট করুন"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "স্টাইল রিসেট করুন"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "প্রয়োগকৃত স্টাইলশীটে রিসেট করুন"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "নির্বাচিত"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "ডকার দিয়ে নিজে হোস্ট করুন"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "সিমান্টিক সিএসএস স্টাইলশিট"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "শব্দার্থিক শৈলী সক্রিয় থাকে"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "স্ট্রাইক"
 msgid "Strong fit"
 msgstr "শক্তিশালী ফিট"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "স্টাইলশিট সম্পাদক"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "স্টাইলশিটে ত্রুটি আছে"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "সাবরেডিট"
@@ -4308,6 +4405,10 @@ msgstr "আপনি যে পৃষ্ঠাটি খুঁজছেন স�
 msgid "The password you entered is incorrect"
 msgstr "আপনি যে পাসওয়ার্ড লিখেছেন তা সঠিক নয়"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "জীবনবৃত্তান্তের প্রিভিউ আপডেট করা যায়নি। সর্বশেষ বৈধ প্রিভিউটিই এখনও দেখানো হচ্ছে।"
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "আপনি যে জীবনবৃত্তান্তে প্রবেশ করার চেষ্টা করছেন তা পাসওয়ার্ড দ্বারা সুরক্ষিত"
@@ -4380,6 +4481,10 @@ msgstr "এই এন্ট্রি স্থায়ীভাবে মুছ
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "এই ফিচারটি ব্যবহারের জন্য একটি সংযুক্ত এআই প্রোভাইডার প্রয়োজন। অনুগ্রহ করে সেটিংস থেকে একটি সেট আপ করুন।"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "এই ইনস্ট্যান্সটিতে বর্তমানে সিমান্টিক সিএসএস সম্পাদনার অনুমতি নেই।"
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "আন্ডারলাইন"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "পূর্বাবস্থায় ফেরান"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "স্টাইলশীট সম্পাদনা পূর্বাবস্থায় ফেরান"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "আপনার ডেটা নিরাপদভাবে সংরক
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "আপনার সর্বশেষ পরিবর্তনগুলো সংরক্ষণ করা যায়নি।"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "যতক্ষণ না আপনি স্পষ্টভাবে এই সিম্যান্টিক সিএসএস ড্রাফটটি সক্রিয় করছেন, ততক্ষণ আপনার পুরোনো স্টাইলগুলো সক্রিয় থাকবে।"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

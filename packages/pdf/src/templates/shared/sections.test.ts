@@ -16,15 +16,20 @@ describe("ExperienceSection", () => {
 
 describe("ItemTitle", () => {
 	it("renders award titles without the bold style", () => {
-		expect(source).toContain("const ItemTitle = ({ children, website, bold = true }: ItemTitleProps)");
-		expect(source).toContain("const title = bold ? <Bold>{children}</Bold> : <Text>{children}</Text>;");
-		expect(source).toContain("<ItemTitle website={item.website} bold={false}>");
+		expect(source).toContain("const ItemTitle = ({ children, website, field, bold = true }: ItemTitleProps)");
+		expect(source).toContain(
+			"const title = bold ? <Bold semanticField={field}>{children}</Bold> : <Text semanticField={field}>{children}</Text>;",
+		);
+		expect(source).toContain('<ItemTitle field="title" website={item.website} bold={false}>');
 	});
 });
 
 describe("SectionShell", () => {
 	it("keeps section and heading style rules when section heading icons are hidden", () => {
-		expect(source).toContain("<View style={composeStyles(sectionStyle, sectionRuleStyle)} {...breakProps}>");
+		expect(source).toContain(
+			"const resolvedSectionStyle = composeStyles(sectionStyle, sectionRuleStyle, resolved.style)",
+		);
+		expect(source).toContain("<View style={resolvedSectionStyle} {...flowProps}>");
 		expect(source).toContain("<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>");
 	});
 

@@ -1,24 +1,13 @@
 import { SmartCoercionPlugin } from "@orpc/json-schema";
-import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { onError } from "@orpc/server";
 import { BatchHandlerPlugin, RequestHeadersPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { downloadResumePdfProcedure } from "@reactive-resume/api/features/resume/export";
-import router from "@reactive-resume/api/routers";
 import { env } from "@reactive-resume/env/server";
-import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { appVersion } from "../app-version";
 import { mergeResponseHeaders } from "../http/headers";
 import { getRequestLocale } from "../rpc/locale";
-
-const openAPIRouter = {
-	...router,
-	resume: {
-		...router.resume,
-		downloadPdf: downloadResumePdfProcedure,
-	},
-};
+import { generateOpenApiSpec, openAPIRouter } from "./generator";
 
 const openAPIHandler = new OpenAPIHandler(openAPIRouter, {
 	plugins: [
@@ -36,46 +25,15 @@ const openAPIHandler = new OpenAPIHandler(openAPIRouter, {
 	],
 });
 
-const openAPIGenerator = new OpenAPIGenerator({
-	schemaConverters: [new ZodToJsonSchemaConverter()],
-});
-
-export async function handleOpenApi(request: Request) {
+export async function handleOpenApi(request: Request, trustedClient = "unknown") {
 	if (request.method === "GET" && (request.url.endsWith("/spec.json") || request.url.endsWith("/spec"))) {
-		const spec = await openAPIGenerator.generate(openAPIRouter, {
-			info: {
-				title: "Reactive Resume",
-				version: appVersion,
-				description: "Reactive Resume API",
-				license: { name: "MIT", url: "https://github.com/amruthpillai/reactive-resume/blob/main/LICENSE" },
-				contact: { name: "Amruth Pillai", email: "hello@amruthpillai.com", url: "https://amruthpillai.com" },
-			},
-			servers: [{ url: `${env.APP_URL}/api/openapi` }],
-			externalDocs: { url: "https://docs.rxresu.me", description: "Reactive Resume Documentation" },
-			commonSchemas: {
-				ResumeData: { schema: resumeDataSchema },
-			},
-			components: {
-				securitySchemes: {
-					apiKey: {
-						type: "apiKey",
-						name: "x-api-key",
-						in: "header",
-						description: "The API key to authenticate requests.",
-					},
-				},
-			},
-			security: [{ apiKey: [] }],
-			filter: ({ contract }) => !contract["~orpc"].route.tags?.includes("Internal"),
-		});
-
-		return Response.json(spec);
+		return Response.json(await generateOpenApiSpec({ appUrl: env.APP_URL, version: appVersion }));
 	}
 
 	const resHeaders = new Headers();
 	const { response } = await openAPIHandler.handle(request, {
 		prefix: "/api/openapi",
-		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders },
+		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders, trustedClient },
 	});
 
 	if (!response) return new Response("NOT_FOUND", { status: 404 });

@@ -1,4 +1,9 @@
 {
 	"extends": ["//"],
-	"tags": ["app:server", "runtime:server", "role:adapter"]
+	"tags": ["app:server", "runtime:server", "role:adapter"],
+	"tasks": {
+		"test:ci": {
+			"cache": false
+		}
+	}
 }

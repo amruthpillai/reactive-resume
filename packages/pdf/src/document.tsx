@@ -4,10 +4,13 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import type { ComponentType } from "react";
 import type { ResumeRenderOptions } from "./context";
 import type { SectionTitleResolver } from "./section-title";
+import type { ResolvedResumeRuntime } from "./semantic";
 import { useMemo } from "react";
 import { Document } from "#react-pdf-renderer";
 import { RenderProvider } from "./context";
 import { registerFonts, resumeContentContainsCJK, resumeContentScripts } from "./hooks/use-register-fonts";
+import { SemanticRenderProvider } from "./semantic/context";
+import { resolveResumeRuntime, resolveStylesheetMode } from "./semantic/resolve";
 import { getTemplatePage } from "./templates";
 import { shouldShowResumeHeader } from "./templates/shared/cover-letter";
 import { getTemplatePageMinHeightStyle, getTemplatePageSize } from "./templates/shared/page-size";
@@ -17,6 +20,7 @@ export type TemplatePageProps = {
 	pageSize: ReturnType<typeof getTemplatePageSize>;
 	pageMinHeightStyle: ReturnType<typeof getTemplatePageMinHeightStyle>;
 	showHeader: boolean;
+	pageNumber: number;
 };
 
 export type TemplatePage = ComponentType<TemplatePageProps>;
@@ -26,12 +30,19 @@ type ResumeDocumentProps = {
 	template: Template;
 	renderOptions?: ResumeRenderOptions | undefined;
 	resolveSectionTitle?: SectionTitleResolver | undefined;
+	semanticRuntime?: ResolvedResumeRuntime | undefined;
 };
 
 const getLayoutPageKey = (page: LayoutPage, pageIndex: number) =>
 	`${page.fullWidth ? "full" : "split"}:${page.main.join(",")}:${page.sidebar.join(",")}:${pageIndex}`;
 
-export const ResumeDocument = ({ data, template, renderOptions, resolveSectionTitle }: ResumeDocumentProps) => {
+export const ResumeDocument = ({
+	data,
+	template,
+	renderOptions,
+	resolveSectionTitle,
+	semanticRuntime,
+}: ResumeDocumentProps) => {
 	const TemplatePageComponent = getTemplatePage(template);
 	const creationDate = useMemo(() => new Date(), []);
 	const hasCjkContent = useMemo(() => resumeContentContainsCJK(data), [data]);
@@ -50,29 +61,43 @@ export const ResumeDocument = ({ data, template, renderOptions, resolveSectionTi
 	const pageSize = getTemplatePageSize(resumeData.metadata.page.format);
 	const pageMinHeightStyle = getTemplatePageMinHeightStyle(resumeData.metadata.page.format);
 	const headerResumeData = renderOptions ? { ...resumeData, renderOptions } : resumeData;
+	const stylesheetMode = resolveStylesheetMode(resumeData);
+	const runtime = useMemo(
+		() => semanticRuntime ?? resolveResumeRuntime({ data: resumeData, template, mode: stylesheetMode }),
+		[resumeData, semanticRuntime, stylesheetMode, template],
+	);
+	const semanticMode = semanticRuntime ? "semantic" : stylesheetMode;
 
 	return (
-		<RenderProvider data={resumeData} resolveSectionTitle={resolveSectionTitle} renderOptions={renderOptions}>
-			<Document
-				pageMode="useNone"
-				creationDate={creationDate}
-				producer="Reactive Resume"
-				title={resumeData.basics.name}
-				author={resumeData.basics.name}
-				creator={resumeData.basics.name}
-				subject={resumeData.basics.headline}
-				language={resumeData.metadata.page.locale}
-			>
-				{resumeData.metadata.layout.pages.map((page, index) => (
-					<TemplatePageComponent
-						key={getLayoutPageKey(page, index)}
-						page={page}
-						pageSize={pageSize}
-						pageMinHeightStyle={pageMinHeightStyle}
-						showHeader={shouldShowResumeHeader(headerResumeData, index)}
-					/>
-				))}
-			</Document>
-		</RenderProvider>
+		<SemanticRenderProvider
+			presentation={runtime.presentation}
+			mode={semanticMode}
+			sourceTree={runtime.sourceTree}
+			renderTree={runtime.renderTree}
+		>
+			<RenderProvider data={resumeData} resolveSectionTitle={resolveSectionTitle} renderOptions={renderOptions}>
+				<Document
+					pageMode="useNone"
+					creationDate={creationDate}
+					producer="Reactive Resume"
+					title={resumeData.basics.name}
+					author={resumeData.basics.name}
+					creator={resumeData.basics.name}
+					subject={resumeData.basics.headline}
+					language={resumeData.metadata.page.locale}
+				>
+					{resumeData.metadata.layout.pages.map((page, index) => (
+						<TemplatePageComponent
+							key={getLayoutPageKey(page, index)}
+							page={page}
+							pageSize={pageSize}
+							pageMinHeightStyle={pageMinHeightStyle}
+							showHeader={shouldShowResumeHeader(headerResumeData, index)}
+							pageNumber={index + 1}
+						/>
+					))}
+				</Document>
+			</RenderProvider>
+		</SemanticRenderProvider>
 	);
 };

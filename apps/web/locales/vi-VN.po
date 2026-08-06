@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -162,6 +162,10 @@ msgstr "Menu tài khoản"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Hành động"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Kích hoạt CSS ngữ nghĩa"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Đơn ứng tuyển đã gửi mỗi tuần (8 tuần gần nhất)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Đã ứng tuyển"
 
@@ -492,6 +497,10 @@ msgstr "Đã ứng tuyển vào"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Quy tắc áp dụng"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Được áp dụng kèm theo cảnh báo"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Hãy kiểm tra email của bạn để lấy đường link đặt lạ
 msgid "Check your email for a link to verify your account."
 msgstr "Hãy kiểm tra email của bạn để lấy liên kết xác minh tài khoản."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Kiểm tra"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Kiểm tra bản nháp"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Tiếng Trung (Giản thể)"
@@ -966,6 +983,10 @@ msgstr "Cuộc hội thoại đã được sao chép."
 msgid "Conversation JSON copied."
 msgstr "Đã sao chép JSON hội thoại."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Bản nháp bảng định kiểu đã chuyển đổi"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Đã sao chép vào bảng nhớ tạm."
@@ -988,6 +1009,10 @@ msgstr "Sao chép mã Backup"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Sao chép JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Sao chép bảng định kiểu"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Chỉnh sửa {chip}"
 msgid "Edit application"
 msgstr "Chỉnh sửa hồ sơ ứng tuyển"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Chỉnh sửa màu {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Nhập mật khẩu của bạn để xác nhận thiết lập xác th�
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Nhập mật khẩu của bạn để tắt xác thực hai yếu tố. Tài khoản của bạn sẽ kém an toàn hơn nếu không bật 2FA."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Lỗi"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Mỗi đóng góp, dù lớn hay nhỏ, đều tạo nên sự khác biệt lớn cho dự án.<0/>Cảm ơn sự ủng hộ của bạn!"
@@ -1681,6 +1715,10 @@ msgstr "Mỗi đóng góp, dù lớn hay nhỏ, đều tạo nên sự khác bi�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Mọi thứ bạn cần để tạo, tùy chỉnh và chia sẻ bản lý lịch chuyên nghiệp. Được xây dựng với tính riêng tư, mã nguồn mở và hoàn toàn miễn phí mãi mãi."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Thoát chế độ lấy nét"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Bạn quên mật khẩu?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Định dạng"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Định dạng bảng định kiểu"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Sáng"
 msgid "Light theme"
 msgstr "Chủ đề sáng"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Dòng {0}, cột {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Chiều cao giữa các dòng"
@@ -2918,6 +2966,10 @@ msgstr "Na Uy"
 msgid "Not connected"
 msgstr "Không kết nối"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Không biết nên viết gì?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Trợ lý AI mở"
 msgid "Open Email Client"
 msgstr "Mở ứng dụng Email"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Chế độ lấy nét mở"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Mở trong trình soạn thảo"
@@ -2992,6 +3048,7 @@ msgstr "Tương thích với OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Nhấn <0>phím Enter</0> để mở"
 msgid "Preview"
 msgstr "Xem trước"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Chức năng xem trước và xuất khẩu sử dụng phiên bản hợp lệ mới nhất."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Màu chủ đạo"
@@ -3374,9 +3435,21 @@ msgstr "Reactive Resume v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Sơ yếu lý lịch phản hồi phiên bản 4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Hãy đọc hướng dẫn Áp dụng kiểu tùy chỉnh."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Đang đọc…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Sẵn sàng kích hoạt"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Sẵn sàng kích hoạt kèm cảnh báo"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Hình chữ nhật (Toàn bộ chiều rộng)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Làm lại"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Chỉnh sửa lại bảng định kiểu"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Đặt mật khẩu mới"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Đặt lại kiểu"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Đặt lại về kiểu định dạng đã áp dụng"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "đã chọn"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Tự dựng với Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Bảng định kiểu CSS ngữ nghĩa"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Các kiểu ngữ nghĩa vẫn còn hiệu lực"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Gạch ngang"
 msgid "Strong fit"
 msgstr "Rất phù hợp"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Trình chỉnh sửa bảng định kiểu"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Tệp định kiểu có lỗi"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4405,10 @@ msgstr "Trang bạn đang tìm có thể đã được di chuyển hoặc không
 msgid "The password you entered is incorrect"
 msgstr "Mật khẩu bạn đã nhập không đúng"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Không thể cập nhật bản xem trước sơ yếu lý lịch. Bản xem trước hợp lệ cuối cùng vẫn được hiển thị."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Hồ sơ bạn đang cố truy cập đã được bảo vệ bằng mật khẩu"
@@ -4380,6 +4481,10 @@ msgstr "Mục này sẽ bị xóa vĩnh viễn. Không thể hoàn tác."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Tính năng này yêu cầu kết nối với nhà cung cấp AI. Vui lòng thiết lập nhà cung cấp này trong phần cài đặt."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Hiện tại, phiên bản này không cho phép chỉnh sửa CSS ngữ nghĩa."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Gạch chân"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Hoàn tác"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Hoàn tác chỉnh sửa bảng định kiểu"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Dữ liệu của bạn được lưu trữ an toàn và không bao gi�
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Những thay đổi gần đây của bạn không thể được lưu lại."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Các kiểu định dạng cũ của bạn vẫn hoạt động cho đến khi bạn kích hoạt bản nháp CSS ngữ nghĩa này một cách rõ ràng."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "Menu da conta"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Ações"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Ativar CSS Semântico"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Candidaturas enviadas por semana (últimas 8 semanas)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Aplicado"
 
@@ -492,6 +497,10 @@ msgstr "Aplicado em"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Regras Aplicadas"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Aplicado com ressalvas."
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Verifique seu email em busca de um link para redefinir sua senha."
 msgid "Check your email for a link to verify your account."
 msgstr "Verifique seu email em busca de um link para verificar sua conta."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Verificando"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Verificando rascunho"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Chinês (Simplificado)"
@@ -966,6 +983,10 @@ msgstr "Conversa copiada."
 msgid "Conversation JSON copied."
 msgstr "JSON da conversa copiado."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Rascunho da folha de estilo convertida"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Copiado para a área de transferência."
@@ -988,6 +1009,10 @@ msgstr "Copiar códigos de backup"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Copiar JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Copiar folha de estilo"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Editar {chip}"
 msgid "Edit application"
 msgstr "Editar aplicativo"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Editar cor {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Digite sua senha para confirmar a configuração da autenticação de do
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Digite sua senha para desativar a autenticação de dois fatores. Sua conta ficará menos segura sem o 2FA ativado."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Erro"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Cada contribuição, grande ou pequena, faz uma enorme diferença para o projeto.<0/>Obrigado pelo seu apoio!"
@@ -1681,6 +1715,10 @@ msgstr "Cada contribuição, grande ou pequena, faz uma enorme diferença para o
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Tudo o que você precisa para criar, personalizar e compartilhar currículos profissionais. Construído com foco na privacidade, impulsionado por código aberto e completamente gratuito para sempre."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Sair do modo de foco"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Esqueceu a sua senha?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Formatar"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Formatar folha de estilo"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Claro"
 msgid "Light theme"
 msgstr "Tema claro"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Linha {0}, coluna {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Altura da linha"
@@ -2918,6 +2966,10 @@ msgstr "Norueguês"
 msgid "Not connected"
 msgstr "Não conectado"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Não sabe o que escrever?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Assistente de IA aberta"
 msgid "Open Email Client"
 msgstr "Abrir cliente de email"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Modo de foco aberto"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Abrir no construtor"
@@ -2992,6 +3048,7 @@ msgstr "Compatível com OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Pressione <0>Enter</0> para abrir"
 msgid "Preview"
 msgstr "Pré-visualização"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "A pré-visualização e a exportação utilizam a última versão válida."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Cor primária"
@@ -3374,9 +3435,21 @@ msgstr "Retomar reativo v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Currículo reativo v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Leia o guia Aplicando Estilos Personalizados."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Lendo…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Pronto para ativar"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Pronto para ativar com avisos"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Retângulo (largura total)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Refazer"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Refazer edição da folha de estilo"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Redefinir senha"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Redefinir estilo"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Redefinir para a folha de estilo aplicada"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "selecionado"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Auto-hospedagem com Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Folha de estilo CSS semântica"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Os estilos semânticos permanecem ativos"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Tachar"
 msgid "Strong fit"
 msgstr "Ajuste forte"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Editor de folhas de estilo"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "A folha de estilo contém erros."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4405,10 @@ msgstr "A página que você está procurando pode ter sido movida ou não existi
 msgid "The password you entered is incorrect"
 msgstr "A senha que você digitou está incorreta"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Não foi possível atualizar a pré-visualização do currículo. A última pré-visualização válida ainda está sendo exibida."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "O currículo que você está tentando acessar está protegido por senha"
@@ -4380,6 +4481,10 @@ msgstr "Esta entrada será excluída permanentemente. Isso não pode ser desfeit
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Este recurso requer um provedor de IA conectado. Configure um nas configurações."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Esta instância não permite, no momento, a edição de CSS semântico."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Sublinhar"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Desfazer"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Desfazer edição da folha de estilo"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Seus dados são armazenados com segurança e nunca são compartilhados c
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Não foi possível salvar suas últimas alterações."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Seus estilos legados permanecerão ativos até que você ative explicitamente este rascunho de CSS Semântico."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

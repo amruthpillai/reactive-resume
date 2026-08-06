@@ -19,6 +19,14 @@ const resumeMock = vi.hoisted(() => ({
 				slug: string;
 				data: typeof defaultResumeData;
 		  },
+	stylesheet: {
+		resumeId: "r1" as string | undefined,
+		mode: "semantic" as "legacy" | "semantic",
+		source: { languageVersion: 1, text: "@version 1;\nname {" },
+		applied: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
+		revision: 42,
+		renderDataVersion: 7,
+	},
 }));
 
 type SectionBaseProps = {
@@ -42,6 +50,9 @@ vi.mock("@/libs/resume/section-title-locale", () => ({
 vi.mock("@/features/resume/builder/draft", () => ({
 	useResume: () => resumeMock.resume,
 }));
+vi.mock("@/features/resume/stylesheet/store", () => ({
+	useStylesheetStore: (selector: (state: typeof resumeMock.stylesheet) => unknown) => selector(resumeMock.stylesheet),
+}));
 
 const { ExportSectionBuilder } = await import("./export");
 
@@ -51,6 +62,14 @@ beforeAll(() => {
 
 beforeEach(() => {
 	resumeMock.resume = { id: "r1", name: "My Resume", slug: "my-resume", data: defaultResumeData };
+	resumeMock.stylesheet = {
+		resumeId: "r1",
+		mode: "semantic",
+		source: { languageVersion: 1, text: "@version 1;\nname {" },
+		applied: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
+		revision: 42,
+		renderDataVersion: 7,
+	};
 });
 
 afterEach(() => {
@@ -96,7 +115,7 @@ describe("ExportSectionBuilder", () => {
 		expect(filename).toBe("My Resume.md");
 	});
 
-	it("downloads a JSON blob when the JSON button is clicked", () => {
+	it("downloads canonical stylesheet content in JSON without concurrency metadata", async () => {
 		renderExport();
 		openDialog();
 		fireEvent.click(screen.getByRole("button", { name: "Download JSON" }));
@@ -107,6 +126,14 @@ describe("ExportSectionBuilder", () => {
 		expect(blob).toBeInstanceOf(Blob);
 		expect((blob as Blob).type).toBe("application/json");
 		expect(filename).toBe("My Resume.json");
+		const exported = JSON.parse(await (blob as Blob).text());
+		expect(exported.metadata.stylesheet).toEqual({
+			mode: "semantic",
+			source: resumeMock.stylesheet.source,
+			applied: resumeMock.stylesheet.applied,
+		});
+		expect(JSON.stringify(exported)).not.toContain("revision");
+		expect(JSON.stringify(exported)).not.toContain("renderDataVersion");
 	});
 
 	it("calls buildDocx and downloads the resulting blob when DOCX is clicked", async () => {
@@ -128,6 +155,12 @@ describe("ExportSectionBuilder", () => {
 		await Promise.resolve();
 
 		expect(createResumePdfBlob).toHaveBeenCalledTimes(1);
+		expect(createResumePdfBlob).toHaveBeenCalledWith(defaultResumeData, undefined, undefined, {
+			stylesheet: {
+				mode: "semantic",
+				applied: resumeMock.stylesheet.applied,
+			},
+		});
 		expect(downloadWithAnchor).toHaveBeenCalledTimes(1);
 		expect(downloadWithAnchor.mock.calls[0]?.[1]).toBe("My Resume.pdf");
 	});

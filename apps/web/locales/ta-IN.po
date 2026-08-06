@@ -8,7 +8,7 @@ msgstr ""
 "Language: ta\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Tamil\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "கணக்கு மெனு"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "செயல்கள்"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "செமாண்டிக் CSS-ஐ செயல்படுத்துக"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "வாரத்திற்கு அனுப்பப்பட்ட விண்ணப்பங்கள் (கடைசி 8 வாரங்கள்)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "விண்ணப்பிக்கப்பட்டது"
 
@@ -492,6 +497,10 @@ msgstr "அன்று விண்ணப்பித்தது"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "பயன்படுத்தப்பட்ட விதிகள்"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "எச்சரிக்கைகளுடன் கூடிய அறிவு"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "உங்கள் கடவுச்சொல்லை மீட்ட�
 msgid "Check your email for a link to verify your account."
 msgstr "உங்கள் கணக்கை சரிபார்க்க ஒரு இணைப்புக்காக உங்கள் மின்னஞ்சலைச் சரிபார்க்கவும்."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "சரிபார்த்தல்"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "வரைவைச் சரிபார்த்தல்"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "சீனம் (எளிய)"
@@ -966,6 +983,10 @@ msgstr "உரையாடல் நகலெடுக்கப்பட்ட�
 msgid "Conversation JSON copied."
 msgstr "உரையாடல் JSON நகலெடுக்கப்பட்டது."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "மாற்றப்பட்ட ஸ்டைல்ஷீட் வரைவு"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "கிளிப்போர்டுக்கு நகலெடுக்கப்பட்டது."
@@ -988,6 +1009,10 @@ msgstr "காப்பு குறியீடுகளை நகலெடு"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON-ஐ நகலெடுக்கவும்"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "பாணித்தாளை நகலெடுக்கவும்"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "திருத்து {chip}"
 msgid "Edit application"
 msgstr "பயன்பாட்டைத் திருத்தவும்"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "வண்ணத்தைத் திருத்து {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "இரண்டு நிலை அங்கீகாரத்தை அ
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "இரண்டு நிலை அங்கீகாரத்தை முடக்க உங்கள் கடவுச்சொல்லை உள்ளிடவும். 2FA இயங்காவிட்டால் உங்கள் கணக்கு குறைந்த பாதுகாப்புடன் இருக்கும்."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "பிழை"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "ஒவ்வொரு பங்களிப்பும், பெரியதோ சிறியதோ, இந்த திட்டத்திற்கு மிகப் பெரிய மாற்றத்தை கொண்டுவந்து விடுகிறது.<0/>உங்கள் ஆதரவுக்கு நன்றி!"
@@ -1681,6 +1715,10 @@ msgstr "ஒவ்வொரு பங்களிப்பும், பெரி
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "தொழில்முறை ரெஸ்யூமிகளை உருவாக்க, விருப்பத்துக்கு உருப்பெற்றி, பகிர்வதற்குத் தேவையான அனைத்தும் இங்கே. தனியுரிமையை கருத்தில் கொண்டு உருவாக்கப்பட்டதால், திறந்த மூலத்தால் இயக்கப்படுகிறது மற்றும் எப்போதும் முழுவதுமாக இலவசம்."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "கவனப் பயன்முறையிலிருந்து வெளியேறு"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "உங்கள் கடவுச்சொல்லை மறந்த�
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "வடிவம்"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "வடிவமைப்பு பாணித்தாள்"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "லைட்"
 msgid "Light theme"
 msgstr "லைட் தீம்"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "வரி {0}, நெடுவரிசை {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "வரி உயரம்"
@@ -2918,6 +2966,10 @@ msgstr "நார்வேஜியன்"
 msgid "Not connected"
 msgstr "இணைப்பு இல்லை"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "என்ன எழுதுவது என்று தெரியவில்லையா?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "திறந்த AI உதவியாளர்"
 msgid "Open Email Client"
 msgstr "மின்னஞ்சல் பயன்பாட்டை திறக்கவும்"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "திறந்த குவிய முறை"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "பில்டரில் திறக்கவும்"
@@ -2992,6 +3048,7 @@ msgstr "OpenAI-இணக்கமானது"
 msgid "OpenRouter"
 msgstr "ஓப்பன்ரவுட்டர்"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "திறக்க <0>Enter ஐ</0> அழுத்தவும்"
 msgid "Preview"
 msgstr "முன்னோட்டம்"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "முன்னோட்டம் மற்றும் ஏற்றுமதிக்கு, கடைசியாகச் செல்லுபடியாகும் பதிப்பைப் பயன்படுத்தவும்."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "முதன்மை நிறம்"
@@ -3374,9 +3435,21 @@ msgstr "ரியாக்டிவ் ரெஸ்யூம் v<0>{__APP_VERSI
 msgid "Reactive Resume v4 (JSON)"
 msgstr "எதிர்வினை ரெஸ்யூம் v4 (ஜேசன்)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "தனிப்பயன் பாணிகளைப் பயன்படுத்துதல் வழிகாட்டியைப் படிக்கவும்."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "படிக்கிறது…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "செயல்படுத்தத் தயார்"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "எச்சரிக்கைகளுடன் செயல்படுத்தத் தயார்"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "சதுரம் (முழு அகலம்)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "மீண்டும் செய்"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "ஸ்டைல்ஷீட் திருத்தத்தை மீண்டும் செய்"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "கடவுச்சொல்லை மீட்டமைக்கவ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "பாணியை மீட்டமைக்கவும்"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "பயன்படுத்தப்பட்ட பாணித் தாளுக்கு மீட்டமைக்கவும்"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "தேர்ந்தெடுக்கப்பட்டது"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Docker-இன் உதவியுடன் தானே ஹோஸ்ட் செய்யவும்"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "செமாண்டிக் CSS ஸ்டைல்ஷீட்"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "சொற்பொருள் பாணிகள் செயலில் உள்ளன"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "கோடு கிழித்தல்"
 msgid "Strong fit"
 msgstr "வலுவான பொருத்தம்"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "ஸ்டைல்ஷீட் எடிட்டர்"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "ஸ்டைல்ஷீட்டில் பிழைகள் உள்ளன"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "சப்ரெட்டிட்"
@@ -4308,6 +4405,10 @@ msgstr "நீங்கள் தேடும் பக்கம் வேறு
 msgid "The password you entered is incorrect"
 msgstr "நீங்கள் உள்ளிட்ட கடவுச்சொல் தவறானது"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "சுயவிவர முன்னோட்டத்தைப் புதுப்பிக்க முடியவில்லை. கடைசியாகச் செல்லுபடியான முன்னோட்டம் இன்னும் காட்டப்படுகிறது."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "நீங்கள் அணுக முயற்சிக்கும் ரெஸ்யூமி கடவுச்சொல் பாதுகாப்புடன் உள்ளது"
@@ -4380,6 +4481,10 @@ msgstr "இந்த உள்ளீடு நிரந்தரமாக நீ
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "இந்த அம்சத்திற்கு இணைக்கப்பட்ட AI வழங்குநர் தேவைப்படுகிறது. அமைப்புகளில் ஒன்றை அமைக்கவும்."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "இந்த இன்ஸ்டன்ஸ் தற்போது செமாண்டிக் CSS திருத்தத்தை அனுமதிக்காது."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "அடைமுறை கோடு"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "செயல்தவிர்"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "ஸ்டைல்ஷீட் திருத்தத்தை செயல்தவிர்க்கவும்"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "உங்கள் தரவு பாதுகாப்பாக சே
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "உங்கள் சமீபத்திய மாற்றங்களைச் சேமிக்க முடியவில்லை."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "நீங்கள் இந்த செமாண்டிக் CSS வரைவை வெளிப்படையாகச் செயல்படுத்தும் வரை, உங்கள் மரபுப் பாணிகள் செயலில் இருக்கும்."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

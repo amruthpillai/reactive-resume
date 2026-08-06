@@ -1,7 +1,7 @@
 {
 	"name": "reactive-resume",
 	"description": "Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
-	"version": "5.2.3",
+	"version": "5.2.5",
 	"private": true,
 	"license": "MIT",
 	"author": {
@@ -13,7 +13,7 @@
 		"type": "git",
 		"url": "https://github.com/amruthpillai/reactive-resume.git"
 	},
-	"packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72",
+	"packageManager": "pnpm@11.18.0",
 	"workspaces": [
 		"apps/*",
 		"packages/*",
@@ -23,6 +23,7 @@
 		"build": "turbo run build",
 		"doctor": "turbo run doctor",
 		"check": "biome check --write --unsafe . && markdownlint-cli2 --fix && github-actionlint -shellcheck= -pyflakes=",
+		"docs:gen": "pnpm --filter server docs:gen && pnpm --filter @reactive-resume/tooling docs:gen",
 		"db:generate": "turbo run db:generate --filter=@reactive-resume/db",
 		"db:migrate": "turbo run db:migrate --filter=@reactive-resume/db",
 		"db:studio": "turbo run db:studio --filter=@reactive-resume/db",
@@ -41,10 +42,10 @@
 		"test:agent": "turbo run test:agent"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.5",
+		"@biomejs/biome": "^2.5.6",
 		"@commitlint/cli": "^21.2.1",
 		"@commitlint/config-conventional": "^21.2.0",
-		"@playwright/test": "^1.62.0",
+		"@playwright/test": "^1.62.1",
 		"@reactive-resume/config": "workspace:*",
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/jest-dom": "^7.0.0",
@@ -55,11 +56,11 @@
 		"@vitest/coverage-v8": "^4.1.10",
 		"github-actionlint": "1.7.12",
 		"happy-dom": "^20.11.1",
-		"knip": "^6.29.0",
+		"knip": "^6.31.0",
 		"lefthook": "^2.1.10",
 		"markdownlint-cli2": "0.23.2",
 		"pg": "^8.22.0",
-		"turbo": "^2.10.7",
+		"turbo": "^2.10.8",
 		"typescript": "^7.0.2",
 		"vitest": "^4.1.10"
 	}

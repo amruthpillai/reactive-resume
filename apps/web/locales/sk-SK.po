@@ -8,7 +8,7 @@ msgstr ""
 "Language: sk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Slovak\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -162,6 +162,10 @@ msgstr "Ponuka účtu"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Akcie"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Aktivovať sémantický CSS"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Žiadosti odoslané za týždeň (posledných 8 týždňov)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Odoslané"
 
@@ -492,6 +497,10 @@ msgstr "Aplikované dňa"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Použité pravidlá"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Použité s upozorneniami"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Skontroluj svoj e‑mail, nájdeš tam odkaz na obnovenie hesla."
 msgid "Check your email for a link to verify your account."
 msgstr "Skontroluj svoj e‑mail, nájdeš tam odkaz na overenie účtu."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Kontrola"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Kontrola konceptu"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Čínština (zjednodušená)"
@@ -966,6 +983,10 @@ msgstr "Konverzácia bola skopírovaná."
 msgid "Conversation JSON copied."
 msgstr "JSON konverzácie bol skopírovaný."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Konvertovaný koncept štýlového hárka"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Skopírované do schránky."
@@ -988,6 +1009,10 @@ msgstr "Skopírovať záložné kódy"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Kopírovať JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Kopírovať šablónu so štýlmi"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Upraviť {chip}"
 msgid "Edit application"
 msgstr "Upraviť aplikáciu"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Upraviť farbu {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Zadaj svoje heslo na potvrdenie nastavenia dvojfaktorového overenia. Po
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Zadaj svoje heslo na vypnutie dvojfaktorového overenia. Bez zapnutého 2FA bude tvoj účet menej zabezpečený."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Chyba"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Každý príspevok, veľký či malý, má pre projekt obrovský význam.<0/>Ďakujeme za tvoju podporu!"
@@ -1681,6 +1715,10 @@ msgstr "Každý príspevok, veľký či malý, má pre projekt obrovský význam
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Všetko, čo potrebuješ na vytvorenie, prispôsobenie a zdieľanie profesionálnych životopisov. Vytvorené s dôrazom na súkromie, poháňané open source a úplne zadarmo – navždy."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Ukončiť režim zaostrenia"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Zabudol si heslo?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Formát"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Formátovať štýlový hárok"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Svetlá"
 msgid "Light theme"
 msgstr "Svetlá téma"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Riadok {0}, stĺpec {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Riadkovanie"
@@ -2918,6 +2966,10 @@ msgstr "Nórčina"
 msgid "Not connected"
 msgstr "Nepripojené"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Nie ste si istí, čo napísať?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Otvorený asistent s umelou inteligenciou"
 msgid "Open Email Client"
 msgstr "Otvoriť e‑mailového klienta"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Otvoriť režim zaostrenia"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Otvoriť v editore"
@@ -2992,6 +3048,7 @@ msgstr "Kompatibilné s OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Stlačením tlačidla <0>Enter</0> otvoríte"
 msgid "Preview"
 msgstr "Náhľad"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Pri ukážke a exporte sa použije posledná platná verzia."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Hlavná farba"
@@ -3374,9 +3435,21 @@ msgstr "Reaktívny životopis v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktívny životopis v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Prečítajte si príručku Používanie vlastných štýlov."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Číta sa…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Pripravené na aktiváciu"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Pripravené na aktiváciu s upozorneniami"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Obdĺžnik (plná šírka)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Znovu"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Znovu upraviť štýlový hárok"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Obnoviť heslo"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Obnoviť štýl"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Obnoviť na použitý štýlový hárok"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "vybrané"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Vlastný hosting cez Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Sémantický CSS štýlový hárok"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Sémantické štýly zostávajú aktívne"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Prečiarknuté"
 msgid "Strong fit"
 msgstr "Silný strih"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Editor štýlov"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Štýlový hárok obsahuje chyby"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4405,10 @@ msgstr "Stránka, ktorú hľadáte, mohla byť presunutá alebo už neexistuje."
 msgid "The password you entered is incorrect"
 msgstr "Zadané heslo je nesprávne"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Ukážku životopisu sa nepodarilo aktualizovať. Stále sa zobrazuje posledná platná ukážka."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Životopis, ku ktorému sa snažíš pristúpiť, je chránený heslom"
@@ -4380,6 +4481,10 @@ msgstr "Tento záznam bude natrvalo odstránený. Túto akciu nie je možné vr�
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Táto funkcia vyžaduje pripojeného poskytovateľa umelej inteligencie. Nastavte si ho v nastaveniach."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Táto inštancia momentálne neumožňuje úpravu sémantického CSS."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Podčiarknuté"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Späť"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Vrátiť späť úpravu štýlového hárka"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Tvoje dáta sú bezpečne uložené a nikdy sa nezdieľajú s tretími s
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Vaše posledné zmeny sa nepodarilo uložiť."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Vaše staršie štýly zostanú aktívne, kým explicitne neaktivujete tento koncept sémantického CSS."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

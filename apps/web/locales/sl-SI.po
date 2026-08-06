@@ -8,7 +8,7 @@ msgstr ""
 "Language: sl\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Slovenian\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -162,6 +162,10 @@ msgstr "Meni računa"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Dejanja"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Aktiviraj semantični CSS"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Prijave, poslane na teden (zadnjih 8 tednov)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Prijavljeno"
 
@@ -492,6 +497,10 @@ msgstr "Uporabljeno na"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Uporabljena pravila"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Uporabljeno z opozorili"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Preverite svoj e-poštni naslov za povezavo za ponastavitev gesla."
 msgid "Check your email for a link to verify your account."
 msgstr "Preverite svoj e-poštni naslov za povezavo za potrditev računa."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Preverjanje"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Preverjanje osnutka"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Kitajščina (poenostavljena)"
@@ -966,6 +983,10 @@ msgstr "Pogovor je kopiran."
 msgid "Conversation JSON copied."
 msgstr "JSON pogovora je bil kopiran."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Pretvorjen osnutek slogovne predloge"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Kopirano v odložišče."
@@ -988,6 +1009,10 @@ msgstr "Kopiraj rezervne kode"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Kopiraj JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Kopiraj slogovno predlogo"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Uredi {chip}"
 msgid "Edit application"
 msgstr "Uredi aplikacijo"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Uredi barvo {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Vnesite svoje geslo, da potrdite nastavitev dvostopenjskega preverjanja 
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Vnesite svoje geslo za onemogočanje dvostopenjskega preverjanja pristnosti. Vaš račun bo brez omogočenega 2FA manj varen."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Napaka"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Vsak prispevek, velik ali majhen, veliko pomeni projektu.<0/>Hvala za vašo podporo!"
@@ -1681,6 +1715,10 @@ msgstr "Vsak prispevek, velik ali majhen, veliko pomeni projektu.<0/>Hvala za va
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Vse, kar potrebujete za ustvarjanje, prilagajanje in deljenje strokovnih življenjepisov. Zgrajeno z mislijo na zasebnost, temelji na odprti kodi in je popolnoma brezplačno za vedno."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Izhod iz načina ostrenja"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Ste pozabili svoje geslo?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Format"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Oblikovanje slogovne predloge"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Svetlo"
 msgid "Light theme"
 msgstr "Svetla tema"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Vrstica {0}, stolpec {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Višina vrstice"
@@ -2918,6 +2966,10 @@ msgstr "norveščina"
 msgid "Not connected"
 msgstr "Ni povezano"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Niste prepričani, kaj naj napišete?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Odprti pomočnik umetne inteligence"
 msgid "Open Email Client"
 msgstr "Odpri e-poštni odjemalec"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Odpri način ostrenja"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Odpri v graditelju"
@@ -2992,6 +3048,7 @@ msgstr "Združljivo z OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Pritisnite <0>Enter</0>, da odprete"
 msgid "Preview"
 msgstr "Predogled"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Predogled in izvoz uporabljata zadnjo veljavno različico."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Primarna barva"
@@ -3374,9 +3435,21 @@ msgstr "Reaktivni življenjepis v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktivni življenjepis v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Preberite vodnik Uporaba slogov po meri."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Branje ..."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Pripravljeno za aktivacijo"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Pripravljeno za aktivacijo z opozorili"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Pravokotnik (polna širina)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Ponovi"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Ponovi urejanje slogovne predloge"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Ponastavi geslo"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Ponastavi slog"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Ponastavi na uporabljeno slogovno predlogo"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "izbrano"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Lastno gostovanje z Dockerjem"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Semantični CSS slogovni predlog"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Semantični slogi ostajajo aktivni"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Prečrtano"
 msgid "Strong fit"
 msgstr "Močno prileganje"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Urejevalnik slogovnih predlog"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Slogovna predloga vsebuje napake"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Podreddit"
@@ -4308,6 +4405,10 @@ msgstr "Stran, ki jo iščete, je bila morda premaknjena ali pa ne obstaja več.
 msgid "The password you entered is incorrect"
 msgstr "Vnesli ste napačno geslo"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Predogleda življenjepisa ni bilo mogoče posodobiti. Še vedno je prikazan zadnji veljaven predogled."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Življenjepis, do katerega želite dostopati, je zaščiten z geslom"
@@ -4380,6 +4481,10 @@ msgstr "Ta vnos bo trajno izbrisan. Tega ni mogoče razveljaviti."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ta funkcija zahteva povezanega ponudnika umetne inteligence. Nastavite ga v nastavitvah."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Ta primerek trenutno ne dovoljuje urejanja semantičnega CSS-ja."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Podčrtano"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Razveljavi"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Razveljavi urejanje slogovne predloge"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Vaši podatki so varno shranjeni in se nikoli ne delijo s tretjimi oseba
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Vaših zadnjih sprememb ni bilo mogoče shraniti."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Vaši podedovani slogi ostanejo aktivni, dokler izrecno ne aktivirate tega osnutka semantičnega CSS-ja."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

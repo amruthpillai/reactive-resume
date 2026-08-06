@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "Hesap menüsü"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Eylemler"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Semantik CSS'i Etkinleştir"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Haftalık gönderilen başvurular (son 8 hafta)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Başvuruldu"
 
@@ -492,6 +497,10 @@ msgstr "Başvuru tarihi"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Uygulanan Kurallar"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Uyarılarla birlikte uygulandı."
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Şifrenizi sıfırlamak için bağlantı içeren e-postanızı kontrol e
 msgid "Check your email for a link to verify your account."
 msgstr "Hesabınızı doğrulamak için bağlantı içeren e-postanızı kontrol edin."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Kontrol Etme"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Taslağı kontrol etme"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Çince (Basitleştirilmiş)"
@@ -966,6 +983,10 @@ msgstr "Konuşma kopyalandı."
 msgid "Conversation JSON copied."
 msgstr "Konuşma JSON'u kopyalandı."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Dönüştürülmüş stil sayfası taslağı"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Panoya kopyalandı."
@@ -988,6 +1009,10 @@ msgstr "Yedekleme Kodlarını Kopyala"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON'u kopyala"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Stil sayfasını kopyala"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Düzenle {chip}"
 msgid "Edit application"
 msgstr "Başvuruyu düzenle"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Renk düzenleme {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "İki faktörlü kimlik doğrulamayı kurmayı onaylamak için şifrenizi
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "İki faktörlü kimlik doğrulamayı devre dışı bırakmak için şifrenizi girin. 2FA etkin olmadığında hesabınız daha az güvenli olur."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Hata"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Her katkı, büyük ya da küçük, projeye önemli bir katkı sağlar.<0/>Desteğiniz için teşekkürler!"
@@ -1681,6 +1715,10 @@ msgstr "Her katkı, büyük ya da küçük, projeye önemli bir katkı sağlar.<
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Profesyonel özgeçmişler oluşturmak, özelleştirmek ve paylaşmak için ihtiyacınız olan her şey. Gizlilik odaklı, açık kaynaklı ve sonsuza dek tamamen ücretsiz."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Odak modundan çık"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Şifrenizi mi unuttunuz?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Format"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Biçimlendirme stili sayfası"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Açık"
 msgid "Light theme"
 msgstr "Açık tema"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Satır {0}, sütun {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Satır Yüksekliği"
@@ -2918,6 +2966,10 @@ msgstr "Norveççe"
 msgid "Not connected"
 msgstr "Bağlı değil"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Ne yazacağınızdan emin değil misiniz?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Açık yapay zeka asistanı"
 msgid "Open Email Client"
 msgstr "E-posta İstemcisini Aç"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Açık odak modu"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Yapıcıda aç"
@@ -2992,6 +3048,7 @@ msgstr "OpenAI uyumlu"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Açmak için <0>Enter</0> tuşuna basın"
 msgid "Preview"
 msgstr "Önizleme"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Önizleme ve dışa aktarma işlemleri için en son geçerli sürüm kullanılır."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Birincil Renk"
@@ -3374,9 +3435,21 @@ msgstr "Reaktif Özgeçmiş v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktif Özgeçmiş v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Özel Stilleri Uygulama kılavuzunu okuyun."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Okunuyor…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Etkinleştirmeye hazır"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Uyarılarla birlikte etkinleştirmeye hazır."
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Dikdörtgen (Tam Genişlik)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Tekrarla"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Stil sayfası düzenlemesini yeniden yap"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Şifreyi Sıfırla"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Stili Sıfırla"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Uygulanan stil sayfasına sıfırla"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "seçildi"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Docker ile kendi kendine barındırma"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Anlamsal CSS stil sayfası"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Semantik stiller aktif kalmaya devam ediyor."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Üstü Çizili"
 msgid "Strong fit"
 msgstr "Güçlü uyum"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Stil sayfası düzenleyici"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Stil dosyasında hatalar var."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Alt Reddit"
@@ -4308,6 +4405,10 @@ msgstr "Aradığınız sayfa taşınmış olabilir veya artık mevcut olmayabili
 msgid "The password you entered is incorrect"
 msgstr "Girdiğiniz şifre yanlış"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Özgeçmiş önizlemesi güncellenemedi. Son geçerli önizleme hala gösteriliyor."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Erişmeye çalıştığınız özgeçmiş şifre korumalıdır"
@@ -4380,6 +4481,10 @@ msgstr "Bu girdi kalıcı olarak silinecek. Bu işlem geri alınamaz."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Bu özellik için bağlantılı bir yapay zeka sağlayıcısı gereklidir. Lütfen ayarlardan bir tane kurun."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Bu örnek şu anda Semantik CSS düzenlemesine izin vermiyor."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Altı Çizili"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Geri al"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Stil sayfası düzenlemesini geri al"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Verileriniz güvenli bir şekilde saklanır ve asla üçüncü partilerl
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Son değişiklikleriniz kaydedilemedi."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Eski stilleriniz, bu Semantik CSS taslağını açıkça etkinleştirene kadar aktif kalacaktır."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

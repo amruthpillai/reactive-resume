@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -162,6 +162,10 @@ msgstr "Meniul Cont"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Acțiuni"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Activează CSS-ul semantic"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Candidaturi trimise pe săptămână (ultimele 8 săptămâni)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Candidatură trimisă"
 
@@ -492,6 +497,10 @@ msgstr "Aplicat pe"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Reguli aplicate"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Aplicat cu avertismente"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Verificați-vă e-mailul pentru un link de resetare a parolei."
 msgid "Check your email for a link to verify your account."
 msgstr "Verificați-vă e-mailul pentru un link de verificare a contului."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Control"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Verificare schiță"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Chineză (simplificată)"
@@ -966,6 +983,10 @@ msgstr "Conversație copiată."
 msgid "Conversation JSON copied."
 msgstr "JSON-ul conversației a fost copiat."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Schiță de foaie de stil convertită"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Copiat în clipboard."
@@ -988,6 +1009,10 @@ msgstr "Copiază codurile de rezervă"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Copiază JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Copiați foaia de stil"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Editează {chip}"
 msgid "Edit application"
 msgstr "Editați aplicația"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Editează culoarea {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Introduceți parola pentru a confirma configurarea autentificării cu do
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Introduceți parola pentru a dezactiva autentificarea cu doi factori. Contul va fi mai puțin sigur fără 2FA activat."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Eroare"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Fiecare contribuție, mare sau mică, face o diferență uriașă pentru proiect.<0/>Vă mulțumim pentru sprijin!"
@@ -1681,6 +1715,10 @@ msgstr "Fiecare contribuție, mare sau mică, face o diferență uriașă pentru
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Tot ce aveți nevoie pentru a crea, personaliza și partaja CV-uri profesionale. Construit având confidențialitatea în minte, bazat pe open source și complet gratuit pentru totdeauna."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Ieșiți din modul de focalizare"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "V-ați uitat parola?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Format"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Foaie de stil de format"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Deschisă"
 msgid "Light theme"
 msgstr "Temă deschisă"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Linia {0}, coloana {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Înălțimea liniei"
@@ -2918,6 +2966,10 @@ msgstr "Norvegiană"
 msgid "Not connected"
 msgstr "Neconectat"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Nu ești sigur ce să scrii?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Asistent AI deschis"
 msgid "Open Email Client"
 msgstr "Deschide clientul de e-mail"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Deschide modul de focalizare"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Deschide în constructor"
@@ -2992,6 +3048,7 @@ msgstr "Compatibil cu OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Apăsați <0>Enter</0> pentru a deschide"
 msgid "Preview"
 msgstr "Previzualizare"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Previzualizarea și exportarea utilizează ultima versiune validă."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Culoare primară"
@@ -3374,9 +3435,21 @@ msgstr "CV reactiv v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "CV reactiv v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Citiți ghidul Aplicarea stilurilor personalizate."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Lectură…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Gata de activare"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Gata de activare cu avertismente"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Dreptunghi (lățime completă)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Refaceți"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Refaceți editarea foii de stil"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Resetați parola"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Resetare stil"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Resetare la foaia de stil aplicată"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "selectat"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Self-host cu Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Foaie de stil CSS semantică"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Stilurile semantice rămân active"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Tăiat"
 msgid "Strong fit"
 msgstr "Potrivire puternică"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Editor de foi de stil"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Foaia de stil conține erori"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4405,10 @@ msgstr "Pagina pe care o căutați s-ar putea să fi fost mutată sau să nu mai
 msgid "The password you entered is incorrect"
 msgstr "Parola introdusă este incorectă"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Previzualizarea CV-ului nu a putut fi actualizată. Ultima previzualizare validă este încă afișată."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "CV-ul la care încercați să accesați este protejat prin parolă"
@@ -4380,6 +4481,10 @@ msgstr "Această intrare va fi ștearsă definitiv. Această acțiune nu poate f
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Această funcție necesită un furnizor de inteligență artificială conectat. Vă rugăm să configurați unul în setări."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Această instanță nu permite în prezent editarea CSS semantică."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Subliniat"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Anula"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Anulează editarea foii de stil"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Datele dvs. sunt stocate în siguranță și nu sunt niciodată partajat
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Ultimele modificări ale dvs. nu au putut fi salvate."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Stilurile tale vechi rămân active până când activezi explicit această schiță CSS semantică."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

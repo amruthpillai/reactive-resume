@@ -8,7 +8,7 @@ msgstr ""
 "Language: ms\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Malay\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -162,6 +162,10 @@ msgstr "Menu akaun"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Tindakan"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Aktifkan CSS Semantik"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Permohonan dihantar setiap minggu (8 minggu lepas)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Dimohon"
 
@@ -492,6 +497,10 @@ msgstr "Digunakan pada"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Peraturan yang Digunakan"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Digunakan dengan amaran"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Semak e-mel anda untuk pautan bagi menetapkan semula kata laluan anda."
 msgid "Check your email for a link to verify your account."
 msgstr "Semak e-mel anda untuk pautan bagi mengesahkan akaun anda."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Memeriksa"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Memeriksa draf"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Cina (Ringkas)"
@@ -966,6 +983,10 @@ msgstr "Perbualan disalin."
 msgid "Conversation JSON copied."
 msgstr "JSON perbualan disalin."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Draf helaian gaya yang ditukar"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Disalin ke papan keratan."
@@ -988,6 +1009,10 @@ msgstr "Salin Kod Sandaran"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Salin JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Salin helaian gaya"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Sunting {chip}"
 msgid "Edit application"
 msgstr "Edit aplikasi"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Sunting warna {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Masukkan kata laluan anda untuk mengesahkan penyediaan pengesahan dua fa
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Masukkan kata laluan anda untuk melumpuhkan pengesahan dua faktor. Akaun anda akan menjadi kurang selamat tanpa 2FA diaktifkan."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Ralat"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Setiap sumbangan, besar atau kecil, memberi perbezaan besar kepada projek ini.<0/>Terima kasih atas sokongan anda!"
@@ -1681,6 +1715,10 @@ msgstr "Setiap sumbangan, besar atau kecil, memberi perbezaan besar kepada proje
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Segala yang anda perlukan untuk mencipta, menyesuaikan dan berkongsi resume profesional. Dibina dengan mengambil kira privasi, dikuasakan oleh sumber terbuka dan benar-benar percuma selama-lamanya."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Keluar dari mod fokus"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Lupa kata laluan anda?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Format"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Helaian gaya format"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Cerah"
 msgid "Light theme"
 msgstr "Tema cerah"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Baris {0}, lajur {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Tinggi Baris"
@@ -2918,6 +2966,10 @@ msgstr "Norwegian"
 msgid "Not connected"
 msgstr "Tidak bersambung"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Tidak pasti apa yang perlu ditulis?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Pembantu AI terbuka"
 msgid "Open Email Client"
 msgstr "Buka Klien E-mel"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Mod fokus terbuka"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Buka dalam pembina"
@@ -2992,6 +3048,7 @@ msgstr "Serasi dengan OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Tekan <0>Enter</0> untuk membuka"
 msgid "Preview"
 msgstr "Pratonton"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Pratonton dan eksport gunakan versi terakhir yang sah."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Warna Utama"
@@ -3374,9 +3435,21 @@ msgstr "Resume Reaktif v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktif Resume v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Baca panduan Menggunakan Gaya Tersuai."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Membaca…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Bersedia untuk diaktifkan"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Bersedia untuk diaktifkan dengan amaran"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Segi empat tepat (Lebar Penuh)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Buat semula"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Buat semula suntingan helaian gaya"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Tetapkan Semula Kata Laluan"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Tetapkan Semula Gaya"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Tetapkan semula kepada helaian gaya yang digunakan"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "dipilih"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Hos Sendiri dengan Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Helaian gaya CSS semantik"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Gaya semantik kekal aktif"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Coret"
 msgid "Strong fit"
 msgstr "Kuat sesuai"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Editor helaian gaya"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Helaian gaya mempunyai ralat"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4405,10 @@ msgstr "Halaman yang anda cari mungkin telah dipindahkan atau tidak lagi wujud."
 msgid "The password you entered is incorrect"
 msgstr "Kata laluan yang anda masukkan adalah tidak betul"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Pratonton resume tidak dapat dikemas kini. Pratonton sah terakhir masih dipaparkan."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Resume yang anda cuba akses dilindungi kata laluan"
@@ -4380,6 +4481,10 @@ msgstr "Entri ini akan dipadam secara kekal. Ini tidak boleh dibuat asal."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ciri ini memerlukan penyedia AI yang disambungkan. Sila sediakan satu dalam tetapan."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Keadaan ini pada masa ini tidak membenarkan pengeditan CSS Semantik."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Garis Bawah"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Buat asal"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Buat asal suntingan helaian gaya"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Data anda disimpan dengan selamat dan tidak pernah dikongsi dengan pihak
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Perubahan terkini anda tidak dapat disimpan."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Gaya legasi anda kekal aktif sehingga anda mengaktifkan draf CSS Semantik ini secara eksplisit."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

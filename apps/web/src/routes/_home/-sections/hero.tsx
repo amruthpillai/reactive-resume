@@ -29,15 +29,15 @@ export function Hero() {
 					<video
 						loop
 						muted
-						autoPlay
+						controls
 						playsInline
+						preload="none"
 						width={1146}
 						height={720}
-						src="/videos/timelapse.mp4"
+						poster="/videos/timelapse-v1.webp"
+						src="/videos/timelapse-v1.mp4"
 						aria-label={t`Timelapse demonstration of building a resume with Reactive Resume`}
-						// Reserve the intrinsic aspect ratio so the box height is known before the video
-						// metadata loads — otherwise it reflows the centered hero column and causes CLS (~0.10).
-						className="pointer-events-none aspect-[1146/720] w-full rounded-md border object-cover"
+						className="aspect-[1146/720] w-full rounded-md border object-cover"
 					/>
 
 					<div

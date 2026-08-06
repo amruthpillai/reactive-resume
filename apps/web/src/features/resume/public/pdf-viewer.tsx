@@ -1,4 +1,6 @@
+import type { PublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { SemanticStylesheet } from "@reactive-resume/schema/resume/stylesheet";
 import type { PDFDocumentLoadingTask, PDFDocumentProxy } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { AnnotationMode, GlobalWorkerOptions, getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { EventBus, LinkTarget, PDFLinkService, PDFViewer } from "pdfjs-dist/legacy/web/pdf_viewer.mjs";
@@ -6,6 +8,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
+import { resolvePublicResumePdfBlob } from "./public-pdf";
 import "pdfjs-dist/legacy/web/pdf_viewer.css";
 import "./pdf-viewer.css";
 
@@ -14,6 +17,13 @@ GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
+	stylesheetMode?: SemanticStylesheet["mode"];
+	styleProjection?: PublicStyleProjection;
+	refetchStyleProjection?: () => Promise<PublicStyleProjection | undefined>;
+	publicResume?: {
+		username: string;
+		slug: string;
+	};
 };
 
 type PdfViewerOptions = ConstructorParameters<typeof PDFViewer>[0] & {
@@ -67,11 +77,21 @@ function pdfViewerReducer(state: PdfViewerState, action: PdfViewerAction): PdfVi
 	}
 }
 
-export function PdfViewer({ className, data }: PdfViewerProps) {
+export function PdfViewer({
+	className,
+	data,
+	stylesheetMode,
+	styleProjection,
+	refetchStyleProjection,
+	publicResume,
+}: PdfViewerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewerRef = useRef<HTMLDivElement>(null);
 	const fileRef = useRef<Blob | null>(null);
+	const projectionRetryRef = useRef<{ data?: ResumeData; publicKey?: string; retried: boolean }>({
+		retried: false,
+	});
 	const [{ error, fileVersion, isReady, viewerHeight }, dispatch] = useReducer(
 		pdfViewerReducer,
 		INITIAL_PDF_VIEWER_STATE,
@@ -83,7 +103,29 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 		fileRef.current = null;
 		dispatch({ type: "resetForData" });
 
-		void createResumePdfBlob(data)
+		const createPdf = () => {
+			if (!stylesheetMode || !publicResume) return createResumePdfBlob(data);
+			const publicKey = `${publicResume.username}/${publicResume.slug}`;
+			if (projectionRetryRef.current.data !== data || projectionRetryRef.current.publicKey !== publicKey) {
+				projectionRetryRef.current = { data, publicKey, retried: false };
+			}
+			const retryProjection =
+				refetchStyleProjection && !projectionRetryRef.current.retried
+					? () => {
+							projectionRetryRef.current.retried = true;
+							return refetchStyleProjection();
+						}
+					: undefined;
+			return resolvePublicResumePdfBlob({
+				data,
+				stylesheetMode,
+				publicResume,
+				...(styleProjection ? { styleProjection } : {}),
+				...(retryProjection ? { refetchStyleProjection: retryProjection } : {}),
+			});
+		};
+
+		void createPdf()
 			.then((blob) => {
 				if (isCancelled) return;
 
@@ -100,7 +142,7 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 		return () => {
 			isCancelled = true;
 		};
-	}, [data]);
+	}, [data, publicResume, refetchStyleProjection, styleProjection, stylesheetMode]);
 
 	useEffect(() => {
 		void fileVersion;

@@ -8,7 +8,7 @@ msgstr ""
 "Language: lv\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Latvian\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
@@ -162,6 +162,10 @@ msgstr "Konta izvēlne"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Darbības"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Aktivizēt semantisko CSS"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Nedēļā nosūtītie pieteikumi (pēdējās 8 nedēļas)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Pieteikts"
 
@@ -492,6 +497,10 @@ msgstr "Pieteikts"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Piemērotie noteikumi"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Pielietots ar brīdinājumiem"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Pārbaudiet savu e-pastu, lai atrastu saiti paroles atiestatīšanai."
 msgid "Check your email for a link to verify your account."
 msgstr "Pārbaudiet savu e-pastu, lai atrastu saiti konta verifikācijai."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Pārbaude"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Melnraksta pārbaude"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "Ķīniešu (vienkāršotā)"
@@ -966,6 +983,10 @@ msgstr "Saruna nokopēta."
 msgid "Conversation JSON copied."
 msgstr "Sarunas JSON fails ir nokopēts."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Konvertēts stila lapas melnraksts"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Nokopēts starpliktuvē."
@@ -988,6 +1009,10 @@ msgstr "Kopēt rezerves kodus"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Kopēt JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Kopēt stila lapu"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Rediģēt {chip}"
 msgid "Edit application"
 msgstr "Rediģēt pieteikumu"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Rediģēt krāsu {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Ievadiet savu paroli, lai apstiprinātu divu faktoru autentifikācijas i
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Ievadiet savu paroli, lai deaktivētu divu faktoru autentifikāciju. Bez ieslēgtas 2FA jūsu konts būs mazāk drošs."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Kļūda"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Katrs ieguldījums, liels vai mazs, projektam ir milzīgi nozīmīgs.<0/>Paldies par jūsu atbalstu!"
@@ -1681,6 +1715,10 @@ msgstr "Katrs ieguldījums, liels vai mazs, projektam ir milzīgi nozīmīgs.<0/
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Viss, kas jums nepieciešams, lai izveidotu, pielāgotu un kopīgotu profesionālus CV. Veidots, domājot par privātumu, darbināms ar atvērtā pirmkoda risinājumiem un pilnīgi bez maksas uz visiem laikiem."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Iziet no fokusa režīma"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Aizmirsāt paroli?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Formāts"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Stilu lapas formatēšana"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Gaišs"
 msgid "Light theme"
 msgstr "Gaišā tēma"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Rinda {0}, kolonna {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Rindu augstums"
@@ -2918,6 +2966,10 @@ msgstr "Norvēģu"
 msgid "Not connected"
 msgstr "Nav izveidots savienojums"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Neesat pārliecināts, ko rakstīt?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Atvērt AI palīgu"
 msgid "Open Email Client"
 msgstr "Atvērt e-pasta klientu"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Atvērtā fokusa režīms"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Atvērt veidotājā"
@@ -2992,6 +3048,7 @@ msgstr "OpenAI saderīgs"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Nospiediet <0>Enter</0>, lai atvērtu"
 msgid "Preview"
 msgstr "Priekšskatījums"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Priekšskatījumā un eksportā tiek izmantota pēdējā derīgā versija."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Primārā krāsa"
@@ -3374,9 +3435,21 @@ msgstr "Reaktīvs CV v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reactive Resume v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Izlasiet rokasgrāmatu Pielāgotu stilu lietošana."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Lasa…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Gatavs aktivizēšanai"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Gatavs aktivizēšanai ar brīdinājumiem"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Taisnstūris (pilns platums)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Atkārtot"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Atkārtoti veikt stila lapas rediģēšanu"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Atiestatīt paroli"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Atiestatīt stilu"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Atiestatīt uz lietoto stila lapu"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "atlasīts"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Pašhostēšana ar Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Semantiskā CSS stila lapa"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Semantiskie stili paliek aktīvi"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Pārsvītrot"
 msgid "Strong fit"
 msgstr "Spēcīga atbilstība"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Stilu lapu redaktors"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Stilu lapā ir kļūdas"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddits"
@@ -4308,6 +4405,10 @@ msgstr "Iespējams, ka meklētā lapa ir pārvietota vai vairs nepastāv."
 msgid "The password you entered is incorrect"
 msgstr "Ievadītā parole ir nepareiza"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "CV priekšskatījumu nevarēja atjaunināt. Joprojām tiek rādīts pēdējais derīgais priekšskatījums."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "CV, kam mēģināt piekļūt, ir aizsargāts ar paroli"
@@ -4380,6 +4481,10 @@ msgstr "Šis ieraksts tiks neatgriezeniski dzēsts. To nevar atsaukt."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Šai funkcijai ir nepieciešams pievienots mākslīgā intelekta pakalpojumu sniedzējs. Lūdzu, iestatiet to iestatījumos."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Šajā instancē pašlaik nav atļauta semantiskās CSS rediģēšana."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Pasvītrot"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Atsaukt"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Atsaukt stila lapas rediģēšanu"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Jūsu dati tiek glabāti droši un nekad netiek kopīgoti ar trešajām 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Jūsu jaunākās izmaiņas nevarēja saglabāt."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Jūsu mantotie stili paliek aktīvi, līdz jūs skaidri aktivizējat šo semantiskās CSS melnrakstu."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

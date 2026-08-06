@@ -1,9 +1,12 @@
-import { createSampleResumeData } from "@reactive-resume/schema/resume/sample";
-import { generateRandomName, slugify } from "@reactive-resume/utils/string";
+import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { generateId, generateRandomName, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
+import { parseStoredResumeData } from "./resume-data-validation";
 import { resumeService } from "./service";
+import { prepareImportedResumeData } from "./stylesheet-preflight";
+import { createResumeData } from "./stylesheet-preservation";
 
 export const crudRouter = {
 	list: protectedProcedure
@@ -69,7 +72,11 @@ export const crudRouter = {
 				tags: input.tags,
 				locale: context.locale,
 				userId: context.user.id,
-				...(input.withSampleData ? { data: createSampleResumeData(input.name) } : {}),
+				data: createResumeData({
+					withSampleData: input.withSampleData,
+					name: input.name,
+					locale: context.locale,
+				}),
 			}),
 		),
 
@@ -92,16 +99,32 @@ export const crudRouter = {
 				message: "A resume with this slug already exists.",
 				status: 400,
 			},
+			SEMANTIC_STYLESHEET_UNAVAILABLE: {
+				message: "Semantic stylesheet PDF preflight is unavailable.",
+				status: 503,
+			},
+			STYLESHEET_VALIDATION_FAILED: {
+				message: "The imported stylesheet failed validation.",
+				status: 400,
+			},
 		})
 		.handler(async ({ context, input }) => {
+			const id = generateId();
+			const data = await prepareImportedResumeData({
+				data: resumeDataSchema.parse(input.data),
+				resumeId: id,
+				revision: 0,
+				...(context.stylesheetPreflightRunner ? { runner: context.stylesheetPreflightRunner } : {}),
+			});
 			const name = generateRandomName();
 			const slug = slugify(name);
 
-			const id = await resumeService.create({
+			await resumeService.create({
+				id,
 				name,
 				slug,
 				tags: [],
-				data: input.data,
+				data,
 				locale: context.locale,
 				userId: context.user.id,
 			});
@@ -110,7 +133,7 @@ export const crudRouter = {
 			await resumeService.versions.snapshot({
 				resumeId: id,
 				userId: context.user.id,
-				data: input.data,
+				data,
 				label: "Imported",
 			});
 
@@ -220,6 +243,7 @@ export const crudRouter = {
 		.output(resumeDto.duplicate.output)
 		.handler(async ({ context, input }) => {
 			const original = await resumeService.getById({ id: input.id, userId: context.user.id });
+			const data = parseStoredResumeData(original.data);
 
 			return resumeService.create({
 				userId: context.user.id,
@@ -227,7 +251,7 @@ export const crudRouter = {
 				slug: input.slug ?? original.slug,
 				tags: input.tags ?? original.tags,
 				locale: context.locale,
-				data: original.data,
+				data,
 			});
 		}),
 

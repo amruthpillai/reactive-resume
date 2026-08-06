@@ -56,6 +56,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Run Server and Tooling Tests
+        run: pnpm exec turbo run test:ci --filter=server --filter=@reactive-resume/tooling
+
       - name: Install Playwright Browser
         run: pnpm exec playwright install --with-deps chromium
 
@@ -73,8 +76,11 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Run E2E Tests
-        run: pnpm test:e2e:ci
+      - name: Run Baseline E2E Tests
+        run: pnpm exec playwright test --grep-invert "@semantic-css"
+
+      - name: Run Semantic CSS Acceptance
+        run: pnpm exec playwright test tests/e2e/specs/semantic-css
 
       - name: Upload Playwright Report
         if: always()

@@ -3,8 +3,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { Fragment, useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import {
 	CustomFieldContactItem,
@@ -17,7 +19,15 @@ import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticContactRowView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -45,19 +55,26 @@ type ChikoritaHeaderProps = {
 	styles: ChikoritaStyles;
 };
 
-export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: TemplatePageProps) => {
+export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata, picture } = data;
 	const { colors, styles } = useChikoritaTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
 	const hasPicture = hasTemplatePicture(picture);
-	const sidebarSections = filterSections(page.sidebar, data);
-	const mainSections = filterSections(page.main, data);
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors}>
-				<View
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
+				<SemanticRegionView
+					region="main"
 					style={composeStyles(styles.mainColumn, {
 						paddingTop: metrics.page.paddingVertical,
 						paddingRight: page.fullWidth ? metrics.page.paddingHorizontal : metrics.columnGap,
@@ -71,9 +88,10 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader }
 					{mainSections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
-				</View>
+				</SemanticRegionView>
 
-				<View
+				<SemanticRegionView
+					region="sidebar"
 					style={composeStyles(styles.sidebarColumn, {
 						display: page.fullWidth ? "none" : "flex",
 						flexBasis: `${metadata.layout.sidebarWidth}%`,
@@ -92,7 +110,7 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader }
 							<Section section={section} placement="sidebar" />
 						</Fragment>
 					))}
-				</View>
+				</SemanticRegionView>
 			</TemplateProvider>
 		</Page>
 	);
@@ -103,8 +121,8 @@ const Header = ({ styles }: ChikoritaHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
+		<SemanticHeaderView style={styles.header}>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
@@ -112,22 +130,22 @@ const Header = ({ styles }: ChikoritaHeaderProps) => {
 					<Text>{basics.headline}</Text>
 				</View>
 
-				<View style={styles.headerContactList}>
-					<View style={styles.headerContactRow}>
+				<SemanticContactListView style={styles.headerContactList}>
+					<SemanticContactRowView partKey="contact-row-primary" style={styles.headerContactRow}>
 						<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 						<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
 						<LocationContactItem location={basics.location} style={styles.headerContactItem} />
-					</View>
+					</SemanticContactRowView>
 
-					<View style={styles.headerContactRow}>
+					<SemanticContactRowView partKey="contact-row-secondary" style={styles.headerContactRow}>
 						<WebsiteContactItem website={basics.website} style={styles.headerContactItem} />
 						{basics.customFields.map((field) => (
 							<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 						))}
-					</View>
-				</View>
+					</SemanticContactRowView>
+				</SemanticContactListView>
 			</View>
-		</View>
+		</SemanticHeaderView>
 	);
 };
 

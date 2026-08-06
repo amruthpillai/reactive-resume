@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-27 18:56\n"
+"PO-Revision-Date: 2026-07-30 14:30\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "Tilivalikko"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Toiminnot"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Aktivoi semanttinen CSS"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Lähetetyt hakemukset viikoittain (viimeiset 8 viikkoa)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Haettu"
 
@@ -492,6 +497,10 @@ msgstr "Haettu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Applied Rules"
 msgstr "Sovelletut säännöt"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Käytetty varoituksilla"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -800,6 +809,14 @@ msgstr "Tarkista sähköpostisi linkin löytämiseksi salasanan palauttamiseksi.
 msgid "Check your email for a link to verify your account."
 msgstr "Tarkista sähköpostisi linkin löytämiseksi tilisi vahvistamiseksi."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Tarkistetaan"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Luonnoksen tarkistaminen"
+
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
 msgstr "kiina (yksinkertaistettu)"
@@ -966,6 +983,10 @@ msgstr "Keskustelu kopioitu."
 msgid "Conversation JSON copied."
 msgstr "Keskustelun JSON-tiedosto kopioitu."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Muunnettu tyylitiedoston luonnos"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Kopioitu leikepöydälle."
@@ -988,6 +1009,10 @@ msgstr "Kopioi varmuuskoodit"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Kopioi JSON"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Kopioi tyylitiedosto"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1545,6 +1570,11 @@ msgstr "Muokkaa {chip}"
 msgid "Edit application"
 msgstr "Muokkaa hakemusta"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Muokkaa väriä {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1674,6 +1704,10 @@ msgstr "Syötä salasanasi vahvistaaksesi kaksivaiheisen todennuksen käyttöön
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Syötä salasanasi poistaaksesi kaksivaiheisen todennuksen käytöstä. Tilisi on vähemmän suojattu ilman 2FA:ta."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Virhe"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Jokainen panos, suuri tai pieni, vaikuttaa valtavasti projektiin.<0/>Kiitos tuestasi!"
@@ -1681,6 +1715,10 @@ msgstr "Jokainen panos, suuri tai pieni, vaikuttaa valtavasti projektiin.<0/>Kii
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Kaikki, mitä tarvitset ammattimaisen ansioluettelon luomiseen, mukauttamiseen ja jakamiseen. Rakennettu yksityisyys edellä, avoimen lähdekoodin voimin ja täysin ilmainen ikuisesti."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Poistu tarkennustilasta"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -2000,6 +2038,10 @@ msgstr "Unohditko salasanasi?"
 msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Muoto"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Muotoile tyylitiedosto"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
@@ -2584,6 +2626,12 @@ msgstr "Vaalea"
 msgid "Light theme"
 msgstr "Vaalea teema"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Rivi {0}, sarake {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Riviväli"
@@ -2918,6 +2966,10 @@ msgstr "norja"
 msgid "Not connected"
 msgstr "Ei yhdistetty"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Etkö ole varma, mitä kirjoittaa?"
+
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -2968,6 +3020,10 @@ msgstr "Avoin tekoälyavustaja"
 msgid "Open Email Client"
 msgstr "Avaa sähköpostiohjelma"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Avoin tarkennustila"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Avaa rakentajassa"
@@ -2992,6 +3048,7 @@ msgstr "OpenAI-yhteensopiva"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3267,6 +3324,10 @@ msgstr "Paina <0>Enter</0> avataksesi"
 msgid "Preview"
 msgstr "Esikatselu"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Esikatsele ja vie käyttämällä viimeisintä kelvollista versiota."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Pääväri"
@@ -3374,9 +3435,21 @@ msgstr "Reaktiivinen ansioluettelo v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktiivinen ansioluettelo v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Lue opas Mukautettujen tyylien käyttäminen."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Luetaan…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Valmis aktivoitavaksi"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Valmis aktivoitavaksi varoituksilla"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3393,6 +3466,10 @@ msgstr "Suorakulmio (täysi leveys)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Tee uudelleen"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Tee tyylitiedoston muokkaus uudelleen"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3494,6 +3571,10 @@ msgstr "Palauta salasana"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
 msgid "Reset Style"
 msgstr "Palauta tyyli"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Palauta käytettyyn tyylitiedostoon"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3790,6 +3871,14 @@ msgstr "valittu"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Itse-isännöinti Dockerilla"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Semanttinen CSS-tyylitiedosto"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Semantic styles remain active"
+msgstr "Semanttiset tyylit pysyvät aktiivisina"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4152,6 +4241,14 @@ msgstr "Yliviivaus"
 msgid "Strong fit"
 msgstr "Vahva sopivuus"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Tyylitiedostoeditori"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Tyylitiedostossa on virheitä"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4308,6 +4405,10 @@ msgstr "Etsimäsi sivu on ehkä siirretty tai sitä ei enää ole."
 msgid "The password you entered is incorrect"
 msgstr "Syöttämäsi salasana on virheellinen"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Ansioluettelon esikatselua ei voitu päivittää. Viimeisin kelvollinen esikatselu näkyy edelleen."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Ansioluettelo, johon yrität päästä, on salasanalla suojattu"
@@ -4380,6 +4481,10 @@ msgstr "Tämä merkintä poistetaan pysyvästi. Tätä ei voi kumota."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Tämä ominaisuus vaatii yhdistetyn tekoälypalveluntarjoajan. Määritä sellainen asetuksissa."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "This instance does not currently allow Semantic CSS editing."
+msgstr "Tämä instanssi ei tällä hetkellä salli semanttisen CSS:n muokkausta."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -4638,6 +4743,10 @@ msgstr "Alleviivaus"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Kumoa"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Kumoa tyylitiedoston muokkaus"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
@@ -5012,6 +5121,10 @@ msgstr "Tietosi tallennetaan turvallisesti eikä niitä koskaan jaeta kolmansill
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
 msgstr "Viimeisimpiä muutoksiasi ei voitu tallentaa."
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Vanhat tyylisi pysyvät aktiivisina, kunnes aktivoit tämän semanttisen CSS-luonnoksen erikseen."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."

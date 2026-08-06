@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
+import { refreshStylesheetStore } from "@/features/resume/stylesheet/store";
 import { orpc, streamClient } from "@/libs/orpc/client";
 
 export type Resume = {
@@ -25,7 +26,7 @@ export type Resume = {
 };
 
 // Mirrors the server-side ResumeUpdatedEvent discriminator (packages/api resume/events.ts).
-type ResumeUpdateMutation = "sync" | "create" | "update" | "patch" | "lock" | "password" | "delete";
+type ResumeUpdateMutation = "sync" | "create" | "update" | "patch" | "lock" | "password" | "delete" | "stylesheet";
 type ResumeUpdateEvent = { mutation: ResumeUpdateMutation };
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -114,7 +115,8 @@ export function isEditableElementFocused(): boolean {
 		element.tagName === "INPUT" ||
 		element.tagName === "TEXTAREA" ||
 		element.tagName === "SELECT" ||
-		element.isContentEditable
+		element.isContentEditable ||
+		element.closest(".cm-editor") !== null
 	);
 }
 
@@ -614,9 +616,14 @@ export function useBuilderResumeUpdateSubscription() {
 			if (!resumeId) return;
 
 			bindRuntimeQueryClient(resumeId, queryClient);
+			if (event.mutation === "stylesheet") {
+				await refreshStylesheetStore(resumeId);
+				return;
+			}
 			const resume = (await orpc.resume.getById.call({ id: resumeId })) as Resume;
 
 			queryClient.setQueryData(getResumeQueryKey(resumeId), resume);
+			await refreshStylesheetStore(resumeId, resume.data);
 
 			if (hasPendingLocalChanges(resumeId)) {
 				useResumeStore.getState().mergeResumeMetadata(resume);

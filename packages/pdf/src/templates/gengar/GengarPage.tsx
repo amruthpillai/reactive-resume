@@ -3,8 +3,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { Fragment, useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import { getPrimaryTint } from "../shared/color-helpers";
 import {
@@ -19,7 +21,15 @@ import { getFeaturedSummaryLayout } from "../shared/featured-summary";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionTemplatePartView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -51,14 +61,16 @@ type GengarHeaderProps = {
 	colors: TemplateColorRoles;
 };
 
-export const GengarPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: TemplatePageProps) => {
+export const GengarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles } = useGengarTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
 	const showSidebar = !page.fullWidth || showHeader;
-	const sidebarSections = filterSections(page.sidebar, data);
-	const mainSections = filterSections(page.main, data);
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
 	const { featuredSummarySection, regularSections: regularMainSections } = getFeaturedSummaryLayout({
 		sections: mainSections,
 		canFeatureSummary: showHeader,
@@ -68,8 +80,12 @@ export const GengarPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: T
 		: sidebarSections;
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showSidebar && (
 					<View
 						style={composeStyles(styles.sidebarColumn, {
@@ -79,29 +95,33 @@ export const GengarPage = ({ page, pageSize, pageMinHeightStyle, showHeader }: T
 						{showHeader && <Header styles={styles} colors={colors} />}
 
 						{!page.fullWidth && (
-							<View style={styles.sidebarContent}>
+							<SemanticRegionView region="sidebar" style={styles.sidebarContent}>
 								{regularSidebarSections.map((section) => (
 									<Fragment key={section}>
 										<Section section={section} placement="sidebar" />
 									</Fragment>
 								))}
-							</View>
+							</SemanticRegionView>
 						)}
 					</View>
 				)}
 
 				<View style={styles.mainColumn}>
 					{featuredSummarySection && (
-						<View style={styles.specialContainer}>
+						<SemanticRegionTemplatePartView
+							region="featured"
+							partKeys={["featured-summary"]}
+							style={styles.specialContainer}
+						>
 							<Section section={featuredSummarySection} placement="main" showHeading={false} />
-						</View>
+						</SemanticRegionTemplatePartView>
 					)}
 
-					<View style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
 						{regularMainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -113,8 +133,8 @@ const Header = ({ styles, colors }: GengarHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
+		<SemanticHeaderView style={styles.header}>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
@@ -123,7 +143,7 @@ const Header = ({ styles, colors }: GengarHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.contactList}>
+			<SemanticContactListView style={styles.contactList}>
 				<EmailContactItem
 					email={basics.email}
 					style={styles.contactItem}
@@ -157,8 +177,8 @@ const Header = ({ styles, colors }: GengarHeaderProps) => {
 						iconColor={colors.background}
 					/>
 				))}
-			</View>
-		</View>
+			</SemanticContactListView>
+		</SemanticHeaderView>
 	);
 };
 
