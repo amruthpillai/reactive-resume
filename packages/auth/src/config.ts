@@ -32,7 +32,18 @@ const isRateLimitEnabled = process.env.NODE_ENV === "production" && !env.FLAG_DI
 // publicly-visible URL — under Docker port-mapping or behind a reverse proxy
 // it does not loop back to the app process. Override with `BETTER_AUTH_INTERNAL_URL`
 // for split deployments or custom servers that bind to a port not exposed via `PORT`.
-const internalBaseUrl = process.env.BETTER_AUTH_INTERNAL_URL ?? `http://127.0.0.1:${process.env.PORT ?? "3000"}`;
+function resolveInternalBaseUrl(): string {
+	const configured = process.env.BETTER_AUTH_INTERNAL_URL?.trim();
+	if (configured) {
+		return configured.replace(/\/+$/, "");
+	}
+
+	const port = process.env.NODE_ENV === "production" ? (process.env.PORT ?? "3000") : String(env.SERVER_PORT);
+
+	return `http://127.0.0.1:${port}`;
+}
+
+const internalBaseUrl = resolveInternalBaseUrl();
 
 const oauthAudienceBase = authBaseUrl.replace(/\/$/, "");
 const OAUTH_AUDIENCES = [

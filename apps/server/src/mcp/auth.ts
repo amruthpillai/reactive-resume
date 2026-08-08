@@ -1,5 +1,21 @@
 import { auth, verifyOAuthToken } from "@reactive-resume/auth/config";
 
+const OAUTH_WARN_THROTTLE_MS = 60_000;
+let lastOAuthWarnAt = 0;
+
+function warnOAuthThrottled(message: string, detail?: unknown): void {
+	const now = Date.now();
+	if (now - lastOAuthWarnAt < OAUTH_WARN_THROTTLE_MS) return;
+	lastOAuthWarnAt = now;
+
+	if (detail !== undefined) {
+		console.warn(message, detail);
+		return;
+	}
+
+	console.warn(message);
+}
+
 export class AuthError extends Error {
 	constructor() {
 		super("Unauthorized");
@@ -13,9 +29,9 @@ export async function authenticateRequest(request: Request): Promise<void> {
 		try {
 			const payload = await verifyOAuthToken(authHeader.slice(7));
 			if (payload?.sub) return;
-			console.warn("[MCP] OAuth token verified but missing `sub` claim");
+			warnOAuthThrottled("[MCP] OAuth token verified but missing `sub` claim");
 		} catch (error) {
-			console.warn("[MCP] OAuth token verification failed:", error);
+			warnOAuthThrottled("[MCP] OAuth token verification failed:", error);
 		}
 	}
 
