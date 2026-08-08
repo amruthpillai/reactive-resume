@@ -182,7 +182,7 @@ describe("getPdfFallbackFontFamilies", () => {
 		]);
 	});
 
-	it("returns only the Simplified Chinese font for zh-CN (unchanged behavior)", () => {
+	it("uses the Simplified Chinese font and punctuation fallback for zh-CN", () => {
 		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-CN" })).toEqual(["Noto Serif SC", "Noto Serif"]);
 	});
 
