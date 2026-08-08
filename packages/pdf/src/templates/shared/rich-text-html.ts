@@ -165,9 +165,9 @@ export const normalizeRichTextHtml = (
 	unwrapSingleParagraphListItems(root);
 
 	const flushInlineNodes = () => {
-		const inlineHtml = inlineNodes.join("").trim();
+		const inlineHtml = inlineNodes.join("");
 
-		if (inlineHtml) normalized.push(`<p>${inlineHtml}</p>`);
+		if (inlineHtml.trim()) normalized.push(`<p>${inlineHtml}</p>`);
 
 		inlineNodes = [];
 	};

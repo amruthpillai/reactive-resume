@@ -29,6 +29,11 @@ describe("normalizeRichTextHtml", () => {
 		);
 	});
 
+	it("preserves whitespace moved outside top-level bold tags", () => {
+		expect(normalizeRichTextHtml("<strong>Built </strong>")).toBe("<p><strong>Built</strong> </p>");
+		expect(normalizeRichTextHtml("<strong> Built</strong>")).toBe("<p> <strong>Built</strong></p>");
+	});
+
 	it.each(["&nbsp;", "&#160;", "&#xA0;"])(
 		"moves encoded non-breaking spaces outside bold boundaries: %s",
 		(whitespace) => {
