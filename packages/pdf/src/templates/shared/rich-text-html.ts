@@ -69,11 +69,14 @@ const isMeaningfulNode = (node: Node): boolean =>
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
 
+const LEADING_BOLD_BOUNDARY_WHITESPACE = /^(?:[\u0020\u00a0]|&nbsp;|&#160;|&#xA0;)+/i;
+const TRAILING_BOLD_BOUNDARY_WHITESPACE = /(?:[\u0020\u00a0]|&nbsp;|&#160;|&#xA0;)+$/i;
+
 const normalizeBoldBoundaryWhitespace = (root: ReturnType<typeof parse>) => {
 	for (const bold of root.querySelectorAll("strong,b").reverse()) {
 		const firstChild = bold.childNodes[0];
 		if (firstChild?.nodeType === NodeType.TEXT_NODE) {
-			const whitespace = firstChild.rawText.match(/^[\u0020\u00a0]+/)?.[0];
+			const whitespace = firstChild.rawText.match(LEADING_BOLD_BOUNDARY_WHITESPACE)?.[0];
 			if (whitespace) {
 				firstChild.rawText = firstChild.rawText.slice(whitespace.length);
 				bold.insertAdjacentHTML("beforebegin", whitespace);
@@ -82,7 +85,7 @@ const normalizeBoldBoundaryWhitespace = (root: ReturnType<typeof parse>) => {
 
 		const lastChild = bold.childNodes[bold.childNodes.length - 1];
 		if (lastChild?.nodeType === NodeType.TEXT_NODE) {
-			const whitespace = lastChild.rawText.match(/[\u0020\u00a0]+$/)?.[0];
+			const whitespace = lastChild.rawText.match(TRAILING_BOLD_BOUNDARY_WHITESPACE)?.[0];
 			if (whitespace) {
 				lastChild.rawText = lastChild.rawText.slice(0, -whitespace.length);
 				bold.insertAdjacentHTML("afterend", whitespace);

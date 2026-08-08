@@ -29,6 +29,18 @@ describe("normalizeRichTextHtml", () => {
 		);
 	});
 
+	it.each(["&nbsp;", "&#160;", "&#xA0;"])(
+		"moves encoded non-breaking spaces outside bold boundaries: %s",
+		(whitespace) => {
+			expect(normalizeRichTextHtml(`<p>Built<strong>${whitespace}and deployed</strong></p>`)).toBe(
+				`<p>Built${whitespace}<strong>and deployed</strong></p>`,
+			);
+			expect(normalizeRichTextHtml(`<p><strong>Built${whitespace}</strong>and deployed</p>`)).toBe(
+				`<p><strong>Built</strong>${whitespace}and deployed</p>`,
+			);
+		},
+	);
+
 	it("preserves > characters inside quoted bold-tag attributes", () => {
 		expect(normalizeRichTextHtml('<p>Built<strong title="1 > 0"> and deployed</strong></p>')).toBe(
 			'<p>Built <strong title="1 > 0">and deployed</strong></p>',
