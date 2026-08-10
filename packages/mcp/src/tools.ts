@@ -159,32 +159,39 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 		}),
 	);
 
-	// ── Download Resume PDF ────────��──────────────────────────────
+	// ── Download Resume or Cover Letter PDF ───────────────────────
 	server.registerTool(
 		T.downloadResumePdf,
 		TOOL_META[T.downloadResumePdf],
-		withErrorHandling("creating PDF download URL", async ({ id }: { id: string }) => {
-			const resume = await client.resume.getById({ id });
-			const user = await resolveUserFromRequestHeaders(requestHeaders);
-			if (!user) throw new Error("Unauthorized");
+		withErrorHandling(
+			"creating PDF download URL",
+			async ({ id, target }: { id: string; target?: "resume" | "cover-letter" }) => {
+				const resume = await client.resume.getById({ id });
+				const user = await resolveUserFromRequestHeaders(requestHeaders);
+				if (!user) throw new Error("Unauthorized");
 
-			const signedUrl = createResumePdfDownloadUrl({ resumeId: id, userId: user.id });
+				const documentTarget = target ?? "resume";
+				const signedUrl = createResumePdfDownloadUrl(
+					target === "cover-letter" ? { resumeId: id, userId: user.id, target } : { resumeId: id, userId: user.id },
+				);
 
-			return text(
-				JSON.stringify(
-					{
-						resumeId: id,
-						name: resume.name,
-						downloadUrl: signedUrl.url,
-						expiresAt: signedUrl.expiresAt,
-						expiresInSeconds: signedUrl.expiresInSeconds,
-						contentType: "application/pdf",
-					},
-					null,
-					2,
-				),
-			);
-		}),
+				return text(
+					JSON.stringify(
+						{
+							resumeId: id,
+							target: documentTarget,
+							name: documentTarget === "cover-letter" ? `${resume.name} Cover Letter` : resume.name,
+							downloadUrl: signedUrl.url,
+							expiresAt: signedUrl.expiresAt,
+							expiresInSeconds: signedUrl.expiresInSeconds,
+							contentType: "application/pdf",
+						},
+						null,
+						2,
+					),
+				);
+			},
+		),
 	);
 
 	// ── Create Resume ─────────────────────────────────────────────

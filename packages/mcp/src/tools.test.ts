@@ -116,8 +116,40 @@ describe("registerTools", () => {
 		expect(mocks.createResumePdfDownloadUrl).toHaveBeenCalledWith({ resumeId: "resume-1", userId: "user-1" });
 		expect(payload).toEqual({
 			resumeId: "resume-1",
+			target: "resume",
 			name: "Scizor",
 			downloadUrl: "https://example.com/api/resumes/resume-1/pdf?token=signed",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+			expiresInSeconds: 600,
+			contentType: "application/pdf",
+		});
+	});
+
+	it("creates a cover-letter PDF URL and reports cover-letter metadata", async () => {
+		clientMock.resume.getById.mockResolvedValueOnce({ id: "resume-1", name: "Scizor" });
+		mocks.resolveUserFromRequestHeaders.mockResolvedValueOnce({ id: "user-1" });
+		mocks.createResumePdfDownloadUrl.mockReturnValueOnce({
+			url: "https://example.com/api/resumes/resume-1/pdf?token=signed&target=cover-letter",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+			expiresInSeconds: 600,
+		});
+
+		const { server, registered } = makeFakeServer();
+		registerTools(server as never, clientMock as never, new Headers());
+
+		const tool = registered.find((item) => item.name === "download_resume_pdf")!;
+		const result = await tool.handler({ id: "resume-1", target: "cover-letter" });
+
+		expect(mocks.createResumePdfDownloadUrl).toHaveBeenCalledWith({
+			resumeId: "resume-1",
+			userId: "user-1",
+			target: "cover-letter",
+		});
+		expect(JSON.parse(result.content[0]!.text)).toEqual({
+			resumeId: "resume-1",
+			target: "cover-letter",
+			name: "Scizor Cover Letter",
+			downloadUrl: "https://example.com/api/resumes/resume-1/pdf?token=signed&target=cover-letter",
 			expiresAt: "2026-06-01T10:10:00.000Z",
 			expiresInSeconds: 600,
 			contentType: "application/pdf",

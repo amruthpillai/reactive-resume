@@ -215,6 +215,7 @@ Tool names use canonical unprefixed `snake_case` names.
 | `list_resume_tags`      | List every distinct tag in use across your resumes (sorted)                                                                        |
 | `read_resume`           | Get the full data of a specific resume by ID                                                                                       |
 | `get_resume_analysis`   | Get the latest saved AI analysis for a resume (from the web app), if any                                                           |
+| `download_resume_pdf`   | Create a 10-minute authenticated PDF download URL. Defaults to the resume; set `target: "cover-letter"` for its visible cover letter |
 | `create_resume`         | Create a new, empty resume with a name and slug. Optionally pre-fill with sample data                                              |
 | `import_resume`         | Create a resume from a full ResumeData JSON export (random name/slug). Large files may exceed client limits                        |
 | `duplicate_resume`      | Create a copy of an existing resume with a new name and slug                                                                       |
@@ -311,6 +312,8 @@ For a complete workflow and prompt library, see [Managing applications with MCP]
 - "Make my resume public and give me the share link"
 - "Lock my finalized resume so it can't be accidentally edited"
 - "Delete my old draft resume"
+- "Download a PDF of my Software Engineer resume"
+- "Download the visible cover letter from my Software Engineer resume as a PDF"
 
 ### Editing
 

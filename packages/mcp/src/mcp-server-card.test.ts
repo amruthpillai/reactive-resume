@@ -40,6 +40,8 @@ describe("buildMcpServerCard", () => {
 		expect(tool?.description).toContain("short-lived");
 		expect(tool?.description).toContain("10 minutes");
 		expect(tool?.annotations?.readOnlyHint).toBe(true);
+		const properties = tool?.inputSchema.properties as Record<string, { enum?: string[]; default?: string }>;
+		expect(properties.target).toMatchObject({ enum: ["resume", "cover-letter"], default: "resume" });
 	});
 
 	it("advertises application tracker tools", () => {

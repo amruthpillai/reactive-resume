@@ -137,12 +137,20 @@ export const TOOL_META = {
 	[T.downloadResumePdf]: {
 		title: "Download Resume PDF",
 		description: [
-			"Create a short-lived authenticated URL for downloading a resume as a PDF.",
+			"Create a short-lived authenticated URL for downloading a resume or its visible cover letter as a PDF.",
 			"The URL expires in 10 minutes and should be used immediately.",
-			"Returns JSON containing: resumeId, name, downloadUrl, expiresAt, expiresInSeconds, contentType.",
+			"Set target to `cover-letter` to export the visible cover letter separately; omit it (or use `resume`) for the resume.",
+			"Returns JSON containing: resumeId, target, name, downloadUrl, expiresAt, expiresInSeconds, contentType.",
 			`Use \`${T.listResumes}\` first to find valid IDs.`,
 		].join("\n"),
-		inputSchema: z.object({ id: resumeIdSchema }),
+		inputSchema: z.object({
+			id: resumeIdSchema,
+			target: z
+				.enum(["resume", "cover-letter"])
+				.optional()
+				.default("resume")
+				.describe("Document to export. Default: resume."),
+		}),
 		annotations: TOOL_ANNOTATIONS[T.downloadResumePdf],
 	},
 	[T.createResume]: {
