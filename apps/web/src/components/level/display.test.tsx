@@ -46,12 +46,12 @@ describe("LevelDisplay", () => {
 		expect(wrapper.querySelector("i")?.className).toContain("ph-star");
 	});
 
-	it("dims inactive icons for icon type", () => {
+	it("fills active icons for icon type", () => {
 		const { container } = render(<LevelDisplay type="icon" icon="star" level={1} />);
 		const wrapper = container.firstChild as HTMLElement;
 		const icons = wrapper.querySelectorAll("i");
-		expect(icons[0]?.className).not.toContain("opacity-40");
-		expect(icons[4]?.className).toContain("opacity-40");
+		expect(icons[0]?.className).toContain("ph-fill");
+		expect(icons[4]?.className).not.toContain("ph-fill");
 	});
 
 	it("renders square segments for circle/rectangle/rectangle-full types", () => {

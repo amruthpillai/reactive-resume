@@ -11,7 +11,7 @@ import {
 	useSemanticNodeVisible,
 } from "../../semantic/context";
 import { semanticNodeKeys } from "../../semantic/node-keys";
-import { useSectionStyleRule, useTemplateIconSlot, useTemplateStyle } from "./context";
+import { useSectionStyleRule, useTemplateStyle } from "./context";
 import { resolveStyleFontSize } from "./icon-size";
 import { getTemplateMetrics } from "./metrics";
 import { Icon } from "./primitives";
@@ -32,7 +32,6 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 	const { resolveNode, isNodeVisible } = useSemanticNodeBindings();
 	const levelDesign = data.metadata.design.level;
 	const metrics = getTemplateMetrics(data.metadata.page);
-	const iconProps = useTemplateIconSlot("icon");
 	const levelContainerStyle = useTemplateStyle("levelContainer");
 	const levelItemStyle = useTemplateStyle("levelItem");
 	const levelItemActiveStyle = useTemplateStyle("levelItemActive");
@@ -44,7 +43,10 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 		iconFontSize: resolveStyleFontSize(iconRuleStyle),
 		levelFontSize: resolveStyleFontSize(levelRuleStyle, resolved.style),
 	});
-	const color = typeof iconProps.color === "string" ? iconProps.color : "#000000";
+	const color =
+		levelItemActiveStyle && "backgroundColor" in levelItemActiveStyle
+			? levelItemActiveStyle.backgroundColor
+			: "#000000";
 
 	if (level === 0 || !visible) return null;
 	if (levelDesign.type === "hidden") return null;
@@ -83,7 +85,8 @@ export const LevelDisplay = ({ level }: LevelDisplayProps) => {
 							nodeKey={decorationNodeKey}
 							{...(levelIconExplicitSize === undefined ? {} : { size: levelIconExplicitSize })}
 							name={levelDesign.icon as IconName}
-							style={{ opacity: isActive ? 1 : 0.35 }}
+							weight={isActive ? "fill" : "regular"}
+							color={color}
 						/>
 					);
 				}

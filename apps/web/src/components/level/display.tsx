@@ -69,7 +69,7 @@ export function LevelDisplay({ icon, type, level, className, decorationSizePx, i
 								"ph text-(--page-primary-color)",
 								resolvedIconSizePx === undefined && defaultDecorationClassName,
 								`ph-${icon}`,
-								!isActive && "opacity-40",
+								isActive && "ph-fill",
 							)}
 						/>
 					);
