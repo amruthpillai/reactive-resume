@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
@@ -10,11 +11,33 @@ import { useDialogStore } from "@/dialogs/store";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 
 const navigate = vi.hoisted(() => vi.fn());
+// Stands in for the navigation TanStack Router performs from inside <Link>. Keeping it separate
+// from `navigate` lets a test tell "the router took us away" apart from "the dialog took us away".
+const routerNavigate = vi.hoisted(() => vi.fn());
+
+type MockLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+	to: string;
+	children: ReactNode;
+};
 
 vi.mock("@tanstack/react-router", () => ({
 	useNavigate: () => navigate,
-	Link: ({ to, children, ...props }: { to: string; children: React.ReactNode }) => (
-		<a href={to} {...props}>
+	// Mirrors the part of <Link> this fix depends on: the router handles the click and navigates
+	// unless something already prevented the default. Without that, a missing preventDefault() in
+	// the dialog would go unnoticed here.
+	Link: ({ to, children, onClick, ...props }: MockLinkProps) => (
+		<a
+			href={to}
+			onClick={(event) => {
+				onClick?.(event);
+
+				if (event.defaultPrevented) return;
+				if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+				routerNavigate({ to });
+			}}
+			{...props}
+		>
 			{children}
 		</a>
 	),
@@ -37,8 +60,19 @@ beforeAll(() => {
 
 afterEach(() => {
 	navigate.mockReset();
-	useDialogStore.setState({ open: true, activeDialog: null, onBeforeClose: null });
+	routerNavigate.mockReset();
 });
+
+// Drive `open` from the store the way DialogManager does, so closing the dialog actually unmounts it.
+function DialogHarness() {
+	const open = useDialogStore((state) => state.open);
+
+	return (
+		<Dialog open={open}>
+			<ImportResumeDialog />
+		</Dialog>
+	);
+}
 
 const renderDialog = () => {
 	useDialogStore.setState({ open: true, activeDialog: null, onBeforeClose: null });
@@ -47,9 +81,7 @@ const renderDialog = () => {
 		<I18nProvider i18n={i18n}>
 			<QueryClientProvider client={new QueryClient()}>
 				<ConfirmDialogProvider>
-					<Dialog open>
-						<ImportResumeDialog />
-					</Dialog>
+					<DialogHarness />
 				</ConfirmDialogProvider>
 			</QueryClientProvider>
 		</I18nProvider>,
@@ -79,8 +111,9 @@ describe("ImportResumeDialog — Set up a provider", () => {
 		fireEvent.click(link);
 
 		expect(await screen.findByText("Leave to set up an AI provider?")).toBeInTheDocument();
+		expect(routerNavigate).not.toHaveBeenCalled();
 		expect(navigate).not.toHaveBeenCalled();
-		expect(useDialogStore.getState().open).toBe(true);
+		expect(screen.getByText("Import an existing resume")).toBeInTheDocument();
 	});
 
 	it("stays put and keeps the selected file when the user cancels", async () => {
@@ -94,6 +127,7 @@ describe("ImportResumeDialog — Set up a provider", () => {
 			expect(screen.queryByText("Leave to set up an AI provider?")).not.toBeInTheDocument();
 		});
 
+		expect(routerNavigate).not.toHaveBeenCalled();
 		expect(navigate).not.toHaveBeenCalled();
 		expect(useDialogStore.getState().open).toBe(true);
 		expect(screen.getByText("resume.pdf")).toBeInTheDocument();
@@ -111,6 +145,9 @@ describe("ImportResumeDialog — Set up a provider", () => {
 		});
 
 		expect(useDialogStore.getState().open).toBe(false);
+		await waitFor(() => {
+			expect(screen.queryByText("Set up a provider")).not.toBeInTheDocument();
+		});
 	});
 
 	it("leaves modifier clicks to the browser so the link can open in a new tab", async () => {
@@ -118,6 +155,18 @@ describe("ImportResumeDialog — Set up a provider", () => {
 		const link = await selectPdfFile();
 
 		const event = new MouseEvent("click", { bubbles: true, cancelable: true, metaKey: true });
+		fireEvent(link, event);
+
+		expect(event.defaultPrevented).toBe(false);
+		expect(screen.queryByText("Leave to set up an AI provider?")).not.toBeInTheDocument();
+		expect(navigate).not.toHaveBeenCalled();
+	});
+
+	it("leaves middle clicks to the browser too", async () => {
+		renderDialog();
+		const link = await selectPdfFile();
+
+		const event = new MouseEvent("click", { bubbles: true, cancelable: true, button: 1 });
 		fireEvent(link, event);
 
 		expect(event.defaultPrevented).toBe(false);
