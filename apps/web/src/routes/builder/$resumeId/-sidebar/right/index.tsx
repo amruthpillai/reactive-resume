@@ -9,6 +9,7 @@ import { Copyright } from "@/components/ui/copyright";
 import { getSectionIcon, getSectionTitle, rightSidebarSections } from "@/libs/resume/section";
 import { BuilderSidebarEdge } from "../../-components/edge";
 import { useBuilderSidebar } from "../../-store/sidebar";
+import { AtsCheckSectionBuilder } from "./sections/ats-check";
 import { CustomStylesSectionBuilder } from "./sections/custom-styles";
 import { DesignSectionBuilder } from "./sections/design";
 import { ExportSectionBuilder } from "./sections/export";
@@ -33,6 +34,7 @@ function getSectionComponent(type: RightSidebarSection) {
 		.with("notes", () => <NotesSectionBuilder />)
 		.with("sharing", () => <SharingSectionBuilder />)
 		.with("statistics", () => <StatisticsSectionBuilder />)
+		.with("ats", () => <AtsCheckSectionBuilder />)
 		.with("analysis", () => <ResumeAnalysisSectionBuilder />)
 		.with("export", () => <ExportSectionBuilder />)
 		.with("information", () => <InformationSectionBuilder />)
