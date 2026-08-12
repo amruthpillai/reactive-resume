@@ -27,6 +27,7 @@ import { Input } from "@reactive-resume/ui/components/input";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { Combobox } from "@/components/ui/combobox";
 import { useHasUsableAiProvider } from "@/features/settings/integrations/hooks/use-has-usable-ai-provider";
+import { useConfirm } from "@/hooks/use-confirm";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc } from "@/libs/orpc/client";
@@ -120,6 +121,7 @@ async function detectImportType(file: File): Promise<ImportType> {
 }
 
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
+	const confirm = useConfirm();
 	const navigate = useNavigate();
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 
@@ -247,6 +249,31 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 
 	// #6: only warn about unsaved changes once a file has actually been chosen — not on a bare type selection.
 	useFormBlocker(form, { shouldBlock: () => Boolean(file) });
+
+	// The provider link navigates away while this dialog stays mounted over the new page, so the
+	// unsaved-changes guard (which only runs on a close attempt) fires far too late. Confirm first,
+	// then close and navigate ourselves.
+	const onSetUpProvider = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+		// Modifier and middle clicks open a new tab: the user is not leaving this page, so let the
+		// browser handle the link and keep the dialog exactly as it is.
+		if (event.defaultPrevented || event.button !== 0) return;
+		if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+		event.preventDefault();
+
+		if (file) {
+			const confirmed = await confirm(t`Leave to set up an AI provider?`, {
+				description: t`You'll be taken to the Integrations page. The file you selected won't be imported.`,
+				confirmText: t`Leave`,
+				cancelText: t`Stay`,
+			});
+
+			if (!confirmed) return;
+		}
+
+		closeDialog();
+		await navigate({ to: "/dashboard/settings/integrations" });
+	};
 
 	return (
 		<DialogContent>
@@ -388,7 +415,11 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 							size="sm"
 							variant="secondary"
 							nativeButton={false}
-							render={<Link to="/dashboard/settings/integrations">{t`Set up a provider`}</Link>}
+							render={
+								<Link to="/dashboard/settings/integrations" onClick={onSetUpProvider}>
+									{t`Set up a provider`}
+								</Link>
+							}
 						/>
 					</div>
 				)}
