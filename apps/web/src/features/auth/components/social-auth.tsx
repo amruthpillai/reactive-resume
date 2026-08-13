@@ -11,23 +11,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { authClient } from "@/libs/auth/client";
 import { orpc } from "@/libs/orpc/client";
 
-type SocialAuthProps = {
-	requestSignUp?: boolean;
-};
-
-type SocialSignInOptions = {
-	provider: string;
-	callbackURL: string;
-	requestSignUp?: true;
-};
-
-function getSocialSignInOptions(provider: string, requestSignUp: boolean): SocialSignInOptions {
-	const options: SocialSignInOptions = { provider, callbackURL: "/dashboard" };
-	if (requestSignUp) options.requestSignUp = true;
-	return options;
-}
-
-export function SocialAuth({ requestSignUp = false }: SocialAuthProps) {
+export function SocialAuth() {
 	const { data: providers = {}, isLoading } = useQuery(orpc.auth.providers.list.queryOptions());
 
 	return (
@@ -42,7 +26,7 @@ export function SocialAuth({ requestSignUp = false }: SocialAuthProps) {
 				<hr className="flex-1" />
 			</div>
 
-			{isLoading ? <SocialAuthSkeleton /> : <SocialAuthButtons providers={providers} requestSignUp={requestSignUp} />}
+			{isLoading ? <SocialAuthSkeleton /> : <SocialAuthButtons providers={providers} />}
 		</>
 	);
 }
@@ -60,10 +44,9 @@ function SocialAuthSkeleton() {
 
 type SocialAuthButtonsProps = {
 	providers: RouterOutput["auth"]["providers"]["list"];
-	requestSignUp: boolean;
 };
 
-function SocialAuthButtons({ providers, requestSignUp }: SocialAuthButtonsProps) {
+function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 	const router = useRouter();
 
 	const runSignIn = async (fn: () => Promise<{ error: { message?: string } | null }>) => {
@@ -112,7 +95,7 @@ function SocialAuthButtons({ providers, requestSignUp }: SocialAuthButtonsProps)
 			</Button>
 
 			<Button
-				onClick={() => runSignIn(() => authClient.signIn.social(getSocialSignInOptions("google", requestSignUp)))}
+				onClick={() => runSignIn(() => authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" }))}
 				className={cn(
 					"hidden flex-1 bg-[#4285F4] text-white hover:bg-[#4285F4]/80",
 					"google" in providers && "inline-flex",
@@ -123,7 +106,7 @@ function SocialAuthButtons({ providers, requestSignUp }: SocialAuthButtonsProps)
 			</Button>
 
 			<Button
-				onClick={() => runSignIn(() => authClient.signIn.social(getSocialSignInOptions("github", requestSignUp)))}
+				onClick={() => runSignIn(() => authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" }))}
 				className={cn(
 					"hidden flex-1 bg-[#2b3137] text-white hover:bg-[#2b3137]/80",
 					"github" in providers && "inline-flex",
@@ -134,7 +117,7 @@ function SocialAuthButtons({ providers, requestSignUp }: SocialAuthButtonsProps)
 			</Button>
 
 			<Button
-				onClick={() => runSignIn(() => authClient.signIn.social(getSocialSignInOptions("linkedin", requestSignUp)))}
+				onClick={() => runSignIn(() => authClient.signIn.social({ provider: "linkedin", callbackURL: "/dashboard" }))}
 				className={cn(
 					"hidden flex-1 bg-[#0A66C2] text-white hover:bg-[#0A66C2]/80",
 					"linkedin" in providers && "inline-flex",
