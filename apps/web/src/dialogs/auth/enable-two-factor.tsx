@@ -254,6 +254,12 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 									<div className="flex items-center gap-x-2">
 										<Input readOnly value={secret} className="font-mono text-sm" />
 										<Button size="icon" variant="ghost" type="button" onClick={handleCopySecret}>
+											<span className="sr-only">
+												{t({
+													comment: "Accessible label for the button that copies the two-factor secret key",
+													message: "Copy secret",
+												})}
+											</span>
 											<CopyIcon />
 										</Button>
 									</div>

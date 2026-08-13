@@ -3,7 +3,7 @@ import type {
 	PdfPreflightResult,
 	StylesheetPreflightInput,
 } from "@reactive-resume/pdf/preflight";
-import { parentPort, workerData } from "node:worker_threads";
+import { parentPort } from "node:worker_threads";
 import * as React from "react";
 import { inspectPreflightPdf } from "./stylesheet-preflight-inspection";
 
@@ -14,7 +14,12 @@ type StylesheetPreflightWorkerLimits = PdfPreflightPageLimits & {
 	maxBytes: number;
 };
 
-type StylesheetPreflightWorkerData = {
+// The worker is long-lived and reused across requests: the heavy PDF runtime is
+// loaded once at startup and each preflight arrives as a message (input can no
+// longer come from `workerData`, which is fixed at construction time).
+type StylesheetPreflightWorkerRequest = {
+	type: "preflight";
+	requestId: number;
 	input: StylesheetPreflightInput;
 	limits: StylesheetPreflightWorkerLimits;
 };
@@ -23,10 +28,6 @@ type SerializedPreflightCause = {
 	name: string;
 	message: string;
 	issues: readonly unknown[];
-};
-
-const send = (result: PdfPreflightResult) => {
-	parentPort?.postMessage(result);
 };
 
 const sanitizeWorkerCause = (cause: unknown): string => {
@@ -43,31 +44,47 @@ const serializeZodCause = (cause: unknown): SerializedPreflightCause | undefined
 	return { name: cause.name, message: cause.message, issues: cause.issues };
 };
 
+// Load the heavy PDF runtime once. A rejection here (missing/broken dependency in
+// a pruned production install) is reported explicitly instead of becoming an
+// unhandled rejection that silently kills the worker and surfaces as an opaque
+// runner-side failure.
 const initialization = import("@reactive-resume/pdf/preflight");
-void initialization.then(() => parentPort?.postMessage({ type: "ready" }));
 
-async function run(): Promise<PdfPreflightResult> {
-	const { renderPreflightPdf } = await initialization;
-	const { input, limits } = workerData as StylesheetPreflightWorkerData;
-	const rendered = await renderPreflightPdf(input, limits);
-	return rendered.ok ? inspectPreflightPdf(rendered, limits) : rendered;
-}
+void initialization.then(
+	() => parentPort?.postMessage({ type: "ready" }),
+	(cause: unknown) => {
+		console.error("[stylesheet-preflight] worker runtime failed to load", cause);
+		parentPort?.postMessage({ type: "load_error", message: sanitizeWorkerCause(cause) });
+	},
+);
 
-if (parentPort) {
-	void run()
-		.then(send)
-		.catch((cause: unknown) => {
-			const serializedCause = serializeZodCause(cause);
-			if (serializedCause) {
-				parentPort?.postMessage({ type: "preflight_error", cause: serializedCause });
-				return;
-			}
-			console.error("[stylesheet-preflight]", cause);
-			send({
+const handle = async (request: StylesheetPreflightWorkerRequest): Promise<void> => {
+	try {
+		const { renderPreflightPdf } = await initialization;
+		const rendered = await renderPreflightPdf(request.input, request.limits);
+		const result: PdfPreflightResult = rendered.ok ? await inspectPreflightPdf(rendered, request.limits) : rendered;
+		parentPort?.postMessage({ type: "result", requestId: request.requestId, result });
+	} catch (cause) {
+		const serializedCause = serializeZodCause(cause);
+		if (serializedCause) {
+			parentPort?.postMessage({ type: "preflight_error", requestId: request.requestId, cause: serializedCause });
+			return;
+		}
+		console.error("[stylesheet-preflight]", cause);
+		parentPort?.postMessage({
+			type: "result",
+			requestId: request.requestId,
+			result: {
 				ok: false,
 				code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
 				message: sanitizeWorkerCause(cause),
 				diagnostics: [],
-			});
+			},
 		});
-}
+	}
+};
+
+parentPort?.on("message", (message: StylesheetPreflightWorkerRequest) => {
+	if (message.type !== "preflight") return;
+	void handle(message);
+});

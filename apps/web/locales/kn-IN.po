@@ -8,7 +8,7 @@ msgstr ""
 "Language: kn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Kannada\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -493,10 +493,6 @@ msgstr "ಅರ್ಜಿಸಲಾಗಿದೆ"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "ಅರ್ಜಿ ಸಲ್ಲಿಸಿದ ದಿನಾಂಕ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "ಅನ್ವಯವಾಗುವ ನಿಯಮಗಳು"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "ಬ್ಯಾಕಪ್ ಕೋಡ್‌ಗಳನ್ನು ನಕಲಿಸ�
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON ನಕಲಿಸಿ"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "ರಹಸ್ಯವನ್ನು ನಕಲಿಸಿ"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "ಇನ್ನೂ ಯಾವುದೇ ಉಳಿಸಿದ ಆವೃತ್ತ
 msgid "No source data yet."
 msgstr "ಇನ್ನೂ ಮೂಲ ಡೇಟಾ ಇಲ್ಲ."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "ಇನ್ನೂ ಯಾವುದೇ ಶೈಲಿಯ ನಿಯಮಗಳಿಲ್ಲ."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "ಪರೀಕ್ಷಿಸದ ಪೂರೈಕೆದಾರರು ಇಲ್ಲ."
@@ -3568,10 +3565,6 @@ msgstr "ಮರುಹೊಂದಿಸಿ"
 msgid "Reset Password"
 msgstr "ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ಮರುಹೊಂದಿಸಿ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "ಶೈಲಿಯನ್ನು ಮರುಹೊಂದಿಸಿ"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "ಅನ್ವಯಿಸಲಾದ ಸ್ಟೈಲ್‌ಶೀಟ್‌ಗೆ ಮರುಹೊಂದಿಸಿ"
@@ -3686,14 +3679,6 @@ msgstr "ರೊಮೇನಿಯನ್"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "ಭ್ರಮನ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "ನಿಯಮ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "ನಿಯಮಗಳು"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "ಡಾಕರ್ ಜೊತೆಗೆ ಸ್ವಯಂ ಹೋಸ್ಟ್"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "ಲಾಕ್ಷಣಿಕ CSS ಶೈಲಿ ಹಾಳೆ"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "ಶಬ್ದಾರ್ಥದ ಶೈಲಿಗಳು ಸಕ್ರಿಯವಾಗಿರುತ್ತವೆ"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "ಈ ನಮೂದನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸ
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "ಈ ವೈಶಿಷ್ಟ್ಯಕ್ಕೆ ಸಂಪರ್ಕಿತ AI ಪೂರೈಕೆದಾರರ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಒಂದನ್ನು ಹೊಂದಿಸಿ."
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "ಈ ನಿದರ್ಶನವು ಪ್ರಸ್ತುತ ಲಾಕ್ಷಣಿಕ CSS ಸಂಪಾದನೆಯನ್ನು ಅನುಮತಿಸುವುದಿಲ್ಲ."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
