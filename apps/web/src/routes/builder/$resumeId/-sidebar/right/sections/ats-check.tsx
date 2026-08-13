@@ -9,7 +9,12 @@ import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
 import { cn } from "@reactive-resume/utils/style";
 import { useResumeData } from "@/features/resume/builder/draft";
-import { getAtsFindingLocation, getAtsFindingMessage, getAtsFindingTarget } from "@/libs/resume/ats";
+import {
+	atsFindingItemElementId,
+	getAtsFindingLocation,
+	getAtsFindingMessage,
+	getAtsFindingTarget,
+} from "@/libs/resume/ats";
 import { useSectionStore } from "../../../-store/section";
 import { useBuilderSidebar } from "../../../-store/sidebar";
 import { SectionBase } from "../shared/section-base";
@@ -93,16 +98,17 @@ export function AtsCheckSectionBuilder() {
 
 	const onJump = useCallback(
 		(pointer: string) => {
-			const target = getAtsFindingTarget(pointer);
+			const target = getAtsFindingTarget(pointer, data);
 			if (!target) return;
 
 			toggleSidebar(target.side, true);
 			setCollapsed(target.section, false);
-			document
-				.getElementById(`sidebar-${target.section}`)
-				?.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+
+			const item = target.itemId ? document.getElementById(atsFindingItemElementId(target.itemId)) : null;
+			const destination = item ?? document.getElementById(`sidebar-${target.section}`);
+			destination?.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
 		},
-		[setCollapsed, toggleSidebar],
+		[data, setCollapsed, toggleSidebar],
 	);
 
 	if (!report) return null;

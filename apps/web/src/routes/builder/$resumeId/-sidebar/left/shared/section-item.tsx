@@ -39,6 +39,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
+import { atsFindingItemElementId } from "@/libs/resume/ats";
 import {
 	addItemToSection,
 	createCustomSectionWithItem,
@@ -244,6 +245,7 @@ export function SectionItem<T extends CustomSectionItem | SectionItemType>({
 	return (
 		<Reorder.Item
 			key={item.id}
+			id={atsFindingItemElementId(item.id)}
 			value={item}
 			dragListener={false}
 			dragControls={controls}

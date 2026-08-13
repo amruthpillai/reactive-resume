@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { ExperienceItem, ResumeData } from "@reactive-resume/schema/resume/data";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
@@ -37,6 +37,20 @@ beforeAll(() => {
 beforeEach(() => {
 	vi.clearAllMocks();
 	resumeState.data = undefined;
+	document.body.innerHTML = "";
+});
+
+const experienceItem = (overrides: Partial<ExperienceItem> = {}): ExperienceItem => ({
+	id: "exp-1",
+	hidden: false,
+	company: "Analytical Engines",
+	position: "Engineer",
+	location: "London",
+	period: "Jan 2020 - Present",
+	website: { url: "", label: "", inlineLink: false },
+	description: "<p>Designed and shipped the difference engine.</p>",
+	roles: [],
+	...overrides,
 });
 
 function makeResume(mutate: (data: ResumeData) => void = () => undefined): ResumeData {
@@ -46,19 +60,7 @@ function makeResume(mutate: (data: ResumeData) => void = () => undefined): Resum
 	data.basics.email = "ada@example.com";
 	data.basics.phone = "+44 20 7946 0100";
 	data.basics.location = "London, UK";
-	data.sections.experience.items = [
-		{
-			id: "exp-1",
-			hidden: false,
-			company: "Analytical Engines",
-			position: "Engineer",
-			location: "London",
-			period: "Jan 2020 - Present",
-			website: { url: "", label: "", inlineLink: false },
-			description: "<p>Designed and shipped the difference engine.</p>",
-			roles: [],
-		},
-	];
+	data.sections.experience.items = [experienceItem()];
 	data.metadata.layout.pages = [{ fullWidth: false, main: ["experience"], sidebar: [] }];
 
 	mutate(data);
@@ -130,5 +132,63 @@ describe("AtsCheckSectionBuilder", () => {
 
 		expect(sidebarState.toggleSidebar).toHaveBeenCalledWith("right", true);
 		expect(sectionState.setCollapsed).toHaveBeenCalledWith("typography", false);
+	});
+});
+
+describe("navigating to a finding", () => {
+	const stubElement = (id: string) => {
+		const element = document.createElement("div");
+		element.id = id;
+		element.scrollIntoView = vi.fn();
+		document.body.append(element);
+		return element;
+	};
+
+	it("scrolls to the item a finding belongs to, not the section header", () => {
+		const section = stubElement("sidebar-experience");
+		const item = stubElement("resume-item-exp-1");
+
+		resumeState.data = makeResume((data) => {
+			data.sections.experience.items = [experienceItem({ period: "nonsense" })];
+		});
+		renderPanel();
+
+		fireEvent.click(screen.getByRole("button", { name: /Experience/ }));
+
+		expect(item.scrollIntoView).toHaveBeenCalled();
+		expect(section.scrollIntoView).not.toHaveBeenCalled();
+	});
+
+	it("sends two findings in the same section to different items", () => {
+		const first = stubElement("resume-item-exp-1");
+		const second = stubElement("resume-item-exp-2");
+
+		resumeState.data = makeResume((data) => {
+			data.sections.experience.items = [
+				experienceItem({ id: "exp-1", period: "nonsense" }),
+				experienceItem({ id: "exp-2", period: "gibberish" }),
+			];
+		});
+		renderPanel();
+
+		const buttons = screen.getAllByRole("button", { name: /Experience · Item/ });
+		fireEvent.click(buttons[0] as HTMLElement);
+		fireEvent.click(buttons[1] as HTMLElement);
+
+		expect(first.scrollIntoView).toHaveBeenCalledOnce();
+		expect(second.scrollIntoView).toHaveBeenCalledOnce();
+	});
+
+	it("falls back to the section header when the item is not mounted", () => {
+		const section = stubElement("sidebar-experience");
+
+		resumeState.data = makeResume((data) => {
+			data.sections.experience.items = [experienceItem({ period: "nonsense" })];
+		});
+		renderPanel();
+
+		fireEvent.click(screen.getByRole("button", { name: /Experience/ }));
+
+		expect(section.scrollIntoView).toHaveBeenCalled();
 	});
 });

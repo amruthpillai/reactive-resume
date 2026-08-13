@@ -1,4 +1,5 @@
 import type { AtsRuleCode } from "@reactive-resume/resume/ats";
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { LeftSidebarSection, SidebarSection } from "./section";
 import { t } from "@lingui/core/macro";
 import { match } from "ts-pattern";
@@ -12,7 +13,10 @@ export type AtsFindingMessage = {
 export type AtsFindingTarget = {
 	side: "left" | "right";
 	section: SidebarSection;
+	itemId?: string;
 };
+
+export const atsFindingItemElementId = (itemId: string) => `resume-item-${itemId}`;
 
 export function getAtsFindingMessage(code: AtsRuleCode): AtsFindingMessage {
 	return match(code)
@@ -118,16 +122,41 @@ function pointerTokens(pointer: string): string[] {
 const isLeftSidebarSection = (value: string): value is LeftSidebarSection =>
 	(leftSidebarSections as string[]).includes(value);
 
-export function getAtsFindingTarget(pointer: string): AtsFindingTarget | null {
-	const [head, next] = pointerTokens(pointer);
+function resolveItemId(tokens: readonly string[], data?: ResumeData): string | undefined {
+	if (!data) return undefined;
+
+	const itemsIndex = tokens.indexOf("items");
+	if (itemsIndex === -1) return undefined;
+
+	const position = Number(tokens[itemsIndex + 1]);
+	if (!Number.isInteger(position)) return undefined;
+
+	const [head, next] = tokens;
+	let items: readonly unknown[] | undefined;
+
+	if (head === "sections" && next) {
+		items = (data.sections as Record<string, { items?: readonly unknown[] }>)[next]?.items;
+	} else if (head === "customSections") {
+		items = data.customSections[Number(next)]?.items;
+	}
+
+	const item = items?.[position] as { id?: unknown } | undefined;
+	return typeof item?.id === "string" ? item.id : undefined;
+}
+
+export function getAtsFindingTarget(pointer: string, data?: ResumeData): AtsFindingTarget | null {
+	const tokens = pointerTokens(pointer);
+	const [head, next] = tokens;
+	const itemId = resolveItemId(tokens, data);
+	const withItem = (target: AtsFindingTarget): AtsFindingTarget => (itemId ? { ...target, itemId } : target);
 
 	if (head === "basics") return { side: "left", section: "basics" };
 	if (head === "picture") return { side: "left", section: "picture" };
 	if (head === "summary") return { side: "left", section: "summary" };
-	if (head === "customSections") return { side: "left", section: "custom" };
+	if (head === "customSections") return withItem({ side: "left", section: "custom" });
 
 	if (head === "sections" && next && isLeftSidebarSection(next)) {
-		return { side: "left", section: next };
+		return withItem({ side: "left", section: next });
 	}
 
 	if (head === "metadata") {
