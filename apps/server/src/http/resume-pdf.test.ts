@@ -70,6 +70,30 @@ describe("handleResumePdfDownload", () => {
 		});
 	});
 
+	it("uses the query target only for a legacy token without one", async () => {
+		mocks.verifyResumePdfDownloadToken.mockReturnValueOnce({
+			ok: true,
+			resumeId: "resume-1",
+			userId: "user-1",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+		});
+		mocks.createResumePdfDownload.mockResolvedValueOnce({
+			headers: { "content-disposition": 'attachment; filename="Cover Letter.pdf"' },
+			body: new File([], "Cover Letter.pdf", { type: "application/pdf" }),
+		});
+
+		await handleResumePdfDownload(
+			new Request("https://example.com/api/resumes/resume-1/pdf?token=legacy&target=cover-letter"),
+			"resume-1",
+		);
+
+		expect(mocks.createResumePdfDownload).toHaveBeenCalledWith({
+			id: "resume-1",
+			userId: "user-1",
+			target: "cover-letter",
+		});
+	});
+
 	it("rejects a target that differs from the signed token", async () => {
 		mocks.verifyResumePdfDownloadToken.mockReturnValueOnce({
 			ok: true,

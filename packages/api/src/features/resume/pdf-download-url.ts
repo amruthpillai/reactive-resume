@@ -8,7 +8,7 @@ type PdfDownloadTokenPayload = {
 	v: 1;
 	resumeId: string;
 	userId: string;
-	target: ResumeExportTarget;
+	target?: ResumeExportTarget;
 	expiresAt: number;
 	issuedAt: number;
 };
@@ -32,7 +32,7 @@ type VerifyResumePdfDownloadTokenResult =
 			ok: true;
 			resumeId: string;
 			userId: string;
-			target: ResumeExportTarget;
+			target?: ResumeExportTarget;
 			expiresAt: string;
 	  }
 	| {
@@ -71,7 +71,7 @@ function parsePayload(value: unknown): PdfDownloadTokenPayload | null {
 	if (payload.v !== 1) return null;
 	if (typeof payload.resumeId !== "string" || payload.resumeId.length === 0) return null;
 	if (typeof payload.userId !== "string" || payload.userId.length === 0) return null;
-	if (payload.target !== "resume" && payload.target !== "cover-letter") return null;
+	if (payload.target !== undefined && payload.target !== "resume" && payload.target !== "cover-letter") return null;
 	if (typeof payload.expiresAt !== "number" || !Number.isFinite(payload.expiresAt)) return null;
 	if (typeof payload.issuedAt !== "number" || !Number.isFinite(payload.issuedAt)) return null;
 
@@ -126,7 +126,7 @@ export function verifyResumePdfDownloadToken({
 			ok: true,
 			resumeId: parsed.resumeId,
 			userId: parsed.userId,
-			target: parsed.target,
+			...(parsed.target ? { target: parsed.target } : {}),
 			expiresAt: new Date(parsed.expiresAt).toISOString(),
 		};
 	} catch {
