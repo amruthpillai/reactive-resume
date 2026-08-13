@@ -84,6 +84,15 @@ const scriptFonts: Record<Script, { serif: string; sansSerif: string }> = {
 	thai: { serif: "Noto Sans Thai", sansSerif: "Noto Sans Thai" },
 };
 
+// Covers General Punctuation (U+2000–U+206F) and other symbols missing from
+// many Latin body fonts (e.g. U+2022 BULLET in IBM Plex Serif). react-pdf has
+// no browser-style system fallback, so we register Noto as a last-resort
+// glyph source in the PDF font stack (#3190).
+const punctuationFallbackFonts = {
+	serif: "Noto Serif",
+	sansSerif: "Noto Sans",
+} as const;
+
 export const webFontList = webFontListJSON as WebFont[];
 export const webFontMap = new Map<string, WebFont>(webFontList.map((font) => [font.family, font]));
 export const standardFontList = standardPdfFontList.filter((font) => !webFontMap.has(font.family));
@@ -140,6 +149,11 @@ function getScriptFont(script: Script, category: FontCategory | null) {
 	return category === "serif" ? variants.serif : variants.sansSerif;
 }
 
+function getPunctuationFallbackFont(category: FontCategory | null) {
+	const family = category === "serif" ? punctuationFallbackFonts.serif : punctuationFallbackFonts.sansSerif;
+	return getWebFont(family) ? family : null;
+}
+
 export function isStandardPdfFontFamily(family: string) {
 	return standardFontList.some((font) => font.family === family);
 }
@@ -185,7 +199,14 @@ export function getPdfFallbackFontFamilies(
 	if (options.scripts) ordered.push(...options.scripts);
 	if (ordered.some(isCjkScript)) ordered.push("han-simplified");
 
-	return unique(ordered.map((script) => getScriptFont(script, category)))
+	const fallbacks = unique(ordered.map((script) => getScriptFont(script, category)))
 		.filter((candidate) => candidate !== family)
 		.filter((candidate) => Boolean(getWebFont(candidate)));
+
+	const punctuationFallback = getPunctuationFallbackFont(category);
+	if (punctuationFallback && punctuationFallback !== family && !fallbacks.includes(punctuationFallback)) {
+		fallbacks.push(punctuationFallback);
+	}
+
+	return fallbacks;
 }
