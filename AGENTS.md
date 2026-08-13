@@ -107,7 +107,7 @@ The production server runs migrations during startup before serving traffic. Man
 
 ### Environment
 
-Copy `.env.example` to `.env`. The three required variables are:
+Copy `.env.example` to `.env.local`. The three required variables are:
 
 - `APP_URL` (default `http://localhost:3000`)
 - `DATABASE_URL` (default `postgresql://postgres:postgres@localhost:5432/postgres`)
