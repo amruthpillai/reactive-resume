@@ -8,6 +8,7 @@ import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ResumePreview } from "@/features/resume/preview/preview";
 import { BuilderDock } from "./dock";
 import { DEFAULT_BUILDER_PREVIEW_PAGE_LAYOUT, getNextBuilderPreviewPageLayout } from "./page-layout";
+import { blurFocusedElementOnPan } from "./pan-focus";
 
 export function PreviewPage() {
 	const [pageLayout, setPageLayout] = useState(DEFAULT_BUILDER_PREVIEW_PAGE_LAYOUT);
@@ -26,6 +27,7 @@ export function PreviewPage() {
 					initialScale={0.75}
 					limitToBounds={false}
 					wheel={{ step: 0.001 }}
+					onPanningStart={blurFocusedElementOnPan}
 				>
 					<TransformComponent wrapperClass="h-full! w-full!">
 						<ResumePreview showPageNumbers pageLayout={pageLayout} />
