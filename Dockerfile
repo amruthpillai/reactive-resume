@@ -1,17 +1,17 @@
 # syntax=docker/dockerfile:1.7
 
+ARG PNPM_VERSION=11.21.0
 ARG NODE_VERSION=24
 
-FROM node:${NODE_VERSION}-slim AS base
+FROM ghcr.io/pnpm/pnpm:${PNPM_VERSION} AS base
+
+ARG NODE_VERSION
+
+RUN pnpm runtime set node ${NODE_VERSION} -g --config.store-dir=/pnpm/runtime-store
 
 WORKDIR /app
 
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-    PNPM_HOME="/pnpm" \
-    PATH="/pnpm:$PATH" \
-    TURBO_TELEMETRY_DISABLED=1
-
-RUN corepack enable
+ENV TURBO_TELEMETRY_DISABLED=1
 
 FROM base AS pruner
 COPY . .

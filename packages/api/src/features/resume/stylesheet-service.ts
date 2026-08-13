@@ -12,7 +12,7 @@ import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/styles
 import { publishResumeUpdated } from "./events";
 import { parseStoredResumeData } from "./resume-data-validation";
 import { recordSemanticCssEvent } from "./stylesheet-observability";
-import { checkLegacyStylesheetParity, convertLegacyStylesheet } from "./stylesheet-preflight";
+import { convertLegacyStylesheet } from "./stylesheet-preflight";
 
 export type StylesheetSnapshot = {
 	id: string;
@@ -68,12 +68,6 @@ type StylesheetServiceDependencies = {
 	convertLegacy(snapshot: StylesheetSnapshot): StylesheetSource | Promise<StylesheetSource>;
 	compile(source: StylesheetSource): CompileStylesheetResult;
 	preflight?(input: { data: ResumeData; stylesheet: StylesheetSource }): Promise<PdfPreflightResult>;
-	parity(input: {
-		data: ResumeData;
-		stylesheet: StylesheetSource;
-		resumeId: string;
-		revision: number;
-	}): Promise<{ mismatches: readonly string[] }>;
 	transaction<T>(run: (transaction: StylesheetTransaction) => Promise<T>): Promise<T>;
 	compare(snapshot: StylesheetSnapshot, input: StylesheetMutationCommon): boolean | Promise<boolean>;
 	publish(snapshot: StylesheetSnapshot): Promise<void>;
@@ -262,20 +256,6 @@ export function createStylesheetService(dependencies: StylesheetServiceDependenc
 						throw validationError("The stylesheet cannot be activated because it is invalid.", compiled.diagnostics);
 					}
 
-					const parity = await dependencies.parity({
-						data: snapshot.data,
-						stylesheet: input.source,
-						resumeId: snapshot.id,
-						revision: snapshot.stylesheetRevision,
-					});
-					if (parity.mismatches.length > 0) {
-						throw new ORPCError("STYLESHEET_PARITY_FAILED", {
-							status: 400,
-							message: "The converted stylesheet does not preserve the legacy PDF presentation.",
-							data: { mismatches: parity.mismatches },
-						});
-					}
-
 					const preflight = await runPreflight(snapshot, input.source);
 					didPreflight = true;
 					activationPageCount = preflight.ok ? preflight.pageCount : null;
@@ -397,7 +377,6 @@ export function createDatabaseStylesheetService(options: DatabaseStylesheetServi
 						}),
 				}
 			: {}),
-		parity: checkLegacyStylesheetParity,
 		transaction: (run) =>
 			database.transaction((transaction) =>
 				run({

@@ -197,7 +197,6 @@ const getAuthConfig = () => {
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				disableImplicitSignUp: true,
 				clientId: env.GOOGLE_CLIENT_ID ?? "",
 				clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
 				mapProfileToUser: createProfileMapper({
@@ -210,7 +209,6 @@ const getAuthConfig = () => {
 			github: {
 				enabled: !!env.GITHUB_CLIENT_ID && !!env.GITHUB_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				disableImplicitSignUp: true,
 				clientId: env.GITHUB_CLIENT_ID ?? "",
 				clientSecret: env.GITHUB_CLIENT_SECRET ?? "",
 				mapProfileToUser: createGithubProfileMapper(),
@@ -219,7 +217,6 @@ const getAuthConfig = () => {
 			linkedin: {
 				enabled: !!env.LINKEDIN_CLIENT_ID && !!env.LINKEDIN_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				disableImplicitSignUp: true,
 				clientId: env.LINKEDIN_CLIENT_ID ?? "",
 				clientSecret: env.LINKEDIN_CLIENT_SECRET ?? "",
 				mapProfileToUser: createProfileMapper({

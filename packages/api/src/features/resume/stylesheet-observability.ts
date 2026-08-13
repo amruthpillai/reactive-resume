@@ -5,7 +5,6 @@ type SemanticCssEventName =
 	| "semantic_css.compile"
 	| "semantic_css.preflight"
 	| "semantic_css.convert_legacy"
-	| "semantic_css.parity_check"
 	| "semantic_css.activate";
 
 export type SemanticCssEventInput = {
