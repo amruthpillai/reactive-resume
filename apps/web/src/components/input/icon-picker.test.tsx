@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import { render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -67,5 +67,18 @@ describe("IconPicker", () => {
 	it("renders the picker button as a single icon-size button", () => {
 		const { container } = renderPicker();
 		expect(container.querySelectorAll("button").length).toBeGreaterThanOrEqual(1);
+	});
+
+	it("calls onChange with an empty string when the no-icon cell is clicked", () => {
+		const onChange = vi.fn();
+		render(
+			<I18nProvider i18n={i18n}>
+				<IconPicker value="globe" onChange={onChange} popoverProps={{ defaultOpen: true }} />
+			</I18nProvider>,
+		);
+
+		const firstCell = screen.getByTestId("grid").querySelector("button");
+		if (firstCell) fireEvent.click(firstCell);
+		expect(onChange).toHaveBeenCalledWith("");
 	});
 });
