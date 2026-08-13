@@ -171,7 +171,7 @@ const renderHostDocument = async (data: ResumeData): Promise<LegacyParityHostNod
 };
 
 const findEmptyTextNodes = (node: LegacyParityHostNode): LegacyParityHostNode[] => [
-	...(node.type === "TEXT" && nodeText(node) === "" ? [node] : []),
+	...(node.type === "TEXT" && nodeText(node).trim() === "" ? [node] : []),
 	...(node.children ?? []).flatMap(findEmptyTextNodes),
 ];
 
@@ -262,8 +262,10 @@ describe("compareLegacySemanticPresentation", () => {
 		data.metadata.typography.body.fontSize = 9;
 		const [skill] = data.sections.skills.items;
 		if (!skill) throw new Error("Expected Gengar skill fixture.");
-		skill.proficiency = "";
-		expect(findEmptyTextNodes(await renderHostDocument(data)).filter((node) => hasFontSize(node, 9))).toEqual([]);
+		for (const proficiency of ["", " \t"]) {
+			skill.proficiency = proficiency;
+			expect(findEmptyTextNodes(await renderHostDocument(data)).filter((node) => hasFontSize(node, 9))).toEqual([]);
+		}
 
 		skill.proficiency = "Expert";
 		expect(nodeText(await renderHostDocument(data))).toContain("Expert");
