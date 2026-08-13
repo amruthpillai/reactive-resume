@@ -176,7 +176,7 @@ export function ChipInput({
 			});
 			if (nextValues.length === 0) return;
 
-			const newChips = Array.from(new Set([...chips, ...nextValues]));
+			const newChips = [...new Set([...chips, ...nextValues])];
 			setChips(newChips);
 		},
 		[chips, setChips],
@@ -269,7 +269,7 @@ export function ChipInput({
 			const oldIndex = chips.indexOf(active.id as string);
 			const newIndex = chips.indexOf(over.id as string);
 			if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
-				const newOrder = Array.from(chips);
+				const newOrder = [...chips];
 				const [removed] = newOrder.splice(oldIndex, 1);
 				newOrder.splice(newIndex, 0, removed);
 				handleReorder(newOrder);

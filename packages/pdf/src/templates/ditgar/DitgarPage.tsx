@@ -3,8 +3,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateFeatures, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import { getPrimaryTint } from "../shared/color-helpers";
 import {
@@ -15,13 +17,19 @@ import {
 	WebsiteContactItem,
 } from "../shared/contact-item";
 import { TemplateProvider } from "../shared/context";
-import { shouldShowResumeHeader } from "../shared/cover-letter";
 import { getFeaturedSummaryLayout } from "../shared/featured-summary";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
-import { getTemplatePageMinHeightStyle, getTemplatePageSize } from "../shared/page-size";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionTemplatePartView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -58,17 +66,16 @@ const ditgarFeatures = {
 	mainItemHeaderBorder: true,
 } satisfies TemplateFeatures;
 
-export const DitgarPage = ({ page, pageIndex }: TemplatePageProps) => {
+export const DitgarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles } = useDitgarTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const pageSize = getTemplatePageSize(metadata.page.format);
-	const pageMinHeightStyle = getTemplatePageMinHeightStyle(metadata.page.format);
-	const showHeader = shouldShowResumeHeader(data, pageIndex);
 	const showSidebar = !page.fullWidth || showHeader;
-	const sidebarSections = filterSections(page.sidebar, data);
-	const mainSections = filterSections(page.main, data);
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
 	const { featuredSummarySection, regularSections: regularMainSections } = getFeaturedSummaryLayout({
 		sections: mainSections,
 		canFeatureSummary: showHeader,
@@ -78,8 +85,12 @@ export const DitgarPage = ({ page, pageIndex }: TemplatePageProps) => {
 		: sidebarSections;
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors} features={ditgarFeatures}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors} features={ditgarFeatures}>
 				{showSidebar && (
 					<View
 						style={composeStyles(styles.sidebarColumn, {
@@ -89,27 +100,34 @@ export const DitgarPage = ({ page, pageIndex }: TemplatePageProps) => {
 						{showHeader && <Header styles={styles} colors={colors} />}
 
 						{!page.fullWidth && (
-							<View style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}>
+							<SemanticRegionView
+								region="sidebar"
+								style={composeStyles(styles.sidebarContent, { rowGap: metrics.sectionGap })}
+							>
 								{regularSidebarSections.map((section) => (
 									<Section key={section} section={section} placement="sidebar" />
 								))}
-							</View>
+							</SemanticRegionView>
 						)}
 					</View>
 				)}
 
 				<View style={styles.mainColumn}>
 					{featuredSummarySection && (
-						<View style={styles.specialContainer}>
+						<SemanticRegionTemplatePartView
+							region="featured"
+							partKeys={["featured-summary"]}
+							style={styles.specialContainer}
+						>
 							<Section section={featuredSummarySection} placement="main" showHeading={false} />
-						</View>
+						</SemanticRegionTemplatePartView>
 					)}
 
-					<View style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainContent, { rowGap: metrics.sectionGap })}>
 						{regularMainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -121,8 +139,8 @@ const Header = ({ styles, colors }: DitgarHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
+		<SemanticHeaderView style={styles.header}>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
@@ -131,7 +149,7 @@ const Header = ({ styles, colors }: DitgarHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.contactList}>
+			<SemanticContactListView style={styles.contactList}>
 				<EmailContactItem
 					email={basics.email}
 					style={styles.contactItem}
@@ -166,8 +184,8 @@ const Header = ({ styles, colors }: DitgarHeaderProps) => {
 						iconColor={colors.background}
 					/>
 				))}
-			</View>
-		</View>
+			</SemanticContactListView>
+		</SemanticHeaderView>
 	);
 };
 
@@ -189,18 +207,13 @@ const useDitgarTemplate = (): DitgarTemplate => {
 		};
 		const metrics = getTemplateMetrics(metadata.page);
 
-		const base = createBaseTemplateStyles({ metadata, foreground, r, metrics, picture });
+		const base = createBaseTemplateStyles({ metadata, foreground, background, r, metrics, picture });
 
 		const baseStyles = StyleSheet.create({
 			...base,
 			page: {
+				...base.page,
 				flexDirection: r.row,
-				color: foreground,
-				backgroundColor: background,
-				fontFamily: metadata.typography.body.fontFamily,
-				fontSize: metadata.typography.body.fontSize,
-				lineHeight: metadata.typography.body.lineHeight,
-				direction: r.pageDirection,
 			},
 			section: {
 				flexDirection: "column",

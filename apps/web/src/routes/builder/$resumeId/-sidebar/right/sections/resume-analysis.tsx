@@ -3,7 +3,6 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, InfoIcon, LightningIcon, SparkleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { useMemo } from "react";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 import { Alert, AlertDescription } from "@reactive-resume/ui/components/alert";
@@ -93,13 +92,8 @@ export function ResumeAnalysisSectionBuilder() {
 	// so the server render has no date and there's no hydration mismatch to defer around.
 	const updatedAtLabel = updatedAt ? new Date(updatedAt).toLocaleString() : null;
 	const analyzeLabel = isPending ? t`Analyzing…` : t`Analyze Resume`;
-
-	const scoreTone = useMemo(() => {
-		if (score == null) return "bg-muted";
-		if (score >= 80) return "bg-emerald-600";
-		if (score >= 60) return "bg-amber-600";
-		return "bg-rose-600";
-	}, [score]);
+	const scoreTone =
+		score == null ? "bg-muted" : score >= 80 ? "bg-emerald-600" : score >= 60 ? "bg-amber-600" : "bg-rose-600";
 
 	const onAnalyze = () => {
 		if (!resume) return;

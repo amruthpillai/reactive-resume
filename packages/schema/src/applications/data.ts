@@ -43,7 +43,6 @@ export const applicationTimelineEntrySchema = z.discriminatedUnion("type", [
 ]);
 
 export type ApplicationTimelineEntry = z.infer<typeof applicationTimelineEntrySchema>;
-export type ActivityEvent = ApplicationTimelineEntry;
 
 // Reserved for AI enrichment output (autofill / match-score). Free-form so the shape can
 // evolve without a migration. See the AI roadmap in the applications feature.

@@ -14,15 +14,13 @@ describe("Badge", () => {
 		expect(screen.getByText("x")).toHaveClass("my-extra");
 	});
 
-	it.each([
-		["default"],
-		["secondary"],
-		["destructive"],
-		["outline"],
-	] as const)("renders variant=%s without throwing", (variant) => {
-		render(<Badge variant={variant}>{variant}</Badge>);
-		expect(screen.getByText(variant)).toBeInTheDocument();
-	});
+	it.each([["default"], ["secondary"], ["destructive"], ["outline"]] as const)(
+		"renders variant=%s without throwing",
+		(variant) => {
+			render(<Badge variant={variant}>{variant}</Badge>);
+			expect(screen.getByText(variant)).toBeInTheDocument();
+		},
+	);
 
 	it("forwards aria attributes", () => {
 		render(<Badge aria-label="status indicator">3</Badge>);

@@ -12,8 +12,6 @@ import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
 import { TOOL_META } from "./tool-meta";
 
-export { MCP_TOOL_NAME } from "./mcp-tool-names";
-
 type PatchOperation = z.infer<typeof resumePatchOperationsSchema>[number];
 
 // ── Shared Helpers ───────────────���──────────────────────────────

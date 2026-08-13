@@ -10,6 +10,14 @@ export { isRTL };
 const storageKey = "locale";
 const defaultLocale: Locale = "en-US";
 const messageLoaders = import.meta.glob<{ messages: Messages }>("../../locales/*.po");
+const relativeTimeDivisions: Array<{ amount: number; unit: Intl.RelativeTimeFormatUnit }> = [
+	{ amount: 31_536_000_000, unit: "year" },
+	{ amount: 2_592_000_000, unit: "month" },
+	{ amount: 604_800_000, unit: "week" },
+	{ amount: 86_400_000, unit: "day" },
+	{ amount: 3_600_000, unit: "hour" },
+	{ amount: 60_000, unit: "minute" },
+];
 
 export const localeMap = {
 	"af-ZA": msg`Afrikaans`,
@@ -77,14 +85,22 @@ export const resolveLocale = (locale: string): Locale => {
 	return isLocale(locale) ? locale : defaultLocale;
 };
 
+export function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFormat, invalidFallback?: string) {
+	const date = value instanceof Date ? value : new Date(value);
+	const diffMs = date.getTime() - Date.now();
+	if (Number.isNaN(diffMs)) return invalidFallback ?? formatter.format(0, "second");
+
+	const division = relativeTimeDivisions.find((candidate) => Math.abs(diffMs) >= candidate.amount);
+
+	return division
+		? formatter.format(Math.round(diffMs / division.amount), division.unit)
+		: formatter.format(0, "second");
+}
+
 export const getLocale = () => {
 	const locale = Cookies.get(storageKey);
 	if (!locale || !isLocale(locale)) return defaultLocale;
 	return locale;
-};
-
-export const setLocaleCookie = (locale: Locale) => {
-	Cookies.set(storageKey, locale);
 };
 
 const loadMessages = async (locale: Locale) => {
@@ -112,4 +128,10 @@ export const getLocaleMessages = async (locale: string) => {
 export const loadLocale = async (locale: string) => {
 	const { locale: resolvedLocale, messages } = await getLocaleMessages(locale);
 	i18n.loadAndActivate({ locale: resolvedLocale, messages });
+};
+
+export const changeLocale = (value: string | null) => {
+	if (!value || !isLocale(value)) return;
+	Cookies.set(storageKey, value);
+	window.location.reload();
 };

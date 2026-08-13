@@ -17,14 +17,14 @@ export const crudRouter = {
 		})
 		.input(applicationDto.list.input)
 		.output(applicationDto.list.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.list({
+		.handler(({ input, context }) =>
+			applicationService.list({
 				userId: context.user.id,
 				...(input.status ? { status: input.status } : {}),
 				...(input.tags ? { tags: input.tags } : {}),
 				includeArchived: input.includeArchived,
-			});
-		}),
+			}),
+		),
 
 	getById: protectedProcedure
 		.route({
@@ -39,9 +39,7 @@ export const crudRouter = {
 		})
 		.input(applicationDto.getById.input)
 		.output(applicationDto.getById.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.getById({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ input, context }) => applicationService.getById({ id: input.id, userId: context.user.id })),
 
 	create: protectedProcedure
 		.route({
@@ -57,9 +55,7 @@ export const crudRouter = {
 		.input(applicationDto.create.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.create.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.create({ userId: context.user.id, ...input });
-		}),
+		.handler(({ input, context }) => applicationService.create({ userId: context.user.id, ...input })),
 
 	import: protectedProcedure
 		.route({
@@ -75,9 +71,7 @@ export const crudRouter = {
 		.input(applicationDto.import.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.import.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.importMany({ userId: context.user.id, items: input.items });
-		}),
+		.handler(({ input, context }) => applicationService.importMany({ userId: context.user.id, items: input.items })),
 
 	update: protectedProcedure
 		.route({
@@ -93,9 +87,7 @@ export const crudRouter = {
 		.input(applicationDto.update.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.update.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.update({ userId: context.user.id, ...input });
-		}),
+		.handler(({ input, context }) => applicationService.update({ userId: context.user.id, ...input })),
 
 	attachDocument: protectedProcedure
 		.route({
@@ -153,9 +145,9 @@ export const crudRouter = {
 		.input(applicationDto.removeDocument.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.removeDocument.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.removeDocument({ id: input.id, userId: context.user.id, kind: input.kind });
-		}),
+		.handler(({ input, context }) =>
+			applicationService.removeDocument({ id: input.id, userId: context.user.id, kind: input.kind }),
+		),
 
 	addNote: protectedProcedure
 		.route({
@@ -170,9 +162,14 @@ export const crudRouter = {
 		.input(applicationDto.addNote.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.addNote.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.addNote({ id: input.id, userId: context.user.id, text: input.text, date: input.date });
-		}),
+		.handler(({ input, context }) =>
+			applicationService.addNote({
+				id: input.id,
+				userId: context.user.id,
+				text: input.text,
+				date: input.date,
+			}),
+		),
 
 	updateTimelineEntry: protectedProcedure
 		.route({
@@ -187,9 +184,7 @@ export const crudRouter = {
 		.input(applicationDto.updateTimelineEntry.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.updateTimelineEntry.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.updateTimelineEntry({ ...input, userId: context.user.id });
-		}),
+		.handler(({ input, context }) => applicationService.updateTimelineEntry({ ...input, userId: context.user.id })),
 
 	deleteTimelineEntry: protectedProcedure
 		.route({
@@ -205,9 +200,7 @@ export const crudRouter = {
 		.input(applicationDto.deleteTimelineEntry.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.deleteTimelineEntry.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.deleteTimelineEntry({ ...input, userId: context.user.id });
-		}),
+		.handler(({ input, context }) => applicationService.deleteTimelineEntry({ ...input, userId: context.user.id })),
 
 	delete: protectedProcedure
 		.route({
@@ -222,9 +215,7 @@ export const crudRouter = {
 		.input(applicationDto.delete.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.delete.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.delete({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ input, context }) => applicationService.delete({ id: input.id, userId: context.user.id })),
 
 	bulkUpdate: protectedProcedure
 		.route({
@@ -240,9 +231,7 @@ export const crudRouter = {
 		.input(applicationDto.bulkUpdate.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.bulkUpdate.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.bulkUpdate({ userId: context.user.id, ...input });
-		}),
+		.handler(({ input, context }) => applicationService.bulkUpdate({ userId: context.user.id, ...input })),
 
 	bulkDelete: protectedProcedure
 		.route({
@@ -257,9 +246,7 @@ export const crudRouter = {
 		.input(applicationDto.bulkDelete.input)
 		.use(resumeMutationRateLimit)
 		.output(applicationDto.bulkDelete.output)
-		.handler(async ({ input, context }) => {
-			return applicationService.bulkDelete({ userId: context.user.id, ids: input.ids });
-		}),
+		.handler(({ input, context }) => applicationService.bulkDelete({ userId: context.user.id, ids: input.ids })),
 
 	stats: protectedProcedure
 		.route({
@@ -273,9 +260,7 @@ export const crudRouter = {
 		})
 		.input(applicationDto.stats.input)
 		.output(applicationDto.stats.output)
-		.handler(async ({ context }) => {
-			return applicationService.stats({ userId: context.user.id });
-		}),
+		.handler(({ context }) => applicationService.stats({ userId: context.user.id })),
 
 	tags: protectedProcedure
 		.route({
@@ -288,7 +273,5 @@ export const crudRouter = {
 			successDescription: "Distinct tags.",
 		})
 		.output(applicationDto.tags.output)
-		.handler(async ({ context }) => {
-			return applicationService.listTags({ userId: context.user.id });
-		}),
+		.handler(({ context }) => applicationService.listTags({ userId: context.user.id })),
 };

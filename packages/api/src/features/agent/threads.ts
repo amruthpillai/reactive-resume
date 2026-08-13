@@ -13,9 +13,7 @@ export const threadsRouter = {
 			summary: "List agent threads",
 		})
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context }) => {
-			return await agentService.threads.list({ userId: context.user.id });
-		}),
+		.handler(({ context }) => agentService.threads.list({ userId: context.user.id })),
 
 	create: protectedProcedure
 		.route({
@@ -27,14 +25,14 @@ export const threadsRouter = {
 		})
 		.input(z.object({ aiProviderId: z.string().optional(), sourceResumeId: z.string().optional() }))
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.threads.create({
+		.handler(({ context, input }) =>
+			agentService.threads.create({
 				userId: context.user.id,
 				locale: context.locale,
 				...(input.aiProviderId ? { aiProviderId: input.aiProviderId } : {}),
 				...(input.sourceResumeId ? { sourceResumeId: input.sourceResumeId } : {}),
-			});
-		}),
+			}),
+		),
 
 	getOrCreateForResume: protectedProcedure
 		.route({
@@ -46,13 +44,13 @@ export const threadsRouter = {
 		})
 		.input(z.object({ resumeId: z.string(), aiProviderId: z.string().optional() }))
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.threads.getOrCreateForResume({
+		.handler(({ context, input }) =>
+			agentService.threads.getOrCreateForResume({
 				userId: context.user.id,
 				resumeId: input.resumeId,
 				...(input.aiProviderId ? { aiProviderId: input.aiProviderId } : {}),
-			});
-		}),
+			}),
+		),
 
 	get: protectedProcedure
 		.route({
@@ -64,9 +62,7 @@ export const threadsRouter = {
 		})
 		.input(z.object({ id: z.string() }))
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.threads.get({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => agentService.threads.get({ id: input.id, userId: context.user.id })),
 
 	archive: protectedProcedure
 		.route({
@@ -79,9 +75,7 @@ export const threadsRouter = {
 		.input(z.object({ id: z.string() }))
 		.output(z.void())
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			await agentService.threads.archive({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => agentService.threads.archive({ id: input.id, userId: context.user.id })),
 
 	delete: protectedProcedure
 		.route({
@@ -94,7 +88,5 @@ export const threadsRouter = {
 		.input(z.object({ id: z.string() }))
 		.output(z.void())
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			await agentService.threads.delete({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => agentService.threads.delete({ id: input.id, userId: context.user.id })),
 };

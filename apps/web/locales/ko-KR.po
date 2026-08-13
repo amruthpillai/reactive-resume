@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 13:34\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -162,6 +162,10 @@ msgstr "계정 메뉴"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "작업"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "시맨틱 CSS 활성화"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "주당 보낸 지원서 (최근 8주)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "지원함"
 
@@ -489,9 +494,9 @@ msgstr "지원함"
 msgid "Applied on"
 msgstr "지원일"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "적용된 규칙"
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "경고와 함께 적용됨"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -526,8 +531,7 @@ msgid "Are you sure you want to delete this item?"
 msgstr "이 항목을 삭제하시겠습니까?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to delete this resume?"
 msgstr "이 이력서를 삭제하시겠습니까?"
 
@@ -536,8 +540,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "계정을 삭제하시겠습니까?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to lock this resume?"
 msgstr "이 이력서를 잠그시겠습니까?"
 
@@ -734,6 +737,7 @@ msgstr "이력서를 PDF로 내보낼 수 있나요?"
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/api-keys.tsx
 #: src/features/settings/pages/danger-zone.tsx
 #: src/features/settings/pages/profile.tsx
@@ -800,6 +804,14 @@ msgstr "비밀번호를 재설정할 수 있는 링크가 이메일로 전송되
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "계정을 인증할 수 있는 링크가 이메일로 전송되었습니다."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "확인 중"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "초안 검토"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -967,6 +979,10 @@ msgstr "대화 내용이 복사되었습니다."
 msgid "Conversation JSON copied."
 msgstr "대화 JSON이 복사되었습니다."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "변환된 스타일시트 초안"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "클립보드에 복사되었습니다."
@@ -989,6 +1005,15 @@ msgstr "백업 코드 복사"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON 복사"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "비밀을 복사하세요"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "스타일시트 복사"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1379,8 +1404,7 @@ msgid "Deleting your API key..."
 msgstr "API 키를 삭제하는 중입니다..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Deleting your resume..."
 msgstr "이력서를 삭제하는 중입니다..."
 
@@ -1547,6 +1571,11 @@ msgstr "{chip} 수정"
 msgid "Edit application"
 msgstr "지원 편집"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "색상 편집 {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1567,6 +1596,10 @@ msgstr "세부 정보 수정"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "키워드 수정"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Edit model"
+msgstr "모델 편집"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit note"
@@ -1648,7 +1681,7 @@ msgstr "계정 보안을 강화하기 위해 추가 보호 계층을 적용하�
 msgid "Enter a name for your passkey."
 msgstr "비밀번호 키의 이름을 입력합니다."
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "저장해 둔 백업 코드 중 하나를 입력해 계정에 접속하세요"
 
@@ -1672,6 +1705,10 @@ msgstr "2단계 인증을 설정하려면 비밀번호를 입력해 확인하세
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "2단계 인증을 비활성화하려면 비밀번호를 입력하세요. 2단계 인증을 사용하지 않으면 계정 보안이 낮아집니다."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "오류"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "크든 작든 모든 기여는 프로젝트에 큰 변화를 가져옵니다.<0/>후원해 주셔서 감사합니다!"
@@ -1679,6 +1716,10 @@ msgstr "크든 작든 모든 기여는 프로젝트에 큰 변화를 가져옵�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "전문적인 이력서를 만들고, 사용자 지정하고, 공유하는 데 필요한 모든 것을 제공합니다. 개인정보 보호를 최우선으로 설계되었으며, 오픈 소스로 구동되고, 완전히 무료입니다."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "포커스 모드 종료"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1886,7 +1927,7 @@ msgid "Failed to verify the password. Please try again."
 msgstr "비밀번호를 인증하지 못했습니다. 다시 시도해 주세요."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "백업 코드를 인증하지 못했습니다. 다시 시도해 주세요."
 
@@ -1999,6 +2040,10 @@ msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "용지 형식"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "서식 스타일시트"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
 msgstr "무료"
@@ -2066,7 +2111,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Go Back"
 msgstr "뒤로 가기"
 
@@ -2582,6 +2627,12 @@ msgstr "라이트"
 msgid "Light theme"
 msgstr "라이트 테마"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "행 {0}, 열 {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "줄 간격"
@@ -2896,10 +2947,6 @@ msgstr "아직 저장된 버전이 없습니다."
 msgid "No source data yet."
 msgstr "아직 소스 데이터가 없습니다."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "아직 스타일 규칙은 없습니다."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "검증되지 않은 제공업체"
@@ -2915,6 +2962,10 @@ msgstr "노르웨이어"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "연결되지 않음"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "무엇을 써야 할지 모르겠나요?"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -2966,6 +3017,10 @@ msgstr "오픈 AI 어시스턴트"
 msgid "Open Email Client"
 msgstr "이메일 클라이언트 열기"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "초점 모드 열기"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "빌더에서 열기"
@@ -2990,6 +3045,7 @@ msgstr "OpenAI 호환"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3265,6 +3321,10 @@ msgstr "<0>Enter</0> 키를 눌러 열기"
 msgid "Preview"
 msgstr "시사"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "미리보기 및 내보내기 시에는 마지막으로 유효한 버전을 사용합니다."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "기본 색상"
@@ -3310,6 +3370,10 @@ msgstr "제공자"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "공급자 연결이 확인되었습니다."
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Provider model"
+msgstr "공급자 모델"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3368,9 +3432,21 @@ msgstr "반응형 재개 v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "리액티브 이력서 v4(JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "사용자 지정 스타일 적용 가이드를 읽어보세요."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "읽는 중…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "활성화 준비 완료"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "경고 메시지와 함께 활성화할 준비가 되었습니다."
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3387,6 +3463,10 @@ msgstr "사각형(전체 너비)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "다시 하다"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "스타일시트 편집 다시 실행"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3485,9 +3565,9 @@ msgstr "초기화"
 msgid "Reset Password"
 msgstr "비밀번호 재설정"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "스타일 재설정"
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "적용된 스타일시트로 재설정"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3600,14 +3680,6 @@ msgstr "루마니아어"
 msgid "Rotation"
 msgstr "회전"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "규칙"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "규칙"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
 msgstr "첫 번째 분석을 실행하여 스코어카드, 강점, 우선순위가 지정된 제안을 확인하세요."
@@ -3662,6 +3734,10 @@ msgstr "변경사항 저장"
 #: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "변경 사항 저장"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Save model"
+msgstr "저장 모델"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
@@ -3780,6 +3856,10 @@ msgstr "선택됨"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Docker로 자체 호스팅"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "시맨틱 CSS 스타일시트"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4142,6 +4222,14 @@ msgstr "취소선"
 msgid "Strong fit"
 msgstr "높은 적합도"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "스타일시트 편집기"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "스타일시트에 오류가 있습니다"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "서브레딧"
@@ -4298,6 +4386,10 @@ msgstr "찾으시는 페이지가 이동되었거나 더 이상 존재하지 않
 msgid "The password you entered is incorrect"
 msgstr "입력하신 비밀번호가 올바르지 않습니다"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "이력서 미리보기를 업데이트할 수 없습니다. 마지막으로 유효했던 미리보기가 여전히 표시됩니다."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "접근하려는 이력서는 비밀번호로 보호되어 있습니다"
@@ -4339,8 +4431,7 @@ msgid "Thinking"
 msgstr "생각"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "This action cannot be undone."
 msgstr "이 작업은 되돌릴 수 없습니다."
 
@@ -4630,6 +4721,10 @@ msgstr "밑줄"
 msgid "Undo"
 msgstr "끄르다"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "스타일시트 편집 취소"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
 msgstr "무제한 이력서"
@@ -4827,16 +4922,15 @@ msgstr "인증됨"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/features/auth/pages/verify-2fa-backup.tsx
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "인증"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify with a Backup Code"
 msgstr "백업 코드로 인증"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying backup code..."
 msgstr "백업 코드를 확인하는 중입니다..."
 
@@ -4916,8 +5010,7 @@ msgid "What's new in the latest version?"
 msgstr "최신 버전의 새로운 기능"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "잠그면 이력서는 수정하거나 삭제할 수 없습니다."
 
@@ -5006,6 +5099,10 @@ msgstr "데이터는 안전하게 저장되며 제3자와 공유되지 않습니
 msgid "Your latest changes could not be saved."
 msgstr "최근 변경 내용을 저장할 수 없습니다."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "이 시맨틱 CSS 초안을 명시적으로 활성화하기 전까지는 기존 스타일이 계속 유지됩니다."
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "비밀번호가 성공적으로 재설정되었습니다. 이제 새 비밀번호로 로그인할 수 있습니다."
@@ -5023,8 +5120,7 @@ msgid "Your resume has been created successfully."
 msgstr "이력서가 성공적으로 생성되었습니다."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Your resume has been deleted successfully."
 msgstr "이력서가 성공적으로 삭제되었습니다."
 

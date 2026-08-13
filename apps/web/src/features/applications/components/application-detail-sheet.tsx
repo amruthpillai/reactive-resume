@@ -40,7 +40,7 @@ const stageOf = (status: ApplicationStatus) => STAGES.find((s) => s.value === st
 
 const dateInputValue = (value: Date | string) => {
 	const date = new Date(value);
-	return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+	return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
 };
 
 const formatDate = (value: Date | string) =>

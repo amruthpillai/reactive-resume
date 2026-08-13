@@ -100,9 +100,9 @@ describe("buildMcpServerCard", () => {
 			true,
 		);
 		expect(autofill.safeParse({ sourceUrl: "http://example.com/job" }).success).toBe(true);
-		expect(create.safeParse({ company: "Acme", role: "Engineer", sourceUrl: "ftp://example.com/job" }).success).toBe(
-			false,
-		);
+		const invalidUrl = create.safeParse({ company: "Acme", role: "Engineer", sourceUrl: "ftp://example.com/job" });
+		expect(invalidUrl.success).toBe(false);
+		if (!invalidUrl.success) expect(invalidUrl.error.issues[0]?.message).toBe("URL must use http or https.");
 		expect(autofill.safeParse({ sourceUrl: "javascript:alert(1)" }).success).toBe(false);
 	});
 

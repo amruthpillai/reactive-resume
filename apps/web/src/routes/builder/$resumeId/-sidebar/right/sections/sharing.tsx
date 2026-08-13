@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { ClipboardIcon, LockSimpleIcon, LockSimpleOpenIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -29,10 +29,7 @@ export function SharingSectionBuilder() {
 	const { mutateAsync: setPassword } = useMutation(orpc.resume.setPassword.mutationOptions());
 	const { mutateAsync: removePassword } = useMutation(orpc.resume.removePassword.mutationOptions());
 
-	const publicUrl = useMemo(() => {
-		if (!session) return "";
-		return `${window.location.origin}/${session.user.username}/${resume.slug}`;
-	}, [session, resume]);
+	const publicUrl = session ? `${window.location.origin}/${session.user.username}/${resume.slug}` : "";
 
 	const onCopyUrl = useCallback(async () => {
 		await copyToClipboard(publicUrl);

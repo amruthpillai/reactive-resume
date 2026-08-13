@@ -10,6 +10,8 @@ import { createRichTextStylesheet } from "./rich-text-stylesheet";
 type PdfElement = ReactElement<{ children?: unknown; style?: unknown }>;
 
 const getPdfElementProps = (element: unknown) => (element as PdfElement).props;
+const mergeStyle = (style: unknown): Record<string, unknown> =>
+	Object.assign({}, ...(Array.isArray(style) ? style : style ? [style] : []));
 
 describe("normalizeRichTextHtml", () => {
 	it("wraps top-level inline rich text in a paragraph", () => {
@@ -49,6 +51,33 @@ describe("renderRichTextParagraph", () => {
 
 		expect(rendered.type).toBe(PdfText);
 		expect(props.children).toEqual(["Plain ", expect.any(Object), " text"]);
+	});
+
+	it("keeps semantic paragraph margins after prose edge trimming while preserving text safety", () => {
+		const paragraph = parse("<p>First</p><p>Second</p>").querySelector("p");
+
+		if (!paragraph) throw new Error("Expected paragraph to exist.");
+
+		const rendered = renderRichTextParagraph({
+			element: paragraph,
+			style: { marginTop: 4, marginBottom: 4 },
+			semanticStyle: {
+				marginTop: 20,
+				marginBottom: 21,
+				minWidth: 72,
+				maxWidth: 72,
+				flexShrink: 0,
+			},
+			children: "First",
+		});
+
+		expect(mergeStyle(getPdfElementProps(rendered).style)).toMatchObject({
+			marginTop: 20,
+			marginBottom: 21,
+			minWidth: 0,
+			maxWidth: "100%",
+			flexShrink: 1,
+		});
 	});
 });
 

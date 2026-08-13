@@ -7,6 +7,7 @@ import { rgbaStringToHex } from "@reactive-resume/utils/color";
 type BaseTemplateStylesInput = {
 	metadata: ResumeData["metadata"];
 	foreground: string;
+	background: string;
 	r: ReturnType<typeof createRtlStyleHelpers>;
 	metrics: ReturnType<typeof getTemplateMetrics>;
 	picture: Picture;
@@ -20,7 +21,14 @@ type BaseTemplateStylesInput = {
  * ponytail: factory returns plain objects, not StyleSheet.create'd; each template does one
  * StyleSheet.create pass so the final resolved styles are identical to before.
  */
-export function createBaseTemplateStyles({ metadata, foreground, r, metrics, picture }: BaseTemplateStylesInput) {
+export function createBaseTemplateStyles({
+	metadata,
+	foreground,
+	background,
+	r,
+	metrics,
+	picture,
+}: BaseTemplateStylesInput) {
 	const bodyText = {
 		fontFamily: metadata.typography.body.fontFamily,
 		fontSize: metadata.typography.body.fontSize,
@@ -31,6 +39,15 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 	} satisfies Style;
 
 	return {
+		page: {
+			color: foreground,
+			backgroundColor: background,
+			fontFamily: metadata.typography.body.fontFamily,
+			fontSize: metadata.typography.body.fontSize,
+			lineHeight: metadata.typography.body.lineHeight,
+			direction: r.pageDirection,
+		} satisfies Style,
+
 		/** The canonical body text style; alias for `text` in StyleSheet slots. */
 		text: bodyText,
 

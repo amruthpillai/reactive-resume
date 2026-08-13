@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 13:34\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "Menú de cuenta"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Acciones"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Activar CSS semántico"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Candidaturas enviadas por semana (últimas 8 semanas)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Enviada"
 
@@ -489,9 +494,9 @@ msgstr "Enviada"
 msgid "Applied on"
 msgstr "Postulado el"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "Reglas aplicadas"
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Aplicado con advertencias"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -526,8 +531,7 @@ msgid "Are you sure you want to delete this item?"
 msgstr "¿Está seguro de que desea eliminar este elemento?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to delete this resume?"
 msgstr "¿Seguro que deseas eliminar este currículum?"
 
@@ -536,8 +540,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "¿Seguro que deseas eliminar tu cuenta?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to lock this resume?"
 msgstr "¿Seguro que deseas bloquear este currículum?"
 
@@ -734,6 +737,7 @@ msgstr "¿Puedo exportar mi currículum a PDF?"
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/api-keys.tsx
 #: src/features/settings/pages/danger-zone.tsx
 #: src/features/settings/pages/profile.tsx
@@ -800,6 +804,14 @@ msgstr "Revisa tu correo electrónico para encontrar un enlace para restablecer 
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "Revisa tu correo electrónico para encontrar un enlace para verificar tu cuenta."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "De cheques"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Borrador de comprobación"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -967,6 +979,10 @@ msgstr "Conversación copiada."
 msgid "Conversation JSON copied."
 msgstr "JSON de conversación copiada."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "Borrador de hoja de estilo convertido"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Copiado al portapapeles."
@@ -989,6 +1005,15 @@ msgstr "Copiar códigos de respaldo"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Copiar JSON"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "Copia secreta"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Copiar hoja de estilo"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1379,8 +1404,7 @@ msgid "Deleting your API key..."
 msgstr "Eliminando tu clave API..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Deleting your resume..."
 msgstr "Eliminando tu currículum..."
 
@@ -1547,6 +1571,11 @@ msgstr "Edite {chip}"
 msgid "Edit application"
 msgstr "Editar candidatura"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "Editar color {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1567,6 +1596,10 @@ msgstr "Editar detalles"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Editar palabra clave"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Edit model"
+msgstr "Editar modelo"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit note"
@@ -1648,7 +1681,7 @@ msgstr "Refuerza la seguridad de tu cuenta con capas adicionales de protección.
 msgid "Enter a name for your passkey."
 msgstr "Introduzca un nombre para su clave de acceso."
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "Introduce uno de tus códigos de respaldo guardados para acceder a tu cuenta"
 
@@ -1672,6 +1705,10 @@ msgstr "Introduce tu contraseña para confirmar la configuración de la autentic
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Introduce tu contraseña para deshabilitar la autenticación de doble factor. Tu cuenta será menos segura sin 2FA habilitada."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Error"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Cada contribución, grande o pequeña, marca una gran diferencia para el proyecto.<0/>¡Gracias por tu apoyo!"
@@ -1679,6 +1716,10 @@ msgstr "Cada contribución, grande o pequeña, marca una gran diferencia para el
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Todo lo que necesitas para crear, personalizar y compartir currículums profesionales. Creado con la privacidad en mente, impulsado por el código abierto y completamente gratis para siempre."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Salir del modo de enfoque"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1886,7 +1927,7 @@ msgid "Failed to verify the password. Please try again."
 msgstr "No se ha podido verificar la contraseña. Por favor, inténtelo de nuevo."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "No se ha podido verificar su código de copia de seguridad. Por favor, inténtelo de nuevo."
 
@@ -1999,6 +2040,10 @@ msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Formato"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Hoja de estilo de formato"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
 msgstr "Gratis"
@@ -2066,7 +2111,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Go Back"
 msgstr "Volver"
 
@@ -2582,6 +2627,12 @@ msgstr "Claro"
 msgid "Light theme"
 msgstr "Tema claro"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "Línea {0}, columna {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Altura de la línea"
@@ -2896,10 +2947,6 @@ msgstr "Aún no hay versiones guardadas."
 msgid "No source data yet."
 msgstr "Aún no hay datos de fuentes."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "Aún no hay reglas de estilo."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "No hay ningún proveedor probado"
@@ -2915,6 +2962,10 @@ msgstr "Noruego"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "No conectado"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "¿No sabes qué escribir?"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -2966,6 +3017,10 @@ msgstr "Asistente de IA abierta"
 msgid "Open Email Client"
 msgstr "Abrir cliente de correo"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Modo de enfoque abierto"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Abrir en constructor"
@@ -2990,6 +3045,7 @@ msgstr "Compatible con OpenAI"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3265,6 +3321,10 @@ msgstr "Pulse <0>Intro</0> para abrir"
 msgid "Preview"
 msgstr "Avance"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "La vista previa y la exportación utilizan la última versión válida."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Color primario"
@@ -3310,6 +3370,10 @@ msgstr "Proveedor"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "Conexión con el proveedor verificada."
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Provider model"
+msgstr "Modelo de proveedor"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3368,9 +3432,21 @@ msgstr "Reanudación reactiva v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Currículum reactivo v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Lea la guía sobre cómo aplicar estilos personalizados."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "Leyendo…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Listo para activar"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Listo para activarse con advertencias"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3387,6 +3463,10 @@ msgstr "Rectángulo (ancho completo)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Rehacer"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Rehacer la edición de la hoja de estilos"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3485,9 +3565,9 @@ msgstr "Restablecer"
 msgid "Reset Password"
 msgstr "Restablecer contraseña"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "Restablecer estilo"
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Restablecer a la hoja de estilos aplicada"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3600,14 +3680,6 @@ msgstr "Rumano"
 msgid "Rotation"
 msgstr "Rotación"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "regla"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "normas"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
 msgstr "Realice su primer análisis para obtener un cuadro de mando, los puntos fuertes y las sugerencias priorizadas."
@@ -3662,6 +3734,10 @@ msgstr "Guardar cambios"
 #: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "Guardar cambios"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Save model"
+msgstr "Guardar modelo"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
@@ -3780,6 +3856,10 @@ msgstr "seleccionado"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Auto alojamiento con Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Hoja de estilo CSS semántica"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4142,6 +4222,14 @@ msgstr "Tachado"
 msgid "Strong fit"
 msgstr "Buen encaje"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Editor de hojas de estilo"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "La hoja de estilos tiene errores."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4298,6 +4386,10 @@ msgstr "Es posible que la página que buscas se haya movido o que ya no exista."
 msgid "The password you entered is incorrect"
 msgstr "La contraseña que introdujiste es incorrecta"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "No se pudo actualizar la vista previa del currículum. Todavía se muestra la última vista previa válida."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "El currículum al que intentas acceder está protegido con contraseña"
@@ -4339,8 +4431,7 @@ msgid "Thinking"
 msgstr "Pensamiento"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "This action cannot be undone."
 msgstr "Esta acción no se puede deshacer."
 
@@ -4630,6 +4721,10 @@ msgstr "Subrayado"
 msgid "Undo"
 msgstr "Deshacer"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Deshacer la edición de la hoja de estilos"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
 msgstr "Currículums ilimitados"
@@ -4827,16 +4922,15 @@ msgstr "Verificada"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/features/auth/pages/verify-2fa-backup.tsx
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "Verificar"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify with a Backup Code"
 msgstr "Verificar con un código de respaldo"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying backup code..."
 msgstr "Verificando código de respaldo..."
 
@@ -4916,8 +5010,7 @@ msgid "What's new in the latest version?"
 msgstr "¿Novedades en la última versión?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "Cuando está bloqueado, el currículum no se puede actualizar ni eliminar."
 
@@ -5006,6 +5099,10 @@ msgstr "Tus datos se almacenan de forma segura y nunca se comparten con terceros
 msgid "Your latest changes could not be saved."
 msgstr "No se pudieron guardar los últimos cambios."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Tus estilos heredados permanecerán activos hasta que actives explícitamente este borrador de CSS semántico."
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "Tu contraseña se ha restablecido correctamente. Ahora puedes iniciar sesión con tu nueva contraseña."
@@ -5023,8 +5120,7 @@ msgid "Your resume has been created successfully."
 msgstr "Tu currículum se ha creado correctamente."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Your resume has been deleted successfully."
 msgstr "Tu currículum se ha eliminado correctamente."
 

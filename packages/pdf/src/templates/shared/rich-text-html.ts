@@ -1,8 +1,10 @@
 import type { HTMLElement, Node } from "node-html-parser";
 import { NodeType, parse } from "node-html-parser";
 import { isDarkColor } from "@reactive-resume/utils/color";
+import { getRichTextSemanticKind, getRichTextSemanticNodeKey } from "../../semantic/rich-text-keys";
 
 export const richTextMarkClassName = "rr-pdf-mark";
+export const richTextSemanticNodeKeyAttribute = "data-resume-semantic-node-key";
 
 const inlineTags = new Set([
 	"a",
@@ -121,7 +123,14 @@ export const convertPseudoBulletParagraphs = (html: string): string =>
 		return converted ?? full;
 	});
 
-export const normalizeRichTextHtml = (html: string): string => {
+type NormalizeRichTextHtmlOptions = {
+	direction?: "ltr" | "rtl";
+};
+
+export const normalizeRichTextHtml = (
+	html: string,
+	{ direction = "ltr" }: NormalizeRichTextHtmlOptions = {},
+): string => {
 	const root = parse(html.trim(), { comment: false });
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
@@ -151,5 +160,71 @@ export const normalizeRichTextHtml = (html: string): string => {
 
 	flushInlineNodes();
 
-	return normalized.join("");
+	const normalizedHtml = normalized.join("");
+	if (direction !== "rtl") return normalizedHtml;
+
+	// RTL pseudo-bullets must become real list items before both the semantic
+	// descriptor and renderer traverse the HTML. RLM anchors each independent
+	// react-pdf-html text frame without changing element ancestry or indices.
+	return convertPseudoBulletParagraphs(normalizedHtml).replace(
+		/<(p|li)\b([^>]*)>/gi,
+		(_match, tag, rest) => `<${tag}${rest}>‏`,
+	);
+};
+
+export const parseNormalizedRichTextHtml = (html: string, options?: NormalizeRichTextHtmlOptions) =>
+	parse(normalizeRichTextHtml(html, options), { comment: false });
+
+export const projectNormalizedRichTextHtml = (
+	html: string,
+	rootNodeKey: string,
+	renderedChildKeysFor: (nodeKey: string) => readonly string[] | undefined,
+): string => {
+	const root = parse(html, { comment: false });
+	const elements = root.querySelectorAll("*");
+
+	for (const element of elements) {
+		if (!getRichTextSemanticKind(element, richTextMarkClassName)) continue;
+		element.setAttribute(
+			richTextSemanticNodeKeyAttribute,
+			getRichTextSemanticNodeKey(rootNodeKey, element, richTextMarkClassName),
+		);
+	}
+
+	const visit = (parent: HTMLElement, parentNodeKey: string) => {
+		for (const child of parent.childNodes) {
+			if (!isElement(child)) continue;
+			const childNodeKey = child.getAttribute(richTextSemanticNodeKeyAttribute);
+			const childContentNodeKey =
+				childNodeKey && getTagName(child) === "li"
+					? `${childNodeKey}/list-item-content-0`
+					: (childNodeKey ?? parentNodeKey);
+			visit(child, childContentNodeKey);
+		}
+
+		const keyedChildren = parent.childNodes.flatMap((child) => {
+			if (!isElement(child)) return [];
+			const nodeKey = child.getAttribute(richTextSemanticNodeKeyAttribute);
+			return nodeKey ? [{ nodeKey, child }] : [];
+		});
+		if (keyedChildren.length === 0) return;
+		const renderedChildKeys = renderedChildKeysFor(parentNodeKey);
+		if (!renderedChildKeys) return;
+
+		const childByNodeKey = new Map(keyedChildren.map(({ nodeKey, child }) => [nodeKey, child]));
+		const projected = renderedChildKeys.flatMap((nodeKey) => {
+			const child = childByNodeKey.get(nodeKey);
+			return child ? [child] : [];
+		});
+		let projectedIndex = 0;
+		const nextChildren = parent.childNodes.flatMap((child) => {
+			if (!isElement(child) || !child.getAttribute(richTextSemanticNodeKeyAttribute)) return [child];
+			const projectedChild = projected[projectedIndex++];
+			return projectedChild ? [projectedChild] : [];
+		});
+		parent.set_content(nextChildren);
+	};
+
+	visit(root, rootNodeKey);
+	return root.toString();
 };

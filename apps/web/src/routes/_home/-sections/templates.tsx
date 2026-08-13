@@ -1,7 +1,6 @@
 import type { TemplateMetadata } from "@/dialogs/resume/template/data";
 import { Trans } from "@lingui/react/macro";
 import { m } from "motion/react";
-import { useMemo } from "react";
 import { templates } from "@/dialogs/resume/template/data";
 
 type TemplateItemProps = {
@@ -75,21 +74,12 @@ const createMarqueeItems = (entries: Array<[string, TemplateMetadata]>, rowId: s
 		{ id: `${rowId}-${template}-repeat`, metadata },
 	]);
 
+const templateEntries = Object.entries(templates);
+const halfway = Math.ceil(templateEntries.length / 2);
+const row1 = createMarqueeItems(templateEntries.slice(0, halfway), "row1");
+const row2 = createMarqueeItems(templateEntries.slice(halfway), "row2");
+
 export function Templates() {
-	// Split templates into two rows and duplicate for seamless infinite scroll
-	const { row1, row2 } = useMemo(() => {
-		const entries = Object.entries(templates);
-		const half = Math.ceil(entries.length / 2);
-		const firstHalf = entries.slice(0, half);
-		const secondHalf = entries.slice(half);
-
-		// Duplicate each row for seamless scrolling
-		return {
-			row1: createMarqueeItems(firstHalf, "row1"),
-			row2: createMarqueeItems(secondHalf, "row2"),
-		};
-	}, []);
-
 	return (
 		<section id="templates" className="overflow-hidden border-t-0! p-4 md:p-8 xl:py-16">
 			<m.div

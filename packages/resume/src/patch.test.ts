@@ -1,3 +1,4 @@
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { applyResumePatches, jsonPatchOperationSchema, ResumePatchError } from "./patch";
@@ -67,6 +68,44 @@ describe("applyResumePatches", () => {
 		const before = JSON.stringify(defaultResumeData);
 		applyResumePatches(defaultResumeData, [{ op: "replace", path: "/basics/name", value: "Bob" }]);
 		expect(JSON.stringify(defaultResumeData)).toBe(before);
+	});
+
+	it("normalizes an unrelated patch without losing compatible custom-section overlap", () => {
+		const data = {
+			...structuredClone(defaultResumeData),
+			customSections: [
+				{
+					id: "custom-experience",
+					type: "experience",
+					title: "Experience",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [
+						{
+							id: "experience-item",
+							hidden: false,
+							company: "Analytical Engines",
+							position: "Programmer",
+							location: "London",
+							period: "1842–1843",
+							description: "<p>Wrote the first algorithm.</p>",
+							content: "<p>Compatible overlap</p>",
+						},
+					],
+				},
+			],
+		} as unknown as ResumeData;
+
+		const result = applyResumePatches(data, [{ op: "replace", path: "/basics/name", value: "Ada" }]);
+
+		expect(result.customSections[0]?.items[0]).toMatchObject({
+			content: "<p>Compatible overlap</p>",
+			roles: [],
+			website: { url: "", label: "", inlineLink: false },
+		});
 	});
 
 	it("applies multiple ops in sequence", () => {

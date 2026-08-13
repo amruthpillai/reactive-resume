@@ -284,7 +284,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 			const toastId = toast.loading(t`Duplicating your resume...`);
 
 			duplicateResume(value, {
-				onSuccess: async (id) => {
+				onSuccess: (id) => {
 					toast.success(t`Your resume has been duplicated successfully.`, { id: toastId });
 					closeDialog();
 

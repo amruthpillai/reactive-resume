@@ -1,5 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { isLocale, resolveLocale } from "./locale";
+// @vitest-environment happy-dom
+
+import { afterEach, describe, expect, it, vi } from "vitest";
+import Cookies from "js-cookie";
+import { changeLocale, formatRelativeTime, isLocale, resolveLocale } from "./locale";
+
+afterEach(() => {
+	vi.restoreAllMocks();
+	vi.useRealTimers();
+	Cookies.remove("locale");
+});
 
 describe("isLocale", () => {
 	it("returns true for known locale en-US", () => {
@@ -42,5 +51,33 @@ describe("resolveLocale", () => {
 
 	it("returns en-US default for empty string", () => {
 		expect(resolveLocale("")).toBe("en-US");
+	});
+});
+
+describe("formatRelativeTime", () => {
+	it("selects the largest matching unit", () => {
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date("2026-01-02T12:00:00Z"));
+		const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+		expect(formatRelativeTime("2026-01-02T10:00:00Z", formatter)).toBe("2 hours ago");
+		expect(formatRelativeTime("2026-01-02T11:59:45Z", formatter)).toBe("now");
+	});
+
+	it("uses the requested fallback for an invalid date", () => {
+		const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+		expect(formatRelativeTime("invalid", formatter, "")).toBe("");
+	});
+});
+
+describe("changeLocale", () => {
+	it("persists a valid locale and reloads", () => {
+		const reload = vi.spyOn(window.location, "reload").mockImplementation(() => undefined);
+
+		changeLocale("de-DE");
+
+		expect(Cookies.get("locale")).toBe("de-DE");
+		expect(reload).toHaveBeenCalledOnce();
 	});
 });

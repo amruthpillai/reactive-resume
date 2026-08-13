@@ -58,7 +58,7 @@ export function registerResources(server: McpServer, client: RouterClient<typeof
 				"custom sections, and metadata (template, layout, typography, colors, CSS).",
 			].join(" "),
 		},
-		async (uri: URL) => ({
+		(uri: URL) => ({
 			contents: [
 				{
 					uri: uri.href,

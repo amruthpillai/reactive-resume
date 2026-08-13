@@ -7,6 +7,7 @@
 		},
 		"apps/web": {
 			"entry": ["lingui.config.ts", "vite.config.ts", "vitest.config.ts"],
+			"ignoreDependencies": ["buffer"],
 			"vite": {
 				"config": []
 			},
@@ -34,13 +35,16 @@
 				"@better-auth/drizzle-adapter",
 				"@better-auth/infra",
 				"@better-auth/passkey",
+				"@bramus/specificity",
 				"@orpc/experimental-ratelimit",
 				"@sindresorhus/slugify",
 				"@t3-oss/env-core",
 				"@uiw/color-convert",
 				"ai",
 				"bcrypt",
+				"canonicalize",
 				"cjk-regex",
+				"css-tree",
 				"deepmerge-ts",
 				"drizzle-zod",
 				"fast-json-patch",

@@ -15,7 +15,7 @@ afterEach(() => {
 function stubOpenAICompatibleResponse(response?: { content?: string; finishReason?: string }) {
 	let requestBody: unknown;
 
-	const fetchMock = vi.fn(async (_input: unknown, init?: { body?: unknown }) => {
+	const fetchMock = vi.fn((_input: unknown, init?: { body?: unknown }) => {
 		const body = JSON.parse(String(init?.body ?? "{}")) as { max_tokens?: number };
 		requestBody = body;
 		const hasEnoughOutputTokens = (body.max_tokens ?? 0) >= 128;

@@ -52,14 +52,14 @@ describe("agent tools", () => {
 		expect(tools).not.toHaveProperty("web_search");
 	});
 
-	it.each([
-		"https://api.openai.com/v1?proxy=1",
-		"https://api.openai.com/v1#fragment",
-	])("does not add provider-native web search for OpenAI providers with non-exact base URL %s", (baseURL) => {
-		const tools = buildTools("openai", { baseURL });
+	it.each(["https://api.openai.com/v1?proxy=1", "https://api.openai.com/v1#fragment"])(
+		"does not add provider-native web search for OpenAI providers with non-exact base URL %s",
+		(baseURL) => {
+			const tools = buildTools("openai", { baseURL });
 
-		expect(tools).not.toHaveProperty("web_search");
-	});
+			expect(tools).not.toHaveProperty("web_search");
+		},
+	);
 
 	it("does not add provider-native web search for unsupported OpenAI models", () => {
 		const tools = buildTools("openai", { model: "custom-model" });
@@ -67,18 +67,14 @@ describe("agent tools", () => {
 		expect(tools).not.toHaveProperty("web_search");
 	});
 
-	it.each<AIProvider>([
-		"anthropic",
-		"gemini",
-		"vercel-ai-gateway",
-		"openrouter",
-		"ollama",
-		"openai-compatible",
-	])("does not add provider-native web search for %s", (provider) => {
-		const tools = buildTools(provider);
+	it.each<AIProvider>(["anthropic", "gemini", "vercel-ai-gateway", "openrouter", "ollama", "openai-compatible"])(
+		"does not add provider-native web search for %s",
+		(provider) => {
+			const tools = buildTools(provider);
 
-		expect(tools).not.toHaveProperty("web_search");
-	});
+			expect(tools).not.toHaveProperty("web_search");
+		},
+	);
 
 	it("keeps instructions explicit about native search availability", () => {
 		expect(buildAgentInstructions({ hasProviderNativeSearch: true })).toContain("Use web_search");

@@ -7,7 +7,7 @@ export async function handleMcp(request: Request) {
 	try {
 		await authenticateRequest(request);
 
-		const server = await createMcpServer(request);
+		const server = createMcpServer(request);
 		const transport = new WebStandardStreamableHTTPServerTransport({
 			enableJsonResponse: true,
 		});

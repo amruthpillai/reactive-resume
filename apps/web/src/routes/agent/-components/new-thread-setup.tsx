@@ -4,7 +4,7 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, ChatCircleDotsIcon, FilePlusIcon, GearSixIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useIsClient } from "usehooks-ts";
 import { Badge } from "@reactive-resume/ui/components/badge";
@@ -12,6 +12,7 @@ import { Button } from "@reactive-resume/ui/components/button";
 import { Label } from "@reactive-resume/ui/components/label";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { Combobox } from "@/components/ui/combobox";
+import { useHasUsableAiProvider } from "@/features/settings/integrations/hooks/use-has-usable-ai-provider";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
 
@@ -34,20 +35,12 @@ function isAgentConfigError(error: unknown) {
 export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 	const isClient = useIsClient();
 	const navigate = useNavigate();
-	const {
-		data: providers,
-		isLoading: isLoadingProviders,
-		error: providersError,
-	} = useQuery(orpc.aiProviders.list.queryOptions());
+	const { usableProviders, isLoading: isLoadingProviders, error: providersError } = useHasUsableAiProvider();
 	const { data: resumes, isLoading: isLoadingResumes } = useQuery(
 		orpc.resume.list.queryOptions({ input: { sort: "lastUpdatedAt", tags: [] } }),
 	);
 	const { mutate: createThread, isPending } = useMutation(orpc.agent.threads.create.mutationOptions());
 
-	const usableProviders = useMemo(
-		() => providers?.filter((provider) => provider.enabled && provider.testStatus === "success") ?? [],
-		[providers],
-	);
 	const [aiProviderIdOverride, setAiProviderIdOverride] = useState<string | null | undefined>(undefined);
 	const [sourceResumeIdOverride, setSourceResumeIdOverride] = useState<string | null | undefined>(undefined);
 	const aiProviderId = aiProviderIdOverride ?? usableProviders[0]?.id ?? null;

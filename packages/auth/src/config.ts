@@ -28,16 +28,16 @@ import { getTrustedOrigins } from "./trusted-origins";
 const authBaseUrl = env.APP_URL;
 const isRateLimitEnabled = process.env.NODE_ENV === "production" && !env.FLAG_DISABLE_API_RATE_LIMIT;
 
-function getOAuthAudiences(): string[] {
-	const base = authBaseUrl.replace(/\/$/, "");
+const oauthAudienceBase = authBaseUrl.replace(/\/$/, "");
+const OAUTH_AUDIENCES = [
+	oauthAudienceBase,
+	`${oauthAudienceBase}/`,
+	`${oauthAudienceBase}/mcp`,
+	`${oauthAudienceBase}/mcp/`,
+];
 
-	return [base, `${base}/`, `${base}/mcp`, `${base}/mcp/`];
-}
-
-const OAUTH_AUDIENCES = getOAuthAudiences();
-
-export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
-	return await verifyAccessToken(token, {
+export function verifyOAuthToken(token: string): Promise<JWTPayload> {
+	return verifyAccessToken(token, {
 		jwksUrl: `${authBaseUrl}/api/auth/jwks`,
 		verifyOptions: {
 			issuer: `${authBaseUrl}/api/auth`,
@@ -105,6 +105,7 @@ const getAuthConfig = () => {
 		},
 
 		hooks: {
+			// biome-ignore lint/suspicious/useAwait: Better Auth requires middleware callbacks to return a Promise.
 			before: createAuthMiddleware(async (ctx) => {
 				if (!ctx.path.includes("/oauth2/register")) return;
 
@@ -196,7 +197,6 @@ const getAuthConfig = () => {
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				disableImplicitSignUp: true,
 				clientId: env.GOOGLE_CLIENT_ID ?? "",
 				clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
 				mapProfileToUser: createProfileMapper({
@@ -209,7 +209,6 @@ const getAuthConfig = () => {
 			github: {
 				enabled: !!env.GITHUB_CLIENT_ID && !!env.GITHUB_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				disableImplicitSignUp: true,
 				clientId: env.GITHUB_CLIENT_ID ?? "",
 				clientSecret: env.GITHUB_CLIENT_SECRET ?? "",
 				mapProfileToUser: createGithubProfileMapper(),
@@ -218,7 +217,6 @@ const getAuthConfig = () => {
 			linkedin: {
 				enabled: !!env.LINKEDIN_CLIENT_ID && !!env.LINKEDIN_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
-				disableImplicitSignUp: true,
 				clientId: env.LINKEDIN_CLIENT_ID ?? "",
 				clientSecret: env.LINKEDIN_CLIENT_SECRET ?? "",
 				mapProfileToUser: createProfileMapper({

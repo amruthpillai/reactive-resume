@@ -8,7 +8,7 @@ msgstr ""
 "Language: uz\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 13:34\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Uzbek\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -162,6 +162,10 @@ msgstr "Hisob menyusi"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "Amallar"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "Semantik CSS-ni faollashtirish"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Haftasiga yuborilgan arizalar (so‘nggi 8 hafta)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Topshirildi"
 
@@ -489,9 +494,9 @@ msgstr "Topshirildi"
 msgid "Applied on"
 msgstr "Ariza sanasi"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "Amaliy qoidalar"
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "Ogohlantirishlar bilan qo'llanildi"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -526,8 +531,7 @@ msgid "Are you sure you want to delete this item?"
 msgstr "Ushbu elementni o'chirmoqchimisiz?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to delete this resume?"
 msgstr "Haqiqatan ham bu tarjimai holni oʻchirmoqchimisiz?"
 
@@ -536,8 +540,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "Haqiqatan ham akkauntingizni oʻchirmoqchimisiz?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to lock this resume?"
 msgstr "Haqiqatan ham bu tarjimai holni qulflamoqchimisiz?"
 
@@ -734,6 +737,7 @@ msgstr "Rezyumeni PDF ga eksport qila olamanmi?"
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/api-keys.tsx
 #: src/features/settings/pages/danger-zone.tsx
 #: src/features/settings/pages/profile.tsx
@@ -800,6 +804,14 @@ msgstr "Parolingizni tiklash uchun havola yuborilganligini emailingizni tekshiri
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "Hisobingizni tasdiqlash uchun havola yuborilganligini emailingizni tekshiring."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "Tekshirish"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "Qoralama tekshirilmoqda"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -967,6 +979,10 @@ msgstr "Suhbat nusxalandi."
 msgid "Conversation JSON copied."
 msgstr "JSON suhbatidan nusxa ko'chirildi."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "O'zgartirilgan uslublar jadvali qoralamasi"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "Buferga nusxalandi."
@@ -989,6 +1005,15 @@ msgstr "Zaxira kodlarini nusxalash"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON nusxasini olish"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "Maxfiy nusxa ko'chirish"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "Uslublar jadvalini nusxalash"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1379,8 +1404,7 @@ msgid "Deleting your API key..."
 msgstr "API kalitingiz o'chirilmoqda..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Deleting your resume..."
 msgstr "Rezyumeni o‘chirilmoqda..."
 
@@ -1547,6 +1571,11 @@ msgstr "Tahrir qilish {chip}"
 msgid "Edit application"
 msgstr "Arizani tahrirlash"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "{0} rangini tahrirlash"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1567,6 +1596,10 @@ msgstr "Tafsilotlarni tahrirlash"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "Kalit so'zni tahrirlash"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Edit model"
+msgstr "Modelni tahrirlash"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit note"
@@ -1648,7 +1681,7 @@ msgstr "Hisobingiz xavfsizligini qo‘shimcha himoya qatlamlari bilan oshiring."
 msgid "Enter a name for your passkey."
 msgstr "Kirish kalitingiz uchun nom kiriting."
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "Hisobingizga kirish uchun saqlagan zaxira kodlaringizdan birini kiriting"
 
@@ -1672,6 +1705,10 @@ msgstr "Ikki bosqichli autentifikatsiyani yoqishni tasdiqlash uchun parolingizni
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Ikki bosqichli autentifikatsiyani o‘chirishni tasdiqlash uchun parolingizni kiriting. 2BShT yoqilmagan holda hisobingiz kamroq xavfsiz boʻladi."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "Xato"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "Har bir hissa, kichik yoki katta bo‘lishidan qat’i nazar, loyiha uchun katta ahamiyatga ega.<0/>Qo‘llab-quvvatlaganingiz uchun rahmat!"
@@ -1679,6 +1716,10 @@ msgstr "Har bir hissa, kichik yoki katta bo‘lishidan qat’i nazar, loyiha uch
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "Professional rezyumelar yaratish, sozlash va ulashish uchun kerakli barcha narsa. Maxfiylik tamoyiliga asoslangan, ochiq manba asosida qurilgan va doimiy ravishda butunlay bepul."
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "Fokus rejimidan chiqish"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1886,7 +1927,7 @@ msgid "Failed to verify the password. Please try again."
 msgstr "Parolni tasdiqlash muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ring."
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "Zaxira kodingizni tasdiqlash muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ring."
 
@@ -1999,6 +2040,10 @@ msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "Format"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "Uslublar jadvalini formatlash"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
 msgstr "Bepul"
@@ -2066,7 +2111,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Go Back"
 msgstr "Orqaga qaytish"
 
@@ -2582,6 +2627,12 @@ msgstr "Yorugʻ"
 msgid "Light theme"
 msgstr "Yorugʻ mavzu"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "{0}qatori, {1} ustuni"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "Satr balandligi"
@@ -2896,10 +2947,6 @@ msgstr "Hali saqlanmagan versiyalar mavjud."
 msgid "No source data yet."
 msgstr "Hali manba ma'lumotlari yo'q."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "Hali uslub qoidalari yo'q."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Sinovdan o'tgan provayder yo'q"
@@ -2915,6 +2962,10 @@ msgstr "Norveg tili"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "Ulanmagan"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "Nima yozishni bilmayapsizmi?"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -2966,6 +3017,10 @@ msgstr "Ochiq AI yordamchisi"
 msgid "Open Email Client"
 msgstr "Pochta dasturini ochish"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "Fokus rejimini ochish"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "Quruvchida ochish"
@@ -2990,6 +3045,7 @@ msgstr "OpenAI bilan mos keladi"
 msgid "OpenRouter"
 msgstr "Ochiq marshrutizator"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3265,6 +3321,10 @@ msgstr "Ochish uchun <0>Enter tugmasini</0> bosing"
 msgid "Preview"
 msgstr "Oldindan ko'rish"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "Oldindan ko'rish va eksport qilish uchun oxirgi amaldagi versiyadan foydalaning."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Asosiy rang"
@@ -3310,6 +3370,10 @@ msgstr "Provayder"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "Provayder ulanishi tasdiqlandi."
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Provider model"
+msgstr "Provayder modeli"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3368,9 +3432,21 @@ msgstr "Reaktiv rezyume v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reaktiv Rezume v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "Maxsus uslublarni qo'llash qo'llanmasini o'qing."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "O'qilmoqda…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "Faollashtirishga tayyor"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "Ogohlantirishlar bilan faollashtirishga tayyor"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3387,6 +3463,10 @@ msgstr "Toʻgʻri burchakli (toʻliq kenglik)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "Qayta bajarish"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "Uslublar jadvalini tahrirlashni qayta bajarish"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3485,9 +3565,9 @@ msgstr "Tiklash"
 msgid "Reset Password"
 msgstr "Parolni tiklash"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "Uslubni tiklash"
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "Qo'llanilgan uslublar jadvaliga qayta o'rnatish"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3600,14 +3680,6 @@ msgstr "Rumin tili"
 msgid "Rotation"
 msgstr "Aylantirish"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "qoida"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "qoidalar"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
 msgstr "Birinchi tahlilingizni ishga tushiring va ballar jadvali, kuchli tomonlar hamda ustuvor tavsiyalarni oling."
@@ -3662,6 +3734,10 @@ msgstr "O'zgarishlarni saqlash"
 #: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "Oʻzgarishlarni saqlash"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Save model"
+msgstr "Modelni saqlash"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
@@ -3780,6 +3856,10 @@ msgstr "tanlandi"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Docker bilan mustaqil joylashtirish"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "Semantik CSS uslublar jadvali"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4142,6 +4222,14 @@ msgstr "Ustiga chizish"
 msgid "Strong fit"
 msgstr "Kuchli moslik"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "Uslublar jadvali muharriri"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "Uslublar jadvalida xatolar mavjud"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -4298,6 +4386,10 @@ msgstr "Siz izlayotgan sahifa boshqa joyga ko'chirilgan yoki endi mavjud emas bo
 msgid "The password you entered is incorrect"
 msgstr "Kiritilgan parol noto'g'ri"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "Rezyume oldindan ko'rish versiyasini yangilab bo'lmadi. Oxirgi haqiqiy oldindan ko'rish versiyasi hali ham ko'rsatilmoqda."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Siz kirishga harakat qilayotgan rezyume parol bilan himoyalangan"
@@ -4339,8 +4431,7 @@ msgid "Thinking"
 msgstr "Fikrlash"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "This action cannot be undone."
 msgstr "Bu amalni bekor qilib boʻlmaydi."
 
@@ -4630,6 +4721,10 @@ msgstr "Tagiga chizilgan"
 msgid "Undo"
 msgstr "Bekor qilish"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "Uslublar jadvali tahririni bekor qilish"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
 msgstr "Cheksiz rezyumelar"
@@ -4827,16 +4922,15 @@ msgstr "Tasdiqlangan"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/features/auth/pages/verify-2fa-backup.tsx
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "Tasdiqlash"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify with a Backup Code"
 msgstr "Zaxira kod bilan tasdiqlash"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying backup code..."
 msgstr "Zaxira kod tekshirilmoqda..."
 
@@ -4916,8 +5010,7 @@ msgid "What's new in the latest version?"
 msgstr "So‘nggi versiyada nima yangiliklar bor?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "Qulfda bo‘lsa, rezyumeni yangilash yoki o‘chirish mumkin emas."
 
@@ -5006,6 +5099,10 @@ msgstr "Maʼlumotlaringiz xavfsiz saqlanadi va uchinchi tomonlarga hech qachon u
 msgid "Your latest changes could not be saved."
 msgstr "So'nggi o'zgarishlaringizni saqlab bo'lmadi."
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "Sizning eski uslublaringiz ushbu Semantik CSS qoralamasini aniq faollashtirmaguningizcha faol bo'lib qoladi."
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "Parolingiz muvaffaqiyatli tiklandi. Endi yangi parolingiz bilan tizimga kirishingiz mumkin."
@@ -5023,8 +5120,7 @@ msgid "Your resume has been created successfully."
 msgstr "Rezyume muvaffaqiyatli yaratildi."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Your resume has been deleted successfully."
 msgstr "Rezyume muvaffaqiyatli o‘chirildi."
 

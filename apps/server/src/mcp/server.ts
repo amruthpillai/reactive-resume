@@ -22,7 +22,7 @@ function createRequestClient(request: Request): RouterClient<typeof router> {
 	});
 }
 
-export async function createMcpServer(request: Request) {
+export function createMcpServer(request: Request) {
 	const server = new McpServer(
 		{
 			name: "reactive-resume",

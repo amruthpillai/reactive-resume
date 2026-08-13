@@ -41,6 +41,12 @@ const ROLLED_BACK_MESSAGE = "This patch was rolled back when the resume was rest
 const activeRunControllers = new Map<string, AbortController>();
 const canceledRunsWithPersistedPartial = new Set<string>();
 
+// Abort reasons MUST be an AbortError: the AI SDK only treats `err.name === "AbortError"`
+// (via isAbortError) as a cancellation. A bare-string reason is treated as a genuine stream
+// error whose rejection escapes the background (resumable-stream) pump and takes down the whole
+// process with ERR_UNHANDLED_REJECTION. The label is preserved as the DOMException message.
+const abortReason = (label: string) => new DOMException(label, "AbortError");
+
 type AgentThreadRecord = typeof schema.agentThread.$inferSelect;
 type AgentMessageRecord = typeof schema.agentMessage.$inferSelect;
 type AgentActionRecord = typeof schema.agentAction.$inferSelect;
@@ -332,20 +338,11 @@ function uniqueAttachmentIds(ids: unknown) {
 		throw new ORPCError("BAD_REQUEST", { message: "Attachment IDs must be unique." });
 	}
 
-	if (unique.size > MAX_ATTACHMENTS_PER_MESSAGE) {
-		throw new ORPCError("BAD_REQUEST", { message: "Too many attachments for one message." });
-	}
-
-	return Array.from(unique);
-}
-
-function normalizeAttachmentIds(ids: unknown) {
-	const unique = uniqueAttachmentIds(ids);
-	return unique;
+	return [...unique];
 }
 
 async function getUnlinkedMessageAttachments(input: { ids: unknown; threadId: string; userId: string }) {
-	const ids = normalizeAttachmentIds(input.ids);
+	const ids = uniqueAttachmentIds(input.ids);
 	if (ids.length === 0) return [];
 
 	const attachments = await db
@@ -406,9 +403,9 @@ async function linkAttachmentsToMessage(input: {
 	}
 }
 
-async function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): Promise<AttachmentModelInput[]> {
+function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): Promise<AttachmentModelInput[]> {
 	const storage = getStorageService();
-	const inputs = await Promise.all(
+	return Promise.all(
 		attachments.map(async (attachment) => {
 			const stored = await storage.read(attachment.storageKey);
 			if (!stored) {
@@ -418,8 +415,6 @@ async function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): 
 			return { attachment, data: stored.data };
 		}),
 	);
-
-	return inputs;
 }
 
 function attachModelPartsToLatestUserMessage(
@@ -643,7 +638,7 @@ function buildThreadTitle(message: UIMessage, fallback: string) {
 	return text.length > 60 ? `${text.slice(0, 57)}...` : text;
 }
 
-async function listThreadMessages(input: { threadId: string; userId: string }) {
+function listThreadMessages(input: { threadId: string; userId: string }) {
 	return db
 		.select()
 		.from(schema.agentMessage)
@@ -976,7 +971,7 @@ export const agentService = {
 			const activeStreamId = thread.activeStreamId;
 
 			if (activeRunId) {
-				activeRunControllers.get(activeRunId)?.abort("USER_ARCHIVED");
+				activeRunControllers.get(activeRunId)?.abort(abortReason("USER_ARCHIVED"));
 				activeRunControllers.delete(activeRunId);
 				try {
 					await clearActiveAgentRunIfCurrent({
@@ -1206,7 +1201,7 @@ export const agentService = {
 				persistError = error;
 			} finally {
 				if (activeRunId) {
-					activeRunControllers.get(activeRunId)?.abort("USER_STOPPED");
+					activeRunControllers.get(activeRunId)?.abort(abortReason("USER_STOPPED"));
 					activeRunControllers.delete(activeRunId);
 					try {
 						await clearActiveAgentRunIfCurrent({

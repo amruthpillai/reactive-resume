@@ -2,6 +2,8 @@ import { protectedProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
+import { convertLegacyStylesheet, validateHistoricalStylesheet } from "./stylesheet-preflight";
+import { stylesheetFromSnapshot } from "./stylesheet-service";
 
 export const versionsRouter = {
 	listVersions: protectedProcedure
@@ -17,9 +19,9 @@ export const versionsRouter = {
 		})
 		.input(resumeDto.listVersions.input)
 		.output(resumeDto.listVersions.output)
-		.handler(async ({ context, input }) => {
-			return resumeService.versions.list({ resumeId: input.resumeId, userId: context.user.id });
-		}),
+		.handler(({ context, input }) =>
+			resumeService.versions.list({ resumeId: input.resumeId, userId: context.user.id }),
+		),
 
 	restoreVersion: protectedProcedure
 		.route({
@@ -35,11 +37,46 @@ export const versionsRouter = {
 		.input(resumeDto.restoreVersion.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.restoreVersion.output)
+		.errors({
+			SEMANTIC_STYLESHEET_UNAVAILABLE: {
+				message: "Semantic stylesheet PDF preflight is unavailable.",
+				status: 503,
+			},
+			STYLESHEET_VALIDATION_FAILED: {
+				message: "The historical stylesheet failed validation.",
+				status: 400,
+			},
+		})
 		.handler(async ({ context, input }) => {
-			return resumeService.versions.restore({
+			const resume = await resumeService.versions.restore({
 				resumeId: input.resumeId,
 				versionId: input.versionId,
 				userId: context.user.id,
+				prepareData: async ({ data, stylesheetRevision }) => {
+					const stylesheet = data.metadata.stylesheet;
+					if (!stylesheet) return data;
+
+					const validated = await validateHistoricalStylesheet({
+						data,
+						resumeId: input.resumeId,
+						revision: stylesheetRevision,
+						stylesheet,
+						...(context.stylesheetPreflightRunner ? { runner: context.stylesheetPreflightRunner } : {}),
+					});
+					return {
+						...data,
+						metadata: { ...data.metadata, stylesheet: validated },
+					};
+				},
 			});
+			const stylesheet = await stylesheetFromSnapshot({ ...resume, userId: context.user.id }, convertLegacyStylesheet);
+			return {
+				resume,
+				stylesheetState: {
+					stylesheet,
+					revision: resume.stylesheetRevision,
+					renderDataVersion: resume.renderDataVersion,
+				},
+			};
 		}),
 };

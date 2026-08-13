@@ -8,7 +8,7 @@ msgstr ""
 "Language: or\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 13:34\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Odia\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -162,6 +162,10 @@ msgstr "ଆକାଉଣ୍ଟ ମେନୁ"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "କାର୍ଯ୍ୟଗୁଡ଼ିକ"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "ସିମାଣ୍ଟିକ୍ CSS ସକ୍ରିୟ କରନ୍ତୁ"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "ପ୍ରତି ସପ୍ତାହରେ ପଠାଯାଇଥିବା ଆବେଦନ (ଗତ 8 ସପ୍ତାହ)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "ଆବେଦନ କରାଯାଇଛି"
 
@@ -489,9 +494,9 @@ msgstr "ଆବେଦନ କରାଯାଇଛି"
 msgid "Applied on"
 msgstr "ପ୍ରୟୋଗ ହୋଇଛି |"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "ଲାଗୁ ହୋଇଥିବା ନିୟମଗୁଡ଼ିକ"
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "ଚେତାବନୀ ସହିତ ଲାଗୁ କରାଯାଇଛି"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -526,8 +531,7 @@ msgid "Are you sure you want to delete this item?"
 msgstr "ଆପଣ ନିଶ୍ଚିତ କି ଏହି ଆଇଟମ୍‌କୁ ବିଲୋପ କରିବାକୁ ଚାହାଁନ୍ତି?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to delete this resume?"
 msgstr "ଆପଣ ନିଶ୍ଚିତ କି ଏହି ରେଜ୍ୟୁମେକୁ ବିଲୋପ କରିବାକୁ ଚାହାଁନ୍ତି?"
 
@@ -536,8 +540,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "ଆପଣ ନିଶ୍ଚିତ କି ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ବିଲୋପ କରିବାକୁ ଚାହାଁନ୍ତି?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to lock this resume?"
 msgstr "ଆପଣ ନିଶ୍ଚିତ କି ଏହି ରେଜ୍ୟୁମେକୁ ଲକ୍ କରିବାକୁ ଚାହାଁନ୍ତି?"
 
@@ -734,6 +737,7 @@ msgstr "ମୁଁ ମୋର ରେଜ୍ୟୁମେକୁ PDF କୁ ନିର�
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/api-keys.tsx
 #: src/features/settings/pages/danger-zone.tsx
 #: src/features/settings/pages/profile.tsx
@@ -800,6 +804,14 @@ msgstr "ଆପଣଙ୍କ ପାସୱାର୍ଡ ପୁନଃସେଟ୍ କ
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ସତ୍ୟାପନ କରିବା ପାଇଁ ଲିଙ୍କ ପାଇଁ ଆପଣଙ୍କ ଇମେଲ୍ ଯାଞ୍ଚ କରନ୍ତୁ।"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "ଯାଞ୍ଚ କରାଯାଉଛି"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "ଡ୍ରାଫ୍ଟ ଯାଞ୍ଚ କରାଯାଉଛି"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -967,6 +979,10 @@ msgstr "ବାର୍ତ୍ତାଳାପ କପି କରାଯାଇଛି।"
 msgid "Conversation JSON copied."
 msgstr "ବାର୍ତ୍ତାଳାପ JSON କପି କରାଯାଇଛି।"
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "ରୂପାନ୍ତରିତ ଷ୍ଟାଇଲସିଟ୍ ଡ୍ରାଫ୍ଟ"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "କ୍ଲିପବୋର୍ଡରେ କପି କରାଯାଇଛି |"
@@ -989,6 +1005,15 @@ msgstr "ବ୍ୟାକଅପ୍ କୋଡଗୁଡିକ କପି କରନ୍
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON କପି କରନ୍ତୁ"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "ଗୁପ୍ତ ଟୋକନ୍ କପି କରନ୍ତୁ"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "ଷ୍ଟାଇଲସିଟ୍ କପି କରନ୍ତୁ"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1379,8 +1404,7 @@ msgid "Deleting your API key..."
 msgstr "ଆପଣଙ୍କ API କି ବିଲୋପ ହେଉଛି..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Deleting your resume..."
 msgstr "ଆପଣଙ୍କ ରେଜ୍ୟୁମେ ବିଲୋପ ହୋଇଯାଉଛି..."
 
@@ -1547,6 +1571,11 @@ msgstr "{chip} ସମ୍ପାଦନ କରନ୍ତୁ"
 msgid "Edit application"
 msgstr "ପ୍ରୟୋଗ ସଂପାଦନ କରନ୍ତୁ |"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "ରଙ୍ଗ ସମ୍ପାଦନ କରନ୍ତୁ {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1567,6 +1596,10 @@ msgstr "ବିବରଣୀ ସମ୍ପାଦନ କରନ୍ତୁ"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "କୀୱାର୍ଡ ସମ୍ପାଦନ କରନ୍ତୁ"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Edit model"
+msgstr "ମଡେଲ୍ ସମ୍ପାଦନ କରନ୍ତୁ"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit note"
@@ -1648,7 +1681,7 @@ msgstr "ଅତିରିକ୍ତ ସୁରକ୍ଷା ସ୍ତର ସହିତ
 msgid "Enter a name for your passkey."
 msgstr "ଆପଣଙ୍କ ପାସକି ପାଇଁ ଏକ ନାମ ଲେଖନ୍ତୁ।"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "ଆପଣଙ୍କ ଆକାଉଣ୍ଟକୁ ଆକ୍ସେସ୍ କରିବା ପାଇଁ ସଜାଇ ରଖିଥିବା ବ୍ୟାକଅପ୍ କୋଡ୍‌ଗୁଡିକ ମଧ୍ୟରୁ ଗୋଟିଏକୁ ପ୍ରବେଶ କରନ୍ତୁ"
 
@@ -1672,6 +1705,10 @@ msgstr "ଦ୍ୱି-ଘଟକ ପରିଚୟ ପ୍ରମାଣିକରଣ �
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "ଦ୍ୱି-ଘଟକ ପରିଚୟ ପ୍ରମାଣିକରଣ ଅସକ୍ରିୟ କରିବା ପାଇଁ ଆପଣଙ୍କ ପାସୱାର୍ଡ ପ୍ରବେଶ କରନ୍ତୁ। 2FA ସକ୍ରିୟ ନ ଥିଲେ ଆପଣଙ୍କ ଆକାଉଣ୍ଟ କମ୍ ସୁରକ୍ଷିତ ହେବ।"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "ତ୍ରୁଟି"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "ପ୍ରତ୍ୟେକ ଅବଦାନ, ବଡ଼ କିମ୍ବା ଛୋଟ, ପ୍ରକଳ୍ପ ପାଇଁ ବିଶେଷ ପରିବର୍ତ୍ତନ ଆଣେ।<0/>ଆପଣଙ୍କ ସମର୍ଥନ ପାଇଁ ଧନ୍ୟବାଦ!"
@@ -1679,6 +1716,10 @@ msgstr "ପ୍ରତ୍ୟେକ ଅବଦାନ, ବଡ଼ କିମ୍ବା �
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "ପେଶାଦାର ରେଜ୍ୟୁମେ ତିଆରି, କଷ୍ଟମାଇଜ୍ ଏବଂ ସେୟାର କରିବାକୁ ଆପଣଙ୍କୁ ଯାହା କିଛି ଆବଶ୍ୟକ ସମସ୍ତ ଏଥିରେ ଅଛି। ଗୋପନୀୟତା ଧ୍ୟାନରେ ରଖି ନିର୍ମିତ, ଖୋଲା‑ମୂଳ ଦ୍ୱାରା ଶକ୍ତିଶାଳୀ ହୋଇଛି, ଏବଂ ସଂପୂର୍ଣ୍ଣ ଭାବରେ ସଦା ପାଇଁ ନିଶୁଳ୍କ।"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "ଫୋକସ୍ ମୋଡ୍‌ରୁ ବାହାରି ଯାଆନ୍ତୁ"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1886,7 +1927,7 @@ msgid "Failed to verify the password. Please try again."
 msgstr "ପାସୱାର୍ଡ ସତ୍ୟାପନ କରିବାରେ ବିଫଳ ହେଲା। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "ଆପଣଙ୍କ ବ୍ୟାକଅପ୍ କୋଡ୍ ସତ୍ୟାପନ କରିବାରେ ବିଫଳ ହେଲା। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"
 
@@ -1999,6 +2040,10 @@ msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "ରୂପରେଖା (Format)"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "ଷ୍ଟାଇଲସିଟ୍ ଫର୍ମାଟ୍ କରନ୍ତୁ"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
 msgstr "ନିଶୁଳ୍କ"
@@ -2066,7 +2111,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Go Back"
 msgstr "ପଛକୁ ଯାଆନ୍ତୁ"
 
@@ -2582,6 +2627,12 @@ msgstr "ଲାଇଟ୍"
 msgid "Light theme"
 msgstr "ଲାଇଟ୍ ଥିମ୍"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "ଧାଡି {0}, ସ୍ତମ୍ଭ {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "ଲାଇନ୍ ଉଚ୍ଚତା"
@@ -2896,10 +2947,6 @@ msgstr "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ସେଭ୍ କରାଯ
 msgid "No source data yet."
 msgstr "ଏପର୍ଯ୍ୟନ୍ତ କ source ଣସି ଉତ୍ସ ତଥ୍ୟ ନାହିଁ |"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଷ୍ଟାଇଲ୍ ନିୟମ ନାହିଁ।"
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "କୌଣସି ପରୀକ୍ଷିତ ପ୍ରଦାନକାରୀ ନାହାଁନ୍ତି"
@@ -2915,6 +2962,10 @@ msgstr "ନରୱେଜିଆନ୍"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "ସଂଯୁକ୍ତ ହୋଇନାହିଁ"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "କଣ ଲେଖିବେ ନିଶ୍ଚିତ ନୁହଁନ୍ତି?"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -2966,6 +3017,10 @@ msgstr "AI ଆସିଷ୍ଟାଣ୍ଟ ଖୋଲନ୍ତୁ"
 msgid "Open Email Client"
 msgstr "ଇମେଲ୍ କ୍ଲାୟେଣ୍ଟ ଖୋଲନ୍ତୁ"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "ଫୋକସ୍ ମୋଡ୍ ଖୋଲନ୍ତୁ"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "ବିଲ୍ଡରରେ ଖୋଲନ୍ତୁ"
@@ -2990,6 +3045,7 @@ msgstr "OpenAI-ସୁସଙ୍ଗତ"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3265,6 +3321,10 @@ msgstr "ଖୋଲିବା ପାଇଁ <0>Enter</0> ଦବାନ୍ତୁ"
 msgid "Preview"
 msgstr "ପୂର୍ବାବଲୋକନ"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "ପୂର୍ବାବଲୋକନ ଏବଂ ରପ୍ତାନି ଶେଷ ବୈଧ ସଂସ୍କରଣ ବ୍ୟବହାର କରନ୍ତୁ।"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "ମୁଖ୍ୟ ରଙ୍ଗ"
@@ -3310,6 +3370,10 @@ msgstr "ପ୍ରଦାନକାରୀ"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "ପ୍ରଦାତା ସଂଯୋଗ ଯାଞ୍ଚ କରାଯାଇଛି।"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Provider model"
+msgstr "ପ୍ରଦାତା ମଡେଲ୍"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3368,9 +3432,21 @@ msgstr "ପ୍ରତିକ୍ରିୟାଶୀଳ ରିଜ୍ୟୁମ୍ v<0>
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reactive Resume v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "କଷ୍ଟମ୍ ଷ୍ଟାଇଲ୍ସ ପ୍ରୟୋଗ କରିବା ଗାଇଡ୍ ପଢ଼ନ୍ତୁ।"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "ପ Reading ିବା…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "ସକ୍ରିୟ କରିବାକୁ ପ୍ରସ୍ତୁତ"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "ଚେତାବନୀ ସହିତ ସକ୍ରିୟ କରିବାକୁ ପ୍ରସ୍ତୁତ"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3387,6 +3463,10 @@ msgstr "ଆୟାତାକାର (ପୁରା ପ୍ରସ୍ଥ)"
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "ପୁନଃକରିଦିଅନ୍ତୁ"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "ଷ୍ଟାଇଲସିଟ୍ ସମ୍ପାଦନ ପୁନଃକରିବା"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3485,9 +3565,9 @@ msgstr "ରିସେଟ୍ କରନ୍ତୁ"
 msgid "Reset Password"
 msgstr "ପାସୱାର୍ଡ ରିସେଟ୍ କରନ୍ତୁ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "ଷ୍ଟାଇଲ୍ ରିସେଟ୍ କରନ୍ତୁ"
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "ଲାଗୁ ହୋଇଥିବା ଷ୍ଟାଇଲସିଟକୁ ରିସେଟ୍ କରନ୍ତୁ"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3600,14 +3680,6 @@ msgstr "ରୋମାନିଆନ୍"
 msgid "Rotation"
 msgstr "ଘୁର୍ଣ୍ଣନ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "ନିୟମ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "ନିୟମ"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
 msgstr "ସ୍କୋରକାର୍ଡ, ଶକ୍ତି ଏବଂ ପ୍ରାଥମିକତାଭିତ୍ତିକ ପରାମର୍ଶ ପାଇବା ପାଇଁ ଆପଣଙ୍କ ପ୍ରଥମ ବିଶ୍ଳେଷଣ ଚଲାନ୍ତୁ।"
@@ -3662,6 +3734,10 @@ msgstr "ପରିବର୍ତ୍ତନଗୁଡିକ ସଞ୍ଚୟ କରନ�
 #: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "ପରିବର୍ତ୍ତନଗୁଡିକ ସେଭ୍ କରନ୍ତୁ"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Save model"
+msgstr "ମଡେଲ୍ ସେଭ୍ କରନ୍ତୁ"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
@@ -3780,6 +3856,10 @@ msgstr "ମନୋନୀତ |"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "Docker ସହ ସ୍ୱୟଂ‑ହୋଷ୍ଟ କରନ୍ତୁ"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "ଅର୍ଥଗତ CSS ଷ୍ଟାଇଲସିଟ୍"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4142,6 +4222,14 @@ msgstr "ଷ୍ଟ୍ରାଇକ୍"
 msgid "Strong fit"
 msgstr "ଶକ୍ତିଶାଳୀ ଫିଟ୍ |"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "ଷ୍ଟାଇଲସିଟ୍ ଏଡିଟର୍"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "ଷ୍ଟାଇଲସିଟରେ ତ୍ରୁଟି ଅଛି"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "ସବ୍ରେଡିଟ୍ (Subreddit)"
@@ -4298,6 +4386,10 @@ msgstr "ଆପଣ ଖୋଜୁଥିବା ପୃଷ୍ଠାଟି ହୁଏତ
 msgid "The password you entered is incorrect"
 msgstr "ଆପଣ ଯେ ପାସୱାର୍ଡ ପ୍ରବେଶ କରିଛନ୍ତି ସେଥା ଭୁଲ୍"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "ରିଜ୍ୟୁମ୍ ପ୍ରିଭ୍ୟୁ ଅପଡେଟ୍ କରାଯାଇପାରିଲା ନାହିଁ। ଶେଷ ବୈଧ ପ୍ରିଭ୍ୟୁ ଏବେ ବି ଦେଖାଯାଉଛି।"
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "ଯେ ରେଜ୍ୟୁମେକୁ ଆପଣ ଆକ୍ସେସ୍ କରିବାକୁ ଚେଷ୍ଟା କରୁଛନ୍ତି ଏହା ପାସୱାର୍ଡ ସୁରକ୍ଷିତ"
@@ -4339,8 +4431,7 @@ msgid "Thinking"
 msgstr "ଚିନ୍ତା କରୁଛି"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "This action cannot be undone."
 msgstr "ଏହି କାର୍ଯ୍ୟ ପୁନଃ କରିହୋଇପାରିବ ନାହିଁ।"
 
@@ -4630,6 +4721,10 @@ msgstr "ଅଣ୍ଡର୍ଲାଇନ୍"
 msgid "Undo"
 msgstr "ପୂର୍ବବତ୍ କରନ୍ତୁ"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "ଷ୍ଟାଇଲସିଟ୍ ସମ୍ପାଦନକୁ ପୂର୍ବବତ୍ କରନ୍ତୁ"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
 msgstr "ଅସୀମିତ ରେଜ୍ୟୁମେଗୁଡିକ"
@@ -4827,16 +4922,15 @@ msgstr "ସତ୍ୟାପିତ"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/features/auth/pages/verify-2fa-backup.tsx
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "ସତ୍ୟାପନ କରନ୍ତୁ"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify with a Backup Code"
 msgstr "ବ୍ୟାକଅପ୍ କୋଡ୍ ସହ ସତ୍ୟାପନ କରନ୍ତୁ"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying backup code..."
 msgstr "ବ୍ୟାକଅପ୍ କୋଡ୍ ସତ୍ୟାପନ ହେଉଛି..."
 
@@ -4916,8 +5010,7 @@ msgid "What's new in the latest version?"
 msgstr "ଶେଷ ସଂସ୍କରଣରେ କ’ଣ ନୂତନ ଅଛି?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "ଲକ୍ ହେଉଥିବା ବେଳେ, ରେଜ୍ୟୁମେକୁ ଅଦ୍ୟତନ କିମ୍ବା ବିଲୋପ କରିହୋଇପାରିବ ନାହିଁ।"
 
@@ -5006,6 +5099,10 @@ msgstr "ଆପଣଙ୍କ ତଥ୍ୟ ସୁରକ୍ଷିତ ଭାବରେ
 msgid "Your latest changes could not be saved."
 msgstr "ଆପଣଙ୍କର ନବୀନତମ ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ସେଭ୍ କରାଯାଇପାରିଲା ନାହିଁ।"
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "ଆପଣ ଏହି ସେମାଣ୍ଟିକ୍ CSS ଡ୍ରାଫ୍ଟକୁ ସ୍ପଷ୍ଟ ଭାବରେ ସକ୍ରିୟ ନକରିବା ପର୍ଯ୍ୟନ୍ତ ଆପଣଙ୍କର ଲିଗାସୀ ଷ୍ଟାଇଲ୍ ସକ୍ରିୟ ରହିବ।"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "ଆପଣଙ୍କ ପାସୱାର୍ଡ ସଫଳତାର ସହ ପୁନଃ ସେଟ୍ କରାଯାଇଛି। ଆପଣ ଏବେ ନୂତନ ପାସୱାର୍ଡ ସହ ସାଇନ୍ ଇନ୍ କରିପାରିବେ।"
@@ -5023,8 +5120,7 @@ msgid "Your resume has been created successfully."
 msgstr "ଆପଣଙ୍କ ରେଜ୍ୟୁମେ ସଫଳତାର ସହ ସୃଷ୍ଟି କରାଯାଇଛି।"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Your resume has been deleted successfully."
 msgstr "ଆପଣଙ୍କ ରେଜ୍ୟୁମେ ସଫଳତାର ସହ ବିଲୋପ କରାଯାଇଛି।"
 

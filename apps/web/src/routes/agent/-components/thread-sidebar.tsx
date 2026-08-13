@@ -25,6 +25,7 @@ import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 import { cn } from "@reactive-resume/utils/style";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getOrpcErrorMessage } from "@/libs/error-message";
+import { formatRelativeTime } from "@/libs/locale";
 import { orpc } from "@/libs/orpc/client";
 
 type AgentThreadSummary = RouterOutput["agent"]["threads"]["list"][number];
@@ -40,28 +41,6 @@ type AgentThreadSidebarProps = {
 	activeThreadId?: string | null;
 	className?: string;
 };
-
-const RELATIVE_TIME_DIVISIONS: Array<{ amount: number; unit: Intl.RelativeTimeFormatUnit }> = [
-	{ amount: 31_536_000_000, unit: "year" },
-	{ amount: 2_592_000_000, unit: "month" },
-	{ amount: 604_800_000, unit: "week" },
-	{ amount: 86_400_000, unit: "day" },
-	{ amount: 3_600_000, unit: "hour" },
-	{ amount: 60_000, unit: "minute" },
-];
-
-function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFormat) {
-	const date = value instanceof Date ? value : new Date(value);
-	const diffMs = date.getTime() - Date.now();
-	const absMs = Math.abs(diffMs);
-
-	if (absMs < 60_000) return formatter.format(0, "second");
-
-	const division = RELATIVE_TIME_DIVISIONS.find((candidate) => absMs >= candidate.amount);
-	if (!division) return "";
-
-	return formatter.format(Math.round(diffMs / division.amount), division.unit);
-}
 
 function ThreadActions({ thread, activeThreadId }: ThreadActionsProps) {
 	const navigate = useNavigate();
@@ -164,7 +143,7 @@ function ThreadRow({ thread, activeThreadId }: ThreadRowProps) {
 			>
 				<div className="truncate font-medium">{title}</div>
 				<div className="truncate text-muted-foreground text-xs">
-					{formatRelativeTime(thread.lastMessageAt, relativeTimeFormatter)}
+					{formatRelativeTime(thread.lastMessageAt, relativeTimeFormatter, "")}
 				</div>
 			</Link>
 			<ThreadActions thread={thread} activeThreadId={activeThreadId} />

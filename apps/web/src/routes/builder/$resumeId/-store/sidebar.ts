@@ -1,6 +1,6 @@
 import type { Layout, usePanelRef } from "react-resizable-panels";
 import Cookies from "js-cookie";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useMediaQuery, useWindowSize } from "usehooks-ts";
 import { create } from "zustand/react";
 
@@ -135,17 +135,14 @@ export function useBuilderSidebar(): UseBuilderSidebarReturn {
 		[expandSize],
 	);
 
-	// ponytail: memoized but callers destructure; selector removed (state rebuilt every render, zero benefit)
-	return useMemo(() => {
-		return {
-			maxSidebarSize,
-			minSidebarSize,
-			collapsedSidebarSize,
-			groupResizeBehavior,
-			isCollapsed,
-			toggleSidebar,
-		};
-	}, [maxSidebarSize, minSidebarSize, collapsedSidebarSize, groupResizeBehavior, isCollapsed, toggleSidebar]);
+	return {
+		maxSidebarSize,
+		minSidebarSize,
+		collapsedSidebarSize,
+		groupResizeBehavior,
+		isCollapsed,
+		toggleSidebar,
+	};
 }
 
 export const setBuilderLayout = (data: BuilderLayout) => {

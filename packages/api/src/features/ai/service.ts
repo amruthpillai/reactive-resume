@@ -361,7 +361,7 @@ async function chat(input: ChatInput) {
 					"Return one or more cohesive resume change proposals. Each proposal must include a title, optional summary, and valid JSON Patch operations against the current resume data. The tool validates but does not apply changes.",
 				inputSchema: resumePatchProposalToolInputSchema,
 				outputSchema: resumePatchProposalToolOutputSchema,
-				execute: async (toolInput) => {
+				execute: (toolInput) => {
 					const proposals = normalizeResumePatchProposals(toolInput, input.resumeUpdatedAt);
 
 					for (const proposal of proposals) {

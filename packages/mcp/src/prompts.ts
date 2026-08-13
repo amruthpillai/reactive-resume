@@ -72,7 +72,7 @@ export function registerPrompts(server: McpServer) {
 			description: "Guide the user step-by-step through building a resume from scratch, section by section.",
 			argsSchema: { id: resumeIdArg },
 		},
-		async ({ id }) => ({
+		({ id }) => ({
 			messages: [
 				...resumeContext(id),
 				{
@@ -113,7 +113,7 @@ export function registerPrompts(server: McpServer) {
 			description: "Review resume content and suggest concrete improvements to wording, impact, and structure.",
 			argsSchema: { id: resumeIdArg },
 		},
-		async ({ id }) => ({
+		({ id }) => ({
 			messages: [
 				...resumeContext(id),
 				{
@@ -158,7 +158,7 @@ export function registerPrompts(server: McpServer) {
 				"Get a structured, professional critique with a scorecard and prioritized recommendations. Read-only — no changes are made.",
 			argsSchema: { id: resumeIdArg },
 		},
-		async ({ id }) => ({
+		({ id }) => ({
 			messages: [
 				...resumeContext(id),
 				{

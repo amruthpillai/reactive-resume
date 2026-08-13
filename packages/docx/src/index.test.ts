@@ -1,8 +1,27 @@
 // @vitest-environment happy-dom
 
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { buildDocx } from "./index";
+
+const createRendererUnsafeResumeData = (): ResumeData => {
+	const data = structuredClone(defaultResumeData);
+	data.customSections = [
+		{
+			id: "custom-experience",
+			type: "experience",
+			title: "Experience",
+			icon: "",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [{ id: "summary-shaped-item", hidden: false, content: "<p>Missing company</p>" }],
+		} as never,
+	];
+	return data;
+};
 
 describe("buildDocx", () => {
 	it("returns a Blob for the default resume", async () => {
@@ -19,5 +38,50 @@ describe("buildDocx", () => {
 
 		const blob = await buildDocx(data);
 		expect(blob.size).toBeGreaterThan(0);
+	});
+
+	it("returns a rejected Promise when document building fails synchronously", async () => {
+		const promise = buildDocx(undefined as never);
+
+		expect(promise).toBeInstanceOf(Promise);
+		await expect(promise).rejects.toThrow();
+	});
+
+	it("rejects renderer-unsafe data before DOCX builder dispatch", async () => {
+		const error = await buildDocx(createRendererUnsafeResumeData()).catch((caught: unknown) => caught);
+
+		expect(error).toHaveProperty("issues.0.path", ["customSections", 0, "items", 0, "company"]);
+	});
+
+	it("normalizes valid legacy data before DOCX building", async () => {
+		const data = {
+			...structuredClone(defaultResumeData),
+			customSections: [
+				{
+					id: "custom-experience",
+					type: "experience",
+					title: "Experience",
+					icon: "",
+					columns: 1,
+					hidden: false,
+					keepTogether: false,
+					startOnNewPage: false,
+					items: [
+						{
+							id: "experience-item",
+							hidden: false,
+							company: "Analytical Engines",
+							position: "Programmer",
+							location: "London",
+							period: "1842–1843",
+							description: "<p>Wrote the first algorithm.</p>",
+							content: "<p>Compatible overlap</p>",
+						},
+					],
+				},
+			],
+		} as unknown as ResumeData;
+
+		await expect(buildDocx(data)).resolves.toBeInstanceOf(Blob);
 	});
 });

@@ -78,9 +78,9 @@ function sectionHeading(title: string, colorHex: string): Paragraph {
 	});
 }
 
-function titleAndSubtitle(primary: string, secondary: string, rightText?: string): Paragraph {
+function titleAndSubtitle(primary: string, secondary: string, rightText?: string, bold = true): Paragraph {
 	const baseRun = getBaseRun();
-	const children: (TextRun | ExternalHyperlink)[] = [new TextRun({ text: primary, bold: true, ...baseRun })];
+	const children: (TextRun | ExternalHyperlink)[] = [new TextRun({ text: primary, bold, ...baseRun })];
 
 	if (secondary) {
 		children.push(new TextRun({ text: ` — ${secondary}`, ...baseRun }));
@@ -321,7 +321,7 @@ function renderAwards(section: Sections["awards"], colorHex: string): Paragraph[
 	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
 
 	for (const item of items) {
-		paragraphs.push(titleAndSubtitle(item.title, item.awarder, item.date));
+		paragraphs.push(titleAndSubtitle(item.title, item.awarder, item.date, false));
 
 		if (item.description) {
 			paragraphs.push(...htmlToParagraphs(item.description, getHtmlStyle()));

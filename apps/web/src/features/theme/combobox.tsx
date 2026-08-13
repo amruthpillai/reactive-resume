@@ -18,7 +18,7 @@ export function ThemeCombobox(props: Props) {
 		keywords: [i18n.t(label)],
 	}));
 
-	const onThemeChange = async (value: string | null) => {
+	const onThemeChange = (value: string | null) => {
 		if (!value || !isTheme(value)) return;
 		setTheme(value);
 		void router.invalidate();

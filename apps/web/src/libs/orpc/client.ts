@@ -10,8 +10,8 @@ const getRpcUrl = () => {
 	return `${window.location.origin}/api/rpc`;
 };
 
-const createRpcClient = (): RouterClient<typeof router> => {
-	const link = new RPCLink({
+export const client: RouterClient<typeof router> = createORPCClient(
+	new RPCLink({
 		url: getRpcUrl(),
 		fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
 		plugins: [
@@ -26,15 +26,11 @@ const createRpcClient = (): RouterClient<typeof router> => {
 				console.warn("[oRPC client]", error);
 			}),
 		],
-	});
+	}),
+);
 
-	return createORPCClient(link);
-};
-
-export const client = createRpcClient();
-
-const createStreamClient = (): RouterClient<typeof router> => {
-	const link = new RPCLink({
+export const streamClient: RouterClient<typeof router> = createORPCClient(
+	new RPCLink({
 		url: getRpcUrl(),
 		fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
 		interceptors: [
@@ -43,12 +39,8 @@ const createStreamClient = (): RouterClient<typeof router> => {
 				console.warn("[oRPC stream client]", error);
 			}),
 		],
-	});
-
-	return createORPCClient(link);
-};
-
-export const streamClient = createStreamClient();
+	}),
+);
 
 export const orpc = createTanstackQueryUtils(client);
 

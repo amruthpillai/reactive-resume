@@ -3,7 +3,7 @@ import type { CellComponentProps } from "react-window";
 import { t } from "@lingui/core/macro";
 import { ProhibitIcon } from "@phosphor-icons/react";
 import Fuse from "fuse.js";
-import { memo, useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Grid } from "react-window";
 import { icons } from "@reactive-resume/schema/icons";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -14,6 +14,7 @@ import { cn } from "@reactive-resume/utils/style";
 const columnCount = 8;
 const columnWidth = 36;
 const rowHeight = 36;
+const iconSearch = new Fuse(icons, { threshold: 0.35 });
 
 type IconSearchInputProps = {
 	value: string;
@@ -21,7 +22,7 @@ type IconSearchInputProps = {
 	className?: string;
 };
 
-function _IconSearchInput(props: IconSearchInputProps) {
+function IconSearchInput(props: IconSearchInputProps) {
 	return (
 		<Input
 			spellCheck={false}
@@ -40,10 +41,6 @@ function _IconSearchInput(props: IconSearchInputProps) {
 		/>
 	);
 }
-
-const IconSearchInput = memo(_IconSearchInput);
-
-IconSearchInput.displayName = "IconSearchInput";
 
 type IconCellComponentProps = CellComponentProps & {
 	icons: IconName[];
@@ -70,18 +67,9 @@ function IconCellComponent({ columnIndex, rowIndex, style, icons, onChange }: Ic
 	);
 }
 
-function useIconSearch() {
-	const fuse = useMemo(() => new Fuse(icons, { threshold: 0.35 }), []);
-
-	const search = useCallback(
-		(query: string): IconName[] => {
-			if (!query.trim()) return Array.from(icons);
-			return fuse.search(query).map((result) => result.item);
-		},
-		[fuse],
-	);
-
-	return search;
+function searchIcons(query: string): IconName[] {
+	if (!query.trim()) return [...icons];
+	return iconSearch.search(query).map((result) => result.item);
 }
 
 type IconPickerProps = Omit<React.ComponentProps<typeof Button>, "value" | "onChange"> & {
@@ -91,12 +79,10 @@ type IconPickerProps = Omit<React.ComponentProps<typeof Button>, "value" | "onCh
 };
 
 export function IconPicker({ value, onChange, popoverProps, ...props }: IconPickerProps) {
-	const searchIcons = useIconSearch();
-
 	const [search, setSearch] = useState("");
 
-	const searchedIcons = useMemo(() => searchIcons(search), [search, searchIcons]);
-	const rowCount = useMemo(() => Math.ceil(searchedIcons.length / columnCount), [searchedIcons]);
+	const searchedIcons = useMemo(() => searchIcons(search), [search]);
+	const rowCount = Math.ceil(searchedIcons.length / columnCount);
 
 	return (
 		<Popover {...popoverProps}>

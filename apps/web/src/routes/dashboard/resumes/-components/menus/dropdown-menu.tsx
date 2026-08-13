@@ -1,5 +1,4 @@
 import type { RouterOutput } from "@/libs/orpc/client";
-import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
 	CopySimpleIcon,
@@ -9,9 +8,7 @@ import {
 	PencilSimpleLineIcon,
 	TrashSimpleIcon,
 } from "@phosphor-icons/react";
-import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -19,10 +16,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
-import { useDialogStore } from "@/dialogs/store";
-import { useConfirm } from "@/hooks/use-confirm";
-import { getResumeErrorMessage } from "@/libs/error-message";
-import { orpc } from "@/libs/orpc/client";
+import { useResumeMenuActions } from "./use-resume-menu-actions";
 
 type Props = Omit<React.ComponentProps<typeof DropdownMenuContent>, "children"> & {
 	resume: RouterOutput["resume"]["list"][number];
@@ -30,60 +24,7 @@ type Props = Omit<React.ComponentProps<typeof DropdownMenuContent>, "children"> 
 };
 
 export function ResumeDropdownMenu({ resume, children, ...props }: Props) {
-	const confirm = useConfirm();
-	const { openDialog } = useDialogStore();
-
-	const { mutate: deleteResume } = useMutation(orpc.resume.delete.mutationOptions());
-	const { mutate: setLockedResume } = useMutation(orpc.resume.setLocked.mutationOptions());
-
-	const handleUpdate = () => {
-		openDialog("resume.update", resume);
-	};
-
-	const handleDuplicate = () => {
-		openDialog("resume.duplicate", resume);
-	};
-
-	const handleToggleLock = async () => {
-		if (!resume.isLocked) {
-			const confirmation = await confirm(t`Are you sure you want to lock this resume?`, {
-				description: t`When locked, the resume cannot be updated or deleted.`,
-			});
-
-			if (!confirmation) return;
-		}
-
-		setLockedResume(
-			{ id: resume.id, isLocked: !resume.isLocked },
-			{
-				onError: (error) => {
-					toast.error(getResumeErrorMessage(error));
-				},
-			},
-		);
-	};
-
-	const handleDelete = async () => {
-		const confirmation = await confirm(t`Are you sure you want to delete this resume?`, {
-			description: t`This action cannot be undone.`,
-		});
-
-		if (!confirmation) return;
-
-		const toastId = toast.loading(t`Deleting your resume...`);
-
-		deleteResume(
-			{ id: resume.id },
-			{
-				onSuccess: () => {
-					toast.success(t`Your resume has been deleted successfully.`, { id: toastId });
-				},
-				onError: (error) => {
-					toast.error(getResumeErrorMessage(error), { id: toastId });
-				},
-			},
-		);
-	};
+	const { handleDelete, handleDuplicate, handleToggleLock, handleUpdate } = useResumeMenuActions(resume);
 
 	return (
 		<DropdownMenu>

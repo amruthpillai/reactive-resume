@@ -17,7 +17,5 @@ export const analysisRouter = {
 		})
 		.input(z.object({ id: z.string().describe("The unique identifier of the resume.") }))
 		.output(storedResumeAnalysisSchema.nullable())
-		.handler(async ({ context, input }) => {
-			return resumeService.analysis.getById({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => resumeService.analysis.getById({ id: input.id, userId: context.user.id })),
 };

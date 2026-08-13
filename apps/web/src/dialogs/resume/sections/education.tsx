@@ -4,10 +4,8 @@ import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { educationItemSchema } from "@reactive-resume/schema/resume/data";
-import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
+import { FormControl, FormItem, FormLabel } from "@reactive-resume/ui/components/form";
 import { Switch } from "@reactive-resume/ui/components/switch";
-import { RichInput } from "@/components/input/rich-input";
-import { URLInput } from "@/components/input/url-input";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
@@ -40,7 +38,7 @@ export function CreateEducationDialog({ data }: DialogProps<"resume.sections.edu
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				createSectionItem(draft, "education", value, data?.customSectionId);
 			});
@@ -72,7 +70,7 @@ export function UpdateEducationDialog({ data }: DialogProps<"resume.sections.edu
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				updateSectionItem(draft, "education", value, data?.customSectionId);
 			});
@@ -116,24 +114,15 @@ const EducationForm = withForm({
 
 				<form.AppField name="period">{(field) => <field.TextField label={<Trans>Period</Trans>} />}</form.AppField>
 
-				<form.Field name="website">
+				<form.AppField name="website">
 					{(field) => (
-						<FormItem
-							className="sm:col-span-full"
-							hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
-						>
-							<FormLabel>
-								<Trans>Website</Trans>
-							</FormLabel>
-							<URLInput
-								value={field.state.value}
-								onChange={(v) => field.handleChange(v)}
-								hideLabelButton={inlineLink}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
+						<field.WebsiteField
+							label={<Trans>Website</Trans>}
+							formItemClassName="sm:col-span-full"
+							hideLabelButton={inlineLink}
+						/>
 					)}
-				</form.Field>
+				</form.AppField>
 
 				<form.Field name="website.inlineLink">
 					{(field) => (
@@ -155,20 +144,9 @@ const EducationForm = withForm({
 					)}
 				</form.Field>
 
-				<form.Field name="description">
-					{(field) => (
-						<FormItem
-							className="sm:col-span-full"
-							hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
-						>
-							<FormLabel>
-								<Trans>Description</Trans>
-							</FormLabel>
-							<FormControl render={<RichInput value={field.state.value} onChange={(v) => field.handleChange(v)} />} />
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
-					)}
-				</form.Field>
+				<form.AppField name="description">
+					{(field) => <field.RichTextField label={<Trans>Description</Trans>} formItemClassName="sm:col-span-full" />}
+				</form.AppField>
 			</>
 		);
 	},

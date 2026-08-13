@@ -6,6 +6,12 @@
 	"exports": {
 		"./browser": "./src/browser.tsx",
 		"./document": "./src/document.tsx",
+		"./preflight": "./src/semantic/preflight-core.tsx",
+		"./preflight-reference": "./src/semantic/preflight-reference.ts",
+		"./public-projection": "./src/semantic/public-projection.ts",
+		"./semantic": "./src/semantic/index.ts",
+		"./semantic-manifest": "./src/semantic/template-manifest.ts",
+		"./semantic-tree": "./src/semantic/tree.ts",
 		"./section-title": "./src/section-title.ts",
 		"./server": "./src/server.tsx"
 	},
@@ -20,21 +26,25 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
-		"@react-pdf/renderer": "^4.5.1",
+		"@react-pdf/renderer": "^4.6.0",
 		"@reactive-resume/fonts": "workspace:*",
+		"@reactive-resume/resume": "workspace:*",
 		"@reactive-resume/schema": "workspace:*",
 		"@reactive-resume/utils": "workspace:*",
 		"cjk-regex": "^3.4.0",
-		"node-html-parser": "^9.0.0",
+		"node-html-parser": "^9.0.1",
 		"phosphor-icons-react-pdf": "^0.1.3",
-		"react": "^19.2.7",
+		"react": "^19.2.8",
 		"react-pdf-html": "^2.1.5"
 	},
 	"devDependencies": {
-		"@react-pdf/types": "^2.11.1",
+		"@napi-rs/canvas": "1.0.5",
+		"@react-pdf/types": "^2.11.2",
 		"@reactive-resume/config": "workspace:*",
-		"@types/react": "^19.2.17",
+		"@types/react": "^19.2.18",
 		"@typescript/native-preview": "7.0.0-dev.20260707.2",
+		"pdfjs-dist": "6.2.108",
+		"pixelmatch": "^7.2.0",
 		"typescript": "^7.0.2"
 	}
 }

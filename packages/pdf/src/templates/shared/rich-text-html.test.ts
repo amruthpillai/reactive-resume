@@ -109,6 +109,10 @@ describe("normalizeRichTextHtml", () => {
 	it("does not double-wrap inline tags inside block elements", () => {
 		expect(normalizeRichTextHtml("<p><strong>x</strong></p>")).toBe("<p><strong>x</strong></p>");
 	});
+
+	it("normalizes RTL pseudo-bullets into anchored list items in the shared HTML path", () => {
+		expect(normalizeRichTextHtml("<p>‏- א<br>‏- ב</p>", { direction: "rtl" })).toBe("<ul><li>‏א</li><li>‏ב</li></ul>");
+	});
 });
 
 describe("convertPseudoBulletParagraphs", () => {

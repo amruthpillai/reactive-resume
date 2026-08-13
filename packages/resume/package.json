@@ -7,7 +7,11 @@
 		"./export-sections": "./src/export-sections.ts",
 		"./icons": "./src/icons.ts",
 		"./markdown": "./src/markdown.ts",
-		"./patch": "./src/patch.ts"
+		"./patch": "./src/patch.ts",
+		"./stylesheet": "./src/stylesheet/index.ts",
+		"./stylesheet/registry": "./src/stylesheet/registry/index.ts",
+		"./stylesheet/types": "./src/stylesheet/semantic-types.ts",
+		"./stylesheet/render-data": "./src/stylesheet/render-data.ts"
 	},
 	"scripts": {
 		"typecheck": "tsgo --noEmit",
@@ -17,13 +21,18 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
+		"@bramus/specificity": "^2.4.2",
 		"@reactive-resume/schema": "workspace:*",
+		"canonicalize": "^3.0.0",
+		"css-tree": "^3.2.1",
 		"fast-json-patch": "^3.1.1",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
 		"@typescript/native-preview": "7.0.0-dev.20260707.2",
+		"fast-check": "^4.9.0",
+		"tsx": "^4.23.12",
 		"typescript": "^7.0.2"
 	}
 }

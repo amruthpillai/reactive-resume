@@ -1,3 +1,4 @@
+import type { StylesheetPreflightRunner } from "@reactive-resume/pdf/server";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { User } from "better-auth";
 import { ORPCError, os } from "@orpc/server";
@@ -10,6 +11,8 @@ interface ORPCContext {
 	locale: Locale;
 	reqHeaders: Headers;
 	resHeaders?: Headers;
+	trustedClient?: string;
+	stylesheetPreflightRunner?: StylesheetPreflightRunner;
 }
 
 async function getUserFromBearerToken(headers: Headers): Promise<User | null> {
@@ -88,7 +91,7 @@ export const publicProcedure = base.use(async ({ context, next }) => {
 	});
 });
 
-export const protectedProcedure = publicProcedure.use(async ({ context, next }) => {
+export const protectedProcedure = publicProcedure.use(({ context, next }) => {
 	if (!context.user) throw new ORPCError("UNAUTHORIZED");
 
 	return next({

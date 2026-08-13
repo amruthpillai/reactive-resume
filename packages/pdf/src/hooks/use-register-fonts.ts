@@ -106,17 +106,6 @@ const toFontWeight = (weight: number): FontWeight => {
 	return "900";
 };
 
-const collectFontRangeWeights = (ranges: FontWeightRange[]): number[] => {
-	const weights = new Set<number>();
-
-	for (const range of ranges) {
-		weights.add(range.lowest);
-		weights.add(range.highest);
-	}
-
-	return [...weights];
-};
-
 // Resolves the user-stored family to the one we hand to Font.register:
 // direct match → legacy alias (#2989) → IBM Plex Serif fallback.
 const resolvePdfFontFamily = (family: string) => {
@@ -277,7 +266,7 @@ export const registerFonts = (
 	const headingFallbacks = getPdfFallbackFontFamilies(headingFontFamily, { locale, scripts: fallbackScripts });
 
 	const registerFallbacks = (families: string[], ranges: FontWeightRange[]) => {
-		const weights = collectFontRangeWeights(ranges);
+		const weights = new Set(ranges.flatMap(({ lowest, highest }) => [lowest, highest]));
 
 		for (const family of families) {
 			for (const weight of weights) {

@@ -23,14 +23,14 @@ export const messagesRouter = {
 		)
 		.use(aiRequestRateLimit)
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.messages.send({
+		.handler(({ context, input }) =>
+			agentService.messages.send({
 				userId: context.user.id,
 				threadId: input.threadId,
 				message: input.message,
 				...(input.attachmentIds ? { attachmentIds: input.attachmentIds } : {}),
-			});
-		}),
+			}),
+		),
 
 	stop: protectedProcedure
 		.route({
@@ -48,13 +48,13 @@ export const messagesRouter = {
 		)
 		.output(z.void())
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			await agentService.messages.stop({
+		.handler(({ context, input }) =>
+			agentService.messages.stop({
 				userId: context.user.id,
 				threadId: input.threadId,
 				...(input.partialMessage ? { partialMessage: input.partialMessage } : {}),
-			});
-		}),
+			}),
+		),
 
 	resume: protectedProcedure
 		.route({
@@ -66,7 +66,7 @@ export const messagesRouter = {
 		})
 		.input(z.object({ threadId: z.string() }))
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.messages.resume({ userId: context.user.id, threadId: input.threadId });
-		}),
+		.handler(({ context, input }) =>
+			agentService.messages.resume({ userId: context.user.id, threadId: input.threadId }),
+		),
 };

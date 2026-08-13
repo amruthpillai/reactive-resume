@@ -27,21 +27,22 @@ describe("rich text template styles", () => {
 		expect(richListItemContentBlock?.groups?.body).not.toMatch(/\blineHeight:/);
 	});
 
-	it.each(
-		templatePageFiles.map((file) => [basename(file), file]),
-	)("%s keeps list item rich text on the global body line height", (_name, file) => {
-		const source = readFileSync(file, "utf8");
+	it.each(templatePageFiles.map((file) => [basename(file), file]))(
+		"%s keeps list item rich text on the global body line height",
+		(_name, file) => {
+			const source = readFileSync(file, "utf8");
 
-		if (source.includes("createBaseTemplateStyles")) {
-			// Factory handles richListItemContent; guard is on the factory test above.
-			expect(source).toContain("createBaseTemplateStyles");
-			return;
-		}
+			if (source.includes("createBaseTemplateStyles")) {
+				// Factory handles richListItemContent; guard is on the factory test above.
+				expect(source).toContain("createBaseTemplateStyles");
+				return;
+			}
 
-		// Legacy: template defines richListItemContent inline — no lineHeight override allowed.
-		const richListItemContentBlock = source.match(/richListItemContent:\s*{(?<body>[\s\S]*?)^\s*},/m);
-		expect(richListItemContentBlock?.groups?.body).toBeDefined();
-		expect(richListItemContentBlock?.groups?.body).toContain("...bodyText");
-		expect(richListItemContentBlock?.groups?.body).not.toMatch(/\blineHeight:/);
-	});
+			// Legacy: template defines richListItemContent inline — no lineHeight override allowed.
+			const richListItemContentBlock = source.match(/richListItemContent:\s*{(?<body>[\s\S]*?)^\s*},/m);
+			expect(richListItemContentBlock?.groups?.body).toBeDefined();
+			expect(richListItemContentBlock?.groups?.body).toContain("...bodyText");
+			expect(richListItemContentBlock?.groups?.body).not.toMatch(/\blineHeight:/);
+		},
+	);
 });

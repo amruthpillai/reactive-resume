@@ -27,11 +27,25 @@ const readTemplate = (file: string) => {
 };
 
 describe("cover letter PDF layout", () => {
-	it.each(pageFiles)("%s suppresses the resume header for cover-letter-only documents", (file) => {
+	it("derives shared page props in the document renderer", () => {
+		const source = readTemplate("../document.tsx");
+
+		expect(source).toContain('from "./templates/shared/cover-letter"');
+		expect(source).toContain('from "./templates/shared/page-size"');
+		expect(source).toContain("showHeader={shouldShowResumeHeader");
+		expect(source).toContain("pageSize={pageSize}");
+		expect(source).toContain("pageMinHeightStyle={pageMinHeightStyle}");
+		expect(source).toContain("pageNumber={index + 1}");
+	});
+
+	it.each(pageFiles)("%s renders the shared page props", (file) => {
 		const source = readTemplate(file);
 
-		expect(source, basename(file)).toContain('from "../shared/cover-letter"');
-		expect(source, basename(file)).toContain("shouldShowResumeHeader(data, pageIndex)");
-		expect(source, basename(file)).not.toContain("const showHeader = pageIndex === 0;");
+		expect(source, basename(file)).toContain("pageSize, pageMinHeightStyle, showHeader, pageNumber");
+		expect(source, basename(file)).toContain("size={semanticPageSize ?? pageSize}");
+		expect(source, basename(file)).toContain("pageNodeKey={pageNodeKey}");
+		expect(source, basename(file)).toContain("showHeader &&");
+		expect(source, basename(file)).not.toContain('from "../shared/cover-letter"');
+		expect(source, basename(file)).not.toContain('from "../shared/page-size"');
 	});
 });

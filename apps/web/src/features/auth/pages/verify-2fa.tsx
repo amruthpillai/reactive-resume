@@ -10,31 +10,44 @@ import { Input } from "@reactive-resume/ui/components/input";
 import { authClient } from "@/libs/auth/client";
 import { useAppForm } from "@/libs/tanstack-form";
 
-const formSchema = z.object({
+const totpSchema = z.object({
 	code: z.string().length(6, "Code must be 6 digits"),
 });
 
-export function VerifyTwoFactorPage() {
+const backupCodeSchema = z.object({
+	code: z.string().trim(),
+});
+
+type TwoFactorVerificationPageProps = {
+	backupCode?: boolean;
+};
+
+function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerificationPageProps) {
 	const router = useRouter();
 	const navigate = useNavigate();
 
 	const form = useAppForm({
 		defaultValues: { code: "" },
-		validators: { onSubmit: formSchema },
+		validators: { onSubmit: backupCode ? backupCodeSchema : totpSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Verifying code...`);
-
-			const { error } = await authClient.twoFactor.verifyTotp({
-				code: value.code,
-			});
+			const toastId = toast.loading(backupCode ? t`Verifying backup code...` : t`Verifying code...`);
+			const code = backupCode ? `${value.code.slice(0, 5)}-${value.code.slice(5)}` : value.code;
+			const { error } = backupCode
+				? await authClient.twoFactor.verifyBackupCode({ code })
+				: await authClient.twoFactor.verifyTotp({ code });
 
 			if (error) {
 				toast.error(
 					error.message ||
-						t({
-							comment: "Fallback toast when verifying a two-factor authentication code fails",
-							message: "Failed to verify your code. Please try again.",
-						}),
+						(backupCode
+							? t({
+									comment: "Fallback toast when verifying a backup two-factor authentication code fails",
+									message: "Failed to verify your backup code. Please try again.",
+								})
+							: t({
+									comment: "Fallback toast when verifying a two-factor authentication code fails",
+									message: "Failed to verify your code. Please try again.",
+								})),
 					{ id: toastId },
 				);
 				return;
@@ -50,10 +63,14 @@ export function VerifyTwoFactorPage() {
 		<>
 			<div className="space-y-1 text-center">
 				<h1 className="font-semibold text-2xl tracking-tight">
-					<Trans>Two-Factor Authentication</Trans>
+					{backupCode ? <Trans>Verify with a Backup Code</Trans> : <Trans>Two-Factor Authentication</Trans>}
 				</h1>
 				<div className="text-muted-foreground">
-					<Trans>Enter the verification code from your authenticator app</Trans>
+					{backupCode ? (
+						<Trans>Enter one of your saved backup codes to access your account</Trans>
+					) : (
+						<Trans>Enter the verification code from your authenticator app</Trans>
+					)}
 				</div>
 			</div>
 
@@ -74,8 +91,8 @@ export function VerifyTwoFactorPage() {
 							<FormControl
 								render={
 									<Input
-										type="number"
-										maxLength={6}
+										type={backupCode ? "text" : "number"}
+										maxLength={backupCode ? 10 : 6}
 										className="max-w-xs"
 										name={field.name}
 										value={field.state.value}
@@ -95,32 +112,50 @@ export function VerifyTwoFactorPage() {
 						className="flex-1"
 						nativeButton={false}
 						render={
-							<Link to="/auth/login">
+							<Link to={backupCode ? "/auth/verify-2fa" : "/auth/login"}>
 								<ArrowLeftIcon />
-								<Trans comment="Secondary navigation button on 2FA verification screen">Back to Login</Trans>
+								{backupCode ? (
+									<Trans comment="Secondary navigation button on backup-code verification screen">Go Back</Trans>
+								) : (
+									<Trans comment="Secondary navigation button on 2FA verification screen">Back to Login</Trans>
+								)}
 							</Link>
 						}
 					/>
 
 					<Button type="submit" className="flex-1">
 						<CheckIcon />
-						<Trans comment="Primary action button to submit 2FA code">Verify</Trans>
+						{backupCode ? (
+							<Trans comment="Primary action button to submit backup code">Verify</Trans>
+						) : (
+							<Trans comment="Primary action button to submit 2FA code">Verify</Trans>
+						)}
 					</Button>
 				</div>
 			</form>
 
-			<Button
-				variant="link"
-				nativeButton={false}
-				className="h-auto justify-self-center p-0 text-sm"
-				render={
-					<Link to="/auth/verify-2fa-backup">
-						<Trans comment="Link to backup-code verification flow when authenticator app is unavailable">
-							Lost access to your authenticator?
-						</Trans>
-					</Link>
-				}
-			/>
+			{!backupCode && (
+				<Button
+					variant="link"
+					nativeButton={false}
+					className="h-auto justify-self-center p-0 text-sm"
+					render={
+						<Link to="/auth/verify-2fa-backup">
+							<Trans comment="Link to backup-code verification flow when authenticator app is unavailable">
+								Lost access to your authenticator?
+							</Trans>
+						</Link>
+					}
+				/>
+			)}
 		</>
 	);
+}
+
+export function VerifyTwoFactorPage() {
+	return <TwoFactorVerificationPage />;
+}
+
+export function VerifyTwoFactorBackupPage() {
+	return <TwoFactorVerificationPage backupCode />;
 }

@@ -8,7 +8,7 @@ msgstr ""
 "Language: th\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 13:34\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Thai\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -162,6 +162,10 @@ msgstr "เมนูบัญชี"
 #: src/features/applications/components/table-view.tsx
 msgid "Actions"
 msgstr "การดำเนินการ"
+
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Activate Semantic CSS"
+msgstr "เปิดใช้งาน Semantic CSS"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Actual size (100%)"
@@ -482,6 +486,7 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "ใบสมัครที่ส่งต่อสัปดาห์ (8 สัปดาห์ล่าสุด)"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "สมัครแล้ว"
 
@@ -489,9 +494,9 @@ msgstr "สมัครแล้ว"
 msgid "Applied on"
 msgstr "สมัครเมื่อ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "กฎที่ใช้"
+#: src/features/resume/stylesheet/status.tsx
+msgid "Applied with warnings"
+msgstr "ใช้งานโดยมีคำเตือน"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -526,8 +531,7 @@ msgid "Are you sure you want to delete this item?"
 msgstr "คุณแน่ใจหรือไม่ว่าคุณต้องการลบรายการนี้?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to delete this resume?"
 msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบเรซูเม่นี้?"
 
@@ -536,8 +540,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีของคุณ?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Are you sure you want to lock this resume?"
 msgstr "คุณแน่ใจหรือไม่ว่าต้องการล็อคเรซูเม่นี้?"
 
@@ -734,6 +737,7 @@ msgstr "ฉันสามารถส่งออกเรซูเม่ขอ
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/api-keys.tsx
 #: src/features/settings/pages/danger-zone.tsx
 #: src/features/settings/pages/profile.tsx
@@ -800,6 +804,14 @@ msgstr "ตรวจสอบอีเมลของคุณสำหรับ
 #: src/features/auth/pages/register.tsx
 msgid "Check your email for a link to verify your account."
 msgstr "ตรวจสอบอีเมลของคุณสำหรับลิงก์ยืนยันบัญชีของคุณ"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking"
+msgstr "กำลังตรวจสอบ"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Checking draft"
+msgstr "ตรวจสอบร่าง"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -967,6 +979,10 @@ msgstr "บทสนทนานี้ถูกคัดลอกแล้ว"
 msgid "Conversation JSON copied."
 msgstr "คัดลอกข้อมูล JSON ของบทสนทนาแล้ว"
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Converted stylesheet draft"
+msgstr "แปลงร่างสไตล์ชีตแล้ว"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Copied to clipboard."
 msgstr "คัดลอกไปยังคลิปบอร์ดแล้ว"
@@ -989,6 +1005,15 @@ msgstr "คัดลอกรหัสสำรอง"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "คัดลอก JSON"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "คัดลอกความลับ"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Copy stylesheet"
+msgstr "คัดลอกสไตล์ชีต"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1379,8 +1404,7 @@ msgid "Deleting your API key..."
 msgstr "กำลังลบคีย์ API ของคุณ..."
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Deleting your resume..."
 msgstr "กำลังลบเรซูเม่ของคุณ..."
 
@@ -1547,6 +1571,11 @@ msgstr "แก้ไข {chip}"
 msgid "Edit application"
 msgstr "แก้ไขใบสมัคร"
 
+#. placeholder {0}: selectedColor.token.value
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Edit color {0}"
+msgstr "แก้ไขสี {0}"
+
 #. Screen reader description for the fullscreen rich-text editor dialog
 #: src/components/input/rich-input.tsx
 msgid "Edit content in fullscreen mode"
@@ -1567,6 +1596,10 @@ msgstr "แก้ไขรายละเอียด"
 #: src/components/input/chip-input.tsx
 msgid "Edit keyword"
 msgstr "แก้ไขคำค้นหา"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Edit model"
+msgstr "แก้ไขโมเดล"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit note"
@@ -1648,7 +1681,7 @@ msgstr "เพิ่มความปลอดภัยให้กับบั
 msgid "Enter a name for your passkey."
 msgstr "ป้อนชื่อสำหรับพาสคีย์ของคุณ"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Enter one of your saved backup codes to access your account"
 msgstr "กรอกรหัสสำรองที่คุณบันทึกไว้เพื่อเข้าถึงบัญชีของคุณ"
 
@@ -1672,6 +1705,10 @@ msgstr "กรอกรหัสผ่านของคุณเพื่อย
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "กรอกรหัสผ่านของคุณเพื่อปิดการใช้งานการยืนยันตัวตนสองขั้นตอน บัญชีของคุณจะไม่ปลอดภัยเท่าเดิมหากไม่ได้เปิดใช้งาน 2FA"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Error"
+msgstr "ข้อผิดพลาด"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
 msgstr "ทุกการสนับสนุน ไม่ว่ามากหรือน้อย มีความสำคัญอย่างยิ่งต่อโปรเจกต์นี้<0/>ขอขอบคุณที่สนับสนุน!"
@@ -1679,6 +1716,10 @@ msgstr "ทุกการสนับสนุน ไม่ว่ามาก�
 #: src/routes/_home/-sections/features.tsx
 msgid "Everything you need to create, customize, and share professional resumes. Built with privacy in mind, powered by open source, and completely free forever."
 msgstr "ทุกสิ่งที่คุณต้องการในการสร้าง ปรับแต่ง และแบ่งปันเรซูเม่มืออาชีพ สร้างขึ้นโดยคำนึงถึงความเป็นส่วนตัว เปิดบริการด้วยโอเพ่นซอร์ส และฟรีตลอดไป"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Exit focus mode"
+msgstr "ออกจากโหมดโฟกัส"
 
 #: src/components/input/rich-input.tsx
 msgid "Exit Fullscreen"
@@ -1886,7 +1927,7 @@ msgid "Failed to verify the password. Please try again."
 msgstr "ไม่สามารถยืนยันรหัสผ่านได้ กรุณาลองอีกครั้ง"
 
 #. Fallback toast when verifying a backup two-factor authentication code fails
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your backup code. Please try again."
 msgstr "ไม่สามารถยืนยันรหัสสำรองของคุณได้ กรุณาลองอีกครั้ง"
 
@@ -1999,6 +2040,10 @@ msgctxt "Page Format (A4, Letter, Free-form)"
 msgid "Format"
 msgstr "รูปแบบ"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Format stylesheet"
+msgstr "จัดรูปแบบสไตล์ชีต"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Free"
 msgstr "ฟรี"
@@ -2066,7 +2111,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #. Secondary navigation button on backup-code verification screen
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Go Back"
 msgstr "ย้อนกลับ"
 
@@ -2582,6 +2627,12 @@ msgstr "สว่าง"
 msgid "Light theme"
 msgstr "ธีมสว่าง"
 
+#. placeholder {0}: diagnostic.range.start.line
+#. placeholder {1}: diagnostic.range.start.column
+#: src/features/resume/stylesheet/status.tsx
+msgid "Line {0}, column {1}"
+msgstr "แถว {0}, คอลัมน์ {1}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Line Height"
 msgstr "ความสูงของเส้น"
@@ -2896,10 +2947,6 @@ msgstr "ยังไม่มีเวอร์ชันที่บันทึ
 msgid "No source data yet."
 msgstr "ยังไม่มีข้อมูลแหล่งที่มา"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "ยังไม่มีกฎเกณฑ์ด้านสไตล์ใดๆ"
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "ไม่มีผู้ให้บริการที่ผ่านการทดสอบ"
@@ -2915,6 +2962,10 @@ msgstr "นอร์เวย์"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "ไม่ได้เชื่อมต่อ"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Not sure what to write?"
+msgstr "ไม่แน่ใจว่าจะเขียนอะไรดี?"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -2966,6 +3017,10 @@ msgstr "เปิดผู้ช่วย AI"
 msgid "Open Email Client"
 msgstr "เปิดโปรแกรมอีเมล"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Open focus mode"
+msgstr "โหมดเปิดโฟกัส"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Open in builder"
 msgstr "เปิดในโปรแกรมสร้าง"
@@ -2990,6 +3045,7 @@ msgstr "เข้ากันได้กับ OpenAI"
 msgid "OpenRouter"
 msgstr "โอเพ่นรูเตอร์"
 
+#: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -3265,6 +3321,10 @@ msgstr "กด<0>Enter</0>เพื่อเปิด"
 msgid "Preview"
 msgstr "ตัวอย่าง"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export use the last valid version."
+msgstr "ให้ใช้เวอร์ชันล่าสุดที่ถูกต้องในการแสดงตัวอย่างและการส่งออก"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "สีหลัก"
@@ -3310,6 +3370,10 @@ msgstr "ผู้ให้บริการ"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider connection verified."
 msgstr "ยืนยันการเชื่อมต่อกับผู้ให้บริการแล้ว"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Provider model"
+msgstr "รูปแบบผู้ให้บริการ"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3368,9 +3432,21 @@ msgstr "Reactive Resume v<0>{__APP_VERSION__}</0>"
 msgid "Reactive Resume v4 (JSON)"
 msgstr "เรแอคทีฟ เรซูเม่ v4 (JSON)"
 
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Read the Applying Custom Styles guide."
+msgstr "โปรดอ่านคู่มือการใช้สไตล์ที่กำหนดเอง"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading…"
 msgstr "กำลังอ่าน…"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate"
+msgstr "พร้อมใช้งานแล้ว"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with warnings"
+msgstr "พร้อมใช้งานพร้อมคำเตือน"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Recipient"
@@ -3387,6 +3463,10 @@ msgstr "สี่เหลี่ยมผืนผ้า (เต็มควา�
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Redo"
 msgstr "ทำซ้ำ"
+
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Redo stylesheet edit"
+msgstr "แก้ไขสไตล์ชีตใหม่"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3485,9 +3565,9 @@ msgstr "รีเซ็ต"
 msgid "Reset Password"
 msgstr "รีเซ็ตรหัสผ่าน"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "รีเซ็ตสไตล์"
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Reset to applied stylesheet"
+msgstr "รีเซ็ตเป็นสไตล์ชีตที่ใช้งานอยู่"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -3600,14 +3680,6 @@ msgstr "โรมาเนีย"
 msgid "Rotation"
 msgstr "การหมุน"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "กฎ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "กฎ"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
 msgstr "ดำเนินการวิเคราะห์ครั้งแรกของคุณเพื่อรับสกอร์การ์ด จุดแข็ง และข้อเสนอแนะที่จัดลำดับความสำคัญ"
@@ -3662,6 +3734,10 @@ msgstr "บันทึกการเปลี่ยนแปลง"
 #: src/features/settings/pages/profile.tsx
 msgid "Save Changes"
 msgstr "บันทึกการเปลี่ยนแปลง"
+
+#: src/features/settings/integrations/components/ai-section.tsx
+msgid "Save model"
+msgstr "บันทึกโมเดล"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
@@ -3780,6 +3856,10 @@ msgstr "เลือกแล้ว"
 #: src/routes/_home/-sections/features.tsx
 msgid "Self-Host with Docker"
 msgstr "โฮสต์ด้วยตนเองบน Docker"
+
+#: src/features/resume/stylesheet/editor.tsx
+msgid "Semantic CSS stylesheet"
+msgstr "สไตล์ชีต CSS เชิงความหมาย"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4142,6 +4222,14 @@ msgstr "ขีดฆ่า"
 msgid "Strong fit"
 msgstr "เหมาะสมมาก"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Stylesheet editor"
+msgstr "ตัวแก้ไขสไตล์ชีต"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Stylesheet has errors"
+msgstr "ไฟล์สไตล์ชีตมีข้อผิดพลาด"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "ซับเรดดิต"
@@ -4298,6 +4386,10 @@ msgstr "หน้าที่คุณกำลังมองหาอาจถ
 msgid "The password you entered is incorrect"
 msgstr "รหัสผ่านที่คุณกรอกไม่ถูกต้อง"
 
+#: src/features/resume/preview/preview.browser.tsx
+msgid "The resume preview could not be updated. The last valid preview is still shown."
+msgstr "ไม่สามารถอัปเดตตัวอย่างประวัติย่อได้ ตัวอย่างที่ถูกต้องล่าสุดยังคงแสดงอยู่"
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "เรซูเม่ที่คุณพยายามเข้าถึงถูกป้องกันด้วยรหัสผ่าน"
@@ -4339,8 +4431,7 @@ msgid "Thinking"
 msgstr "การคิด"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "This action cannot be undone."
 msgstr "การดำเนินการนี้ไม่สามารถย้อนกลับได้"
 
@@ -4630,6 +4721,10 @@ msgstr "ขีดเส้นใต้"
 msgid "Undo"
 msgstr "เลิกทำ"
 
+#: src/features/resume/stylesheet/toolbar.tsx
+msgid "Undo stylesheet edit"
+msgstr "ยกเลิกการแก้ไขสไตล์ชีต"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Unlimited Resumes"
 msgstr "เรซูเม่ไม่จำกัดจำนวน"
@@ -4827,16 +4922,15 @@ msgstr "ยืนยันแล้ว"
 
 #. Primary action button to submit 2FA code
 #. Primary action button to submit backup code
-#: src/features/auth/pages/verify-2fa-backup.tsx
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify"
 msgstr "ยืนยัน"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verify with a Backup Code"
 msgstr "ยืนยันด้วยรหัสสำรอง"
 
-#: src/features/auth/pages/verify-2fa-backup.tsx
+#: src/features/auth/pages/verify-2fa.tsx
 msgid "Verifying backup code..."
 msgstr "กำลังตรวจสอบรหัสสำรอง..."
 
@@ -4916,8 +5010,7 @@ msgid "What's new in the latest version?"
 msgstr "มีอะไรใหม่ในเวอร์ชันล่าสุด?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "When locked, the resume cannot be updated or deleted."
 msgstr "เมื่อถูกล็อก ประวัติย่อจะไม่สามารถอัปเดตหรือถูกลบได้."
 
@@ -5006,6 +5099,10 @@ msgstr "ข้อมูลของคุณถูกจัดเก็บไว
 msgid "Your latest changes could not be saved."
 msgstr "ไม่สามารถบันทึกการเปลี่ยนแปลงล่าสุดของคุณได้"
 
+#: src/features/resume/stylesheet/legacy-banner.tsx
+msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
+msgstr "สไตล์เดิมของคุณจะยังคงใช้งานได้จนกว่าคุณจะเปิดใช้งานร่าง CSS เชิงความหมายนี้อย่างชัดเจน"
+
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
 msgstr "รหัสผ่านของคุณถูกรีเซ็ตเรียบร้อยแล้ว ตอนนี้คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ของคุณได้."
@@ -5023,8 +5120,7 @@ msgid "Your resume has been created successfully."
 msgstr "ประวัติย่อของคุณถูกสร้างเรียบร้อยแล้ว"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
-#: src/routes/dashboard/resumes/-components/menus/context-menu.tsx
-#: src/routes/dashboard/resumes/-components/menus/dropdown-menu.tsx
+#: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
 msgid "Your resume has been deleted successfully."
 msgstr "ประวัติย่อของคุณถูกลบเรียบร้อยแล้ว"
 

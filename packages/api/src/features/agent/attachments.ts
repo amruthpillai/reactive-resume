@@ -4,10 +4,6 @@ import { storageUploadRateLimit } from "../../middleware/rate-limit";
 import { mapAgentEnvironmentError } from "./routing";
 import { agentService } from "./service";
 
-function base64ToUint8Array(value: string) {
-	return Uint8Array.from(Buffer.from(value, "base64"));
-}
-
 export const attachmentsRouter = {
 	create: protectedProcedure
 		.route({
@@ -27,15 +23,15 @@ export const attachmentsRouter = {
 		)
 		.use(storageUploadRateLimit)
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.attachments.create({
+		.handler(({ context, input }) =>
+			agentService.attachments.create({
 				userId: context.user.id,
 				threadId: input.threadId,
 				filename: input.filename,
 				mediaType: input.mediaType,
-				data: base64ToUint8Array(input.data),
-			});
-		}),
+				data: Uint8Array.from(Buffer.from(input.data, "base64")),
+			}),
+		),
 
 	delete: protectedProcedure
 		.route({
@@ -48,7 +44,5 @@ export const attachmentsRouter = {
 		.input(z.object({ id: z.string() }))
 		.output(z.void())
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			await agentService.attachments.delete({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => agentService.attachments.delete({ id: input.id, userId: context.user.id })),
 };

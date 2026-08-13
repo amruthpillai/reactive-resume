@@ -15,6 +15,7 @@ import { useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import { toast } from "sonner";
 import { pictureSchema } from "@reactive-resume/schema/resume/data";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { Button } from "@reactive-resume/ui/components/button";
 import { ButtonGroup } from "@reactive-resume/ui/components/button-group";
 import {
@@ -484,8 +485,8 @@ function PictureSectionForm() {
 		// If the picture is from the same origin, attempt to delete it
 		if (pictureOrigin === appOrigin) deleteFile({ filename });
 
-		form.setFieldValue("url", "");
-		handleAutoSave();
+		form.reset(defaultResumeData.picture);
+		persist(defaultResumeData.picture);
 	};
 
 	const uploadPictureFile = (file: File) => {

@@ -3,7 +3,7 @@ import { LoginPage } from "@/features/auth/pages/login";
 
 export const Route = createFileRoute("/auth/login")({
 	component: RouteComponent,
-	beforeLoad: async ({ context }) => {
+	beforeLoad: ({ context }) => {
 		if (context.session) throw redirect({ to: "/dashboard", replace: true });
 		return { session: null };
 	},

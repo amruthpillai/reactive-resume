@@ -31,7 +31,7 @@ export function CreateCoverLetterDialog({ data }: DialogProps<"resume.sections.c
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				if (data?.customSectionId) {
 					const section = draft.customSections.find((s) => s.id === data.customSectionId);
@@ -67,7 +67,7 @@ export function UpdateCoverLetterDialog({ data }: DialogProps<"resume.sections.c
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				if (data?.customSectionId) {
 					const section = draft.customSections.find((s) => s.id === data.customSectionId);

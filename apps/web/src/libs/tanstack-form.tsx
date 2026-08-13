@@ -1,8 +1,11 @@
+import type { Website } from "@reactive-resume/schema/resume/data";
 import type * as React from "react";
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { InputGroupInput } from "@reactive-resume/ui/components/input-group";
+import { RichInput } from "@/components/input/rich-input";
+import { URLInput } from "@/components/input/url-input";
 
 type FieldFrameProps = {
 	label?: React.ReactNode;
@@ -24,6 +27,17 @@ type NumberFieldProps = FieldFrameProps &
 		React.ComponentProps<typeof Input>,
 		"children" | "defaultValue" | "name" | "onBlur" | "onChange" | "type" | "value"
 	>;
+
+type WebsiteFieldProps = {
+	label: React.ReactNode;
+	formItemClassName?: string;
+	hideLabelButton: boolean;
+};
+
+type RichTextFieldProps = {
+	label: React.ReactNode;
+	formItemClassName?: string;
+};
 
 const { fieldContext, formContext, useFieldContext } = createFormHookContexts();
 
@@ -103,8 +117,38 @@ function NumberField({ label, description, formItemClassName, ...props }: Number
 	);
 }
 
+function WebsiteField({ label, formItemClassName, hideLabelButton }: WebsiteFieldProps) {
+	const field = useFieldContext<Website>();
+	const hasError = field.state.meta.isTouched && field.state.meta.errors.length > 0;
+
+	return (
+		<FormItem hasError={hasError} className={formItemClassName}>
+			<FormLabel>{label}</FormLabel>
+			<URLInput
+				value={field.state.value}
+				onChange={(value) => field.handleChange(value)}
+				hideLabelButton={hideLabelButton}
+			/>
+			<FormMessage errors={field.state.meta.errors} />
+		</FormItem>
+	);
+}
+
+function RichTextField({ label, formItemClassName }: RichTextFieldProps) {
+	const field = useFieldContext<string>();
+	const hasError = field.state.meta.isTouched && field.state.meta.errors.length > 0;
+
+	return (
+		<FormItem hasError={hasError} className={formItemClassName}>
+			<FormLabel>{label}</FormLabel>
+			<FormControl render={<RichInput value={field.state.value} onChange={(value) => field.handleChange(value)} />} />
+			<FormMessage errors={field.state.meta.errors} />
+		</FormItem>
+	);
+}
+
 export const { useAppForm, withForm } = createFormHook({
-	fieldComponents: { InputGroupTextField, NumberField, TextField },
+	fieldComponents: { InputGroupTextField, NumberField, RichTextField, TextField, WebsiteField },
 	fieldContext,
 	formComponents: {},
 	formContext,

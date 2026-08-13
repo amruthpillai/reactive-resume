@@ -26,6 +26,21 @@ Run tests:
 
 `APP_URL=http://localhost:3000 PORT=3000 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres FLAG_DISABLE_SIGNUPS=false FLAG_DISABLE_EMAIL_AUTH=false FLAG_DISABLE_API_RATE_LIMIT=true LOCAL_STORAGE_PATH=/workspace/data/e2e pnpm test:e2e`
 
+## Semantic CSS
+
+Run opt-in conversion, editing, conflict, last-valid, default-mode, and visual acceptance:
+
+```bash
+pnpm exec playwright test tests/e2e/specs/semantic-css
+```
+
+Linux/Chromium visual baselines are updated intentionally with:
+
+```bash
+pnpm exec playwright test tests/e2e/specs/semantic-css/template-visual.spec.ts \
+	--project=chromium --update-snapshots
+```
+
 ## Coverage
 
 - Email/password auth smoke.
@@ -33,5 +48,6 @@ Run tests:
 - Builder basics edit and autosave persistence.
 - JSON export/import.
 - Public sharing for anonymous visitors.
+- Semantic CSS legacy conversion, last-valid recovery, portability, revision conflicts, and all-template visual regression.
 
 PDF, DOCX, OAuth, passkeys, 2FA, password reset, and AI flows are intentionally outside the initial PR gate.

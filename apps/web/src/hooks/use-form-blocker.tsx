@@ -48,7 +48,7 @@ export function useFormBlocker<TStore extends BlockableFormStore>(
 		return isDirty && !isSubmitting;
 	}, [isDirty, isSubmitting]);
 
-	const confirmClose = useCallback(async () => {
+	const confirmClose = useCallback(() => {
 		if (!shouldBlock()) return true;
 
 		return confirm(t`Are you sure you want to close this dialog?`, {

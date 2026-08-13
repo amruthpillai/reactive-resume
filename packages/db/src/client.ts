@@ -1,12 +1,10 @@
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { env } from "@reactive-resume/env/server";
-import { relations } from "./relations";
 
 declare global {
 	var __pool: Pool | undefined;
-	var __drizzle: NodePgDatabase<typeof relations> | undefined;
+	var __drizzle: ReturnType<typeof drizzle> | undefined;
 }
 
 export function getPool() {
@@ -31,5 +29,5 @@ export function getPool() {
 }
 
 // ponytail: two private fns collapsed; getPool() is already a singleton, global cache preserved
-globalThis.__drizzle ??= drizzle({ client: getPool(), relations });
+globalThis.__drizzle ??= drizzle({ client: getPool() });
 export const db = globalThis.__drizzle;

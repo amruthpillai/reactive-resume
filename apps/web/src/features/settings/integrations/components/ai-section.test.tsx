@@ -41,6 +41,8 @@ const queryClient = vi.hoisted(() => ({
 	setQueryData: vi.fn(),
 }));
 
+const providers = vi.hoisted(() => ({ data: [] as MockProvider[] }));
+
 const mutations = vi.hoisted(() => ({
 	create: vi.fn(),
 	test: vi.fn(),
@@ -56,7 +58,7 @@ const mutationOptions = vi.hoisted(() => ({
 }));
 
 vi.mock("@tanstack/react-query", () => ({
-	useQuery: () => ({ data: [], isLoading: false, error: null }),
+	useQuery: () => ({ data: providers.data, isLoading: false, error: null }),
 	useQueryClient: () => queryClient,
 	useMutation: (options: MutationOptions) => ({
 		isPending: false,
@@ -140,6 +142,7 @@ describe("AISettingsSection", () => {
 		mutations.test.mockReset();
 		mutations.update.mockReset();
 		mutations.delete.mockReset();
+		providers.data = [];
 	});
 
 	it("offers popular AI SDK providers and labels Ollama as cloud-hosted", () => {
@@ -186,5 +189,19 @@ describe("AISettingsSection", () => {
 			(providers: MockProvider[]) => MockProvider[],
 		];
 		expect(updater([created])).toEqual([tested]);
+	});
+
+	it("updates a configured provider's model", async () => {
+		providers.data = [provider({})];
+		mutations.update.mockResolvedValue(provider({ model: "gpt-5-mini", testStatus: "untested", enabled: false }));
+
+		renderSection();
+
+		fireEvent.click(screen.getByRole("button", { name: "Edit model" }));
+		fireEvent.change(screen.getByLabelText("Provider model"), { target: { value: "gpt-5-mini" } });
+		fireEvent.click(screen.getByRole("button", { name: "Save model" }));
+
+		await waitFor(() => expect(mutations.update).toHaveBeenCalledWith({ id: "provider-1", model: "gpt-5-mini" }));
+		expect(queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ["aiProviders", "list"] });
 	});
 });

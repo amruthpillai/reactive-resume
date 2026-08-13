@@ -21,9 +21,7 @@ export function PasskeysSection() {
 	});
 
 	const registerPasskeyMutation = useMutation({
-		mutationFn: async () => {
-			return await authClient.passkey.addPasskey();
-		},
+		mutationFn: () => authClient.passkey.addPasskey(),
 		onSuccess: async ({ data, error }) => {
 			if (error) {
 				toast.error(
@@ -77,9 +75,7 @@ export function PasskeysSection() {
 	});
 
 	const deletePasskeyMutation = useMutation({
-		mutationFn: async (id: string) => {
-			return await authClient.passkey.deletePasskey({ id });
-		},
+		mutationFn: (id: string) => authClient.passkey.deletePasskey({ id }),
 		onSuccess: async ({ error }) => {
 			if (error) {
 				toast.error(

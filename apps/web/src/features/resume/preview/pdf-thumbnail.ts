@@ -1,8 +1,8 @@
 import type { PreviewPageSize } from "./preview.shared.utils";
 import { getResumeThumbnailRenderSize, RESUME_THUMBNAIL_TARGET_WIDTH } from "./resume-thumbnail.shared";
 
-const canvasToBlob = async (canvas: HTMLCanvasElement) => {
-	return await new Promise<Blob>((resolve, reject) => {
+const canvasToBlob = (canvas: HTMLCanvasElement) =>
+	new Promise<Blob>((resolve, reject) => {
 		canvas.toBlob((blob) => {
 			if (!blob) {
 				reject(new Error("Failed to create resume thumbnail image."));
@@ -12,7 +12,6 @@ const canvasToBlob = async (canvas: HTMLCanvasElement) => {
 			resolve(blob);
 		}, "image/png");
 	});
-};
 
 export const createPdfFirstPageImageUrl = async (file: Blob) => {
 	const { AnnotationMode, GlobalWorkerOptions, getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");

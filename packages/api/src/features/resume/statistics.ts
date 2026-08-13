@@ -24,9 +24,7 @@ export const resumeStatisticsRouter = {
 				lastDownloadedAt: z.date().nullable().describe("Timestamp of the last download, or null if never downloaded."),
 			}),
 		)
-		.handler(async ({ context, input }) => {
-			return resumeService.statistics.getById({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => resumeService.statistics.getById({ id: input.id, userId: context.user.id })),
 
 	getDailyById: protectedProcedure
 		.route({
@@ -54,7 +52,11 @@ export const resumeStatisticsRouter = {
 				}),
 			),
 		)
-		.handler(async ({ context, input }) => {
-			return resumeService.statistics.getDailySeries({ id: input.id, userId: context.user.id, days: input.days });
-		}),
+		.handler(({ context, input }) =>
+			resumeService.statistics.getDailySeries({
+				id: input.id,
+				userId: context.user.id,
+				days: input.days,
+			}),
+		),
 };

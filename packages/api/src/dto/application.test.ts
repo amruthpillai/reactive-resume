@@ -19,7 +19,7 @@ describe("applicationDto sourceUrl", () => {
 				role: "Engineer",
 				sourceUrl: "javascript:alert(1)",
 			}),
-		).toThrow();
+		).toThrow("URL must use http or https.");
 	});
 });
 

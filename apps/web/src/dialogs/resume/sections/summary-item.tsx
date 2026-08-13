@@ -30,7 +30,7 @@ export function CreateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				if (data?.customSectionId) {
 					const section = draft.customSections.find((s) => s.id === data.customSectionId);
@@ -66,7 +66,7 @@ export function UpdateSummaryItemDialog({ data }: DialogProps<"resume.sections.s
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeStore((draft) => {
 				if (data?.customSectionId) {
 					const section = draft.customSections.find((s) => s.id === data.customSectionId);

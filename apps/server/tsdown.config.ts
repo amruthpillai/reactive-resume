@@ -33,7 +33,10 @@ const promptAssetsPlugin: TsdownPlugin = {
 };
 
 export default defineConfig({
-	entry: { index: "src/index.ts" },
+	entry: {
+		index: "src/index.ts",
+		"stylesheet-preflight-worker": "src/workers/stylesheet-preflight.ts",
+	},
 	format: "esm",
 	platform: "node",
 	target: "node24",
@@ -42,6 +45,9 @@ export default defineConfig({
 	shims: true,
 	dts: false,
 	define: { __APP_VERSION__: JSON.stringify(rootPackageJson.version ?? "0.0.0") },
+	// The flagged dynamic imports are deliberate: they defer evaluation of env-dependent
+	// modules so tests can run without env vars, not to split chunks.
+	suppressWarnings: [/dynamic import will not move module into another chunk/],
 	outExtensions: () => ({ js: ".mjs" }),
 	deps: {
 		alwaysBundle: [/^@reactive-resume\//],

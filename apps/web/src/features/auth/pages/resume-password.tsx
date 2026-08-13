@@ -4,7 +4,6 @@ import { ORPCError } from "@orpc/client";
 import { EyeIcon, EyeSlashIcon, LockOpenIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useMemo } from "react";
 import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
@@ -29,16 +28,13 @@ export function ResumePasswordPage({ redirectPath }: Props) {
 
 	const { mutate: verifyPassword } = useMutation(orpc.resume.verifyPassword.mutationOptions());
 
-	const [username, slug] = useMemo(() => {
-		const [username, slug] = redirectPath.split("/").slice(1) as [string, string];
-		if (!username || !slug) throw navigate({ to: "/" });
-		return [username, slug];
-	}, [redirectPath, navigate]);
+	const [username, slug] = redirectPath.split("/").slice(1) as [string, string];
+	if (!username || !slug) throw navigate({ to: "/" });
 
 	const form = useAppForm({
 		defaultValues: { password: "" },
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value, formApi }) => {
+		onSubmit: ({ value, formApi }) => {
 			const toastId = toast.loading(t`Verifying password...`);
 
 			verifyPassword(

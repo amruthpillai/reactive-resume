@@ -88,7 +88,7 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			items: data?.items ?? [],
 		},
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				draft.customSections.push(value);
 				const lastPageIndex = draft.metadata.layout.pages.length - 1;
@@ -146,7 +146,7 @@ export function UpdateCustomSectionDialog({ data }: DialogProps<"resume.sections
 			icon: data.icon ?? "",
 		},
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				const index = draft.customSections.findIndex((item) => item.id === value.id);
 				if (index === -1) return;

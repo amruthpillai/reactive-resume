@@ -21,7 +21,8 @@ vi.mock("@reactive-resume/env/server", () => ({
 	},
 }));
 
-const { MCP_TOOL_NAME, registerTools } = await import("./tools");
+const { MCP_TOOL_NAME } = await import("./mcp-tool-names");
+const { registerTools } = await import("./tools");
 
 type ToolHandler = (input: Record<string, unknown>) => Promise<{
 	content: Array<{ type: "text"; text: string }>;

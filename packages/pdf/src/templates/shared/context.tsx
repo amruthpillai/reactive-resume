@@ -14,6 +14,7 @@ import type {
 } from "./types";
 import { createContext, use, useMemo } from "react";
 import { useRender } from "../../context";
+import { useSemanticRenderMode } from "../../semantic/context";
 import { resolveStyleRuleSlot } from "./style-rules";
 
 type TemplateContextValue = {
@@ -21,11 +22,13 @@ type TemplateContextValue = {
 	featureStyles: TemplateFeatureStyleSlots;
 	colors: TemplateColorRoles;
 	features: TemplateFeatures;
+	pageNodeKey: string;
 };
 
 type TemplateProviderProps = Omit<TemplateContextValue, "featureStyles" | "features" | "sectionTitleFallbacks"> & {
 	featureStyles?: TemplateFeatureStyleSlots;
 	features?: TemplateFeatures;
+	pageNodeKey: string;
 	children: ReactNode;
 };
 
@@ -73,11 +76,12 @@ export const TemplateProvider = ({
 	featureStyles = EMPTY_FEATURE_STYLES,
 	colors,
 	features = EMPTY_FEATURES,
+	pageNodeKey,
 	children,
 }: TemplateProviderProps) => {
 	const contextValue = useMemo<TemplateContextValue>(
-		() => ({ styles, featureStyles, colors, features }),
-		[colors, featureStyles, features, styles],
+		() => ({ styles, featureStyles, colors, features, pageNodeKey }),
+		[colors, featureStyles, features, pageNodeKey, styles],
 	);
 
 	return <TemplateContext.Provider value={contextValue}>{children}</TemplateContext.Provider>;
@@ -107,6 +111,8 @@ export const useTemplateFeature = (feature: keyof TemplateFeatures): boolean => 
 
 export const useTemplatePlacement = () => use(TemplatePlacementContext);
 
+export const useTemplatePageNodeKey = () => useTemplateContext().pageNodeKey;
+
 const useTemplateStyleContext = (): TemplateStyleContextValue => {
 	const { colors } = useTemplateContext();
 	const placement = useTemplatePlacement();
@@ -124,8 +130,9 @@ export const useTemplateStyle = (slot: keyof TemplateStyleSlots): StyleInput => 
 export const useSectionStyleRule = (slot: StyleSlot): StyleInput => {
 	const data = useRender();
 	const context = use(SectionStyleContext);
+	const mode = useSemanticRenderMode();
 
-	if (!context) return undefined;
+	if (!context || mode === "semantic") return undefined;
 
 	return resolveStyleRuleSlot(data, { ...context, slot });
 };

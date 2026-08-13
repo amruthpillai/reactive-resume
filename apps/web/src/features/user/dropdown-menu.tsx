@@ -22,18 +22,11 @@ import {
 import { useTheme } from "@/features/theme/provider";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
-import { isLocale, loadLocale, localeMap, setLocaleCookie } from "@/libs/locale";
+import { changeLocale, localeMap } from "@/libs/locale";
 import { isTheme } from "@/libs/theme";
 
 type Props = {
 	children: ({ session }: { session: AuthSession }) => React.ComponentProps<typeof DropdownMenuTrigger>["render"];
-};
-
-const handleLocaleChange = async (value: string) => {
-	if (!isLocale(value)) return;
-	setLocaleCookie(value);
-	await loadLocale(value);
-	window.location.reload();
 };
 
 export function UserDropdownMenu({ children }: Props) {
@@ -88,7 +81,7 @@ export function UserDropdownMenu({ children }: Props) {
 							<Trans comment="Menu item that opens language selection submenu">Language</Trans>
 						</DropdownMenuSubTrigger>
 						<DropdownMenuSubContent className="max-h-[400px] overflow-y-auto">
-							<DropdownMenuRadioGroup value={i18n.locale} onValueChange={handleLocaleChange}>
+							<DropdownMenuRadioGroup value={i18n.locale} onValueChange={changeLocale}>
 								{Object.entries(localeMap).map(([value, label]) => (
 									<DropdownMenuRadioItem key={value} value={value}>
 										{i18n.t(label)}

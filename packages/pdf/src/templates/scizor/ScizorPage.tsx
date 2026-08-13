@@ -3,8 +3,10 @@ import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import {
 	CustomFieldContactItem,
@@ -14,12 +16,18 @@ import {
 	WebsiteContactItem,
 } from "../shared/contact-item";
 import { TemplateProvider } from "../shared/context";
-import { shouldShowResumeHeader } from "../shared/cover-letter";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
-import { getTemplatePageMinHeightStyle, getTemplatePageSize } from "../shared/page-size";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	SemanticTemplatePartView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight } from "../shared/styles";
@@ -46,28 +54,31 @@ type ScizorHeaderProps = {
 	styles: ScizorStyles;
 };
 
-export const ScizorPage = ({ page, pageIndex }: TemplatePageProps) => {
+export const ScizorPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles } = useScizorTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const pageSize = getTemplatePageSize(metadata.page.format);
-	const pageMinHeightStyle = getTemplatePageMinHeightStyle(metadata.page.format);
-	const showHeader = shouldShowResumeHeader(data, pageIndex);
-	const mainSections = filterSections(page.main, data);
-	const sidebarSections = page.fullWidth ? [] : filterSections(page.sidebar, data);
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, page.fullWidth ? [] : filterSections(page.sidebar, data));
 	const sections = [...mainSections, ...sidebarSections];
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} colors={colors}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
-				<View style={composeStyles(styles.sections, { rowGap: metrics.sectionGap })}>
+				<SemanticRegionView region="main" style={composeStyles(styles.sections, { rowGap: metrics.sectionGap })}>
 					{sections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
-				</View>
+				</SemanticRegionView>
 			</TemplateProvider>
 		</Page>
 	);
@@ -78,13 +89,13 @@ const Header = ({ styles }: ScizorHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
+		<SemanticHeaderView style={styles.header}>
 			<View style={styles.headerIdentity}>
 				<Heading style={styles.headerName}>{basics.name}</Heading>
-				<View style={styles.headerNameRule} />
+				<SemanticTemplatePartView partKeys={["header-name-rule"]} style={styles.headerNameRule} />
 				{basics.headline && <Text style={styles.headerHeadline}>{basics.headline}</Text>}
 
-				<View style={styles.headerContactRow}>
+				<SemanticContactListView style={styles.headerContactRow}>
 					<LocationContactItem location={basics.location} style={styles.headerContactItem} />
 					<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 					<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
@@ -92,11 +103,11 @@ const Header = ({ styles }: ScizorHeaderProps) => {
 					{basics.customFields.map((field) => (
 						<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 					))}
-				</View>
+				</SemanticContactListView>
 			</View>
 
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
-		</View>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
+		</SemanticHeaderView>
 	);
 };
 
@@ -111,22 +122,17 @@ const useScizorTemplate = (): ScizorTemplate => {
 		const divider = "#D8DCE2";
 		const colors: TemplateColorRoles = { foreground, background, primary };
 		const metrics = getTemplateMetrics(metadata.page);
-		const base = createBaseTemplateStyles({ metadata, foreground, r, metrics, picture });
+		const base = createBaseTemplateStyles({ metadata, foreground, background, r, metrics, picture });
 
 		const baseStyles = StyleSheet.create({
 			...base,
 			page: {
-				color: foreground,
-				backgroundColor: background,
+				...base.page,
 				borderTopWidth: metrics.gapY(0.45),
 				borderTopColor: primary,
 				paddingHorizontal: metrics.page.paddingHorizontal,
 				paddingVertical: metrics.page.paddingVertical,
 				rowGap: metrics.sectionGap,
-				fontFamily: metadata.typography.body.fontFamily,
-				fontSize: metadata.typography.body.fontSize,
-				lineHeight: metadata.typography.body.lineHeight,
-				direction: r.pageDirection,
 			},
 			heading: { ...base.heading, fontWeight: metadata.typography.heading.fontWeights.at(-1) ?? "700" },
 			bold: { fontWeight: metadata.typography.body.fontWeights.at(-1) ?? "700", color: foreground },

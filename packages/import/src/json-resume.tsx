@@ -162,19 +162,6 @@ const jsonResumeSchema = z.looseObject({
 });
 
 type JSONResume = z.infer<typeof jsonResumeSchema>;
-type JSONResumeLocation = z.infer<typeof locationSchema>;
-
-// Helper function to format location object to string
-function formatLocation(location?: JSONResumeLocation): string {
-	if (!location) return "";
-
-	const parts: string[] = [];
-	if (location.city) parts.push(location.city);
-	if (location.region) parts.push(location.region);
-	if (location.countryCode) parts.push(location.countryCode);
-
-	return parts.join(", ");
-}
 
 // ponytail: stateless two-method class → two plain functions
 function convertJSONResume(jsonResume: JSONResume): ResumeData {
@@ -190,7 +177,9 @@ function convertJSONResume(jsonResume: JSONResume): ResumeData {
 			headline: basics.label || "",
 			email: basics.email || "",
 			phone: basics.phone || "",
-			location: basics.location ? formatLocation(basics.location) : "",
+			location: [basics.location?.city, basics.location?.region, basics.location?.countryCode]
+				.filter(Boolean)
+				.join(", "),
 			website: createUrl(basics.url),
 			customFields: [],
 		};

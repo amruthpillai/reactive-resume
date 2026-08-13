@@ -22,14 +22,7 @@ const applicationDocumentFileSchema = z
 const httpUrlSchema = z
 	.string()
 	.trim()
-	.refine((value) => {
-		try {
-			const parsed = new URL(value);
-			return parsed.protocol === "http:" || parsed.protocol === "https:";
-		} catch {
-			return false;
-		}
-	}, "URL must use http or https.");
+	.pipe(z.url({ protocol: /^https?$/, error: "URL must use http or https." }));
 
 const applicationSchema = createSelectSchema(schema.application, {
 	id: z.string().describe("The ID of the application."),

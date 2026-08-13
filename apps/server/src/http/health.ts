@@ -37,9 +37,7 @@ async function checkDatabase() {
 	return { status: "healthy" };
 }
 
-async function checkStorage() {
-	return getStorageService().healthcheck();
-}
+const checkStorage = () => getStorageService().healthcheck();
 
 export async function handleHealth() {
 	const [database, storage] = await Promise.all([runCheck(checkDatabase), runCheck(checkStorage)]);

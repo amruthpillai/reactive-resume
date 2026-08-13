@@ -91,13 +91,9 @@ export const standardFontList = standardPdfFontList.filter((font) => !webFontMap
 const fontMap = new Map<string, FontRecord>();
 const chinesePrioritySet = new Set<string>(preferredChineseFontFamilies);
 
-function orderFonts(fonts: FontRecord[]) {
-	return [...fonts].sort((a, b) => {
-		return a.family.localeCompare(b.family, undefined, { sensitivity: "base" });
-	});
-}
-
-export const fontList = orderFonts([...standardFontList, ...webFontList]);
+export const fontList = [...standardFontList, ...webFontList].sort((a, b) =>
+	a.family.localeCompare(b.family, undefined, { sensitivity: "base" }),
+);
 
 for (const font of fontList) {
 	fontMap.set(font.family, font);
@@ -125,10 +121,6 @@ export function getFont(family: string) {
 
 	const alias = legacyFontAliases[family];
 	return alias ? fontMap.get(alias) : undefined;
-}
-
-function getFontCategory(family: string): FontCategory | null {
-	return getFont(family)?.category ?? null;
 }
 
 export function getFontDisplayName(family: string) {
@@ -185,7 +177,7 @@ export function getPdfFallbackFontFamilies(
 	family: string,
 	options: { locale?: Locale; scripts?: Iterable<Script> } = {},
 ): string[] {
-	const category = getFontCategory(family);
+	const category = getFont(family)?.category ?? null;
 
 	const ordered: Script[] = [];
 	const localeScript = getLocaleScript(options.locale);

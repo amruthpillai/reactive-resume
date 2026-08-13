@@ -160,7 +160,7 @@ function getMetricCompatibleFonts(): WebFont[] {
 	];
 }
 
-export async function generateFonts() {
+async function generateFonts() {
 	const response = await getGoogleFontsJSON();
 	console.log(`Found ${response.items.length} fonts in total (Google Fonts).`);
 

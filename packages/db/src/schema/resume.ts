@@ -19,6 +19,8 @@ export const resume = pg.pgTable(
 		isPublic: pg.boolean("is_public").notNull().default(false),
 		isLocked: pg.boolean("is_locked").notNull().default(false),
 		password: pg.text("password"),
+		stylesheetRevision: pg.integer("stylesheet_revision").notNull().default(0),
+		renderDataVersion: pg.integer("render_data_version").notNull().default(0),
 		data: pg
 			.jsonb("data")
 			.notNull()

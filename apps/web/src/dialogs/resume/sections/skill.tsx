@@ -43,7 +43,7 @@ export function CreateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				createSectionItem(draft, "skills", value, data?.customSectionId);
 			});
@@ -75,7 +75,7 @@ export function UpdateSkillDialog({ data }: DialogProps<"resume.sections.skills.
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				updateSectionItem(draft, "skills", value, data?.customSectionId);
 			});

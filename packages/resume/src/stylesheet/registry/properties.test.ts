@@ -1,0 +1,394 @@
+import { describe, expect, it } from "vitest";
+import { PROPERTY_REGISTRY_V1 } from "./properties";
+
+const borderShorthands = ["border", "border-top", "border-right", "border-bottom", "border-left"] as const;
+const borderShorthandHints = [
+	"inherit",
+	"initial",
+	"revert",
+	"unset",
+	"1pt dotted",
+	"1pt dashed",
+	"1pt solid",
+] as const;
+
+const expectedProperties = [
+	"align-content",
+	"align-items",
+	"align-self",
+	"flex",
+	"flex-direction",
+	"flex-wrap",
+	"flex-flow",
+	"flex-grow",
+	"flex-shrink",
+	"flex-basis",
+	"justify-content",
+	"gap",
+	"row-gap",
+	"column-gap",
+	"aspect-ratio",
+	"bottom",
+	"display",
+	"left",
+	"position",
+	"right",
+	"top",
+	"overflow",
+	"z-index",
+	"width",
+	"height",
+	"min-width",
+	"min-height",
+	"max-width",
+	"max-height",
+	"color",
+	"background-color",
+	"opacity",
+	"direction",
+	"font-size",
+	"font-style",
+	"font-weight",
+	"letter-spacing",
+	"line-height",
+	"max-lines",
+	"text-align",
+	"text-decoration",
+	"text-decoration-color",
+	"text-decoration-style",
+	"text-indent",
+	"text-overflow",
+	"text-transform",
+	"vertical-align",
+	"object-fit",
+	"object-position",
+	"-resume-shadow-color",
+	"-resume-shadow-width",
+	"margin",
+	"margin-top",
+	"margin-right",
+	"margin-bottom",
+	"margin-left",
+	"margin-horizontal",
+	"margin-vertical",
+	"padding",
+	"padding-top",
+	"padding-right",
+	"padding-bottom",
+	"padding-left",
+	"padding-horizontal",
+	"padding-vertical",
+	"border",
+	"border-color",
+	"border-style",
+	"border-width",
+	"border-top",
+	"border-right",
+	"border-bottom",
+	"border-left",
+	"border-top-color",
+	"border-top-style",
+	"border-top-width",
+	"border-right-color",
+	"border-right-style",
+	"border-right-width",
+	"border-bottom-color",
+	"border-bottom-style",
+	"border-bottom-width",
+	"border-left-color",
+	"border-left-style",
+	"border-left-width",
+	"border-radius",
+	"border-top-left-radius",
+	"border-top-right-radius",
+	"border-bottom-right-radius",
+	"border-bottom-left-radius",
+	"transform",
+	"transform-origin",
+	"order",
+	"break-before",
+	"break-inside",
+	"orphans",
+	"widows",
+	"size",
+	"-resume-fixed",
+	"-resume-min-presence-ahead",
+];
+
+const containerNodes = [
+	"page",
+	"region",
+	"header",
+	"contact-list",
+	"contact-item",
+	"section",
+	"section-heading",
+	"section-items",
+	"item",
+	"item-header",
+	"rich-text",
+	"list",
+	"list-item",
+	"horizontal-rule",
+	"template-part",
+];
+
+const textNodes = [
+	"name",
+	"headline",
+	"section-heading",
+	"combined-text",
+	"field",
+	"rich-heading",
+	"blockquote",
+	"paragraph",
+	"list-item-content",
+	"list-marker",
+	"strong",
+	"emphasis",
+	"underline",
+	"strike",
+	"code",
+	"text-span",
+	"mark",
+	"hard-break",
+];
+
+const linkContainerNodes = [...containerNodes, "link"];
+const textAndLinkNodes = [...textNodes, "link"];
+const colorNodes = [...new Set([...containerNodes, ...textNodes, "link", "icon", "level"])];
+const spacingNodes = [...new Set([...containerNodes, ...textNodes, "link", "picture"])];
+const structuralNodes = [
+	"page",
+	"region",
+	"header",
+	"picture",
+	"name",
+	"headline",
+	"contact-list",
+	"contact-item",
+	"section",
+	"section-heading",
+	"section-items",
+	"item",
+	"item-header",
+	"combined-text",
+	"field",
+	"link",
+	"icon",
+	"level",
+	"rich-text",
+	"rich-heading",
+	"blockquote",
+	"paragraph",
+	"list",
+	"list-item",
+	"list-item-content",
+	"list-marker",
+	"strong",
+	"emphasis",
+	"underline",
+	"strike",
+	"code",
+	"text-span",
+	"mark",
+	"hard-break",
+	"horizontal-rule",
+	"template-part",
+];
+
+const expectedPropertyGroups = [
+	{
+		names: [
+			"align-content",
+			"align-items",
+			"align-self",
+			"flex",
+			"flex-direction",
+			"flex-wrap",
+			"flex-flow",
+			"flex-grow",
+			"flex-shrink",
+			"flex-basis",
+			"justify-content",
+			"gap",
+			"row-gap",
+			"column-gap",
+		],
+		appliesTo: linkContainerNodes,
+		inheritable: false,
+	},
+	{
+		names: ["aspect-ratio", "bottom"],
+		appliesTo: linkContainerNodes,
+		inheritable: false,
+	},
+	{
+		names: ["display"],
+		appliesTo: [...linkContainerNodes, "list-item-content", "list-marker"],
+		inheritable: false,
+	},
+	{
+		names: ["left", "position", "right", "top", "overflow", "z-index"],
+		appliesTo: linkContainerNodes,
+		inheritable: false,
+	},
+	{
+		names: ["width", "height", "min-width", "min-height", "max-width", "max-height"],
+		appliesTo: [...linkContainerNodes, "picture"],
+		inheritable: false,
+	},
+	{ names: ["color"], appliesTo: colorNodes, inheritable: true },
+	{ names: ["background-color"], appliesTo: linkContainerNodes, inheritable: false },
+	{ names: ["opacity"], appliesTo: colorNodes, inheritable: false },
+	{ names: ["direction"], appliesTo: textAndLinkNodes, inheritable: true },
+	{ names: ["font-size"], appliesTo: [...textAndLinkNodes, "icon", "level"], inheritable: true },
+	{
+		names: ["font-style", "font-weight", "letter-spacing", "line-height"],
+		appliesTo: textAndLinkNodes,
+		inheritable: true,
+	},
+	{ names: ["max-lines"], appliesTo: textAndLinkNodes, inheritable: false },
+	{ names: ["text-align"], appliesTo: textAndLinkNodes, inheritable: true },
+	{
+		names: ["text-decoration", "text-decoration-color", "text-decoration-style"],
+		appliesTo: textAndLinkNodes,
+		inheritable: false,
+	},
+	{ names: ["text-indent"], appliesTo: textAndLinkNodes, inheritable: true },
+	{ names: ["text-overflow"], appliesTo: textAndLinkNodes, inheritable: false },
+	{ names: ["text-transform"], appliesTo: textAndLinkNodes, inheritable: true },
+	{ names: ["vertical-align"], appliesTo: textAndLinkNodes, inheritable: false },
+	{
+		names: ["object-fit", "object-position", "-resume-shadow-color", "-resume-shadow-width"],
+		appliesTo: ["picture"],
+		inheritable: false,
+	},
+	{
+		names: [
+			"margin",
+			"margin-top",
+			"margin-right",
+			"margin-bottom",
+			"margin-left",
+			"margin-horizontal",
+			"margin-vertical",
+			"padding",
+			"padding-top",
+			"padding-right",
+			"padding-bottom",
+			"padding-left",
+			"padding-horizontal",
+			"padding-vertical",
+		],
+		appliesTo: spacingNodes,
+		inheritable: false,
+	},
+	{
+		names: [
+			"border",
+			"border-color",
+			"border-style",
+			"border-width",
+			"border-top",
+			"border-right",
+			"border-bottom",
+			"border-left",
+			"border-top-color",
+			"border-top-style",
+			"border-top-width",
+			"border-right-color",
+			"border-right-style",
+			"border-right-width",
+			"border-bottom-color",
+			"border-bottom-style",
+			"border-bottom-width",
+			"border-left-color",
+			"border-left-style",
+			"border-left-width",
+			"border-radius",
+			"border-top-left-radius",
+			"border-top-right-radius",
+			"border-bottom-right-radius",
+			"border-bottom-left-radius",
+		],
+		appliesTo: [...linkContainerNodes, "picture"],
+		inheritable: false,
+	},
+	{ names: ["transform", "transform-origin"], appliesTo: [...linkContainerNodes, "picture"], inheritable: false },
+	{
+		names: ["order", "break-before", "break-inside"],
+		appliesTo: structuralNodes,
+		inheritable: false,
+	},
+	{ names: ["orphans", "widows"], appliesTo: textNodes, inheritable: false },
+	{ names: ["size"], appliesTo: ["page"], inheritable: false },
+	{
+		names: ["-resume-fixed"],
+		appliesTo: structuralNodes,
+		inheritable: false,
+	},
+	{
+		names: ["-resume-min-presence-ahead"],
+		appliesTo: structuralNodes,
+		inheritable: false,
+	},
+];
+
+describe("property registry", () => {
+	it("covers the normative v1 adapter matrix", () => {
+		expect(Object.keys(PROPERTY_REGISTRY_V1)).toEqual(expectedProperties);
+		expect(expectedPropertyGroups.flatMap(({ names }) => names)).toEqual(expectedProperties);
+	});
+
+	it("uses the complete v1 applicability and inheritance matrix", () => {
+		for (const { names, appliesTo, inheritable } of expectedPropertyGroups) {
+			for (const name of names) {
+				expect(PROPERTY_REGISTRY_V1[name]?.appliesTo).toEqual(appliesTo);
+				expect(PROPERTY_REGISTRY_V1[name]?.inheritable).toBe(inheritable);
+			}
+		}
+	});
+
+	it("publishes duplicate-free applicability lists", () => {
+		for (const [property, definition] of Object.entries(PROPERTY_REGISTRY_V1)) {
+			expect(definition?.appliesTo, property).toEqual([...new Set(definition?.appliesTo)]);
+		}
+	});
+
+	it("rejects unsupported browser and asset properties", () => {
+		expect(PROPERTY_REGISTRY_V1["font-family"]).toBeUndefined();
+		expect(PROPERTY_REGISTRY_V1["background-image"]).toBeUndefined();
+		expect(PROPERTY_REGISTRY_V1["box-shadow"]).toBeUndefined();
+	});
+
+	it("publishes property-specific fixed value hints", () => {
+		expect(PROPERTY_REGISTRY_V1["border-style"]?.values).toEqual([
+			"inherit",
+			"initial",
+			"revert",
+			"unset",
+			"dotted",
+			"dashed",
+			"solid",
+		]);
+		expect(PROPERTY_REGISTRY_V1["object-fit"]?.values).toEqual([
+			"inherit",
+			"initial",
+			"revert",
+			"unset",
+			"contain",
+			"cover",
+			"fill",
+			"none",
+			"scale-down",
+		]);
+		expect(PROPERTY_REGISTRY_V1["font-size"]?.values).toEqual(["inherit", "initial", "revert", "unset"]);
+		expect(PROPERTY_REGISTRY_V1.gap?.values).toEqual(["inherit", "initial", "revert", "unset"]);
+	});
+
+	it.each(borderShorthands)("publishes only complete value hints for the %s shorthand", (property) => {
+		expect(PROPERTY_REGISTRY_V1[property]?.units).toEqual([]);
+		expect(PROPERTY_REGISTRY_V1[property]?.values).toEqual(borderShorthandHints);
+	});
+});

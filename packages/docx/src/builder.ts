@@ -43,27 +43,9 @@ function ptToTwips(pt: number): number {
 	return Math.round(pt * 20);
 }
 
-// --- Page size constants (in mm) ---
-
-interface PageSize {
-	width: number;
-	height: number;
-}
-
-const DEFAULT_PAGE_SIZE: PageSize = { width: 210, height: 297 };
-
-const PAGE_SIZES = {
-	a4: DEFAULT_PAGE_SIZE,
-	letter: { width: 215.9, height: 279.4 },
-} satisfies Record<string, PageSize>;
-
-type DocxPageFormat = keyof typeof PAGE_SIZES;
-
-const resolveDocxPageFormat = (format: ResumeData["metadata"]["page"]["format"]): DocxPageFormat => {
-	if (format === "letter") return "letter";
-
-	return "a4";
-};
+// DOCX has fixed pages; free-form resumes intentionally fall back to A4.
+const A4_PAGE_SIZE = { width: 210, height: 297 };
+const LETTER_PAGE_SIZE = { width: 215.9, height: 279.4 };
 
 // --- Invisible border preset for table cells ---
 
@@ -101,12 +83,6 @@ const TEMPLATE_CONFIGS: Record<Template, TemplateConfig> = {
 	pikachu: { sidebarSide: "left", sidebarBackground: "none", headerPosition: "main-only" },
 	rhyhorn: { sidebarSide: "right", sidebarBackground: "none", headerPosition: "full-width" },
 	scizor: { sidebarSide: "left", sidebarBackground: "none", headerPosition: "full-width" },
-};
-
-const DEFAULT_TEMPLATE_CONFIG: TemplateConfig = {
-	sidebarSide: "left",
-	sidebarBackground: "none",
-	headerPosition: "full-width",
 };
 
 /**
@@ -376,7 +352,7 @@ export function buildDocument(data: ResumeData, resolveTitle?: SectionTitleResol
 	const lineSpacing = Math.round(data.metadata.typography.body.lineHeight * 240);
 
 	const { page } = data.metadata;
-	const pageSize = PAGE_SIZES[resolveDocxPageFormat(page.format)];
+	const pageSize = page.format === "letter" ? LETTER_PAGE_SIZE : A4_PAGE_SIZE;
 	// Margins and gaps are defined in points (pt), not mm
 	const marginXTwips = ptToTwips(page.marginX);
 	const marginYTwips = ptToTwips(page.marginY);
@@ -385,7 +361,7 @@ export function buildDocument(data: ResumeData, resolveTitle?: SectionTitleResol
 	const sidebarWidth = data.metadata.layout.sidebarWidth;
 
 	// Template-aware layout config
-	const templateConfig = TEMPLATE_CONFIGS[data.metadata.template] ?? DEFAULT_TEMPLATE_CONFIG;
+	const templateConfig = TEMPLATE_CONFIGS[data.metadata.template];
 
 	// Compute sidebar background shading hex
 	let sidebarShadingHex: string | undefined;

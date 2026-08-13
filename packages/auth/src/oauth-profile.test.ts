@@ -75,7 +75,7 @@ describe("createProfileMapper", () => {
 		expect(dbMock.update).toHaveBeenCalledTimes(1);
 		expect(dbMock.updateSet).toHaveBeenCalledWith({ email: "legacy.user@example.com" });
 		expect(result).toEqual({
-			id: "legacy-user-id",
+			id: "user-1",
 			name: "Legacy User",
 			email: "legacy.user@example.com",
 			image: "https://example.com/new.png",
@@ -153,6 +153,7 @@ describe("createProfileMapper", () => {
 
 		expect(dbMock.select).toHaveBeenCalledTimes(2);
 		expect(result).toEqual({
+			id: "user-1",
 			name: "GitHub User",
 			email: "github.user@example.com",
 			image: "https://example.com/new.png",
@@ -189,6 +190,7 @@ describe("createProfileMapper", () => {
 		expect(dbMock.update).toHaveBeenCalledTimes(1);
 		expect(dbMock.updateSet).toHaveBeenCalledWith({ email: "legacy.user@example.com" });
 		expect(result).toEqual({
+			id: "user-1",
 			name: "Legacy User",
 			email: "legacy.user@example.com",
 			image: "https://example.com/new.png",

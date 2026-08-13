@@ -80,9 +80,7 @@ export function supportsOpenAIWebSearch(model: string) {
 
 	if (OPENAI_WEB_SEARCH_RESPONSES_MODEL_IDS.has(normalized)) return true;
 
-	return Array.from(OPENAI_WEB_SEARCH_RESPONSES_MODEL_IDS).some((modelId) =>
-		isDateSnapshotForModel(normalized, modelId),
-	);
+	return [...OPENAI_WEB_SEARCH_RESPONSES_MODEL_IDS].some((modelId) => isDateSnapshotForModel(normalized, modelId));
 }
 
 export function supportsProviderNativeWebSearch(provider: AiProviderCapabilityInput) {
