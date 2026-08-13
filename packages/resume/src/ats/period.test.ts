@@ -47,6 +47,10 @@ describe("parsePeriod", () => {
 		expect(parsePeriod(input)).toEqual({ start, ongoing: true });
 	});
 
+	it("reads localized ongoing tokens followed by ordinary punctuation", () => {
+		expect(parsePeriod("2020 - heute.", "de-DE")).toEqual({ start: { year: 2020 }, ongoing: true });
+	});
+
 	it("does not mistake an incomplete month ending for an ongoing marker", () => {
 		expect(parsePeriod("Jan 2020 - Feb")).toBeNull();
 	});
@@ -144,7 +148,7 @@ describe("ONGOING_TOKENS_BY_LANGUAGE", () => {
 	it("reads every listed token as an open-ended period", () => {
 		for (const [language, tokens] of Object.entries(ONGOING_TOKENS_BY_LANGUAGE)) {
 			for (const token of tokens) {
-				expect(parsePeriod(`2020 - ${token}`), `${language}: ${token}`).toEqual({
+				expect(parsePeriod(`2020 - ${token}`, language), `${language}: ${token}`).toEqual({
 					start: { year: 2020 },
 					ongoing: true,
 				});
