@@ -2,6 +2,7 @@ import type { DialogProps } from "../store";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { CopyIcon, PlusIcon } from "@phosphor-icons/react";
+import { useStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -82,6 +83,8 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 	});
 
 	useFormBlocker(form);
+
+	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
 		<DialogContent>
@@ -176,7 +179,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 				</form.Field>
 
 				<DialogFooter>
-					<Button type="submit">
+					<Button type="submit" disabled={isSubmitting}>
 						<Trans comment="Create API key dialog submit action">Create</Trans>
 					</Button>
 				</DialogFooter>

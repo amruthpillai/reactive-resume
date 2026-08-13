@@ -8,7 +8,7 @@ msgstr ""
 "Language: th\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Thai\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -493,10 +493,6 @@ msgstr "สมัครแล้ว"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "สมัครเมื่อ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "กฎที่ใช้"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "คัดลอกรหัสสำรอง"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "คัดลอก JSON"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "คัดลอกความลับ"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "ยังไม่มีเวอร์ชันที่บันทึ
 msgid "No source data yet."
 msgstr "ยังไม่มีข้อมูลแหล่งที่มา"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "ยังไม่มีกฎเกณฑ์ด้านสไตล์ใดๆ"
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "ไม่มีผู้ให้บริการที่ผ่านการทดสอบ"
@@ -3568,10 +3565,6 @@ msgstr "รีเซ็ต"
 msgid "Reset Password"
 msgstr "รีเซ็ตรหัสผ่าน"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "รีเซ็ตสไตล์"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "รีเซ็ตเป็นสไตล์ชีตที่ใช้งานอยู่"
@@ -3686,14 +3679,6 @@ msgstr "โรมาเนีย"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "การหมุน"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "กฎ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "กฎ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "โฮสต์ด้วยตนเองบน Docker"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "สไตล์ชีต CSS เชิงความหมาย"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "รูปแบบความหมายยังคงใช้งานอยู่"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "รายการนี้จะถูกลบอย่างถาว
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "ฟังก์ชันนี้ต้องใช้ผู้ให้บริการ AI ที่เชื่อมต่ออยู่ โปรดตั้งค่าผู้ให้บริการในส่วนการตั้งค่า"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "ขณะนี้ระบบยังไม่รองรับการแก้ไข CSS แบบ Semantic"
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."

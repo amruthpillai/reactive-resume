@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createStylesheetPreflightRunner, STYLESHEET_PREFLIGHT_LIMITS } from "./stylesheet-preflight";
 
@@ -12,6 +12,17 @@ const input = {
 	template: defaultResumeData.metadata.template,
 	stylesheet: validStylesheet,
 } as const;
+
+// Runners now own a long-lived, reused worker; destroy them so no worker thread
+// outlives its test.
+const runners: Array<{ destroy(): Promise<void> }> = [];
+const track = <T extends { destroy(): Promise<void> }>(runner: T): T => {
+	runners.push(runner);
+	return runner;
+};
+afterEach(async () => {
+	await Promise.all(runners.splice(0).map((runner) => runner.destroy()));
+});
 
 const memoryExhaustionWorker = new URL(
 	`data:text/javascript,${encodeURIComponent(`
@@ -27,35 +38,61 @@ const failedWorker = new URL(
 	`data:text/javascript,${encodeURIComponent('throw new Error("sensitive worker details");')}`,
 );
 
+// Counts how many preflights this single worker instance served so a reuse test
+// can prove the worker is not respawned per request.
+const reuseCountingWorker = new URL(
+	`data:text/javascript,${encodeURIComponent(`
+		import { parentPort } from "node:worker_threads";
+		let served = 0;
+		parentPort.postMessage({ type: "ready" });
+		parentPort.on("message", (message) => {
+			if (message?.type !== "preflight") return;
+			served += 1;
+			parentPort.postMessage({
+				type: "result",
+				requestId: message.requestId,
+				result: { ok: true, pageCount: 1, byteCount: served, diagnostics: [] },
+			});
+		});
+	`)}`,
+);
+
 const delayedSuccessfulWorker = new URL(
 	`data:text/javascript,${encodeURIComponent(`
-		import { parentPort, workerData } from "node:worker_threads";
+		import { parentPort } from "node:worker_threads";
 		parentPort.postMessage({ type: "ready" });
-		setTimeout(() => {
-			parentPort.postMessage({
-				ok: true,
-				pageCount: 1,
-				byteCount: Number(workerData.input.data.basics.name),
-				diagnostics: [],
-			});
-		}, 300);
+		parentPort.on("message", (message) => {
+			if (message?.type !== "preflight") return;
+			setTimeout(() => {
+				parentPort.postMessage({
+					type: "result",
+					requestId: message.requestId,
+					result: {
+						ok: true,
+						pageCount: 1,
+						byteCount: Number(message.input.data.basics.name),
+						diagnostics: [],
+					},
+				});
+			}, 300);
+		});
 	`)}`,
 );
 
 const delayedReadyWorker = new URL(
 	`data:text/javascript,${encodeURIComponent(`
 		import { parentPort } from "node:worker_threads";
-		setTimeout(() => {
-			parentPort.postMessage({ type: "ready" });
+		parentPort.on("message", (message) => {
+			if (message?.type !== "preflight") return;
 			setTimeout(() => {
 				parentPort.postMessage({
-					ok: true,
-					pageCount: 1,
-					byteCount: 1,
-					diagnostics: [],
+					type: "result",
+					requestId: message.requestId,
+					result: { ok: true, pageCount: 1, byteCount: 1, diagnostics: [] },
 				});
 			}, 10);
-		}, 50);
+		});
+		setTimeout(() => parentPort.postMessage({ type: "ready" }), 50);
 	`)}`,
 );
 
@@ -101,7 +138,7 @@ const invalidInput = () => {
 describe("stylesheet PDF preflight worker", () => {
 	it("keeps the production resource policy fixed and immutable", () => {
 		expect(STYLESHEET_PREFLIGHT_LIMITS).toEqual({
-			timeoutMs: 5_000,
+			timeoutMs: 30_000,
 			maxPages: 20,
 			maxBytes: 10_000_000,
 			maxPageWidthPt: 2_000,
@@ -115,7 +152,7 @@ describe("stylesheet PDF preflight worker", () => {
 	});
 
 	it("accepts a bounded candidate render in an isolated worker", async () => {
-		const runner = createStylesheetPreflightRunner({ timeoutMs: 15_000 });
+		const runner = track(createStylesheetPreflightRunner({ timeoutMs: 15_000 }));
 
 		const result = await runner.run(input);
 
@@ -131,8 +168,22 @@ describe("stylesheet PDF preflight worker", () => {
 		expect(runner.activeWorkerCount).toBe(0);
 	}, 45_000);
 
+	it("reuses one warm worker across sequential requests instead of cold-starting each one", async () => {
+		const runner = track(createStylesheetPreflightRunner({}, reuseCountingWorker));
+
+		const first = await runner.run(input);
+		const second = await runner.run(input);
+		const third = await runner.run(input);
+
+		// A single reused worker increments its per-instance counter; a per-request
+		// worker would report byteCount 1 every time.
+		expect([first, second, third].map((result) => (result.ok ? result.byteCount : -1))).toEqual([1, 2, 3]);
+		expect(runner.activeWorkerCount).toBe(0);
+		expect(runner.queuedPreflightCount).toBe(0);
+	});
+
 	it("preserves structured resume-data failures across the worker boundary", async () => {
-		const runner = createStylesheetPreflightRunner({ timeoutMs: 15_000 });
+		const runner = track(createStylesheetPreflightRunner({ timeoutMs: 15_000 }));
 
 		const result = runner.run(invalidInput());
 
@@ -145,7 +196,7 @@ describe("stylesheet PDF preflight worker", () => {
 	}, 20_000);
 
 	it("terminates a worker when the render exceeds its deadline", async () => {
-		const runner = createStylesheetPreflightRunner({ timeoutMs: 1 }, neverCompletesWorker);
+		const runner = track(createStylesheetPreflightRunner({ timeoutMs: 1 }, neverCompletesWorker));
 
 		const result = await runner.run(input);
 
@@ -155,15 +206,15 @@ describe("stylesheet PDF preflight worker", () => {
 	});
 
 	it("starts the authored render deadline after the worker runtime is ready", async () => {
-		const runner = createStylesheetPreflightRunner({ timeoutMs: 20 }, delayedReadyWorker);
+		const runner = track(createStylesheetPreflightRunner({ timeoutMs: 20 }, delayedReadyWorker));
 
 		await expect(runner.run(input)).resolves.toEqual(expect.objectContaining({ ok: true, pageCount: 1 }));
 		expect(runner.activeWorkerCount).toBe(0);
 	});
 
 	it("returns deterministic output byte and page limit codes", async () => {
-		const byteRunner = createStylesheetPreflightRunner({ maxBytes: 16 });
-		const pageRunner = createStylesheetPreflightRunner({ maxPages: 0 });
+		const byteRunner = track(createStylesheetPreflightRunner({ maxBytes: 16 }));
+		const pageRunner = track(createStylesheetPreflightRunner({ maxPages: 0 }));
 
 		await expect(byteRunner.run(input)).resolves.toEqual(
 			expect.objectContaining({ ok: false, code: "STYLESHEET_PREFLIGHT_BYTE_LIMIT" }),
@@ -176,9 +227,8 @@ describe("stylesheet PDF preflight worker", () => {
 	}, 30_000);
 
 	it("maps worker heap exhaustion to a controlled memory-limit result", async () => {
-		const runner = createStylesheetPreflightRunner(
-			{ maxOldGenerationMb: 8, timeoutMs: 10_000 },
-			memoryExhaustionWorker,
+		const runner = track(
+			createStylesheetPreflightRunner({ maxOldGenerationMb: 8, timeoutMs: 10_000 }, memoryExhaustionWorker),
 		);
 
 		const result = await runner.run(input);
@@ -188,7 +238,7 @@ describe("stylesheet PDF preflight worker", () => {
 	}, 15_000);
 
 	it("does not expose internal errors from a failed worker bootstrap", async () => {
-		const runner = createStylesheetPreflightRunner({}, failedWorker);
+		const runner = track(createStylesheetPreflightRunner({}, failedWorker));
 
 		const result = await runner.run(input);
 
@@ -207,15 +257,22 @@ describe("stylesheet PDF preflight worker", () => {
 			`data:text/javascript,${encodeURIComponent(`
 				import { parentPort } from "node:worker_threads";
 				parentPort.postMessage({ type: "ready" });
-				parentPort.postMessage({
-					ok: false,
-					code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
-					message: "The PDF preflight worker failed. (Error: Canvas is already closed)",
-					diagnostics: [],
+				parentPort.on("message", (message) => {
+					if (message?.type !== "preflight") return;
+					parentPort.postMessage({
+						type: "result",
+						requestId: message.requestId,
+						result: {
+							ok: false,
+							code: "STYLESHEET_PREFLIGHT_WORKER_FAILED",
+							message: "The PDF preflight worker failed. (Error: Canvas is already closed)",
+							diagnostics: [],
+						},
+					});
 				});
 			`)}`,
 		);
-		const runner = createStylesheetPreflightRunner({ timeoutMs: 5_000 }, throwingWorker);
+		const runner = track(createStylesheetPreflightRunner({ timeoutMs: 5_000 }, throwingWorker));
 
 		const result = await runner.run(input);
 
@@ -228,13 +285,15 @@ describe("stylesheet PDF preflight worker", () => {
 	});
 
 	it("bounds concurrent workers and queued requests without charging queue time to the worker deadline", async () => {
-		const runner = createStylesheetPreflightRunner(
-			{
-				timeoutMs: 500,
-				maxConcurrentWorkers: 1,
-				maxQueuedRequests: 2,
-			},
-			delayedSuccessfulWorker,
+		const runner = track(
+			createStylesheetPreflightRunner(
+				{
+					timeoutMs: 500,
+					maxConcurrentWorkers: 1,
+					maxQueuedRequests: 2,
+				},
+				delayedSuccessfulWorker,
+			),
 		);
 		const completionOrder: number[] = [];
 		const accepted = [1, 2, 3].map((number) =>
@@ -262,7 +321,7 @@ describe("stylesheet PDF preflight worker", () => {
 	}, 5_000);
 
 	it("does not leak a slot when the worker constructor throws synchronously", async () => {
-		const runner = createStylesheetPreflightRunner({}, synchronousFailureWorker);
+		const runner = track(createStylesheetPreflightRunner({}, synchronousFailureWorker));
 
 		await expect(runner.run(input)).resolves.toEqual(
 			expect.objectContaining({ ok: false, code: "STYLESHEET_PREFLIGHT_WORKER_FAILED" }),

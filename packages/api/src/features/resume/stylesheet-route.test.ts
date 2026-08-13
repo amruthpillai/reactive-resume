@@ -56,14 +56,6 @@ describe("resume stylesheet route error contract", () => {
 		}>();
 	});
 
-	it("exposes strict parity mismatch data at runtime and in the inferred client error", () => {
-		const schema = dataSchema("STYLESHEET_PARITY_FAILED");
-
-		expect(schema.safeParse({ mismatches: ["onyx: page 1"] }).success).toBe(true);
-		expect(schema.safeParse({ mismatches: ["onyx: page 1"], source }).success).toBe(false);
-		expectTypeOf<ErrorData<"STYLESHEET_PARITY_FAILED">>().toEqualTypeOf<{ mismatches: string[] }>();
-	});
-
 	it("exposes strict canonical conflict state for type-safe client rebasing", () => {
 		const schema = dataSchema("STYLESHEET_REVISION_CONFLICT");
 

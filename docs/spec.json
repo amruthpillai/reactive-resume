@@ -10925,46 +10925,6 @@
 											"type": "object",
 											"properties": {
 												"defined": {
-													"const": true
-												},
-												"code": {
-													"const": "STYLESHEET_PARITY_FAILED"
-												},
-												"status": {
-													"const": 400
-												},
-												"message": {
-													"type": "string",
-													"default": "The converted stylesheet does not preserve legacy PDF presentation."
-												},
-												"data": {
-													"type": "object",
-													"properties": {
-														"mismatches": {
-															"type": "array",
-															"items": {
-																"type": "string"
-															}
-														}
-													},
-													"required": [
-														"mismatches"
-													],
-													"additionalProperties": false
-												}
-											},
-											"required": [
-												"defined",
-												"code",
-												"status",
-												"message",
-												"data"
-											]
-										},
-										{
-											"type": "object",
-											"properties": {
-												"defined": {
 													"const": false
 												},
 												"code": {
