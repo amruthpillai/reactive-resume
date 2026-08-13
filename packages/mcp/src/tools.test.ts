@@ -171,6 +171,7 @@ describe("registerTools", () => {
 	] as const) {
 		it(`does not create a cover-letter URL when the cover letter is ${name}`, async () => {
 			clientMock.resume.getById.mockResolvedValueOnce({ id: "resume-1", name: "Scizor", data });
+			mocks.resolveUserFromRequestHeaders.mockResolvedValueOnce({ id: "user-1" });
 
 			const { server, registered } = makeFakeServer();
 			registerTools(server as never, clientMock as never, new Headers());
@@ -179,6 +180,7 @@ describe("registerTools", () => {
 			const result = await tool.handler({ id: "resume-1", target: "cover-letter" });
 
 			expect(result.isError).toBe(true);
+			expect(result.content[0]?.text).toContain("No visible cover letter found for this resume.");
 			expect(mocks.createResumePdfDownloadUrl).not.toHaveBeenCalled();
 		});
 	}
