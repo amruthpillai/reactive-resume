@@ -8,7 +8,7 @@ msgstr ""
 "Language: or\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Odia\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -493,10 +493,6 @@ msgstr "ଆବେଦନ କରାଯାଇଛି"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "ପ୍ରୟୋଗ ହୋଇଛି |"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "ଲାଗୁ ହୋଇଥିବା ନିୟମଗୁଡ଼ିକ"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "ବ୍ୟାକଅପ୍ କୋଡଗୁଡିକ କପି କରନ୍
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON କପି କରନ୍ତୁ"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "ଗୁପ୍ତ ଟୋକନ୍ କପି କରନ୍ତୁ"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ସେଭ୍ କରାଯ
 msgid "No source data yet."
 msgstr "ଏପର୍ଯ୍ୟନ୍ତ କ source ଣସି ଉତ୍ସ ତଥ୍ୟ ନାହିଁ |"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଷ୍ଟାଇଲ୍ ନିୟମ ନାହିଁ।"
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "କୌଣସି ପରୀକ୍ଷିତ ପ୍ରଦାନକାରୀ ନାହାଁନ୍ତି"
@@ -3568,10 +3565,6 @@ msgstr "ରିସେଟ୍ କରନ୍ତୁ"
 msgid "Reset Password"
 msgstr "ପାସୱାର୍ଡ ରିସେଟ୍ କରନ୍ତୁ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "ଷ୍ଟାଇଲ୍ ରିସେଟ୍ କରନ୍ତୁ"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "ଲାଗୁ ହୋଇଥିବା ଷ୍ଟାଇଲସିଟକୁ ରିସେଟ୍ କରନ୍ତୁ"
@@ -3686,14 +3679,6 @@ msgstr "ରୋମାନିଆନ୍"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "ଘୁର୍ଣ୍ଣନ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "ନିୟମ"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "ନିୟମ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "Docker ସହ ସ୍ୱୟଂ‑ହୋଷ୍ଟ କରନ୍ତୁ"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "ଅର୍ଥଗତ CSS ଷ୍ଟାଇଲସିଟ୍"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "ଅର୍ଥାତ୍ମକ ଶୈଳୀ ସକ୍ରିୟ ରହିଥାଏ"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "ଏହି ପ୍ରବେଶ ସ୍ଥାୟୀଭାବେ ଡିଲି
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "ଏହି ବୈଶିଷ୍ଟ୍ୟ ପାଇଁ ଏକ ସଂଯୁକ୍ତ AI ପ୍ରଦାତା ଆବଶ୍ୟକ। ଦୟାକରି ସେଟିଂସରେ ଗୋଟିଏ ସେଟ୍ ଅପ୍ କରନ୍ତୁ।"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "ଏହି ଉଦାହରଣ ବର୍ତ୍ତମାନ ସିମାଣ୍ଟିକ୍ CSS ସମ୍ପାଦନାକୁ ଅନୁମତି ଦିଏ ନାହିଁ।"
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."

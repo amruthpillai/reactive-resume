@@ -41,6 +41,12 @@ const ROLLED_BACK_MESSAGE = "This patch was rolled back when the resume was rest
 const activeRunControllers = new Map<string, AbortController>();
 const canceledRunsWithPersistedPartial = new Set<string>();
 
+// Abort reasons MUST be an AbortError: the AI SDK only treats `err.name === "AbortError"`
+// (via isAbortError) as a cancellation. A bare-string reason is treated as a genuine stream
+// error whose rejection escapes the background (resumable-stream) pump and takes down the whole
+// process with ERR_UNHANDLED_REJECTION. The label is preserved as the DOMException message.
+const abortReason = (label: string) => new DOMException(label, "AbortError");
+
 type AgentThreadRecord = typeof schema.agentThread.$inferSelect;
 type AgentMessageRecord = typeof schema.agentMessage.$inferSelect;
 type AgentActionRecord = typeof schema.agentAction.$inferSelect;
@@ -965,7 +971,7 @@ export const agentService = {
 			const activeStreamId = thread.activeStreamId;
 
 			if (activeRunId) {
-				activeRunControllers.get(activeRunId)?.abort("USER_ARCHIVED");
+				activeRunControllers.get(activeRunId)?.abort(abortReason("USER_ARCHIVED"));
 				activeRunControllers.delete(activeRunId);
 				try {
 					await clearActiveAgentRunIfCurrent({
@@ -1195,7 +1201,7 @@ export const agentService = {
 				persistError = error;
 			} finally {
 				if (activeRunId) {
-					activeRunControllers.get(activeRunId)?.abort("USER_STOPPED");
+					activeRunControllers.get(activeRunId)?.abort(abortReason("USER_STOPPED"));
 					activeRunControllers.delete(activeRunId);
 					try {
 						await clearActiveAgentRunIfCurrent({

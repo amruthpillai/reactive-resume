@@ -40,7 +40,10 @@ export const PDF_PREFLIGHT_DIAGNOSTIC_CATALOG = {
 export type PdfPreflightFailureCode = keyof typeof PDF_PREFLIGHT_DIAGNOSTIC_CATALOG;
 
 export const STYLESHEET_PREFLIGHT_LIMITS = Object.freeze({
-	timeoutMs: 5_000,
+	// Render deadline (after the worker is warm). A rich resume on a throttled/shared
+	// vCPU renders in ~5-18s, so 5s spuriously failed real resumes; the worker is now
+	// warmed+reused so this ceiling only bounds a genuinely stuck render.
+	timeoutMs: 30_000,
 	maxPages: 20,
 	maxBytes: 10_000_000,
 	maxPageWidthPt: 2_000,
