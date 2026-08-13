@@ -17,6 +17,51 @@ describe("normalizeRichTextHtml", () => {
 		expect(normalizeRichTextHtml("<strong>bold</strong> text")).toBe("<p><strong>bold</strong> text</p>");
 	});
 
+	it("moves trailing whitespace outside bold tags", () => {
+		expect(normalizeRichTextHtml("<p><strong>Built </strong>and deployed</p>")).toBe(
+			"<p><strong>Built</strong> and deployed</p>",
+		);
+	});
+
+	it("moves leading whitespace outside bold tags", () => {
+		expect(normalizeRichTextHtml("<p>Built<strong> and deployed</strong></p>")).toBe(
+			"<p>Built <strong>and deployed</strong></p>",
+		);
+	});
+
+	it("preserves whitespace moved outside top-level bold tags", () => {
+		expect(normalizeRichTextHtml("<strong>Built </strong>")).toBe("<p><strong>Built</strong> </p>");
+		expect(normalizeRichTextHtml("<strong> Built</strong>")).toBe("<p> <strong>Built</strong></p>");
+	});
+
+	it.each(["&nbsp;", "&#160;", "&#xA0;"])(
+		"moves encoded non-breaking spaces outside bold boundaries: %s",
+		(whitespace) => {
+			expect(normalizeRichTextHtml(`<p>Built<strong>${whitespace}and deployed</strong></p>`)).toBe(
+				`<p>Built${whitespace}<strong>and deployed</strong></p>`,
+			);
+			expect(normalizeRichTextHtml(`<p><strong>Built${whitespace}</strong>and deployed</p>`)).toBe(
+				`<p><strong>Built</strong>${whitespace}and deployed</p>`,
+			);
+		},
+	);
+
+	it("preserves > characters inside quoted bold-tag attributes", () => {
+		expect(normalizeRichTextHtml('<p>Built<strong title="1 > 0"> and deployed</strong></p>')).toBe(
+			'<p>Built <strong title="1 > 0">and deployed</strong></p>',
+		);
+	});
+
+	it("preserves closing bold tags inside quoted attributes", () => {
+		expect(normalizeRichTextHtml('<p><strong title="Use </strong> here">Built </strong>next</p>')).toBe(
+			'<p><strong title="Use </strong> here">Built</strong> next</p>',
+		);
+	});
+
+	it("preserves whitespace inside bold text", () => {
+		expect(normalizeRichTextHtml("<p><strong>two words</strong></p>")).toBe("<p><strong>two words</strong></p>");
+	});
+
 	it("preserves block-level <p> as-is", () => {
 		expect(normalizeRichTextHtml("<p>Already wrapped</p>")).toBe("<p>Already wrapped</p>");
 	});
