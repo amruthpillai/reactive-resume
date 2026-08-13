@@ -310,7 +310,7 @@ export function StylesheetCodeEditor({
 	);
 }
 
-export type StylesheetEditorShellProps = {
+type StylesheetEditorShellProps = {
 	readOnly?: boolean;
 };
 
