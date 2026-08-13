@@ -11,7 +11,57 @@ type EndpointResult = PeriodEndpoint | "ongoing";
 const MIN_YEAR = 1900;
 const MAX_YEAR = 2100;
 
-const PRESENT_TOKENS = new Set(["present", "current", "currently", "now", "ongoing", "today", "date", "to date"]);
+export const ONGOING_TOKENS_BY_LANGUAGE: Readonly<Record<string, readonly string[]>> = {
+	af: ["hede", "tans", "huidig"],
+	ar: ["الآن", "حتى الآن", "الحاضر"],
+	bg: ["настояще", "сега", "днес"],
+	bn: ["বর্তমান"],
+	ca: ["present", "actual", "actualitat"],
+	cs: ["současnost", "současný", "dosud", "nyní"],
+	da: ["nuværende", "i dag"],
+	de: ["heute", "aktuell", "laufend", "gegenwärtig", "jetzt"],
+	el: ["παρόν", "σήμερα", "τώρα"],
+	en: ["present", "current", "currently", "now", "ongoing", "today", "date", "to date"],
+	es: ["presente", "actual", "actualidad", "actualmente", "hoy", "hasta la fecha"],
+	fa: ["اکنون", "تاکنون", "حال حاضر"],
+	fi: ["nykyinen", "nykyään", "tähän asti"],
+	fr: ["présent", "actuel", "actuellement", "aujourd'hui", "en cours", "à ce jour"],
+	he: ["כיום", "הווה", "היום"],
+	hi: ["वर्तमान", "अब तक"],
+	hu: ["jelen", "jelenleg", "napjainkig"],
+	id: ["sekarang", "saat ini", "kini"],
+	it: ["presente", "attuale", "attualmente", "oggi", "in corso"],
+	ja: ["現在", "現在に至る"],
+	kn: ["ಪ್ರಸ್ತುತ"],
+	ko: ["현재", "지금", "재직중"],
+	lt: ["dabar", "iki dabar", "šiuo metu"],
+	lv: ["pašlaik", "tagad", "līdz šim"],
+	ml: ["നിലവിൽ"],
+	mr: ["सध्या", "वर्तमान"],
+	ms: ["sekarang", "kini"],
+	ne: ["हाल", "वर्तमान"],
+	nl: ["heden", "huidig", "nu"],
+	no: ["nåværende", "i dag"],
+	pl: ["obecnie", "obecny", "teraz", "nadal"],
+	pt: ["presente", "atual", "atualmente", "hoje", "até o momento"],
+	ro: ["prezent", "în prezent", "azi"],
+	ru: ["настоящее", "настоящее время", "по настоящее время", "сейчас"],
+	sk: ["súčasnosť", "súčasný", "doteraz", "teraz"],
+	sl: ["sedanjost", "trenutno", "danes"],
+	sq: ["aktual", "aktualisht", "tani"],
+	sr: ["sadašnjost", "trenutno", "danas"],
+	sv: ["nuvarande", "pågående", "idag"],
+	ta: ["தற்போது"],
+	te: ["ప్రస్తుతం"],
+	th: ["ปัจจุบัน"],
+	tr: ["halen", "hâlen", "günümüz", "şu an", "devam ediyor"],
+	uk: ["теперішній час", "зараз", "дотепер", "нині"],
+	vi: ["hiện tại", "đến nay"],
+	zh: ["至今", "现在", "現在", "迄今"],
+	zu: ["manje", "okwamanje"],
+};
+
+const PRESENT_TOKENS = new Set(Object.values(ONGOING_TOKENS_BY_LANGUAGE).flat());
 
 const SEASON_MONTHS: Readonly<Record<string, number>> = {
 	spring: 3,
@@ -26,10 +76,6 @@ const EXTRA_MONTH_ALIASES: Readonly<Record<string, number>> = { sept: 9 };
 const DASH_CHARS = new Set(["-", "–", "—", "~"]);
 
 const SPACED_SEPARATOR = /\s(?:[-–—~]+|to|through|until)\s/;
-
-const MAX_ONGOING_WORDS = 3;
-
-const MAX_ONGOING_LENGTH = 30;
 
 const monthLookupCache = new Map<string, ReadonlyMap<string, number>>();
 
@@ -142,24 +188,12 @@ function* dashSplits(value: string): Generator<[string, string]> {
 	}
 }
 
-function isOngoingWord(raw: string, months: ReadonlyMap<string, number>): boolean {
-	const value = normalizeWhitespace(raw);
-	if (!value || value.length > MAX_ONGOING_LENGTH || /\d/.test(value)) return false;
-
-	const words = value.split(" ");
-	if (words.length > MAX_ONGOING_WORDS) return false;
-
-	return !words.some((word) => months.has(normalizeToken(word)));
-}
-
 function parseSplit(parts: [string, string], months: ReadonlyMap<string, number>): ParsedPeriod | null {
 	const start = parseEndpoint(parts[0], months);
 	if (!start || start === "ongoing") return null;
 
 	const end = parseEndpoint(parts[1], months);
-	if (end) return toPeriod(start, end);
-
-	return isOngoingWord(parts[1], months) ? toPeriod(start, "ongoing") : null;
+	return end ? toPeriod(start, end) : null;
 }
 
 export function parsePeriod(value: string, locale = "en-US"): ParsedPeriod | null {
