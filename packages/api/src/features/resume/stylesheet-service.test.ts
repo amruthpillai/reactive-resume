@@ -88,8 +88,6 @@ type HarnessOptions = {
 	initial?: StylesheetSnapshot;
 	compile?: (source: StylesheetSource) => CompileStylesheetResult;
 	preflight?: ((input: { data: ResumeData; stylesheet: StylesheetSource }) => Promise<PdfPreflightResult>) | undefined;
-	parityMismatches?: readonly string[];
-	parity?: () => Promise<{ mismatches: readonly string[] }>;
 	locked?: StylesheetSnapshot;
 	useDefaultObserver?: boolean;
 };
@@ -108,10 +106,6 @@ const createHarness = (options: HarnessOptions = {}) => {
 				callOrder.push("preflight");
 				return Promise.resolve(successfulPreflight);
 			});
-	const parity = vi.fn(() => {
-		callOrder.push("parity");
-		return options.parity?.() ?? Promise.resolve({ mismatches: options.parityMismatches ?? [] });
-	});
 	const publish = vi.fn(() => {
 		callOrder.push("publish");
 		return Promise.resolve();
@@ -134,7 +128,6 @@ const createHarness = (options: HarnessOptions = {}) => {
 						callOrder.push("preflight");
 						return preflight(input);
 					},
-		parity,
 		transaction: async (run) => {
 			callOrder.push("begin");
 			try {
@@ -171,7 +164,7 @@ const createHarness = (options: HarnessOptions = {}) => {
 		...(options.useDefaultObserver ? {} : { observe: (event: SemanticCssEventInput) => events.push(event) }),
 	});
 
-	return { callOrder, compile, events, parity, persisted: () => persisted, preflight, publish, service };
+	return { callOrder, compile, events, persisted: () => persisted, preflight, publish, service };
 };
 
 describe("stylesheet service", () => {
@@ -262,7 +255,7 @@ describe("stylesheet service", () => {
 		]);
 	});
 
-	it("requires parity and preflight before explicit activation", async () => {
+	it("activates an explicitly requested mode transition without checking legacy parity", async () => {
 		const initial = snapshot({ ...previousStylesheet, mode: "legacy" });
 		const harness = createHarness({ initial });
 
@@ -273,7 +266,6 @@ describe("stylesheet service", () => {
 		});
 
 		expect(result.stylesheet).toEqual({ mode: "semantic", source: validSource, applied: validSource });
-		expect(harness.parity).toHaveBeenCalledOnce();
 		expect(harness.preflight).toHaveBeenCalledOnce();
 		expect(result.revision).toBe(4);
 		expect(result.renderDataVersion).toBe(8);
@@ -342,35 +334,6 @@ describe("stylesheet service", () => {
 		expect(serialized).not.toContain("resume-1");
 	});
 
-	it("records a sanitized activation failure metric when parity throws", async () => {
-		const privateText = "private parity failure john.doe@example.com";
-		const log = vi.spyOn(console, "info").mockImplementation(() => undefined);
-		const harness = createHarness({
-			initial: snapshot({ ...previousStylesheet, mode: "legacy" }),
-			parity: () => Promise.reject(new Error(privateText)),
-			useDefaultObserver: true,
-		});
-
-		await expect(
-			harness.service.mutate({ ...commonMutationInput, transition: "activate", source: validSource }),
-		).rejects.toThrow(privateText);
-
-		expect(log.mock.calls.map(([event]) => event)).toContainEqual(
-			expect.objectContaining({
-				name: "semantic_css.activate",
-				durationMs: expect.any(Number),
-				diagnosticCodes: [],
-				pageCount: null,
-				revision: 3,
-				success: false,
-			}),
-		);
-		const serialized = JSON.stringify(log.mock.calls);
-		expect(serialized).not.toContain(privateText);
-		expect(serialized).not.toContain(validSource.text);
-		expect(serialized).not.toContain("resume-1");
-	});
-
 	it("deactivates without compiling or deleting either source", async () => {
 		const harness = createHarness();
 
@@ -378,7 +341,6 @@ describe("stylesheet service", () => {
 
 		expect(result.stylesheet).toEqual({ ...previousStylesheet, mode: "legacy" });
 		expect(harness.compile).not.toHaveBeenCalled();
-		expect(harness.parity).not.toHaveBeenCalled();
 		expect(harness.preflight).not.toHaveBeenCalled();
 	});
 

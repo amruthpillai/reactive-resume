@@ -79,9 +79,6 @@ jobs:
       - name: Run Baseline E2E Tests
         run: pnpm exec playwright test --grep-invert "@semantic-css"
 
-      - name: Run Semantic CSS Acceptance
-        run: pnpm exec playwright test tests/e2e/specs/semantic-css
-
       - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v7

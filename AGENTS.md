@@ -12,7 +12,7 @@ Internal packages are source-consumed through `package.json` export maps that po
 
 - **Node.js 24** (matches Dockerfile `ARG NODE_VERSION=24`). Use `nvm install 24 && nvm use 24` if needed.
 - **Docker** is required to run PostgreSQL. Start it with `sudo dockerd &` if the daemon isn't running.
-- **pnpm 11.17.0** is managed via corepack (`corepack enable`).
+- **pnpm 11.21.0**. Install pnpm directly using the [official installation guide](https://pnpm.io/installation).
 
 ### Codebase map
 
@@ -107,7 +107,7 @@ The production server runs migrations during startup before serving traffic. Man
 
 ### Environment
 
-Copy `.env.example` to `.env`. The three required variables are:
+Copy `.env.example` to `.env.local`. The three required variables are:
 
 - `APP_URL` (default `http://localhost:3000`)
 - `DATABASE_URL` (default `postgresql://postgres:postgres@localhost:5432/postgres`)
