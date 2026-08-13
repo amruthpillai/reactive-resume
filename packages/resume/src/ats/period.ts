@@ -129,7 +129,7 @@ function toEndpoint(year: number, month?: number): PeriodEndpoint | null {
 function parseEndpoint(raw: string, months: ReadonlyMap<string, number>): EndpointResult | null {
 	const value = normalizeWhitespace(raw);
 	if (!value) return null;
-	if (PRESENT_TOKENS.has(value.replace(/[.,;:!?]+$/u, ""))) return "ongoing";
+	if (PRESENT_TOKENS.has(value.replace(/\p{P}+$/u, ""))) return "ongoing";
 
 	const yearOnly = /^(\d{4})$/.exec(value);
 	if (yearOnly?.[1]) return toEndpoint(Number(yearOnly[1]));

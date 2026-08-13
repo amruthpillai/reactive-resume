@@ -49,6 +49,7 @@ describe("parsePeriod", () => {
 
 	it("reads localized ongoing tokens followed by ordinary punctuation", () => {
 		expect(parsePeriod("2020 - heute.", "de-DE")).toEqual({ start: { year: 2020 }, ongoing: true });
+		expect(parsePeriod("2020 - 現在。", "ja-JP")).toEqual({ start: { year: 2020 }, ongoing: true });
 	});
 
 	it("does not mistake an incomplete month ending for an ongoing marker", () => {
