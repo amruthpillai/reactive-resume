@@ -1,7 +1,6 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { DialogProps } from "../store";
 import type { ImportType } from "./import.utils";
-import type { ResumeJsonFormat } from "./parse-json";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { DownloadSimpleIcon, FileIcon, UploadSimpleIcon } from "@phosphor-icons/react";
@@ -11,6 +10,9 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
+import { parseJSONResume } from "@reactive-resume/import/json-resume";
+import { parseReactiveResumeJSON } from "@reactive-resume/import/reactive-resume-json";
+import { parseReactiveResumeV4JSON } from "@reactive-resume/import/reactive-resume-v4-json";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
@@ -32,13 +34,6 @@ import { client, orpc } from "@/libs/orpc/client";
 import { useAppForm } from "@/libs/tanstack-form";
 import { useDialogStore } from "../store";
 import { detectJsonImportType } from "./import.utils";
-import { parseResumeJson } from "./parse-json";
-
-const JSON_IMPORT_TYPES: readonly ImportType[] = [
-	"reactive-resume-json",
-	"reactive-resume-v4-json",
-	"json-resume-json",
-];
 
 const formSchema = z.discriminatedUnion("type", [
 	z.object({
@@ -154,9 +149,16 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 			try {
 				let data: ResumeData | undefined;
 
-				if (JSON_IMPORT_TYPES.includes(value.type)) {
-					const parsed = parseResumeJson(await value.file.text(), value.type as ResumeJsonFormat);
-					data = parsed.data;
+				if (value.type === "json-resume-json") {
+					data = parseJSONResume(await value.file.text());
+				}
+
+				if (value.type === "reactive-resume-json") {
+					data = parseReactiveResumeJSON(await value.file.text());
+				}
+
+				if (value.type === "reactive-resume-v4-json") {
+					data = parseReactiveResumeV4JSON(await value.file.text());
 				}
 
 				if (value.type === "pdf") {

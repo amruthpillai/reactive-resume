@@ -19,6 +19,7 @@ describe("detectJsonImportType", () => {
 	});
 
 	it("returns an empty string for unrecognized shapes", () => {
+		expect(detectJsonImportType({})).toBe("");
 		expect(detectJsonImportType({ foo: "bar" })).toBe("");
 		expect(detectJsonImportType(null)).toBe("");
 		expect(detectJsonImportType("nope")).toBe("");
