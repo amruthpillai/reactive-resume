@@ -65,7 +65,6 @@ const emptyTextResetStyle: Readonly<Record<string, unknown>> = {
 	maxWidth: "100%",
 	minWidth: 0,
 };
-const emptyTextPresentationFontSizes = new Set([9]);
 
 const nodeText = (node: LegacyParityHostNode): string =>
 	node.value ?? (node.children ?? []).map((child) => nodeText(child)).join("");
@@ -189,15 +188,7 @@ const collectPrimitiveSnapshots = (
 		nodeText(node) === "" &&
 		children.length === 0 &&
 		Object.keys(props).length === 0 &&
-		(isInheritedOnlyStyle ||
-			isRendererEmptyTextStyle ||
-			(typeof snapshotStyle.fontSize === "number" &&
-				emptyTextPresentationFontSizes.has(snapshotStyle.fontSize) &&
-				Object.entries(snapshotStyle).every(([property, value]) => {
-					if (property === "fontSize") return true;
-					if (property in inheritedStyle) return Object.is(value, inheritedStyle[property]);
-					return false;
-				})));
+		(isInheritedOnlyStyle || isRendererEmptyTextStyle);
 	if (isPresentationNeutralEmptyText) return [];
 	return [
 		{

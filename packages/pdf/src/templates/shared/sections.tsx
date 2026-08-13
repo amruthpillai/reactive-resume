@@ -1153,7 +1153,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 						</SectionItemHeader>
 
 						<View>
-							<Text semanticField="proficiency">{item.proficiency}</Text>
+							{hasSplitRowText(item.proficiency) && <Text semanticField="proficiency">{item.proficiency}</Text>}
 							<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
 						</View>
 

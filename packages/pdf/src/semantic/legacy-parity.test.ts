@@ -3,9 +3,12 @@ import type { Template } from "@reactive-resume/schema/templates";
 import type { LegacyParityHostNode } from "./legacy-parity";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { pdf } from "@react-pdf/renderer";
+import { createElement } from "react";
 import { styleRulesSchema } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
+import { ResumeDocument } from "../document";
 import { convertLegacyStyleRules } from "./legacy-converter";
 import { compareLegacyParityHostNodes, compareLegacySemanticPresentation } from "./legacy-parity";
 
@@ -157,6 +160,27 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 	return data;
 };
 
+const nodeText = (node: LegacyParityHostNode): string =>
+	node.value ?? (node.children ?? []).map((child) => nodeText(child)).join("");
+
+const renderHostDocument = async (data: ResumeData): Promise<LegacyParityHostNode> => {
+	const element = createElement(ResumeDocument, { data, template: "gengar" }) as unknown as Parameters<typeof pdf>[0];
+	const instance = pdf(element);
+	await expect.poll(() => instance.container.document).not.toBeNull();
+	return instance.container.document as LegacyParityHostNode;
+};
+
+const findEmptyTextNodes = (node: LegacyParityHostNode): LegacyParityHostNode[] => [
+	...(node.type === "TEXT" && nodeText(node) === "" ? [node] : []),
+	...(node.children ?? []).flatMap(findEmptyTextNodes),
+];
+
+const hasFontSize = (node: LegacyParityHostNode, fontSize: number): boolean =>
+	(Array.isArray(node.style) ? node.style : [node.style]).some(
+		(style) =>
+			style !== null && typeof style === "object" && (style as Readonly<Record<string, unknown>>).fontSize === fontSize,
+	);
+
 describe("compareLegacySemanticPresentation", () => {
 	it("renders the mandatory target shapes in the shared parity document", () => {
 		const data = buildFixture([]);
@@ -231,6 +255,20 @@ describe("compareLegacySemanticPresentation", () => {
 		expect(comparison.mismatches).toEqual([]);
 	});
 
+	it("omits empty Gengar skill proficiency text while preserving populated text", async () => {
+		const data = buildFixture([]);
+		data.metadata.template = "gengar";
+		data.metadata.layout.pages = [{ fullWidth: false, main: [], sidebar: ["skills"] }];
+		data.metadata.typography.body.fontSize = 9;
+		const [skill] = data.sections.skills.items;
+		if (!skill) throw new Error("Expected Gengar skill fixture.");
+		skill.proficiency = "";
+		expect(findEmptyTextNodes(await renderHostDocument(data)).filter((node) => hasFontSize(node, 9))).toEqual([]);
+
+		skill.proficiency = "Expert";
+		expect(nodeText(await renderHostDocument(data))).toContain("Expert");
+	});
+
 	it.each(["onyx", "meowth"] as const)(
 		"matches combined separator and box-style primitives on %s",
 		async (template) => {
@@ -289,19 +327,6 @@ describe("compareLegacySemanticPresentation", () => {
 					style: { color: "#112233" },
 					children: [{ type: "TEXT", value: "same" }],
 				},
-			),
-		).toEqual([]);
-
-		expect(
-			compareLegacyParityHostNodes(
-				{
-					type: "VIEW",
-					children: [
-						{ type: "TEXT", style: { fontSize: 9 }, value: "" },
-						{ type: "TEXT", value: "same" },
-					],
-				},
-				{ type: "VIEW", children: [{ type: "TEXT", value: "same" }] },
 			),
 		).toEqual([]);
 
