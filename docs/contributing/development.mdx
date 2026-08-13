@@ -4,7 +4,7 @@ description: "Set up a local development environment for Reactive Resume with pn
 ---
 
 <Info>
-  **Prerequisites**: - [Node.js](https://nodejs.org/) v24 - [pnpm](https://pnpm.io/) v11.17.0 through Corepack -
+  **Prerequisites**: - [Node.js](https://nodejs.org/) v24 - [pnpm](https://pnpm.io/) v11.21.0 -
   [Docker](https://docs.docker.com/get-docker/) and Docker Compose - [Git](https://git-scm.com/)
 </Info>
 
@@ -23,13 +23,9 @@ This guide walks you through setting up Reactive Resume for local development. W
   </Step>
   
   <Step title="Install Dependencies">
-    This project uses [pnpm](https://pnpm.io/) through Corepack.
-    
+    Install [pnpm](https://pnpm.io/installation) directly, then install the project dependencies:
+
     ```bash
-    # Enable the package manager version from package.json
-    corepack enable
-    
-    # Install project dependencies
     pnpm install
     ```
   </Step>

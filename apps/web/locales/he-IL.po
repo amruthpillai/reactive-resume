@@ -8,7 +8,7 @@ msgstr ""
 "Language: he\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -493,10 +493,6 @@ msgstr "הוגש"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "הוגש בתאריך"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "כללים יישומיים"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "העתקת קודי גיבוי"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "העתקת JSON"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "העתק סוד"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "עדיין אין גרסאות שנשמרו."
 msgid "No source data yet."
 msgstr "אין עדיין נתוני מקור."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "עדיין אין חוקי סגנון."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "אין ספק שנבדק"
@@ -3568,10 +3565,6 @@ msgstr "איפוס"
 msgid "Reset Password"
 msgstr "איפוס סיסמה"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "איפוס סגנון"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "איפוס לגיליון הסגנונות שהוחל"
@@ -3686,14 +3679,6 @@ msgstr "רומנית"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "סיבוב"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "כְּלָל"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "כללים"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "אירוח עצמי עם Docker"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "גיליון סגנונות CSS סמנטי"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "סגנונות סמנטיים נשארים פעילים"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "רשומה זו תימחק לצמיתות. לא ניתן לבטל פעו
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "תכונה זו דורשת ספק בינה מלאכותית מחובר. אנא הגדר ספק כזה בהגדרות."
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "מופע זה אינו מאפשר כעת עריכת CSS סמנטי."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."

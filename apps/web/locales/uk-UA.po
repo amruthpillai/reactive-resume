@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -493,10 +493,6 @@ msgstr "Подано"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Подано"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "Застосовані правила"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "Скопіювати резервні коди"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Копіювати JSON"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "Скопіювати секретний код"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "Збережених версій поки що немає."
 msgid "No source data yet."
 msgstr "Даних джерел ще немає."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "Поки що немає правил стилю."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Немає перевіреного постачальника"
@@ -3568,10 +3565,6 @@ msgstr "Скинути"
 msgid "Reset Password"
 msgstr "Скинути пароль"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "Скинути стиль"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "Скинути до застосованого таблиці стилів"
@@ -3686,14 +3679,6 @@ msgstr "Румунська"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Обертання"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "правило"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "правила"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "Самостійний хостинг з Docker"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "Семантична таблиця стилів CSS"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "Семантичні стилі залишаються активними"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "Цей запис буде видалено назавжди. Цю ді�
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ця функція вимагає підключеного постачальника штучного інтелекту. Будь ласка, налаштуйте його в налаштуваннях."
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "Цей екземпляр наразі не дозволяє редагування семантичного CSS."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."

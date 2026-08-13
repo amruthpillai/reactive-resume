@@ -45,6 +45,9 @@ export default defineConfig({
 	shims: true,
 	dts: false,
 	define: { __APP_VERSION__: JSON.stringify(rootPackageJson.version ?? "0.0.0") },
+	// The flagged dynamic imports are deliberate: they defer evaluation of env-dependent
+	// modules so tests can run without env vars, not to split chunks.
+	suppressWarnings: [/dynamic import will not move module into another chunk/],
 	outExtensions: () => ({ js: ".mjs" }),
 	deps: {
 		alwaysBundle: [/^@reactive-resume\//],

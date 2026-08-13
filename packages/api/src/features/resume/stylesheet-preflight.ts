@@ -6,7 +6,6 @@ import type { StylesheetSnapshot } from "./stylesheet-service";
 import { ORPCError } from "@orpc/client";
 import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
 import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
-import { templateSchema } from "@reactive-resume/schema/templates";
 import { recordSemanticCssEvent } from "./stylesheet-observability";
 
 type PrepareImportedResumeDataInput = {
@@ -186,50 +185,6 @@ export async function convertLegacyStylesheet(snapshot: StylesheetSnapshot): Pro
 			diagnosticCodes: [],
 			pageCount: null,
 			revision: snapshot.stylesheetRevision,
-			success: false,
-		});
-		throw error;
-	}
-}
-
-export async function checkLegacyStylesheetParity(input: {
-	data: ResumeData;
-	stylesheet: StylesheetSource;
-	resumeId: string;
-	revision: number;
-}): Promise<{ mismatches: readonly string[] }> {
-	const startedAt = performance.now();
-	try {
-		const { compareLegacySemanticPresentation } = await import("@reactive-resume/pdf/semantic");
-		const result = await compareLegacySemanticPresentation({
-			data: input.data,
-			convertedSource: input.stylesheet,
-			templates: templateSchema.options,
-		});
-		recordSemanticCssEvent({
-			name: "semantic_css.parity_check",
-			resumeId: input.resumeId,
-			durationMs: performance.now() - startedAt,
-			languageVersion: input.stylesheet.languageVersion,
-			sourceBytes: byteCount(input.stylesheet),
-			template: input.data.metadata.template,
-			diagnosticCodes: [],
-			pageCount: null,
-			revision: input.revision,
-			success: result.mismatches.length === 0,
-		});
-		return result;
-	} catch (error) {
-		recordSemanticCssEvent({
-			name: "semantic_css.parity_check",
-			resumeId: input.resumeId,
-			durationMs: performance.now() - startedAt,
-			languageVersion: input.stylesheet.languageVersion,
-			sourceBytes: byteCount(input.stylesheet),
-			template: input.data.metadata.template,
-			diagnosticCodes: [],
-			pageCount: null,
-			revision: input.revision,
 			success: false,
 		});
 		throw error;

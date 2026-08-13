@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -493,10 +493,6 @@ msgstr "Jelentkezve"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Jelentkezés dátuma"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "Alkalmazott szabályok"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "Biztonsági kódok másolása"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON másolása"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "Titkos kód másolása"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "Még nincsenek mentett verziók."
 msgid "No source data yet."
 msgstr "Még nincs forrásadat."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "Stílusra még nincsenek szabályok."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Nincs tesztelt szolgáltató"
@@ -3568,10 +3565,6 @@ msgstr "Visszaállítás"
 msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "Stílus visszaállítása"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "Visszaállítás az alkalmazott stíluslapra"
@@ -3686,14 +3679,6 @@ msgstr "Román"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Forgatás"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "szabály"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "szabályok"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "Önálló hosztolás Dockerrel"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "Szemantikus CSS stíluslap"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "A szemantikai stílusok továbbra is aktívak"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "Ez a bejegyzés véglegesen törlődik. Ezt nem lehet visszavonni."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ehhez a funkcióhoz csatlakoztatott MI-szolgáltató szükséges. Kérjük, állítson be egyet a beállításokban."
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "Ez a példány jelenleg nem engedélyezi a szemantikus CSS szerkesztést."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."

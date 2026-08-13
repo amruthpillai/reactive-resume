@@ -1,8 +1,8 @@
 diff --git a/lib/textkit.js b/lib/textkit.js
-index 0b8b6fa636c48ef0ac9cecb27040d2bac9303ce8..058d96e4d47339482c2c8e8769ca031b8688e3a5 100644
+index 40814303e013f68675712caaeb3ca21617cfc9e7..7d337ad45eab263af25e9b724dd288509ab8bb82 100644
 --- a/lib/textkit.js
 +++ b/lib/textkit.js
-@@ -697,6 +697,31 @@ const omit = (value, run) => {
+@@ -709,6 +709,31 @@ const omit = (value, run) => {
      return Object.assign({}, run, { attributes });
  };
  
@@ -34,7 +34,7 @@ index 0b8b6fa636c48ef0ac9cecb27040d2bac9303ce8..058d96e4d47339482c2c8e8769ca031b
  /**
   * Get run ascent
   *
-@@ -706,7 +731,7 @@ const omit = (value, run) => {
+@@ -718,7 +743,7 @@ const omit = (value, run) => {
  const ascent$1 = (run) => {
      const { font, attachment } = run.attributes;
      const attachmentHeight = attachment?.height || 0;
@@ -43,7 +43,7 @@ index 0b8b6fa636c48ef0ac9cecb27040d2bac9303ce8..058d96e4d47339482c2c8e8769ca031b
      return Math.max(attachmentHeight, fontAscent * scale(run));
  };
  
-@@ -718,7 +743,7 @@ const ascent$1 = (run) => {
+@@ -730,7 +755,7 @@ const ascent$1 = (run) => {
   */
  const descent = (run) => {
      const font = run.attributes?.font;
@@ -52,7 +52,7 @@ index 0b8b6fa636c48ef0ac9cecb27040d2bac9303ce8..058d96e4d47339482c2c8e8769ca031b
      return scale(run) * fontDescent;
  };
  
-@@ -730,8 +755,8 @@ const descent = (run) => {
+@@ -742,8 +767,8 @@ const descent = (run) => {
   */
  const lineGap = (run) => {
      const font = run.attributes?.font;
@@ -63,7 +63,7 @@ index 0b8b6fa636c48ef0ac9cecb27040d2bac9303ce8..058d96e4d47339482c2c8e8769ca031b
  };
  
  /**
-@@ -742,7 +767,8 @@ const lineGap = (run) => {
+@@ -754,7 +779,8 @@ const lineGap = (run) => {
   */
  const height$1 = (run) => {
      const lineHeight = run.attributes?.lineHeight;

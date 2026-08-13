@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -493,10 +493,6 @@ msgstr "Pateikta"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Pateikta"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "Taikomos taisyklės"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -1009,6 +1005,11 @@ msgstr "Kopijuoti atsarginius kodus"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "Kopijuoti JSON"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "Kopijuoti slaptą kodą"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -2946,10 +2947,6 @@ msgstr "Kol kas nėra išsaugotų versijų."
 msgid "No source data yet."
 msgstr "Šaltinio duomenų dar nėra."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "Stiliaus taisyklių dar nėra."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Nėra patikrinto tiekėjo"
@@ -3568,10 +3565,6 @@ msgstr "Nustatyti iš naujo"
 msgid "Reset Password"
 msgstr "Atkurti slaptažodį"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "Atstatyti stilių"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "Atkurti pritaikytą stiliaus lapą"
@@ -3686,14 +3679,6 @@ msgstr "Rumunų"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Rotation"
 msgstr "Sukimas"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "taisyklė"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "taisyklės"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
@@ -3875,10 +3860,6 @@ msgstr "Savarankiškas talpinimas naudojant Docker"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "Semantinis CSS stiliaus lapas"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "Semantiniai stiliai išlieka aktyvūs"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "Šis įrašas bus visam laikui ištrintas. To negalima atšaukti."
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Šiai funkcijai reikalingas prijungtas dirbtinio intelekto teikėjas. Nustatykite jį nustatymuose."
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "Šiuo metu šis egzempliorius neleidžia redaguoti semantinio CSS."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
