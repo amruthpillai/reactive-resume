@@ -8,6 +8,7 @@ import { Buffer } from "node:buffer";
 import { resolveUserFromRequestHeaders } from "@reactive-resume/api/context";
 import { createResumePdfDownloadUrl } from "@reactive-resume/api/features/resume/export";
 import { env } from "@reactive-resume/env/server";
+import { resumeHasCoverLetter } from "@reactive-resume/resume/export-sections";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
 import { TOOL_META } from "./tool-meta";
@@ -169,9 +170,10 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 				if (!user) throw new Error("Unauthorized");
 
 				const documentTarget = target ?? "resume";
-				const signedUrl = createResumePdfDownloadUrl(
-					target === "cover-letter" ? { resumeId: id, userId: user.id, target } : { resumeId: id, userId: user.id },
-				);
+				if (documentTarget === "cover-letter" && !resumeHasCoverLetter(resume.data))
+					throw new Error("No visible cover letter found for this resume.");
+
+				const signedUrl = createResumePdfDownloadUrl({ resumeId: id, userId: user.id, target: documentTarget });
 
 				return text(
 					JSON.stringify(

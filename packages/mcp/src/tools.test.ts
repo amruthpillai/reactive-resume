@@ -114,7 +114,11 @@ describe("registerTools", () => {
 		expect(tool.config.title).toBe("Download Resume PDF");
 		expect(clientMock.resume.getById).toHaveBeenCalledWith({ id: "resume-1" });
 		expect(mocks.resolveUserFromRequestHeaders).toHaveBeenCalledWith(requestHeaders);
-		expect(mocks.createResumePdfDownloadUrl).toHaveBeenCalledWith({ resumeId: "resume-1", userId: "user-1" });
+		expect(mocks.createResumePdfDownloadUrl).toHaveBeenCalledWith({
+			resumeId: "resume-1",
+			userId: "user-1",
+			target: "resume",
+		});
 		expect(payload).toEqual({
 			resumeId: "resume-1",
 			target: "resume",
@@ -127,7 +131,11 @@ describe("registerTools", () => {
 	});
 
 	it("creates a cover-letter PDF URL and reports cover-letter metadata", async () => {
-		clientMock.resume.getById.mockResolvedValueOnce({ id: "resume-1", name: "Scizor" });
+		clientMock.resume.getById.mockResolvedValueOnce({
+			id: "resume-1",
+			name: "Scizor",
+			data: { customSections: [{ type: "cover-letter", hidden: false, items: [{ hidden: false }] }] },
+		});
 		mocks.resolveUserFromRequestHeaders.mockResolvedValueOnce({ id: "user-1" });
 		mocks.createResumePdfDownloadUrl.mockReturnValueOnce({
 			url: "https://example.com/api/resumes/resume-1/pdf?token=signed&target=cover-letter",
@@ -156,6 +164,24 @@ describe("registerTools", () => {
 			contentType: "application/pdf",
 		});
 	});
+
+	for (const [name, data] of [
+		["missing", { customSections: [] }],
+		["hidden", { customSections: [{ type: "cover-letter", hidden: true, items: [{ hidden: false }] }] }],
+	] as const) {
+		it(`does not create a cover-letter URL when the cover letter is ${name}`, async () => {
+			clientMock.resume.getById.mockResolvedValueOnce({ id: "resume-1", name: "Scizor", data });
+
+			const { server, registered } = makeFakeServer();
+			registerTools(server as never, clientMock as never, new Headers());
+
+			const tool = registered.find((item) => item.name === "download_resume_pdf")!;
+			const result = await tool.handler({ id: "resume-1", target: "cover-letter" });
+
+			expect(result.isError).toBe(true);
+			expect(mocks.createResumePdfDownloadUrl).not.toHaveBeenCalled();
+		});
+	}
 
 	it("keeps the tool name stable", () => {
 		expect(MCP_TOOL_NAME.downloadResumePdf).toBe("download_resume_pdf");

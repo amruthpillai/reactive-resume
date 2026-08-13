@@ -30,10 +30,10 @@ export async function handleResumePdfDownload(request: Request, id: string) {
 
 	const verification = verifyResumePdfDownloadToken({ resumeId: id, token });
 	if (!verification.ok) return verification.reason === "expired" ? expiredResponse() : unauthorizedResponse();
+	if (searchParams.has("target") && searchParams.get("target") !== verification.target) return unauthorizedResponse();
 
 	try {
-		const target = searchParams.get("target") === "cover-letter" ? "cover-letter" : "resume";
-		const download = await createResumePdfDownload({ id, userId: verification.userId, target });
+		const download = await createResumePdfDownload({ id, userId: verification.userId, target: verification.target });
 
 		return new Response(download.body, {
 			headers: {
