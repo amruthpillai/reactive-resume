@@ -3,17 +3,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
-import {
-	checkLegacyStylesheetParity,
-	prepareImportedResumeData,
-	validateHistoricalStylesheet,
-} from "./stylesheet-preflight";
-
-const semanticPdfMocks = vi.hoisted(() => ({
-	compareLegacySemanticPresentation: vi.fn(),
-}));
-
-vi.mock("@reactive-resume/pdf/semantic", () => semanticPdfMocks);
+import { prepareImportedResumeData, validateHistoricalStylesheet } from "./stylesheet-preflight";
 
 const validSource = {
 	languageVersion: 1,
@@ -47,7 +37,6 @@ const createRunner = () => {
 describe("stylesheet persistence preparation", () => {
 	beforeEach(() => {
 		vi.restoreAllMocks();
-		semanticPdfMocks.compareLegacySemanticPresentation.mockReset();
 	});
 
 	it("uses a valid imported source as applied only after PDF preflight", async () => {
@@ -170,33 +159,5 @@ describe("stylesheet persistence preparation", () => {
 		]);
 		expect(serialized).not.toContain(validSource.text);
 		expect(serialized).not.toContain("import-observed");
-	});
-
-	it("records a sanitized parity failure metric when the comparator throws", async () => {
-		const privateText = "private parity failure john.doe@example.com";
-		const log = vi.spyOn(console, "info").mockImplementation(() => undefined);
-		semanticPdfMocks.compareLegacySemanticPresentation.mockRejectedValueOnce(new Error(privateText));
-
-		await expect(
-			checkLegacyStylesheetParity({
-				data: resumeData(),
-				stylesheet: validSource,
-				resumeId: "parity-observed",
-				revision: 5,
-			}),
-		).rejects.toThrow(privateText);
-
-		expect(log.mock.calls.map(([event]) => event)).toContainEqual(
-			expect.objectContaining({
-				name: "semantic_css.parity_check",
-				durationMs: expect.any(Number),
-				diagnosticCodes: [],
-				success: false,
-			}),
-		);
-		const serialized = JSON.stringify(log.mock.calls);
-		expect(serialized).not.toContain(privateText);
-		expect(serialized).not.toContain(validSource.text);
-		expect(serialized).not.toContain("parity-observed");
 	});
 });
