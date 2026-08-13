@@ -69,6 +69,31 @@ const isMeaningfulNode = (node: Node): boolean =>
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
 
+const LEADING_BOLD_BOUNDARY_WHITESPACE = /^(?:[\u0020\u00a0]|&nbsp;|&#160;|&#xA0;)+/i;
+const TRAILING_BOLD_BOUNDARY_WHITESPACE = /(?:[\u0020\u00a0]|&nbsp;|&#160;|&#xA0;)+$/i;
+
+const normalizeBoldBoundaryWhitespace = (root: ReturnType<typeof parse>) => {
+	for (const bold of root.querySelectorAll("strong,b").reverse()) {
+		const firstChild = bold.childNodes[0];
+		if (firstChild?.nodeType === NodeType.TEXT_NODE) {
+			const whitespace = firstChild.rawText.match(LEADING_BOLD_BOUNDARY_WHITESPACE)?.[0];
+			if (whitespace) {
+				firstChild.rawText = firstChild.rawText.slice(whitespace.length);
+				bold.insertAdjacentHTML("beforebegin", whitespace);
+			}
+		}
+
+		const lastChild = bold.childNodes[bold.childNodes.length - 1];
+		if (lastChild?.nodeType === NodeType.TEXT_NODE) {
+			const whitespace = lastChild.rawText.match(TRAILING_BOLD_BOUNDARY_WHITESPACE)?.[0];
+			if (whitespace) {
+				lastChild.rawText = lastChild.rawText.slice(0, -whitespace.length);
+				bold.insertAdjacentHTML("afterend", whitespace);
+			}
+		}
+	}
+};
+
 const unwrapSingleParagraphListItems = (root: ReturnType<typeof parse>) => {
 	for (const listItem of root.querySelectorAll("li")) {
 		const meaningfulChildren = listItem.childNodes.filter(isMeaningfulNode);
@@ -135,13 +160,14 @@ export const normalizeRichTextHtml = (
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
 
+	normalizeBoldBoundaryWhitespace(root);
 	normalizeMarkElements(root);
 	unwrapSingleParagraphListItems(root);
 
 	const flushInlineNodes = () => {
-		const inlineHtml = inlineNodes.join("").trim();
+		const inlineHtml = inlineNodes.join("");
 
-		if (inlineHtml) normalized.push(`<p>${inlineHtml}</p>`);
+		if (inlineHtml.trim()) normalized.push(`<p>${inlineHtml}</p>`);
 
 		inlineNodes = [];
 	};
