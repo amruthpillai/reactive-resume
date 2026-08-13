@@ -27,6 +27,10 @@ const DASH_CHARS = new Set(["-", "–", "—", "~"]);
 
 const SPACED_SEPARATOR = /\s(?:[-–—~]+|to|through|until)\s/;
 
+const MAX_ONGOING_WORDS = 3;
+
+const MAX_ONGOING_LENGTH = 30;
+
 const monthLookupCache = new Map<string, ReadonlyMap<string, number>>();
 
 const normalizeToken = (value: string) => value.trim().toLowerCase().replace(/\.$/, "");
@@ -138,13 +142,24 @@ function* dashSplits(value: string): Generator<[string, string]> {
 	}
 }
 
+function isOngoingWord(raw: string, months: ReadonlyMap<string, number>): boolean {
+	const value = normalizeWhitespace(raw);
+	if (!value || value.length > MAX_ONGOING_LENGTH || /\d/.test(value)) return false;
+
+	const words = value.split(" ");
+	if (words.length > MAX_ONGOING_WORDS) return false;
+
+	return !words.some((word) => months.has(normalizeToken(word)));
+}
+
 function parseSplit(parts: [string, string], months: ReadonlyMap<string, number>): ParsedPeriod | null {
 	const start = parseEndpoint(parts[0], months);
-	const end = parseEndpoint(parts[1], months);
-	if (!start || !end) return null;
-	if (start === "ongoing") return null;
+	if (!start || start === "ongoing") return null;
 
-	return toPeriod(start, end);
+	const end = parseEndpoint(parts[1], months);
+	if (end) return toPeriod(start, end);
+
+	return isOngoingWord(parts[1], months) ? toPeriod(start, "ongoing") : null;
 }
 
 export function parsePeriod(value: string, locale = "en-US"): ParsedPeriod | null {
@@ -154,7 +169,7 @@ export function parsePeriod(value: string, locale = "en-US"): ParsedPeriod | nul
 	const months = getMonthLookup(locale);
 
 	const single = parseEndpoint(normalized, months);
-	if (single) return toPeriod(single, undefined);
+	if (single) return single === "ongoing" ? null : toPeriod(single, undefined);
 
 	const spaced = splitOnce(normalized, SPACED_SEPARATOR);
 	if (spaced) {

@@ -33,6 +33,28 @@ describe("parsePeriod", () => {
 		},
 	);
 
+	it.each(["Present", "Current", "Now", "Ongoing"])("rejects %j on its own, with no start date", (input) => {
+		expect(parsePeriod(input)).toBeNull();
+	});
+
+	it.each([
+		["2020 - heute", { year: 2020 }],
+		["Jan 2020 - présent", { year: 2020, month: 1 }],
+		["2020 - 現在", { year: 2020 }],
+		["2020 - en cours", { year: 2020 }],
+		["Mar 2021 - actualidad", { year: 2021, month: 3 }],
+	])("reads %s as ongoing without knowing the word", (input, start) => {
+		expect(parsePeriod(input)).toEqual({ start, ongoing: true });
+	});
+
+	it("does not mistake an incomplete month ending for an ongoing marker", () => {
+		expect(parsePeriod("Jan 2020 - Feb")).toBeNull();
+	});
+
+	it("does not treat a long phrase as an ongoing marker", () => {
+		expect(parsePeriod("2020 - whenever we finally got around to shipping it")).toBeNull();
+	});
+
 	it("reads month names in the resume's own locale", () => {
 		expect(parsePeriod("janvier 2020 - mars 2022", "fr-FR")).toEqual({
 			start: { year: 2020, month: 1 },

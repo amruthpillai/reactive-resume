@@ -142,6 +142,21 @@ describe("date rules", () => {
 		expect(codesOf(data)).not.toContain("EMPTY_PERIOD");
 	});
 
+	it("flags an open-ended period with no start date", () => {
+		const data = makeResume((resume) => {
+			resume.sections.experience.items = [experienceItem({ period: "Present" })];
+		});
+		expect(codesOf(data)).toContain("UNPARSEABLE_PERIOD");
+	});
+
+	it("accepts a localized open-ended period", () => {
+		const data = makeResume((resume) => {
+			resume.metadata.page.locale = "de-DE";
+			resume.sections.experience.items = [experienceItem({ period: "Jan 2020 - heute" })];
+		});
+		expect(codesOf(data)).not.toContain("UNPARSEABLE_PERIOD");
+	});
+
 	it("flags a period that runs backwards", () => {
 		const data = makeResume((resume) => {
 			resume.sections.experience.items = [experienceItem({ period: "Mar 2022 - Jan 2020" })];
