@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-30 14:30\n"
+"PO-Revision-Date: 2026-08-13 07:27\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -401,7 +401,7 @@ msgstr "Und viele weitere ..."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Anthropic Claude"
-msgstr "Anthropischer Claude"
+msgstr "Anthropic Claude"
 
 #: src/routes/dashboard/applications/index.tsx
 msgid "Any tag"
@@ -493,10 +493,6 @@ msgstr "Beworben"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Beworben am"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Applied Rules"
-msgstr "Angewandte Regeln"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Applied with warnings"
@@ -768,7 +764,7 @@ msgstr "Zentriert"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Cerebras"
-msgstr "Großhirn"
+msgstr "Cerebras"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -876,7 +872,7 @@ msgstr "Schließen Sie den KI-Assistenten"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Cohere"
-msgstr "Zusammenhängen"
+msgstr "Cohere"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -1009,6 +1005,11 @@ msgstr "Backup-Codes kopieren"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Copy JSON"
 msgstr "JSON kopieren"
+
+#. Accessible label for the button that copies the two-factor secret key
+#: src/dialogs/auth/enable-two-factor.tsx
+msgid "Copy secret"
+msgstr "Geheimnis kopieren"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Copy stylesheet"
@@ -1449,7 +1450,7 @@ msgstr "Discord"
 #: src/components/ui/donation-toast.tsx
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Dismiss"
-msgstr "Zurückweisen"
+msgstr "Ausblenden"
 
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
@@ -2142,7 +2143,7 @@ msgstr "Google"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Google Gemini"
-msgstr "Google Zwillinge"
+msgstr "Google Gemini"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "gpt-4.1"
@@ -2946,10 +2947,6 @@ msgstr "Bisher keine gespeicherten Versionen."
 msgid "No source data yet."
 msgstr "Noch keine Quelldaten."
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "No style rules yet."
-msgstr "Noch keine Stilregeln."
-
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Kein geprüfter Anbieter"
@@ -3207,7 +3204,7 @@ msgstr "Zeitraum"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Perplexity"
-msgstr "Verwirrung"
+msgstr "Perplexity"
 
 #: src/libs/locale.ts
 msgid "Persian"
@@ -3568,10 +3565,6 @@ msgstr "Zurücksetzen"
 msgid "Reset Password"
 msgstr "Passwort zurücksetzen"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "Reset Style"
-msgstr "Stil zurücksetzen"
-
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Reset to applied stylesheet"
 msgstr "Auf angewendetes Stylesheet zurücksetzen"
@@ -3687,14 +3680,6 @@ msgstr "Rumänisch"
 msgid "Rotation"
 msgstr "Drehung"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rule"
-msgstr "Regel"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/custom-styles.tsx
-msgid "rules"
-msgstr "Regeln"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
 msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
 msgstr "Führen Sie Ihre erste Analyse durch, um eine Scorecard, Stärken und priorisierte Vorschläge zu erhalten."
@@ -3716,7 +3701,7 @@ msgstr "Gehaltsspanne"
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "Save"
-msgstr "Speichern Sie"
+msgstr "Speichern"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Save & Test Provider"
@@ -3875,10 +3860,6 @@ msgstr "Selbst hosten mit Docker"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
 msgstr "Semantisches CSS-Stylesheet"
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "Semantic styles remain active"
-msgstr "Semantische Stile bleiben aktiv"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Send message"
@@ -4481,10 +4462,6 @@ msgstr "Dieser Eintrag wird dauerhaft gelöscht. Das kann nicht rückgängig gem
 #: src/dialogs/resume/import.tsx
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Diese Funktion erfordert einen verbundenen KI-Anbieter. Bitte richten Sie einen in den Einstellungen ein."
-
-#: src/features/resume/stylesheet/legacy-banner.tsx
-msgid "This instance does not currently allow Semantic CSS editing."
-msgstr "Diese Instanz erlaubt derzeit keine Bearbeitung von semantischem CSS."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."

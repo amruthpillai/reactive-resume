@@ -242,7 +242,7 @@ export function RegisterPage({ disableEmailAuth }: Props) {
 				</form>
 			)}
 
-			<SocialAuth requestSignUp />
+			<SocialAuth />
 		</>
 	);
 }

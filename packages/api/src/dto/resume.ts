@@ -202,9 +202,6 @@ export const resumeDto = {
 			validation: z.strictObject({
 				diagnostics: z.array(stylesheetDiagnosticSchema),
 			}),
-			parity: z.strictObject({
-				mismatches: z.array(z.string()),
-			}),
 			revisionConflict: z.strictObject({
 				state: stylesheetStateSchema,
 			}),

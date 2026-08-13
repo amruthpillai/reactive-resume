@@ -13,11 +13,6 @@ const errors = {
 		status: 400,
 		data: resumeDto.stylesheet.errors.validation,
 	},
-	STYLESHEET_PARITY_FAILED: {
-		message: "The converted stylesheet does not preserve legacy PDF presentation.",
-		status: 400,
-		data: resumeDto.stylesheet.errors.parity,
-	},
 	STYLESHEET_REVISION_CONFLICT: {
 		message: "The resume or stylesheet changed while the candidate was being validated.",
 		status: 409,
