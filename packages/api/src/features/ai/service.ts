@@ -201,9 +201,12 @@ function findNetworkErrorCode(error: unknown): string | undefined {
 }
 
 // The key is never part of a response body, but a provider echoing the request would leak it into
-// the message we persist, so scrub it from anything we did not write ourselves.
+// the message we persist, so scrub it from anything we did not write ourselves. The schema allows
+// keys as short as one character, and a mangled message costs less than a leaked credential, so
+// every non-empty key is redacted. The guard only keeps `replaceAll` from splicing "***" between
+// every character of the message.
 function redactApiKey(message: string, apiKey: string): string {
-	if (apiKey.length < 8) return message;
+	if (!apiKey) return message;
 
 	return message.replaceAll(apiKey, "***");
 }

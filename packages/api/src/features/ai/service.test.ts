@@ -153,6 +153,19 @@ describe("AI provider connection test", () => {
 		expect(result.ok).toBe(false);
 		if (!result.ok) expect(result.message).not.toContain("sk-secret-value-123");
 	});
+
+	// The credentials schema accepts a single character, so short keys must be redacted too.
+	it("redacts a short API key as well", async () => {
+		stubFailedResponse(400, JSON.stringify({ error: { message: "Bad key tok123" } }));
+
+		const result = await testConnection(testInput({ apiKey: "tok123" }));
+
+		expect(result.ok).toBe(false);
+		if (!result.ok) {
+			expect(result.message).not.toContain("tok123");
+			expect(result.message).toContain("***");
+		}
+	});
 });
 
 describe("AI chat service", () => {
