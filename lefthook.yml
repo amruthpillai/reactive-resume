@@ -9,13 +9,12 @@ pre-commit:
       exclude:
         - "*.md"
         - "*.mdx"
+      # Single quotes only: on Windows the script is truncated at the first double quote, which
+      # leaves the shell with an unterminated command and fails the job on every commit.
       run: |
-        matches=$(grep -nEI '<{7} |>{7} |^={7}$' {staged_files} || true)
-        if [ -n "$matches" ]; then
-          echo "$matches"
-          echo "Error: merge conflict markers found in staged files"
-          exit 1
-        fi
+        grep -nEI '<{7} |>{7} |^={7}$' {staged_files} || exit 0
+        echo 'Error: merge conflict markers found in staged files'
+        exit 1
     - name: lint and format
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: pnpm biome check --write --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
