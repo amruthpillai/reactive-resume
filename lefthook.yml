@@ -11,8 +11,16 @@ pre-commit:
         - "*.mdx"
       # Single quotes only: on Windows the script is truncated at the first double quote, which
       # leaves the shell with an unterminated command and fails the job on every commit.
+      # grep exits 1 for a clean tree and 2 on error, so the statuses are handled separately —
+      # an unreadable path must fail the job rather than read as no markers found.
       run: |
-        grep -nEI '<{7} |>{7} |^={7}$' {staged_files} || exit 0
+        grep -nEI '<{7} |>{7} |^={7}$' {staged_files}
+        status=$?
+        if [ $status -eq 1 ]; then
+          exit 0
+        elif [ $status -ne 0 ]; then
+          exit $status
+        fi
         echo 'Error: merge conflict markers found in staged files'
         exit 1
     - name: lint and format
