@@ -4,6 +4,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
+import { toast } from "sonner";
 
 type MutationName = "create" | "test" | "update" | "delete";
 
@@ -189,6 +190,35 @@ describe("AISettingsSection", () => {
 			(providers: MockProvider[]) => MockProvider[],
 		];
 		expect(updater([created])).toEqual([tested]);
+	});
+
+	// The server returns a provider-side failure as data (see the API package's e2e coverage), so the
+	// reason has to reach the card rather than being flattened into a generic transport error.
+	it("shows the server's reason on the card and keeps the toast to the outcome", async () => {
+		const failed = provider({
+			enabled: false,
+			testStatus: "failure",
+			testError: "OpenAI rejected the API key.",
+			lastTestedAt: new Date("2026-08-15T00:00:00Z"),
+		});
+
+		providers.data = [provider({})];
+		mutations.test.mockResolvedValue(failed);
+
+		renderSection();
+		fireEvent.click(screen.getByRole("button", { name: "Test" }));
+
+		await waitFor(() => expect(toast.error).toHaveBeenCalled());
+
+		// Toast reports only the outcome; the card carries the detail.
+		expect(toast.error).toHaveBeenCalledWith("Connection failed.");
+		expect(toast.error).not.toHaveBeenCalledWith(expect.stringContaining("rejected the API key"));
+
+		providers.data = [failed];
+		renderSection();
+
+		expect(screen.getAllByText("OpenAI rejected the API key.").length).toBeGreaterThan(0);
+		expect(screen.getAllByText("Connection failed").length).toBeGreaterThan(0);
 	});
 
 	it("updates a configured provider's model", async () => {

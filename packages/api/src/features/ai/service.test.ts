@@ -44,7 +44,116 @@ function stubOpenAICompatibleResponse(response?: { content?: string; finishReaso
 	return { fetchMock, getRequestBody: () => requestBody };
 }
 
+function testInput(overrides?: { model?: string; apiKey?: string; baseURL?: string }) {
+	return {
+		provider: "openai-compatible" as const,
+		model: overrides?.model ?? "test-model",
+		apiKey: overrides?.apiKey ?? "test-key",
+		baseURL: overrides?.baseURL ?? "https://example.test/v1",
+	};
+}
+
+function stubFailedResponse(status: number, body = "{}") {
+	const fetchMock = vi.fn(() => new Response(body, { status, headers: { "Content-Type": "application/json" } }));
+	vi.stubGlobal("fetch", fetchMock);
+
+	return fetchMock;
+}
+
+function stubRejectedFetch(error: unknown) {
+	const fetchMock = vi.fn(() => Promise.reject(error));
+	vi.stubGlobal("fetch", fetchMock);
+
+	return fetchMock;
+}
+
 const { testConnection } = await import("./service");
+
+describe("AI provider connection test", () => {
+	it("names the rejected key instead of reporting a transport failure", async () => {
+		stubFailedResponse(401);
+
+		await expect(testConnection(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("rejected the API key"),
+		});
+	});
+
+	it("points at the model when the provider returns a not-found status", async () => {
+		stubFailedResponse(404);
+
+		await expect(testConnection(testInput({ model: "missing-model" }))).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining('no model named "missing-model"'),
+		});
+	});
+
+	it("distinguishes rate limiting from an outage", async () => {
+		stubFailedResponse(429);
+
+		await expect(testConnection(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("rate-limited"),
+		});
+	});
+
+	it("attributes a server error to the provider", async () => {
+		stubFailedResponse(503);
+
+		await expect(testConnection(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("server error (503)"),
+		});
+	});
+
+	it("reports an unreachable base URL rather than the socket error", async () => {
+		stubRejectedFetch(
+			Object.assign(new TypeError("fetch failed"), {
+				cause: Object.assign(new Error("connect ECONNREFUSED 127.0.0.1:11434"), { code: "ECONNREFUSED" }),
+			}),
+		);
+
+		await expect(testConnection(testInput({ baseURL: "https://example.test/v1" }))).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("Could not reach https://example.test/v1"),
+		});
+	});
+
+	it("explains a timeout in terms of the wait the user just sat through", async () => {
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnection(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 30 seconds"),
+		});
+	});
+
+	it("does not retry, so the test cannot silently multiply its own wait", async () => {
+		const fetchMock = stubFailedResponse(503);
+
+		await testConnection(testInput());
+
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it("separates a reachable provider from a usable one", async () => {
+		stubOpenAICompatibleResponse({ content: "Sure! The connection works.", finishReason: "stop" });
+
+		await expect(testConnection(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("reachable"),
+		});
+	});
+
+	it("keeps the API key out of a passed-through provider message", async () => {
+		stubFailedResponse(400, JSON.stringify({ error: { message: "Bad key sk-secret-value-123" } }));
+
+		const result = await testConnection(testInput({ apiKey: "sk-secret-value-123" }));
+
+		expect(result.ok).toBe(false);
+		if (!result.ok) expect(result.message).not.toContain("sk-secret-value-123");
+	});
+});
 
 describe("AI chat service", () => {
 	it("tests OpenAI-compatible providers without requiring structured output", async () => {
@@ -57,7 +166,7 @@ describe("AI chat service", () => {
 				apiKey: "test-key",
 				baseURL: "https://example.test/v1",
 			}),
-		).resolves.toBe(true);
+		).resolves.toEqual({ ok: true });
 
 		expect(openAiCompatible.fetchMock).toHaveBeenCalledTimes(1);
 		expect(openAiCompatible.getRequestBody()).not.toHaveProperty("response_format");
@@ -67,14 +176,10 @@ describe("AI chat service", () => {
 	it("explains when the provider test hits the output limit", async () => {
 		stubOpenAICompatibleResponse({ content: "1. The connection works.", finishReason: "length" });
 
-		await expect(
-			testConnection({
-				provider: "openai-compatible",
-				model: "test-model",
-				apiKey: "test-key",
-				baseURL: "https://example.test/v1",
-			}),
-		).rejects.toThrow("The model returned too much text during the provider test.");
+		await expect(testConnection(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("returned too much text"),
+		});
 	});
 
 	it("keeps proposal tool history valid for follow-up chat messages", async () => {

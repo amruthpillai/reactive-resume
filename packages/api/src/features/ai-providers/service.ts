@@ -228,19 +228,21 @@ export const aiProvidersService = {
 		const apiKey = decryptCredential(provider.encryptedApiKey);
 
 		try {
-			const ok = await testConnection({
+			const result = await testConnection({
 				provider: parsedProvider,
 				model: provider.model,
 				apiKey,
 				baseURL: provider.baseUrl ?? "",
 			});
 
+			// A provider that answers "no" is a completed test, not a failed request: it comes back as
+			// data so the client can show why, instead of a generic transport error.
 			const [updated] = await db
 				.update(schema.aiProvider)
 				.set({
-					enabled: ok,
-					testStatus: ok ? "success" : "failure",
-					testError: ok ? null : "The provider test returned an unexpected response.",
+					enabled: result.ok,
+					testStatus: result.ok ? "success" : "failure",
+					testError: result.ok ? null : result.message,
 					lastTestedAt: new Date(),
 				})
 				.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)))
@@ -249,6 +251,7 @@ export const aiProvidersService = {
 			if (!updated) throw new ORPCError("NOT_FOUND");
 			return toResponse(updated);
 		} catch (error) {
+			// Only unexpected failures reach here now: provider-side outcomes come back as data above.
 			await db
 				.update(schema.aiProvider)
 				.set({

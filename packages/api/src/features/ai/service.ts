@@ -17,7 +17,17 @@ import { createPerplexity } from "@ai-sdk/perplexity";
 import { createTogetherAI } from "@ai-sdk/togetherai";
 import { createXai } from "@ai-sdk/xai";
 import { streamToEventIterator } from "@orpc/server";
-import { convertToModelMessages, createGateway, generateText, stepCountIs, streamText, tool } from "ai";
+import {
+	APICallError,
+	convertToModelMessages,
+	createGateway,
+	generateText,
+	LoadAPIKeyError,
+	NoSuchModelError,
+	stepCountIs,
+	streamText,
+	tool,
+} from "ai";
 import { createOllama } from "ollama-ai-provider-v2";
 import { match } from "ts-pattern";
 import { z } from "zod";
@@ -36,7 +46,7 @@ import {
 	resumePatchProposalToolInputSchema,
 	resumePatchProposalToolOutputSchema,
 } from "@reactive-resume/ai/tools/patch-proposal";
-import { aiProviderSchema } from "@reactive-resume/ai/types";
+import { AI_PROVIDER_DEFAULT_BASE_URLS, AI_PROVIDER_DISPLAY_NAMES, aiProviderSchema } from "@reactive-resume/ai/types";
 import { applyResumePatches } from "@reactive-resume/resume/patch";
 import { resumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
 import { supportsProviderNativeWebSearch } from "./capabilities";
@@ -83,6 +93,8 @@ type GetModelInput = {
 const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
 const TEST_CONNECTION_MAX_OUTPUT_TOKENS = 128;
+// Long enough for a cold local model to load, short enough that the UI does not look frozen.
+const TEST_CONNECTION_TIMEOUT_MS = 30_000;
 const DOCX_DOCUMENT_XML_PATH = "word/document.xml";
 const ZIP_LOCAL_FILE_HEADER_SIGNATURE = 0x04034b50;
 const ZIP_CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
@@ -144,20 +156,132 @@ export const fileInputSchema = z.object({
 
 type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
 
-export async function testConnection(input: TestConnectionInput): Promise<boolean> {
-	const RESPONSE_OK = "1";
+type TestConnectionResult = { ok: true } | { ok: false; message: string };
 
-	const result = await generateText({
-		model: getModel(input),
-		maxOutputTokens: TEST_CONNECTION_MAX_OUTPUT_TOKENS,
-		temperature: 0,
-		messages: [{ role: "user", content: `Respond only with the single character: ${RESPONSE_OK}` }],
+const NETWORK_ERROR_CODES = new Set([
+	"ECONNREFUSED",
+	"ECONNRESET",
+	"EAI_AGAIN",
+	"ENOTFOUND",
+	"ETIMEDOUT",
+	"UND_ERR_CONNECT_TIMEOUT",
+	"UND_ERR_SOCKET",
+]);
+
+// Provider SDKs wrap the useful error (a socket failure, an abort) inside a generic one, so the
+// signal we need is usually a few `cause` hops down rather than on the error we are handed.
+function findInCauseChain<T>(error: unknown, pick: (candidate: unknown) => T | undefined): T | undefined {
+	let current = error;
+
+	for (let depth = 0; depth < 8 && current !== null && current !== undefined; depth++) {
+		const picked = pick(current);
+		if (picked !== undefined) return picked;
+		current = (current as { cause?: unknown }).cause;
+	}
+
+	return undefined;
+}
+
+function isTimeout(error: unknown): boolean {
+	return (
+		findInCauseChain(error, (candidate) =>
+			candidate instanceof Error && (candidate.name === "TimeoutError" || candidate.name === "AbortError")
+				? true
+				: undefined,
+		) ?? false
+	);
+}
+
+function findNetworkErrorCode(error: unknown): string | undefined {
+	return findInCauseChain(error, (candidate) => {
+		const code = (candidate as { code?: unknown }).code;
+
+		return typeof code === "string" && NETWORK_ERROR_CODES.has(code) ? code : undefined;
 	});
+}
 
-	if (result.text.trim() === RESPONSE_OK) return true;
-	if (result.finishReason === "length") throw new Error("The model returned too much text during the provider test.");
+// The key is never part of a response body, but a provider echoing the request would leak it into
+// the message we persist, so scrub it from anything we did not write ourselves.
+function redactApiKey(message: string, apiKey: string): string {
+	if (apiKey.length < 8) return message;
 
-	return false;
+	return message.replaceAll(apiKey, "***");
+}
+
+function describeTestConnectionFailure(input: TestConnectionInput, error: unknown): string {
+	const provider = AI_PROVIDER_DISPLAY_NAMES[input.provider];
+	const endpoint = input.baseURL.trim() || AI_PROVIDER_DEFAULT_BASE_URLS[input.provider];
+
+	if (isTimeout(error)) {
+		return `${provider} did not respond within ${TEST_CONNECTION_TIMEOUT_MS / 1000} seconds. The service may be unreachable, or the model may be too slow to load.`;
+	}
+
+	if (findNetworkErrorCode(error)) {
+		return endpoint
+			? `Could not reach ${endpoint}. Check that the base URL is correct and the service is running.`
+			: `${provider} could not be reached. Check that the base URL is correct and the service is running.`;
+	}
+
+	if (LoadAPIKeyError.isInstance(error)) return `${provider} was configured without an API key.`;
+	if (NoSuchModelError.isInstance(error)) return `${provider} has no model named "${input.model}".`;
+
+	if (APICallError.isInstance(error)) {
+		const status = error.statusCode;
+
+		if (status === 401 || status === 403) return `${provider} rejected the API key.`;
+		if (status === 404) return `${provider} has no model named "${input.model}", or the base URL is wrong.`;
+		if (status === 429) return `${provider} rate-limited the test. Wait a moment and try again.`;
+		if (status !== undefined && status >= 500) {
+			return `${provider} reported a server error (${status}). This is a problem on the provider's side.`;
+		}
+
+		return `${provider} rejected the test request${status === undefined ? "" : ` (${status})`}: ${redactApiKey(error.message, input.apiKey)}`;
+	}
+
+	if (error instanceof Error && error.message) {
+		return `${provider} could not be tested: ${redactApiKey(error.message, input.apiKey)}`;
+	}
+
+	return `${provider} could not be tested, and reported no reason.`;
+}
+
+export async function testConnection(input: TestConnectionInput): Promise<TestConnectionResult> {
+	const RESPONSE_OK = "1";
+	const provider = AI_PROVIDER_DISPLAY_NAMES[input.provider];
+
+	// Resolved outside the try so the base-URL policy error still reaches the router, which turns it
+	// into an invalid-configuration response rather than a provider failure.
+	const model = getModel(input);
+
+	let result: Awaited<ReturnType<typeof generateText>>;
+
+	try {
+		result = await generateText({
+			model,
+			maxOutputTokens: TEST_CONNECTION_MAX_OUTPUT_TOKENS,
+			temperature: 0,
+			// A connection test must not silently multiply its own wait by retrying behind the user.
+			maxRetries: 0,
+			abortSignal: AbortSignal.timeout(TEST_CONNECTION_TIMEOUT_MS),
+			messages: [{ role: "user", content: `Respond only with the single character: ${RESPONSE_OK}` }],
+		});
+	} catch (error) {
+		return { ok: false, message: describeTestConnectionFailure(input, error) };
+	}
+
+	if (result.text.trim() === RESPONSE_OK) return { ok: true };
+
+	if (result.finishReason === "length") {
+		return {
+			ok: false,
+			message: `${provider} is reachable, but the model returned too much text during the test. Try a model that follows short instructions.`,
+		};
+	}
+
+	return {
+		ok: false,
+		message: `${provider} is reachable, but the model replied with unexpected output instead of a simple confirmation.`,
+	};
 }
 
 type ParsePdfInput = z.infer<typeof aiCredentialsSchema> & {
