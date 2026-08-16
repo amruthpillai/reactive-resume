@@ -1,112 +1,84 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import type { PublicRenderAccessDependencies } from "./public-style-projection";
 import { ORPCError } from "@orpc/server";
 import { generateFilename } from "@reactive-resume/utils/file";
+import { assertCanView } from "./access-policy";
 import { publicRenderRateLimiter } from "./public-render-rate-limit";
-import { defaultPublicRenderAccessDependencies, loadAuthorizedPublicRenderResume } from "./public-style-projection";
-import { hashSemanticCssResumeId } from "./stylesheet-observability";
+import { parseStoredResumeData } from "./resume-data-validation";
 
-export type PublicResumePdfMismatchReason =
-	| "missing-projection"
-	| "format-version"
-	| "language-version"
-	| "semantic-tree-version"
-	| "registry-fingerprint"
-	| "adapter-fingerprint"
-	| "render-data-hash"
-	| "invalid-projection";
-
-export const PUBLIC_RESUME_PDF_MISMATCH_REASONS = [
-	"missing-projection",
-	"format-version",
-	"language-version",
-	"semantic-tree-version",
-	"registry-fingerprint",
-	"adapter-fingerprint",
-	"render-data-hash",
-	"invalid-projection",
-] as const satisfies readonly PublicResumePdfMismatchReason[];
+type PublicRenderResume = {
+	id: string;
+	userId: string;
+	data: ResumeData;
+	isPublic: boolean;
+	passwordHash: string | null;
+};
 
 export type CreatePublicResumePdfInput = {
 	username: string;
 	slug: string;
 	requestHeaders: Headers;
 	trustedClient: string;
-	mismatchReason: PublicResumePdfMismatchReason;
-	clientRegistryFingerprint?: string;
-	clientAdapterFingerprint?: string;
 };
 
-export type PublicResumePdfDependencies = PublicRenderAccessDependencies & {
+export type PublicResumePdfDependencies = {
+	findResume(input: Pick<CreatePublicResumePdfInput, "username" | "slug">): Promise<PublicRenderResume | null>;
+	hasPasswordAccess(requestHeaders: Headers, resumeId: string, passwordHash: string | null): boolean | Promise<boolean>;
 	resolveCurrentUserId(requestHeaders: Headers): Promise<string | undefined>;
 	rateLimiter: { consume(input: { trustedClient: string; resumeId: string }): void };
 	renderPdf(input: { data: ResumeData; filename: string }): Promise<File>;
-	getFingerprints(): Promise<{ registryFingerprint: string; adapterFingerprint: string }>;
-	now(): number;
-	observe(event: Readonly<Record<string, unknown>>): void;
+};
+
+const findResume = async ({ username, slug }: Pick<CreatePublicResumePdfInput, "username" | "slug">) => {
+	const [{ db }, schema, { and, eq }] = await Promise.all([
+		import("@reactive-resume/db/client"),
+		import("@reactive-resume/db/schema"),
+		import("drizzle-orm"),
+	]);
+	const [resume] = await db
+		.select({
+			id: schema.resume.id,
+			userId: schema.resume.userId,
+			data: schema.resume.data,
+			isPublic: schema.resume.isPublic,
+			passwordHash: schema.resume.password,
+		})
+		.from(schema.resume)
+		.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
+		.where(and(eq(schema.resume.slug, slug), eq(schema.user.username, username)));
+	return resume ?? null;
 };
 
 const defaultDependencies: PublicResumePdfDependencies = {
-	...defaultPublicRenderAccessDependencies,
+	findResume,
+	hasPasswordAccess: async (requestHeaders, resumeId, passwordHash) =>
+		(await import("./access")).hasResumeAccess(requestHeaders, resumeId, passwordHash),
 	resolveCurrentUserId: async (requestHeaders) =>
 		(await import("../../context")).resolveUserFromRequestHeaders(requestHeaders).then((user) => user?.id),
 	rateLimiter: publicRenderRateLimiter,
 	renderPdf: async (input) => (await import("@reactive-resume/pdf/server")).createResumePdfFile(input),
-	getFingerprints: async () =>
-		(await import("@reactive-resume/pdf/public-projection")).getPublicStyleProjectionFingerprints(),
-	now: Date.now,
-	observe: console.info,
 };
 
 export async function createPublicResumePdf(
 	input: CreatePublicResumePdfInput,
 	dependencies: PublicResumePdfDependencies = defaultDependencies,
 ): Promise<{ body: File; filename: string }> {
-	const fingerprintPattern = /^[a-f0-9]{64}$/;
-	if (
-		!PUBLIC_RESUME_PDF_MISMATCH_REASONS.includes(input.mismatchReason) ||
-		(input.clientRegistryFingerprint !== undefined && !fingerprintPattern.test(input.clientRegistryFingerprint)) ||
-		(input.clientAdapterFingerprint !== undefined && !fingerprintPattern.test(input.clientAdapterFingerprint))
-	) {
-		throw new ORPCError("BAD_REQUEST", { status: 400, message: "Invalid public PDF fallback metadata." });
-	}
-	const currentUserId = await dependencies.resolveCurrentUserId(input.requestHeaders);
-	const resume = await loadAuthorizedPublicRenderResume(
-		{
-			username: input.username,
-			slug: input.slug,
-			requestHeaders: input.requestHeaders,
-			trustedClient: input.trustedClient,
-			...(currentUserId ? { currentUserId } : {}),
-		},
-		dependencies,
-	);
-	dependencies.rateLimiter.consume({ trustedClient: input.trustedClient, resumeId: resume.id });
-	const startedAt = dependencies.now();
-	const fingerprints = await dependencies.getFingerprints();
-	const event = (success: boolean) => {
-		dependencies.observe({
-			name: "semantic_css.render_fallback",
-			resumeIdHash: hashSemanticCssResumeId(resume.id),
-			mismatchReason: input.mismatchReason,
-			...(input.clientRegistryFingerprint ? { clientRegistryFingerprint: input.clientRegistryFingerprint } : {}),
-			...(input.clientAdapterFingerprint ? { clientAdapterFingerprint: input.clientAdapterFingerprint } : {}),
-			...fingerprints,
-			durationMs: Math.max(0, dependencies.now() - startedAt),
-			success,
-		});
-	};
+	const resume = await dependencies.findResume(input);
+	if (!resume) throw new ORPCError("NOT_FOUND");
 
-	try {
-		const filename = generateFilename(resume.data.basics.name || "Resume", "pdf");
-		const body = await dependencies.renderPdf({ data: resume.data, filename });
-		event(true);
-		return {
-			body,
-			filename,
-		};
-	} catch (error) {
-		event(false);
-		throw error;
+	const currentUserId = await dependencies.resolveCurrentUserId(input.requestHeaders);
+	assertCanView(resume, currentUserId ? { id: currentUserId } : null);
+	if (
+		resume.passwordHash &&
+		!(await dependencies.hasPasswordAccess(input.requestHeaders, resume.id, resume.passwordHash))
+	) {
+		throw new ORPCError("NEED_PASSWORD", {
+			status: 401,
+			data: { username: input.username, slug: input.slug },
+		});
 	}
+
+	const data = parseStoredResumeData(resume.data);
+	dependencies.rateLimiter.consume({ trustedClient: input.trustedClient, resumeId: resume.id });
+	const filename = generateFilename(data.basics.name || "Resume", "pdf");
+	return { body: await dependencies.renderPdf({ data, filename }), filename };
 }

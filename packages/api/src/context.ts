@@ -1,4 +1,3 @@
-import type { StylesheetPreflightRunner } from "@reactive-resume/pdf/server";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { User } from "better-auth";
 import { ORPCError, os } from "@orpc/server";
@@ -12,7 +11,6 @@ interface ORPCContext {
 	reqHeaders: Headers;
 	resHeaders?: Headers;
 	trustedClient?: string;
-	stylesheetPreflightRunner?: StylesheetPreflightRunner;
 }
 
 async function getUserFromBearerToken(headers: Headers): Promise<User | null> {

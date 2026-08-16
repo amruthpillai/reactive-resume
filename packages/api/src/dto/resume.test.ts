@@ -65,7 +65,7 @@ describe("resume DTO output validation", () => {
 		expect(resumeDto.import.input.safeParse({ data }).success).toBe(false);
 	});
 
-	it("defers imported stylesheet validation to the stable unavailable-feature error", () => {
+	it("rejects invalid imported stylesheet structure at the schema boundary", () => {
 		expect(
 			resumeDto.import.input.safeParse({
 				data: {
@@ -76,36 +76,11 @@ describe("resume DTO output validation", () => {
 					},
 				},
 			}).success,
-		).toBe(true);
+		).toBe(false);
 	});
 
 	it("does not let otherwise-invalid imports bypass validation without a stylesheet field", () => {
 		expect(resumeDto.import.input.safeParse({ data: { metadata: {} } }).success).toBe(false);
-	});
-
-	it.each([
-		[resumeDto.getById.output, {}],
-		[resumeDto.getBySlug.output, { stylesheetMode: "legacy" }],
-		[resumeDto.update.output, {}],
-		[resumeDto.patch.output, {}],
-	] as const)("keeps server concurrency columns out of ordinary resume outputs", (output, extra) => {
-		const parsed = output.parse({
-			id: "019e128d-0598-75d2-ae6a-771e2eb84614",
-			name: "Resume",
-			slug: "resume",
-			tags: [],
-			data: defaultResumeData,
-			isPublic: false,
-			isLocked: false,
-			updatedAt: new Date("2026-01-01T00:00:00Z"),
-			hasPassword: false,
-			stylesheetRevision: 7,
-			renderDataVersion: 9,
-			...extra,
-		});
-
-		expect(parsed).not.toHaveProperty("stylesheetRevision");
-		expect(parsed).not.toHaveProperty("renderDataVersion");
 	});
 
 	it("accepts public resume responses after owner-only fields are redacted", () => {
@@ -130,7 +105,6 @@ describe("resume DTO output validation", () => {
 		const publicResume = {
 			...redactResumeForViewer(dbResume, false),
 			hasPassword: dbResume.hasPassword,
-			stylesheetMode: "legacy",
 		};
 
 		expect(publicResume.name).toBe("Resume");
@@ -138,7 +112,7 @@ describe("resume DTO output validation", () => {
 		expect(resumeDto.getBySlug.output.safeParse(publicResume).success).toBe(true);
 	});
 
-	it("exposes only the safe public stylesheet mode discriminator", () => {
+	it("exposes canonical stylesheet source in authorized public data", () => {
 		const source = { languageVersion: 1, text: "@version 1;\nresume { color: red; }\n" };
 		const parsed = resumeDto.getBySlug.output.parse({
 			id: "019e128d-0598-75d2-ae6a-771e2eb84614",
@@ -152,7 +126,7 @@ describe("resume DTO output validation", () => {
 						...defaultResumeData,
 						metadata: {
 							...defaultResumeData.metadata,
-							stylesheet: { mode: "semantic", source, applied: source },
+							stylesheet: { mode: "semantic", source },
 						},
 					},
 				},
@@ -161,15 +135,12 @@ describe("resume DTO output validation", () => {
 			isPublic: true,
 			isLocked: false,
 			hasPassword: false,
-			stylesheetMode: "semantic",
 		});
 
-		expect(parsed.stylesheetMode).toBe("semantic");
-		expect(JSON.stringify(parsed)).not.toContain("@version");
-		expect(JSON.stringify(parsed)).not.toContain("stylesheetRevision");
+		expect(parsed.data.metadata.stylesheet).toEqual({ mode: "semantic", source });
 	});
 
-	it("returns current canonical stylesheet state only on version restore", () => {
+	it("returns the ordinary resume contract on version restore", () => {
 		const resume = {
 			id: "019e128d-0598-75d2-ae6a-771e2eb84614",
 			name: "Resume",
@@ -181,20 +152,6 @@ describe("resume DTO output validation", () => {
 			updatedAt: new Date("2026-01-01T00:00:00Z"),
 			hasPassword: false,
 		};
-		const stylesheet = {
-			mode: "semantic" as const,
-			source: { languageVersion: 1, text: "@version 1;\n" },
-			applied: { languageVersion: 1, text: "@version 1;\n" },
-		};
-
-		expect(
-			resumeDto.restoreVersion.output.parse({
-				resume,
-				stylesheetState: { stylesheet, revision: 8, renderDataVersion: 13 },
-			}),
-		).toEqual({
-			resume,
-			stylesheetState: { stylesheet, revision: 8, renderDataVersion: 13 },
-		});
+		expect(resumeDto.restoreVersion.output.parse(resume)).toEqual(resume);
 	});
 });

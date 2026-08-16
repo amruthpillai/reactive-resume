@@ -18,7 +18,6 @@ import { grantResumeAccess, hasResumeAccess } from "./access";
 import { assertCanView, isOwner, redactResumeForViewer, shouldCountForStatistics } from "./access-policy";
 import { publishResumeUpdated } from "./events";
 import { parseStoredResumeData, parseWritableResumeData } from "./resume-data-validation";
-import { hasRenderDataChanged, preserveServerStylesheet } from "./stylesheet-preservation";
 import { clientKeyFromHeaders, shouldCountView } from "./view-dedup";
 
 type DbOrTx = typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -39,11 +38,9 @@ function invalidPatchOperation(message: string, index?: number, operation?: Json
 	return new ORPCError("INVALID_PATCH_OPERATIONS", { status: 400, message });
 }
 
-type JsonPointerClass = "root" | "metadata" | "stylesheet" | "other";
-
-function classifyJsonPointer(pointer: string): JsonPointerClass | undefined {
-	if (pointer === "") return "root";
-	if (!pointer.startsWith("/")) return undefined;
+function isValidJsonPointer(pointer: string): boolean {
+	if (pointer === "") return true;
+	if (!pointer.startsWith("/")) return false;
 
 	const segments = pointer
 		.slice(1)
@@ -52,35 +49,16 @@ function classifyJsonPointer(pointer: string): JsonPointerClass | undefined {
 			if (/~(?:[^01]|$)/.test(segment)) return undefined;
 			return segment.replace(/~[01]/g, (encoded) => (encoded === "~1" ? "/" : "~"));
 		});
-	if (segments.some((segment) => segment === undefined)) return undefined;
-	if (segments[0] !== "metadata") return "other";
-	if (segments.length === 1) return "metadata";
-	return segments[1] === "stylesheet" ? "stylesheet" : "other";
+	return !segments.some((segment) => segment === undefined);
 }
 
-function assertSafePatchPointers(operation: JsonPatchOperation, index: number) {
-	const pathClass = classifyJsonPointer(operation.path);
-	if (!pathClass) {
+function assertValidPatchPointers(operation: JsonPatchOperation, index: number) {
+	if (!isValidJsonPointer(operation.path)) {
 		throw invalidPatchOperation("Operation `path` property is not a valid JSON Pointer string.", index, operation);
 	}
 
-	let fromClass: JsonPointerClass | undefined;
-	if ("from" in operation) {
-		fromClass = classifyJsonPointer(operation.from);
-		if (!fromClass) {
-			throw invalidPatchOperation("Operation `from` property is not a valid JSON Pointer string.", index, operation);
-		}
-	}
-
-	const protectedPath =
-		pathClass === "stylesheet" || (operation.op !== "test" && (pathClass === "root" || pathClass === "metadata"));
-	const protectedSource = fromClass === "stylesheet" || fromClass === "root" || fromClass === "metadata";
-	if (protectedPath || protectedSource) {
-		throw invalidPatchOperation(
-			"The server-owned stylesheet cannot be changed through generic resume patches.",
-			index,
-			operation,
-		);
+	if ("from" in operation && !isValidJsonPointer(operation.from)) {
+		throw invalidPatchOperation("Operation `from` property is not a valid JSON Pointer string.", index, operation);
 	}
 }
 
@@ -148,7 +126,6 @@ async function applyResumePatchTx(
 		.select({
 			data: schema.resume.data,
 			isLocked: schema.resume.isLocked,
-			renderDataVersion: schema.resume.renderDataVersion,
 			updatedAt: schema.resume.updatedAt,
 		})
 		.from(schema.resume)
@@ -161,7 +138,7 @@ async function applyResumePatchTx(
 		throw resumeVersionConflict(existing.updatedAt);
 	}
 
-	input.operations.forEach(assertSafePatchPointers);
+	input.operations.forEach(assertValidPatchPointers);
 
 	let patchedData: ResumeData;
 
@@ -182,21 +159,10 @@ async function applyResumePatchTx(
 		});
 	}
 
-	patchedData = parseWritableResumeData(preserveServerStylesheet(existing.data, patchedData));
-	if (
-		existing.data.metadata.stylesheet?.mode === "semantic" &&
-		JSON.stringify(existing.data.metadata.styleRules) !== JSON.stringify(patchedData.metadata.styleRules)
-	) {
-		throw invalidPatchOperation("Legacy style rules cannot be changed while Semantic CSS mode is active.");
-	}
-
-	const renderDataChanged = hasRenderDataChanged(existing.data, patchedData);
+	patchedData = parseWritableResumeData(patchedData);
 	const [resume] = await client
 		.update(schema.resume)
-		.set({
-			data: patchedData,
-			...(renderDataChanged ? { renderDataVersion: existing.renderDataVersion + 1 } : {}),
-		})
+		.set({ data: patchedData })
 		.where(
 			and(
 				eq(schema.resume.id, input.id),
@@ -395,7 +361,6 @@ function toSharedResumeResponse(
 		isLocked: boolean;
 	},
 	hasPassword: boolean,
-	stylesheetMode: "legacy" | "semantic",
 ) {
 	return {
 		id: resume.id,
@@ -406,7 +371,6 @@ function toSharedResumeResponse(
 		isPublic: resume.isPublic,
 		isLocked: resume.isLocked,
 		hasPassword,
-		stylesheetMode,
 	};
 }
 
@@ -455,12 +419,7 @@ export const resumeService = {
 
 		// Non-destructive restore: writes the snapshot's data back through the normal update path, so
 		// prior versions remain and the restore is itself just another (snapshot-able, undoable) change.
-		restore: async (input: {
-			resumeId: string;
-			versionId: string;
-			userId: string;
-			prepareData(input: { data: ResumeData; stylesheetRevision: number }): Promise<ResumeData>;
-		}) => {
+		restore: async (input: { resumeId: string; versionId: string; userId: string }) => {
 			// Check lock state before loading or validating historical data so locked resumes fail without expensive work.
 			const current = await resumeService.getById({ id: input.resumeId, userId: input.userId });
 			if (current.isLocked) throw new ORPCError("RESUME_LOCKED");
@@ -481,10 +440,6 @@ export const resumeService = {
 			const versionData = parseStoredResumeData(version.data);
 
 			// Capture the pre-restore state first so the restore itself is undoable.
-			const restoredData = await input.prepareData({
-				data: versionData,
-				stylesheetRevision: current.stylesheetRevision,
-			});
 			await resumeService.versions.snapshot({
 				resumeId: input.resumeId,
 				userId: input.userId,
@@ -495,8 +450,7 @@ export const resumeService = {
 			const updated = await resumeService.update({
 				id: input.resumeId,
 				userId: input.userId,
-				data: restoredData,
-				restoreStylesheet: true,
+				data: versionData,
 				skipAutoSnapshot: true,
 			});
 
@@ -550,7 +504,6 @@ export const resumeService = {
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
-				stylesheetRevision: schema.resume.stylesheetRevision,
 				updatedAt: schema.resume.updatedAt,
 				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 			})
@@ -599,12 +552,7 @@ export const resumeService = {
 			}
 		}
 
-		const stylesheetMode = resume.data.metadata.stylesheet?.mode ?? "legacy";
-		return toSharedResumeResponse(
-			redactResumeForViewer(resume, isOwner(resume, viewer)),
-			resume.hasPassword,
-			stylesheetMode,
-		);
+		return toSharedResumeResponse(redactResumeForViewer(resume, isOwner(resume, viewer)), resume.hasPassword);
 	},
 
 	create: async (input: {
@@ -659,7 +607,6 @@ export const resumeService = {
 		tags?: string[];
 		data?: ResumeData;
 		isPublic?: boolean;
-		restoreStylesheet?: boolean;
 		skipAutoSnapshot?: boolean;
 	}) => {
 		const resume = await db
@@ -668,8 +615,6 @@ export const resumeService = {
 					.select({
 						data: schema.resume.data,
 						isLocked: schema.resume.isLocked,
-						stylesheetRevision: schema.resume.stylesheetRevision,
-						renderDataVersion: schema.resume.renderDataVersion,
 					})
 					.from(schema.resume)
 					.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
@@ -677,29 +622,13 @@ export const resumeService = {
 
 				if (!existing) throw new ORPCError("NOT_FOUND");
 				if (existing.isLocked) throw new ORPCError("RESUME_LOCKED");
-				const inputData = input.data ? parseWritableResumeData(input.data) : undefined;
-
-				const data = inputData
-					? input.restoreStylesheet
-						? inputData
-						: preserveServerStylesheet(existing.data, inputData)
-					: undefined;
-				const normalizedData = data ? parseWritableResumeData(data) : undefined;
-				const dataForRenderComparison =
-					normalizedData && input.restoreStylesheet
-						? preserveServerStylesheet(existing.data, normalizedData)
-						: normalizedData;
-				const renderDataChanged = dataForRenderComparison
-					? hasRenderDataChanged(existing.data, dataForRenderComparison)
-					: false;
+				const normalizedData = input.data ? parseWritableResumeData(input.data) : undefined;
 				const updateData: Partial<typeof schema.resume.$inferSelect> = {
 					...(input.name !== undefined ? { name: input.name } : {}),
 					...(input.slug !== undefined ? { slug: input.slug } : {}),
 					...(input.tags !== undefined ? { tags: input.tags } : {}),
 					...(normalizedData ? { data: normalizedData } : {}),
 					...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
-					...(input.restoreStylesheet ? { stylesheetRevision: existing.stylesheetRevision + 1 } : {}),
-					...(renderDataChanged ? { renderDataVersion: existing.renderDataVersion + 1 } : {}),
 				};
 
 				const [updated] = await tx
@@ -720,8 +649,6 @@ export const resumeService = {
 						data: schema.resume.data,
 						isPublic: schema.resume.isPublic,
 						isLocked: schema.resume.isLocked,
-						stylesheetRevision: schema.resume.stylesheetRevision,
-						renderDataVersion: schema.resume.renderDataVersion,
 						updatedAt: schema.resume.updatedAt,
 						hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 					});

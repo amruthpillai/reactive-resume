@@ -6,16 +6,6 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@reactive-resume/api/features/resume/public-pdf", () => ({
 	createPublicResumePdf: mocks.createPublicResumePdf,
-	PUBLIC_RESUME_PDF_MISMATCH_REASONS: [
-		"missing-projection",
-		"format-version",
-		"language-version",
-		"semantic-tree-version",
-		"registry-fingerprint",
-		"adapter-fingerprint",
-		"render-data-hash",
-		"invalid-projection",
-	],
 }));
 
 const { handlePublicResumePdf } = await import("./public-resume-pdf");
@@ -24,18 +14,15 @@ const trustedClient = "203.0.113.9";
 describe("handlePublicResumePdf", () => {
 	beforeEach(() => vi.clearAllMocks());
 
-	it("returns the authorized fallback PDF with strict mismatch metadata and cache policy", async () => {
+	it("returns the authorized on-demand PDF without forwarding compatibility metadata", async () => {
 		const body = new File(["%PDF"], "Ada_Lovelace.pdf", { type: "text/plain" });
 		mocks.createPublicResumePdf.mockResolvedValueOnce({
 			body,
 			filename: "Ada_Lovelace.pdf",
 		});
-		const registry = "0".repeat(64);
-		const adapter = "1".repeat(64);
-		const request = new Request(
-			`https://example.com/api/resumes/jane/resume/pdf?reason=render-data-hash&registryFingerprint=${registry}&adapterFingerprint=${adapter}`,
-			{ headers: { "x-forwarded-for": "203.0.113.7" } },
-		);
+		const request = new Request("https://example.com/api/resumes/jane/resume/pdf?ignored=true", {
+			headers: { "x-forwarded-for": "203.0.113.7" },
+		});
 
 		const response = await handlePublicResumePdf(request, "jane", "resume", trustedClient);
 
@@ -50,13 +37,10 @@ describe("handlePublicResumePdf", () => {
 			slug: "resume",
 			requestHeaders: request.headers,
 			trustedClient,
-			mismatchReason: "render-data-hash",
-			clientRegistryFingerprint: registry,
-			clientAdapterFingerprint: adapter,
 		});
 	});
 
-	it("defaults a missing mismatch reason and keeps password/private responses uncacheable", async () => {
+	it("keeps password and private responses uncacheable", async () => {
 		mocks.createPublicResumePdf.mockResolvedValueOnce({
 			body: new File(["%PDF"], "resume.pdf", { type: "application/pdf" }),
 			filename: "resume.pdf",
@@ -66,13 +50,15 @@ describe("handlePublicResumePdf", () => {
 		const response = await handlePublicResumePdf(request, "jane", "resume", trustedClient);
 
 		expect(response.headers.get("Cache-Control")).toBe("private, no-store");
-		expect(mocks.createPublicResumePdf).toHaveBeenCalledWith(
-			expect.objectContaining({ mismatchReason: "missing-projection" }),
-		);
+		expect(mocks.createPublicResumePdf).toHaveBeenCalledWith({
+			username: "jane",
+			slug: "resume",
+			requestHeaders: request.headers,
+			trustedClient,
+		});
 	});
 
 	it.each([
-		[{ code: "BAD_REQUEST" }, 400],
 		[{ code: "NEED_PASSWORD" }, 401],
 		[{ code: "NOT_FOUND" }, 404],
 		[{ code: "RATE_LIMIT_EXCEEDED" }, 429],
@@ -90,20 +76,4 @@ describe("handlePublicResumePdf", () => {
 		expect(response.status).toBe(status);
 		expect(response.headers.get("Cache-Control")).toBe("private, no-store");
 	});
-
-	it.each(["?reason=private-source", "?registryFingerprint=unsafe", "?adapterFingerprint=unsafe"])(
-		"rejects invalid fallback metadata before the API service",
-		async (search) => {
-			const response = await handlePublicResumePdf(
-				new Request(`https://example.com/api/resumes/jane/resume/pdf${search}`),
-				"jane",
-				"resume",
-				trustedClient,
-			);
-
-			expect(response.status).toBe(400);
-			expect(response.headers.get("Cache-Control")).toBe("private, no-store");
-			expect(mocks.createPublicResumePdf).not.toHaveBeenCalled();
-		},
-	);
 });

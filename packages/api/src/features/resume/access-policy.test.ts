@@ -71,7 +71,7 @@ describe("redactResumeForViewer", () => {
 		expect(result.data.metadata.notes).toBe("");
 	});
 
-	it("strips editable and applied stylesheet source for non-owner", () => {
+	it("preserves stylesheet source for an authorized non-owner", () => {
 		const source = { languageVersion: 1, text: "@version 1;\nresume { color: red; }\n" };
 		const resume = {
 			name: "Title",
@@ -79,15 +79,14 @@ describe("redactResumeForViewer", () => {
 				...defaultResumeData,
 				metadata: {
 					...defaultResumeData.metadata,
-					stylesheet: { mode: "semantic" as const, source, applied: source },
+					stylesheet: { mode: "semantic" as const, source },
 				},
 			},
 		};
 
 		const result = redactResumeForViewer(resume, false);
 
-		expect(result.data.metadata.stylesheet).toBeUndefined();
-		expect(JSON.stringify(result)).not.toContain("@version");
+		expect(result.data.metadata.stylesheet).toEqual({ mode: "semantic", source });
 	});
 
 	it("preserves resume.data.basics.name (the person's name) for non-owner", () => {

@@ -131,10 +131,10 @@ describe("createApp", () => {
 	it("uses the transport address for public PDF fallback despite rotated forwarding headers", async () => {
 		const { createApp } = await import("./app");
 		const app = createApp();
-		const first = new Request("http://localhost:3001/api/resumes/jane/resume/pdf?reason=render-data-hash", {
+		const first = new Request("http://localhost:3001/api/resumes/jane/resume/pdf", {
 			headers: { "x-forwarded-for": "198.51.100.1" },
 		});
-		const rotated = new Request("http://localhost:3001/api/resumes/jane/resume/pdf?reason=render-data-hash", {
+		const rotated = new Request("http://localhost:3001/api/resumes/jane/resume/pdf", {
 			headers: { "x-forwarded-for": "198.51.100.2" },
 		});
 		const env = transportEnv("203.0.113.9");
@@ -159,8 +159,8 @@ describe("createApp", () => {
 		const unknownRpcRequest = new Request("http://localhost:3001/api/rpc", {
 			headers: { "cf-connecting-ip": "198.51.100.2" },
 		});
-		const trustedOpenApiRequest = new Request("http://localhost:3001/api/openapi/resumes/jane/resume/style-projection");
-		const unknownOpenApiRequest = new Request("http://localhost:3001/api/openapi/resumes/jane/resume/style-projection");
+		const trustedOpenApiRequest = new Request("http://localhost:3001/api/openapi/resumes/jane/resume");
+		const unknownOpenApiRequest = new Request("http://localhost:3001/api/openapi/resumes/jane/resume");
 
 		await app.fetch(trustedRpcRequest, transportEnv("203.0.113.9"));
 		await app.fetch(unknownRpcRequest);

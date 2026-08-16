@@ -53,15 +53,13 @@ export function redactResumeForViewer<T extends { name: string; data: ResumeData
 	viewerIsOwner: boolean,
 ): T {
 	if (viewerIsOwner) return resume;
-	const { stylesheet: _stylesheet, ...metadata } = resume.data.metadata;
-
 	return {
 		...resume,
 		name: "Resume",
 		data: {
 			...resume.data,
 			metadata: {
-				...metadata,
+				...resume.data.metadata,
 				notes: "",
 			},
 		},

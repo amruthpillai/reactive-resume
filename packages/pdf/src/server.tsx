@@ -8,16 +8,6 @@ import { renderToBuffer } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
 import { inspectResumePdf } from "./semantic";
 
-export type {
-	PdfPreflightFailure,
-	PdfPreflightPageLimits,
-	PdfPreflightResult,
-	RenderPreflightPdfResult,
-	StylesheetPreflightInput,
-	StylesheetPreflightRunner,
-} from "./semantic/preflight-core";
-export { renderPreflightPdf } from "./semantic/preflight-core";
-
 export type CreateResumePdfFileOptions = {
 	data: ResumeData;
 	filename: string;

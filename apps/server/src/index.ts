@@ -2,7 +2,6 @@ import { pathToFileURL } from "node:url";
 import { serve } from "@hono/node-server";
 import { env } from "@reactive-resume/env/server";
 import { createApp } from "./http/app";
-import { stylesheetPreflightRunner } from "./services/stylesheet-preflight";
 import { runStartupChecks } from "./startup/checks";
 
 export { createApp } from "./http/app";
@@ -32,10 +31,6 @@ async function main() {
 			console.info(`🚀 Up and running on http://localhost:${info.port}`);
 		},
 	);
-
-	// Load the heavy PDF preflight runtime once, now, so the first semantic-CSS edit
-	// does not pay (and time out on) the cold worker start.
-	stylesheetPreflightRunner.warmup();
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
