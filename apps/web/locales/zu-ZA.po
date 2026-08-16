@@ -521,16 +521,11 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr ""
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
-msgstr ""
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
 msgstr ""
 
 #: src/libs/locale.ts
@@ -1756,7 +1751,6 @@ msgstr ""
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr ""
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr ""
@@ -1992,6 +1986,10 @@ msgstr ""
 #: src/dialogs/auth/enable-two-factor.tsx
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
 msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
@@ -3411,7 +3409,11 @@ msgid "Preview"
 msgstr ""
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
 msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3536,10 @@ msgid "Ready to activate"
 msgstr ""
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr ""
 
@@ -3652,10 +3658,6 @@ msgstr ""
 #. Primary action button label on reset-password form
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
-msgstr ""
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
 msgstr ""
 
 #: src/features/auth/pages/reset-password.tsx
@@ -4186,6 +4188,10 @@ msgstr ""
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr ""
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr ""
@@ -4325,7 +4331,7 @@ msgid "Stylesheet editor"
 msgstr ""
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
+msgid "Stylesheet has fatal errors"
 msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
@@ -5086,8 +5092,20 @@ msgstr ""
 msgid "Uzbek"
 msgstr ""
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
 msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx

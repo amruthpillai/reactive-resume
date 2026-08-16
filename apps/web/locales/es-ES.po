@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Candidaturas enviadas por semana (últimas 8 semanas)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Enviada"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Postulado el"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Aplicado con advertencias"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Introduce tu contraseña para confirmar la configuración de la autentic
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Introduce tu contraseña para deshabilitar la autenticación de doble factor. Tu cuenta será menos segura sin 2FA habilitada."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Error"
@@ -1998,6 +1992,10 @@ msgstr "No se ha podido verificar su código de copia de seguridad. Por favor, i
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "No se ha podido verificar su código. Por favor, inténtelo de nuevo."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Avance"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "La vista previa y la exportación utilizan la última versión válida."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Listo para activar"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Listo para activarse con advertencias"
 
@@ -3658,10 +3664,6 @@ msgstr "Restablecer"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Restablecer contraseña"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Restablecer a la hoja de estilos aplicada"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Algunos sistemas de solicitud requieren uno antes de poder enviarlo."
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Algunos analizadores manejan mal las imágenes y en algunas regiones no se recomiendan las fotografías."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Algo salió mal"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Editor de hojas de estilo"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "La hoja de estilos tiene errores."
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Usuarios"
 msgid "Uzbek"
 msgstr "Uzbeko"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Las URL válidas deben comenzar con http:// o https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Alejar"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulú"
-

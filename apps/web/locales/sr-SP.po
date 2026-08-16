@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Пријаве послате недељно (последњих 8 недеља)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Пријављено"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Примењено на"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Примењено са упозорењима"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Унесите своју лозинку да потврдите под�
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Унесите своју лозинку да бисте онемогућили двофакторску аутентификацију. Ваш налог ће бити мање безбедан без омогућеног 2FA."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Грешка"
@@ -1998,6 +1992,10 @@ msgstr "Није успело да се потврди ваш резервни �
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Није успело да се потврди ваш код. Молимо покушајте поново."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Преглед"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Преглед и извоз користе последњу важећу верзију."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Спремно за активирање"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Спремно за активирање са упозорењима"
 
@@ -3658,10 +3664,6 @@ msgstr "Ресетуј"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Ресетуј лозинку"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Врати на примењени стилски лист"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Неки системи апликација захтевају једа
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Неки парсери погрешно рукују сликама, а фотографије су обесхрабрене у неким регионима."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Нешто је пошло наопако"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Уређивач стилских листова"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Стилски лист садржи грешке"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Корисници"
 msgid "Uzbek"
 msgstr "Узбечки"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Важећи URL-ови морају да почињу са http:// или https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Умањи"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Зулу"
-

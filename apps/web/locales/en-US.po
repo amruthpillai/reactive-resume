@@ -521,17 +521,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Applications sent per week (last 8 weeks)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Applied"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Applied on"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Applied with warnings"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1756,7 +1751,6 @@ msgstr "Enter your password to confirm setting up two-factor authentication. Whe
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Error"
@@ -1993,6 +1987,10 @@ msgstr "Failed to verify your backup code. Please try again."
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Failed to verify your code. Please try again."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr "Fatal error"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3411,8 +3409,12 @@ msgid "Preview"
 msgstr "Preview"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Preview and export use the last valid version."
+msgid "Preview and export fall back to base styles."
+msgstr "Preview and export fall back to base styles."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr "Preview and export keep valid styles and ignore invalid styles."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3534,6 +3536,10 @@ msgid "Ready to activate"
 msgstr "Ready to activate"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr "Ready to activate with errors"
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Ready to activate with warnings"
 
@@ -3653,10 +3659,6 @@ msgstr "Reset"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Reset Password"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Reset to applied stylesheet"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4186,6 +4188,10 @@ msgstr "Some application systems require one before you can submit."
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Some parsers mishandle images, and photos are discouraged in some regions."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr "Some styles were ignored"
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Something went wrong"
@@ -4325,8 +4331,8 @@ msgid "Stylesheet editor"
 msgstr "Stylesheet editor"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Stylesheet has errors"
+msgid "Stylesheet has fatal errors"
+msgstr "Stylesheet has fatal errors"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5086,9 +5092,21 @@ msgstr "Users"
 msgid "Uzbek"
 msgstr "Uzbek"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr "Valid"
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Valid URLs must start with http:// or https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr "Valid with errors"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr "Valid with warnings"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"

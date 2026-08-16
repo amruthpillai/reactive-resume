@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Lamaran dikirim per minggu (8 minggu terakhir)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Dilamar"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Dilamar pada"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Diterapkan dengan peringatan"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Masukkan kata sandi Anda untuk mengonfirmasi penyiapan autentikasi dua f
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Masukkan kata sandi Anda untuk menonaktifkan autentikasi dua faktor. Akun Anda akan menjadi kurang aman tanpa 2FA diaktifkan."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Kesalahan"
@@ -1998,6 +1992,10 @@ msgstr "Gagal memverifikasi kode cadangan Anda. Silakan coba lagi."
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Gagal memverifikasi kode Anda. Silakan coba lagi."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Pratinjau"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Pratinjau dan ekspor menggunakan versi valid terakhir."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Siap diaktifkan"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Siap diaktifkan dengan peringatan"
 
@@ -3658,10 +3664,6 @@ msgstr "Atur Ulang"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Atur Ulang Kata Sandi"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Atur ulang ke stylesheet yang diterapkan"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Beberapa sistem lamaran memerlukannya sebelum Anda dapat mengirimkannya.
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Beberapa parser salah menangani gambar, dan foto tidak disarankan di beberapa wilayah."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Terjadi kesalahan."
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Editor lembar gaya"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Stylesheet memiliki kesalahan"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Pengguna"
 msgid "Uzbek"
 msgstr "Uzbek"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "URL yang valid harus dimulai dengan http:// atau https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Perkecil"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

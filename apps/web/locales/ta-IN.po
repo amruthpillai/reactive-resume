@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "வாரத்திற்கு அனுப்பப்பட்ட விண்ணப்பங்கள் (கடைசி 8 வாரங்கள்)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "விண்ணப்பிக்கப்பட்டது"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "அன்று விண்ணப்பித்தது"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "எச்சரிக்கைகளுடன் கூடிய அறிவு"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "இரண்டு நிலை அங்கீகாரத்தை அ
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "இரண்டு நிலை அங்கீகாரத்தை முடக்க உங்கள் கடவுச்சொல்லை உள்ளிடவும். 2FA இயங்காவிட்டால் உங்கள் கணக்கு குறைந்த பாதுகாப்புடன் இருக்கும்."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "பிழை"
@@ -1998,6 +1992,10 @@ msgstr "உங்கள் காப்புக் குறியீட்ட�
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "உங்கள் குறியீட்டைச் சரிபார்க்கத் தவறியது. மீண்டும் முயற்சிக்கவும்."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "முன்னோட்டம்"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "முன்னோட்டம் மற்றும் ஏற்றுமதிக்கு, கடைசியாகச் செல்லுபடியாகும் பதிப்பைப் பயன்படுத்தவும்."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "செயல்படுத்தத் தயார்"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "எச்சரிக்கைகளுடன் செயல்படுத்தத் தயார்"
 
@@ -3658,10 +3664,6 @@ msgstr "மீட்டமை"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "கடவுச்சொல்லை மீட்டமைக்கவும்"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "பயன்படுத்தப்பட்ட பாணித் தாளுக்கு மீட்டமைக்கவும்"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "நீங்கள் சமர்ப்பிக்கும் மு�
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "சில பாகுபடுத்துபவர்கள் படங்களை தவறாகக் கையாளுகின்றனர், மேலும் சில பகுதிகளில் புகைப்படங்கள் ஊக்கமளிக்கவில்லை."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "ஏதோ தவறு நடந்துவிட்டது"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "ஸ்டைல்ஷீட் எடிட்டர்"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "ஸ்டைல்ஷீட்டில் பிழைகள் உள்ளன"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "பயனர்கள்"
 msgid "Uzbek"
 msgstr "உஸ்பெக்"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "சரியான URL-கள் http:// அல்லது https:// கொண்டு தொடங்க வேண்டும்."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "சிறிதாக்கு"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ஜூலு"
-

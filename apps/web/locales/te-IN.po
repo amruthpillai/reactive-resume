@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "వారానికి పంపిన దరఖాస్తులు (చివరి 8 వారాలు)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "దరఖాస్తు చేశారు"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "దరఖాస్తు చేసిన తేదీ"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "హెచ్చరికలతో వర్తింపజేయబడింది"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "రెండు దశల ధృవీకరణ ఏర్పాటున
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "రెండు దశల ధృవీకరణను నిలిపివేయడానికి మీ పాస్‌వర్డ్‌ని నమోదు చేయండి. 2FA ప్రారంభించబడకుండా ఉంటే మీ ఖాతా తక్కువ భద్రతగా ఉంటుంది."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "లోపం"
@@ -1998,6 +1992,10 @@ msgstr "మీ బ్యాకప్ కోడ్‌ను ధృవీకరి
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "మీ కోడ్‌ను ధృవీకరించడంలో విఫలమయ్యాము. దయచేసి మళ్ళీ ప్రయత్నించండి."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "ప్రివ్యూ"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "ప్రివ్యూ మరియు ఎక్స్‌పోర్ట్ చివరి చెల్లుబాటు అయ్యే వెర్షన్‌ను ఉపయోగిస్తాయి."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "యాక్టివేట్ చేయడానికి సిద్ధంగా ఉంది"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "హెచ్చరికలతో యాక్టివేట్ చేయడానికి సిద్ధంగా ఉంది"
 
@@ -3658,10 +3664,6 @@ msgstr "రీసెట్ చేయండి"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "పాస్‌వర్డ్ రీసెట్ చేయండి"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "వర్తింపజేసిన స్టైల్‌షీట్‌కు రీసెట్ చేయండి"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "మీరు సమర్పించే ముందు కొన్న
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "కొంతమంది పార్సర్‌లు చిత్రాలను తప్పుగా నిర్వహిస్తారు మరియు కొన్ని ప్రాంతాలలో ఫోటోలు నిరుత్సాహపరుస్తాయి."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "ఏదో తప్పు జరిగింది"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "స్టైల్‌షీట్ ఎడిటర్"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "స్టైల్‌షీట్‌లో లోపాలు ఉన్నాయి"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "వినియోగదారులు"
 msgid "Uzbek"
 msgstr "ఉజ్‌బెక్"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "చెల్లే URLలు తప్పనిసరిగా http:// లేదా https://తో ప్రారంభించాలి."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "జూమ్ అవుట్ చేయండి"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "జులు"
-

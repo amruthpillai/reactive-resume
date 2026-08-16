@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Per savaitę išsiųstos paraiškos (paskutinės 8 savaitės)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Pateikta"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Pateikta"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Taikoma su įspėjimais"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Įveskite slaptažodį, kad patvirtintumėte dviejų veiksnių tapatumo 
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Įveskite slaptažodį, kad išjungtumėte dviejų veiksnių tapatumo patvirtinimą. Be įjungto 2FA jūsų paskyra bus mažiau saugi."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Klaida"
@@ -1998,6 +1992,10 @@ msgstr "Nepavyko patikrinti atsarginės kopijos kodo. Bandykite dar kartą."
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Nepavyko patikrinti jūsų kodo. Bandykite dar kartą."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Peržiūra"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Peržiūrai ir eksportui naudokite paskutinę galiojančią versiją."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Paruošta aktyvuoti"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Paruošta aktyvuoti su įspėjimais"
 
@@ -3658,10 +3664,6 @@ msgstr "Nustatyti iš naujo"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Atkurti slaptažodį"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Atkurti pritaikytą stiliaus lapą"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Kai kurioms paraiškų teikimo sistemoms reikia, kad galėtumėte pateik
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Kai kurie analizatoriai netinkamai tvarko vaizdus, ​​o kai kuriuose regionuose nuotraukos nerekomenduojamos."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Kažkas nutiko ne taip"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Stilių lapų redaktorius"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Stiliaus lape yra klaidų"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Vartotojai"
 msgid "Uzbek"
 msgstr "Uzbekų"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Teisingi URL turi prasidėti http:// arba https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Tolinti"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
-

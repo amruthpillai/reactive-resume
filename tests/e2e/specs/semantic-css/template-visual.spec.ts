@@ -94,7 +94,7 @@ test("@semantic-css renders deterministic first-page previews for all templates"
 		basicsName: "Semantic CSS Acceptance",
 		experienceItemId: "experience-item-2",
 		hidePicture: true,
-		stylesheet: { mode: "semantic", source: portable, applied: portable },
+		stylesheet: { mode: "semantic", source: portable },
 	});
 
 	for (const template of templates) {

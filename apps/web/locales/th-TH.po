@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "ใบสมัครที่ส่งต่อสัปดาห์ (8 สัปดาห์ล่าสุด)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "สมัครแล้ว"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "สมัครเมื่อ"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "ใช้งานโดยมีคำเตือน"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "กรอกรหัสผ่านของคุณเพื่อย
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "กรอกรหัสผ่านของคุณเพื่อปิดการใช้งานการยืนยันตัวตนสองขั้นตอน บัญชีของคุณจะไม่ปลอดภัยเท่าเดิมหากไม่ได้เปิดใช้งาน 2FA"
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "ข้อผิดพลาด"
@@ -1998,6 +1992,10 @@ msgstr "ไม่สามารถยืนยันรหัสสำรอง
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "ไม่สามารถยืนยันรหัสของคุณได้ กรุณาลองอีกครั้ง"
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "ตัวอย่าง"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "ให้ใช้เวอร์ชันล่าสุดที่ถูกต้องในการแสดงตัวอย่างและการส่งออก"
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "พร้อมใช้งานแล้ว"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "พร้อมใช้งานพร้อมคำเตือน"
 
@@ -3658,10 +3664,6 @@ msgstr "รีเซ็ต"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "รีเซ็ตรหัสผ่าน"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "รีเซ็ตเป็นสไตล์ชีตที่ใช้งานอยู่"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "ระบบการสมัครบางระบบจำเป็
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "โปรแกรมแยกวิเคราะห์บางคนจัดการรูปภาพในทางที่ผิด และรูปภาพไม่ได้รับการสนับสนุนในบางภูมิภาค"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "เกิดข้อผิดพลาดบางอย่าง"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "ตัวแก้ไขสไตล์ชีต"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "ไฟล์สไตล์ชีตมีข้อผิดพลาด"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "ผู้ใช้"
 msgid "Uzbek"
 msgstr "อุซเบก"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "URL ที่ถูกต้องต้องขึ้นต้นด้วย http:// หรือ https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "ซูมออก"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ซูลู"
-

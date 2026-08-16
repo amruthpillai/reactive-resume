@@ -108,21 +108,6 @@ describe("createResumePdfFile", () => {
 		);
 	});
 
-	it("renders while returning recoverable semantic diagnostics", async () => {
-		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
-		data.metadata.stylesheet = { mode: "semantic", source: invalid };
-		const { createResumePdfFileResult } = await import("./server");
-
-		const result = await createResumePdfFileResult({ data, filename: "resume.pdf" });
-
-		expect(result).toMatchObject({
-			ok: true,
-			diagnostics: [expect.objectContaining({ severity: "error" })],
-		});
-		expect(rendererMock.renderToBuffer).toHaveBeenCalledTimes(1);
-	});
-
 	it("renders with base styles when the source is fatal", async () => {
 		const data = structuredClone(sampleResumeData);
 		data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 2, text: "@version 2;" } };

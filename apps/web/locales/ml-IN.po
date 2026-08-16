@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "ആഴ്ചയിൽ അയച്ച അപേക്ഷകൾ (കഴിഞ്ഞ 8 ആഴ്ച)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "അപേക്ഷിച്ചു"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "പ്രയോഗിച്ചു"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "മുന്നറിയിപ്പുകൾ ഉപയോഗിച്ച് പ്രയോഗിച്ചു"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "ടു‑ഫാക്ടർ ഓത്‌ന്റിക്കേഷൻ �
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "ടു‑ഫാക്ടർ ഓത്‌ന്റിക്കേഷൻ അപ്രാപ്തമാക്കാൻ നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക. 2FA പ്രാപ്തമാക്കിയിട്ടില്ലാത്തതിനാൽ നിങ്ങളുടെ അക്കൗണ്ട് കുറച്ച് കുറവായി സുരക്ഷിതമായിവരും."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "പിശക്"
@@ -1998,6 +1992,10 @@ msgstr "നിങ്ങളുടെ ബാക്കപ്പ് കോഡ് പ
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "നിങ്ങളുടെ കോഡ് പരിശോധിക്കുന്നതിൽ പരാജയപ്പെട്ടു. ദയവായി വീണ്ടും ശ്രമിക്കുക."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "പ്രിവ്യൂ"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "അവസാനത്തെ സാധുവായ പതിപ്പ് ഉപയോഗിച്ച് പ്രിവ്യൂ ചെയ്ത് എക്സ്പോർട്ട് ചെയ്യുക."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "സജീവമാക്കാൻ തയ്യാറാണ്"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "മുന്നറിയിപ്പുകൾ നൽകി സജീവമാക്കാൻ തയ്യാറാണ്"
 
@@ -3658,10 +3664,6 @@ msgstr "റീസെറ്റ് ചെയ്യുക"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "പാസ്‌വേഡ് റീസെറ്റ് ചെയ്യുക"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "പ്രയോഗിച്ച സ്റ്റൈൽഷീറ്റിലേക്ക് പുനഃസജ്ജമാക്കുക"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "നിങ്ങൾ സമർപ്പിക്കുന്നതിന�
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "ചില പാഴ്‌സർമാർ ചിത്രങ്ങൾ തെറ്റായി കൈകാര്യം ചെയ്യുന്നു, ചില പ്രദേശങ്ങളിൽ ഫോട്ടോകൾ നിരുത്സാഹപ്പെടുത്തുന്നു."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "എന്തോ കുഴപ്പം സംഭവിച്ചു."
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "സ്റ്റൈൽഷീറ്റ് എഡിറ്റർ"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "സ്റ്റൈൽഷീറ്റിൽ പിശകുകൾ ഉണ്ട്"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "യൂസർമാർ"
 msgid "Uzbek"
 msgstr "ഉസ്‌ബെക്ക്"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "സാധുവായ URL‑കൾ http:// അല്ലെങ്കിൽ https:// കൊണ്ട് ആരംഭിക്കണം."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "സൂം ഔട്ട് ചെയ്യുക"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "സൂളു"
-

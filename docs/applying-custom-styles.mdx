@@ -50,12 +50,12 @@ every stylesheet.
   <Step title="Paste one focused rule">
     Add the stylesheet to the editor. Start with one visual change so it is easy to review in the preview.
   </Step>
-  <Step title="Wait for Applied">
-    Reactive Resume checks the source and the PDF result. When the status changes to **Applied**, compare the preview
-    and export if you are ready to share the resume.
+  <Step title="Wait for Valid">
+    Reactive Resume checks the source in the browser. When the status changes to **Valid**, compare the preview and
+    export if you are ready to share the resume.
   </Step>
   <Step title="Build on the working rule">
-    Add one related change at a time. The editor keeps your draft, undo history, and last valid stylesheet separately.
+    Add one related change at a time. Your changes use the normal resume autosave and undo history.
   </Step>
 </Steps>
 
@@ -300,19 +300,19 @@ browser viewport.
 Supported media features are `width`, `min-width`, `max-width`, `height`, `min-height`, `max-height`, and
 `orientation: portrait` or `orientation: landscape`.
 
-## Apply, diagnose, and recover safely
+## Diagnose and recover safely
 
-The editor saves your draft even when it has an error. The preview and PDF export continue using the last stylesheet
-that compiled and passed PDF checks, so a mistake does not replace a working result.
+The editor saves the current source even when it has an error. A recoverable error ignores only the invalid declaration,
+value, selector, or rule; valid parts still appear in preview and PDF export. A fatal version or resource-limit error
+ignores the whole stylesheet and renders the resume with its base styles until you fix the source.
 
 If a rule does not work:
 
 1. Read the status below the editor. Errors include a line and column number when available.
 2. Check the selector's spelling, attribute value, placement, and template guard. A **selector matches nothing**
    warning usually means the resume does not contain that semantic node.
-3. Simplify the rule to one selector and one declaration, then wait for **Applied** before adding more.
-4. Use **Reset to applied stylesheet** to discard the current draft, or use the stylesheet undo and redo controls to
-   restore an earlier source and applied pair.
+3. Simplify the rule to one selector and one declaration, then wait for **Valid** before adding more.
+4. Use the stylesheet undo and redo controls to restore an earlier source.
 
 Select **Open focus mode** when you need a taller editor. On mobile, it opens a full-width sheet; switch to
 **Preview** to inspect the result.
@@ -331,7 +331,7 @@ starting point. Exact IDs and template parts are intentionally specific to a res
 2. Open **Design -> Custom Styles** in the destination resume.
 3. Paste the stylesheet and review any warnings.
 4. Replace or remove exact IDs and template-part rules that do not apply.
-5. Wait for **Applied**, then compare the preview and exported PDF.
+5. Wait for **Valid**, then compare the preview and exported PDF.
 
 Semantic CSS does not support classes, pseudo-elements, CSS Grid, arbitrary at-rules, `@import`, `@font-face`, `url()`,
 browser APIs, animations, filters, gradients, general box shadows, or external assets. Use the normal builder settings

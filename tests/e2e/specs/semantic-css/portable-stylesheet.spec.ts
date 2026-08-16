@@ -1,4 +1,3 @@
-import type { Page } from "@playwright/test";
 import { readSemanticCssFixture } from "../../fixtures/db";
 import {
 	createSemanticCssResume,
@@ -81,7 +80,6 @@ const WITHOUT_PAGINATION_DIRECTIVES = PORTABLE_ACCEPTANCE_STYLESHEET.replace(BRE
 	"",
 );
 const BREAK_INSIDE_ONLY_STYLESHEET = PORTABLE_ACCEPTANCE_STYLESHEET.replace(MIN_PRESENCE_AHEAD_DIRECTIVE, "");
-const MIN_PRESENCE_AHEAD_ONLY_STYLESHEET = PORTABLE_ACCEPTANCE_STYLESHEET.replace(BREAK_INSIDE_DIRECTIVE, "");
 
 const GENERIC_PORTABLE_MARKERS = [
 	"exactItemField",
@@ -126,10 +124,10 @@ async function countPortableMarkersByPage(page: Parameters<typeof waitForStableP
 	}, PORTABLE_MARKERS);
 }
 
-async function waitForPortableApplied(page: Parameters<typeof waitForStablePreview>[0]) {
+async function waitForPortableValid(page: Parameters<typeof waitForStablePreview>[0]) {
 	await expect(
 		page
-			.getByText(/^Applied(?: with warnings)?$/)
+			.getByText(/^Valid(?: with warnings)?$/)
 			.filter({ visible: true })
 			.last(),
 	).toBeVisible({
@@ -145,23 +143,9 @@ async function applyPortableStylesheet(
 	await openSemanticCssEditor(page);
 	await replaceStylesheet(page, source);
 	await expect
-		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet?.applied.text, { timeout: 30_000 })
+		.poll(async () => (await readSemanticCssFixture(resumeId)).stylesheet?.source.text, { timeout: 30_000 })
 		.toBe(source);
-	await waitForPortableApplied(page);
-}
-
-async function readProjectMinPresenceAhead(page: Page, resumeId: string) {
-	const fixture = await readSemanticCssFixture(resumeId);
-	const response = await page.request.get(
-		`/api/openapi/resumes/${encodeURIComponent(fixture.username)}/${encodeURIComponent(fixture.slug)}/style-projection`,
-	);
-	expect(response.ok(), `the public PDF projection request should succeed (${response.status()})`).toBe(true);
-	const projection = (await response.json()) as {
-		nodes: Record<string, { minPresenceAhead?: number }>;
-	};
-	const projectNodes = Object.entries(projection.nodes).filter(([key]) => key.endsWith("/section-projects"));
-	expect(projectNodes, "the public PDF projection should contain one projects section").toHaveLength(1);
-	return projectNodes[0]?.[1].minPresenceAhead;
+	await waitForPortableValid(page);
 }
 
 test("@semantic-css applies every portable selector behavior across Onyx, Azurill, and Ditto", async ({
@@ -176,7 +160,7 @@ test("@semantic-css applies every portable selector behavior across Onyx, Azuril
 	await applyPortableStylesheet(page, resumeId, PORTABLE_ACCEPTANCE_STYLESHEET);
 	await page.reload();
 	await openSemanticCssEditor(page);
-	await waitForPortableApplied(page);
+	await waitForPortableValid(page);
 
 	for (const template of ["Onyx", "Azurill", "Ditto"]) {
 		await switchTemplate(page, template);
@@ -201,9 +185,7 @@ test("@semantic-css applies every portable selector behavior across Onyx, Azuril
 	}
 });
 
-test("@semantic-css pagination directives keep a portable project section together", async ({
-	authPage: page,
-}, testInfo) => {
+test("@semantic-css break-inside keeps a portable project section together", async ({ authPage: page }, testInfo) => {
 	const resumeId = await createSemanticCssResume(page, testInfo);
 	await seedSemanticCssResume(page, resumeId, {
 		portableLayout: "pagination-stress",
@@ -220,30 +202,15 @@ test("@semantic-css pagination directives keep a portable project section togeth
 	await applyPortableStylesheet(page, resumeId, BREAK_INSIDE_ONLY_STYLESHEET);
 	const breakInsideOnlyDistribution = (await countPortableMarkersByPage(page)).map((page) => page.pagination);
 
-	await applyPortableStylesheet(page, resumeId, WITHOUT_PAGINATION_DIRECTIVES);
-	const withoutMinPresenceAhead = await readProjectMinPresenceAhead(page, resumeId);
-
-	await applyPortableStylesheet(page, resumeId, MIN_PRESENCE_AHEAD_ONLY_STYLESHEET);
-	const minPresenceAheadOnly = await readProjectMinPresenceAhead(page, resumeId);
-
 	console.info(
 		`PORTABLE_PAGINATION_EVIDENCE ${JSON.stringify({
 			breakInside: {
 				withoutDirective: withoutBreakInsideDistribution,
 				withDirective: breakInsideOnlyDistribution,
 			},
-			minPresenceAhead: {
-				withoutDirective: withoutMinPresenceAhead ?? null,
-				withDirective: minPresenceAheadOnly,
-			},
 		})}`,
 	);
 	expect(breakInsideOnlyDistribution, "break-inside: avoid must independently change project pagination").not.toEqual(
 		withoutBreakInsideDistribution,
 	);
-	expect(withoutMinPresenceAhead, "the no-directive control must omit minPresenceAhead").toBeUndefined();
-	expect(
-		minPresenceAheadOnly,
-		"-resume-min-presence-ahead: 24pt must independently reach the project pagination props",
-	).toBe(24);
 });

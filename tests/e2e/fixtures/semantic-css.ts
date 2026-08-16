@@ -12,7 +12,6 @@ const EMPTY_SEMANTIC_STYLESHEET = {
 type SemanticStylesheetSeed = {
 	mode: "semantic";
 	source: { languageVersion: number; text: string };
-	applied: { languageVersion: number; text: string };
 };
 
 export const PORTABLE_STYLESHEET = `@version 1;
@@ -85,7 +84,6 @@ export async function seedSemanticCssResume(
 		stylesheet = {
 			mode: "semantic",
 			source: EMPTY_SEMANTIC_STYLESHEET,
-			applied: EMPTY_SEMANTIC_STYLESHEET,
 		},
 	}: {
 		basicsName?: string;
@@ -104,7 +102,7 @@ export async function seedSemanticCssResume(
 	});
 	await page.reload();
 	await openSemanticCssEditor(page);
-	await waitForStylesheetStatus(page, "Applied");
+	await waitForStylesheetStatus(page, "Valid");
 }
 
 export async function openSemanticCssEditor(page: Page) {
@@ -135,7 +133,7 @@ export async function activateStylesheet(page: Page) {
 	const button = page.getByRole("button", { name: "Activate Semantic CSS" });
 	await expect(button).toBeEnabled({ timeout: 30_000 });
 	await button.click();
-	await waitForStylesheetStatus(page, "Applied");
+	await waitForStylesheetStatus(page, "Valid");
 }
 
 async function firstPreviewPage(page: Page, selector = ACTIVE_PREVIEW_PAGE_SELECTOR): Promise<Locator> {

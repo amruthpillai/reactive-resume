@@ -9,7 +9,7 @@ test("@semantic-css preserves a persisted stylesheet through an old-client resum
 	await createSampleResumeFromDashboard(page, testInfo);
 	const resumeId = resumeIdFromPage(page);
 	const source = { languageVersion: 1, text: "@version 1;\nname { color: #dc2626; }\n" };
-	await updateSemanticCssFixture(resumeId, { stylesheet: { mode: "semantic", source, applied: source } });
+	await updateSemanticCssFixture(resumeId, { stylesheet: { mode: "semantic", source } });
 	await page.reload();
 
 	await openSidebarSection(page, "Basics");
@@ -21,7 +21,6 @@ test("@semantic-css preserves a persisted stylesheet through an old-client resum
 			stylesheet: {
 				mode: "semantic",
 				source,
-				applied: source,
 			},
 		});
 });

@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "주당 보낸 지원서 (최근 8주)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "지원함"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "지원일"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "경고와 함께 적용됨"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "2단계 인증을 설정하려면 비밀번호를 입력해 확인하세
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "2단계 인증을 비활성화하려면 비밀번호를 입력하세요. 2단계 인증을 사용하지 않으면 계정 보안이 낮아집니다."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "오류"
@@ -1998,6 +1992,10 @@ msgstr "백업 코드를 인증하지 못했습니다. 다시 시도해 주세�
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "코드를 인증하지 못했습니다. 다시 시도해 주세요."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "시사"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "미리보기 및 내보내기 시에는 마지막으로 유효한 버전을 사용합니다."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "활성화 준비 완료"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "경고 메시지와 함께 활성화할 준비가 되었습니다."
 
@@ -3658,10 +3664,6 @@ msgstr "초기화"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "비밀번호 재설정"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "적용된 스타일시트로 재설정"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "일부 지원 시스템에서는 제출하기 전에 하나의 정보가
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "일부 파서는 이미지를 잘못 처리하므로 일부 지역에서는 사진을 사용하지 않는 것이 좋습니다."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "뭔가 잘못됐어요"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "스타일시트 편집기"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "스타일시트에 오류가 있습니다"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "사용자 수"
 msgid "Uzbek"
 msgstr "우즈베크어"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "유효한 URL은 http:// 또는 https://로 시작해야 합니다."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "축소"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "줄루어"
-

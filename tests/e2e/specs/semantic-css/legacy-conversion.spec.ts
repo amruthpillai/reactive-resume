@@ -7,13 +7,6 @@ test.setTimeout(120_000);
 test("@semantic-css converts legacy rules into an inactive draft before activation", async ({
 	authPage: page,
 }, testInfo) => {
-	const preflightWorkerErrors: string[] = [];
-	page.on("console", (message) => {
-		if (message.location().url.includes("preflight.worker") && message.text().includes("Buffer is not defined")) {
-			preflightWorkerErrors.push(message.text());
-		}
-	});
-
 	const resumeId = await createSemanticCssResume(page, testInfo);
 	await updateSemanticCssFixture(resumeId, { legacyStyleRule: true });
 	await page.reload();
@@ -28,8 +21,7 @@ test("@semantic-css converts legacy rules into an inactive draft before activati
 	await expect(page.getByText(/^Ready to activate(?: with warnings)?$/)).toBeVisible({ timeout: 30_000 });
 
 	await activateStylesheet(page);
-	expect(preflightWorkerErrors).toEqual([]);
 	await page.reload();
 	await expect(page.getByText("Converted stylesheet draft", { exact: true })).toHaveCount(0);
-	await expect(page.getByText("Applied", { exact: true }).filter({ visible: true })).toBeVisible();
+	await expect(page.getByText("Valid", { exact: true }).filter({ visible: true })).toBeVisible();
 });

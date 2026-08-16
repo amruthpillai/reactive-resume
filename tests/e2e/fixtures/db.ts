@@ -30,14 +30,12 @@ export async function deleteE2EUser(account: E2EAccount) {
 type SemanticStylesheetSeed = {
 	mode: "legacy" | "semantic";
 	source: { languageVersion: number; text: string };
-	applied: { languageVersion: number; text: string };
 };
 
 export async function updateSemanticCssFixture(
 	resumeId: string,
 	update: {
 		stylesheet?: SemanticStylesheetSeed;
-		bumpRevision?: boolean;
 		portableLayout?: "balanced" | "pagination-stress";
 		experienceItemId?: string;
 		legacyStyleRule?: boolean;
@@ -136,23 +134,9 @@ export async function updateSemanticCssFixture(
 		await pool.query(
 			`update "resume"
 			 set data = $2,
-			     stylesheet_revision = stylesheet_revision + $3,
-			     render_data_version = render_data_version + $4,
 			     updated_at = now()
 			 where id = $1`,
-			[
-				resumeId,
-				data,
-				update.bumpRevision || update.stylesheet || update.legacyStyleRule ? 1 : 0,
-				update.stylesheet ||
-				update.portableLayout ||
-				update.experienceItemId ||
-				update.legacyStyleRule ||
-				update.hidePicture ||
-				update.basicsName
-					? 1
-					: 0,
-			],
+			[resumeId, data],
 		);
 	} finally {
 		await pool.end();
@@ -168,24 +152,12 @@ export async function readSemanticCssFixture(resumeId: string) {
 				basics?: { headline?: string };
 				metadata?: { stylesheet?: SemanticStylesheetSeed };
 			};
-			slug: string;
-			stylesheet_revision: number;
-			username: string;
-		}>(
-			`select r.data, r.slug, r.stylesheet_revision, u.username
-			 from "resume" r
-			 inner join "user" u on u.id = r.user_id
-			 where r.id = $1`,
-			[resumeId],
-		);
+		}>(`select data from "resume" where id = $1`, [resumeId]);
 		const row = result.rows[0];
 		if (!row) throw new Error(`Resume ${resumeId} was not found.`);
 		return {
 			stylesheet: row.data.metadata?.stylesheet,
 			headline: row.data.basics?.headline,
-			revision: row.stylesheet_revision,
-			slug: row.slug,
-			username: row.username,
 		};
 	} finally {
 		await pool.end();

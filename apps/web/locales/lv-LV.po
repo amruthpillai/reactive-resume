@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Nedēļā nosūtītie pieteikumi (pēdējās 8 nedēļas)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Pieteikts"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Pieteikts"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Pielietots ar brīdinājumiem"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Ievadiet savu paroli, lai apstiprinātu divu faktoru autentifikācijas i
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Ievadiet savu paroli, lai deaktivētu divu faktoru autentifikāciju. Bez ieslēgtas 2FA jūsu konts būs mazāk drošs."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Kļūda"
@@ -1998,6 +1992,10 @@ msgstr "Neizdevās pārbaudīt jūsu dublējuma kodu. Lūdzu, mēģiniet vēlrei
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Jūsu kodu neizdevās pārbaudīt. Lūdzu, mēģiniet vēlreiz."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Priekšskatījums"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Priekšskatījumā un eksportā tiek izmantota pēdējā derīgā versija."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Gatavs aktivizēšanai"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Gatavs aktivizēšanai ar brīdinājumiem"
 
@@ -3658,10 +3664,6 @@ msgstr "Atiestatīt"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Atiestatīt paroli"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Atiestatīt uz lietoto stila lapu"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Dažām pieteikumu sistēmām tas ir nepieciešams, lai to varētu iesni
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Daži parsētāji nepareizi apstrādā attēlus, un dažos reģionos fotoattēli nav ieteicami."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Kaut kas nogāja greizi"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Stilu lapu redaktors"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Stilu lapā ir kļūdas"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Lietotāji"
 msgid "Uzbek"
 msgstr "Uzbeku"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Derīgiem URL jāsākas ar http:// vai https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Tālināt"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

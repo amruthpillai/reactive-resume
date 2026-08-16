@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Žiadosti odoslané za týždeň (posledných 8 týždňov)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Odoslané"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Aplikované dňa"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Použité s upozorneniami"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Zadaj svoje heslo na potvrdenie nastavenia dvojfaktorového overenia. Po
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Zadaj svoje heslo na vypnutie dvojfaktorového overenia. Bez zapnutého 2FA bude tvoj účet menej zabezpečený."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Chyba"
@@ -1998,6 +1992,10 @@ msgstr "Nepodarilo sa overiť váš záložný kód. Skúste to prosím znova."
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Nepodarilo sa overiť váš kód. Skúste to prosím znova."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Náhľad"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Pri ukážke a exporte sa použije posledná platná verzia."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Pripravené na aktiváciu"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Pripravené na aktiváciu s upozorneniami"
 
@@ -3658,10 +3664,6 @@ msgstr "Resetovať"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Obnoviť heslo"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Obnoviť na použitý štýlový hárok"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Niektoré aplikačné systémy vyžadujú pred odoslaním žiadosť."
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Niektoré analyzátory nesprávne narábajú s obrázkami a v niektorých regiónoch sa fotografie neodporúčajú."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Niečo sa pokazilo"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Editor štýlov"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Štýlový hárok obsahuje chyby"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Používatelia"
 msgid "Uzbek"
 msgstr "Uzbečtina"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Platné URL adresy musia začínať http:// alebo https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Oddialiť"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

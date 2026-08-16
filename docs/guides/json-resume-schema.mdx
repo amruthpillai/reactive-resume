@@ -3629,30 +3629,11 @@ Below is the complete JSON Schema for Reactive Resume. You can also fetch the la
 								"text"
 							],
 							"additionalProperties": false
-						},
-						"applied": {
-							"type": "object",
-							"properties": {
-								"languageVersion": {
-									"type": "integer",
-									"exclusiveMinimum": 0,
-									"maximum": 9007199254740991
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"required": [
-								"languageVersion",
-								"text"
-							],
-							"additionalProperties": false
 						}
 					},
 					"required": [
 						"mode",
-						"source",
-						"applied"
+						"source"
 					],
 					"additionalProperties": false
 				}

@@ -129,16 +129,14 @@ describe("stylesheet editor status", () => {
 		renderWithI18n(<StylesheetStatus mode="legacy" status="idle" diagnostics={[]} />);
 
 		expect(screen.getByText("Ready to activate")).toBeInTheDocument();
-		expect(screen.queryByText("Applied")).not.toBeInTheDocument();
 	});
 
-	it("labels legacy warnings without claiming they are applied", () => {
+	it("labels a legacy draft with warnings as ready to activate", () => {
 		renderWithI18n(
 			<StylesheetStatus mode="legacy" status="idle" diagnostics={[{ ...recoverableError, severity: "warning" }]} />,
 		);
 
 		expect(screen.getByText("Ready to activate with warnings")).toBeInTheDocument();
-		expect(screen.queryByText("Applied with warnings")).not.toBeInTheDocument();
 	});
 
 	it("disables activation while the converted draft has errors", () => {
@@ -261,7 +259,6 @@ describe("StylesheetEditorShell", () => {
 		await screen.findByText("Valid");
 		expect(screen.queryByRole("button", { name: /activate semantic css/i })).not.toBeInTheDocument();
 		expect(screen.queryByRole("button", { name: /save|apply/i })).not.toBeInTheDocument();
-		expect(screen.queryByRole("button", { name: /reset to applied stylesheet/i })).not.toBeInTheDocument();
 	});
 
 	it("writes semantic edits into the ordinary resume draft immediately", () => {

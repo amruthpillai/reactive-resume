@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Haftalık gönderilen başvurular (son 8 hafta)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Başvuruldu"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Başvuru tarihi"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Uyarılarla birlikte uygulandı."
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "İki faktörlü kimlik doğrulamayı kurmayı onaylamak için şifrenizi
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "İki faktörlü kimlik doğrulamayı devre dışı bırakmak için şifrenizi girin. 2FA etkin olmadığında hesabınız daha az güvenli olur."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Hata"
@@ -1998,6 +1992,10 @@ msgstr "Yedekleme kodunuz doğrulanamadı. Lütfen tekrar deneyin."
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Kodunuz doğrulanamadı. Lütfen tekrar deneyin."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Önizleme"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Önizleme ve dışa aktarma işlemleri için en son geçerli sürüm kullanılır."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Etkinleştirmeye hazır"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Uyarılarla birlikte etkinleştirmeye hazır."
 
@@ -3658,10 +3664,6 @@ msgstr "Sıfırla"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Şifreyi Sıfırla"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Uygulanan stil sayfasına sıfırla"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Bazı başvuru sistemleri, gönderebilmeniz için bir başvuru gerektiri
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Bazı ayrıştırıcılar görüntüleri yanlış kullanıyor ve bazı bölgelerde fotoğraf kullanılması önerilmez."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Bir şeyler ters gitti."
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Stil sayfası düzenleyici"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Stil dosyasında hatalar var."
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Kullanıcılar"
 msgid "Uzbek"
 msgstr "Özbekçe"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Geçerli URL'ler http:// veya https:// ile başlamalıdır."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Uzaklaştır"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

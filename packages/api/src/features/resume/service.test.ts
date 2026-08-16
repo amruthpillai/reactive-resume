@@ -537,20 +537,6 @@ describe("update", () => {
 		);
 	});
 
-	it("does not increment render-data version for notes-only changes", async () => {
-		const serverData: ResumeData = structuredClone(defaultResumeData);
-		const clientData: ResumeData = structuredClone(defaultResumeData);
-		clientData.metadata.notes = "private note";
-		const row = createResumeRow(clientData);
-		const select = createLockedSelectChain([{ data: serverData, isLocked: false, updatedAt: row.updatedAt }]);
-		const update = createUpdateChain([row]);
-		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
-			callback({ select: () => select.chain, update: () => update.chain }),
-		);
-
-		await resumeService.update({ id: "r1", userId: "u1", data: clientData, skipAutoSnapshot: true });
-	});
-
 	it("rejects renderer-unsafe data before updating the JSONB column", async () => {
 		const select = createLockedSelectChain([{ data: defaultResumeData, isLocked: false, updatedAt: new Date() }]);
 		const update = createUpdateChain([createResumeRow(defaultResumeData)]);

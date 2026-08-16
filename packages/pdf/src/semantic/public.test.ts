@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inspectResumePdf } from "@reactive-resume/pdf/semantic";
+import { resolveResumeRuntime } from "@reactive-resume/pdf/semantic";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 
 describe("@reactive-resume/pdf/semantic", () => {
@@ -7,7 +7,7 @@ describe("@reactive-resume/pdf/semantic", () => {
 		const data = structuredClone(sampleResumeData);
 		data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 2, text: "@version 2;" } };
 
-		const inspection = inspectResumePdf({ data });
+		const inspection = resolveResumeRuntime({ data, template: data.metadata.template, mode: "semantic" });
 
 		expect(inspection.diagnostics).toContainEqual(
 			expect.objectContaining({ code: "UNSUPPORTED_VERSION", severity: "error" }),
@@ -25,7 +25,7 @@ describe("@reactive-resume/pdf/semantic", () => {
 			},
 		};
 
-		const inspection = inspectResumePdf({ data });
+		const inspection = resolveResumeRuntime({ data, template: data.metadata.template, mode: "semantic" });
 
 		expect(inspection.presentation["page-1/region-header/header/name"]?.style?.color).toBe("#123456");
 		expect(inspection.diagnostics).toContainEqual(

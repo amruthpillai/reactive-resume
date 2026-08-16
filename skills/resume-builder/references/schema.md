@@ -629,6 +629,3 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `metadata.stylesheet.source` | `object` | yes | — | — |
 | `metadata.stylesheet.source.languageVersion` | `integer` | yes | exclusiveMinimum: 0; maximum: 9007199254740991 | — |
 | `metadata.stylesheet.source.text` | `string` | yes | — | — |
-| `metadata.stylesheet.applied` | `object` | yes | — | — |
-| `metadata.stylesheet.applied.languageVersion` | `integer` | yes | exclusiveMinimum: 0; maximum: 9007199254740991 | — |
-| `metadata.stylesheet.applied.text` | `string` | yes | — | — |

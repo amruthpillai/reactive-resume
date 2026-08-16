@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Đơn ứng tuyển đã gửi mỗi tuần (8 tuần gần nhất)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Đã ứng tuyển"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Đã ứng tuyển vào"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Được áp dụng kèm theo cảnh báo"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Nhập mật khẩu của bạn để xác nhận thiết lập xác th�
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Nhập mật khẩu của bạn để tắt xác thực hai yếu tố. Tài khoản của bạn sẽ kém an toàn hơn nếu không bật 2FA."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Lỗi"
@@ -1998,6 +1992,10 @@ msgstr "Không thể xác minh mã dự phòng của bạn. Vui lòng thử lạ
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Không thể xác minh mã của bạn. Vui lòng thử lại."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Xem trước"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Chức năng xem trước và xuất khẩu sử dụng phiên bản hợp lệ mới nhất."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Sẵn sàng kích hoạt"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Sẵn sàng kích hoạt kèm cảnh báo"
 
@@ -3658,10 +3664,6 @@ msgstr "Thiết lập lại"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Đặt mật khẩu mới"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Đặt lại về kiểu định dạng đã áp dụng"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Một số hệ thống ứng dụng yêu cầu phải có trước khi 
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Một số trình phân tích cú pháp xử lý sai hình ảnh và ảnh không được khuyến khích ở một số vùng."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Đã xảy ra lỗi"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Trình chỉnh sửa bảng định kiểu"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Tệp định kiểu có lỗi"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Người dùng"
 msgid "Uzbek"
 msgstr "Uzbek"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "URL hợp lệ phải bắt đầu với http:// hoặc https://."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Thu nhỏ"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

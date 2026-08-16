@@ -526,17 +526,12 @@ msgid "Applications sent per week (last 8 weeks)"
 msgstr "Haftasiga yuborilgan arizalar (so‘nggi 8 hafta)"
 
 #: src/features/applications/components/table-view.tsx
-#: src/features/resume/stylesheet/status.tsx
 msgid "Applied"
 msgstr "Topshirildi"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Applied on"
 msgstr "Ariza sanasi"
-
-#: src/features/resume/stylesheet/status.tsx
-msgid "Applied with warnings"
-msgstr "Ogohlantirishlar bilan qo'llanildi"
 
 #: src/libs/locale.ts
 msgid "Arabic"
@@ -1761,7 +1756,6 @@ msgstr "Ikki bosqichli autentifikatsiyani yoqishni tasdiqlash uchun parolingizni
 msgid "Enter your password to disable two-factor authentication. Your account will be less secure without 2FA enabled."
 msgstr "Ikki bosqichli autentifikatsiyani o‘chirishni tasdiqlash uchun parolingizni kiriting. 2BShT yoqilmagan holda hisobingiz kamroq xavfsiz boʻladi."
 
-#: src/features/resume/stylesheet/status.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Xato"
@@ -1998,6 +1992,10 @@ msgstr "Zaxira kodingizni tasdiqlash muvaffaqiyatsiz bo'ldi. Iltimos, yana urini
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Failed to verify your code. Please try again."
 msgstr "Kodingizni tekshirish muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ring."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Fatal error"
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -3416,8 +3414,12 @@ msgid "Preview"
 msgstr "Oldindan ko'rish"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Preview and export use the last valid version."
-msgstr "Oldindan ko'rish va eksport qilish uchun oxirgi amaldagi versiyadan foydalaning."
+msgid "Preview and export fall back to base styles."
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Preview and export keep valid styles and ignore invalid styles."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3539,6 +3541,10 @@ msgid "Ready to activate"
 msgstr "Faollashtirishga tayyor"
 
 #: src/features/resume/stylesheet/status.tsx
+msgid "Ready to activate with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Ogohlantirishlar bilan faollashtirishga tayyor"
 
@@ -3658,10 +3664,6 @@ msgstr "Tiklash"
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset Password"
 msgstr "Parolni tiklash"
-
-#: src/features/resume/stylesheet/toolbar.tsx
-msgid "Reset to applied stylesheet"
-msgstr "Qo'llanilgan uslublar jadvaliga qayta o'rnatish"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Reset your password"
@@ -4191,6 +4193,10 @@ msgstr "Ba'zi dastur tizimlari siz yuborishingizdan oldin uni talab qiladi."
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Ba'zi tahlilchilar tasvirlarni noto'g'ri ishlatishadi va ba'zi hududlarda fotosuratlar tavsiya etilmaydi."
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Some styles were ignored"
+msgstr ""
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Nimadir noto'g'ri ketdi"
@@ -4330,8 +4336,8 @@ msgid "Stylesheet editor"
 msgstr "Uslublar jadvali muharriri"
 
 #: src/features/resume/stylesheet/status.tsx
-msgid "Stylesheet has errors"
-msgstr "Uslublar jadvalida xatolar mavjud"
+msgid "Stylesheet has fatal errors"
+msgstr ""
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5091,9 +5097,21 @@ msgstr "Foydalanuvchilar"
 msgid "Uzbek"
 msgstr "O'zbek tili"
 
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid"
+msgstr ""
+
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
 msgstr "Toʻgʻri URL http:// yoki https:// bilan boshlanishi kerak."
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with errors"
+msgstr ""
+
+#: src/features/resume/stylesheet/status.tsx
+msgid "Valid with warnings"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5399,4 +5417,3 @@ msgstr "Kichraytirish"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-
