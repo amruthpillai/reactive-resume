@@ -1,4 +1,4 @@
-import type { Download, Locator, Page, TestInfo } from "@playwright/test";
+import type { Locator, Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
 import { updateSemanticCssFixture } from "./db";
 import { ACTIVE_PREVIEW_PAGE_SELECTOR, activePreviewPageSelector, readPreviewPageDataUrl } from "./preview";
@@ -123,7 +123,7 @@ export function readStylesheetSource(page: Page) {
 	);
 }
 
-export async function waitForStylesheetStatus(page: Page, status: string) {
+async function waitForStylesheetStatus(page: Page, status: string) {
 	await expect(page.getByText(status, { exact: true }).filter({ visible: true }).last()).toBeVisible({
 		timeout: 30_000,
 	});
@@ -177,13 +177,4 @@ export async function switchTemplate(page: Page, template: string) {
 		await page.keyboard.press("Escape");
 	}
 	await waitForStablePreview(page, targetPreview);
-}
-
-export async function downloadPdf(page: Page): Promise<Download> {
-	await page.getByRole("button", { name: "Download options" }).click();
-	const dialog = page.getByRole("dialog", { name: "Download" });
-	await expect(dialog).toBeVisible();
-	const download = page.waitForEvent("download");
-	await dialog.getByRole("button", { name: "Download PDF" }).click();
-	return download;
 }
