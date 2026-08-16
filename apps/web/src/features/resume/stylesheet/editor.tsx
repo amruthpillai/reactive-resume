@@ -28,6 +28,7 @@ import {
 	semanticNodeKeys,
 	shouldShowResumeHeader,
 } from "@reactive-resume/pdf/semantic-tree";
+import { isFatalStylesheetDiagnostic } from "@reactive-resume/resume/stylesheet";
 import { PopoverTrigger } from "@reactive-resume/ui/components/popover";
 import { Sheet, SheetContent, SheetTitle } from "@reactive-resume/ui/components/sheet";
 import { ColorPicker } from "@/components/input/color-picker";
@@ -393,7 +394,7 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 		[data, stylesheet],
 	);
 	const metadata = useMemo(() => (data ? createEditorMetadata(data) : emptyMetadata), [data]);
-	const hasErrors = status === "error" || diagnostics.some(({ severity }) => severity === "error");
+	const hasFatalErrors = status === "error" || diagnostics.some(isFatalStylesheetDiagnostic);
 	const isChecking = status === "compiling";
 	const disabled = readOnly || isLocked;
 
@@ -430,9 +431,7 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 					if (cancelled || result.editGeneration !== compileGenerationRef.current) return;
 					setDiagnostics(result.diagnostics);
 					setColorTokens(result.colorTokens ?? []);
-					setStatus(
-						result.program && !result.diagnostics.some(({ severity }) => severity === "error") ? "idle" : "error",
-					);
+					setStatus(result.program && !result.diagnostics.some(isFatalStylesheetDiagnostic) ? "idle" : "error");
 				})
 				.catch(() => {
 					if (!cancelled && editGeneration === compileGenerationRef.current) setStatus("error");
@@ -455,7 +454,7 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 	};
 
 	const activate = () => {
-		if (disabled || mode === "semantic" || hasErrors || isChecking) return;
+		if (disabled || mode === "semantic" || hasFatalErrors || isChecking) return;
 		updateResumeData((draft) => {
 			draft.metadata.stylesheet = { mode: "semantic", source };
 		});
@@ -503,7 +502,7 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 	const editorChrome = (
 		<div className="space-y-3">
 			{mode === "legacy" && (
-				<LegacyStylesheetBanner disabled={disabled || hasErrors || isChecking} onActivate={activate} />
+				<LegacyStylesheetBanner disabled={disabled || hasFatalErrors || isChecking} onActivate={activate} />
 			)}
 
 			<StylesheetToolbar

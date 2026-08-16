@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic, StyleProgram } from "@reactive-resume/resume/stylesheet";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { EditorView } from "@codemirror/view";
@@ -13,6 +13,10 @@ import { LegacyStylesheetBanner } from "./legacy-banner";
 import { StylesheetStatus } from "./status";
 
 const media = vi.hoisted(() => ({ mobile: false }));
+const compileWorker = vi.hoisted(() => ({
+	program: { languageVersion: 1, rules: [] } as StyleProgram | null,
+	diagnostics: [] as SemanticCssDiagnostic[],
+}));
 const builder = vi.hoisted(() => ({
 	canUndo: false,
 	canRedo: false,
@@ -47,22 +51,34 @@ vi.mock("./worker-client", () => ({
 			type: "compile_result",
 			requestId: editGeneration,
 			editGeneration,
-			program: {},
-			diagnostics: [],
+			program: compileWorker.program,
+			diagnostics: compileWorker.diagnostics,
 			colorTokens: [],
 		})),
 		destroy: vi.fn(),
 	}),
 }));
 
-const error: SemanticCssDiagnostic = {
-	code: "SEMANTIC_CSS_UNKNOWN_PROPERTY",
+const recoverableError: SemanticCssDiagnostic = {
+	code: "INVALID_VALUE",
 	severity: "error",
-	message: "Unknown property",
+	message: "Invalid value",
 	range: {
 		start: { line: 2, column: 3, offset: 17 },
 		end: { line: 2, column: 9, offset: 23 },
 	},
+};
+
+const fatalError: SemanticCssDiagnostic = {
+	...recoverableError,
+	code: "VERSION_MISMATCH",
+	message: "Version mismatch",
+};
+
+const resolutionError: SemanticCssDiagnostic = {
+	...recoverableError,
+	code: "UNRESOLVED_VARIABLE",
+	message: "Undefined variable --missing",
 };
 
 const guideName = /read the applying custom styles guide.*opens in new tab/i;
@@ -87,16 +103,26 @@ beforeEach(() => {
 	builder.canRedo = false;
 	builder.undo.mockReset();
 	builder.redo.mockReset();
+	compileWorker.program = { languageVersion: 1, rules: [] };
+	compileWorker.diagnostics = [];
 });
 
 const renderWithI18n = (element: React.ReactNode) => render(<I18nProvider i18n={i18n}>{element}</I18nProvider>);
 
 describe("stylesheet editor status", () => {
 	it("explains that fatal source falls back to base styles", () => {
-		renderWithI18n(<StylesheetStatus mode="semantic" status="error" diagnostics={[error]} />);
+		renderWithI18n(<StylesheetStatus mode="semantic" status="idle" diagnostics={[fatalError]} />);
 
 		expect(screen.getByText(/preview and export fall back to base styles/i)).toBeInTheDocument();
-		expect(screen.getByText("Unknown property")).toBeInTheDocument();
+		expect(screen.getByText("Version mismatch")).toBeInTheDocument();
+	});
+
+	it("explains that recoverable errors preserve valid styles", () => {
+		renderWithI18n(<StylesheetStatus mode="semantic" status="idle" diagnostics={[recoverableError]} />);
+
+		expect(screen.getByText("Valid with errors")).toBeInTheDocument();
+		expect(screen.getByText(/preview and export keep valid styles/i)).toBeInTheDocument();
+		expect(screen.queryByText(/fall back to base styles/i)).not.toBeInTheDocument();
 	});
 
 	it("labels a valid legacy draft as ready to activate", () => {
@@ -107,7 +133,9 @@ describe("stylesheet editor status", () => {
 	});
 
 	it("labels legacy warnings without claiming they are applied", () => {
-		renderWithI18n(<StylesheetStatus mode="legacy" status="idle" diagnostics={[{ ...error, severity: "warning" }]} />);
+		renderWithI18n(
+			<StylesheetStatus mode="legacy" status="idle" diagnostics={[{ ...recoverableError, severity: "warning" }]} />,
+		);
 
 		expect(screen.getByText("Ready to activate with warnings")).toBeInTheDocument();
 		expect(screen.queryByText("Applied with warnings")).not.toBeInTheDocument();
@@ -155,7 +183,7 @@ describe("StylesheetCodeEditor", () => {
 				<StylesheetCodeEditor
 					value={"@version 1;\nsection { color: red; }\n"}
 					{...props}
-					diagnostics={[error]}
+					diagnostics={[recoverableError]}
 					theme="dark"
 					readOnly
 				/>
@@ -276,6 +304,39 @@ describe("StylesheetEditorShell", () => {
 			mode: "semantic",
 			source: { languageVersion: 1, text: "@version 1;\n" },
 		});
+	});
+
+	it("allows a converted legacy draft with recoverable errors to activate", async () => {
+		compileWorker.diagnostics = [resolutionError];
+
+		render(
+			<I18nProvider i18n={i18n}>
+				<TooltipProvider>
+					<StylesheetEditorShell />
+				</TooltipProvider>
+			</I18nProvider>,
+		);
+
+		const activate = await screen.findByRole("button", { name: "Activate Semantic CSS" });
+		await waitFor(() => expect(activate).toBeEnabled());
+		fireEvent.click(activate);
+
+		expect(builder.data?.metadata.stylesheet?.mode).toBe("semantic");
+	});
+
+	it("keeps legacy activation disabled for fatal diagnostics", async () => {
+		compileWorker.diagnostics = [fatalError];
+
+		render(
+			<I18nProvider i18n={i18n}>
+				<TooltipProvider>
+					<StylesheetEditorShell />
+				</TooltipProvider>
+			</I18nProvider>,
+		);
+
+		await screen.findByText("Fatal error");
+		expect(screen.getByRole("button", { name: "Activate Semantic CSS" })).toBeDisabled();
 	});
 
 	it("makes editor mutation controls read-only while the resume is locked", () => {
