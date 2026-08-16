@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-09 13:09\n"
+"PO-Revision-Date: 2026-08-16 09:56\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -73,9 +73,29 @@ msgstr "{0} пропущено (немає компанії/ролі)"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# Стовпчик} few {# Стовпці} many {# Стовпців} other {# Стовпців}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# помилка} other {# помилки}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {#нотатка} other {#нотатки}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, one {# попередження} other {# попередження}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} протягом останніх 30 днів"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{passedRules} із {totalRules} перевірок пройшли"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · Пункт {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "Додати новий волонтерський досвід"
 msgid "Add a note…"
 msgstr "Додайте нотатку…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "Додайте період, як-от \"Січень 2020 – теперішній час\", щоб він з’явився на вашій часовій шкалі."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Додайте тег і натисніть Enter…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "Додайте запис або використовуйте проекти та волонтерську роботу, щоб показати еквівалентну історію."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "Додайте до нього елемент або приховайте його."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "Додайте та перевірте постачальника пер
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "Додати заявку"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "Додайте принаймні місто та країну, щоб ролі могли відповідати вашому регіону."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "Додати тег"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Додати до конвеєра"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "Додайте своє повне ім’я в розділі Основи."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "Пропорції"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud підтримує Reactive Resume як спонсор проекту. Якщо ваша компанія бажає спонсорувати проект, надішліть електронного листа на адресу <0>{sponsorshipEmail}</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "Перевірка ATS"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "Зв'язати"
 msgid "Columns"
 msgstr "Стовпці"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "Стовпці зазвичай шифрують текст наказу, який читається. Установіть його в один стовпець."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "Скопіюйте цей секретний ключ та викори�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "Скопіювати URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "Виправте рік або використовуйте \"Поточний\" для поточної роботи."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "Видаляємо ваш API-ключ..."
 msgid "Deleting your resume..."
 msgstr "Видалення вашого резюме..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "Опишіть, що ви зробили, щоб запис додав ключові слова для відповідності."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "Введіть свій пароль для вимикання двофакторної автентифікації. Ваш профіль буде менш захищений без увімкненого 2FA."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Помилка"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "Кожна перевірка пройдена. Ніщо тут не повинно заважати аналізатору прочитати ваше резюме."
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "Досвід"
 msgid "Expires in"
 msgstr "Закінчується через"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Закінчується {0}"
@@ -2372,6 +2433,10 @@ msgstr "Додати заголовок резюме"
 msgid "Increase indent"
 msgstr "Збільшити відступ"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "Збільште їх, щоб вміст залишався в зоні надійного читання."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "Збільшити масштаб"
@@ -2582,6 +2647,7 @@ msgstr "Макет"
 msgid "Learn More"
 msgstr "Дізнатися більше"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "Залишити"
@@ -2589,6 +2655,10 @@ msgstr "Залишити"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Залиште порожнім, щоб повернути початкову назву."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "Вийти, щоб налаштувати постачальника AI?"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "Містраль ШІ"
 msgid "Model"
 msgstr "Модель"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "Більшість систем подають кандидатів електронною поштою. Додайте один у розділі Основи."
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "Перемістіть його в головний стовпець і збережіть бічну панель для коротких списків."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Перемістити розділ до іншого стовпця або сторінки"
@@ -2854,6 +2932,10 @@ msgstr "Непальська"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "Мережа"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "Ніколи не закінчується"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "Не підключено"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "Не знаєте, що написати?"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "Примітка"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "Потік конвеєра"
 msgid "Pipeline health across all applications"
 msgstr "Стан конвеєра для всіх заявок"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "Розмістіть його на сторінці з панелі «Макет» або сховайте, якщо ви хотіли його припаркувати."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "Звичайний текст, ідеальний для AI-інструментів і швидких правок."
@@ -3288,6 +3378,10 @@ msgstr "Португальська (Португалія)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Посада"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "Віддавайте перевагу традиційному заголовку, наприклад \"Досвід роботи\" або \"Освіта\"."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "Словенська"
 msgid "Slug"
 msgstr "Посилання"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "Деякі системи заявок вимагають її, перш ніж ви зможете подати."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "Деякі аналізатори неправильно обробляють зображення, тому в деяких регіонах фотографії не рекомендуються."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Щось пішло не так"
@@ -4202,6 +4304,7 @@ msgstr "Розпочати тему"
 msgid "Statistics"
 msgstr "Статистика"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "Залишитись"
@@ -4254,6 +4357,10 @@ msgstr "Підтримати Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "Підтримайте застосунок будь-яким доступним способом!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "Поміняйте дати початку та закінчення."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "Виникла проблема під час створення PDF-ф�
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Виникла проблема під час підготовки вашого резюме до друку. Спробуйте ще раз."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "Ці перевірки виконуються під час введення тексту та не виходять із браузера. Вони запитують, чи може машина прочитати ваше резюме, а не те, чи добре воно читається."
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "Ці дати не будуть прочитані правильно."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "Мислення"
@@ -4455,6 +4570,18 @@ msgstr "Не вдалося відкрити цей потік агента."
 msgid "This assistant could not be opened."
 msgstr "Цей помічник не вдалося відкрити."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "Ця дата не буде прочитана правильно."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "Ця електронна адреса не буде розпізнана."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "Цей запис не має дат."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "Цей запис буде видалено назавжди. Цю дію не можна скасувати."
@@ -4463,13 +4590,29 @@ msgstr "Цей запис буде видалено назавжди. Цю ді�
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ця функція вимагає підключеного постачальника штучного інтелекту. Будь ласка, налаштуйте його в налаштуваннях."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "Цей заголовок не шукає аналізатор."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Це ім'я вашого резюме, пристосоване для використання у URL."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "Для цього посилання відсутній протокол."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Це може зайняти кілька хвилин, залежно від відповіді AI-провайдера. Будь ласка, не закривайте вікно і не оновлюйте сторінку."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "Цей період закінчується раніше, ніж почався."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "Цей період починається в майбутньому."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "Це резюме було оновлено агентом штучно�
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Налаштування спільного доступу до цього резюме змінено в інших місцях."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "Ця роль не має опису."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "Цей розділ має вміст, але ніколи не відображається."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Тут можна зберігати персональні нотатки щодо цього резюме. Їхній вміст буде приватним і не розкриватиметься іншим."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "Цей розділ поділено на кілька стовпців."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "Цей розділ відображається як порожній заголовок."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "Цей розділ знаходиться на бічній панелі."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL-адреса"
 msgid "Use"
 msgstr "Використання"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "Використовуйте висоту лінії принаймні 1,15, щоб лінії не об’єднувалися."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "Використовуйте просту адресу, наприклад name@example.com, без тексту навколо."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Використовуйте визнану форму, як-от \"Січень 2020 – Березень 2022\" або \"2020 – 2022\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "Використовуйте визнану форму, наприклад \"березень 2022\" або \"2022\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "Використовуйте розмір принаймні 9 пунктів, щоб повторно відтворені копії залишалися точними."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "Волонтер"
 msgid "vs previous 30 days"
 msgstr "порівняно з попередніми 30 днями"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "Попередження"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "Нам не вдалося автоматично визначити формат — будь ласка, виберіть його вище."
@@ -5034,6 +5221,10 @@ msgstr "Працює…"
 msgid "Worth a shot"
 msgstr "Варто спробувати"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "Напишіть повну адресу, включаючи https://."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "Х (Твіттер)"
@@ -5066,6 +5257,10 @@ msgstr "Ви можете поділитися резюме за унікаль�
 msgid "You have unsaved changes that will be lost."
 msgstr "У вас є незбережені зміни, які буде втрачено."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "Ви перейдете на сторінку інтеграцій. Вибраний файл не буде імпортовано."
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "Ваш акаунт було успішно видалено."
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Ваш API-ключ скопійовано в буфер обміну."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "Ваш основний текст дуже малий."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "Не вдалося зберегти ваші останні зміни.
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Ваші застарілі стилі залишаються активними, доки ви явно не активуєте цей черновик семантичного CSS."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "Ваші рядки зібрані дуже щільно."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "Ваші поля сторінки дуже вузькі."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5139,6 +5346,30 @@ msgstr "Ваше резюме відновлено до вибраної вер�
 #: src/dialogs/resume/index.tsx
 msgid "Your resume has been updated successfully."
 msgstr "Ваше резюме успішно оновлено."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "У вашому резюме немає електронної адреси."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "У вашому резюме немає місцезнаходження."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "Ваше резюме не має назви."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "У вашому резюме немає номера телефону."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "Ваше резюме містить фото."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "У вашому резюме немає досвіду роботи."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."

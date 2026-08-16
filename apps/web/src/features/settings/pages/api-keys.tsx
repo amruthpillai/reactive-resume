@@ -24,7 +24,7 @@ export function ApiKeysSettingsPage() {
 
 			return data.apiKeys
 				.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-				.filter((key) => !!key.expiresAt && key.expiresAt.getTime() > Date.now());
+				.filter((key) => !key.expiresAt || key.expiresAt.getTime() > Date.now());
 		},
 	});
 
@@ -129,7 +129,11 @@ export function ApiKeysSettingsPage() {
 							<div className="flex-1 space-y-1">
 								<p className="font-mono text-xs">{key.start}...</p>
 								<div className="text-muted-foreground text-xs">
-									<Trans>Expires on {key.expiresAt?.toLocaleDateString()}</Trans>
+									{key.expiresAt ? (
+										<Trans>Expires on {key.expiresAt.toLocaleDateString()}</Trans>
+									) : (
+										<Trans>Never expires</Trans>
+									)}
 								</div>
 							</div>
 

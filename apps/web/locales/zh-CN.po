@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-09 13:09\n"
+"PO-Revision-Date: 2026-08-16 09:55\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -73,9 +73,29 @@ msgstr "已跳过 {0} 个（缺少公司/职位）"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, other {# 栏}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# 个错误} other {# 个错误}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {# 条备注} other {# 条备注}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, one {# 个警告} other {# 个警告}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} 在过去 30 天内"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{totalRules} 的 {passedRules} 检查已通过”"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · 项目 {itemNumber} "
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "添加新的志愿者经历"
 msgid "Add a note…"
 msgstr "添加备注…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "添加一个时期，例如“2020 年 1 月 - 现在”，以便它出现在您的时间轴上。"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "添加标签并按 Enter…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "添加条目，或使用项目和志愿者工作来展示同等的历史。”"
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "向其中添加一个项目，或隐藏它。”"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "在启动代理线程之前，添加并测试提供程序。"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "添加申请"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "至少添加一个城市和国家，以便角色可以与您所在的地区相匹配。”"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "添加标签"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "添加到流程"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "在“基本信息”下添加您的全名。”"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "宽高比"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud 以项目赞助商的身份支持 Reactive Resume 项目。如果贵公司有意赞助该项目，请发送电子邮件至 <0>{sponsorshipEmail}</0> 。"
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "ATS检查”"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "凝聚"
 msgid "Columns"
 msgstr "栏"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "列通常会打乱文本的读入顺序。将其设置为单列。”"
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "复制此密钥，并在你的应用程序中使用它来访问你的数
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "复制 URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "更正年份，或对正在进行的工作使用“现在”。”"
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "正在删除你的 API key…"
 msgid "Deleting your resume..."
 msgstr "正在删除你的简历…"
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "描述您做了什么，以便该条目提供用于匹配的关键字。”"
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "请输入你的密码以禁用双重身份验证。关闭 2FA 后，你的账号将不再那么安全。"
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "错误"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "每项检查都通过了。这里没有任何东西可以阻止解析器阅读你的简历。”"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "工作经历"
 msgid "Expires in"
 msgstr "过期时间"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "将于 {0} 过期"
@@ -2372,6 +2433,10 @@ msgstr "包含简历页眉"
 msgid "Increase indent"
 msgstr "增加缩进"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "增加它们，使内容保持在可靠读取的区域内。”"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "放大"
@@ -2582,6 +2647,7 @@ msgstr "布局"
 msgid "Learn More"
 msgstr "了解详情"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "离开"
@@ -2589,6 +2655,10 @@ msgstr "离开"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "留空则将标题重置为原始值。"
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "离开去建立人工智能提供商吗？”"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "米斯特拉尔人工智能"
 msgid "Model"
 msgstr "模型"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "大多数系统通过电子邮件归档候选人。在“基础知识”下添加一项。”"
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "将其移至主栏并保留侧边栏以显示简短列表。”"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "将本节内容移至另一列或页面"
@@ -2854,6 +2932,10 @@ msgstr "尼泊尔语"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "网络"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "永不过期"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "未连接"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "不知道该写些什么？"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "笔记”"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "流程流向"
 msgid "Pipeline health across all applications"
 msgstr "所有申请的流程健康状况"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "将其放置在“布局”面板中的页面上，或者如果您想将其停放，则将其隐藏。”"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "纯文本，适合 AI 工具和快速编辑。"
@@ -3288,6 +3378,10 @@ msgstr "葡萄牙语（葡萄牙）"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "职位"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "更喜欢常规标题，例如“工作经验”或“教育程度”。"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "斯洛文尼亚语"
 msgid "Slug"
 msgstr "短链接"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "有些申请系统需要先有一个，然后才能提交。”"
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "一些解析器错误地处理图像，并且在某些地区不鼓励使用照片。”"
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "出问题了"
@@ -4202,6 +4304,7 @@ msgstr "发起讨论"
 msgid "Statistics"
 msgstr "统计数据"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "留下"
@@ -4254,6 +4357,10 @@ msgstr "支持 Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "尽你所能支持这个应用！"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "交换开始日期和结束日期。”"
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "生成 PDF 时出现问题，请重试。"
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "准备打印您的简历时出现问题，请重试。"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "这些检查会在您键入时运行，并且永远不会离开浏览器。他们询问机器是否可以读取你的简历，而不是它是否可读。”"
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "这些日期将无法正确读取。”"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "思维"
@@ -4455,6 +4570,18 @@ msgstr "此代理线程无法打开。"
 msgid "This assistant could not be opened."
 msgstr "此助手无法打开。"
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "该日期将无法正确读取。”"
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "该电子邮件地址将不会被识别。”"
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "该条目没有日期。”"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "此条目将被永久删除。此操作无法撤销。"
@@ -4463,13 +4590,29 @@ msgstr "此条目将被永久删除。此操作无法撤销。"
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "此功能需要连接人工智能服务提供商。请在设置中进行设置。"
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "这个标题不是解析器寻找的。”"
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "这是一个适合放在 URL 中的简历名称。"
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "此链接缺少其协议。”"
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "这可能需要几分钟时间，具体取决于 AI 服务提供商的响应速度。请不要关闭窗口或刷新页面。"
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "这个时期在开始之前就结束了。”"
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "这个时期从未来开始。”"
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "这份简历由人工智能代理更新。"
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "此简历的共享设置已在其他地方更改。"
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "这个角色没有描述。”"
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "该部分有内容但从未出现。”"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "此部分用于记录与你这份简历相关的个人注释。这里的内容保持私密，不会与其他任何人共享。"
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "此部分分为多个列。”"
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "此部分呈现为空标题。”"
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "此部分位于侧边栏中。”"
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "使用"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "使用至少 1.15 的行高，这样行就不会合并在一起。”"
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "使用简单的地址，例如 name@example.com，周围没有文字。”"
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "使用公认的形式，例如“2020 年 1 月 - 2022 年 3 月”或“2020 年 - 2022 年”。"
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "使用可识别的形式，例如“2022 年 3 月”或“2022”。"
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "使用至少 9pt 的大小，以便重新渲染的副本保持准确。”"
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "志愿者经历"
 msgid "vs previous 30 days"
 msgstr "与前 30 天相比"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "警告”"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "我们无法自动检测格式——请在上方选择格式。"
@@ -5034,6 +5221,10 @@ msgstr "正在运行…"
 msgid "Worth a shot"
 msgstr "值得一试"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "写入完整地址，包括 https:// 。”"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X（推特）"
@@ -5066,6 +5257,10 @@ msgstr "你可以通过唯一的公共 URL 分享你的简历，用密码保护�
 msgid "You have unsaved changes that will be lost."
 msgstr "你有未保存的更改，这些更改将会丢失。"
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "您将被带到“集成”页面。您选择的文件将不会被导入。”"
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "你的账号已成功删除。"
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "你的 API key 已复制到剪贴板。"
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "你的正文很小。”"
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "您所做的最新更改未能保存。"
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "在您明确激活此语义化 CSS 草案之前，您的旧版样式仍将保持有效。"
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "你的线路排得很紧。”"
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "你的页边距很窄。”"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5139,6 +5346,30 @@ msgstr "您的简历已恢复为所选版本。"
 #: src/dialogs/resume/index.tsx
 msgid "Your resume has been updated successfully."
 msgstr "你的简历已成功更新。"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "你的简历没有电子邮件地址。”"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "你的简历没有位置。”"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "你的简历上没有名字。"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "你的简历上没有电话号码。”"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "你的简历里有一张照片。”"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "你的简历没有显示任何工作经验。”"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."

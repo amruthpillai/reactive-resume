@@ -8,7 +8,7 @@ msgstr ""
 "Language: el\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-09 13:09\n"
+"PO-Revision-Date: 2026-08-16 09:55\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -73,9 +73,29 @@ msgstr "{0} παραλείφθηκαν (λείπει εταιρεία/ρόλος
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# Στήλη} other {# Στήλες}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# σφάλμα} other {# σφάλματα}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {# σημείωση} other {# σημειώσεις}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, one {# προειδοποίηση} other {# προειδοποιήσεις}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} τις τελευταίες 30 ημέρες"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{passedRules} από {totalRules} ελέγχους με επιτυχία"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · Στοιχείο {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "Προσθέστε μια νέα εθελοντική εμπειρία"
 msgid "Add a note…"
 msgstr "Προσθήκη σημείωσης…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "Προσθέστε μια περίοδο όπως «Jan 2020 - Present», ώστε να εμφανίζεται στο χρονολόγιό σας."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Προσθέστε ετικέτα και πατήστε Enter…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "Προσθέστε μια καταχώριση ή χρησιμοποιήστε έργα και εθελοντική εργασία για να εμφανίσετε ισοδύναμο ιστορικό."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "Προσθέστε ένα στοιχείο σε αυτό ή αποκρύψτε το."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "Προσθέστε και δοκιμάστε έναν πάροχο πρ�
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "Προσθήκη αίτησης"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "Προσθέστε τουλάχιστον μια πόλη και μια χώρα, ώστε οι ρόλοι να μπορούν να αντιστοιχιστούν στην περιοχή σας."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "Προσθήκη ετικέτας"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Προσθήκη στη ροή"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "Προσθέστε το πλήρες όνομά σας στα Βασικά."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "Αναλογία διαστάσεων"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Το Atlas Cloud υποστηρίζει το Reactive Resume ως χορηγός έργου. Εάν η εταιρεία σας επιθυμεί να χρηματοδοτήσει το έργο, στείλτε email στο <0>{sponsorshipEmail}</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "Έλεγχος ATS"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "Διατηρώ συνέπεια"
 msgid "Columns"
 msgstr "Στήλες"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "Οι στήλες συνήθως κωδικοποιούν το κείμενο της παραγγελίας που διαβάζεται. Ρυθμίστε το σε μία στήλη."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "Αντιγράψτε αυτό το μυστικό κλειδί και χ
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "Αντιγραφή URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "Correct the year, or use \\\"Present\\\" for ongoing work."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "Διαγραφή του κλειδιού API σας..."
 msgid "Deleting your resume..."
 msgstr "Διαγραφή του βιογραφικού σας σημειώματος..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "Περιγράψτε τι κάνατε, ώστε η καταχώριση να συνεισφέρει λέξεις-κλειδιά για αντιστοίχιση."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "Εισαγάγετε τον κωδικό πρόσβασής σας για να απενεργοποιήσετε τον έλεγχο ταυτότητας δύο παραγόντων. Ο λογαριασμός σας θα είναι λιγότερο ασφαλής χωρίς ενεργοποιημένο 2FA."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Σφάλμα"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "Κάθε έλεγχος πέρασε. Τίποτα εδώ δεν πρέπει να εμποδίζει έναν αναλυτή να διαβάσει το βιογραφικό σας."
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "Εμπειρία"
 msgid "Expires in"
 msgstr "Λήγει σε"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Λήγει στις {0}"
@@ -2372,6 +2433,10 @@ msgstr "Συμπερίληψη κεφαλίδας βιογραφικού"
 msgid "Increase indent"
 msgstr "Αύξηση εσοχής"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "Αυξήστε τα, ώστε το περιεχόμενο να παραμένει εντός της περιοχής με αξιόπιστη ανάγνωση."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "Αύξηση ζουμ"
@@ -2582,6 +2647,7 @@ msgstr "Διάταξη"
 msgid "Learn More"
 msgstr "Μάθετε περισσότερα"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "Αποχώρηση"
@@ -2589,6 +2655,10 @@ msgstr "Αποχώρηση"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Αφήστε το κενό για να επαναφέρετε τον τίτλο στο αρχικό."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "Αποχωρείτε για να δημιουργήσετε έναν πάροχο τεχνητής νοημοσύνης;"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "Mistral AI"
 msgid "Model"
 msgstr "Μοντέλο"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "Τα περισσότερα συστήματα υποβάλλουν υποψηφίους μέσω email. Προσθέστε ένα κάτω από τα Βασικά."
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "Μετακινήστε το στην κύρια στήλη και κρατήστε την πλαϊνή γραμμή για σύντομες λίστες."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Μετακίνηση ενότητας σε άλλη στήλη ή σελίδα"
@@ -2854,6 +2932,10 @@ msgstr "Νεπάλι"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "Δίκτυο"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "Δεν λήγει ποτέ"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "Δεν είναι συνδεδεμένο"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "Δεν είστε σίγουροι τι να γράψετε;"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "Σημείωμα"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "Ροή pipeline"
 msgid "Pipeline health across all applications"
 msgstr "Υγεία pipeline σε όλες τις αιτήσεις"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "Τοποθετήστε το σε μια σελίδα από τον πίνακα Διάταξη ή αποκρύψτε το εάν θέλετε να το παρκάρετε."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "Απλό κείμενο, ιδανικό για εργαλεία AI και γρήγορες αλλαγές."
@@ -3288,6 +3378,10 @@ msgstr "Πορτογαλικά (Πορτογαλίας)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Θέση"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "Σλοβενικά"
 msgid "Slug"
 msgstr "Slug"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "Ορισμένα συστήματα αιτήσεων απαιτούν ένα για να μπορέσετε να υποβάλετε."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "Ορισμένοι αναλυτές χειρίζονται εσφαλμένα τις εικόνες και οι φωτογραφίες αποθαρρύνονται σε ορισμένες περιοχές."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Κάτι πήγε στραβά"
@@ -4202,6 +4304,7 @@ msgstr "Έναρξη νήματος"
 msgid "Statistics"
 msgstr "Στατιστικά"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "Παραμονή"
@@ -4254,6 +4357,10 @@ msgstr "Υποστήριξη Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "Υποστηρίξτε την εφαρμογή κάνοντας ό,τι μπορείτε!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "Αλλάξτε τις ημερομηνίες έναρξης και λήξης."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "Παρουσιάστηκε πρόβλημα κατά τη δημιουρ
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Παρουσιάστηκε πρόβλημα κατά την προετοιμασία του βιογραφικού σας για εκτύπωση, δοκιμάστε ξανά."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "Αυτοί οι έλεγχοι εκτελούνται καθώς πληκτρολογείτε και δεν εγκαταλείπουν ποτέ το πρόγραμμα περιήγησής σας. Ρωτούν εάν ένα μηχάνημα μπορεί να διαβάσει το βιογραφικό σας, όχι εάν διαβάζει καλά."
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "Αυτές οι ημερομηνίες δεν θα διαβαστούν σωστά."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "Σκέψη"
@@ -4455,6 +4570,18 @@ msgstr "Δεν ήταν δυνατό το άνοιγμα αυτού του νή�
 msgid "This assistant could not be opened."
 msgstr "Δεν ήταν δυνατό το άνοιγμα αυτού του βοηθού."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "Αυτή η ημερομηνία δεν θα διαβαστεί σωστά."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "Αυτή η διεύθυνση email δεν θα αναγνωριστεί."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "Αυτή η καταχώρηση δεν έχει ημερομηνίες."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "Αυτή η καταχώριση θα διαγραφεί οριστικά. Αυτό δεν μπορεί να αναιρεθεί."
@@ -4463,13 +4590,29 @@ msgstr "Αυτή η καταχώριση θα διαγραφεί οριστικ�
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Αυτή η λειτουργία απαιτεί έναν συνδεδεμένο πάροχο τεχνητής νοημοσύνης. Ορίστε έναν στις ρυθμίσεις."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "Αυτή η επικεφαλίδα δεν αναζητείται από τους αναλυτές."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Αυτό είναι ένα φιλικό προς το URL όνομα για το βιογραφικό σας σημείωμα."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "Από αυτόν τον σύνδεσμο λείπει το πρωτόκολλό του."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Αυτό μπορεί να πάρει μερικά λεπτά, ανάλογα με την απόκριση του παρόχου ΤΝ. Μην κλείσετε το παράθυρο ή ανανεώσετε τη σελίδα."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "Αυτή η περίοδος τελειώνει πριν ξεκινήσει."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "Αυτή η περίοδος ξεκινά στο μέλλον."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "Αυτό το βιογραφικό ενημερώθηκε από ένα�
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Οι ρυθμίσεις κοινής χρήσης αυτού του βιογραφικού έχουν αλλάξει αλλού."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "Αυτός ο ρόλος δεν έχει περιγραφή."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "Αυτή η ενότητα έχει περιεχόμενο αλλά δεν εμφανίζεται ποτέ."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Αυτή η ενότητα προορίζεται για τις προσωπικές σας σημειώσεις ειδικά για το συγκεκριμένο βιογραφικό σημείωμα. Το περιεχόμενο εδώ παραμένει ιδιωτικό και δεν κοινοποιείται σε κανέναν άλλον."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "Αυτή η ενότητα είναι χωρισμένη σε στήλες."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "Αυτή η ενότητα αποδίδεται ως κενή επικεφαλίδα."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "Αυτή η ενότητα βρίσκεται στην πλαϊνή γραμμή."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "Χρήση"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "Χρησιμοποιήστε ύψος γραμμής τουλάχιστον 1,15 ώστε οι γραμμές να μην συγχωνεύονται μεταξύ τους."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "Χρησιμοποιήστε μια απλή διεύθυνση, όπως name@example.com, χωρίς περιβάλλον κείμενο."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 2022\\\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "Use a recognized form such as \\\"March 2022\\\" or \\\"2022\\\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "Χρησιμοποιήστε μέγεθος τουλάχιστον 9 pt, ώστε τα αντίγραφα που αποδίδονται ξανά να παραμένουν ακριβή."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "Εθελοντική εργασία"
 msgid "vs previous 30 days"
 msgstr "σε σύγκριση με τις προηγούμενες 30 ημέρες"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "Προειδοποίηση"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "Δεν ήταν δυνατός ο αυτόματος εντοπισμός της μορφής — επιλέξτε την παραπάνω."
@@ -5034,6 +5221,10 @@ msgstr "Εργασία…"
 msgid "Worth a shot"
 msgstr "Αξίζει μια προσπάθεια"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "Γράψτε την πλήρη διεύθυνση, συμπεριλαμβανομένου του https://."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "Χ (Τwitter)"
@@ -5066,6 +5257,10 @@ msgstr "Μπορείτε να μοιραστείτε το βιογραφικό �
 msgid "You have unsaved changes that will be lost."
 msgstr "Έχετε μη αποθηκευμένες αλλαγές που θα χαθούν."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "Θα μεταφερθείτε στη σελίδα Ενσωματώσεις. Το αρχείο που επιλέξατε δεν θα εισαχθεί."
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "Ο λογαριασμός σας διαγράφηκε με επιτυχ�
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Το κλειδί API σας αντιγράφηκε στο πρόχειρο."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "Το κείμενο του σώματος σας είναι πολύ μικρό."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "Δεν ήταν δυνατή η αποθήκευση των τελευτ
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Τα παλαιότερα στυλ σας παραμένουν ενεργά μέχρι να ενεργοποιήσετε ρητά αυτό το προσχέδιο Semantic CSS."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "Οι γραμμές σας είναι γεμάτες πολύ σφιχτά."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "Τα περιθώρια της σελίδας σας είναι πολύ στενά."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5139,6 +5346,30 @@ msgstr "Το βιογραφικό σας έχει αποκατασταθεί σ�
 #: src/dialogs/resume/index.tsx
 msgid "Your resume has been updated successfully."
 msgstr "Το βιογραφικό σας σημείωμα ενημερώθηκε με επιτυχία."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "Το βιογραφικό σας δεν έχει διεύθυνση email."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "Το βιογραφικό σας δεν έχει τοποθεσία."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "Το βιογραφικό σας δεν έχει όνομα."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "Το βιογραφικό σας δεν έχει αριθμό τηλεφώνου."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "Το βιογραφικό σας περιλαμβάνει φωτογραφία."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "Το βιογραφικό σας δεν δείχνει εργασιακή εμπειρία."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
