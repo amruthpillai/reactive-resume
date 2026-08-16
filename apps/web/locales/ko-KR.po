@@ -73,9 +73,29 @@ msgstr "{0}개 건너뜀(회사/직무 누락)"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, other {#개 열}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{개수, 복수형, 하나 {# 오류} 기타 {# 오류}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{개수, 복수형, 하나 {# 음표} 기타 {# 음표}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{개수, 복수형, 하나 {# 경고} 기타 {# 경고}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} 지난 30일 동안"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{totalRules} 검사 중 {passedRules} 검사 통과"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · 항목 {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "새 봉사 경험 추가"
 msgid "Add a note…"
 msgstr "메모 추가…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "타임라인에 표시되도록 \"2020년 1월 - 현재\"와 같은 기간을 추가하세요."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "태그를 추가하고 Enter를 누르세요…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "항목을 추가하거나 프로젝트 및 자원 봉사 활동을 사용하여 동등한 기록을 표시하세요."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "항목을 추가하거나 숨깁니다."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "에이전트 스레드를 시작하기 전에 공급자를 추가하고 
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "지원 추가"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "역할이 해당 지역에 맞춰질 수 있도록 최소한 도시와 국가를 추가하세요."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "태그 추가"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "파이프라인에 추가"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "기본사항 아래에 이름을 추가하세요."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "가로세로 비율"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud는 Reactive Resume의 프로젝트 스폰서로 지원합니다. 귀사에서 프로젝트 스폰서 참여를 원하시면 <0>{sponsorshipEmail}으로 이메일을 보내주세요.</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "ATS 수표"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "응집하다"
 msgid "Columns"
 msgstr "열"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "열은 일반적으로 텍스트를 읽는 순서를 뒤섞습니다. 단일 열로 설정합니다."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "이 비밀 키를 복사해 애플리케이션에 붙여넣어 데이터
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "URL 복사"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "연도를 수정하거나 진행 중인 작업에 \"현재\"를 사용하세요."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "API 키를 삭제하는 중입니다..."
 msgid "Deleting your resume..."
 msgstr "이력서를 삭제하는 중입니다..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "항목이 일치하는 키워드에 기여하도록 수행한 작업을 설명하십시오."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "2단계 인증을 비활성화하려면 비밀번호를 입력하세요. 2단계 인증을 사용하지 않으면 계정 보안이 낮아집니다."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "오류"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "모든 점검이 통과되었습니다. "
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "경력"
 msgid "Expires in"
 msgstr "만료까지 남은 기간"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "만료일: {0}"
@@ -2372,6 +2433,10 @@ msgstr "이력서 헤더 포함"
 msgid "Increase indent"
 msgstr "들여쓰기 증가"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "콘텐츠가 안정적으로 읽을 수 있는 영역 내에 유지되도록 이를 늘립니다."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "확대/축소"
@@ -2582,6 +2647,7 @@ msgstr "레이아웃"
 msgid "Learn More"
 msgstr "자세히 알아보기"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "나가기"
@@ -2589,6 +2655,10 @@ msgstr "나가기"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "원래 제목으로 되돌리려면 비워 두세요."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "AI 제공업체 설정을 위해 나가시겠습니까?"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "미스트랄 AI"
 msgid "Model"
 msgstr "모델"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "대부분의 시스템은 후보자를 이메일로 제출합니다. "
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "그것을 메인 컬럼으로 옮기고 짧은 목록을 위해 사이드바를 유지하세요."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "해당 섹션을 다른 열이나 페이지로 이동합니다."
@@ -2854,6 +2932,10 @@ msgstr "네팔어"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "네트워크"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "만료되지 않음"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "연결되지 않음"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "무엇을 써야 할지 모르겠나요?"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "메모"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "파이프라인 흐름"
 msgid "Pipeline health across all applications"
 msgstr "전체 지원의 파이프라인 상태"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "레이아웃 패널에서 페이지에 배치하거나, ​​파킹하려는 경우 숨깁니다."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "일반 텍스트로, AI 도구와 빠른 편집에 적합합니다."
@@ -3288,6 +3378,10 @@ msgstr "포르투갈어(포르투갈)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "직책"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "\"직업 경험\" 또는 \"교육\"과 같은 일반적인 제목을 선호합니다."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "슬로베니아어"
 msgid "Slug"
 msgstr "슬러그"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "일부 지원 시스템에서는 제출하기 전에 하나의 정보가 필요합니다."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "일부 파서는 이미지를 잘못 처리하므로 일부 지역에서는 사진을 사용하지 않는 것이 좋습니다."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "뭔가 잘못됐어요"
@@ -4202,6 +4304,7 @@ msgstr "시작 스레드"
 msgid "Statistics"
 msgstr "통계"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "머물기"
@@ -4254,6 +4357,10 @@ msgstr "Reactive Resume 후원하기"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "가능한 방식으로 앱을 지원해 주세요!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "시작 날짜와 종료 날짜를 바꿉니다."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "PDF 파일을 생성하는 동안 문제가 발생했습니다. 다시 �
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "이력서 인쇄 준비 중 문제가 발생했습니다. 다시 시도해 주세요."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "이러한 검사는 입력하는 동안 실행되며 브라우저를 떠나지 않습니다. "
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "이 날짜는 올바르게 읽혀지지 않습니다."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "생각"
@@ -4455,6 +4570,18 @@ msgstr "이 에이전트 스레드를 열 수 없습니다."
 msgid "This assistant could not be opened."
 msgstr "이 도우미를 열 수 없습니다."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "이 날짜는 올바르게 읽혀지지 않습니다."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "이 이메일 주소는 인식되지 않습니다."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "이 항목에는 날짜가 없습니다."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "이 항목은 영구적으로 삭제됩니다. 되돌릴 수 없습니다."
@@ -4463,13 +4590,29 @@ msgstr "이 항목은 영구적으로 삭제됩니다. 되돌릴 수 없습니�
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "이 기능을 사용하려면 연결된 AI 제공업체가 필요합니다. 설정에서 AI 제공업체를 설정해 주세요."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "이 제목은 파서가 찾는 항목이 아닙니다."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "이것은 이력서에 사용할 URL 친화적인 이름입니다."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "이 링크에는 프로토콜이 없습니다."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "AI 제공자의 응답 속도에 따라 몇 분 정도 걸릴 수 있습니다. 창을 닫거나 페이지를 새로 고치지 마세요."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "이 기간은 시작되기 전에 종료됩니다."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "이 기간은 미래에 시작됩니다."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "이력서는 AI 에이전트에 의해 업데이트되었습니다."
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "이력서의 공유 설정이 다른 곳에서 변경되었습니다."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "이 역할에는 설명이 없습니다."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "이 섹션에는 콘텐츠가 있지만 표시되지 않습니다."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "이 섹션은 이 이력서에 대한 개인적인 노트 전용 공간입니다. 여기 입력한 내용은 비공개로 유지되며 다른 누구와도 공유되지 않습니다."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "이 섹션은 여러 열로 분할되어 있습니다."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "이 섹션은 빈 제목으로 렌더링됩니다."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "이 섹션은 사이드바에 있습니다."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "사용"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "선이 서로 병합되지 않도록 선 높이를 1.15 이상으로 사용하십시오."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "주변 텍스트 없이 name@example.com과 같은 일반 주소를 사용하세요."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "'2020년 1월~2022년 3월' 또는 '2020~2022'와 같이 인식된 형식을 사용하세요."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "\"2022년 3월\" 또는 \"2022\"와 같이 인식된 형식을 사용하세요."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "다시 렌더링된 복사본이 정확하게 유지되도록 하려면 최소 9pt 크기를 사용하세요."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "봉사"
 msgid "vs previous 30 days"
 msgstr "지난 30일 대비"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "경고"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "형식을 자동으로 감지할 수 없습니다. 위에서 직접 선택해 주세요."
@@ -5034,6 +5221,10 @@ msgstr "작업 중…"
 msgid "Worth a shot"
 msgstr "시도해 볼 만함"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "https://를 포함한 전체 주소를 작성하세요."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (트위터)"
@@ -5066,6 +5257,10 @@ msgstr "고유한 공개 URL로 이력서를 공유하고, 비밀번호로 보�
 msgid "You have unsaved changes that will be lost."
 msgstr "저장되지 않은 변경 사항이 있으며, 이 내용은 사라집니다."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "통합 페이지로 이동됩니다. "
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "계정이 성공적으로 삭제되었습니다."
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "API 키가 클립보드에 복사되었습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "본문 텍스트가 매우 작습니다."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "최근 변경 내용을 저장할 수 없습니다."
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "이 시맨틱 CSS 초안을 명시적으로 활성화하기 전까지는 기존 스타일이 계속 유지됩니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "귀하의 라인은 매우 촘촘하게 포장되어 있습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "페이지 여백이 매우 좁습니다."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5140,6 +5347,30 @@ msgstr "이력서가 선택하신 버전으로 복원되었습니다."
 msgid "Your resume has been updated successfully."
 msgstr "이력서가 성공적으로 업데이트되었습니다."
 
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "이력서에 이메일 주소가 없습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "이력서에 위치가 없습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "이력서에 이름이 없습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "이력서에 전화번호가 없습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "이력서에는 사진이 포함되어 있습니다."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "이력서에는 업무 경험이 없습니다."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "현재 이력서의 공개 링크는 비밀번호로 보호되고 있습니다. 신뢰하는 사람에게만 비밀번호를 공유하세요."
@@ -5168,4 +5399,3 @@ msgstr "축소"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "줄루어"
-

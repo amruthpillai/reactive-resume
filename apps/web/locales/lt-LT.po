@@ -73,9 +73,29 @@ msgstr "{0} praleista (trūksta įmonės / pareigų)"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# stulpelis} few {# stulpeliai} many {# stulpelių} other {# stulpelio}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# error} other {# errors}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {# note} other {# notes}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, daugiskaita, vienas {# įspėjimas} kiti {# įspėjimai}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} per pastarąsias 30 dienų"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "Patikslinimų: {passedRules} iš {totalRules}"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · Prekė {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "Pridėti naują savanorišką veiklą"
 msgid "Add a note…"
 msgstr "Pridėti pastabą…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "Pridėkite laikotarpį, pvz., \"2020 m. sausio mėn. – dabartis\", kad jis atsidurtų jūsų laiko juostoje."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Pridėkite žymą ir paspauskite Enter…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "Pridėkite įrašą arba naudokite projektus ir savanorišką darbą, kad parodytumėte lygiavertę istoriją."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "Pridėkite prie jo elementą arba paslėpkite jį."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "Prieš pradėdami agento giją, pridėkite ir išbandykite teikėją."
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "Pridėti paraišką"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "Pridėkite bent miestą ir šalį, kad vaidmenys būtų suderinti su jūsų regionu."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "Pridėti žymą"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Pridėti į procesą"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "Skiltyje „Pagrindai“ pridėkite savo vardą ir pavardę."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "Vaizdo santykis"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "„Atlas Cloud“ remia „Reactive Resume“ kaip projekto rėmėją. Jei jūsų įmonė norėtų remti projektą, rašykite el. paštu <0>{sponsorshipEmail}</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "ATS patikrinimas"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "Koheras"
 msgid "Columns"
 msgstr "Stulpeliai"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "Stulpeliai paprastai maišosi, kai tekstas yra skaitomas. Nustatykite jį į vieną stulpelį."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "Nukopijuokite šį slaptą raktą ir naudokite jį savo programose duome
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "Kopijuoti URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "Pataisykite metus arba naudokite \"Dabar\" atliekamiems darbams."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "Ištrinamas jūsų API raktas..."
 msgid "Deleting your resume..."
 msgstr "Jūsų gyvenimo aprašymas ištrinamas..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "Aprašykite, ką padarėte, kad įraše būtų pateikti atitikimo raktiniai žodžiai."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "Įveskite slaptažodį, kad išjungtumėte dviejų veiksnių tapatumo patvirtinimą. Be įjungto 2FA jūsų paskyra bus mažiau saugi."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Klaida"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "Kiekvienas patikrinimas praėjo. "
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "Patirtis"
 msgid "Expires in"
 msgstr "Galioja iki"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Baigia galioti {0}"
@@ -2372,6 +2433,10 @@ msgstr "Įtraukti gyvenimo aprašymo antraštę"
 msgid "Increase indent"
 msgstr "Padidinti įtrauką"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "Padidinkite juos, kad turinys liktų patikimai nuskaitomoje srityje."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "Padidinti mastelį"
@@ -2582,6 +2647,7 @@ msgstr "Išdėstymas"
 msgid "Learn More"
 msgstr "Sužinokite daugiau"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "Išeiti"
@@ -2589,6 +2655,10 @@ msgstr "Išeiti"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Palikite tuščią, jei norite atstatyti pirminį pavadinimą."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "Norite nustatyti AI teikėją?"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "Mistral AI"
 msgid "Model"
 msgstr "Modelis"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "Dauguma sistemų pateikia kandidatus el. paštu. "
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "Perkelkite jį į pagrindinį stulpelį ir palikite trumpųjų sąrašų šoninę juostą."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Perkelti skyrių į kitą stulpelį arba puslapį"
@@ -2854,6 +2932,10 @@ msgstr "Nepalų"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "Tinklas"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "Niekada nesibaigia"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "Nesusijungta"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "Nežinote, ką rašyti?"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "Pastaba"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "Proceso eiga"
 msgid "Pipeline health across all applications"
 msgstr "Proceso būklė visose paraiškose"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "Įdėkite jį į puslapį iš išdėstymo skydelio arba paslėpkite, jei norėjote jį pastatyti."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "Paprastas tekstas, puikiai tinka AI įrankiams ir greitiems taisymams."
@@ -3288,6 +3378,10 @@ msgstr "Portugalų (Portugalija)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Pareigos"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "Pirmenybę teikite įprastai antraštei, pvz., \"Darbo patirtis\" arba \"Išsilavinimas\"."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "Slovėnų"
 msgid "Slug"
 msgstr "Nuorodos dalis"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "Kai kurioms paraiškų teikimo sistemoms reikia, kad galėtumėte pateikti."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "Kai kurie analizatoriai netinkamai tvarko vaizdus, ​​o kai kuriuose regionuose nuotraukos nerekomenduojamos."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Kažkas nutiko ne taip"
@@ -4202,6 +4304,7 @@ msgstr "Pradėti temą"
 msgid "Statistics"
 msgstr "Statistika"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "Likti"
@@ -4254,6 +4357,10 @@ msgstr "Palaikyti „Reactive Resume“"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "Palaikykite programėlę darydami tai, ką galite!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "Sukeiskite pradžios ir pabaigos datas."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "Generuojant PDF failą kilo problemų, bandykite dar kartą."
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Ruošiant jūsų gyvenimo aprašymą spausdinimui kilo problemų, bandykite dar kartą."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "Šie patikrinimai vykdomi jums įvedant tekstą ir niekada neišeina iš naršyklės. "
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "Šios datos nebus perskaitytos teisingai."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "Mąstymas"
@@ -4455,6 +4570,18 @@ msgstr "Šios agento gijos atidaryti nepavyko."
 msgid "This assistant could not be opened."
 msgstr "Šio asistento atidaryti nepavyko."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "Ši data nebus perskaityta teisingai."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "Šis el. pašto adresas nebus atpažintas."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "Šis įrašas neturi datų."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "Šis įrašas bus visam laikui ištrintas. To negalima atšaukti."
@@ -4463,13 +4590,29 @@ msgstr "Šis įrašas bus visam laikui ištrintas. To negalima atšaukti."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Šiai funkcijai reikalingas prijungtas dirbtinio intelekto teikėjas. Nustatykite jį nustatymuose."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "Ši antraštė nėra ta, kurios analizatoriai ieško."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Tai URL draugiškas jūsų gyvenimo aprašymo pavadinimas."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "Šiai nuorodai trūksta protokolo."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Tai gali užtrukti kelias minutes, priklausomai nuo DI tiekėjo atsako. Neuždarykite lango ir neatnaujinkite puslapio."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "Šis laikotarpis baigiasi anksčiau nei jis prasideda."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "Šis laikotarpis prasideda ateityje."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "Šį gyvenimo aprašymą atnaujino dirbtinio intelekto agentas."
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Šio gyvenimo aprašymo bendrinimo nustatymai pakeisti kitur."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "Šis vaidmuo neturi aprašymo."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "Šioje skiltyje yra turinio, bet ji niekada nerodoma."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Šis skyrius skirtas jūsų asmeninėms pastaboms, susijusioms su šiuo gyvenimo aprašymu. Čia pateiktas turinys lieka privatus ir niekam kitam neteikiamas."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "Šis skyrius yra padalintas į stulpelius."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "Šis skyrius pateikiamas kaip tuščia antraštė."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "Ši dalis yra šoninėje juostoje."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "Naudojimas"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "Naudokite bent 1,15 linijos aukštį, kad eilutės nebūtų sujungtos."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "Naudokite paprastą adresą, pvz., vardas@example.com, be aplinkinio teksto."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Naudokite pripažintą formą, pvz., \"2020 m. sausis – 2022 m. kovas\" arba \"2020 m. - 2022 m.\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "Naudokite pripažintą formą, pvz., \"2022 m. kovo mėn.\" arba \"2022 m.\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "Naudokite bent 9 pt dydį, kad pakartotinai pateiktos kopijos išliktų tikslios."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "Savanorystė"
 msgid "vs previous 30 days"
 msgstr "palyginti su ankstesnėmis 30 dienų"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "Įspėjimas"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "Nepavyko automatiškai aptikti formato – pasirinkite jį aukščiau."
@@ -5034,6 +5221,10 @@ msgstr "Dirba…"
 msgid "Worth a shot"
 msgstr "Verta pabandyti"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "Parašykite visą adresą, įskaitant https://."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
@@ -5066,6 +5257,10 @@ msgstr "Gyvenimo aprašymu galite dalintis per unikalų viešą URL, apsaugoti j
 msgid "You have unsaved changes that will be lost."
 msgstr "Turite neišsaugotų pakeitimų, kurie bus prarasti."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "Būsite nukreipti į integravimo puslapį. "
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "Jūsų paskyra sėkmingai ištrinta."
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Jūsų API raktas nukopijuotas į iškarpinę."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "Jūsų tekstas labai mažas."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "Nepavyko išsaugoti naujausių pakeitimų."
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Jūsų seni stiliai liks aktyvūs, kol aiškiai neaktyvuosite šio semantinio CSS juodraščio."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "Jūsų eilutės supakuotos labai sandariai."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "Jūsų puslapio paraštės labai siauros."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5140,6 +5347,30 @@ msgstr "Jūsų gyvenimo aprašymas atkurtas į pasirinktą versiją."
 msgid "Your resume has been updated successfully."
 msgstr "Jūsų gyvenimo aprašymas sėkmingai atnaujintas."
 
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "Jūsų gyvenimo aprašyme nėra el. pašto adreso."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "Jūsų gyvenimo aprašyme nėra vietos."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "Jūsų gyvenimo aprašymas neturi pavadinimo."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "Jūsų gyvenimo aprašyme nėra telefono numerio."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "Jūsų gyvenimo aprašyme yra nuotrauka."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "Jūsų gyvenimo aprašyme nėra darbo patirties."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Jūsų gyvenimo aprašymo vieša nuoroda šiuo metu apsaugota slaptažodžiu. Dalinkitės slaptažodžiu tik su žmonėmis, kuriais pasitikite."
@@ -5168,4 +5399,3 @@ msgstr "Tolinti"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulų"
-

@@ -73,9 +73,29 @@ msgstr "{0} kihagyva (hiányzó cég/szerepkör)"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# oszlop} other {# oszlop}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# hiba} other {# hibák}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {# megjegyzés} other {# megjegyzések}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, one {# figyelmeztetés} other {# figyelmeztetések}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} az elmúlt 30 napban"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{passedRules}/{totalRules} ellenőrzés sikeres"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · Tétel: {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "Új önkéntes tapasztalat hozzáadása"
 msgid "Add a note…"
 msgstr "Jegyzet hozzáadása…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "Adjon hozzá egy időszakot, például \"2020. január – jelenkor\", hogy az az idővonalra kerüljön."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Adj hozzá egy címkét, majd nyomj Entert…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "Adjon hozzá bejegyzést, vagy használja projekteket és önkéntes munkát az egyenértékű előzmények megjelenítéséhez."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "Adjon hozzá egy elemet, vagy rejtse el."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "Adjon hozzá és teszteljen egy szolgáltatót egy ügynökszál indít�
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "Jelentkezés hozzáadása"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "Adjon hozzá legalább egy várost és egy országot, hogy a szerepeket a régiójához illessze."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "Címke hozzáadása"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Hozzáadás a folyamathoz"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "Adja meg teljes nevét az Alapok alatt."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "Méretarány"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Az Atlas Cloud projektszponzorként támogatja a Reactive Resume-ot. Ha vállalata szeretné szponzorálni a projektet, küldjön e-mailt a következő címre: <0>{sponsorshipEmail}</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "ATS ellenőrzés"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "Összefügg"
 msgid "Columns"
 msgstr "Oszlopok"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "Az oszlopok általában összekeverik a szöveg beolvasási sorrendjét. Állítsa egyetlen oszlopra."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "Másold ki ezt a titkos kulcsot, és használd az alkalmazásaidban az a
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "URL másolása"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "Javítsa ki az évet, vagy használja a \"Jelenleg\" lehetőséget a folyamatban lévő munkához."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "API kulcs törlése..."
 msgid "Deleting your resume..."
 msgstr "Önéletrajz törlése..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "Írja le, mit tett, hogy a bejegyzés kulcsszavakat adjon az egyezéshez."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "Add meg a jelszavadat a kétlépcsős hitelesítés kikapcsolásához. A fiókod kevésbé lesz biztonságos 2FA nélkül."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Hiba"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "Minden ellenőrzés sikeres volt. "
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "Tapasztalat"
 msgid "Expires in"
 msgstr "Lejárat"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Lejár ekkor: {0}"
@@ -2372,6 +2433,10 @@ msgstr "Önéletrajz fejlécének beillesztése"
 msgid "Increase indent"
 msgstr "Behúzás növelése"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "Növelje őket, hogy a tartalom a megbízhatóan olvasható területen belül maradjon."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "Nagyítás növelése"
@@ -2582,6 +2647,7 @@ msgstr "Elrendezés"
 msgid "Learn More"
 msgstr "Tudj meg többet"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "Elhagyás"
@@ -2589,6 +2655,10 @@ msgstr "Elhagyás"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Hagyd üresen az eredeti cím visszaállításához."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "Hagyja, hogy AI-szolgáltatót hozzon létre?"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "Mistral mesterséges intelligencia"
 msgid "Model"
 msgstr "Modell"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "A legtöbb rendszer e-mailben rögzíti a jelölteket. "
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "Helyezze át a fő oszlopba, és tartsa meg az oldalsávot a rövid listák számára."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Szakasz áthelyezése másik oszlopba vagy oldalra"
@@ -2854,6 +2932,10 @@ msgstr "nepáli"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "Hálózat"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "Soha nem jár le"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "Nincs csatlakoztatva"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "Nem tudod, mit írj?"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "Jegyzet"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "Folyamatábra"
 msgid "Pipeline health across all applications"
 msgstr "A folyamat állapota az összes jelentkezésben"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "Helyezze el egy oldalra az Elrendezés panelről, vagy rejtse el, ha parkolni akarta."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "Egyszerű szöveg, ideális AI-eszközökhöz és gyors szerkesztésekhez."
@@ -3288,6 +3378,10 @@ msgstr "portugál (Portugália)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Pozíció"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "Előnyben részesítse a hagyományos címsort, például \"Munka tapasztalat\" vagy \"Oktatás\"."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "Szlovén"
 msgid "Slug"
 msgstr "Keresőbarát azonosító"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "Egyes jelentkezési rendszereknek szüksége van egy ilyenre a benyújtás előtt."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "Egyes elemzők rosszul kezelik a képeket, és egyes régiókban nem javasoljuk a fotók használatát."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Valami rosszul sült el"
@@ -4202,6 +4304,7 @@ msgstr "Téma indítása"
 msgid "Statistics"
 msgstr "Statisztikák"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "Maradás"
@@ -4254,6 +4357,10 @@ msgstr "A Reactive Resume támogatása"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "Támogasd az alkalmazást, amivel csak tudod!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "Cserélje fel a kezdő és befejező dátumot."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "Hiba történt a PDF létrehozásakor, kérjük, próbálja újra."
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Hiba történt az önéletrajz nyomtatásra való előkészítése során, kérjük, próbálja újra."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "Ezek az ellenőrzések gépelés közben futnak, és soha nem hagyják el a böngészőt. "
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "Ezek a dátumok nem lesznek megfelelően olvasva."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "Gondolkodás"
@@ -4455,6 +4570,18 @@ msgstr "Ez az ügynökszál nem nyitható meg."
 msgid "This assistant could not be opened."
 msgstr "Ez az asszisztens nem nyitható meg."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "Ez a dátum nem lesz helyesen olvasható."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "Ezt az e-mail címet a rendszer nem ismeri fel."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "Ennek a bejegyzésnek nincsenek dátumai."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "Ez a bejegyzés véglegesen törlődik. Ezt nem lehet visszavonni."
@@ -4463,13 +4590,29 @@ msgstr "Ez a bejegyzés véglegesen törlődik. Ezt nem lehet visszavonni."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ehhez a funkcióhoz csatlakoztatott MI-szolgáltató szükséges. Kérjük, állítson be egyet a beállításokban."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "Ezt a címsort nem az elemzők keresik."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Ez az önéletrajzod URL‑barát neve."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "Ennek a linknek hiányzik a protokollja."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Ez néhány percet igénybe vehet, az AI szolgáltató válaszidejétől függően. Kérjük, ne zárd be az ablakot, és ne frissítsd az oldalt."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "Ez az időszak a kezdete előtt véget ér."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "Ez az időszak a jövőben kezdődik."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "Ezt az önéletrajzot egy mesterséges intelligencia által fejlesztett 
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Az önéletrajz megosztási beállításai máshol módosultak."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "Ennek a szerepnek nincs leírása."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "Ennek a szakasznak van tartalma, de soha nem jelenik meg."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Ez a szekció az adott önéletrajzhoz tartozó személyes jegyzeteidnek van fenntartva. A tartalma privát marad, és senkivel sem osztjuk meg."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "Ez a szakasz oszlopokra van osztva."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "Ez a szakasz üres címsorként jelenik meg."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "Ez a rész az oldalsávban található."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "Használat"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "Használjon legalább 1,15-ös vonalmagasságot, hogy a sorok ne legyenek összevonva."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "Használjon egyszerű címet, például név@example.com, körülvevő szöveg nélkül."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Használjon elismert űrlapot, például \"2020. január – 2022. március\" vagy \"2020 - 2022\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "Használjon elismert űrlapot, például \"2022. március\" vagy \"2022\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "Használjon legalább 9 pt méretet, hogy az újra renderelt másolatok pontosak maradjanak."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "Önkéntesség"
 msgid "vs previous 30 days"
 msgstr "az előző 30 naphoz képest"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "Nem tudtuk automatikusan felismerni a formátumot – kérjük, válassza ki fent."
@@ -5034,6 +5221,10 @@ msgstr "Működik…"
 msgid "Worth a shot"
 msgstr "Megér egy próbát"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "Írja be a teljes címet, beleértve a https://-t is."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
@@ -5066,6 +5257,10 @@ msgstr "Az önéletrajzodat megoszthatod egy egyedi nyilvános URL‑lel, jelsz�
 msgid "You have unsaved changes that will be lost."
 msgstr "Nem mentett módosításai vannak, amelyek elvesznek."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "Ekkor az Integrációk oldalra kerül. "
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "A fiókodat sikeresen töröltük."
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Az API kulcsodat a vágólapra másoltuk."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "A törzsszövege nagyon kicsi."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "A legutóbbi módosításokat nem sikerült menteni."
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "A korábbi stílusok aktívak maradnak, amíg explicit módon nem aktiválja ezt a szemantikus CSS-tervezetet."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "A soraid nagyon szorosan vannak csomagolva."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "Az oldal margói nagyon szűkek."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5140,6 +5347,30 @@ msgstr "Az önéletrajz visszaállításra került a kiválasztott verzióra."
 msgid "Your resume has been updated successfully."
 msgstr "Az önéletrajzod sikeresen frissítve lett."
 
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "Az önéletrajzában nincs e-mail cím."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "Az önéletrajzának nincs helye."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "Az önéletrajzának nincs neve."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "Az önéletrajzában nincs telefonszám."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "Önéletrajza fényképet is tartalmaz."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "Az önéletrajzában nincs munkatapasztalat."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Az önéletrajzod nyilvános linkje jelenleg jelszóval védett. A jelszót csak megbízható személyekkel oszd meg."
@@ -5168,4 +5399,3 @@ msgstr "Kicsinyítés"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

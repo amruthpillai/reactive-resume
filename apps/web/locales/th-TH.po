@@ -73,9 +73,29 @@ msgstr "ข้าม {0} รายการ (ไม่มีบริษัท/�
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, other {# คอลัมน์}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, other {# ข้อผิดพลาด}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, other {# หมายเหตุ}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, other {# คำเตือน}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} ในช่วง 30 วันที่ผ่านมา"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "ผ่านการตรวจสอบ {passedRules} จาก {totalRules} รายการ"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · รายการ {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "เพิ่มประสบการณ์อาสาสมัคร
 msgid "Add a note…"
 msgstr "เพิ่มโน้ต…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "เพิ่มช่วงเวลา เช่น \"ม.ค. 2020 - ปัจจุบัน\" เพื่อให้เข้าสู่ไทม์ไลน์ของคุณ"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "เพิ่มแท็กแล้วกด Enter…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "เพิ่มรายการหรือใช้โครงการและงานอาสาสมัครเพื่อแสดงประวัติที่เทียบเท่า"
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "เพิ่มรายการหรือซ่อนรายการ"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "เพิ่มและทดสอบผู้ให้บริกา
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "เพิ่มใบสมัคร"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "เพิ่มเมืองและประเทศเป็นอย่างน้อยเพื่อให้สามารถจับคู่บทบาทกับภูมิภาคของคุณได้"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "เพิ่มแท็ก"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "เพิ่มไปยังไปป์ไลน์"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "เพิ่มชื่อเต็มของคุณใต้ข้อมูลพื้นฐาน"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "อัตราส่วนภาพ"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud สนับสนุน Reactive Resume ในฐานะผู้สนับสนุนโครงการ หากบริษัทของคุณสนใจสนับสนุนโครงการ โปรดส่งอีเมลไปที่ <0>{sponsorshipEmail}</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "ตรวจสอบเอทีเอส"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "โคฮีร์"
 msgid "Columns"
 msgstr "คอลัมน์"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "โดยทั่วไปแล้วคอลัมน์จะแย่งกันอ่านข้อความตามลำดับ ให้ตั้งค่าเป็นคอลัมน์เดียว"
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "คัดลอกคีย์ลับนี้และใช้ใน
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "คัดลอก URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "แก้ไขปี หรือใช้ \"ปัจจุบัน\" สำหรับงานต่อเนื่อง"
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "กำลังลบคีย์ API ของคุณ..."
 msgid "Deleting your resume..."
 msgstr "กำลังลบเรซูเม่ของคุณ..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "อธิบายสิ่งที่คุณทำเพื่อให้รายการมีส่วนช่วยในการจับคู่คำหลัก"
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "กรอกรหัสผ่านของคุณเพื่อปิดการใช้งานการยืนยันตัวตนสองขั้นตอน บัญชีของคุณจะไม่ปลอดภัยเท่าเดิมหากไม่ได้เปิดใช้งาน 2FA"
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "ข้อผิดพลาด"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "ผ่านการตรวจสอบทุกครั้ง ไม่มีสิ่งใดที่นี่ควรหยุด parser จากการอ่านเรซูเม่ของคุณ"
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "ประสบการณ์"
 msgid "Expires in"
 msgstr "หมดอายุใน"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "หมดอายุเมื่อ {0}"
@@ -2372,6 +2433,10 @@ msgstr "รวมส่วนหัวของเรซูเม่"
 msgid "Increase indent"
 msgstr "เพิ่มระยะเยื้อง"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "เพิ่มเนื้อหาเพื่อให้เนื้อหาอยู่ภายในพื้นที่อ่านที่เชื่อถือได้"
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "เพิ่มกำลังซูม"
@@ -2582,6 +2647,7 @@ msgstr "เค้าโครง"
 msgid "Learn More"
 msgstr "เรียนรู้เพิ่มเติม"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "ออก"
@@ -2589,6 +2655,10 @@ msgstr "ออก"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "เว้นว่างไว้เพื่อรีเซ็ตชื่อกลับเป็นค่าเดิม"
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "ออกไปตั้งค่าผู้ให้บริการ AI ไหม?"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "มิสทรัล AI"
 msgid "Model"
 msgstr "โมเดล"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "ระบบส่วนใหญ่จะยื่นผู้สมัครทางอีเมล เพิ่มหนึ่งอันภายใต้พื้นฐาน"
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "ย้ายไปยังคอลัมน์หลักและเก็บแถบด้านข้างไว้สำหรับรายการสั้นๆ"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "ย้ายส่วนไปยังคอลัมน์หรือหน้าอื่น"
@@ -2854,6 +2932,10 @@ msgstr "เนปาลี"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "ชื่อเว็บไซต์"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "ไม่มีวันหมดอายุ"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "ไม่ได้เชื่อมต่อ"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "ไม่แน่ใจว่าจะเขียนอะไรดี?"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "หมายเหตุ"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "โฟลว์ไปป์ไลน์"
 msgid "Pipeline health across all applications"
 msgstr "สถานะไปป์ไลน์ในทุกใบสมัคร"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "วางบนหน้าจากแผงเค้าโครง หรือซ่อนไว้หากคุณต้องการจอด"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "ข้อความล้วน เหมาะสำหรับเครื่องมือ AI และการแก้ไขด่วน"
@@ -3288,6 +3378,10 @@ msgstr "โปรตุเกส (โปรตุเกส)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "ตำแหน่ง"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "ต้องการหัวข้อทั่วไป เช่น \"ประสบการณ์การทำงาน\" หรือ \"การศึกษา\""
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "ภาษาสโลวีเนีย"
 msgid "Slug"
 msgstr "ชื่อ"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "ระบบการสมัครบางระบบจำเป็นต้องมีระบบก่อนจึงจะสามารถส่งได้"
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "โปรแกรมแยกวิเคราะห์บางคนจัดการรูปภาพในทางที่ผิด และรูปภาพไม่ได้รับการสนับสนุนในบางภูมิภาค"
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "เกิดข้อผิดพลาดบางอย่าง"
@@ -4202,6 +4304,7 @@ msgstr "เริ่มกระทู้"
 msgid "Statistics"
 msgstr "สถิติ"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "อยู่ต่อ"
@@ -4254,6 +4357,10 @@ msgstr "สนับสนุน Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "สนับสนุนแอปด้วยวิธีใดก็ได้ตามกำลังของคุณ!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "สลับวันที่เริ่มต้นและสิ้นสุด"
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "เกิดปัญหาขณะสร้างไฟล์ PDF โ�
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "เกิดข้อผิดพลาดขณะเตรียมพิมพ์เรซูเม่ของคุณ โปรดลองใหม่อีกครั้ง"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "การตรวจสอบเหล่านี้ทำงานในขณะที่คุณพิมพ์และจะไม่ออกจากเบราว์เซอร์ของคุณ พวกเขาถามว่าเครื่องสามารถอ่านเรซูเม่ของคุณได้หรือไม่ ไม่ใช่ว่าอ่านได้ดีหรือไม่"
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "วันที่เหล่านี้จะอ่านไม่ถูกต้อง"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "การคิด"
@@ -4455,6 +4570,18 @@ msgstr "ไม่สามารถเปิดกระทู้ตัวแท
 msgid "This assistant could not be opened."
 msgstr "ไม่สามารถเปิดผู้ช่วยนี้ได้"
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "วันที่นี้จะอ่านไม่ถูกต้อง"
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "ที่อยู่อีเมลนี้จะไม่ถูกจดจำ"
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "รายการนี้ไม่มีวันที่"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "รายการนี้จะถูกลบอย่างถาวร ไม่สามารถย้อนกลับได้"
@@ -4463,13 +4590,29 @@ msgstr "รายการนี้จะถูกลบอย่างถาว
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "ฟังก์ชันนี้ต้องใช้ผู้ให้บริการ AI ที่เชื่อมต่ออยู่ โปรดตั้งค่าผู้ให้บริการในส่วนการตั้งค่า"
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "หัวข้อนี้ไม่ใช่สิ่งที่ parsers มองหา"
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "นี่คือชื่อเรซูเม่ที่เหมาะสำหรับใช้ใน URL"
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "ลิงก์นี้ไม่มีโปรโตคอล"
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "อาจใช้เวลาสักครู่ขึ้นอยู่กับการตอบสนองของผู้ให้บริการ AI กรุณาอย่าปิดหน้าต่างหรือรีเฟรชหน้าเว็บ"
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "ช่วงเวลานี้สิ้นสุดก่อนที่จะเริ่ม"
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "ช่วงนี้เริ่มในอนาคต"
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "ประวัติย่อนี้ได้รับการปร
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "การตั้งค่าการแชร์เรซูเม่ฉบับนี้มีการเปลี่ยนแปลงที่อื่น"
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "บทบาทนี้ไม่มีคำอธิบาย"
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "ส่วนนี้มีเนื้อหาแต่ไม่เคยปรากฏ"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "ส่วนนี้มีไว้สำหรับจดโน้ตส่วนตัวของคุณที่เกี่ยวกับเรซูเม่นี้ เนื้อหาตรงนี้เป็นส่วนตัวและไม่ได้แชร์กับใคร"
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "ส่วนนี้แบ่งออกเป็นคอลัมน์ต่างๆ"
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "ส่วนนี้แสดงผลเป็นส่วนหัวที่ว่างเปล่า"
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "ส่วนนี้อยู่ในแถบด้านข้าง"
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "ใช้"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "ใช้ความสูงของเส้นอย่างน้อย 1.15 เพื่อไม่ให้เส้นรวมเข้าด้วยกัน"
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "ใช้ที่อยู่ธรรมดา เช่น name@example.com โดยไม่มีข้อความล้อมรอบ"
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "ใช้แบบฟอร์มที่ได้รับการยอมรับ เช่น \"ม.ค. 2020 - มี.ค. 2022\" หรือ \"2020 - 2022\""
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "ใช้แบบฟอร์มที่ได้รับการยอมรับ เช่น \"มีนาคม 2022\" หรือ \"2022\""
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "ใช้ขนาดอย่างน้อย 9pt เพื่อให้สำเนาที่แสดงผลซ้ำมีความถูกต้องแม่นยำ"
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "อาสาสมัคร"
 msgid "vs previous 30 days"
 msgstr "เมื่อเทียบกับ 30 วันก่อนหน้า"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "คำเตือน"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "เราไม่สามารถตรวจจับรูปแบบได้โดยอัตโนมัติ โปรดเลือกรูปแบบด้านบน"
@@ -5034,6 +5221,10 @@ msgstr "กำลังทำงาน…"
 msgid "Worth a shot"
 msgstr "น่าลอง"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "เขียนที่อยู่แบบเต็ม รวมทั้ง https://"
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (ทวิตเตอร์)"
@@ -5066,6 +5257,10 @@ msgstr "คุณสามารถแบ่งปันประวัติย
 msgid "You have unsaved changes that will be lost."
 msgstr "คุณมีการเปลี่ยนแปลงที่ยังไม่ได้บันทึกซึ่งจะสูญหาย"
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "คุณจะถูกนำไปที่หน้าการรวมระบบ ไฟล์ที่คุณเลือกจะไม่ถูกนำเข้า"
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "บัญชีของคุณถูกลบเรียบร้อ
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "คีย์ API ของคุณถูกคัดลอกไปยังคลิปบอร์ดแล้ว"
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "ข้อความในร่างกายของคุณมีขนาดเล็กมาก"
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "ไม่สามารถบันทึกการเปลี่ย
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "สไตล์เดิมของคุณจะยังคงใช้งานได้จนกว่าคุณจะเปิดใช้งานร่าง CSS เชิงความหมายนี้อย่างชัดเจน"
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "เส้นของคุณแน่นมาก"
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "ขอบหน้าของคุณแคบมาก"
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5140,6 +5347,30 @@ msgstr "ประวัติย่อของคุณได้รับกา
 msgid "Your resume has been updated successfully."
 msgstr "ประวัติย่อของคุณได้รับการอัปเดตเรียบร้อยแล้ว"
 
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "ประวัติย่อของคุณไม่มีที่อยู่อีเมล"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "ประวัติย่อของคุณไม่มีที่ตั้ง"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "ประวัติย่อของคุณไม่มีชื่อ"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "ประวัติย่อของคุณไม่มีหมายเลขโทรศัพท์"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "ประวัติย่อของคุณมีรูปถ่าย"
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "ประวัติย่อของคุณไม่มีประสบการณ์การทำงาน"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "ขณะนี้ลิงก์สาธารณะของประวัติย่อคุณได้รับการป้องกันด้วยรหัสผ่าน โปรดแบ่งปันรหัสผ่านกับเฉพาะบุคคลที่คุณไว้ใจเท่านั้น."
@@ -5168,4 +5399,3 @@ msgstr "ซูมออก"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ซูลู"
-
