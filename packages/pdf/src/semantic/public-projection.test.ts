@@ -41,6 +41,23 @@ describe("public semantic style projection", () => {
 		expect(serialized).not.toContain("undefined");
 	});
 
+	it("projects valid presentation when the source also has a recoverable error", async () => {
+		const data = buildData();
+		data.metadata.stylesheet = {
+			mode: "semantic",
+			source: {
+				languageVersion: 1,
+				text: "@version 1; section:hover { color: red; } name { color: #123456; }",
+			},
+		};
+
+		const projection = await createPublicStyleProjection({ data });
+
+		expect(projection.nodes["page-1/region-header/header/name"]).toEqual({
+			style: { color: "#123456" },
+		});
+	});
+
 	it("carries final sibling visibility and order without stylesheet source", async () => {
 		const data = buildData();
 		data.basics.email = "ada@example.com";

@@ -4,6 +4,7 @@ import type { ResolvedPdfNodePresentation } from "./adapter";
 import type { ResolvedResumeRuntime } from "./resolve";
 import {
 	computeRenderDataHash,
+	isFatalStylesheetDiagnostic,
 	PROPERTY_REGISTRY_V1,
 	projectPublicRenderData,
 	SEMANTIC_REGISTRY_V1,
@@ -259,8 +260,8 @@ export async function createPublicStyleProjection(input: { data: ResumeData }): 
 		template: input.data.metadata.template,
 		mode: resolveStylesheetMode(input.data),
 	});
-	if (runtime.diagnostics.some(({ severity }) => severity === "error")) {
-		throw new Error("Applied semantic stylesheet cannot be projected");
+	if (runtime.diagnostics.some(isFatalStylesheetDiagnostic)) {
+		throw new Error("Fatal semantic stylesheet cannot be projected");
 	}
 
 	const structure = projectNodeStructure(runtime.sourceTree, runtime.renderTree);

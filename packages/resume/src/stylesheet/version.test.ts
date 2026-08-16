@@ -36,6 +36,18 @@ describe("compileStylesheet", () => {
 		);
 	});
 
+	it("rejects a duplicate version directive nested in an at-rule block", () => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: "@version 1; @media (width: 600pt) { @version 1; name { color: red; } }",
+		});
+
+		expect(result.program).toBeNull();
+		expect(result.diagnostics).toContainEqual(
+			expect.objectContaining({ code: "DUPLICATE_VERSION_DIRECTIVE", severity: "error" }),
+		);
+	});
+
 	it("rejects malformed directives", () => {
 		const result = compileStylesheet({ languageVersion: 1, text: "@version one;" });
 

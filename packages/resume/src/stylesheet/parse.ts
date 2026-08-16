@@ -49,8 +49,20 @@ export function parseStylesheet(source: string): ParsedStylesheet {
 
 	if (!ast) return { ast: null, atRules: [], rules: [], diagnostics };
 
+	const atRules: ParsedAtRule[] = [];
 	const rawRanges = new Set<number>();
 	csstree.walk(ast, function (this: { declaration?: { property?: string } | null }, node: CssNode) {
+		if (node.type === "Atrule" && node.name) {
+			const prelude = node.prelude?.loc
+				? source.slice(node.prelude.loc.start.offset, node.prelude.loc.end.offset).trim()
+				: "";
+			atRules.push({
+				name: csstree.ident.decode(node.name).toLowerCase(),
+				prelude,
+				hasBlock: node.block !== null,
+				range: rangeFromLocation(node.loc),
+			});
+		}
 		if (node.type !== "Raw") return;
 		if (this.declaration?.property?.startsWith("--")) return;
 
@@ -62,22 +74,6 @@ export function parseStylesheet(source: string): ParsedStylesheet {
 	});
 
 	const nodes = topLevelNodes(ast);
-	const atRules: ParsedAtRule[] = nodes.flatMap((node) => {
-		if (node.type !== "Atrule" || !node.name) return [];
-
-		const prelude = node.prelude?.loc
-			? source.slice(node.prelude.loc.start.offset, node.prelude.loc.end.offset).trim()
-			: "";
-
-		return [
-			{
-				name: csstree.ident.decode(node.name).toLowerCase(),
-				prelude,
-				hasBlock: node.block !== null,
-				range: rangeFromLocation(node.loc),
-			},
-		];
-	});
 
 	return {
 		ast,
