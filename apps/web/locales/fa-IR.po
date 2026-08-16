@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: reactive-resume\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-04 23:14+0100\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
+"Last-Translator: \n"
+"Language-Team: Persian\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: fa\n"
-"Project-Id-Version: reactive-resume\n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-09 13:09\n"
-"Last-Translator: \n"
-"Language-Team: Persian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: reactive-resume\n"
 "X-Crowdin-Project-ID: 503410\n"
@@ -73,9 +73,29 @@ msgstr "{0} مورد رد شد (شرکت/نقش موجود نیست)"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# ستون} other {# ستون}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# خطا} other {# خطا}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {# یادداشت} other {# یادداشت}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, one {# هشدار} other {# هشدار}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} در طول 30 روز گذشته"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{passedRules} از {totalRules} بررسی با موفقیت انجام شد"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · مورد {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "افزودن سابقه داوطلبانه جدید"
 msgid "Add a note…"
 msgstr "افزودن یادداشت…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "دوره‌ای مانند \\\"ژانویهٔ ۲۰۲۰ - اکنون\\\" اضافه کنید تا در خط زمانی شما قرار بگیرد."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "یک برچسب اضافه کنید و Enter را بزنید…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "یک مورد اضافه کنید، یا برای نشان دادن سابقهٔ معادل از پروژه‌ها و کار داوطلبانه استفاده کنید."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "موردی به آن اضافه کنید یا آن را پنهان کنید."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "قبل از شروع یک نخ عامل، یک ارائه‌دهنده �
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "افزودن درخواست"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "دست‌کم شهر و کشور را اضافه کنید تا نقش‌ها با منطقهٔ شما تطبیق داده شوند."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "افزودن برچسب"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "افزودن به مسیر"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "نام کامل خود را در بخش اطلاعات پایه اضافه کنید."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "نسبت تصویر"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud از Reactive Resume به عنوان حامی پروژه پشتیبانی می‌کند. اگر شرکت شما مایل به حمایت مالی از پروژه است، به <0>{sponsorshipEmail}ایمیل بزنید.</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "بررسی ATS"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "کوهر"
 msgid "Columns"
 msgstr "ستون‌ها"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "ستون‌ها معمولاً ترتیب خواندن متن را به‌هم می‌ریزند. آن را روی تک‌ستونه تنظیم کنید."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "این کلید مخفی را کپی کنید و برای دسترسی �
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "کپی URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "سال را اصلاح کنید یا برای کارهای ادامه‌دار از \\\"اکنون\\\" استفاده کنید."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "در حال حذف کلید API شما..."
 msgid "Deleting your resume..."
 msgstr "در حال حذف رزومه شما..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "کاری را که انجام داده‌اید شرح دهید تا این مورد کلمات کلیدی لازم برای تطبیق را داشته باشد."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "برای غیرفعال کردن احراز هویت دو مرحله‌ای گذرواژهٔ خود را وارد کنید. بدون فعال بودن 2FA حساب شما امنیت کمتری خواهد داشت."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "خطا"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "همهٔ بررسی‌ها موفق بودند. هیچ‌چیز در اینجا نباید مانع خواندن رزومهٔ شما توسط تجزیه‌گر شود."
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "تجربه"
 msgid "Expires in"
 msgstr "منقضی می‌شود در"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "در {0} منقضی می‌شود"
@@ -2372,6 +2433,10 @@ msgstr "افزودن سربرگ رزومه"
 msgid "Increase indent"
 msgstr "افزایش تورفتگی"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "آن‌ها را افزایش دهید تا محتوا در محدوده‌ای بماند که به‌طور قابل‌اعتماد خوانده می‌شود."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "افزایش زوم"
@@ -2582,6 +2647,7 @@ msgstr "چیدمان"
 msgid "Learn More"
 msgstr "بیشتر بدانید"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "خروج"
@@ -2589,6 +2655,10 @@ msgstr "خروج"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "برای بازگرداندن عنوان به مقدار اصلی، آن را خالی بگذارید."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "برای تنظیم ارائه‌دهندهٔ هوش مصنوعی خارج می‌شوید؟"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "هوش مصنوعی میسترال"
 msgid "Model"
 msgstr "مدل"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "بیشتر سامانه‌ها داوطلبان را با ایمیل ثبت می‌کنند. یک ایمیل در بخش اطلاعات پایه اضافه کنید."
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "آن را به ستون اصلی منتقل کنید و نوار کناری را برای فهرست‌های کوتاه نگه دارید."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "انتقال بخش به ستون یا صفحه دیگر"
@@ -2854,6 +2932,10 @@ msgstr "نپالی"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "شبکه"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "هرگز منقضی نمی‌شود"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "متصل نیست"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "مطمئن نیستید چه بنویسید؟"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "یادداشت"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "جریان مسیر"
 msgid "Pipeline health across all applications"
 msgstr "وضعیت مسیر در همهٔ درخواست‌ها"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "آن را از پنل چیدمان در یک صفحه قرار دهید، یا اگر قصد کنار گذاشتنش را دارید پنهان کنید."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "متن ساده، مناسب برای ابزارهای AI و ویرایش‌های سریع."
@@ -3288,6 +3378,10 @@ msgstr "پرتغالی (پرتغال)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "موقعیت شغلی"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "عنوانی رایج مانند \\\"سابقهٔ کاری\\\" یا \\\"تحصیلات\\\" را ترجیح دهید."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "اسلوونیایی"
 msgid "Slug"
 msgstr "نام یکتا"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "برخی سامانه‌های درخواست شغلی پیش از ارسال، داشتن آن را الزامی می‌کنند."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "برخی تجزیه‌گرها تصاویر را نادرست پردازش می‌کنند و در بعضی مناطق استفاده از عکس توصیه نمی‌شود."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "چیزی اشتباه پیش رفت"
@@ -4202,6 +4304,7 @@ msgstr "شروع تاپیک"
 msgid "Statistics"
 msgstr "آمارها"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "ماندن"
@@ -4254,6 +4357,10 @@ msgstr "حمایت از Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "با هر کاری که می‌توانید از اپ حمایت کنید!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "تاریخ شروع و پایان را جابه‌جا کنید."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "هنگام ایجاد فایل PDF مشکلی پیش آمد، لطفاً
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "هنگام آماده‌سازی رزومه شما برای چاپ مشکلی پیش آمد، لطفاً دوباره امتحان کنید."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "این بررسی‌ها هنگام تایپ اجرا می‌شوند و هرگز از مرورگر شما خارج نمی‌شوند. آن‌ها می‌پرسند آیا ماشین می‌تواند رزومهٔ شما را بخواند، نه اینکه آیا خوب می‌خواند."
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "این تاریخ‌ها به‌درستی خوانده نخواهند شد."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "تفکر"
@@ -4455,6 +4570,18 @@ msgstr "این تاپیک مربوط به نماینده قابل باز شدن 
 msgid "This assistant could not be opened."
 msgstr "این دستیار قابل باز شدن نیست."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "این تاریخ به‌درستی خوانده نخواهد شد."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "این نشانی ایمیل شناسایی نخواهد شد."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "این مورد هیچ تاریخی ندارد."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "این ورودی برای همیشه حذف خواهد شد. این کار قابل بازگشت نیست."
@@ -4463,13 +4590,29 @@ msgstr "این ورودی برای همیشه حذف خواهد شد. این ک�
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "این ویژگی به یک ارائه‌دهنده هوش مصنوعی متصل نیاز دارد. لطفاً یکی را در تنظیمات تنظیم کنید."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "این عنوان از عنوان‌هایی نیست که تجزیه‌گرها به دنبال آن هستند."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "این یک نام مناسب برای URLِ رزومه شما است."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "پروتکل این پیوند وجود ندارد."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "این کار ممکن است چند دقیقه طول بکشد، بسته به پاسخ ارائه‌دهندهٔ هوش مصنوعی. لطفاً پنجره را نبندید یا صفحه را تازه‌سازی نکنید."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "این دوره پیش از شروع به پایان می‌رسد."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "این دوره در آینده شروع می‌شود."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "این رزومه توسط یک عامل هوش مصنوعی به‌رو
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "تنظیمات اشتراک‌گذاری این رزومه در جای دیگری تغییر کرده است."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "این نقش توضیحی ندارد."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "این بخش محتوا دارد اما هرگز نمایش داده نمی‌شود."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "این بخش برای یادداشت‌های شخصی شما مخصوص این رزومه اختصاص داده شده است. محتوای اینجا خصوصی است و با هیچ‌کس دیگری به اشتراک گذاشته نمی‌شود."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "این بخش بین ستون‌ها تقسیم شده است."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "این بخش به‌صورت عنوانی خالی نمایش داده می‌شود."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "این بخش در نوار کناری قرار دارد."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "آدرس وبسایت"
 msgid "Use"
 msgstr "استفاده کنید"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "ارتفاع خط را دست‌کم ۱٫۱۵ تنظیم کنید تا خطوط با هم ادغام نشوند."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "از نشانی ساده‌ای مانند name@example.com بدون متن پیرامون آن استفاده کنید."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "از قالب شناخته‌شده‌ای مانند \\\"ژانویهٔ ۲۰۲۰ - مارس ۲۰۲۲\\\" یا \\\"۲۰۲۰ - ۲۰۲۲\\\" استفاده کنید."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "از قالب شناخته‌شده‌ای مانند \\\"مارس ۲۰۲۲\\\" یا \\\"۲۰۲۲\\\" استفاده کنید."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "اندازه‌ای دست‌کم ۹pt استفاده کنید تا نسخه‌های بازتولیدشده دقیق بمانند."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "داوطلبانه"
 msgid "vs previous 30 days"
 msgstr "در مقابل ۳۰ روز گذشته"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "هشدار"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "ما نتوانستیم قالب را به طور خودکار تشخیص دهیم — لطفاً آن را از بالا انتخاب کنید."
@@ -5034,6 +5221,10 @@ msgstr "کار می‌کند…"
 msgid "Worth a shot"
 msgstr "ارزش امتحان کردن دارد"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "نشانی کامل را، از جمله https://، بنویسید."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "ایکس (توییتر)"
@@ -5066,6 +5257,10 @@ msgstr "می‌توانید رزومه خود را از طریق یک URL عمو
 msgid "You have unsaved changes that will be lost."
 msgstr "تغییرات ذخیره‌نشده‌ای دارید که از دست خواهند رفت."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "به صفحهٔ یکپارچه‌سازی‌ها منتقل می‌شوید. فایل انتخاب‌شدهٔ شما وارد نخواهد شد."
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "حساب کاربری شما با موفقیت حذف شد."
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "کلید API شما در کلیپ‌بورد کپی شد."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "متن بدنهٔ شما بسیار کوچک است."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "آخرین تغییرات شما ذخیره نشد."
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "سبک‌های قدیمی شما تا زمانی که صریحاً این پیش‌نویس CSS معنایی را فعال نکنید، فعال می‌مانند."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "خطوط شما بیش از حد فشرده‌اند."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "حاشیه‌های صفحهٔ شما بسیار باریک‌اند."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5140,6 +5347,30 @@ msgstr "رزومه شما به نسخه انتخاب شده بازیابی شد.
 msgid "Your resume has been updated successfully."
 msgstr "رزومه شما با موفقیت به‌روز شد."
 
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "رزومهٔ شما نشانی ایمیل ندارد."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "رزومهٔ شما مکان ندارد."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "رزومه شما نام ندارد."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "رزومه شما شماره تلفن ندارد."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "رزومه شما شامل عکس است."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "رزومه شما سابقه کاری نشان نمی‌دهد."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "لینک عمومی رزومه شما در حال حاضر با گذرواژه محافظت می‌شود. گذرواژه را فقط با افرادی که به آن‌ها اعتماد دارید به اشتراک بگذارید."
@@ -5168,4 +5399,3 @@ msgstr "کوچک‌نمایی"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "زولو"
-

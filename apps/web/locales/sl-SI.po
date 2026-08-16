@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: reactive-resume\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-04 23:14+0100\n"
+"PO-Revision-Date: 2026-08-09 13:09\n"
+"Last-Translator: \n"
+"Language-Team: Slovenian\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: sl\n"
-"Project-Id-Version: reactive-resume\n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-09 13:09\n"
-"Last-Translator: \n"
-"Language-Team: Slovenian\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
 "X-Crowdin-Project: reactive-resume\n"
 "X-Crowdin-Project-ID: 503410\n"
@@ -73,9 +73,29 @@ msgstr "{0} preskočenih (manjkajoče podjetje/vloga)"
 msgid "{column, plural, one {# Column} other {# Columns}}"
 msgstr "{column, plural, one {# stolpec} two {# stolpca} few {# stolpci} other {# stolpcev}}"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# error} other {# errors}}"
+msgstr "{count, plural, one {# error} other {# errors}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# note} other {# notes}}"
+msgstr "{count, plural, one {# note} other {# notes}}"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{count, plural, one {# warning} other {# warnings}}"
+msgstr "{count, plural, one {# opozorilo} other {# opozoril}}"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "{label} over the last 30 days"
 msgstr "{label} v zadnjih 30 dneh"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "{passedRules} of {totalRules} checks passed"
+msgstr "{passedRules} od {totalRules} preverjanj je uspelo"
+
+#: src/libs/resume/ats.ts
+msgid "{sectionTitle} · Item {itemNumber}"
+msgstr "{sectionTitle} · Element {itemNumber}"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
@@ -254,9 +274,21 @@ msgstr "Dodaj novo prostovoljno izkušnjo"
 msgid "Add a note…"
 msgstr "Dodajte opombo…"
 
+#: src/libs/resume/ats.ts
+msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
+msgstr "Dodajte obdobje, kot je \"januar 2020 - danes\", da bo pristalo na vaši časovnici."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Dodajte oznako in pritisnite Enter…"
+
+#: src/libs/resume/ats.ts
+msgid "Add an entry, or use projects and volunteer work to show equivalent history."
+msgstr "Dodajte vnos ali uporabite projekte in prostovoljno delo, da prikažete enakovredno zgodovino."
+
+#: src/libs/resume/ats.ts
+msgid "Add an item to it, or hide it."
+msgstr "Dodajte ji element ali ga skrijte."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -267,6 +299,10 @@ msgstr "Preden začnete nit agenta, dodajte in preizkusite ponudnika."
 #: src/routes/dashboard/applications/index.tsx
 msgid "Add application"
 msgstr "Dodaj aplikacijo"
+
+#: src/libs/resume/ats.ts
+msgid "Add at least a city and country so roles can be matched to your region."
+msgstr "Dodajte vsaj mesto in državo, da se lahko vloge ujemajo z vašo regijo."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Add contact"
@@ -304,6 +340,10 @@ msgstr "Dodaj oznako"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Dodaj v cevovod"
+
+#: src/libs/resume/ats.ts
+msgid "Add your full name under Basics."
+msgstr "Dodajte svoje polno ime pod Osnove."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Adjust the resume for a remote-first role that values async communication and ownership."
@@ -571,6 +611,10 @@ msgstr "Razmerje stranic"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Atlas Cloud supports Reactive Resume as a project sponsor. If your company would like to sponsor the project, email <0>{sponsorshipEmail}</0>."
 msgstr "Atlas Cloud podpira Reactive Resume kot sponzor projekta. Če bi vaše podjetje želelo sponzorirati projekt, pišite na <0>{sponsorshipEmail}</0> ."
+
+#: src/libs/resume/section.tsx
+msgid "ATS Check"
+msgstr "ATS Check"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -879,6 +923,10 @@ msgstr "Skladno"
 msgid "Columns"
 msgstr "Stolpci"
 
+#: src/libs/resume/ats.ts
+msgid "Columns commonly scramble the order text is read in. Set it to a single column."
+msgstr "Stolpci običajno zamegljujejo besedilo naročila, v katerem se bere. Nastavite ga na en sam stolpec."
+
 #. Accessible label for command list region inside command palette
 #. Accessible label for the command palette dialog
 #: src/features/command-palette/index.tsx
@@ -1023,6 +1071,10 @@ msgstr "Kopirajte to skrivno kodo in jo uporabite v svojih aplikacijah za dostop
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Copy URL"
 msgstr "Kopiraj URL"
+
+#: src/libs/resume/ats.ts
+msgid "Correct the year, or use \"Present\" for ongoing work."
+msgstr "Popravite leto ali uporabite \"Sedanjost\" za tekoče delo."
 
 #. Error description when AI provider cannot be reached during resume analysis
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
@@ -1408,6 +1460,10 @@ msgstr "Brišem vaš API ključ ..."
 msgid "Deleting your resume..."
 msgstr "Brišem vaš življenjepis..."
 
+#: src/libs/resume/ats.ts
+msgid "Describe what you did so the entry contributes keywords for matching."
+msgstr "Opišite, kaj ste storili, da vnos prispeva ključne besede za ujemanje."
+
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
 #: src/dialogs/resume/sections/education.tsx
@@ -1706,8 +1762,13 @@ msgid "Enter your password to disable two-factor authentication. Your account wi
 msgstr "Vnesite svoje geslo za onemogočanje dvostopenjskega preverjanja pristnosti. Vaš račun bo brez omogočenega 2FA manj varen."
 
 #: src/features/resume/stylesheet/status.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Error"
 msgstr "Napaka"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Every check passed. Nothing here should stop a parser from reading your resume."
+msgstr "Vsako preverjanje uspešno. Nič tukaj ne bi smelo razčlenjevalcu preprečiti branja vašega življenjepisa."
 
 #: src/routes/_home/-sections/donate.tsx
 msgid "Every contribution, big or small, makes a huge difference to the project.<0/>Thank you for your support!"
@@ -1735,7 +1796,7 @@ msgstr "Izkušnje"
 msgid "Expires in"
 msgstr "Poteče čez"
 
-#. placeholder {0}: key.expiresAt?.toLocaleDateString()
+#. placeholder {0}: key.expiresAt.toLocaleDateString()
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Poteče {0}"
@@ -2372,6 +2433,10 @@ msgstr "Vključi glavo življenjepisa"
 msgid "Increase indent"
 msgstr "Povečaj zamik"
 
+#: src/libs/resume/ats.ts
+msgid "Increase them so content stays inside the reliably read area."
+msgstr "Povečajte jih, tako da vsebina ostane znotraj zanesljivo prebranega območja."
+
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Increase zoom"
 msgstr "Povečaj povečavo"
@@ -2582,6 +2647,7 @@ msgstr "Postavitev"
 msgid "Learn More"
 msgstr "Več o tem"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Leave"
 msgstr "Zapusti"
@@ -2589,6 +2655,10 @@ msgstr "Zapusti"
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Pustite prazno, da ponastavite naslov na izvirnega."
+
+#: src/dialogs/resume/import.tsx
+msgid "Leave to set up an AI provider?"
+msgstr "Želite zapustiti nastavitev ponudnika AI?"
 
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
@@ -2804,6 +2874,14 @@ msgstr "Mistral AI"
 msgid "Model"
 msgstr "Model"
 
+#: src/libs/resume/ats.ts
+msgid "Most systems file candidates by email. Add one under Basics."
+msgstr "Večina sistemov kandidate vloži po e-pošti. Dodajte eno pod Osnove."
+
+#: src/libs/resume/ats.ts
+msgid "Move it into the main column and keep the sidebar for short lists."
+msgstr "Premaknite ga v glavni stolpec in obdržite stransko vrstico za kratke sezname."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
 msgstr "Premakni razdelek v drug stolpec ali na drugo stran"
@@ -2854,6 +2932,10 @@ msgstr "nepalščina"
 #: src/dialogs/resume/sections/profile.tsx
 msgid "Network"
 msgstr "Omrežje"
+
+#: src/features/settings/pages/api-keys.tsx
+msgid "Never expires"
+msgstr "Nikoli ne poteče"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -2966,6 +3048,10 @@ msgstr "Ni povezano"
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
 msgstr "Niste prepričani, kaj naj napišete?"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Note"
+msgstr "Opomba"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
@@ -3235,6 +3321,10 @@ msgstr "Pretok cevovoda"
 msgid "Pipeline health across all applications"
 msgstr "Zdravje cevovoda v vseh aplikacijah"
 
+#: src/libs/resume/ats.ts
+msgid "Place it on a page from the Layout panel, or hide it if you meant to park it."
+msgstr "Postavite ga na stran s plošče Postavitev ali ga skrijte, če ste ga želeli parkirati."
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Plain text, ideal for AI tools and quick edits."
 msgstr "Navadno besedilo, idealno za orodja AI in hitro urejanje."
@@ -3288,6 +3378,10 @@ msgstr "portugalščina (Portugalska)"
 #: src/dialogs/resume/sections/reference.tsx
 msgid "Position"
 msgstr "Položaj"
+
+#: src/libs/resume/ats.ts
+msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
+msgstr "Dajte prednost običajnemu naslovu, kot je \"Delovne izkušnje\" ali \"Izobrazba\"."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -4089,6 +4183,14 @@ msgstr "Slovenščina"
 msgid "Slug"
 msgstr "Polž"
 
+#: src/libs/resume/ats.ts
+msgid "Some application systems require one before you can submit."
+msgstr "Nekateri sistemi prijav zahtevajo, da jo lahko oddate."
+
+#: src/libs/resume/ats.ts
+msgid "Some parsers mishandle images, and photos are discouraged in some regions."
+msgstr "Nekateri razčlenjevalniki napačno obravnavajo slike, zato fotografije v nekaterih regijah odsvetujejo."
+
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Nekaj je šlo narobe"
@@ -4202,6 +4304,7 @@ msgstr "Začni nit"
 msgid "Statistics"
 msgstr "Statistika"
 
+#: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
 msgid "Stay"
 msgstr "Ostani"
@@ -4254,6 +4357,10 @@ msgstr "Podprite Reactive Resume"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "Podprite aplikacijo na kakršen koli način lahko!"
+
+#: src/libs/resume/ats.ts
+msgid "Swap the start and end dates."
+msgstr "Zamenjajte začetni in končni datum."
 
 #: src/libs/locale.ts
 msgid "Swedish"
@@ -4426,6 +4533,14 @@ msgstr "Pri ustvarjanju PDF-ja je prišlo do težave. Poskusite znova."
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Pri pripravi življenjepisa za tisk je prišlo do težave. Poskusite znova."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
+msgstr "Ta preverjanja se izvajajo med tipkanjem in nikoli ne zapustijo brskalnika. Sprašujejo, ali lahko stroj prebere vaš življenjepis, ne pa, ali ga dobro bere."
+
+#: src/libs/resume/ats.ts
+msgid "These dates will not be read correctly."
+msgstr "Ti datumi ne bodo pravilno prebrani."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Thinking"
 msgstr "Razmišljanje"
@@ -4455,6 +4570,18 @@ msgstr "Te niti agenta ni bilo mogoče odpreti."
 msgid "This assistant could not be opened."
 msgstr "Tega pomočnika ni bilo mogoče odpreti."
 
+#: src/libs/resume/ats.ts
+msgid "This date will not be read correctly."
+msgstr "Ta datum ne bo pravilno prebran."
+
+#: src/libs/resume/ats.ts
+msgid "This email address will not be recognized."
+msgstr "Ta e-poštni naslov ne bo prepoznan."
+
+#: src/libs/resume/ats.ts
+msgid "This entry has no dates."
+msgstr "Ta vnos nima datumov."
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "This entry will be permanently deleted. This can't be undone."
 msgstr "Ta vnos bo trajno izbrisan. Tega ni mogoče razveljaviti."
@@ -4463,13 +4590,29 @@ msgstr "Ta vnos bo trajno izbrisan. Tega ni mogoče razveljaviti."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ta funkcija zahteva povezanega ponudnika umetne inteligence. Nastavite ga v nastavitvah."
 
+#: src/libs/resume/ats.ts
+msgid "This heading is not one parsers look for."
+msgstr "Tega naslova razčlenjevalci ne iščejo."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "To je ime vašega življenjepisa, ki je prijazno do URL-jev."
 
+#: src/libs/resume/ats.ts
+msgid "This link is missing its protocol."
+msgstr "Ta povezava nima protokola."
+
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "To lahko traja nekaj minut, odvisno od odziva AI ponudnika. Prosimo, ne zaprite okna ali osvežite strani."
+
+#: src/libs/resume/ats.ts
+msgid "This period ends before it starts."
+msgstr "To obdobje se konča, preden se začne."
+
+#: src/libs/resume/ats.ts
+msgid "This period starts in the future."
+msgstr "To obdobje se začne v prihodnosti."
 
 #: src/routes/builder/$resumeId/-sidebar/left/index.tsx
 msgid "This resume is locked"
@@ -4487,9 +4630,29 @@ msgstr "Ta življenjepis je posodobil agent umetne inteligence."
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Nastavitve deljenja tega življenjepisa so se spremenile drugje."
 
+#: src/libs/resume/ats.ts
+msgid "This role has no description."
+msgstr "Ta vloga nima opisa."
+
+#: src/libs/resume/ats.ts
+msgid "This section has content but never appears."
+msgstr "Ta razdelek ima vsebino, vendar se nikoli ne pojavi."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "This section is reserved for your personal notes specific to this resume. The content here remains private and is not shared with anyone else."
 msgstr "Ta razdelek je namenjen vašim osebnim opombam, ki se nanašajo na ta življenjepis. Vsebina tukaj ostane zasebna in ni deljena z nikomer."
+
+#: src/libs/resume/ats.ts
+msgid "This section is split across columns."
+msgstr "Ta razdelek je razdeljen na več stolpcev."
+
+#: src/libs/resume/ats.ts
+msgid "This section renders as an empty heading."
+msgstr "Ta razdelek se prikaže kot prazen naslov."
+
+#: src/libs/resume/ats.ts
+msgid "This section sits in the sidebar."
+msgstr "Ta razdelek je v stranski vrstici."
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -4884,6 +5047,26 @@ msgstr "URL"
 msgid "Use"
 msgstr "Uporaba"
 
+#: src/libs/resume/ats.ts
+msgid "Use a line height of at least 1.15 so lines are not merged together."
+msgstr "Uporabite višino vrstice vsaj 1,15, da se črte ne združijo."
+
+#: src/libs/resume/ats.ts
+msgid "Use a plain address such as name@example.com, with no surrounding text."
+msgstr "Uporabite navaden naslov, kot je ime@example.com, brez besedila v okolici."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Uporabite priznano obliko, kot je \"januar 2020 - marec 2022\" ali \"2020 - 2022\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
+msgstr "Uporabite priznano obliko, kot je \"marec 2022\" ali \"2022\"."
+
+#: src/libs/resume/ats.ts
+msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
+msgstr "Uporabite velikost vsaj 9pt, da bodo znova upodobljene kopije ostale natančne."
+
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
@@ -4972,6 +5155,10 @@ msgstr "Prostovoljec"
 msgid "vs previous 30 days"
 msgstr "v primerjavi s prejšnjimi 30 dnevi"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Warning"
+msgstr "Opozorilo"
+
 #: src/dialogs/resume/import.tsx
 msgid "We couldn't detect the format automatically — please choose it above."
 msgstr "Oblike ni bilo mogoče samodejno zaznati – izberite jo zgoraj."
@@ -5034,6 +5221,10 @@ msgstr "Deluje…"
 msgid "Worth a shot"
 msgstr "Vredno poskusiti"
 
+#: src/libs/resume/ats.ts
+msgid "Write the full address, including https://."
+msgstr "Napišite polni naslov, vključno s https://."
+
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
@@ -5066,6 +5257,10 @@ msgstr "Svoj življenjepis lahko delite prek edinstvenega javnega URL-ja, ga za�
 msgid "You have unsaved changes that will be lost."
 msgstr "Imate neshranjene spremembe, ki bodo izgubljene."
 
+#: src/dialogs/resume/import.tsx
+msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
+msgstr "Preusmerjeni boste na stran Integracije. Datoteka, ki ste jo izbrali, ne bo uvožena."
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -5078,6 +5273,10 @@ msgstr "Vaš račun je bil uspešno izbrisan."
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Vaš API ključ je bil kopiran v odložišče."
+
+#: src/libs/resume/ats.ts
+msgid "Your body text is very small."
+msgstr "Vaše besedilo je zelo majhno."
 
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
@@ -5102,6 +5301,14 @@ msgstr "Vaših zadnjih sprememb ni bilo mogoče shraniti."
 #: src/features/resume/stylesheet/legacy-banner.tsx
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Vaši podedovani slogi ostanejo aktivni, dokler izrecno ne aktivirate tega osnutka semantičnega CSS-ja."
+
+#: src/libs/resume/ats.ts
+msgid "Your lines are packed very tightly."
+msgstr "Vaše vrstice so zelo natrpane."
+
+#: src/libs/resume/ats.ts
+msgid "Your page margins are very narrow."
+msgstr "Robovi vaše strani so zelo ozki."
 
 #: src/features/auth/pages/reset-password.tsx
 msgid "Your password has been reset successfully. You can now sign in with your new password."
@@ -5140,6 +5347,30 @@ msgstr "Vaš življenjepis je bil obnovljen v izbrano različico."
 msgid "Your resume has been updated successfully."
 msgstr "Vaš življenjepis je bil uspešno posodobljen."
 
+#: src/libs/resume/ats.ts
+msgid "Your resume has no email address."
+msgstr "Vaš življenjepis nima e-poštnega naslova."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no location."
+msgstr "Vaš življenjepis nima lokacije."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no name."
+msgstr "Vaš življenjepis nima imena."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume has no phone number."
+msgstr "Vaš življenjepis nima telefonske številke."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume includes a photo."
+msgstr "Vaš življenjepis vključuje fotografijo."
+
+#: src/libs/resume/ats.ts
+msgid "Your resume shows no work experience."
+msgstr "Vaš življenjepis ne kaže delovnih izkušenj."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Javna povezava do vašega življenjepisa je trenutno zaščitena z geslom. Geslo delite le z osebami, ki jim zaupate."
@@ -5168,4 +5399,3 @@ msgstr "Oddalji"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zuluščina"
-

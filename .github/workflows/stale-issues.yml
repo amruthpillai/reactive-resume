@@ -1,0 +1,30 @@
+name: Close Issues Awaiting Information
+
+on:
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Close Inactive Issues Awaiting Information
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11
+        with:
+          only-issue-labels: "status: needs info"
+          days-before-issue-stale: 14
+          days-before-issue-close: 7
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          stale-issue-label: stale
+          stale-issue-message: >-
+            This issue is waiting for information requested by a maintainer. It will close in 7 days if no new information is provided.
+          close-issue-message: >-
+            Closing because the requested information was not provided. Add the missing details in a comment and a maintainer can reopen the issue.
+          close-issue-reason: not_planned
+          remove-issue-stale-when-updated: true
