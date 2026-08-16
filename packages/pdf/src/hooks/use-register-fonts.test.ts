@@ -299,6 +299,25 @@ describe("registerFonts", () => {
 		expect(registerSpy).not.toHaveBeenCalledWith(expect.objectContaining({ family: "Lato", fontWeight: 600 }));
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Lato", fontWeight: 700 }));
 	});
+
+	it("keeps Vazirmatn as the primary PDF family instead of substituting IBM Plex Serif (#3098)", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const vazirTypography = {
+			...typography,
+			body: { ...typography.body, fontFamily: "Vazirmatn", fontWeights: ["400"] },
+			heading: { ...typography.heading, fontFamily: "Vazirmatn", fontWeights: ["700"] },
+		} satisfies Typography;
+
+		const pdfTypography = registerFonts(vazirTypography, "fa-IR");
+
+		expect(pdfTypography.body.fontFamily).toEqual(["Vazirmatn", "Noto Sans Arabic", "Noto Sans"]);
+		expect(pdfTypography.heading.fontFamily).toEqual(["Vazirmatn", "Noto Sans Arabic", "Noto Sans"]);
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Vazirmatn", fontWeight: 400 }));
+		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Vazirmatn", fontWeight: 700 }));
+	});
 });
 
 describe("resumeContentContainsCJK", () => {
