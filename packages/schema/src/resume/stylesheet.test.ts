@@ -1,9 +1,21 @@
-import { describe, expect, it } from "vitest";
+import type { z } from "zod";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { resumeDataSchema } from "./data";
 import { defaultResumeData } from "./default";
 import { semanticStylesheetSchema, stylesheetSourceSchema } from "./stylesheet";
 
 describe("semanticStylesheetSchema", () => {
+	it("keeps the public input canonical instead of widening it to unknown", () => {
+		type StylesheetInput = z.input<typeof semanticStylesheetSchema>;
+		type CanonicalInput = {
+			mode: "legacy" | "semantic";
+			source: { languageVersion: number; text: string };
+		};
+
+		expectTypeOf<StylesheetInput>().toEqualTypeOf<CanonicalInput>();
+		expectTypeOf<string>().not.toExtend<StylesheetInput>();
+	});
+
 	it("persists one canonical stylesheet source", () => {
 		const result = semanticStylesheetSchema.parse({
 			mode: "semantic",
