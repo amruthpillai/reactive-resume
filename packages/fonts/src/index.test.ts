@@ -289,3 +289,16 @@ describe("legacy font compatibility (#2989)", () => {
 		expect(getFontDisplayName("Times New Roman")).toBe("Times New Roman");
 	});
 });
+
+describe("locale coverage fonts (#3098)", () => {
+	it("resolves Vazirmatn from the webfont catalog", () => {
+		expect(getFont("Vazirmatn")?.family).toBe("Vazirmatn");
+		expect(getWebFont("Vazirmatn")?.category).toBe("sans-serif");
+	});
+
+	it("returns a gstatic source for Vazirmatn regular so PDF registration can load it", () => {
+		const source = getWebFontSource("Vazirmatn", "400");
+		expect(source).toEqual(expect.stringContaining("vazirmatn"));
+		expect(source).toEqual(expect.stringMatching(/\.ttf(\?|$)/));
+	});
+});
