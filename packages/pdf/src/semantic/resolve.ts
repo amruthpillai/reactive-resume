@@ -3,7 +3,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { StylesheetMode, StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { Template } from "@reactive-resume/schema/templates";
 import type { ResolvedResumePresentation } from "./context";
-import { compileStylesheet, resolveStylesheet } from "@reactive-resume/resume/stylesheet";
+import { compileStylesheet, isFatalStylesheetDiagnostic, resolveStylesheet } from "@reactive-resume/resume/stylesheet";
 import { EMPTY_SEMANTIC_CSS_SOURCE } from "@reactive-resume/schema/resume/stylesheet";
 import { shouldShowResumeHeader } from "../templates/shared/cover-letter";
 import { getTemplatePageSize } from "../templates/shared/page-size";
@@ -17,7 +17,7 @@ import { buildSemanticTree } from "./tree";
 export type ResolveResumePresentationInput = {
 	data: ResumeData;
 	template: Template;
-	applied?: StylesheetSource;
+	source?: StylesheetSource;
 	mode: StylesheetMode;
 };
 
@@ -85,7 +85,7 @@ export function resolveStylesheetMode(data: ResumeData): StylesheetMode {
 export function resolveResumeRuntime({
 	data,
 	template,
-	applied,
+	source,
 	mode,
 }: ResolveResumePresentationInput): ResolvedResumeRuntime {
 	const sourceTree = mergeAuthoredPageTrees(data, template);
@@ -93,12 +93,12 @@ export function resolveResumeRuntime({
 		return { presentation: EMPTY_PRESENTATION, sourceTree, renderTree: sourceTree, diagnostics: [] };
 	}
 
-	const source = applied ??
-		data.metadata.stylesheet?.applied ?? {
+	const stylesheetSource = source ??
+		data.metadata.stylesheet?.source ?? {
 			languageVersion: 1,
 			text: EMPTY_SEMANTIC_CSS_SOURCE,
 		};
-	const compiled = compileStylesheet(source);
+	const compiled = compileStylesheet(stylesheetSource);
 	if (!compiled.program) {
 		return { presentation: EMPTY_PRESENTATION, sourceTree, renderTree: sourceTree, diagnostics: compiled.diagnostics };
 	}
@@ -123,7 +123,7 @@ export function resolveResumeRuntime({
 		pages: authoredPageDimensions(data),
 		aliases,
 	});
-	if (resolved.diagnostics.some(({ severity }) => severity === "error")) {
+	if (resolved.diagnostics.some(isFatalStylesheetDiagnostic)) {
 		return {
 			presentation: EMPTY_PRESENTATION,
 			sourceTree,

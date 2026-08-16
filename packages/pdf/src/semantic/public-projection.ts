@@ -227,7 +227,7 @@ const dataForPublicProjection = (data: ResumeData, languageVersion: number): Res
 		...data,
 		metadata: {
 			...data.metadata,
-			stylesheet: { mode: "semantic", source, applied: source },
+			stylesheet: { mode: "semantic", source },
 		},
 	};
 };
@@ -236,7 +236,7 @@ const projectionFingerprints = async (data: ResumeData, languageVersion?: number
 	formatVersion: PUBLIC_STYLE_PROJECTION_FORMAT_VERSION,
 	languageVersion:
 		languageVersion ??
-		(data.metadata.stylesheet?.mode === "semantic" ? data.metadata.stylesheet.applied.languageVersion : 1),
+		(data.metadata.stylesheet?.mode === "semantic" ? data.metadata.stylesheet.source.languageVersion : 1),
 	semanticTreeVersion: SEMANTIC_TREE_VERSION,
 	...(await getFingerprints()),
 });
@@ -288,7 +288,7 @@ export async function validatePublicStyleProjection(
 	if (!SUPPORTED_SEMANTIC_CSS_VERSIONS.includes(projection.languageVersion as 1)) return false;
 	if (
 		data.metadata.stylesheet?.mode === "semantic" &&
-		projection.languageVersion !== data.metadata.stylesheet.applied.languageVersion
+		projection.languageVersion !== data.metadata.stylesheet.source.languageVersion
 	) {
 		return false;
 	}

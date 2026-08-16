@@ -4,15 +4,16 @@ import { defaultResumeData } from "./default";
 import { semanticStylesheetSchema, stylesheetSourceSchema } from "./stylesheet";
 
 describe("semanticStylesheetSchema", () => {
-	it("preserves separate editable and applied sources", () => {
+	it("persists one canonical stylesheet source", () => {
 		const result = semanticStylesheetSchema.parse({
 			mode: "semantic",
-			source: { languageVersion: 1, text: "@version 1;\nsection {" },
-			applied: { languageVersion: 1, text: "@version 1;\nsection { color: red; }\n" },
+			source: { languageVersion: 1, text: "@version 1;\nsection { color: red; }\n" },
 		});
 
-		expect(result.source.text).toContain("section {");
-		expect(result.applied.text).toContain("color: red");
+		expect(result).toEqual({
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@version 1;\nsection { color: red; }\n" },
+		});
 	});
 
 	it("keeps resumes without a stylesheet valid for legacy rendering", () => {
@@ -24,7 +25,6 @@ describe("semanticStylesheetSchema", () => {
 			semanticStylesheetSchema.safeParse({
 				mode: "semantic",
 				source: { languageVersion: 0, text: "" },
-				applied: { languageVersion: 1, text: "" },
 			}).success,
 		).toBe(false);
 	});
@@ -34,7 +34,6 @@ describe("semanticStylesheetSchema", () => {
 			semanticStylesheetSchema.safeParse({
 				mode: "semantic",
 				source: { languageVersion: 1, text: "" },
-				applied: { languageVersion: 1, text: "" },
 				unknown: true,
 			}).success,
 		).toBe(false);

@@ -15,7 +15,7 @@ describe("Semantic CSS all-template presentation", () => {
 		const runtime = resolveResumeRuntime({
 			data,
 			template,
-			applied: comprehensiveStylesheet,
+			source: comprehensiveStylesheet,
 			mode: "semantic",
 		});
 
@@ -34,7 +34,7 @@ describe("Semantic CSS all-template presentation", () => {
 			const { sourceTree } = resolveResumeRuntime({
 				data,
 				template,
-				applied: comprehensiveStylesheet,
+				source: comprehensiveStylesheet,
 				mode: "semantic",
 			});
 			const templateParts = new Set<string>();

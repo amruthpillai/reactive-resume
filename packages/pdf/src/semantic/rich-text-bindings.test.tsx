@@ -47,7 +47,7 @@ const findSemanticNode = (
 
 const buildFixture = (): ResumeData => {
 	const data = structuredClone(defaultResumeData);
-	const applied = {
+	const source = {
 		languageVersion: 1,
 		text: `
 			@version 1;
@@ -60,7 +60,7 @@ const buildFixture = (): ResumeData => {
 	data.basics.name = "Ada Lovelace";
 	data.summary.content = "<p>First <strong>bold</strong></p><ul><li>Item</li></ul>";
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
-	data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+	data.metadata.stylesheet = { mode: "semantic", source };
 	return data;
 };
 

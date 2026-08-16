@@ -8,7 +8,7 @@ import { createElement } from "react";
 import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { pdf } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
-import { hasSemanticErrors, inspectResumePdf } from "./semantic";
+import { inspectResumePdf } from "./semantic";
 import { resolvePublicStyleProjectionRuntime } from "./semantic/public-projection";
 
 export type {
@@ -60,9 +60,6 @@ export const createResumePdfBlobResult = async ({
 }: CreateResumePdfBlobResultOptions): Promise<ResumePdfRenderResult<Blob>> => {
 	const normalizedOptions = { ...options, data: parseResumeData(options.data) };
 	const resolvedInspection = inspection ?? inspectResumePdf(normalizedOptions);
-	if (hasSemanticErrors(resolvedInspection)) {
-		return { ok: false, diagnostics: resolvedInspection.diagnostics };
-	}
 
 	return {
 		ok: true,

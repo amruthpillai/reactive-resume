@@ -10,13 +10,13 @@ import {
 
 const buildData = () => {
 	const data = structuredClone(defaultResumeData);
-	const applied = {
+	const source = {
 		languageVersion: 1,
 		text: "@version 1;\nname { color: #123456; }\n",
 	};
 	data.basics.name = "Ada Lovelace";
 	data.metadata.layout.pages = [{ fullWidth: true, main: [], sidebar: [] }];
-	data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+	data.metadata.stylesheet = { mode: "semantic", source };
 	return data;
 };
 
@@ -46,14 +46,14 @@ describe("public semantic style projection", () => {
 		data.basics.email = "ada@example.com";
 		data.basics.phone = "+44 123";
 		data.basics.location = "London";
-		const applied = {
+		const source = {
 			languageVersion: 1,
 			text: `@version 1;
 				contact-item[name="location"] { display: none; }
 				contact-item[name="phone"] { order: -1; }
 			`,
 		};
-		data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+		data.metadata.stylesheet = { mode: "semantic", source };
 
 		const projection = await createPublicStyleProjection({ data });
 
@@ -99,14 +99,14 @@ describe("public semantic style projection", () => {
 		await expect(validatePublicStyleProjection(changed, projection)).resolves.toBe(false);
 	});
 
-	it("changes the projection hash when only the applied presentation changes", async () => {
+	it("changes the projection hash when only the source presentation changes", async () => {
 		const red = buildData();
 		const blue = buildData();
-		const blueApplied = {
+		const blueSource = {
 			languageVersion: 1,
 			text: "@version 1;\nname { color: #654321; }\n",
 		};
-		blue.metadata.stylesheet = { mode: "semantic", source: blueApplied, applied: blueApplied };
+		blue.metadata.stylesheet = { mode: "semantic", source: blueSource };
 
 		const redProjection = await createPublicStyleProjection({ data: red });
 		const blueProjection = await createPublicStyleProjection({ data: blue });

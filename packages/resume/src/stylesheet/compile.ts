@@ -1,7 +1,7 @@
 import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { CompileStylesheetResult } from "./types";
 import { stylesheetCacheKey, stylesheetCompilationCache } from "./cache";
-import { createDiagnostic } from "./diagnostics";
+import { createDiagnostic, isFatalStylesheetDiagnostic } from "./diagnostics";
 import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { parseStylesheet } from "./parse";
 import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
@@ -98,13 +98,13 @@ export function compileStylesheet(source: StylesheetSource): CompileStylesheetRe
 		);
 	}
 
-	if (!compiler || diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+	if (!compiler || diagnostics.some(isFatalStylesheetDiagnostic)) {
 		return { program: null, diagnostics };
 	}
 
 	const compiled = compileProgram(stylesheet, source.languageVersion);
 	diagnostics.push(...compiled.diagnostics);
-	if (!compiled.program || diagnostics.some(({ severity }) => severity === "error")) {
+	if (!compiled.program || diagnostics.some(isFatalStylesheetDiagnostic)) {
 		return { program: null, diagnostics };
 	}
 

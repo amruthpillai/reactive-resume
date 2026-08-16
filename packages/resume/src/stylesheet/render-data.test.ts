@@ -27,7 +27,6 @@ const semanticData: ResumeData = {
 		stylesheet: {
 			mode: "semantic",
 			source: { languageVersion: 1, text: "@version 1;\nfield { color: red; }" },
-			applied: { languageVersion: 1, text: "@version 1;\nfield { color: blue; }" },
 		},
 	},
 };

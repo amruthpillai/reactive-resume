@@ -6,7 +6,7 @@ import { createElement } from "react";
 import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { renderToBuffer } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
-import { hasSemanticErrors, inspectResumePdf } from "./semantic";
+import { inspectResumePdf } from "./semantic";
 
 export type {
 	PdfPreflightFailure,
@@ -48,9 +48,6 @@ export const createResumePdfFileResult = async ({
 }: CreateResumePdfFileResultOptions): Promise<ResumePdfRenderResult<File>> => {
 	const normalizedOptions = { ...options, data: parseResumeData(options.data) };
 	const resolvedInspection = inspection ?? inspectResumePdf(normalizedOptions);
-	if (hasSemanticErrors(resolvedInspection)) {
-		return { ok: false, diagnostics: resolvedInspection.diagnostics };
-	}
 
 	return {
 		ok: true,

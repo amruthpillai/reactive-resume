@@ -108,31 +108,31 @@ describe("createResumePdfFile", () => {
 		);
 	});
 
-	it("returns semantic diagnostics without rendering an invalid applied source", async () => {
+	it("renders while returning recoverable semantic diagnostics", async () => {
 		const data = structuredClone(sampleResumeData);
 		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
-		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		data.metadata.stylesheet = { mode: "semantic", source: invalid };
 		const { createResumePdfFileResult } = await import("./server");
 
 		const result = await createResumePdfFileResult({ data, filename: "resume.pdf" });
 
 		expect(result).toMatchObject({
-			ok: false,
+			ok: true,
 			diagnostics: [expect.objectContaining({ severity: "error" })],
 		});
-		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
+		expect(rendererMock.renderToBuffer).toHaveBeenCalledTimes(1);
 	});
 
-	it("rejects unchecked rendering instead of producing an unstyled PDF for semantic errors", async () => {
+	it("renders with base styles when the source is fatal", async () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
-		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 2, text: "@version 2;" } };
 		const { createResumePdfFile } = await import("./server");
 
-		await expect(createResumePdfFile({ data, filename: "resume.pdf" })).rejects.toMatchObject({
-			cause: [expect.objectContaining({ severity: "error" })],
-		});
-		expect(rendererMock.renderToBuffer).not.toHaveBeenCalled();
+		await expect(createResumePdfFile({ data, filename: "resume.pdf" })).resolves.toHaveProperty(
+			"type",
+			"application/pdf",
+		);
+		expect(rendererMock.renderToBuffer).toHaveBeenCalledTimes(1);
 	});
 
 	it("rejects renderer-unsafe data at the server boundary before React PDF dispatch", async () => {

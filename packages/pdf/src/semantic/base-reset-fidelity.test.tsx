@@ -54,7 +54,7 @@ const buildFixture = (template: Template, rule = ""): ResumeData => {
 			: [{ fullWidth: true, main: ["skills"], sidebar: [] }];
 
 	const stylesheet = { languageVersion: 1, text: `@version 1; ${rule}` };
-	data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+	data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 	return data;
 };
 
@@ -88,7 +88,7 @@ const finalOnyxCompanyStyle = async (keyword?: "inherit" | "initial" | "revert" 
 		keyword ? `section[type="experience"] field[name="company"] { font-weight: ${keyword}; }` : ""
 	}`;
 	const stylesheet = { languageVersion: 1, text };
-	data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+	data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 	const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
 	const instance = pdf(element);
 	await expect.poll(() => instance.container.document).not.toBeNull();

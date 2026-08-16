@@ -96,14 +96,13 @@ export async function renderPreflightPdf(
 			stylesheet: {
 				mode: "semantic" as const,
 				source: input.stylesheet,
-				applied: input.stylesheet,
 			},
 		},
 	};
 	const inspection = resolveResumeRuntime({
 		data,
 		template: input.template,
-		applied: input.stylesheet,
+		source: input.stylesheet,
 		mode: "semantic",
 	});
 

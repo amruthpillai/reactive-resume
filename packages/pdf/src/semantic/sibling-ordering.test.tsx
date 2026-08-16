@@ -49,7 +49,7 @@ const semanticFixture = (rule: string): ResumeData => {
 		customFields: [],
 	};
 	const stylesheet = { languageVersion: 1, text: `@version 1; ${rule}` };
-	data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+	data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 	return data;
 };
 

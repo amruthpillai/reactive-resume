@@ -37,7 +37,7 @@ export type {
 export { analyzeStylesheet } from "./analyze";
 export { resolveStylesheet } from "./cascade";
 export { compileStylesheet } from "./compile";
-export { SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1 } from "./diagnostics";
+export { isFatalStylesheetDiagnostic, SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1 } from "./diagnostics";
 export { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 export { parseStylesheet } from "./parse";
 export { PROPERTY_REGISTRY_V1 } from "./registry/properties";

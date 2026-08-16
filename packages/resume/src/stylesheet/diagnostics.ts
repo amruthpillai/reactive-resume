@@ -122,6 +122,18 @@ export const SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1 = {
 
 export type SemanticCssCompilerDiagnosticCode = keyof typeof SEMANTIC_CSS_DIAGNOSTIC_CATALOG_V1;
 
+const FATAL_DIAGNOSTIC_CODES = new Set<string>([
+	"DUPLICATE_VERSION_DIRECTIVE",
+	"INVALID_VERSION",
+	"RESOURCE_LIMIT",
+	"UNSUPPORTED_VERSION",
+	"VERSION_MISMATCH",
+]);
+
+export function isFatalStylesheetDiagnostic({ code }: Pick<SemanticCssDiagnostic, "code">): boolean {
+	return FATAL_DIAGNOSTIC_CODES.has(code);
+}
+
 export const EMPTY_SOURCE_RANGE: SourceRange = {
 	start: { line: 1, column: 1, offset: 0 },
 	end: { line: 1, column: 1, offset: 0 },

@@ -280,7 +280,7 @@ describe("Semantic CSS cascade and structural resolution", () => {
 		});
 		if (!compiled.program) throw new Error(compiled.diagnostics.map(({ code }) => code).join(","));
 		const cycled = resolveStylesheet(compiled.program, tree, context);
-		expect(cycled.nodes).toEqual({});
+		expect(cycled.nodes["heading-experience"]?.style.color).toBe("black");
 		expect(cycled.diagnostics).toContainEqual(expect.objectContaining({ code: "VARIABLE_CYCLE", severity: "error" }));
 	});
 
@@ -356,6 +356,15 @@ describe("Semantic CSS cascade and structural resolution", () => {
 		);
 	});
 
+	it("keeps valid resolved declarations when a neighboring value is invalid", () => {
+		const result = resolve("section-heading { color: red; opacity: var(--missing); }");
+
+		expect(result.nodes["heading-experience"]?.style.color).toBe("red");
+		expect(result.diagnostics).toContainEqual(
+			expect.objectContaining({ code: "UNRESOLVED_VARIABLE", severity: "error" }),
+		);
+	});
+
 	it("warns after variable expansion when a value is extreme but technically renderable", () => {
 		const result = resolve(":root { --tiny: 3pt; } section-heading { font-size: var(--tiny); }");
 
@@ -379,7 +388,7 @@ describe("Semantic CSS cascade and structural resolution", () => {
 			languageVersion: 1,
 			text: "@version 1; @media (width: 400pt) { page { size: A4; } }",
 		});
-		expect(invalid.program).toBeNull();
+		expect(invalid.program).not.toBeNull();
 		expect(invalid.diagnostics).toContainEqual(expect.objectContaining({ code: "MEDIA_PAGE_SIZE", severity: "error" }));
 	});
 
@@ -513,14 +522,14 @@ describe("Semantic CSS cascade and structural resolution", () => {
 				languageVersion: 1,
 				text: `@version 1;section-heading{${declaration}}`,
 			});
-			expect(compiled.program, declaration).toBeNull();
+			expect(compiled.program, declaration).not.toBeNull();
 			expect(compiled.diagnostics, declaration).toContainEqual(
 				expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
 			);
 		}
 
 		const variable = resolve(":root { --bad: 1.0001; } section-heading { opacity: var(--bad); }");
-		expect(variable.nodes).toEqual({});
+		expect(variable.nodes["heading-experience"]?.style.color).toBe("black");
 		expect(variable.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }));
 	});
 

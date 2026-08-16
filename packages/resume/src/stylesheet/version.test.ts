@@ -59,10 +59,10 @@ describe("compileStylesheet", () => {
 		);
 	});
 
-	it("does not compile a recovered CSS error", () => {
+	it("compiles around a recovered CSS error", () => {
 		const result = compileStylesheet({ languageVersion: 1, text: "@version 1;\nsection { color red; }" });
 
-		expect(result.program).toBeNull();
+		expect(result.program).not.toBeNull();
 		expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "CSS_PARSE_ERROR", severity: "error" }));
 	});
 });

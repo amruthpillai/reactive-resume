@@ -286,7 +286,6 @@ export async function compareLegacySemanticPresentation(
 			stylesheet: {
 				mode: "semantic",
 				source: input.convertedSource,
-				applied: input.convertedSource,
 			},
 		},
 	};

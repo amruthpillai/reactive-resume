@@ -14,7 +14,7 @@ import type {
 	StructuralPresentation,
 	StyleProgram,
 } from "./types";
-import { createDiagnostic } from "./diagnostics";
+import { createDiagnostic, isFatalStylesheetDiagnostic } from "./diagnostics";
 import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import { PROPERTY_REGISTRY_V1 } from "./registry/properties";
 import { createSystemVariables } from "./registry/system-variables";
@@ -927,7 +927,7 @@ export function resolveStylesheet(
 		};
 	}
 
-	if (diagnostics.some(({ severity }) => severity === "error")) {
+	if (diagnostics.some(isFatalStylesheetDiagnostic)) {
 		return { nodes: {}, renderTree: tree, diagnostics };
 	}
 	return { nodes: resolved, renderTree: createRenderTree(tree, flatNodes, resolved), diagnostics };

@@ -11,7 +11,7 @@ import type {
 	StyleProgram,
 } from "./types";
 import * as csstree from "css-tree";
-import { createDiagnostic, EMPTY_SOURCE_RANGE } from "./diagnostics";
+import { createDiagnostic, EMPTY_SOURCE_RANGE, isFatalStylesheetDiagnostic } from "./diagnostics";
 import { SEMANTIC_CSS_LIMITS_V1 } from "./limits";
 import {
 	PROPERTY_REGISTRY_V1,
@@ -594,9 +594,11 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				continue;
 			}
 			for (const [expandedProperty, expandedValue] of expanded) {
+				const diagnosticCount = diagnostics.length;
 				validateValue(expandedProperty, expandedValue, declaration, diagnostics);
 				const syntaxError = property.startsWith("--") ? null : valueSyntaxError(expandedProperty, expandedValue);
 				if (syntaxError) diagnostic(diagnostics, "INVALID_VALUE", syntaxError, declaration);
+				if (diagnostics.length > diagnosticCount && diagnostics.at(-1)?.severity === "error") continue;
 				declarations.push({
 					property: expandedProperty,
 					value: expandedValue,
@@ -651,7 +653,7 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 	const ast = stylesheet.ast as AstNode | null;
 	if (ast) visit(children(ast), [], 0);
 	const program = { languageVersion, rules } satisfies StyleProgram;
-	return diagnostics.some(({ severity }) => severity === "error")
+	return diagnostics.some(isFatalStylesheetDiagnostic)
 		? { program: null, diagnostics }
 		: { program: structuredClone(program), diagnostics };
 }

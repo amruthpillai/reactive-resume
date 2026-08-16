@@ -97,7 +97,7 @@ const buildFixture = (
 	data.metadata.page.hideIcons = false;
 	data.metadata.layout.pages = [{ fullWidth: true, main: [section], sidebar: [] }];
 	const stylesheet = { languageVersion: 1, text: `@version 1; ${text}` };
-	data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+	data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 	return data;
 };
 

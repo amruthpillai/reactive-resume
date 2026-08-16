@@ -54,7 +54,6 @@ export const buildAllTemplatesFixture = (template: Template) => {
 	data.metadata.stylesheet = {
 		mode: "semantic",
 		source: comprehensiveStylesheet,
-		applied: comprehensiveStylesheet,
 	};
 	return data;
 };

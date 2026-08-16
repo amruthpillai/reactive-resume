@@ -122,8 +122,8 @@ describe("createResumePdfBlob", () => {
 
 	it("renders a source-free public projection through the semantic runtime", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const applied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
-		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
+		semanticData.metadata.stylesheet = { mode: "semantic", source };
 		const projection = await createPublicStyleProjection({ data: semanticData });
 		const publicData = structuredClone(semanticData);
 		delete publicData.metadata.stylesheet;
@@ -145,31 +145,28 @@ describe("createResumePdfBlob", () => {
 		);
 	});
 
-	it("returns semantic diagnostics without rendering an invalid applied source", async () => {
+	it("renders while returning recoverable semantic diagnostics", async () => {
 		const data = structuredClone(sampleResumeData);
 		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
-		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		data.metadata.stylesheet = { mode: "semantic", source: invalid };
 		const { createResumePdfBlobResult } = await import("./browser");
 
 		const result = await createResumePdfBlobResult({ data });
 
 		expect(result).toMatchObject({
-			ok: false,
+			ok: true,
 			diagnostics: [expect.objectContaining({ severity: "error" })],
 		});
-		expect(rendererMock.pdf).not.toHaveBeenCalled();
+		expect(rendererMock.pdf).toHaveBeenCalledTimes(1);
 	});
 
-	it("rejects unchecked rendering instead of producing an unstyled PDF for semantic errors", async () => {
+	it("renders with base styles when the source is fatal", async () => {
 		const data = structuredClone(sampleResumeData);
-		const invalid = { languageVersion: 1, text: "@version 1; section { color: ; }" };
-		data.metadata.stylesheet = { mode: "semantic", source: invalid, applied: invalid };
+		data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 2, text: "@version 2;" } };
 		const { createResumePdfBlob } = await import("./browser");
 
-		await expect(createResumePdfBlob({ data })).rejects.toMatchObject({
-			cause: [expect.objectContaining({ severity: "error" })],
-		});
-		expect(rendererMock.pdf).not.toHaveBeenCalled();
+		await expect(createResumePdfBlob({ data })).resolves.toHaveProperty("type", "application/pdf");
+		expect(rendererMock.pdf).toHaveBeenCalledTimes(1);
 	});
 
 	it("accepts an optional prior semantic inspection on the result path", async () => {

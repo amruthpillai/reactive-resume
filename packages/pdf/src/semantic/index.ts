@@ -7,7 +7,7 @@ import { resolveResumeRuntime, resolveStylesheetMode } from "./resolve";
 export type InspectResumePdfOptions = {
 	data: ResumeData;
 	template?: Template | undefined;
-	applied?: StylesheetSource | undefined;
+	source?: StylesheetSource | undefined;
 	mode?: StylesheetMode | undefined;
 };
 
@@ -18,18 +18,15 @@ export type ResumePdfRenderResult<T> =
 export const inspectResumePdf = ({
 	data,
 	template = data.metadata.template,
-	applied,
+	source,
 	mode = resolveStylesheetMode(data),
 }: InspectResumePdfOptions): ResolvedResumeRuntime =>
 	resolveResumeRuntime({
 		data,
 		template,
 		mode,
-		...(applied ? { applied } : {}),
+		...(source ? { source } : {}),
 	});
-
-export const hasSemanticErrors = ({ diagnostics }: Pick<ResolvedResumeRuntime, "diagnostics">): boolean =>
-	diagnostics.some(({ severity }) => severity === "error");
 
 export type {
 	ResolvedResumeRuntime,

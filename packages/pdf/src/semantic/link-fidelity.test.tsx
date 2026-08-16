@@ -28,7 +28,7 @@ const buildFixture = (
 
 	if (mode !== "missing") {
 		const stylesheet = { languageVersion: 1, text };
-		data.metadata.stylesheet = { mode, source: stylesheet, applied: stylesheet };
+		data.metadata.stylesheet = { mode, source: stylesheet };
 	}
 
 	return data;

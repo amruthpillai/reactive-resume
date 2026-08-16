@@ -58,7 +58,7 @@ const parsePdf = (data: Uint8Array): Promise<ParsedPdf> => getDocument({ data })
 
 const overflowingFixture = (pageSize: "A4" | "LETTER"): ResumeData => {
 	const data = structuredClone(defaultResumeData);
-	const applied = {
+	const source = {
 		languageVersion: 1,
 		text: `
 			@version 1;
@@ -75,7 +75,7 @@ const overflowingFixture = (pageSize: "A4" | "LETTER"): ResumeData => {
 		(_value, index) => `<p>Overflow line ${index + 1} with enough text to occupy the authored page.</p>`,
 	).join("");
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
-	data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+	data.metadata.stylesheet = { mode: "semantic", source };
 	return data;
 };
 
@@ -96,14 +96,14 @@ const readPhysicalPages = async (document: ParsedPdf) => {
 describe("semantic pagination bindings", () => {
 	it("passes resolved authored-page size to the existing Page primitive", async () => {
 		const data = structuredClone(defaultResumeData);
-		const applied = {
+		const source = {
 			languageVersion: 1,
 			text: '@version 1;\npage[page-number="1"] { size: LETTER; }',
 		};
 		data.picture.hidden = true;
 		data.basics.name = "Ada Lovelace";
 		data.metadata.layout.pages = [{ fullWidth: true, main: [], sidebar: [] }];
-		data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+		data.metadata.stylesheet = { mode: "semantic", source };
 
 		const page = findFirst(await renderHostTree(data), "PAGE");
 

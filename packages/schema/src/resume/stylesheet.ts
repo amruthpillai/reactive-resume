@@ -10,7 +10,6 @@ export const stylesheetSourceSchema = z.strictObject({
 export const semanticStylesheetSchema = z.strictObject({
 	mode: z.enum(["legacy", "semantic"]),
 	source: stylesheetSourceSchema,
-	applied: stylesheetSourceSchema,
 });
 
 export type StylesheetSource = z.infer<typeof stylesheetSourceSchema>;

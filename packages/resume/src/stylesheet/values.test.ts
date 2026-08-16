@@ -51,13 +51,44 @@ describe("Semantic CSS value compilation", () => {
 		expect(() => structuredClone(first.program)).not.toThrow();
 	});
 
+	it("keeps valid rules and declarations when neighboring fragments are invalid", () => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: "@version 1; section:hover { color: red; } name { unknown: 1; color: #123456; }",
+		});
+
+		expect(result.program?.rules).toEqual([
+			expect.objectContaining({
+				declarations: [expect.objectContaining({ property: "color", value: "#123456" })],
+			}),
+		]);
+		expect(result.diagnostics).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ code: "INVALID_SELECTOR", severity: "error" }),
+				expect.objectContaining({ code: "UNSUPPORTED_PROPERTY", severity: "error" }),
+			]),
+		);
+	});
+
+	it("omits an invalid value without dropping valid declarations in the rule", () => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: "@version 1; name { opacity: 2; color: #123456; }",
+		});
+
+		expect(result.program?.rules[0]?.declarations).toEqual([
+			expect.objectContaining({ property: "color", value: "#123456" }),
+		]);
+		expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }));
+	});
+
 	it("rejects assignments to reserved system variables", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,
 			text: "@version 1; :root { --resume-primary-color: red; } name { color: blue; }",
 		});
 
-		expect(result.program).toBeNull();
+		expect(result.program).not.toBeNull();
 		expect(result.diagnostics).toContainEqual(
 			expect.objectContaining({ code: "SYSTEM_VARIABLE_READONLY", severity: "error" }),
 		);
@@ -70,7 +101,7 @@ describe("Semantic CSS value compilation", () => {
 				text: `@version 1; :root { --asset: ${value}; } picture { background-color: var(--asset); }`,
 			});
 
-			expect(result.program, value).toBeNull();
+			expect(result.program, value).not.toBeNull();
 			expect(result.diagnostics, value).toContainEqual(
 				expect.objectContaining({ code: "FORBIDDEN_CSS_VALUE", severity: "error" }),
 			);
@@ -93,7 +124,7 @@ describe("Semantic CSS value compilation", () => {
 				languageVersion: 1,
 				text: `@version 1; field { margin-top: ${value}; }`,
 			});
-			expect(result.program, value).toBeNull();
+			expect(result.program, value).not.toBeNull();
 			expect(result.diagnostics, value).toContainEqual(
 				expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
 			);
@@ -121,7 +152,7 @@ describe("Semantic CSS value compilation", () => {
 				text: `@version 1; section { border-style: ${value}; }`,
 			});
 
-			expect(result.program).toBeNull();
+			expect(result.program).not.toBeNull();
 			expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }));
 		},
 	);
@@ -211,7 +242,7 @@ describe("Semantic CSS value compilation", () => {
 					text: `@version 1;section{flex:${grow} auto ${trailing}}`,
 				});
 
-				expect(result.program).toBeNull();
+				expect(result.program).not.toBeNull();
 				expect(result.diagnostics).toContainEqual(
 					expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
 				);
@@ -240,7 +271,7 @@ describe("Semantic CSS value compilation", () => {
 				text: `@version 1;section{${declaration}}`,
 			});
 
-			expect(rejected.program, declaration).toBeNull();
+			expect(rejected.program, declaration).not.toBeNull();
 			expect(rejected.diagnostics, declaration).toContainEqual(
 				expect.objectContaining({ code: "INVALID_VALUE", severity: "error" }),
 			);
@@ -406,7 +437,7 @@ describe("Semantic CSS value compilation", () => {
 		fc.assert(
 			fc.property(forbiddenBody, ({ body, code }) => {
 				const result = compileStylesheet({ languageVersion: 1, text: `@version 1;${body}` });
-				expect(result.program).toBeNull();
+				expect(result.program).not.toBeNull();
 				expect(result.diagnostics).toContainEqual(expect.objectContaining({ code, severity: "error" }));
 			}),
 			{ numRuns: 100 },

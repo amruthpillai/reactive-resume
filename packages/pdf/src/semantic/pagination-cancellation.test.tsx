@@ -57,7 +57,7 @@ const buildFixture = (value: string): ResumeData => {
 		languageVersion: 1,
 		text: `@version 1; section[type="summary"] { break-before: ${value}; break-inside: ${value}; }`,
 	};
-	data.metadata.stylesheet = { mode: "semantic", source, applied: source };
+	data.metadata.stylesheet = { mode: "semantic", source };
 	return data;
 };
 

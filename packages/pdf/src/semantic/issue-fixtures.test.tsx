@@ -8,7 +8,7 @@ import { ResumeDocument } from "../document";
 import { semanticNodeKeys } from "./node-keys";
 import { resolveResumePresentation, resolveStylesheetMode } from "./resolve";
 
-const applied = (text: string) => ({ languageVersion: 1, text });
+const source = (text: string) => ({ languageVersion: 1, text });
 
 type HostNode = {
 	type: string;
@@ -90,7 +90,7 @@ const resolveIssueFixture = (text: string) => {
 	return resolveResumePresentation({
 		data,
 		template: "onyx",
-		applied: applied(text),
+		source: source(text),
 		mode: "semantic",
 	});
 };
@@ -138,7 +138,7 @@ describe("semantic issue fixtures", () => {
 			resolveResumePresentation({
 				data,
 				template: "onyx",
-				applied: applied(`@version 1;${text}`),
+				source: source(`@version 1;${text}`),
 				mode: "semantic",
 			});
 
@@ -157,11 +157,11 @@ describe("semantic issue fixtures", () => {
 			header { background-color: #1e293b; }
 			name { color: white; }
 		`);
-		const invalid = compileStylesheet(applied("@version 1; header { background-image: linear-gradient(red, blue); }"));
+		const invalid = compileStylesheet(source("@version 1; header { background-image: linear-gradient(red, blue); }"));
 
 		expect(valid[headerKey]?.style?.backgroundColor).toBe("#1e293b");
 		expect(valid[semanticNodeKeys.headerPart(headerKey, "name")]?.style?.color).toBe("white");
-		expect(invalid.program).toBeNull();
+		expect(invalid.program).not.toBeNull();
 	});
 
 	it("unbolds only skill names and leaves experience titles unchanged (#2223)", () => {
@@ -180,8 +180,7 @@ describe("semantic issue fixtures", () => {
 		const semanticData = buildIssueFixture();
 		semanticData.metadata.stylesheet = {
 			mode: "semantic",
-			source: applied("@version 1;"),
-			applied: applied("@version 1;"),
+			source: source("@version 1;"),
 		};
 		const legacyData = buildIssueFixture();
 
@@ -191,7 +190,7 @@ describe("semantic issue fixtures", () => {
 			resolveResumePresentation({
 				data: legacyData,
 				template: "onyx",
-				applied: applied("@version 1; name { color: red; }"),
+				source: source("@version 1; name { color: red; }"),
 				mode: "legacy",
 			}),
 		).toEqual({});
@@ -199,7 +198,7 @@ describe("semantic issue fixtures", () => {
 
 	it("applies issue-regression styles to the final existing PDF primitives", async () => {
 		const data = buildIssueFixture();
-		const stylesheet = applied(`
+		const stylesheet = source(`
 			@version 1;
 			header { background-color: #1e293b; }
 			name { color: white; }
@@ -208,7 +207,7 @@ describe("semantic issue fixtures", () => {
 			section[type="skills"] field[name="name"] { font-weight: 400; }
 			level icon[role~="active"] { opacity: 0.2; }
 		`);
-		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+		data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
 		const instance = pdf(element);
 		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
@@ -226,11 +225,11 @@ describe("semantic issue fixtures", () => {
 
 	it("unbolds only the final skill-name primitive and preserves the experience title weight (#2223)", async () => {
 		const data = buildIssueFixture();
-		const stylesheet = applied(`
+		const stylesheet = source(`
 			@version 1;
 			section[type="skills"] field[name="name"] { font-weight: 400; }
 		`);
-		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+		data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
 		const instance = pdf(element);
 		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
@@ -253,12 +252,12 @@ describe("semantic issue fixtures", () => {
 			keywords: [],
 		}));
 		data.metadata.layout.pages = [{ fullWidth: true, main: ["skills"], sidebar: [] }];
-		const stylesheet = applied(`
+		const stylesheet = source(`
 			@version 1;
 			section[type="skills"] item:nth-child(2) { display: none; }
 			section[type="skills"] item:last-child { order: -1; }
 		`);
-		data.metadata.stylesheet = { mode: "semantic", source: stylesheet, applied: stylesheet };
+		data.metadata.stylesheet = { mode: "semantic", source: stylesheet };
 		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
 		const instance = pdf(element);
 		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());

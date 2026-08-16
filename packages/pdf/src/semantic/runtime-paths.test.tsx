@@ -39,7 +39,7 @@ const findFirst = (node: HostNode, predicate: (candidate: HostNode) => boolean):
 
 const buildFixture = (): ResumeData => {
 	const data = structuredClone(defaultResumeData);
-	const applied = {
+	const source = {
 		languageVersion: 1,
 		text: `
 			@version 1;
@@ -50,15 +50,15 @@ const buildFixture = (): ResumeData => {
 	data.picture.hidden = true;
 	data.basics.name = "Ada Lovelace";
 	data.metadata.layout.pages = [{ fullWidth: true, main: [], sidebar: [] }];
-	data.metadata.stylesheet = { mode: "semantic", source: applied, applied };
+	data.metadata.stylesheet = { mode: "semantic", source };
 	return data;
 };
 
 const buildNodeBudgetFixture = (mode: "legacy" | "semantic"): ResumeData => {
 	const data = structuredClone(defaultResumeData);
-	const applied = { languageVersion: 1, text: "@version 1;\n" };
+	const source = { languageVersion: 1, text: "@version 1;\n" };
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["skills"], sidebar: [] }];
-	data.metadata.stylesheet = { mode, source: applied, applied };
+	data.metadata.stylesheet = { mode, source };
 	data.sections.skills.items = Array.from({ length: 2_000 }, (_, index) => ({
 		id: `skill-${index}`,
 		hidden: false,
@@ -69,6 +69,13 @@ const buildNodeBudgetFixture = (mode: "legacy" | "semantic"): ResumeData => {
 		level: 5,
 		keywords: ["TypeScript"],
 	}));
+	return data;
+};
+
+const buildFatalSourceFixture = (): ResumeData => {
+	const data = structuredClone(defaultResumeData);
+	data.metadata.layout.pages = [{ fullWidth: true, main: [], sidebar: [] }];
+	data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 2, text: "@version 2;" } };
 	return data;
 };
 
@@ -100,28 +107,15 @@ describe("browser/server semantic runtime identity", () => {
 		expect(browserProps.fixed).toMatchObject({ type: "VIEW", fixed: true });
 	}, 30_000);
 
-	it("rejects a valid stylesheet when later content exceeds the Semantic CSS node budget", async () => {
-		const data = buildNodeBudgetFixture("semantic");
+	it("renders browser and server PDFs with base styles when the stylesheet is fatal", async () => {
+		const data = buildFatalSourceFixture();
 
-		const results = await Promise.allSettled([
-			createResumePdfBlob({ data, template: "onyx" }),
-			createResumePdfFile({ data, filename: "resume.pdf", template: "onyx" }),
-		]);
+		const blob = await createResumePdfBlob({ data, template: "onyx" });
+		const file = await createResumePdfFile({ data, filename: "resume.pdf", template: "onyx" });
 
-		expect(results).toEqual([
-			expect.objectContaining({
-				status: "rejected",
-				reason: expect.objectContaining({
-					cause: expect.arrayContaining([expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" })]),
-				}),
-			}),
-			expect.objectContaining({
-				status: "rejected",
-				reason: expect.objectContaining({
-					cause: expect.arrayContaining([expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" })]),
-				}),
-			}),
-		]);
+		expect(blob.type).toBe("application/pdf");
+		expect(file.type).toBe("application/pdf");
+		expect(await renderFinalProps(captured.browser)).toEqual(await renderFinalProps(captured.server));
 	}, 15_000);
 
 	it("keeps legacy PDF rendering unaffected by the semantic node budget", async () => {

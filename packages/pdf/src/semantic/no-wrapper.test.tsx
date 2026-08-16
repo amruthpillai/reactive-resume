@@ -53,7 +53,6 @@ const buildFixture = (mode: "legacy" | "semantic"): ResumeData => {
 		data.metadata.stylesheet = {
 			mode,
 			source: semanticSource(),
-			applied: semanticSource(),
 		};
 	}
 	return data;

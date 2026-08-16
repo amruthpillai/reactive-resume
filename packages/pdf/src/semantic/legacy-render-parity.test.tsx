@@ -162,7 +162,7 @@ const semanticData = (data: ResumeData): ResumeData => {
 	const conversion = convertLegacyStyleRules(data);
 	const semantic = structuredClone(data);
 	semantic.metadata.styleRules = [...conversion.sanitizedRules];
-	semantic.metadata.stylesheet = { mode: "semantic", source: conversion.source, applied: conversion.source };
+	semantic.metadata.stylesheet = { mode: "semantic", source: conversion.source };
 	return semantic;
 };
 
