@@ -297,8 +297,12 @@ describe("locale coverage fonts (#3098)", () => {
 	});
 
 	it("returns a gstatic source for Vazirmatn regular so PDF registration can load it", () => {
+		const regularSource = getWebFont("Vazirmatn")?.files["400"];
+		expect(regularSource).toBeDefined();
+
 		const source = getWebFontSource("Vazirmatn", "400");
-		expect(source).toEqual(expect.stringContaining("vazirmatn"));
+		expect(source).toBe(regularSource);
+		expect(source).toEqual(expect.stringContaining("fonts.gstatic.com"));
 		expect(source).toEqual(expect.stringMatching(/\.ttf(\?|$)/));
 	});
 });

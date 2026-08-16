@@ -241,9 +241,13 @@ async function generateFonts() {
 		...filteredLocaleCoverage,
 	];
 
-	console.log(
-		`Added ${computerModernFonts.length} Computer Modern Web Fonts, ${filteredMetricCompat.length} metric-compatible fonts, and ${filteredLocaleCoverage.length} locale-coverage fonts. Total output: ${allWebFonts.length} web fonts.`,
-	);
+	const manualFontSummary = [
+		`${computerModernFonts.length} Computer Modern Web Fonts`,
+		`${filteredMetricCompat.length} metric-compatible fonts`,
+		`and ${filteredLocaleCoverage.length} locale-coverage fonts`,
+	].join(", ");
+
+	console.log(`Added ${manualFontSummary}. Total output: ${allWebFonts.length} web fonts.`);
 
 	const jsonString = argCompress ? JSON.stringify(allWebFonts) : JSON.stringify(allWebFonts, null, 2);
 	await mkdir(FONTS_DIR, { recursive: true });
