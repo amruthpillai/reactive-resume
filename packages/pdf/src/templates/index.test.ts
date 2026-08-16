@@ -12,7 +12,6 @@ describe("templatePages", () => {
 
 	it("exports the semantic manifest registry through the template index", () => {
 		expect(registry).toContain("getTemplateSemanticManifest");
-		expect(registry).toContain("getTemplateSemanticRegistryFingerprintInput");
 		expect(registry).toContain("TemplateSemanticManifest");
 	});
 });

@@ -10,7 +10,6 @@ import { createBindingInventory } from "./binding-inventory";
 import {
 	getTemplateSemanticBindingRegistry,
 	getTemplateSemanticManifest,
-	getTemplateSemanticRegistryFingerprintInput,
 	validateTemplateSemanticManifest,
 } from "./template-manifest";
 import { buildSemanticTree } from "./tree";
@@ -423,8 +422,6 @@ const EXPECTED_LAYOUT = {
 } as const satisfies Readonly<Record<Template, Omit<TemplateSemanticManifest, "template" | "parts">>>;
 
 const flattenTree = (node: SemanticNode): SemanticNode[] => [node, ...node.children.flatMap(flattenTree)];
-const flattenValues = (value: unknown): unknown[] =>
-	typeof value === "object" && value !== null ? [value, ...Object.values(value).flatMap(flattenValues)] : [value];
 const findNodes = (node: SemanticNode, predicate: (candidate: SemanticNode) => boolean): SemanticNode[] =>
 	flattenTree(node).filter(predicate);
 const findPart = (node: SemanticNode, name: string): SemanticNode | undefined =>
@@ -488,7 +485,8 @@ describe("template semantic manifests", () => {
 	});
 
 	it("registers child kinds for every primitive template part", () => {
-		for (const manifest of Object.values(getTemplateSemanticRegistryFingerprintInput())) {
+		for (const template of templateSchema.options) {
+			const manifest = getTemplateSemanticManifest(template);
 			for (const part of manifest.parts) {
 				if (part.binding.type === "alias") continue;
 				expect(TEMPLATE_PART_CHILD_KINDS_V1, `${manifest.template}:${part.name}`).toHaveProperty(part.name);
@@ -1314,22 +1312,6 @@ describe("template semantic manifests", () => {
 			expect(findNodes(fullWidth, (node) => node.kind === "section" && node.id === "experience")).toHaveLength(1);
 		},
 	);
-
-	it("publishes stable, deterministic, deeply frozen fingerprint input without functions", () => {
-		const first = getTemplateSemanticRegistryFingerprintInput();
-		const second = getTemplateSemanticRegistryFingerprintInput();
-		const serialized = JSON.stringify(first);
-
-		expect(second).toBe(first);
-		expect(JSON.stringify(second)).toBe(serialized);
-		expect(Object.isFrozen(first)).toBe(true);
-		expect(Object.isFrozen(first.azurill.parts)).toBe(true);
-		expect(flattenValues(first).every((value) => typeof value !== "function")).toBe(true);
-		expect(() => {
-			(first.azurill.parts as unknown as object[]).pop();
-		}).toThrow();
-		expect(JSON.stringify(getTemplateSemanticRegistryFingerprintInput())).toBe(serialized);
-	});
 
 	it.each(templateSchema.options)(
 		"%s binds every manifest node to existing chrome without synthetic wrappers",

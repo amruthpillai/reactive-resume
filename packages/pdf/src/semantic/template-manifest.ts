@@ -334,10 +334,6 @@ export function getTemplateSemanticManifest(template: Template): TemplateSemanti
 	return TEMPLATE_SEMANTIC_MANIFESTS[template];
 }
 
-export function getTemplateSemanticRegistryFingerprintInput(): Readonly<Record<Template, TemplateSemanticManifest>> {
-	return TEMPLATE_SEMANTIC_MANIFESTS;
-}
-
 export function getTemplateSemanticBindingRegistry(template: Template): SemanticBindingRegistry {
 	const manifest = getTemplateSemanticManifest(template);
 	const canonicalBindings = Object.fromEntries(

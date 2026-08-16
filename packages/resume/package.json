@@ -11,8 +11,7 @@
 		"./patch": "./src/patch.ts",
 		"./stylesheet": "./src/stylesheet/index.ts",
 		"./stylesheet/registry": "./src/stylesheet/registry/index.ts",
-		"./stylesheet/types": "./src/stylesheet/semantic-types.ts",
-		"./stylesheet/render-data": "./src/stylesheet/render-data.ts"
+		"./stylesheet/types": "./src/stylesheet/semantic-types.ts"
 	},
 	"scripts": {
 		"typecheck": "tsgo --noEmit",
@@ -24,7 +23,6 @@
 	"dependencies": {
 		"@bramus/specificity": "^2.4.2",
 		"@reactive-resume/schema": "workspace:*",
-		"canonicalize": "^3.0.0",
 		"css-tree": "^3.2.1",
 		"fast-json-patch": "^3.1.1",
 		"zod": "^4.4.3"

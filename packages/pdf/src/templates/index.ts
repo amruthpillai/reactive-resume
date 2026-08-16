@@ -42,6 +42,5 @@ export type { TemplateSemanticManifest } from "../semantic/template-manifest";
 export {
 	getTemplateSemanticBindingRegistry,
 	getTemplateSemanticManifest,
-	getTemplateSemanticRegistryFingerprintInput,
 	validateTemplateSemanticManifest,
 } from "../semantic/template-manifest";

@@ -998,6 +998,5 @@ export { semanticNodeKeys } from "./node-keys";
 export {
 	getTemplateSemanticBindingRegistry,
 	getTemplateSemanticManifest,
-	getTemplateSemanticRegistryFingerprintInput,
 	validateTemplateSemanticManifest,
 } from "./template-manifest";
