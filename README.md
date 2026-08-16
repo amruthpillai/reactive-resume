@@ -234,7 +234,8 @@ Reactive Resume is and always will be free and open-source. If it has helped you
 Other ways to support:
 
 - Star this repository
-- Report bugs and suggest features
+- Report reproducible bugs and suggest actionable features
+- Help other users in [GitHub Discussions](https://github.com/amruthpillai/reactive-resume/discussions/categories/q-a)
 - Improve documentation
 - Help with translations
 
@@ -259,6 +260,10 @@ Contributions make open-source thrive. Whether fixing a typo or adding a feature
 5. Open a Pull Request
 
 See the [development setup guide](https://docs.rxresu.me/contributing/development) for detailed instructions on how to set up the project locally.
+
+Maintainers review the [`status: needs triage` queue](https://github.com/amruthpillai/reactive-resume/issues?q=is%3Aissue+is%3Aopen+label%3A%22status%3A+needs+triage%22)
+weekly. Triaged bugs become `status: confirmed`; feature proposals become `status: accepted`; reports that need details become
+`status: needs info`.
 
 ## License
 
