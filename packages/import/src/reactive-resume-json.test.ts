@@ -8,6 +8,23 @@ describe("parseReactiveResumeJSON", () => {
 		expect(result.basics.name).toBe(defaultResumeData.basics.name);
 	});
 
+	it("imports a historical applied stylesheet as canonical source-only data", () => {
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: red; }\n" };
+		const data = {
+			...structuredClone(defaultResumeData),
+			metadata: {
+				...structuredClone(defaultResumeData.metadata),
+				stylesheet: {
+					mode: "semantic",
+					source,
+					applied: { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" },
+				},
+			},
+		};
+
+		expect(parseReactiveResumeJSON(JSON.stringify(data)).metadata.stylesheet).toEqual({ mode: "semantic", source });
+	});
+
 	it("throws a JSON-serialised validation error for an invalid object", () => {
 		// Missing required top-level fields.
 		expect(() => parseReactiveResumeJSON(JSON.stringify({ foo: "bar" }))).toThrow();

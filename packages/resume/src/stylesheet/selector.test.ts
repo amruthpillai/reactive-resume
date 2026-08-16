@@ -165,6 +165,15 @@ describe("semantic selector compilation", () => {
 		expect(invalid.diagnostics).toContainEqual(expect.objectContaining({ code: "INVALID_SELECTOR" }));
 	});
 
+	it("treats selector-count overflow as a fatal resource limit", () => {
+		const selectors = new Array(65).fill("section").join(",");
+		const result = compileStylesheet({ languageVersion: 1, text: `@version 1;\n${selectors} { color: red; }` });
+
+		expect(result.program).toBeNull();
+		expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "RESOURCE_LIMIT", severity: "error" }));
+		expect(result.diagnostics).not.toContainEqual(expect.objectContaining({ code: "INVALID_SELECTOR" }));
+	});
+
 	it("rejects uppercase pseudo names while compiling a stylesheet", () => {
 		const result = compileStylesheet({ languageVersion: 1, text: "@version 1;\n:ROOT { color: red; }" });
 		expect(result.program).not.toBeNull();

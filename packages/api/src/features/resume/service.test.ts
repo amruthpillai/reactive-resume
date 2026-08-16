@@ -344,13 +344,22 @@ describe("versions.snapshot", () => {
 });
 
 describe("versions.restore", () => {
-	it("persists historical stylesheet source without a stylesheet preparation hook", async () => {
+	it("normalizes a historical applied stylesheet while restoring its canonical source", async () => {
 		const currentData = createSemanticResumeData();
 		const restoredData = createSemanticResumeData();
-		if (restoredData.metadata.stylesheet) {
-			restoredData.metadata.stylesheet.source.text = "@version 1;\nname { color: blue; }\n";
-		}
-		const { set } = createRestoreHarness(currentData, restoredData);
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" };
+		const legacyRestoredData = {
+			...restoredData,
+			metadata: {
+				...restoredData.metadata,
+				stylesheet: {
+					mode: "semantic",
+					source,
+					applied: { languageVersion: 1, text: "@version 1;\nname { color: red; }\n" },
+				},
+			},
+		} as unknown as ResumeData;
+		const { set } = createRestoreHarness(currentData, legacyRestoredData);
 
 		const result = await resumeService.versions.restore({
 			resumeId: "r1",
@@ -361,11 +370,11 @@ describe("versions.restore", () => {
 		expect(set).toHaveBeenCalledWith(
 			expect.objectContaining({
 				data: expect.objectContaining({
-					metadata: expect.objectContaining({ stylesheet: restoredData.metadata.stylesheet }),
+					metadata: expect.objectContaining({ stylesheet: { mode: "semantic", source } }),
 				}),
 			}),
 		);
-		expect(result.data.metadata.stylesheet).toEqual(restoredData.metadata.stylesheet);
+		expect(result.data.metadata.stylesheet).toEqual({ mode: "semantic", source });
 	});
 
 	it("rejects a currently locked resume before version lookup or snapshots", async () => {

@@ -16,6 +16,17 @@ describe("semanticStylesheetSchema", () => {
 		});
 	});
 
+	it("normalizes the historical applied source to the canonical source-only shape", () => {
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: red; }\n" };
+		const result = semanticStylesheetSchema.parse({
+			mode: "semantic",
+			source,
+			applied: { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" },
+		});
+
+		expect(result).toEqual({ mode: "semantic", source });
+	});
+
 	it("keeps resumes without a stylesheet valid for legacy rendering", () => {
 		expect(resumeDataSchema.parse(defaultResumeData).metadata.stylesheet).toBeUndefined();
 	});

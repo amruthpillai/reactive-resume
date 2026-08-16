@@ -542,7 +542,7 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 			? compileSelector(node.prelude)
 			: { selector: null, error: "Missing selector." };
 		if (!selectorResult.selector) {
-			const code = /too many|too long/i.test(selectorResult.error ?? "") ? "RESOURCE_LIMIT" : "INVALID_SELECTOR";
+			const code = selectorResult.resourceLimit ? "RESOURCE_LIMIT" : "INVALID_SELECTOR";
 			diagnostic(diagnostics, code, selectorResult.error ?? "Invalid selector.", node.prelude ?? node);
 			return;
 		}

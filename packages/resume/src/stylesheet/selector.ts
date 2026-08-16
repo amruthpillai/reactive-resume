@@ -46,6 +46,7 @@ export type CompiledSelector = {
 export type CompileSelectorResult = {
 	selector: CompiledSelector | null;
 	error?: string;
+	resourceLimit?: true;
 };
 
 type SelectorAst = {
@@ -64,6 +65,8 @@ type SelectorAst = {
 type CompileContext = {
 	depth: number;
 };
+
+class SelectorResourceLimitError extends Error {}
 
 type TreeNode = {
 	node: SemanticNode;
@@ -208,7 +211,7 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 			}
 			if (["is", "where", "not"].includes(name)) {
 				if (context.depth >= SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth) {
-					throw new Error("Selector function nesting is too deep.");
+					throw new SelectorResourceLimitError("Selector function nesting is too deep.");
 				}
 				const nested = childrenOf(node);
 				if (nested.length !== 1 || nested[0]?.type !== "SelectorList") {
@@ -219,7 +222,7 @@ function compileSimple(node: SelectorAst, context: CompileContext): CompiledSimp
 			}
 			if (name === "nth-child" || name === "nth-of-type") {
 				if (context.depth >= SEMANTIC_CSS_LIMITS_V1.maxFunctionDepth) {
-					throw new Error("Selector function nesting is too deep.");
+					throw new SelectorResourceLimitError("Selector function nesting is too deep.");
 				}
 				return compileNth(node, name, context);
 			}
@@ -251,7 +254,7 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 			selectors = [];
 			combinators.push(name);
 			if (combinators.length > SEMANTIC_CSS_LIMITS_V1.maxCombinatorsPerSelector) {
-				throw new Error("Selector has too many combinators.");
+				throw new SelectorResourceLimitError("Selector has too many combinators.");
 			}
 			continue;
 		}
@@ -270,8 +273,11 @@ function compileComplex(node: SelectorAst, context: CompileContext): CompiledCom
 function compileSelectorList(node: SelectorAst, context: CompileContext): readonly CompiledComplexSelector[] {
 	if (node.type !== "SelectorList") throw new Error("Expected a SelectorList AST.");
 	const selectors = childrenOf(node);
-	if (selectors.length === 0 || selectors.length > SEMANTIC_CSS_LIMITS_V1.maxSelectorsPerRule) {
+	if (selectors.length === 0) {
 		throw new Error("Selector list has an unsupported number of selectors.");
+	}
+	if (selectors.length > SEMANTIC_CSS_LIMITS_V1.maxSelectorsPerRule) {
+		throw new SelectorResourceLimitError("Selector list has an unsupported number of selectors.");
 	}
 	return selectors.map((selector) => compileComplex(selector, context));
 }
@@ -280,13 +286,17 @@ export function compileSelector(source: string | CssNode): CompileSelectorResult
 	try {
 		const text = typeof source === "string" ? source : csstree.generate(source);
 		if (Array.from(text).length > SEMANTIC_CSS_LIMITS_V1.maxSelectorCodePoints)
-			throw new Error("Selector is too long.");
+			throw new SelectorResourceLimitError("Selector is too long.");
 		const ast = (
 			typeof source === "string" ? csstree.parse(source, { context: "selectorList", positions: true }) : source
 		) as SelectorAst;
 		return { selector: { selectors: compileSelectorList(ast, { depth: 0 }) } };
 	} catch (error) {
-		return { selector: null, error: error instanceof Error ? error.message : "Invalid selector." };
+		return {
+			selector: null,
+			error: error instanceof Error ? error.message : "Invalid selector.",
+			...(error instanceof SelectorResourceLimitError ? { resourceLimit: true } : {}),
+		};
 	}
 }
 
