@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createPublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { resolvePublicResumePdfBlob } from "./public-pdf";
 
@@ -15,58 +14,35 @@ vi.mock("@/features/resume/export/pdf-document", () => ({
 const publicResume = { username: "amruth", slug: "sample" };
 
 beforeEach(() => {
-	mocks.createResumePdfBlob.mockClear();
-	mocks.fetch.mockClear();
+	mocks.createResumePdfBlob.mockReset();
+	mocks.createResumePdfBlob.mockResolvedValue(new Blob(["local"], { type: "application/pdf" }));
+	mocks.fetch.mockReset();
+	mocks.fetch.mockResolvedValue(new Response(new Blob(["server"], { type: "application/pdf" })));
 	vi.stubGlobal("fetch", mocks.fetch);
 });
 
 describe("resolvePublicResumePdfBlob", () => {
-	it("keeps legitimate legacy resumes on the local PDF path", async () => {
-		await resolvePublicResumePdfBlob({
-			data: sampleResumeData,
-			stylesheetMode: "legacy",
-			publicResume,
-		});
+	it("renders the exposed stylesheet source directly in the browser", async () => {
+		const data = structuredClone(sampleResumeData);
+		data.metadata.stylesheet = {
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
+		};
+
+		const blob = await resolvePublicResumePdfBlob({ data, publicResume });
+
+		expect(mocks.createResumePdfBlob).toHaveBeenCalledWith(data);
+		expect(mocks.fetch).not.toHaveBeenCalled();
+		expect(await blob.text()).toBe("local");
+	});
+
+	it("fetches the server PDF only after browser rendering rejects", async () => {
+		mocks.createResumePdfBlob.mockRejectedValue(new Error("browser renderer failed"));
+
+		const blob = await resolvePublicResumePdfBlob({ data: sampleResumeData, publicResume });
 
 		expect(mocks.createResumePdfBlob).toHaveBeenCalledWith(sampleResumeData);
-		expect(mocks.fetch).not.toHaveBeenCalled();
-	});
-
-	it("uses the authorized server fallback when a semantic projection is unavailable", async () => {
-		const refetchStyleProjection = vi.fn().mockRejectedValue(new Error("projection unavailable"));
-
-		await resolvePublicResumePdfBlob({
-			data: sampleResumeData,
-			stylesheetMode: "semantic",
-			publicResume,
-			refetchStyleProjection,
-		});
-
-		expect(refetchStyleProjection).toHaveBeenCalledTimes(1);
-		expect(String(mocks.fetch.mock.calls[0]?.[0])).toContain("/api/resumes/amruth/sample/pdf");
-		expect(String(mocks.fetch.mock.calls[0]?.[0])).toContain("reason=missing-projection");
-		expect(mocks.createResumePdfBlob).not.toHaveBeenCalled();
-	});
-
-	it("refetches a mismatched projection once before returning the authorized server blob", async () => {
-		const semanticData = structuredClone(sampleResumeData);
-		const source = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
-		semanticData.metadata.stylesheet = { mode: "semantic", source, applied: source };
-		const projection = await createPublicStyleProjection({ data: semanticData });
-		const mismatchedProjection = { ...projection, renderDataHash: "0".repeat(64) };
-		const refetchStyleProjection = vi.fn(async () => mismatchedProjection);
-
-		const blob = await resolvePublicResumePdfBlob({
-			data: sampleResumeData,
-			stylesheetMode: "semantic",
-			styleProjection: mismatchedProjection,
-			publicResume,
-			refetchStyleProjection,
-		});
-
-		expect(refetchStyleProjection).toHaveBeenCalledTimes(1);
-		expect(mocks.fetch).toHaveBeenCalledTimes(1);
+		expect(mocks.fetch).toHaveBeenCalledWith("/api/resumes/amruth/sample/pdf", { credentials: "include" });
 		expect(await blob.text()).toBe("server");
-		expect(mocks.createResumePdfBlob).not.toHaveBeenCalled();
 	});
 });

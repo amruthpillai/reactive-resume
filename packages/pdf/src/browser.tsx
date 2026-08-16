@@ -9,16 +9,6 @@ import { pdf } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
 import { inspectResumePdf } from "./semantic";
 
-export type {
-	BrowserPdfPreflightResult,
-	PdfPreflightFailure,
-	PdfPreflightPageLimits,
-	PdfPreflightResult,
-	RenderPreflightPdfResult,
-	StylesheetPreflightInput,
-} from "./semantic/preflight-core";
-export { renderPreflightPdf } from "./semantic/preflight-core";
-
 export type CreateResumePdfBlobOptions = {
 	data: ResumeData;
 	template?: Template | undefined;

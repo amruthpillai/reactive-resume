@@ -4,13 +4,12 @@ import type { ResolvedResumePreviewProps } from "./preview.shared";
 import type { PreviewPageSize } from "./preview.shared.utils";
 import { t } from "@lingui/core/macro";
 import { AnimatePresence, m } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { isRTL } from "@reactive-resume/utils/locale";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
-import { useStylesheetStore } from "@/features/resume/stylesheet/store";
-import { usePreviewPausedStore, useResumeData, useResumeStore } from "../builder/draft";
+import { usePreviewPausedStore, useResumeData } from "../builder/draft";
 import { PdfCanvasDocument, PdfCanvasPage } from "./pdf-canvas";
 import { ResumePreviewLoader } from "./preview.shared";
 import { getResumePreviewGapValue, getResumePreviewPageCount } from "./preview.shared.utils";
@@ -102,17 +101,6 @@ export function ResumePreviewClient({
 }: ResolvedResumePreviewProps) {
 	const builderResumeData = useResumeData();
 	const resumeData = data ?? builderResumeData;
-	const builderResumeId = useResumeStore((state) => state.resumeId);
-	const stylesheetResumeId = useStylesheetStore((state) => state.resumeId);
-	const mode = useStylesheetStore((state) => state.mode);
-	const applied = useStylesheetStore((state) => state.applied);
-	const presentation = useMemo(
-		() =>
-			data === undefined && builderResumeId !== undefined && stylesheetResumeId === builderResumeId
-				? { stylesheet: { mode, applied } }
-				: undefined,
-		[applied, builderResumeId, data, mode, stylesheetResumeId],
-	);
 	const paused = usePreviewPausedStore((state) => state.paused);
 
 	const [previewLayers, setPreviewLayers] = useState<PreviewPdf[]>([]);
@@ -133,7 +121,7 @@ export function ResumePreviewClient({
 		const generatePdfPreview = async () => {
 			try {
 				if (cancelled || requestId !== requestIdRef.current) return;
-				const blob = await createResumePdfBlob(resumeData, undefined, undefined, presentation);
+				const blob = await createResumePdfBlob(resumeData);
 
 				if (!cancelled && requestId === requestIdRef.current) {
 					const nextPdf = createPreviewPdf(
@@ -162,7 +150,7 @@ export function ResumePreviewClient({
 			cancelled = true;
 			window.clearTimeout(timeoutId);
 		};
-	}, [paused, presentation, resumeData]);
+	}, [paused, resumeData]);
 
 	if (!resumeData) return null;
 

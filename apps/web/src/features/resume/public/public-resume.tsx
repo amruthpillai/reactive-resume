@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { CircleNotchIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { BrandIcon } from "@reactive-resume/ui/components/brand-icon";
 import { Button } from "@reactive-resume/ui/components/button";
 import { LoadingScreen } from "@/components/layout/loading-screen";
@@ -17,30 +17,12 @@ export function PublicResumeRoute() {
 	const { username, slug } = publicResumeRoute.useParams();
 
 	const { data: resume } = useQuery(orpc.resume.getBySlug.queryOptions({ input: { username, slug } }));
-	const projectionQuery = useQuery(
-		orpc.resume.getStyleProjection.queryOptions({ input: { username, slug }, enabled: resume !== undefined }),
-	);
-	const styleProjection =
-		projectionQuery.data && Object.keys(projectionQuery.data.nodes).length > 0 ? projectionQuery.data : undefined;
 	const publicResume = useMemo(() => ({ username, slug }), [slug, username]);
-	const refetchStyleProjection = useCallback(async () => {
-		const result = await projectionQuery.refetch();
-		return result.data;
-	}, [projectionQuery.refetch]);
 	const { onDownloadPDF, isExporting } = useResumeExport(resume, {
-		...(resume
-			? {
-					publicResumePdf: {
-						stylesheetMode: resume.stylesheetMode,
-						publicResume,
-						refetchStyleProjection,
-						...(styleProjection ? { styleProjection } : {}),
-					},
-				}
-			: {}),
+		...(resume ? { publicResumePdf: { publicResume } } : {}),
 	});
 
-	if (!resume || projectionQuery.isPending) return <LoadingScreen />;
+	if (!resume) return <LoadingScreen />;
 
 	const { basics, picture } = resume.data;
 
@@ -66,14 +48,7 @@ export function PublicResumeRoute() {
 				</header>
 
 				<main className="w-full max-w-5xl bg-white print:max-w-full">
-					<PdfViewer
-						data={resume.data}
-						className="block w-full"
-						stylesheetMode={resume.stylesheetMode}
-						styleProjection={styleProjection}
-						publicResume={publicResume}
-						refetchStyleProjection={refetchStyleProjection}
-					/>
+					<PdfViewer data={resume.data} className="block w-full" publicResume={publicResume} />
 				</main>
 
 				<footer className="flex justify-center print:hidden">

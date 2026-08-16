@@ -144,7 +144,7 @@ describe("subscribeResumeUpdated", () => {
 		await iterator.next();
 	});
 
-	it("accepts stylesheet invalidations and ignores unknown mutation names", async () => {
+	it("ignores removed stylesheet and unknown mutation names", async () => {
 		const client = makeFakeClient();
 		pool.connect.mockResolvedValueOnce(client);
 
@@ -161,9 +161,10 @@ describe("subscribeResumeUpdated", () => {
 
 		client.__notify("resume_updated", JSON.stringify({ ...exampleEvent, mutation: "forged" }));
 		client.__notify("resume_updated", JSON.stringify({ ...exampleEvent, mutation: "stylesheet" }));
+		client.__notify("resume_updated", JSON.stringify(exampleEvent));
 
 		const result = await resultP;
-		expect(result.value?.mutation).toBe("stylesheet");
+		expect(result.value).toEqual(exampleEvent);
 
 		controller.abort();
 		await iterator.next();

@@ -1,5 +1,7 @@
 import type { Extension } from "@codemirror/state";
-import type { SemanticCssDiagnostic } from "@reactive-resume/resume/stylesheet";
+import type { SemanticCssDiagnostic, SemanticNode } from "@reactive-resume/resume/stylesheet";
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { StylesheetSource } from "@reactive-resume/schema/resume/stylesheet";
 import type { SemanticCssColorToken } from "./color-tokens";
 import type { SemanticCssEditorMetadata } from "./protocol";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
@@ -17,11 +19,19 @@ import {
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { BookOpenIcon } from "@phosphor-icons/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import { convertLegacyStyleRules } from "@reactive-resume/pdf/semantic-legacy";
+import {
+	buildSemanticTree,
+	getTemplateSemanticManifest,
+	semanticNodeKeys,
+	shouldShowResumeHeader,
+} from "@reactive-resume/pdf/semantic-tree";
 import { PopoverTrigger } from "@reactive-resume/ui/components/popover";
 import { Sheet, SheetContent, SheetTitle } from "@reactive-resume/ui/components/sheet";
 import { ColorPicker } from "@/components/input/color-picker";
+import { useIsResumeLocked, useResumeData, useResumeStore, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useTheme } from "@/features/theme/provider";
 import { useBuilderSidebarStore } from "@/routes/builder/$resumeId/-store/sidebar";
 import { compositionAwareDocumentListener, createSemanticCssEditorExtensions } from "./editor-extensions";
@@ -29,8 +39,8 @@ import { enterStylesheetFocusMode } from "./focus-mode";
 import { formatEditorDocument } from "./formatter";
 import { LegacyStylesheetBanner } from "./legacy-banner";
 import { StylesheetStatus } from "./status";
-import { useStylesheetStore } from "./store";
 import { StylesheetToolbar } from "./toolbar";
+import { createCompileWorkerClient } from "./worker-client";
 
 const externalReplacement = Annotation.define<boolean>();
 const emptyMetadata: SemanticCssEditorMetadata = {
@@ -314,30 +324,78 @@ type StylesheetEditorShellProps = {
 	readOnly?: boolean;
 };
 
+const pageDimensions = (data: ResumeData) => {
+	const size = data.metadata.page.format === "letter" ? { width: 612, height: 792 } : { width: 595.28, height: 841.89 };
+	return data.metadata.layout.pages.map((_page, index) => ({
+		pageKey: semanticNodeKeys.page(index + 1),
+		...size,
+	}));
+};
+
+const createEditorMetadata = (data: ResumeData): SemanticCssEditorMetadata => {
+	const pages = data.metadata.layout.pages.map((page, index) =>
+		buildSemanticTree({
+			data,
+			template: data.metadata.template,
+			page,
+			pageNumber: index + 1,
+			showHeader: shouldShowResumeHeader(data, index),
+		}),
+	);
+	const semanticTree: SemanticNode = {
+		key: semanticNodeKeys.resume(),
+		kind: "resume",
+		attributes: { template: data.metadata.template },
+		roles: [],
+		children: pages.flatMap(({ children }) => children),
+	};
+	return {
+		semanticTree,
+		templateParts: getTemplateSemanticManifest(data.metadata.template).parts.map(({ name }) => name),
+	};
+};
+
 function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps) {
 	const { theme } = useTheme();
 	const isMobile = useMediaQuery("(max-width: 767px)", { initializeWithValue: false });
 	const [focusOpen, setFocusOpen] = useState(false);
+	const [diagnostics, setDiagnostics] = useState<readonly SemanticCssDiagnostic[]>([]);
+	const [colorTokens, setColorTokens] = useState<readonly SemanticCssColorToken[]>([]);
+	const [status, setStatus] = useState<"idle" | "compiling" | "error">("compiling");
+	const [compiler, setCompiler] = useState<ReturnType<typeof createCompileWorkerClient>>();
 	const restoreDesktopRef = useRef<(() => void) | null>(null);
-	const mode = useStylesheetStore((state) => state.mode);
-	const source = useStylesheetStore((state) => state.source.text);
-	const applied = useStylesheetStore((state) => state.applied.text);
-	const diagnostics = useStylesheetStore((state) => state.diagnostics);
-	const colorTokens = useStylesheetStore((state) => state.colorTokens);
-	const metadata = useStylesheetStore((state) => state.editorMetadata);
-	const status = useStylesheetStore((state) => state.status);
-	const restoreLocked = useStylesheetStore((state) => state.restoreLocked);
-	const canUndo = useStylesheetStore((state) => state.canUndo);
-	const canRedo = useStylesheetStore((state) => state.canRedo);
-	const setSourceText = useStylesheetStore((state) => state.setSourceText);
-	const setFocused = useStylesheetStore((state) => state.setFocused);
-	const activate = useStylesheetStore((state) => state.activate);
-	const undo = useStylesheetStore((state) => state.undo);
-	const redo = useStylesheetStore((state) => state.redo);
-	const refreshIntelligence = useStylesheetStore((state) => state.refreshIntelligence);
+	const data = useResumeData();
+	const updateResumeData = useUpdateResumeData();
+	const isLocked = useIsResumeLocked();
+	const canUndo = useResumeStore((state) => state.canUndo);
+	const canRedo = useResumeStore((state) => state.canRedo);
+	const undo = useResumeStore((state) => state.undo);
+	const redo = useResumeStore((state) => state.redo);
 	const editorViewRef = useRef<EditorView | null>(null);
+	const compileGenerationRef = useRef(0);
+	useEffect(() => {
+		const client = createCompileWorkerClient(
+			() =>
+				new Worker(new URL("./stylesheet.worker.ts", import.meta.url), {
+					type: "module",
+					name: "semantic-css-compiler",
+				}),
+		);
+		setCompiler(client);
+		return () => client.destroy();
+	}, []);
+	const stylesheet = data?.metadata.stylesheet;
+	const mode = stylesheet?.mode ?? "legacy";
+	const source = useMemo<StylesheetSource>(
+		() =>
+			stylesheet?.source ??
+			(data ? convertLegacyStyleRules(data).source : { languageVersion: 1, text: "@version 1;\n" }),
+		[data, stylesheet],
+	);
+	const metadata = useMemo(() => (data ? createEditorMetadata(data) : emptyMetadata), [data]);
 	const hasErrors = status === "error" || diagnostics.some(({ severity }) => severity === "error");
-	const isChecking = status === "compiling" || status === "preflighting" || status === "saving";
+	const isChecking = status === "compiling";
+	const disabled = readOnly || isLocked;
 
 	useEffect(
 		() => () => {
@@ -347,8 +405,61 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 	);
 
 	useEffect(() => {
-		refreshIntelligence();
-	}, [refreshIntelligence]);
+		if (!compiler || !data) return;
+		let cancelled = false;
+		const editGeneration = ++compileGenerationRef.current;
+		setStatus("compiling");
+		setColorTokens([]);
+		const timer = window.setTimeout(() => {
+			void compiler
+				.compile({
+					editGeneration,
+					source,
+					semanticTree: metadata.semanticTree,
+					baseSettings: {
+						picture: data.picture,
+						template: data.metadata.template,
+						design: data.metadata.design,
+						typography: data.metadata.typography,
+						page: data.metadata.page,
+						layout: { sidebarWidth: data.metadata.layout.sidebarWidth },
+					},
+					pages: pageDimensions(data),
+				})
+				.then((result) => {
+					if (cancelled || result.editGeneration !== compileGenerationRef.current) return;
+					setDiagnostics(result.diagnostics);
+					setColorTokens(result.colorTokens ?? []);
+					setStatus(
+						result.program && !result.diagnostics.some(({ severity }) => severity === "error") ? "idle" : "error",
+					);
+				})
+				.catch(() => {
+					if (!cancelled && editGeneration === compileGenerationRef.current) setStatus("error");
+				});
+		}, 180);
+
+		return () => {
+			cancelled = true;
+			window.clearTimeout(timer);
+		};
+	}, [compiler, data, metadata, source]);
+
+	if (!data) return null;
+
+	const setSourceText = (text: string) => {
+		if (disabled || text === source.text) return;
+		updateResumeData((draft) => {
+			draft.metadata.stylesheet = { mode, source: { ...source, text } };
+		});
+	};
+
+	const activate = () => {
+		if (disabled || mode === "semantic" || hasErrors || isChecking) return;
+		updateResumeData((draft) => {
+			draft.metadata.stylesheet = { mode: "semantic", source };
+		});
+	};
 
 	const toggleFocus = () => {
 		if (isMobile) {
@@ -374,15 +485,14 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 
 	const editor = (
 		<StylesheetCodeEditor
-			value={source}
+			value={source.text}
 			diagnostics={diagnostics}
 			colorTokens={colorTokens}
 			metadata={metadata}
 			theme={theme}
-			readOnly={readOnly || restoreLocked}
+			readOnly={disabled}
 			label={t`Semantic CSS stylesheet`}
 			onChange={setSourceText}
-			onFocusChange={setFocused}
 			onReady={(view) => {
 				editorViewRef.current = view;
 			}}
@@ -393,22 +503,21 @@ function StylesheetEditorShell({ readOnly = false }: StylesheetEditorShellProps)
 	const editorChrome = (
 		<div className="space-y-3">
 			{mode === "legacy" && (
-				<LegacyStylesheetBanner disabled={restoreLocked || hasErrors || isChecking} onActivate={activate} />
+				<LegacyStylesheetBanner disabled={disabled || hasErrors || isChecking} onActivate={activate} />
 			)}
 
 			<StylesheetToolbar
-				source={source}
+				source={source.text}
 				canUndo={canUndo}
 				canRedo={canRedo}
 				focused={focusOpen}
-				disabled={restoreLocked}
+				disabled={disabled}
 				onUndo={undo}
 				onRedo={redo}
 				onFormat={() => {
 					const view = editorViewRef.current;
 					if (view) void formatEditorDocument(view).catch(() => undefined);
 				}}
-				onReset={() => setSourceText(applied)}
 				onFocusToggle={toggleFocus}
 			/>
 

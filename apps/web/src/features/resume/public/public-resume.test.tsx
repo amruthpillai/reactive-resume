@@ -1,6 +1,5 @@
 // @vitest-environment happy-dom
 
-import type { PublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
@@ -12,30 +11,12 @@ import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
-	stylesheetMode?: "legacy" | "semantic";
-	styleProjection?: PublicStyleProjection;
-	refetchStyleProjection?: () => Promise<PublicStyleProjection | undefined>;
 	publicResume?: { username: string; slug: string };
 };
 
 const publicResumeMock = vi.hoisted(() => ({
 	onDownloadPDF: vi.fn(),
 	PdfViewer: vi.fn<(_props: PdfViewerProps) => ReactNode>(() => null),
-	projection: {
-		formatVersion: 1,
-		languageVersion: 1,
-		semanticTreeVersion: 1,
-		registryFingerprint: "1".repeat(64),
-		adapterFingerprint: "2".repeat(64),
-		renderDataHash: "3".repeat(64),
-		nodes: { resume: {} },
-	} as PublicStyleProjection,
-	refetchProjection: vi.fn(),
-	projectionResult: {
-		data: undefined as PublicStyleProjection | undefined,
-		isError: false,
-		isPending: false,
-	},
 	useResumeExport: vi.fn(),
 	resume: undefined as
 		| undefined
@@ -43,61 +24,28 @@ const publicResumeMock = vi.hoisted(() => ({
 				data: ResumeData;
 				name: string;
 				slug: string;
-				stylesheetMode: "legacy" | "semantic";
 		  },
 }));
 
-vi.mock("@tanstack/react-query", () => ({
-	useQuery: (options: { query: "resume" | "projection" }) =>
-		options.query === "resume"
-			? { data: publicResumeMock.resume }
-			: { ...publicResumeMock.projectionResult, refetch: publicResumeMock.refetchProjection },
-}));
-
+vi.mock("@tanstack/react-query", () => ({ useQuery: () => ({ data: publicResumeMock.resume }) }));
 vi.mock("@tanstack/react-router", () => ({
-	getRouteApi: () => ({
-		useParams: () => ({ username: "amruth", slug: "sample" }),
-	}),
+	getRouteApi: () => ({ useParams: () => ({ username: "amruth", slug: "sample" }) }),
 }));
-
-vi.mock("./pdf-viewer", () => ({
-	PdfViewer: publicResumeMock.PdfViewer,
-}));
-
+vi.mock("./pdf-viewer", () => ({ PdfViewer: publicResumeMock.PdfViewer }));
 vi.mock("@/libs/orpc/client", () => ({
-	orpc: {
-		resume: {
-			getBySlug: { queryOptions: () => ({ query: "resume" }) },
-			getStyleProjection: { queryOptions: () => ({ query: "projection" }) },
-		},
-	},
+	orpc: { resume: { getBySlug: { queryOptions: () => ({ query: "resume" }) } } },
 }));
-
 vi.mock("@/features/resume/export/use-resume-export", () => ({
 	useResumeExport: publicResumeMock.useResumeExport,
 }));
 
 const { PublicResumeRoute } = await import("./public-resume");
 
-beforeAll(() => {
-	i18n.loadAndActivate({ locale: "en", messages: {} });
-});
+beforeAll(() => i18n.loadAndActivate({ locale: "en", messages: {} }));
 
 beforeEach(() => {
-	publicResumeMock.resume = {
-		data: sampleResumeData,
-		name: "Sample Resume",
-		slug: "sample",
-		stylesheetMode: "semantic",
-	};
-	publicResumeMock.projectionResult = {
-		data: publicResumeMock.projection,
-		isError: false,
-		isPending: false,
-	};
+	publicResumeMock.resume = { data: sampleResumeData, name: "Sample Resume", slug: "sample" };
 	publicResumeMock.PdfViewer.mockClear();
-	publicResumeMock.refetchProjection.mockReset();
-	publicResumeMock.refetchProjection.mockResolvedValue({ data: publicResumeMock.projection });
 	publicResumeMock.useResumeExport.mockReset();
 	publicResumeMock.useResumeExport.mockReturnValue({
 		onDownloadPDF: publicResumeMock.onDownloadPDF,
@@ -116,70 +64,19 @@ const renderPublicResumeRoute = () =>
 	);
 
 describe("PublicResumeRoute", () => {
-	it("renders the public resume through the route-local PDF.js viewer", () => {
+	it("passes exposed source data directly to the browser viewer and export fallback", () => {
 		renderPublicResumeRoute();
 
-		expect(screen.getByTestId("pdf-viewer")).toHaveClass("block", "w-full");
 		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
-			expect.objectContaining({ data: sampleResumeData }),
+			expect.objectContaining({
+				data: sampleResumeData,
+				publicResume: { username: "amruth", slug: "sample" },
+			}),
 			undefined,
 		);
 		expect(publicResumeMock.useResumeExport).toHaveBeenCalledWith(publicResumeMock.resume, {
-			publicResumePdf: expect.objectContaining({
-				stylesheetMode: "semantic",
-				styleProjection: publicResumeMock.projection,
-				publicResume: { username: "amruth", slug: "sample" },
-			}),
+			publicResumePdf: { publicResume: { username: "amruth", slug: "sample" } },
 		});
-	});
-
-	it("routes a missing semantic projection to the shared fallback seam", () => {
-		publicResumeMock.projectionResult = { data: undefined, isError: true, isPending: false };
-
-		renderPublicResumeRoute();
-
-		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
-			expect.objectContaining({
-				stylesheetMode: "semantic",
-				styleProjection: undefined,
-				refetchStyleProjection: expect.any(Function),
-				publicResume: { username: "amruth", slug: "sample" },
-			}),
-			undefined,
-		);
-		expect(publicResumeMock.useResumeExport).toHaveBeenCalledWith(
-			publicResumeMock.resume,
-			expect.objectContaining({
-				publicResumePdf: expect.objectContaining({
-					stylesheetMode: "semantic",
-				}),
-			}),
-		);
-	});
-
-	it("keeps missing legacy projections on the local rendering path", () => {
-		if (publicResumeMock.resume) publicResumeMock.resume.stylesheetMode = "legacy";
-		publicResumeMock.projectionResult = { data: undefined, isError: false, isPending: false };
-
-		renderPublicResumeRoute();
-
-		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
-			expect.objectContaining({ stylesheetMode: "legacy", styleProjection: undefined }),
-			undefined,
-		);
-	});
-
-	it("loads the public projection and passes it to the shared viewer", () => {
-		renderPublicResumeRoute();
-
-		expect(publicResumeMock.PdfViewer).toHaveBeenCalledWith(
-			expect.objectContaining({
-				styleProjection: publicResumeMock.projection,
-				refetchStyleProjection: expect.any(Function),
-				publicResume: { username: "amruth", slug: "sample" },
-			}),
-			undefined,
-		);
 	});
 
 	it("lets the public resume page grow to the full PDF length", () => {
@@ -187,7 +84,6 @@ describe("PublicResumeRoute", () => {
 
 		const viewerFrame = screen.getByTestId("pdf-viewer").parentElement;
 		const page = viewerFrame?.parentElement;
-
 		expect(page).not.toHaveClass("min-h-svh", "h-svh", "max-h-svh", "overflow-hidden");
 		expect(viewerFrame).not.toHaveClass("min-h-0", "flex-1", "overflow-hidden");
 	});

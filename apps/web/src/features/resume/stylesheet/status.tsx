@@ -7,7 +7,7 @@ import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
 
 export type StylesheetStatusProps = {
 	mode: "legacy" | "semantic";
-	status: "idle" | "compiling" | "preflighting" | "saving" | "applied" | "error";
+	status: "idle" | "compiling" | "error";
 	diagnostics: readonly SemanticCssDiagnostic[];
 };
 
@@ -15,7 +15,7 @@ export function StylesheetStatus({ mode, status, diagnostics }: StylesheetStatus
 	const errors = diagnostics.filter(({ severity }) => severity === "error");
 	const warnings = diagnostics.filter(({ severity }) => severity === "warning");
 	const hasErrors = status === "error" || errors.length > 0;
-	const isPending = status === "compiling" || status === "preflighting" || status === "saving";
+	const isPending = status === "compiling";
 
 	return (
 		<div className="space-y-2" aria-live="polite">
@@ -29,12 +29,10 @@ export function StylesheetStatus({ mode, status, diagnostics }: StylesheetStatus
 			) : warnings.length > 0 ? (
 				<Badge variant="secondary">
 					<WarningIcon data-icon="inline-start" />
-					{mode === "legacy" ? <Trans>Ready to activate with warnings</Trans> : <Trans>Applied with warnings</Trans>}
+					{mode === "legacy" ? <Trans>Ready to activate with warnings</Trans> : <Trans>Valid with warnings</Trans>}
 				</Badge>
 			) : (
-				<Badge variant="secondary">
-					{mode === "legacy" ? <Trans>Ready to activate</Trans> : <Trans>Applied</Trans>}
-				</Badge>
+				<Badge variant="secondary">{mode === "legacy" ? <Trans>Ready to activate</Trans> : <Trans>Valid</Trans>}</Badge>
 			)}
 
 			{hasErrors && (
@@ -44,7 +42,7 @@ export function StylesheetStatus({ mode, status, diagnostics }: StylesheetStatus
 						<Trans>Stylesheet has errors</Trans>
 					</AlertTitle>
 					<AlertDescription>
-						<Trans>Preview and export use the last valid version.</Trans>
+						<Trans>Preview and export fall back to base styles.</Trans>
 					</AlertDescription>
 				</Alert>
 			)}

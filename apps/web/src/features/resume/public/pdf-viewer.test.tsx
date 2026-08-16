@@ -2,7 +2,6 @@
 
 import { render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createPublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 
 const pdfViewerMock = vi.hoisted(() => {
@@ -120,67 +119,25 @@ describe("PdfViewer", () => {
 		expect(pdfViewerMock.loadingTask.destroy).toHaveBeenCalledTimes(1);
 	});
 
-	it("renders a valid public projection through the shared PDF entrypoint", async () => {
+	it("renders exposed semantic source through the shared PDF entrypoint", async () => {
 		const semanticData = structuredClone(sampleResumeData);
-		const applied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
-		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
-		const projection = await createPublicStyleProjection({ data: semanticData });
-		const refetchStyleProjection = vi.fn();
+		semanticData.metadata.stylesheet = {
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
+		};
 
-		render(
-			<PdfViewer
-				data={sampleResumeData}
-				stylesheetMode="semantic"
-				styleProjection={projection}
-				refetchStyleProjection={refetchStyleProjection}
-				publicResume={{ username: "amruth", slug: "sample" }}
-			/>,
-		);
+		render(<PdfViewer data={semanticData} publicResume={{ username: "amruth", slug: "sample" }} />);
 
-		await waitFor(() =>
-			expect(pdfViewerMock.createResumePdfBlob).toHaveBeenCalledWith(sampleResumeData, undefined, undefined, {
-				publicStyleProjection: projection,
-			}),
-		);
-		expect(refetchStyleProjection).not.toHaveBeenCalled();
+		await waitFor(() => expect(pdfViewerMock.createResumePdfBlob).toHaveBeenCalledWith(semanticData));
 		expect(pdfViewerMock.fetch).not.toHaveBeenCalled();
 	});
 
-	it("refetches a mismatched projection once before using the authorized PDF fallback", async () => {
-		const semanticData = structuredClone(sampleResumeData);
-		const applied = { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" };
-		semanticData.metadata.stylesheet = { mode: "semantic", source: applied, applied };
-		const projection = await createPublicStyleProjection({ data: semanticData });
-		const mismatchedProjection = { ...projection, renderDataHash: "0".repeat(64) };
-		const refetchStyleProjection = vi.fn(async () => mismatchedProjection);
+	it("uses the authorized PDF fallback after browser generation rejects", async () => {
+		pdfViewerMock.createResumePdfBlob.mockRejectedValueOnce(new Error("browser renderer failed"));
 
-		const view = render(
-			<PdfViewer
-				data={sampleResumeData}
-				stylesheetMode="semantic"
-				styleProjection={mismatchedProjection}
-				refetchStyleProjection={refetchStyleProjection}
-				publicResume={{ username: "amruth", slug: "sample" }}
-			/>,
-		);
+		render(<PdfViewer data={sampleResumeData} publicResume={{ username: "amruth", slug: "sample" }} />);
 
-		await waitFor(() => expect(refetchStyleProjection).toHaveBeenCalledTimes(1));
 		await waitFor(() => expect(pdfViewerMock.fetch).toHaveBeenCalledTimes(1));
-		expect(String(pdfViewerMock.fetch.mock.calls[0]?.[0])).toContain("/api/resumes/amruth/sample/pdf");
-		expect(String(pdfViewerMock.fetch.mock.calls[0]?.[0])).toContain("reason=render-data-hash");
-		expect(pdfViewerMock.createResumePdfBlob).not.toHaveBeenCalled();
-
-		view.rerender(
-			<PdfViewer
-				data={sampleResumeData}
-				stylesheetMode="semantic"
-				styleProjection={{ ...mismatchedProjection, renderDataHash: "1".repeat(64) }}
-				refetchStyleProjection={refetchStyleProjection}
-				publicResume={{ username: "amruth", slug: "sample" }}
-			/>,
-		);
-
-		await waitFor(() => expect(pdfViewerMock.fetch).toHaveBeenCalledTimes(2));
-		expect(refetchStyleProjection).toHaveBeenCalledTimes(1);
+		expect(pdfViewerMock.fetch).toHaveBeenCalledWith("/api/resumes/amruth/sample/pdf", { credentials: "include" });
 	});
 });

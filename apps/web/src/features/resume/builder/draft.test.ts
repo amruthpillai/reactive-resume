@@ -35,10 +35,6 @@ const toastMocks = vi.hoisted(() => ({
 	error: vi.fn(() => "sync-error-toast"),
 }));
 
-const stylesheetMocks = vi.hoisted(() => ({
-	refresh: vi.fn(),
-}));
-
 vi.mock("@orpc/client", () => ({
 	consumeEventIterator: consumeEventIteratorMock,
 }));
@@ -79,10 +75,6 @@ vi.mock("@/libs/orpc/client", () => ({
 
 vi.mock("sonner", () => ({
 	toast: toastMocks,
-}));
-
-vi.mock("@/features/resume/stylesheet/store", () => ({
-	refreshStylesheetStore: stylesheetMocks.refresh,
 }));
 
 function cloneResumeData(data: ResumeData): ResumeData {
@@ -135,7 +127,6 @@ describe("builder resume autosave", () => {
 		i18n.loadAndActivate({ locale: "en-US", messages: {} });
 		toastMocks.dismiss.mockClear();
 		toastMocks.error.mockClear();
-		stylesheetMocks.refresh.mockReset();
 		useResumeStore.getState().reset();
 	});
 
@@ -167,6 +158,26 @@ describe("builder resume autosave", () => {
 			expect.objectContaining({ signal: expect.any(AbortSignal) }),
 		);
 		expect(orpcMocks.patchResume).not.toHaveBeenCalled();
+	});
+
+	it("autosaves stylesheet source through the ordinary full-data update", async () => {
+		const initial = makeResume("resume-stylesheet-autosave");
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" };
+		const updated = makeResume(initial.id);
+		updated.data.metadata.stylesheet = { mode: "semantic", source };
+		orpcMocks.updateResume.mockResolvedValue(updated);
+		useResumeStore.getState().initialize(initial);
+
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.metadata.stylesheet = { mode: "semantic", source };
+		});
+		vi.advanceTimersByTime(500);
+		await flushMicrotasks();
+
+		expect(orpcMocks.updateResume).toHaveBeenCalledWith(
+			{ id: initial.id, data: updated.data },
+			expect.objectContaining({ signal: expect.any(AbortSignal) }),
+		);
 	});
 
 	it("saves the latest pending snapshot after an in-flight save resolves", async () => {
@@ -507,25 +518,13 @@ describe("resume update stream subscription", () => {
 		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Local Name");
 	});
 
-	it("refetches canonical stylesheet state for stylesheet SSE events", async () => {
+	it("applies stylesheet source from the ordinary resume SSE flow", async () => {
 		const initial = makeResume("resume-stylesheet");
-		consumeEventIteratorMock.mockReturnValue(vi.fn().mockResolvedValue(undefined));
-		routerParamsMock.value = { resumeId: initial.id };
-		useResumeStore.getState().initialize(initial);
-
-		renderHook(() => useBuilderResumeUpdateSubscription());
-		const handlers = consumeEventIteratorMock.mock.calls[0]?.[1] as {
-			onEvent: (event: { mutation: string }) => Promise<void>;
+		const remote = makeResume("resume-stylesheet");
+		remote.data.metadata.stylesheet = {
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" },
 		};
-		await act(async () => handlers.onEvent({ mutation: "stylesheet" }));
-
-		expect(stylesheetMocks.refresh).toHaveBeenCalledWith(initial.id);
-		expect(orpcMocks.getResumeById).not.toHaveBeenCalled();
-	});
-
-	it("refreshes the render-data version after content SSE events", async () => {
-		const initial = makeResume("resume-content");
-		const remote = withBasicsName(initial, "Remote");
 		consumeEventIteratorMock.mockReturnValue(vi.fn().mockResolvedValue(undefined));
 		orpcMocks.getResumeById.mockResolvedValue(remote);
 		routerParamsMock.value = { resumeId: initial.id };
@@ -537,6 +536,7 @@ describe("resume update stream subscription", () => {
 		};
 		await act(async () => handlers.onEvent({ mutation: "update" }));
 
-		expect(stylesheetMocks.refresh).toHaveBeenCalledWith(initial.id, remote.data);
+		expect(orpcMocks.getResumeById).toHaveBeenCalledWith({ id: initial.id });
+		expect(useResumeStore.getState().resume?.data.metadata.stylesheet).toEqual(remote.data.metadata.stylesheet);
 	});
 });

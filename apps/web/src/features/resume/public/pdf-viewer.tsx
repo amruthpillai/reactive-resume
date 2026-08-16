@@ -1,6 +1,4 @@
-import type { PublicStyleProjection } from "@reactive-resume/pdf/public-projection";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import type { SemanticStylesheet } from "@reactive-resume/schema/resume/stylesheet";
 import type { PDFDocumentLoadingTask, PDFDocumentProxy } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { AnnotationMode, GlobalWorkerOptions, getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { EventBus, LinkTarget, PDFLinkService, PDFViewer } from "pdfjs-dist/legacy/web/pdf_viewer.mjs";
@@ -17,9 +15,6 @@ GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
-	stylesheetMode?: SemanticStylesheet["mode"];
-	styleProjection?: PublicStyleProjection;
-	refetchStyleProjection?: () => Promise<PublicStyleProjection | undefined>;
 	publicResume?: {
 		username: string;
 		slug: string;
@@ -77,21 +72,11 @@ function pdfViewerReducer(state: PdfViewerState, action: PdfViewerAction): PdfVi
 	}
 }
 
-export function PdfViewer({
-	className,
-	data,
-	stylesheetMode,
-	styleProjection,
-	refetchStyleProjection,
-	publicResume,
-}: PdfViewerProps) {
+export function PdfViewer({ className, data, publicResume }: PdfViewerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewerRef = useRef<HTMLDivElement>(null);
 	const fileRef = useRef<Blob | null>(null);
-	const projectionRetryRef = useRef<{ data?: ResumeData; publicKey?: string; retried: boolean }>({
-		retried: false,
-	});
 	const [{ error, fileVersion, isReady, viewerHeight }, dispatch] = useReducer(
 		pdfViewerReducer,
 		INITIAL_PDF_VIEWER_STATE,
@@ -103,27 +88,8 @@ export function PdfViewer({
 		fileRef.current = null;
 		dispatch({ type: "resetForData" });
 
-		const createPdf = () => {
-			if (!stylesheetMode || !publicResume) return createResumePdfBlob(data);
-			const publicKey = `${publicResume.username}/${publicResume.slug}`;
-			if (projectionRetryRef.current.data !== data || projectionRetryRef.current.publicKey !== publicKey) {
-				projectionRetryRef.current = { data, publicKey, retried: false };
-			}
-			const retryProjection =
-				refetchStyleProjection && !projectionRetryRef.current.retried
-					? () => {
-							projectionRetryRef.current.retried = true;
-							return refetchStyleProjection();
-						}
-					: undefined;
-			return resolvePublicResumePdfBlob({
-				data,
-				stylesheetMode,
-				publicResume,
-				...(styleProjection ? { styleProjection } : {}),
-				...(retryProjection ? { refetchStyleProjection: retryProjection } : {}),
-			});
-		};
+		const createPdf = () =>
+			publicResume ? resolvePublicResumePdfBlob({ data, publicResume }) : createResumePdfBlob(data);
 
 		void createPdf()
 			.then((blob) => {
@@ -142,7 +108,7 @@ export function PdfViewer({
 		return () => {
 			isCancelled = true;
 		};
-	}, [data, publicResume, refetchStyleProjection, styleProjection, stylesheetMode]);
+	}, [data, publicResume]);
 
 	useEffect(() => {
 		void fileVersion;

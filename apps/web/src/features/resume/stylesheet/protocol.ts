@@ -1,9 +1,4 @@
 import type {
-	BrowserPdfPreflightResult,
-	PdfPreflightPageLimits,
-	StylesheetPreflightInput,
-} from "@reactive-resume/pdf/preflight";
-import type {
 	AuthoredPageContext,
 	BaseSettingsSnapshot,
 	SemanticCssDiagnostic,
@@ -39,47 +34,3 @@ export type CompileWorkerResponse = {
 	diagnostics: readonly SemanticCssDiagnostic[];
 	colorTokens?: readonly SemanticCssColorToken[];
 };
-
-type PreflightLimits = PdfPreflightPageLimits & {
-	maxPages: number;
-	maxBytes: number;
-};
-
-export type PreflightWorkerInput = {
-	editGeneration: number;
-	input: StylesheetPreflightInput;
-	limits: PreflightLimits;
-};
-
-export type PreflightWorkerRequest = PreflightWorkerInput & {
-	type: "preflight";
-	requestId: number;
-};
-
-export type PreflightWorkerResponse = {
-	type: "preflight_result";
-	requestId: number;
-	editGeneration: number;
-	result: BrowserPdfPreflightResult;
-};
-
-export type SerializedPreflightCause = {
-	name: string;
-	message: string;
-	issues: readonly unknown[];
-};
-
-export type PreflightWorkerError = {
-	type: "preflight_error";
-	requestId: number;
-	editGeneration: number;
-	cause: SerializedPreflightCause;
-};
-
-export type PreflightWorkerReady = {
-	type: "preflight_ready";
-};
-
-export function getPreflightTransferables(response: PreflightWorkerResponse): Transferable[] {
-	return response.result.ok ? [response.result.pdf] : [];
-}

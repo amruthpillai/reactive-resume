@@ -1,10 +1,8 @@
 import type { ResumeExportTarget } from "@reactive-resume/resume/export-sections";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import type { SemanticStylesheet } from "@reactive-resume/schema/resume/stylesheet";
 import type { PublicResumePdfOptions } from "@/features/resume/public/public-pdf";
-import type { ResumePdfPresentation } from "./pdf-document";
 import { t } from "@lingui/core/macro";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { buildDocx } from "@reactive-resume/docx";
 import { getResumeSectionTitle } from "@reactive-resume/pdf/section-title";
@@ -12,7 +10,6 @@ import { getResumeExportData, resumeHasCoverLetter } from "@reactive-resume/resu
 import { buildMarkdown } from "@reactive-resume/resume/markdown";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { resolvePublicResumePdfBlob } from "@/features/resume/public/public-pdf";
-import { useStylesheetStore } from "@/features/resume/stylesheet/store";
 import { createSectionTitleResolverForLocale } from "@/libs/resume/section-title-locale";
 import { createResumePdfBlob } from "./pdf-document";
 
@@ -54,43 +51,12 @@ type DownloadPdfOptions = {
 export function useResumeExport(resume: ExportableResume | undefined, exportOptions: UseResumeExportOptions = {}) {
 	const [isExporting, setIsExporting] = useState(false);
 	const hasCoverLetter = resume ? resumeHasCoverLetter(resume.data) : false;
-	const stylesheetResumeId = useStylesheetStore((state) => state.resumeId);
-	const stylesheetMode = useStylesheetStore((state) => state.mode);
-	const stylesheetSource = useStylesheetStore((state) => state.source);
-	const stylesheetApplied = useStylesheetStore((state) => state.applied);
-	const canonicalStylesheet = useMemo<SemanticStylesheet | undefined>(
-		() =>
-			resume?.id && resume.id === stylesheetResumeId
-				? {
-						mode: stylesheetMode,
-						source: stylesheetSource,
-						applied: stylesheetApplied,
-					}
-				: undefined,
-		[resume?.id, stylesheetApplied, stylesheetMode, stylesheetResumeId, stylesheetSource],
-	);
-	const pdfPresentation = useMemo<ResumePdfPresentation | undefined>(
-		() =>
-			canonicalStylesheet
-				? { stylesheet: { mode: canonicalStylesheet.mode, applied: canonicalStylesheet.applied } }
-				: undefined,
-		[canonicalStylesheet],
-	);
 
 	const onDownloadJSON = useCallback(() => {
 		if (!resume) return;
-		const data = canonicalStylesheet
-			? {
-					...resume.data,
-					metadata: {
-						...resume.data.metadata,
-						stylesheet: canonicalStylesheet,
-					},
-				}
-			: resume.data;
-		const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+		const blob = new Blob([JSON.stringify(resume.data, null, 2)], { type: "application/json" });
 		downloadWithAnchor(blob, generateFilename(getExportName(resume), "json"));
-	}, [canonicalStylesheet, resume]);
+	}, [resume]);
 
 	const onDownloadMarkdown = useCallback(
 		async (target: ResumeExportTarget = "resume") => {
@@ -136,7 +102,6 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 							target === "cover-letter"
 								? { includeCoverLetterHeader: downloadOptions?.includeCoverLetterHeader }
 								: undefined,
-							pdfPresentation,
 						);
 				downloadWithAnchor(blob, generateFilename(getTargetExportName(resume, target), "pdf"));
 			} catch {
@@ -146,7 +111,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 				toast.dismiss(toastId);
 			}
 		},
-		[exportOptions.publicResumePdf, pdfPresentation, resume],
+		[exportOptions.publicResumePdf, resume],
 	);
 
 	const onPrint = useCallback(async () => {
@@ -156,7 +121,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 		try {
 			const blob = exportOptions.publicResumePdf
 				? await resolvePublicResumePdfBlob({ data: resume.data, ...exportOptions.publicResumePdf })
-				: await createResumePdfBlob(resume.data, undefined, undefined, pdfPresentation);
+				: await createResumePdfBlob(resume.data);
 			const url = URL.createObjectURL(blob);
 			// ponytail: print the generated PDF via a hidden iframe (reliable in Chromium). If the browser
 			// blocks iframe printing, fall back to opening the PDF in a new tab so the user can print manually.
@@ -182,7 +147,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 			setIsExporting(false);
 			toast.dismiss(toastId);
 		}
-	}, [exportOptions.publicResumePdf, pdfPresentation, resume]);
+	}, [exportOptions.publicResumePdf, resume]);
 
 	return { onDownloadJSON, onDownloadMarkdown, onDownloadDOCX, onDownloadPDF, onPrint, isExporting, hasCoverLetter };
 }

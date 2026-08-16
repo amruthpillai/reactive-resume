@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 import {
-	ArrowCounterClockwiseIcon,
 	ArrowsInIcon,
 	ArrowsOutIcon,
 	ArrowUUpLeftIcon,
@@ -43,7 +42,6 @@ export type StylesheetToolbarProps = {
 	onUndo(): void;
 	onRedo(): void;
 	onFormat(): void;
-	onReset(): void;
 	onFocusToggle(): void;
 };
 
@@ -56,7 +54,6 @@ export function StylesheetToolbar({
 	onUndo,
 	onRedo,
 	onFormat,
-	onReset,
 	onFocusToggle,
 }: StylesheetToolbarProps) {
 	return (
@@ -72,9 +69,6 @@ export function StylesheetToolbar({
 			</ToolbarButton>
 			<ToolbarButton label={t`Format stylesheet`} disabled={disabled} onClick={onFormat}>
 				<MagicWandIcon data-icon="inline-start" />
-			</ToolbarButton>
-			<ToolbarButton label={t`Reset to applied stylesheet`} disabled={disabled} onClick={onReset}>
-				<ArrowCounterClockwiseIcon data-icon="inline-start" />
 			</ToolbarButton>
 			<ToolbarButton label={focused ? t`Exit focus mode` : t`Open focus mode`} onClick={onFocusToggle}>
 				{focused ? <ArrowsInIcon data-icon="inline-start" /> : <ArrowsOutIcon data-icon="inline-start" />}

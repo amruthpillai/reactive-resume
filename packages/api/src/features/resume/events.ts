@@ -1,16 +1,7 @@
 import { getPool } from "@reactive-resume/db/client";
 
 const RESUME_UPDATED_CHANNEL = "resume_updated";
-const resumeMutationNames = new Set([
-	"sync",
-	"create",
-	"update",
-	"patch",
-	"lock",
-	"password",
-	"delete",
-	"stylesheet",
-] as const);
+const resumeMutationNames = new Set(["sync", "create", "update", "patch", "lock", "password", "delete"] as const);
 
 type PgNotification = {
 	channel?: string | undefined;
@@ -22,7 +13,7 @@ export type ResumeUpdatedEvent = {
 	resumeId: string;
 	userId: string;
 	updatedAt: string;
-	mutation: "sync" | "create" | "update" | "patch" | "lock" | "password" | "delete" | "stylesheet";
+	mutation: "sync" | "create" | "update" | "patch" | "lock" | "password" | "delete";
 };
 
 type SubscribeResumeUpdatedInput = {
