@@ -63,12 +63,8 @@ describe("useResumeExport public PDF", () => {
 		expect(await blob.text()).toBe("server");
 	});
 
-	it("does not download an unstyled PDF when semantic rendering rejects", async () => {
-		mocks.createResumePdfBlob.mockRejectedValueOnce(
-			new Error("The semantic stylesheet could not be rendered.", {
-				cause: [{ code: "RESOURCE_LIMIT", severity: "error" }],
-			}),
-		);
+	it("does not download a PDF when the renderer rejects", async () => {
+		mocks.createResumePdfBlob.mockRejectedValueOnce(new Error("PDF renderer failed"));
 		const { result } = renderHook(() => useResumeExport({ name: "Sample", slug: "sample", data: sampleResumeData }));
 
 		await act(() => result.current.onDownloadPDF());

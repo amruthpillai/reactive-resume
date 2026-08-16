@@ -150,16 +150,12 @@ describe("ResumePreviewClient", () => {
 		expect(previewMock.toBlob).toHaveBeenCalledTimes(1);
 	});
 
-	it("keeps the active PDF visible and reports later semantic render diagnostics", async () => {
+	it("keeps the active PDF visible and reports a later renderer failure", async () => {
 		previewMock.builderResumeData = sampleResumeData;
 		const view = render(<ResumePreviewClient pageLayout="vertical" pageScale={1.25} showPageNumbers={false} />);
 		expect(await screen.findByRole("img", { name: "Resume page 1 of 1" })).toBeTruthy();
 
-		previewMock.toBlob.mockRejectedValueOnce(
-			new Error("The semantic stylesheet could not be rendered.", {
-				cause: [{ code: "RESOURCE_LIMIT", severity: "error" }],
-			}),
-		);
+		previewMock.toBlob.mockRejectedValueOnce(new Error("PDF renderer failed"));
 		previewMock.builderResumeData = {
 			...sampleResumeData,
 			metadata: {

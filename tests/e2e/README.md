@@ -28,7 +28,8 @@ Run tests:
 
 ## Semantic CSS
 
-Run opt-in conversion, editing, conflict, last-valid, default-mode, and visual acceptance:
+Run the six Semantic CSS scenarios: default mode, legacy conversion, source-only autosave preservation, portable
+selector rendering, break-inside pagination, and all-template visual regression:
 
 ```bash
 pnpm exec playwright test tests/e2e/specs/semantic-css
@@ -48,6 +49,7 @@ pnpm exec playwright test tests/e2e/specs/semantic-css/template-visual.spec.ts \
 - Builder basics edit and autosave persistence.
 - JSON export/import.
 - Public sharing for anonymous visitors.
-- Semantic CSS legacy conversion, last-valid recovery, portability, revision conflicts, and all-template visual regression.
+- Semantic CSS default mode, legacy conversion, source-only autosave preservation, portable selector rendering,
+  break-inside pagination, and all-template visual regression.
 
 PDF, DOCX, OAuth, passkeys, 2FA, password reset, and AI flows are intentionally outside the initial PR gate.
