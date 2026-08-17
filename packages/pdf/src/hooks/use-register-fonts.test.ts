@@ -165,6 +165,27 @@ describe("registerFonts", () => {
 		expect(registerSpy).toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Sans Thai" }));
 	});
 
+	it("registers the Noto Emoji fallback when content contains emoji (#3321)", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const emojiSource = getWebFontSource("Noto Emoji", "400", false);
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const pdfTypography = registerFonts(typography, "en-US", false, new Set(["emoji"]));
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Emoji", "Noto Serif"]);
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({
+				family: "Noto Emoji",
+				fontWeight: 400,
+				fontStyle: "normal",
+				src: emojiSource,
+			}),
+		);
+		// Emoji is not CJK: no Simplified-Chinese safety net, no per-character breaking.
+		expect(registerSpy).not.toHaveBeenCalledWith(expect.objectContaining({ family: "Noto Serif SC" }));
+	});
+
 	it("does NOT enable CJK per-character line breaking for non-CJK fallback scripts", async () => {
 		const registerHyphenationSpy = vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
 		vi.spyOn(Font, "register").mockImplementation(() => {});
@@ -357,6 +378,20 @@ describe("resumeContentScripts", () => {
 	it("detects Thai", async () => {
 		const { resumeContentScripts } = await import("./use-register-fonts");
 		expect([...resumeContentScripts(withSummary("สวัสดี"))]).toEqual(["thai"]);
+	});
+
+	it("detects emoji flags and pictographs (#3321)", async () => {
+		const { resumeContentScripts } = await import("./use-register-fonts");
+		const data = {
+			...defaultResumeData,
+			basics: { ...defaultResumeData.basics, location: "Berlin \u{1F1E9}\u{1F1EA} \u{1F310} \u{2B50}" },
+		} satisfies ResumeData;
+
+		const scripts = resumeContentScripts(data);
+		expect(scripts.has("emoji")).toBe(true);
+		// Regional indicators are not Extended_Pictographic and pictographs are
+		// not any other script — the emoji detector must catch both alone.
+		expect(scripts.size).toBe(1);
 	});
 
 	it("detects multiple scripts in mixed content", async () => {

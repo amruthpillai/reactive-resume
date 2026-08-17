@@ -159,6 +159,10 @@ const arabicRegex = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-ﻼ]/;
 const hebrewRegex = /[֐-׿יִ-ﭏ]/;
 const thaiRegex = /[฀-๿]/;
 
+// Emoji: regional indicators (flags) are NOT Extended_Pictographic, so union
+// them explicitly with the pictographic property (#3321).
+const emojiRegex = /[\u{1F1E6}-\u{1F1FF}]|\p{Extended_Pictographic}/u;
+
 const scriptDetectors: { script: Script; regex: RegExp }[] = [
 	{ script: "hangul", regex: hangulRegex },
 	{ script: "kana", regex: kanaRegex },
@@ -166,6 +170,7 @@ const scriptDetectors: { script: Script; regex: RegExp }[] = [
 	{ script: "arabic", regex: arabicRegex },
 	{ script: "hebrew", regex: hebrewRegex },
 	{ script: "thai", regex: thaiRegex },
+	{ script: "emoji", regex: emojiRegex },
 ];
 
 const collectScripts = (value: unknown, scripts: Set<Script>): void => {
