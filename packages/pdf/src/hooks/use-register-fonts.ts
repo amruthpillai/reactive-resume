@@ -7,6 +7,7 @@ import {
 	getPdfFallbackFontFamilies,
 	getWebFontSource,
 	isStandardPdfFontFamily,
+	resolveBoldFontWeight,
 	resolveLegacyFontAlias,
 	sortFontWeights,
 } from "@reactive-resume/fonts";
@@ -228,6 +229,11 @@ export const registerFonts = (
 	const headingFontFamily = pdfTypography.heading.fontFamily;
 	const bodyRange = getFontWeightRange(pdfTypography.body.fontWeights);
 	const headingRange = getFontWeightRange(pdfTypography.heading.fontWeights);
+	// Bold styles resolve to the family's true Bold face when one exists
+	// (#3310), which can be heavier than the stored weight range (e.g.
+	// ["400", "600"] for Open Sans) — make sure that face is registered or
+	// @react-pdf/renderer would silently fall back to the nearest one.
+	const bodyBoldWeight = resolveBoldFontWeight(bodyFontFamily, pdfTypography.body.fontWeights);
 
 	const registerFont = (family: string, weight: number, italic = false) => {
 		if (isStandardPdfFontFamily(family)) return;
@@ -247,6 +253,7 @@ export const registerFonts = (
 	for (const italic of [false, true]) {
 		registerFont(bodyFontFamily, bodyRange.lowest, italic);
 		registerFont(bodyFontFamily, bodyRange.highest, italic);
+		if (bodyBoldWeight) registerFont(bodyFontFamily, Number(bodyBoldWeight), italic);
 		registerFont(headingFontFamily, headingRange.lowest, italic);
 		registerFont(headingFontFamily, headingRange.highest, italic);
 	}

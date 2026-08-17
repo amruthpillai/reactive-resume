@@ -135,7 +135,9 @@ const useScizorTemplate = (): ScizorTemplate => {
 				rowGap: metrics.sectionGap,
 			},
 			heading: { ...base.heading, fontWeight: metadata.typography.heading.fontWeights.at(-1) ?? "700" },
-			bold: { fontWeight: metadata.typography.body.fontWeights.at(-1) ?? "700", color: foreground },
+			// `base.bold` already resolves the family's true Bold face (#3310);
+			// scizor only adds its foreground color.
+			bold: { ...base.bold, color: foreground },
 			section: {
 				flexDirection: "column",
 				rowGap: metrics.gapY(0.25),
