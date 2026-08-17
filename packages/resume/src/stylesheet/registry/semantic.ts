@@ -193,6 +193,7 @@ const templatePartChildKinds = {
 	"header-intro": ["template-part"],
 	"header-body": ["picture", "name", "headline", "section"],
 	"header-contact-band": ["contact-list"],
+	"item-header-row": ["field", "link"],
 	"inline-item-header-leading": ["field", "combined-text"],
 	"inline-item-header-middle": ["field", "link"],
 	"inline-item-header-trailing": ["field"],

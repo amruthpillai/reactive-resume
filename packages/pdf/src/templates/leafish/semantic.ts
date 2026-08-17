@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const leafishSemanticManifest = {
 	template: "leafish",
@@ -10,6 +11,7 @@ export const leafishSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: { region: "header", placement: "main", source: "always" },
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "header-intro",
 			key: "header-intro",

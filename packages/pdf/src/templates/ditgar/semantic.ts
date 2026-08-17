@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 const borderedItemHeaderSectionTypes = [
 	"profiles",
@@ -26,6 +27,7 @@ export const ditgarSemanticManifest = {
 	header: { region: "header", placement: "sidebar" },
 	specialSummary: { region: "featured", placement: "main", source: "main-with-header" },
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "featured-summary",
 			key: "featured-summary",

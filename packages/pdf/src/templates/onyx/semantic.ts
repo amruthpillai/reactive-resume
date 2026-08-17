@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const onyxSemanticManifest = {
 	template: "onyx",
@@ -9,5 +10,5 @@ export const onyxSemanticManifest = {
 	],
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
-	parts: [],
+	parts: [itemHeaderRowPart],
 } as const satisfies TemplateSemanticManifest;

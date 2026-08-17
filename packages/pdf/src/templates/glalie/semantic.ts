@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const glalieSemanticManifest = {
 	template: "glalie",
@@ -10,6 +11,7 @@ export const glalieSemanticManifest = {
 	header: { region: "header", placement: "sidebar" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "sidebar-background",
 			key: "sidebar-background",

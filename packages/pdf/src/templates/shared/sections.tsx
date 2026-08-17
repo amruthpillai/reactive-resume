@@ -42,6 +42,7 @@ import {
 	useSemanticSectionNodeKey,
 } from "../../semantic/context";
 import { semanticNodeKeys } from "../../semantic/node-keys";
+import { ITEM_HEADER_ROW_PART_KEYS } from "../../semantic/shared-parts";
 import { getSectionItemRows, getSectionItemsLayout, shouldUseSectionTimeline } from "./columns";
 import { getWebsiteDisplayText } from "./contact";
 import {
@@ -612,6 +613,25 @@ const useSectionSplitRowStyle = () => {
 	);
 };
 
+type ItemHeaderRowProps = {
+	children: ReactNode;
+	style: StyleInput;
+};
+
+/**
+ * The title/date row inside a section item header, exposed to Semantic CSS as
+ * `template-part[name="item-header-row"]`.
+ *
+ * It has to be addressable on its own: the row carries `flex-wrap: wrap`, so a long title pushes
+ * the trailing date onto its own line, and `item-header` selects the box around the row rather than
+ * the row itself. The owning item-header key comes from the surrounding provider.
+ */
+const ItemHeaderRow = ({ children, style }: ItemHeaderRowProps) => (
+	<SemanticTemplatePartView partKeys={ITEM_HEADER_ROW_PART_KEYS} style={composeStyles(style)}>
+		{children}
+	</SemanticTemplatePartView>
+);
+
 const SectionItemHeader = ({ children }: SectionItemHeaderProps) => {
 	const itemNodeKey = useSemanticNodeKey();
 	const itemHeaderNodeKey = itemNodeKey ? semanticNodeKeys.itemHeader(itemNodeKey) : undefined;
@@ -1109,14 +1129,14 @@ const ProjectsSection = ({ sectionId = "projects", sectionData }: ItemSectionPro
 				{items.map((item) => (
 					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
-							<View style={composeStyles(splitRowStyle)}>
+							<ItemHeaderRow style={composeStyles(splitRowStyle)}>
 								<ItemTitle field="name" website={item.website}>
 									{item.name}
 								</ItemTitle>
 								<Text semanticField="period" style={composeStyles(alignEndStyle)}>
 									{item.period}
 								</Text>
-							</View>
+							</ItemHeaderRow>
 						</SectionItemHeader>
 
 						<RichText semanticField="description">{item.description}</RichText>
@@ -1232,14 +1252,14 @@ const AwardsSection = ({ sectionId = "awards", sectionData }: ItemSectionProps<A
 				{items.map((item) => (
 					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
-							<View style={composeStyles(splitRowStyle, awardTitleDateRowStyle)}>
+							<ItemHeaderRow style={composeStyles(splitRowStyle, awardTitleDateRowStyle)}>
 								<ItemTitle field="title" website={item.website} bold={false}>
 									{item.title}
 								</ItemTitle>
 								<Text semanticField="date" style={composeStyles(alignEndStyle)}>
 									{item.date}
 								</Text>
-							</View>
+							</ItemHeaderRow>
 							<Text semanticField="awarder">{item.awarder}</Text>
 						</SectionItemHeader>
 						<RichText semanticField="description">{item.description}</RichText>
@@ -1270,14 +1290,14 @@ const CertificationsSection = ({
 				{items.map((item) => (
 					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
-							<View style={composeStyles(splitRowStyle)}>
+							<ItemHeaderRow style={composeStyles(splitRowStyle)}>
 								<ItemTitle field="title" website={item.website}>
 									{item.title}
 								</ItemTitle>
 								<Text semanticField="date" style={composeStyles(alignEndStyle)}>
 									{item.date}
 								</Text>
-							</View>
+							</ItemHeaderRow>
 							<Text semanticField="issuer">{item.issuer}</Text>
 						</SectionItemHeader>
 
@@ -1306,14 +1326,14 @@ const PublicationsSection = ({ sectionId = "publications", sectionData }: ItemSe
 				{items.map((item) => (
 					<SectionItem key={item.id} itemId={item.id}>
 						<SectionItemHeader>
-							<View style={composeStyles(splitRowStyle)}>
+							<ItemHeaderRow style={composeStyles(splitRowStyle)}>
 								<ItemTitle field="title" website={item.website}>
 									{item.title}
 								</ItemTitle>
 								<Text semanticField="date" style={composeStyles(alignEndStyle)}>
 									{item.date}
 								</Text>
-							</View>
+							</ItemHeaderRow>
 
 							<Text semanticField="publisher">{item.publisher}</Text>
 						</SectionItemHeader>

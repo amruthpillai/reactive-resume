@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 const inlineHeaderSectionTypes = ["experience", "education", "volunteer"] as const;
 
@@ -12,6 +13,7 @@ export const meowthSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "inline-item-header-leading",
 			key: "inline-item-header-leading",

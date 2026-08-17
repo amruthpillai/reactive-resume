@@ -14,8 +14,32 @@ import {
 } from "./template-manifest";
 import { buildSemanticTree } from "./tree";
 
+const EXPECTED_ITEM_HEADER_ROW = {
+	"item-header-row": {
+		key: "item-header-row",
+		owner: {
+			kind: "item-header",
+			key: "item-header",
+			sectionTypes: ["awards", "certifications", "projects", "publications"],
+		},
+		binding: { type: "primitive", primitive: "View", source: "existing" },
+		route: {
+			parent: "owner",
+			at: "start",
+			take: [
+				{ kind: "field", name: "title", sectionTypes: ["awards", "certifications", "publications"] },
+				{ kind: "field", name: "date", sectionTypes: ["awards", "certifications", "publications"] },
+				{ kind: "field", name: "name", sectionTypes: ["projects"] },
+				{ kind: "field", name: "period", sectionTypes: ["projects"] },
+				{ kind: "link", sectionTypes: ["awards", "certifications", "projects", "publications"] },
+			],
+		},
+	},
+} as const;
+
 const EXPECTED_PARTS = {
 	azurill: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"timeline-line": {
 			key: "timeline-line",
 			owner: { kind: "section-items", key: "section-items", placement: "main", columns: 1 },
@@ -42,6 +66,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	bronzor: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"interleaved-section-row": {
 			key: "interleaved-section-row",
 			owner: { kind: "section", key: "section", placement: "main" },
@@ -49,6 +74,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	chikorita: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"contact-row-primary": {
 			key: "contact-row-primary",
 			owner: { kind: "contact-list", key: "contact-list" },
@@ -78,6 +104,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	ditgar: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"featured-summary": {
 			key: "featured-summary",
 			owner: { kind: "region", key: "featured" },
@@ -113,6 +140,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	ditto: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"header-band": {
 			key: "header-band",
 			owner: { kind: "header", key: "header" },
@@ -137,6 +165,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	gengar: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"featured-summary": {
 			key: "featured-summary",
 			owner: { kind: "region", key: "featured" },
@@ -150,6 +179,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	glalie: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"sidebar-background": {
 			key: "sidebar-background",
 			owner: { kind: "region", key: "sidebar" },
@@ -157,9 +187,10 @@ const EXPECTED_PARTS = {
 			route: { parent: "owner", at: "start" },
 		},
 	},
-	kakuna: {},
-	lapras: {},
+	kakuna: { ...EXPECTED_ITEM_HEADER_ROW },
+	lapras: { ...EXPECTED_ITEM_HEADER_ROW },
 	leafish: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"header-intro": {
 			key: "header-intro",
 			owner: { kind: "header", key: "header" },
@@ -184,6 +215,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	meowth: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"inline-item-header-leading": {
 			key: "inline-item-header-leading",
 			owner: {
@@ -247,8 +279,9 @@ const EXPECTED_PARTS = {
 			},
 		},
 	},
-	onyx: {},
+	onyx: { ...EXPECTED_ITEM_HEADER_ROW },
 	pikachu: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"header-divider": {
 			key: "header-divider",
 			owner: { kind: "header", key: "header" },
@@ -257,6 +290,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	rhyhorn: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"contact-item-content": {
 			key: "contact-item-content",
 			owner: { kind: "contact-item", key: "contact-item" },
@@ -274,6 +308,7 @@ const EXPECTED_PARTS = {
 		},
 	},
 	scizor: {
+		...EXPECTED_ITEM_HEADER_ROW,
 		"header-name-rule": {
 			key: "header-name-rule",
 			owner: { kind: "header", key: "header" },
@@ -456,6 +491,16 @@ const buildFixture = (): ResumeData => {
 			roles: [],
 		},
 	];
+	data.sections.projects.items = [
+		{
+			id: "projects/1",
+			hidden: false,
+			name: "Analytical Engine",
+			period: "1843",
+			website: { url: "https://project.example.com", label: "Project", inlineLink: true },
+			description: "<p>Wrote the first program.</p>",
+		},
+	];
 	data.sections.skills.items = [
 		{
 			id: "skills/1",
@@ -474,7 +519,7 @@ const buildFixture = (): ResumeData => {
 
 const buildFixtureTree = (template: Template, showHeader = true): SemanticNode => {
 	const data = buildFixture();
-	const page = { fullWidth: false, main: ["summary", "experience"], sidebar: ["skills"] };
+	const page = { fullWidth: false, main: ["summary", "experience", "projects"], sidebar: ["skills"] };
 
 	return buildSemanticTree({ data, template, page, pageNumber: 1, showHeader });
 };
@@ -555,7 +600,7 @@ describe("template semantic manifests", () => {
 
 		(unknownRegionPlacement.regions[0] as { placement: string }).placement = "footer";
 		(unknownHeaderPlacement.header as { placement: string }).placement = "footer";
-		const alias = ownerLie.parts[0]?.binding;
+		const alias = ownerLie.parts.find((part) => part.name === "interleaved-section-row")?.binding;
 		if (alias?.type !== "alias") throw new Error("Missing Bronzor alias fixture");
 		(alias as { canonicalKind: string }).canonicalKind = "item";
 		const primitive = synthetic.parts[0]?.binding;
@@ -606,7 +651,7 @@ describe("template semantic manifests", () => {
 			token: "contact-item-content",
 		};
 		delete (content as unknown as { route?: object }).route;
-		const row = aliasToPrimitive.parts[0];
+		const row = aliasToPrimitive.parts.find((part) => part.name === "interleaved-section-row");
 		if (!row) throw new Error("Missing Bronzor row");
 		(row as unknown as { binding: object; route?: object }).binding = {
 			type: "primitive",
@@ -766,9 +811,20 @@ describe("template semantic manifests", () => {
 				description: "",
 			},
 		];
+		data.sections.awards.items = [
+			{
+				id: "award/coverage",
+				hidden: false,
+				title: "Order of Merit",
+				awarder: "Royal Society",
+				date: "1844",
+				website: { url: "", label: "", inlineLink: false },
+				description: "",
+			},
+		];
 		const page = {
 			fullWidth: false,
-			main: ["summary", "experience", "education", "volunteer", "skills"],
+			main: ["summary", "experience", "education", "volunteer", "projects", "awards", "skills"],
 			sidebar: [],
 		};
 		const partNames = new Set<string>();
@@ -803,6 +859,7 @@ describe("template semantic manifests", () => {
 				"inline-item-header-leading",
 				"inline-item-header-middle",
 				"inline-item-header-trailing",
+				"item-header-row",
 				"picture-anchor",
 				"sidebar-background",
 				"timeline-content",
@@ -836,6 +893,8 @@ describe("template semantic manifests", () => {
 				"inline-item-header-middle:field",
 				"inline-item-header-middle:link",
 				"inline-item-header-trailing:field",
+				"item-header-row:field",
+				"item-header-row:link",
 				"picture-anchor:picture",
 				"timeline-content:field",
 				"timeline-content:item",

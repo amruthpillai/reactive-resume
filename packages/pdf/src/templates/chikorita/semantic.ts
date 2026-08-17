@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const chikoritaSemanticManifest = {
 	template: "chikorita",
@@ -10,6 +11,7 @@ export const chikoritaSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "contact-row-primary",
 			key: "contact-row-primary",

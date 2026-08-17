@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const azurillSemanticManifest = {
 	template: "azurill",
@@ -10,6 +11,7 @@ export const azurillSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "timeline-line",
 			key: "timeline-line",

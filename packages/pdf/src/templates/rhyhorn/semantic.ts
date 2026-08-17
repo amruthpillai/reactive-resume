@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const rhyhornSemanticManifest = {
 	template: "rhyhorn",
@@ -10,6 +11,7 @@ export const rhyhornSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "contact-item-content",
 			key: "contact-item-content",

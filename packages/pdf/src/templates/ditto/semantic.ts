@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const dittoSemanticManifest = {
 	template: "ditto",
@@ -10,6 +11,7 @@ export const dittoSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "header-band",
 			key: "header-band",

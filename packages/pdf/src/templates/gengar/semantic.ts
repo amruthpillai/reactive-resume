@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const gengarSemanticManifest = {
 	template: "gengar",
@@ -11,6 +12,7 @@ export const gengarSemanticManifest = {
 	header: { region: "header", placement: "sidebar" },
 	specialSummary: { region: "featured", placement: "main", source: "main-with-header" },
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "featured-summary",
 			key: "featured-summary",

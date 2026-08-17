@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const bronzorSemanticManifest = {
 	template: "bronzor",
@@ -9,6 +10,7 @@ export const bronzorSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "interleaved-section-row",
 			key: "interleaved-section-row",

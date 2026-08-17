@@ -1,4 +1,5 @@
 import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const scizorSemanticManifest = {
 	template: "scizor",
@@ -9,6 +10,7 @@ export const scizorSemanticManifest = {
 	header: { region: "header", placement: "main" },
 	specialSummary: null,
 	parts: [
+		itemHeaderRowPart,
 		{
 			name: "header-name-rule",
 			key: "header-name-rule",
