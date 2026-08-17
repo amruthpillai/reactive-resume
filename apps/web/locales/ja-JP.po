@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-16 14:51\n"
+"PO-Revision-Date: 2026-08-17 21:09\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -447,7 +447,7 @@ msgstr "他にもたくさんあります。"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Answer in your own words"
-msgstr "自分の言葉で回答"
+msgstr "自分の言葉で答えてください"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Anthropic Claude"
@@ -1070,7 +1070,7 @@ msgstr "スタイルシートをコピー"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
-msgstr "求人情報から職務内容の全文をコピーして、下に貼り付けてください。こちらでフィールドを入力し、適合度の評価と内容の調整のために、そのテキストをこの応募と一緒に保存します。"
+msgstr "求人情報から職務内容全体をコピーして、以下に貼り付けてください。弊社で該当欄に必要事項を入力し、応募書類に添付したテキストは、選考基準の算出や応募内容のカスタマイズに使用します。"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1815,7 +1815,7 @@ msgstr "エクスポート"
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
-msgstr "データをエクスポート"
+msgstr "エクスポートデータ"
 
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
@@ -2017,7 +2017,7 @@ msgstr "ファイル"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Fill fields"
-msgstr "フィールドを入力"
+msgstr "空欄を埋めてください"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Filled in what we could from the posting."
@@ -2527,7 +2527,7 @@ msgstr "求人情報"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job posting link"
-msgstr "求人情報のリンク"
+msgstr "求人掲載リンク"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Job search pipeline"
@@ -2725,7 +2725,7 @@ msgstr "Reactive Resume をリンク（推奨）"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Link a resume and paste the job description (Edit) to score your fit and tailor a copy."
-msgstr "レジュメをリンクし、職務内容を貼り付ける（編集）と、適合度を評価して調整済みのコピーを作成できます。"
+msgstr "履歴書をリンクし、求人内容を貼り付けて（編集）、あなたの適性を評価し、応募書類をカスタマイズしましょう。"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Linked Reactive Resume"
@@ -3261,11 +3261,11 @@ msgstr "行を貼り付けるか .csv をアップロードしてください。
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
-msgstr "ここに職務内容の全文を貼り付けてください…"
+msgstr "求人内容の全文をここに貼り付けてください…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
-msgstr "貼り付けるとフィールドが自動的に入力されます。"
+msgstr "貼り付けると、入力欄が自動的に入力されます。"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch applied"
@@ -3433,11 +3433,11 @@ msgstr "プレビュー"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export fall back to base styles."
-msgstr "プレビューとエクスポートはベーススタイルに戻ります。"
+msgstr "プレビューとエクスポート時に、基本スタイルにフォールバックします。"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export keep valid styles and ignore invalid styles."
-msgstr "プレビューとエクスポートは有効なスタイルを保持し、無効なスタイルを無視します。"
+msgstr "プレビューとエクスポートでは、有効なスタイルは保持され、無効なスタイルは無視されます。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3552,7 +3552,7 @@ msgstr "カスタムスタイルの適用ガイドをお読みください。"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
-msgstr "求人情報を読み取り中…"
+msgstr "投稿を読んでいます…"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
@@ -3560,7 +3560,7 @@ msgstr "起動準備完了"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with errors"
-msgstr "エラーがありますが有効化できます"
+msgstr "エラーが発生しても有効化できます"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
@@ -4217,11 +4217,11 @@ msgstr "一部のパーサーは画像を誤って処理するため、一部の
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Some styles were ignored"
-msgstr "一部のスタイルが無視されました"
+msgstr "一部のスタイルは無視されました"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
-msgstr "その他…"
+msgstr "何か別のこと…"
 
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
@@ -5131,11 +5131,11 @@ msgstr "有効な URL は http:// または https:// で始まる必要があり
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with errors"
-msgstr "有効（エラーあり）"
+msgstr "エラーがあっても有効です"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
-msgstr "有効（警告あり）"
+msgstr "警告付きで有効"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5199,7 +5199,7 @@ msgstr "過去30日間との比較"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Waiting for the agent…"
-msgstr "エージェントを待機中…"
+msgstr "エージェントを待っています…"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
@@ -5445,3 +5445,4 @@ msgstr "ズームアウト"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ズールー語"
+

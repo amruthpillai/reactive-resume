@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-16 14:51\n"
+"PO-Revision-Date: 2026-08-17 21:09\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -650,7 +650,7 @@ msgstr "Автентифікація"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Auto-fill failed."
-msgstr "Не вдалося автоматично заповнити."
+msgstr "Не вдалося виконати автозаповнення."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
@@ -1070,7 +1070,7 @@ msgstr "Копіювати таблицю стилів"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
-msgstr "Скопіюйте весь опис вакансії з оголошення та вставте його нижче. Ми заповнимо поля за вас і збережемо цей текст разом із заявкою для оцінки відповідності та адаптації резюме."
+msgstr "Скопіюйте весь опис вакансії з оголошення та вставте його нижче. Ми заповнимо поля для вас і збережемо текст разом із цією заявкою для підрахунку очок та адаптації."
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1815,7 +1815,7 @@ msgstr "Експорт"
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
-msgstr "Експортувати дані"
+msgstr "Експорт даних"
 
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
@@ -2005,7 +2005,7 @@ msgstr "Не вдалося підтвердити ваш код. Спробуй
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Fatal error"
-msgstr "Критична помилка"
+msgstr "Фатальна помилка"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Features"
@@ -2017,7 +2017,7 @@ msgstr "Файл"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Fill fields"
-msgstr "Заповнити поля"
+msgstr "Заповніть поля"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Filled in what we could from the posting."
@@ -2527,7 +2527,7 @@ msgstr "Оголошення про вакансію"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job posting link"
-msgstr "Посилання на вакансію"
+msgstr "Посилання на оголошення про роботу"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Job search pipeline"
@@ -2725,7 +2725,7 @@ msgstr "Прив'язати Reactive Resume (рекомендовано)"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Link a resume and paste the job description (Edit) to score your fit and tailor a copy."
-msgstr "Прив'яжіть резюме та вставте опис вакансії (Редагувати), щоб оцінити свою відповідність і адаптувати копію."
+msgstr "Додайте посилання на резюме та вставте опис вакансії (Редагувати), щоб оцінити свою відповідність та адаптувати текст."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Linked Reactive Resume"
@@ -2997,7 +2997,7 @@ msgstr "Без реклами, без відстеження"
 
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "No AI provider connected"
-msgstr "Постачальника штучного інтелекту не підключено"
+msgstr "Немає підключеного постачальника ШІ"
 
 #: src/routes/dashboard/applications/index.tsx
 msgid "No applications match your filters."
@@ -3261,11 +3261,11 @@ msgstr "Вставте рядки або завантажте .csv. Ми зіс�
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
-msgstr "Вставте сюди повний опис вакансії…"
+msgstr "Вставте повний опис вакансії сюди…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
-msgstr "Вставлення автоматично заповнює поля."
+msgstr "Вставка заповнює поля автоматично."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch applied"
@@ -3437,7 +3437,7 @@ msgstr "Попередній перегляд та експорт поверта
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export keep valid styles and ignore invalid styles."
-msgstr "Попередній перегляд та експорт зберігають дійсні стилі й ігнорують недійсні."
+msgstr "Попередній перегляд та експорт зберігають дійсні стилі та ігнорують недійсні."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
@@ -3552,7 +3552,7 @@ msgstr "Ознайомтеся з посібником із застосуван
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
-msgstr "Читання оголошення…"
+msgstr "Читання публікації…"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
@@ -3560,7 +3560,7 @@ msgstr "Готовий до активації"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with errors"
-msgstr "Готово до активації з помилками"
+msgstr "Готовий до активації з помилками"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
@@ -4217,7 +4217,7 @@ msgstr "Деякі аналізатори неправильно обробля�
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Some styles were ignored"
-msgstr "Деякі стилі проігноровано"
+msgstr "Деякі стилі були проігноровані"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
@@ -4362,7 +4362,7 @@ msgstr "Редактор таблиць стилів"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Stylesheet has fatal errors"
-msgstr "Таблиця стилів містить критичні помилки"
+msgstr "Таблиця стилів містить фатальні помилки"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
@@ -5123,7 +5123,7 @@ msgstr "Узбецька"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid"
-msgstr "Дійсна"
+msgstr "Дійсний"
 
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
@@ -5131,11 +5131,11 @@ msgstr "Дійсні URL-адреси мають починатися з http://
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with errors"
-msgstr "Дійсна з помилками"
+msgstr "Дійсний з помилками"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
-msgstr "Дійсна з попередженнями"
+msgstr "Дійсно з попередженнями"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5445,3 +5445,4 @@ msgstr "Зменшити"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Зулу"
+

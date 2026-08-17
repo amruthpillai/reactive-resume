@@ -8,7 +8,7 @@ msgstr ""
 "Language: pl\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-16 14:51\n"
+"PO-Revision-Date: 2026-08-17 21:09\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
@@ -650,7 +650,7 @@ msgstr "Uwierzytelnianie"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Auto-fill failed."
-msgstr "Automatyczne wypełnianie nie powiodło się."
+msgstr "Automatyczne uzupełnianie nie powiodło się."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
@@ -1070,7 +1070,7 @@ msgstr "Kopiuj arkusz stylów"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
-msgstr "Skopiuj cały opis stanowiska z ogłoszenia i wklej go poniżej. Wypełnimy pola za Ciebie i zachowamy ten tekst przy tej aplikacji na potrzeby oceny dopasowania i dostosowania CV."
+msgstr "Skopiuj cały opis stanowiska z ogłoszenia i wklej go poniżej. Wypełnimy pola za Ciebie i zachowamy tekst w tym zgłoszeniu, aby umożliwić nam dopasowanie i dopasowanie."
 
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
@@ -1815,7 +1815,7 @@ msgstr "Eksportuj"
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
-msgstr "Eksportuj dane"
+msgstr "Eksport danych"
 
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
@@ -2527,7 +2527,7 @@ msgstr "Ogłoszenie o pracę"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job posting link"
-msgstr "Link do ogłoszenia"
+msgstr "Link do ogłoszenia o pracę"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Job search pipeline"
@@ -2725,7 +2725,7 @@ msgstr "Połącz Reactive Resume (zalecane)"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Link a resume and paste the job description (Edit) to score your fit and tailor a copy."
-msgstr "Połącz CV i wklej opis stanowiska (Edytuj), aby ocenić dopasowanie i dostosować kopię."
+msgstr "Dodaj link do CV i wklej opis stanowiska (Edytuj), aby ocenić jego dopasowanie i dostosować treść."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Linked Reactive Resume"
@@ -2997,7 +2997,7 @@ msgstr "Bez reklam, bez śledzenia"
 
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "No AI provider connected"
-msgstr "Brak połączonego dostawcy AI"
+msgstr "Brak podłączonego dostawcy sztucznej inteligencji"
 
 #: src/routes/dashboard/applications/index.tsx
 msgid "No applications match your filters."
@@ -3265,7 +3265,7 @@ msgstr "Wklej tutaj pełny opis stanowiska…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
-msgstr "Wklejenie automatycznie wypełni pola."
+msgstr "Wklejenie spowoduje automatyczne wypełnienie pól."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Patch applied"
@@ -3433,7 +3433,7 @@ msgstr "Zapowiedź"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export fall back to base styles."
-msgstr "Podgląd i eksport wracają do stylów podstawowych."
+msgstr "Podgląd i eksportowanie stylów zapasowych do bazowych."
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Preview and export keep valid styles and ignore invalid styles."
@@ -3552,7 +3552,7 @@ msgstr "Przeczytaj przewodnik Stosowanie niestandardowych stylów."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
-msgstr "Odczytywanie ogłoszenia…"
+msgstr "Czytanie wpisu…"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
@@ -5123,7 +5123,7 @@ msgstr "Uzbecki"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid"
-msgstr "Prawidłowy"
+msgstr "Ważny"
 
 #: src/components/input/rich-input.tsx
 msgid "Valid URLs must start with http:// or https://."
@@ -5131,11 +5131,11 @@ msgstr "Prawidłowe adresy URL muszą zaczynać się od http:// lub https://."
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with errors"
-msgstr "Prawidłowy z błędami"
+msgstr "Ważne z błędami"
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
-msgstr "Prawidłowy z ostrzeżeniami"
+msgstr "Ważne z ostrzeżeniami"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5199,7 +5199,7 @@ msgstr "w porównaniu z poprzednimi 30 dniami"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Waiting for the agent…"
-msgstr "Oczekiwanie na agenta…"
+msgstr "Czekam na agenta…"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
@@ -5445,3 +5445,4 @@ msgstr "Pomniejsz"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
+
