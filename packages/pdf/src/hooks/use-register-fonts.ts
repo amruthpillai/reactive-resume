@@ -272,10 +272,12 @@ export const registerFonts = (
 	const bodyFallbacks = getPdfFallbackFontFamilies(bodyFontFamily, { locale, scripts: fallbackScripts });
 	const headingFallbacks = getPdfFallbackFontFamilies(headingFontFamily, { locale, scripts: fallbackScripts });
 
-	const registerFallbacks = (families: string[], ranges: FontWeightRange[]) => {
-		const weights = new Set(ranges.flatMap(({ lowest, highest }) => [lowest, highest]));
-
+	const registerFallbacks = (families: string[], ranges: FontWeightRange[], storedWeights: readonly string[]) => {
 		for (const family of families) {
+			const weights = new Set(ranges.flatMap(({ lowest, highest }) => [lowest, highest]));
+			const fallbackBoldWeight = resolveBoldFontWeight(family, storedWeights);
+			if (fallbackBoldWeight) weights.add(Number(fallbackBoldWeight));
+
 			for (const weight of weights) {
 				registerFont(family, weight, false);
 				registerFont(family, weight, true);
@@ -288,10 +290,10 @@ export const registerFonts = (
 		bodyFallbacks.every((family, index) => family === headingFallbacks[index]);
 
 	if (sameStack) {
-		registerFallbacks(bodyFallbacks, [bodyRange, headingRange]);
+		registerFallbacks(bodyFallbacks, [bodyRange, headingRange], pdfTypography.body.fontWeights);
 	} else {
-		registerFallbacks(bodyFallbacks, [bodyRange]);
-		registerFallbacks(headingFallbacks, [headingRange]);
+		registerFallbacks(bodyFallbacks, [bodyRange], pdfTypography.body.fontWeights);
+		registerFallbacks(headingFallbacks, [headingRange], pdfTypography.heading.fontWeights);
 	}
 
 	// Latin-only path: no fallback registered, return as-is.
