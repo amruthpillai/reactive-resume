@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/client";
-import { generateText } from "ai";
+import { AISDKError, generateText } from "ai";
 import z from "zod";
 import { generateId, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
@@ -28,10 +28,32 @@ async function resolveModel(userId: string) {
 	});
 }
 
+function isAiProviderGatewayError(error: unknown): boolean {
+	return error instanceof AISDKError;
+}
+
+/** Throws a BAD_GATEWAY ORPCError, preserving the original cause for upstream error reporters. */
+function throwAiProviderGatewayError(cause?: unknown): never {
+	throw new ORPCError("BAD_GATEWAY", { message: "Could not reach the AI provider.", cause });
+}
+
 // generateText + tolerant JSON extraction + Zod validation. Mirrors the resume-analysis pattern
 // (the SDK's generateObject isn't wired for every provider here, so we parse defensively).
-async function generateJson<T>(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string, schema: z.ZodType<T>) {
-	const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
+// Provider failures (bad key, unknown model, quota, 5xx) are translated to BAD_GATEWAY instead of
+// bubbling out as an opaque INTERNAL_SERVER_ERROR, matching features/ai/router.ts.
+/** Exported for tests: provider-failure translation shared by every copilot procedure. */
+export async function generateJson<T>(
+	model: Awaited<ReturnType<typeof resolveModel>>,
+	prompt: string,
+	schema: z.ZodType<T>,
+) {
+	let text: string;
+	try {
+		({ text } = await generateText({ model, messages: [{ role: "user", content: prompt }] }));
+	} catch (error) {
+		if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
+		throw error;
+	}
 	const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
 	const candidate = fenced?.[1] ?? text;
 	const start = candidate.indexOf("{");
@@ -42,9 +64,15 @@ async function generateJson<T>(model: Awaited<ReturnType<typeof resolveModel>>, 
 	return schema.parse(JSON.parse(candidate.slice(start, end + 1)));
 }
 
-async function generatePlainText(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string) {
-	const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
-	return text.trim();
+/** Exported for tests: provider-failure translation shared by every copilot procedure. */
+export async function generatePlainText(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string) {
+	try {
+		const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
+		return text.trim();
+	} catch (error) {
+		if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
+		throw error;
+	}
 }
 
 const autofillOutput = z.object({
@@ -82,6 +110,10 @@ export const aiRouter = {
 		.input(autofillInputSchema)
 		.use(aiRequestRateLimit)
 		.output(autofillOutput)
+		.errors({
+			BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
+			BAD_REQUEST: { message: "Invalid application or AI request.", status: 400 },
+		})
 		.handler(async ({ context, input }) => {
 			const model = await resolveModel(context.user.id);
 
@@ -103,6 +135,10 @@ export const aiRouter = {
 		.input(z.object({ id: z.string() }))
 		.use(aiRequestRateLimit)
 		.output(matchScoreOutput)
+		.errors({
+			BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
+			BAD_REQUEST: { message: "Invalid application or AI request.", status: 400 },
+		})
 		.handler(async ({ context, input }) => {
 			const application = await applicationService.getById({ id: input.id, userId: context.user.id });
 			if (!application.resumeId)
@@ -143,6 +179,10 @@ export const aiRouter = {
 		.input(z.object({ id: z.string(), kind: z.enum(["cover-letter", "follow-up"]) }))
 		.use(aiRequestRateLimit)
 		.output(z.object({ text: z.string() }))
+		.errors({
+			BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
+			BAD_REQUEST: { message: "Invalid application or AI request.", status: 400 },
+		})
 		.handler(async ({ context, input }) => {
 			const application = await applicationService.getById({ id: input.id, userId: context.user.id });
 			const model = await resolveModel(context.user.id);
@@ -171,6 +211,10 @@ export const aiRouter = {
 		.input(z.object({ id: z.string() }))
 		.use(aiRequestRateLimit)
 		.output(z.object({ resumeId: z.string(), name: z.string() }))
+		.errors({
+			BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
+			BAD_REQUEST: { message: "Invalid application or AI request.", status: 400 },
+		})
 		.handler(async ({ context, input }) => {
 			const application = await applicationService.getById({ id: input.id, userId: context.user.id });
 			if (!application.resumeId)
