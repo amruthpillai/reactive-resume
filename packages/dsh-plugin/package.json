@@ -1,0 +1,75 @@
+{
+	"name": "dsh-plugin-reactive-resume",
+	"version": "0.1.0",
+	"description": "DeepSeek Harness plugin for Reactive Resume: bridges your resumes and job applications into a Harness session over MCP.",
+	"keywords": [
+		"dsh-plugin",
+		"deepseek-harness",
+		"mcp",
+		"reactive-resume",
+		"resume"
+	],
+	"license": "MIT",
+	"author": "Amruth Pillai",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/amruthpillai/reactive-resume.git",
+		"directory": "packages/dsh-plugin"
+	},
+	"homepage": "https://github.com/amruthpillai/reactive-resume/tree/main/packages/dsh-plugin#readme",
+	"bugs": {
+		"url": "https://github.com/amruthpillai/reactive-resume/issues"
+	},
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"engines": {
+		"node": "^22.19.0 || >=24.0.0"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"typecheck": "tsgo --noEmit",
+		"test": "vitest run --passWithNoTests",
+		"test:coverage": "vitest run --coverage --passWithNoTests",
+		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
+		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests",
+		"prepublishOnly": "pnpm build"
+	},
+	"peerDependencies": {
+		"@deepseek-ai/cordis": "^4.0.1-rc.1",
+		"@deepseek-ai/dsh-mcp-client": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-system-prompt": "^0.0.1-rc.1",
+		"@deepseek-ai/schemastery": "^3.18.1-rc.1"
+	},
+	"devDependencies": {
+		"@deepseek-ai/cordis": "^4.0.1-rc.1",
+		"@deepseek-ai/dsh-llm": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-mcp-client": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-scope": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-session": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-subprocess": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-system-prompt": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-timeout": "^0.0.1-rc.1",
+		"@deepseek-ai/dsh-tools": "^0.0.1-rc.1",
+		"@deepseek-ai/schemastery": "^3.18.1-rc.1",
+		"@reactive-resume/config": "workspace:*",
+		"@reactive-resume/mcp": "workspace:*",
+		"@typescript/native-preview": "7.0.0-dev.20260707.2",
+		"tsdown": "^0.22.0",
+		"typescript": "^7.0.2",
+		"vitest": "^4.1.10"
+	}
+}

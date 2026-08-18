@@ -1,0 +1,10 @@
+{
+	"extends": "@reactive-resume/config/tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true
+	},
+	// Scoped to `src` so tsdown's declaration emit does not follow
+	// `vitest.config.ts` into the root `vitest.shared.ts` and drop a stray
+	// `vitest.shared.d.ts` at the repository root.
+	"include": ["src"]
+}

@@ -7,7 +7,7 @@
 		},
 		"apps/web": {
 			"entry": ["lingui.config.ts", "vite.config.ts", "vitest.config.ts"],
-			"ignoreDependencies": ["buffer"],
+			"ignoreDependencies": ["@neodrag/core", "buffer"],
 			"vite": {
 				"config": []
 			},
