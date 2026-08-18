@@ -191,6 +191,7 @@ export const sampleResumeData: ResumeData = {
 			title: "",
 			icon: "compass-tool",
 			columns: 1,
+			layout: "default",
 			hidden: false,
 			keepTogether: false,
 			startOnNewPage: false,
