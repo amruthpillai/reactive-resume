@@ -47,6 +47,7 @@ Do not include markdown, comments, or additional keys.
 4. Never invent candidate achievements or facts.
 5. If data is missing, call it out explicitly in rationale/suggestions.
 6. Keep scorecard dimensions practical and common for resume review.
+7. Use the current date from the analysis context for chronology checks. Do not flag a date on or before that date as future-dated.
 
 ## Suggestions Requirements
 
