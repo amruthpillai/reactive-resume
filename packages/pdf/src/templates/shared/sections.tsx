@@ -619,6 +619,18 @@ type ItemHeaderRowProps = {
 };
 
 /**
+ * React PDF lays a `Text` out once, at the width it is first measured at, and reuses those lines
+ * afterwards. `flex-wrap: nowrap` asks Yoga to shrink the title so the date fits beside it, and the
+ * cached lines keep the wider layout, so the title's glyphs run over the date. A zero flex basis
+ * makes the title's first measurement its final width, so it wraps inside its own box instead.
+ */
+const nowrapItemTitleStyle = { flexGrow: 1, flexBasis: 0 } satisfies Style;
+const wrappingItemTitleStyle = {} satisfies Style;
+
+/** True while rendering inside an item header row a stylesheet turned into a single line. */
+const ItemHeaderRowNowrapContext = createContext(false);
+
+/**
  * The title/date row inside a section item header, exposed to Semantic CSS as
  * `template-part[name="item-header-row"]`.
  *
@@ -626,11 +638,18 @@ type ItemHeaderRowProps = {
  * the trailing date onto its own line, and `item-header` selects the box around the row rather than
  * the row itself. The owning item-header key comes from the surrounding provider.
  */
-const ItemHeaderRow = ({ children, style }: ItemHeaderRowProps) => (
-	<SemanticTemplatePartView partKeys={ITEM_HEADER_ROW_PART_KEYS} style={composeStyles(style)}>
-		{children}
-	</SemanticTemplatePartView>
-);
+const ItemHeaderRow = ({ children, style }: ItemHeaderRowProps) => {
+	const ownerNodeKey = useSemanticNodeKey();
+	const resolved = useResolvedNode(semanticTemplatePartNodeKey(ownerNodeKey, ...ITEM_HEADER_ROW_PART_KEYS));
+
+	return (
+		<SemanticTemplatePartView partKeys={ITEM_HEADER_ROW_PART_KEYS} style={composeStyles(style)}>
+			<ItemHeaderRowNowrapContext.Provider value={resolved.style?.flexWrap === "nowrap"}>
+				{children}
+			</ItemHeaderRowNowrapContext.Provider>
+		</SemanticTemplatePartView>
+	);
+};
 
 const SectionItemHeader = ({ children }: SectionItemHeaderProps) => {
 	const itemNodeKey = useSemanticNodeKey();
@@ -687,12 +706,21 @@ const SectionItemHeader = ({ children }: SectionItemHeaderProps) => {
 
 const ItemTitle = ({ children, website, field, bold = true }: ItemTitleProps) => {
 	const inlineWebsiteUrl = getInlineItemWebsiteUrl(website);
-	const title = bold ? <Bold semanticField={field}>{children}</Bold> : <Text semanticField={field}>{children}</Text>;
+	const style = use(ItemHeaderRowNowrapContext) ? nowrapItemTitleStyle : wrappingItemTitleStyle;
+	const title = bold ? (
+		<Bold style={style} semanticField={field}>
+			{children}
+		</Bold>
+	) : (
+		<Text style={style} semanticField={field}>
+			{children}
+		</Text>
+	);
 
 	if (!inlineWebsiteUrl) return title;
 
 	return (
-		<Link semanticRole="inline-website" src={inlineWebsiteUrl}>
+		<Link style={style} semanticRole="inline-website" src={inlineWebsiteUrl}>
 			{title}
 		</Link>
 	);

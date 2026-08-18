@@ -17,9 +17,8 @@ describe("ExperienceSection", () => {
 describe("ItemTitle", () => {
 	it("renders award titles without the bold style", () => {
 		expect(source).toContain("const ItemTitle = ({ children, website, field, bold = true }: ItemTitleProps)");
-		expect(source).toContain(
-			"const title = bold ? <Bold semanticField={field}>{children}</Bold> : <Text semanticField={field}>{children}</Text>;",
-		);
+		expect(source).toContain("const title = bold ? (\n\t\t<Bold style={style} semanticField={field}>");
+		expect(source).toContain("\t) : (\n\t\t<Text style={style} semanticField={field}>");
 		expect(source).toContain('<ItemTitle field="title" website={item.website} bold={false}>');
 	});
 });

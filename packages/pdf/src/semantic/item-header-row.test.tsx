@@ -62,7 +62,7 @@ const buildFixture = (): ResumeData => {
 	return data;
 };
 
-const renderTitleRowStyle = async (template: Template, stylesheet?: string) => {
+const renderTitleRowStyles = async (template: Template, stylesheet?: string) => {
 	const data = buildFixture();
 	const semanticRuntime = stylesheet
 		? resolveResumeRuntime({ data, template, mode: "semantic", source: { languageVersion: 1, text: stylesheet } })
@@ -76,9 +76,10 @@ const renderTitleRowStyle = async (template: Template, stylesheet?: string) => {
 	const path = pathTo(document, (node) => nodeText(node).trim() === LONG_TITLE);
 	if (!path) throw new Error("Missing certification title in the rendered document");
 	const row = path.at(-2);
-	if (!row) throw new Error("Missing the row wrapping the certification title");
+	const title = path.at(-1);
+	if (!row || !title) throw new Error("Missing the row wrapping the certification title");
 
-	return mergedStyle(row);
+	return { row: mergedStyle(row), title: mergedStyle(title) };
 };
 
 describe("item-header-row template part", () => {
@@ -112,8 +113,19 @@ describe("item-header-row template part", () => {
 	// The row ships with `flex-wrap: wrap`, which drops a long title's date onto its own line. This
 	// is the whole point of exposing the part, so assert the override reaches the rendered row.
 	it.each(["onyx", "ditgar", "meowth"] as const)("lets %s stylesheets turn off the row wrap", async (template) => {
-		expect(await renderTitleRowStyle(template)).toMatchObject({ flexWrap: "wrap" });
-		expect(await renderTitleRowStyle(template, NOWRAP_STYLESHEET)).toMatchObject({ flexWrap: "nowrap" });
+		expect((await renderTitleRowStyles(template)).row).toMatchObject({ flexWrap: "wrap" });
+		expect((await renderTitleRowStyles(template, NOWRAP_STYLESHEET)).row).toMatchObject({ flexWrap: "nowrap" });
+	});
+
+	// React PDF reuses the line layout a Text was first measured with, so a title Yoga shrinks after
+	// that measurement draws its glyphs over the date. Under `nowrap` the title takes a zero flex
+	// basis instead, which makes its first measurement its final width.
+	it("gives the title a zero flex basis only when the row stops wrapping", async () => {
+		expect((await renderTitleRowStyles("onyx")).title).not.toMatchObject({ flexBasis: 0 });
+		expect((await renderTitleRowStyles("onyx", NOWRAP_STYLESHEET)).title).toMatchObject({
+			flexBasis: 0,
+			flexGrow: 1,
+		});
 	});
 
 	it("reports no diagnostics for the selector", () => {
