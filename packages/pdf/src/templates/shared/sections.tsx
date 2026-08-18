@@ -75,7 +75,7 @@ import { createRtlStyleHelpers } from "./rtl";
 import { getInlineItemWebsiteUrl, shouldRenderSeparateItemWebsite } from "./section-links";
 import { hasSplitRowText } from "./split-row";
 import { getSectionStyleRuleContext } from "./style-rules";
-import { composeStyles } from "./styles";
+import { composeStyles, mergeStyles } from "./styles";
 
 type SectionItemsContextValue = {
 	itemStyle: StyleInput;
@@ -641,10 +641,12 @@ const ItemHeaderRowNowrapContext = createContext(false);
 const ItemHeaderRow = ({ children, style }: ItemHeaderRowProps) => {
 	const ownerNodeKey = useSemanticNodeKey();
 	const resolved = useResolvedNode(semanticTemplatePartNodeKey(ownerNodeKey, ...ITEM_HEADER_ROW_PART_KEYS));
+	// Same order the rendered row composes in, so a template that ships `nowrap` counts too.
+	const { flexWrap } = mergeStyles(style, resolved.style);
 
 	return (
 		<SemanticTemplatePartView partKeys={ITEM_HEADER_ROW_PART_KEYS} style={composeStyles(style)}>
-			<ItemHeaderRowNowrapContext.Provider value={resolved.style?.flexWrap === "nowrap"}>
+			<ItemHeaderRowNowrapContext.Provider value={flexWrap === "nowrap"}>
 				{children}
 			</ItemHeaderRowNowrapContext.Provider>
 		</SemanticTemplatePartView>
