@@ -19,11 +19,11 @@ import type {
 	VolunteerItem,
 } from "@reactive-resume/schema/resume/data";
 import type { IconName } from "phosphor-icons-react-pdf/dynamic";
-import type { ReactElement, ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { CombinedTextName } from "../../semantic/node-keys";
 import type { StyleInput, TemplatePlacement } from "./styles";
 import type { CustomItemSection, ItemSection } from "./types";
-import { Children, cloneElement, createContext, Fragment, isValidElement, use } from "react";
+import { Children, createContext, Fragment, isValidElement, use } from "react";
 import { View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { getResumeSectionIcon } from "../../section-icon";
@@ -527,21 +527,19 @@ const SectionItem = ({ itemId, children, style }: SectionItemProps) => {
 	);
 };
 
-const InlineItemHeader = ({
-	leading,
-	middle,
-	trailing,
-	nodeKey,
-}: InlineItemHeaderProps & { nodeKey?: string | undefined }) => {
+/**
+ * The single-line variant of an item header. `SectionItemHeader` owns the `item-header` node and
+ * its resolved style, so this only lays the three slots out and addresses their template parts
+ * against the surrounding item-header key.
+ */
+const InlineItemHeader = ({ leading, middle, trailing }: InlineItemHeaderProps) => {
 	const inlineItemHeaderStyle = useTemplateStyle("inlineItemHeader");
 	const leadingStyle = useTemplateStyle("inlineItemHeaderLeading");
 	const middleStyle = useTemplateStyle("inlineItemHeaderMiddle");
 	const trailingStyle = useTemplateStyle("inlineItemHeaderTrailing");
 
-	const resolved = useResolvedNode(nodeKey);
+	const nodeKey = useSemanticNodeKey();
 	const renderedChildKeys = useRenderedChildKeys(nodeKey);
-	const visible = useSemanticNodeVisible(nodeKey);
-	if (!visible) return null;
 	const parts = [
 		{
 			nodeKey: semanticTemplatePartNodeKey(nodeKey, "inline-item-header-leading") ?? "inline-item-header-leading",
@@ -584,11 +582,7 @@ const InlineItemHeader = ({
 		},
 	];
 
-	return (
-		<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(inlineItemHeaderStyle, resolved.style)}>
-			{projectRenderedChildren(renderedChildKeys, parts)}
-		</View>
-	);
+	return <View style={composeStyles(inlineItemHeaderStyle)}>{projectRenderedChildren(renderedChildKeys, parts)}</View>;
 };
 
 const stackedSidebarSplitRowStyle = {
@@ -653,55 +647,25 @@ const ItemHeaderRow = ({ children, style }: ItemHeaderRowProps) => {
 	);
 };
 
+/**
+ * The box around an item's header rows, exposed to Semantic CSS as `item-header`.
+ *
+ * It always renders its own `Div`, whatever shape the section's header markup has, so a resolved
+ * `item-header` style covers every header row of every section on every template. `Div` rather than
+ * `View` because the header rows keep the row gap they used to get from the item box around them.
+ */
 const SectionItemHeader = ({ children }: SectionItemHeaderProps) => {
 	const itemNodeKey = useSemanticNodeKey();
 	const itemHeaderNodeKey = itemNodeKey ? semanticNodeKeys.itemHeader(itemNodeKey) : undefined;
-	const resolved = useResolvedNode(itemHeaderNodeKey);
-	const mainItemHeaderBorder = useTemplateFeature("mainItemHeaderBorder");
 	const sectionItemHeaderStyle = useTemplateStyle("sectionItemHeader");
 	const exists = useSemanticNodeExists(itemHeaderNodeKey);
-	const visible = useSemanticNodeVisible(itemHeaderNodeKey);
 	if (!exists) return <>{children}</>;
-	if (!visible) return null;
-
-	if (!mainItemHeaderBorder) {
-		const bindFirstExistingView = (node: ReactNode): [ReactNode, boolean] => {
-			if (!isValidElement(node)) return [node, false];
-			if (node.type === InlineItemHeader) {
-				const inline = node as ReactElement<InlineItemHeaderProps & { nodeKey?: string | undefined }>;
-				return [cloneElement(inline, { nodeKey: itemHeaderNodeKey }), true];
-			}
-			if (node.type === View) {
-				const view = node as ReactElement<{ style?: StyleInput }>;
-				return [
-					cloneElement(view, {
-						...resolvedPdfFlowProps(resolved),
-						style: composeStyles(view.props.style, resolved.style),
-					}),
-					true,
-				];
-			}
-			if (node.type !== Fragment) return [node, false];
-
-			let bound = false;
-			const fragment = node as ReactElement<{ children?: ReactNode }>;
-			const nextChildren = Children.map(fragment.props.children, (child) => {
-				if (bound) return child;
-				const [next, didBind] = bindFirstExistingView(child);
-				bound = didBind;
-				return next;
-			});
-			return [cloneElement(fragment, {}, nextChildren), bound];
-		};
-		const [boundChildren] = bindFirstExistingView(children);
-		return <SemanticNodeKeyProvider nodeKey={itemHeaderNodeKey}>{boundChildren}</SemanticNodeKeyProvider>;
-	}
 
 	return (
 		<SemanticNodeKeyProvider nodeKey={itemHeaderNodeKey}>
-			<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(sectionItemHeaderStyle, resolved.style)}>
+			<Div nodeKey={itemHeaderNodeKey} style={composeStyles(sectionItemHeaderStyle)}>
 				{children}
-			</View>
+			</Div>
 		</SemanticNodeKeyProvider>
 	);
 };

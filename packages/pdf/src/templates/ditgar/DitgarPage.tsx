@@ -63,7 +63,6 @@ type DitgarHeaderProps = {
 
 const ditgarFeatures = {
 	stackSidebarItemHeader: true,
-	mainItemHeaderBorder: true,
 } satisfies TemplateFeatures;
 
 export const DitgarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
@@ -319,6 +318,8 @@ const useDitgarTemplate = (): DitgarTemplate => {
 					borderBottomColor: accentFor(context),
 				}),
 				sectionItemHeader: (context) => ({
+					/** Ditgar packs the header rows tight inside the accent border, without the usual row gap. */
+					rowGap: 0,
 					...(context.placement === "main"
 						? {
 								borderLeftWidth: 2,

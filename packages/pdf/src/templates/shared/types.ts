@@ -28,7 +28,6 @@ export type TemplateFeatures = {
 	sectionTimeline?: boolean;
 	inlineItemHeader?: boolean;
 	stackSidebarItemHeader?: boolean;
-	mainItemHeaderBorder?: boolean;
 };
 
 export type SectionTimelineStyleSlots = {
