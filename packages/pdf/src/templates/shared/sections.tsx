@@ -1175,7 +1175,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 	const skills = sectionData ?? data.sections.skills;
 	const items = getVisibleItems(skills, "skills");
 	const inlineStyle = useTemplateStyle("inline");
-	const _metrics = getTemplateMetrics(data.metadata.page);
+	const metrics = getTemplateMetrics(data.metadata.page);
 
 	if (items.length === 0) return null;
 
@@ -1197,7 +1197,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 											? { alignItems: "center" }
 											: undefined,
 									)
-								: undefined
+								: { rowGap: metrics.gapY(0.25) }
 						}
 					>
 						<SectionItemHeader>
@@ -1212,8 +1212,9 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 						<View style={{ flexGrow: skills.columns > 1 ? 1 : 0 }}>
 							{hasSplitRowText(item.proficiency) && <Text semanticField="proficiency">{item.proficiency}</Text>}
 							<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
-							<LevelDisplay level={item.level} />
+							{isInlineSkillsItem && <LevelDisplay level={item.level} />}
 						</View>
+						{!isInlineSkillsItem && <LevelDisplay level={item.level} />}
 					</SectionItem>
 				))}
 			</SectionItems>
