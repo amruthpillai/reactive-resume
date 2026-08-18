@@ -394,6 +394,24 @@ describe("resumeContentScripts", () => {
 		expect(scripts.size).toBe(1);
 	});
 
+	it("detects keycap emoji without pictographs (#3321)", async () => {
+		const { resumeContentScripts } = await import("./use-register-fonts");
+		// "1\uFE0F\u20E3" (1\u20e3) and "#\uFE0F\u20E3" (#\u20e3) hold no regional
+		// indicator and no Extended_Pictographic codepoint, so the detector must
+		// catch the combining enclosing keycap on its own.
+		const data = {
+			...defaultResumeData,
+			basics: {
+				...defaultResumeData.basics,
+				location: "Steps \u0031\uFE0F\u20E3 and \u0023\uFE0F\u20E3",
+			},
+		} satisfies ResumeData;
+
+		const scripts = resumeContentScripts(data);
+		expect(scripts.has("emoji")).toBe(true);
+		expect(scripts.size).toBe(1);
+	});
+
 	it("detects multiple scripts in mixed content", async () => {
 		const { resumeContentScripts } = await import("./use-register-fonts");
 		const scripts = resumeContentScripts(withSummary("안녕 翠翠 سلام"));

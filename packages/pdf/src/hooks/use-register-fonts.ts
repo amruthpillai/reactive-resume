@@ -160,8 +160,12 @@ const hebrewRegex = /[֐-׿יִ-ﭏ]/;
 const thaiRegex = /[฀-๿]/;
 
 // Emoji: regional indicators (flags) are NOT Extended_Pictographic, so union
-// them explicitly with the pictographic property (#3321).
-const emojiRegex = /[\u{1F1E6}-\u{1F1FF}]|\p{Extended_Pictographic}/u;
+// them explicitly with the pictographic property (#3321). Keycap sequences
+// (e.g. "1\uFE0F\u20E3") carry no pictographic codepoint either — their
+// discriminator is the combining enclosing keycap U+20E3, unioned here for the
+// same reason: without it, keycap-only content falls back to a font without
+// the enclosure mark and renders garbled.
+const emojiRegex = /[\u{1F1E6}-\u{1F1FF}]|\u{20E3}|\p{Extended_Pictographic}/u;
 
 const scriptDetectors: { script: Script; regex: RegExp }[] = [
 	{ script: "hangul", regex: hangulRegex },
