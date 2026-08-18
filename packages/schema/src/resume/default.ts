@@ -47,7 +47,7 @@ export const defaultResumeData: ResumeData = {
 		experience: section("briefcase"),
 		education: section("graduation-cap"),
 		projects: section("code-simple"),
-		skills: section("compass-tool"),
+		skills: { ...section("compass-tool"), layout: "default" },
 		languages: section("translate"),
 		interests: section("football"),
 		awards: section("trophy"),
