@@ -3,7 +3,6 @@ packages:
   - packages/*
   - tooling
 minimumReleaseAge: 0
-autoInstallPeers: false
 allowBuilds:
   bcrypt: true
   esbuild: true
@@ -17,13 +16,5 @@ overrides:
   postcss@<8.5.10: ^8.5.14
   samlify@<2.13.0: ^2.13.0
   uuid@<11.1.1: ^11.1.1
-peerDependencyRules:
-  # The DeepSeek Harness rc packages declare peers that are not published yet
-  # (dsh-brand, dsh-invariants, dsh-type-meta). The Harness host supplies them at
-  # runtime; without this, autoInstallPeers tries to fetch them and 404s.
-  ignoreMissing:
-    - '@deepseek-ai/dsh-brand'
-    - '@deepseek-ai/dsh-invariants'
-    - '@deepseek-ai/dsh-type-meta'
 patchedDependencies:
   '@react-pdf/textkit': patches/@react-pdf__textkit.patch

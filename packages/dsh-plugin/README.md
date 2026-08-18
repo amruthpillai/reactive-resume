@@ -5,26 +5,26 @@ Connect [Reactive Resume](https://rxresu.me) to [DeepSeek Harness](https://githu
 ## Install
 
 ```bash
-pnpm add dsh-plugin-reactive-resume
+dsh plugin --profile <name> add dsh-plugin-reactive-resume
 ```
+
+This package declares `dsh.bundle`, so the profile picks it up as a layer and mounts it automatically. Until you configure a key it mounts nothing and logs a warning, so installing it never leaves a profile unbootable.
 
 ## Configure
 
-Mint an API key at `https://rxresu.me/dashboard/settings/api-keys`, then add a row to your `cordis.yml`:
+Mint an API key at `https://rxresu.me/dashboard/settings/api-keys` and export it as `RXRESUME_API_KEY` — the bundle patch reads that variable. To set it explicitly, or to change any other option, patch the row by id from your profile's `cordis.patch.yml`:
 
 ```yaml
-- insert:
-    - id: reactive-resume
-      name: dsh-plugin-reactive-resume
-      config:
-        apiKey: !!js process.env.RXRESUME_API_KEY
+- id: reactive-resume
+  config:
+    apiKey: !!js process.env.RXRESUME_API_KEY
 ```
 
 ### Options
 
 | Key | Default | Description |
 |---|---|---|
-| `apiKey` | *(required)* | API key from `<url>/dashboard/settings/api-keys`. |
+| `apiKey` | `''` | API key from `<url>/dashboard/settings/api-keys`. Empty mounts nothing. |
 | `url` | `https://rxresu.me` | Origin of your instance. Set this if you self-host. |
 | `serverName` | `resume` | Tool namespace. Tools reach the model as `mcp__<serverName>__<rawName>`. |
 | `toolCallTimeoutMs` | `60000` | Per-tool-call timeout. |
@@ -34,9 +34,10 @@ Every tool Reactive Resume publishes is exposed. Narrowing that set is not curre
 ### Self-hosted
 
 ```yaml
-config:
-  apiKey: !!js process.env.RXRESUME_API_KEY
-  url: http://localhost:3000
+- id: reactive-resume
+  config:
+    apiKey: !!js process.env.RXRESUME_API_KEY
+    url: http://localhost:3000
 ```
 
 ## What it does

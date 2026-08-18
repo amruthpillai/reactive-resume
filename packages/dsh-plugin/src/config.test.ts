@@ -25,6 +25,6 @@ it("keeps explicit values", () => {
 	expect(parsed.toolCallTimeoutMs).toBe(5_000);
 });
 
-it("rejects a missing apiKey", () => {
-	expect(() => Config({})).toThrow();
+it("defaults apiKey to empty rather than throwing, so an unconfigured row still loads", () => {
+	expect(Config({}).apiKey).toBe("");
 });

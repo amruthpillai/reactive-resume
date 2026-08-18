@@ -16,7 +16,11 @@ export interface Config {
 }
 
 export const Config = z.object({
-	apiKey: z.string().required().description("API key from <url>/dashboard/settings/api-keys."),
+	// Not `.required()`: the bundle patch mounts this plugin as soon as the
+	// package is installed, so a missing key has to be an inert no-op rather
+	// than a validation error that takes the whole profile down at boot.
+	// `apply` warns and mounts nothing instead.
+	apiKey: z.string().default("").description("API key from <url>/dashboard/settings/api-keys."),
 	url: z
 		.string()
 		.default("https://rxresu.me")

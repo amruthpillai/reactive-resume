@@ -37,6 +37,14 @@ export const inject = ["systemPrompt"];
  *   invalid `serverName` at parse time, before `apply` ever runs.
  */
 export async function apply(ctx: Context, config: Config): Promise<void> {
+	// The bundle patch mounts this row on install, before anyone has minted a
+	// key. Mount nothing rather than failing the profile's boot: `dsh plugin
+	// add` should never leave the harness unbootable.
+	if (config.apiKey === "") {
+		ctx.logger.warn("no apiKey configured — set one at %s/dashboard/settings/api-keys to enable the tools", config.url);
+		return;
+	}
+
 	const origin = config.url.replace(/\/+$/, "");
 
 	await ctx.plugin(mcpClient, {

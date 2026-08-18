@@ -1,0 +1,17 @@
+# dsh-plugin-reactive-resume bundle patch: one insert over the profile root.
+# `dsh plugin add` joins this layer to the profile's bundle stack automatically.
+# Override any field by patching the row by id from your profile's own
+# cordis.patch.yml (the last write wins per row) — for a self-hosted instance:
+#
+#   - id: reactive-resume
+#     config:
+#       apiKey: !!js process.env.RXRESUME_API_KEY
+#       url: http://localhost:3000
+#
+# With no apiKey the row loads and mounts nothing, so installing this plugin
+# before configuring it leaves the profile bootable.
+- insert:
+    - id: reactive-resume
+      name: dsh-plugin-reactive-resume
+      config:
+        apiKey: !!js process.env.RXRESUME_API_KEY ?? ''

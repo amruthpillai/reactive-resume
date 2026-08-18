@@ -7,6 +7,7 @@ function fakeContext() {
 	return {
 		plugin: vi.fn(async (_plugin: unknown, _config: unknown) => undefined),
 		systemPrompt: { section: vi.fn(() => () => undefined) },
+		logger: { warn: vi.fn() },
 	};
 }
 
@@ -44,4 +45,14 @@ it("strips a trailing slash from the configured url", async () => {
 
 it("rejects a serverName the bridge would refuse at config-parse time, before apply runs", () => {
 	expect(() => Config({ apiKey: "test-key", serverName: "has spaces" })).toThrow(/serverName/);
+});
+
+it("mounts nothing when no apiKey is configured, so an unconfigured install still boots", async () => {
+	const ctx = fakeContext();
+
+	await apply(ctx as never, Config({}));
+
+	expect(ctx.plugin).not.toHaveBeenCalled();
+	expect(ctx.systemPrompt.section).not.toHaveBeenCalled();
+	expect(ctx.logger.warn).toHaveBeenCalledTimes(1);
 });
