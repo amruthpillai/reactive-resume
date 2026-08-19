@@ -78,7 +78,15 @@ export function isCJKLocale(locale: Locale): boolean {
 // of falling back to a Latin/Han-only font and producing tofu. "emoji" is
 // content-detected only (never locale-derived) and resolves to Noto Emoji so
 // pictographs and regional indicators render instead of mojibake (#3321).
-export type Script = "hangul" | "kana" | "han-traditional" | "han-simplified" | "arabic" | "hebrew" | "thai" | "emoji";
+export type Script =
+	| "hangul"
+	| "kana"
+	| "han-traditional"
+	| "han-simplified"
+	| "arabic"
+	| "hebrew"
+	| "thai"
+	| "emoji";
 
 // The CJK subset of `Script`. CJK needs extra per-character line breaking that
 // must NOT be applied to Arabic (cursive, joined letters) or Thai (combining
