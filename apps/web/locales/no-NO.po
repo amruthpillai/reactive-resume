@@ -543,6 +543,14 @@ msgstr "Søkt"
 msgid "Applied on"
 msgstr "Påført på"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approved — waiting for the agent…"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arabisk"
@@ -1462,6 +1470,14 @@ msgstr "Sletter API-nøkkelen din..."
 msgid "Deleting your resume..."
 msgstr "Sletter CV-en din..."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Denied — waiting for the agent…"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Deny"
+msgstr ""
+
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
 msgstr "Beskriv hva du gjorde, slik at oppføringen bidrar med nøkkelord for matching."
@@ -1641,6 +1657,10 @@ msgstr "Rediger innhold i fullskjermmodus"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit date"
 msgstr "Rediger dato"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Edit declined"
+msgstr ""
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -1967,6 +1987,10 @@ msgstr "Kunne ikke koble fra leverandør. Prøv igjen."
 msgid "Failed to update provider."
 msgstr "Kunne ikke oppdatere leverandøren."
 
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Failed to update thread settings."
+msgstr ""
+
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
@@ -2128,6 +2152,10 @@ msgstr "Friform"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Fransk"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "from"
+msgstr ""
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
@@ -3153,6 +3181,10 @@ msgstr "OpenRouter"
 msgid "opens in new tab"
 msgstr "åpnes i ny fane"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent…"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Du kan eventuelt angi et passord slik at bare personer med passordet kan se CV-en din via lenken."
@@ -3700,8 +3732,8 @@ msgid "Restore"
 msgstr "Restaurere"
 
 #: src/routes/agent/-components/agent-chat.tsx
-msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
-msgstr "Vil du gjenopprette CV-en til før denne oppdateringen? Dette vil tilbakestille denne oppdateringen og eventuelle oppdateringer som ble brukt etter den."
+msgid "Restore the resume to before this patch?"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
@@ -3725,6 +3757,10 @@ msgstr "CV-analysen er fullført."
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
 msgstr "CV-innhold"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Resume edit"
+msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Resume file"
@@ -3755,8 +3791,16 @@ msgid "Retry"
 msgstr "Prøv på nytt"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "Review edits"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Gjennomgå CV-en mot en stillingsbeskrivelse og still meg spørsmål før du endrer usikre deler."
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Review this edit"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -4713,6 +4757,10 @@ msgid "This will remove all items from this section."
 msgstr "Dette vil fjerne alle elementer fra denne seksjonen."
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "This will roll back this patch and any patches applied after it."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Thread actions"
 msgstr "Trådhandlinger"
@@ -5445,4 +5493,3 @@ msgstr "Zoom ut"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

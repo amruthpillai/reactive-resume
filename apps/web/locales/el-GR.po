@@ -543,6 +543,14 @@ msgstr "Υποβλήθηκε"
 msgid "Applied on"
 msgstr "Ημερομηνία αίτησης"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approved — waiting for the agent…"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Αραβικά"
@@ -1462,6 +1470,14 @@ msgstr "Διαγραφή του κλειδιού API σας..."
 msgid "Deleting your resume..."
 msgstr "Διαγραφή του βιογραφικού σας σημειώματος..."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Denied — waiting for the agent…"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Deny"
+msgstr ""
+
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
 msgstr "Περιγράψτε τι κάνατε, ώστε η καταχώριση να συνεισφέρει λέξεις-κλειδιά για αντιστοίχιση."
@@ -1641,6 +1657,10 @@ msgstr "Επεξεργασία περιεχομένου σε λειτουργί�
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit date"
 msgstr "Επεξεργασία ημερομηνίας"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Edit declined"
+msgstr ""
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -1967,6 +1987,10 @@ msgstr "Απέτυχε η αποσύνδεση του παρόχου. Προσπ
 msgid "Failed to update provider."
 msgstr "Αποτυχία ενημέρωσης παρόχου."
 
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Failed to update thread settings."
+msgstr ""
+
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
@@ -2128,6 +2152,10 @@ msgstr "Ελεύθερη μορφή"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Γαλλικά"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "from"
+msgstr ""
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
@@ -3153,6 +3181,10 @@ msgstr "OpenRouter"
 msgid "opens in new tab"
 msgstr "ανοίγει σε νέα καρτέλα"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent…"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Προαιρετικά, ορίστε έναν κωδικό πρόσβασης ώστε μόνο τα άτομα που γνωρίζουν τον κωδικό να μπορούν να βλέπουν το βιογραφικό σας σημείωμα μέσω του συνδέσμου."
@@ -3700,8 +3732,8 @@ msgid "Restore"
 msgstr "Επαναφέρω"
 
 #: src/routes/agent/-components/agent-chat.tsx
-msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
-msgstr "Επαναφορά του βιογραφικού σημειώματος πριν από αυτήν την ενημέρωση κώδικα; Αυτό θα ακυρώσει αυτήν την ενημέρωση κώδικα και τυχόν ενημερώσεις κώδικα που εφαρμόστηκαν μετά από αυτήν."
+msgid "Restore the resume to before this patch?"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
@@ -3725,6 +3757,10 @@ msgstr "Η ανάλυση του βιογραφικού ολοκληρώθηκε
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
 msgstr "Περιεχόμενο βιογραφικού"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Resume edit"
+msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Resume file"
@@ -3755,8 +3791,16 @@ msgid "Retry"
 msgstr "Δοκιμάζω πάλι"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "Review edits"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Ελέγξτε το βιογραφικό σημείωμα με βάση την περιγραφή της θέσης εργασίας και κάντε μου ερωτήσεις πριν αλλάξετε αβέβαια σημεία."
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Review this edit"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -4713,6 +4757,10 @@ msgid "This will remove all items from this section."
 msgstr "Αυτό θα αφαιρέσει όλα τα στοιχεία από αυτό το τμήμα."
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "This will roll back this patch and any patches applied after it."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Thread actions"
 msgstr "Ενέργειες νήματος"
@@ -5445,4 +5493,3 @@ msgstr "Σμίκρυνση"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Ζουλού"
-

@@ -543,6 +543,14 @@ msgstr "आवेदन गरियो"
 msgid "Applied on"
 msgstr "मा लागू गरियो"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approved — waiting for the agent…"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "अरबी"
@@ -1462,6 +1470,14 @@ msgstr "तपाईंको API key मेटाइँदैछ..."
 msgid "Deleting your resume..."
 msgstr "तपाईंको बायोडाटा मेटाउँदै..."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Denied — waiting for the agent…"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Deny"
+msgstr ""
+
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
 msgstr "तपाईंले के गर्नुभयो वर्णन गर्नुहोस् ताकि प्रविष्टिले मिलानको लागि कुञ्जी शब्दहरू योगदान गर्दछ।"
@@ -1641,6 +1657,10 @@ msgstr "पूर्ण स्क्रिन मोडमा सामग्र
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit date"
 msgstr "मिति सम्पादन गर्नुहोस्"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Edit declined"
+msgstr ""
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -1967,6 +1987,10 @@ msgstr "प्रदायक अनलिङ्क गर्न असफल �
 msgid "Failed to update provider."
 msgstr "प्रदायक अद्यावधिक गर्न असफल भयो।"
 
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Failed to update thread settings."
+msgstr ""
+
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
@@ -2128,6 +2152,10 @@ msgstr "फ्री-फर्म"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "फ्रेन्च"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "from"
+msgstr ""
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
@@ -3153,6 +3181,10 @@ msgstr "ओपनराउटर"
 msgid "opens in new tab"
 msgstr "नयाँ ट्याबमा खुल्छ"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent…"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "वैकल्पिक रूपमा, पासवर्ड राख्न सक्नुहुन्छ ताकि लिङ्कमार्फत बायोडाटा हेर्न केवल पासवर्ड भएको व्यक्तिले मात्र सकोस्।"
@@ -3700,8 +3732,8 @@ msgid "Restore"
 msgstr "पुनर्स्थापना गर्नुहोस्"
 
 #: src/routes/agent/-components/agent-chat.tsx
-msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
-msgstr "यो प्याचभन्दा पहिलेको रिजुमे पुनर्स्थापित गर्ने हो? यसले यो प्याच र त्यसपछि लागू गरिएका कुनै पनि प्याचहरूलाई रोलब्याक गर्नेछ।"
+msgid "Restore the resume to before this patch?"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
@@ -3725,6 +3757,10 @@ msgstr "बायोडाटा विश्लेषण पूरा भयो
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
 msgstr "सामग्री पुनःसुरु गर्नुहोस्"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Resume edit"
+msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Resume file"
@@ -3755,8 +3791,16 @@ msgid "Retry"
 msgstr "पुन: प्रयास गर्नुहोस्"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "Review edits"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "जागिरको विवरणसँग बायोडाटा समीक्षा गर्नुहोस् र अनिश्चित खण्डहरू परिवर्तन गर्नु अघि मलाई प्रश्नहरू सोध्नुहोस्।"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Review this edit"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -4713,6 +4757,10 @@ msgid "This will remove all items from this section."
 msgstr "यसले यस खण्डका सबै वस्तुहरू हटाउनेछ।"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "This will roll back this patch and any patches applied after it."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Thread actions"
 msgstr "थ्रेडका कार्यहरू"
@@ -5445,4 +5493,3 @@ msgstr "जूम आउट"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "जुलु"
-

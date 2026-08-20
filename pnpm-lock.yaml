@@ -560,6 +560,9 @@ importers:
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/runtime@7.29.7)(rolldown@1.2.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0))
+      '@shadcn/helpers':
+        specifier: ^0.2.0
+        version: 0.2.0(ai@7.0.66(zod@4.4.3))
       '@tanstack/devtools-vite':
         specifier: ^0.8.3
         version: 0.8.3(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0))
@@ -3881,6 +3884,20 @@ packages:
 
   '@selderee/plugin-htmlparser2@0.11.0':
     resolution: {integrity: sha512-P33hHGdldxGabLFjPPpaTxVolMrzrcegejx+0GxjrIb9Zv48D8yAIA/QTDR2dFl7Uz7urX8aX6+5bCZslr+gWQ==}
+
+  '@shadcn/helpers@0.2.0':
+    resolution: {integrity: sha512-wpcZNuRgdW16jLwjvh4mbREKpVFrGY+nBM3Okgic8b04sijN5CHW1Nl/AEMajsP3INaCTNnqMCouOalZ7OHvEQ==}
+    peerDependencies:
+      '@tanstack/ai': '>=0.40.0 <0.41.0'
+      '@tanstack/ai-client': '>=0.20.0 <0.21.0'
+      ai: '>=7.0.0 <8'
+    peerDependenciesMeta:
+      '@tanstack/ai':
+        optional: true
+      '@tanstack/ai-client':
+        optional: true
+      ai:
+        optional: true
 
   '@shadcn/react@0.3.0':
     resolution: {integrity: sha512-iKN0NuYe850VDHlxEfvppFrpa7CMV3zArTHusXlaSmeFeQhohGbIqclv6WwPTs/44I8EkXQpcuRt6sXEVKkWqQ==}
@@ -11254,6 +11271,10 @@ snapshots:
     dependencies:
       domhandler: 5.0.3
       selderee: 0.11.0
+
+  '@shadcn/helpers@0.2.0(ai@7.0.66(zod@4.4.3))':
+    optionalDependencies:
+      ai: 7.0.66(zod@4.4.3)
 
   '@shadcn/react@0.3.0(@types/react@19.2.18)(react@19.2.8)':
     optionalDependencies:

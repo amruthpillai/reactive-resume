@@ -543,6 +543,14 @@ msgstr "விண்ணப்பிக்கப்பட்டது"
 msgid "Applied on"
 msgstr "அன்று விண்ணப்பித்தது"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approved — waiting for the agent…"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "அரபிக்"
@@ -1462,6 +1470,14 @@ msgstr "உங்கள் API விசையை நீக்கிக் க�
 msgid "Deleting your resume..."
 msgstr "உங்கள் ரெஸ்யூமியை நீக்கிக் கொண்டிருக்கிறது..."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Denied — waiting for the agent…"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Deny"
+msgstr ""
+
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
 msgstr "நீங்கள் என்ன செய்தீர்கள் என்பதை விவரிக்கவும்."
@@ -1641,6 +1657,10 @@ msgstr "முழுத்திரை பயன்முறையில் உ�
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit date"
 msgstr "தேதியைத் திருத்து"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Edit declined"
+msgstr ""
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -1967,6 +1987,10 @@ msgstr "செயலியைத் துண்டிக்கத் தவற�
 msgid "Failed to update provider."
 msgstr "வழங்குநரைப் புதுப்பிக்க முடியவில்லை."
 
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Failed to update thread settings."
+msgstr ""
+
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
@@ -2128,6 +2152,10 @@ msgstr "இலவச வடிவம்"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "ஃபிரென்ச்"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "from"
+msgstr ""
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
@@ -3153,6 +3181,10 @@ msgstr "ஓப்பன்ரவுட்டர்"
 msgid "opens in new tab"
 msgstr "புதிய தாவலில் திறக்கிறது"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent…"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "விருப்பமாக, ஒரு கடவுச்சொல்லை அமைக்கலாம்; அப்போது அந்த கடவுச்சொல்லை தெரிந்தவர்களுக்கே இணைப்பின் மூலம் உங்கள் ரெஸ்யூமியைப் பார்க்க முடியும்."
@@ -3700,8 +3732,8 @@ msgid "Restore"
 msgstr "மீட்டெடு"
 
 #: src/routes/agent/-components/agent-chat.tsx
-msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
-msgstr "இந்தப் பேட்ச்சிற்கு முந்தைய நிலைக்கு மீட்டமைப்பதா? இது இந்தப் பேட்ச்சையும், இதற்குப் பிறகு செயல்படுத்தப்பட்ட பேட்ச்கள் அனைத்தையும் பின்னோக்கிச் செலுத்தும்."
+msgid "Restore the resume to before this patch?"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
@@ -3725,6 +3757,10 @@ msgstr "விண்ணப்பப் பகுப்பாய்வு நி�
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
 msgstr "சுயவிவர உள்ளடக்கம்"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Resume edit"
+msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Resume file"
@@ -3755,8 +3791,16 @@ msgid "Retry"
 msgstr "மீண்டும் முயற்சிக்கவும்"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "Review edits"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "பணி விவரத்துடன் சுயவிவரத்தை ஒப்பிட்டுப் பார்த்து, உறுதியற்ற பகுதிகளை மாற்றுவதற்கு முன் என்னிடம் கேள்விகளைக் கேளுங்கள்."
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Review this edit"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -4713,6 +4757,10 @@ msgid "This will remove all items from this section."
 msgstr "இது இந்தப் பிரிவிலிருந்து அனைத்துப் பொருட்களையும் நீக்கும்."
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "This will roll back this patch and any patches applied after it."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Thread actions"
 msgstr "நூல் செயல்கள்"
@@ -5445,4 +5493,3 @@ msgstr "சிறிதாக்கு"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ஜூலு"
-

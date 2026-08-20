@@ -543,6 +543,14 @@ msgstr "Topshirildi"
 msgid "Applied on"
 msgstr "Ariza sanasi"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approved — waiting for the agent…"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Arab tili"
@@ -1462,6 +1470,14 @@ msgstr "API kalitingiz o'chirilmoqda..."
 msgid "Deleting your resume..."
 msgstr "Rezyumeni o‘chirilmoqda..."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Denied — waiting for the agent…"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Deny"
+msgstr ""
+
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
 msgstr "Nima qilganingizni tasvirlab bering, shunda kirish mos keladigan kalit so'zlarga hissa qo'shadi."
@@ -1641,6 +1657,10 @@ msgstr "Mazmunni to'liq ekran rejimida tahrirlang"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit date"
 msgstr "Sanani tahrirlash"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Edit declined"
+msgstr ""
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -1967,6 +1987,10 @@ msgstr "Provayderni bog'lanishni bekor qila olmadik. Iltimos, yana urinib ko'rin
 msgid "Failed to update provider."
 msgstr "Provayderni yangilashda xatolik yuz berdi."
 
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Failed to update thread settings."
+msgstr ""
+
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
@@ -2128,6 +2152,10 @@ msgstr "Erkin shakl"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Fransuz tili"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "from"
+msgstr ""
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
@@ -3153,6 +3181,10 @@ msgstr "Ochiq marshrutizator"
 msgid "opens in new tab"
 msgstr "yangi tabda ochiladi"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent…"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Istasangiz, maxfiy soʻz kiriting, faqat parolni bilganlar havola orqali rezyumeni koʻra oladi."
@@ -3700,8 +3732,8 @@ msgid "Restore"
 msgstr "Qayta tiklash"
 
 #: src/routes/agent/-components/agent-chat.tsx
-msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
-msgstr "Rezyume ushbu yamoqni avvalgi holatiga qaytarilsinmi? Bu ushbu yamoqni va undan keyin qo'llanilgan barcha yamoqlarni orqaga qaytaradi."
+msgid "Restore the resume to before this patch?"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
@@ -3725,6 +3757,10 @@ msgstr "Rezyume tahlili yakunlandi."
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
 msgstr "Rezyume mazmuni"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Resume edit"
+msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Resume file"
@@ -3755,8 +3791,16 @@ msgid "Retry"
 msgstr "Qayta urinish"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "Review edits"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Rezyumeni ish tavsifi bilan taqqoslang va noaniq bo'limlarni o'zgartirishdan oldin menga savollar bering."
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Review this edit"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -4713,6 +4757,10 @@ msgid "This will remove all items from this section."
 msgstr "Bu bo'limdagi barcha elementlarni o'chirib tashlaydi."
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "This will roll back this patch and any patches applied after it."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Thread actions"
 msgstr "Mavzu harakatlari"
@@ -5445,4 +5493,3 @@ msgstr "Kichraytirish"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

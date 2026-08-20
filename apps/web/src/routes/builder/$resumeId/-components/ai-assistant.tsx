@@ -82,6 +82,7 @@ function AiAssistantThread({ threadId, onClose }: AiAssistantThreadProps) {
 			isReadOnly={data.isReadOnly}
 			readOnlyReason={readOnlyReason}
 			threadStatus={data.thread.status}
+			reviewPatches={data.thread.reviewPatches}
 			activeRunId={data.thread.activeRunId}
 			actions={data.actions}
 			onClose={onClose}

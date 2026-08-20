@@ -1,6 +1,7 @@
 import type { UIMessage, UIMessageChunk } from "ai";
 import type * as React from "react";
 import type { RouterOutput } from "@/libs/orpc/client";
+import type { PatchApprovalResponse } from "./patch-approval-card";
 import { useChat } from "@ai-sdk/react";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -23,7 +24,7 @@ import {
 } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { lastAssistantMessageIsCompleteWithApprovalResponses, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { m } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -39,6 +40,7 @@ import { Bubble, BubbleContent } from "@reactive-resume/ui/components/bubble";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
+	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
@@ -73,6 +75,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { client, orpc, streamClient } from "@/libs/orpc/client";
 import { attachmentIdsFromTransportBody, buildAgentChatSubmission } from "../-helpers/chat-attachments";
+import { PatchApprovalCard } from "./patch-approval-card";
 
 type AgentThreadDetail = RouterOutput["agent"]["threads"]["get"];
 type AgentAction = AgentThreadDetail["actions"][number];
@@ -110,6 +113,7 @@ type MessagePartProps = {
 	part: UIMessage["parts"][number];
 	isUser: boolean;
 	onAnswer: (toolCallId: string, answer: string) => void;
+	onApprovalRespond: (response: PatchApprovalResponse) => void;
 	onRevert: (actionId: string) => void;
 	isReverting: boolean;
 	actionsById: Map<string, AgentAction>;
@@ -118,6 +122,7 @@ type MessagePartProps = {
 type ChatMessageProps = {
 	message: UIMessage;
 	onAnswer: (toolCallId: string, answer: string) => void;
+	onApprovalRespond: (response: PatchApprovalResponse) => void;
 	onRevert: (actionId: string) => void;
 	isReverting: boolean;
 	actionsById: Map<string, AgentAction>;
@@ -129,6 +134,7 @@ export type AgentChatProps = {
 	isReadOnly: boolean;
 	readOnlyReason: "archived" | "missing" | null;
 	threadStatus: string;
+	reviewPatches: boolean;
 	activeRunId: string | null;
 	actions: AgentAction[];
 	onToggleThreads?: () => void;
@@ -149,6 +155,7 @@ type AgentChatMessagesProps = {
 	isStreaming: boolean;
 	messages: UIMessage[];
 	onAnswer: (toolCallId: string, answer: string) => void;
+	onApprovalRespond: (response: PatchApprovalResponse) => void;
 	onRevert: (actionId: string) => void;
 	onRetry: () => void;
 	onStarterSelect: (prompt: string) => void;
@@ -158,12 +165,15 @@ type AgentChatHeaderProps = {
 	isArchived: boolean;
 	isArchivePending: boolean;
 	isDeletePending: boolean;
+	isUpdatePending: boolean;
+	reviewPatches: boolean;
 	onArchive: () => void;
 	onCopyConversation: () => void;
 	onCopyConversationJson: () => void;
 	onDelete: () => void;
 	onClose?: () => void;
 	onToggleResume?: () => void;
+	onToggleReviewPatches: (reviewPatches: boolean) => void;
 	onToggleThreads?: () => void;
 };
 
@@ -507,7 +517,15 @@ export function AskUserQuestion({ part, answer, onAnswer }: AskUserQuestionProps
 	);
 }
 
-function MessagePart({ part, isUser, onAnswer, onRevert, isReverting, actionsById }: MessagePartProps) {
+function MessagePart({
+	part,
+	isUser,
+	onAnswer,
+	onApprovalRespond,
+	onRevert,
+	isReverting,
+	actionsById,
+}: MessagePartProps) {
 	if (part.type === "text") {
 		return (
 			<Bubble variant={isUser ? "default" : "ghost"} align={isUser ? "end" : "start"}>
@@ -550,6 +568,18 @@ function MessagePart({ part, isUser, onAnswer, onRevert, isReverting, actionsByI
 	}
 
 	if (part.type === "tool-apply_resume_patch") {
+		const state = "state" in part && typeof part.state === "string" ? part.state : null;
+
+		if (state === "approval-requested" || state === "approval-responded" || state === "output-denied") {
+			return (
+				<Bubble variant="outline" className="max-w-full">
+					<BubbleContent className="w-full">
+						<PatchApprovalCard part={part} onRespond={onApprovalRespond} />
+					</BubbleContent>
+				</Bubble>
+			);
+		}
+
 		const output =
 			"output" in part && typeof part.output === "object" && part.output
 				? (part.output as Record<string, unknown>)
@@ -594,7 +624,7 @@ function MessagePart({ part, isUser, onAnswer, onRevert, isReverting, actionsByI
 	return null;
 }
 
-function ChatMessage({ message, onAnswer, onRevert, isReverting, actionsById }: ChatMessageProps) {
+function ChatMessage({ message, onAnswer, onApprovalRespond, onRevert, isReverting, actionsById }: ChatMessageProps) {
 	const isUser = message.role === "user";
 
 	return (
@@ -606,6 +636,7 @@ function ChatMessage({ message, onAnswer, onRevert, isReverting, actionsById }: 
 						part={part}
 						isUser={isUser}
 						onAnswer={onAnswer}
+						onApprovalRespond={onApprovalRespond}
 						onRevert={onRevert}
 						isReverting={isReverting}
 						actionsById={actionsById}
@@ -622,6 +653,7 @@ export function AgentChat({
 	isReadOnly,
 	readOnlyReason,
 	threadStatus,
+	reviewPatches,
 	activeRunId,
 	actions,
 	onToggleThreads,
@@ -642,6 +674,7 @@ export function AgentChat({
 	const revertMutation = useMutation(orpc.agent.actions.revert.mutationOptions());
 	const archiveMutation = useMutation(orpc.agent.threads.archive.mutationOptions());
 	const deleteMutation = useMutation(orpc.agent.threads.delete.mutationOptions());
+	const updateThreadMutation = useMutation(orpc.agent.threads.update.mutationOptions());
 	const isArchived = threadStatus === "archived";
 
 	const refreshThread = useCallback(async () => {
@@ -726,12 +759,24 @@ export function AgentChat({
 		[threadId],
 	);
 
-	const { messages, sendMessage, regenerate, setMessages, status, error, clearError, addToolOutput } = useChat({
+	const {
+		messages,
+		sendMessage,
+		regenerate,
+		setMessages,
+		status,
+		error,
+		clearError,
+		addToolOutput,
+		addToolApprovalResponse,
+	} = useChat({
 		id: threadId,
 		messages: initialMessages,
 		resume: !!activeRunId,
 		transport,
-		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+		sendAutomaticallyWhen: (options) =>
+			lastAssistantMessageIsCompleteWithToolCalls(options) ||
+			lastAssistantMessageIsCompleteWithApprovalResponses(options),
 		onFinish: () => {
 			void refreshThread();
 		},
@@ -840,10 +885,30 @@ export function AgentChat({
 		addToolOutput({ tool: "ask_user_question", toolCallId, output: answer });
 	};
 
-	const revertAction = (actionId: string) => {
-		const confirmation = window.confirm(
-			t`Restore the resume to before this patch? This will roll back this patch and any patches applied after it.`,
+	// Responds locally; the composed sendAutomaticallyWhen resubmits the assistant message once
+	// every pending approval on it has a decision.
+	const respondToApproval = (response: PatchApprovalResponse) => {
+		void addToolApprovalResponse(response);
+	};
+
+	const toggleReviewPatches = (nextReviewPatches: boolean) => {
+		updateThreadMutation.mutate(
+			{ id: threadId, reviewPatches: nextReviewPatches },
+			{
+				onSuccess: () => void refreshThread(),
+				onError: (error) =>
+					toast.add({
+						type: "error",
+						description: getOrpcErrorMessage(error, { fallback: t`Failed to update thread settings.` }),
+					}),
+			},
 		);
+	};
+
+	const revertAction = async (actionId: string) => {
+		const confirmation = await confirm(t`Restore the resume to before this patch?`, {
+			description: t`This will roll back this patch and any patches applied after it.`,
+		});
 		if (!confirmation) return;
 
 		revertMutation.mutate(
@@ -881,12 +946,15 @@ export function AgentChat({
 				isArchived={isArchived}
 				isArchivePending={archiveMutation.isPending}
 				isDeletePending={deleteMutation.isPending}
+				isUpdatePending={updateThreadMutation.isPending}
+				reviewPatches={reviewPatches}
 				onArchive={handleArchive}
 				onClose={onClose}
 				onCopyConversation={copyConversationText}
 				onCopyConversationJson={copyConversationJson}
 				onDelete={() => void handleDelete()}
 				onToggleResume={onToggleResume}
+				onToggleReviewPatches={toggleReviewPatches}
 				onToggleThreads={onToggleThreads}
 			/>
 
@@ -900,7 +968,8 @@ export function AgentChat({
 				isStreaming={isStreaming}
 				messages={messages}
 				onAnswer={answerToolCall}
-				onRevert={revertAction}
+				onApprovalRespond={respondToApproval}
+				onRevert={(actionId) => void revertAction(actionId)}
 				onRetry={retryLastMessage}
 				onStarterSelect={setInput}
 			/>
@@ -943,6 +1012,7 @@ function AgentChatMessages({
 	isStreaming,
 	messages,
 	onAnswer,
+	onApprovalRespond,
 	onRevert,
 	onRetry,
 	onStarterSelect,
@@ -975,6 +1045,7 @@ function AgentChatMessages({
 									isReverting={isReverting}
 									actionsById={actionsById}
 									onAnswer={onAnswer}
+									onApprovalRespond={onApprovalRespond}
 									onRevert={onRevert}
 								/>
 							</MessageScrollerItem>
@@ -1018,12 +1089,15 @@ function AgentChatHeader({
 	isArchived,
 	isArchivePending,
 	isDeletePending,
+	isUpdatePending,
+	reviewPatches,
 	onArchive,
 	onClose,
 	onCopyConversation,
 	onCopyConversationJson,
 	onDelete,
 	onToggleResume,
+	onToggleReviewPatches,
 	onToggleThreads,
 }: AgentChatHeaderProps) {
 	return (
@@ -1074,6 +1148,16 @@ function AgentChatHeader({
 						</DropdownMenuItem>
 
 						<DropdownMenuSeparator />
+
+						{!isArchived ? (
+							<DropdownMenuCheckboxItem
+								checked={reviewPatches}
+								disabled={isUpdatePending}
+								onCheckedChange={(checked) => onToggleReviewPatches(checked === true)}
+							>
+								<Trans>Review edits</Trans>
+							</DropdownMenuCheckboxItem>
+						) : null}
 
 						{!isArchived ? (
 							<DropdownMenuItem disabled={isArchivePending} onClick={onArchive}>

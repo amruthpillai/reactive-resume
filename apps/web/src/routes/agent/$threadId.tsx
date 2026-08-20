@@ -101,6 +101,7 @@ function RouteComponent() {
 							isReadOnly={data.isReadOnly}
 							readOnlyReason={readOnlyReason}
 							threadStatus={data.thread.status}
+							reviewPatches={data.thread.reviewPatches}
 							activeRunId={data.thread.activeRunId}
 							actions={data.actions}
 							onToggleThreads={toggleThreadsPanel}
@@ -155,6 +156,7 @@ function RouteComponent() {
 							isReadOnly={data.isReadOnly}
 							readOnlyReason={readOnlyReason}
 							threadStatus={data.thread.status}
+							reviewPatches={data.thread.reviewPatches}
 							activeRunId={data.thread.activeRunId}
 							actions={data.actions}
 						/>

@@ -543,6 +543,14 @@ msgstr "Подано"
 msgid "Applied on"
 msgstr "Подано"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Approved — waiting for the agent…"
+msgstr ""
+
 #: src/libs/locale.ts
 msgid "Arabic"
 msgstr "Арабська"
@@ -1462,6 +1470,14 @@ msgstr "Видаляємо ваш API-ключ..."
 msgid "Deleting your resume..."
 msgstr "Видалення вашого резюме..."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Denied — waiting for the agent…"
+msgstr ""
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Deny"
+msgstr ""
+
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
 msgstr "Опишіть, що ви зробили, щоб запис додав ключові слова для відповідності."
@@ -1641,6 +1657,10 @@ msgstr "Редагувати вміст у повноекранному режи
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Edit date"
 msgstr "Редагувати дату"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Edit declined"
+msgstr ""
 
 #. Resume card context menu action to edit resume metadata
 #. Resume card dropdown action to edit resume metadata
@@ -1967,6 +1987,10 @@ msgstr "Не вдалося від'єднати провайдера. Спроб
 msgid "Failed to update provider."
 msgstr "Не вдалося оновити постачальника."
 
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Failed to update thread settings."
+msgstr ""
+
 #. Fallback toast when changing account password fails
 #: src/dialogs/auth/change-password.tsx
 msgid "Failed to update your password. Please try again."
@@ -2128,6 +2152,10 @@ msgstr "Вільна форма"
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Французька"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "from"
+msgstr ""
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
@@ -3153,6 +3181,10 @@ msgstr "OpenRouter"
 msgid "opens in new tab"
 msgstr "відкриється у новій вкладці"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent…"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "За бажанням встановіть пароль, щоб лише користувачі з паролем могли переглядати ваше резюме через посилання."
@@ -3700,8 +3732,8 @@ msgid "Restore"
 msgstr "Відновити"
 
 #: src/routes/agent/-components/agent-chat.tsx
-msgid "Restore the resume to before this patch? This will roll back this patch and any patches applied after it."
-msgstr "Відновити резюме до стану до цього патчу? Це призведе до скасування цього патчу та будь-яких патчів, застосованих після нього."
+msgid "Restore the resume to before this patch?"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Restore this version?"
@@ -3725,6 +3757,10 @@ msgstr "Аналіз резюме завершено."
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
 msgstr "Зміст резюме"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Resume edit"
+msgstr ""
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Resume file"
@@ -3755,8 +3791,16 @@ msgid "Retry"
 msgstr "Повторити спробу"
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "Review edits"
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Перегляньте резюме на відповідність опису вакансії та поставте мені запитання, перш ніж вносити зміни до невизначених розділів."
+
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Review this edit"
+msgstr ""
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -4713,6 +4757,10 @@ msgid "This will remove all items from this section."
 msgstr "Це призведе до видалення всіх елементів з цього розділу."
 
 #: src/routes/agent/-components/agent-chat.tsx
+msgid "This will roll back this patch and any patches applied after it."
+msgstr ""
+
+#: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Thread actions"
 msgstr "Дії з темою"
@@ -5445,4 +5493,3 @@ msgstr "Зменшити"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Зулу"
-
