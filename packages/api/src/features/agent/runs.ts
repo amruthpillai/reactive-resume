@@ -1,5 +1,5 @@
 import type { UIMessage } from "ai";
-import { and, eq, isNotNull, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 
@@ -165,7 +165,16 @@ export async function reapStaleAgentRun(
 		await database
 			.update(schema.agentMessage)
 			.set({ status: "canceled", uiMessage: message as unknown as Record<string, unknown> })
-			.where(eq(schema.agentMessage.id, draft.id));
+			.where(
+				and(
+					eq(schema.agentMessage.id, draft.id),
+					// A continuation can claim the thread right after our conditional clear and start
+					// writing into this very row. Flip only the exact state we snapshotted — any
+					// concurrent write changes status or uiMessage and makes this a no-op.
+					eq(schema.agentMessage.status, "streaming"),
+					sql`${schema.agentMessage.uiMessage} = ${JSON.stringify(draft.uiMessage)}::jsonb`,
+				),
+			);
 	}
 }
 
