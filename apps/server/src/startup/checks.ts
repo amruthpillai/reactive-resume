@@ -61,7 +61,18 @@ async function validateLocalStoragePath() {
 	}
 }
 
+async function reapStaleAgentRuns() {
+	try {
+		const { reapStaleAgentRunsAtBoot } = await import("@reactive-resume/api/features/agent/runs");
+		await reapStaleAgentRunsAtBoot();
+	} catch (error) {
+		// A reap failure must not block serving traffic; stuck runs also heal lazily on access.
+		console.error("Failed to reap stale agent runs at boot", { error });
+	}
+}
+
 export async function runStartupChecks() {
 	await runDatabaseMigrations();
 	await validateLocalStoragePath();
+	await reapStaleAgentRuns();
 }

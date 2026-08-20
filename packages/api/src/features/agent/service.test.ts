@@ -126,6 +126,8 @@ vi.mock("./resume", () => ({
 vi.mock("./runs", () => ({
 	claimActiveAgentRun: claimActiveAgentRunMock,
 	clearActiveAgentRunIfCurrent: clearActiveAgentRunIfCurrentMock,
+	isStaleAgentRun: vi.fn(() => false),
+	reapStaleAgentRun: vi.fn(),
 }));
 vi.mock("./messages-persistence", () => messagesPersistenceMock);
 vi.mock("./streams", () => ({

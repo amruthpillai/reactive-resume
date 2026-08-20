@@ -22,7 +22,7 @@ import {
 	upsertAssistantUiMessage,
 } from "./messages-persistence";
 import { buildAgentDraftResumeName, buildUniqueAgentDraftSlug, normalizeAgentResumePatchOperations } from "./resume";
-import { claimActiveAgentRun, clearActiveAgentRunIfCurrent } from "./runs";
+import { claimActiveAgentRun, clearActiveAgentRunIfCurrent, isStaleAgentRun, reapStaleAgentRun } from "./runs";
 import { agentStreamLifecycle } from "./streams";
 import { buildAgentInstructions, buildAgentTools } from "./tools";
 
@@ -958,6 +958,21 @@ export const agentService = {
 			assertAgentEnvironment();
 
 			const thread = await getThread(input);
+
+			// Heal on open: clear a dead run's claim before reading messages so the client neither
+			// resumes a dead stream nor renders a perpetually "streaming" draft.
+			if (thread.activeRunId && isStaleAgentRun(thread)) {
+				await reapStaleAgentRun({
+					threadId: input.id,
+					userId: input.userId,
+					runId: thread.activeRunId,
+					streamId: thread.activeStreamId,
+				});
+				thread.activeRunId = null;
+				thread.activeStreamId = null;
+				thread.activeRunStartedAt = null;
+			}
+
 			const [messages, actions, attachments, resume] = await Promise.all([
 				listThreadMessages({ threadId: input.id, userId: input.userId }),
 				db
@@ -1052,7 +1067,16 @@ export const agentService = {
 				throw new ORPCError("CONFLICT", { message: "This thread is archived." });
 			}
 			if (thread.activeRunId) {
-				throw new ORPCError("CONFLICT", { message: "This thread already has an active run." });
+				if (!isStaleAgentRun(thread)) {
+					throw new ORPCError("CONFLICT", { message: "This thread already has an active run." });
+				}
+				// Lazy reap: a dead run's claim heals on the next send instead of CONFLICTing forever.
+				await reapStaleAgentRun({
+					threadId: input.threadId,
+					userId: input.userId,
+					runId: thread.activeRunId,
+					streamId: thread.activeStreamId,
+				});
 			}
 			if (!thread.workingResumeId || !thread.aiProviderId) {
 				throw new ORPCError("BAD_REQUEST", { message: "This thread is read-only." });
