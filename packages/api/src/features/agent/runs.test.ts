@@ -81,6 +81,7 @@ type ScriptedReaperDb = {
 function scriptedReaperDatabase(input: {
 	drafts: Array<Record<string, unknown>>;
 	actions: Array<Record<string, unknown>>;
+	clearMatches?: boolean;
 }) {
 	const state: ScriptedReaperDb = { updates: [] };
 	let selectCall = 0;
@@ -99,7 +100,12 @@ function scriptedReaperDatabase(input: {
 		update: () => ({
 			set: (set: unknown) => {
 				state.updates.push({ set });
-				return { where: async () => undefined };
+				return {
+					where: () =>
+						Object.assign(Promise.resolve(undefined), {
+							returning: async () => ((input.clearMatches ?? true) ? [{ id: "thread-1" }] : []),
+						}),
+				};
 			},
 		}),
 	};
@@ -138,5 +144,25 @@ describe("reapStaleAgentRun", () => {
 		);
 
 		expect(database.state.updates).toHaveLength(1);
+	});
+
+	// Regression: a concurrent request/replica can claim a replacement run (and insert a live
+	// draft) between the stale read and this reap. When the conditional clear matches nothing,
+	// the loser must not flip any draft.
+	it("does not touch drafts when another reaper already cleared or replaced the run", async () => {
+		const database = scriptedReaperDatabase({
+			drafts: [{ id: "row-live", uiMessage: { id: "ui-live", role: "assistant", parts: [] } }],
+			actions: [],
+			clearMatches: false,
+		});
+
+		await reapStaleAgentRun(
+			{ threadId: "thread-1", userId: "user-1", runId: "run-stale", streamId: "stream-stale" },
+			database as never,
+		);
+
+		// Only the (no-op) conditional clear ran; no draft status flip.
+		expect(database.state.updates).toHaveLength(1);
+		expect(database.state.updates[0]?.set).toMatchObject({ activeRunId: null });
 	});
 });

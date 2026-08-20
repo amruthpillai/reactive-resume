@@ -46,7 +46,7 @@ export async function clearActiveAgentRunIfCurrent(
 	input: { threadId: string; userId: string; runId: string; streamId: string | null },
 	database: AgentRunStateDb = db,
 ) {
-	await database
+	const cleared = await database
 		.update(schema.agentThread)
 		.set({ activeRunId: null, activeStreamId: null, activeRunStartedAt: null })
 		.where(
@@ -58,7 +58,10 @@ export async function clearActiveAgentRunIfCurrent(
 					? isNull(schema.agentThread.activeStreamId)
 					: eq(schema.agentThread.activeStreamId, input.streamId),
 			),
-		);
+		)
+		.returning({ id: schema.agentThread.id });
+
+	return cleared.length === 1;
 }
 
 type ReapableActionRow = Pick<
@@ -120,8 +123,9 @@ export async function reapStaleAgentRun(
 	input: { threadId: string; userId: string; runId: string; streamId: string | null },
 	database: AgentRunReaperDb = db,
 ) {
-	await clearActiveAgentRunIfCurrent(input, database);
-
+	// Snapshot drafts BEFORE clearing the claim: while the stale claim still holds, no new run can
+	// start, so every "streaming" draft visible here belongs to the dead run — a draft inserted by
+	// a replacement run claimed after this point is never in the snapshot.
 	const drafts = await database
 		.select()
 		.from(schema.agentMessage)
@@ -132,6 +136,11 @@ export async function reapStaleAgentRun(
 				eq(schema.agentMessage.status, "streaming"),
 			),
 		);
+
+	// Concurrent reapers (another request or replica) race on this conditional clear; the loser
+	// must not touch drafts — the thread has already moved on under a different run.
+	const cleared = await clearActiveAgentRunIfCurrent(input, database);
+	if (!cleared) return;
 
 	for (const draft of drafts) {
 		const actions = await database
