@@ -13,3 +13,9 @@ describe("social provider signup policy", () => {
 		},
 	);
 });
+
+describe("session freshness", () => {
+	it("disables the freshness gate so provider unlinking works for week-old sessions", () => {
+		expect(auth.options.session?.freshAge).toBe(0);
+	});
+});

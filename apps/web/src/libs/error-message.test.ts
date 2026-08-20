@@ -11,8 +11,16 @@ describe("getReadableErrorMessage", () => {
 		expect(getReadableErrorMessage(new Error("boom"), "fallback")).toBe("boom");
 	});
 
+	it("returns the message of a plain error object (Better Auth client errors)", () => {
+		expect(getReadableErrorMessage({ code: "SESSION_NOT_FRESH", message: "Session is not fresh" }, "fallback")).toBe(
+			"Session is not fresh",
+		);
+	});
+
 	it("returns fallback for unknown shapes", () => {
 		expect(getReadableErrorMessage({ random: "object" }, "fallback")).toBe("fallback");
+		expect(getReadableErrorMessage({ message: "" }, "fallback")).toBe("fallback");
+		expect(getReadableErrorMessage({ message: 42 }, "fallback")).toBe("fallback");
 		expect(getReadableErrorMessage(null, "fallback")).toBe("fallback");
 		expect(getReadableErrorMessage(undefined, "fallback")).toBe("fallback");
 		expect(getReadableErrorMessage(42, "fallback")).toBe("fallback");

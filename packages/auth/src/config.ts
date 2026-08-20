@@ -203,6 +203,12 @@ const getAuthConfig = () => {
 			},
 		},
 
+		// Better Auth gates `/unlink-account` (and `/list-sessions`) behind a "fresh"
+		// session, which defaults to one day old. Sessions here live for a week and
+		// there is no re-authentication flow to refresh that timestamp, so disconnecting
+		// a provider failed with `SESSION_NOT_FRESH` for anyone who signed in yesterday.
+		session: { freshAge: 0 },
+
 		account: {
 			accountLinking: {
 				enabled: true,

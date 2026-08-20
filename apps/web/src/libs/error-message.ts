@@ -3,6 +3,11 @@ import { ORPCError } from "@orpc/client";
 export function getReadableErrorMessage(error: unknown, fallback: string): string {
 	if (typeof error === "string" && error) return error;
 	if (error instanceof Error && error.message) return error.message;
+	// Better Auth client errors are plain objects ({ code, message, status }), not Error instances.
+	if (typeof error === "object" && error !== null && "message" in error) {
+		const { message } = error as { message?: unknown };
+		if (typeof message === "string" && message) return message;
+	}
 	return fallback;
 }
 
