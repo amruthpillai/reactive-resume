@@ -16,6 +16,7 @@ import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
 import { getStorageService, inferContentType } from "../storage/service";
 import { pruneAgentModelContext } from "./context";
+import { mergeClientToolResponses } from "./messages-merge";
 import {
 	applyStepToUiMessage,
 	deleteDraftIfEmpty,
@@ -205,63 +206,6 @@ type AgentToolPart = UIMessage["parts"][number] & {
 	toolCallId?: string;
 };
 
-type AnsweredAskUserQuestionPart = AgentToolPart & {
-	toolCallId: string;
-};
-
-function isAnsweredAskUserQuestionPart(part: UIMessage["parts"][number]): part is AnsweredAskUserQuestionPart {
-	const toolPart = part as AgentToolPart;
-	return (
-		toolPart.type === "tool-ask_user_question" &&
-		typeof toolPart.toolCallId === "string" &&
-		(toolPart.state === "output-available" || toolPart.state === "output-error")
-	);
-}
-
-function mergeAskUserQuestionOutputs(existingMessage: UIMessage, incomingMessage: UIMessage): UIMessage {
-	const answeredParts = new Map<string, AgentToolPart>();
-
-	for (const part of incomingMessage.parts) {
-		if (isAnsweredAskUserQuestionPart(part)) answeredParts.set(part.toolCallId, part);
-	}
-
-	let didMerge = false;
-	const parts = existingMessage.parts.map((part) => {
-		const existingPart = part as AgentToolPart;
-		if (
-			existingPart.type !== "tool-ask_user_question" ||
-			typeof existingPart.toolCallId !== "string" ||
-			existingPart.state !== "input-available"
-		) {
-			return part;
-		}
-
-		const answeredPart = answeredParts.get(existingPart.toolCallId);
-		if (!answeredPart) return part;
-
-		didMerge = true;
-		if (answeredPart.state === "output-error") {
-			return {
-				...part,
-				state: "output-error",
-				errorText: answeredPart.errorText ?? "User answer failed.",
-			} as UIMessage["parts"][number];
-		}
-
-		return {
-			...part,
-			state: "output-available",
-			output: answeredPart.output,
-		} as UIMessage["parts"][number];
-	});
-
-	if (!didMerge) {
-		throw new ORPCError("BAD_REQUEST", { message: "No matching unanswered user question was found." });
-	}
-
-	return { ...existingMessage, parts };
-}
-
 function getFirstUnansweredAskUserQuestionToolCallId(message: UIMessage) {
 	const part = message.parts.find((part) => {
 		const toolPart = part as AgentToolPart;
@@ -276,7 +220,7 @@ function getFirstUnansweredAskUserQuestionToolCallId(message: UIMessage) {
 }
 
 function answerAskUserQuestionToolCall(message: UIMessage, toolCallId: string, answer: string) {
-	return mergeAskUserQuestionOutputs(message, {
+	const { message: merged } = mergeClientToolResponses(message, {
 		...message,
 		parts: [
 			{
@@ -288,6 +232,8 @@ function answerAskUserQuestionToolCall(message: UIMessage, toolCallId: string, a
 			} as UIMessage["parts"][number],
 		],
 	});
+
+	return merged;
 }
 
 function attachmentLabel(attachment: AgentAttachmentRecord) {
@@ -546,7 +492,22 @@ async function updateAssistantToolResultMessage(input: { userId: string; threadI
 		throw new ORPCError("BAD_REQUEST", { message: "The answered assistant message was not found." });
 	}
 
-	const mergedMessage = mergeAskUserQuestionOutputs(toMessage(existingRow), input.message);
+	const {
+		message: mergedMessage,
+		mergedCount,
+		alreadyResolvedCount,
+		conflictingCount,
+	} = mergeClientToolResponses(toMessage(existingRow), input.message);
+
+	if (conflictingCount > 0) {
+		throw new ORPCError("BAD_REQUEST", { message: "This approval was already answered with a different decision." });
+	}
+	if (mergedCount === 0 && alreadyResolvedCount > 0) {
+		throw new ORPCError("CONFLICT", { message: "This response was already handled." });
+	}
+	if (mergedCount === 0) {
+		throw new ORPCError("BAD_REQUEST", { message: "No matching unanswered user question was found." });
+	}
 
 	await db
 		.update(schema.agentMessage)
@@ -1137,6 +1098,21 @@ export const agentService = {
 					userId: input.userId,
 				}),
 			]);
+			// Merge client tool responses (question answers, approval decisions) BEFORE claiming a
+			// run: an already-handled response CONFLICTs without consuming the thread's run slot.
+			let continuation: { rowId: string; message: UIMessage } | undefined;
+			if (input.message.role === "assistant") {
+				if (attachments.length > 0) {
+					throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
+				}
+
+				continuation = await updateAssistantToolResultMessage({
+					userId: input.userId,
+					threadId: input.threadId,
+					message: input.message,
+				});
+			}
+
 			const runId = generateId();
 			const streamId = generateId();
 			const controller = new AbortController();
@@ -1164,16 +1140,7 @@ export const agentService = {
 			try {
 				let attachmentsForModel: AgentAttachmentRecord[] = [];
 
-				if (input.message.role === "assistant") {
-					if (attachments.length > 0) {
-						throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
-					}
-
-					const continuation = await updateAssistantToolResultMessage({
-						userId: input.userId,
-						threadId: input.threadId,
-						message: input.message,
-					});
+				if (continuation) {
 					draftRowId = continuation.rowId;
 					draftUiMessage = continuation.message;
 				} else {
