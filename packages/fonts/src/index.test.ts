@@ -200,9 +200,15 @@ describe("getPdfFallbackFontFamilies", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "th-TH" })).toEqual(["Noto Sans Thai", "Noto Sans"]);
 	});
 
+	it("uses Noto Emoji for detected emoji content, for serif and sans stacks alike (#3321)", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["emoji"] })).toEqual(["Noto Emoji", "Noto Sans"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["emoji"] })).toEqual(["Noto Emoji", "Noto Serif"]);
+	});
+
 	it("does not append the Simplified Chinese safety net for non-CJK scripts", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["arabic"] })).toEqual(["Noto Sans Arabic", "Noto Sans"]);
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["thai"] })).not.toContain("Noto Sans SC");
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["emoji"] })).not.toContain("Noto Sans SC");
 	});
 
 	it("orders the locale script first, then content scripts (mixed RTL + CJK resume)", () => {

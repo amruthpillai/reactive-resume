@@ -75,8 +75,10 @@ export function isCJKLocale(locale: Locale): boolean {
 // because react-pdf (unlike a browser) has no automatic system-font fallback:
 // a glyph only renders if a registered font contains it. We pick the matching
 // Noto font per script so e.g. Hangul → Noto KR, Arabic → Noto Arabic, instead
-// of falling back to a Latin/Han-only font and producing tofu.
-export type Script = "hangul" | "kana" | "han-traditional" | "han-simplified" | "arabic" | "hebrew" | "thai";
+// of falling back to a Latin/Han-only font and producing tofu. "emoji" is
+// content-detected only (never locale-derived) and resolves to Noto Emoji so
+// pictographs and regional indicators render instead of mojibake (#3321).
+export type Script = "hangul" | "kana" | "han-traditional" | "han-simplified" | "arabic" | "hebrew" | "thai" | "emoji";
 
 // The CJK subset of `Script`. CJK needs extra per-character line breaking that
 // must NOT be applied to Arabic (cursive, joined letters) or Thai (combining
