@@ -696,7 +696,13 @@ async function applyResumePatch(input: {
 	// signed tool input, so an approval cannot be replayed against a changed resume either.
 	if (input.baseUpdatedAt) {
 		const baseTime = new Date(input.baseUpdatedAt).getTime();
-		if (!Number.isNaN(baseTime) && baseTime !== before.updatedAt.getTime()) {
+		// An unparseable value must fail loudly rather than silently skip the revision check.
+		if (Number.isNaN(baseTime)) {
+			throw new Error(
+				`baseUpdatedAt is not a valid timestamp. Pass the updatedAt from the read_resume or apply_resume_patch result verbatim (currently ${before.updatedAt.toISOString()}).`,
+			);
+		}
+		if (baseTime !== before.updatedAt.getTime()) {
 			throw new Error(
 				`The resume changed after it was read (its updatedAt is now ${before.updatedAt.toISOString()}). Re-read the resume and rebuild the patch against the current document.`,
 			);

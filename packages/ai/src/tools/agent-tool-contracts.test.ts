@@ -31,6 +31,21 @@ describe("applyResumePatchInputSchema", () => {
 		).toBe(true);
 		expect(applyResumePatchInputSchema.safeParse({ title: "Edit", operations: [] }).success).toBe(false);
 	});
+
+	it("accepts a strict ISO baseUpdatedAt and rejects malformed values", () => {
+		const operations = [{ op: "replace", path: "/basics/name", value: "Bob" }];
+
+		expect(
+			applyResumePatchInputSchema.safeParse({
+				title: "Edit",
+				baseUpdatedAt: "2026-08-20T10:15:00.000Z",
+				operations,
+			}).success,
+		).toBe(true);
+		expect(
+			applyResumePatchInputSchema.safeParse({ title: "Edit", baseUpdatedAt: "yesterday", operations }).success,
+		).toBe(false);
+	});
 });
 
 describe("applyResumePatchOutputSchema", () => {

@@ -17,8 +17,9 @@ export const applyResumePatchInputSchema = z.object({
 	// The `updatedAt` of the read_resume / apply_resume_patch result the operations were built
 	// against. Execution rejects the patch when the resume has changed since, so index-based
 	// operations can never silently target different items (e.g. after a user edit while an
-	// approval was pending). Optional for weaker models; enforced when present.
-	baseUpdatedAt: z.string().optional(),
+	// approval was pending). Optional for weaker models; strict ISO when present, so a malformed
+	// value is rejected at the schema (SDK re-asks) instead of silently skipping the check.
+	baseUpdatedAt: z.iso.datetime().optional(),
 	operations: z.array(jsonPatchOperationSchema).min(1),
 });
 

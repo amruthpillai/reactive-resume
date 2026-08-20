@@ -248,11 +248,20 @@ describe("pruneAgentModelContext — tier 3 (turn dropping)", () => {
 	});
 
 	it("never drops the final two turns even when still over budget", () => {
-		const messages = textTurn("only question ".repeat(200), "only answer ".repeat(200));
+		const messages = [
+			...textTurn("first question ".repeat(100), "first answer ".repeat(100)),
+			...textTurn("second question ".repeat(100), "second answer ".repeat(100)),
+			...textTurn("third question ".repeat(100), "third answer ".repeat(100)),
+		];
 
 		const pruned = pruneAgentModelContext(messages, 10);
 
-		expect(pruned).toHaveLength(2);
+		// Only the oldest turn is droppable; the penultimate and final turns must both survive
+		// even though the result is still over budget.
+		expect(pruned).toHaveLength(4);
+		expect(JSON.stringify(pruned)).not.toContain("first question");
+		expect(JSON.stringify(pruned)).toContain("second question");
+		expect(JSON.stringify(pruned)).toContain("third question");
 	});
 });
 
