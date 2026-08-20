@@ -96,9 +96,11 @@ vi.mock("drizzle-orm", () => ({
 	sql: () => ({ type: "sql" }),
 }));
 
-vi.mock("ai", () => ({
+// Spread-actual: pure helpers (isStepCount, safeValidateUIMessages, pruneMessages, ...) stay real;
+// only the scripted seams are mocked.
+vi.mock("ai", async (importOriginal) => ({
+	...(await importOriginal<typeof import("ai")>()),
 	convertToModelMessages: vi.fn(),
-	stepCountIs: vi.fn(),
 	ToolLoopAgent: vi.fn(),
 }));
 
