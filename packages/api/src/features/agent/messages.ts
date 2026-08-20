@@ -43,6 +43,8 @@ export const messagesRouter = {
 		.input(
 			z.object({
 				threadId: z.string(),
+				// Deprecated and ignored: partial content now persists server-side via the run's
+				// abort path. Kept in the schema for one release so mid-deploy clients still parse.
 				partialMessage: z.custom<UIMessage>(isUiMessage, { message: "Invalid UI message." }).optional(),
 			}),
 		)
@@ -52,7 +54,6 @@ export const messagesRouter = {
 			agentService.messages.stop({
 				userId: context.user.id,
 				threadId: input.threadId,
-				...(input.partialMessage ? { partialMessage: input.partialMessage } : {}),
 			}),
 		),
 

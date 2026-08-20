@@ -11,6 +11,12 @@ const dbMock = {
 
 const clearActiveAgentRunIfCurrentMock = vi.fn();
 const claimActiveAgentRunMock = vi.fn();
+const messagesPersistenceMock = {
+	applyStepToUiMessage: vi.fn((message: unknown) => message),
+	insertDraftAssistantMessage: vi.fn(),
+	upsertAssistantUiMessage: vi.fn(),
+	deleteDraftIfEmpty: vi.fn(),
+};
 const storageServiceMock = {
 	delete: vi.fn(),
 	write: vi.fn(),
@@ -121,6 +127,7 @@ vi.mock("./runs", () => ({
 	claimActiveAgentRun: claimActiveAgentRunMock,
 	clearActiveAgentRunIfCurrent: clearActiveAgentRunIfCurrentMock,
 }));
+vi.mock("./messages-persistence", () => messagesPersistenceMock);
 vi.mock("./streams", () => ({
 	agentStreamLifecycle: { create: vi.fn(), resume: vi.fn() },
 }));
@@ -137,6 +144,10 @@ beforeEach(() => {
 	dbMock.transaction.mockImplementation(async <T>(callback: (tx: typeof dbMock) => Promise<T>) => callback(dbMock));
 	clearActiveAgentRunIfCurrentMock.mockReset();
 	claimActiveAgentRunMock.mockReset();
+	for (const mock of Object.values(messagesPersistenceMock)) mock.mockReset();
+	messagesPersistenceMock.applyStepToUiMessage.mockImplementation((message: unknown) => message);
+	messagesPersistenceMock.insertDraftAssistantMessage.mockResolvedValue({ rowId: "draft-row-1", sequence: 1 });
+	messagesPersistenceMock.upsertAssistantUiMessage.mockResolvedValue({ rowId: "draft-row-1" });
 	for (const mock of Object.values(storageServiceMock)) mock.mockReset();
 	for (const mock of Object.values(resumeServiceMock)) mock.mockReset();
 	for (const mock of Object.values(aiProvidersServiceMock)) mock.mockReset();
@@ -883,6 +894,114 @@ describe("agentService.messages.send", () => {
 			}),
 		);
 		expect(convertToModelMessages).toHaveBeenCalledWith([userMessage.uiMessage, answeredAssistantModelInput]);
+	});
+
+	// Regression (defect 8): a question continuation streams into the SAME uiMessage id; onFinish
+	// must upsert the existing assistant row instead of inserting a duplicate row.
+	it("continues the existing assistant row on a question continuation instead of inserting a duplicate", async () => {
+		const activeThread = buildActiveThread();
+		const userMessage = {
+			id: "message-user-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: { id: "ui-user-1", role: "user", parts: [{ type: "text", text: "Change the name" }] },
+		};
+		const question = { question: "How broadly should I rename?", choices: ["Only the header"] };
+		const unansweredAssistantMessage = {
+			id: "message-assistant-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "assistant",
+			status: "completed",
+			sequence: 1,
+			uiMessage: {
+				id: "ui-assistant-1",
+				role: "assistant",
+				parts: [{ type: "tool-ask_user_question", toolCallId: "call-1", state: "input-available", input: question }],
+			},
+		};
+		const answeredAssistantMessage = {
+			...unansweredAssistantMessage,
+			uiMessage: {
+				...unansweredAssistantMessage.uiMessage,
+				parts: [
+					{
+						type: "tool-ask_user_question",
+						toolCallId: "call-1",
+						state: "output-available",
+						input: question,
+						output: "Only the header",
+					},
+				],
+			},
+		};
+
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectOrderByResult([userMessage, unansweredAssistantMessage]))
+			.mockImplementationOnce(() => selectOrderByResult([userMessage, answeredAssistantMessage]));
+		dbMock.update.mockImplementation(() => ({ set: vi.fn(() => ({ where: vi.fn(async () => undefined) })) }));
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+
+		const [{ convertToModelMessages, ToolLoopAgent }, { agentStreamLifecycle }, { streamToEventIterator }] =
+			await Promise.all([import("ai"), import("./streams"), import("@orpc/server")]);
+		vi.mocked(convertToModelMessages).mockResolvedValue([
+			{ role: "user", content: [{ type: "text", text: "Change the name" }] },
+		]);
+
+		let uiStreamOptions: Record<string, unknown> | undefined;
+		class MockToolLoopAgent {
+			stream = vi.fn(async () => ({
+				toUIMessageStream: vi.fn((options: Record<string, unknown>) => {
+					uiStreamOptions = options;
+					return new ReadableStream();
+				}),
+			}));
+		}
+		vi.mocked(ToolLoopAgent).mockImplementation(MockToolLoopAgent as never);
+		vi.mocked(agentStreamLifecycle.create).mockImplementation((_streamId, makeStream) => {
+			(makeStream as () => unknown)();
+			return Promise.resolve(new ReadableStream());
+		});
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./service");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: answeredAssistantMessage.uiMessage as any,
+		});
+
+		const onFinish = uiStreamOptions?.onFinish as (event: Record<string, unknown>) => Promise<void>;
+		const continuedMessage = {
+			...answeredAssistantMessage.uiMessage,
+			parts: [...answeredAssistantMessage.uiMessage.parts, { type: "text", text: "Renamed the header." }],
+		};
+		await onFinish({ responseMessage: continuedMessage, isAborted: false, isContinuation: true, messages: [] });
+
+		expect(messagesPersistenceMock.insertDraftAssistantMessage).not.toHaveBeenCalled();
+		expect(dbMock.insert).not.toHaveBeenCalled();
+		expect(messagesPersistenceMock.upsertAssistantUiMessage).toHaveBeenCalledWith(
+			expect.objectContaining({
+				rowId: "message-assistant-1",
+				status: "completed",
+				message: expect.objectContaining({ id: "ui-assistant-1" }),
+			}),
+		);
 	});
 
 	it("repairs legacy user-answer messages that followed an unresolved ask-user-question tool call", async () => {

@@ -809,11 +809,7 @@ export function AgentChat({
 	};
 
 	const stopRun = async () => {
-		const last = messages.at(-1);
-		await client.agent.messages.stop({
-			threadId,
-			...(last?.role === "assistant" ? { partialMessage: last } : {}),
-		});
+		await client.agent.messages.stop({ threadId });
 	};
 
 	const copyConversationJson = () => {

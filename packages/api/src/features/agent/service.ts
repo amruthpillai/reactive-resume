@@ -15,6 +15,12 @@ import { getAgentModel } from "../ai/service";
 import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
 import { getStorageService, inferContentType } from "../storage/service";
+import {
+	applyStepToUiMessage,
+	deleteDraftIfEmpty,
+	insertDraftAssistantMessage,
+	upsertAssistantUiMessage,
+} from "./messages-persistence";
 import { buildAgentDraftResumeName, buildUniqueAgentDraftSlug, normalizeAgentResumePatchOperations } from "./resume";
 import { claimActiveAgentRun, clearActiveAgentRunIfCurrent } from "./runs";
 import { agentStreamLifecycle } from "./streams";
@@ -44,7 +50,6 @@ const ROLLED_BACK_MESSAGE = "This patch was rolled back when the resume was rest
 
 const activeRunControllers = new Map<string, AbortController>();
 const activeRunTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
-const canceledRunsWithPersistedPartial = new Set<string>();
 
 // Abort reasons MUST be an AbortError: the AI SDK only treats `err.name === "AbortError"`
 // (via isAbortError) as a cancellation. A bare-string reason is treated as a genuine stream
@@ -560,7 +565,7 @@ async function updateAssistantToolResultMessage(input: { userId: string; threadI
 		.set({ lastMessageAt: new Date() })
 		.where(and(eq(schema.agentThread.id, input.threadId), eq(schema.agentThread.userId, input.userId)));
 
-	return mergedMessage;
+	return { message: mergedMessage, rowId: existingRow.id };
 }
 
 async function repairLegacyAskUserQuestionAnswers(
@@ -619,7 +624,6 @@ async function cleanupActiveRun(input: {
 	activeRunControllers.delete(input.runId);
 	clearTimeout(activeRunTimeouts.get(input.runId));
 	activeRunTimeouts.delete(input.runId);
-	canceledRunsWithPersistedPartial.delete(input.runId);
 
 	try {
 		await clearActiveAgentRunIfCurrent(input);
@@ -695,6 +699,7 @@ async function applyResumePatch(input: {
 	userId: string;
 	threadId: string;
 	resumeId: string;
+	messageId?: string;
 	title: string;
 	summary?: string;
 	operations: JsonPatchOperation[];
@@ -718,6 +723,7 @@ async function applyResumePatch(input: {
 					userId: input.userId,
 					threadId: input.threadId,
 					resumeId: input.resumeId,
+					...(input.messageId ? { messageId: input.messageId } : {}),
 					kind: "resume_patch",
 					status: "applied",
 					title: input.title,
@@ -761,6 +767,7 @@ function createAgent(input: {
 	userId: string;
 	threadId: string;
 	resumeId: string;
+	draftRowId?: string;
 	provider: {
 		provider: Parameters<typeof getModel>[0]["provider"];
 		model: string;
@@ -801,6 +808,7 @@ function createAgent(input: {
 					userId: input.userId,
 					threadId: input.threadId,
 					resumeId: input.resumeId,
+					...(input.draftRowId ? { messageId: input.draftRowId } : {}),
 					title,
 					...(summary !== undefined ? { summary } : {}),
 					operations,
@@ -1087,6 +1095,13 @@ export const agentService = {
 				setTimeout(() => controller.abort(abortReason("RUN_TIMEOUT")), AGENT_RUN_TIMEOUT_MS),
 			);
 
+			// Row + message the run streams into. A continuation reuses the existing assistant
+			// row (same uiMessage id); a fresh turn inserts a "streaming" draft row below.
+			let draftRowId: string | undefined;
+			let insertedDraft = false;
+			const responseMessageId = generateId();
+			let draftUiMessage: UIMessage = { id: responseMessageId, role: "assistant", parts: [] };
+
 			try {
 				let attachmentsForModel: AgentAttachmentRecord[] = [];
 
@@ -1095,11 +1110,13 @@ export const agentService = {
 						throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
 					}
 
-					await updateAssistantToolResultMessage({
+					const continuation = await updateAssistantToolResultMessage({
 						userId: input.userId,
 						threadId: input.threadId,
 						message: input.message,
 					});
+					draftRowId = continuation.rowId;
+					draftUiMessage = continuation.message;
 				} else {
 					attachmentsForModel = attachments;
 					const sequence = await getNextMessageSequence(input.threadId);
@@ -1140,10 +1157,24 @@ export const agentService = {
 				const messages = messageRows.map(toMessage);
 				const modelMessages = await convertToModelMessages(messages.map(toModelInputMessage));
 				const attachmentModelParts = buildAttachmentModelParts(await readAttachmentModelInputs(attachmentsForModel));
+
+				// Draft row inserted after the replay snapshot (so it is not replayed) and before the
+				// stream starts, so a crash mid-run leaves a resumable record instead of nothing.
+				if (input.message.role === "user") {
+					const draft = await insertDraftAssistantMessage({
+						userId: input.userId,
+						threadId: input.threadId,
+						uiMessageId: responseMessageId,
+					});
+					draftRowId = draft.rowId;
+					insertedDraft = true;
+				}
+
 				const agent = createAgent({
 					userId: input.userId,
 					threadId: input.threadId,
 					resumeId: thread.workingResumeId,
+					...(draftRowId ? { draftRowId } : {}),
 					provider: {
 						provider: runnableProvider.provider,
 						model: runnableProvider.model,
@@ -1161,25 +1192,41 @@ export const agentService = {
 				const result = await agent.stream({
 					messages: attachModelPartsToLatestUserMessage(modelMessages, attachmentModelParts),
 					abortSignal: controller.signal,
+					// Crash-safety: fold each finished step into the draft row so a process death
+					// mid-run loses at most the current step, never the whole transcript.
+					onStepEnd: async (step) => {
+						try {
+							draftUiMessage = applyStepToUiMessage(draftUiMessage, step);
+							const upserted = await upsertAssistantUiMessage({
+								userId: input.userId,
+								threadId: input.threadId,
+								...(draftRowId ? { rowId: draftRowId } : {}),
+								message: draftUiMessage,
+								status: "streaming",
+							});
+							draftRowId = upserted.rowId;
+						} catch (error) {
+							console.error("[agent] Failed to persist step draft", error);
+						}
+					},
 				});
 
 				return streamToEventIterator(
 					await agentStreamLifecycle.create(streamId, () =>
 						result.toUIMessageStream({
 							originalMessages: messages,
-							generateMessageId: generateId,
+							generateMessageId: () => responseMessageId,
 							sendSources: true,
 							onFinish: async ({ responseMessage, isAborted }) => {
 								let persistError: unknown;
 								try {
-									if (!(isAborted && canceledRunsWithPersistedPartial.has(runId))) {
-										await persistMessage({
-											userId: input.userId,
-											threadId: input.threadId,
-											message: responseMessage,
-											status: isAborted ? "canceled" : "completed",
-										});
-									}
+									await upsertAssistantUiMessage({
+										userId: input.userId,
+										threadId: input.threadId,
+										...(draftRowId ? { rowId: draftRowId } : {}),
+										message: responseMessage,
+										status: isAborted ? "canceled" : "completed",
+									});
 								} catch (error) {
 									persistError = error;
 									throw error;
@@ -1198,6 +1245,11 @@ export const agentService = {
 					),
 				);
 			} catch (error) {
+				if (insertedDraft && draftRowId) {
+					await deleteDraftIfEmpty({ rowId: draftRowId, threadId: input.threadId, userId: input.userId }).catch(
+						(cleanupError: unknown) => console.error("[agent] Failed to delete empty draft", cleanupError),
+					);
+				}
 				await cleanupActiveRun({
 					threadId: input.threadId,
 					userId: input.userId,
@@ -1209,47 +1261,26 @@ export const agentService = {
 			}
 		},
 
-		stop: async (input: { userId: string; threadId: string; partialMessage?: UIMessage }) => {
+		// Server-authored cancellation: the abort makes onFinish({isAborted: true}) persist exactly
+		// what the server generated. The deprecated client `partialMessage` is ignored.
+		stop: async (input: { userId: string; threadId: string }) => {
 			assertAgentEnvironment();
 
 			const thread = await getThread({ id: input.threadId, userId: input.userId });
 			const activeRunId = thread.activeRunId;
 			const activeStreamId = thread.activeStreamId;
+			if (!activeRunId) return;
 
-			let persistError: unknown;
-			let cleanupError: unknown;
-			try {
-				if (input.partialMessage) {
-					await persistMessage({
-						userId: input.userId,
-						threadId: input.threadId,
-						message: input.partialMessage,
-						status: "canceled",
-					});
-					if (activeRunId) canceledRunsWithPersistedPartial.add(activeRunId);
-				}
-			} catch (error) {
-				persistError = error;
-			} finally {
-				if (activeRunId) {
-					activeRunControllers.get(activeRunId)?.abort(abortReason("USER_STOPPED"));
-					activeRunControllers.delete(activeRunId);
-					try {
-						await clearActiveAgentRunIfCurrent({
-							threadId: input.threadId,
-							userId: input.userId,
-							runId: activeRunId,
-							streamId: activeStreamId,
-						});
-					} catch (error) {
-						cleanupError = error;
-						if (persistError) console.error("[agent] Failed to clear active run after stop persistence error", error);
-					}
-				}
-			}
-
-			if (persistError) throw persistError;
-			if (cleanupError) throw cleanupError;
+			activeRunControllers.get(activeRunId)?.abort(abortReason("USER_STOPPED"));
+			activeRunControllers.delete(activeRunId);
+			clearTimeout(activeRunTimeouts.get(activeRunId));
+			activeRunTimeouts.delete(activeRunId);
+			await clearActiveAgentRunIfCurrent({
+				threadId: input.threadId,
+				userId: input.userId,
+				runId: activeRunId,
+				streamId: activeStreamId,
+			});
 		},
 		resume: async (input: { userId: string; threadId: string }) => {
 			assertAgentEnvironment();
