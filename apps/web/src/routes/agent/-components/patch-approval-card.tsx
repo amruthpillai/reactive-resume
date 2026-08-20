@@ -16,6 +16,7 @@ export type PatchApprovalResponse = {
 
 export type PatchApprovalCardProps = {
 	part: UIMessage["parts"][number];
+	disabled?: boolean;
 	onRespond: (response: PatchApprovalResponse) => void;
 };
 
@@ -44,7 +45,8 @@ export function OperationRow({ operation }: { operation: PatchOperationLike }) {
 			<span className="shrink-0 text-foreground">{String(operation.path ?? "")}</span>
 			{typeof operation.from === "string" ? (
 				<span className="truncate text-muted-foreground">
-					<Trans>from</Trans> {operation.from}
+					{/* One translatable phrase: several languages place the source marker after the path. */}
+					<Trans>Source: {operation.from}</Trans>
 				</span>
 			) : null}
 			{valuePreview ? <span className="truncate text-muted-foreground">{valuePreview}</span> : null}
@@ -54,7 +56,7 @@ export function OperationRow({ operation }: { operation: PatchOperationLike }) {
 
 // Renders the approval lifecycle of an apply_resume_patch call: a pending request with
 // Approve/Deny, the waiting state after a response, and the declined terminal state.
-export function PatchApprovalCard({ part, onRespond }: PatchApprovalCardProps) {
+export function PatchApprovalCard({ part, disabled, onRespond }: PatchApprovalCardProps) {
 	const [reason, setReason] = useState("");
 	const fields = part as ApprovalPartFields;
 	const input = (typeof fields.input === "object" && fields.input ? fields.input : {}) as Record<string, unknown>;
@@ -76,7 +78,9 @@ export function PatchApprovalCard({ part, onRespond }: PatchApprovalCardProps) {
 		);
 	}
 
-	const isPending = state === "approval-requested" && approvalId !== null;
+	// Read-only threads keep the request visible but never actionable: responding would only
+	// change local state before the server rejects the continuation.
+	const isPending = state === "approval-requested" && approvalId !== null && !disabled;
 
 	return (
 		<div className="space-y-3 text-sm">
@@ -105,6 +109,7 @@ export function PatchApprovalCard({ part, onRespond }: PatchApprovalCardProps) {
 					<Textarea
 						rows={1}
 						value={reason}
+						aria-label={t`Optional note for the agent`}
 						placeholder={t`Optional note for the agent…`}
 						className="min-h-8 text-xs"
 						onChange={(event) => setReason(event.target.value)}
@@ -135,8 +140,10 @@ export function PatchApprovalCard({ part, onRespond }: PatchApprovalCardProps) {
 				<p className={cn("text-muted-foreground text-xs")}>
 					{fields.approval?.approved === false ? (
 						<Trans>Denied — waiting for the agent…</Trans>
-					) : (
+					) : fields.approval?.approved === true ? (
 						<Trans>Approved — waiting for the agent…</Trans>
+					) : (
+						<Trans>This edit request can no longer be answered.</Trans>
 					)}
 				</p>
 			)}

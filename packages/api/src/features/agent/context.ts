@@ -1,5 +1,6 @@
 import type { ModelMessage } from "ai";
 import { pruneMessages } from "ai";
+import { estimateTokenCount as estimateTextTokenCount } from "tokenx";
 
 // Pure model-context pruning, wired into the agent loop via prepareStep so it runs before every
 // step. Tier 0 always runs (a stale resume snapshot is actively harmful — shifted array indexes);
@@ -11,14 +12,39 @@ const SNAPSHOT_TOOL_NAMES = new Set(["read_resume", "apply_resume_patch"]);
 const SUPERSEDED_SNAPSHOT_NOTE =
 	"Superseded resume snapshot removed. Base further edits on the resume state in the latest read_resume or apply_resume_patch result.";
 const PRUNED_TOOL_RESULT_NOTE = "Older tool result pruned to fit the context budget.";
-const PRUNED_ATTACHMENT_NOTE =
-	"Attachment content removed to fit the context budget. Text, Markdown, and JSON attachments can be re-read with the read_attachment tool using their attachmentId from the conversation.";
 
 type LoosePart = Record<string, unknown> & { type: string };
 
+// Binary attachment data (up to 25MB per file) must never be JSON.stringified — each byte would
+// expand into a numeric-key object entry and repeated estimation would exhaust the heap.
+function isBinary(value: unknown): value is ArrayBufferView | ArrayBuffer {
+	return ArrayBuffer.isView(value) || value instanceof ArrayBuffer;
+}
+
+// Manual walk instead of JSON.stringify: a Buffer's toJSON() runs before any stringify replacer,
+// so serialization-based estimation would expand binary into per-byte entries (hundreds of MB of
+// JSON for one allowed 25MB attachment). String leaves go through tokenx; binary counts as
+// opaque bytes; structural syntax gets a small flat cost.
+function estimateTokens(value: unknown): number {
+	if (value === null || value === undefined) return 1;
+	if (typeof value === "string") return estimateTextTokenCount(value);
+	if (typeof value === "number" || typeof value === "boolean" || typeof value === "bigint") return 2;
+	if (isBinary(value)) return Math.ceil(value.byteLength / 4);
+	if (Array.isArray(value)) {
+		let sum = 1;
+		for (const item of value) sum += estimateTokens(item) + 1;
+		return sum;
+	}
+	if (typeof value === "object") {
+		let sum = 1;
+		for (const [key, nested] of Object.entries(value)) sum += estimateTextTokenCount(key) + 1 + estimateTokens(nested);
+		return sum;
+	}
+	return 2;
+}
+
 export function estimateTokenCount(value: unknown): number {
-	const text = typeof value === "string" ? value : JSON.stringify(value);
-	return Math.ceil((text?.length ?? 0) / 4);
+	return estimateTokens(value);
 }
 
 function contentParts(message: ModelMessage): LoosePart[] {
@@ -155,26 +181,24 @@ function collapseOldestToolPairs(messages: ModelMessage[], budget: number): Mode
 	return changed ? next : messages;
 }
 
-// Tier 3: attachment parts on non-latest user messages become recovery-path stubs.
-function stubOlderAttachments(messages: ModelMessage[]): ModelMessage[] {
-	const lastUserIndex = lastIndexWhere(messages, (message) => message.role === "user");
-	const next = [...messages];
-	let changed = false;
+// Tier 3 (last resort): drop the oldest complete turns. A turn is one user message plus every
+// message up to the next user message, so tool call/result and approval request/response pairs
+// are always dropped atomically. The final two turns (latest user turn and the trailing
+// assistant turn, when present) are never dropped.
+function dropOldestTurns(messages: ModelMessage[], budget: number): ModelMessage[] {
+	const turnStarts: number[] = [];
+	for (const [index, message] of messages.entries()) {
+		if (message.role === "user" || turnStarts.length === 0) turnStarts.push(index);
+	}
+	if (turnStarts.length <= 2) return messages;
 
-	for (const [index, message] of next.entries()) {
-		if (message.role !== "user" || index === lastUserIndex || !Array.isArray(message.content)) continue;
-
-		const parts = contentParts(message).map((part) =>
-			part.type === "image" || part.type === "file" ? { type: "text", text: PRUNED_ATTACHMENT_NOTE } : part,
-		);
-
-		if (parts.some((part, partIndex) => part !== contentParts(message)[partIndex])) {
-			next[index] = { ...message, content: parts } as unknown as ModelMessage;
-			changed = true;
-		}
+	const turns = turnStarts.map((start, turnIndex) => messages.slice(start, turnStarts[turnIndex + 1]));
+	let dropCount = 0;
+	while (dropCount < turns.length - 2 && estimateTokenCount(turns.slice(dropCount).flat()) > budget) {
+		dropCount += 1;
 	}
 
-	return changed ? next : messages;
+	return dropCount === 0 ? messages : turns.slice(dropCount).flat();
 }
 
 export function pruneAgentModelContext(
@@ -192,5 +216,5 @@ export function pruneAgentModelContext(
 	current = collapseOldestToolPairs(current, budget);
 	if (estimateTokenCount(current) <= budget) return current;
 
-	return stubOlderAttachments(current);
+	return dropOldestTurns(current, budget);
 }

@@ -51,12 +51,25 @@ describe("PatchApprovalCard", () => {
 		const onRespond = vi.fn();
 		renderCard(approvalPart(), onRespond);
 
-		fireEvent.change(screen.getByPlaceholderText("Optional note for the agent…"), {
+		fireEvent.change(screen.getByRole("textbox", { name: "Optional note for the agent" }), {
 			target: { value: "Wrong section" },
 		});
 		fireEvent.click(screen.getByRole("button", { name: "Deny" }));
 
 		expect(onRespond).toHaveBeenCalledWith({ id: "approval-1", approved: false, reason: "Wrong section" });
+	});
+
+	it("renders no response controls when disabled (read-only thread)", () => {
+		const onRespond = vi.fn();
+		render(
+			<I18nProvider i18n={i18n}>
+				<PatchApprovalCard part={approvalPart()} disabled onRespond={onRespond} />
+			</I18nProvider>,
+		);
+
+		expect(screen.queryByRole("button")).not.toBeInTheDocument();
+		expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+		expect(screen.getByText("This edit request can no longer be answered.")).toBeInTheDocument();
 	});
 
 	it("hides the buttons once the approval has been responded to", () => {

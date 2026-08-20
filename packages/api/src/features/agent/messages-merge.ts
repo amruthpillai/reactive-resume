@@ -24,7 +24,14 @@ type ApprovalDecision = { approved: boolean; reason?: string };
 export type MergeClientToolResponsesResult = {
 	message: UIMessage;
 	mergedCount: number;
+	/** Matches on terminal parts (question answered, approval executed or denied). */
 	alreadyResolvedCount: number;
+	/**
+	 * Matches on approval parts that are responded but not yet executed — a continuation run was
+	 * claimed (or persisted) earlier but never completed. Callers should proceed with a run so the
+	 * recorded decision can still execute instead of stranding it.
+	 */
+	pendingContinuationCount: number;
 	conflictingCount: number;
 };
 
@@ -68,6 +75,7 @@ export function mergeClientToolResponses(
 
 	let mergedCount = 0;
 	let alreadyResolvedCount = 0;
+	let pendingContinuationCount = 0;
 	let conflictingCount = 0;
 
 	const parts = existingMessage.parts.map((part) => {
@@ -115,8 +123,9 @@ export function mergeClientToolResponses(
 				}
 
 				if (typeof existingPart.approval.approved === "boolean") {
-					if (existingPart.approval.approved === decision.approved) alreadyResolvedCount += 1;
-					else conflictingCount += 1;
+					if (existingPart.approval.approved !== decision.approved) conflictingCount += 1;
+					else if (existingPart.state === "approval-responded") pendingContinuationCount += 1;
+					else alreadyResolvedCount += 1;
 				}
 
 				return part;
@@ -126,5 +135,11 @@ export function mergeClientToolResponses(
 		return part;
 	});
 
-	return { message: { ...existingMessage, parts }, mergedCount, alreadyResolvedCount, conflictingCount };
+	return {
+		message: { ...existingMessage, parts },
+		mergedCount,
+		alreadyResolvedCount,
+		pendingContinuationCount,
+		conflictingCount,
+	};
 }

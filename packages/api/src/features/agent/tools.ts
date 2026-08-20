@@ -85,12 +85,13 @@ export function buildAgentTools(input: BuildAgentToolsInput): ToolSet {
 		}),
 		apply_resume_patch: tool({
 			description:
-				"Apply one cohesive batch of JSON Patch operations to the working resume data immediately. Paths are rooted at resume data; use /basics/name for the visible resume name, not /data/basics/name or /name. This tool cannot rename the resume file/title metadata. The user can restore the draft to the snapshot captured before a patch later. The result includes the complete post-patch resume; array indexes may have shifted — base further patches on it, never on an earlier read_resume.",
+				"Apply one cohesive batch of JSON Patch operations to the working resume data immediately. Paths are rooted at resume data; use /basics/name for the visible resume name, not /data/basics/name or /name. This tool cannot rename the resume file/title metadata. The user can restore the draft to the snapshot captured before a patch later. The result includes the complete post-patch resume; array indexes may have shifted — base further patches on it, never on an earlier read_resume. Always pass baseUpdatedAt: the updatedAt of the read_resume or apply_resume_patch result these operations were built against; the edit is rejected if the resume changed since.",
 			inputSchema: applyResumePatchInputSchema,
 			inputExamples: [
 				{
 					input: {
 						title: "Tighten the summary",
+						baseUpdatedAt: "2026-08-20T10:15:00.000Z",
 						operations: [
 							{ op: "replace", path: "/sections/summary/content", value: "Impact-driven engineer with 8 years…" },
 						],

@@ -109,6 +109,11 @@ export function appendMissingActionParts(message: UIMessage, actions: ReapableAc
 							summary: action.summary,
 							operations: action.operations,
 							appliedUpdatedAt: action.appliedUpdatedAt.toISOString(),
+							// Snapshot boundary: the `resume` key makes context pruning supersede older
+							// full snapshots, and the null value forces a fresh read_resume — the edit
+							// committed, but the post-patch document was lost with the crashed run.
+							resume: null,
+							note: "This edit was applied, but the run was interrupted before the updated resume could be recorded. Re-read the resume before making further edits.",
 						},
 					}) as UIMessage["parts"][number],
 			),

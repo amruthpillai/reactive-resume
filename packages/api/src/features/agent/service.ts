@@ -31,6 +31,7 @@ import {
 	deleteDraftIfEmpty,
 	insertDraftAssistantMessage,
 	upsertAssistantUiMessage,
+	withAccumulatedUsageMetadata,
 } from "./messages-persistence";
 import { repairAgentToolCall } from "./repair";
 import { buildAgentDraftResumeName, buildUniqueAgentDraftSlug, normalizeAgentResumePatchOperations } from "./resume";
@@ -506,16 +507,19 @@ async function updateAssistantToolResultMessage(input: { userId: string; threadI
 		message: mergedMessage,
 		mergedCount,
 		alreadyResolvedCount,
+		pendingContinuationCount,
 		conflictingCount,
 	} = mergeClientToolResponses(toMessage(existingRow), input.message);
 
 	if (conflictingCount > 0) {
 		throw new ORPCError("BAD_REQUEST", { message: "This approval was already answered with a different decision." });
 	}
-	if (mergedCount === 0 && alreadyResolvedCount > 0) {
-		throw new ORPCError("CONFLICT", { message: "This response was already handled." });
-	}
-	if (mergedCount === 0) {
+	// A recorded-but-unexecuted approval (pendingContinuationCount) proceeds: a prior continuation
+	// attempt failed after persisting the decision, and this retry is the recovery path.
+	if (mergedCount === 0 && pendingContinuationCount === 0) {
+		if (alreadyResolvedCount > 0) {
+			throw new ORPCError("CONFLICT", { message: "This response was already handled." });
+		}
 		throw new ORPCError("BAD_REQUEST", { message: "No matching unanswered user question was found." });
 	}
 
@@ -593,10 +597,16 @@ async function cleanupActiveRun(input: {
 	runId: string;
 	streamId: string;
 	primaryError?: unknown;
+	// When final persistence failed, keep the run claim: the reaper only examines threads with an
+	// active claim, so releasing it here would orphan the "streaming" draft forever. The TTL reap
+	// heals the claim and the draft together.
+	preserveClaimForReaper?: boolean;
 }) {
 	activeRunControllers.delete(input.runId);
 	clearTimeout(activeRunTimeouts.get(input.runId));
 	activeRunTimeouts.delete(input.runId);
+
+	if (input.preserveClaimForReaper) return;
 
 	try {
 		await clearActiveAgentRunIfCurrent(input);
@@ -675,9 +685,24 @@ async function applyResumePatch(input: {
 	messageId?: string;
 	title: string;
 	summary?: string;
+	baseUpdatedAt?: string;
 	operations: JsonPatchOperation[];
 }) {
 	const before = await resumeService.getById({ id: input.resumeId, userId: input.userId });
+
+	// Bind the patch to the revision the model actually read (and, under review, the revision the
+	// user approved): index-based operations built against an older document could otherwise
+	// silently target different items after a concurrent edit. baseUpdatedAt travels inside the
+	// signed tool input, so an approval cannot be replayed against a changed resume either.
+	if (input.baseUpdatedAt) {
+		const baseTime = new Date(input.baseUpdatedAt).getTime();
+		if (!Number.isNaN(baseTime) && baseTime !== before.updatedAt.getTime()) {
+			throw new Error(
+				`The resume changed after it was read (its updatedAt is now ${before.updatedAt.toISOString()}). Re-read the resume and rebuild the patch against the current document.`,
+			);
+		}
+	}
+
 	const snapshotData = cloneResumeData(before.data);
 	const operations = normalizeAgentResumePatchOperations(before.data, input.operations);
 
@@ -809,7 +834,7 @@ function createAgent(input: {
 			),
 			applyResumePatch: timedToolHandler(
 				"apply_resume_patch",
-				({ title, summary, operations }: ApplyResumePatchInput) =>
+				({ title, summary, baseUpdatedAt, operations }: ApplyResumePatchInput) =>
 					applyResumePatch({
 						userId: input.userId,
 						threadId: input.threadId,
@@ -817,6 +842,7 @@ function createAgent(input: {
 						...(input.draftRowId ? { messageId: input.draftRowId } : {}),
 						title,
 						...(summary !== undefined ? { summary } : {}),
+						...(baseUpdatedAt !== undefined ? { baseUpdatedAt } : {}),
 						operations,
 					}),
 			),
@@ -1038,7 +1064,12 @@ export const agentService = {
 		update: async (input: { id: string; userId: string; reviewPatches: boolean }) => {
 			assertAgentEnvironment();
 
-			await getThread({ id: input.id, userId: input.userId });
+			const thread = await getThread({ id: input.id, userId: input.userId });
+			// Approval behavior is captured when a run's agent is created; toggling mid-run would
+			// show "review on" while later patches from the same run still auto-apply.
+			if (thread.activeRunId && !isStaleAgentRun(thread)) {
+				throw new ORPCError("CONFLICT", { message: "Review settings cannot change while a run is active." });
+			}
 
 			const [updated] = await db
 				.update(schema.agentThread)
@@ -1148,21 +1179,6 @@ export const agentService = {
 					userId: input.userId,
 				}),
 			]);
-			// Merge client tool responses (question answers, approval decisions) BEFORE claiming a
-			// run: an already-handled response CONFLICTs without consuming the thread's run slot.
-			let continuation: { rowId: string; message: UIMessage } | undefined;
-			if (input.message.role === "assistant") {
-				if (attachments.length > 0) {
-					throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
-				}
-
-				continuation = await updateAssistantToolResultMessage({
-					userId: input.userId,
-					threadId: input.threadId,
-					message: input.message,
-				});
-			}
-
 			const runId = generateId();
 			const streamId = generateId();
 			const controller = new AbortController();
@@ -1190,7 +1206,20 @@ export const agentService = {
 			try {
 				let attachmentsForModel: AgentAttachmentRecord[] = [];
 
-				if (continuation) {
+				if (input.message.role === "assistant") {
+					if (attachments.length > 0) {
+						throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
+					}
+
+					// Merge AFTER the exclusive claim: concurrent approve/deny requests serialize on
+					// the claim instead of both persisting, and a merge that is rejected (or any later
+					// setup failure) releases the claim via the catch below. A response persisted by a
+					// failed earlier attempt re-enters as pendingContinuation and still gets its run.
+					const continuation = await updateAssistantToolResultMessage({
+						userId: input.userId,
+						threadId: input.threadId,
+						message: input.message,
+					});
 					draftRowId = continuation.rowId;
 					draftUiMessage = continuation.message;
 				} else {
@@ -1316,7 +1345,9 @@ export const agentService = {
 										userId: input.userId,
 										threadId: input.threadId,
 										...(draftRowId ? { rowId: draftRowId } : {}),
-										message: responseMessage,
+										// A continuation reuses the message; the SDK replaces primitive
+										// metadata, so prior-run usage must be summed back in.
+										message: withAccumulatedUsageMetadata(draftUiMessage, responseMessage),
 										status: isAborted ? "canceled" : "completed",
 									});
 								} catch (error) {
@@ -1329,6 +1360,7 @@ export const agentService = {
 										runId,
 										streamId,
 										primaryError: persistError,
+										preserveClaimForReaper: !!persistError,
 									});
 								}
 							},
@@ -1363,10 +1395,18 @@ export const agentService = {
 			const activeStreamId = thread.activeStreamId;
 			if (!activeRunId) return;
 
-			activeRunControllers.get(activeRunId)?.abort(abortReason("USER_STOPPED"));
-			activeRunControllers.delete(activeRunId);
-			clearTimeout(activeRunTimeouts.get(activeRunId));
-			activeRunTimeouts.delete(activeRunId);
+			const controller = activeRunControllers.get(activeRunId);
+			if (controller) {
+				// This replica owns the run: abort only. The claim stays until onFinish has
+				// persisted the terminal (canceled) state, so no new run can interleave with a
+				// still-committing tool or write. onFinish's cleanup releases the claim.
+				controller.abort(abortReason("USER_STOPPED"));
+				return;
+			}
+
+			// No local controller (another replica owns the run, or the process restarted):
+			// best-effort claim release so the user is not stuck. Cross-replica abort signaling
+			// is a documented follow-up; the stale-run reaper covers the leftovers.
 			await clearActiveAgentRunIfCurrent({
 				threadId: input.threadId,
 				userId: input.userId,

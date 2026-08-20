@@ -35,4 +35,18 @@ describe("normalizeAgentResumePatchOperations", () => {
 			{ op: "copy", from: "/sections/education/items/0", path: "/customSections/0/items/-" },
 		]);
 	});
+
+	it("strips the /data prefix from path and from at execution time", () => {
+		const result = normalizeAgentResumePatchOperations({ sections: { experience: {} } }, [
+			{ op: "replace", path: "/data/basics/name", value: "Bob" },
+			{ op: "move", path: "/data/basics/headline", from: "/data/basics/label" },
+			{ op: "replace", path: "/data/experience/items/0/description", value: "Combined with section shortcut" },
+		]);
+
+		expect(result).toEqual([
+			{ op: "replace", path: "/basics/name", value: "Bob" },
+			{ op: "move", path: "/basics/headline", from: "/basics/label" },
+			{ op: "replace", path: "/sections/experience/items/0/description", value: "Combined with section shortcut" },
+		]);
+	});
 });

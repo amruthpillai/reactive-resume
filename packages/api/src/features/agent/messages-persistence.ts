@@ -84,6 +84,51 @@ export function applyStepToUiMessage(message: UIMessage, step: AgentStepLike): U
 	return { ...message, parts };
 }
 
+type UsageDetails = Record<string, number | undefined>;
+type UsageLike = {
+	inputTokens?: number | undefined;
+	outputTokens?: number | undefined;
+	totalTokens?: number | undefined;
+	inputTokenDetails?: UsageDetails | undefined;
+	outputTokenDetails?: UsageDetails | undefined;
+};
+type MessageWithUsage = { metadata?: Record<string, unknown> & { usage?: UsageLike } };
+
+function addCounts(a: number | undefined, b: number | undefined): number | undefined {
+	if (typeof a !== "number" && typeof b !== "number") return undefined;
+	return (a ?? 0) + (b ?? 0);
+}
+
+function addDetails(a: UsageDetails | undefined, b: UsageDetails | undefined): UsageDetails | undefined {
+	if (!a && !b) return undefined;
+	const keys = new Set([...Object.keys(a ?? {}), ...Object.keys(b ?? {})]);
+	const sum: UsageDetails = {};
+	for (const key of keys) {
+		const value = addCounts(a?.[key], b?.[key]);
+		if (value !== undefined) sum[key] = value;
+	}
+	return sum;
+}
+
+// A question/approval continuation streams into the SAME assistant message; the SDK deep-merges
+// metadata but replaces primitive token counts, so the continuation's usage would silently
+// overwrite the pre-halt run's. Sum the previous usage into the final message before persisting.
+export function withAccumulatedUsageMetadata(previous: UIMessage, next: UIMessage): UIMessage {
+	const previousUsage = (previous as MessageWithUsage).metadata?.usage;
+	const nextMetadata = (next as MessageWithUsage).metadata;
+	if (!previousUsage || !nextMetadata?.usage) return next;
+
+	const usage: UsageLike = {
+		inputTokens: addCounts(previousUsage.inputTokens, nextMetadata.usage.inputTokens),
+		outputTokens: addCounts(previousUsage.outputTokens, nextMetadata.usage.outputTokens),
+		totalTokens: addCounts(previousUsage.totalTokens, nextMetadata.usage.totalTokens),
+		inputTokenDetails: addDetails(previousUsage.inputTokenDetails, nextMetadata.usage.inputTokenDetails),
+		outputTokenDetails: addDetails(previousUsage.outputTokenDetails, nextMetadata.usage.outputTokenDetails),
+	};
+
+	return { ...next, metadata: { ...nextMetadata, usage } } as UIMessage;
+}
+
 async function nextMessageSequence(threadId: string, database: AgentMessagesDb) {
 	const [row] = await database
 		.select({ maxSequence: max(schema.agentMessage.sequence) })

@@ -1,6 +1,6 @@
 import type { UIMessage } from "ai";
 import { describe, expect, it } from "vitest";
-import { applyStepToUiMessage, upsertAssistantUiMessage } from "./messages-persistence";
+import { applyStepToUiMessage, upsertAssistantUiMessage, withAccumulatedUsageMetadata } from "./messages-persistence";
 
 function emptyMessage(): UIMessage {
 	return { id: "ui-1", role: "assistant", parts: [] };
@@ -97,6 +97,48 @@ describe("applyStepToUiMessage", () => {
 		});
 
 		expect(folded.parts).toEqual([{ type: "step-start" }]);
+	});
+});
+
+describe("withAccumulatedUsageMetadata", () => {
+	function messageWithUsage(usage: Record<string, unknown>): UIMessage {
+		return { id: "ui-1", role: "assistant", parts: [], metadata: { model: "gpt-5", usage } } as UIMessage;
+	}
+
+	it("sums token counts across a continuation, including nested details", () => {
+		const previous = messageWithUsage({
+			inputTokens: 100,
+			outputTokens: 50,
+			totalTokens: 150,
+			inputTokenDetails: { cacheReadTokens: 40 },
+			outputTokenDetails: { reasoningTokens: 10 },
+		});
+		const next = messageWithUsage({
+			inputTokens: 200,
+			outputTokens: 30,
+			totalTokens: 230,
+			inputTokenDetails: { cacheReadTokens: 60, cacheWriteTokens: 5 },
+		});
+
+		const merged = withAccumulatedUsageMetadata(previous, next) as UIMessage & {
+			metadata: { usage: Record<string, unknown> };
+		};
+
+		expect(merged.metadata.usage).toMatchObject({
+			inputTokens: 300,
+			outputTokens: 80,
+			totalTokens: 380,
+			inputTokenDetails: { cacheReadTokens: 100, cacheWriteTokens: 5 },
+			outputTokenDetails: { reasoningTokens: 10 },
+		});
+	});
+
+	it("returns the next message unchanged when either side has no usage", () => {
+		const next = messageWithUsage({ totalTokens: 42 });
+		const noUsage: UIMessage = { id: "ui-1", role: "assistant", parts: [] };
+
+		expect(withAccumulatedUsageMetadata(noUsage, next)).toBe(next);
+		expect(withAccumulatedUsageMetadata(next, noUsage)).toBe(noUsage);
 	});
 });
 

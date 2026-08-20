@@ -14,6 +14,11 @@ export const askUserQuestionInputSchema = z.object({
 export const applyResumePatchInputSchema = z.object({
 	title: z.string().trim().min(1),
 	summary: z.string().trim().optional(),
+	// The `updatedAt` of the read_resume / apply_resume_patch result the operations were built
+	// against. Execution rejects the patch when the resume has changed since, so index-based
+	// operations can never silently target different items (e.g. after a user edit while an
+	// approval was pending). Optional for weaker models; enforced when present.
+	baseUpdatedAt: z.string().optional(),
 	operations: z.array(jsonPatchOperationSchema).min(1),
 });
 
@@ -30,6 +35,7 @@ export const applyResumePatchOutputSchema = z.looseObject({
 });
 
 // All-optional and loose: legacy rows have no metadata and must keep rendering.
+// The usage shape mirrors the AI SDK's LanguageModelUsage (nested token details).
 export const agentMessageMetadataSchema = z
 	.looseObject({
 		model: z.string().optional(),
@@ -38,8 +44,19 @@ export const agentMessageMetadataSchema = z
 				inputTokens: z.number().optional(),
 				outputTokens: z.number().optional(),
 				totalTokens: z.number().optional(),
-				reasoningTokens: z.number().optional(),
-				cachedInputTokens: z.number().optional(),
+				inputTokenDetails: z
+					.looseObject({
+						noCacheTokens: z.number().optional(),
+						cacheReadTokens: z.number().optional(),
+						cacheWriteTokens: z.number().optional(),
+					})
+					.optional(),
+				outputTokenDetails: z
+					.looseObject({
+						textTokens: z.number().optional(),
+						reasoningTokens: z.number().optional(),
+					})
+					.optional(),
 			})
 			.optional(),
 	})

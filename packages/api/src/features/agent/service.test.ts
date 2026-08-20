@@ -16,6 +16,7 @@ const messagesPersistenceMock = {
 	insertDraftAssistantMessage: vi.fn(),
 	upsertAssistantUiMessage: vi.fn(),
 	deleteDraftIfEmpty: vi.fn(),
+	withAccumulatedUsageMetadata: vi.fn((_previous: unknown, next: unknown) => next),
 };
 const storageServiceMock = {
 	delete: vi.fn(),
@@ -165,6 +166,7 @@ beforeEach(() => {
 	messagesPersistenceMock.insertDraftAssistantMessage.mockResolvedValue({ rowId: "draft-row-1", sequence: 1 });
 	messagesPersistenceMock.upsertAssistantUiMessage.mockResolvedValue({ rowId: "draft-row-1" });
 	messagesPersistenceMock.deleteDraftIfEmpty.mockResolvedValue(undefined);
+	messagesPersistenceMock.withAccumulatedUsageMetadata.mockImplementation((_previous: unknown, next: unknown) => next);
 	for (const mock of Object.values(storageServiceMock)) mock.mockReset();
 	for (const mock of Object.values(resumeServiceMock)) mock.mockReset();
 	for (const mock of Object.values(aiProvidersServiceMock)) mock.mockReset();

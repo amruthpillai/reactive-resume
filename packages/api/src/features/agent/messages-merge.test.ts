@@ -98,14 +98,34 @@ describe("mergeClientToolResponses — approvals", () => {
 		});
 	});
 
-	it("double submit with the same decision is already resolved", () => {
+	it("resubmitting the same decision on a responded-but-unexecuted approval is a pending continuation", () => {
 		const responded = assistantMessage([
 			{ ...APPROVAL_REQUESTED, state: "approval-responded", approval: { id: "approval-1", approved: true } },
 		]);
 
 		const result = mergeClientToolResponses(responded, assistantMessage([approvalResponse(true)]));
 
-		expect(result).toMatchObject({ mergedCount: 0, alreadyResolvedCount: 1, conflictingCount: 0 });
+		expect(result).toMatchObject({
+			mergedCount: 0,
+			alreadyResolvedCount: 0,
+			pendingContinuationCount: 1,
+			conflictingCount: 0,
+		});
+	});
+
+	it("resubmitting the decision after the approved call executed is already resolved", () => {
+		const executed = assistantMessage([
+			{
+				...APPROVAL_REQUESTED,
+				state: "output-available",
+				output: { actionId: "action-1" },
+				approval: { id: "approval-1", approved: true },
+			},
+		]);
+
+		const result = mergeClientToolResponses(executed, assistantMessage([approvalResponse(true)]));
+
+		expect(result).toMatchObject({ mergedCount: 0, alreadyResolvedCount: 1, pendingContinuationCount: 0 });
 	});
 
 	it("double submit with a conflicting decision is flagged", () => {

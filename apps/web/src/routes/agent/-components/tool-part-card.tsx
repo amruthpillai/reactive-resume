@@ -25,7 +25,8 @@ function toolDisplay(part: ToolPartFields): { label: string; icon: React.ReactNo
 			return { label: t`Read an attachment`, icon: <FileTextIcon /> };
 		}
 		case "tool-web_search": {
-			return { label: t`Searched the web`, icon: <GlobeIcon /> };
+			// State-neutral: this label sits next to a live Running…/Done/Failed badge.
+			return { label: t`Web search`, icon: <GlobeIcon /> };
 		}
 		default: {
 			return { label: part.toolName ?? part.type, icon: <WrenchIcon /> };

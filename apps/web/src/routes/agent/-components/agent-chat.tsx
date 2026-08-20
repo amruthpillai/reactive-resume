@@ -109,12 +109,14 @@ type FileAttachmentProps = {
 type AskUserQuestionProps = {
 	part: UIMessage["parts"][number];
 	answer: string | null;
+	disabled?: boolean;
 	onAnswer: (toolCallId: string, answer: string) => void;
 };
 
 type MessagePartProps = {
 	part: UIMessage["parts"][number];
 	isUser: boolean;
+	isReadOnly: boolean;
 	onAnswer: (toolCallId: string, answer: string) => void;
 	onApprovalRespond: (response: PatchApprovalResponse) => void;
 	onRevert: (actionId: string) => void;
@@ -124,6 +126,7 @@ type MessagePartProps = {
 
 type ChatMessageProps = {
 	message: UIMessage;
+	isReadOnly: boolean;
 	onAnswer: (toolCallId: string, answer: string) => void;
 	onApprovalRespond: (response: PatchApprovalResponse) => void;
 	onRevert: (actionId: string) => void;
@@ -169,6 +172,7 @@ type AgentChatHeaderProps = {
 	isArchivePending: boolean;
 	isDeletePending: boolean;
 	isUpdatePending: boolean;
+	isStreaming: boolean;
 	reviewPatches: boolean;
 	threadTokenTotal: number;
 	onArchive: () => void;
@@ -483,7 +487,7 @@ function FileAttachment({ filename, mediaType, state = "done" }: FileAttachmentP
 // The agent asks one question at a time, so this is a single-item Questionnaire: radio choices plus a
 // freeform answer, submitted as the tool output. `Questionnaire` owns the fieldset/legend semantics,
 // keyboard shortcuts, focus management, and required-answer validation.
-export function AskUserQuestion({ part, answer, onAnswer }: AskUserQuestionProps) {
+export function AskUserQuestion({ part, answer, disabled, onAnswer }: AskUserQuestionProps) {
 	const input =
 		"input" in part && typeof part.input === "object" && part.input ? (part.input as Record<string, unknown>) : {};
 	const choices = Array.isArray(input.choices)
@@ -492,7 +496,9 @@ export function AskUserQuestion({ part, answer, onAnswer }: AskUserQuestionProps
 	const question = typeof input.question === "string" ? input.question : t`The agent needs your input.`;
 	const toolCallId = "toolCallId" in part && typeof part.toolCallId === "string" ? part.toolCallId : null;
 
-	if (answer !== null || !toolCallId) {
+	// Read-only threads (archived, missing resume/provider) render the static view: answering would
+	// only mutate local state before the server rejects the continuation.
+	if (answer !== null || !toolCallId || disabled) {
 		return (
 			<div className="flex flex-col gap-1">
 				<p className="font-medium">{question}</p>
@@ -537,6 +543,7 @@ export function AskUserQuestion({ part, answer, onAnswer }: AskUserQuestionProps
 function MessagePart({
 	part,
 	isUser,
+	isReadOnly,
 	onAnswer,
 	onApprovalRespond,
 	onRevert,
@@ -578,7 +585,7 @@ function MessagePart({
 		return (
 			<Bubble variant="outline" className="max-w-full">
 				<BubbleContent className="w-full">
-					<AskUserQuestion part={part} answer={answer} onAnswer={onAnswer} />
+					<AskUserQuestion part={part} answer={answer} disabled={isReadOnly} onAnswer={onAnswer} />
 				</BubbleContent>
 			</Bubble>
 		);
@@ -591,7 +598,7 @@ function MessagePart({
 			return (
 				<Bubble variant="outline" className="max-w-full">
 					<BubbleContent className="w-full">
-						<PatchApprovalCard part={part} onRespond={onApprovalRespond} />
+						<PatchApprovalCard part={part} disabled={isReadOnly} onRespond={onApprovalRespond} />
 					</BubbleContent>
 				</Bubble>
 			);
@@ -647,10 +654,11 @@ function SourcesBlock({ parts }: { parts: SourceUrlPartLike[] }) {
 					<Trans>Sources</Trans>
 				</p>
 				<ul className="space-y-1">
-					{parts.map((part) => {
+					{parts.map((part, index) => {
 						const title = part.title?.trim() || null;
 						return (
-							<li key={part.url}>
+							// Providers can cite the same URL more than once; the index keeps keys unique.
+							<li key={`${part.url}-${index}`}>
 								<a className="block text-primary text-sm underline" href={part.url} target="_blank" rel="noreferrer">
 									<span className="block truncate">{title ?? part.url}</span>
 									{title ? <span className="block truncate text-muted-foreground">{part.url}</span> : null}
@@ -701,15 +709,17 @@ function MessageTokenFooter({ message }: { message: UIMessage }) {
 	if (typeof total !== "number") return null;
 	const cached = metadata?.usage?.cachedInputTokens;
 
+	// Label-form ("Tokens: N") avoids noun declension against the count entirely, so the string
+	// stays grammatical at N=1 in every locale without ICU plural catalogs.
 	return (
 		<p className="px-1 text-[0.7rem] text-muted-foreground/70">
 			{metadata?.model ? `${metadata.model} · ` : null}
 			{typeof cached === "number" && cached > 0 ? (
 				<Trans>
-					{total} tokens · {cached} cached
+					Tokens: {total} ({cached} cached)
 				</Trans>
 			) : (
-				<Trans>{total} tokens</Trans>
+				<Trans>Tokens: {total}</Trans>
 			)}
 		</p>
 	);
@@ -719,6 +729,7 @@ function MessageTokenFooter({ message }: { message: UIMessage }) {
 // later message streams (the handlers passed down are useCallback-stable).
 const ChatMessage = memo(function ChatMessage({
 	message,
+	isReadOnly,
 	onAnswer,
 	onApprovalRespond,
 	onRevert,
@@ -738,6 +749,7 @@ const ChatMessage = memo(function ChatMessage({
 							key={item.key}
 							part={item.part}
 							isUser={isUser}
+							isReadOnly={isReadOnly}
 							onAnswer={onAnswer}
 							onApprovalRespond={onApprovalRespond}
 							onRevert={onRevert}
@@ -1065,6 +1077,19 @@ export function AgentChat({
 
 	const retryLastMessage = () => {
 		clearError();
+		// A failed question/approval continuation must not regenerate: regenerate() removes the
+		// answered assistant message and resends the prior user prompt, losing the recorded
+		// decision. Resubmitting the transcript (sendMessage with no message) retries the
+		// continuation itself; regenerate stays for ordinary generation failures.
+		const last = messages.at(-1);
+		if (
+			last?.role === "assistant" &&
+			(lastAssistantMessageIsCompleteWithToolCalls({ messages }) ||
+				lastAssistantMessageIsCompleteWithApprovalResponses({ messages }))
+		) {
+			void sendMessage();
+			return;
+		}
 		void regenerate();
 	};
 
@@ -1075,6 +1100,7 @@ export function AgentChat({
 				isArchivePending={archiveMutation.isPending}
 				isDeletePending={deleteMutation.isPending}
 				isUpdatePending={updateThreadMutation.isPending}
+				isStreaming={isStreaming}
 				reviewPatches={reviewPatches}
 				threadTokenTotal={threadTokenTotal}
 				onArchive={handleArchive}
@@ -1171,6 +1197,7 @@ function AgentChatMessages({
 							<MessageScrollerItem key={message.id} messageId={message.id} scrollAnchor={message.role === "user"}>
 								<ChatMessage
 									message={message}
+									isReadOnly={isReadOnly}
 									isReverting={isReverting}
 									actionsById={actionsById}
 									onAnswer={onAnswer}
@@ -1219,6 +1246,7 @@ function AgentChatHeader({
 	isArchivePending,
 	isDeletePending,
 	isUpdatePending,
+	isStreaming,
 	reviewPatches,
 	threadTokenTotal,
 	onArchive,
@@ -1247,7 +1275,7 @@ function AgentChatHeader({
 				</div>
 				{threadTokenTotal > 0 ? (
 					<span className="shrink-0 text-muted-foreground/70 text-xs">
-						<Trans>{threadTokenTotal} tokens</Trans>
+						<Trans>Tokens: {threadTokenTotal}</Trans>
 					</span>
 				) : null}
 			</div>
@@ -1287,7 +1315,9 @@ function AgentChatHeader({
 						{!isArchived ? (
 							<DropdownMenuCheckboxItem
 								checked={reviewPatches}
-								disabled={isUpdatePending}
+								// Approval behavior is captured when a run starts; toggling mid-run would
+								// misrepresent what the streaming run actually does (server rejects it too).
+								disabled={isUpdatePending || isStreaming}
 								onCheckedChange={(checked) => onToggleReviewPatches(checked === true)}
 							>
 								<Trans>Review edits</Trans>
