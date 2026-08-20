@@ -69,7 +69,8 @@ function stubRejectedFetch(error: unknown) {
 	return fetchMock;
 }
 
-const { analyzeResume, testConnection } = await import("./service");
+const { aiService, testConnection } = await import("./service");
+const { analyzeResume } = aiService;
 
 describe("AI provider connection test", () => {
 	it("names the rejected key instead of reporting a transport failure", async () => {
