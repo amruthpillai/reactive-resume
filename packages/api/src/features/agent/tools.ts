@@ -21,6 +21,9 @@ type ApplyResumePatchToolInput = ApplyResumePatchInput;
 
 type BuildAgentToolsInput = {
 	provider: AgentProviderConfig;
+	options?: {
+		requirePatchApproval?: boolean;
+	};
 	handlers: {
 		readResume: () => Promise<unknown>;
 		readAttachment: (attachmentId: string) => Promise<unknown>;
@@ -82,6 +85,9 @@ export function buildAgentTools(input: BuildAgentToolsInput): ToolSet {
 			description:
 				"Apply one cohesive batch of JSON Patch operations to the working resume data immediately. Paths are rooted at resume data; use /basics/name for the visible resume name, not /data/basics/name or /name. This tool cannot rename the resume file/title metadata. The user can restore the draft to the snapshot captured before a patch later. The result includes the complete post-patch resume; array indexes may have shifted — base further patches on it, never on an earlier read_resume.",
 			inputSchema: applyResumePatchInputSchema,
+			// Static approval gate: when the thread has "Review edits" on, the loop halts with an
+			// approval-requested part instead of executing; the SDK executes after approval.
+			...(input.options?.requirePatchApproval ? { needsApproval: true } : {}),
 			execute: (toolInput) => input.handlers.applyResumePatch(toolInput),
 		}),
 	};

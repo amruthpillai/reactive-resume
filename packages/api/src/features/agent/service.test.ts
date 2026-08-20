@@ -112,7 +112,10 @@ vi.mock("ai", async (importOriginal) => ({
 }));
 
 vi.mock("../ai/service", () => ({ getAgentModel: vi.fn() }));
-vi.mock("../ai/credentials", () => ({ assertAgentEnvironment: vi.fn() }));
+vi.mock("../ai/credentials", () => ({
+	assertAgentEnvironment: vi.fn(),
+	getAgentToolApprovalSecret: vi.fn(() => "test-approval-secret"),
+}));
 vi.mock("../ai-providers/service", () => ({ aiProvidersService: aiProvidersServiceMock }));
 vi.mock("../resume/service", () => ({ resumeService: resumeServiceMock }));
 vi.mock("../storage/service", () => ({

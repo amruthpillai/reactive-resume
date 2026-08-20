@@ -10,7 +10,7 @@ import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { generateId } from "@reactive-resume/utils/string";
-import { assertAgentEnvironment } from "../ai/credentials";
+import { assertAgentEnvironment, getAgentToolApprovalSecret } from "../ai/credentials";
 import { getAgentModel } from "../ai/service";
 import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
@@ -774,6 +774,7 @@ function createAgent(input: {
 	threadId: string;
 	resumeId: string;
 	draftRowId?: string;
+	requirePatchApproval?: boolean;
 	provider: {
 		provider: Parameters<typeof getModel>[0]["provider"];
 		model: string;
@@ -784,6 +785,7 @@ function createAgent(input: {
 }) {
 	const tools = buildAgentTools({
 		provider: input.provider,
+		options: { requirePatchApproval: !!input.requirePatchApproval },
 		handlers: {
 			readResume: async () => {
 				const resume = await resumeService.getById({ id: input.resumeId, userId: input.userId });
@@ -829,6 +831,11 @@ function createAgent(input: {
 		maxOutputTokens: MAX_AGENT_OUTPUT_TOKENS,
 		maxRetries: MAX_AGENT_MODEL_RETRIES,
 		timeout: { stepMs: AGENT_STEP_TIMEOUT_MS },
+		// HMAC-signs approval requests at issuance and verifies them when replayed on the
+		// continuation run, so a client cannot forge or alter an approval payload. The agent
+		// runtime forwards constructor settings to streamText verbatim; ToolLoopAgentSettings
+		// does not type this key yet, hence the spread-cast.
+		...({ experimental_toolApprovalSecret: getAgentToolApprovalSecret() } as object),
 		// Runs before every loop step, so intra-run growth (N patches → N snapshots) is pruned too.
 		prepareStep: ({ messages }) => {
 			const pruned = pruneAgentModelContext(messages);
@@ -1227,6 +1234,7 @@ export const agentService = {
 					threadId: input.threadId,
 					resumeId: thread.workingResumeId,
 					...(draftRowId ? { draftRowId } : {}),
+					requirePatchApproval: thread.reviewPatches,
 					provider: {
 						provider: runnableProvider.provider,
 						model: runnableProvider.model,

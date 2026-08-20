@@ -26,9 +26,15 @@ const handlers = {
 	}),
 };
 
-function buildTools(provider: AIProvider, options?: { model?: string; baseURL?: string }) {
+function buildTools(
+	provider: AIProvider,
+	options?: { model?: string; baseURL?: string; requirePatchApproval?: boolean },
+) {
 	return buildAgentTools({
 		provider: { provider, model: options?.model ?? "gpt-5-mini", apiKey: "test-key", baseURL: options?.baseURL ?? "" },
+		...(options?.requirePatchApproval !== undefined
+			? { options: { requirePatchApproval: options.requirePatchApproval } }
+			: {}),
 		handlers,
 	});
 }
@@ -75,6 +81,14 @@ describe("agent tools", () => {
 			expect(tools).not.toHaveProperty("web_search");
 		},
 	);
+
+	it("marks apply_resume_patch as needing approval only when review is required", () => {
+		const gated = buildTools("openai-compatible", { requirePatchApproval: true });
+		const open = buildTools("openai-compatible");
+
+		expect(gated.apply_resume_patch).toMatchObject({ needsApproval: true });
+		expect(open.apply_resume_patch?.needsApproval).toBeUndefined();
+	});
 
 	it("keeps instructions explicit about native search availability", () => {
 		expect(buildAgentInstructions({ hasProviderNativeSearch: true })).toContain("Use web_search");
