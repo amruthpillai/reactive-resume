@@ -487,8 +487,13 @@ describe("agentService.messages.send", () => {
 		];
 		const insertValues: unknown[] = [];
 
+		const patchedData = { basics: { customFields: [{ id: "field-1" }] } };
 		resumeServiceMock.getById.mockResolvedValue({ data: beforeData, updatedAt: beforeUpdatedAt });
-		resumeServiceMock.patchInTransaction.mockResolvedValue({ id: "resume-1", updatedAt: patchedUpdatedAt });
+		resumeServiceMock.patchInTransaction.mockResolvedValue({
+			id: "resume-1",
+			updatedAt: patchedUpdatedAt,
+			data: patchedData,
+		});
 		dbMock.insert.mockReturnValue({
 			values: vi.fn((value) => {
 				insertValues.push(value);
@@ -526,7 +531,14 @@ describe("agentService.messages.send", () => {
 				appliedUpdatedAt: patchedUpdatedAt,
 			}),
 		);
-		expect(result).toEqual(expect.objectContaining({ actionId: "action-1", resumeId: "resume-1" }));
+		expect(result).toEqual(
+			expect.objectContaining({
+				actionId: "action-1",
+				resumeId: "resume-1",
+				changedPaths: ["/basics/customFields/-"],
+				resume: patchedData,
+			}),
+		);
 	});
 
 	it("rethrows a resume version conflict as a recoverable plain tool error", async () => {

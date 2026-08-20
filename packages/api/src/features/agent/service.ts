@@ -15,6 +15,7 @@ import { getAgentModel } from "../ai/service";
 import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
 import { getStorageService, inferContentType } from "../storage/service";
+import { pruneAgentModelContext } from "./context";
 import {
 	applyStepToUiMessage,
 	deleteDraftIfEmpty,
@@ -760,6 +761,10 @@ async function applyResumePatch(input: {
 		summary: action.summary,
 		operations: action.operations,
 		appliedUpdatedAt: action.appliedUpdatedAt.toISOString(),
+		changedPaths: [...new Set(operations.flatMap((op) => ("from" in op ? [op.path, op.from] : [op.path])))],
+		// Full post-patch document: array indexes may have shifted, so the model must base
+		// further patches on this instead of an earlier read_resume snapshot.
+		resume: patched.data,
 	};
 }
 
@@ -823,6 +828,11 @@ function createAgent(input: {
 		maxOutputTokens: MAX_AGENT_OUTPUT_TOKENS,
 		maxRetries: MAX_AGENT_MODEL_RETRIES,
 		timeout: { stepMs: AGENT_STEP_TIMEOUT_MS },
+		// Runs before every loop step, so intra-run growth (N patches → N snapshots) is pruned too.
+		prepareStep: ({ messages }) => {
+			const pruned = pruneAgentModelContext(messages);
+			return pruned === messages ? {} : { messages: pruned };
+		},
 		tools,
 	});
 }
