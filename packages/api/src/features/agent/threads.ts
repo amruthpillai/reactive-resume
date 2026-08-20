@@ -64,6 +64,24 @@ export const threadsRouter = {
 		.use(mapAgentEnvironmentError)
 		.handler(({ context, input }) => agentService.threads.get({ id: input.id, userId: context.user.id })),
 
+	update: protectedProcedure
+		.route({
+			method: "PATCH",
+			path: "/agent/threads/{id}",
+			tags: ["Agent"],
+			operationId: "updateAgentThread",
+			summary: "Update agent thread settings",
+		})
+		.input(z.object({ id: z.string(), reviewPatches: z.boolean() }))
+		.use(mapAgentEnvironmentError)
+		.handler(({ context, input }) =>
+			agentService.threads.update({
+				id: input.id,
+				userId: context.user.id,
+				reviewPatches: input.reviewPatches,
+			}),
+		),
+
 	archive: protectedProcedure
 		.route({
 			method: "POST",

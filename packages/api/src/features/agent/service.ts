@@ -99,6 +99,7 @@ function toThreadSummary(row: AgentThreadRecord & { resumeName?: string | null; 
 		id: row.id,
 		title: row.title,
 		status: row.status,
+		reviewPatches: row.reviewPatches,
 		sourceResumeId: row.sourceResumeId,
 		workingResumeId: row.workingResumeId,
 		aiProviderId: row.aiProviderId,
@@ -845,6 +846,7 @@ const threadSummarySelection = {
 	workingResumeId: schema.agentThread.workingResumeId,
 	title: schema.agentThread.title,
 	status: schema.agentThread.status,
+	reviewPatches: schema.agentThread.reviewPatches,
 	activeRunId: schema.agentThread.activeRunId,
 	activeStreamId: schema.agentThread.activeStreamId,
 	activeRunStartedAt: schema.agentThread.activeRunStartedAt,
@@ -1013,6 +1015,22 @@ export const agentService = {
 					!resume ||
 					!!resume.isLocked,
 			};
+		},
+
+		update: async (input: { id: string; userId: string; reviewPatches: boolean }) => {
+			assertAgentEnvironment();
+
+			await getThread({ id: input.id, userId: input.userId });
+
+			const [updated] = await db
+				.update(schema.agentThread)
+				.set({ reviewPatches: input.reviewPatches })
+				.where(and(eq(schema.agentThread.id, input.id), eq(schema.agentThread.userId, input.userId)))
+				.returning();
+
+			if (!updated) throw new ORPCError("NOT_FOUND");
+
+			return toThreadSummary(updated);
 		},
 
 		archive: async (input: { id: string; userId: string }) => {
