@@ -5,7 +5,7 @@ import { pruneMessages } from "ai";
 // step. Tier 0 always runs (a stale resume snapshot is actively harmful — shifted array indexes);
 // the remaining tiers only fire once the estimated token count exceeds the budget.
 
-export const AGENT_CONTEXT_TOKEN_BUDGET = 40_000;
+const AGENT_CONTEXT_TOKEN_BUDGET = 40_000;
 
 const SNAPSHOT_TOOL_NAMES = new Set(["read_resume", "apply_resume_patch"]);
 const SUPERSEDED_SNAPSHOT_NOTE =

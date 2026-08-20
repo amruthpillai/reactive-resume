@@ -1,9 +1,13 @@
+import type { ApplyResumePatchInput } from "@reactive-resume/ai/tools/agent-tool-contracts";
 import type { AIProvider } from "@reactive-resume/ai/types";
 import type { ToolSet } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { tool } from "ai";
 import z from "zod";
-import { jsonPatchOperationSchema } from "@reactive-resume/resume/patch";
+import {
+	applyResumePatchInputSchema,
+	askUserQuestionInputSchema,
+} from "@reactive-resume/ai/tools/agent-tool-contracts";
 import { supportsProviderNativeWebSearch } from "../ai/capabilities";
 
 type AgentProviderConfig = {
@@ -13,13 +17,7 @@ type AgentProviderConfig = {
 	baseURL?: string | null;
 };
 
-const applyResumePatchToolInputSchema = z.object({
-	title: z.string().trim().min(1),
-	summary: z.string().trim().optional(),
-	operations: z.array(jsonPatchOperationSchema).min(1),
-});
-
-type ApplyResumePatchToolInput = z.infer<typeof applyResumePatchToolInputSchema>;
+type ApplyResumePatchToolInput = ApplyResumePatchInput;
 
 type BuildAgentToolsInput = {
 	provider: AgentProviderConfig;
@@ -67,11 +65,7 @@ export function buildAgentTools(input: BuildAgentToolsInput): ToolSet {
 		ask_user_question: tool({
 			description:
 				"Ask the user a short question when you need a preference, missing fact, or choice before continuing. Provide 2-4 recommended answer choices when possible.",
-			inputSchema: z.object({
-				question: z.string().trim().min(1),
-				choices: z.array(z.string().trim().min(1)).min(1).max(4).optional(),
-				recommendedChoice: z.string().trim().optional(),
-			}),
+			inputSchema: askUserQuestionInputSchema,
 		}),
 		read_resume: tool({
 			description: "Read the current working resume JSON and metadata.",
@@ -87,7 +81,7 @@ export function buildAgentTools(input: BuildAgentToolsInput): ToolSet {
 		apply_resume_patch: tool({
 			description:
 				"Apply one cohesive batch of JSON Patch operations to the working resume data immediately. Paths are rooted at resume data; use /basics/name for the visible resume name, not /data/basics/name or /name. This tool cannot rename the resume file/title metadata. The user can restore the draft to the snapshot captured before a patch later. The result includes the complete post-patch resume; array indexes may have shifted — base further patches on it, never on an earlier read_resume.",
-			inputSchema: applyResumePatchToolInputSchema,
+			inputSchema: applyResumePatchInputSchema,
 			execute: (toolInput) => input.handlers.applyResumePatch(toolInput),
 		}),
 	};
