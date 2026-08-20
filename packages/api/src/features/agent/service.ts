@@ -21,6 +21,10 @@ import { agentStreamLifecycle } from "./streams";
 import { buildAgentInstructions, buildAgentTools } from "./tools";
 
 const MAX_AGENT_STEPS = 30;
+const MAX_AGENT_OUTPUT_TOKENS = 8_192;
+const MAX_AGENT_MODEL_RETRIES = 2;
+const AGENT_STEP_TIMEOUT_MS = 120_000;
+const AGENT_RUN_TIMEOUT_MS = 600_000;
 const MAX_ATTACHMENTS_PER_MESSAGE = 10;
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 const MAX_THREAD_ATTACHMENT_BYTES = 100 * 1024 * 1024;
@@ -39,6 +43,7 @@ const ROLLBACK_CONFLICT_MESSAGE = "The resume changed after this action was appl
 const ROLLED_BACK_MESSAGE = "This patch was rolled back when the resume was restored to an earlier state.";
 
 const activeRunControllers = new Map<string, AbortController>();
+const activeRunTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 const canceledRunsWithPersistedPartial = new Set<string>();
 
 // Abort reasons MUST be an AbortError: the AI SDK only treats `err.name === "AbortError"`
@@ -612,6 +617,8 @@ async function cleanupActiveRun(input: {
 	primaryError?: unknown;
 }) {
 	activeRunControllers.delete(input.runId);
+	clearTimeout(activeRunTimeouts.get(input.runId));
+	activeRunTimeouts.delete(input.runId);
 	canceledRunsWithPersistedPartial.delete(input.runId);
 
 	try {
@@ -680,7 +687,7 @@ async function readAttachment(input: { id: string; threadId: string; userId: str
 		filename: attachment.filename,
 		mediaType: attachment.mediaType,
 		size: attachment.size,
-		content: new TextDecoder().decode(stored.data).slice(0, 40_000),
+		content: new TextDecoder().decode(stored.data).slice(0, MAX_ATTACHMENT_TEXT_CHARS),
 	};
 }
 
@@ -696,34 +703,43 @@ async function applyResumePatch(input: {
 	const snapshotData = cloneResumeData(before.data);
 	const operations = normalizeAgentResumePatchOperations(before.data, input.operations);
 
-	const { action, patched } = await db.transaction(async (tx) => {
-		const patched = await resumeService.patchInTransaction(tx, {
-			id: input.resumeId,
-			userId: input.userId,
-			operations,
-		});
-
-		const [action] = await tx
-			.insert(schema.agentAction)
-			.values({
+	const { action, patched } = await db
+		.transaction(async (tx) => {
+			const patched = await resumeService.patchInTransaction(tx, {
+				id: input.resumeId,
 				userId: input.userId,
-				threadId: input.threadId,
-				resumeId: input.resumeId,
-				kind: "resume_patch",
-				status: "applied",
-				title: input.title,
-				...(input.summary !== undefined ? { summary: input.summary } : {}),
 				operations,
-				snapshotData,
-				baseUpdatedAt: before.updatedAt,
-				appliedUpdatedAt: patched.updatedAt,
-			})
-			.returning();
+				expectedUpdatedAt: before.updatedAt,
+			});
 
-		if (!action) throw new Error("AGENT_ACTION_CREATE_FAILED");
+			const [action] = await tx
+				.insert(schema.agentAction)
+				.values({
+					userId: input.userId,
+					threadId: input.threadId,
+					resumeId: input.resumeId,
+					kind: "resume_patch",
+					status: "applied",
+					title: input.title,
+					...(input.summary !== undefined ? { summary: input.summary } : {}),
+					operations,
+					snapshotData,
+					baseUpdatedAt: before.updatedAt,
+					appliedUpdatedAt: patched.updatedAt,
+				})
+				.returning();
 
-		return { action, patched };
-	});
+			if (!action) throw new Error("AGENT_ACTION_CREATE_FAILED");
+
+			return { action, patched };
+		})
+		.catch((error: unknown) => {
+			// Surface the version conflict as a recoverable tool error, not a run-fatal ORPCError.
+			if (error instanceof ORPCError && error.code === "RESUME_VERSION_CONFLICT") {
+				throw new Error("The resume changed while this edit was being prepared. Re-read the resume and retry.");
+			}
+			throw error;
+		});
 
 	await resumeService.notifyResumePatched({
 		resumeId: patched.id,
@@ -796,6 +812,9 @@ function createAgent(input: {
 		model: input.model,
 		instructions: buildAgentInstructions({ hasProviderNativeSearch: "web_search" in tools }),
 		stopWhen: stepCountIs(MAX_AGENT_STEPS),
+		maxOutputTokens: MAX_AGENT_OUTPUT_TOKENS,
+		maxRetries: MAX_AGENT_MODEL_RETRIES,
+		timeout: { stepMs: AGENT_STEP_TIMEOUT_MS },
 		tools,
 	});
 }
@@ -1055,6 +1074,12 @@ export const agentService = {
 				activeRunControllers.delete(runId);
 				throw new ORPCError("CONFLICT", { message: "This thread already has an active run." });
 			}
+
+			// Whole-run wall clock. Must abort with an AbortError (see abortReason) — never AbortSignal.timeout().
+			activeRunTimeouts.set(
+				runId,
+				setTimeout(() => controller.abort(abortReason("RUN_TIMEOUT")), AGENT_RUN_TIMEOUT_MS),
+			);
 
 			try {
 				let attachmentsForModel: AgentAttachmentRecord[] = [];
