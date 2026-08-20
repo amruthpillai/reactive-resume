@@ -97,18 +97,6 @@ msgstr "{passedRules} od {totalRules} preverjanj je uspelo"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Element {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} žetonov"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} žetonov"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} žetonov · {cached} predpomnjenih"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Končno,</0><1>Brezplačni in odprtokodni graditelj življenjepisov</1>"
@@ -2173,10 +2161,6 @@ msgstr "Prosta oblika"
 msgid "French"
 msgstr "Francoščina"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "iz"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Iz vašega življenjepisa in objave"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "odpre se v novem zavihku"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Neobvezna opomba za agenta"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Neobvezna opomba za agenta…"
 
@@ -3997,10 +3985,6 @@ msgstr "Iskanje ..."
 msgid "Search…"
 msgstr "Iskanje…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Iskal po spletu"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Skrivnost kopirana v odložišče."
@@ -4336,6 +4320,11 @@ msgstr "Vir"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Izvorna koda"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Vir: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Tega pomočnika ni bilo mogoče odpreti."
 msgid "This date will not be read correctly."
 msgstr "Ta datum ne bo pravilno prebran."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Na to zahtevo za urejanje ni več mogoče odgovoriti."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Ta e-poštni naslov ne bo prepoznan."
@@ -4885,6 +4878,18 @@ msgstr "Preklapljanje desne stranske vrstice"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Preklopi niti"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Žetoni: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Žetoni: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Žetoni: {total} ({cached} predpomnjenih)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Oblike ni bilo mogoče samodejno zaznati – izberite jo zgoraj."
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Te strani nismo mogli najti."
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Spletno iskanje"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

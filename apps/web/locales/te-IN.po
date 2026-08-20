@@ -97,18 +97,6 @@ msgstr "{passedRules} {totalRules} చెక్కులు ఆమోదిం�
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · అంశం {itemNumber} "
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} టోకెన్లు"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} టోకెన్లు"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} టోకెన్లు · {cached} కాష్ చేయబడ్డాయి"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>చివరిగా,</0><1>ఉచిత మరియు ఓపెన్-సోర్స్ రిజ్యూమ్ బిల్డర్</1>"
@@ -2173,10 +2161,6 @@ msgstr "స్వేచ్ఛా రూపం"
 msgid "French"
 msgstr "ఫ్రెంచ్"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "నుండి"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "మీ రెజ్యూమ్ మరియు పోస్టింగ్ నుండి"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "కొత్త ట్యాబ్‌లో తెరవబడుతుంది"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "ఏజెంట్ కోసం ఐచ్ఛిక గమనిక"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "ఏజెంట్ కోసం ఐచ్ఛిక గమనిక…"
 
@@ -3997,10 +3985,6 @@ msgstr "వెతుకు..."
 msgid "Search…"
 msgstr "శోధన…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "వెబ్‌లో శోధించింది"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "రహస్యాన్ని క్లిప్‌బోర్డ్‌కు కాపీ చేశాం."
@@ -4336,6 +4320,11 @@ msgstr "మూలం"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "సోర్స్ కోడ్"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "మూలం: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "ఈ సహాయకుడిని తెరవలేకపోయిం�
 msgid "This date will not be read correctly."
 msgstr "ఈ తేదీ సరిగ్గా చదవబడదు."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "ఈ సవరణ అభ్యర్థనకు ఇకపై సమాధానం ఇవ్వడం సాధ్యం కాదు."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "ఈ ఇమెయిల్ చిరునామా గుర్తించబడదు."
@@ -4885,6 +4878,18 @@ msgstr "కుడి వైపు పక్క పట్టీని టోగ�
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "థ్రెడ్‌లను టోగుల్ చేయండి"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "టోకెన్లు: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "టోకెన్లు: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "టోకెన్లు: {total} ({cached} కాష్ చేయబడినవి)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "మేము ఫార్మాట్‌ను స్వయంచాల�
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "మేము ఆ పేజీని కనుగొనలేకపోయాము"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "వెబ్ శోధన"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

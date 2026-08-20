@@ -97,18 +97,6 @@ msgstr "تم اجتياز {passedRules} من إجمالي {totalRules} من عم
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · العنصر {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} رمز"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} رمز"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} رمز · {cached} مخزّن مؤقتًا"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>أخيرًا،</0><1>أداة إنشاء سيرة ذاتية مجانية ومفتوحة المصدر</1>"
@@ -2173,10 +2161,6 @@ msgstr "حر الشكل"
 msgid "French"
 msgstr "الفرنسية"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "من"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "من سيرتك الذاتية والإعلان الوظيفي"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "يفتح في علامة تبويب جديدة"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "ملاحظة اختيارية للوكيل"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "ملاحظة اختيارية للوكيل…"
 
@@ -3997,10 +3985,6 @@ msgstr "بحث..."
 msgid "Search…"
 msgstr "ابحث…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "بحث في الويب"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "تم نسخ السر إلى الحافظة."
@@ -4336,6 +4320,11 @@ msgstr "مصدر"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "شفرة المصدر"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "المصدر: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "تعذر فتح هذا المساعد."
 msgid "This date will not be read correctly."
 msgstr "لن يتم قراءة هذا التاريخ بشكل صحيح."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "لم يعد من الممكن الرد على طلب التعديل هذا."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "لن يتم التعرف على عنوان البريد الإلكتروني هذا."
@@ -4885,6 +4878,18 @@ msgstr "تبديل الشريط الجانبي الأيمن"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "تبديل الخيوط"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "الرموز: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "الرموز: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "الرموز: {total} ({cached} مخزّنة مؤقتًا)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "لم نتمكن من اكتشاف التنسيق تلقائيًا - ير
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "لم نتمكن من العثور على تلك الصفحة"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "بحث الويب"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

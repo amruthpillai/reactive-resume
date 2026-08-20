@@ -97,18 +97,6 @@ msgstr "{passedRules} av {totalRules} kontroller passerade"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Objekt {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} tokens"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} tokens"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} tokens · {cached} cachade"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Äntligen är det dags,</0><1>En gratis CV-byggare med öppen källkod</1>"
@@ -2173,10 +2161,6 @@ msgstr "Fri form"
 msgid "French"
 msgstr "Franska"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "från"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Från ditt CV och inlägget"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "öppnas i ny flik"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Valfri anteckning till agenten"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Valfri anteckning till agenten…"
 
@@ -3997,10 +3985,6 @@ msgstr "Sök..."
 msgid "Search…"
 msgstr "Sök…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Sökte på webben"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Hemligheten kopierades till urklipp."
@@ -4336,6 +4320,11 @@ msgstr "Källa"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Källkod"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Källa: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Den här assistenten kunde inte öppnas."
 msgid "This date will not be read correctly."
 msgstr "Detta datum kommer inte att läsas korrekt."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Den här redigeringsförfrågan kan inte längre besvaras."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Denna e-postadress kommer inte att kännas igen."
@@ -4885,6 +4878,18 @@ msgstr "Växla höger sidofält"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Växla trådar"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokens: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokens: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokens: {total} ({cached} cachade)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Vi kunde inte identifiera formatet automatiskt — vänligen välj det o
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Vi kunde inte hitta den sidan"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Webbsökning"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

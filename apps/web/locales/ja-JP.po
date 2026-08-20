@@ -97,18 +97,6 @@ msgstr "{totalRules} 件中 {passedRules} 件のチェックに合格しまし�
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · アイテム {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal}トークン"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total}トークン"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total}トークン（うちキャッシュ済み: {cached}トークン）"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>ついに登場、</0><1>無料・オープンソースのレジュメビルダー</1>"
@@ -2173,10 +2161,6 @@ msgstr "自由形式"
 msgid "French"
 msgstr "フランス語"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "移動元"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "履歴書と求人情報から"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "新しいタブで開きます"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "エージェントへのメモ（任意）"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "エージェントへのメモ（任意）…"
 
@@ -3997,10 +3985,6 @@ msgstr "検索..."
 msgid "Search…"
 msgstr "検索…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "ウェブを検索しました"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "シークレットをクリップボードにコピーしました。"
@@ -4336,6 +4320,11 @@ msgstr "ソース"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "ソースコード"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "ソース: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "このアシスタントを開くことができませんでした。"
 msgid "This date will not be read correctly."
 msgstr "この日付は正しく読み取れません。"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "この編集リクエストには回答できなくなりました。"
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "このメールアドレスは認識されません。"
@@ -4885,6 +4878,18 @@ msgstr "右サイドバーの切り替え"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "スレッドの切り替え"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "トークン: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "トークン: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "トークン: {total}（{cached} キャッシュ済み）"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "フォーマットを自動的に検出できませんでした。上記
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "そのページは見つかりませんでした"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "ウェブ検索"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

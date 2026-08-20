@@ -97,18 +97,6 @@ msgstr "{totalRules} ta tekshiruvdan {passedRules} oʻtdi"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Element {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} token · {cached} keshlangan"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Nihoyat,</0><1>Bepul va ochiq manbali tarjimai hol yaratuvchisi</1>"
@@ -2173,10 +2161,6 @@ msgstr "Erkin shakl"
 msgid "French"
 msgstr "Fransuz tili"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "manba:"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Rezyumengiz va e'londan"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "yangi tabda ochiladi"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Agent uchun ixtiyoriy izoh"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Agent uchun ixtiyoriy izoh…"
 
@@ -3997,10 +3985,6 @@ msgstr "Qidirish..."
 msgid "Search…"
 msgstr "… ni qidiring"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Internetdan qidirdi"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Maxfiy kod buferga nusxalandi."
@@ -4336,6 +4320,11 @@ msgstr "Manba"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Manba kodi"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Manba: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Bu yordamchini ochib bo'lmadi."
 msgid "This date will not be read correctly."
 msgstr "Bu sana to'g'ri o'qilmaydi."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Bu tahrirlash so'roviga endi javob berib bo'lmaydi."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Ushbu elektron pochta manzili tanib bo'lmaydi."
@@ -4885,6 +4878,18 @@ msgstr "O'ng yon panelni yoqish/o'chirish"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Mavzularni ochish/o'chirish"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokenlar: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokenlar: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokenlar: {total} ({cached} keshlangan)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Formatni avtomatik ravishda aniqlay olmadik — iltimos, uni yuqoridan t
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Biz o'sha sahifani topa olmadik"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Veb-qidiruv"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

@@ -97,18 +97,6 @@ msgstr "{passedRules}/{totalRules} ellenőrzés sikeres"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Tétel: {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} token · {cached} gyorsítótárazott"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Végre</0><1>egy ingyenes és nyílt forráskódú önéletrajz‑készítő</1>"
@@ -2173,10 +2161,6 @@ msgstr "Szabad formátumú"
 msgid "French"
 msgstr "francia"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "innen:"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Az önéletrajzodból és a hirdetésből"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "új lapon nyílik meg"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Opcionális megjegyzés az ügynöknek"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Opcionális megjegyzés az ügynöknek…"
 
@@ -3997,10 +3985,6 @@ msgstr "Keresés..."
 msgid "Search…"
 msgstr "Keresés…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Keresett a weben"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "A titkos kód a vágólapra másolva."
@@ -4336,6 +4320,11 @@ msgstr "Forrás"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Forráskód"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Forrás: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Ez az asszisztens nem nyitható meg."
 msgid "This date will not be read correctly."
 msgstr "Ez a dátum nem lesz helyesen olvasható."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Erre a szerkesztési kérésre már nem lehet válaszolni."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Ezt az e-mail címet a rendszer nem ismeri fel."
@@ -4885,6 +4878,18 @@ msgstr "Jobb oldalsáv bekapcsolása"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Témák ki-/bekapcsolása"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokenek: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokenek: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokenek: {total} ({cached} gyorsítótárazva)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Nem tudtuk automatikusan felismerni a formátumot – kérjük, válassz
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Nem találtuk meg az oldalt"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Webes keresés"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

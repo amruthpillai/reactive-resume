@@ -97,18 +97,6 @@ msgstr "Izietas {passedRules} no {totalRules} pārbaudēm"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Vienums {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} tokeni"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} tokeni"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} tokeni · {cached} kešatmiņā saglabāti"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Beidzot,</0><1>bezmaksas un atvērtā pirmkoda CV veidotājs</1>"
@@ -2173,10 +2161,6 @@ msgstr "Brīvā forma"
 msgid "French"
 msgstr "Franču"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "no"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "No jūsu CV un sludinājuma"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "atveras jaunā cilnē"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Neobligāta piezīme aģentam"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Neobligāta piezīme aģentam…"
 
@@ -3997,10 +3985,6 @@ msgstr "Meklēt..."
 msgid "Search…"
 msgstr "Meklēt…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Meklēja tīmeklī"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Noslēpums nokopēts starpliktuvē."
@@ -4336,6 +4320,11 @@ msgstr "Avots"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Pirmkods"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Avots: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Šo palīgu nevarēja atvērt."
 msgid "This date will not be read correctly."
 msgstr "Šis datums netiks nolasīts pareizi."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Uz šo rediģēšanas pieprasījumu vairs nevar atbildēt."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Šī e-pasta adrese netiks atpazīta."
@@ -4885,6 +4878,18 @@ msgstr "Pārslēgt labo sānjjoslu"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Pārslēgt pavedienus"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokeni: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokeni: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokeni: {total} ({cached} kešatmiņā)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Mēs nevarējām automātiski noteikt formātu — lūdzu, izvēlieties 
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Mēs nevarējām atrast šo lapu."
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Meklēšana tīmeklī"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

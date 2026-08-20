@@ -97,18 +97,6 @@ msgstr "{passedRules} of {totalRules} காசோலைகள் நிறை�
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · உருப்படி {itemNumber} "
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} டோக்கன்கள்"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} டோக்கன்கள்"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} டோக்கன்கள் · {cached} கேச் செய்யப்பட்டவை"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>இறுதியாக,</0><1>முற்றிலும் இலவசமான மற்றும் ஓபன் சோர்ஸ் ரெஸ்யூம் பில்டர்</1>"
@@ -2173,10 +2161,6 @@ msgstr "இலவச வடிவம்"
 msgid "French"
 msgstr "ஃபிரென்ச்"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "இருந்து"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "உங்கள் விண்ணப்பம் மற்றும் இடுகையிலிருந்து"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "புதிய தாவலில் திறக்கிறது"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "ஏஜென்டுக்கான விருப்பக் குறிப்பு"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "ஏஜென்டுக்கான விருப்பக் குறிப்பு…"
 
@@ -3997,10 +3985,6 @@ msgstr "தேடு..."
 msgid "Search…"
 msgstr "தேடு…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "இணையத்தில் தேடியது"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "ரகசியம் கிளிப்போர்டுக்கு நகலெடுக்கப்பட்டுள்ளது."
@@ -4336,6 +4320,11 @@ msgstr "ஆதாரம்"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "மூல குறியீடு"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "மூலம்: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "இந்த உதவியாளரைத் திறக்க மு
 msgid "This date will not be read correctly."
 msgstr "இந்த தேதி சரியாக படிக்கப்படாது."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "இந்தத் திருத்தக் கோரிக்கைக்கு இனி பதிலளிக்க முடியாது."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "இந்த மின்னஞ்சல் முகவரி அங்கீகரிக்கப்படாது."
@@ -4885,6 +4878,18 @@ msgstr "வலது பக்கப் பட்டை மாற்று"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "இழைகளை நிலைமாற்று"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "டோக்கன்கள்: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "டோக்கன்கள்: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "டோக்கன்கள்: {total} ({cached} கேச் செய்யப்பட்டவை)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "எங்களால் வடிவமைப்பைத் தான�
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "எங்களால் அந்தப் பக்கத்தைக் கண்டுபிடிக்க முடியவில்லை."
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "இணையத் தேடல்"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

@@ -97,18 +97,6 @@ msgstr "{totalRules} 검사 중 {passedRules} 검사 통과"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · 항목 {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} 토큰"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} 토큰"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} 토큰 · {cached} 캐시됨"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>마침내,</0><1>무료 오픈 소스 이력서 작성 도구</1>"
@@ -2173,10 +2161,6 @@ msgstr "자유 형식"
 msgid "French"
 msgstr "프랑스어"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "이동 전 위치"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "이력서와 공고에서"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "새 탭에서 열림"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "에이전트를 위한 메모(선택 사항)"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "에이전트를 위한 메모(선택 사항)…"
 
@@ -3997,10 +3985,6 @@ msgstr "검색..."
 msgid "Search…"
 msgstr "검색…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "웹을 검색함"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "비밀 키가 클립보드에 복사되었습니다."
@@ -4336,6 +4320,11 @@ msgstr "출처"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "소스 코드"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "소스: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "이 도우미를 열 수 없습니다."
 msgid "This date will not be read correctly."
 msgstr "이 날짜는 올바르게 읽혀지지 않습니다."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "이 편집 요청에는 더 이상 응답할 수 없습니다."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "이 이메일 주소는 인식되지 않습니다."
@@ -4885,6 +4878,18 @@ msgstr "오른쪽 사이드바 토글"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "스레드 토글"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "토큰: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "토큰: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "토큰: {total} ({cached} 캐시됨)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "형식을 자동으로 감지할 수 없습니다. 위에서 직접 선�
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "해당 페이지를 찾을 수 없습니다."
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "웹 검색"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

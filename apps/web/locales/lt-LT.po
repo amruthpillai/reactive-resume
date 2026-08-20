@@ -97,18 +97,6 @@ msgstr "Patikslinimų: {passedRules} iš {totalRules}"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Prekė {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} tokenų"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} tokenų"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} tokenų · {cached} iš talpyklos"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Pagaliau,</0><1>nemokamas atvirojo kodo gyvenimo aprašymų kūrėjas</1>"
@@ -2173,10 +2161,6 @@ msgstr "Laisva forma"
 msgid "French"
 msgstr "Prancūzų"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "iš"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Iš jūsų gyvenimo aprašymo ir skelbimo"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "atidaro naujame skirtuke"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Neprivaloma pastaba agentui"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Neprivaloma pastaba agentui…"
 
@@ -3997,10 +3985,6 @@ msgstr "Ieškoti..."
 msgid "Search…"
 msgstr "Paieška…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Ieškojo žiniatinklyje"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Slaptas kodas nukopijuotas į iškarpinę."
@@ -4336,6 +4320,11 @@ msgstr "Šaltinis"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Programos kodas"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Šaltinis: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Šio asistento atidaryti nepavyko."
 msgid "This date will not be read correctly."
 msgstr "Ši data nebus perskaityta teisingai."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Į šią redagavimo užklausą nebegalima atsakyti."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Šis el. pašto adresas nebus atpažintas."
@@ -4885,6 +4878,18 @@ msgstr "Dešiniosios šoninės juostos perjungimas"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Perjungti gijas"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Žetonai: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Žetonai: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Žetonai: {total} ({cached} talpykloje)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Nepavyko automatiškai aptikti formato – pasirinkite jį aukščiau."
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Nepavyko rasti to puslapio"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Žiniatinklio paieška"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

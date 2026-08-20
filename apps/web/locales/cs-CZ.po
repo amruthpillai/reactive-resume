@@ -97,18 +97,6 @@ msgstr "{passedRules} z {totalRules} kontrol provedeno"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Položka {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} tokenů"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} tokenů"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} tokenů · {cached} v mezipaměti"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Konečně</0><1>Bezplatný nástroj pro tvorbu životopisů s otevřeným zdrojovým kódem</1>"
@@ -2173,10 +2161,6 @@ msgstr "Volný formát"
 msgid "French"
 msgstr "Francouzština"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "z"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Z vašeho životopisu a inzerátu"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "otevře se na nové kartě"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Volitelná poznámka pro agenta"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Volitelná poznámka pro agenta…"
 
@@ -3997,10 +3985,6 @@ msgstr "Hledat..."
 msgid "Search…"
 msgstr "Hledat…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Prohledal web"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Tajný kód zkopírován do schránky."
@@ -4336,6 +4320,11 @@ msgstr "Zdroj"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Zdrojový kód"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Zdroj: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Tohoto asistenta se nepodařilo otevřít."
 msgid "This date will not be read correctly."
 msgstr "Toto datum nebude správně přečteno."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Na tuto žádost o úpravu již nelze odpovědět."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Tato e-mailová adresa nebude rozpoznána."
@@ -4885,6 +4878,18 @@ msgstr "Přepnutí pravého postranního panelu"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Přepnout vlákna"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokeny: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokeny: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokeny: {total} ({cached} v mezipaměti)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Formát se nám nepodařilo automaticky rozpoznat – vyberte jej prosí
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Tuto stránku jsme nenašli"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Vyhledávání na webu"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

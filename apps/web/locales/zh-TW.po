@@ -97,18 +97,6 @@ msgstr "{totalRules} 的 {passedRules} 檢查已通過”"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · 項目 {itemNumber} "
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} 個 token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} 個 token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} 個 token · 已快取 {cached} 個"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>終於有了，</0><1>免費且開放原始碼的履歷建立工具</1>"
@@ -2173,10 +2161,6 @@ msgstr "自由形式"
 msgid "French"
 msgstr "法文"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "來自"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "來自你的履歷與職缺公告"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "在新分頁中開啟"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "給代理的備註（選填）"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "給代理的備註（選填）…"
 
@@ -3997,10 +3985,6 @@ msgstr "搜尋..."
 msgid "Search…"
 msgstr "搜尋…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "已搜尋網路"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "私密金鑰已複製到剪貼簿。"
@@ -4336,6 +4320,11 @@ msgstr "來源"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "原始碼"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "來源：{0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "此助手無法打開。"
 msgid "This date will not be read correctly."
 msgstr "該日期將無法正確讀取。 」"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "此編輯請求已無法回應。"
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "該電子郵件地址將不會被辨識。 」"
@@ -4885,6 +4878,18 @@ msgstr "切換右側邊欄"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "切換線程"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Token：{threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Token：{total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Token：{total}（{cached} 已快取）"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "我們無法自動偵測格式—請在上方選擇格式。"
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "我們找不到那一頁"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "網路搜尋"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

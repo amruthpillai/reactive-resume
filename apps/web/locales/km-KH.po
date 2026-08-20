@@ -97,18 +97,6 @@ msgstr "ការត្រួតពិនិត្យ {passedRules} នៃ {tota
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · ធាតុ {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} ថូខឹន"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} ថូខឹន"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} ថូខឹន · {cached} ក្នុងឃ្លាំងសម្ងាត់"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>ចុងក្រោយនេះ</0><1>កម្មវិធីបង្កើតប្រវត្តិរូបឥតគិតថ្លៃ និងបើកប្រភព</1>"
@@ -2173,10 +2161,6 @@ msgstr "ទម្រង់សេរី"
 msgid "French"
 msgstr "French"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "ពី"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "ពីប្រវត្តិរូប និងការប្រកាសរបស់អ្នក"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "បើក​ក្នុង​ផ្ទាំង​ថ្មី"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "ចំណាំស្រេចចិត្តសម្រាប់ភ្នាក់ងារ"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "ចំណាំស្រេចចិត្តសម្រាប់ភ្នាក់ងារ…"
 
@@ -3997,10 +3985,6 @@ msgstr "ស្វែងរក..."
 msgid "Search…"
 msgstr "ស្វែងរក…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "បានស្វែងរកលើអ៊ីនធឺណិត"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "កូនសោ​សម្ងាត់​ត្រូវ​បាន​ចម្លង​ទៅ​ក្ដារ​តម្រៀប។"
@@ -4336,6 +4320,11 @@ msgstr "ប្រភព"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "កូដ​ប្រភព"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "ប្រភព៖ {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "មិនអាចបើកជំនួយការនេះបានទ
 msgid "This date will not be read correctly."
 msgstr "កាលបរិច្ឆេទនេះនឹងមិនត្រូវបានអានត្រឹមត្រូវទេ។"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "សំណើកែសម្រួលនេះមិនអាចឆ្លើយតបបានទៀតទេ។"
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "អាសយដ្ឋានអ៊ីមែលនេះនឹងមិនត្រូវបានទទួលស្គាល់ទេ។"
@@ -4885,6 +4878,18 @@ msgstr "បិទបើករបារចំហៀងខាងស្តាំ"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "បិទ/បើកខ្សែស្រឡាយ"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "ថូខឹន៖ {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "ថូខឹន៖ {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "ថូខឹន៖ {total} ({cached} ក្នុងឃ្លាំងសម្ងាត់)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "យើងមិនអាចរកឃើញទម្រង់ដោយស
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "យើងរកមិនឃើញទំព័រនោះទេ"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "ការស្វែងរកតាមអ៊ីនធឺណិត"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

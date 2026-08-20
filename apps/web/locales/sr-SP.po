@@ -97,18 +97,6 @@ msgstr "# од # провјере су прошли"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "# · Ставка # "
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} токена"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} токена"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} токена · {cached} кеширано"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Коначно,</0><1>бесплатан и отворен алат за креирање резимеа</1>"
@@ -2173,10 +2161,6 @@ msgstr "Слободан облик"
 msgid "French"
 msgstr "Француски"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "из"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Из вашег животописа и објављивања"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "отвара се у новом језичку"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Опциона напомена за агента"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Опциона напомена за агента…"
 
@@ -3997,10 +3985,6 @@ msgstr "Претрага..."
 msgid "Search…"
 msgstr "Претрага…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Претражен веб"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Тајна је копирана у привремену меморију."
@@ -4336,6 +4320,11 @@ msgstr "Извор"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Изворни код"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Извор: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Овај помоћник није могао бити отворен."
 msgid "This date will not be read correctly."
 msgstr "Овај датум неће бити правилно прочитан“."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "На овај захтев за измену више није могуће одговорити."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Ова адреса е-поште неће бити препозната."
@@ -4885,6 +4878,18 @@ msgstr "Пребаци десну бочну траку"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Укључи/искључи нити"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Токени: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Токени: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Токени: {total} ({cached} кеширано)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Нисмо могли аутоматски да детектујемо �
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Нисмо могли да пронађемо ту страницу"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Веб претрага"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

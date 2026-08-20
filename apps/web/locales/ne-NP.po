@@ -97,18 +97,6 @@ msgstr "{totalRules} चेकहरू मध्ये {passedRules} पास 
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · वस्तु {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} टोकनहरू"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} टोकनहरू"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} टोकनहरू · {cached} क्यास गरिएको"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>अन्ततः,</0><1>निःशुल्क र खुला-स्रोत बायोडाटा निर्माण गर्ने साधन</1>"
@@ -2173,10 +2161,6 @@ msgstr "फ्री-फर्म"
 msgid "French"
 msgstr "फ्रेन्च"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "बाट"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "तपाईंको बायोडाटा र पोस्टिंगबाट"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "नयाँ ट्याबमा खुल्छ"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "एजेन्टका लागि वैकल्पिक टिप्पणी"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "एजेन्टका लागि वैकल्पिक टिप्पणी…"
 
@@ -3997,10 +3985,6 @@ msgstr "खोज्नुहोस्..."
 msgid "Search…"
 msgstr "खोज्नुहोस्…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "वेबमा खोजियो"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "गोप्य कोड क्लिपबोर्डमा प्रतिलिपि गरियो।"
@@ -4336,6 +4320,11 @@ msgstr "स्रोत"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "स्रोत कोड"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "स्रोत: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "यो सहायक खोल्न सकिएन।"
 msgid "This date will not be read correctly."
 msgstr "यो मिति सही रूपमा पढिने छैन।"
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "यो सम्पादन अनुरोधको अब जवाफ दिन सकिँदैन।"
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "यो इमेल ठेगाना पहिचान गरिने छैन।"
@@ -4885,6 +4878,18 @@ msgstr "दायाँ साइडबार स्विच गर्नुह
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "थ्रेडहरू टगल गर्नुहोस्"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "टोकनहरू: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "टोकनहरू: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "टोकनहरू: {total} ({cached} क्यास गरिएको)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "हामीले स्वचालित रूपमा ढाँच
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "हामीले त्यो पृष्ठ फेला पार्न सकेनौं।"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "वेब खोज"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

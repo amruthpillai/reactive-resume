@@ -97,18 +97,6 @@ msgstr "{passedRules} von {totalRules} Prüfungen bestanden"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Artikel {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} Tokens"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} Tokens"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} Tokens · {cached} im Cache"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Endlich,</0><1>ein kostenloser und quelloffener Lebenslauf-Builder</1>"
@@ -2173,10 +2161,6 @@ msgstr "Freiform"
 msgid "French"
 msgstr "Französisch"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "von"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Aus deinem Lebenslauf und der Ausschreibung"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "öffnet in neuem Tab"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Optionale Notiz für den Agenten"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Optionale Notiz für den Agenten…"
 
@@ -3997,10 +3985,6 @@ msgstr "Suchen..."
 msgid "Search…"
 msgstr "Suche…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Im Web gesucht"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Geheimnis wurde in die Zwischenablage kopiert."
@@ -4336,6 +4320,11 @@ msgstr "Quelle"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Quellcode"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Quelle: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Dieser Assistent konnte nicht geöffnet werden."
 msgid "This date will not be read correctly."
 msgstr "Dieses Datum wird nicht korrekt gelesen."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Diese Bearbeitungsanfrage kann nicht mehr beantwortet werden."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Diese E-Mail-Adresse wird nicht erkannt."
@@ -4885,6 +4878,18 @@ msgstr "Rechte Seitenleiste umschalten"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Threads umschalten"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokens: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokens: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokens: {total} ({cached} im Cache)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Das Format konnte nicht automatisch erkannt werden – bitte wählen Sie
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Wir konnten diese Seite nicht finden."
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Websuche"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

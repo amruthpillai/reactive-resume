@@ -97,18 +97,6 @@ msgstr "{passedRules} από {totalRules} ελέγχους με επιτυχία
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Στοιχείο {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} tokens"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} tokens"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} tokens · {cached} στην κρυφή μνήμη"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Επιτέλους,</0><1>ένας δωρεάν και ανοικτού κώδικα κατασκευαστής βιογραφικών σημειωμάτων</1>"
@@ -2173,10 +2161,6 @@ msgstr "Ελεύθερη μορφή"
 msgid "French"
 msgstr "Γαλλικά"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "από"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Από το βιογραφικό σας και την αγγελία"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "ανοίγει σε νέα καρτέλα"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Προαιρετική σημείωση για τον πράκτορα"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Προαιρετική σημείωση για τον πράκτορα…"
 
@@ -3997,10 +3985,6 @@ msgstr "Αναζήτηση..."
 msgid "Search…"
 msgstr "Αναζήτηση…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Αναζήτηση στον ιστό"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Το μυστικό αντιγράφηκε στο πρόχειρο."
@@ -4336,6 +4320,11 @@ msgstr "Πηγή"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Πηγαίος κώδικας"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Πηγή: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Δεν ήταν δυνατό το άνοιγμα αυτού του βο�
 msgid "This date will not be read correctly."
 msgstr "Αυτή η ημερομηνία δεν θα διαβαστεί σωστά."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Αυτό το αίτημα επεξεργασίας δεν μπορεί πλέον να απαντηθεί."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Αυτή η διεύθυνση email δεν θα αναγνωριστεί."
@@ -4885,6 +4878,18 @@ msgstr "Εναλλαγή δεξιάς πλευρικής γραμμής"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Εναλλαγή νημάτων"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Tokens: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Tokens: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Tokens: {total} ({cached} στην κρυφή μνήμη)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Δεν ήταν δυνατός ο αυτόματος εντοπισμό�
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Δεν μπορέσαμε να βρούμε αυτήν τη σελίδα"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Αναζήτηση στον ιστό"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

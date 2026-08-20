@@ -97,18 +97,6 @@ msgstr "Đã vượt qua {passedRules} trong tổng số {totalRules} kiểm tra
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Mục {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} token"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} token · {cached} từ bộ nhớ đệm"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Cuối cùng,</0><1>Công cụ tạo sơ yếu lý lịch miễn phí và mã nguồn mở</1>"
@@ -2173,10 +2161,6 @@ msgstr "Hình thức tự do"
 msgid "French"
 msgstr "Tiếng Pháp"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "từ"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "Từ sơ yếu lý lịch của bạn và tin tuyển dụng"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "mở ở tab mới"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Ghi chú tùy chọn cho tác nhân"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Ghi chú tùy chọn cho tác nhân…"
 
@@ -3997,10 +3985,6 @@ msgstr "Tìm kiếm..."
 msgid "Search…"
 msgstr "Tìm kiếm…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Đã tìm kiếm trên web"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Mã bí mật đã được sao chép vào clipboard."
@@ -4336,6 +4320,11 @@ msgstr "Nguồn"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Mã nguồn"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Nguồn: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Không thể mở trình trợ lý này."
 msgid "This date will not be read correctly."
 msgstr "Ngày này sẽ không được đọc chính xác."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "Không thể trả lời yêu cầu chỉnh sửa này được nữa."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Địa chỉ email này sẽ không được công nhận."
@@ -4885,6 +4878,18 @@ msgstr "Bật/tắt thanh bên phải"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Luồng chuyển đổi"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Token: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Token: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Token: {total} ({cached} từ bộ nhớ đệm)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Chúng tôi không thể tự động nhận diện định dạng — v
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Chúng tôi không tìm thấy trang đó."
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Tìm kiếm trên web"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

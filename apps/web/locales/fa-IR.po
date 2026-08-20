@@ -97,18 +97,6 @@ msgstr "{passedRules} از {totalRules} بررسی با موفقیت انجام 
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · مورد {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} توکن"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} توکن"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} توکن · {cached} کش‌شده"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>در نهایت،</0><1>یک رزومه‌ساز رایگان و متن‌باز</1>"
@@ -2173,10 +2161,6 @@ msgstr "فرم آزاد"
 msgid "French"
 msgstr "فرانسوی"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "از"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "از رزومه و آگهی شما"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "در زبانهٔ جدید باز می‌شود"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "یادداشت اختیاری برای عامل"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "یادداشت اختیاری برای عامل…"
 
@@ -3997,10 +3985,6 @@ msgstr "جستجو..."
 msgid "Search…"
 msgstr "جستجو…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "در وب جستجو شد"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "کلید مخفی در کلیپ‌بورد کپی شد."
@@ -4336,6 +4320,11 @@ msgstr "منبع"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "کد منبع"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "منبع: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "این دستیار قابل باز شدن نیست."
 msgid "This date will not be read correctly."
 msgstr "این تاریخ به‌درستی خوانده نخواهد شد."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "دیگر نمی‌توان به این درخواست ویرایش پاسخ داد."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "این نشانی ایمیل شناسایی نخواهد شد."
@@ -4885,6 +4878,18 @@ msgstr "گوشه‌ای کردن نوار کناری راست"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "تغییر وضعیت موضوعات"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "توکن‌ها: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "توکن‌ها: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "توکن‌ها: {total} ({cached} کش‌شده)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "ما نتوانستیم قالب را به طور خودکار تشخی�
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "ما نتوانستیم آن صفحه را پیدا کنیم"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "جستجوی وب"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx

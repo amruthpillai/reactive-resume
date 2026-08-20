@@ -97,18 +97,6 @@ msgstr "{passedRules} із {totalRules} перевірок пройшли"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Пункт {itemNumber}"
 
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{threadTokenTotal} tokens"
-msgstr "{threadTokenTotal} токенів"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens"
-msgstr "{total} токенів"
-
-#: src/routes/agent/-components/agent-chat.tsx
-msgid "{total} tokens · {cached} cached"
-msgstr "{total} токенів · {cached} кешовано"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
 msgstr "<0>Нарешті,</0><1>безкоштовний конструктор резюме з відкритим кодом</1>"
@@ -2173,10 +2161,6 @@ msgstr "Вільна форма"
 msgid "French"
 msgstr "Французька"
 
-#: src/routes/agent/-components/patch-approval-card.tsx
-msgid "from"
-msgstr "з"
-
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "From your resume and the posting"
 msgstr "З вашого резюме й оголошення"
@@ -3202,6 +3186,10 @@ msgid "opens in new tab"
 msgstr "відкриється у новій вкладці"
 
 #: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Optional note for the agent"
+msgstr "Необов'язкова примітка для агента"
+
+#: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Optional note for the agent…"
 msgstr "Необов'язкова примітка для агента…"
 
@@ -3997,10 +3985,6 @@ msgstr "Пошук..."
 msgid "Search…"
 msgstr "Пошук…"
 
-#: src/routes/agent/-components/tool-part-card.tsx
-msgid "Searched the web"
-msgstr "Виконано пошук в інтернеті"
-
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Secret copied to clipboard."
 msgstr "Секрет скопійовано до буфера обміну."
@@ -4336,6 +4320,11 @@ msgstr "Джерело"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
 msgstr "Вихідний код"
+
+#. placeholder {0}: operation.from
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "Source: {0}"
+msgstr "Джерело: {0}"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Sources"
@@ -4692,6 +4681,10 @@ msgstr "Цей помічник не вдалося відкрити."
 msgid "This date will not be read correctly."
 msgstr "Ця дата не буде прочитана правильно."
 
+#: src/routes/agent/-components/patch-approval-card.tsx
+msgid "This edit request can no longer be answered."
+msgstr "На цей запит на редагування більше не можна відповісти."
+
 #: src/libs/resume/ats.ts
 msgid "This email address will not be recognized."
 msgstr "Ця електронна адреса не буде розпізнана."
@@ -4885,6 +4878,18 @@ msgstr "Перемикання правої бічної панелі"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Toggle threads"
 msgstr "Перемикання тем"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {threadTokenTotal}"
+msgstr "Токени: {threadTokenTotal}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total}"
+msgstr "Токени: {total}"
+
+#: src/routes/agent/-components/agent-chat.tsx
+msgid "Tokens: {total} ({cached} cached)"
+msgstr "Токени: {total} ({cached} кешовано)"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
@@ -5304,6 +5309,10 @@ msgstr "Нам не вдалося автоматично визначити ф�
 #: src/components/layout/not-found-screen.tsx
 msgid "We couldn't find that page"
 msgstr "Нам не вдалося знайти цю сторінку"
+
+#: src/routes/agent/-components/tool-part-card.tsx
+msgid "Web search"
+msgstr "Пошук в інтернеті"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
