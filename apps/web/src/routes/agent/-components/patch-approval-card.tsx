@@ -25,7 +25,7 @@ type ApprovalPartFields = {
 	approval?: { id?: string; approved?: boolean; reason?: string };
 };
 
-type PatchOperationLike = { op?: unknown; path?: unknown; value?: unknown; from?: unknown };
+export type PatchOperationLike = { op?: unknown; path?: unknown; value?: unknown; from?: unknown };
 
 function truncateValue(value: unknown, max = 80) {
 	if (value === undefined) return null;
@@ -33,7 +33,7 @@ function truncateValue(value: unknown, max = 80) {
 	return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
-function OperationRow({ operation }: { operation: PatchOperationLike }) {
+export function OperationRow({ operation }: { operation: PatchOperationLike }) {
 	const valuePreview = truncateValue(operation.value);
 
 	return (

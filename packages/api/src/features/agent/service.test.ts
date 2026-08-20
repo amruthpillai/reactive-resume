@@ -1021,6 +1021,14 @@ describe("agentService.messages.send", () => {
 				message: expect.objectContaining({ id: "ui-assistant-1" }),
 			}),
 		);
+
+		// Usage metadata is attached on the finish part only and carries the provider's model id.
+		const messageMetadata = uiStreamOptions?.messageMetadata as (options: { part: Record<string, unknown> }) => unknown;
+		expect(messageMetadata({ part: { type: "finish", totalUsage: { totalTokens: 42 } } })).toEqual({
+			usage: { totalTokens: 42 },
+			model: "gpt-5",
+		});
+		expect(messageMetadata({ part: { type: "text-delta" } })).toBeUndefined();
 	});
 
 	it("repairs legacy user-answer messages that followed an unresolved ask-user-question tool call", async () => {

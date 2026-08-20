@@ -4,7 +4,7 @@ import type { FilePart, ImagePart, ModelMessage, TextPart, UIMessage } from "ai"
 import type { getModel } from "../ai/service";
 import { ORPCError } from "@orpc/client";
 import { streamToEventIterator } from "@orpc/server";
-import { convertToModelMessages, safeValidateUIMessages, stepCountIs, ToolLoopAgent } from "ai";
+import { convertToModelMessages, isStepCount, safeValidateUIMessages, smoothStream, ToolLoopAgent } from "ai";
 import { and, asc, count, desc, eq, gte, inArray, isNull, max, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
@@ -788,7 +788,7 @@ function createAgent(input: {
 	return new ToolLoopAgent({
 		model: input.model,
 		instructions: buildAgentInstructions({ hasProviderNativeSearch: "web_search" in tools }),
-		stopWhen: stepCountIs(MAX_AGENT_STEPS),
+		stopWhen: isStepCount(MAX_AGENT_STEPS),
 		maxOutputTokens: MAX_AGENT_OUTPUT_TOKENS,
 		maxRetries: MAX_AGENT_MODEL_RETRIES,
 		timeout: { stepMs: AGENT_STEP_TIMEOUT_MS },
@@ -1219,6 +1219,7 @@ export const agentService = {
 				const result = await agent.stream({
 					messages: attachModelPartsToLatestUserMessage(modelMessages, attachmentModelParts),
 					abortSignal: controller.signal,
+					experimental_transform: smoothStream({ chunking: "word" }),
 					// Crash-safety: fold each finished step into the draft row so a process death
 					// mid-run loses at most the current step, never the whole transcript.
 					onStepEnd: async (step) => {
@@ -1244,6 +1245,9 @@ export const agentService = {
 							originalMessages: messages,
 							generateMessageId: () => responseMessageId,
 							sendSources: true,
+							// Round-trips inside the persisted uiMessage jsonb — no migration needed.
+							messageMetadata: ({ part }) =>
+								part.type === "finish" ? { usage: part.totalUsage, model: runnableProvider.model } : undefined,
 							onFinish: async ({ responseMessage, isAborted }) => {
 								let persistError: unknown;
 								try {
