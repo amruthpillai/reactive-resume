@@ -41,6 +41,8 @@ export function SectionDropdownMenu({ type }: Props) {
 	const updateResumeData = useUpdateResumeData();
 	const resume = useCurrentResume();
 	const section = type === "summary" ? resume.data.summary : resume.data.sections[type];
+	const dropDownValue =
+		type === "skills" && resume.data.sections[type].layout === "inline" ? "inline" : section.columns.toString();
 
 	const onAddItem = () => {
 		if (type === "summary") return;
@@ -76,6 +78,15 @@ export function SectionDropdownMenu({ type }: Props) {
 
 	const onSetColumns = (value: string) => {
 		updateResumeData((draft) => {
+			if (type === "skills") {
+				if (value === "inline") {
+					draft.sections[type].layout = value;
+					draft.sections[type].columns = 1;
+					return;
+				}
+				draft.sections[type].layout = "default";
+			}
+
 			if (type === "summary") {
 				draft.summary.columns = Number.parseInt(value, 10);
 			} else {
@@ -150,12 +161,21 @@ export function SectionDropdownMenu({ type }: Props) {
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
-							<DropdownMenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
+							<DropdownMenuRadioGroup value={dropDownValue} onValueChange={onSetColumns}>
 								{[1, 2, 3, 4, 5, 6].map((column) => (
 									<DropdownMenuRadioItem key={column} value={column.toString()}>
 										<Plural value={column} one="# Column" other="# Columns" />
 									</DropdownMenuRadioItem>
 								))}
+
+								{type === "skills" && (
+									<>
+										<DropdownMenuSeparator />
+										<DropdownMenuRadioItem value="inline">
+											<Trans>1 Column / Inline</Trans>
+										</DropdownMenuRadioItem>
+									</>
+								)}
 							</DropdownMenuRadioGroup>
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>
