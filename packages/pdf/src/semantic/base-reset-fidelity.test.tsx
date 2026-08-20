@@ -152,7 +152,11 @@ describe("PDF semantic base and reset fidelity", () => {
 	});
 
 	it("restores Onyx's local company weight with revert", async () => {
-		expect(await finalOnyxCompanyStyle()).toMatchObject({ fontWeight: "500" });
-		expect(await finalOnyxCompanyStyle("revert")).toMatchObject({ fontWeight: "500" });
+		// The local value is the template's bold weight for the body family:
+		// IBM Plex Serif stored as ["400", "500"] resolves to its true Bold
+		// face (#3310) — still distinct from the inherited 400 and the initial
+		// undefined, so the reset-keyword contract below stays verifiable.
+		expect(await finalOnyxCompanyStyle()).toMatchObject({ fontWeight: "700" });
+		expect(await finalOnyxCompanyStyle("revert")).toMatchObject({ fontWeight: "700" });
 	});
 });

@@ -1,6 +1,7 @@
 import type { ResolvedNodeStyle, SemanticNode } from "@reactive-resume/resume/stylesheet";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
+import { resolveBoldFontWeight } from "@reactive-resume/fonts";
 
 export type BuildPdfBaseStylesInput = {
 	data: ResumeData;
@@ -57,7 +58,9 @@ export function buildPdfBaseStyles({
 	const body = data.metadata.typography.body;
 	const heading = data.metadata.typography.heading;
 	const bodyWeight = body.fontWeights[0] ?? "400";
-	const boldWeight = body.fontWeights.at(-1) ?? "600";
+	// Bold must use the family's true Bold face when one exists; the last
+	// stored weight is only a fallback (#3310).
+	const boldWeight = resolveBoldFontWeight(body.fontFamily, body.fontWeights) ?? body.fontWeights.at(-1) ?? "600";
 	const headingWeight = heading.fontWeights.at(-1) ?? "600";
 
 	const visit = (node: SemanticNode) => {

@@ -71,6 +71,30 @@ describe("registerFonts", () => {
 		);
 	});
 
+	it("registers the family's true Bold face when the stored weights stop below it (#3310)", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		// Open Sans stored with the default Regular+SemiBold pairing: bold
+		// styles resolve to 700, so that face must be registered or
+		// @react-pdf/renderer would silently fall back to the nearest weight.
+		const openSansTypography = {
+			...typography,
+			body: { ...typography.body, fontFamily: "Open Sans", fontWeights: ["400", "600"] },
+			heading: { ...typography.heading, fontFamily: "Open Sans", fontWeights: ["400", "600"] },
+		} satisfies Typography;
+
+		registerFonts(openSansTypography, "en-US");
+
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({ family: "Open Sans", fontWeight: 700, fontStyle: "normal" }),
+		);
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({ family: "Open Sans", fontWeight: 700, fontStyle: "italic" }),
+		);
+	});
+
 	it("registers the Korean Noto fallback for the ko-KR locale so Hangul renders", async () => {
 		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
 		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
@@ -175,6 +199,27 @@ describe("registerFonts", () => {
 		const hyphenationCallback = registerHyphenationSpy.mock.calls.at(-1)?.[0];
 		// Arabic is cursive — words must NOT be split per character.
 		expect(hyphenationCallback?.("سلام")).toEqual(["سلام"]);
+	});
+
+	it("registers the fallback family's true Bold face when primary bold exceeds stored weights (#3310)", async () => {
+		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+
+		const openSansTypography = {
+			...typography,
+			body: { ...typography.body, fontFamily: "Open Sans", fontWeights: ["400", "600"] },
+			heading: { ...typography.heading, fontFamily: "Open Sans", fontWeights: ["400", "600"] },
+		} satisfies Typography;
+
+		registerFonts(openSansTypography, "zh-CN");
+
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({ family: "Noto Sans SC", fontWeight: 700, fontStyle: "normal" }),
+		);
+		expect(registerSpy).toHaveBeenCalledWith(
+			expect.objectContaining({ family: "Noto Sans SC", fontWeight: 700, fontStyle: "italic" }),
+		);
 	});
 
 	it("registers bold CJK fallback variants so strong text keeps bold glyphs", async () => {

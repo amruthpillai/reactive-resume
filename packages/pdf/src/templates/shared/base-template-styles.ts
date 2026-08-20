@@ -2,6 +2,7 @@ import type { Style } from "@react-pdf/types";
 import type { Picture, ResumeData } from "@reactive-resume/schema/resume/data";
 import type { getTemplateMetrics } from "./metrics";
 import type { createRtlStyleHelpers } from "./rtl";
+import { resolveBoldFontWeight } from "@reactive-resume/fonts";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
 
 type BaseTemplateStylesInput = {
@@ -82,9 +83,12 @@ export function createBaseTemplateStyles({
 			fontSize: metadata.typography.body.fontSize * 0.875,
 		} satisfies Style,
 
-		/** Default fallback "600". scizor overrides to "700". */
+		/** True Bold face when the family has one (#3310); falls back to the last stored weight. scizor overrides color only. */
 		bold: {
-			fontWeight: metadata.typography.body.fontWeights.at(-1) ?? "600",
+			fontWeight:
+				resolveBoldFontWeight(metadata.typography.body.fontFamily, metadata.typography.body.fontWeights) ??
+				metadata.typography.body.fontWeights.at(-1) ??
+				"600",
 		} satisfies Style,
 
 		richParagraph: {
