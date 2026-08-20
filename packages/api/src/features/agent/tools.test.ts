@@ -106,7 +106,7 @@ describe("agent tools", () => {
 		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain(
 			"/customSections/0/items/0/description",
 		);
-		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("never /data/basics/name or /name");
+		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("never prefixed with /data");
 		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("clean Markdown");
 	});
 });

@@ -1,10 +1,19 @@
+import type { ApplyResumePatchInput } from "@reactive-resume/ai/tools/agent-tool-contracts";
 import type { JsonPatchOperation } from "@reactive-resume/resume/patch";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { FilePart, ImagePart, ModelMessage, TextPart, UIMessage } from "ai";
 import type { getModel } from "../ai/service";
 import { ORPCError } from "@orpc/client";
 import { streamToEventIterator } from "@orpc/server";
-import { convertToModelMessages, isStepCount, safeValidateUIMessages, smoothStream, ToolLoopAgent } from "ai";
+import {
+	addToolInputExamplesMiddleware,
+	convertToModelMessages,
+	isStepCount,
+	safeValidateUIMessages,
+	smoothStream,
+	ToolLoopAgent,
+	wrapLanguageModel,
+} from "ai";
 import { and, asc, count, desc, eq, gte, inArray, isNull, max, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
@@ -23,6 +32,7 @@ import {
 	insertDraftAssistantMessage,
 	upsertAssistantUiMessage,
 } from "./messages-persistence";
+import { repairAgentToolCall } from "./repair";
 import { buildAgentDraftResumeName, buildUniqueAgentDraftSlug, normalizeAgentResumePatchOperations } from "./resume";
 import { claimActiveAgentRun, clearActiveAgentRunIfCurrent, isStaleAgentRun, reapStaleAgentRun } from "./runs";
 import { agentStreamLifecycle } from "./streams";
@@ -744,11 +754,35 @@ function createAgent(input: {
 	};
 	model: ReturnType<typeof getModel>;
 }) {
+	// One greppable JSON line per tool execution.
+	const timedToolHandler =
+		<A extends unknown[], R>(toolName: string, run: (...args: A) => Promise<R>) =>
+		async (...args: A): Promise<R> => {
+			const startedAt = Date.now();
+			let ok = true;
+			try {
+				return await run(...args);
+			} catch (error) {
+				ok = false;
+				throw error;
+			} finally {
+				console.info(
+					JSON.stringify({
+						evt: "agent.tool",
+						threadId: input.threadId,
+						tool: toolName,
+						ok,
+						durationMs: Date.now() - startedAt,
+					}),
+				);
+			}
+		};
+
 	const tools = buildAgentTools({
 		provider: input.provider,
 		options: { requirePatchApproval: !!input.requirePatchApproval },
 		handlers: {
-			readResume: async () => {
+			readResume: timedToolHandler("read_resume", async () => {
 				const resume = await resumeService.getById({ id: input.resumeId, userId: input.userId });
 				return {
 					id: resume.id,
@@ -769,25 +803,41 @@ function createAgent(input: {
 					],
 					data: resume.data,
 				};
-			},
-			readAttachment: (attachmentId) =>
+			}),
+			readAttachment: timedToolHandler("read_attachment", (attachmentId: string) =>
 				readAttachment({ id: attachmentId, threadId: input.threadId, userId: input.userId }),
-			applyResumePatch: ({ title, summary, operations }) =>
-				applyResumePatch({
-					userId: input.userId,
-					threadId: input.threadId,
-					resumeId: input.resumeId,
-					...(input.draftRowId ? { messageId: input.draftRowId } : {}),
-					title,
-					...(summary !== undefined ? { summary } : {}),
-					operations,
-				}),
+			),
+			applyResumePatch: timedToolHandler(
+				"apply_resume_patch",
+				({ title, summary, operations }: ApplyResumePatchInput) =>
+					applyResumePatch({
+						userId: input.userId,
+						threadId: input.threadId,
+						resumeId: input.resumeId,
+						...(input.draftRowId ? { messageId: input.draftRowId } : {}),
+						title,
+						...(summary !== undefined ? { summary } : {}),
+						operations,
+					}),
+			),
 		},
 	});
 
+	const instructionsText = buildAgentInstructions({ hasProviderNativeSearch: "web_search" in tools });
+
 	return new ToolLoopAgent({
-		model: input.model,
-		instructions: buildAgentInstructions({ hasProviderNativeSearch: "web_search" in tools }),
+		// Providers without native inputExamples support get them appended to the tool description.
+		model: wrapLanguageModel({ model: input.model, middleware: addToolInputExamplesMiddleware() }),
+		// The loop re-sends stable instructions every step; on anthropic, prompt caching pays from step 2.
+		instructions:
+			input.provider.provider === "anthropic"
+				? {
+						role: "system",
+						content: instructionsText,
+						providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } },
+					}
+				: instructionsText,
+		repairToolCall: repairAgentToolCall,
 		stopWhen: isStepCount(MAX_AGENT_STEPS),
 		maxOutputTokens: MAX_AGENT_OUTPUT_TOKENS,
 		maxRetries: MAX_AGENT_MODEL_RETRIES,
@@ -1223,6 +1273,17 @@ export const agentService = {
 					// Crash-safety: fold each finished step into the draft row so a process death
 					// mid-run loses at most the current step, never the whole transcript.
 					onStepEnd: async (step) => {
+						console.info(
+							JSON.stringify({
+								evt: "agent.step",
+								threadId: input.threadId,
+								runId,
+								step: step.stepNumber,
+								toolNames: step.toolCalls.map((call) => call.toolName),
+								usage: step.usage,
+								finishReason: step.finishReason,
+							}),
+						);
 						try {
 							draftUiMessage = applyStepToUiMessage(draftUiMessage, step);
 							const upserted = await upsertAssistantUiMessage({

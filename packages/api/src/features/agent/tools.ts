@@ -52,8 +52,10 @@ function buildProviderNativeAgentTools(provider: AgentProviderConfig): ToolSet {
 }
 
 export function buildAgentInstructions({ hasProviderNativeSearch }: { hasProviderNativeSearch: boolean }) {
+	// The JSON-Pointer conventions live in the read_resume result, the tool descriptions, and the
+	// tool input examples; the instructions keep only a compact reminder to save tokens per step.
 	const baseInstructions =
-		"You are an expert resume-writing agent inside Reactive Resume. Help the user improve the working resume for a target role. Read the resume before editing. Respond to the user in clean Markdown with concise paragraphs, bullets, and bold text when it improves scanability. Apply concise, valid JSON Patch operations when changes are useful. Patch paths are evaluated against the resume data object returned by read_resume, so use paths like /basics/name for the visible name and never /data/basics/name or /name. Built-in sections must use /sections/<sectionId>, for example /sections/experience/items/0/description. Custom sections must use /customSections/<index>, for example /customSections/0/items/0/description, even when their type is experience, education, or another built-in section type. apply_resume_patch cannot rename the resume file/title metadata. Batch related JSON Patch operations into one apply_resume_patch call for each coherent edit instead of making repeated patch calls for the same request. Ask the user a question when a missing preference blocks a high-confidence edit.";
+		"You are an expert resume-writing agent inside Reactive Resume. Help the user improve the working resume for a target role. Read the resume before editing. Respond to the user in clean Markdown with concise paragraphs, bullets, and bold text when it improves scanability. Apply concise, valid JSON Patch operations when changes are useful. Patch paths are rooted at the resume data object returned by read_resume — for example /basics/name, /sections/experience/items/0/description, or /customSections/0/items/0/description — never prefixed with /data. apply_resume_patch cannot rename the resume file/title metadata. Batch related JSON Patch operations into one apply_resume_patch call for each coherent edit instead of making repeated patch calls for the same request. Ask the user a question when a missing preference blocks a high-confidence edit.";
 
 	if (!hasProviderNativeSearch) {
 		return `${baseInstructions} Live web research is unavailable with the selected provider or model. If the user asks you to browse, search the web, fetch a URL, or use current online context, briefly tell them live web research is unavailable with the selected provider/model and ask them to paste or attach the relevant content. Continue normal resume editing using the resume, chat context, and attachments.`;
@@ -85,6 +87,16 @@ export function buildAgentTools(input: BuildAgentToolsInput): ToolSet {
 			description:
 				"Apply one cohesive batch of JSON Patch operations to the working resume data immediately. Paths are rooted at resume data; use /basics/name for the visible resume name, not /data/basics/name or /name. This tool cannot rename the resume file/title metadata. The user can restore the draft to the snapshot captured before a patch later. The result includes the complete post-patch resume; array indexes may have shifted — base further patches on it, never on an earlier read_resume.",
 			inputSchema: applyResumePatchInputSchema,
+			inputExamples: [
+				{
+					input: {
+						title: "Tighten the summary",
+						operations: [
+							{ op: "replace", path: "/sections/summary/content", value: "Impact-driven engineer with 8 years…" },
+						],
+					},
+				},
+			],
 			// Static approval gate: when the thread has "Review edits" on, the loop halts with an
 			// approval-requested part instead of executing; the SDK executes after approval.
 			...(input.options?.requirePatchApproval ? { needsApproval: true } : {}),

@@ -111,7 +111,17 @@ vi.mock("ai", async (importOriginal) => ({
 	ToolLoopAgent: vi.fn(),
 }));
 
-vi.mock("../ai/service", () => ({ getAgentModel: vi.fn() }));
+// Minimal V4 model stub: the real wrapLanguageModel/addToolInputExamplesMiddleware run against it.
+vi.mock("../ai/service", () => ({
+	getAgentModel: vi.fn(() => ({
+		specificationVersion: "v4",
+		provider: "mock",
+		modelId: "mock-model",
+		supportedUrls: {},
+		doGenerate: vi.fn(),
+		doStream: vi.fn(),
+	})),
+}));
 vi.mock("../ai/credentials", () => ({
 	assertAgentEnvironment: vi.fn(),
 	getAgentToolApprovalSecret: vi.fn(() => "test-approval-secret"),
@@ -154,6 +164,7 @@ beforeEach(() => {
 	messagesPersistenceMock.applyStepToUiMessage.mockImplementation((message: unknown) => message);
 	messagesPersistenceMock.insertDraftAssistantMessage.mockResolvedValue({ rowId: "draft-row-1", sequence: 1 });
 	messagesPersistenceMock.upsertAssistantUiMessage.mockResolvedValue({ rowId: "draft-row-1" });
+	messagesPersistenceMock.deleteDraftIfEmpty.mockResolvedValue(undefined);
 	for (const mock of Object.values(storageServiceMock)) mock.mockReset();
 	for (const mock of Object.values(resumeServiceMock)) mock.mockReset();
 	for (const mock of Object.values(aiProvidersServiceMock)) mock.mockReset();
