@@ -856,6 +856,10 @@ describe("agentService.messages.send", () => {
 						type: "tool-ask_user_question",
 						toolCallId: "call-1",
 						state: "output-available",
+						input: {
+							question: "How broadly should I rename?",
+							choices: ["Only change the main resume header name"],
+						},
 						output: "Only change the main resume header name",
 					},
 				],
@@ -1022,6 +1026,30 @@ describe("agentService.messages.send", () => {
 			legacyAnswerMessage.uiMessage,
 			retryMessage.uiMessage,
 		]);
+	});
+
+	it("rejects malformed UI message parts before claiming a run", async () => {
+		dbMock.select.mockImplementationOnce(() => selectLimitResult([buildActiveThread()]));
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+
+		const { agentService } = await import("./service");
+
+		const sending = agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: malformed fixture on purpose
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text" }] } as any,
+		});
+
+		await expect(sending).rejects.toMatchObject({ code: "BAD_REQUEST", message: "Invalid UI message parts." });
+		expect(claimActiveAgentRunMock).not.toHaveBeenCalled();
+		expect(dbMock.insert).not.toHaveBeenCalled();
 	});
 
 	it("rejects malformed attachment IDs before persisting a message", async () => {

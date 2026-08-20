@@ -4,7 +4,7 @@ import type { FilePart, ImagePart, ModelMessage, TextPart, UIMessage } from "ai"
 import type { getModel } from "../ai/service";
 import { ORPCError } from "@orpc/client";
 import { streamToEventIterator } from "@orpc/server";
-import { convertToModelMessages, stepCountIs, ToolLoopAgent } from "ai";
+import { convertToModelMessages, safeValidateUIMessages, stepCountIs, ToolLoopAgent } from "ai";
 import { and, asc, count, desc, eq, gte, inArray, isNull, max, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
@@ -1051,6 +1051,12 @@ export const agentService = {
 			}
 			if (input.message.role !== "user" && input.message.role !== "assistant") {
 				throw new ORPCError("BAD_REQUEST", { message: "Agent messages must be user messages or tool results." });
+			}
+
+			// Deliberately schema-less: provider-echoed tool parts must pass, and replayed history is never re-validated.
+			const validated = await safeValidateUIMessages({ messages: [input.message] });
+			if (!validated.success) {
+				throw new ORPCError("BAD_REQUEST", { message: "Invalid UI message parts." });
 			}
 
 			const [runnableProvider, attachments] = await Promise.all([
