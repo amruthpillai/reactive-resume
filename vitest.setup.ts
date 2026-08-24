@@ -16,6 +16,12 @@ afterEach(() => {
 	cleanup();
 });
 
+// Same reason as the cleanup above: RTL flips `IS_REACT_ACT_ENVIRONMENT` from its own global
+// `beforeAll`/`afterAll` hooks, which it skips without `test.globals`. Without the flag React
+// logs "The current testing environment is not configured to support act(...)" on every
+// `act()` call, so set it here instead.
+(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
 // jsdom polyfills for browser APIs that some libraries (cmdk, base-ui)
 // rely on but jsdom does not implement.
 if (typeof globalThis.ResizeObserver === "undefined") {
