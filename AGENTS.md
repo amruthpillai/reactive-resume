@@ -11,6 +11,16 @@ Before editing files for a substantial task:
 
 # AGENTS.md
 
+## Agent skills
+
+### Issue tracker
+
+Issues and specs are tracked in GitHub Issues for `amruthpillai/reactive-resume`. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+This repository uses a multi-context domain-doc layout. See `docs/agents/domain.md`.
+
 ## Cursor Cloud specific instructions
 
 ### Overview
