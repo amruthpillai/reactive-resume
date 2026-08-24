@@ -679,6 +679,11 @@ msgstr "Distincții"
 msgid "Azerbaijani"
 msgstr "Azeră"
 
+#. Action returning a signed-in user to the page where they manage linked providers
+#: src/features/auth/pages/error.tsx
+msgid "Back to authentication settings"
+msgstr ""
+
 #. Secondary navigation button on 2FA verification screen
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Back to Login"
@@ -687,6 +692,11 @@ msgstr "Înapoi la autentificare"
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Back to resumes"
 msgstr "Înapoi la CV-uri"
+
+#. Action returning the visitor to the sign-in page after a failed sign-in
+#: src/features/auth/pages/error.tsx
+msgid "Back to sign in"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Background Color"
@@ -1497,6 +1507,11 @@ msgstr "Descriere"
 #: src/routes/builder/$resumeId/-components/mobile-builder-shell.tsx
 msgid "Design"
 msgstr "Design"
+
+#. Label above the raw error text forwarded by the identity provider
+#: src/features/auth/pages/error.tsx
+msgid "Details from the provider:"
+msgstr ""
 
 #. Destructive action button to turn off two-factor authentication
 #: src/dialogs/auth/disable-two-factor.tsx
@@ -2981,6 +2996,10 @@ msgstr "Rețea"
 msgid "Never expires"
 msgstr "Nu expiră niciodată"
 
+#: src/features/auth/pages/error.tsx
+msgid "New account sign-ups are currently disabled on this server."
+msgstr ""
+
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
 msgid "New Application"
@@ -4209,6 +4228,11 @@ msgstr "Autentificați-vă cu GitHub, Google sau un furnizor OAuth personalizat.
 msgid "Sign up"
 msgstr "Înregistrare"
 
+#. Title on the page shown after a failed or cancelled OAuth sign-in
+#: src/features/auth/pages/error.tsx
+msgid "Sign-in didn't complete"
+msgstr ""
+
 #: src/features/auth/components/social-auth.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Signing in..."
@@ -4294,6 +4318,10 @@ msgstr "Altceva…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Ceva nu a mers bine"
+
+#: src/features/auth/pages/error.tsx
+msgid "Something went wrong while signing you in. Please try again."
+msgstr ""
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
@@ -4570,6 +4598,18 @@ msgstr "Thailandeză"
 msgid "Thank you to our sponsors"
 msgstr "Mulțumim sponsorilor noștri"
 
+#: src/features/auth/pages/error.tsx
+msgid "That provider account is already linked to a different user."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "That provider account uses a different email address than your account."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "That sign-in provider is no longer available on this server."
+msgstr ""
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "The agent needs your input."
 msgstr "Agentul are nevoie de contribuția dumneavoastră."
@@ -4581,6 +4621,10 @@ msgstr "Cheia API a fost ștearsă cu succes."
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "Cheia API nu va mai putea accesa datele dvs. după ștergere. Această acțiune nu poate fi anulată."
+
+#: src/features/auth/pages/error.tsx
+msgid "The application that sent you here made an invalid authorization request."
+msgstr ""
 
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
@@ -4599,6 +4643,18 @@ msgstr "Pagina pe care o căutați s-ar putea să fi fost mutată sau să nu mai
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "Parola introdusă este incorectă"
+
+#: src/features/auth/pages/error.tsx
+msgid "The provider didn't share an email address, which is required to sign in."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "The provider rejected this sign-in attempt. Please start again."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "The provider's response could not be verified. Please start again."
+msgstr ""
 
 #: src/features/resume/preview/preview.browser.tsx
 msgid "The resume preview could not be updated. The last valid preview is still shown."
@@ -4764,6 +4820,10 @@ msgstr "Această secțiune este redată ca un titlu gol."
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
 msgstr "Această secțiune se află în bara laterală."
+
+#: src/features/auth/pages/error.tsx
+msgid "This sign-in attempt expired or was already used. Please start again."
+msgstr ""
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -5310,6 +5370,14 @@ msgstr "Nu am putut detecta formatul automat — vă rugăm să îl alegeți mai
 msgid "We couldn't find that page"
 msgstr "Nu am putut găsi pagina respectivă"
 
+#: src/features/auth/pages/error.tsx
+msgid "We couldn't link that provider account. Please try again."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "We couldn't read your profile from the provider."
+msgstr ""
+
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Web search"
 msgstr "Căutare pe web"
@@ -5400,6 +5468,10 @@ msgstr "Puteți folosi și numele de utilizator pentru a vă autentifica."
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "Puteți partaja CV-ul printr-un URL public unic, îl puteți proteja cu o parolă sau îl puteți descărca ca PDF pentru a-l partaja direct. Alegerea vă aparține!"
 
+#: src/features/auth/pages/error.tsx
+msgid "You cancelled the sign-in before it finished."
+msgstr ""
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "Aveți modificări nesalvate care vor fi pierdute."
@@ -5440,6 +5512,10 @@ msgstr "Datele dvs. sunt în siguranță și nu sunt niciodată partajate sau v�
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Datele dvs. sunt stocate în siguranță și nu sunt niciodată partajate cu terți. De asemenea, puteți auto-găzdui Reactive Resume pe propriile servere pentru control complet asupra datelor."
+
+#: src/features/auth/pages/error.tsx
+msgid "Your email address isn't verified with the provider."
+msgstr ""
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5546,4 +5622,3 @@ msgstr "Micșorează"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

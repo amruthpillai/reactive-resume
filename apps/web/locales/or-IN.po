@@ -679,6 +679,11 @@ msgstr "ପୁରସ୍କାରଗୁଡିକ"
 msgid "Azerbaijani"
 msgstr "ଆଜେରବାଇଜାନୀ"
 
+#. Action returning a signed-in user to the page where they manage linked providers
+#: src/features/auth/pages/error.tsx
+msgid "Back to authentication settings"
+msgstr ""
+
 #. Secondary navigation button on 2FA verification screen
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Back to Login"
@@ -687,6 +692,11 @@ msgstr "ଲଗଇନ୍‌କୁ ଫେରନ୍ତୁ"
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Back to resumes"
 msgstr "ରିଜ୍ୟୁମକୁ ଫେରନ୍ତୁ"
+
+#. Action returning the visitor to the sign-in page after a failed sign-in
+#: src/features/auth/pages/error.tsx
+msgid "Back to sign in"
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Background Color"
@@ -1497,6 +1507,11 @@ msgstr "ବର୍ଣ୍ଣନା"
 #: src/routes/builder/$resumeId/-components/mobile-builder-shell.tsx
 msgid "Design"
 msgstr "ଡିଜାଇନ୍"
+
+#. Label above the raw error text forwarded by the identity provider
+#: src/features/auth/pages/error.tsx
+msgid "Details from the provider:"
+msgstr ""
 
 #. Destructive action button to turn off two-factor authentication
 #: src/dialogs/auth/disable-two-factor.tsx
@@ -2981,6 +2996,10 @@ msgstr "ନେଟୱର୍କ"
 msgid "Never expires"
 msgstr "କେବେ ମେୟାଦ ସମାପ୍ତ ହୁଏ ନାହିଁ"
 
+#: src/features/auth/pages/error.tsx
+msgid "New account sign-ups are currently disabled on this server."
+msgstr ""
+
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
 msgid "New Application"
@@ -4209,6 +4228,11 @@ msgstr "GitHub, Google କିମ୍ବା କଷ୍ଟମ୍ OAuth ପ୍ରଦ�
 msgid "Sign up"
 msgstr "ସାଇନ୍ ଅପ୍ କରନ୍ତୁ"
 
+#. Title on the page shown after a failed or cancelled OAuth sign-in
+#: src/features/auth/pages/error.tsx
+msgid "Sign-in didn't complete"
+msgstr ""
+
 #: src/features/auth/components/social-auth.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Signing in..."
@@ -4294,6 +4318,10 @@ msgstr "ଅନ୍ୟ କିଛି…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "କିଛି ତ୍ରୁଟି ହୋଇଗଲା"
+
+#: src/features/auth/pages/error.tsx
+msgid "Something went wrong while signing you in. Please try again."
+msgstr ""
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
@@ -4570,6 +4598,18 @@ msgstr "ଥାଇ"
 msgid "Thank you to our sponsors"
 msgstr "ଆମର ପ୍ରାୟୋଜକଙ୍କୁ ଧନ୍ୟବାଦ।"
 
+#: src/features/auth/pages/error.tsx
+msgid "That provider account is already linked to a different user."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "That provider account uses a different email address than your account."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "That sign-in provider is no longer available on this server."
+msgstr ""
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "The agent needs your input."
 msgstr "ଏଜେଣ୍ଟଙ୍କୁ ଆପଣଙ୍କ ମତାମତ ଆବଶ୍ୟକ।"
@@ -4581,6 +4621,10 @@ msgstr "API କି ସଫଳତାର ସହ ବିଲୋପ କରାଯାଇ�
 #: src/features/settings/pages/api-keys.tsx
 msgid "The API key will no longer be able to access your data after deletion. This action cannot be undone."
 msgstr "API କି ବିଲୋପ କରାଯାଇବା ପରେ ଆପଣଙ୍କ ତଥ୍ୟକୁ ଆରମ୍ଭରୁ ଆକ୍ସେସ୍ କରିପାରିବ ନାହିଁ। ଏହି କାର୍ଯ୍ୟ ପୁନଃ କରିହୋଇପାରିବ ନାହିଁ।"
+
+#: src/features/auth/pages/error.tsx
+msgid "The application that sent you here made an invalid authorization request."
+msgstr ""
 
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
@@ -4599,6 +4643,18 @@ msgstr "ଆପଣ ଖୋଜୁଥିବା ପୃଷ୍ଠାଟି ହୁଏତ
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "ଆପଣ ଯେ ପାସୱାର୍ଡ ପ୍ରବେଶ କରିଛନ୍ତି ସେଥା ଭୁଲ୍"
+
+#: src/features/auth/pages/error.tsx
+msgid "The provider didn't share an email address, which is required to sign in."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "The provider rejected this sign-in attempt. Please start again."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "The provider's response could not be verified. Please start again."
+msgstr ""
 
 #: src/features/resume/preview/preview.browser.tsx
 msgid "The resume preview could not be updated. The last valid preview is still shown."
@@ -4764,6 +4820,10 @@ msgstr "ଏହି ବିଭାଗଟି ଖାଲି ଶିରୋନାମା �
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
 msgstr "ଏହି ବିଭାଗଟି ସାଇଡବାର୍‌ରେ ଅଛି।"
+
+#: src/features/auth/pages/error.tsx
+msgid "This sign-in attempt expired or was already used. Please start again."
+msgstr ""
 
 #: src/features/auth/pages/register.tsx
 msgid "This step is optional, but recommended."
@@ -5310,6 +5370,14 @@ msgstr "ଆମେ ସ୍ଵଚାଳିତ ଭାବରେ ଫର୍ମାଟ୍
 msgid "We couldn't find that page"
 msgstr "ଆମେ ସେହି ପୃଷ୍ଠା ପାଇଲୁ ନାହିଁ।"
 
+#: src/features/auth/pages/error.tsx
+msgid "We couldn't link that provider account. Please try again."
+msgstr ""
+
+#: src/features/auth/pages/error.tsx
+msgid "We couldn't read your profile from the provider."
+msgstr ""
+
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Web search"
 msgstr "ୱେବ୍ ଖୋଜ"
@@ -5400,6 +5468,10 @@ msgstr "ଆପଣ ଆପଣଙ୍କ ଯୁଜରନେମ୍ ବ୍ୟବହା
 msgid "You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!"
 msgstr "ଆପଣ ଏକ ଅଦ୍ୱିତୀୟ ସାର୍ବଜନିକ URL ଦ୍ୱାରା ଆପଣଙ୍କ ରେଜ୍ୟୁମେକୁ ସେୟାର କରିପାରିବେ, ପାସୱାର୍ଡ ସହ ଏହାକୁ ସୁରକ୍ଷିତ କରିପାରିବେ, କିମ୍ବା ସରାସରି ସେୟାର କରିବା ପାଇଁ ଏହାକୁ PDF ଭାବରେ ଡାଉନ଴ଲୋଡ୍ କରିପାରିବେ। ପସନ୍ଦ ଆପଣଙ୍କର!"
 
+#: src/features/auth/pages/error.tsx
+msgid "You cancelled the sign-in before it finished."
+msgstr ""
+
 #: src/hooks/use-form-blocker.tsx
 msgid "You have unsaved changes that will be lost."
 msgstr "ଆପଣଙ୍କର ସଞ୍ଚୟ ନହୋଇଥିବା ପରିବର୍ତ୍ତନ ହରାଇ ଯିବ।"
@@ -5440,6 +5512,10 @@ msgstr "ଆପଣଙ୍କ ତଥ୍ୟ ସୁରକ୍ଷିତ ଅଛି, ଏ�
 #: src/routes/_home/-sections/faq.tsx
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "ଆପଣଙ୍କ ତଥ୍ୟ ସୁରକ୍ଷିତ ଭାବରେ ସଞ୍ଚୟ ହୋଇଛି ଏବଂ କେବେ ମଧ୍ୟ ତୃତୀୟ ପକ୍ଷ ସହ ସେୟାର ହୋଇନାହିଁ। ଆପଣ ଆପଣଙ୍କ ତଥ୍ୟ ଉପରେ ପୂର୍ଣ୍ଣ ନିୟନ୍ତ୍ରଣ ପାଇଁ ଆପଣଙ୍କ ନିଜ ସର୍ଭରଗୁଡିକରେ Reactive Resume କୁ ସ୍ୱୟଂ‑ହୋଷ୍ଟ କରିପାରିବେ।"
+
+#: src/features/auth/pages/error.tsx
+msgid "Your email address isn't verified with the provider."
+msgstr ""
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5546,4 +5622,3 @@ msgstr "ଜୁମ୍ ଆଉଟ୍ କରନ୍ତୁ"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ଜୁଲୁ"
-
