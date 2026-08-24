@@ -240,6 +240,11 @@ export const jwks = pg.pgTable("jwks", {
 	privateKey: pg.text("private_key").notNull(),
 	createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 	expiresAt: pg.timestamp("expires_at", { withTimezone: true }),
+	// Better Auth 1.7 added `alg` and `crv` to the jwt plugin's jwks model. Both are optional to
+	// the plugin, but the Drizzle adapter rejects a model whose columns it cannot find, so every
+	// session verification throws until they exist. Existing rows keep NULL and stay valid.
+	alg: pg.text("alg"),
+	crv: pg.text("crv"),
 });
 
 export const oauthClient = pg.pgTable(
