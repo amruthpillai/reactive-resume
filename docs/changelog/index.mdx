@@ -4,6 +4,41 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v5.2.8" description="24th August 2026">
+## Highlights
+
+- **The AI agent now asks before it edits your resume.** Changes arrive as a proposal you approve or reject, so you see what the assistant wants to touch before anything is written. Once you trust a conversation, you can turn the review step off for that thread alone. The agent also survives a server restart mid-reply instead of leaving the thread stuck, and long conversations are trimmed as they grow so they keep working past the point they used to stall. [c8081ac2f](https://github.com/amruthpillai/reactive-resume/commit/c8081ac2f)
+- **Custom Styles can finally reach every item header.** `item-header` used to match only some sections, and on stacked headers only the first row — certifications, awards, projects, publications and references quietly ignored it. It now covers the full header row of every section on every template, and a new `item-header-row` part lets you stop a long title from pushing its trailing date onto a line of its own. [4d53a6d1d](https://github.com/amruthpillai/reactive-resume/commit/4d53a6d1d), [00be67f70](https://github.com/amruthpillai/reactive-resume/commit/00be67f70)
+- **Self-hosters using a custom OAuth provider must update one URL.** The callback path changed from `/api/auth/oauth2/callback/custom` to `/api/auth/callback/custom`. Update the redirect URI registered with your identity provider before upgrading, or custom sign-in will fail. Installs that use `OAUTH_DISCOVERY_URL` need one additional SQL statement — both steps are written up in the [SSO documentation](https://docs.rxresu.me/self-hosting/sso). [bdac806c7](https://github.com/amruthpillai/reactive-resume/commit/bdac806c7)
+
+## AI Agent
+
+- Resume edits are gated behind an approval step, with a per-conversation setting to skip it once you are comfortable. Tool activity, token usage, and each step the assistant takes are now visible in the thread. [c8081ac2f](https://github.com/amruthpillai/reactive-resume/commit/c8081ac2f)
+- Copying a conversation as JSON no longer embeds full resume documents, so the file stays small and your resume content does not travel with a transcript you might paste elsewhere. [8ce899a04](https://github.com/amruthpillai/reactive-resume/commit/8ce899a04)
+- Resume analysis is told today's date, so it no longer misjudges how recent your most recent role is. Thanks to [@emanuelet](https://github.com/emanuelet). [#3353](https://github.com/amruthpillai/reactive-resume/pull/3353)
+- Agent edits to a newly created resume no longer fail permanently with a version conflict. [39f36b4ac](https://github.com/amruthpillai/reactive-resume/commit/39f36b4ac)
+
+## Custom Styles
+
+- `item-header` now applies to the whole header row of every section on every template, instead of being silently dropped on sections whose header did not start with the one element it looked for. Rendered output is unchanged apart from the rows that should have been styled all along. [4d53a6d1d](https://github.com/amruthpillai/reactive-resume/commit/4d53a6d1d)
+- Added `template-part[name="item-header-row"]`, the split row holding a title and its trailing date. Set `flex-wrap: nowrap` on it to keep the date pinned right down a long list of certifications. [00be67f70](https://github.com/amruthpillai/reactive-resume/commit/00be67f70)
+- Under `nowrap`, long item titles no longer overlap the date beside them. [ebcaa4729](https://github.com/amruthpillai/reactive-resume/commit/ebcaa4729)
+
+## Accounts & Sign-in
+
+- Disconnecting a linked provider works again. Sessions last a week, but the unlink endpoint rejected any session older than a day, so the button failed for nearly everyone. [39590eaff](https://github.com/amruthpillai/reactive-resume/commit/39590eaff)
+- Sign-in and account errors now show the actual reason instead of collapsing to a generic message. [39590eaff](https://github.com/amruthpillai/reactive-resume/commit/39590eaff)
+- Sign-in failures that happen before your provider can redirect you now land on a proper page explaining what went wrong, translated into every supported language, rather than a wall of JSON. [bdac806c7](https://github.com/amruthpillai/reactive-resume/commit/bdac806c7), [b960e3273](https://github.com/amruthpillai/reactive-resume/commit/b960e3273)
+
+## Self-Hosting & Maintenance
+
+- Upgraded to Better Auth 1.7. Beyond the callback URL change above, accounts are now identified by the issuer your provider advertises; the startup migration backfills existing accounts and refuses to proceed if the backfill would merge two accounts together. [bdac806c7](https://github.com/amruthpillai/reactive-resume/commit/bdac806c7)
+- The DeepSeek Harness plugin now lives in this repository and is published from it. It reads MCP tool names directly from the server, so a renamed tool breaks its prompt guide in the same pull request rather than days later through a scheduled job. [65618a82a](https://github.com/amruthpillai/reactive-resume/commit/65618a82a)
+- Routine dependency updates across the workspace, including the AI SDK providers, the PDF renderer, and the build toolchain. [8ffe50a58](https://github.com/amruthpillai/reactive-resume/commit/8ffe50a58)
+
+**Full Changelog**: [v5.2.7...v5.2.8](https://github.com/amruthpillai/reactive-resume/compare/v5.2.7...v5.2.8)
+</Update>
+
 <Update label="v5.2.7" description="17th August 2026">
 ## Highlights
 
