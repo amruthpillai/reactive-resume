@@ -19,6 +19,7 @@ import { Route as AgentIndexRouteImport } from "./routes/agent/index";
 import { Route as AgentThreadIdRouteImport } from "./routes/agent/$threadId";
 import { Route as AgentNewRouteImport } from "./routes/agent/new";
 import { Route as AuthIndexRouteImport } from "./routes/auth/index";
+import { Route as AuthErrorRouteImport } from "./routes/auth/error";
 import { Route as AuthForgotPasswordRouteImport } from "./routes/auth/forgot-password";
 import { Route as AuthLoginRouteImport } from "./routes/auth/login";
 import { Route as AuthRegisterRouteImport } from "./routes/auth/register";
@@ -87,6 +88,11 @@ const AgentNewRoute = AgentNewRouteImport.update({
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: "/",
   path: "/",
+  getParentRoute: () => AuthRouteRoute,
+} as any);
+const AuthErrorRoute = AuthErrorRouteImport.update({
+  id: "/error",
+  path: "/error",
   getParentRoute: () => AuthRouteRoute,
 } as any);
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   "/$username/$slug": typeof UsernameSlugRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
+  "/auth/error": typeof AuthErrorRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
   "/auth/register": typeof AuthRegisterRoute;
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   "/$username/$slug": typeof UsernameSlugRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
+  "/auth/error": typeof AuthErrorRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
   "/auth/register": typeof AuthRegisterRoute;
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   "/$username/$slug": typeof UsernameSlugRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
+  "/auth/error": typeof AuthErrorRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
   "/auth/register": typeof AuthRegisterRoute;
@@ -300,6 +309,7 @@ export interface FileRouteTypes {
     | "/$username/$slug"
     | "/agent/$threadId"
     | "/agent/new"
+    | "/auth/error"
     | "/auth/forgot-password"
     | "/auth/login"
     | "/auth/register"
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | "/$username/$slug"
     | "/agent/$threadId"
     | "/agent/new"
+    | "/auth/error"
     | "/auth/forgot-password"
     | "/auth/login"
     | "/auth/register"
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | "/$username/$slug"
     | "/agent/$threadId"
     | "/agent/new"
+    | "/auth/error"
     | "/auth/forgot-password"
     | "/auth/login"
     | "/auth/register"
@@ -462,6 +474,13 @@ declare module "@tanstack/react-router" {
       path: "/";
       fullPath: "/auth/";
       preLoaderRoute: typeof AuthIndexRouteImport;
+      parentRoute: typeof AuthRouteRoute;
+    };
+    "/auth/error": {
+      id: "/auth/error";
+      path: "/error";
+      fullPath: "/auth/error";
+      preLoaderRoute: typeof AuthErrorRouteImport;
       parentRoute: typeof AuthRouteRoute;
     };
     "/auth/forgot-password": {
@@ -636,6 +655,7 @@ const AgentRouteRouteWithChildren = AgentRouteRoute._addFileChildren(
 );
 
 interface AuthRouteRouteChildren {
+  AuthErrorRoute: typeof AuthErrorRoute;
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute;
   AuthLoginRoute: typeof AuthLoginRoute;
   AuthRegisterRoute: typeof AuthRegisterRoute;
@@ -647,6 +667,7 @@ interface AuthRouteRouteChildren {
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthErrorRoute: AuthErrorRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,

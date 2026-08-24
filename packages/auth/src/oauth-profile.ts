@@ -137,14 +137,14 @@ async function findAvailableUsernameSuffix(baseUsername: string, index = 1): Pro
 }
 
 interface OAuthProfile {
-	email?: string | null;
-	id?: string | number | null;
-	name?: string | null;
-	picture?: string | null;
-	image?: string | null;
-	avatar_url?: string | null;
-	login?: string | null;
-	preferred_username?: string | null;
+	email?: string | null | undefined;
+	id?: string | number | null | undefined;
+	name?: string | null | undefined;
+	picture?: string | null | undefined;
+	image?: string | null | undefined;
+	avatar_url?: string | null | undefined;
+	login?: string | null | undefined;
+	preferred_username?: string | null | undefined;
 }
 
 interface OAuthMapperContext {
@@ -185,11 +185,14 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 			const existingEmail = existingUser.email.trim().toLowerCase();
 			await normalizeExistingUserEmail(existingUser.id, existingUser.email, existingEmail);
 
+			// Better Auth 1.7 forbids `mapProfileToUser` from returning `id`; provider identity is
+			// resolved by `accountSubject` and existing local users are matched by `account.accountLinking`.
+			const existingImage = image ?? existingUser.image;
+
 			return {
-				id: existingUser.id,
 				name: existingUser.name,
 				email: existingEmail,
-				image: image ?? existingUser.image,
+				...(existingImage ? { image: existingImage } : {}),
 				username: existingUser.username,
 				displayUsername: existingUser.displayUsername,
 				emailVerified: existingUser.emailVerified,
@@ -203,7 +206,7 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 		return {
 			name: mappedName || username || emailLocalPart,
 			email,
-			image,
+			...(image ? { image } : {}),
 			username,
 			displayUsername: username,
 			emailVerified: true,

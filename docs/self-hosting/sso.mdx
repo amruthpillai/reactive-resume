@@ -72,18 +72,39 @@ You must configure endpoints using **one** of these two methods:
 When configuring your OAuth provider, you'll need to set the **callback URL** (also called redirect URI). Use the following format:
 
 ```
-{APP_URL}/api/auth/oauth2/callback/custom
+{APP_URL}/api/auth/callback/custom
 ```
 
 For example, if your `APP_URL` is `https://resume.example.com`, the callback URL would be:
 
 ```
-https://resume.example.com/api/auth/oauth2/callback/custom
+https://resume.example.com/api/auth/callback/custom
 ```
 
 <Warning>
   Make sure the callback URL exactly matches what you configure in your OAuth provider. A mismatch will cause
   authentication to fail.
+</Warning>
+
+<Warning>
+  **Upgrading an existing install:** the callback path changed from `/api/auth/oauth2/callback/custom` to
+  `/api/auth/callback/custom`. Update the redirect URI registered with your identity provider, or custom OAuth
+  sign-in will fail after the upgrade.
+</Warning>
+
+<Warning>
+  **Upgrading an existing install with `OAUTH_DISCOVERY_URL`:** accounts are now identified by the issuer your
+  provider advertises, and the automatic migration cannot know that value ahead of time. It backfills existing
+  rows with the placeholder `local:oauth:custom`. After upgrading, run the following once, replacing the value
+  with the `issuer` field from your discovery document (`{OAUTH_DISCOVERY_URL}` returns it as JSON):
+
+  ```sql
+  UPDATE account SET issuer = 'https://auth.example.com/realms/main' WHERE provider_id = 'custom';
+  ```
+
+  Skipping this does not lose data, but existing users signing in through your provider will no longer match
+  their account. If you configure the provider with explicit `OAUTH_AUTHORIZATION_URL` / `OAUTH_TOKEN_URL`
+  endpoints instead of discovery, the placeholder is already correct and no action is needed.
 </Warning>
 
 <Info>
@@ -124,7 +145,7 @@ Reactive Resume automatically maps user profile data from the OAuth provider. Th
     - **Name**: Reactive Resume
     - **Authorization flow**: Use your preferred authorization flow
     - **Client type**: Confidential
-    - **Redirect URIs**: `https://resume.example.com/api/auth/oauth2/callback/custom`
+    - **Redirect URIs**: `https://resume.example.com/api/auth/callback/custom`
 
   </Step>
 
@@ -165,7 +186,7 @@ identity_providers:
         public: false
         authorization_policy: two_factor # or one_factor
         redirect_uris:
-          - https://resume.example.com/api/auth/oauth2/callback/custom
+          - https://resume.example.com/api/auth/callback/custom
         scopes:
           - openid
           - profile
@@ -211,7 +232,7 @@ OAUTH_DISCOVERY_URL="https://auth.example.com/.well-known/openid-configuration"
   <Step title="Configure redirect URI">
     In the client settings, add the redirect URI:
 
-    - **Valid redirect URIs**: `https://resume.example.com/api/auth/oauth2/callback/custom`
+    - **Valid redirect URIs**: `https://resume.example.com/api/auth/callback/custom`
 
   </Step>
 
@@ -288,7 +309,7 @@ OAUTH_DISCOVERY_URL="https://auth.company.com/application/o/reactive-resume/.wel
 
 <Accordion title="Redirect URI mismatch error">
   The callback URL configured in your OAuth provider must exactly match: ```
-  {APP_URL}/api/auth/oauth2/callback/custom ``` Common issues: - Trailing slash mismatch - HTTP vs HTTPS mismatch - Port
+  {APP_URL}/api/auth/callback/custom ``` Common issues: - Trailing slash mismatch - HTTP vs HTTPS mismatch - Port
   number differences - Path case sensitivity
 </Accordion>
 

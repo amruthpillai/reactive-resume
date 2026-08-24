@@ -75,8 +75,8 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 				variant="secondary"
 				onClick={() =>
 					runSignIn(() =>
-						authClient.signIn.oauth2({
-							providerId: "custom",
+						authClient.signIn.social({
+							provider: "custom",
 							callbackURL: "/dashboard",
 						}),
 					)

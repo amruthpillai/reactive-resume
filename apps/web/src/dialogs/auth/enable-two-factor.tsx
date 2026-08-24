@@ -80,7 +80,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 				return;
 			}
 
-			if (data.totpURI && data.backupCodes) {
+			if (data.method === "totp") {
 				setTotpUri(data.totpURI);
 				setBackupCodes(data.backupCodes);
 				setStep("verify");
