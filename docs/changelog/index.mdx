@@ -36,6 +36,7 @@ rss: true
 - **A migration drops the `resume_analysis` table.** Any saved analyses are deleted when you upgrade; they have no equivalent in the new report, which is computed on demand rather than stored. No action is needed beyond the usual upgrade. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
 - **Two API surfaces were removed.** MCP clients calling `get_resume_analysis` and API clients calling `POST /ai/analyze-resume` will start failing; the replacement is `POST /ai/ats-review`, which reviews extracted resume text and returns qualitative feedback without a score. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
 - `/ats-checker` is listed in the sitemap and carries its own preview card, so the page is indexable and shares cleanly. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- Routine dependency updates across the workspace, including the AI SDK providers, Better Auth, TipTap, TanStack Query, Hono and the build toolchain. All patch and minor releases; no breaking upgrades.
 - Translations synced from Crowdin, with the new ATS checker strings covered across every supported language. [7fac6f29c](https://github.com/amruthpillai/reactive-resume/commit/7fac6f29c)
 
 **Full Changelog**: [v5.2.8...v5.2.9](https://github.com/amruthpillai/reactive-resume/compare/v5.2.8...v5.2.9)
