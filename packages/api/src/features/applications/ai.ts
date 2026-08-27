@@ -45,15 +45,16 @@ function throwAiProviderGatewayError(cause?: unknown): never {
 
 /**
  * Wrapper around the shared `generateJson` that translates AI provider failures
- * to BAD_GATEWAY.  Exported for tests.
+ * to BAD_GATEWAY.  Accepts the same prompt shape as the shared module.
+ * Exported for tests.
  */
 export async function generateJson<T>(
 	model: Awaited<ReturnType<typeof resolveModel>>,
-	prompt: string,
+	prompt: { system?: string; prompt: string },
 	schema: z.ZodType<T>,
 ) {
 	try {
-		return await sharedGenerateJson(model, { prompt }, schema);
+		return await sharedGenerateJson(model, prompt, schema);
 	} catch (error) {
 		if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
 		throw error;

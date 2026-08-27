@@ -62,7 +62,7 @@ describe("copilot provider-failure translation", () => {
 	it("translates AI SDK provider failures to BAD_GATEWAY in generateJson", async () => {
 		vi.mocked(generateText).mockRejectedValue(new AISDKError({ name: "AISDKError", message: "Model not found" }));
 
-		await expect(generateJson({} as never, "prompt", schema)).rejects.toMatchObject({ code: "BAD_GATEWAY" });
+		await expect(generateJson({} as never, { prompt: "prompt" }, schema)).rejects.toMatchObject({ code: "BAD_GATEWAY" });
 	});
 
 	it("preserves the provider error as the BAD_GATEWAY cause", async () => {
@@ -81,12 +81,12 @@ describe("copilot provider-failure translation", () => {
 		vi.mocked(generateText).mockRejectedValue(unrelated);
 
 		await expect(generatePlainText({} as never, "prompt")).rejects.toBe(unrelated);
-		await expect(generateJson({} as never, "prompt", schema)).rejects.toBe(unrelated);
+		await expect(generateJson({} as never, { prompt: "prompt" }, schema)).rejects.toBe(unrelated);
 	});
 
 	it("still returns parsed JSON on success", async () => {
 		vi.mocked(generateText).mockResolvedValue({ text: '```json\n{"summary":"<p>Hi</p>"}\n```' } as never);
 
-		await expect(generateJson({} as never, "prompt", schema)).resolves.toEqual({ summary: "<p>Hi</p>" });
+		await expect(generateJson({} as never, { prompt: "prompt" }, schema)).resolves.toEqual({ summary: "<p>Hi</p>" });
 	});
 });
