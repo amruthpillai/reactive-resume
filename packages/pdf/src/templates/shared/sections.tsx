@@ -207,10 +207,18 @@ const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] => {
 			paddingTop: _paddingTop,
 			width: _width,
 			...textStyle
-		}) => ({ ...textStyle, paddingLeft: textStyle.paddingLeft ?? 1 }),
+		}) => textStyle,
 	);
 
-	return textStyles.length === 0 ? [{ paddingLeft: 1 }] : textStyles;
+	if (textStyles.length === 0) return [{ paddingLeft: 1 }];
+
+	const hasPaddingLeft = textStyles.some((style) => style.paddingLeft !== undefined);
+	if (!hasPaddingLeft) {
+		const last = textStyles[textStyles.length - 1];
+		textStyles[textStyles.length - 1] = { ...last, paddingLeft: 1 };
+	}
+
+	return textStyles;
 };
 
 const useSectionItemsContext = () => use(SectionItemsContext);
