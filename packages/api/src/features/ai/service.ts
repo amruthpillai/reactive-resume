@@ -91,7 +91,8 @@ const MAX_AI_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const MAX_AI_FILE_BASE64_CHARS = Math.ceil((MAX_AI_FILE_BYTES * 4) / 3) + 4;
 const TEST_CONNECTION_MAX_OUTPUT_TOKENS = 128;
 // Long enough for a cold local model to load, short enough that the UI does not look frozen.
-const TEST_CONNECTION_TIMEOUT_MS = 30_000;
+// Self-hosted deployments with cold-start models (e.g. Ollama) can override via AI_TEST_TIMEOUT_MS.
+const TEST_CONNECTION_TIMEOUT_MS = Number(process.env.AI_TEST_TIMEOUT_MS) || 30_000;
 const DOCX_DOCUMENT_XML_PATH = "word/document.xml";
 const ZIP_LOCAL_FILE_HEADER_SIGNATURE = 0x04034b50;
 const ZIP_CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
