@@ -6,9 +6,9 @@ const protectedProcedureMock = vi.hoisted(() => {
 	const chain = {
 		route: vi.fn(() => chain),
 		input: vi.fn(() => chain),
-		.use: vi.fn(() => chain),
-		.output: vi.fn(() => chain),
-		.errors: vi.fn(() => chain),
+		use: vi.fn(() => chain),
+		output: vi.fn(() => chain),
+		errors: vi.fn(() => chain),
 		handler: vi.fn(() => chain),
 	};
 	return chain;
