@@ -94,6 +94,16 @@ const TEST_CONNECTION_MAX_OUTPUT_TOKENS = 128;
 // AbortSignal.timeout stores the delay as a 32-bit signed integer.
 const MAX_ABORT_SIGNAL_TIMEOUT_MS = 2_147_483_647;
 
+/**
+ * Parse `AI_TEST_TIMEOUT_MS` into a safe, finite, non-negative integer.
+ *
+ * Rejects empty, non-numeric, negative, fractional, and out-of-range values
+ * so that `AbortSignal.timeout` never receives an invalid delay.
+ *
+ * @param raw - The raw environment variable value, if set.
+ * @param fallback - Milliseconds to use when `raw` is missing or invalid.
+ * @returns The validated timeout in milliseconds.
+ */
 function parseTestConnectionTimeoutMs(raw: string | undefined, fallback: number): number {
 	if (raw === undefined) return fallback;
 	const trimmed = raw.trim();

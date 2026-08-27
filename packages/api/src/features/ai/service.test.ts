@@ -170,6 +170,12 @@ describe("AI provider connection test", () => {
 });
 
 describe("AI provider test connection timeout", () => {
+	/**
+	 * Re-import the service module with `AI_TEST_TIMEOUT_MS` set to a specific value.
+	 *
+	 * @param value - The environment value to test, or `undefined` to unset it.
+	 * @returns The `testConnection` function from the freshly imported module.
+	 */
 	async function loadWithTimeout(value: string | undefined) {
 		if (value === undefined) {
 			delete process.env.AI_TEST_TIMEOUT_MS;
