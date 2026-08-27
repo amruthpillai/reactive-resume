@@ -1972,10 +1972,6 @@ msgstr "Jelszóvédelem engedélyezése..."
 msgid "Enabling two-factor authentication…"
 msgstr "Kétfaktoros hitelesítés engedélyezése…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "Egyoldalas szabályt érvényesíteni, vagy hibaként kezelni egy betűtípust vagy egy karrierhiátust."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "Angol"
@@ -3423,6 +3419,10 @@ msgstr "Nem található e-mail cím."
 msgid "No lines look like a job title paired with an employer."
 msgstr "Egyetlen sor sem hasonlít munkakör és munkáltató párosítására."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "Semmilyen egyoldalas szabály, és sem a betűtípus, sem a karrierszünet nem számít hibának."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Még nincsenek regisztrált kulcsok."
@@ -3431,9 +3431,17 @@ msgstr "Még nincsenek regisztrált kulcsok."
 msgid "No phone number was found."
 msgstr "Nem található telefonszám."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "Semmilyen jóslat arról, hogy elutasítják-e — erre egyetlen eszköz sem képes."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "Nincsenek korábbi adatok"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "Semmilyen ismétlése annak az állításnak, hogy a legtöbb önéletrajzot automatikusan kidobják."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "portugál (Portugália)"
 msgid "Position"
 msgstr "Pozíció"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "Megjósolni, hogy elutasítanak-e. Erre egyetlen eszköz sem képes."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Előnyben részesítse a hagyományos címsort, például \"Munka tapasztalat\" vagy \"Oktatás\"."
@@ -4227,10 +4231,6 @@ msgstr "Átrendezés"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Egyéni mező átrendezése"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "Megismételni azt az állítást, hogy a legtöbb önéletrajzot automatikusan kidobják."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

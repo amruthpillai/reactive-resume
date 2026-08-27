@@ -184,13 +184,13 @@ function HonestyPanel() {
 			>
 				<ul className="space-y-1.5 text-muted-foreground text-sm leading-relaxed">
 					<li>
-						<Trans>Predict whether you will be rejected. No tool can.</Trans>
+						<Trans>No prediction of whether you will be rejected — no tool can do that.</Trans>
 					</li>
 					<li>
-						<Trans>Repeat the claim that most resumes are thrown out automatically.</Trans>
+						<Trans>No repeating the claim that most resumes are thrown out automatically.</Trans>
 					</li>
 					<li>
-						<Trans>Enforce a one-page rule, or treat a font or a career gap as a fault.</Trans>
+						<Trans>No one-page rule, and no treating a font or a career gap as a fault.</Trans>
 					</li>
 				</ul>
 			</FactGroup>

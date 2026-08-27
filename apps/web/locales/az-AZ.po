@@ -1972,10 +1972,6 @@ msgstr "Parol qorunması aktivləşdirilir..."
 msgid "Enabling two-factor authentication…"
 msgstr "İki faktorlu identifikasiyanın aktivləşdirilməsi…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "Bir səhifə qaydasını tətbiq edir, ya da şrifti və ya karyera fasiləsini qüsur kimi qəbul edir."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "İngilis"
@@ -3423,6 +3419,10 @@ msgstr "E-poçt ünvanı tapılmadı."
 msgid "No lines look like a job title paired with an employer."
 msgstr "Heç bir sətir vəzifə adı ilə işəgötürənin birləşməsinə oxşamır."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "Bir səhifə qaydası yoxdur və şrift və ya karyera fasiləsi qüsur sayılmır."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Hələ heç bir giriş açarı qeydiyyatdan keçməyib."
@@ -3431,9 +3431,17 @@ msgstr "Hələ heç bir giriş açarı qeydiyyatdan keçməyib."
 msgid "No phone number was found."
 msgstr "Telefon nömrəsi tapılmadı."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "Rədd ediləcəyinizlə bağlı heç bir proqnoz yoxdur — heç bir alət bunu edə bilməz."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "Əvvəlki məlumat yoxdur"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "Əksər CV-lərin avtomatik olaraq rədd edildiyi iddiası təkrarlanmır."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "Portuqal (Portuqaliya)"
 msgid "Position"
 msgstr "Vəzifə"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "Rədd ediləcəyinizi proqnozlaşdırır. Heç bir alət bunu bacarmaz."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
@@ -4227,10 +4231,6 @@ msgstr "Yenidən sırala"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Xüsusi sahəni yenidən sıralayın"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "Əksər CV-lərin avtomatik olaraq rədd edildiyi iddiasını təkrarlayır."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

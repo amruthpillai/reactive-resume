@@ -1972,10 +1972,6 @@ msgstr "ಪಾಸ್‌ವರ್ಡ್ ರಕ್ಷಣೆಯನ್ನು ಸಕ�
 msgid "Enabling two-factor authentication…"
 msgstr "ಎರಡು-ಅಂಶದ ದೃಢೀಕರಣವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗುತ್ತಿದೆ…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "ಒಂದು-ಪುಟ ನಿಯಮವನ್ನು ಜಾರಿಗೊಳಿಸುವುದು, ಅಥವಾ ಒಂದು ಫಾಂಟ್ ಅಥವಾ ವೃತ್ತಿ ಅಂತರವನ್ನು ದೋಷವೆಂದು ಪರಿಗಣಿಸುವುದು."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "ಆಂಗ್ಲ"
@@ -3423,6 +3419,10 @@ msgstr "ಯಾವುದೇ ಇಮೇಲ್ ವಿಳಾಸ ಕಂಡುಬಂದ
 msgid "No lines look like a job title paired with an employer."
 msgstr "ಉದ್ಯೋಗ ಶೀರ್ಷಿಕೆಯನ್ನು ಉದ್ಯೋಗದಾತರೊಂದಿಗೆ ಜೋಡಿಸಿದಂತೆ ಕಾಣುವ ಯಾವುದೇ ಸಾಲುಗಳಿಲ್ಲ."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "ಒಂದು ಪುಟದ ನಿಯಮವಿಲ್ಲ, ಮತ್ತು ಫಾಂಟ್ ಅಥವಾ ವೃತ್ತಿ ಅಂತರವನ್ನು ದೋಷವೆಂದು ಪರಿಗಣಿಸುವುದಿಲ್ಲ."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "ಇನ್ನೂ ಯಾವುದೇ ಪಾಸ್‌ಕೀಗಳು ನೋಂದಾಯಿಸಲ್ಪಟ್ಟಿಲ್ಲ."
@@ -3431,9 +3431,17 @@ msgstr "ಇನ್ನೂ ಯಾವುದೇ ಪಾಸ್‌ಕೀಗಳು ನೋ
 msgid "No phone number was found."
 msgstr "ಯಾವುದೇ ಫೋನ್ ಸಂಖ್ಯೆ ಕಂಡುಬಂದಿಲ್ಲ."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "ನೀವು ತಿರಸ್ಕೃತರಾಗುತ್ತೀರಾ ಎಂಬ ಯಾವುದೇ ಭವಿಷ್ಯವಾಣಿ ಇಲ್ಲ — ಯಾವ ಸಾಧನವೂ ಅದನ್ನು ಮಾಡಲಾರದು."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "ಯಾವುದೇ ಹಿಂದಿನ ಡೇಟಾ ಇಲ್ಲ"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "ಹೆಚ್ಚಿನ ರೆಸ್ಯೂಮೆಗಳು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ತಿರಸ್ಕರಿಸಲ್ಪಡುತ್ತವೆ ಎಂಬ ಹೇಳಿಕೆಯ ಪುನರಾವರ್ತನೆ ಇಲ್ಲ."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "ಪೋರ್ಚುಗೀಸ್ (ಪೋರ್ಚುಗಲ್)"
 msgid "Position"
 msgstr "ಸ್ಥಾನ"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "ನೀವು ತಿರಸ್ಕರಿಸಲ್ಪಡುತ್ತೀರಾ ಎಂದು ಊಹಿಸುವುದು. ಯಾವುದೇ ಪರಿಕರವು ಇದನ್ನು ಮಾಡಲಾಗುವುದಿಲ್ಲ."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "\"ಕೆಲಸದ ಅನುಭವ\" ಅಥವಾ \"ಶಿಕ್ಷಣ\" ದಂತಹ ಸಾಂಪ್ರದಾಯಿಕ ಶೀರ್ಷಿಕೆಗೆ ಆದ್ಯತೆ ನೀಡಿ."
@@ -4227,10 +4231,6 @@ msgstr "ಮರುಕ್ರಮಗೊಳಿಸಿ"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "ಕಸ್ಟಮ್ ಕ್ಷೇತ್ರವನ್ನು ಮರುಕ್ರಮಗೊಳಿಸಿ"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "ಹೆಚ್ಚಿನ ರೆಸ್ಯೂಮೆಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ತಿರಸ್ಕರಿಸಲಾಗುತ್ತದೆ ಎಂಬ ಹೇಳಿಕೆಯನ್ನು ಪುನರಾವರ್ತಿಸುವುದು."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

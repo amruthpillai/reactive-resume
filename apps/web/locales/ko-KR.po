@@ -1972,10 +1972,6 @@ msgstr "비밀번호 보호를 활성화하는 중입니다..."
 msgid "Enabling two-factor authentication…"
 msgstr "2단계 인증 활성화…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "한 페이지 규칙을 강제하거나, 폰트나 경력 공백을 결함으로 취급하는 것입니다."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "영어"
@@ -3423,6 +3419,10 @@ msgstr "이메일 주소를 찾을 수 없습니다."
 msgid "No lines look like a job title paired with an employer."
 msgstr "직함과 회사명이 함께 있는 줄을 찾을 수 없습니다."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "한 페이지 규칙을 강요하지 않으며, 글꼴이나 경력 공백을 결함으로 취급하지 않습니다."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "아직 등록된 패스키가 없습니다."
@@ -3431,9 +3431,17 @@ msgstr "아직 등록된 패스키가 없습니다."
 msgid "No phone number was found."
 msgstr "전화번호를 찾을 수 없습니다."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "불합격 여부를 예측하지 않습니다. 어떤 도구도 할 수 없습니다."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "사전 데이터 없음"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "대부분의 이력서가 자동으로 걸러진다는 주장을 되풀이하지 않습니다."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "포르투갈어(포르투갈)"
 msgid "Position"
 msgstr "직책"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "탈락 여부를 예측하는 것입니다. 어떤 도구도 이를 할 수 없습니다."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "\"직업 경험\" 또는 \"교육\"과 같은 일반적인 제목을 선호합니다."
@@ -4227,10 +4231,6 @@ msgstr "순서 변경"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "사용자 정의 필드 순서 변경"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "대부분의 이력서가 자동으로 탈락한다는 주장을 반복하는 것입니다."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

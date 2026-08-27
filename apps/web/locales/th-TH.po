@@ -1972,10 +1972,6 @@ msgstr "กำลังเปิดใช้งานการป้องกั
 msgid "Enabling two-factor authentication…"
 msgstr "การเปิดใช้งานการตรวจสอบสิทธิ์แบบสองขั้นตอน…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "บังคับใช้กฎหนึ่งหน้า หรือถือว่าฟอนต์หรือช่วงว่างในประวัติการทำงานเป็นข้อผิดพลาด"
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "ภาษาอังกฤษ"
@@ -3423,6 +3419,10 @@ msgstr "ไม่พบที่อยู่อีเมล"
 msgid "No lines look like a job title paired with an employer."
 msgstr "ไม่มีบรรทัดใดที่ดูเหมือนตำแหน่งงานคู่กับชื่อนายจ้าง"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "ไม่มีกฎหน้าเดียว และไม่ถือว่าฟอนต์หรือช่วงว่างจากการทำงานเป็นข้อบกพร่อง"
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "ยังไม่มีพาสคีย์ที่ลงทะเบียนไว้"
@@ -3431,9 +3431,17 @@ msgstr "ยังไม่มีพาสคีย์ที่ลงทะเบ
 msgid "No phone number was found."
 msgstr "ไม่พบหมายเลขโทรศัพท์"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "ไม่มีการทำนายว่าคุณจะถูกปฏิเสธหรือไม่ — ไม่มีเครื่องมือใดทำได้"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "ไม่มีข้อมูลก่อนหน้า"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "ไม่มีการกล่าวซ้ำคำอ้างที่ว่าเรซูเม่ส่วนใหญ่ถูกคัดทิ้งโดยอัตโนมัติ"
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "โปรตุเกส (โปรตุเกส)"
 msgid "Position"
 msgstr "ตำแหน่ง"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "คาดการณ์ว่าคุณจะถูกปฏิเสธหรือไม่ ไม่มีเครื่องมือใดทำได้"
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "ต้องการหัวข้อทั่วไป เช่น \"ประสบการณ์การทำงาน\" หรือ \"การศึกษา\""
@@ -4227,10 +4231,6 @@ msgstr "เรียงลำดับใหม่"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "เรียงลำดับฟิลด์ที่กำหนดเองใหม่"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "ย้ำคำกล่าวอ้างที่ว่าเรซูเม่ส่วนใหญ่ถูกคัดทิ้งโดยอัตโนมัติ"
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

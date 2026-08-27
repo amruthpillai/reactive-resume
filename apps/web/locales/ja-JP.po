@@ -1972,10 +1972,6 @@ msgstr "パスワード保護を有効にしています..."
 msgid "Enabling two-factor authentication…"
 msgstr "二段階認証を有効にする…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "1ページ厳守のルールを強制したり、フォントや職務のブランクを欠点として扱ったりすること。"
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "英語"
@@ -3423,6 +3419,10 @@ msgstr "メールアドレスが見つかりませんでした。"
 msgid "No lines look like a job title paired with an employer."
 msgstr "職種名と勤務先が対になっているような行が見つかりません。"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "1ページの原則を課すことも、フォントやキャリアの空白を欠点として扱うこともありません。"
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "まだパスキーが登録されていません。"
@@ -3431,9 +3431,17 @@ msgstr "まだパスキーが登録されていません。"
 msgid "No phone number was found."
 msgstr "電話番号が見つかりませんでした。"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "不合格になるかどうかの予測は行いません。どのツールにもできません。"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "過去のデータなし"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "履歴書の大半が自動的に落とされるという主張は繰り返しません。"
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "ポルトガル語（ポルトガル）"
 msgid "Position"
 msgstr "役職"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "不採用になるかどうかを予測すること。どのツールにもそれはできません。"
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "「職歴」や「教育」などの従来の見出しを使用してください。"
@@ -4227,10 +4231,6 @@ msgstr "並び替え"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "カスタムフィールドの並べ替え"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "ほとんどの履歴書が自動的に却下されるという主張を繰り返すこと。"
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

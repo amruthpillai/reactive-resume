@@ -1972,10 +1972,6 @@ msgstr "Şifre koruması etkinleştiriliyor..."
 msgid "Enabling two-factor authentication…"
 msgstr "İki faktörlü kimlik doğrulamayı etkinleştirme…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "Tek sayfa kuralı dayatmak veya bir yazı tipini ya da kariyer boşluğunu kusur saymak."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "İngilizce"
@@ -3423,6 +3419,10 @@ msgstr "E-posta adresi bulunamadı."
 msgid "No lines look like a job title paired with an employer."
 msgstr "Hiçbir satır, bir işverenle eşleştirilmiş iş unvanına benzemiyor."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "Tek sayfa kuralı yok; yazı tipi veya kariyer boşluğu da kusur sayılmaz."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Henüz kayıtlı geçiş anahtarı yok."
@@ -3431,9 +3431,17 @@ msgstr "Henüz kayıtlı geçiş anahtarı yok."
 msgid "No phone number was found."
 msgstr "Telefon numarası bulunamadı."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "Reddedilip edilmeyeceğinize dair hiçbir tahmin yok — bunu hiçbir araç yapamaz."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "Önceden herhangi bir veri yok."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "Çoğu özgeçmişin otomatik olarak elendiği iddiası tekrarlanmaz."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "Portekizce (Portekiz)"
 msgid "Position"
 msgstr "Pozisyon"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "Reddedilip reddedilmeyeceğinizi tahmin etmek. Hiçbir araç bunu yapamaz."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "\"İş Deneyimi\" veya \"Eğitim\" gibi geleneksel bir başlığı tercih edin."
@@ -4227,10 +4231,6 @@ msgstr "Yeniden Sırala"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Özel alanı yeniden sırala"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "Çoğu özgeçmişin otomatik olarak elendiği iddiasını tekrarlamak."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

@@ -1972,10 +1972,6 @@ msgstr "Otetaan salasanasuojaus käyttöön..."
 msgid "Enabling two-factor authentication…"
 msgstr "Kaksivaiheisen todennuksen käyttöönotto…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "Pakottaa yhden sivun säännön tai kohdella fonttia tai uravälistä virheenä."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "englanti"
@@ -3423,6 +3419,10 @@ msgstr "Sähköpostiosoitetta ei löytynyt."
 msgid "No lines look like a job title paired with an employer."
 msgstr "Yksikään rivi ei näytä tehtävänimikkeeltä yhdistettynä työnantajaan."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "Ei yhden sivun sääntöä eikä fontin tai urakatkoksen pitämistä virheenä."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Ei vielä rekisteröityjä kulkulupia."
@@ -3431,9 +3431,17 @@ msgstr "Ei vielä rekisteröityjä kulkulupia."
 msgid "No phone number was found."
 msgstr "Puhelinnumeroa ei löytynyt."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "Ei ennustetta siitä, hylätäänkö sinut — mikään työkalu ei siihen pysty."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "Ei aiempia tietoja"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "Ei toistoa väitteelle, että useimmat ansioluettelot hylätään automaattisesti."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "portugali (Portugali)"
 msgid "Position"
 msgstr "Tehtävänimike"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "Ennustaa, tuletko hylätyksi. Mikään työkalu ei pysty siihen."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
@@ -4227,10 +4231,6 @@ msgstr "Järjestä uudelleen"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Järjestä mukautettu kenttä uudelleen"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "Toistaa väitettä, että useimmat ansioluettelot hylätään automaattisesti."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

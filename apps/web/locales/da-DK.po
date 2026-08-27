@@ -1972,10 +1972,6 @@ msgstr "Aktiverer adgangskodebeskyttelse..."
 msgid "Enabling two-factor authentication…"
 msgstr "Aktivering af tofaktorgodkendelse…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "Håndhæve en regel om én side, eller behandle en skrifttype eller et karrierehul som en fejl."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "Engelsk"
@@ -3423,6 +3419,10 @@ msgstr "Der blev ikke fundet nogen e-mailadresse."
 msgid "No lines look like a job title paired with an employer."
 msgstr "Ingen linjer ligner en jobtitel parret med en arbejdsgiver."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "Ingen regel om én side, og ingen skrifttype eller karrierepause behandles som en fejl."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Ingen nøgler registreret endnu."
@@ -3431,9 +3431,17 @@ msgstr "Ingen nøgler registreret endnu."
 msgid "No phone number was found."
 msgstr "Der blev ikke fundet noget telefonnummer."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "Ingen forudsigelse af, om du bliver afvist — det kan intet værktøj."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "Ingen tidligere data"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "Ingen gentagelse af påstanden om, at de fleste CV'er automatisk kasseres."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "Portugisisk (Portugal)"
 msgid "Position"
 msgstr "Stilling"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "Forudsige om du bliver afvist. Det kan intet værktøj."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
@@ -4227,10 +4231,6 @@ msgstr "Omsortér"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Omarranger brugerdefineret felt"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "Gentage påstanden om, at de fleste CV'er automatisk kasseres."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx

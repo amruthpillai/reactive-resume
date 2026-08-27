@@ -1972,10 +1972,6 @@ msgstr "Mengaktifkan perlindungan kata sandi..."
 msgid "Enabling two-factor authentication…"
 msgstr "Mengaktifkan otentikasi dua faktor…"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
-msgstr "Terapkan aturan satu halaman secara ketat, atau anggap font atau jeda karier sebagai kesalahan."
-
 #: src/libs/locale.ts
 msgid "English"
 msgstr "Inggris"
@@ -3423,6 +3419,10 @@ msgstr "Tidak ditemukan alamat email."
 msgid "No lines look like a job title paired with an employer."
 msgstr "Tidak ada baris yang tampak seperti jabatan yang dipasangkan dengan nama pemberi kerja."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No one-page rule, and no treating a font or a career gap as a fault."
+msgstr "Tidak ada aturan satu halaman, dan font atau jeda karier tidak dianggap sebagai kesalahan."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Belum ada kunci sandi yang terdaftar."
@@ -3431,9 +3431,17 @@ msgstr "Belum ada kunci sandi yang terdaftar."
 msgid "No phone number was found."
 msgstr "Tidak ditemukan nomor telepon."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "No prediction of whether you will be rejected — no tool can do that."
+msgstr "Tidak ada prediksi apakah Anda akan ditolak — tidak ada alat yang bisa melakukannya."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
 msgstr "Tidak ada data sebelumnya"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "No repeating the claim that most resumes are thrown out automatically."
+msgstr "Tidak ada pengulangan klaim bahwa sebagian besar resume dibuang secara otomatis."
 
 #: src/components/ui/combobox.tsx
 msgid "No results found."
@@ -3900,10 +3908,6 @@ msgstr "Portugis (Portugal)"
 msgid "Position"
 msgstr "Posisi"
 
-#: src/routes/_home/ats-checker.tsx
-msgid "Predict whether you will be rejected. No tool can."
-msgstr "Memprediksi apakah Anda akan ditolak. Tidak ada alat yang bisa melakukan itu."
-
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Pilih judul konvensional seperti \"Pengalaman Kerja\" atau \"Pendidikan\"."
@@ -4227,10 +4231,6 @@ msgstr "Urutkan ulang"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Susun ulang kolom kustom"
-
-#: src/routes/_home/ats-checker.tsx
-msgid "Repeat the claim that most resumes are thrown out automatically."
-msgstr "Mengulangi klaim bahwa sebagian besar resume dibuang secara otomatis."
 
 #. placeholder {0}: jd.stuffedTerms.join(", ")
 #: src/features/ats-checker/report/jd-coverage.tsx
