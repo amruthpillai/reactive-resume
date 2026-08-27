@@ -169,6 +169,69 @@ describe("AI provider connection test", () => {
 	});
 });
 
+describe("AI provider test connection timeout", () => {
+	async function loadWithTimeout(value: string | undefined) {
+		if (value === undefined) {
+			delete process.env.AI_TEST_TIMEOUT_MS;
+		} else {
+			process.env.AI_TEST_TIMEOUT_MS = value;
+		}
+		vi.resetModules();
+		const mod = await import("./service");
+		return mod.testConnection;
+	}
+
+	it("uses a valid custom timeout", async () => {
+		const testConnectionWithEnv = await loadWithTimeout("5000");
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 5 seconds"),
+		});
+	});
+
+	it("falls back to the default for negative values", async () => {
+		const testConnectionWithEnv = await loadWithTimeout("-1");
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 30 seconds"),
+		});
+	});
+
+	it("falls back to the default for fractional values", async () => {
+		const testConnectionWithEnv = await loadWithTimeout("30.5");
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 30 seconds"),
+		});
+	});
+
+	it("falls back to the default for non-numeric values", async () => {
+		const testConnectionWithEnv = await loadWithTimeout("not-a-number");
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 30 seconds"),
+		});
+	});
+
+	it("falls back to the default for out-of-range values", async () => {
+		const testConnectionWithEnv = await loadWithTimeout("999999999999");
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 30 seconds"),
+		});
+	});
+});
+
 describe("AI chat service", () => {
 	it("tests OpenAI-compatible providers without requiring structured output", async () => {
 		const openAiCompatible = stubOpenAICompatibleResponse();
