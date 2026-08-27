@@ -2,11 +2,18 @@ import type { VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { cva } from "class-variance-authority";
 import { Button } from "@reactive-resume/ui/components/button";
+import { useFormControl } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Textarea } from "@reactive-resume/ui/components/textarea";
 import { cn } from "@reactive-resume/utils/style";
 
-function InputGroup({ className, ...props }: React.ComponentProps<"fieldset">) {
+function InputGroup({
+	className,
+	id: _id,
+	"aria-describedby": _ariaDescribedBy,
+	"aria-invalid": _ariaInvalid,
+	...props
+}: React.ComponentProps<"fieldset">) {
 	return (
 		<fieldset
 			data-slot="input-group"
@@ -114,10 +121,24 @@ function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
 	);
 }
 
-function InputGroupInput({ className, ...props }: React.ComponentProps<"input">) {
+function InputGroupInput({
+	className,
+	id: idProp,
+	"aria-describedby": ariaDescribedByProp,
+	"aria-invalid": ariaInvalidProp,
+	...props
+}: React.ComponentProps<"input">) {
+	const formControl = useFormControl();
+	const controlId = idProp ?? formControl.id;
+	const describedBy = ariaDescribedByProp ?? formControl["aria-describedby"];
+	const invalid = ariaInvalidProp ?? formControl["aria-invalid"];
+
 	return (
 		<Input
 			data-slot="input-group-control"
+			id={controlId}
+			aria-describedby={describedBy}
+			aria-invalid={invalid}
 			className={cn(
 				"flex-1 rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0",
 				className,
@@ -127,10 +148,24 @@ function InputGroupInput({ className, ...props }: React.ComponentProps<"input">)
 	);
 }
 
-function InputGroupTextarea({ className, ...props }: React.ComponentProps<"textarea">) {
+function InputGroupTextarea({
+	className,
+	id: idProp,
+	"aria-describedby": ariaDescribedByProp,
+	"aria-invalid": ariaInvalidProp,
+	...props
+}: React.ComponentProps<"textarea">) {
+	const formControl = useFormControl();
+	const controlId = idProp ?? formControl.id;
+	const describedBy = ariaDescribedByProp ?? formControl["aria-describedby"];
+	const invalid = ariaInvalidProp ?? formControl["aria-invalid"];
+
 	return (
 		<Textarea
 			data-slot="input-group-control"
+			id={controlId}
+			aria-describedby={describedBy}
+			aria-invalid={invalid}
 			className={cn(
 				"flex-1 resize-none rounded-none border-0 bg-transparent py-2 shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0",
 				className,

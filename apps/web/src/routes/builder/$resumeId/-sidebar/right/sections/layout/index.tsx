@@ -1,5 +1,6 @@
 import type z from "zod";
 import { Trans } from "@lingui/react/macro";
+import * as React from "react";
 import { metadataSchema } from "@reactive-resume/schema/resume/data";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import {
@@ -52,6 +53,8 @@ function LayoutSectionForm() {
 		persist(form.state.values);
 	};
 
+	const labelId = React.useId();
+
 	return (
 		<form
 			className="space-y-4"
@@ -64,23 +67,20 @@ function LayoutSectionForm() {
 			<form.Field name="sidebarWidth">
 				{(field) => (
 					<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
-						<FormLabel>
+						<FormLabel id={labelId}>
 							<Trans>Sidebar Width</Trans>
 						</FormLabel>
 						<div className="flex items-center gap-4">
-							<FormControl
-								render={
-									<Slider
-										min={10}
-										max={50}
-										step={0.01}
-										value={[field.state.value]}
-										onValueChange={(value) => {
-											field.handleChange(Array.isArray(value) ? value[0] : value);
-											handleAutoSave();
-										}}
-									/>
-								}
+							<Slider
+								aria-labelledby={labelId}
+								min={10}
+								max={50}
+								step={0.01}
+								value={[field.state.value]}
+								onValueChange={(value) => {
+									field.handleChange(Array.isArray(value) ? value[0] : value);
+									handleAutoSave();
+								}}
 							/>
 
 							<FormControl

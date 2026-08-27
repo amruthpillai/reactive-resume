@@ -3,7 +3,17 @@ import { cn } from "@reactive-resume/utils/style";
 
 const THUMB_POSITION_KEYS = ["single", "start", "end"] as const;
 
-function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }: SliderPrimitive.Root.Props) {
+function Slider({
+	className,
+	defaultValue,
+	value,
+	min = 0,
+	max = 100,
+	id: _id,
+	"aria-describedby": ariaDescribedBy,
+	"aria-invalid": _ariaInvalid,
+	...props
+}: SliderPrimitive.Root.Props) {
 	const _values = Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max];
 	const thumbDescriptors = _values.map((thumbValue, position) => ({
 		key:
@@ -15,13 +25,13 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }
 	return (
 		<SliderPrimitive.Root
 			className={cn("data-vertical:h-full data-horizontal:w-full", className)}
-			data-slot="slider"
 			defaultValue={defaultValue}
 			value={value}
 			min={min}
 			max={max}
 			thumbAlignment="edge"
 			{...props}
+			data-slot="slider"
 		>
 			<SliderPrimitive.Control className="relative flex w-full touch-none select-none items-center data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col data-disabled:opacity-50">
 				<SliderPrimitive.Track
@@ -37,6 +47,7 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }
 					<SliderPrimitive.Thumb
 						data-slot="slider-thumb"
 						key={thumb.key}
+						aria-describedby={ariaDescribedBy}
 						className="relative block size-3 shrink-0 select-none rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-3 focus-visible:outline-hidden focus-visible:ring-3 active:ring-3 disabled:pointer-events-none disabled:opacity-50"
 					/>
 				))}
