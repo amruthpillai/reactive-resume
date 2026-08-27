@@ -114,7 +114,8 @@ export function createBaseTemplateStyles({
 
 		richListItemContent: {
 			...bodyText,
-			flex: "initial",
+			flex: 1,
+			minWidth: 0,
 		} satisfies Style,
 
 		splitRow: {

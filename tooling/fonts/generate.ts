@@ -160,6 +160,37 @@ function getMetricCompatibleFonts(): WebFont[] {
 	];
 }
 
+/**
+ * Helper: locale-coverage web fonts that aren't in the popularity-sorted
+ * Google Fonts slice but are stored as `typography.*.fontFamily` in imported
+ * resume JSON. Without a catalog entry, PDF registration silently substitutes
+ * IBM Plex Serif and Persian/Arabic glyphs stack or tofu (#3098).
+ */
+function getLocaleCoverageFonts(): WebFont[] {
+	const CDN = "https://fonts.gstatic.com/s/vazirmatn/v16";
+
+	return [
+		{
+			type: "web",
+			category: "sans-serif",
+			family: "Vazirmatn",
+			weights: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+			preview: `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklWgzCRCT60LA7Qdazg.ttf`,
+			files: {
+				"100": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklWgyCRCT60LA7Qdazg.ttf`,
+				"200": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklegzCRCT60LA7Qdazg.ttf`,
+				"300": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklTYzCRCT60LA7Qdazg.ttf`,
+				"400": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklWgzCRCT60LA7Qdazg.ttf`,
+				"500": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklVozCRCT60LA7Qdazg.ttf`,
+				"600": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklbY0CRCT60LA7Qdazg.ttf`,
+				"700": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklY80CRCT60LA7Qdazg.ttf`,
+				"800": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRkleg0CRCT60LA7Qdazg.ttf`,
+				"900": `${CDN}/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklcE0CRCT60LA7Qdazg.ttf`,
+			},
+		},
+	];
+}
+
 async function generateFonts() {
 	const response = await getGoogleFontsJSON();
 	console.log(`Found ${response.items.length} fonts in total (Google Fonts).`);
@@ -196,16 +227,27 @@ async function generateFonts() {
 	const computerModernFonts = getComputerModernWebFonts();
 	// Manually append metric-compatible fonts not covered by the popularity slice
 	const metricCompatFonts = getMetricCompatibleFonts();
+	const localeCoverageFonts = getLocaleCoverageFonts();
 	// De-duplicate against the Google Fonts slice in case a manual entry
 	// later enters the popularity top-N.
 	const googleFontFamilies = new Set(googleFontResults.map((f) => f.family));
 	const filteredMetricCompat = metricCompatFonts.filter((f) => !googleFontFamilies.has(f.family));
+	const filteredLocaleCoverage = localeCoverageFonts.filter((f) => !googleFontFamilies.has(f.family));
 
-	const allWebFonts: WebFont[] = [...computerModernFonts, ...googleFontResults, ...filteredMetricCompat];
+	const allWebFonts: WebFont[] = [
+		...computerModernFonts,
+		...googleFontResults,
+		...filteredMetricCompat,
+		...filteredLocaleCoverage,
+	];
 
-	console.log(
-		`Added ${computerModernFonts.length} Computer Modern Web Fonts and ${filteredMetricCompat.length} metric-compatible fonts. Total output: ${allWebFonts.length} web fonts.`,
-	);
+	const manualFontSummary = [
+		`${computerModernFonts.length} Computer Modern Web Fonts`,
+		`${filteredMetricCompat.length} metric-compatible fonts`,
+		`and ${filteredLocaleCoverage.length} locale-coverage fonts`,
+	].join(", ");
+
+	console.log(`Added ${manualFontSummary}. Total output: ${allWebFonts.length} web fonts.`);
 
 	const jsonString = argCompress ? JSON.stringify(allWebFonts) : JSON.stringify(allWebFonts, null, 2);
 	await mkdir(FONTS_DIR, { recursive: true });

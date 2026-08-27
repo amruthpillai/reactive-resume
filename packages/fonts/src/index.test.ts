@@ -201,9 +201,15 @@ describe("getPdfFallbackFontFamilies", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "th-TH" })).toEqual(["Noto Sans Thai", "Noto Sans"]);
 	});
 
+	it("uses Noto Emoji for detected emoji content, for serif and sans stacks alike (#3321)", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["emoji"] })).toEqual(["Noto Emoji", "Noto Sans"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["emoji"] })).toEqual(["Noto Emoji", "Noto Serif"]);
+	});
+
 	it("does not append the Simplified Chinese safety net for non-CJK scripts", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["arabic"] })).toEqual(["Noto Sans Arabic", "Noto Sans"]);
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["thai"] })).not.toContain("Noto Sans SC");
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["emoji"] })).not.toContain("Noto Sans SC");
 	});
 
 	it("orders the locale script first, then content scripts (mixed RTL + CJK resume)", () => {
@@ -288,6 +294,23 @@ describe("legacy font compatibility (#2989)", () => {
 		// Users who picked "Times New Roman" should keep seeing that label
 		// in the typography sidebar — the alias is a render-time concern only.
 		expect(getFontDisplayName("Times New Roman")).toBe("Times New Roman");
+	});
+});
+
+describe("locale coverage fonts (#3098)", () => {
+	it("resolves Vazirmatn from the webfont catalog", () => {
+		expect(getFont("Vazirmatn")?.family).toBe("Vazirmatn");
+		expect(getWebFont("Vazirmatn")?.category).toBe("sans-serif");
+	});
+
+	it("returns a gstatic source for Vazirmatn regular so PDF registration can load it", () => {
+		const regularSource = getWebFont("Vazirmatn")?.files["400"];
+		expect(regularSource).toBeDefined();
+
+		const source = getWebFontSource("Vazirmatn", "400");
+		expect(source).toBe(regularSource);
+		expect(source).toEqual(expect.stringContaining("fonts.gstatic.com"));
+		expect(source).toEqual(expect.stringMatching(/\.ttf(\?|$)/));
 	});
 });
 

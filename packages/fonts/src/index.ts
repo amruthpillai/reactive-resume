@@ -82,6 +82,9 @@ const scriptFonts: Record<Script, { serif: string; sansSerif: string }> = {
 	arabic: { serif: "Noto Naskh Arabic", sansSerif: "Noto Sans Arabic" },
 	hebrew: { serif: "Noto Sans Hebrew", sansSerif: "Noto Sans Hebrew" },
 	thai: { serif: "Noto Sans Thai", sansSerif: "Noto Sans Thai" },
+	// Monochrome outlines (TrueType glyf, not CBDT bitmaps) so react-pdf can
+	// embed them; the serif/sans distinction is meaningless for emoji (#3321).
+	emoji: { serif: "Noto Emoji", sansSerif: "Noto Emoji" },
 };
 
 // Covers General Punctuation (U+2000–U+206F) and other symbols missing from
