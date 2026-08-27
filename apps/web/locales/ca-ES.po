@@ -53,6 +53,24 @@ msgstr "{0} sol·licituds en seguiment"
 msgid "{0} characters"
 msgstr "caràcters {0}"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{0} de {1} comprovacions aplicables superades"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{0} de {1} comprovacions aplicables superades."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "{0} de {1} termes trobats"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} llest per importar"
 msgid "{0} rejected"
 msgstr "{0} rebutjades"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} omeses"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0} omès (falta empresa/rol)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} per corregir"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 mesos"
 msgid "6 months"
 msgstr "6 mesos"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "Una exportació neta a una sola columna conserva totes les dades. Les columnes i les imatges és on es perden."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "S’ha enviat un enllaç de confirmació a l’adreça de correu electrònic actual. Comprova la bústia d’entrada per confirmar el canvi."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "Una data és en el futur."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "Un interval de dates acaba abans de començar."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "Un interval de dates està escrit en un format que la majoria de programari no pot llegir."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "Es fa referència a un tipus de lletra que no està incrustat."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Un creador de currículums gratuït i de codi obert que simplifica el pr
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Un cop amable per al reclutador"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "Un espai de tota l'alçada divideix aquesta pàgina en dues columnes."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "Un buit no és cap problema. Afegeix una explicació d'una línia si vols; molts currículums sòlids simplement no ho fan."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "Un enllaç apunta a un lloc diferent de l'adreça que mostra."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "Molta gent m’ha escrit al llarg dels anys per compartir les seves expe
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "S’ha enviat un nou enllaç de verificació a la teva adreça de correu electrònic. Comprova la bústia d’entrada per verificar el compte."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "Una data numèrica es llegeix de manera diferent segons el país."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "Una pàgina està girada."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Un projecte fet amb passió per <0>Amruth Pillai</0>."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "Un currículum dissenyat per a un lector humà, amb foto, encapçalaments i columnes"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "Un tram"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "Una adreça web està escrita sense https://."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "Afegeix una nota…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "Afegeix un període com «Jan 2020 - Present» perquè aparegui a la teva línia temporal."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "Afegeix una secció titulada «Education». Molts sistemes tenen un camp d'educació obligatori."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "Afegeix una secció titulada «Experience» o «Work Experience». És el camp pel qual més sistemes puntuen."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Afegeix una etiqueta i prem Retorn…"
@@ -291,10 +375,6 @@ msgstr "Afegeix una etiqueta i prem Retorn…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "Afegeix una entrada o utilitza projectes i treball voluntari per mostrar un historial equivalent."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "Afegeix-hi un element o amaga'l."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "Afegeix com a mínim una ciutat i un país perquè els rols es puguin co
 msgid "Add contact"
 msgstr "Afegeix un contacte"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "Afegeix xifres quan en tinguis: volums, percentatges, terminis, mides d'equip."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Afegeix paraula clau"
@@ -327,6 +411,14 @@ msgstr "Afegeix un enllaç"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Afegiu diversos càrrecs per mostrar la progressió professional a la mateixa empresa."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "Afegeix un enllaç que mostri la teva feina."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "Afegeix-ne un amb el prefix del país; alguns formularis de sol·licitud el requereixen abans de poder-lo enviar."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Afegeix pàgina"
@@ -339,6 +431,10 @@ msgstr "Afegeix un proveïdor"
 msgid "Add Role"
 msgstr "Afegir càrrec"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "Afegeix espai en blanc entre seccions perquè una persona ho pugui fullejar."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "Afegeix una etiqueta"
@@ -346,6 +442,10 @@ msgstr "Afegeix una etiqueta"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Afegeix a la canalització"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "Afegeix dues o tres línies a dalt que descriguin què fas."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "Ajusta el currículum per a un rol de treball remot que valori la comuni
 msgid "Advanced"
 msgstr "Avançat"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "Consells per a la persona que ho llegeix. Res d'això afecta la puntuació."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikaans"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "Segons la descripció de la feina"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "La configuració de l'agent d'IA no està disponible fins que REDIS_URL 
 msgid "AI assistant"
 msgstr "Assistent d'IA"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "Proveïdor d'IA"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "La gestió de proveïdors d'IA no està disponible fins que REDIS_URL i ENCRYPTION_SECRET no estiguin configurats."
@@ -403,6 +515,10 @@ msgstr "La gestió de proveïdors d'IA no està disponible. Torna-ho a provar."
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Proveïdors d'IA"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "Els proveïdors d'IA no estan disponibles fins que es configuri ENCRYPTION_SECRET."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "Albanès"
 msgid "Allow Public Access"
 msgstr "Permet accés públic"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "Gairebé cap de les teves vinyetes conté un número."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "Ja cobert"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Ja teniu un compte? <0/>"
@@ -423,6 +547,10 @@ msgstr "Ja teniu un compte? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "Amhàric"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "No s'ha pogut llegir un tipus de lletra incrustat."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "Un error inesperat ha impedit que aquesta pàgina es carregui. Pots torn
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "S’ha produït un error desconegut en importar el currículum."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "Analitzar currículum"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "Analitzant…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloud dóna suport a Reactive Resume com a patrocinador de project
 msgid "ATS Check"
 msgstr "Comprovació ATS"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "Comprovador ATS"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "Ha fallat l'emplenament automàtic."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Disponible en múltiples idiomes. Si vols contribuir-hi, visita Crowdin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "Evita efectes pesants d'espaiat entre lletres i torna a exportar."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "Ideal per a aplicacions, compartició i impressió."
 msgid "Blank draft"
 msgstr "Esborrany en blanc"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "Bloquejant"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Junta"
@@ -750,6 +884,10 @@ msgstr "Radi de la vora"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "Gruix de la vora"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "Divideix el currículum en les seccions habituals perquè es pugui segmentar."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "Canvi de registre"
 msgid "Chat"
 msgstr "Xat"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "Torna a comprovar"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "Comprova que el fitxer exportat conté tot el que esperes i que tot és text seleccionable."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Comprova el correu electrònic per trobar un enllaç per restablir la contrasenya."
@@ -868,6 +1014,10 @@ msgstr "Comprova el correu electrònic per trobar un enllaç per restablir la co
 msgid "Check your email for a link to verify your account."
 msgstr "Comprova el correu electrònic per trobar un enllaç per verificar el compte."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "Comprovat al teu navegador. El fitxer mai es carrega."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "Comprovació"
@@ -875,6 +1025,10 @@ msgstr "Comprovació"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "S'està revisant l'esborrany"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "Comprovant…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "Xinès (tradicional)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "Trieu un model i un esborrany de currículum."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "Tria un PDF"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "Compara aquest currículum amb l'URL d'aquesta funció i actualitza les 
 msgid "Completely free, forever, no hidden costs."
 msgstr "Completament gratuït, per sempre, sense costos ocults."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "Comprimeix o elimina imatges grans per mantenir les càrregues ràpides."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "Confirma"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Connecta"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "Connecta el teu propi proveïdor d'IA per obtenir una revisió de la redacció. Les comprovacions anteriors no necessiten cap proveïdor ni compte."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "La connexió ha fallat."
 msgid "Connection verified — provider is ready to use."
 msgstr "Connexió verificada: el proveïdor està a punt per utilitzar-lo."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "Dades de contacte"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "Contactes"
@@ -1020,6 +1190,10 @@ msgstr "Contactes"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "Contingut"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "El contingut està disposat en una graella."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "Copiar full d'estils"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "Copia tota la descripció de la feina de l'oferta i enganxa-la a continuació. Omplirem els camps per tu i desarem el text amb aquesta aplicació per puntuar la coincidència i adaptar-la."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "Copia el text del fitxer exportat i llegeix-lo sencer; corregeix qualsevol cosa que quedi mal col·locada."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "Copia aquesta clau secreta i utilitza-la a les aplicacions per accedir a les dades."
@@ -1102,6 +1280,10 @@ msgstr "Copia l’URL"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Correct the year, or use \\\"Present\\\" for ongoing work."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "Corregeix l'any, o escriu «Present» per a una feina en curs."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "No s'ha pogut carregar el fitxer. Torna-ho a intentar."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "Compta per font"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "Es compta per separat de la puntuació d'anàlisi. La cobertura no prediu res."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "Data"
 msgid "Date applied"
 msgstr "Data de sol·licitud"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "Dates"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "Reduir la sagnia"
@@ -1397,6 +1588,10 @@ msgstr "Reduir la sagnia"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "Redueix el zoom"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "Comprovació profunda"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "Suprimeix"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "Suprimeix el compte"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "Suprimeix-ho. Les paraules clau ocultes es consideren un intent deliberat de manipular la cerca."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "Denegat — esperant l'agent…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Denega"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "Descriu cada rol amb vinyetes curtes. Els paràgrafs sòlids són més difícils de fullejar i de segmentar."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "Arrossega i deixa anar seccions aquí per moure-les entre columnes"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Arrossega per reposicionar i utilitza el control lliscant per fer zoom abans de carregar."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "Elimina els pronoms i comença pel verb. Aquesta és la convenció a la majoria de mercats."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "Adreça de correu electrònic"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "L'enviament de correu electrònic no està configurat en aquesta instància, per la qual cosa la verificació està desactivada."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "Incrusta tots els tipus de lletra en exportar, perquè els caràcters es mostrin com vols."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Activa l’A2F"
@@ -1760,6 +1971,10 @@ msgstr "S’està activant la protecció amb contrasenya..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "Habilitació de l'autenticació de dos factors…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "Imposar una regla d'una sola pàgina, o tractar un tipus de lletra o un buit laboral com una falta."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "Exporta"
 msgid "Export Data"
 msgstr "Exporta les dades"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "Exporta des del document original en lloc d'escanejar-lo o fer-ne una captura de pantalla."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "Exporta les meves dades"
@@ -1863,6 +2082,10 @@ msgstr "Exporta les meves dades"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "Exporta PNG"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "Exporta el currículum com a PDF de text en lloc d'imatge o escaneig."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "S'ha exportat el flux de la canonada.png"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "Ha fallat"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "S'ha fallat l'anàlisi del currículum."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "S'ha produït un error en tornar a enviar el correu electrònic de verif
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "S'ha produït un error en restablir la contrasenya. Torni a provar."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "No s'ha pogut revisar aquest currículum."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "Focs artificials"
 msgid "Fit to view"
 msgstr "Ajustar a la vista"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "Aplana el formulari perquè el text formi part de la pàgina."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "Flexibilitat"
@@ -2210,14 +2437,6 @@ msgstr "Genera un nom aleatori"
 msgid "German"
 msgstr "Alemany"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "Obtén una revisió del teu currículum amb una puntuació global, punts forts i suggeriments pràctics."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "Obtén una revisió en profunditat del teu currículum impulsada per IA amb una puntuació global, punts forts clau i suggeriments pràctics. Per activar aquesta funció, actualitza la configuració de la teva IA."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Comença"
@@ -2229,6 +2448,14 @@ msgstr "Comença"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "Dona a cada rol un període, com «Jan 2020 - Present», perquè es pugui reconstruir la teva trajectòria."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "Dona a cada rol i titulació un interval de dates."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "Encapçalament 5"
 msgid "Heading 6"
 msgstr "Encapçalament 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "Titular"
@@ -2388,10 +2616,9 @@ msgstr "Amaga la imatge"
 msgid "Hide Section Icons"
 msgstr "Amaga les icones de secció"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "Alt"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "Impacte alt"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "Icona"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Identifiqueu les mancances d'un sistema de seguiment de candidats i apliqueu només millores de paraules clau d'alta confiança."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "Si prové d'un escaneig, és normal. Si no, elimina-ho; els reclutadors ho interpreten com a farciment de paraules clau."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "Les imatges cobreixen la major part de la pàgina."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "S’està important el currículum..."
 msgid "Importing…"
 msgstr "Important…"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "A {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "Inclou la capçalera del currículum"
@@ -2491,6 +2731,10 @@ msgstr "Inclou la capçalera del currículum"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "Augmenta la sagnia"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "Augmenta l'interlineat perquè dues línies no es fusionin en una."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "Codi en línia"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "Perspectives"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "Inspeccionant la pàgina {0} de {1}…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "Feina"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "Descripció de la feina"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "Descripció de la feina (opcional)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "Justifica"
 msgid "Kannada"
 msgstr "Kannada"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "Mantén una sola adreça, perquè ningú hagi d'endevinar quina utilitzar."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "Mantén-lo per sota de 2,5 MB, normalment eliminant o reduint imatges."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "Mantén el contingut del currículum com a text real en lloc d'imatges de text."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "Mantén curtes les capçaleres que es repeteixen a cada pàgina, o elimina-les. També es repeteixen al text extret."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "Mantén-les en unes dues línies, perquè qui les fullegi les acabi de llegir."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "Limita't a dues o tres famílies. Cada tipus de lletra addicional és una oportunitat més perquè un es representi malament."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "Idioma"
 msgid "Languages"
 msgstr "Idiomes"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "Darrera anàlisi el {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "Darrera visualització el {0}"
 msgid "Latvian"
 msgstr "Letó"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "Disposa el text horitzontalment. Els fragments girats sovint es perden o es col·loquen malament."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "Disposició"
@@ -2715,6 +2995,10 @@ msgstr "Més informació"
 msgid "Leave"
 msgstr "Surt"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "Deixa almenys mig polzada al voltant de la pàgina."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Deixa-ho buit per restablir el títol original."
@@ -2726,6 +3010,10 @@ msgstr "Voleu deixar de configurar un proveïdor d'IA?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Alinea a l’esquerra"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "La longitud no és cap defecte, i no hi ha cap regla universal d'una sola pàgina. Conserva les pàgines que es guanyen el seu lloc."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "Nivell {level} de 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "Sota llicència <0>MIT</0>."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "Les lligadures poden eliminar lletres de paraules com «workflow»."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "S’està enllaçant el compte de {providerName}..."
 msgid "List"
 msgstr "Llista"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "Enumera les eines i tecnologies que fas servir. Els reclutadors cerquen habilitats més que cap altre camp."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "Lituà"
@@ -2814,8 +3110,8 @@ msgstr "S'estan carregant els proveïdors d'IA. Si us plau, torneu-ho a provar d
 msgid "Loading applications…"
 msgstr "S'estan carregant les aplicacions…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "S'estan carregant els proveïdors…"
 
@@ -2838,6 +3134,7 @@ msgstr "S'està carregant…"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Ubicació"
@@ -2855,6 +3152,10 @@ msgstr "Bloqueja"
 msgid "Logout"
 msgstr "Tanca la sessió"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "Hi ha trams llargs escrits en majúscules."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "Sostenibilitat a llarg termini"
@@ -2864,10 +3165,9 @@ msgstr "Sostenibilitat a llarg termini"
 msgid "Lost access to your authenticator?"
 msgstr "Has perdut l’accés a l’autenticador?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "Baix"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "Impacte baix"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "Navegació principal"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "Feu que la secció d'experiència estigui més orientada a resultats i elimineu les responsabilitats vagues."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "Fes que el text visible i la destinació coincideixin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "Fes-los visiblement més grans, en negreta o en majúscules."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "Malai"
@@ -2889,6 +3197,10 @@ msgstr "Malai"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "Malaiàlam"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "Moltes vinyetes comencen amb la mateixa frase."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "Marc ha rebutjat"
 msgid "Match scoring failed."
 msgstr "La puntuació del partit ha fallat."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Mitjà"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "Impacte mitjà"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "IA Mistral"
 msgid "Model"
 msgstr "Model"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "Apareix més d'una adreça de correu electrònic."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "La majoria de vinyetes comencen amb farciment en lloc d'alguna cosa que vas fer."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "La majoria d'entrades no tenen dates."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "La majoria de sistemes presenten els candidats per correu electrònic. Afegiu-ne un a Conceptes bàsics."
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "Mou tot el contingut dins dels límits de la pàgina i torna a exportar."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "Mou-lo a la columna principal i mantén la barra lateral per a les llistes curtes."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "Mou el contingut real al cos de la pàgina; alguns programes descarten els marges."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "Mou l'escenari"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Mou a"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "Mou el teu correu electrònic i telèfon a la part superior de la primera pàgina."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "Ha de començar amb https://"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "No hi ha cap aplicació que coincideixi amb els filtres."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "Encara no hi ha cap sol·licitud; afegeix-ne algunes per veure el teu embut de vendes i les taxes de resposta."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "No s'ha trobat cap llista de vinyetes."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "No s'ha trobat cap encapçalament de secció convencional."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "No es van retornar dades del proveïdor d'IA."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "No s'ha trobat cap data."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "No s'ha trobat cap secció d'educació."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "No s'ha trobat cap adreça de correu electrònic."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "Cap línia sembla un càrrec aparellat amb un empresari."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Encara no s'han registrat cap clau d'accés."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "No s'ha trobat cap número de telèfon."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "Encara no hi ha currículums."
 msgid "No saved versions yet."
 msgstr "Encara no hi ha versions desades."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "No s'ha trobat cap secció d'habilitats."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "Encara no hi ha dades d'origen."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "No s'ha pogut extreure cap terme específic d'aquesta descripció de la feina, així que pot ser majoritàriament genèrica. Enganxa la secció de requisits per obtenir una comparació més útil."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Cap proveïdor provat"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "No s'ha pogut llegir cap text d'aquest fitxer."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "Encara no hi ha fils."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "No s'ha trobat cap secció d'experiència laboral."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "Noruec"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "No connectat"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "No queda evidenciat en el teu currículum"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "No és al teu currículum"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "Sense puntuar"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "Nota"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "Notes"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "Res indica que un rol estigui en curs."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "Res a corregir aquí."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "Res a corregir. Les pàgines restants simplement no estaven cobertes per aquest informe."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "Res a suggerir."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "Manteniment continu"
 msgid "Only applies when the section fits on a single page."
 msgstr "Només s'aplica quan la secció cap en una sola pàgina."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "Només s'ha trobat un encapçalament de secció reconeixible."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "Només s'han comprovat les primeres {0} pàgines, així que aquest informe no cobreix tot el fitxer."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "Només s'importen les primeres {MAX_IMPORT} files alhora, i s'omet {overflow} . Dividiu el fitxer per importar la resta."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "Només s'han comprovat les primeres pàgines."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "Obre el mode d'enfocament"
 msgid "Open in builder"
 msgstr "Obre al constructor"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "Obre la configuració d'integracions"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Codi obert"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "Obre el fitxer exportat i confirma que pots seleccionar i copiar cada part."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "Compatible amb OpenAI"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "Obrint el fitxer…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "Nota opcional per a l'agent…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Opcionalment, estableix una contrasenya perquè només les persones que la tinguin puguin veure el currículum mitjançant l’enllaç."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "Opcionalment, quins termes d'una oferta de feina ja hi apareixen."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "Opcions per a {title}"
@@ -3237,9 +3670,9 @@ msgstr "Llista ordenada"
 msgid "Organization"
 msgstr "Organització"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "Puntuació global"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "sobre 100"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "La protecció amb contrasenya s’ha desactivat."
 msgid "Password protection has been enabled."
 msgstr "La protecció amb contrasenya s’ha activat."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "Enganxa una oferta per veure quins dels seus termes ja apareixen al teu currículum."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "Enganxa files o puja un fitxer .csv. Mapem columnes com ara Empresa, Rol, Etapa, Data de l'etapa, Salari, Origen i Etiquetes."
@@ -3321,6 +3758,10 @@ msgstr "Enganxa files o puja un fitxer .csv. Mapem columnes com ara Empresa, Rol
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "Enganxa aquí la descripció completa de la feina…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "Enganxa l'oferta per veure quins dels seus termes ja apareixen al teu currículum."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "Personalitza el currículum amb qualsevol color, lletra o disseny i fes-lo teu."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "Telèfon"
@@ -3383,6 +3825,10 @@ msgstr "Telèfon"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Trieu una icona"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "Tria un format i utilitza'l a tot arreu."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "Portuguès (Portugal)"
 msgid "Position"
 msgstr "Càrrec"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "Predir si seràs rebutjat. Cap eina no pot fer-ho."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "Prefereix una sola columna, o limita la columna lateral a llistes curtes i autònomes."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "La vista prèvia i l'exportació mantenen els estils vàlids i ignoren e
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Color principal"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "Imprimeix o exporta el formulari a un PDF pla abans d'enviar-lo."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "Publicacions"
 msgid "Publisher"
 msgstr "Editor"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "Posa una adreça de correu electrònic senzilla a prop de la part superior de la primera pàgina. És el que la majoria de sistemes fan servir per classificar-te."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "JSON en brut"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "Torna a exportar des d'un disseny d'una sola columna i després copia el text i comprova que es llegeix de dalt a baix."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "Torna a exportar des del document original en lloc de convertir-lo des d'un altre format."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "Torna a exportar des del document original amb els tipus de lletra incrustats correctament."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "Torna a exportar utilitzant un tipus de lletra TrueType o OpenType habitual."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "Torna a exportar amb els tipus de lletra incrustats i comprova que el text es copia sense errors."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "Torna a exportar amb els tipus de lletra incrustats i després obre el fitxer i comprova que el text es copia sense errors."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "Llegiu la guia Aplicació d'estils personalitzats."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Ha llegit el currículum"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "Llegibilitat"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "Llegint la pàgina {0} de {1}…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "S’està desactivant la protecció amb contrasenya..."
 msgid "Rename"
 msgstr "Canvia el nom"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "Renderitza el teu currículum actual a PDF i executa la comprovació completa del fitxer, al teu navegador. Res es carrega."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Reordena"
@@ -3727,6 +4227,23 @@ msgstr "Reordena"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Reordena el camp personalitzat"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "Repetir l'afirmació que la majoria de currículums es descarten automàticament."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "Repetit molt més sovint del que l'oferta mateixa els fa servir: {0}. Els reclutadors se n'adonen."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "Substitueix els tipus de lletra d'icones per text pla i torna a exportar."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "Substitueix les taules per paràgrafs i llistes simples. Les cel·les s'extreuen en l'ordre d'emmagatzematge, no en l'ordre de lectura."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "Torna a enviar el correu de verificació"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "S’està tornant a enviar el correu de verificació..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "Reserva les majúscules per a encapçalaments curts. Alenteixen la lectura i poden fer fallar les cerques sensibles a majúscules."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "Voleu restaurar aquesta versió?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Currículum vitae"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "Anàlisi de currículum"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "Anàlisi del currículum completada."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "Revisa les edicions"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Revisa el currículum en relació amb la descripció del lloc de treball i fes-me preguntes abans de canviar les seccions incertes."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "Revisa la redacció amb IA"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "Revisa aquesta edició"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "Revisant…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "Romanès"
 msgid "Rotation"
 msgstr "Rotació"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "Executa la teva primera anàlisi per obtenir un quadre de comandament, els punts forts i suggeriments prioritzats."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "Torna a executar"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "Executa la revisió amb IA"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "Executa la comprovació profunda"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "Desa i prova el proveïdor"
 msgid "Save & Upload"
 msgstr "Desa i puja"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "Desa una còpia sense protegir, sense contrasenya ni restriccions de permisos."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "Desa els canvis"
@@ -3940,6 +4473,10 @@ msgstr "Desa els canvis"
 msgid "Save model"
 msgstr "Desa el model"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "Desa el fitxer amb totes les pàgines dretes."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "Desat"
@@ -3959,10 +4496,6 @@ msgstr "Centre educatiu"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "Puntua el meu ajust"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "Fitxa de puntuació"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "Opcions de secció"
 msgid "Section Type"
 msgstr "Tipus de secció"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "Seccions"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "Veure com aquest currículum coincideix amb l'anunci"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "Descobreix què pot llegir un sistema de seguiment de candidats del teu currículum. S'executa al teu navegador."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "Selecciona-ho tot"
 msgid "Select an agent model"
 msgstr "Seleccioneu un model d'agent"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "Seleccioneu un proveïdor d'IA"
 
@@ -4075,9 +4617,21 @@ msgstr "Enviar missatge"
 msgid "Send Password Reset Email"
 msgstr "Envia el correu per restablir la contrasenya"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "Envia el currículum mateix en lloc d'un embolcall de portafoli."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "S’està enviant el correu per restablir la contrasenya..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Envia el text ja extret del teu PDF al proveïdor d'IA que triïs a continuació. El fitxer PDF mateix mai es carrega."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Envia el text ja extret del teu PDF, més la descripció de la feina que has enganxat, al proveïdor d'IA que triïs a continuació. El fitxer PDF mateix mai es carrega."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "Serbi"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Estableix una contrasenya"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "Estableix l'idioma del document en exportar."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "Amplada de la barra lateral"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Inicia sessió"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "Inicia sessió i connecta el teu propi proveïdor d'IA per obtenir suggeriments de reescriptura per a vinyetes febles. Les comprovacions anteriors són gratuïtes i no necessiten cap compte."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "Identificador llegible (slug)"
 msgid "Some application systems require one before you can submit."
 msgstr "Alguns sistemes de sol·licitud en requereixen un abans de poder enviar-lo."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "Algunes vinyetes són massa llargues."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "Alguns caràcters surten com a signes d'interrogació."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "Algunes comprovacions necessiten informació que aquest fitxer no conté: contingut de pàgina que no s'ha pogut inspeccionar, o text en un idioma que aquestes comprovacions no cobreixen. No es compten ni com a superades ni com a fallides."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "Alguns glifs no tenen cap significat fora d'aquest fitxer."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "Algunes línies s'emmagatzemen fora de l'ordre de lectura."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Alguns analitzadors analítics gestionen malament les imatges i, en algunes regions, no es recomanen les fotos."
@@ -4311,6 +4894,14 @@ msgstr "Alguns analitzadors analítics gestionen malament les imatges i, en algu
 msgid "Some styles were ignored"
 msgstr "S'han ignorat alguns estils"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "Part del text queda fora de la pàgina."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "Part del text està girat."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Una altra cosa…"
@@ -4318,6 +4909,10 @@ msgstr "Una altra cosa…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Alguna cosa ha anat malament"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "S'ha produït un error en llegir aquest fitxer. Torna-ho a provar."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "Espaiat (vertical)"
 msgid "Spanish"
 msgstr "Espanyol"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "Escriu el mes amb lletres, com a «Mar 2022»."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "Patrocinadors"
@@ -4419,6 +5018,10 @@ msgstr "Comença a crear el currículum posant-li un nom."
 msgid "Start building your resume from scratch"
 msgstr "Comença a crear el currículum des de zero"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "Comença cadascuna amb un verb concret: va crear, va liderar, va reduir, va migrar."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "Inicia un fil nou"
@@ -4427,6 +5030,10 @@ msgstr "Inicia un fil nou"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "Comença en una pàgina nova"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "Comença el currículum amb el teu nom en una línia pròpia."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "Encara esperant {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "Atura la generació"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "Fortaleses"
 
@@ -4473,7 +5080,7 @@ msgstr "El full d'estils té errors fatals"
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "Suggeriments"
 
@@ -4494,6 +5101,7 @@ msgstr "Dóna suport a Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "Dóna suport a l’aplicació fent el que puguis!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "Intercanvieu les dates d'inici i de finalització."
@@ -4532,6 +5140,10 @@ msgstr "Etiquetes"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Les etiquetes es poden utilitzar per categoritzar el currículum per paraules clau."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "Les etiquetes donen al programari un ordre de lectura explícit. Activa-les en exportar, si la teva eina ho permet."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "Alineació del text"
 msgid "Text Color"
 msgstr "Color del text"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "El text està escrit caràcter a caràcter."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "El text es troba a la zona de capçalera o peu de pàgina."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "Tai"
@@ -4597,6 +5217,19 @@ msgstr "Tai"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "Gràcies als nostres patrocinadors"
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "Aquest fitxer no s'ha pogut llegir com a PDF."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "Aquest fitxer no és un PDF. Exporta el teu currículum com a PDF i torna-ho a provar."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "Aquest fitxer és massa gran per comprovar-lo al navegador."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "Després de la supressió, la clau API ja no podrà accedir a les dades.
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "L'aplicació que t'ha enviat aquí ha fet una sol·licitud d'autorització no vàlida."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "Les comprovacions anteriors són mecàniques. Aquesta pregunta a un model de llenguatge què en pensaria un lector de les teves vinyetes i suggereix reescriptures. No genera cap puntuació."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "L’ordre que busques no existeix."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "La comprovació profunda no s'ha pogut completar. Torna-ho a provar."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "El fitxer importat no es va poder analitzar per convertir-lo en un currículum vàlid."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "L'ordre en què s'emmagatzema el text difereix molt de l'ordre en què es llegeix."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "Pot ser que la pàgina que busques s'hagi mogut o que ja no existeixi."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "Les pàgines són imatges, sense text al darrere."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "La contrasenya introduïda és incorrecta"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "El PDF es llegeix amb codi que s'executa en aquesta pestanya. Res es carrega, res es desa i no cal cap compte. Obre la pestanya de xarxa del teu navegador i observa-ho, si vols."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "El proveïdor no ha compartit cap adreça electrònica, que és necessà
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "El proveïdor ha rebutjat aquest intent d'inici de sessió. Torna a començar."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "El proveïdor ha retornat una revisió que no s'ha pogut llegir. Torna-ho a provar."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "No s'ha pogut actualitzar la vista prèvia del currículum. Encara es mo
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "El currículum al qual intentes accedir està protegit amb contrasenya"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "La mateixa línia es repeteix a cada pàgina."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "La puntuació està limitada a causa d'un problema bloquejant: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "El text surt il·legible."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "La part superior de la primera pàgina no sembla un nom."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "Tema"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "A continuació, introdueix el codi de 6 dígits que proporciona l’aplicació per continuar."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "Hi ha un buit entre dos rols amb data."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "No hi ha cap enllaç a un perfil, portafoli o repositori."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "No hi ha cap paràgraf de resum."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "S'ha produït un problema mentre es generava el DOCX, si us plau, torni a provar."
@@ -4695,6 +5381,10 @@ msgstr "Hi ha hagut un problema en generar el PDF, si us plau, torneu-ho a inten
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Hi ha hagut un problema en preparar el currículum per a la impressió. Si us plau, torna-ho a intentar."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "No hi havia prou informació per executar aquesta comprovació."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "No s'ha pogut obrir aquest fil d'agent."
 msgid "This assistant could not be opened."
 msgstr "No s'ha pogut obrir aquest assistent."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "Aquesta comprovació no s'aplica a aquest fitxer."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "Aquesta comprovació només s'executa en currículums escrits en anglès."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "Aquesta data no es llegirà correctament."
@@ -4757,13 +5455,73 @@ msgstr "Aquesta entrada se suprimirà permanentment. Això no es pot desfer."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Aquesta funció requereix un proveïdor d'IA connectat. Configura'n un a la configuració."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "Aquest fitxer conté camps de formulari."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "Aquest fitxer conté text que un lector no pot veure, així que algunes d'aquestes coincidències poden ser-hi degudes."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "Aquest fitxer conté text dibuixat de manera invisible."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "Aquest fitxer conté text blanc sobre blanc."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "Aquest fitxer no declara cap idioma."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "Aquest fitxer no té etiquetes d'accessibilitat."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "Aquest fitxer està xifrat."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "Aquest fitxer és gran per a un currículum."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "Aquest fitxer és més gran del que accepten molts formularis de sol·licitud."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "Aquest fitxer utilitza molts tipus de lletra diferents."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "Aquest fitxer utilitza tipus de lletra Type 3, que porten dibuixos en lloc de caràcters."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "El contingut de les pàgines d'aquest fitxer no s'ha pogut inspeccionar a temps."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "Aquest encapçalament no és un dels que busquen els analitzadors sintàctics."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "Això és un PDF Portfolio: la pàgina visible només és una portada."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Aquest és un nom d’URL fàcil d’utilitzar per al currículum."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "Això és un formulari XFA, així que la majoria de programari només en llegeix la closca buida."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "Aquesta no és una mida de pàgina habitual per a un currículum."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "Aquest enllaç no té el seu protocol."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Això pot trigar uns minuts, segons la resposta del proveïdor d’IA. No tanquis la finestra ni actualitzis la pàgina."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "Això mesura amb quina fidelitat el programari pot extreure el text d'aquest fitxer. No prediu si una sol·licitud serà rebutjada. Cap eina no pot fer-ho. El teu fitxer s'ha llegit en aquest navegador i mai s'ha carregat."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "Aquesta pàgina està en columnes, i el text s'extreu fora d'ordre."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "Aquesta pàgina està molt atapeïda."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "Aquest PDF està protegit amb contrasenya. Desa'n una còpia sense protegir i torna-ho a provar."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "Aquest currículum està bloquejat"
 msgid "This resume is locked and cannot be updated."
 msgstr "Aquest currículum està bloquejat i no es pot actualitzar."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "Aquest currículum és llarg."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "Aquest currículum ha estat actualitzat per un agent d'IA."
@@ -4796,6 +5574,10 @@ msgstr "Aquest currículum ha estat actualitzat per un agent d'IA."
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "La configuració de compartició d'aquest currículum ha canviat en altres llocs."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "Aquesta revisió és l'opinió d'un model de llenguatge sobre la teva redacció. No canvia la puntuació anterior, i pot equivocar-se. Llegeix-la com una segona opinió, no com un veredicte."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "Aquesta secció està reservada per a notes personals específiques d’
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "Aquesta secció està dividida en columnes."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "Aquesta secció es mostra com un encapçalament buit."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Demostració a càmera ràpida de com es crea un currículum amb Reactiv
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Cronologia"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "Consell"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "Torna-ho a intentar"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "Turc"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "Desactiva les lligadures discrecionals en exportar."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "S’està actualitzant el currículum..."
 msgid "Upload .csv"
 msgstr "Puja un fitxer .csv"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "Carrega un currículum i descobreix què llegeix realment un sistema de seguiment de candidats. Tot s'executa en aquest navegador. El teu fitxer mai es carrega, i res es desa."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Puja fitxers adjunts"
@@ -5242,6 +6032,14 @@ msgstr "Feu servir una alçada de línia de com a mínim 1,15 perquè les línie
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "Feu servir una adreça senzilla com ara nom@exemple.com, sense text al voltant."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "Utilitza un format internacional senzill, com +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Utilitza un format reconegut, com «Jan 2020 - Mar 2022» o «2020 - 2022»."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 2022\\\"."
@@ -5250,18 +6048,38 @@ msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Use a recognized form such as \\\"March 2022\\\" or \\\"2022\\\"."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "Utilitza una sola columna per a tot allò que s'hagi de llegir en seqüència."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "Feu servir una mida de com a mínim 9 punts per tal que les còpies renderitzades siguin precises."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "Utilitza A4 o US Letter perquè el disseny sobrevisqui en tornar-se a renderitzar."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "Utilitza almenys 9pt."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Utilitza el color {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "Utilitza encapçalaments senzills com «Experience», «Education» i «Skills»."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "Utilitza la mostra"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "Utilitza la llista de vinyetes normal del teu editor, perquè no apareguin glifs perduts enmig d'una frase."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "Vàlid amb errors"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "Vàlid amb avisos"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "Varia els inicis perquè la secció no soni genèrica."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "Verificar el correu electrònic és necessari per restablir la contrasen
 msgid "Version history"
 msgstr "Historial de versions"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "S'han recuperat molt poques paraules per a un currículum."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "S'ha recuperat molt poc text per a aquest nombre de pàgines."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "Vietnamita"
@@ -5358,6 +6188,11 @@ msgstr "en comparació amb els 30 dies anteriors"
 msgid "Waiting for the agent…"
 msgstr "S'està esperant l'agent…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "Vols una segona opinió sobre la redacció?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "Avís"
@@ -5395,6 +6230,14 @@ msgstr "Cerca web"
 msgid "Website"
 msgstr "Lloc web"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "El que llegeix un analitzador"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "El que veu una persona"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Què vols fer?"
@@ -5406,6 +6249,14 @@ msgstr "Com vols canviar el nom d’aquesta secció?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Què fa que Reactive Resume sigui diferent d’altres creadors de currículums?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "Què comprova això"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "Què no fa això"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "D'on provenen les sol·licituds"
 msgid "Where your applications went"
 msgstr "On van anar a parar les teves sol·licituds"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "Si un reclutador pot contactar-te."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "Si el programari pot recuperar les paraules en absolut."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "Si el fitxer conté text real, o una imatge d'aquest."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "Si la geometria de la pàgina preserva l'ordre de lectura."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "Si el currículum està segmentat de la manera que espera el programari."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "Si el text surt en l'ordre en què el llegiria una persona."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "Si hi són les seccions habituals i es poden distingir."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "Si el teu nom, correu electrònic, telèfon i dates sobreviuen intactes."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "Si la teva trajectòria es pot reconstruir."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "Les paraules es fusionen quan s'extreu el text."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Treballar amb OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "Treballant…"
 msgid "Worth a shot"
 msgstr "Val la pena intentar-ho"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "Escriu «Present» com a data de finalització del teu rol actual."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "Escriu cada rol com una línia clara de càrrec i empresa, amb les dates al costat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "Escriu-ho com una peça ininterrompuda, sense espaiat especial."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "Escriu l'adreça completa perquè es reconegui com a enllaç."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "Escriviu l'adreça completa, incloent-hi https://."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "Redacció"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "Tens correu nou!"
 msgid "Your account has been deleted successfully."
 msgstr "El compte s’ha suprimit correctament."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "No s'ha pogut contactar amb el teu proveïdor d'IA. Comprova la seva configuració i torna-ho a provar."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "La clau API s’ha copiat al porta-retalls."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "El text del cos és molt petit."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "Les teves vinyetes estan dibuixades amb caràcters inusuals."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "Els canvis es desen automàticament."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "Les teves dades de contacte no són a la primera pàgina."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "Les dades són segures i mai no es comparteixen ni es venen a ningú."
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Les dades s’emmagatzemen de manera segura i mai no es comparteixen amb tercers. També pots autoallotjar Reactive Resume als teus propis servidors per tenir un control total sobre les dades."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "Les teves dates estan escrites de diverses maneres diferents."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "La teva adreça de correu electrònic està trencada entre fragments de text."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "La teva adreça electrònica no està verificada amb el proveïdor."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "El teu fitxer es queda aquí"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "Els teus encapçalaments semblen iguals que el text del cos."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "No s'han pogut desar els darrers canvis."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Els vostres estils antics romanen actius fins que activeu explícitament aquest esborrany de CSS semàntic."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "Les teves línies estan molt atapeïdes."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "Els teus marges són molt estrets."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "La contrasenya s’ha restablert correctament. Ara ja pots iniciar sessi
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "La contrasenya s’ha actualitzada correctament."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "El teu número de telèfon està escrit d'una forma inusual."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "El teu currículum inclou una foto."
 msgid "Your resume shows no work experience."
 msgstr "El teu currículum no mostra experiència laboral."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "El teu currículum utilitza «I» i «my»."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "L’enllaç públic del currículum està actualment protegit amb una contrasenya. Comparteix la contrasenya només amb persones de confiança."
@@ -5622,4 +6575,3 @@ msgstr "Allunya"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulú"
-

@@ -1,5 +1,4 @@
 import type { JsonPatchOperation } from "@reactive-resume/resume/patch";
-import type { StoredResumeAnalysis } from "@reactive-resume/schema/resume/analysis";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { ResumeUpdatedEvent } from "./events";
@@ -311,44 +310,6 @@ const statistics = {
 	},
 };
 
-const analysis = {
-	getById: async (input: { id: string; userId: string }) => {
-		const [result] = await db
-			.select({ analysis: schema.resumeAnalysis.analysis })
-			.from(schema.resume)
-			.leftJoin(schema.resumeAnalysis, eq(schema.resumeAnalysis.resumeId, schema.resume.id))
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
-
-		if (!result) throw new ORPCError("NOT_FOUND");
-
-		return result.analysis ?? null;
-	},
-
-	upsert: async (input: { id: string; userId: string; analysis: StoredResumeAnalysis }) => {
-		const [resume] = await db
-			.select({ id: schema.resume.id })
-			.from(schema.resume)
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
-
-		if (!resume) throw new ORPCError("NOT_FOUND");
-
-		await db
-			.insert(schema.resumeAnalysis)
-			.values({
-				resumeId: input.id,
-				analysis: input.analysis,
-			})
-			.onConflictDoUpdate({
-				target: [schema.resumeAnalysis.resumeId],
-				set: {
-					analysis: input.analysis,
-				},
-			});
-
-		return input.analysis;
-	},
-};
-
 function toSharedResumeResponse(
 	resume: {
 		id: string;
@@ -384,7 +345,6 @@ async function notifyResumeUpdated(event: ResumeUpdatedEvent) {
 export const resumeService = {
 	tags,
 	statistics,
-	analysis,
 
 	versions: {
 		list: async (input: { resumeId: string; userId: string }) => {

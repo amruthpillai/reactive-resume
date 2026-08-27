@@ -20,6 +20,13 @@ function resolveWebDistPath() {
 const staticRoot = resolveWebDistPath();
 const indexHtmlPath = `${staticRoot}/index.html`;
 const noindexShellPrefixes = ["/auth", "/dashboard", "/builder", "/agent", "/templates"];
+/**
+ * Marketing pages the SPA owns that search engines should index.
+ *
+ * Without an entry here the fallback below returns 404 for the path in production — the dev Vite
+ * server serves the shell for anything, so this failure only ever shows up once deployed.
+ */
+const indexableAppPaths = new Set(["/ats-checker"]);
 const reservedPublicResumeSegments = new Set([
 	"api",
 	"mcp",
@@ -30,6 +37,7 @@ const reservedPublicResumeSegments = new Set([
 	"builder",
 	"agent",
 	"templates",
+	"ats-checker",
 ]);
 
 function isAssetPath(pathname: string): boolean {
@@ -160,6 +168,43 @@ function createRootSeoMarkup(canonicalUrl: string) {
 	`;
 }
 
+const ATS_CHECKER_TITLE = "ATS Checker - Reactive Resume";
+// Kept under ~120 characters so Google's mobile SERP snippet is not truncated at 3 lines.
+const ATS_CHECKER_DESCRIPTION =
+	"Check whether software can read your resume PDF. Runs in your browser, so your file is never uploaded.";
+
+function createAtsCheckerSeoMarkup(origin: string) {
+	const canonicalUrl = `${origin}/ats-checker`;
+	const imageUrl = `${origin}/opengraph/ats-checker.png`;
+	const structuredData = {
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		name: "ATS Checker",
+		url: canonicalUrl,
+		description: ATS_CHECKER_DESCRIPTION,
+		applicationCategory: "BusinessApplication",
+		operatingSystem: "Web",
+		isAccessibleForFree: true,
+		offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+		isPartOf: { "@type": "WebSite", name: "Reactive Resume", url: `${origin}/` },
+	};
+
+	return `
+		<link rel="canonical" href="${canonicalUrl}">
+		<meta property="og:type" content="website">
+		<meta property="og:site_name" content="Reactive Resume">
+		<meta property="og:title" content="${ATS_CHECKER_TITLE}">
+		<meta property="og:description" content="${ATS_CHECKER_DESCRIPTION}">
+		<meta property="og:url" content="${canonicalUrl}">
+		<meta property="og:image" content="${imageUrl}">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="${ATS_CHECKER_TITLE}">
+		<meta name="twitter:description" content="${ATS_CHECKER_DESCRIPTION}">
+		<meta name="twitter:image" content="${imageUrl}">
+		<script id="ats-checker-structured-data" type="application/ld+json">${JSON.stringify(structuredData)}</script>
+	`;
+}
+
 // Resume names, headlines, and summaries are user-authored, so they must never reach the served
 // HTML unescaped.
 const escapeAttribute = (value: string) =>
@@ -215,7 +260,9 @@ export const serveWebDistStatic = serveStatic({
 });
 
 function getFallbackResponseHeaders(pathname: string) {
-	if (pathname === "/") return { "Content-Type": "text/html; charset=UTF-8", ...BASE_SECURITY_HEADERS };
+	if (pathname === "/" || indexableAppPaths.has(pathname)) {
+		return { "Content-Type": "text/html; charset=UTF-8", ...BASE_SECURITY_HEADERS };
+	}
 	if (isNoindexShellPath(pathname) || isPublicResumePath(pathname)) {
 		return {
 			"Content-Type": "text/html; charset=UTF-8",
@@ -256,6 +303,15 @@ export async function handleWebApp(request: Request) {
 
 	if (pathname === "/") {
 		return new Response(html.replace("</head>", `${createRootSeoMarkup(canonicalUrl)}</head>`), { headers });
+	}
+
+	if (pathname === "/ats-checker") {
+		const origin = new URL(env.APP_URL).origin;
+		const withTitle = html
+			.replace(/<title>[^<]*<\/title>/, `<title>${ATS_CHECKER_TITLE}</title>`)
+			.replace(/<meta\s+name="description"[^>]*>/, `<meta name="description" content="${ATS_CHECKER_DESCRIPTION}">`);
+
+		return new Response(withTitle.replace("</head>", `${createAtsCheckerSeoMarkup(origin)}</head>`), { headers });
 	}
 
 	if (isPublicResumePath(pathname)) {

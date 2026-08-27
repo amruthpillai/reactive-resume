@@ -1,0 +1,77 @@
+---
+title: "Using the ATS checker"
+description: "Check whether an applicant tracking system can read your resume PDF, from the free public page or from inside the builder, without uploading the file anywhere."
+---
+
+The ATS checker answers one question: **can software read your resume?**
+
+It opens your PDF the way a parser would, pulls the text out, and reports what survived and what did not. Everything runs in your browser. The file is never uploaded, nothing is stored, and no account is needed.
+
+<Info>
+  Use it at [rxresu.me/ats-checker](https://rxresu.me/ats-checker), or from the **ATS Check** section in the builder's
+  right sidebar.
+</Info>
+
+## What it measures
+
+- Whether the file carries real text, or is a picture of one.
+- Whether the text extracts in the order a person reads it, which is where multi-column layouts usually fail.
+- Whether your name, email, phone number, links, and dates survive extraction intact.
+- Whether the conventional sections are present and can be told apart.
+- Whether the file itself is readable: fonts, encryption, forms, size, page geometry.
+
+Optionally, paste a job description and it will tell you which of the posting's terms already appear in your resume.
+
+## What it does not measure
+
+<Warning>
+  No tool can tell you whether an application will be rejected. That depends on the role, the screening questions, and
+  the person reading. Anything that claims otherwise is guessing.
+</Warning>
+
+The checker deliberately does not:
+
+- repeat the widely quoted claim that most resumes are discarded automatically, because that figure comes from marketing copy rather than research;
+- enforce a one-page rule;
+- treat a font choice, a photo, or an employment gap as a defect.
+
+Employment gaps, writing style, and length are reported as **unscored tips**. They never move the score.
+
+## Reading the report
+
+The report has three parts.
+
+**A score from 0 to 100.** It is the weighted result of five categories: readability, layout, sections, contact details, and dates. A blocking problem puts a hard ceiling on it: a file with no text layer cannot score well because its margins are tidy.
+
+**A category breakdown.** Each category expands into the checks that ran, what failed, and what to do about it. Every finding cites evidence from your file: the text that triggered it and the page it sits on.
+
+**A denominator you can trust.** The report says "X of Y applicable checks passed" and states how many were skipped. A check is skipped when it cannot honestly run. Section detection only works on resumes written in English, for instance, and some checks need page contents that a very large file may not yield in time.
+
+## Checking from the builder
+
+The **ATS Check** section in the builder's right sidebar has two tiers:
+
+<Steps>
+  <Step title="Live checks">
+    These run as you type, against your resume data rather than a file. They catch missing dates, malformed links,
+    prose in a narrow sidebar, and similar problems before you export anything.
+  </Step>
+
+  <Step title="Deep check">
+    Click **Run deep check** to render your current resume to a PDF in your browser and run the full file check against
+    those bytes, which is the same file a recruiter would receive.
+  </Step>
+</Steps>
+
+## Adding an AI review
+
+After a report exists, you can optionally ask an AI provider to review the **writing**: weak phrasing, bullets that describe duties rather than outcomes, and where a rewrite would land better.
+
+<Info>
+  The AI review needs your own tested AI provider in **Dashboard → Settings → Integrations**. See [Using Artificial
+  Intelligence](/guides/using-ai).
+</Info>
+
+It sends the text already extracted from your PDF, plus the job description if you pasted one, to the provider you pick. The PDF file itself is never uploaded.
+
+The AI review returns no score. The deterministic report owns the only number in this feature, and an AI-adjusted score would make it mean less. Treat the review as a second opinion on your writing, not a verdict.

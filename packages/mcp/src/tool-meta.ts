@@ -147,16 +147,6 @@ export const TOOL_META = {
 		inputSchema: z.object({ id: resumeIdSchema }),
 		annotations: READ_IDEMPOTENT,
 	},
-	[T.getResumeAnalysis]: {
-		title: "Get Resume Analysis",
-		description: [
-			"Returns the latest saved AI analysis for a resume (scorecard, strengths, suggestions), if any.",
-			"Analyses are created from the Reactive Resume web app AI flow, not from MCP.",
-			`Returns JSON or a short message if none exists. Use \`${T.listResumes}\` to find resume IDs.`,
-		].join("\n"),
-		inputSchema: z.object({ id: resumeIdSchema }),
-		annotations: READ_IDEMPOTENT,
-	},
 	[T.downloadResumePdf]: {
 		title: "Download Resume PDF",
 		description: [

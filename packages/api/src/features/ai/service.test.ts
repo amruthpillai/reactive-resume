@@ -1,4 +1,3 @@
-import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { UIMessage } from "ai";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { convertToModelMessages, modelMessageSchema } from "ai";
@@ -69,8 +68,7 @@ function stubRejectedFetch(error: unknown) {
 	return fetchMock;
 }
 
-const { aiService, testConnection } = await import("./service");
-const { analyzeResume } = aiService;
+const { testConnection } = await import("./service");
 
 describe("AI provider connection test", () => {
 	it("names the rejected key instead of reporting a transport failure", async () => {
@@ -168,26 +166,6 @@ describe("AI provider connection test", () => {
 			expect(result.message).not.toContain("tok123");
 			expect(result.message).toContain("***");
 		}
-	});
-});
-
-describe("AI resume analysis", () => {
-	it("gives the model the actual current date for chronology checks", async () => {
-		vi.useFakeTimers();
-		vi.setSystemTime(new Date("2026-08-18T12:00:00Z"));
-
-		const response = stubOpenAICompatibleResponse({
-			content: JSON.stringify({
-				overallScore: 80,
-				scorecard: [{ dimension: "Clarity", score: 80, rationale: "Clear." }],
-				suggestions: [],
-				strengths: ["Clear experience."],
-			}),
-		});
-
-		await analyzeResume({ ...testInput(), resumeData: {} as ResumeData });
-
-		expect(JSON.stringify(response.getRequestBody())).toContain("Current date: 2026-08-18");
 	});
 });
 

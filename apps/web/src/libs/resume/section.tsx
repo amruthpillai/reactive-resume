@@ -4,7 +4,6 @@ import { t } from "@lingui/core/macro";
 import {
 	ArticleIcon,
 	BooksIcon,
-	BrainIcon,
 	BriefcaseIcon,
 	CertificateIcon,
 	ChartLineIcon,
@@ -54,7 +53,6 @@ export type RightSidebarSection =
 	| "sharing"
 	| "statistics"
 	| "ats"
-	| "analysis"
 	| "export"
 	| "information";
 
@@ -90,7 +88,6 @@ export const rightSidebarSections: RightSidebarSection[] = [
 	"page",
 	"notes",
 	"ats",
-	"analysis",
 	"export",
 	"information",
 ] as const;
@@ -130,7 +127,6 @@ export const getSectionTitle = (type: SidebarSection | CustomOnlyType): string =
 			.with("sharing", () => t`Sharing`)
 			.with("statistics", () => t`Statistics`)
 			.with("ats", () => t`ATS Check`)
-			.with("analysis", () => t`Resume Analysis`)
 			.with("export", () => t`Export`)
 			.with("information", () => t`Information`)
 
@@ -175,7 +171,6 @@ export const getSectionIcon = (type: SidebarSection | CustomOnlyType, props?: Ic
 			.with("sharing", () => <ShareFatIcon {...iconProps} />)
 			.with("statistics", () => <ChartLineIcon {...iconProps} />)
 			.with("ats", () => <SealCheckIcon {...iconProps} />)
-			.with("analysis", () => <BrainIcon {...iconProps} />)
 			.with("export", () => <DownloadIcon {...iconProps} />)
 			.with("information", () => <InfoIcon {...iconProps} />)
 

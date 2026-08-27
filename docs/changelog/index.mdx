@@ -4,6 +4,43 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v5.2.9" description="27th August 2026">
+## Highlights
+
+- **A free ATS checker that never uploads your resume.** Drop a PDF on [rxresu.me/ats-checker](https://rxresu.me/ats-checker) and it opens the file the way a parser would, pulls the text out, and reports what survived: whether the file carries real text or a picture of one, whether a multi-column layout scrambles the reading order, and whether your name, email, phone, links and dates come through intact. Everything runs in your browser — the file is never uploaded, nothing is stored, and no account is needed. Paste a job description and it will also tell you which of the posting's terms already appear in your resume. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- **A score you can actually audit.** The report gives one number from 0 to 100 across readability, layout, sections, contact details and dates — and shows its working. Every finding cites the text that triggered it and the page it sits on, and the report states how many checks ran and how many were honestly skipped rather than quietly counting them as passes. Employment gaps, writing style and length are reported as unscored tips; they never move the score. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- **Resume analysis has been replaced by the ATS check.** The old AI-scored analysis is gone, along with its stored results, its `get_resume_analysis` MCP tool, and the `POST /ai/analyze-resume` endpoint. What replaces it is deterministic and evidence-backed, with an optional AI second opinion on your writing that deliberately returns no score of its own. Self-hosters: read the upgrade note below. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- **Bold text finally looks bold.** Most resumes pair Regular with SemiBold, which rendered `<strong>` almost indistinguishably from body text. Bold now resolves to the font family's true Bold face, so emphasis reads as emphasis — existing resumes will export with visibly stronger bold text. Thanks to [@santhiprakash](https://github.com/santhiprakash). [e065a1082](https://github.com/amruthpillai/reactive-resume/commit/e065a1082)
+
+## Resume Builder
+
+- The right sidebar's **ATS Check** section now runs live checks against your resume as you type — missing dates, malformed links, prose stranded in a narrow sidebar — before you export anything. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- **Run deep check** renders your current resume to a PDF in your browser and runs the full file check against those exact bytes, which is the same file a recruiter receives. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- Once a report exists, you can ask your own AI provider to review the writing — weak phrasing, bullets that describe duties rather than outcomes, and where a rewrite would land better. It sends only the extracted text, never the PDF. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- Section detection understands more of the headings people actually use, so conventional sections are recognized across a wider range of resumes. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- Toasts no longer slide underneath dialogs and sheets. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+
+## AI Agent
+
+- Picking a provider when starting a thread now uses the same provider picker as the rest of the app, showing the label, provider and model consistently instead of one long concatenated line. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+
+## PDF Export & Fonts
+
+- Bold text now uses the font family's true Bold face. Most resumes store their typography as Regular plus SemiBold, which rendered `<strong>` almost indistinguishably from body text on faces like Open Sans; bold now resolves to the family's 700 weight where it has one, and to its heaviest bold-class face where it does not. Existing resumes will export with visibly stronger bold text. Thanks to [@santhiprakash](https://github.com/santhiprakash). [e065a1082](https://github.com/amruthpillai/reactive-resume/commit/e065a1082)
+- Long bullet-list lines no longer spill past the page margin. Thanks to [@santhiprakash](https://github.com/santhiprakash). [a416d0111](https://github.com/amruthpillai/reactive-resume/commit/a416d0111)
+- Emoji render instead of dropping out as blank boxes. They are drawn as monochrome outlines, because the color emoji format cannot be embedded in a PDF, and the fallback font is only loaded when your resume actually contains emoji. Thanks to [@santhiprakash](https://github.com/santhiprakash). [b47f80532](https://github.com/amruthpillai/reactive-resume/commit/b47f80532)
+- Vazirmatn is available in the font catalog again, so Persian and Arabic resumes that ask for it no longer fall back to a Latin serif and lose their glyphs on export. Thanks to [@santhiprakash](https://github.com/santhiprakash). [2761bd671](https://github.com/amruthpillai/reactive-resume/commit/2761bd671)
+
+## Self-Hosting & Maintenance
+
+- **A migration drops the `resume_analysis` table.** Any saved analyses are deleted when you upgrade; they have no equivalent in the new report, which is computed on demand rather than stored. No action is needed beyond the usual upgrade. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- **Two API surfaces were removed.** MCP clients calling `get_resume_analysis` and API clients calling `POST /ai/analyze-resume` will start failing; the replacement is `POST /ai/ats-review`, which reviews extracted resume text and returns qualitative feedback without a score. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- `/ats-checker` is listed in the sitemap and carries its own preview card, so the page is indexable and shares cleanly. [#3382](https://github.com/amruthpillai/reactive-resume/pull/3382)
+- Translations synced from Crowdin, with the new ATS checker strings covered across every supported language. [7fac6f29c](https://github.com/amruthpillai/reactive-resume/commit/7fac6f29c)
+
+**Full Changelog**: [v5.2.8...v5.2.9](https://github.com/amruthpillai/reactive-resume/compare/v5.2.8...v5.2.9)
+</Update>
+
 <Update label="v5.2.8" description="24th August 2026">
 ## Highlights
 

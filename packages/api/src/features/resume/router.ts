@@ -1,4 +1,3 @@
-import { analysisRouter } from "./analysis";
 import { crudRouter } from "./crud";
 import { updatesRouter } from "./event-router";
 import { sharingRouter } from "./sharing";
@@ -9,7 +8,6 @@ import { versionsRouter } from "./versions";
 export const resumeRouter = {
 	tags: tagsRouter,
 	statistics: resumeStatisticsRouter,
-	analysis: analysisRouter,
 	updates: updatesRouter,
 
 	list: crudRouter.list,

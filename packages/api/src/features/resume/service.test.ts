@@ -56,7 +56,6 @@ vi.mock("@reactive-resume/db/schema", () => ({
 		label: "label",
 		createdAt: "created_at",
 	},
-	resumeAnalysis: { resumeId: "resume_id", analysis: "analysis" },
 	user: { id: "id", username: "username" },
 }));
 vi.mock("drizzle-orm", () => ({

@@ -145,19 +145,6 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 		}),
 	);
 
-	// ── Get Resume Analysis ────────────────────���──────────────────
-	server.registerTool(
-		T.getResumeAnalysis,
-		TOOL_META[T.getResumeAnalysis],
-		withErrorHandling("getting resume analysis", async ({ id }: { id: string }) => {
-			const analysis = await client.resume.analysis.getById({ id });
-
-			if (!analysis) return text("No saved analysis for this resume yet.");
-
-			return text(JSON.stringify(analysis, null, 2));
-		}),
-	);
-
 	// ── Download Resume or Cover Letter PDF ───────────────────────
 	server.registerTool(
 		T.downloadResumePdf,

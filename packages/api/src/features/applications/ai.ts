@@ -4,6 +4,7 @@ import z from "zod";
 import { generateId, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
+import { generateJson } from "../ai/generate-json";
 import { getModel } from "../ai/service";
 import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
@@ -26,20 +27,6 @@ async function resolveModel(userId: string) {
 		apiKey: provider.apiKey,
 		...(provider.baseURL ? { baseURL: provider.baseURL } : {}),
 	});
-}
-
-// generateText + tolerant JSON extraction + Zod validation. Mirrors the resume-analysis pattern
-// (the SDK's generateObject isn't wired for every provider here, so we parse defensively).
-async function generateJson<T>(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string, schema: z.ZodType<T>) {
-	const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
-	const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-	const candidate = fenced?.[1] ?? text;
-	const start = candidate.indexOf("{");
-	const end = candidate.lastIndexOf("}");
-	if (start === -1 || end === -1 || end < start) {
-		throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "The AI response could not be parsed." });
-	}
-	return schema.parse(JSON.parse(candidate.slice(start, end + 1)));
 }
 
 async function generatePlainText(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string) {
@@ -87,7 +74,9 @@ export const aiRouter = {
 
 			return generateJson(
 				model,
-				`Extract the following fields from this job posting. Return ONLY JSON with keys company, role, location, salary. Use an empty string for anything not stated.\n\nJOB POSTING:\n${input.jobDescription}`,
+				{
+					prompt: `Extract the following fields from this job posting. Return ONLY JSON with keys company, role, location, salary. Use an empty string for anything not stated.\n\nJOB POSTING:\n${input.jobDescription}`,
+				},
 				autofillOutput,
 			);
 		}),
@@ -118,7 +107,9 @@ export const aiRouter = {
 
 			const result = await generateJson(
 				model,
-				`Compare this resume against the job description. Return ONLY JSON with keys score (integer 0-100 fit), gaps (array of short missing-qualification strings), strengths (array of short matching-strength strings).\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB DESCRIPTION:\n${application.jobDescription}`,
+				{
+					prompt: `Compare this resume against the job description. Return ONLY JSON with keys score (integer 0-100 fit), gaps (array of short missing-qualification strings), strengths (array of short matching-strength strings).\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB DESCRIPTION:\n${application.jobDescription}`,
+				},
 				matchScoreOutput,
 			);
 
@@ -186,7 +177,9 @@ export const aiRouter = {
 
 			const { summary } = await generateJson(
 				model,
-				`Rewrite this candidate's professional summary to target the job below. Return ONLY JSON { "summary": "<one to two sentence HTML paragraph, e.g. <p>…</p>>" }. Keep it truthful to the resume.\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB:\n${application.role} at ${application.company}\n${application.jobDescription}`,
+				{
+					prompt: `Rewrite this candidate's professional summary to target the job below. Return ONLY JSON { "summary": "<one to two sentence HTML paragraph, e.g. <p>…</p>>" }. Keep it truthful to the resume.\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB:\n${application.role} at ${application.company}\n${application.jobDescription}`,
+				},
 				z.object({ summary: z.string() }),
 			);
 

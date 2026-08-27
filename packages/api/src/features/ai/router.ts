@@ -4,11 +4,11 @@ import { ORPCError } from "@orpc/client";
 import { type } from "@orpc/server";
 import { AISDKError } from "ai";
 import { flattenError, ZodError, z } from "zod";
-import { storedResumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
 import { protectedProcedure } from "../../context";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
 import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
+import { atsReviewInputSchema, atsReviewOutputSchema, reviewResumeText } from "./ats-review";
 import { aiService, fileInputSchema } from "./service";
 
 function isInvalidAiBaseUrlError(error: unknown): boolean {
@@ -180,61 +180,41 @@ export const aiRouter = {
 			}
 		}),
 
-	analyzeResume: protectedProcedure
+	atsReview: protectedProcedure
 		.route({
 			method: "POST",
-			path: "/ai/analyze-resume",
+			path: "/ai/ats-review",
 			tags: ["AI"],
-			operationId: "analyzeResume",
-			summary: "Analyze resume and persist latest analysis",
+			operationId: "atsReview",
+			summary: "Review extracted resume text",
 			description:
-				"Uses AI to analyze the current resume and returns a structured analysis with scorecard, strengths, and improvement suggestions. The latest analysis is persisted and can be fetched later. Requires authentication and AI credentials.",
-			successDescription: "Structured resume analysis returned and persisted successfully.",
+				"Reviews the plain text extracted from a resume PDF and returns qualitative feedback: a summary, rewrite suggestions, strengths, and — when a job description is supplied — how the candidate's experience lines up with the role. Deliberately returns no score: the deterministic ATS report owns the only number in this feature. Requires authentication and AI credentials.",
+			successDescription: "Qualitative review returned successfully.",
 		})
-		.input(
-			z.object({
-				aiProviderId: z.string().optional(),
-				resumeId: z.string(),
-			}),
-		)
+		.input(atsReviewInputSchema)
 		.use(aiRequestRateLimit)
-		.output(storedResumeAnalysisSchema)
+		.output(atsReviewOutputSchema)
 		.errors({
 			BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
 			BAD_REQUEST: { message: "The AI returned an improperly formatted structure.", status: 400 },
 		})
 		.handler(async ({ context, input }) => {
 			try {
-				const [provider, resume] = await Promise.all([
-					getRunnableProvider(context.user.id, input.aiProviderId),
-					resumeService.getById({ id: input.resumeId, userId: context.user.id }),
-				]);
-				const analysis = await aiService.analyzeResume({
+				const provider = await getRunnableProvider(context.user.id, input.aiProviderId);
+
+				return await reviewResumeText({
+					...input,
 					provider: provider.provider,
 					model: provider.model,
 					apiKey: provider.apiKey,
 					baseURL: provider.baseURL ?? "",
-					resumeData: resume.data,
-				});
-
-				return await resumeService.analysis.upsert({
-					id: input.resumeId,
-					userId: context.user.id,
-					analysis: {
-						...analysis,
-						updatedAt: new Date(),
-						modelMeta: { provider: provider.provider, model: provider.model },
-					},
 				});
 			} catch (error) {
 				if (isCredentialEncryptionUnavailable(error)) throwCredentialEncryptionUnavailable();
 				if (isInvalidAiBaseUrlError(error)) throwAiProviderConfigError();
 				if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
 				if (error instanceof ZodError) {
-					throw new ORPCError("BAD_REQUEST", {
-						message: "Invalid resume analysis structure",
-						cause: flattenError(error),
-					});
+					throw new ORPCError("BAD_REQUEST", { message: "Invalid ATS review structure", cause: flattenError(error) });
 				}
 				throw error;
 			}

@@ -74,11 +74,6 @@ export const ATS_RULE_CATALOG_V1 = {
 		meaning: "A section has visible content but is not placed on any page, so it never renders or exports.",
 		action: "Place the section on a page from the Layout panel, or hide it if it is intentionally unused.",
 	},
-	EMPTY_RENDERED_SECTION: {
-		severity: "warning",
-		meaning: "A section is placed on a page but has no visible items, so it renders as a bare heading.",
-		action: "Add an item to the section, or hide it.",
-	},
 	NO_VISIBLE_EXPERIENCE: {
 		severity: "warning",
 		meaning: "The resume shows no work experience, which most screening systems rank on.",

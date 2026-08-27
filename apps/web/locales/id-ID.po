@@ -53,6 +53,24 @@ msgstr "{0} lamaran dilacak"
 msgid "{0} characters"
 msgstr "{0} karakter"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{0} dari {1} pemeriksaan yang berlaku berhasil"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{0} dari {1} pemeriksaan yang berlaku berhasil."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "{0} dari {1} istilah ditemukan"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} siap diimpor"
 msgid "{0} rejected"
 msgstr "{0} ditolak"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} dilewati"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0} dilewati (perusahaan/peran tidak ada)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} untuk diperbaiki"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 bulan"
 msgid "6 months"
 msgstr "6 bulan"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "Ekspor satu kolom yang bersih menjaga semua fakta. Kolom dan gambar adalah tempat fakta tersebut sering hilang."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Tautan konfirmasi telah dikirim ke alamat email Anda saat ini. Silakan periksa kotak masuk Anda untuk mengonfirmasi perubahan."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "Sebuah tanggal berada di masa depan."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "Rentang tanggal berakhir sebelum dimulai."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "Rentang tanggal ditulis dalam format yang tidak dapat dibaca sebagian besar perangkat lunak."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "Sebuah font dirujuk tetapi tidak disematkan."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Pembuat resume gratis dan sumber terbuka yang menyederhanakan proses mem
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Pengingat ramah untuk perekrut"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "Celah setinggi penuh halaman ini membaginya menjadi dua kolom."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "Celah bukan masalah. Tambahkan penjelasan satu baris jika Anda mau; banyak resume yang kuat sama sekali tidak melakukannya."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "Sebuah tautan mengarah ke tempat lain selain alamat yang ditampilkannya."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "Selama bertahun-tahun banyak orang menulis kepada saya untuk berbagi pen
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Tautan verifikasi baru telah dikirim ke alamat email Anda. Silakan periksa kotak masuk Anda untuk memverifikasi akun Anda."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "Tanggal berupa angka dibaca berbeda di setiap negara."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "Sebuah halaman diputar."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Sebuah proyek penuh semangat dari <0>Amruth Pillai</0>."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "Resume yang ditata untuk pembaca manusia, dengan foto, judul bagian, dan kolom"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "Cukup menantang"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "Alamat web ditulis tanpa https://."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "Tambahkan catatan…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "Tambahkan periode seperti \"Jan 2020 - Sekarang\" agar muncul di timeline Anda."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "Tambahkan bagian berjudul \"Education\". Banyak sistem memiliki kolom pendidikan yang wajib diisi."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "Tambahkan bagian berjudul \"Experience\" atau \"Work Experience\". Ini adalah kolom yang paling banyak dijadikan acuan peringkat oleh sistem."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Tambahkan tag lalu tekan Enter…"
@@ -291,10 +375,6 @@ msgstr "Tambahkan tag lalu tekan Enter…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "Tambahkan entri, atau gunakan proyek dan kerja sukarela untuk menunjukkan sejarah yang setara."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "Tambahkan item ke dalamnya, atau sembunyikan."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "Tambahkan setidaknya satu kota dan negara sehingga peran dapat dicocokka
 msgid "Add contact"
 msgstr "Tambah kontak"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "Tambahkan angka jika Anda memilikinya: volume, persentase, rentang waktu, ukuran tim."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Tambahkan kata kunci"
@@ -327,6 +411,14 @@ msgstr "Tambahkan tautan"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Tambahkan beberapa peran untuk menunjukkan perkembangan karier di perusahaan yang sama."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "Tambahkan satu tautan yang menunjukkan hasil kerja Anda."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "Tambahkan satu dengan kode negaranya; beberapa formulir lamaran mewajibkannya sebelum Anda dapat mengirim."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Tambah Halaman"
@@ -339,6 +431,10 @@ msgstr "Tambahkan Penyedia"
 msgid "Add Role"
 msgstr "Tambah Peran"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "Tambahkan sedikit ruang kosong antar bagian agar mudah dibaca sekilas."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "Tambah tag"
@@ -346,6 +442,10 @@ msgstr "Tambah tag"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Tambahkan ke pipeline"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "Tambahkan dua atau tiga baris di bagian atas yang menjelaskan apa yang Anda kerjakan."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "Sesuaikan resume Anda untuk peran yang mengutamakan kerja jarak jauh dan
 msgid "Advanced"
 msgstr "Canggih"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "Saran untuk orang yang membacanya. Tidak satu pun dari ini memengaruhi skor."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikaans"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "Terhadap deskripsi pekerjaan"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "Pengaturan agen AI tidak tersedia sampai REDIS_URL dan ENCRYPTION_SECRET
 msgid "AI assistant"
 msgstr "Asisten AI"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "Penyedia AI"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Manajemen penyedia AI tidak tersedia sampai REDIS_URL dan ENCRYPTION_SECRET dikonfigurasi."
@@ -403,6 +515,10 @@ msgstr "Manajemen penyedia AI tidak tersedia. Silakan coba lagi."
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Penyedia AI"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "Penyedia AI tidak tersedia sampai ENCRYPTION_SECRET dikonfigurasi."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "Albania"
 msgid "Allow Public Access"
 msgstr "Izinkan Akses Publik"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "Hampir tidak ada poin Anda yang memuat angka."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "Sudah tercakup"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Sudah punya akun? <0/>"
@@ -423,6 +547,10 @@ msgstr "Sudah punya akun? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "Amharik"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "Font yang disematkan tidak dapat dibaca."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "Terjadi kesalahan tak terduga yang menyebabkan halaman ini gagal dimuat.
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Terjadi kesalahan yang tidak diketahui saat mengimpor resume Anda."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "Menganalisis Lanjutkan"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "Menganalisis…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloud mendukung Reactive Resume sebagai sponsor proyek. Jika perus
 msgid "ATS Check"
 msgstr "Pemeriksaan ATS"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "Pemeriksa ATS"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "Pengisian otomatis gagal."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Tersedia dalam banyak bahasa. Jika Anda ingin berkontribusi, lihat Crowdin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "Hindari efek spasi antarhuruf yang berat, lalu ekspor ulang."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "Terbaik untuk lamaran, berbagi, dan mencetak."
 msgid "Blank draft"
 msgstr "Draf kosong"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "Penghalang"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Papan"
@@ -750,6 +884,10 @@ msgstr "Radius Tepi"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "Lebar Tepi"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "Pecah resume menjadi bagian-bagian umum agar dapat disegmentasi."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "Changelog"
 msgid "Chat"
 msgstr "Mengobrol"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "Periksa lagi"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "Periksa bahwa file yang diekspor memuat semua yang Anda harapkan, dan semuanya berupa teks yang dapat dipilih."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Periksa email Anda untuk tautan mengatur ulang kata sandi."
@@ -868,6 +1014,10 @@ msgstr "Periksa email Anda untuk tautan mengatur ulang kata sandi."
 msgid "Check your email for a link to verify your account."
 msgstr "Periksa email Anda untuk tautan memverifikasi akun Anda."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "Diperiksa di peramban Anda. File tidak pernah diunggah."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "Memeriksa"
@@ -875,6 +1025,10 @@ msgstr "Memeriksa"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "Memeriksa draf"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "Memeriksa…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "Cina (Tradisional)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "Pilih model dan draf resume."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "Pilih PDF"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "Bandingkan resume ini dengan URL lowongan pekerjaan ini dan perbarui kat
 msgid "Completely free, forever, no hidden costs."
 msgstr "Sepenuhnya gratis, selamanya, tanpa biaya tersembunyi."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "Kompres atau hapus gambar besar agar pengunggahan tetap cepat."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "Konfirmasi"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Hubungkan"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "Hubungkan penyedia AI Anda sendiri untuk mendapatkan ulasan tulisan. Pemeriksaan di atas tidak memerlukan penyedia maupun akun."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "Koneksi gagal."
 msgid "Connection verified — provider is ready to use."
 msgstr "Koneksi terverifikasi — penyedia siap digunakan."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "Detail kontak"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "Kontak"
@@ -1020,6 +1190,10 @@ msgstr "Kontak"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "Konten"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "Konten ditata dalam bentuk kisi."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "Salin stylesheet"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "Salin seluruh deskripsi pekerjaan dari lowongan tersebut dan tempel di bawah ini. Kami akan mengisi kolomnya untuk Anda dan menyimpan teksnya bersama lamaran ini untuk penilaian kecocokan dan penyesuaian."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "Salin teks dari file yang diekspor dan baca seluruhnya; perbaiki apa pun yang muncul di tempat yang salah."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "Salin kunci rahasia ini dan gunakan di aplikasi Anda untuk mengakses data Anda."
@@ -1102,6 +1280,10 @@ msgstr "Salin URL"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Perbaiki tahunnya, atau gunakan \"Sekarang\" untuk pekerjaan yang sedang berlangsung."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "Perbaiki tahunnya, atau tulis \"Present\" untuk pekerjaan yang masih berlangsung."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "Tidak dapat mengunggah file. Coba lagi."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "Jumlah menurut sumber"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "Dihitung terpisah dari skor penguraian. Cakupan bukan prediksi apa pun."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "Tanggal"
 msgid "Date applied"
 msgstr "Tanggal melamar"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "Tanggal"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "Kurangi lekukan"
@@ -1397,6 +1588,10 @@ msgstr "Kurangi lekukan"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "Kurangi zoom"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "Pemeriksaan mendalam"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "Hapus"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "Hapus Akun"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "Hapus itu. Kata kunci tersembunyi dianggap sebagai upaya sengaja untuk mengakali pencarian."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "Ditolak — menunggu agen…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Tolak"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "Jelaskan setiap peran dengan poin-poin singkat. Paragraf padat lebih sulit dibaca sekilas dan disegmentasi."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "Seret dan jatuhkan bagian ke sini untuk memindahkannya antar kolom"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Seret untuk memposisikan ulang dan gunakan penggeser untuk memperbesar atau memperkecil sebelum mengunggah."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "Hilangkan kata ganti orang dan mulai dari kata kerja. Itu adalah konvensi di sebagian besar pasar kerja."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "Alamat Email"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "Pengiriman email tidak dikonfigurasi pada instance ini, sehingga verifikasi dinonaktifkan."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "Sematkan semua font saat mengekspor, agar karakter dipetakan sesuai maksud Anda."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Aktifkan 2FA"
@@ -1760,6 +1971,10 @@ msgstr "Mengaktifkan perlindungan kata sandi..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "Mengaktifkan otentikasi dua faktor…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "Terapkan aturan satu halaman secara ketat, atau anggap font atau jeda karier sebagai kesalahan."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "Ekspor"
 msgid "Export Data"
 msgstr "Ekspor Data"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "Ekspor dari dokumen asli, bukan dengan memindai atau mengambil tangkapan layarnya."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "Ekspor data saya"
@@ -1863,6 +2082,10 @@ msgstr "Ekspor data saya"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "Ekspor PNG"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "Ekspor resume sebagai PDF berbasis teks, bukan sebagai gambar atau hasil pindai."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "pipeline-flow.png diekspor"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "Gagal"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "Gagal menganalisis resume."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "Gagal mengirim ulang email verifikasi. Silakan coba lagi."
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "Gagal mengatur ulang kata sandi Anda. Silakan coba lagi."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "Gagal meninjau resume ini."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "Kembang api"
 msgid "Fit to view"
 msgstr "Sesuai untuk dilihat"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "Ratakan formulir agar teksnya menjadi bagian dari halaman."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "Fleksibilitas"
@@ -2210,14 +2437,6 @@ msgstr "Hasilkan nama acak"
 msgid "German"
 msgstr "Jerman"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "Dapatkan ulasan tentang resume Anda dengan skor keseluruhan, kekuatan, dan saran yang dapat ditindaklanjuti."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "Dapatkan tinjauan mendalam yang didukung oleh AI atas resume Anda dengan skor keseluruhan, kekuatan utama, dan saran praktis. Untuk mengaktifkan fitur ini, perbarui pengaturan AI Anda."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Mulai"
@@ -2229,6 +2448,14 @@ msgstr "Mulai"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "Beri setiap peran periode waktu, seperti \"Jan 2020 - Present\", agar linimasa Anda dapat disusun ulang."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "Beri setiap peran dan kualifikasi rentang tanggal."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "Judul 5"
 msgid "Heading 6"
 msgstr "Judul 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "Headline"
@@ -2388,10 +2616,9 @@ msgstr "Sembunyikan gambar"
 msgid "Hide Section Icons"
 msgstr "Sembunyikan Ikon Bagian"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "Tinggi"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "Dampak tinggi"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "Ikon"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Identifikasi celah pada sistem pelacakan pelamar dan terapkan hanya perbaikan kata kunci yang memiliki tingkat kepercayaan tinggi."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "Jika berasal dari hasil pindai, itu wajar. Jika tidak, hapuslah; perekrut akan menganggapnya sebagai penjejalan kata kunci."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "Gambar menutupi sebagian besar halaman."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "Mengimpor resume Anda..."
 msgid "Importing…"
 msgstr "Mengimpor…"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "Dalam {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "Sertakan header resume"
@@ -2491,6 +2731,10 @@ msgstr "Sertakan header resume"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "Perbesar lekukan"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "Tambah spasi antar baris agar dua baris tidak menyatu menjadi satu."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "Kode Inline"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "Insight"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "Memeriksa halaman {0} dari {1}…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "Pekerjaan"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "Deskripsi pekerjaan"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "Deskripsi pekerjaan (opsional)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "Rata Kanan-Kiri"
 msgid "Kannada"
 msgstr "Kannada"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "Gunakan satu alamat saja, agar tidak perlu menebak mana yang harus dipakai."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "Jaga agar tetap di bawah 2,5 MB, biasanya dengan menghapus atau memperkecil gambar."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "Jaga agar konten resume berupa teks asli, bukan gambar dari teks."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "Buat kepala halaman berulang tetap singkat, atau hilangkan. Kepala halaman itu juga ikut terulang dalam teks yang diekstrak."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "Buat masing-masing sekitar dua baris, agar pembaca sekilas dapat menyelesaikannya."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "Batasi hingga dua atau tiga keluarga font. Setiap font tambahan adalah peluang lain untuk terpetakan dengan buruk."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "Bahasa"
 msgid "Languages"
 msgstr "Bahasa"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "Terakhir dianalisis pada {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "Terakhir dilihat pada {0}"
 msgid "Latvian"
 msgstr "Latvia"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "Tata teks secara horizontal. Teks yang diputar sering hilang atau salah tempat."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "Tata Letak"
@@ -2715,6 +2995,10 @@ msgstr "Pelajari Lebih Lanjut"
 msgid "Leave"
 msgstr "Tinggalkan"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "Sisakan setidaknya setengah inci di sekeliling halaman."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Biarkan kosong untuk mengatur ulang judul ke aslinya."
@@ -2726,6 +3010,10 @@ msgstr "Tinggalkan untuk menyiapkan penyedia AI?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Rata Kiri"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "Panjang bukan cacat, dan tidak ada aturan satu halaman yang berlaku universal. Pertahankan halaman yang memang pantas ada."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "Tingkat {level} dari 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "Berlisensi di bawah <0>MIT</0>."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "Ligatur dapat menghilangkan huruf dari kata seperti \"workflow\"."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "Menautkan akun {providerName} Anda..."
 msgid "List"
 msgstr "List"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "Cantumkan alat dan teknologi yang Anda gunakan. Perekrut mencari kolom keahlian lebih dari kolom lainnya."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "Lituania"
@@ -2814,8 +3110,8 @@ msgstr "Sedang memuat penyedia AI. Silakan coba lagi sebentar lagi."
 msgid "Loading applications…"
 msgstr "Memuat aplikasi…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "Memuat penyedia…"
 
@@ -2838,6 +3134,7 @@ msgstr "Memuat…"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Lokasi"
@@ -2855,6 +3152,10 @@ msgstr "Kunci"
 msgid "Logout"
 msgstr "Keluar"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "Bentangan teks yang panjang ditulis dengan huruf kapital."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "Keberlanjutan Jangka Panjang"
@@ -2864,10 +3165,9 @@ msgstr "Keberlanjutan Jangka Panjang"
 msgid "Lost access to your authenticator?"
 msgstr "Kehilangan akses ke autentikator Anda?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "Rendah"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "Dampak rendah"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "Navigasi utama"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "Buat bagian pengalaman lebih berorientasi pada hasil dan hilangkan tanggung jawab yang ambigu."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "Samakan teks yang terlihat dengan tujuan tautannya."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "Buat lebih besar, tebal, atau berhuruf kapital secara jelas."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "Melayu"
@@ -2889,6 +3197,10 @@ msgstr "Melayu"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "Malayalam"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "Banyak poin dimulai dengan frasa yang sama."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "Tandai ditolak"
 msgid "Match scoring failed."
 msgstr "Penilaian kecocokan gagal."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Sedang"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "Dampak sedang"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "Mistral AI"
 msgid "Model"
 msgstr "Model"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "Lebih dari satu alamat email muncul."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "Sebagian besar poin dibuka dengan kata pengisi, bukan dengan hal yang benar-benar Anda lakukan."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "Sebagian besar entri tidak memiliki tanggal."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "Sebagian besar sistem mengajukan kandidat melalui email. "
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "Pindahkan semua konten ke dalam batas halaman dan ekspor ulang."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "Pindahkan ke kolom utama dan simpan sidebar untuk daftar pendek."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "Pindahkan konten sebenarnya ke badan halaman; beberapa perangkat lunak mengabaikan margin."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "Pindahkan tahap"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Pindahkan ke"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "Pindahkan alamat email dan nomor telepon Anda ke bagian atas halaman pertama."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "Harus dimulai dengan https://"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "Tidak ada lamaran yang cocok dengan filtermu."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "Belum ada lamaran — tambahkan beberapa untuk melihat funnel dan tingkat balasanmu."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "Tidak ditemukan daftar berpoin."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "Tidak ditemukan judul bagian yang konvensional."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "Tidak ada data yang dikembalikan dari penyedia AI."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "Tidak ditemukan tanggal."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "Tidak ditemukan bagian pendidikan."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "Tidak ditemukan alamat email."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "Tidak ada baris yang tampak seperti jabatan yang dipasangkan dengan nama pemberi kerja."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Belum ada kunci sandi yang terdaftar."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "Tidak ditemukan nomor telepon."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "Belum ada resume."
 msgid "No saved versions yet."
 msgstr "Belum ada versi yang tersimpan."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "Tidak ditemukan bagian keahlian."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "Belum ada data sumber."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "Tidak ada istilah spesifik yang dapat diambil dari deskripsi pekerjaan itu, jadi mungkin sebagian besar berupa teks baku. Tempel bagian persyaratan untuk perbandingan yang lebih berguna."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Tidak ada penyedia yang teruji"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "Tidak ada teks yang dapat dibaca dari file ini."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "Belum ada thread."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "Tidak ditemukan bagian pengalaman kerja."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "Norwegia"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "Tidak terhubung"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "Tidak terbukti dalam resume Anda"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "Tidak ada dalam resume Anda"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "Tidak dinilai"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "Catatan"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "Catatan"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "Tidak ada tanda yang menunjukkan peran ini masih berlangsung."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "Tidak ada yang perlu diperbaiki di sini."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "Tidak ada yang perlu diperbaiki. Halaman yang tersisa memang tidak tercakup dalam laporan ini."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "Tidak ada saran."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "Pemeliharaan Berkelanjutan"
 msgid "Only applies when the section fits on a single page."
 msgstr "Hanya berlaku jika bagian tersebut muat dalam satu halaman."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "Hanya satu judul bagian yang dapat dikenali ditemukan."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "Hanya {0} halaman pertama yang diperiksa, sehingga laporan ini tidak mencakup seluruh file."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "Hanya {MAX_IMPORT} baris pertama yang diimpor sekaligus — {overflow} tertinggal. Pecah file untuk mengimpor sisanya."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "Hanya halaman-halaman pertama yang diperiksa."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "Mode fokus terbuka"
 msgid "Open in builder"
 msgstr "Buka di pembangun"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "Buka Pengaturan Integrasi"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Sumber Terbuka"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "Buka file yang diekspor dan pastikan Anda dapat memilih dan menyalin setiap bagiannya."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "Kompatibel dengan OpenAI"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "Membuka file…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "Catatan opsional untuk agen…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Secara opsional, atur kata sandi sehingga hanya orang yang memiliki kata sandi yang dapat melihat resume Anda melalui tautan."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "Secara opsional, istilah mana dari lowongan pekerjaan yang sudah muncul."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "Opsi untuk {title}"
@@ -3237,9 +3670,9 @@ msgstr "Daftar Bernomor"
 msgid "Organization"
 msgstr "Organisasi"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "Skor Keseluruhan"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "dari 100"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "Perlindungan kata sandi telah dinonaktifkan."
 msgid "Password protection has been enabled."
 msgstr "Perlindungan kata sandi telah diaktifkan."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "Tempel lowongan untuk melihat istilah mana yang sudah muncul dalam resume Anda."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "Tempel baris atau unggah .csv. Kami memetakan kolom seperti Perusahaan, Peran, Tahap, Tanggal Tahap, Gaji, Sumber, dan Tag."
@@ -3321,6 +3758,10 @@ msgstr "Tempel baris atau unggah .csv. Kami memetakan kolom seperti Perusahaan, 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "Tempel deskripsi pekerjaan lengkap di sini…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "Tempel lowongan tersebut untuk melihat istilah mana yang sudah muncul dalam resume Anda."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "Personalisasikan resume Anda dengan warna, font, atau desain apa pun, dan jadikan itu milik Anda."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "Telepon"
@@ -3383,6 +3825,10 @@ msgstr "Telepon"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Pilih ikon"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "Pilih satu format dan gunakan di mana pun."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "Portugis (Portugal)"
 msgid "Position"
 msgstr "Posisi"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "Memprediksi apakah Anda akan ditolak. Tidak ada alat yang bisa melakukan itu."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Pilih judul konvensional seperti \"Pengalaman Kerja\" atau \"Pendidikan\"."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "Utamakan satu kolom, atau batasi kolom samping untuk daftar pendek yang berdiri sendiri."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "Pratinjau dan ekspor mempertahankan gaya yang valid dan mengabaikan gaya
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Warna Utama"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "Cetak atau ekspor formulir menjadi PDF datar sebelum mengirimkannya."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "Publikasi"
 msgid "Publisher"
 msgstr "Penerbit"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "Letakkan alamat email biasa di dekat bagian atas halaman pertama. Itulah yang dipakai kebanyakan sistem untuk mengelompokkan Anda."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "JSON mentah"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "Ekspor ulang dari tata letak satu kolom, lalu salin teksnya dan periksa apakah terbaca dari atas ke bawah."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "Ekspor ulang dari dokumen asli, bukan hasil konversi dari format lain."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "Ekspor ulang dari dokumen asli dengan font yang disematkan dengan benar."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "Ekspor ulang menggunakan font TrueType atau OpenType biasa."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "Ekspor ulang dengan font tersemat, lalu periksa apakah teksnya tersalin dengan bersih."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "Ekspor ulang dengan font tersemat, lalu buka file dan periksa apakah teksnya tersalin dengan bersih."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "Bacalah panduan Menerapkan Gaya Kustom."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Membaca resume"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "Keterbacaan"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "Membaca halaman {0} dari {1}…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "Menghapus perlindungan kata sandi..."
 msgid "Rename"
 msgstr "Ganti Nama"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "Merender resume Anda saat ini menjadi PDF dan menjalankan pemeriksaan file secara lengkap, di peramban Anda. Tidak ada yang diunggah."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Urutkan ulang"
@@ -3727,6 +4227,23 @@ msgstr "Urutkan ulang"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Susun ulang kolom kustom"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "Mengulangi klaim bahwa sebagian besar resume dibuang secara otomatis."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "Diulang jauh lebih sering daripada penggunaannya dalam lowongan itu sendiri: {0}. Perekrut akan menyadarinya."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "Ganti font ikon dengan teks biasa, lalu ekspor ulang."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "Ganti tabel dengan paragraf dan daftar biasa. Sel diekstrak sesuai urutan penyimpanan, bukan urutan baca."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "Kirim ulang email verifikasi"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Mengirim ulang email verifikasi..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "Simpan huruf kapital hanya untuk judul singkat. Huruf kapital memperlambat pembacaan dan dapat mengecoh pencarian yang peka huruf besar/kecil."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "Pulihkan versi ini?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Melanjutkan"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "Melanjutkan Analisis"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "Lanjutkan analisis hingga selesai."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "Tinjau edit"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Tinjau resume Anda dan bandingkan dengan deskripsi pekerjaan, serta ajukan pertanyaan kepada saya sebelum mengubah bagian-bagian yang kurang jelas."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "Tinjau tulisan dengan AI"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "Tinjau edit ini"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "Meninjau…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "Rumania"
 msgid "Rotation"
 msgstr "Rotasi"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "Jalankan analisis pertama Anda untuk mendapatkan kartu skor, kekuatan, dan saran yang diprioritaskan."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "Jalankan lagi"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "Jalankan tinjauan AI"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "Jalankan pemeriksaan mendalam"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "Penyedia Simpan & Uji"
 msgid "Save & Upload"
 msgstr "Simpan & Unggah"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "Simpan salinan yang tidak dilindungi, tanpa kata sandi dan tanpa pembatasan izin."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "Simpan perubahan"
@@ -3940,6 +4473,10 @@ msgstr "Simpan Perubahan"
 msgid "Save model"
 msgstr "Simpan model"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "Simpan file dengan setiap halaman tegak."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "Tersimpan"
@@ -3959,10 +4496,6 @@ msgstr "Sekolah"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "Nilai kecocokanku"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "Kartu penilaian"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "Opsi bagian"
 msgid "Section Type"
 msgstr "Tipe Bagian"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "Bagian"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "Lihat bagaimana resume ini cocok dengan lowongan"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "Lihat apa yang dapat dibaca oleh sistem pelacakan pelamar dari resume Anda. Berjalan di peramban Anda."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "Pilih semua"
 msgid "Select an agent model"
 msgstr "Pilih model agen"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "Pilih penyedia AI"
 
@@ -4075,9 +4617,21 @@ msgstr "Kirim pesan"
 msgid "Send Password Reset Email"
 msgstr "Kirim Email Atur Ulang Kata Sandi"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "Kirim resume itu sendiri, bukan berkas portofolio pembungkusnya."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Mengirim email atur ulang kata sandi..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Mengirimkan teks yang sudah diekstrak dari PDF Anda ke penyedia AI yang Anda pilih di bawah. File PDF itu sendiri tidak pernah diunggah."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Mengirimkan teks yang sudah diekstrak dari PDF Anda, ditambah deskripsi pekerjaan yang Anda tempel, ke penyedia AI yang Anda pilih di bawah. File PDF itu sendiri tidak pernah diunggah."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "Serbia"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Atur Kata Sandi"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "Atur bahasa dokumen saat mengekspor."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "Lebar Bilah Sisi"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Masuk"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "Masuk dan hubungkan penyedia AI Anda sendiri untuk mendapatkan saran penulisan ulang bagi poin yang lemah. Pemeriksaan di atas gratis dan tidak memerlukan akun."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "Slug"
 msgid "Some application systems require one before you can submit."
 msgstr "Beberapa sistem lamaran memerlukannya sebelum Anda dapat mengirimkannya."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "Beberapa poin terlalu panjang."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "Beberapa karakter muncul sebagai tanda tanya."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "Beberapa pemeriksaan memerlukan informasi yang tidak dimiliki file ini: isi halaman yang tidak dapat diperiksa, atau teks dalam bahasa yang tidak dicakup pemeriksaan ini. Pemeriksaan tersebut tidak dihitung sebagai berhasil maupun gagal."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "Beberapa glif tidak memiliki arti di luar file ini."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "Beberapa baris disimpan tidak sesuai urutan baca."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Beberapa parser salah menangani gambar, dan foto tidak disarankan di beberapa wilayah."
@@ -4311,6 +4894,14 @@ msgstr "Beberapa parser salah menangani gambar, dan foto tidak disarankan di beb
 msgid "Some styles were ignored"
 msgstr "Beberapa gaya diabaikan"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "Beberapa teks jatuh di luar halaman."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "Beberapa teks diputar."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Lainnya…"
@@ -4318,6 +4909,10 @@ msgstr "Lainnya…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Terjadi kesalahan."
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "Terjadi kesalahan saat membaca file itu. Silakan coba lagi."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "Jarak (Vertikal)"
 msgid "Spanish"
 msgstr "Spanyol"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "Eja nama bulannya, seperti pada \"Mar 2022\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "Sponsor"
@@ -4419,6 +5018,10 @@ msgstr "Mulai membuat resume Anda dengan memberikan nama."
 msgid "Start building your resume from scratch"
 msgstr "Mulai membuat resume Anda dari awal"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "Mulai setiap poin dengan kata kerja yang konkret: membangun, memimpin, mengurangi, memigrasikan."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "Mulai utas baru"
@@ -4427,6 +5030,10 @@ msgstr "Mulai utas baru"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "Mulai di halaman baru"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "Mulai resume dengan nama Anda pada barisnya sendiri."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "Masih menunggu {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "Hentikan pembangkitan"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "Kekuatan"
 
@@ -4473,7 +5080,7 @@ msgstr "Stylesheet memiliki kesalahan fatal"
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "Saran"
 
@@ -4494,6 +5101,7 @@ msgstr "Dukung Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "Dukung aplikasi dengan melakukan apa yang Anda bisa!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "Tukar tanggal mulai dan berakhir."
@@ -4532,6 +5140,10 @@ msgstr "Tag"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Tag dapat digunakan untuk mengkategorikan resume Anda dengan kata kunci."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "Tag memberi perangkat lunak urutan baca yang eksplisit. Aktifkan saat mengekspor, jika alat Anda menyediakannya."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "Penyelarasan teks"
 msgid "Text Color"
 msgstr "Warna Teks"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "Teks ditulis satu karakter dalam satu waktu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "Teks berada di area kepala atau kaki halaman."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "Thai"
@@ -4597,6 +5217,19 @@ msgstr "Thai"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "Terima kasih kepada para sponsor kami."
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "File itu tidak dapat dibaca sebagai PDF."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "File itu bukan PDF. Ekspor resume Anda sebagai PDF dan coba lagi."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "File itu terlalu besar untuk diperiksa di peramban."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "API key tidak akan lagi dapat mengakses data Anda setelah dihapus. Tinda
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "Aplikasi yang mengirim Anda ke sini membuat permintaan otorisasi yang tidak valid."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "Pemeriksaan di atas bersifat mekanis. Fitur ini menanyakan model bahasa apa pendapat seorang pembaca tentang poin-poin Anda, dan menyarankan penulisan ulang. Fitur ini tidak menghasilkan skor."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "Perintah yang Anda cari tidak ada."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "Pemeriksaan mendalam tidak dapat diselesaikan. Silakan coba lagi."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "File yang diimpor tidak dapat diuraikan menjadi resume yang valid."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "Urutan penyimpanan teks sangat berbeda dari urutan bacanya."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "Halaman yang Anda cari mungkin telah dipindahkan atau sudah tidak ada lagi."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "Halaman-halaman berupa gambar, tanpa teks di baliknya."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "Kata sandi yang Anda masukkan salah"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "PDF dibaca oleh kode yang berjalan di tab ini. Tidak ada yang diunggah, tidak ada yang disimpan, dan tidak diperlukan akun. Buka tab jaringan peramban Anda dan amati sendiri, jika Anda mau."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "Penyedia tidak membagikan alamat email, yang diperlukan untuk masuk."
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "Penyedia menolak upaya masuk ini. Silakan mulai lagi."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "Penyedia mengembalikan tinjauan yang tidak dapat dibaca. Coba lagi."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "Pratinjau resume tidak dapat diperbarui. Pratinjau valid terakhir masih 
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Resume yang Anda coba akses dilindungi kata sandi"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "Baris yang sama berulang di setiap halaman."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "Skor dibatasi karena ada masalah penghalang: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "Teks yang dihasilkan tidak dapat dibaca."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "Bagian atas halaman pertama tidak tampak seperti sebuah nama."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "Tema"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Lalu, masukkan kode 6 digit yang diberikan aplikasi untuk melanjutkan."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "Ada celah antara dua peran yang memiliki tanggal."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "Tidak ada tautan ke profil, portofolio, atau repositori."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "Tidak ada paragraf ringkasan."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "Ada masalah saat membuat DOCX, silakan coba lagi."
@@ -4695,6 +5381,10 @@ msgstr "Terjadi masalah saat membuat PDF, silakan coba lagi."
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Terdapat masalah saat menyiapkan resume Anda untuk dicetak, silakan coba lagi."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "Informasi tidak cukup untuk menjalankan pemeriksaan ini."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "Thread agen ini tidak dapat dibuka."
 msgid "This assistant could not be opened."
 msgstr "Asisten ini tidak dapat dibuka."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "Pemeriksaan ini tidak berlaku untuk file ini."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "Pemeriksaan ini hanya berjalan pada resume yang ditulis dalam bahasa Inggris."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "Tanggal ini tidak akan terbaca dengan benar."
@@ -4757,13 +5455,73 @@ msgstr "Entri ini akan dihapus secara permanen. Ini tidak dapat dibatalkan."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Fitur ini memerlukan penyedia AI yang terhubung. Silakan atur di pengaturan."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "File ini berisi kolom formulir."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "File ini berisi teks yang tidak dapat dilihat pembaca, sehingga sebagian kecocokan ini mungkin berasal darinya."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "File ini berisi teks yang digambar secara tidak terlihat."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "File ini berisi teks putih di atas latar putih."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "File ini tidak menyatakan bahasa apa pun."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "File ini tidak memiliki tag aksesibilitas."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "File ini terenkripsi."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "File ini besar untuk ukuran sebuah resume."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "File ini lebih besar dari yang diterima banyak formulir lamaran."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "File ini menggunakan banyak font yang berbeda."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "File ini menggunakan font Type 3, yang memuat gambar, bukan karakter."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "Isi halaman file ini tidak dapat diperiksa tepat waktu."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "Judul ini bukan yang dicari parser."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "Ini adalah PDF Portfolio: halaman yang terlihat hanyalah sampul."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Ini adalah nama yang ramah URL untuk resume Anda."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "Ini adalah formulir XFA, sehingga sebagian besar perangkat lunak hanya membaca kerangka kosongnya."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "Ini bukan ukuran halaman resume yang umum."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "Tautan ini tidak memiliki protokolnya."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Ini mungkin memakan waktu beberapa menit, tergantung respons penyedia AI. Harap jangan menutup jendela atau memuat ulang halaman."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "Ini mengukur seberapa akurat perangkat lunak dapat mengekstrak teks file ini. Ini tidak memprediksi apakah lamaran Anda akan ditolak. Tidak ada alat yang bisa melakukan itu. File Anda dibaca di peramban ini dan tidak pernah diunggah."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "Halaman ini berbentuk kolom, dan teksnya diekstrak tidak sesuai urutan."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "Halaman ini sangat padat."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "PDF ini dilindungi kata sandi. Simpan salinan yang tidak dilindungi dan coba lagi."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "Resume ini terkunci."
 msgid "This resume is locked and cannot be updated."
 msgstr "Resume ini dikunci dan tidak dapat diperbarui."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "Resume ini panjang."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "Resume ini diperbarui oleh agen AI."
@@ -4796,6 +5574,10 @@ msgstr "Resume ini diperbarui oleh agen AI."
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Pengaturan berbagi resume ini telah berubah di tempat lain."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "Tinjauan ini adalah pendapat model bahasa tentang tulisan Anda. Tidak mengubah skor di atas, dan bisa saja keliru. Anggap ini sebagai pendapat kedua, bukan keputusan akhir."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "Bagian ini disediakan untuk catatan pribadi Anda yang khusus untuk resum
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "Bagian ini dibagi menjadi beberapa kolom."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "Bagian ini ditampilkan sebagai judul kosong."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Demo timelapse membuat resume dengan Reactive Resume"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Linimasa"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "Tips"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "Coba lagi"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "Turki"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "Matikan ligatur opsional saat mengekspor."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "Memperbarui resume Anda..."
 msgid "Upload .csv"
 msgstr "Unggah .csv"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "Unggah resume dan lihat apa yang sebenarnya dibaca oleh sistem pelacakan pelamar darinya. Semuanya berjalan di peramban ini. File Anda tidak pernah diunggah, dan tidak ada yang disimpan."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Unggah lampiran"
@@ -5242,6 +6032,14 @@ msgstr "Gunakan tinggi garis minimal 1,15 agar garis tidak menyatu."
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "Gunakan alamat biasa seperti nama@example.com, tanpa teks di sekitarnya."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "Gunakan format internasional biasa, seperti +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Gunakan format yang dikenali, seperti \"Jan 2020 - Mar 2022\" atau \"2020 - 2022\"."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Gunakan formulir yang dikenal seperti \"Jan 2020 - Mar 2022\" atau \"2020 - 2022\"."
@@ -5250,18 +6048,38 @@ msgstr "Gunakan formulir yang dikenal seperti \"Jan 2020 - Mar 2022\" atau \"202
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Gunakan formulir yang dikenal seperti \"Maret 2022\" atau \"2022\"."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "Gunakan satu kolom untuk apa pun yang harus dibaca secara berurutan."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "Gunakan ukuran minimal 9pt agar salinan yang dirender ulang tetap akurat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "Gunakan ukuran A4 atau US Letter agar tata letak tetap utuh saat dirender ulang."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "Gunakan setidaknya 9pt."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Gunakan warna {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "Gunakan judul biasa seperti \"Experience\", \"Education\", dan \"Skills\"."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "Gunakan contoh"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "Gunakan daftar berpoin biasa dari editor Anda, agar glif liar tidak muncul di tengah kalimat."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "Valid dengan kesalahan"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "Valid dengan peringatan"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "Variasikan kalimat pembuka agar bagian ini tidak terasa seperti teks baku."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "Memverifikasi email Anda diperlukan saat mengatur ulang kata sandi Anda.
 msgid "Version history"
 msgstr "Riwayat versi"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "Hanya sedikit kata yang berhasil dipulihkan untuk sebuah resume."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "Hanya sedikit teks yang berhasil dipulihkan untuk sebanyak ini halaman."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "Vietnam"
@@ -5358,6 +6188,11 @@ msgstr "dibandingkan 30 hari sebelumnya"
 msgid "Waiting for the agent…"
 msgstr "Menunggu agen…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "Ingin pendapat kedua tentang tulisannya?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "Peringatan"
@@ -5395,6 +6230,14 @@ msgstr "Pencarian web"
 msgid "Website"
 msgstr "Situs Web"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "Apa yang dibaca oleh pengurai"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "Apa yang dilihat oleh seseorang"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Kamu ingin melakukan apa?"
@@ -5406,6 +6249,14 @@ msgstr "Apa yang ingin Anda ganti nama bagian ini menjadi?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Apa yang membuat Reactive Resume berbeda dari pembuat resume lainnya?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "Apa yang diperiksa"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "Apa yang tidak dilakukan"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "Dari mana lamaran berasal"
 msgid "Where your applications went"
 msgstr "Ke mana lamaranmu berakhir"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "Apakah perekrut dapat menghubungi Anda."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "Apakah perangkat lunak sama sekali dapat memulihkan kata-katanya."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "Apakah file berisi teks asli, atau gambar dari teks tersebut."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "Apakah geometri halaman menjaga urutan baca."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "Apakah resume tersegmentasi sesuai yang diharapkan perangkat lunak."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "Apakah teks keluar sesuai urutan yang akan dibaca seseorang."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "Apakah bagian-bagian umum ada dan dapat dibedakan."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "Apakah nama, email, telepon, dan tanggal Anda tetap utuh."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "Apakah linimasa Anda dapat disusun ulang."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "Kata-kata menyatu ketika teksnya diekstrak."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Kerja OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "Sedang bekerja…"
 msgid "Worth a shot"
 msgstr "Layak dicoba"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "Tulis \"Present\" sebagai tanggal akhir untuk peran Anda saat ini."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "Tulis setiap peran sebagai baris jabatan dan perusahaan yang jelas, dengan tanggal di sampingnya."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "Tulis sebagai satu kesatuan tanpa putus, tanpa spasi khusus."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "Tulis alamat lengkapnya agar dikenali sebagai tautan."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "Tulis alamat lengkap, termasuk https://."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "Tulisan"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "Anda mendapat email!"
 msgid "Your account has been deleted successfully."
 msgstr "Akun Anda telah berhasil dihapus."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "Penyedia AI Anda tidak dapat dihubungi. Periksa pengaturannya dan coba lagi."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "API key Anda telah disalin ke papan klip."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "Teks isi Anda sangat kecil."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "Poin-poin Anda digambar dengan karakter yang tidak biasa."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "Perubahan Anda disimpan secara otomatis."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "Detail kontak Anda tidak ada di halaman pertama."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "Data Anda aman, dan tidak pernah dibagikan atau dijual kepada siapa pun.
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Data Anda disimpan dengan aman dan tidak pernah dibagikan dengan pihak ketiga. Anda juga dapat self-host Reactive Resume di server Anda sendiri untuk kontrol penuh atas data Anda."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "Tanggal Anda ditulis dengan beberapa cara berbeda."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "Alamat email Anda terpecah di beberapa potongan teks."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "Alamat email Anda belum diverifikasi dengan penyedia."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "File Anda tetap di sini"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "Judul Anda terlihat sama seperti teks isi."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "Perubahan terbaru Anda tidak dapat disimpan."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Gaya lama Anda tetap aktif hingga Anda secara eksplisit mengaktifkan draf CSS Semantik ini."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "Garis Anda dikemas sangat rapat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "Margin Anda sangat sempit."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "Kata sandi Anda telah berhasil diatur ulang. Anda sekarang dapat masuk d
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "Kata sandi Anda telah berhasil diperbarui."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "Nomor telepon Anda ditulis dalam bentuk yang tidak biasa."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "Resume Anda menyertakan foto."
 msgid "Your resume shows no work experience."
 msgstr "Resume Anda tidak menunjukkan pengalaman kerja."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "Resume Anda menggunakan \"I\" dan \"my\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Tautan publik resume Anda saat ini dilindungi oleh kata sandi. Bagikan kata sandi hanya kepada orang yang Anda percaya."
@@ -5622,4 +6575,3 @@ msgstr "Perkecil"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

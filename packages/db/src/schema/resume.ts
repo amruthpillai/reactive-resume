@@ -1,4 +1,3 @@
-import type { StoredResumeAnalysis } from "@reactive-resume/schema/resume/analysis";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import * as pg from "drizzle-orm/pg-core";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
@@ -114,28 +113,4 @@ export const resumeStatisticsDaily = pg.pgTable(
 			.$onUpdate(() => /* @__PURE__ */ new Date()),
 	},
 	(t) => [pg.unique().on(t.resumeId, t.date), pg.index().on(t.resumeId, t.date.desc())],
-);
-
-export const resumeAnalysis = pg.pgTable(
-	"resume_analysis",
-	{
-		id: pg
-			.text("id")
-			.notNull()
-			.primaryKey()
-			.$defaultFn(() => generateId()),
-		analysis: pg.jsonb("analysis").notNull().$type<StoredResumeAnalysis>(),
-		resumeId: pg
-			.text("resume_id")
-			.unique()
-			.notNull()
-			.references(() => resume.id, { onDelete: "cascade" }),
-		createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-		updatedAt: pg
-			.timestamp("updated_at", { withTimezone: true })
-			.notNull()
-			.defaultNow()
-			.$onUpdate(() => /* @__PURE__ */ new Date()),
-	},
-	(t) => [pg.index().on(t.resumeId)],
 );

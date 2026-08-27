@@ -1,48 +1,23 @@
 ---
 title: "Using AI in the builder"
-description: "Run AI-powered resume analysis and chat with the built-in AI assistant in the builder to review proposed resume changes before applying them."
+description: "Chat with the built-in AI assistant in the builder to review proposed resume changes before applying them, and add an optional AI review to the ATS check."
 ---
 
 Reactive Resume includes two AI-assisted builder workflows:
 
-- **Resume Analysis** gives you a score, strengths, and prioritized suggestions.
 - The **AI assistant** opens as a side panel in the builder, scoped to the open resume, so you can chat and apply edits inline.
+- The **ATS Check** section can add an optional AI review of your writing on top of its deterministic report.
 
 <Info>
   These features require a tested and enabled AI provider in **Dashboard -> Settings -> Integrations**. For setup, see
   [Using Artificial Intelligence](/guides/using-ai).
 </Info>
 
-## Run a resume analysis
+## Review the writing from the ATS check
 
-Use resume analysis when you want a broad review before making changes.
+The **ATS Check** section in the right sidebar runs without AI: its checks are deterministic and run in your browser. Once a deep check has produced a report, it offers an optional AI review of the writing — weak phrasing, bullets that describe duties rather than outcomes, and where a rewrite would land better.
 
-<Steps>
-  <Step title="Open your resume in the builder">
-    Go to the dashboard and open the resume you want to review.
-  </Step>
-
-  <Step title="Open the Resume Analysis section">
-    In the right sidebar, select **Resume Analysis**.
-
-    <Frame caption="Resume Analysis section in the builder">
-      <img
-        src="/images/guides/using-ai-in-the-builder/screenshot-1.webp"
-        alt="Resume Analysis section showing the AI setup prompt in the builder sidebar"
-      />
-    </Frame>
-  </Step>
-
-  <Step title="Click Analyze Resume">
-    Reactive Resume sends the current resume data to your configured AI provider.
-  </Step>
-
-  <Step title="Review the results">
-    Review the overall score, scorecard, strengths, and suggestions.
-  </Step>
-</Steps>
-
-Use the analysis as guidance, not as a final verdict. The best resume still depends on the job, industry, and audience.
+The review sends the text already extracted from your rendered PDF to the provider you pick, and returns no score. See [Using the ATS checker](/guides/using-the-ats-checker).
 
 ## Open the AI assistant
 

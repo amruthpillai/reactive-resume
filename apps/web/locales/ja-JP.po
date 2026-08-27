@@ -53,6 +53,24 @@ msgstr "{0} 件の応募を追跡中"
 msgid "{0} characters"
 msgstr "{0} 文字"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{1} 件中 {0} 件の該当するチェックに合格しました"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{1} 件中 {0} 件の該当するチェックに合格しました。"
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "{1} 件中 {0} 件の用語が見つかりました"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} 件をインポートできます"
 msgid "{0} rejected"
 msgstr "{0} 件が不採用"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} 件スキップ"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0} 件をスキップしました（会社/職種がありません）"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} 件の修正が必要"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3か月"
 msgid "6 months"
 msgstr "6か月"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "整った単一列のエクスポートならすべての情報が保持されます。情報が失われるのは、列や画像がある場合です。"
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "確認用リンクを現在のメールアドレスに送信しました。受信ボックスを確認して、変更を確定してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "日付が未来になっています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "期間の終了日が開始日より前になっています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "期間が、多くのソフトウェアでは読み取れない形式で書かれています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "フォントが参照されていますが、埋め込まれていません。"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Reactive Resume は、レジュメの作成・更新・共有を簡単�
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "採用担当者への丁寧なリマインダー"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "ページ全体を貫く空白が、このページを2列に分割しています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "空白期間は問題ではありません。必要であれば一行で説明を加えてもよいですが、優れた履歴書の多くはそうしていません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "リンク先が表示されているアドレスと異なります。"
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "これまで多くの方々が、Reactive Resume を使った体験や�
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "新しい確認用リンクをメールアドレスに送信しました。受信ボックスを確認して、アカウントを認証してください。"
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "数字だけの日付は、国によって読み方が異なります。"
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "ページが回転しています。"
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "<0>Amruth Pillai によるパッションプロジェクト</0>です。"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "写真、見出し、列を使って人間の読み手向けにレイアウトされた履歴書"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "やや挑戦的"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "ウェブアドレスに https:// が付いていません。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "メモを追加…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "「2020 年 1 月 - 現在」などの期間を追加して、タイムラインに表示されるようにします。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "「学歴」という見出しのセクションを追加してください。多くのシステムには必須の学歴欄があります。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "「職歴」または「実務経験」という見出しのセクションを追加してください。多くのシステムがこの項目を評価基準にしています。"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "タグを追加して Enter を押す…"
@@ -291,10 +375,6 @@ msgstr "タグを追加して Enter を押す…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "エントリを追加するか、プロジェクトやボランティア活動を使用して同等の履歴を表示します。"
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "項目を追加するか、非表示にします。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "役割をあなたの地域に合わせられるように、少なくと
 msgid "Add contact"
 msgstr "連絡先を追加"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "可能な限り数字を加えてください。量、割合、期間、チーム人数などです。"
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "キーワードの追加"
@@ -327,6 +411,14 @@ msgstr "リンクを追加"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "同じ会社でのキャリアの変遷を、複数の役職として追加できます。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "自分の仕事を示すリンクを1つ追加してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "国番号付きで追加してください。応募フォームによっては送信前に必須となる場合があります。"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "ページを追加"
@@ -339,6 +431,10 @@ msgstr "プロバイダーを追加"
 msgid "Add Role"
 msgstr "役職を追加"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "セクションの間に余白を加えると、読み手が流し読みしやすくなります。"
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "タグを追加"
@@ -346,6 +442,10 @@ msgstr "タグを追加"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "パイプラインに追加"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "冒頭に、自分の仕事内容を説明する2〜3行を追加してください。"
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "非同期コミュニケーションと主体性を重視する、リモ
 msgid "Advanced"
 msgstr "高度な"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "読み手へのアドバイスです。スコアには影響しません。"
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "アフリカーンス語"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "求人情報との比較"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "REDIS_URLとENCRYPTION_SECRETが設定されるまで、AIエージェ�
 msgid "AI assistant"
 msgstr "AIアシスタント"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "AIプロバイダー"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "REDIS_URLとENCRYPTION_SECRETが設定されるまで、AIプロバイダーの管理は利用できません。"
@@ -403,6 +515,10 @@ msgstr "AIプロバイダー管理機能はご利用いただけません。も�
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "AIプロバイダー"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "ENCRYPTION_SECRET が設定されるまでAIプロバイダーは利用できません。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "アルバニア語"
 msgid "Allow Public Access"
 msgstr "公開アクセスを許可"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "数字を含む箇条書きがほとんどありません。"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "すでにカバーされています"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "すでにアカウントをお持ちですか？ <0/>"
@@ -423,6 +547,10 @@ msgstr "すでにアカウントをお持ちですか？ <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "アムハラ語"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "埋め込まれたフォントを読み取れませんでした。"
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "予期せぬエラーが発生したため、このページを読み込
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "レジュメのインポート中に不明なエラーが発生しました。"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "レジュメの分析"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "分析中…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloudは、Reactive Resumeをプロジェクトスポンサーと�
 msgid "ATS Check"
 msgstr "ATSチェック"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "ATSチェッカー"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "自動入力に失敗しました。"
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "複数の言語で利用できます。翻訳に貢献したい場合は、Crowdin をご覧ください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "文字間隔を大きく広げる効果を避けてから、再エクスポートしてください。"
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "応募、共有、印刷に最適です。"
 msgid "Blank draft"
 msgstr "白紙の下書き"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "ブロッカー"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "ボード"
@@ -750,6 +884,10 @@ msgstr "角丸"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "枠線の幅"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "履歴書を一般的なセクションに分けて、区分けできるようにしてください。"
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "更新履歴"
 msgid "Chat"
 msgstr "チャット"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "再チェック"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "エクスポートしたファイルに想定通りの内容が含まれ、すべてが選択可能なテキストであることを確認してください。"
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "パスワードをリセットするリンクを記載したメールを確認してください。"
@@ -868,6 +1014,10 @@ msgstr "パスワードをリセットするリンクを記載したメールを
 msgid "Check your email for a link to verify your account."
 msgstr "アカウントを認証するリンクを記載したメールを確認してください。"
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "ブラウザ内でチェックされます。ファイルはアップロードされません。"
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "チェック中"
@@ -875,6 +1025,10 @@ msgstr "チェック中"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "下書きの確認"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "チェック中…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "中国語（繁体字）"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "モデルを選び、レジュメの下書きを作成してください。"
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "PDFを選択"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "このレジュメをこの求人情報のURLと比較し、簡潔かつ
 msgid "Completely free, forever, no hidden costs."
 msgstr "完全無料。ずっと無料。隠されたコストはありません。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "アップロードを速く保つため、大きな画像を圧縮するか削除してください。"
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "確認"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "接続"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "自分のAIプロバイダーを接続すると、文章のレビューを受けられます。上記のチェックにはプロバイダーもアカウントも不要です。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "接続に失敗しました。"
 msgid "Connection verified — provider is ready to use."
 msgstr "接続確認済み — プロバイダは使用可能です。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "連絡先情報"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "連絡先"
@@ -1020,6 +1190,10 @@ msgstr "連絡先"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "コンテンツ"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "コンテンツがグリッドレイアウトになっています。"
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "スタイルシートをコピー"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "求人情報から職務内容の全文をコピーして、下に貼り付けてください。こちらでフィールドを入力し、適合度の評価と内容の調整のために、そのテキストをこの応募と一緒に保存します。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "エクスポートしたファイルからテキストをコピーして通読し、位置がおかしい箇所があれば修正してください。"
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "このシークレットキーをコピーし、アプリケーションで使用してデータにアクセスしてください。"
@@ -1102,6 +1280,10 @@ msgstr "URL をコピー"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "年を修正するか、進行中の作業には「現在」を使用してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "年を修正するか、現在も継続中であれば「Present」と記載してください。"
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "ファイルをアップロードできませんでした。もう一度
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "ソース別件数"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "解析スコアとは別に集計されます。カバー率は何かを予測するものではありません。"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "日付"
 msgid "Date applied"
 msgstr "応募日"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "日付"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "インデントを減らす"
@@ -1397,6 +1588,10 @@ msgstr "インデントを減らす"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "ズームを縮小する"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "詳細チェック"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "削除"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "アカウントを削除する"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "削除してください。隠しキーワードは検索を意図的に操作しようとする行為とみなされます。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "拒否済み — エージェントを待っています…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "拒否"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "各職務は短い箇条書きで説明してください。長い段落は流し読みや区分けがしにくくなります。"
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "ここにセクションをドラッグ＆ドロップして、列間で
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "アップロードする前に、ドラッグして位置を調整し、スライダーを使ってズームしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "代名詞を省き、動詞から書き始めてください。それがほとんどの市場での慣例です。"
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "メールアドレス"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "このインスタンスではメール配信が設定されていないため、検証は無効になっています。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "エクスポート時にすべてのフォントを埋め込み、文字が意図通りに表示されるようにしてください。"
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "2FA を有効化"
@@ -1760,6 +1971,10 @@ msgstr "パスワード保護を有効にしています..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "二段階認証を有効にする…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "1ページ厳守のルールを強制したり、フォントや職務のブランクを欠点として扱ったりすること。"
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "エクスポート"
 msgid "Export Data"
 msgstr "データをエクスポート"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "スキャンやスクリーンショットではなく、元の文書からエクスポートしてください。"
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "データをエクスポートする"
@@ -1863,6 +2082,10 @@ msgstr "データをエクスポートする"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "PNG をエクスポート"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "履歴書は画像やスキャンではなく、テキストPDFとしてエクスポートしてください。"
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "pipeline-flow.png をエクスポートしました"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "失敗"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "レジュメの解析に失敗しました。"
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "認証メールの再送に失敗しました。もう一度お試しく
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "パスワードのリセットに失敗しました。もう一度お試しください。"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "この履歴書のレビューに失敗しました。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "花火"
 msgid "Fit to view"
 msgstr "見るのにふさわしい"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "フォームをフラット化して、テキストがページの一部になるようにしてください。"
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "柔軟性"
@@ -2210,14 +2437,6 @@ msgstr "ランダムな名前を生成"
 msgid "German"
 msgstr "ドイツ語"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "レジュメの全体的なスコア、長所、実用的な提案などのレビューを受けることができます。"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "AIがあなたの履歴書を詳細にレビューし、総合スコア、主な長所、実用的な提案を表示します。この機能を有効にするには、AI設定を更新してください。"
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "はじめる"
@@ -2229,6 +2448,14 @@ msgstr "はじめる"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "ギットハブ"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "各職務に「Jan 2020 - Present」のような期間を記載し、経歴を時系列で追えるようにしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "すべての職務と資格に期間を記載してください。"
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "見出し 5"
 msgid "Heading 6"
 msgstr "見出し 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "肩書き"
@@ -2388,10 +2616,9 @@ msgstr "画像を非表示にする"
 msgid "Hide Section Icons"
 msgstr "セクションアイコンを非表示にする"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "高い"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "影響大"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "アイコン"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "応募者追跡システムのギャップを特定し、信頼性の高いキーワード改善のみを適用する。"
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "スキャンによるものであれば想定内です。そうでなければ削除してください。採用担当者はキーワードの詰め込みとみなします。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "画像がページの大部分を占めています。"
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "レジュメをインポートしています…"
 msgid "Importing…"
 msgstr "… をインポートしています"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "{0} 内"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "履歴書のヘッダーを含める"
@@ -2491,6 +2731,10 @@ msgstr "履歴書のヘッダーを含める"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "インデントを増やす"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "行間を広げて、2行が1行に結合されないようにしてください。"
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "インラインコード"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "インサイト"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "{1} ページ中 {0} ページ目を検査中…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "仕事"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "職務内容"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "求人情報（任意）"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "両端揃え"
 msgid "Kannada"
 msgstr "カンナダ語"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "アドレスは1つだけにして、どちらを使うべきか推測させないようにしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "通常は画像を削除または縮小して、2.5MB未満に抑えてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "履歴書の内容はテキストの画像ではなく、実際のテキストとして保ってください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "ヘッダーやフッターの繰り返しテキストは短くするか、削除してください。抽出したテキストにも繰り返し現れます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "おおよそ2行以内に収め、流し読みでも読み切れるようにしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "フォントは2〜3種類に抑えてください。追加するフォントが増えるほど、正しく表示されないリスクが高まります。"
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "言語"
 msgid "Languages"
 msgstr "語学"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "最終分析日時： {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "最終閲覧日: {0}"
 msgid "Latvian"
 msgstr "ラトビア語"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "テキストは横書きで配置してください。回転したテキストは省略されたり位置がずれたりしがちです。"
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "レイアウト"
@@ -2715,6 +2995,10 @@ msgstr "詳しく見る"
 msgid "Leave"
 msgstr "離れる"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "ページの周囲に少なくとも0.5インチの余白を残してください。"
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "空欄のままにすると、タイトルは元の名前にリセットされます。"
@@ -2726,6 +3010,10 @@ msgstr "AI プロバイダーのセットアップを辞めますか?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "左揃え"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "長さそのものは欠点ではなく、1ページに収めるべきという普遍的なルールもありません。価値のあるページだけを残してください。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "5 段階中 {level}"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT ライセンス</0>の下で提供されています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "合字（リガチャ）により、「workflow」のような単語から文字が欠落することがあります。"
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "{providerName} アカウントをリンクしています..."
 msgid "List"
 msgstr "一覧"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "使用しているツールや技術を記載してください。採用担当者はどの項目よりもスキルを検索します。"
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "リトアニア語"
@@ -2814,8 +3110,8 @@ msgstr "AIプロバイダーを読み込んでいます。しばらくしてか�
 msgid "Loading applications…"
 msgstr "アプリケーションを読み込んでいます…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "プロバイダーを読み込んでいます…"
 
@@ -2838,6 +3134,7 @@ msgstr "… を読み込み中"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "所在地"
@@ -2855,6 +3152,10 @@ msgstr "ロック"
 msgid "Logout"
 msgstr "ログアウト"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "長い箇所がすべて大文字で書かれています。"
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "長期的な持続可能性"
@@ -2864,10 +3165,9 @@ msgstr "長期的な持続可能性"
 msgid "Lost access to your authenticator?"
 msgstr "認証アプリにアクセスできなくなりましたか？"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "低い"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "影響小"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "メインナビゲーション"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "職務経歴欄をより成果重視の記述にし、曖昧な責任記述は削除してください。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "表示テキストとリンク先を一致させてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "見た目で分かるように大きく、太く、または大文字にしてください。"
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "マレー語"
@@ -2889,6 +3197,10 @@ msgstr "マレー語"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "マラヤーラム語"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "多くの箇条書きが同じフレーズで始まっています。"
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "不採用としてマーク"
 msgid "Match scoring failed."
 msgstr "適合度スコアリングに失敗しました。"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "ミディアム"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "影響中"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "ミストラルAI"
 msgid "Model"
 msgstr "モデル"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "複数のメールアドレスが記載されています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "ほとんどの箇条書きが、実際に行ったことではなく前置きの言葉で始まっています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "ほとんどの項目に日付がありません。"
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "ほとんどのシステムは候補者を電子メールで登録します。 "
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "すべてのコンテンツをページの境界内に収めてから、再エクスポートしてください。"
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "これをメイン列に移動し、短いリスト用のサイドバーを残しておきます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "実際のコンテンツはページの本文領域に配置してください。ソフトウェアによっては余白部分を破棄します。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "ステージを移動"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "移動先"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "メールアドレスと電話番号を1ページ目の上部に移動してください。"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "先頭を https:// にしてください"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "フィルターに一致する応募はありません。"
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "まだ応募はありません — いくつか追加するとファネルと返信率を確認できます。"
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "箇条書きが見つかりませんでした。"
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "一般的なセクション見出しが見つかりませんでした。"
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "AIプロバイダーからデータが返されませんでした。"
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "日付が見つかりませんでした。"
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "学歴セクションが見つかりませんでした。"
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "メールアドレスが見つかりませんでした。"
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "職種名と勤務先が対になっているような行が見つかりません。"
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "まだパスキーが登録されていません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "電話番号が見つかりませんでした。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "まだ履歴書はありません。"
 msgid "No saved versions yet."
 msgstr "まだ保存されたバージョンはありません。"
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "スキルセクションが見つかりませんでした。"
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "ソースデータはまだありません。"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "その求人情報から具体的な用語を抽出できませんでした。定型文が中心の可能性があります。より有用な比較のために、応募要件セクションを貼り付けてください。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "テスト済みのプロバイダーはありません"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "このファイルからテキストを読み取れませんでした。"
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "まだスレッドはありません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "職歴セクションが見つかりませんでした。"
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "ノルウェー語"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "接続されていません"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "履歴書内に根拠が見つかりません"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "履歴書にありません"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "採点対象外"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "注記"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "メモ"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "現在も継続中であることを示す表記がありません。"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "ここに修正すべき点はありません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "修正すべき点はありません。残りのページは単にこのレポートの対象外でした。"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "提案はありません。"
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "継続的な保守"
 msgid "Only applies when the section fits on a single page."
 msgstr "当該セクションが1ページに収まる場合にのみ適用されます。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "認識可能なセクション見出しが1つしか見つかりませんでした。"
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "最初の {0} ページのみがチェックされたため、このレポートはファイル全体を網羅していません。"
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "一度にインポートされるのは最初の {MAX_IMPORT} 行のみです — {overflow} 行は除外されました。残りをインポートするにはファイルを分割してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "最初の数ページのみがチェックされました。"
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "オープンフォーカスモード"
 msgid "Open in builder"
 msgstr "ビルダーで開く"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "統合設定を開く"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "オープンソース"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "エクスポートしたファイルを開き、すべての部分を選択・コピーできることを確認してください。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "OpenAI互換"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "ファイルを開いています…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "エージェントへのメモ（任意）…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "必要に応じてパスワードを設定し、パスワードを知っている人だけがリンクを閲覧できるようにすることもできます。"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "任意で、求人情報のどの用語がすでに含まれているか。"
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "{title} のオプション"
@@ -3237,9 +3670,9 @@ msgstr "番号付きリスト"
 msgid "Organization"
 msgstr "組織名"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "総合得点"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "100点満点中"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "パスワード保護を無効にしました。"
 msgid "Password protection has been enabled."
 msgstr "パスワード保護を有効にしました。"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "求人情報を貼り付けると、その用語が履歴書にすでに含まれているかを確認できます。"
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "行を貼り付けるか .csv をアップロードしてください。会社、職種、ステージ、ステージ日付、給与、ソース、タグなどの列を対応付けます。"
@@ -3321,6 +3758,10 @@ msgstr "行を貼り付けるか .csv をアップロードしてください。
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "ここに職務内容の全文を貼り付けてください…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "求人情報を貼り付けて、その用語が履歴書にすでに含まれているかを確認してください。"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "好きな色やフォント、デザインでレジュメをパーソナライズし、自分だけのものにしましょう。"
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "電話番号"
@@ -3383,6 +3825,10 @@ msgstr "電話番号"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "アイコンを選択してください"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "1つの形式を選び、全体を通して使用してください。"
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "ポルトガル語（ポルトガル）"
 msgid "Position"
 msgstr "役職"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "不採用になるかどうかを予測すること。どのツールにもそれはできません。"
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "「職歴」や「教育」などの従来の見出しを使用してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "単一列のレイアウトを優先するか、サイドの列は短く独立したリストに留めてください。"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "プレビューとエクスポートは有効なスタイルを保持し
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "メインカラー"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "送信前に、フォームをフラットなPDFとして印刷またはエクスポートしてください。"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "著作物"
 msgid "Publisher"
 msgstr "出版社"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "1ページ目の上部近くに、プレーンなメールアドレスを記載してください。多くのシステムがこれをもとに応募者を管理します。"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "生のJSON"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "単一列のレイアウトから再エクスポートし、テキストをコピーして上から下へ正しく読めるか確認してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "他の形式から変換するのではなく、元の文書から再エクスポートしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "フォントを正しく埋め込んだ状態で、元の文書から再エクスポートしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "通常のTrueTypeまたはOpenTypeフォントを使用して再エクスポートしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "フォントを埋め込んで再エクスポートし、テキストが正しくコピーできるか確認してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "フォントを埋め込んで再エクスポートしてからファイルを開き、テキストが正しくコピーできるか確認してください。"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "カスタムスタイルの適用ガイドをお読みください。"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "レジュメを読み取りました"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "読みやすさ"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "{1} ページ中 {0} ページ目を読み取り中…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "パスワード保護を解除しています..."
 msgid "Rename"
 msgstr "名前を変更"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "現在の履歴書をブラウザ内でPDFに変換し、ファイル全体のチェックを実行します。アップロードは行われません。"
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "並び替え"
@@ -3727,6 +4227,23 @@ msgstr "並び替え"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "カスタムフィールドの並べ替え"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "ほとんどの履歴書が自動的に却下されるという主張を繰り返すこと。"
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "求人情報自体よりもはるかに頻繁に繰り返されています: {0}。採用担当者は気づきます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "アイコンフォントをプレーンテキストに置き換えてから、再エクスポートしてください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "表をプレーンな段落やリストに置き換えてください。セルは読み取り順ではなく保存順で抽出されます。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "確認メールを再送信"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "確認メールを再送信しています..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "大文字は短い見出しにのみ使用してください。読む速度が落ち、大文字小文字を区別する検索が機能しなくなることがあります。"
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "このバージョンを復元しますか？"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "レジュメ"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "レジュメの分析"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "レジュメの分析が完了しました。"
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "編集内容を確認"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "レジュメを求人内容と照らし合わせて確認し、不明な点があれば変更する前に私に質問してください。"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "AIで文章をレビュー"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "この編集を確認"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "レビュー中…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "ルーマニア語"
 msgid "Rotation"
 msgstr "回転"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "分析を実行すると、スコアカード・強み・改善提案が表示されます。"
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "再実行"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "AIレビューを実行"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "詳細チェックを実行"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "プロバイダーを保存してテストする"
 msgid "Save & Upload"
 msgstr "保存してアップロード"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "パスワードや権限制限のない、保護されていないコピーを保存してください。"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "変更を保存"
@@ -3940,6 +4473,10 @@ msgstr "変更を保存"
 msgid "Save model"
 msgstr "モデルを保存"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "すべてのページが正しい向きになった状態でファイルを保存してください。"
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "保存済み"
@@ -3959,10 +4496,6 @@ msgstr "学校名"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "適合度を採点"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "スコアカード"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "セクションオプション"
 msgid "Section Type"
 msgstr "セクションタイプ"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "セクション"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "この履歴書が求人にどの程度合うか確認"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "応募者追跡システム（ATS）が履歴書から何を読み取れるかを確認できます。ブラウザ内で動作します。"
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "すべて選択"
 msgid "Select an agent model"
 msgstr "エージェントモデルを選択してください"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "AIプロバイダーを選択してください"
 
@@ -4075,9 +4617,21 @@ msgstr "メッセージを送信"
 msgid "Send Password Reset Email"
 msgstr "パスワードリセットメールを送信"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "ポートフォリオの表紙ではなく、履歴書そのものを送付してください。"
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "パスワードリセットメールを送信しています..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "PDFからすでに抽出済みのテキストを、以下で選択したAIプロバイダーに送信します。PDFファイル自体はアップロードされません。"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "PDFからすでに抽出済みのテキストと、貼り付けた求人情報を、以下で選択したAIプロバイダーに送信します。PDFファイル自体はアップロードされません。"
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "セルビア語"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "パスワードを設定"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "エクスポート時に文書の言語を設定してください。"
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "サイドバーの幅"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "サインイン"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "サインインして自分のAIプロバイダーを接続すると、弱い箇条書きの書き直し案を受け取れます。上記のチェックは無料でアカウント不要です。"
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "スラッグ"
 msgid "Some application systems require one before you can submit."
 msgstr "一部のアプリケーション システムでは、送信する前にそれが必要になります。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "長すぎる箇条書きがあります。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "一部の文字が疑問符として出力されます。"
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "一部のチェックには、このファイルにない情報が必要です。検査できなかったページ内容や、これらのチェックが対応していない言語のテキストなどです。これらは合格・不合格のいずれにもカウントされません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "一部のグリフは、このファイルの外では意味を持ちません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "一部の行が読み取り順とは異なる順序で保存されています。"
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "一部のパーサーは画像を誤って処理するため、一部の地域では写真の使用が推奨されません。"
@@ -4311,6 +4894,14 @@ msgstr "一部のパーサーは画像を誤って処理するため、一部の
 msgid "Some styles were ignored"
 msgstr "一部のスタイルが無視されました"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "一部のテキストがページの外にはみ出しています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "一部のテキストが回転しています。"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "その他…"
@@ -4318,6 +4909,10 @@ msgstr "その他…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "何らかの問題が発生しました"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "ファイルの読み込み中に問題が発生しました。もう一度お試しください。"
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "間隔（上下）"
 msgid "Spanish"
 msgstr "スペイン語"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "「Mar 2022」のように、月をアルファベットで表記してください。"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "スポンサー"
@@ -4419,6 +5018,10 @@ msgstr "まずレジュメに名前を付けてください。"
 msgid "Start building your resume from scratch"
 msgstr "ゼロからレジュメの作成を始める"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "それぞれを具体的な動詞から書き始めてください。例: built、led、reduced、migrated。"
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "新しいスレッドを開始する"
@@ -4427,6 +5030,10 @@ msgstr "新しいスレッドを開始する"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "新しいページから開始"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "履歴書は氏名を単独の行として先頭に配置してください。"
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "{provider}… {elapsedSeconds}s をまだ待っています"
 msgid "Stop generation"
 msgstr "生成を停止"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "強み"
 
@@ -4473,7 +5080,7 @@ msgstr "スタイルシートに致命的なエラーがあります"
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "提案"
 
@@ -4494,6 +5101,7 @@ msgstr "Reactive Resume を支援する"
 msgid "Support the app by doing what you can!"
 msgstr "できる範囲で、このアプリをサポートしてください。"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "開始日と終了日を入れ替えます。"
@@ -4532,6 +5140,10 @@ msgstr "タグ"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "タグを使って、レジュメをキーワードで分類できます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "タグはソフトウェアに明確な読み取り順を伝えます。ツールが対応していれば、エクスポート時に有効にしてください。"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "テキストの配置"
 msgid "Text Color"
 msgstr "テキストカラー"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "テキストが1文字ずつ個別に書き込まれています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "テキストがヘッダーまたはフッター領域に配置されています。"
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "タイ語"
@@ -4597,6 +5217,19 @@ msgstr "タイ語"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "スポンサーの皆様、ありがとうございます。"
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "そのファイルをPDFとして読み取れませんでした。"
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "そのファイルはPDFではありません。履歴書をPDFとしてエクスポートしてから、もう一度お試しください。"
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "そのファイルは大きすぎてブラウザ内でチェックできません。"
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "この API キーは削除後、データにアクセスできなくな�
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "こちらへ誘導したアプリケーションが無効な認可リクエストを送信しました。"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "上記のチェックは機械的なものです。こちらは、言語モデルに読み手が箇条書きをどう感じるかを尋ね、書き直し案を提案します。スコアは算出されません。"
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "お探しのコマンドは存在しません。"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "詳細チェックを完了できませんでした。もう一度お試しください。"
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "インポートされたファイルが有効なレジュメに解析できませんでした。"
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "テキストが保存されている順序が、実際に読む順序と大きく異なっています。"
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "お探しのページは移動されたか、既に存在しない可能性があります。"
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "ページが画像であり、背後にテキストがありません。"
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "入力されたパスワードが正しくありません。"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "PDFはこのタブ内で動作するコードによって読み取られます。アップロードも保存も行われず、アカウントも不要です。よろしければブラウザのネットワークタブを開いて確認してください。"
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "プロバイダーからメールアドレスが共有されませんで
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "プロバイダーがこのサインイン試行を拒否しました。最初からやり直してください。"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "プロバイダーから読み取れないレビューが返されました。もう一度お試しください。"
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "履歴書のプレビューを更新できませんでした。最後に
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "アクセスしようとしているレジュメはパスワードで保護されています"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "同じ行がすべてのページに繰り返し表示されています。"
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "ブロッカーの問題によりスコアが上限に制限されています: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "テキストが読み取れない状態で出力されます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "1ページ目の冒頭が氏名のようには見えません。"
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "テーマ"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "次に、続行するためにアプリが表示する 6 桁のコードを入力してください。"
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "日付が記載された2つの職務の間に空白期間があります。"
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "プロフィール、ポートフォリオ、リポジトリへのリンクがありません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "概要の段落がありません。"
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "DOCXの生成中に問題が発生しました。"
@@ -4695,6 +5381,10 @@ msgstr "PDFの生成中に問題が発生しました。もう一度お試しく
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "履歴書の印刷準備中に問題が発生しました。もう一度お試しください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "このチェックを実行するための情報が不足していました。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "このエージェントスレッドを開くことができませんで
 msgid "This assistant could not be opened."
 msgstr "このアシスタントを開くことができませんでした。"
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "このチェックはこのファイルには適用されません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "このチェックは英語で書かれた履歴書にのみ実行されます。"
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "この日付は正しく読み取れません。"
@@ -4757,13 +5455,73 @@ msgstr "この項目は完全に削除されます。元に戻すことはでき
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "この機能を使用するには、AIプロバイダーとの接続が必要です。設定画面でプロバイダーを設定してください。"
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "このファイルにはフォームフィールドが含まれています。"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "このファイルには読み手には見えないテキストが含まれているため、一致した項目の一部はそのテキストによるものかもしれません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "このファイルには見えない状態で描画されたテキストが含まれています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "このファイルには白背景に白文字のテキストが含まれています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "このファイルには言語が指定されていません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "このファイルにはアクセシビリティタグがありません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "このファイルは暗号化されています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "このファイルは履歴書としては大きすぎます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "このファイルは多くの応募フォームが受け付けるサイズより大きくなっています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "このファイルは多くの異なるフォントを使用しています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "このファイルはType 3フォントを使用しています。これは文字ではなく図形データを保持します。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "このファイルのページ内容を時間内に検査できませんでした。"
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "この見出しはパーサーが探すものではありません。"
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "これはPDFポートフォリオです。表示されているページは表紙にすぎません。"
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "URLに使用されるレジュメの識別名です。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "これはXFAフォームであるため、多くのソフトウェアは空の外枠しか読み取れません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "これは履歴書として一般的なページサイズではありません。"
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "このリンクにはプロトコルがありません。"
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "AI プロバイダーからの応答によっては、数分かかる場合があります。ウィンドウを閉じたりページを再読み込みしたりしないでください。"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "これは、ソフトウェアがこのファイルのテキストをどれだけ忠実に抽出できるかを測定するものです。応募が却下されるかどうかを予測するものではありません。どのツールにもそれはできません。ファイルはこのブラウザ内で読み取られ、アップロードされることはありません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "このページは段組みになっており、テキストが順序通りに抽出されません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "このページは非常に情報が密集しています。"
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "このPDFはパスワードで保護されています。保護されていないコピーを保存してから、もう一度お試しください。"
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "この履歴書はロックされています"
 msgid "This resume is locked and cannot be updated."
 msgstr "このレジュメはロックされているため、更新できません。"
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "この履歴書は長くなっています。"
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "この履歴書はAIエージェントによって更新されました。"
@@ -4796,6 +5574,10 @@ msgstr "この履歴書はAIエージェントによって更新されました�
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "この履歴書の共有設定が他の場所で変更されました。"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "このレビューは、言語モデルによるあなたの文章に対する意見です。上記のスコアを変えるものではなく、誤っている可能性もあります。断定的な結論ではなく、参考意見として読んでください。"
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "このセクションはこのレジュメ専用のメモ欄です。内
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "このセクションは複数の列に分かれています。"
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "このセクションは空の見出しとして表示されます。"
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Reactive Resume で履歴書を作成する様子を早送りで示し�
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "タイムライン"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "ヒント"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "もう一度やり直してください"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "トルコ語"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "エクスポート時に任意の合字（ディスクレショナリー・リガチャ）をオフにしてください。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "レジュメを更新しています…"
 msgid "Upload .csv"
 msgstr ".csv をアップロード"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "履歴書をアップロードすると、応募者追跡システムが実際に何を読み取るかを確認できます。すべての処理はこのブラウザ内で行われます。ファイルはアップロードされず、何も保存されません。"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "添付ファイルをアップロードする"
@@ -5242,6 +6032,14 @@ msgstr "行が結合しないように、行の高さは少なくとも 1.15 に
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "name@example.com など、周囲にテキストを含まないプレーンなアドレスを使用します。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "+1 555 010 1234 のような、シンプルな国際形式を使用してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "「Jan 2020 - Mar 2022」や「2020 - 2022」のような、一般的に認識される形式を使用してください。"
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "「2020 年 1 月 - 2022 年 3 月」または「2020 年 - 2022 年」などの認識された形式を使用してください。"
@@ -5250,18 +6048,38 @@ msgstr "「2020 年 1 月 - 2022 年 3 月」または「2020 年 - 2022 年」�
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "「March 2022」や「2022」などの認識された形式を使用してください。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "順番に読む必要がある内容には、単一列を使用してください。"
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "再レンダリングされたコピーが正確であるように、少なくとも 9pt のサイズを使用してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "A4またはUSレターを使用すると、再描画してもレイアウトが崩れません。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "最低9pt以上を使用してください。"
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "カラーを使う {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "「Experience」「Education」「Skills」のような、シンプルな見出しを使用してください。"
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "サンプルを使用"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "エディタの標準の箇条書き機能を使用し、文中に余分な記号が紛れ込まないようにしてください。"
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "有効（エラーあり）"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "有効（警告あり）"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "書き出しにバリエーションを持たせ、定型文のように読まれないようにしてください。"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "パスワードをリセットするには、メールアドレスの確
 msgid "Version history"
 msgstr "バージョン履歴"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "履歴書として復元できた単語数が非常に少なくなっています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "このページ数に対して復元できたテキストが非常に少なくなっています。"
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "ベトナム語"
@@ -5358,6 +6188,11 @@ msgstr "過去30日間との比較"
 msgid "Waiting for the agent…"
 msgstr "エージェントを待機中…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "文章について第三者の意見が欲しいですか？"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "警告"
@@ -5395,6 +6230,14 @@ msgstr "ウェブ検索"
 msgid "Website"
 msgstr "Webサイト"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "パーサーが読み取る内容"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "人が見る内容"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "あなたは何をしたいですか？"
@@ -5406,6 +6249,14 @@ msgstr "このセクションの新しい名前を入力してください。"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Reactive Resume が他の履歴書ビルダーと違う点は何ですか？"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "このチェックの内容"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "このチェックが行わないこと"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "応募の流入元"
 msgid "Where your applications went"
 msgstr "応募の行き先"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "採用担当者があなたに連絡を取れるかどうか。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "ソフトウェアがそもそも単語を復元できるかどうか。"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "ファイルが実際のテキストを保持しているか、それとも画像であるか。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "ページの配置が読み取り順を維持しているかどうか。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "履歴書がソフトウェアの想定通りに区分けされているかどうか。"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "テキストが人間が読む順序通りに出力されるかどうか。"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "一般的なセクションが存在し、互いに区別できるかどうか。"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "氏名、メールアドレス、電話番号、日付が損なわれずに残っているかどうか。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "経歴を時系列で再構築できるかどうか。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "テキストを抽出すると単語同士がつながってしまいます。"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "OpenAIでの活動"
@@ -5436,9 +6327,29 @@ msgstr "作業中…"
 msgid "Worth a shot"
 msgstr "試す価値あり"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "現在の職務の終了日には「Present」と記載してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "各職務を、役職名と会社名を明確にした1行として記載し、日付を併記してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "特殊な間隔を入れず、途切れのない1つの文字列として記載してください。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "リンクとして認識されるよう、アドレスを省略せず記載してください。"
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "https:// を含む完全なアドレスを書きます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "文章"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "メールを送信しました。"
 msgid "Your account has been deleted successfully."
 msgstr "アカウントを正常に削除しました。"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "AIプロバイダーに接続できませんでした。設定を確認してもう一度お試しください。"
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "API キーをクリップボードにコピーしました。"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "本文のテキストが非常に小さいです。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "箇条書きに一般的でない文字が使われています。"
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "変更内容は自動的に保存されます。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "連絡先情報が1ページ目にありません。"
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "あなたのデータは安全に保護され、第三者と共有・販
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "あなたのデータは安全に保存され、第三者と共有されることはありません。また、完全にデータを管理したい場合は、Reactive Resume を自分のサーバーにセルフホストすることもできます。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "日付がいくつかの異なる形式で書かれています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "メールアドレスが複数のテキスト片に分断されています。"
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "メールアドレスがプロバイダーで確認されていません。"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "ファイルはここに留まります"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "見出しが本文と同じ見た目になっています。"
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "最新の変更内容を保存できませんでした。"
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "このセマンティックCSSドラフトを明示的に有効化するまで、既存のスタイルは有効なままです。"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "あなたのラインは非常に密集しています。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "余白が非常に狭くなっています。"
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "パスワードを正常にリセットしました。新しいパスワ
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "パスワードを正常に更新しました。"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "電話番号が一般的でない形式で書かれています。"
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "履歴書には写真が含まれます。"
 msgid "Your resume shows no work experience."
 msgstr "あなたの履歴書には職歴がありません。"
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "履歴書内に「I」や「my」が使われています。"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "公開リンクはパスワードで保護されています。信頼できる人にのみ、このパスワードを共有してください。"
@@ -5622,4 +6575,3 @@ msgstr "ズームアウト"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "ズールー語"
-

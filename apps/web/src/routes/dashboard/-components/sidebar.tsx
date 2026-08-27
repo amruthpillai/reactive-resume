@@ -10,6 +10,7 @@ import {
 	KeyIcon,
 	MagnifyingGlassIcon,
 	ReadCvLogoIcon,
+	SealCheckIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
 	UserGearIcon,
@@ -60,6 +61,11 @@ const appSidebarItems = [
 		icon: <ChatCircleDotsIcon />,
 		label: msg`Agents`,
 		href: "/agent",
+	},
+	{
+		icon: <SealCheckIcon />,
+		label: msg`ATS Checker`,
+		href: "/ats-checker",
 	},
 ] as const satisfies SidebarItem[];
 

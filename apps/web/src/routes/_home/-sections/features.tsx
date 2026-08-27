@@ -1,4 +1,5 @@
 import type { Icon } from "@phosphor-icons/react";
+import type { LinkProps } from "@tanstack/react-router";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
@@ -16,9 +17,11 @@ import {
 	LockSimpleIcon,
 	PaletteIcon,
 	ProhibitIcon,
+	SealCheckIcon,
 	ShieldCheckIcon,
 	TranslateIcon,
 } from "@phosphor-icons/react";
+import { Link } from "@tanstack/react-router";
 import { m } from "motion/react";
 import { cn } from "@reactive-resume/utils/style";
 
@@ -27,6 +30,8 @@ type Feature = {
 	icon: Icon;
 	title: string;
 	description: string;
+	/** When set, the whole card becomes a link to this route. */
+	to?: LinkProps["to"];
 };
 
 type FeatureCardProps = Feature;
@@ -123,6 +128,13 @@ const getFeatures = (): Feature[] => [
 		description: t`Access your resumes and data programmatically using the API.`,
 	},
 	{
+		id: "ats-checker",
+		icon: SealCheckIcon,
+		title: t`ATS Checker`,
+		description: t`See what an applicant tracking system can read from your resume. Runs in your browser.`,
+		to: "/ats-checker",
+	},
+	{
 		id: "more",
 		icon: DotsThreeIcon,
 		title: t`And many more...`,
@@ -130,8 +142,8 @@ const getFeatures = (): Feature[] => [
 	},
 ];
 
-function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
-	return (
+function FeatureCard({ icon: Icon, title, description, to }: FeatureCardProps) {
+	const card = (
 		<m.div
 			className={cn(
 				"group relative flex min-h-48 flex-col gap-4 overflow-hidden border-b bg-background p-6 transition-[background-color] duration-300 will-change-[transform,opacity]",
@@ -162,6 +174,14 @@ function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
 				<p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
 			</div>
 		</m.div>
+	);
+
+	if (!to) return card;
+
+	return (
+		<Link to={to} className="contents">
+			{card}
+		</Link>
 	);
 }
 

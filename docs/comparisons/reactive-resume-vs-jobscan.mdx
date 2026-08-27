@@ -1,9 +1,9 @@
 ---
 title: "Reactive Resume vs Jobscan"
-description: "Compare Reactive Resume and Jobscan by free PDF creation, ATS analysis, job matching, exports, open source, and automation."
+description: "Compare Reactive Resume and Jobscan by free PDF creation, ATS parse checking, job matching, exports, open source, and automation."
 ---
 
-Jobscan is a better fit when your workflow centers on its resume scanner and job-description analysis. Reactive Resume is a better fit when you want structured resume data, multiple export formats, open-source deployment, and API or MCP automation without a native scoring product.
+Jobscan is a better fit when your workflow centers on its hosted resume scanner and its match-rate score against a job description. Reactive Resume is a better fit when you want structured resume data, multiple export formats, open-source deployment, and API or MCP automation — with a free ATS checker that measures how well your file parses rather than predicting an outcome.
 
 ## Quick comparison
 
@@ -11,16 +11,16 @@ Jobscan is a better fit when your workflow centers on its resume scanner and job
 | --- | --- | --- |
 | Resume creation | Structured editor with PDF, DOCX, Markdown, and JSON exports | Free builder with nine current templates and PDF download |
 | Import | Supported resume imports | Existing-resume and LinkedIn import |
-| Analysis | No native ATS or keyword-match score | Separate resume scanner and job-description analysis workflow |
+| Analysis | Built-in ATS checker, free: a parse-quality score, a pass/warn/fail checklist, and optional job-description keyword coverage, all computed in your browser | Separate resume scanner producing a match rate against a job description |
 | Automation | Authenticated API and MCP workflows | Separate scanner workflow |
 
 Jobscan's builder documents a free PDF-creation workflow, LinkedIn import, and nine ATS-friendly templates. Its separate scanner describes resume scoring, formatting checks, and job-listing analysis as product features. Those features are vendor positioning and do not guarantee ATS handling or hiring outcomes.
 
-Reactive Resume exports PDF, DOCX, Markdown, and JSON and supports authenticated automation through its API and MCP server. It does not provide a native ATS score or job-keyword scanner.
+Reactive Resume exports PDF, DOCX, Markdown, and JSON and supports authenticated automation through its API and MCP server. Its [ATS checker](/guides/using-the-ats-checker) scores how faithfully software can extract your PDF and lists which of a posting's terms already appear in it. It deliberately does not report a match rate or predict a rejection, because neither is knowable from the file.
 
 ## Where Jobscan is a better fit
 
-Choose Jobscan when you want its specialized scanner and job-description analysis alongside resume creation. The scanner's feature set is more direct when a documented score and its associated recommendations are central to your review process.
+Choose Jobscan when you want a match-rate score against a specific posting, and its associated recommendations, as the center of your review process. Its scanner is a paid, hosted product built around that number.
 
 ## Where Reactive Resume is a better fit
 
@@ -28,22 +28,23 @@ Choose Reactive Resume when you want to own structured resume data, choose a tem
 
 ## Which should you choose?
 
-Choose Jobscan when its scanner and job-analysis flow are your primary need. Choose Reactive Resume when the builder, data portability, self-hosting, and automation are primary and a specialized score is not required.
+Choose Jobscan when a match-rate score against each posting is your primary need. Choose Reactive Resume when the builder, data portability, self-hosting, and automation are primary, and a parse-quality check that runs free and locally covers the rest.
 
 ## Reactive Resume limitations in this comparison
 
-Reactive Resume does not include a native ATS score or job-keyword scanner. If you want Jobscan's specialized analysis in the same hosted workflow as the builder, it is the more direct fit.
+Reactive Resume's ATS checker measures file properties: whether the text extracts, in what order, and whether your facts survive. It does not produce a match rate against a posting, and it does not claim to predict a rejection. If a documented match-rate score is what you want, Jobscan is the more direct fit.
 
 ## Sources
 
 - [Jobscan resume builder](https://www.jobscan.co/resume-builder)
 - [Jobscan resume scanner](https://www.jobscan.co/resume-scanner)
+- [Reactive Resume: using the ATS checker](/guides/using-the-ats-checker)
 - [Reactive Resume: exporting your resume](/guides/exporting-your-resume)
 - [Reactive Resume: using the API](/guides/using-the-api)
 - [Reactive Resume: using the MCP server](/guides/using-the-mcp-server)
 
 Last checked: July 28, 2026
 
-<Card title="Own the resume before adding specialized analysis" icon="arrow-right" href="https://rxresu.me">
-  Build, export, and automate structured resume data in Reactive Resume when an ATS score is not your primary need.
+<Card title="Check that your resume parses, for free" icon="arrow-right" href="https://rxresu.me/ats-checker">
+  Upload a PDF and see what an applicant tracking system can read from it. Runs in your browser; no account needed.
 </Card>

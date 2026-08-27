@@ -53,7 +53,6 @@ describe("lintResumeForAts", () => {
 		expect(codes).toContain("MISSING_EMAIL");
 		expect(codes).toContain("MISSING_PHONE");
 		expect(codes).toContain("NO_VISIBLE_EXPERIENCE");
-		expect(codes).toContain("EMPTY_RENDERED_SECTION");
 	});
 
 	it("sorts findings by severity", () => {
@@ -240,11 +239,12 @@ describe("structure rules", () => {
 		});
 	});
 
-	it("flags a placed section with no items", () => {
+	it("stays quiet about a placed section with no items", () => {
+		// Templates skip an empty section entirely — heading included — so there is nothing to fix.
 		const data = makeResume((resume) => {
 			resume.metadata.layout.pages = [{ fullWidth: false, main: ["experience", "skills"], sidebar: [] }];
 		});
-		expect(codesOf(data)).toContain("EMPTY_RENDERED_SECTION");
+		expect(codesOf(data)).toEqual([]);
 	});
 
 	it("flags an experience entry with no narrative", () => {

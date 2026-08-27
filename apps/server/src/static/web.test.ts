@@ -89,6 +89,47 @@ describe("web app fallback classification", () => {
 		expect(await dashboardResponse.text()).not.toContain('rel="canonical"');
 	});
 
+	describe("the ATS checker page", () => {
+		const shell = `<html><head><title>Reactive Resume — A free and open-source resume builder</title><meta name="description" content="Marketing copy."></head><body></body></html>`;
+
+		it("serves an indexable shell rather than a 404", async () => {
+			vi.mocked(fs.readFile).mockResolvedValue(shell);
+
+			const response = await handleWebApp(new Request("https://example.com/ats-checker"));
+
+			expect(response.status).toBe(200);
+			expect(response.headers.get("Content-Type")).toBe("text/html; charset=UTF-8");
+			expect(response.headers.get("X-Robots-Tag")).toBeNull();
+		});
+
+		it("replaces the shell metadata with the checker's own", async () => {
+			vi.mocked(fs.readFile).mockResolvedValue(shell);
+
+			const html = await (await handleWebApp(new Request("https://example.com/ats-checker"))).text();
+
+			expect(html).toContain("<title>ATS Checker - Reactive Resume</title>");
+			expect(html).toContain('<link rel="canonical" href="https://rxresu.me/ats-checker">');
+			expect(html).toContain('<meta property="og:url" content="https://rxresu.me/ats-checker">');
+			expect(html).toContain('<meta property="og:image" content="https://rxresu.me/opengraph/ats-checker.png">');
+			expect(html).toContain('id="ats-checker-structured-data"');
+			expect(html).not.toContain("Marketing copy.");
+		});
+
+		it("answers HEAD without a body", async () => {
+			const response = await handleWebApp(new Request("https://example.com/ats-checker", { method: "HEAD" }));
+
+			expect(response.status).toBe(200);
+			expect(await response.text()).toBe("");
+		});
+
+		it("does not treat the checker path as a public resume owner", async () => {
+			const response = await handleWebApp(new Request("https://example.com/ats-checker/anything"));
+
+			expect(response.status).toBe(404);
+			expect(mocks.getPublicResumeSocialMeta).not.toHaveBeenCalled();
+		});
+	});
+
 	describe("public resume social cards", () => {
 		const shell = `<html><head><title>Reactive Resume — A free and open-source resume builder</title><meta name="description" content="Marketing copy."></head><body></body></html>`;
 

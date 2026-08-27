@@ -53,6 +53,24 @@ msgstr "تم تتبع {0} طلبات"
 msgid "{0} characters"
 msgstr "{0} شخصيات"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "اجتاز {0} من أصل {1} من الفحوصات القابلة للتطبيق"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "اجتاز {0} من أصل {1} من الفحوصات القابلة للتطبيق."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "تم العثور على {0} من أصل {1} من المصطلحات"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "جاهز للاستيراد {0}"
 msgid "{0} rejected"
 msgstr "{0} مرفوضة"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "تم تخطي {0}"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "تم تخطي {0} (الشركة/الدور مفقود)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} للإصلاح"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 أشهر"
 msgid "6 months"
 msgstr "6 أشهر"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "التصدير النظيف بعمود واحد يحافظ على كل التفاصيل. الأعمدة والصور هي حيث تُفقد."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "تم إرسال رابط تأكيد إلى عنوان بريدك الإلكتروني الحالي. يُرجى التحقق من بريدك الوارد لتأكيد التغيير."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "تاريخ يقع في المستقبل."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "نطاق تاريخ ينتهي قبل أن يبدأ."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "نطاق تاريخ مكتوب بصيغة لا تستطيع معظم البرامج قراءتها."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "خط مُشار إليه لكنه غير مُضمَّن."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "أداة إنشاء سيرة ذاتية مجانية ومفتوحة ال
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "لفتة ودية للموظف المسؤول عن التوظيف"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "فجوة بارتفاع كامل تقسم هذه الصفحة إلى عمودين."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "الفجوة ليست مشكلة. أضف شرحًا من سطر واحد إن أردت؛ فكثير من السير الذاتية القوية لا تفعل ذلك."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "رابط يشير إلى مكان مختلف عن العنوان الذي يعرضه."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "كتب إليّ الكثير من الأشخاص على مر السني�
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني. يُرجى التحقق من بريدك الوارد للتحقق من حسابك."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "التاريخ الرقمي يُقرأ بشكل مختلف في بلدان مختلفة."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "صفحة مُدوَّرة."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "مشروع شغوف من تنفيذ <0>أمروث بيلاي</0>."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "سيرة ذاتية مصممة لقارئ بشري، بصورة وعناوين وأعمدة"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "تمدد"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "عنوان ويب مكتوب بدون https://."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "أضف ملاحظة…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "أضف فترة مثل «Jan 2020 - Present» لتظهر في خطك الزمني."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "أضف قسمًا بعنوان \"Education\" (التعليم). تحتوي أنظمة كثيرة على حقل تعليم إلزامي."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "أضف قسمًا بعنوان \"Experience\" أو \"Work Experience\" (الخبرة). إنه الحقل الذي تعتمد عليه معظم الأنظمة في الترتيب."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "أضف وسمًا واضغط Enter…"
@@ -291,10 +375,6 @@ msgstr "أضف وسمًا واضغط Enter…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "أضف إدخالاً، أو استخدم المشاريع والعمل التطوعي لإظهار التاريخ المعادل."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "أضف عنصرًا إليه، أو قم بإخفائه."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "أضف مدينة وبلدًا على الأقل حتى يمكن مطا�
 msgid "Add contact"
 msgstr "إضافة جهة اتصال"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "أضف أرقامًا حيثما توفرت لديك: الأحجام، النسب المئوية، الأطر الزمنية، أحجام الفرق."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "إضافة كلمة رئيسية"
@@ -327,6 +411,14 @@ msgstr "أضف رابطًا"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "أضف أدوارًا متعددة لإظهار التقدم الوظيفي في نفس الشركة."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "أضف رابطًا واحدًا يعرض عملك."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "أضف رقمًا برمز الدولة؛ فبعض نماذج التقديم تطلبه قبل أن تتمكن من الإرسال."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "إضافة صفحة"
@@ -339,6 +431,10 @@ msgstr "إضافة موفر الخدمة"
 msgid "Add Role"
 msgstr "إضافة دور"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "أضف بعض المسافات البيضاء بين الأقسام لتسهيل التصفح السريع."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "إضافة علامة"
@@ -346,6 +442,10 @@ msgstr "إضافة علامة"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "أضف إلى خط الإنتاج"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "أضف سطرين أو ثلاثة في الأعلى تصف فيها ما تقوم به."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "قم بتعديل سيرتك الذاتية لتناسب وظيفة تت
 msgid "Advanced"
 msgstr "متقدم"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "نصيحة للشخص الذي يقرأها. لا شيء من هذا يؤثر على النتيجة."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "الأفريقانس"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "مقارنةً بالوصف الوظيفي"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "لا يتوفر إعداد وكيل الذكاء الاصطناعي حت
 msgid "AI assistant"
 msgstr "مساعد الذكاء الاصطناعي"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "مزوّد الذكاء الاصطناعي"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "إدارة موفر الذكاء الاصطناعي غير متاحة حتى يتم تكوين REDIS_URL و ENCRYPTION_SECRET."
@@ -403,6 +515,10 @@ msgstr "خدمة إدارة مزودي الذكاء الاصطناعي غير م
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "مزودو خدمات الذكاء الاصطناعي"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "مزوّدو الذكاء الاصطناعي غير متاحين إلى أن يتم تكوين ENCRYPTION_SECRET."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "الألبانية"
 msgid "Allow Public Access"
 msgstr "السماح بالوصول العام"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "لا تكاد أي من نقاطك تحتوي على رقم."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "مُغطّى بالفعل"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "لديك حساب بالفعل؟ <0/>"
@@ -423,6 +547,10 @@ msgstr "لديك حساب بالفعل؟ <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "الأمهرية"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "تعذّرت قراءة خط مُضمَّن."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "حدث خطأ غير متوقع منع تحميل هذه الصفحة. �
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "حدث خطأ غير معروف أثناء استيراد سيرتك الذاتية."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "تحليل السيرة الذاتية"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "تحليل…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "تدعم أطلس كلاود مشروع \"السيرة الذاتية ا
 msgid "ATS Check"
 msgstr "فحص المنشطات الأمفيتامينية"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "فاحص ATS"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "فشلت التعبئة التلقائية."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "متاح بعدة لغات. إذا كنت ترغب في المساهمة، فألقِ نظرة على Crowdin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "تجنّب تأثيرات التباعد الكبير بين الأحرف، ثم أعد التصدير."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "الأفضل للتطبيقات والمشاركة والطباعة."
 msgid "Blank draft"
 msgstr "مسودة فارغة"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "عائق حاسم"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "سبورة"
@@ -750,6 +884,10 @@ msgstr "نصف قطر الحافة"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "عرض الإطار"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "قسّم السيرة الذاتية إلى الأقسام المعتادة لتسهيل تجزئتها."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "سجل التغييرات"
 msgid "Chat"
 msgstr "محادثة"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "تحقق مرة أخرى"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "تحقق من أن الملف المُصدَّر يحتوي على كل ما تتوقعه، وأن كل النص فيه قابل للتحديد."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "تحقق من بريدك الإلكتروني للحصول على رابط لإعادة تعيين كلمة المرور."
@@ -868,6 +1014,10 @@ msgstr "تحقق من بريدك الإلكتروني للحصول على راب
 msgid "Check your email for a link to verify your account."
 msgstr "تحقق من بريدك الإلكتروني للحصول على رابط للتحقق من حسابك."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "تم الفحص في متصفحك. لا يُرفع الملف أبدًا."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "التحقق"
@@ -875,6 +1025,10 @@ msgstr "التحقق"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "مراجعة المسودة"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "جارٍ الفحص…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "الصينية (التقليدية)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "اختر نموذجًا واكتب مسودة سيرة ذاتية."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "اختر ملف PDF"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "قارن هذه السيرة الذاتية مع رابط الوظيفة
 msgid "Completely free, forever, no hidden costs."
 msgstr "مجاني تمامًا، إلى الأبد، بدون تكاليف خفية."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "اضغط الصور الكبيرة أو احذفها لإبقاء عمليات الرفع سريعة."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "تأكيد"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "اتصال"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "اربط مزوّد الذكاء الاصطناعي الخاص بك للحصول على مراجعة للكتابة. الفحوصات أعلاه لا تحتاج إلى مزوّد أو حساب."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "فشل الاتصال."
 msgid "Connection verified — provider is ready to use."
 msgstr "تم التحقق من الاتصال - المزود جاهز للاستخدام."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "بيانات التواصل"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "جهات الاتصال"
@@ -1020,6 +1190,10 @@ msgstr "جهات الاتصال"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "المحتوى"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "المحتوى منظّم في شبكة."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "انسخ ورقة الأنماط"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "انسخ وصف الوظيفة كاملاً من الإعلان والصقه أدناه. سنملأ الحقول نيابةً عنك ونحتفظ بالنص مع هذا الطلب من أجل تقييم مدى التطابق وتخصيص السيرة الذاتية."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "انسخ النص من الملف المُصدَّر واقرأه بالكامل؛ وأصلح أي شيء يظهر في المكان الخاطئ."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "انسخ مفتاحك السري هذا واستخدمه في تطبيقاتك للوصول إلى بياناتك."
@@ -1102,6 +1280,10 @@ msgstr "نسخ عنوان URL"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Correct the year, or use \\\"Present\\\" for ongoing work."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "صحّح السنة، أو اكتب \"Present\" (حاليًا) للعمل المستمر."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "تعذر تحميل الملف. يرجى المحاولة مرة أخر�
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "إحصاء حسب المصدر"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "تُحسب بشكل منفصل عن نتيجة التحليل. التغطية ليست تنبؤًا بأي شيء."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "التاريخ"
 msgid "Date applied"
 msgstr "تاريخ التقديم"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "التواريخ"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "تقليل المسافة البادئة"
@@ -1397,6 +1588,10 @@ msgstr "تقليل المسافة البادئة"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "تقليل التكبير"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "فحص عميق"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "حذف"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "حذف الحساب"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "احذفه. تُعامَل الكلمات المفتاحية المخفية على أنها محاولة متعمّدة للتلاعب بالبحث."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "تم الرفض — في انتظار الوكيل…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "رفض"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "صف كل دور بنقاط قصيرة. الفقرات المتصلة أصعب في التصفح والتجزئة."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "اسحب الأقسام وأسقطها هنا لنقلها بين الأ
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "اسحب لإعادة التموضع واستخدم شريط التمرير للتكبير قبل التحميل."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "احذف الضمائر وابدأ بالفعل. هذا هو المتعارف عليه في معظم الأسواق."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "عنوان البريد الإلكتروني"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "لم يتم إعداد إرسال البريد الإلكتروني في هذه النسخة، لذا تم تعطيل التحقق."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "ضمّن جميع الخطوط عند التصدير، لتُعرض الأحرف كما تريد."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "تمكين المصادقة الثنائية (2FA)"
@@ -1760,6 +1971,10 @@ msgstr "جاري تمكين حماية كلمة المرور..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "تفعيل المصادقة الثنائية…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "فرض قاعدة الصفحة الواحدة، أو اعتبار الخط أو فجوة مسيرة العمل عيبًا."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "تصدير"
 msgid "Export Data"
 msgstr "تصدير البيانات"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "صدّر من المستند الأصلي بدلاً من مسحه ضوئيًا أو التقاط لقطة شاشة له."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "تصدير بياناتي"
@@ -1863,6 +2082,10 @@ msgstr "تصدير بياناتي"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "تصدير PNG"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "صدّر السيرة الذاتية كملف PDF نصي بدلاً من صورة أو مسح ضوئي."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "تم تصدير ملف pipeline-flow.png"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "فشل"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "فشل في تحليل السيرة الذاتية."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "فشل إعادة إرسال رسالة التحقق بالبريد ال
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "فشل في إعادة تعيين كلمة المرور الخاصة بك. يرجى المحاولة مرة أخرى."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "فشلت مراجعة هذه السيرة الذاتية."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "ألعاب نارية"
 msgid "Fit to view"
 msgstr "مناسب للعرض"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "سطّح النموذج ليصبح النص جزءًا من الصفحة."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "المرونة"
@@ -2210,14 +2437,6 @@ msgstr "إنشاء اسم عشوائي"
 msgid "German"
 msgstr "الألمانية"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "احصل على مراجعة لسيرتك الذاتية مع تقييم شامل، ونقاط القوة، والاقتراحات القابلة للتنفيذ."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "احصل على مراجعة متعمقة مدعومة بالذكاء الاصطناعي لسيرتك الذاتية مع درجة إجمالية ونقاط القوة الرئيسية والاقتراحات العملية. لتفعيل هذه الميزة، يُرجى تحديث إعدادات الذكاء الاصطناعي."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "ابدأ الآن"
@@ -2229,6 +2448,14 @@ msgstr "ابدأ الآن"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "جيثب"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "أعطِ كل دور فترة زمنية، مثل \"Jan 2020 - Present\"، حتى يمكن إعادة بناء جدولك الزمني."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "أعطِ كل دور ومؤهل نطاقًا زمنيًا."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "العنوان 5"
 msgid "Heading 6"
 msgstr "العنوان 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "العنوان"
@@ -2388,10 +2616,9 @@ msgstr "إخفاء الصورة"
 msgid "Hide Section Icons"
 msgstr "إخفاء أيقونات الأقسام"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "عالية"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "تأثير عالٍ"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "الأيقونة"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "حدد الثغرات في نظام تتبع المتقدمين للوظائف وقم بتطبيق تحسينات الكلمات الرئيسية ذات الثقة العالية فقط."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "إذا جاء من مسح ضوئي، فهذا متوقّع. وإلا فاحذفه؛ فمسؤولو التوظيف يعتبرونه حشوًا للكلمات المفتاحية."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "تغطي الصور معظم الصفحة."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "جاري استيراد سيرتك الذاتية..."
 msgid "Importing…"
 msgstr "جارٍ الاستيراد…"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "في {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "تضمين ترويسة السيرة الذاتية"
@@ -2491,6 +2731,10 @@ msgstr "تضمين ترويسة السيرة الذاتية"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "زيادة المسافة البادئة"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "زد تباعد الأسطر حتى لا يندمج سطران في سطر واحد."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "كود ضمن السطر"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "رؤى"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "جارٍ فحص الصفحة {0} من {1}…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "وظيفة"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "المسمى الوظيفي"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "الوصف الوظيفي (اختياري)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "محاذاة بضبط العرض"
 msgid "Kannada"
 msgstr "الكانادا"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "احتفظ بعنوان واحد فقط، حتى لا يضطر أحد للتخمين أيها يُستخدم."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "أبقِه أقل من 2.5 ميغابايت، عادةً بحذف الصور أو تصغيرها."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "أبقِ محتوى السيرة الذاتية نصًا حقيقيًا بدلاً من صور للنص."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "أبقِ الترويسات المتكررة قصيرة، أو احذفها. فهي تتكرر أيضًا في النص المُستخرج."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "أبقِها في حدود سطرين تقريبًا، حتى يستطيع القارئ السريع إنهاءها."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "التزم بعائلتين أو ثلاث عائلات خطوط. كل خط إضافي هو فرصة أخرى لخطأ في العرض."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "اللّغة"
 msgid "Languages"
 msgstr "اللغات"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "آخر تحليل بتاريخ {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "آخر عرض في {0}"
 msgid "Latvian"
 msgstr "اللاتفية"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "رتّب النص أفقيًا. غالبًا ما يتم إسقاط النصوص المُدوَّرة أو تشويش موضعها."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "التخطيط"
@@ -2715,6 +2995,10 @@ msgstr "اعرف المزيد"
 msgid "Leave"
 msgstr "مغادرة"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "اترك نصف بوصة على الأقل حول الصفحة."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "اتركه فارغًا لإعادة تعيين العنوان إلى الأصل."
@@ -2726,6 +3010,10 @@ msgstr "هل تريد ترك إعداد موفر الذكاء الاصطناعي
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "محاذاة لليسار"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "الطول ليس عيبًا، ولا توجد قاعدة عالمية للصفحة الواحدة. احتفظ بالصفحات التي تستحق مكانها."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "المستوى {level} من 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "مرخّص بموجب <0>MIT</0>."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "يمكن للحروف المدمجة (Ligatures) أن تُسقط أحرفًا من كلمات مثل \"workflow\"."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "جاري ربط حسابك على {providerName}..."
 msgid "List"
 msgstr "قائمة"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "اذكر الأدوات والتقنيات التي تستخدمها. يبحث مسؤولو التوظيف عن المهارات أكثر من أي حقل آخر."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "اللتوانية"
@@ -2814,8 +3110,8 @@ msgstr "جارٍ تحميل مزودي خدمات الذكاء الاصطناع�
 msgid "Loading applications…"
 msgstr "جارٍ تحميل التطبيقات…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "جارٍ تحميل مزودي الخدمة…"
 
@@ -2838,6 +3134,7 @@ msgstr "جارٍ التحميل…"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "الموقع"
@@ -2855,6 +3152,10 @@ msgstr "قفل"
 msgid "Logout"
 msgstr "تسجيل الخروج"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "مقاطع طويلة مكتوبة بأحرف كبيرة."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "الاستدامة طويلة الأجل"
@@ -2864,10 +3165,9 @@ msgstr "الاستدامة طويلة الأجل"
 msgid "Lost access to your authenticator?"
 msgstr "هل فقدت إمكانية الوصول إلى تطبيق المصادقة؟"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "منخفضة"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "تأثير منخفض"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "التنقل الرئيسي"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "اجعل قسم الخبرة أكثر تركيزاً على النتائج، وتخلص من المسؤوليات الغامضة."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "اجعل النص الظاهر والوجهة متطابقين."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "اجعلها أكبر أو أعرض أو بأحرف كبيرة بشكل واضح."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "الملايوية"
@@ -2889,6 +3197,10 @@ msgstr "الملايوية"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "المالايالام"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "تبدأ نقاط كثيرة بنفس العبارة."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "رفض مارك"
 msgid "Match scoring failed."
 msgstr "فشل تسجيل النقاط في المباراة."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "متوسط"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "تأثير متوسط"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "ميسترال للذكاء الاصطناعي"
 msgid "Model"
 msgstr "النموذج"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "يظهر أكثر من عنوان بريد إلكتروني واحد."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "تبدأ معظم النقاط بحشو بدلاً من شيء قمت به فعليًا."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "معظم المدخلات بلا تواريخ."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "تقدم معظم الأنظمة المرشحين عبر البريد الإلكتروني. أضف واحدًا ضمن الأساسيات."
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "انقل كل المحتوى إلى داخل حدود الصفحة ثم أعد التصدير."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "انقله إلى العمود الرئيسي واحتفظ بالشريط الجانبي للقوائم القصيرة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "انقل المحتوى الفعلي إلى متن الصفحة؛ فبعض البرامج تتجاهل الهوامش."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "نقل المرحلة"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "نقل إلى"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "انقل بريدك الإلكتروني ورقم هاتفك إلى أعلى الصفحة الأولى."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "يجب أن تبدأ بـ https://"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "لا توجد تطبيقات مطابقة لمرشحاتك."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "لا توجد طلبات حتى الآن - أضف بعض الطلبات لمعرفة معدل التحويل ومعدلات الرد."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "لم يُعثر على أي قوائم نقطية."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "لم يُعثر على عناوين أقسام تقليدية."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "لم يتم إرجاع أي بيانات من مزود الذكاء الاصطناعي."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "لم يُعثر على أي تواريخ."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "لم يُعثر على قسم للتعليم."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "لم يُعثر على عنوان بريد إلكتروني."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "لا يوجد سطر يبدو كمسمى وظيفي مقترن بجهة عمل."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "لم يتم تسجيل أي مفاتيح مرور حتى الآن."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "لم يُعثر على رقم هاتف."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "لم يتم استلام أي سير ذاتية حتى الآن."
 msgid "No saved versions yet."
 msgstr "لا توجد نسخ محفوظة حتى الآن."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "لم يُعثر على قسم للمهارات."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "لا توجد بيانات مصدرية حتى الآن."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "تعذّر استخراج مصطلحات محددة من هذا الوصف الوظيفي، فقد يكون معظمه نصًا نمطيًا عامًا. الصق قسم المتطلبات للحصول على مقارنة أكثر فائدة."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "لم يتم اختبار أي مزود خدمة"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "تعذّرت قراءة أي نص من هذا الملف."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "لا توجد مواضيع حتى الآن."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "لم يُعثر على قسم للخبرة العملية."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "النرويجية"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "غير متصل"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "غير مدعوم بدليل في سيرتك الذاتية"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "غير موجود في سيرتك الذاتية"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "غير مُقيَّم"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "ملحوظة"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "ملاحظات"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "لا شيء يشير إلى أن الدور مستمر."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "لا شيء لإصلاحه هنا."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "لا شيء لإصلاحه. الصفحات المتبقية لم يشملها هذا التقرير ببساطة."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "لا يوجد اقتراح."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "صيانة مستمرة"
 msgid "Only applies when the section fits on a single page."
 msgstr "ينطبق هذا فقط عندما يتناسب القسم مع صفحة واحدة."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "لم يُعثر إلا على عنوان قسم واحد قابل للتمييز."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "تم فحص أول {0} صفحات فقط، لذا لا يشمل هذا التقرير الملف بأكمله."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "يتم استيراد أول {MAX_IMPORT} صف فقط دفعة واحدة — يتم استبعاد {overflow} صف. قم بتقسيم الملف لاستيراد الباقي."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "تم فحص الصفحات الأولى فقط."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "وضع التركيز المفتوح"
 msgid "Open in builder"
 msgstr "افتح في أداة الإنشاء"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "فتح إعدادات التكامل"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "مفتوح المصدر"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "افتح الملف المُصدَّر وتأكد من إمكانية تحديد ونسخ كل جزء منه."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "متوافق مع OpenAI"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "جارٍ فتح الملف…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "ملاحظة اختيارية للوكيل…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "اختياريًا، يمكنك تعيين كلمة مرور حتى يتمكن فقط الأشخاص الذين لديهم كلمة المرور من عرض سيرتك الذاتية عبر الرابط."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "اختياريًا، أي المصطلحات من إعلان وظيفي تظهر بالفعل."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "خيارات لـ {title}"
@@ -3237,9 +3670,9 @@ msgstr "قائمة مرتبة"
 msgid "Organization"
 msgstr "المنظمة"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "النتيجة الإجمالية"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "من أصل 100"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "تم تعطيل حماية كلمة المرور."
 msgid "Password protection has been enabled."
 msgstr "تم تمكين حماية كلمة المرور."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "الصق إعلانًا وظيفيًا لترى أي مصطلحاته تظهر بالفعل في سيرتك الذاتية."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "قم بلصق الصفوف أو تحميل ملف CSV. نقوم بربط الأعمدة مثل الشركة، والدور، والمرحلة، وتاريخ المرحلة، والراتب، والمصدر، والوسوم."
@@ -3321,6 +3758,10 @@ msgstr "قم بلصق الصفوف أو تحميل ملف CSV. نقوم بربط
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "الصق وصف الوظيفة كاملاً هنا…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "الصق الإعلان لترى أي مصطلحاته تظهر بالفعل في سيرتك الذاتية."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "خصّص سيرتك الذاتية بأي ألوان وخطوط أو تصاميم، واجعلها تعكس هويتك."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "الهاتف"
@@ -3383,6 +3825,10 @@ msgstr "الهاتف"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "اختر أيقونة"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "اختر تنسيقًا واحدًا واستخدمه في كل مكان."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "البرتغالية (البرتغال)"
 msgid "Position"
 msgstr "المنصب"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "التنبؤ بما إذا كنت سترفض أم لا. لا توجد أداة قادرة على ذلك."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "يُفضَّل عمود واحد، أو إبقاء العمود الجانبي لقوائم قصيرة ومكتفية بذاتها."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "تحتفظ المعاينة والتصدير بالأنماط الصال
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "اللون الأساسي"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "اطبع النموذج أو صدّره إلى PDF مسطّح قبل إرساله."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "المنشورات"
 msgid "Publisher"
 msgstr "الناشر"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "ضع عنوان بريد إلكتروني بسيط بالقرب من أعلى الصفحة الأولى. فهو ما تصنّفك بموجبه معظم الأنظمة."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "JSON خام"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "أعد التصدير من تخطيط بعمود واحد، ثم انسخ النص وتحقق من أنه يُقرأ من أعلى إلى أسفل."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "أعد التصدير من المستند الأصلي بدلاً من التحويل من تنسيق آخر."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "أعد التصدير من المستند الأصلي مع تضمين الخطوط بشكل صحيح."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "أعد التصدير باستخدام خط TrueType أو OpenType عادي."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "أعد التصدير مع تضمين الخطوط، وتحقق من أن النص يُنسخ بشكل نظيف."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "أعد التصدير مع تضمين الخطوط، ثم افتح الملف وتحقق من أن النص يُنسخ بشكل نظيف."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "اقرأ دليل تطبيق الأنماط المخصصة."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "قرأ السيرة الذاتية"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "قابلية القراءة"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "جارٍ قراءة الصفحة {0} من {1}…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "جاري إزالة حماية كلمة المرور..."
 msgid "Rename"
 msgstr "إعادة التسمية"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "يحوّل سيرتك الذاتية الحالية إلى PDF ويشغّل فحص الملف الكامل، في متصفحك. لا يُرفع أي شيء."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "إعادة الترتيب"
@@ -3727,6 +4227,23 @@ msgstr "إعادة الترتيب"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "إعادة ترتيب الحقل المخصص"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "تكرار الادّعاء بأن معظم السير الذاتية تُستبعد تلقائيًا."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "مُكررة بشكل أكثر بكثير مما يستخدمه الإعلان نفسه: {0}. مسؤولو التوظيف يلاحظون ذلك."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "استبدل خطوط الأيقونات بنص عادي، ثم أعد التصدير."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "استبدل الجداول بفقرات وقوائم عادية. تُستخرج الخلايا بترتيب التخزين، وليس بترتيب القراءة."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "إعادة إرسال رسالة التحقق"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "جاري إعادة إرسال رسالة التحقق..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "اقصر الأحرف الكبيرة على العناوين القصيرة. فهي تبطئ القراءة ويمكن أن تُفشل البحث الحساس لحالة الأحرف."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "هل تريد استعادة هذه النسخة؟"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "سيرة ذاتية"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "تحليل السيرة الذاتية"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "اكتمل تحليل السيرة الذاتية."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "مراجعة التعديلات"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "راجع السيرة الذاتية مع وصف الوظيفة واطرح عليّ أسئلة قبل تغيير الأقسام غير الواضحة."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "راجع الكتابة بالذكاء الاصطناعي"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "مراجعة هذا التعديل"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "جارٍ المراجعة…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "الرومانية"
 msgid "Rotation"
 msgstr "الدوران"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "قم بإجراء تحليلك الأول للحصول على بطاقة الأداء ونقاط القوة والاقتراحات ذات الأولوية."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "تشغيل مرة أخرى"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "تشغيل مراجعة الذكاء الاصطناعي"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "تشغيل الفحص العميق"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "موفر الحفظ والاختبار"
 msgid "Save & Upload"
 msgstr "حفظ وتحميل"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "احفظ نسخة غير محمية، بلا كلمة مرور وبلا قيود صلاحيات."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "حفظ التغييرات"
@@ -3940,6 +4473,10 @@ msgstr "حفظ التّغييرات"
 msgid "Save model"
 msgstr "حفظ النموذج"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "احفظ الملف بحيث تكون كل صفحة في وضعها الصحيح."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "أنقذ"
@@ -3959,10 +4496,6 @@ msgstr "المدرسة"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "تقييمي لملاءمتي"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "بطاقة الأداء"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "خيارات القسم"
 msgid "Section Type"
 msgstr "نوع القسم"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "الأقسام"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "انظر كيف تتطابق هذه السيرة الذاتية مع متطلبات الوظيفة المعلن عنها"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "اطّلع على ما يستطيع نظام تتبع المتقدمين (ATS) قراءته من سيرتك الذاتية. يعمل في متصفحك."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "حدد الكل"
 msgid "Select an agent model"
 msgstr "اختر نموذج الوكيل"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "اختر مزودًا لخدمات الذكاء الاصطناعي"
 
@@ -4075,9 +4617,21 @@ msgstr "إرسال الرسائل"
 msgid "Send Password Reset Email"
 msgstr "إرسال رسالة إعادة تعيين كلمة المرور"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "أرسل السيرة الذاتية نفسها بدلاً من غلاف ملف أعمال."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "جاري إرسال رسالة إعادة تعيين كلمة المرور..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "يُرسل النص المُستخرج بالفعل من ملف PDF الخاص بك إلى مزوّد الذكاء الاصطناعي الذي تختاره أدناه. لا يُرفع ملف PDF نفسه أبدًا."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "يُرسل النص المُستخرج بالفعل من ملف PDF الخاص بك، إضافةً إلى الوصف الوظيفي الذي لصقته، إلى مزوّد الذكاء الاصطناعي الذي تختاره أدناه. لا يُرفع ملف PDF نفسه أبدًا."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "الصربية"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "تعيين كلمة مرور"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "حدّد لغة المستند عند التصدير."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "عرض الشريط الجانبي"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "تسجّل الدخول"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "سجّل الدخول واربط مزوّد الذكاء الاصطناعي الخاص بك للحصول على اقتراحات إعادة صياغة للنقاط الضعيفة. الفحوصات أعلاه مجانية ولا تحتاج إلى حساب."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "المعرّف النصي (Slug)"
 msgid "Some application systems require one before you can submit."
 msgstr "تتطلب بعض أنظمة التقديم واحدًا قبل أن تتمكن من الإرسال."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "بعض النقاط طويلة جدًا."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "تظهر بعض الأحرف كعلامات استفهام."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "تحتاج بعض الفحوصات إلى معلومات لا يحملها هذا الملف: محتوى صفحات تعذّر فحصه، أو نص بلغة لا تغطيها هذه الفحوصات. لا تُحتسب كناجحة ولا كفاشلة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "بعض الرموز (glyphs) ليس لها معنى خارج هذا الملف."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "بعض الأسطر مُخزَّنة خارج ترتيب القراءة."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "يسيء بعض المحللين التعامل مع الصور، ولا يُنصح باستخدام الصور في بعض المناطق."
@@ -4311,6 +4894,14 @@ msgstr "يسيء بعض المحللين التعامل مع الصور، ولا
 msgid "Some styles were ignored"
 msgstr "تم تجاهل بعض الأنماط"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "يقع بعض النص خارج الصفحة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "بعض النص مُدوَّر."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "شيء آخر…"
@@ -4318,6 +4909,10 @@ msgstr "شيء آخر…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "حدث خطأ ما"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "حدث خطأ ما أثناء قراءة هذا الملف. يرجى المحاولة مرة أخرى."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "تباعد (عمودي)"
 msgid "Spanish"
 msgstr "الإسبانية"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "اكتب اسم الشهر، كما في \"Mar 2022\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "الرعاة"
@@ -4419,6 +5018,10 @@ msgstr "ابدأ في إنشاء سيرتك الذاتية من خلال إعط�
 msgid "Start building your resume from scratch"
 msgstr "ابدأ في إنشاء سيرتك الذاتية من الصفر"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "ابدأ كل نقطة بفعل ملموس، مثل: built وled وreduced وmigrated."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "ابدأ موضوعًا جديدًا"
@@ -4427,6 +5030,10 @@ msgstr "ابدأ موضوعًا جديدًا"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "ابدأ في صفحة جديدة"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "ابدأ السيرة الذاتية باسمك في سطر مستقل."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "ما زلت أنتظر {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "أوقفوا التوليد"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "نقاط القوة"
 
@@ -4473,7 +5080,7 @@ msgstr "تحتوي ورقة الأنماط على أخطاء فادحة"
 msgid "Subreddit"
 msgstr "سبريديت"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "الاقتراحات"
 
@@ -4494,6 +5101,7 @@ msgstr "ادعم Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "ادعم التطبيق بما تستطيع!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "قم بتبديل تواريخ البدء والانتهاء."
@@ -4532,6 +5140,10 @@ msgstr "الوسوم"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "يمكن استخدام الوسوم لتصنيف سيرتك الذاتية حسب الكلمات المفتاحية."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "تمنح الوسوم (Tags) البرامج ترتيب قراءة صريحًا. فعّلها عند التصدير إن كانت أداتك تتيح ذلك."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "محاذاة النص"
 msgid "Text Color"
 msgstr "لون النص"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "النص مكتوب حرفًا حرفًا."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "يقع النص في منطقة الترويسة أو التذييل."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "التايلاندية"
@@ -4597,6 +5217,19 @@ msgstr "التايلاندية"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "نشكر رعاتنا"
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "تعذّرت قراءة هذا الملف كملف PDF."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "هذا الملف ليس بصيغة PDF. صدّر سيرتك الذاتية بصيغة PDF وحاول مرة أخرى."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "هذا الملف كبير جدًا بحيث لا يمكن فحصه في المتصفح."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "لن يتمكن مفتاح واجهة برمجة التطبيقات هذ
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "أرسل التطبيق الذي أحضرك إلى هنا طلب تفويض غير صالح."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "الفحوصات أعلاه آلية. أما هذا فيسأل نموذج لغة عمّا قد يظنه القارئ بشأن نقاطك، ويقترح إعادة صياغتها. لا يُنتج أي نتيجة."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "أمر البحث غير موجود."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "تعذّر إكمال الفحص العميق. يرجى المحاولة مرة أخرى."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "تعذر تحليل الملف المستورد إلى سيرة ذاتية صالحة."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "يختلف ترتيب تخزين النص اختلافًا كبيرًا عن ترتيب قراءته."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "قد تكون الصفحة التي تبحث عنها قد نُقلت أو لم تعد موجودة."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "الصفحات عبارة عن صور، بلا نص خلفها."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "كلمة المرور التي أدخلتها غير صحيحة"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "تتم قراءة ملف PDF بواسطة كود يعمل في هذا التبويب. لا يُرفع شيء، ولا يُخزَّن شيء، ولا حاجة لحساب. افتح تبويب الشبكة في متصفحك وراقب إن أردت."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "لم يشارك المزوّد عنوان بريد إلكتروني، و
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "رفض المزوّد محاولة تسجيل الدخول هذه. يُرجى البدء من جديد."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "أعاد المزوّد مراجعة تعذّرت قراءتها. حاول مرة أخرى."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "تعذر تحديث معاينة السيرة الذاتية. لا تز�
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "السيرة الذاتية التي تحاول الوصول إليها محمية بكلمة مرور"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "يتكرر السطر نفسه في كل صفحة."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "النتيجة محدودة بحد أقصى بسبب مشكلة معطِّلة: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "يخرج النص غير قابل للقراءة."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "لا يبدو أعلى الصفحة الأولى كاسم."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "السمة"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "بعد ذلك، أدخِل الرمز المكوَّن من 6 أرقام الذي يقدّمه التطبيق للمتابعة."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "توجد فجوة بين دورين مؤرَّخين."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "لا يوجد رابط لملف تعريف أو ملف أعمال أو مستودع."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "لا توجد فقرة ملخّص."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "حدثت مشكلة أثناء إنشاء DOCX، يرجى المحاولة مرة أخرى."
@@ -4695,6 +5381,10 @@ msgstr "حدثت مشكلة أثناء إنشاء ملف PDF، يرجى المح
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "حدثت مشكلة أثناء إعداد سيرتك الذاتية للطباعة، يرجى المحاولة مرة أخرى."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "لم تتوفر معلومات كافية لتشغيل هذا الفحص."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "تعذر فتح هذا الموضوع الخاص بالوكيل."
 msgid "This assistant could not be opened."
 msgstr "تعذر فتح هذا المساعد."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "لا ينطبق هذا الفحص على هذا الملف."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "يعمل هذا الفحص فقط على السير الذاتية المكتوبة بالإنجليزية."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "لن يتم قراءة هذا التاريخ بشكل صحيح."
@@ -4757,13 +5455,73 @@ msgstr "سيتم حذف هذا الإدخال نهائيًا. لا يمكن ال
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "تتطلب هذه الميزة وجود موفر ذكاء اصطناعي متصل. يرجى إعداد واحد في الإعدادات."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "يحتوي هذا الملف على حقول نموذج."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "يحتوي هذا الملف على نص لا يستطيع القارئ رؤيته، لذا قد تكون بعض هذه التطابقات معه."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "يحتوي هذا الملف على نص مرسوم بشكل غير مرئي."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "يحتوي هذا الملف على نص أبيض على خلفية بيضاء."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "لا يُصرّح هذا الملف بأي لغة."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "لا يحتوي هذا الملف على وسوم إمكانية الوصول."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "هذا الملف مُشفَّر."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "هذا الملف كبير الحجم بالنسبة لسيرة ذاتية."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "هذا الملف أكبر مما تقبله كثير من نماذج التقديم."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "يستخدم هذا الملف عددًا كبيرًا من الخطوط المختلفة."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "يستخدم هذا الملف خطوط Type 3، التي تحمل رسومات بدلاً من أحرف."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "تعذّر فحص محتوى صفحات هذا الملف في الوقت المحدد."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "هذا العنوان ليس واحدًا يبحث عنه المحللون."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "هذا ملف PDF Portfolio: الصفحة المرئية هي مجرد غلاف."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "هذا اسم مناسب لعناوين URL لسيرتك الذاتية."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "هذا نموذج XFA، لذا تقرأ معظم البرامج القالب الفارغ فقط."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "هذا ليس حجم صفحة شائعًا للسيرة الذاتية."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "هذا الارتباط يفتقد البروتوكول الخاص به.
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "قد يستغرق هذا بضع دقائق اعتمادًا على استجابة مزوّد الذكاء الاصطناعي. يُرجى عدم إغلاق النافذة أو تحديث الصفحة."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "يقيس هذا مدى دقة استخراج البرامج لنص هذا الملف. إنه لا يتنبأ بما إذا كان طلبك سيُرفض. لا توجد أداة قادرة على ذلك. تمت قراءة ملفك في هذا المتصفح ولم يُرفع أبدًا."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "هذه الصفحة مقسّمة إلى أعمدة، ويُستخرج النص خارج الترتيب."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "هذه الصفحة مزدحمة جدًا بالمحتوى."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "ملف PDF هذا محمي بكلمة مرور. احفظ نسخة غير محمية وحاول مرة أخرى."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "هذه السيرة الذاتية مغلقة"
 msgid "This resume is locked and cannot be updated."
 msgstr "هذه السيرة الذاتية مقفلة ولا يمكن تحديثها."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "هذه السيرة الذاتية طويلة."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "تم تحديث هذه السيرة الذاتية بواسطة برنامج ذكاء اصطناعي."
@@ -4796,6 +5574,10 @@ msgstr "تم تحديث هذه السيرة الذاتية بواسطة برنا
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "تم تغيير إعدادات مشاركة هذه السيرة الذاتية في مكان آخر."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "هذه المراجعة هي رأي نموذج لغة في كتابتك. لا تغيّر النتيجة أعلاه، ويمكن أن تكون خاطئة. اقرأها كرأي ثانٍ، وليس كحكم نهائي."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "هذا القسم مخصص لملاحظاتك الشخصية الخاص�
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "يتم تقسيم هذا القسم عبر الأعمدة."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "يتم عرض هذا القسم كعنوان فارغ."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "عرض سريع لبناء سيرة ذاتية باستخدام Reactive
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "الجدول الزمني"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "نصيحة"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "حاول ثانية"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "التركية"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "أوقف الحروف المدمجة الاختيارية عند التصدير."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "جاري تحديث سيرتك الذاتية..."
 msgid "Upload .csv"
 msgstr "قم بتحميل ملف CSV"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "ارفع سيرة ذاتية واطّلع على ما يقرأه نظام تتبع المتقدمين (ATS) فعليًا منها. يعمل كل شيء في هذا المتصفح. لا يُرفع ملفك أبدًا، ولا يُخزَّن شيء."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "تحميل المرفقات"
@@ -5242,6 +6032,14 @@ msgstr "استخدم ارتفاعًا للخط لا يقل عن 1.15 حتى لا
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "استخدم عنوانًا عاديًا مثل name@example.com، بدون نص محيط."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "استخدم صيغة دولية بسيطة، مثل +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "استخدم صيغة معروفة مثل \"Jan 2020 - Mar 2022\" أو \"2020 - 2022\"."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 2022\\\"."
@@ -5250,18 +6048,38 @@ msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Use a recognized form such as \\\"March 2022\\\" or \\\"2022\\\"."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "استخدم عمودًا واحدًا لأي محتوى يجب قراءته بالتسلسل."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "استخدم حجمًا لا يقل عن 9 نقاط حتى تظل النسخ المُعاد عرضها دقيقة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "استخدم مقاس A4 أو US Letter حتى يصمد التخطيط عند إعادة العرض."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "استخدم حجم خط 9 نقاط على الأقل."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "استخدام اللون {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "استخدم عناوين بسيطة مثل \"Experience\" و\"Education\" و\"Skills\"."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "استخدم العينة"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "استخدم قائمة النقاط العادية في محررك، حتى لا تظهر رموز شاردة في منتصف الجملة."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "صالح مع وجود أخطاء"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "صالح مع وجود تحذيرات"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "نوّع بدايات الجمل حتى لا يبدو القسم نمطيًا مكررًا."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "التحقق من بريدك الإلكتروني مطلوب عند إع
 msgid "Version history"
 msgstr "سجل الإصدارات"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "تم استرجاع كلمات قليلة جدًا بالنسبة لسيرة ذاتية."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "تم استرجاع نص قليل جدًا بالنسبة لهذا العدد من الصفحات."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "الفيتنامية"
@@ -5358,6 +6188,11 @@ msgstr "مقارنة بالأيام الثلاثين السابقة"
 msgid "Waiting for the agent…"
 msgstr "في انتظار العامل…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "أتريد رأيًا ثانيًا في الكتابة؟"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "تحذير"
@@ -5395,6 +6230,14 @@ msgstr "بحث الويب"
 msgid "Website"
 msgstr "الموقع الإلكتروني"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "ما يقرأه المحلِّل"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "ما يراه الشخص"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "ماذا تريد أن تفعل؟"
@@ -5406,6 +6249,14 @@ msgstr "بماذا تريد أن تعيد تسمية هذا القسم؟"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "ما الذي يميز Reactive Resume عن أدوات إنشاء السير الذاتية الأخرى؟"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "ما الذي يفحصه هذا"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "ما لا يفعله هذا"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "من أين تأتي الطلبات"
 msgid "Where your applications went"
 msgstr "أين ذهبت طلباتك؟"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "ما إذا كان بإمكان مسؤول التوظيف الوصول إليك."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "ما إذا كان بإمكان البرنامج استرجاع الكلمات أصلاً."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "ما إذا كان الملف يحتوي على نص حقيقي، أو صورة له."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "ما إذا كانت هندسة الصفحة تحافظ على ترتيب القراءة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "ما إذا كانت السيرة الذاتية مجزَّأة بالطريقة التي يتوقعها البرنامج."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "ما إذا كان النص يخرج بالترتيب الذي يقرأه الشخص به."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "ما إذا كانت الأقسام المعتادة موجودة ويمكن تمييزها."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "ما إذا كان اسمك وبريدك الإلكتروني وهاتفك وتواريخك تبقى سليمة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "ما إذا كان يمكن إعادة بناء جدولك الزمني."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "تندمج الكلمات معًا عند استخراج النص."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "العمل مع OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "جارٍ العمل…"
 msgid "Worth a shot"
 msgstr "يستحق المحاولة"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "اكتب \"Present\" كتاريخ نهاية لدورك الحالي."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "اكتب كل دور كسطر واضح للمسمى الوظيفي والشركة، مع التواريخ بجانبه."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "اكتبه كقطعة واحدة متصلة، بلا تباعد خاص."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "اكتب العنوان كاملاً ليتم التعرف عليه كرابط."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "اكتب العنوان بالكامل، بما في ذلك https://."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "الكتابة"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "لقد وصلتك رسالة!"
 msgid "Your account has been deleted successfully."
 msgstr "تم حذف حسابك بنجاح."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "تعذّر الوصول إلى مزوّد الذكاء الاصطناعي الخاص بك. تحقق من إعداداته وحاول مرة أخرى."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "تم نسخ مفتاح واجهة برمجة التطبيقات (API) إلى الحافظة."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "النص الأساسي الخاص بك صغير جدًا."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "نقاطك مرسومة بأحرف غير معتادة."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "يتم حفظ تغييراتك تلقائيًا."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "بيانات التواصل الخاصة بك ليست في الصفحة الأولى."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "بياناتك آمنة، ولا يتم مشاركتها أو بيعها
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "تُخزَّن بياناتك بأمان ولا تتم مشاركتها أبدًا مع أطراف ثالثة. يمكنك أيضًا استضافة Reactive Resume ذاتيًا على خوادمك الخاصة للتحكم الكامل في بياناتك."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "تواريخك مكتوبة بعدة طرق مختلفة."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "عنوان بريدك الإلكتروني مقسَّم عبر أجزاء من النص."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "عنوان بريدك الإلكتروني غير مُتحقَّق منه لدى المزوّد."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "ملفك يبقى هنا"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "عناوينك تبدو مثل نص المتن تمامًا."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "لم يتم حفظ آخر التغييرات التي أجريتها."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "ستبقى أنماطك القديمة نشطة حتى تقوم بتفعيل مسودة CSS الدلالية هذه بشكل صريح."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "خطوطك معبأة بإحكام شديد."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "هوامشك ضيقة جدًا."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "تمت إعادة تعيين كلمة المرور الخاصة بك ب�
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "تم تحديث كلمة المرور الخاصة بك بنجاح."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "رقم هاتفك مكتوب بصيغة غير معتادة."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "تتضمن سيرتك الذاتية صورة."
 msgid "Your resume shows no work experience."
 msgstr "لا تظهر سيرتك الذاتية أي خبرة في العمل."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "تستخدم سيرتك الذاتية \"I\" و\"my\" (أنا وملكيتي)."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "رابط سيرتك الذاتية العام محمي حاليًا بكلمة مرور. شارك كلمة المرور فقط مع الأشخاص الذين تثق بهم."
@@ -5622,4 +6575,3 @@ msgstr "تصغير"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "الزولو"
-

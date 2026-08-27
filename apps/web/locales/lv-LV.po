@@ -53,6 +53,24 @@ msgstr "Izsekoti {0} pieteikumi"
 msgid "{0} characters"
 msgstr "{0} rakstzīmes"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{0} no {1} piemērojamām pārbaudēm nokārtotas"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{0} no {1} piemērojamām pārbaudēm nokārtotas."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "Atrasti {0} no {1} terminiem"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} gatavi importēšanai"
 msgid "{0} rejected"
 msgstr "{0} noraidīti"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} izlaisti"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0} izlaisti (trūkst uzņēmuma/lomas)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} jāizlabo"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 mēneši"
 msgid "6 months"
 msgstr "6 mēneši"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "Tīrs vienkolonnas eksports saglabā visus faktus. Kolonnas un attēli ir tas, kur tie pazūd."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Uz jūsu pašreizējo e-pasta adresi ir nosūtīta apstiprinājuma saite. Lūdzu, pārbaudiet savu iesūtni, lai apstiprinātu izmaiņas."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "Datums ir nākotnē."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "Datumu diapazons beidzas pirms tā sākuma."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "Datumu diapazons ir rakstīts formātā, ko lielākā daļa programmatūras nevar nolasīt."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "Fonts ir norādīts, bet nav iegults."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Bezmaksas un atvērtā pirmkoda CV veidotājs, kas vienkāršo jūsu CV 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Draudzīgs atgādinājums personāla atlases speciālistam"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "Pilnas augstuma atstarpe sadala šo lapu divās kolonnās."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "Pārtraukums nav problēma. Ja vēlaties, pievienojiet vienas rindas paskaidrojumu; daudzi spēcīgi CV to vienkārši nedara."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "Saite ved uz citu adresi, nevis to, kas redzama."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "Gadu gaitā daudzi cilvēki man rakstījuši, lai dalītos savā pieredz
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Uz jūsu e-pasta adresi ir nosūtīta jauna verifikācijas saite. Lūdzu, pārbaudiet savu iesūtni, lai verificētu kontu."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "Skaitlisks datums dažādās valstīs tiek lasīts atšķirīgi."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "Lapa ir pagriezta."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Aizrautības projekts, ko veidojis <0>Amruth Pillai</0>."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "CV, kas veidots cilvēka lasītājam, ar fotoattēlu, virsrakstiem un kolonnām"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "Neliels izaicinājums"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "Interneta adrese ir rakstīta bez https://."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "Pievienot piezīmi…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "Pievienojiet periodu, piemēram, „2020. gada janvāris — tagadne”, lai tas parādītos jūsu laika skalā."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "Pievienojiet sadaļu ar virsrakstu \"Education\". Daudzām sistēmām ir obligāts izglītības lauks."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "Pievienojiet sadaļu ar virsrakstu \"Experience\" vai \"Work Experience\". Šis ir lauks, pēc kura lielākā daļa sistēmu veic vērtēšanu."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Pievienojiet birku un nospiediet Enter…"
@@ -291,10 +375,6 @@ msgstr "Pievienojiet birku un nospiediet Enter…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "Pievienojiet ierakstu vai izmantojiet projektus un brīvprātīgo darbu, lai parādītu līdzvērtīgu vēsturi."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "Pievienojiet tai vienumu vai paslēpiet to."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "Pievienojiet vismaz pilsētu un valsti, lai lomas varētu saskaņot ar j
 msgid "Add contact"
 msgstr "Pievienot kontaktu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "Pievienojiet skaitļus, kur tie ir pieejami: apjomus, procentus, laika periodus, komandu lielumus."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Pievienot atslēgvārdu"
@@ -327,6 +411,14 @@ msgstr "Pievienot saiti"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Pievienojiet vairākas lomas, lai parādītu karjeras izaugsmi vienā uzņēmumā."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "Pievienojiet vienu saiti, kas parāda jūsu darbu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "Pievienojiet to ar valsts kodu; dažas pieteikuma veidlapas to pieprasa pirms iesniegšanas."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Pievienot lapu"
@@ -339,6 +431,10 @@ msgstr "Pievienot pakalpojumu sniedzēju"
 msgid "Add Role"
 msgstr "Pievienot lomu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "Pievienojiet nedaudz brīvas vietas starp sadaļām, lai cilvēks to varētu ātri pārskatīt."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "Pievienot birku"
@@ -346,6 +442,10 @@ msgstr "Pievienot birku"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Pievienot procesam"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "Pievienojiet augšpusē divas vai trīs rindas, kas apraksta, ko jūs darāt."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "Pielāgojiet CV attālināti strādājošai lomai, kurā tiek vērtēta 
 msgid "Advanced"
 msgstr "Paplašināts"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "Padomi lasītājam. Nekas no tā neietekmē rezultātu."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikandu"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "Salīdzinājumā ar amata aprakstu"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "Mākslīgā intelekta aģenta iestatīšana nav pieejama, kamēr nav kon
 msgid "AI assistant"
 msgstr "Mākslīgā intelekta palīgs"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "MI pakalpojumu sniedzējs"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Mākslīgā intelekta pakalpojumu sniedzēja pārvaldība nav pieejama, kamēr nav konfigurēti REDIS_URL un ENCRYPTION_SECRET."
@@ -403,6 +515,10 @@ msgstr "Mākslīgā intelekta pakalpojumu sniedzēja pārvaldība nav pieejama. 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Mākslīgā intelekta pakalpojumu sniedzēji"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "MI pakalpojumu sniedzēji nav pieejami, kamēr nav konfigurēts ENCRYPTION_SECRET."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "Albāņu"
 msgid "Allow Public Access"
 msgstr "Atļaut publisku piekļuvi"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "Gandrīz nevienā no jūsu aizzīmēm nav skaitļa."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "Jau iekļauts"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Jums jau ir konts? <0/>"
@@ -423,6 +547,10 @@ msgstr "Jums jau ir konts? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "Amharu"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "Iegultu fontu nevarēja nolasīt."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "Negaidīta kļūda apturēja šīs lapas ielādi. Varat mēģināt vēlr
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Importējot jūsu CV, radās nezināma kļūda."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "Analizēt CV"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "Analizējot…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloud atbalsta Reactive Resume kā projekta sponsoru. Ja jūsu uz�
 msgid "ATS Check"
 msgstr "ATS pārbaude"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "ATS pārbaudītājs"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "Automātiskā aizpilde neizdevās."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Pieejama vairākās valodās. Ja vēlaties iesaistīties, apmeklējiet Crowdin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "Izvairieties no izteiktiem burtu atstarpju efektiem un pēc tam eksportējiet atkārtoti."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "Vislabāk pieteikumiem, kopīgošanai un drukāšanai."
 msgid "Blank draft"
 msgstr "Tukšs melnraksts"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "Bloķētājs"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Dēlis"
@@ -750,6 +884,10 @@ msgstr "Apmales rādiuss"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "Apmales platums"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "Sadaliet CV ierastajās sadaļās, lai to varētu segmentēt."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "Izmaiņu žurnāls"
 msgid "Chat"
 msgstr "Tērzēšana"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "Pārbaudīt vēlreiz"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "Pārbaudiet, vai eksportētajā failā ir viss gaidītais un vai viss teksts ir iezīmējams."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Pārbaudiet savu e-pastu, lai atrastu saiti paroles atiestatīšanai."
@@ -868,6 +1014,10 @@ msgstr "Pārbaudiet savu e-pastu, lai atrastu saiti paroles atiestatīšanai."
 msgid "Check your email for a link to verify your account."
 msgstr "Pārbaudiet savu e-pastu, lai atrastu saiti konta verifikācijai."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "Pārbaudīts jūsu pārlūkprogrammā. Fails nekad netiek augšupielādēts."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "Pārbaude"
@@ -875,6 +1025,10 @@ msgstr "Pārbaude"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "Melnraksta pārbaude"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "Pārbauda…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "Ķīniešu (tradicionālā)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "Izvēlieties modeli un CV melnrakstu."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "Izvēlieties PDF"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "Salīdziniet šo CV ar šīs vakances URL un atjauniniet atslēgvārdus,
 msgid "Completely free, forever, no hidden costs."
 msgstr "Pilnībā bez maksas, uz visiem laikiem, bez slēptām izmaksām."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "Saspiediet vai noņemiet lielus attēlus, lai augšupielāde būtu ātra."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "Apstiprināt"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Savienot"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "Pievienojiet savu MI pakalpojumu sniedzēju, lai saņemtu teksta pārskatu. Iepriekš minētajām pārbaudēm nav vajadzīgs ne sniedzējs, ne konts."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "Savienojums neizdevās."
 msgid "Connection verified — provider is ready to use."
 msgstr "Savienojums ir pārbaudīts — pakalpojumu sniedzējs ir gatavs lietošanai."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "Kontaktinformācija"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "Kontakti"
@@ -1020,6 +1190,10 @@ msgstr "Kontakti"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "Saturs"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "Saturs ir izkārtots režģī."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "Kopēt stila lapu"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "Nokopējiet visu amata aprakstu no sludinājuma un ielīmējiet to zemāk. Mēs aizpildīsim laukus jūsu vietā un saglabāsim tekstu kopā ar šo pieteikumu atbilstības vērtēšanai un pielāgošanai."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "Izkopējiet tekstu no eksportētā faila un izlasiet to; izlabojiet visu, kas nokļūst nepareizā vietā."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "Nokopējiet šo slepeno atslēgu un izmantojiet to savās lietotnēs, lai piekļūtu saviem datiem."
@@ -1102,6 +1280,10 @@ msgstr "Kopēt URL"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Labojiet gadu vai izmantojiet „tagadne” pašlaik notiekošam darbam."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "Izlabojiet gadu vai pašreizējam darbam rakstiet \"Present\"."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "Neizdevās augšupielādēt failu. Lūdzu, mēģiniet vēlreiz."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "Skaits pēc avota"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "Tiek skaitīts atsevišķi no parsēšanas rezultāta. Pārklājums neko neparedz."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "Datums"
 msgid "Date applied"
 msgstr "Pieteikšanās datums"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "Datumi"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "Samazināt atkāpi"
@@ -1397,6 +1588,10 @@ msgstr "Samazināt atkāpi"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "Samazināt tālummaiņu"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "Padziļināta pārbaude"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "Dzēst"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "Dzēst kontu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "Dzēsiet to. Slēpti atslēgvārdi tiek uzskatīti par apzinātu mēģinājumu manipulēt ar meklēšanu."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "Noraidīts — gaida aģentu…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Noraidīt"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "Aprakstiet katru amatu ar īsām aizzīmēm. Nepārtrauktus rindkopu blokus ir grūtāk pārskatīt un segmentēt."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "Velciet un nometiet sadaļas šeit, lai pārvietotu tās starp kolonnām
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Pirms augšupielādes velciet, lai mainītu pozīciju, un izmantojiet slīdni, lai tuvinātu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "Izlaidiet vietniekvārdus un sāciet ar darbības vārdu. Tāda ir pieņemtā prakse lielākajā daļā tirgu."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "E-pasta adrese"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "Šajā instancē e-pasta piegāde nav konfigurēta, tāpēc verifikācija ir atspējota."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "Eksportējot iegultiet visus fontus, lai rakstzīmes tiktu attēlotas tā, kā iecerēts."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Iespējot 2FA"
@@ -1760,6 +1971,10 @@ msgstr "Tiek ieslēgta paroles aizsardzība..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "Divfaktoru autentifikācijas iespējošana…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "Piemēro vienas lapas noteikumu vai uzskata fontu vai karjeras pārtraukumu par kļūdu."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "Eksports"
 msgid "Export Data"
 msgstr "Eksportēt datus"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "Eksportējiet no oriģinālā dokumenta, nevis skenējiet vai uzņemiet ekrānuzņēmumu."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "Eksportēt manus datus"
@@ -1863,6 +2082,10 @@ msgstr "Eksportēt manus datus"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "Eksportēt PNG"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "Eksportējiet CV kā teksta PDF, nevis kā attēlu vai skenējumu."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "pipeline-flow.png eksportēts"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "Neizdevās"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "Neizdevās analizēt atsākšanu."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "Neizdevās atkārtoti nosūtīt verifikācijas e-pastu. Lūdzu, mēģini
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "Neizdevās atiestatīt paroli. Lūdzu, mēģiniet vēlreiz."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "Neizdevās pārskatīt šo CV."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "Uguņošana"
 msgid "Fit to view"
 msgstr "Piemērots skatam"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "Saplaciniet veidlapu, lai teksts kļūtu par lapas daļu."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "Elastība"
@@ -2210,14 +2437,6 @@ msgstr "Ģenerēt nejaušu nosaukumu"
 msgid "German"
 msgstr "Vācu"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "Saņemiet savu CV pārskatu ar vispārēju novērtējumu, norādot stiprās puses un ieteikumus, ko var izmantot."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "Saņemiet padziļinātu ar mākslīgo intelektu aprīkotu CV pārskatu ar kopējo novērtējumu, galvenajām stiprajām pusēm un praktiskiem ieteikumiem. Lai aktivizētu šo funkciju, atjauniniet AI iestatījumus."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Sākt"
@@ -2229,6 +2448,14 @@ msgstr "Sākt"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "Norādiet katram amatam laika periodu, piemēram, \"Jan 2020 - Present\", lai jūsu laika grafiku varētu atjaunot."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "Norādiet katram amatam un kvalifikācijai datumu diapazonu."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "Virsraksts 5"
 msgid "Heading 6"
 msgstr "Virsraksts 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "Īss apraksts"
@@ -2388,10 +2616,9 @@ msgstr "Slēpt attēlu"
 msgid "Hide Section Icons"
 msgstr "Slēpt sadaļu ikonas"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "Augsts"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "Augsta ietekme"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "Ikona"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Nosakiet pretendentu izsekošanas sistēmas nepilnības un izmantojiet tikai augstas uzticamības atslēgvārdu uzlabojumus."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "Ja tas radies no skenējuma, tas ir sagaidāms. Citādi noņemiet to; personāla speciālisti to uztver kā atslēgvārdu pārblīvēšanu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "Attēli aizņem lielāko daļu lapas."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "Tiek importēts jūsu CV..."
 msgid "Importing…"
 msgstr "Importē…"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "Sadaļā {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "Iekļaut CV galveni"
@@ -2491,6 +2731,10 @@ msgstr "Iekļaut CV galveni"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "Palielināt atkāpi"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "Palieliniet rindstarpu, lai divas rindas nesaplūstu vienā."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "Iekļautais kods"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "Ieskati"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "Pārbauda lapu {0} no {1}…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "Darbs"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "Darba apraksts"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "Amata apraksts (nav obligāts)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "Izlīdzināt līdz malām"
 msgid "Kannada"
 msgstr "Kannadu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "Saglabājiet vienu adresi, lai nekam nav jāmin, kuru izmantot."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "Saglabājiet to zem 2,5 MB, parasti noņemot vai samazinot attēlus."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "Saglabājiet CV saturu kā īstu tekstu, nevis kā teksta attēlus."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "Saglabājiet atkārtotās galvenes īsas vai izlaidiet tās. Tās atkārtojas arī iegūtajā tekstā."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "Saglabājiet tās aptuveni divu rindu garumā, lai ātrs lasītājs tās pabeigtu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "Izmantojiet ne vairāk kā divas vai trīs fontu saimes. Katrs papildu fonts ir vēl viena iespēja, ka kāds tiks attēlots nepareizi."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "Valoda"
 msgid "Languages"
 msgstr "Valodas"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "Pēdējo reizi analizēts {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "Pēdējo reizi skatīts {0}"
 msgid "Latvian"
 msgstr "Latviešu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "Izkārtojiet tekstu horizontāli. Pagriezti teksta fragmenti bieži tiek izlaisti vai nepareizi novietoti."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "Izkārtojums"
@@ -2715,6 +2995,10 @@ msgstr "Uzzināt vairāk"
 msgid "Leave"
 msgstr "Aiziet"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "Atstājiet vismaz pusi collas brīvas vietas ap lapu."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Atstājiet tukšu, lai atjaunotu sākotnējo virsrakstu."
@@ -2726,6 +3010,10 @@ msgstr "Vai atstāt AI nodrošinātāja iestatīšanu?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Izlīdzināt pa kreisi"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "Garums nav trūkums, un nepastāv universāls vienas lapas noteikums. Saglabājiet tās lapas, kas ir pelnījušas savu vietu."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "Līmenis {level} no 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "Licencēts ar <0>MIT</0>."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "Ligatūras var izlaist burtus tādos vārdos kā \"workflow\"."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "Tiek savienots jūsu {providerName} konts..."
 msgid "List"
 msgstr "Saraksts"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "Uzskaitiet rīkus un tehnoloģijas, ko izmantojat. Personāla speciālisti prasmes meklē biežāk nekā jebkuru citu lauku."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "Lietuviešu"
@@ -2814,8 +3110,8 @@ msgstr "Notiek mākslīgā intelekta pakalpojumu sniedzēju ielāde. Lūdzu, mē
 msgid "Loading applications…"
 msgstr "Lietotņu ielāde…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "Notiek pakalpojumu sniedzēju ielāde…"
 
@@ -2838,6 +3134,7 @@ msgstr "Notiek ielāde…"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Atrašanās vieta"
@@ -2855,6 +3152,10 @@ msgstr "Bloķēt"
 msgid "Logout"
 msgstr "Izrakstīties"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "Gari teksta fragmenti ir rakstīti ar lielajiem burtiem."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "Ilgtermiņa ilgtspēja"
@@ -2864,10 +3165,9 @@ msgstr "Ilgtermiņa ilgtspēja"
 msgid "Lost access to your authenticator?"
 msgstr "Zaudējāt piekļuvi autentifikatoram?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "Zema"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "Zema ietekme"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "Galvenā navigācija"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "Padariet pieredzes sadaļu vairāk orientētu uz rezultātiem un noņemiet neskaidrus pienākumus."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "Panāciet, lai redzamais teksts un mērķa adrese sakristu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "Padariet tos manāmi lielākus, treknākus vai rakstītus ar lielajiem burtiem."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "Malajiešu"
@@ -2889,6 +3197,10 @@ msgstr "Malajiešu"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "Malajalu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "Daudzas aizzīmes sākas ar vienu un to pašu frāzi."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "Atzīmēt kā noraidītu"
 msgid "Match scoring failed."
 msgstr "Atbilstības vērtēšana neizdevās."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Vidēja"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "Vidēja ietekme"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "Mistral AI"
 msgid "Model"
 msgstr "Modelis"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "Parādās vairāk nekā viena e-pasta adrese."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "Lielākā daļa aizzīmju sākas ar liekvārdiem, nevis ar to, ko jūs paveicāt."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "Lielākajai daļai ierakstu nav datumu."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "Lielākā daļa sistēmu kandidātus identificē pēc e-pasta. Pievienojiet to sadaļā Pamatinformācija."
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "Pārvietojiet visu saturu lapas robežās un eksportējiet atkārtoti."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "Pārvietojiet to uz galveno kolonnu un saglabājiet sānjoslu īsajiem sarakstiem."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "Pārvietojiet reālo saturu lapas pamatdaļā; daļa programmatūras malas ignorē."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "Pārvietot posmu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Pārvietot uz"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "Pārvietojiet savu e-pastu un tālruņa numuru pirmās lapas augšpusē."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "Jāuzsāk ar https://"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "Nav pieteikumu, kas atbilst jūsu filtriem."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "Pieteikumu vēl nav — pievienojiet dažus, lai redzētu piltuvi un atbilžu rādītājus."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "Aizzīmju saraksti nav atrasti."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "Ierastie sadaļu virsraksti nav atrasti."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "No AI nodrošinātāja netika saņemti nekādi dati."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "Datumi nav atrasti."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "Izglītības sadaļa nav atrasta."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "E-pasta adrese nav atrasta."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "Neviena rinda neizskatās pēc amata nosaukuma kopā ar darba devēju."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Pagaidām nav reģistrēti pases taustiņi."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "Tālruņa numurs nav atrasts."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "CV vēl nav."
 msgid "No saved versions yet."
 msgstr "Vēl nav saglabātu versiju."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "Prasmju sadaļa nav atrasta."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "Avota datu vēl nav."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "No šī amata apraksta neizdevās izgūt konkrētus terminus, tāpēc tas, iespējams, lielākoties ir vispārīgs teksts. Ielīmējiet prasību sadaļu, lai iegūtu noderīgāku salīdzinājumu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Nav pārbaudīta pakalpojumu sniedzēja"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "No šī faila nevarēja nolasīt tekstu."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "Vēl nav pavedienu."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "Darba pieredzes sadaļa nav atrasta."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "Norvēģu"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "Nav izveidots savienojums"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "Nav apliecināts jūsu CV"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "Nav jūsu CV"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "Nav vērtēts"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "Piezīme"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "Piezīmes"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "Nekas nenorāda, ka amats vēl turpinās."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "Šeit nav nekā, kas jālabo."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "Nav nekā, kas jālabo. Atlikušās lapas šis pārskats vienkārši neaptvēra."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "Nav priekšlikumu."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "Nepārtraukta uzturēšana"
 msgid "Only applies when the section fits on a single page."
 msgstr "Attiecas tikai tad, ja sadaļa ietilpst vienā lapā."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "Atrasts tikai viens atpazīstams sadaļas virsraksts."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "Pārbaudītas tikai pirmās {0} lapas, tāpēc šis pārskats neaptver visu failu."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "Vienlaikus importē tikai pirmās {MAX_IMPORT} rindas — {overflow} palika ārpusē. Sadaliet failu, lai importētu pārējo."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "Pārbaudītas tikai pirmās lapas."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "Atvērtā fokusa režīms"
 msgid "Open in builder"
 msgstr "Atvērt veidotājā"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "Atvērt Integrāciju iestatījumi"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Atvērtā pirmkoda"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "Atveriet eksportēto failu un pārliecinieties, ka varat iezīmēt un kopēt katru tā daļu."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "OpenAI saderīgs"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "Atver failu…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "Neobligāta piezīme aģentam…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Pēc izvēles varat iestatīt paroli, lai tikai cilvēki ar paroli varētu skatīt jūsu CV, izmantojot saiti."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "Pēc izvēles — kuri termini no darba sludinājuma jau parādās."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "Iespējas priekš {title}"
@@ -3237,9 +3670,9 @@ msgstr "Numurēts saraksts"
 msgid "Organization"
 msgstr "Organizācija"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "Kopējais rezultāts"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "no 100"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "Paroles aizsardzība ir deaktivēta."
 msgid "Password protection has been enabled."
 msgstr "Paroles aizsardzība ir aktivēta."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "Ielīmējiet sludinājumu, lai redzētu, kuri tā termini jau parādās jūsu CV."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "Ielīmējiet rindas vai augšupielādējiet .csv. Mēs kartējam kolonnas, piemēram, Uzņēmums, Loma, Posms, Posma datums, Alga, Avots un Birkas."
@@ -3321,6 +3758,10 @@ msgstr "Ielīmējiet rindas vai augšupielādējiet .csv. Mēs kartējam kolonna
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "Ielīmējiet šeit visu amata aprakstu…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "Ielīmējiet sludinājumu, lai redzētu, kuri tā termini jau parādās jūsu CV."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "Personalizējiet savu CV ar jebkurām krāsām, fontiem vai dizainiem un padariet to par unikālu."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "Tālrunis"
@@ -3383,6 +3825,10 @@ msgstr "Tālrunis"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Izvēlieties ikonu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "Izvēlieties vienu formātu un izmantojiet to visur."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "Portugāļu (Portugāle)"
 msgid "Position"
 msgstr "Amats"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "Paredzēt, vai jūs tiksiet noraidīts. To nespēj neviens rīks."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Dodiet priekšroku ierastam virsrakstam, piemēram, „Darba pieredze” vai „Izglītība”."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "Dodiet priekšroku vienai kolonnai vai izmantojiet sānu kolonnu tikai īsiem, patstāvīgiem sarakstiem."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "Priekšskatījums un eksports saglabā derīgos stilus un ignorē neder�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Primārā krāsa"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "Pirms nosūtīšanas izdrukājiet vai eksportējiet veidlapu kā saplacinātu PDF."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "Publikācijas"
 msgid "Publisher"
 msgstr "Izdevējs"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "Ievietojiet vienkāršu e-pasta adresi pirmās lapas augšdaļas tuvumā. Pēc tās jūs klasificē lielākā daļa sistēmu."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "Neapstrādāts JSON"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "Eksportējiet atkārtoti no vienkolonnas izkārtojuma, pēc tam izkopējiet tekstu un pārbaudiet, vai tas lasāms no augšas uz leju."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "Eksportējiet atkārtoti no oriģinālā dokumenta, nevis konvertējiet no cita formāta."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "Eksportējiet atkārtoti no oriģinālā dokumenta ar pareizi iegultiem fontiem."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "Eksportējiet atkārtoti, izmantojot parastu TrueType vai OpenType fontu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "Eksportējiet atkārtoti ar iegultiem fontiem un pārbaudiet, vai teksts kopējas tīri."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "Eksportējiet atkārtoti ar iegultiem fontiem, pēc tam atveriet failu un pārbaudiet, vai teksts kopējas tīri."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "Izlasiet rokasgrāmatu Pielāgotu stilu lietošana."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Izlasīja CV"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "Lasāmība"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "Nolasa lapu {0} no {1}…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "Tiek noņemta paroles aizsardzība..."
 msgid "Rename"
 msgstr "Pārdēvēt"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "Attēlo jūsu pašreizējo CV kā PDF un veic pilnu faila pārbaudi jūsu pārlūkprogrammā. Nekas netiek augšupielādēts."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Pārkārtot"
@@ -3727,6 +4227,23 @@ msgstr "Pārkārtot"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Pārkārtot pielāgoto lauku"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "Atkārto apgalvojumu, ka lielākā daļa CV tiek automātiski noraidīti."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "Atkārtoti daudz biežāk, nekā tos izmanto pats sludinājums: {0}. Personāla speciālisti to pamana."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "Aizstājiet ikonu fontus ar parastu tekstu un pēc tam eksportējiet atkārtoti."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "Aizstājiet tabulas ar parastām rindkopām un sarakstiem. Šūnas tiek iegūtas glabāšanas, nevis lasīšanas secībā."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "Nosūtīt verifikācijas e-pastu vēlreiz"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Atkārtoti nosūta verifikācijas e-pastu..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "Lielos burtus izmantojiet tikai īsiem virsrakstiem. Tie palēnina lasīšanu un var traucēt reģistrjutīgu meklēšanu."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "Vai atjaunot šo versiju?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "CV"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "CV analīze"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "CV analīze pabeigta."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "Pārskatīt labojumus"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Salīdzini CV ar amata aprakstu un uzdod man jautājumus, pirms maināt neskaidrās sadaļas."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "Pārskatīt tekstu ar MI"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "Pārskatīt šo labojumu"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "Pārskata…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "Rumāņu"
 msgid "Rotation"
 msgstr "Rotācija"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "Veiciet pirmo analīzi, lai iegūtu rezultātu tabulu, stiprās puses un prioritizētus ieteikumus."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "Palaist vēlreiz"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "Palaist MI pārskatu"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "Palaist padziļināto pārbaudi"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "Saglabāšanas un testēšanas pakalpojumu sniedzējs"
 msgid "Save & Upload"
 msgstr "Saglabāt un augšupielādēt"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "Saglabājiet neaizsargātu kopiju bez paroles un bez atļauju ierobežojumiem."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "Saglabāt izmaiņas"
@@ -3940,6 +4473,10 @@ msgstr "Saglabāt izmaiņas"
 msgid "Save model"
 msgstr "Saglabāt modeli"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "Saglabājiet failu ar visām lapām pareizā stāvoklī."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "Saglabāts"
@@ -3959,10 +4496,6 @@ msgstr "Skola"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "Novērtēt manu atbilstību"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "Rezultātu tabula"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "Sadaļas opcijas"
 msgid "Section Type"
 msgstr "Sadaļas tips"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "Sadaļas"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "Skatiet, kā šis CV atbilst sludinājumam"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "Uzziniet, ko no jūsu CV var nolasīt kandidātu izsekošanas sistēma. Darbojas jūsu pārlūkprogrammā."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "Atlasīt visu"
 msgid "Select an agent model"
 msgstr "Izvēlieties aģenta modeli"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "Izvēlieties mākslīgā intelekta pakalpojumu sniedzēju"
 
@@ -4075,9 +4617,21 @@ msgstr "Sūtīt ziņojumu"
 msgid "Send Password Reset Email"
 msgstr "Nosūtīt paroles atiestatīšanas e-pastu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "Nosūtiet pašu CV, nevis portfolio apvalku."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Nosūta paroles atiestatīšanas e-pastu..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Nosūta jau no jūsu PDF iegūto tekstu MI pakalpojumu sniedzējam, ko izvēlaties zemāk. Pats PDF fails nekad netiek augšupielādēts."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Nosūta jau no jūsu PDF iegūto tekstu, kā arī jūsu ielīmēto amata aprakstu, MI pakalpojumu sniedzējam, ko izvēlaties zemāk. Pats PDF fails nekad netiek augšupielādēts."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "Serbu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Iestatīt paroli"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "Eksportējot iestatiet dokumenta valodu."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "Sānu joslas platums"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Pieteikties"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "Pierakstieties un pievienojiet savu MI pakalpojumu sniedzēju, lai saņemtu pārrakstīšanas ieteikumus vājām aizzīmēm. Iepriekš minētās pārbaudes ir bezmaksas un neprasa kontu."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "Tīmekļa adrese (slug)"
 msgid "Some application systems require one before you can submit."
 msgstr "Dažām pieteikumu sistēmām tas ir nepieciešams, lai to varētu iesniegt."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "Dažas aizzīmes ir pārāk garas."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "Dažas rakstzīmes parādās kā jautājuma zīmes."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "Dažām pārbaudēm vajadzīga informācija, kuras šajā failā nav: lapas saturs, ko nevarēja pārbaudīt, vai teksts valodā, ko šīs pārbaudes neaptver. Tās netiek skaitītas ne kā nokārtotas, ne kā nenokārtotas."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "Dažiem glifiem ārpus šī faila nav nozīmes."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "Dažas rindas ir saglabātas ārpus lasīšanas secības."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Daži parsētāji nepareizi apstrādā attēlus, un dažos reģionos fotoattēli nav ieteicami."
@@ -4311,6 +4894,14 @@ msgstr "Daži parsētāji nepareizi apstrādā attēlus, un dažos reģionos fot
 msgid "Some styles were ignored"
 msgstr "Daži stili tika ignorēti"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "Daļa teksta atrodas ārpus lapas."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "Daļa teksta ir pagriezta."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Kaut kas cits…"
@@ -4318,6 +4909,10 @@ msgstr "Kaut kas cits…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Kaut kas nogāja greizi"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "Nolasot šo failu, radās kļūda. Lūdzu, mēģiniet vēlreiz."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "Atstatums (vertikāli)"
 msgid "Spanish"
 msgstr "Spāņu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "Rakstiet mēnesi burtiem, piemēram, \"Mar 2022\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "Sponsori"
@@ -4419,6 +5018,10 @@ msgstr "Sāciet veidot savu CV, piešķirot tam nosaukumu."
 msgid "Start building your resume from scratch"
 msgstr "Sāciet veidot savu CV no nulles"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "Sāciet katru ar konkrētu darbības vārdu: izveidoja, vadīja, samazināja, pārcēla."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "Sākt jaunu pavedienu"
@@ -4427,6 +5030,10 @@ msgstr "Sākt jaunu pavedienu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "Sākt jaunā lapā"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "Sāciet CV ar savu vārdu atsevišķā rindā."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "Joprojām gaidu {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "Apturēt paaudzi"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "Stiprās puses"
 
@@ -4473,7 +5080,7 @@ msgstr "Stila lapā ir kritiskas kļūdas"
 msgid "Subreddit"
 msgstr "Subreddits"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "Ieteikumi"
 
@@ -4494,6 +5101,7 @@ msgstr "Atbalstiet Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "Atbalstiet lietotni, darot, ko vien varat!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "Apmainiet sākuma un beigu datumus."
@@ -4532,6 +5140,10 @@ msgstr "Tagi"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Tagus var izmantot, lai kategorizētu savu CV pēc atslēgvārdiem."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "Tagi dod programmatūrai skaidru lasīšanas secību. Iespējojiet tos eksportējot, ja jūsu rīks to piedāvā."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "Teksta izlīdzināšana"
 msgid "Text Color"
 msgstr "Teksta krāsa"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "Teksts ir rakstīts pa vienai rakstzīmei."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "Teksts atrodas galvenes vai kājenes zonā."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "Taju"
@@ -4597,6 +5217,19 @@ msgstr "Taju"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "Paldies mūsu sponsoriem"
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "Šo failu nevarēja nolasīt kā PDF."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "Šis fails nav PDF. Eksportējiet savu CV kā PDF un mēģiniet vēlreiz."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "Šis fails ir pārāk liels, lai to pārbaudītu pārlūkprogrammā."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "Pēc dzēšanas šī API atslēga vairs nevarēs piekļūt jūsu datiem.
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "Lietotne, kas jūs atsūtīja šeit, veica nederīgu autorizācijas pieprasījumu."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "Iepriekš minētās pārbaudes ir mehāniskas. Šī funkcija vaicā valodas modelim, ko lasītājs domātu par jūsu aizzīmēm, un iesaka pārrakstījumus. Tā nesniedz rezultātu."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "Meklētā komanda neeksistē."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "Padziļināto pārbaudi neizdevās pabeigt. Lūdzu, mēģiniet vēlreiz."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Importēto failu nav iespējams analizēt kā derīgu atsākumu."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "Secība, kādā teksts ir saglabāts, būtiski atšķiras no secības, kādā tas lasāms."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "Iespējams, ka meklētā lapa ir pārvietota vai vairs nepastāv."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "Lapas ir attēli bez teksta aiz tiem."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "Ievadītā parole ir nepareiza"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "PDF tiek nolasīts ar kodu, kas darbojas šajā cilnē. Nekas netiek augšupielādēts, nekas netiek saglabāts, un konts nav vajadzīgs. Ja vēlaties, atveriet pārlūkprogrammas tīkla cilni un vērojiet."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "Pakalpojumu sniedzējs nenorādīja e-pasta adresi, kas nepieciešama pi
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "Pakalpojumu sniedzējs noraidīja šo pieteikšanās mēģinājumu. Lūdzu, sāciet no jauna."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "Pakalpojumu sniedzējs atgrieza pārskatu, ko nevarēja nolasīt. Mēģiniet vēlreiz."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "CV priekšskatījumu nevarēja atjaunināt. Joprojām tiek rādīts pēd
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "CV, kam mēģināt piekļūt, ir aizsargāts ar paroli"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "Viena un tā pati rinda atkārtojas katrā lapā."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "Rezultāts ir ierobežots bloķējošas problēmas dēļ: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "Teksts kļūst nelasāms."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "Pirmās lapas augšdaļa neizskatās pēc vārda."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "Tēma"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Pēc tam ievadiet 6 ciparu kodu, ko nodrošina lietotne, lai turpinātu."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "Starp diviem amatiem ar datumiem ir pārtraukums."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "Nav saites uz profilu, portfolio vai repozitoriju."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "Nav kopsavilkuma rindkopas."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "DOCX ģenerēšanas laikā radās problēma, lūdzu, mēģiniet vēlreiz."
@@ -4695,6 +5381,10 @@ msgstr "PDF faila ģenerēšanas laikā radās problēma. Lūdzu, mēģiniet vē
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Sagatavojot jūsu CV drukāšanai, radās problēma. Lūdzu, mēģiniet vēlreiz."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "Nebija pietiekami daudz informācijas, lai veiktu šo pārbaudi."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "Šo aģenta pavedienu nevarēja atvērt."
 msgid "This assistant could not be opened."
 msgstr "Šo palīgu nevarēja atvērt."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "Šī pārbaude neattiecas uz šo failu."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "Šī pārbaude tiek veikta tikai angļu valodā rakstītiem CV."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "Šis datums netiks nolasīts pareizi."
@@ -4757,13 +5455,73 @@ msgstr "Šis ieraksts tiks neatgriezeniski dzēsts. To nevar atsaukt."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Šai funkcijai ir nepieciešams pievienots mākslīgā intelekta pakalpojumu sniedzējs. Lūdzu, iestatiet to iestatījumos."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "Šis fails satur veidlapas laukus."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "Šis fails satur tekstu, ko lasītājs nevar redzēt, tāpēc daļa no šīm sakritībām var būt saistīta ar to."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "Šis fails satur tekstu, kas attēlots neredzami."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "Šis fails satur baltu tekstu uz balta fona."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "Šis fails nedeklarē valodu."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "Šim failam nav pieejamības tagu."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "Šis fails ir šifrēts."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "Šis fails ir liels vienam CV."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "Šis fails ir lielāks, nekā pieņem daudzas pieteikuma veidlapas."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "Šis fails izmanto daudzus dažādus fontus."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "Šis fails izmanto Type 3 fontus, kas satur zīmējumus, nevis rakstzīmes."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "Šī faila lapu saturu neizdevās pārbaudīt laikā."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "Šis virsraksts nav tas, ko parsētāji meklē."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "Šis ir PDF portfelis: redzamā lapa ir tikai vāks."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Tas ir URL-draudzīgs nosaukums jūsu CV."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "Šī ir XFA forma, tāpēc lielākā daļa programmatūras nolasa tikai tukšo čaulu."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "Šis nav ierasts CV lapas izmērs."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "Šai saitei trūkst protokola."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Tas var aizņemt dažas minūtes atkarībā no MI pakalpojumu sniedzēja atbildes. Lūdzu, neaizveriet logu un neatjaunojiet lapu."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "Šis mēra, cik precīzi programmatūra spēj iegūt šī faila tekstu. Tas neparedz, vai pieteikums tiks noraidīts. To nespēj neviens rīks. Jūsu fails tika nolasīts šajā pārlūkprogrammā un nekad netika augšupielādēts."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "Šī lapa ir izkārtota kolonnās, un teksts tiek iegūts nepareizā secībā."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "Šī lapa ir ļoti blīvi piepildīta."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "Šis PDF ir aizsargāts ar paroli. Saglabājiet neaizsargātu kopiju un mēģiniet vēlreiz."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "Šis CV ir bloķēts"
 msgid "This resume is locked and cannot be updated."
 msgstr "Šis CV ir bloķēts un to nevar atjaunināt."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "Šis CV ir garš."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "Šo CV atjaunināja mākslīgā intelekta aģents."
@@ -4796,6 +5574,10 @@ msgstr "Šo CV atjaunināja mākslīgā intelekta aģents."
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Šī CV kopīgošanas iestatījumi ir mainīti citur."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "Šis pārskats ir valodas modeļa viedoklis par jūsu tekstu. Tas nemaina iepriekš redzamo rezultātu, un tas var kļūdīties. Uztveriet to kā otru viedokli, nevis spriedumu."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "Šī sadaļa ir paredzēta jūsu personīgām piezīmēm par šo CV. Sat
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "Šī sadaļa ir sadalīta kolonnās."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "Šī sadaļa tiek attēlota kā tukšs virsraksts."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Paātrināts ieraksts, kurā demonstrēta CV veidošana ar Reactive Resu
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Laika skala"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "Padoms"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "Mēģiniet vēlreiz"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "Turku"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "Eksportējot izslēdziet izvēles ligatūras."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "Tiek atjaunināts jūsu CV..."
 msgid "Upload .csv"
 msgstr "Augšupielādēt .csv"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "Augšupielādējiet CV un uzziniet, ko no tā patiešām nolasa kandidātu izsekošanas sistēma. Viss notiek šajā pārlūkprogrammā. Jūsu fails nekad netiek augšupielādēts, un nekas netiek saglabāts."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Augšupielādēt pielikumus"
@@ -5242,6 +6032,14 @@ msgstr "Izmantojiet līnijas augstumu vismaz 1,15, lai rindas netiktu sapludinā
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "Izmantojiet vienkāršu adresi, piemēram, vārds@example.com, bez teksta."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "Izmantojiet vienkāršu starptautisku formātu, piemēram, +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Izmantojiet atpazīstamu formātu, piemēram, \"Jan 2020 - Mar 2022\" vai \"2020 - 2022\"."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Izmantojiet atpazīstamu formu, piemēram, „2020. gada janvāris — 2022. gada marts” vai „2020 — 2022”."
@@ -5250,18 +6048,38 @@ msgstr "Izmantojiet atpazīstamu formu, piemēram, „2020. gada janvāris — 2
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Izmantojiet atpazīstamu formu, piemēram, „2022. gada marts” vai „2022”."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "Izmantojiet vienu kolonnu visam, kas jālasa secīgi."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "Izmantojiet vismaz 9 pt lielumu, lai atkārtoti atveidotās kopijas būtu precīzas."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "Izmantojiet A4 vai US Letter formātu, lai izkārtojums saglabātos atkārtotas attēlošanas laikā."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "Izmantojiet vismaz 9pt."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Izmantojiet krāsu {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "Izmantojiet vienkāršus virsrakstus, piemēram, \"Experience\", \"Education\" un \"Skills\"."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "Izmantot paraugu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "Izmantojiet redaktora parasto aizzīmju sarakstu, lai nejauši glifi nenokļūtu teikuma vidū."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "Derīgs ar kļūdām"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "Derīgs ar brīdinājumiem"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "Mainiet teikumu sākumus, lai sadaļa neizskatītos pēc šablona teksta."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "Paroles atiestatīšanai ir nepieciešama jūsu e-pasta verifikācija."
 msgid "Version history"
 msgstr "Versiju vēsture"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "Vienam CV tika atgūts ļoti maz vārdu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "Šādam lapu skaitam tika atgūts ļoti maz teksta."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "Vjetnamiešu"
@@ -5358,6 +6188,11 @@ msgstr "salīdzinājumā ar iepriekšējām 30 dienām"
 msgid "Waiting for the agent…"
 msgstr "Gaida aģentu…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "Vēlaties otru viedokli par tekstu?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "Brīdinājums"
@@ -5395,6 +6230,14 @@ msgstr "Meklēšana tīmeklī"
 msgid "Website"
 msgstr "Tīmekļa vietne"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "Ko nolasa parsētājs"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "Ko redz cilvēks"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Ko tu vēlies darīt?"
@@ -5406,6 +6249,14 @@ msgstr "Uz kādu nosaukumu vēlaties pārdēvēt šo sadaļu?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Ar ko Reactive Resume atšķiras no citiem CV veidotājiem?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "Ko šis pārbauda"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "Ko šis nedara"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "No kurienes nāk pieteikumi"
 msgid "Where your applications went"
 msgstr "Kur nonāca jūsu pieteikumi"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "Vai personāla speciālists var jūs sasniegt."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "Vai programmatūra vispār spēj atgūt vārdus."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "Vai failā ir īsts teksts vai tā attēls."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "Vai lapas ģeometrija saglabā lasīšanas secību."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "Vai CV ir segmentēts tā, kā to sagaida programmatūra."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "Vai teksts tiek iegūts tādā secībā, kādā to lasītu cilvēks."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "Vai ierastās sadaļas ir klāt un tās var atšķirt vienu no otras."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "Vai jūsu vārds, e-pasts, tālrunis un datumi saglabājas neskarti."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "Vai jūsu laika grafiku var atjaunot."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "Iegūstot tekstu, vārdi saplūst kopā."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Darbs OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "Darbs…"
 msgid "Worth a shot"
 msgstr "Ir vērts mēģināt"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "Rakstiet \"Present\" kā pašreizējā amata beigu datumu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "Rakstiet katru amatu kā skaidru amata nosaukuma un uzņēmuma rindu, ar datumiem blakus."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "Rakstiet to kā vienu nepārtrauktu daļu bez īpašām atstarpēm."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "Rakstiet pilnu adresi, lai to atpazītu kā saiti."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "Uzrakstiet pilnu adresi, tostarp https://."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "Teksts"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "Jums ir jauna vēstule!"
 msgid "Your account has been deleted successfully."
 msgstr "Jūsu konts ir veiksmīgi dzēsts."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "Neizdevās sazināties ar jūsu MI pakalpojumu sniedzēju. Pārbaudiet tā iestatījumus un mēģiniet vēlreiz."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Jūsu API atslēga ir nokopēta starpliktuvē."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "Jūsu pamatteksts ir ļoti mazs."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "Jūsu aizzīmes ir veidotas ar neparastām rakstzīmēm."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "Jūsu izmaiņas tiek saglabātas automātiski."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "Jūsu kontaktinformācija nav pirmajā lapā."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "Jūsu dati ir droši un nekad netiek kopīgoti vai pārdoti nevienam."
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Jūsu dati tiek glabāti droši un nekad netiek kopīgoti ar trešajām pusēm. Reactive Resume varat arī pašhostēt uz saviem serveriem, lai pilnībā kontrolētu savus datus."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "Jūsu datumi ir rakstīti vairākos dažādos veidos."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "Jūsu e-pasta adrese ir sadalīta pa vairākiem teksta fragmentiem."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "Jūsu e-pasta adrese nav apstiprināta pie pakalpojumu sniedzēja."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "Jūsu fails paliek šeit"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "Jūsu virsraksti izskatās tāpat kā pamatteksts."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "Jūsu jaunākās izmaiņas nevarēja saglabāt."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Jūsu mantotie stili paliek aktīvi, līdz jūs skaidri aktivizējat šo semantiskās CSS melnrakstu."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "Jūsu rindas ir ļoti cieši iesaiņotas."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "Jūsu malas ir ļoti šauras."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "Jūsu parole ir veiksmīgi atiestatīta. Tagad varat pieteikties ar jaun
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "Jūsu parole ir veiksmīgi atjaunināta."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "Jūsu tālruņa numurs ir rakstīts neparastā formā."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "Jūsu CV ir iekļauta fotogrāfija."
 msgid "Your resume shows no work experience."
 msgstr "Jūsu CV nav darba pieredzes."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "Jūsu CV izmanto vārdus \"I\" un \"my\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Jūsu CV publiskā saite pašlaik ir aizsargāta ar paroli. Kopīgojiet paroli tikai ar cilvēkiem, kuriem uzticaties."
@@ -5622,4 +6575,3 @@ msgstr "Tālināt"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

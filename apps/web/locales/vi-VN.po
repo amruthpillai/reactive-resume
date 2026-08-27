@@ -53,6 +53,24 @@ msgstr "Đang theo dõi {0} đơn ứng tuyển"
 msgid "{0} characters"
 msgstr "{0} ký tự"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{0} trên {1} kiểm tra áp dụng được đã đạt"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{0} trên {1} kiểm tra áp dụng được đã đạt."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "Tìm thấy {0} trên {1} từ khóa"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} mục sẵn sàng nhập"
 msgid "{0} rejected"
 msgstr "{0} bị từ chối"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} bị bỏ qua"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "Đã bỏ qua {0} mục (thiếu công ty/vai trò)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} cần khắc phục"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 tháng"
 msgid "6 months"
 msgstr "6 tháng"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "Bản xuất một cột gọn gàng giữ được mọi thông tin. Cột và hình ảnh là nơi chúng thường bị mất."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Một liên kết xác nhận đã được gửi đến địa chỉ email hiện tại của bạn. Vui lòng kiểm tra hộp thư đến để xác nhận thay đổi."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "Một ngày nằm ở tương lai."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "Một khoảng thời gian kết thúc trước khi bắt đầu."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "Một khoảng thời gian được viết theo định dạng mà hầu hết phần mềm không đọc được."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "Có một font được tham chiếu nhưng không được nhúng."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Trình tạo sơ yếu lý lịch mã nguồn mở và miễn phí giúp
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Một lời nhắc thân thiện cho nhà tuyển dụng"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "Một khoảng trống cao suốt trang chia trang này thành hai cột."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "Khoảng trống không phải là vấn đề. Thêm một dòng giải thích nếu bạn muốn; nhiều sơ yếu lý lịch tốt đơn giản là không có."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "Một liên kết trỏ đến nơi khác với địa chỉ mà nó hiển thị."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "Rất nhiều người đã gửi email cho tôi trong những năm qua 
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Một liên kết xác minh mới đã được gửi tới địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến để xác minh tài khoản."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "Một ngày dạng số được đọc khác nhau ở mỗi quốc gia."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "Một trang bị xoay."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Một dự án tâm huyết của <0>Amruth Pillai</0>."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "Một sơ yếu lý lịch được trình bày cho người đọc, có ảnh, tiêu đề và cột"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "Hơi quá tầm"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "Một địa chỉ web được viết mà không có https://."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "Thêm ghi chú…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "Thêm một khoảng thời gian như \"Tháng 1 năm 2020 - Hiện tại\" để nó xuất hiện trên dòng thời gian của bạn."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "Thêm một mục có tiêu đề \"Giáo dục\". Nhiều hệ thống có trường học vấn bắt buộc."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "Thêm một mục có tiêu đề \"Kinh nghiệm\" hoặc \"Kinh nghiệm làm việc\". Đây là trường mà hầu hết hệ thống dùng để xếp hạng."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Thêm thẻ và nhấn Enter…"
@@ -291,10 +375,6 @@ msgstr "Thêm thẻ và nhấn Enter…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "Thêm một mục hoặc sử dụng các dự án và công việc tình nguyện để hiển thị lịch sử tương đương."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "Thêm một mục vào nó hoặc ẩn nó."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "Thêm ít nhất một thành phố và quốc gia để có thể khớ
 msgid "Add contact"
 msgstr "Thêm liên hệ"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "Thêm số liệu khi bạn có: khối lượng, phần trăm, khung thời gian, quy mô đội nhóm."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Thêm từ khóa"
@@ -327,6 +411,14 @@ msgstr "Thêm liên kết"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Thêm nhiều vai trò để thể hiện sự thăng tiến nghề nghiệp tại cùng một công ty."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "Thêm một liên kết thể hiện công việc của bạn."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "Thêm một số kèm mã quốc gia; một số biểu mẫu ứng tuyển yêu cầu điều này trước khi bạn có thể gửi."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Thêm trang"
@@ -339,6 +431,10 @@ msgstr "Thêm nhà cung cấp"
 msgid "Add Role"
 msgstr "Thêm vai trò"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "Thêm khoảng trắng giữa các phần để người đọc có thể lướt qua dễ dàng."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "Thêm thẻ"
@@ -346,6 +442,10 @@ msgstr "Thêm thẻ"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Thêm vào quy trình"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "Thêm hai hoặc ba dòng ở đầu mô tả công việc bạn làm."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "Hãy điều chỉnh sơ yếu lý lịch cho phù hợp với vị trí
 msgid "Advanced"
 msgstr "Trình độ cao"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "Lời khuyên dành cho người đọc. Không có điều nào trong số này ảnh hưởng đến điểm số."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "Tiếng Afrikaans"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "So với mô tả công việc"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "Việc thiết lập tác nhân AI sẽ không khả dụng cho đến k
 msgid "AI assistant"
 msgstr "Trợ lý AI"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "Nhà cung cấp AI"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Chức năng quản lý nhà cung cấp AI sẽ không khả dụng cho đến khi REDIS_URL và ENCRYPTION_SECRET được cấu hình."
@@ -403,6 +515,10 @@ msgstr "Hiện tại, chức năng quản lý nhà cung cấp AI không khả d�
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Các nhà cung cấp AI"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "Nhà cung cấp AI sẽ không khả dụng cho đến khi ENCRYPTION_SECRET được cấu hình."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "Tiếng Albania"
 msgid "Allow Public Access"
 msgstr "Cho phép truy cập công khai"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "Hầu như không có gạch đầu dòng nào của bạn chứa số liệu."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "Đã được đề cập"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Đã có tài khoản? <0/>"
@@ -423,6 +547,10 @@ msgstr "Đã có tài khoản? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "Tiếng Amharic"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "Không thể đọc được một font đã nhúng."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "Đã xảy ra lỗi không mong muốn khiến trang này không thể t
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Đã xảy ra lỗi không xác định khi nhập sơ yếu lý lịch của bạn."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "Phân tích sơ yếu lý lịch"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "Phân tích…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloud hỗ trợ Reactive Resume với tư cách là nhà tài tr�
 msgid "ATS Check"
 msgstr "Kiểm tra ATS"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "Công cụ kiểm tra ATS"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "Tự động điền thất bại."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Có sẵn bằng nhiều ngôn ngữ. Nếu bạn muốn đóng góp, hãy xem qua Crowdin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "Tránh hiệu ứng giãn cách chữ quá mức, sau đó xuất lại."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "Phù hợp nhất để ứng tuyển, chia sẻ và in ấn."
 msgid "Blank draft"
 msgstr "Bản nháp trống"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "Lỗi nghiêm trọng"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Bảng"
@@ -750,6 +884,10 @@ msgstr "Bo viền"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "Độ rộng bo viền"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "Chia sơ yếu lý lịch thành các phần thông thường để có thể phân đoạn được."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "Nhật ký thay đổi"
 msgid "Chat"
 msgstr "Trò chuyện"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "Kiểm tra lại"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "Kiểm tra xem tệp đã xuất có chứa mọi thứ bạn mong đợi hay không, và toàn bộ nội dung đều là văn bản có thể chọn được."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Hãy kiểm tra email của bạn để lấy đường link đặt lại mật khẩu."
@@ -868,6 +1014,10 @@ msgstr "Hãy kiểm tra email của bạn để lấy đường link đặt lạ
 msgid "Check your email for a link to verify your account."
 msgstr "Hãy kiểm tra email của bạn để lấy liên kết xác minh tài khoản."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "Được kiểm tra ngay trên trình duyệt của bạn. Tệp không bao giờ được tải lên."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "Kiểm tra"
@@ -875,6 +1025,10 @@ msgstr "Kiểm tra"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "Kiểm tra bản nháp"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "Đang kiểm tra…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "Tiếng Trung (Phồn thể)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "Chọn một mẫu và soạn thảo bản nháp sơ yếu lý lịch."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "Chọn một tệp PDF"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "Hãy so sánh CV này với đường dẫn đăng tuyển dụng và c�
 msgid "Completely free, forever, no hidden costs."
 msgstr "Hoàn toàn miễn phí, mãi mãi, không có chi phí ẩn."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "Nén hoặc xóa các hình ảnh lớn để việc tải lên được nhanh chóng."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "Xác nhận"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Kết nối"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "Kết nối nhà cung cấp AI của riêng bạn để nhận đánh giá về nội dung viết. Các kiểm tra ở trên không cần nhà cung cấp hay tài khoản nào."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "Kết nối thất bại."
 msgid "Connection verified — provider is ready to use."
 msgstr "Kết nối đã được xác nhận — nhà cung cấp đã sẵn sàng sử dụng."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "Thông tin liên hệ"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "Liên hệ"
@@ -1020,6 +1190,10 @@ msgstr "Liên hệ"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "Nội dung"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "Nội dung được trình bày theo dạng lưới."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "Sao chép bảng định kiểu"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "Sao chép toàn bộ mô tả công việc từ tin tuyển dụng và dán vào bên dưới. Chúng tôi sẽ điền các trường giúp bạn và lưu lại văn bản cùng đơn ứng tuyển này để chấm điểm mức độ phù hợp và tinh chỉnh."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "Sao chép văn bản từ tệp đã xuất và đọc lại toàn bộ; sửa bất cứ điều gì bị đặt sai chỗ."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "Sao chép khóa bí mật này và sử dụng trong ứng dụng của bạn để truy cập dữ liệu."
@@ -1102,6 +1280,10 @@ msgstr "Sao chép URL"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Hãy sửa năm hoặc sử dụng \"Hiện tại\" cho công việc đang diễn ra."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "Sửa lại năm, hoặc ghi \"Hiện tại\" cho công việc đang diễn ra."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "Không thể tải tệp lên. Vui lòng thử lại."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "Số lượng theo nguồn"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "Được tính riêng biệt với điểm phân tích. Mức độ bao phủ không phải là một dự đoán về bất cứ điều gì."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "Ngày"
 msgid "Date applied"
 msgstr "Ngày ứng tuyển"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "Ngày tháng"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "Giảm độ thụt lề"
@@ -1397,6 +1588,10 @@ msgstr "Giảm độ thụt lề"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "Giảm độ phóng to"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "Kiểm tra chuyên sâu"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "Xóa"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "Xóa tài khoản"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "Xóa nó đi. Từ khóa ẩn bị coi là hành vi cố ý gian lận trong tìm kiếm."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "Đã từ chối — đang chờ tác nhân…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Từ chối"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "Mô tả mỗi vai trò bằng các gạch đầu dòng ngắn gọn. Đoạn văn liền mạch khó lướt đọc và khó phân đoạn hơn."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "Kéo và thả các mục ở đây để di chuyển giữa các cột"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Kéo chuột để định vị lại và sử dụng thanh trượt để phóng to trước khi tải lên."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "Bỏ đại từ nhân xưng và bắt đầu bằng động từ. Đó là quy ước phổ biến ở hầu hết thị trường."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "Địa chỉ Email"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "Tính năng gửi email chưa được cấu hình trên phiên bản này, do đó việc xác minh đã bị vô hiệu hóa."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "Nhúng tất cả font khi xuất tệp, để các ký tự hiển thị đúng như bạn mong muốn."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Bật xác thực 2FA"
@@ -1760,6 +1971,10 @@ msgstr "Đang bật bảo vệ bằng mật khẩu..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "Kích hoạt xác thực hai yếu tố…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "Áp đặt quy tắc một trang, hoặc coi một font chữ hay khoảng trống trong sự nghiệp là lỗi."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "Xuất"
 msgid "Export Data"
 msgstr "Xuất dữ liệu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "Xuất từ tài liệu gốc thay vì quét hoặc chụp màn hình nó."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "Xuất dữ liệu của tôi"
@@ -1863,6 +2082,10 @@ msgstr "Xuất dữ liệu của tôi"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "Xuất PNG"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "Xuất sơ yếu lý lịch dưới dạng PDF văn bản thay vì hình ảnh hoặc bản quét."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "Đã xuất pipeline-flow.png"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "Thất bại"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "Không thể phân tích sơ yếu lý lịch."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "Không thể gửi lại email xác minh. Vui lòng thử lại."
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "Không thể đặt lại mật khẩu của bạn. Vui lòng thử lại."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "Không thể đánh giá sơ yếu lý lịch này."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "Pháo hoa"
 msgid "Fit to view"
 msgstr "Phù hợp để xem"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "Làm phẳng biểu mẫu để văn bản trở thành một phần của trang."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "Linh hoạt"
@@ -2210,14 +2437,6 @@ msgstr "Tạo tên ngẫu nhiên"
 msgid "German"
 msgstr "Tiếng Đức"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "Nhận đánh giá về CV của bạn kèm theo điểm tổng thể, những điểm mạnh và các đề xuất cụ thể."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "Nhận bản đánh giá chi tiết về CV của bạn nhờ công nghệ AI, bao gồm điểm tổng thể, những điểm mạnh chính và các gợi ý thiết thực. Để kích hoạt tính năng này, vui lòng cập nhật cài đặt AI của bạn."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Bắt đầu"
@@ -2229,6 +2448,14 @@ msgstr "Bắt đầu"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "Ghi khoảng thời gian cho mỗi vai trò, chẳng hạn \"Tháng 1 năm 2020 - Hiện tại\", để có thể dựng lại dòng thời gian của bạn."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "Ghi khoảng thời gian cho mỗi vai trò và bằng cấp."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "Tiêu đề 5"
 msgid "Heading 6"
 msgstr "Tiêu đề 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "Tiêu đề"
@@ -2388,10 +2616,9 @@ msgstr "Ẩn hình ảnh"
 msgid "Hide Section Icons"
 msgstr "Ẩn biểu tượng phần"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "Cao"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "Tác động cao"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "Icon"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Xác định những thiếu sót trong hệ thống theo dõi ứng viên và chỉ áp dụng những cải tiến từ khóa có độ tin cậy cao."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "Nếu nó xuất phát từ bản quét, đây là điều bình thường. Nếu không, hãy xóa nó đi; nhà tuyển dụng coi đây là hành vi nhồi nhét từ khóa."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "Hình ảnh chiếm phần lớn trang."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "Đang nhập sơ yếu lý lịch của bạn..."
 msgid "Importing…"
 msgstr "Đang nhập…"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "Trong {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "Bao gồm đầu trang hồ sơ"
@@ -2491,6 +2731,10 @@ msgstr "Bao gồm đầu trang hồ sơ"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "Tăng khoảng cách thụt lề"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "Tăng khoảng cách dòng để hai dòng không bị hợp nhất thành một."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "Mã nội tuyến"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "Thông tin chi tiết"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "Đang kiểm tra trang {0} trên {1}…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "Công việc"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "Mô tả công việc"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "Mô tả công việc (tùy chọn)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "Căn đều hai bên"
 msgid "Kannada"
 msgstr "Tiếng Kannada"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "Chỉ giữ một địa chỉ duy nhất, để không ai phải đoán nên dùng địa chỉ nào."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "Giữ dung lượng dưới 2.5 MB, thường bằng cách xóa hoặc thu nhỏ hình ảnh."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "Giữ nội dung sơ yếu lý lịch dưới dạng văn bản thật thay vì hình ảnh của văn bản."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "Giữ tiêu đề lặp lại trên mỗi trang ngắn gọn, hoặc bỏ hẳn chúng đi. Chúng cũng sẽ lặp lại trong văn bản được trích xuất."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "Giữ mỗi mục trong khoảng hai dòng, để người đọc lướt qua có thể đọc hết."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "Chỉ dùng hai hoặc ba họ font. Mỗi font thêm vào là thêm một rủi ro hiển thị sai."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "Ngôn ngữ"
 msgid "Languages"
 msgstr "Ngôn ngữ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "Lần phân tích cuối cùng vào {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "Xem lần cuối vào {0}"
 msgid "Latvian"
 msgstr "Tiếng Latvia"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "Trình bày văn bản theo chiều ngang. Các đoạn bị xoay thường bị mất hoặc đặt sai vị trí."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "Bố cục"
@@ -2715,6 +2995,10 @@ msgstr "Tìm hiểu thêm"
 msgid "Leave"
 msgstr "Rời đi"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "Chừa ít nhất nửa inch xung quanh trang."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Để trống để đặt lại tiêu đề về mặc định."
@@ -2726,6 +3010,10 @@ msgstr "Rời đi để thành lập nhà cung cấp AI?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Căn trái"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "Độ dài không phải là khuyết điểm, và không có quy tắc một trang chung nào cả. Giữ lại những trang thực sự xứng đáng."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "Cấp độ {level} trên 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "Được cấp phép theo <0>MIT</0>."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "Chữ ghép (ligature) có thể làm mất chữ cái trong các từ như \"workflow\"."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "Đang liên kết tài khoản {providerName} của bạn..."
 msgid "List"
 msgstr "Danh sách"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "Liệt kê các công cụ và công nghệ bạn sử dụng. Nhà tuyển dụng tìm kiếm theo kỹ năng nhiều hơn bất kỳ trường nào khác."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "Tiếng Litva"
@@ -2814,8 +3110,8 @@ msgstr "Đang tải các nhà cung cấp AI. Vui lòng thử lại sau một lá
 msgid "Loading applications…"
 msgstr "Đang tải ứng dụng…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "Đang tải nhà cung cấp…"
 
@@ -2838,6 +3134,7 @@ msgstr "Đang tải…"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Vị trí"
@@ -2855,6 +3152,10 @@ msgstr "Khoá"
 msgid "Logout"
 msgstr "Đăng xuất"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "Có những đoạn dài được viết toàn chữ hoa."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "Bền vững lâu dài"
@@ -2864,10 +3165,9 @@ msgstr "Bền vững lâu dài"
 msgid "Lost access to your authenticator?"
 msgstr "Bạn bị mất quyền truy cập vào ứng dụng xác thực?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "Thấp"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "Tác động thấp"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "Điều hướng chính"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "Hãy tập trung vào kết quả hơn trong phần mô tả kinh nghiệm và loại bỏ những trách nhiệm không rõ ràng."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "Làm cho văn bản hiển thị khớp với địa chỉ đích."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "Làm cho chúng lớn hơn, đậm hơn hoặc viết hoa để dễ nhận biết."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "Tiếng Mã Lai"
@@ -2889,6 +3197,10 @@ msgstr "Tiếng Mã Lai"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "Tiếng Malayalam"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "Nhiều gạch đầu dòng bắt đầu bằng cùng một cụm từ."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "Đánh dấu bị từ chối"
 msgid "Match scoring failed."
 msgstr "Chấm điểm độ phù hợp thất bại."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Trung bình"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "Tác động trung bình"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "Trí tuệ nhân tạo Mistral"
 msgid "Model"
 msgstr "Mô hình"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "Xuất hiện nhiều hơn một địa chỉ email."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "Hầu hết gạch đầu dòng mở đầu bằng những từ thừa thãi thay vì điều bạn đã làm."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "Hầu hết các mục không có ngày tháng."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "Hầu hết các hệ thống đều gửi ứng viên qua email. Thêm một cái trong phần Cơ bản."
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "Di chuyển toàn bộ nội dung vào trong phạm vi trang rồi xuất lại."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "Di chuyển nó vào cột chính và giữ thanh bên cho danh sách ngắn."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "Di chuyển nội dung thực sự vào phần thân của trang; một số phần mềm bỏ qua phần lề."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "Chuyển giai đoạn"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Chuyển đến"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "Di chuyển email và số điện thoại của bạn lên đầu trang một."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "Phải bắt đầu bằng https://"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "Không có hồ sơ ứng tuyển nào khớp với bộ lọc của b�
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "Chưa có hồ sơ ứng tuyển — thêm vài mục để xem phễu và tỷ lệ phản hồi."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "Không tìm thấy danh sách gạch đầu dòng nào."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "Không tìm thấy tiêu đề mục thông thường nào."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "Không có dữ liệu nào được trả về từ nhà cung cấp AI."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "Không tìm thấy ngày tháng nào."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "Không tìm thấy mục Giáo dục."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "Không tìm thấy địa chỉ email nào."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "Không có dòng nào trông giống chức danh đi kèm với nhà tuyển dụng."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Chưa có khóa truy cập nào được đăng ký."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "Không tìm thấy số điện thoại nào."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "Chưa có sơ yếu lý lịch nào."
 msgid "No saved versions yet."
 msgstr "Chưa có phiên bản nào được lưu."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "Không tìm thấy mục Kỹ năng."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "Chưa có dữ liệu nguồn."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "Không thể trích xuất từ khóa cụ thể nào từ mô tả công việc đó, có thể phần lớn là nội dung mẫu chung chung. Hãy dán phần yêu cầu để có kết quả so sánh hữu ích hơn."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Không có nhà cung cấp nào được kiểm thử"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "Không thể đọc được văn bản nào từ tệp này."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "Chưa có chủ đề nào."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "Không tìm thấy mục Kinh nghiệm làm việc."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "Na Uy"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "Không kết nối"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "Không có bằng chứng trong sơ yếu lý lịch của bạn"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "Không có trong sơ yếu lý lịch của bạn"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "Không được chấm điểm"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "Lưu ý"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "Ghi chú"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "Không có gì đánh dấu một vai trò đang diễn ra."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "Không có gì cần khắc phục ở đây."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "Không có gì cần khắc phục. Các trang còn lại đơn giản là không nằm trong phạm vi của báo cáo này."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "Không có gợi ý nào."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "Bảo trì liên tục"
 msgid "Only applies when the section fits on a single page."
 msgstr "Chỉ áp dụng khi phần đó nằm gọn trên một trang."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "Chỉ tìm thấy một tiêu đề mục có thể nhận diện được."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "Chỉ {0} trang đầu tiên được kiểm tra, vì vậy báo cáo này không bao quát toàn bộ tệp."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "Chỉ nhập {MAX_IMPORT} hàng đầu tiên mỗi lần — còn lại {overflow}. Hãy chia tệp để nhập phần còn lại."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "Chỉ những trang đầu tiên được kiểm tra."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "Chế độ lấy nét mở"
 msgid "Open in builder"
 msgstr "Mở trong trình soạn thảo"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "Mở Cài đặt tích hợp"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Mã nguồn mở"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "Mở tệp đã xuất và xác nhận bạn có thể chọn và sao chép mọi phần của nó."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "Tương thích với OpenAI"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "Đang mở tệp…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "Ghi chú tùy chọn cho tác nhân…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Tùy chọn, đặt mật khẩu để chỉ những ai có mật khẩu mới có thể xem sơ yếu lý lịch của bạn qua liên kết này."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "Tùy chọn, xem những từ khóa nào trong tin tuyển dụng đã xuất hiện sẵn."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "Tùy chọn cho {title}"
@@ -3237,9 +3670,9 @@ msgstr "Danh sách có thứ tự"
 msgid "Organization"
 msgstr "Tổ chức"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "Điểm tổng thể"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "trên 100"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "Bảo vệ bằng mật khẩu đã bị tắt."
 msgid "Password protection has been enabled."
 msgstr "Bảo vệ bằng mật khẩu đã được bật."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "Dán một tin tuyển dụng để xem những từ khóa nào trong đó đã xuất hiện trong sơ yếu lý lịch của bạn."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "Dán các hàng hoặc tải lên .csv. Chúng tôi ánh xạ các cột như Company, Role, Stage, Stage Date, Salary, Source và Tags."
@@ -3321,6 +3758,10 @@ msgstr "Dán các hàng hoặc tải lên .csv. Chúng tôi ánh xạ các cột
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "Dán toàn bộ mô tả công việc vào đây…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "Dán tin tuyển dụng để xem những từ khóa nào trong đó đã xuất hiện trong sơ yếu lý lịch của bạn."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "Cá nhân hóa sơ yếu lý lịch của bạn với bất kỳ màu sắc, phông chữ hoặc thiết kế nào, và tạo dấu ấn riêng của bạn."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "Điện thoại"
@@ -3383,6 +3825,10 @@ msgstr "Điện thoại"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Chọn một biểu tượng"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "Chọn một định dạng và dùng nhất quán ở mọi nơi."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "Bồ Đào Nha (Bồ Đào Nha)"
 msgid "Position"
 msgstr "Vị trí"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "Dự đoán liệu bạn có bị từ chối hay không. Không công cụ nào làm được điều đó."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Ưu tiên tiêu đề thông thường như \"Kinh nghiệm làm việc\" hoặc \"Học vấn\"."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "Ưu tiên bố cục một cột, hoặc chỉ dùng cột bên để chứa các danh sách ngắn, độc lập."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "Xem trước và xuất sẽ giữ lại các kiểu dáng hợp lệ v�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Màu chủ đạo"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "In hoặc xuất biểu mẫu thành PDF phẳng trước khi gửi."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "Ấn phẩm"
 msgid "Publisher"
 msgstr "Nhà xuất bản"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "Đặt một địa chỉ email đơn giản gần đầu trang một. Đây là thông tin mà hầu hết hệ thống dùng để lưu hồ sơ của bạn."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "JSON thô"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "Xuất lại từ bố cục một cột, sau đó sao chép văn bản ra và kiểm tra xem nó có đọc từ trên xuống dưới hay không."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "Xuất lại từ tài liệu gốc thay vì chuyển đổi từ định dạng khác."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "Xuất lại từ tài liệu gốc với font được nhúng đúng cách."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "Xuất lại bằng một font TrueType hoặc OpenType thông thường."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "Xuất lại với font đã nhúng, rồi kiểm tra xem văn bản có sao chép ra sạch sẽ không."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "Xuất lại với font đã nhúng, sau đó mở tệp và kiểm tra xem văn bản có sao chép ra sạch sẽ không."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "Hãy đọc hướng dẫn Áp dụng kiểu tùy chỉnh."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Đã đọc sơ yếu lý lịch"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "Khả năng đọc"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "Đang đọc trang {0} trên {1}…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "Đang xóa bảo vệ mật khẩu..."
 msgid "Rename"
 msgstr "Đổi tên"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "Kết xuất sơ yếu lý lịch hiện tại của bạn thành PDF và chạy kiểm tra tệp đầy đủ, ngay trên trình duyệt của bạn. Không có gì được tải lên."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Sắp xếp lại"
@@ -3727,6 +4227,23 @@ msgstr "Sắp xếp lại"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Sắp xếp lại trường tùy chỉnh"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "Lặp lại tuyên bố rằng hầu hết sơ yếu lý lịch đều bị loại bỏ tự động."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "Được lặp lại nhiều hơn hẳn so với chính tin tuyển dụng: {0}. Nhà tuyển dụng sẽ nhận ra điều này."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "Thay thế font biểu tượng bằng văn bản thuần túy, sau đó xuất lại."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "Thay thế bảng biểu bằng đoạn văn và danh sách thuần túy. Các ô được trích xuất theo thứ tự lưu trữ, không theo thứ tự đọc."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "Gửi lại email xác minh"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Đang gửi lại email xác minh..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "Chỉ dùng chữ hoa cho các tiêu đề ngắn. Chữ hoa làm chậm việc đọc và có thể khiến tìm kiếm phân biệt hoa thường thất bại."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "Khôi phục phiên bản này?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Bản tóm tắt"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "Phân tích sơ yếu lý lịch"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "Việc phân tích sơ yếu lý lịch đã hoàn tất."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "Xem lại các chỉnh sửa"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Hãy xem lại sơ yếu lý lịch so với mô tả công việc và đặt câu hỏi cho tôi trước khi thay đổi những phần không chắc chắn."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "Đánh giá nội dung viết bằng AI"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "Xem lại chỉnh sửa này"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "Đang đánh giá…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "Rumani"
 msgid "Rotation"
 msgstr "Xoay"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "Hãy thực hiện phân tích đầu tiên để nhận được bảng điểm, điểm mạnh và các đề xuất được sắp xếp theo mức độ ưu tiên."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "Chạy lại"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "Chạy đánh giá bằng AI"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "Chạy kiểm tra chuyên sâu"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "Lưu & Kiểm tra Nhà cung cấp"
 msgid "Save & Upload"
 msgstr "Lưu & Tải lên"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "Lưu một bản không bảo vệ, không mật khẩu và không hạn chế quyền."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "Lưu thay đổi"
@@ -3940,6 +4473,10 @@ msgstr "Lưu thay đổi"
 msgid "Save model"
 msgstr "Lưu mô hình"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "Lưu tệp với tất cả các trang ở chiều thẳng đứng."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "Đã lưu"
@@ -3959,10 +4496,6 @@ msgstr "Trường"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "Chấm điểm độ phù hợp của tôi"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "Bảng điểm"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "Tùy chọn phần"
 msgid "Section Type"
 msgstr "Loại phần"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "Các mục"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "Xem sơ yếu lý lịch này khớp với tin tuyển dụng như thế nào"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "Xem những gì một hệ thống theo dõi ứng viên (ATS) có thể đọc được từ sơ yếu lý lịch của bạn. Chạy ngay trên trình duyệt của bạn."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "Chọn tất cả"
 msgid "Select an agent model"
 msgstr "Chọn một mô hình tác nhân"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "Chọn nhà cung cấp AI"
 
@@ -4075,9 +4617,21 @@ msgstr "Gửi tin nhắn"
 msgid "Send Password Reset Email"
 msgstr "Gửi email đặt lại mật khẩu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "Gửi trực tiếp sơ yếu lý lịch thay vì bọc nó trong một portfolio."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Đang gửi email đặt lại mật khẩu..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Gửi văn bản đã được trích xuất từ PDF của bạn đến nhà cung cấp AI mà bạn chọn bên dưới. Tệp PDF không bao giờ được tải lên."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Gửi văn bản đã được trích xuất từ PDF của bạn, cùng với mô tả công việc bạn đã dán, đến nhà cung cấp AI mà bạn chọn bên dưới. Tệp PDF không bao giờ được tải lên."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "Serbia"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Đặt mật khẩu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "Thiết lập ngôn ngữ tài liệu khi xuất."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "Độ rộng thanh bên"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Đăng nhập"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "Đăng nhập và kết nối nhà cung cấp AI của riêng bạn để nhận gợi ý viết lại cho các gạch đầu dòng còn yếu. Các kiểm tra ở trên hoàn toàn miễn phí và không cần tài khoản."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "Slug"
 msgid "Some application systems require one before you can submit."
 msgstr "Một số hệ thống ứng dụng yêu cầu phải có trước khi bạn có thể gửi."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "Một số gạch đầu dòng quá dài."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "Một số ký tự bị hiển thị thành dấu chấm hỏi."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "Một số kiểm tra cần thông tin mà tệp này không có: nội dung trang không thể kiểm tra được, hoặc văn bản bằng ngôn ngữ mà các kiểm tra này không hỗ trợ. Chúng không được tính là đạt cũng không tính là không đạt."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "Một số ký hiệu không có ý nghĩa bên ngoài tệp này."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "Một số dòng được lưu trữ không theo thứ tự đọc."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Một số trình phân tích cú pháp xử lý sai hình ảnh và ảnh không được khuyến khích ở một số vùng."
@@ -4311,6 +4894,14 @@ msgstr "Một số trình phân tích cú pháp xử lý sai hình ảnh và ả
 msgid "Some styles were ignored"
 msgstr "Một số kiểu dáng đã bị bỏ qua"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "Một số văn bản nằm ngoài phạm vi trang."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "Một số văn bản bị xoay."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Một lựa chọn khác…"
@@ -4318,6 +4909,10 @@ msgstr "Một lựa chọn khác…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Đã xảy ra lỗi"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "Đã xảy ra lỗi khi đọc tệp đó. Vui lòng thử lại."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "Khoảng cách (Dọc)"
 msgid "Spanish"
 msgstr "Tây Ban Nha"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "Viết đầy đủ tên tháng, chẳng hạn \"Tháng 3 năm 2022\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "Nhà tài trợ"
@@ -4419,6 +5018,10 @@ msgstr "Bắt đầu xây dựng hồ sơ của bạn bằng cách đặt tên c
 msgid "Start building your resume from scratch"
 msgstr "Bắt đầu xây dựng hồ sơ từ đầu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "Bắt đầu mỗi mục bằng một động từ cụ thể: xây dựng, dẫn dắt, giảm thiểu, chuyển đổi."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "Bắt đầu chủ đề mới"
@@ -4427,6 +5030,10 @@ msgstr "Bắt đầu chủ đề mới"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "Bắt đầu trên trang mới"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "Bắt đầu sơ yếu lý lịch bằng tên của bạn trên một dòng riêng."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "Vẫn đang chờ {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "Ngừng sản xuất"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "Điểm mạnh"
 
@@ -4473,7 +5080,7 @@ msgstr "Bảng định kiểu có lỗi nghiêm trọng"
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "Gợi ý"
 
@@ -4494,6 +5101,7 @@ msgstr "Ủng hộ Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "Hãy ủng hộ ứng dụng bằng cách làm bất cứ điều gì bạn có thể!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "Hoán đổi ngày bắt đầu và ngày kết thúc."
@@ -4532,6 +5140,10 @@ msgstr "Thẻ"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Thẻ có thể được dùng để phân loại hồ sơ của bạn theo từ khóa."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "Thẻ (tags) cung cấp cho phần mềm thứ tự đọc rõ ràng. Hãy bật chúng khi xuất, nếu công cụ của bạn hỗ trợ."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "Căn chỉnh văn bản"
 msgid "Text Color"
 msgstr "Màu chữ"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "Văn bản được viết từng ký tự một."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "Văn bản nằm trong vùng đầu trang hoặc chân trang."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "Thái"
@@ -4597,6 +5217,19 @@ msgstr "Thái"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "Cảm ơn các nhà tài trợ của chúng tôi."
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "Tệp đó không thể được đọc như một tệp PDF."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "Tệp đó không phải là PDF. Hãy xuất sơ yếu lý lịch của bạn dưới dạng PDF rồi thử lại."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "Tệp đó quá lớn để kiểm tra trên trình duyệt."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "Khóa API sẽ không còn có thể truy cập dữ liệu của bạn 
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "Ứng dụng đã đưa bạn đến đây thực hiện một yêu cầu ủy quyền không hợp lệ."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "Các kiểm tra ở trên mang tính máy móc. Tính năng này hỏi một mô hình ngôn ngữ xem người đọc sẽ nghĩ gì về các gạch đầu dòng của bạn, và đề xuất cách viết lại. Nó không tạo ra điểm số."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "Lệnh bạn đang tìm kiếm không tồn tại."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "Kiểm tra chuyên sâu không thể hoàn tất. Vui lòng thử lại."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Không thể phân tích tệp đã nhập để tạo thành một bản lý lịch hợp lệ."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "Thứ tự lưu trữ văn bản khác biệt nghiêm trọng so với thứ tự đọc."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "Trang bạn đang tìm có thể đã được di chuyển hoặc không còn tồn tại nữa."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "Các trang là hình ảnh, không có văn bản ẩn phía sau."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "Mật khẩu bạn đã nhập không đúng"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "PDF được đọc bởi mã chạy ngay trong tab này. Không có gì được tải lên, không có gì được lưu trữ, và không cần tài khoản. Nếu muốn, bạn có thể mở tab mạng (network) trên trình duyệt để quan sát."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "Nhà cung cấp không chia sẻ địa chỉ email, vốn là bắt bu�
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "Nhà cung cấp đã từ chối lần đăng nhập này. Vui lòng bắt đầu lại."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "Nhà cung cấp đã trả về một đánh giá không thể đọc được. Hãy thử lại."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "Không thể cập nhật bản xem trước sơ yếu lý lịch. Bản
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Hồ sơ bạn đang cố truy cập đã được bảo vệ bằng mật khẩu"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "Cùng một dòng lặp lại trên mọi trang."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "Điểm số bị giới hạn do một vấn đề nghiêm trọng: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "Văn bản khi trích xuất ra không thể đọc được."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "Phần đầu trang một không trông giống một cái tên."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "Chủ đề"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Sau đó, nhập mã 6 chữ số mà ứng dụng cung cấp để tiếp tục."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "Có một khoảng trống giữa hai vai trò có ngày tháng."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "Không có liên kết đến hồ sơ, portfolio hoặc kho lưu trữ."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "Không có đoạn tóm tắt nào."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "Đã xảy ra sự cố trong quá trình tạo tệp DOCX, vui lòng thử lại."
@@ -4695,6 +5381,10 @@ msgstr "Đã xảy ra lỗi trong quá trình tạo PDF, vui lòng thử lại."
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Đã xảy ra lỗi trong quá trình chuẩn bị sơ yếu lý lịch của bạn để in, vui lòng thử lại."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "Không đủ thông tin để chạy kiểm tra này."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "Không thể mở luồng thảo luận về tác vụ này."
 msgid "This assistant could not be opened."
 msgstr "Không thể mở trình trợ lý này."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "Kiểm tra này không áp dụng cho tệp này."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "Kiểm tra này chỉ chạy trên sơ yếu lý lịch được viết bằng tiếng Anh."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "Ngày này sẽ không được đọc chính xác."
@@ -4757,13 +5455,73 @@ msgstr "Mục này sẽ bị xóa vĩnh viễn. Không thể hoàn tác."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Tính năng này yêu cầu kết nối với nhà cung cấp AI. Vui lòng thiết lập nhà cung cấp này trong phần cài đặt."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "Tệp này chứa các trường biểu mẫu."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "Tệp này chứa văn bản mà người đọc không thể nhìn thấy, vì vậy một số kết quả khớp có thể là do phần văn bản đó."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "Tệp này chứa văn bản được vẽ ở chế độ ẩn."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "Tệp này chứa văn bản màu trắng trên nền trắng."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "Tệp này không khai báo ngôn ngữ."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "Tệp này không có thẻ hỗ trợ tiếp cận (accessibility tags)."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "Tệp này được mã hóa."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "Tệp này khá lớn đối với một sơ yếu lý lịch."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "Tệp này lớn hơn mức mà nhiều biểu mẫu ứng tuyển cho phép."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "Tệp này sử dụng rất nhiều font khác nhau."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "Tệp này sử dụng font Type 3, loại font chứa hình vẽ thay vì ký tự."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "Nội dung trang của tệp này không thể được kiểm tra kịp thời."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "Tiêu đề này không phải là tiêu đề mà các trình phân tích cú pháp tìm kiếm."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "Đây là một PDF Portfolio: trang hiển thị chỉ là trang bìa."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Đây là tên thân thiện với URL cho hồ sơ của bạn."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "Đây là một biểu mẫu XFA, vì vậy hầu hết phần mềm chỉ đọc được lớp vỏ rỗng."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "Đây không phải là kích thước trang phổ biến cho sơ yếu lý lịch."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "Liên kết này thiếu giao thức của nó."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Sẽ mất vài phút, tùy thuộc vào tốc độ phản hồi của nhà cung cấp AI. Vui lòng không đóng cửa sổ hoặc làm mới trang."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "Chỉ số này đo lường mức độ chính xác mà phần mềm có thể trích xuất văn bản của tệp này. Nó không dự đoán liệu đơn ứng tuyển có bị từ chối hay không. Không công cụ nào làm được điều đó. Tệp của bạn được đọc ngay trên trình duyệt này và không bao giờ được tải lên."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "Trang này được chia theo cột, và văn bản được trích xuất không đúng thứ tự."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "Trang này được sắp xếp quá dày đặc."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "PDF này được bảo vệ bằng mật khẩu. Hãy lưu một bản không bảo vệ rồi thử lại."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "Hồ sơ này đã bị khóa"
 msgid "This resume is locked and cannot be updated."
 msgstr "Hồ sơ này đã bị khóa và không thể cập nhật."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "Sơ yếu lý lịch này khá dài."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "Bản lý lịch này đã được cập nhật bởi một tác nhân AI."
@@ -4796,6 +5574,10 @@ msgstr "Bản lý lịch này đã được cập nhật bởi một tác nhân 
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Cài đặt chia sẻ sơ yếu lý lịch này đã được thay đổi ở nơi khác."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "Đánh giá này là ý kiến của một mô hình ngôn ngữ về nội dung viết của bạn. Nó không làm thay đổi điểm số ở trên, và có thể sai. Hãy xem đây như một ý kiến tham khảo thứ hai, không phải phán quyết cuối cùng."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "Phần này được dành riêng cho những ghi chú của bạn về 
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "Phần này được chia thành các cột."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "Phần này hiển thị dưới dạng một tiêu đề trống."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Video tua nhanh quá trình tạo hồ sơ với Resume Phản Ứng"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Dòng thời gian"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "Mẹo"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "Hãy thử lại"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "Thổ Nhĩ Kỳ"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "Tắt chữ ghép tùy chọn (discretionary ligatures) khi xuất."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "Đang cập nhật resume của bạn..."
 msgid "Upload .csv"
 msgstr "Tải lên .csv"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "Tải lên một sơ yếu lý lịch và xem thực sự hệ thống theo dõi ứng viên (ATS) đọc được gì từ đó. Mọi thứ đều chạy ngay trên trình duyệt này. Tệp của bạn không bao giờ được tải lên, và không có gì được lưu trữ."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Tải lên tệp đính kèm"
@@ -5242,6 +6032,14 @@ msgstr "Sử dụng chiều cao dòng ít nhất là 1,15 để các dòng khôn
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "Sử dụng địa chỉ đơn giản như name@example.com, không có văn bản xung quanh."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "Sử dụng định dạng quốc tế đơn giản, chẳng hạn +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Sử dụng định dạng được công nhận, chẳng hạn \"Tháng 1 năm 2020 - Tháng 3 năm 2022\" hoặc \"2020 - 2022\"."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Sử dụng biểu mẫu được công nhận, chẳng hạn như \"Tháng 1 năm 2020 - Tháng 3 năm 2022\" hoặc \"2020 - 2022\"."
@@ -5250,18 +6048,38 @@ msgstr "Sử dụng biểu mẫu được công nhận, chẳng hạn như \"Th�
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Sử dụng biểu mẫu được công nhận, chẳng hạn như \"Tháng 3 năm 2022\" hoặc \"2022\"."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "Sử dụng bố cục một cột cho bất kỳ nội dung nào cần đọc theo trình tự."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "Sử dụng kích thước tối thiểu là 9pt để các bản sao được kết xuất lại luôn chính xác."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "Sử dụng khổ A4 hoặc US Letter để bố cục không bị lỗi khi kết xuất lại."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "Sử dụng cỡ chữ tối thiểu 9pt."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Sử dụng màu {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "Sử dụng tiêu đề đơn giản như \"Kinh nghiệm\", \"Giáo dục\" và \"Kỹ năng\"."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "Dùng mẫu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "Sử dụng chức năng danh sách gạch đầu dòng thông thường của trình soạn thảo, để không có ký hiệu lạ xuất hiện giữa câu."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "Hợp lệ nhưng có lỗi"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "Hợp lệ nhưng có cảnh báo"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "Thay đổi cách mở đầu để phần này không đọc như một mẫu có sẵn."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "Cần xác minh email của bạn khi đặt lại mật khẩu."
 msgid "Version history"
 msgstr "Lịch sử phiên bản"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "Rất ít từ được khôi phục cho một sơ yếu lý lịch."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "Rất ít văn bản được khôi phục với số lượng trang nhiều như vậy."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "Tiếng Việt"
@@ -5358,6 +6188,11 @@ msgstr "so với 30 ngày trước đó"
 msgid "Waiting for the agent…"
 msgstr "Đang chờ tác nhân…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "Muốn có thêm một ý kiến tham khảo về nội dung viết?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "Cảnh báo"
@@ -5395,6 +6230,14 @@ msgstr "Tìm kiếm trên web"
 msgid "Website"
 msgstr "Trang web"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "Những gì trình phân tích cú pháp đọc được"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "Những gì con người nhìn thấy"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Bạn muốn làm gì?"
@@ -5406,6 +6249,14 @@ msgstr "Bạn muốn đổi tên phần này thành gì?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Điều gì làm cho Reactive Resume khác biệt so với các trình tạo resume khác?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "Những gì công cụ này kiểm tra"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "Những gì công cụ này không làm"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "Hồ sơ ứng tuyển đến từ đâu"
 msgid "Where your applications went"
 msgstr "Hồ sơ ứng tuyển của bạn đã đi đến đâu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "Liệu nhà tuyển dụng có thể liên hệ với bạn hay không."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "Liệu phần mềm có thể khôi phục được từ ngữ hay không."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "Liệu tệp chứa văn bản thật, hay chỉ là hình ảnh của văn bản."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "Liệu bố cục hình học của trang có giữ được thứ tự đọc hay không."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "Liệu sơ yếu lý lịch có được phân đoạn theo cách phần mềm mong đợi hay không."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "Liệu văn bản khi trích xuất ra có theo đúng thứ tự mà con người sẽ đọc hay không."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "Liệu các mục thông thường có đầy đủ và có thể phân biệt được hay không."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "Liệu tên, email, số điện thoại và ngày tháng của bạn có được giữ nguyên vẹn hay không."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "Liệu dòng thời gian của bạn có thể được dựng lại hay không."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "Các từ bị dính liền nhau khi văn bản được trích xuất."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Làm việc tại OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "Đang xử lý…"
 msgid "Worth a shot"
 msgstr "Đáng để thử"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "Ghi \"Hiện tại\" làm ngày kết thúc cho vai trò hiện tại của bạn."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "Viết mỗi vai trò thành một dòng rõ ràng gồm chức danh và công ty, kèm theo ngày tháng."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "Viết nó thành một khối liền mạch, không có khoảng cách đặc biệt."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "Viết đầy đủ địa chỉ để nó được nhận diện là một liên kết."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "Ghi đầy đủ địa chỉ, trong đó có https://."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "Văn phong"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "Bạn vừa nhận thư!"
 msgid "Your account has been deleted successfully."
 msgstr "Tài khoản của bạn đã được xóa thành công."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "Không thể kết nối đến nhà cung cấp AI của bạn. Hãy kiểm tra cài đặt và thử lại."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Khóa API của bạn đã được sao chép vào bộ nhớ tạm."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "Văn bản nội dung của bạn rất nhỏ."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "Các gạch đầu dòng của bạn được tạo bằng những ký tự khác thường."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "Thay đổi của bạn được lưu tự động."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "Thông tin liên hệ của bạn không nằm ở trang một."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "Dữ liệu của bạn được an toàn, và không bao giờ được
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Dữ liệu của bạn được lưu trữ an toàn và không bao giờ chia sẻ với bên thứ ba. Bạn cũng có thể tự host Reactive Resume trên máy chủ của riêng mình để kiểm soát hoàn toàn dữ liệu của mình."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "Ngày tháng của bạn được viết theo nhiều cách khác nhau."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "Địa chỉ email của bạn bị tách rời thành nhiều đoạn văn bản."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "Địa chỉ email của bạn chưa được xác minh với nhà cung cấp."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "Tệp của bạn ở lại đây"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "Tiêu đề của bạn trông giống hệt như văn bản nội dung."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "Những thay đổi gần đây của bạn không thể được lưu l
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Các kiểu định dạng cũ của bạn vẫn hoạt động cho đến khi bạn kích hoạt bản nháp CSS ngữ nghĩa này một cách rõ ràng."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "Đường dây của bạn được đóng gói rất chặt chẽ."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "Lề trang của bạn rất hẹp."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "Mật khẩu của bạn đã được đặt lại thành công. Bây g
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "Mật khẩu của bạn đã được cập nhật thành công."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "Số điện thoại của bạn được viết theo định dạng khác thường."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "Sơ yếu lý lịch của bạn bao gồm một bức ảnh."
 msgid "Your resume shows no work experience."
 msgstr "Sơ yếu lý lịch của bạn cho thấy không có kinh nghiệm làm việc."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "Sơ yếu lý lịch của bạn sử dụng \"tôi\" và \"của tôi\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Liên kết công khai của resume của bạn hiện được bảo vệ bằng mật khẩu. Chỉ chia sẻ mật khẩu với những người bạn tin tưởng."
@@ -5622,4 +6575,3 @@ msgstr "Thu nhỏ"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

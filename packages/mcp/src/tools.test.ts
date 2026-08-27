@@ -54,7 +54,6 @@ const clientMock = {
 		getById: vi.fn(),
 		list: vi.fn(),
 		tags: { list: vi.fn() },
-		analysis: { getById: vi.fn() },
 		create: vi.fn(),
 		import: vi.fn(),
 		duplicate: vi.fn(),

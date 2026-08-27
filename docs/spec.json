@@ -1,7 +1,7 @@
 {
 	"info": {
 		"title": "Reactive Resume",
-		"version": "5.2.6",
+		"version": "5.2.8",
 		"description": "Reactive Resume API",
 		"license": {
 			"name": "MIT",
@@ -3946,11 +3946,11 @@
 				}
 			}
 		},
-		"/ai/analyze-resume": {
+		"/ai/ats-review": {
 			"post": {
-				"operationId": "analyzeResume",
-				"summary": "Analyze resume and persist latest analysis",
-				"description": "Uses AI to analyze the current resume and returns a structured analysis with scorecard, strengths, and improvement suggestions. The latest analysis is persisted and can be fetched later. Requires authentication and AI credentials.",
+				"operationId": "atsReview",
+				"summary": "Review extracted resume text",
+				"description": "Reviews the plain text extracted from a resume PDF and returns qualitative feedback: a summary, rewrite suggestions, strengths, and — when a job description is supplied — how the candidate's experience lines up with the role. Deliberately returns no score: the deterministic ATS report owns the only number in this feature. Requires authentication and AI credentials.",
 				"tags": [
 					"AI"
 				],
@@ -3964,12 +3964,45 @@
 									"aiProviderId": {
 										"type": "string"
 									},
-									"resumeId": {
-										"type": "string"
+									"extractedText": {
+										"type": "string",
+										"minLength": 1,
+										"maxLength": 50000
+									},
+									"findings": {
+										"type": "array",
+										"maxItems": 120,
+										"items": {
+											"type": "object",
+											"properties": {
+												"code": {
+													"type": "string",
+													"maxLength": 64
+												},
+												"severity": {
+													"type": "string",
+													"maxLength": 16
+												},
+												"message": {
+													"type": "string",
+													"maxLength": 300
+												}
+											},
+											"required": [
+												"code",
+												"severity",
+												"message"
+											]
+										},
+										"default": []
+									},
+									"jobDescription": {
+										"type": "string",
+										"maxLength": 20000
 									}
 								},
 								"required": [
-									"resumeId"
+									"extractedText"
 								]
 							}
 						}
@@ -3977,128 +4010,41 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Structured resume analysis returned and persisted successfully.",
+						"description": "Qualitative review returned successfully.",
 						"content": {
 							"application/json": {
 								"schema": {
 									"type": "object",
 									"properties": {
-										"overallScore": {
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 100
+										"summary": {
+											"type": "string"
 										},
-										"scorecard": {
-											"type": "array",
-											"minItems": 1,
-											"items": {
-												"type": "object",
-												"properties": {
-													"dimension": {
-														"type": "string",
-														"minLength": 1
+										"suggestions": {},
+										"strengths": {},
+										"jdAlignment": {
+											"anyOf": [
+												{
+													"type": "object",
+													"properties": {
+														"verdict": {
+															"type": "string"
+														},
+														"missingConcepts": {},
+														"strengths": {}
 													},
-													"score": {
-														"type": "integer",
-														"minimum": 0,
-														"maximum": 100
-													},
-													"rationale": {
-														"type": "string",
-														"minLength": 1
-													}
+													"required": [
+														"verdict"
+													]
 												},
-												"required": [
-													"dimension",
-													"score",
-													"rationale"
-												]
-											}
-										},
-										"suggestions": {
-											"type": "array",
-											"maxItems": 10,
-											"items": {
-												"type": "object",
-												"properties": {
-													"title": {
-														"type": "string",
-														"minLength": 1
-													},
-													"impact": {
-														"enum": [
-															"high",
-															"medium",
-															"low"
-														],
-														"type": "string"
-													},
-													"why": {
-														"type": "string",
-														"minLength": 1
-													},
-													"exampleRewrite": {
-														"anyOf": [
-															{
-																"type": "string"
-															},
-															{
-																"type": "null"
-															}
-														]
-													},
-													"copyPrompt": {
-														"type": "string",
-														"minLength": 1
-													}
-												},
-												"required": [
-													"title",
-													"impact",
-													"why",
-													"exampleRewrite",
-													"copyPrompt"
-												]
-											}
-										},
-										"strengths": {
-											"type": "array",
-											"maxItems": 10,
-											"items": {
-												"type": "string",
-												"minLength": 1
-											}
-										},
-										"updatedAt": {
-											"type": "string",
-											"format": "date-time",
-											"x-native-type": "date"
-										},
-										"modelMeta": {
-											"type": "object",
-											"properties": {
-												"provider": {
-													"type": "string",
-													"minLength": 1
-												},
-												"model": {
-													"type": "string",
-													"minLength": 1
+												{
+													"type": "null"
 												}
-											},
-											"required": [
-												"provider",
-												"model"
 											]
 										}
 									},
 									"required": [
-										"overallScore",
-										"scorecard",
-										"suggestions",
-										"strengths",
-										"updatedAt",
-										"modelMeta"
+										"summary",
+										"jdAlignment"
 									]
 								}
 							}
@@ -5287,6 +5233,58 @@
 						}
 					}
 				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{},
+										{
+											"not": {}
+										}
+									]
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "updateAgentThread",
+				"summary": "Update agent thread settings",
+				"tags": [
+					"Agent"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"reviewPatches": {
+										"type": "boolean"
+									}
+								},
+								"required": [
+									"reviewPatches"
+								]
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -9648,14 +9646,15 @@
 							"schema": {
 								"type": "object",
 								"properties": {
-									"sourceUrl": {
-										"type": "string"
-									},
 									"jobDescription": {
 										"type": "string",
+										"minLength": 1,
 										"maxLength": 20000
 									}
-								}
+								},
+								"required": [
+									"jobDescription"
+								]
 							}
 						}
 					}
@@ -9679,17 +9678,13 @@
 										},
 										"salary": {
 											"type": "string"
-										},
-										"jobDescription": {
-											"type": "string"
 										}
 									},
 									"required": [
 										"company",
 										"role",
 										"location",
-										"salary",
-										"jobDescription"
+										"salary"
 									]
 								}
 							}
@@ -10131,164 +10126,6 @@
 											"downloads"
 										]
 									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/resumes/{id}/analysis": {
-			"get": {
-				"operationId": "getResumeAnalysis",
-				"summary": "Get latest resume analysis",
-				"description": "Returns the latest persisted AI analysis for the specified resume, if one exists. Requires authentication.",
-				"tags": [
-					"Resume Analysis"
-				],
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"description": "The unique identifier of the resume."
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "The latest persisted resume analysis, or null if no analysis has been saved yet.",
-						"content": {
-							"application/json": {
-								"schema": {
-									"anyOf": [
-										{
-											"type": "object",
-											"properties": {
-												"overallScore": {
-													"type": "integer",
-													"minimum": 0,
-													"maximum": 100
-												},
-												"scorecard": {
-													"type": "array",
-													"minItems": 1,
-													"items": {
-														"type": "object",
-														"properties": {
-															"dimension": {
-																"type": "string",
-																"minLength": 1
-															},
-															"score": {
-																"type": "integer",
-																"minimum": 0,
-																"maximum": 100
-															},
-															"rationale": {
-																"type": "string",
-																"minLength": 1
-															}
-														},
-														"required": [
-															"dimension",
-															"score",
-															"rationale"
-														]
-													}
-												},
-												"suggestions": {
-													"type": "array",
-													"maxItems": 10,
-													"items": {
-														"type": "object",
-														"properties": {
-															"title": {
-																"type": "string",
-																"minLength": 1
-															},
-															"impact": {
-																"enum": [
-																	"high",
-																	"medium",
-																	"low"
-																],
-																"type": "string"
-															},
-															"why": {
-																"type": "string",
-																"minLength": 1
-															},
-															"exampleRewrite": {
-																"anyOf": [
-																	{
-																		"type": "string"
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
-															},
-															"copyPrompt": {
-																"type": "string",
-																"minLength": 1
-															}
-														},
-														"required": [
-															"title",
-															"impact",
-															"why",
-															"exampleRewrite",
-															"copyPrompt"
-														]
-													}
-												},
-												"strengths": {
-													"type": "array",
-													"maxItems": 10,
-													"items": {
-														"type": "string",
-														"minLength": 1
-													}
-												},
-												"updatedAt": {
-													"type": "string",
-													"format": "date-time",
-													"x-native-type": "date"
-												},
-												"modelMeta": {
-													"type": "object",
-													"properties": {
-														"provider": {
-															"type": "string",
-															"minLength": 1
-														},
-														"model": {
-															"type": "string",
-															"minLength": 1
-														}
-													},
-													"required": [
-														"provider",
-														"model"
-													]
-												}
-											},
-											"required": [
-												"overallScore",
-												"scorecard",
-												"suggestions",
-												"strengths",
-												"updatedAt",
-												"modelMeta"
-											]
-										},
-										{
-											"type": "null"
-										}
-									]
 								}
 							}
 						}

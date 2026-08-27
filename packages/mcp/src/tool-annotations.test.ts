@@ -41,7 +41,6 @@ describe("tool annotations", () => {
 			MCP_TOOL_NAME.listResumes,
 			MCP_TOOL_NAME.listResumeTags,
 			MCP_TOOL_NAME.getResume,
-			MCP_TOOL_NAME.getResumeAnalysis,
 			MCP_TOOL_NAME.getResumeStatistics,
 			MCP_TOOL_NAME.listApplications,
 			MCP_TOOL_NAME.readApplication,

@@ -53,6 +53,24 @@ msgstr "{0}개 지원 추적 중"
 msgid "{0} characters"
 msgstr "{0} 문자"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "적용 가능한 점검 {1}개 중 {0}개 통과"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "적용 가능한 점검 {1}개 중 {0}개 통과."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "검색어 {1}개 중 {0}개 발견"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0}개 가져오기 준비됨"
 msgid "{0} rejected"
 msgstr "{0}개 거절됨"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0}개 건너뜀"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0}개 건너뜀(회사/직무 누락)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "수정할 항목 {0}개"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3개월"
 msgid "6 months"
 msgstr "6개월"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "깔끔한 단일 열 내보내기는 모든 정보를 보존합니다. 열과 이미지가 있으면 정보가 소실되기 쉽습니다."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "확인 링크가 현재 이메일 주소로 전송되었습니다. 받은 편지함을 확인해 변경 사항을 승인해 주세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "날짜가 미래로 되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "날짜 범위의 종료일이 시작일보다 빠릅니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "날짜 범위가 대부분의 소프트웨어가 읽을 수 없는 형식으로 작성되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "폰트가 참조되었지만 임베드되지 않았습니다."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "이력서 작성, 업데이트 및 공유를 간단하게 할 수 있는
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "채용 담당자에게 보내는 정중한 리마인더"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "전체 높이의 간격이 이 페이지를 두 개의 열로 나누고 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "공백 기간 자체는 문제가 아닙니다. 원한다면 한 줄로 설명을 덧붙이세요. 훌륭한 이력서 중에도 그렇게 하지 않는 경우가 많습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "링크가 표시된 주소와 다른 곳을 가리키고 있습니다."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "수년 동안 많은 분들이 Reactive Resume가 어떻게 도움이 �
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "새로운 인증 링크가 이메일 주소로 전송되었습니다. 받은 편지함을 확인해 계정을 인증해 주세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "숫자로만 된 날짜는 국가마다 다르게 해석됩니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "페이지가 회전되어 있습니다."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "<0>Amruth Pillai</0>가 만든 열정 프로젝트입니다."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "사람이 읽기 편하도록 사진, 제목, 열로 구성한 이력서"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "조금 도전적"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "웹 주소가 https:// 없이 작성되어 있습니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "메모 추가…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "타임라인에 표시되도록 \"2020년 1월 - 현재\"와 같은 기간을 추가하세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "\"Education\"이라는 제목의 섹션을 추가하세요. 많은 시스템에 학력 필드가 필수로 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "\"Experience\" 또는 \"Work Experience\"라는 제목의 섹션을 추가하세요. 대부분의 시스템이 이 필드를 기준으로 순위를 매깁니다."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "태그를 추가하고 Enter를 누르세요…"
@@ -291,10 +375,6 @@ msgstr "태그를 추가하고 Enter를 누르세요…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "항목을 추가하거나 프로젝트 및 자원 봉사 활동을 사용하여 동등한 기록을 표시하세요."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "항목을 추가하거나 숨깁니다."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "역할이 해당 지역에 맞춰질 수 있도록 최소한 도시와 �
 msgid "Add contact"
 msgstr "연락처 추가"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "가능하다면 수치를 포함하세요: 규모, 비율, 기간, 팀 인원 등."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "키워드 추가"
@@ -327,6 +411,14 @@ msgstr "링크 추가"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "같은 회사에서의 경력 발전을 보여주기 위해 여러 역할을 추가하세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "본인의 작업물을 보여주는 링크를 하나 추가하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "국가 코드를 포함해 추가하세요. 일부 지원서 양식은 제출 전에 이를 요구합니다."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "페이지 추가"
@@ -339,6 +431,10 @@ msgstr "공급자 추가"
 msgid "Add Role"
 msgstr "역할 추가"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "사람이 훑어볼 수 있도록 섹션 사이에 여백을 추가하세요."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "태그 추가"
@@ -346,6 +442,10 @@ msgstr "태그 추가"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "파이프라인에 추가"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "상단에 본인이 하는 일을 설명하는 두세 줄을 추가하세요."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "비동기적 소통과 책임감을 중시하는 원격 근무 우선 �
 msgid "Advanced"
 msgstr "고급의"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "읽는 사람을 위한 조언입니다. 이 항목들은 점수에 영향을 주지 않습니다."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "아프리칸스어"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "채용 공고 기준"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "REDIS_URL 및 ENCRYPTION_SECRET이 구성될 때까지 AI 에이전트 �
 msgid "AI assistant"
 msgstr "AI 비서"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "AI 제공업체"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "REDIS_URL 및 ENCRYPTION_SECRET이 구성될 때까지 AI 공급자 관리 기능을 사용할 수 없습니다."
@@ -403,6 +515,10 @@ msgstr "AI 공급자 관리 기능을 사용할 수 없습니다. 다시 시도�
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "AI 제공업체"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "ENCRYPTION_SECRET이 설정되기 전까지는 AI 제공업체를 사용할 수 없습니다."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "알바니아어"
 msgid "Allow Public Access"
 msgstr "공개 액세스 허용"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "숫자가 포함된 항목이 거의 없습니다."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "이미 포함됨"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "이미 계정이 있으신가요? <0/>"
@@ -423,6 +547,10 @@ msgstr "이미 계정이 있으신가요? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "암하라어"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "임베드된 폰트를 읽을 수 없습니다."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "예기치 않은 오류로 인해 페이지 로딩이 중단되었습니
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "이력서를 가져오는 동안 알 수 없는 오류가 발생했습니다."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "이력서 분석"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "… 분석 중"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloud는 Reactive Resume의 프로젝트 스폰서로 지원합니
 msgid "ATS Check"
 msgstr "ATS 수표"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "ATS 검사기"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "자동 채우기에 실패했습니다."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "여러 언어로 제공됩니다. 기여하고 싶다면 Crowdin을 확인해 보세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "강한 자간 효과를 피한 뒤 다시 내보내세요."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "지원, 공유, 인쇄에 가장 적합합니다."
 msgid "Blank draft"
 msgstr "빈 초안"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "차단 요소"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "보드"
@@ -750,6 +884,10 @@ msgstr "모서리 반경"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "테두리 두께"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "이력서를 일반적인 섹션으로 나누어 구분할 수 있게 하세요."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "변경 로그"
 msgid "Chat"
 msgstr "채팅"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "다시 점검"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "내보낸 파일에 예상한 내용이 모두 있는지, 전체가 선택 가능한 텍스트인지 확인하세요."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "비밀번호를 재설정할 수 있는 링크가 이메일로 전송되었습니다."
@@ -868,6 +1014,10 @@ msgstr "비밀번호를 재설정할 수 있는 링크가 이메일로 전송되
 msgid "Check your email for a link to verify your account."
 msgstr "계정을 인증할 수 있는 링크가 이메일로 전송되었습니다."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "브라우저에서 점검됩니다. 파일은 업로드되지 않습니다."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "확인 중"
@@ -875,6 +1025,10 @@ msgstr "확인 중"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "초안 검토"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "점검 중…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "중국어(번체)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "모델을 선택하고 이력서 초안을 작성하세요."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "PDF 선택"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "이력서를 해당 채용 공고 URL과 비교하고, 간결하고 신�
 msgid "Completely free, forever, no hidden costs."
 msgstr "완전히 무료이며, 영원히 숨은 비용이 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "업로드 속도를 위해 큰 이미지를 압축하거나 제거하세요."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "확인"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "연결"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "직접 AI 제공업체를 연결하면 글쓰기에 대한 검토를 받을 수 있습니다. 위의 점검 항목은 제공업체나 계정이 필요 없습니다."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "연결에 실패했습니다."
 msgid "Connection verified — provider is ready to use."
 msgstr "연결이 확인되었습니다. 공급자를 사용할 준비가 되었습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "연락처 정보"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "연락처"
@@ -1020,6 +1190,10 @@ msgstr "연락처"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "내용"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "내용이 격자 형태로 배치되어 있습니다."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "스타일시트 복사"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "채용 공고의 직무 설명 전체를 복사해 아래에 붙여넣으세요. 항목을 대신 채워 드리고, 적합도 평가와 맞춤 작성을 위해 이 지원 내역에 텍스트를 보관합니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "내보낸 파일에서 텍스트를 복사해 읽어 보고, 잘못된 위치에 놓인 부분을 수정하세요."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "이 비밀 키를 복사해 애플리케이션에 붙여넣어 데이터에 액세스하세요."
@@ -1102,6 +1280,10 @@ msgstr "URL 복사"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "연도를 수정하거나 진행 중인 작업에 \"현재\"를 사용하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "연도를 수정하거나, 진행 중인 업무라면 \"현재\"라고 작성하세요."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "파일을 업로드할 수 없습니다. 다시 시도하세요."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "출처별 개수"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "분석 점수와는 별도로 집계됩니다. 일치율은 어떠한 것도 예측하지 않습니다."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "날짜"
 msgid "Date applied"
 msgstr "지원일"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "날짜"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "들여쓰기 감소"
@@ -1397,6 +1588,10 @@ msgstr "들여쓰기 감소"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "확대/축소 크기 줄이기"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "심층 점검"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "삭제"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "계정 삭제"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "삭제하세요. 숨겨진 키워드는 검색을 조작하려는 고의적인 시도로 간주됩니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "거부됨 — 에이전트를 기다리는 중…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "거부"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "각 직무를 짧은 글머리 기호로 설명하세요. 긴 문단은 훑어보거나 구분하기 어렵습니다."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "섹션을 이곳으로 끌어다 놓아 열 사이에서 이동하세요
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "업로드하기 전에 드래그하여 위치를 조정하고 슬라이더를 사용하여 확대/축소하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "대명사를 빼고 동사로 시작하세요. 대부분의 시장에서 통용되는 방식입니다."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "이메일 주소"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "이 인스턴스에서는 이메일 전송이 구성되어 있지 않으므로 인증이 비활성화되어 있습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "내보낼 때 모든 폰트를 임베드하여 문자가 의도한 대로 표시되게 하세요."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "2단계 인증 활성화"
@@ -1760,6 +1971,10 @@ msgstr "비밀번호 보호를 활성화하는 중입니다..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "2단계 인증 활성화…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "한 페이지 규칙을 강제하거나, 폰트나 경력 공백을 결함으로 취급하는 것입니다."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "내보내기"
 msgid "Export Data"
 msgstr "데이터 내보내기"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "스캔하거나 스크린샷을 찍는 대신 원본 문서에서 내보내세요."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "내 데이터를 내보내기"
@@ -1863,6 +2082,10 @@ msgstr "내 데이터를 내보내기"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "PNG 내보내기"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "이력서를 이미지나 스캔본이 아닌 텍스트 PDF로 내보내세요."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "pipeline-flow.png를 내보냈습니다"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "실패"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "이력서를 분석하지 못했습니다."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "인증 이메일을 다시 보내지 못했습니다. 다시 시도해 �
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "비밀번호를 재설정하지 못했습니다. 다시 시도해 주세요."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "이 이력서를 검토하지 못했습니다."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "불꽃"
 msgid "Fit to view"
 msgstr "보기에 적합함"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "양식을 평면화하여 텍스트가 페이지의 일부가 되게 하세요."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "유연성"
@@ -2210,14 +2437,6 @@ msgstr "무작위 이름 생성"
 msgid "German"
 msgstr "독일어"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "전체 점수, 강점, 실행 가능한 제안이 포함된 이력서 검토를 받아보세요."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "전체 점수, 주요 강점, 실용적인 제안을 통해 이력서에 대한 심층적인 AI 기반 검토를 받아보세요. 이 기능을 활성화하려면 AI 설정을 업데이트하세요."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "시작하기"
@@ -2229,6 +2448,14 @@ msgstr "시작하기"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "타임라인을 재구성할 수 있도록 각 직무에 \"2020년 1월 - 현재\"와 같은 기간을 추가하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "모든 직무와 자격 사항에 날짜 범위를 추가하세요."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "제목 5"
 msgid "Heading 6"
 msgstr "제목 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "헤드라인"
@@ -2388,10 +2616,9 @@ msgstr "사진 숨기기"
 msgid "Hide Section Icons"
 msgstr "섹션 아이콘 숨기기"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "높음"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "높은 영향도"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "아이콘"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "지원자 추적 시스템의 부족한 부분을 파악하고, 신뢰도가 높은 키워드 개선 사항만 적용하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "스캔본이라면 자연스러운 현상입니다. 그렇지 않다면 제거하세요. 채용 담당자는 이를 키워드 남용으로 받아들입니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "이미지가 페이지의 대부분을 차지하고 있습니다."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "이력서를 가져오는 중입니다..."
 msgid "Importing…"
 msgstr "… 가져오기"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "{0}에서"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "이력서 헤더 포함"
@@ -2491,6 +2731,10 @@ msgstr "이력서 헤더 포함"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "들여쓰기 증가"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "두 줄이 하나로 합쳐지지 않도록 줄 간격을 늘리세요."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "인라인 코드"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "인사이트"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "{1}페이지 중 {0}페이지 검사 중…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "직업"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "직무 설명"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "채용 공고 (선택 사항)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "양쪽 정렬"
 msgid "Kannada"
 msgstr "칸나다어"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "주소를 하나만 유지하여 어느 것을 사용할지 추측할 필요가 없게 하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "보통 이미지를 제거하거나 축소하여 2.5MB 이하로 유지하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "이력서 내용을 텍스트 이미지가 아닌 실제 텍스트로 유지하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "머리글을 짧게 유지하거나 삭제하세요. 추출된 텍스트에도 반복되어 나타납니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "훑어 읽는 사람이 끝까지 읽을 수 있도록 대략 두 줄 이내로 유지하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "폰트는 두세 종류로 유지하세요. 폰트가 추가될수록 잘못 매핑될 가능성이 커집니다."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "언어"
 msgid "Languages"
 msgstr "언어"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "마지막 분석일: {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "마지막 조회: {0}"
 msgid "Latvian"
 msgstr "라트비아어"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "텍스트를 가로로 배치하세요. 회전된 텍스트는 누락되거나 잘못 배치되는 경우가 많습니다."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "레이아웃"
@@ -2715,6 +2995,10 @@ msgstr "자세히 알아보기"
 msgid "Leave"
 msgstr "나가기"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "페이지 여백을 최소 0.5인치 이상 남기세요."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "원래 제목으로 되돌리려면 비워 두세요."
@@ -2726,6 +3010,10 @@ msgstr "AI 제공업체 설정을 위해 나가시겠습니까?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "왼쪽 정렬"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "길이 자체는 결함이 아니며, 보편적인 한 페이지 규칙도 없습니다. 그만한 가치가 있는 페이지만 남기세요."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "5점 만점에 {level}점"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT</0> 라이선스로 배포됩니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "합자(리게이처)는 \"workflow\"와 같은 단어에서 글자를 누락시킬 수 있습니다."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "{providerName} 계정을 연결하는 중입니다..."
 msgid "List"
 msgstr "목록"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "사용하는 도구와 기술을 나열하세요. 채용 담당자는 다른 어떤 항목보다 기술을 많이 검색합니다."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "리투아니아어"
@@ -2814,8 +3110,8 @@ msgstr "AI 제공업체를 불러오는 중입니다. 잠시 후 다시 시도�
 msgid "Loading applications…"
 msgstr "애플리케이션 로딩 중…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "공급자 로딩 중…"
 
@@ -2838,6 +3134,7 @@ msgstr "… 로딩 중"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "위치"
@@ -2855,6 +3152,10 @@ msgstr "잠금"
 msgid "Logout"
 msgstr "로그아웃"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "긴 구간이 대문자로 작성되어 있습니다."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "장기적인 지속 가능성"
@@ -2864,10 +3165,9 @@ msgstr "장기적인 지속 가능성"
 msgid "Lost access to your authenticator?"
 msgstr "인증 앱에 접근할 수 없으신가요?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "낮음"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "낮은 영향도"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "메인 내비게이션"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "경력 사항 부분을 결과 중심적으로 작성하고 모호한 책임 조항을 삭제하세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "표시되는 텍스트와 실제 대상 주소를 일치시키세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "눈에 띄게 크게, 굵게, 또는 대문자로 표시하세요."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "말레이어"
@@ -2889,6 +3197,10 @@ msgstr "말레이어"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "말라얄람어"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "많은 항목이 같은 문구로 시작합니다."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "거절됨으로 표시"
 msgid "Match scoring failed."
 msgstr "적합도 점수화에 실패했습니다."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Medium"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "중간 영향도"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "미스트랄 AI"
 msgid "Model"
 msgstr "모델"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "이메일 주소가 두 개 이상 나타납니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "대부분의 항목이 실제로 한 일이 아닌 불필요한 표현으로 시작합니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "대부분의 항목에 날짜가 없습니다."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "대부분의 시스템은 후보자를 이메일로 제출합니다. "
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "모든 내용을 페이지 경계 안으로 옮긴 뒤 다시 내보내세요."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "그것을 메인 컬럼으로 옮기고 짧은 목록을 위해 사이드바를 유지하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "실제 내용을 페이지 본문 안으로 옮기세요. 일부 소프트웨어는 여백 영역을 버립니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "단계 이동"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "이동"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "이메일과 전화번호를 첫 페이지 상단으로 옮기세요."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "https:// 으로 시작해야 합니다."
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "필터와 일치하는 지원이 없습니다."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "아직 지원이 없습니다 — 몇 개를 추가하면 퍼널과 응답률을 볼 수 있습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "글머리 기호 목록을 찾을 수 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "일반적인 섹션 제목을 찾을 수 없습니다."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "AI 제공업체로부터 반환된 데이터가 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "날짜를 찾을 수 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "학력 섹션을 찾을 수 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "이메일 주소를 찾을 수 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "직함과 회사명이 함께 있는 줄을 찾을 수 없습니다."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "아직 등록된 패스키가 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "전화번호를 찾을 수 없습니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "아직 이력서가 없습니다."
 msgid "No saved versions yet."
 msgstr "아직 저장된 버전이 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "기술 섹션을 찾을 수 없습니다."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "아직 소스 데이터가 없습니다."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "해당 채용 공고에서 구체적인 용어를 추출할 수 없어 대부분 정형화된 문구로 보입니다. 더 유용한 비교를 위해 자격 요건 섹션을 붙여넣으세요."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "검증되지 않은 제공업체"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "이 파일에서 텍스트를 읽을 수 없습니다."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "아직 스레드가 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "경력 섹션을 찾을 수 없습니다."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "노르웨이어"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "연결되지 않음"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "이력서에서 근거를 찾을 수 없음"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "이력서에 없음"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "점수 미부여"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "메모"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "노트"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "진행 중임을 나타내는 표시가 없습니다."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "수정할 항목이 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "수정할 항목이 없습니다. 나머지 페이지는 이 보고서에서 다루지 않았을 뿐입니다."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "제안할 항목이 없습니다."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "지속적인 유지 관리"
 msgid "Only applies when the section fits on a single page."
 msgstr "해당 섹션이 한 페이지에 들어갈 경우에만 적용됩니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "인식 가능한 섹션 제목이 하나만 발견되었습니다."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "처음 {0}페이지만 점검했으므로 이 보고서는 전체 파일을 다루지 않습니다."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "한 번에 처음 {MAX_IMPORT}행만 가져옵니다 — {overflow}개는 제외되었습니다. 나머지를 가져오려면 파일을 나누세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "처음 몇 페이지만 점검했습니다."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "초점 모드 열기"
 msgid "Open in builder"
 msgstr "빌더에서 열기"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "통합 설정 열기"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "오픈 소스"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "내보낸 파일을 열어 모든 부분을 선택하고 복사할 수 있는지 확인하세요."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "OpenAI 호환"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "파일 여는 중…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "에이전트를 위한 메모(선택 사항)…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "원한다면 링크에 비밀번호를 설정해, 비밀번호를 아는 사람만 이력서를 볼 수 있도록 할 수 있습니다."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "선택적으로, 채용 공고의 어떤 용어가 이미 포함되어 있는지 확인합니다."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "{title}에 대한 옵션"
@@ -3237,9 +3670,9 @@ msgstr "번호 매기기 목록"
 msgid "Organization"
 msgstr "기관"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "전체 점수"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "100점 만점"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "비밀번호 보호가 비활성화되었습니다."
 msgid "Password protection has been enabled."
 msgstr "비밀번호 보호가 활성화되었습니다."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "공고를 붙여넣으면 이력서에 이미 포함된 용어를 확인할 수 있습니다."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "행을 붙여넣거나 .csv를 업로드하세요. 회사, 직무, 단계, 단계 날짜, 급여, 출처, 태그 같은 열을 매핑합니다."
@@ -3321,6 +3758,10 @@ msgstr "행을 붙여넣거나 .csv를 업로드하세요. 회사, 직무, 단�
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "전체 직무 설명을 여기에 붙여넣으세요…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "공고를 붙여넣으면 그 용어 중 이력서에 이미 포함된 것을 확인할 수 있습니다."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "원하는 색상, 글꼴, 디자인으로 이력서를 개인화해 나만의 이력서를 만들어 보세요."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "전화"
@@ -3383,6 +3825,10 @@ msgstr "전화"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "아이콘을 선택하세요"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "하나의 형식을 정해 모든 곳에 동일하게 사용하세요."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "포르투갈어(포르투갈)"
 msgid "Position"
 msgstr "직책"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "탈락 여부를 예측하는 것입니다. 어떤 도구도 이를 할 수 없습니다."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "\"직업 경험\" 또는 \"교육\"과 같은 일반적인 제목을 선호합니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "단일 열을 사용하거나, 사이드 열은 짧고 독립적인 목록으로만 유지하세요."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "미리 보기와 내보내기는 유효한 스타일만 적용하고 잘
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "기본 색상"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "보내기 전에 양식을 일반 PDF로 인쇄하거나 내보내세요."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "출판물"
 msgid "Publisher"
 msgstr "발행인"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "첫 페이지 상단 근처에 일반 텍스트 이메일 주소를 넣으세요. 대부분의 시스템이 이를 기준으로 분류합니다."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "원시 JSON"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "단일 열 레이아웃으로 다시 내보낸 뒤, 텍스트를 복사해 위에서 아래로 순서대로 읽히는지 확인하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "다른 형식에서 변환하지 말고 원본 문서에서 다시 내보내세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "폰트를 올바르게 임베드하여 원본 문서에서 다시 내보내세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "일반 TrueType 또는 OpenType 폰트를 사용해 다시 내보내세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "폰트를 임베드하여 다시 내보낸 뒤, 텍스트가 깔끔하게 복사되는지 확인하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "폰트를 임베드하여 다시 내보낸 뒤 파일을 열어 텍스트가 깔끔하게 복사되는지 확인하세요."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "사용자 지정 스타일 적용 가이드를 읽어보세요."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "이력서를 읽음"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "가독성"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "{1}페이지 중 {0}페이지 읽는 중…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "비밀번호 보호를 제거하는 중입니다..."
 msgid "Rename"
 msgstr "이름 바꾸기"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "현재 이력서를 브라우저에서 PDF로 변환하여 전체 파일 점검을 실행합니다. 아무것도 업로드되지 않습니다."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "순서 변경"
@@ -3727,6 +4227,23 @@ msgstr "순서 변경"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "사용자 정의 필드 순서 변경"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "대부분의 이력서가 자동으로 탈락한다는 주장을 반복하는 것입니다."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "공고 자체보다 훨씬 자주 반복됩니다: {0}. 채용 담당자가 이를 알아챕니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "아이콘 폰트를 일반 텍스트로 바꾼 뒤 다시 내보내세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "표를 일반 문단과 목록으로 바꾸세요. 셀은 읽는 순서가 아닌 저장 순서로 추출됩니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "인증 이메일 다시 보내기"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "인증 이메일을 다시 보내는 중입니다..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "대문자는 짧은 제목에만 사용하세요. 읽기 속도를 늦추고 대소문자를 구분하는 검색을 방해할 수 있습니다."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "이 버전으로 복원하시겠습니까?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "재개하다"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "이력서 분석"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "이력서 분석 완료."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "편집 검토"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "이력서를 직무 설명과 대조해 보고, 불확실한 부분을 수정하기 전에 저에게 질문해 주세요."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "AI로 글쓰기 검토하기"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "이 편집 검토"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "검토 중…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "루마니아어"
 msgid "Rotation"
 msgstr "회전"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "첫 번째 분석을 실행하여 스코어카드, 강점, 우선순위가 지정된 제안을 확인하세요."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "다시 실행"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "AI 검토 실행"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "심층 점검 실행"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "저장 및 테스트 제공업체"
 msgid "Save & Upload"
 msgstr "저장 및 업로드"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "비밀번호와 권한 제한이 없는 보호되지 않은 사본으로 저장하세요."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "변경사항 저장"
@@ -3940,6 +4473,10 @@ msgstr "변경 사항 저장"
 msgid "Save model"
 msgstr "저장 모델"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "모든 페이지가 똑바로 보이도록 파일을 저장하세요."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "저장됨"
@@ -3959,10 +4496,6 @@ msgstr "학교"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "내 적합도 점수화"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "스코어카드"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "섹션 옵션"
 msgid "Section Type"
 msgstr "섹션 유형"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "섹션"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "이 이력서가 공고와 얼마나 맞는지 확인"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "지원자 추적 시스템(ATS)이 이력서에서 무엇을 읽어낼 수 있는지 확인하세요. 브라우저에서 실행됩니다."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "모두 선택"
 msgid "Select an agent model"
 msgstr "에이전트 모델을 선택하세요"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "AI 제공업체를 선택하세요"
 
@@ -4075,9 +4617,21 @@ msgstr "메시지 보내기"
 msgid "Send Password Reset Email"
 msgstr "비밀번호 재설정 이메일 보내기"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "포트폴리오 표지가 아닌 이력서 자체를 보내세요."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "비밀번호 재설정 이메일을 보내는 중입니다..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "PDF에서 이미 추출된 텍스트를 아래에서 선택한 AI 제공업체로 전송합니다. PDF 파일 자체는 업로드되지 않습니다."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "PDF에서 이미 추출된 텍스트와 붙여넣은 채용 공고를 아래에서 선택한 AI 제공업체로 전송합니다. PDF 파일 자체는 업로드되지 않습니다."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "세르비아어"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "비밀번호 설정"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "내보낼 때 문서 언어를 설정하세요."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "사이드바 너비"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "로그인"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "로그인하고 직접 AI 제공업체를 연결하면 약한 항목에 대한 수정 제안을 받을 수 있습니다. 위의 점검 항목은 무료이며 계정이 필요 없습니다."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "슬러그"
 msgid "Some application systems require one before you can submit."
 msgstr "일부 지원 시스템에서는 제출하기 전에 하나의 정보가 필요합니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "일부 항목이 너무 깁니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "일부 문자가 물음표로 나타납니다."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "일부 점검은 이 파일에 없는 정보를 필요로 합니다: 검사할 수 없었던 페이지 내용, 또는 이 점검이 다루지 않는 언어의 텍스트입니다. 이러한 항목은 통과도 실패도 아닌 것으로 처리됩니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "일부 글리프는 이 파일 밖에서는 의미가 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "일부 줄이 읽는 순서와 다르게 저장되어 있습니다."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "일부 파서는 이미지를 잘못 처리하므로 일부 지역에서는 사진을 사용하지 않는 것이 좋습니다."
@@ -4311,6 +4894,14 @@ msgstr "일부 파서는 이미지를 잘못 처리하므로 일부 지역에서
 msgid "Some styles were ignored"
 msgstr "일부 스타일이 무시됨"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "일부 텍스트가 페이지 밖으로 벗어나 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "일부 텍스트가 회전되어 있습니다."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "기타…"
@@ -4318,6 +4909,10 @@ msgstr "기타…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "뭔가 잘못됐어요"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "파일을 읽는 중 문제가 발생했습니다. 다시 시도해 주세요."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "간격(세로)"
 msgid "Spanish"
 msgstr "스페인어"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "\"2022년 3월\"처럼 월을 정확히 표기하세요."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "스폰서"
@@ -4419,6 +5018,10 @@ msgstr "이력서 이름을 정해 작성을 시작해 보세요."
 msgid "Start building your resume from scratch"
 msgstr "처음부터 이력서를 직접 작성하기"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "각 항목을 구체적인 동사로 시작하세요: 구축했다, 이끌었다, 줄였다, 이전했다 등."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "새 스레드 시작"
@@ -4427,6 +5030,10 @@ msgstr "새 스레드 시작"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "새 페이지에서 시작"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "이력서 첫 줄에 이름만 단독으로 배치하세요."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "{provider}… {elapsedSeconds}를 아직 기다리고 있습니다."
 msgid "Stop generation"
 msgstr "세대 중단"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "강점"
 
@@ -4473,7 +5080,7 @@ msgstr "스타일시트에 치명적 오류가 있습니다"
 msgid "Subreddit"
 msgstr "서브레딧"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "제안 사항"
 
@@ -4494,6 +5101,7 @@ msgstr "Reactive Resume 후원하기"
 msgid "Support the app by doing what you can!"
 msgstr "가능한 방식으로 앱을 지원해 주세요!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "시작 날짜와 종료 날짜를 바꿉니다."
@@ -4532,6 +5140,10 @@ msgstr "태그"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "태그는 키워드로 이력서를 분류하는 데 사용할 수 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "태그는 소프트웨어에 명확한 읽기 순서를 제공합니다. 도구에서 지원한다면 내보낼 때 활성화하세요."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "텍스트 정렬"
 msgid "Text Color"
 msgstr "텍스트 색상"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "텍스트가 한 글자씩 개별적으로 작성되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "텍스트가 머리글 또는 바닥글 영역에 있습니다."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "태국어"
@@ -4597,6 +5217,19 @@ msgstr "태국어"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "후원해 주신 분들께 감사드립니다."
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "해당 파일을 PDF로 읽을 수 없습니다."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "해당 파일은 PDF가 아닙니다. 이력서를 PDF로 내보낸 뒤 다시 시도하세요."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "해당 파일이 너무 커서 브라우저에서 점검할 수 없습니다."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "API 키를 삭제하면 더 이상 데이터에 액세스할 수 없습�
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "회원님을 여기로 보낸 애플리케이션이 잘못된 인증 요청을 보냈습니다."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "위의 점검은 기계적인 검사입니다. 이 기능은 언어 모델에게 독자가 항목들을 어떻게 볼지 물어보고 수정안을 제안합니다. 점수를 산출하지는 않습니다."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "찾으시는 명령이 없습니다."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "심층 점검을 완료하지 못했습니다. 다시 시도해 주세요."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "가져온 파일을 유효한 이력서로 구문 분석할 수 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "텍스트가 저장된 순서가 실제로 읽히는 순서와 크게 다릅니다."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "찾으시는 페이지가 이동되었거나 더 이상 존재하지 않을 수 있습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "페이지가 이미지로만 되어 있고 그 뒤에 텍스트가 없습니다."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "입력하신 비밀번호가 올바르지 않습니다"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "PDF는 이 탭에서 실행되는 코드로 읽힙니다. 아무것도 업로드되거나 저장되지 않으며, 계정도 필요 없습니다. 원한다면 브라우저의 네트워크 탭을 열어 직접 확인해 보세요."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "공급자가 로그인에 필요한 이메일 주소를 제공하지 않
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "공급자가 이 로그인 시도를 거부했습니다. 다시 시작해 주세요."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "제공업체가 읽을 수 없는 형식의 검토 결과를 반환했습니다. 다시 시도하세요."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "이력서 미리보기를 업데이트할 수 없습니다. 마지막으
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "접근하려는 이력서는 비밀번호로 보호되어 있습니다"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "같은 줄이 모든 페이지에 반복됩니다."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "차단 문제로 인해 점수가 제한됩니다: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "텍스트가 읽을 수 없는 형태로 추출됩니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "첫 페이지 상단이 이름처럼 보이지 않습니다."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "테마"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "그 다음, 앱에 표시된 6자리 코드를 입력해 계속 진행하세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "날짜가 있는 두 직무 사이에 공백이 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "프로필, 포트폴리오 또는 저장소로 연결되는 링크가 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "요약 문단이 없습니다."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "DOCX를 생성하는 동안 문제가 발생했습니다. 다시 시도하세요."
@@ -4695,6 +5381,10 @@ msgstr "PDF 파일을 생성하는 동안 문제가 발생했습니다. 다시 �
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "이력서 인쇄 준비 중 문제가 발생했습니다. 다시 시도해 주세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "이 점검을 실행할 충분한 정보가 없었습니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "이 에이전트 스레드를 열 수 없습니다."
 msgid "This assistant could not be opened."
 msgstr "이 도우미를 열 수 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "이 점검은 이 파일에 해당하지 않습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "이 점검은 영어로 작성된 이력서에서만 실행됩니다."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "이 날짜는 올바르게 읽혀지지 않습니다."
@@ -4757,13 +5455,73 @@ msgstr "이 항목은 영구적으로 삭제됩니다. 되돌릴 수 없습니�
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "이 기능을 사용하려면 연결된 AI 제공업체가 필요합니다. 설정에서 AI 제공업체를 설정해 주세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "이 파일에 양식 필드가 포함되어 있습니다."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "이 파일에는 사람이 볼 수 없는 텍스트가 포함되어 있어, 일부 일치 결과가 이 텍스트에 대한 것일 수 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "이 파일에는 보이지 않게 그려진 텍스트가 포함되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "이 파일에는 흰 배경에 흰색 텍스트가 포함되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "이 파일에 지정된 언어가 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "이 파일에 접근성 태그가 없습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "이 파일은 암호화되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "이력서치고 파일 크기가 큽니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "이 파일이 많은 지원서 양식이 허용하는 크기보다 큽니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "이 파일이 매우 다양한 폰트를 사용하고 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "이 파일은 문자 대신 그림 정보를 담는 Type 3 폰트를 사용하고 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "이 파일의 페이지 내용을 시간 내에 검사하지 못했습니다."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "이 제목은 파서가 찾는 항목이 아닙니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "이 파일은 PDF 포트폴리오입니다. 보이는 페이지는 표지일 뿐입니다."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "이것은 이력서에 사용할 URL 친화적인 이름입니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "이 파일은 XFA 양식이므로 대부분의 소프트웨어는 빈 틀만 읽습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "일반적인 이력서 페이지 크기가 아닙니다."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "이 링크에는 프로토콜이 없습니다."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "AI 제공자의 응답 속도에 따라 몇 분 정도 걸릴 수 있습니다. 창을 닫거나 페이지를 새로 고치지 마세요."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "이 점수는 소프트웨어가 이 파일의 텍스트를 얼마나 정확하게 추출할 수 있는지를 측정합니다. 지원 결과가 탈락할지를 예측하지는 않습니다. 어떤 도구도 이를 할 수 없습니다. 파일은 이 브라우저에서 읽혔으며 업로드되지 않았습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "이 페이지는 열로 구성되어 있어 텍스트가 순서에 맞지 않게 추출됩니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "이 페이지는 내용이 매우 빽빽하게 채워져 있습니다."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "이 PDF는 비밀번호로 보호되어 있습니다. 보호되지 않은 사본을 저장한 뒤 다시 시도하세요."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "이 이력서는 잠겨 있습니다."
 msgid "This resume is locked and cannot be updated."
 msgstr "이 이력서는 잠겨 있어 수정할 수 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "이 이력서는 길이가 깁니다."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "이력서는 AI 에이전트에 의해 업데이트되었습니다."
@@ -4796,6 +5574,10 @@ msgstr "이력서는 AI 에이전트에 의해 업데이트되었습니다."
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "이력서의 공유 설정이 다른 곳에서 변경되었습니다."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "이 검토는 언어 모델이 제시하는 글쓰기에 대한 의견입니다. 위 점수를 변경하지 않으며, 틀릴 수도 있습니다. 판정이 아닌 참고 의견으로 받아들이세요."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "이 섹션은 이 이력서에 대한 개인적인 노트 전용 공간�
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "이 섹션은 여러 열로 분할되어 있습니다."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "이 섹션은 빈 제목으로 렌더링됩니다."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Reactive Resume로 이력서를 작성하는 타임랩스 데모"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "타임라인"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "팁"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "다시 시도해 보세요"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "터키어"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "내보낼 때 임의 합자(리게이처)를 비활성화하세요."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "이력서를 업데이트하는 중입니다..."
 msgid "Upload .csv"
 msgstr ".csv 업로드"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "이력서를 업로드하여 지원자 추적 시스템(ATS)이 실제로 무엇을 읽는지 확인하세요. 모든 처리는 이 브라우저에서 이루어집니다. 파일은 업로드되지 않으며 아무것도 저장되지 않습니다."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "첨부 파일을 업로드하세요"
@@ -5242,6 +6032,14 @@ msgstr "선이 서로 병합되지 않도록 선 높이를 1.15 이상으로 사
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "주변 텍스트 없이 name@example.com과 같은 일반 주소를 사용하세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "+1 555 010 1234와 같은 일반적인 국제 형식을 사용하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "\"2020년 1월 - 2022년 3월\" 또는 \"2020 - 2022\"와 같이 널리 통용되는 형식을 사용하세요."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "'2020년 1월~2022년 3월' 또는 '2020~2022'와 같이 인식된 형식을 사용하세요."
@@ -5250,18 +6048,38 @@ msgstr "'2020년 1월~2022년 3월' 또는 '2020~2022'와 같이 인식된 형�
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "\"2022년 3월\" 또는 \"2022\"와 같이 인식된 형식을 사용하세요."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "순서대로 읽혀야 하는 내용에는 단일 열을 사용하세요."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "다시 렌더링된 복사본이 정확하게 유지되도록 하려면 최소 9pt 크기를 사용하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "레이아웃이 다시 렌더링되어도 유지되도록 A4 또는 US Letter 크기를 사용하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "최소 9pt 이상을 사용하세요."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "색상 사용 {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "\"Experience\", \"Education\", \"Skills\"와 같은 일반적인 제목을 사용하세요."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "샘플 사용"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "에디터의 일반 글머리 기호 목록을 사용하여 문장 중간에 이상한 기호가 들어가지 않게 하세요."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "유효함(오류 있음)"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "유효함(경고 있음)"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "시작 문구를 다양하게 하여 섹션이 정형화되어 보이지 않게 하세요."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "비밀번호를 재설정하려면 이메일 인증이 필요합니다."
 msgid "Version history"
 msgstr "버전 기록"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "이력서치고 복구된 단어 수가 매우 적습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "이만큼의 페이지 수에 비해 복구된 텍스트가 매우 적습니다."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "베트남어"
@@ -5358,6 +6188,11 @@ msgstr "지난 30일 대비"
 msgid "Waiting for the agent…"
 msgstr "에이전트를 기다리는 중…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "글쓰기에 대한 다른 의견을 받아보시겠어요?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "경고"
@@ -5395,6 +6230,14 @@ msgstr "웹 검색"
 msgid "Website"
 msgstr "웹사이트"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "파서가 읽는 내용"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "사람이 보는 화면"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "무엇을 하고 싶으세요?"
@@ -5406,6 +6249,14 @@ msgstr "이 섹션의 이름을 무엇으로 바꾸고 싶으신가요?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Reactive Resume는 다른 이력서 작성 도구와 무엇이 다른가요?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "이 점검이 확인하는 항목"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "이 점검이 하지 않는 것"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "지원 유입 경로"
 msgid "Where your applications went"
 msgstr "지원 결과 분포"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "채용 담당자가 연락할 수 있는지 여부."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "소프트웨어가 단어를 제대로 복구할 수 있는지 여부."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "파일에 실제 텍스트가 있는지, 아니면 텍스트 이미지만 있는지 여부."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "페이지 구조가 읽는 순서를 유지하는지 여부."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "이력서가 소프트웨어가 기대하는 방식으로 구분되어 있는지 여부."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "텍스트가 사람이 읽는 순서대로 추출되는지 여부."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "일반적인 섹션들이 존재하고 서로 구분되는지 여부."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "이름, 이메일, 전화번호, 날짜가 손상 없이 유지되는지 여부."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "타임라인을 재구성할 수 있는지 여부."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "텍스트를 추출하면 단어들이 서로 붙어버립니다."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "OpenAI에서 근무"
@@ -5436,9 +6327,29 @@ msgstr "작업 중…"
 msgid "Worth a shot"
 msgstr "시도해 볼 만함"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "현재 재직 중인 직무의 종료일로 \"현재\"라고 작성하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "각 직무를 명확한 직함과 회사명 줄로 작성하고, 옆에 날짜를 함께 표기하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "특수한 간격 없이 하나의 이어진 텍스트로 작성하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "링크로 인식되도록 전체 주소를 작성하세요."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "https://를 포함한 전체 주소를 작성하세요."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "글쓰기"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "이메일이 도착했습니다!"
 msgid "Your account has been deleted successfully."
 msgstr "계정이 성공적으로 삭제되었습니다."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "AI 제공업체에 연결할 수 없습니다. 설정을 확인하고 다시 시도하세요."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "API 키가 클립보드에 복사되었습니다."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "본문 텍스트가 매우 작습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "항목이 특이한 문자로 표시되어 있습니다."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "변경 사항은 자동으로 저장됩니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "연락처 정보가 첫 페이지에 없습니다."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "데이터는 안전하게 보호되며, 누구와도 공유하거나 판
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "데이터는 안전하게 저장되며 제3자와 공유되지 않습니다. 또한 Reactive Resume를 직접 서버에 호스팅해 데이터에 대한 완전한 제어권을 가질 수 있습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "날짜가 여러 다른 형식으로 작성되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "이메일 주소가 여러 텍스트 조각으로 나뉘어 있습니다."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "회원님의 이메일 주소가 공급자에서 확인되지 않았습니다."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "파일은 여기에만 유지됩니다"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "제목이 본문 텍스트와 동일하게 보입니다."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "최근 변경 내용을 저장할 수 없습니다."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "이 시맨틱 CSS 초안을 명시적으로 활성화하기 전까지는 기존 스타일이 계속 유지됩니다."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "귀하의 라인은 매우 촘촘하게 포장되어 있습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "여백이 매우 좁습니다."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "비밀번호가 성공적으로 재설정되었습니다. 이제 새 비
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "비밀번호가 성공적으로 업데이트되었습니다."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "전화번호가 특이한 형식으로 작성되어 있습니다."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "이력서에는 사진이 포함되어 있습니다."
 msgid "Your resume shows no work experience."
 msgstr "이력서에는 업무 경험이 없습니다."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "이력서에서 \"I\"와 \"my\"를 사용하고 있습니다."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "현재 이력서의 공개 링크는 비밀번호로 보호되고 있습니다. 신뢰하는 사람에게만 비밀번호를 공유하세요."
@@ -5622,4 +6575,3 @@ msgstr "축소"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "줄루어"
-

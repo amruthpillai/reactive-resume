@@ -72,10 +72,6 @@ export function getAtsFindingMessage(code: AtsRuleCode): AtsFindingMessage {
 			title: t`This section has content but never appears.`,
 			action: t`Place it on a page from the Layout panel, or hide it if you meant to park it.`,
 		}))
-		.with("EMPTY_RENDERED_SECTION", () => ({
-			title: t`This section renders as an empty heading.`,
-			action: t`Add an item to it, or hide it.`,
-		}))
 		.with("NO_VISIBLE_EXPERIENCE", () => ({
 			title: t`Your resume shows no work experience.`,
 			action: t`Add an entry, or use projects and volunteer work to show equivalent history.`,

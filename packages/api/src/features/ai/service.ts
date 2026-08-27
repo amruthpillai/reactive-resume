@@ -1,5 +1,4 @@
 import type { AIProvider } from "@reactive-resume/ai/types";
-import type { ResumeAnalysis } from "@reactive-resume/schema/resume/analysis";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ModelMessage, UIMessage } from "ai";
 import { inflateRawSync } from "node:zlib";
@@ -32,7 +31,6 @@ import { createOllama } from "ollama-ai-provider-v2";
 import { match } from "ts-pattern";
 import { z } from "zod";
 import {
-	analyzeResumeSystemPrompt as analyzeResumeSystemPromptTemplate,
 	chatSystemPromptTemplate,
 	docxParserSystemPrompt,
 	docxParserUserPrompt,
@@ -48,7 +46,6 @@ import {
 } from "@reactive-resume/ai/tools/patch-proposal";
 import { AI_PROVIDER_DEFAULT_BASE_URLS, AI_PROVIDER_DISPLAY_NAMES, aiProviderSchema } from "@reactive-resume/ai/types";
 import { applyResumePatches } from "@reactive-resume/resume/patch";
-import { resumeAnalysisSchema } from "@reactive-resume/schema/resume/analysis";
 import { supportsProviderNativeWebSearch } from "./capabilities";
 import { resolveAiBaseUrl } from "./url-policy";
 
@@ -505,51 +502,7 @@ async function chat(input: ChatInput) {
 	return streamToEventIterator(result.toUIMessageStream());
 }
 
-type AnalyzeResumeInput = z.infer<typeof aiCredentialsSchema> & {
-	resumeData: ResumeData;
-};
-
-function buildAnalyzeResumeSystemPrompt(resumeData: ResumeData, now = new Date()): string {
-	const currentDate = now.toISOString().slice(0, 10);
-	return `${analyzeResumeSystemPromptTemplate}\n\n## Analysis Context\n\nCurrent date: ${currentDate} (UTC). Treat dates on or before this date as not future-dated. Flag a date as future-dated only when it is after the current date.\n\n## Resume Data\n\n${JSON.stringify(resumeData, null, 2)}`;
-}
-
-/** Sends resume data to the AI provider and returns a structured analysis, parsing raw JSON from the response text. */
-async function analyzeResume(input: AnalyzeResumeInput): Promise<ResumeAnalysis> {
-	const model = getModel(input);
-	const systemPrompt = buildAnalyzeResumeSystemPrompt(input.resumeData);
-
-	const result = await generateText({
-		model,
-		system: systemPrompt,
-		messages: [
-			{
-				role: "user",
-				content:
-					"Analyze this resume and return a structured report with scorecard, overall score, strengths, and actionable suggestions. Return ONLY raw JSON, no markdown fences or explanations.",
-			},
-		],
-	});
-
-	const text = result.text;
-	const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-	const candidate = fenceMatch?.[1] ?? text;
-
-	const firstBrace = candidate.indexOf("{");
-	const lastBrace = candidate.lastIndexOf("}");
-
-	if (firstBrace === -1 || lastBrace === -1 || lastBrace < firstBrace) {
-		throw new Error("AI returned no structured analysis output.");
-	}
-
-	const jsonString = candidate.substring(firstBrace, lastBrace + 1);
-	const parsed = JSON.parse(jsonString);
-
-	return resumeAnalysisSchema.parse(parsed);
-}
-
 export const aiService = {
-	analyzeResume,
 	chat,
 	parseDocx,
 	parsePdf,

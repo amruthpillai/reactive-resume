@@ -53,6 +53,24 @@ msgstr "{0} jelentkezés nyomon követve"
 msgid "{0} characters"
 msgstr "{0} karakter"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{0}/{1} alkalmazható ellenőrzés sikeres"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{0}/{1} alkalmazható ellenőrzés sikeres."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "{0}/{1} kifejezés megtalálva"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} importálásra kész"
 msgid "{0} rejected"
 msgstr "{0} elutasítva"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} kihagyva"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0} kihagyva (hiányzó cég/szerepkör)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} javítandó"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 hónap"
 msgid "6 months"
 msgstr "6 hónap"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "Egy tiszta, egyoszlopos exportálás minden tényt megőriz. Az oszlopok és képek okozzák az adatvesztést."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Megerősítő linket küldtünk a jelenlegi e‑mail‑címedre. Kérjük, ellenőrizd a postafiókodat a módosítás megerősítéséhez."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "Egy dátum a jövőben van."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "Egy időintervallum előbb ér véget, mint ahogy elkezdődik."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "Egy időintervallum olyan formában van megadva, amelyet a legtöbb szoftver nem tud beolvasni."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "Egy betűtípusra hivatkozik a fájl, de nincs beágyazva."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Ingyenes és nyílt forráskódú önéletrajz készítő, amely leegysz
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Barátságos emlékeztető a toborzónak"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "Egy teljes magasságú rés két oszlopra osztja ezt az oldalt."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "Egy hiátus önmagában nem probléma. Ha szeretnéd, adj hozzá egy egysoros magyarázatot; sok erős önéletrajz egyszerűen nem tesz így."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "Egy link máshova mutat, mint amit a megjelenített cím sugall."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "Évek óta rengetegen írtak nekem, hogy megosszák a Reactive Resume‑
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Új megerősítő linket küldtünk az e‑mail‑címedre. Kérjük, ellenőrizd a postafiókodat a fiókod hitelesítéséhez."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "Egy számjegyekkel írt dátum országonként másképp értelmezhető."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "Egy oldal el van forgatva."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Egy szenvedélyprojekt <0>Amruth Pillai</0> tollából."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "Egy emberi olvasóra tervezett önéletrajz, fényképpel, címsorokkal és oszlopokkal"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "Nagyobb kihívás"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "Egy webcím https:// nélkül van megadva."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "Jegyzet hozzáadása…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "Adjon hozzá egy időszakot, például \"2020. január – jelenkor\", hogy az az idővonalra kerüljön."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "Adj hozzá egy \"Tanulmányok\" című szakaszt. Sok rendszerben kötelező mező a tanulmányok."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "Adj hozzá egy \"Tapasztalat\" vagy \"Szakmai tapasztalat\" című szakaszt. A legtöbb rendszer ez alapján rangsorol."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Adj hozzá egy címkét, majd nyomj Entert…"
@@ -291,10 +375,6 @@ msgstr "Adj hozzá egy címkét, majd nyomj Entert…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "Adjon hozzá bejegyzést, vagy használja projekteket és önkéntes munkát az egyenértékű előzmények megjelenítéséhez."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "Adjon hozzá egy elemet, vagy rejtse el."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "Adjon hozzá legalább egy várost és egy országot, hogy a szerepeket 
 msgid "Add contact"
 msgstr "Kapcsolat hozzáadása"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "Adj meg számadatokat, ahol csak tudsz: mennyiségeket, százalékokat, időkereteket, csapatméreteket."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Kulcsszó hozzáadása"
@@ -327,6 +411,14 @@ msgstr "Link hozzáadása"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Adjon hozzá több szerepkört az azonos vállalatnál való karrierút bemutatásához."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "Adj hozzá egy linket, amely bemutatja a munkádat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "Adj hozzá egyet az országkóddal együtt; egyes jelentkezési űrlapok megkövetelik a beküldés előtt."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Oldal hozzáadása"
@@ -339,6 +431,10 @@ msgstr "Szolgáltató hozzáadása"
 msgid "Add Role"
 msgstr "Szerepkör hozzáadása"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "Adj térközt a szakaszok közé, hogy könnyebb legyen átfutni rajta."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "Címke hozzáadása"
@@ -346,6 +442,10 @@ msgstr "Címke hozzáadása"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Hozzáadás a folyamathoz"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "Adj hozzá két-három sort a tetejére, amely leírja, mivel foglalkozol."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "Módosítsa az önéletrajzát egy olyan távoli munkavégzésre alkalma
 msgid "Advanced"
 msgstr "Fejlett"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "Tanács az olvasónak. Ez semmilyen módon nem befolyásolja a pontszámot."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "afrikaans"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "Az állásleírás alapján"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "Az AI-ügynök beállítása a REDIS_URL és az ENCRYPTION_SECRET konfig
 msgid "AI assistant"
 msgstr "MI asszisztens"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "AI szolgáltató"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "A mesterséges intelligencia-szolgáltató kezelése a REDIS_URL és az ENCRYPTION_SECRET konfigurálásáig nem érhető el."
@@ -403,6 +515,10 @@ msgstr "A mesterséges intelligencia szolgáltató kezelése nem érhető el. K�
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "MI-szolgáltatók"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "Az AI szolgáltatók az ENCRYPTION_SECRET konfigurálásáig nem érhetők el."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "albán"
 msgid "Allow Public Access"
 msgstr "Nyilvános hozzáférés engedélyezése"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "Szinte egyik felsoroláspontod sem tartalmaz számadatot."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "Már szerepel"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Már van fiókja? <0/>"
@@ -423,6 +547,10 @@ msgstr "Már van fiókja? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "amhara"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "Egy beágyazott betűtípus nem olvasható be."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "Egy váratlan hiba miatt nem sikerült betölteni ezt az oldalt. Megpró
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Ismeretlen hiba történt az önéletrajz importálása közben."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "Életrajz elemzése"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "Elemzés…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Az Atlas Cloud projektszponzorként támogatja a Reactive Resume-ot. Ha 
 msgid "ATS Check"
 msgstr "ATS ellenőrzés"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "ATS-ellenőrző"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "Az automatikus kitöltés nem sikerült."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "Több nyelven elérhető. Ha szeretnél közreműködni, nézd meg a Crowdin‑t."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "Kerüld az erős betűköz-effekteket, majd exportáld újra."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "Jelentkezésekhez, megosztáshoz és nyomtatáshoz a legjobb."
 msgid "Blank draft"
 msgstr "Üres vázlat"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "Blokkoló"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Tábla"
@@ -750,6 +884,10 @@ msgstr "Szegély lekerekítése"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "Szegély vastagsága"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "Bontsd az önéletrajzot a megszokott szakaszokra, hogy szegmentálható legyen."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "Változásnapló"
 msgid "Chat"
 msgstr "Csevegés"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "Ellenőrzés újra"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "Ellenőrizd, hogy az exportált fájl mindent tartalmaz, amit vársz, és hogy minden szövegrész kijelölhető."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Ellenőrizd az e‑mailedet a jelszó visszaállításához szükséges linkért."
@@ -868,6 +1014,10 @@ msgstr "Ellenőrizd az e‑mailedet a jelszó visszaállításához szükséges 
 msgid "Check your email for a link to verify your account."
 msgstr "Ellenőrizd az e‑mailedet a fiókod megerősítéséhez szükséges linkért."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "A böngésződben ellenőrizve. A fájl soha nincs feltöltve."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "Ellenőrzés"
@@ -875,6 +1025,10 @@ msgstr "Ellenőrzés"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "Vázlat ellenőrzése"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "Ellenőrzés…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "kínai (hagyományos)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "Válasszon egy modellt és önéletrajz-tervezetet."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "PDF kiválasztása"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "Hasonlítsa össze ezt az önéletrajzot a pozíció URL-címével, és 
 msgid "Completely free, forever, no hidden costs."
 msgstr "Teljesen ingyenes, örökké, rejtett költségek nélkül."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "Tömörítsd vagy távolítsd el a nagy képeket, hogy a feltöltés gyors maradjon."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "Megerősítés"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Csatlakozás"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "Kapcsold össze a saját AI szolgáltatóddal a szöveg értékeléséhez. A fenti ellenőrzésekhez nincs szükség szolgáltatóra vagy fiókra."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "Kapcsolódási hiba."
 msgid "Connection verified — provider is ready to use."
 msgstr "Kapcsolat ellenőrizve – a szolgáltató használatra kész."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "Elérhetőségek"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "Kapcsolatok"
@@ -1020,6 +1190,10 @@ msgstr "Kapcsolatok"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "Tartalom"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "A tartalom rácsszerkezetben van elrendezve."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "Stíluslap másolása"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "Másolja ki a teljes állásleírást a hirdetésből, és illessze be alább. Kitöltjük Ön helyett a mezőket, és a szöveget megőrizzük ennél a jelentkezésnél az illeszkedés pontozásához és a testreszabáshoz."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "Másold ki a szöveget az exportált fájlból, és olvasd át; javíts mindent, ami rossz helyre kerül."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "Másold ki ezt a titkos kulcsot, és használd az alkalmazásaidban az adataid eléréséhez."
@@ -1102,6 +1280,10 @@ msgstr "URL másolása"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Javítsa ki az évet, vagy használja a \"Jelenleg\" lehetőséget a folyamatban lévő munkához."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "Javítsd ki az évszámot, vagy írj \"Jelenleg is\" a folyamatban lévő munkához."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "Nem sikerült feltölteni a fájlt. Próbáld újra."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "Darabszám forrás szerint"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "A feldolgozási pontszámtól külön számolva. A lefedettség semmit nem jósol meg."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "Dátum"
 msgid "Date applied"
 msgstr "Jelentkezés dátuma"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "Dátumok"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "Behúzás csökkentése"
@@ -1397,6 +1588,10 @@ msgstr "Behúzás csökkentése"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "Csökkentse a nagyítást"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "Részletes ellenőrzés"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "Törlés"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "Fiók törlése"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "Töröld. A rejtett kulcsszavakat a rendszerek a keresés szándékos manipulálásaként kezelik."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "Elutasítva — várakozás az ügynökre…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Elutasítás"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "Írd le mindegyik pozíciót rövid felsoroláspontokkal. A tömör bekezdéseket nehezebb átfutni és szegmentálni."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "Húzd ide a szekciókat, hogy áthelyezd őket az oszlopok között"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Húzd az áthelyezéshez, és használd a csúszkát a nagyításhoz a feltöltés előtt."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "Hagyd el a névmásokat, és kezdj az igével. A legtöbb piacon ez a bevett gyakorlat."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "E‑mail cím"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "Az e-mail kézbesítés nincs konfigurálva ezen a példányon, ezért az ellenőrzés le van tiltva."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "Ágyazz be minden betűtípust exportáláskor, hogy a karakterek a szándékod szerint jelenjenek meg."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "2FA bekapcsolása"
@@ -1760,6 +1971,10 @@ msgstr "Jelszóvédelem engedélyezése..."
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "Kétfaktoros hitelesítés engedélyezése…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "Egyoldalas szabályt érvényesíteni, vagy hibaként kezelni egy betűtípust vagy egy karrierhiátust."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "Exportálás"
 msgid "Export Data"
 msgstr "Adatok exportálása"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "Exportáld az eredeti dokumentumból, ne szkenneld vagy készíts róla képernyőképet."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "Adatok exportálása"
@@ -1863,6 +2082,10 @@ msgstr "Adatok exportálása"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "PNG exportálása"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "Exportáld az önéletrajzot szöveges PDF-ként, ne képként vagy szkennelt fájlként."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "A pipeline-flow.png exportálva."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "Sikertelen"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "Nem sikerült elemezni az önéletrajzot."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "Nem sikerült újraküldeni az ellenőrző e-mailt. Kérjük, próbálja
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "Nem sikerült visszaállítani a jelszavát. Kérjük, próbálja újra."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "Nem sikerült értékelni ezt az önéletrajzot."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "Tűzijáték"
 msgid "Fit to view"
 msgstr "Nézethez igazítva"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "Lapítsd le az űrlapot, hogy a szöveg az oldal része legyen."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "Rugalmasság"
@@ -2210,14 +2437,6 @@ msgstr "Véletlenszerű név generálása"
 msgid "German"
 msgstr "Német"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "Vizsgálja meg önéletrajzát egy általános pontszámmal, erősségekkel és megvalósítható javaslatokkal."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "Kap egy mélyreható, mesterséges intelligencia által vezérelt áttekintést az önéletrajzáról, általános pontszámmal, a legfontosabb erősségekkel és gyakorlati javaslatokkal. A funkció aktiválásához frissítse a mesterséges intelligencia beállításait."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Kezdjük"
@@ -2229,6 +2448,14 @@ msgstr "Kezdjük"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "Adj minden pozícióhoz időtartamot, például \"2020. jan. - Jelenleg is\", hogy az idővonalad rekonstruálható legyen."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "Adj minden pozícióhoz és végzettséghez egy időintervallumot."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "Címsor 5"
 msgid "Heading 6"
 msgstr "Címsor 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "Főcím"
@@ -2388,10 +2616,9 @@ msgstr "Kép elrejtése"
 msgid "Hide Section Icons"
 msgstr "Szakasz ikonok elrejtése"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "Magas"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "Nagy hatású"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "Ikon"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Azonosítsa a jelentkezőkövető rendszer hiányosságait, és csak nagy megbízhatóságú kulcsszó-fejlesztéseket alkalmazzon."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "Ha szkennelésből származik, ez elvárható. Egyébként távolítsd el; a toborzók kulcsszó-tömésnek tekintik."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "A képek az oldal nagy részét lefedik."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "Önéletrajz importálása..."
 msgid "Importing…"
 msgstr "… importálása"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "Itt: {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "Önéletrajz fejlécének beillesztése"
@@ -2491,6 +2731,10 @@ msgstr "Önéletrajz fejlécének beillesztése"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "Behúzás növelése"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "Növeld a sorközt, hogy két sor ne olvadjon eggyé."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "Sorközi kód"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "Elemzések"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "{0}/{1}. oldal vizsgálata…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "Munka"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "Állásleírás"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "Állásleírás (nem kötelező)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "Sorkizárt igazítás"
 msgid "Kannada"
 msgstr "kannada"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "Tarts meg egyetlen címet, hogy ne kelljen találgatni, melyiket használják."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "Tartsd 2,5 MB alatt, jellemzően a képek eltávolításával vagy kicsinyítésével."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "Tartsd az önéletrajz tartalmát valódi szövegként, ne szöveget ábrázoló képként."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "Tartsd rövidre az élőfejeket, vagy hagyd el őket. A kinyert szövegben is ismétlődnek."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "Tartsd őket nagyjából két sorban, hogy egy átfutó olvasó is végigolvassa."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "Maradj két-három betűcsaládnál. Minden további betűtípus újabb esély a hibás megjelenítésre."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "Nyelv"
 msgid "Languages"
 msgstr "Nyelvek"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "Utolsó elemzés dátuma: {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "Utoljára megtekintve ekkor: {0}"
 msgid "Latvian"
 msgstr "lett"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "Rendezd a szöveget vízszintesen. Az elforgatott szövegrészek gyakran kimaradnak vagy rossz helyre kerülnek."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "Elrendezés"
@@ -2715,6 +2995,10 @@ msgstr "Tudj meg többet"
 msgid "Leave"
 msgstr "Elhagyás"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "Hagyj legalább 1,27 cm margót az oldal körül."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Hagyd üresen az eredeti cím visszaállításához."
@@ -2726,6 +3010,10 @@ msgstr "Hagyja, hogy AI-szolgáltatót hozzon létre?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Balra igazítás"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "A hossz önmagában nem hiba, és nincs egyetemes egyoldalas szabály. Tartsd meg azokat az oldalakat, amelyek megérdemlik a helyüket."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "Szint: {level} / 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT</0> licenc alatt."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "A ligatúrák betűket ejthetnek ki az olyan szavakból, mint a \"workflow\"."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "{providerName} fiókod összekapcsolása..."
 msgid "List"
 msgstr "Lista"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "Sorold fel az általad használt eszközöket és technológiákat. A toborzók a legtöbbet a készségekre keresnek rá."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "litván"
@@ -2814,8 +3110,8 @@ msgstr "MI-szolgáltatók betöltése folyamatban. Kérjük, próbálja újra eg
 msgid "Loading applications…"
 msgstr "Alkalmazások betöltése…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "Szolgáltatók betöltése…"
 
@@ -2838,6 +3134,7 @@ msgstr "… betöltése"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Helyszín"
@@ -2855,6 +3152,10 @@ msgstr "Zárolás"
 msgid "Logout"
 msgstr "Kijelentkezés"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "Hosszú szövegrészek nagybetűvel vannak szedve."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "Hosszú távú fenntarthatóság"
@@ -2864,10 +3165,9 @@ msgstr "Hosszú távú fenntarthatóság"
 msgid "Lost access to your authenticator?"
 msgstr "Elveszítetted a hozzáférést a hitelesítő alkalmazásodhoz?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "Alacsony"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "Kis hatású"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "Fő navigáció"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "A tapasztalati részt tedd eredményorientáltabbá, és távolítsd el a homályos felelősségi köröket."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "A látható szöveg és a célcím egyezzen meg."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "Tedd őket láthatóan nagyobbá, félkövérré vagy nagybetűssé."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "maláj"
@@ -2889,6 +3197,10 @@ msgstr "maláj"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "malajálam"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "Sok felsoroláspont ugyanazzal a kifejezéssel kezdődik."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "Elutasítottnak jelölés"
 msgid "Match scoring failed."
 msgstr "Az illeszkedési pontozás nem sikerült."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Közepes"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "Közepes hatású"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "Mistral mesterséges intelligencia"
 msgid "Model"
 msgstr "Modell"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "Egynél több e-mail cím szerepel."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "A legtöbb felsoroláspont töltelékszóval kezdődik ahelyett, hogy azt írnád le, mit tettél."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "A legtöbb bejegyzéshez nincs dátum megadva."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "A legtöbb rendszer e-mailben rögzíti a jelölteket. "
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "Helyezz minden tartalmat az oldal határain belülre, majd exportáld újra."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "Helyezze át a fő oszlopba, és tartsa meg az oldalsávot a rövid listák számára."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "Helyezd a tényleges tartalmat az oldal törzsébe; egyes szoftverek elvetik a margókat."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "Szakasz áthelyezése"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Áthelyezés ide"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "Helyezd az e-mail címedet és telefonszámodat az első oldal tetejére."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "A https:// címmel kell kezdeni."
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "Nincs a szűrőknek megfelelő jelentkezés."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "Még nincsenek jelentkezések — adj hozzá néhányat, hogy lásd a tölcsért és a válaszadási arányokat."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "Nem található felsorolás."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "Nem található megszokott szakaszcím."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "A mesterséges intelligencia szolgáltatótól nem érkezett vissza adat."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "Nem található dátum."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "Nem található Tanulmányok szakasz."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "Nem található e-mail cím."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "Egyetlen sor sem hasonlít munkakör és munkáltató párosítására."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Még nincsenek regisztrált kulcsok."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "Nem található telefonszám."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "Még nincsenek önéletrajzok."
 msgid "No saved versions yet."
 msgstr "Még nincsenek mentett verziók."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "Nem található Készségek szakasz."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "Még nincs forrásadat."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "Nem sikerült konkrét kifejezéseket kinyerni ebből az állásleírásból, így az valószínűleg többnyire általános szöveg. Illeszd be a követelmények szakaszt egy hasznosabb összehasonlításhoz."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Nincs tesztelt szolgáltató"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "Nem sikerült szöveget kiolvasni ebből a fájlból."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "Még nincsenek témák."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "Nem található Szakmai tapasztalat szakasz."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "norvég"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "Nincs csatlakoztatva"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "Nem igazolt az önéletrajzodban"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "Nincs az önéletrajzodban"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "Nincs pontozva"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "Jegyzet"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "Jegyzetek"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "Semmi nem jelzi, hogy egy pozíció folyamatban van."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "Itt nincs mit javítani."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "Nincs mit javítani. A fennmaradó oldalakra egyszerűen nem terjedt ki ez a jelentés."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "Nincs javaslat."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "Folyamatos karbantartás"
 msgid "Only applies when the section fits on a single page."
 msgstr "Csak akkor érvényes, ha a szakasz elfér egyetlen oldalon."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "Csak egyetlen felismerhető szakaszcím található."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "Csak az első {0} oldal lett ellenőrizve, így ez a jelentés nem fedi le a teljes fájlt."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "Egyszerre csak az első {MAX_IMPORT} sor importálható — {overflow} kimarad. Oszd fel a fájlt a többi importálásához."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "Csak az első oldalak lettek ellenőrizve."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "Nyitott fókusz mód"
 msgid "Open in builder"
 msgstr "Megnyitás a szerkesztőben"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "Integrációk beállításainak megnyitása"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Nyílt forráskódú"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "Nyisd meg az exportált fájlt, és győződj meg róla, hogy minden része kijelölhető és másolható."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "OpenAI-kompatibilis"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "Fájl megnyitása…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "Opcionális megjegyzés az ügynöknek…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Opcionálisan beállíthatsz egy jelszót is, így csak azok tekinthetik meg a linkkel elérhető önéletrajzodat, akik ismerik a jelszót."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "Opcionálisan, hogy egy álláshirdetés mely kifejezései szerepelnek már benne."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "Beállítások a {title}-hoz"
@@ -3237,9 +3670,9 @@ msgstr "Sorszámozott lista"
 msgid "Organization"
 msgstr "Szervezet"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "Általános pontszám"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "100-ból"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "A jelszóvédelem ki lett kapcsolva."
 msgid "Password protection has been enabled."
 msgstr "A jelszóvédelem be lett kapcsolva."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "Illessz be egy hirdetést, hogy lásd, mely kifejezései szerepelnek már az önéletrajzodban."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "Illessz be sorokat vagy tölts fel .csv fájlt. Olyan oszlopokat párosítunk, mint Cég, Szerepkör, Szakasz, Szakasz dátuma, Fizetés, Forrás és Címkék."
@@ -3321,6 +3758,10 @@ msgstr "Illessz be sorokat vagy tölts fel .csv fájlt. Olyan oszlopokat páros�
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "Illessze be ide a teljes állásleírást…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "Illeszd be a hirdetést, hogy lásd, mely kifejezései szerepelnek már az önéletrajzodban."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "Személyre szabhatod az önéletrajzodat bármilyen színekkel, betűtípusokkal vagy dizájnokkal, hogy igazán a sajátoddá tedd."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "Telefonszám"
@@ -3383,6 +3825,10 @@ msgstr "Telefonszám"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Válasszon egy ikont"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "Válassz egy formátumot, és használd mindenhol."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "portugál (Portugália)"
 msgid "Position"
 msgstr "Pozíció"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "Megjósolni, hogy elutasítanak-e. Erre egyetlen eszköz sem képes."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Előnyben részesítse a hagyományos címsort, például \"Munka tapasztalat\" vagy \"Oktatás\"."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "Részesítsd előnyben az egyoszlopos elrendezést, vagy tartsd meg az oldalsó oszlopot rövid, önálló listáknak."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "Az előnézet és az exportálás megtartja az érvényes stílusokat, �
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Elsődleges szín"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "Nyomtasd ki vagy exportáld az űrlapot lapos PDF-ként, mielőtt elküldöd."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "Publikációk"
 msgid "Publisher"
 msgstr "Kiadó"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "Helyezz el egy egyszerű e-mail címet az első oldal teteje közelében. A legtöbb rendszer ez alapján azonosít."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "Nyers JSON"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "Exportáld újra egyoszlopos elrendezésből, majd másold ki a szöveget, és ellenőrizd, hogy fentről lefelé olvasható-e."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "Exportáld újra az eredeti dokumentumból, ne más formátumból konvertálva."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "Exportáld újra az eredeti dokumentumból, megfelelően beágyazott betűtípusokkal."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "Exportáld újra egy hagyományos TrueType vagy OpenType betűtípus használatával."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "Exportáld újra beágyazott betűtípusokkal, és ellenőrizd, hogy a szöveg tisztán másolható-e."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "Exportáld újra beágyazott betűtípusokkal, majd nyisd meg a fájlt, és ellenőrizd, hogy a szöveg tisztán másolható-e."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "Olvasd el az Egyéni stílusok alkalmazása útmutatót."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Elolvasta az önéletrajzot"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "Olvashatóság"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "{0}/{1}. oldal beolvasása…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "Jelszóvédelem eltávolítása..."
 msgid "Rename"
 msgstr "Átnevezés"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "PDF-fé alakítja a jelenlegi önéletrajzodat, és lefuttatja a teljes fájlellenőrzést a böngésződben. Semmi nincs feltöltve."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Átrendezés"
@@ -3727,6 +4227,23 @@ msgstr "Átrendezés"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Egyéni mező átrendezése"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "Megismételni azt az állítást, hogy a legtöbb önéletrajzot automatikusan kidobják."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "Sokkal gyakrabban ismétlődnek, mint ahányszor maga a hirdetés használja őket: {0}. A toborzók ezt észreveszik."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "Cseréld le az ikon-betűtípusokat egyszerű szövegre, majd exportáld újra."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "Cseréld le a táblázatokat egyszerű bekezdésekre és listákra. A cellák tárolási sorrendben, nem olvasási sorrendben kerülnek kinyerésre."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "Megerősítő e‑mail újraküldése"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Megerősítő e‑mail újraküldése..."
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "Tartsd fenn a nagybetűket rövid címsoroknak. Lassítják az olvasást, és megzavarhatják a kis- és nagybetűre érzékeny keresést."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "Visszaállítja ezt a verziót?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Önéletrajz"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "Összefoglaló elemzés"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "Az önéletrajzelemzés befejeződött."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "Szerkesztések áttekintése"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Ellenőrizd az önéletrajzot a munkaköri leírás alapján, és tegyél fel kérdéseket, mielőtt megváltoztatod a bizonytalan részeket."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "Szöveg értékelése AI-val"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "Szerkesztés áttekintése"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "Értékelés…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "Román"
 msgid "Rotation"
 msgstr "Forgatás"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "Futtassa le az első elemzést, hogy kapjon egy értékelőlapot, erősségeket és rangsorolt javaslatokat."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "Futtatás újra"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "AI-értékelés futtatása"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "Részletes ellenőrzés futtatása"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "Mentés és tesztelés szolgáltatója"
 msgid "Save & Upload"
 msgstr "Mentés és feltöltés"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "Mentsd el egy nem védett másolatként, jelszó és jogosultsági korlátozás nélkül."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "Módosítások mentése"
@@ -3940,6 +4473,10 @@ msgstr "Változtatások mentése"
 msgid "Save model"
 msgstr "Modell mentése"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "Mentsd el a fájlt úgy, hogy minden oldal álló helyzetű legyen."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "Mentett"
@@ -3959,10 +4496,6 @@ msgstr "Iskola"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "Illeszkedés pontozása"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "Eredményjegyzék"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "Szakaszbeállítások"
 msgid "Section Type"
 msgstr "Szekció típusa"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "Szakaszok"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "Nézd meg, hogyan illeszkedik ez az önéletrajz a hirdetéshez"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "Nézd meg, mit tud kiolvasni egy toborzórendszer (ATS) az önéletrajzodból. A böngésződben fut."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "Összes kijelölése"
 msgid "Select an agent model"
 msgstr "Válasszon egy ügynökmodellt"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "Válasszon egy AI-szolgáltatót"
 
@@ -4075,9 +4617,21 @@ msgstr "Üzenet küldése"
 msgid "Send Password Reset Email"
 msgstr "Jelszó‑visszaállító e‑mail küldése"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "Küldd el magát az önéletrajzot, ne egy portfólió-csomagolást."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Jelszó‑visszaállító e‑mail küldése..."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "A PDF-edből már kinyert szöveget elküldi az alább kiválasztott AI szolgáltatónak. Maga a PDF fájl soha nincs feltöltve."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "A PDF-edből már kinyert szöveget, valamint a beillesztett állásleírást elküldi az alább kiválasztott AI szolgáltatónak. Maga a PDF fájl soha nincs feltöltve."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "szerb"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Jelszó beállítása"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "Állítsd be a dokumentum nyelvét exportáláskor."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "Oldalsáv szélessége"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Bejelentkezés"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "Jelentkezz be, és kapcsold össze a saját AI szolgáltatóddal, hogy átírási javaslatokat kapj a gyenge felsoroláspontokhoz. A fenti ellenőrzések ingyenesek, és nem igényelnek fiókot."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "Keresőbarát azonosító"
 msgid "Some application systems require one before you can submit."
 msgstr "Egyes jelentkezési rendszereknek szüksége van egy ilyenre a benyújtás előtt."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "Néhány felsoroláspont túl hosszú."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "Néhány karakter kérdőjelként jelenik meg."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "Egyes ellenőrzésekhez olyan információ szükséges, amelyet ez a fájl nem tartalmaz: nem vizsgálható oldaltartalom, vagy olyan nyelvű szöveg, amelyet ezek az ellenőrzések nem fednek le. Ezek sem sikeresként, sem sikertelenként nem számítanak."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "Néhány karakterjelnek nincs jelentése ezen a fájlon kívül."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "Néhány sor nem az olvasási sorrendben van tárolva."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Egyes elemzők rosszul kezelik a képeket, és egyes régiókban nem javasoljuk a fotók használatát."
@@ -4311,6 +4894,14 @@ msgstr "Egyes elemzők rosszul kezelik a képeket, és egyes régiókban nem jav
 msgid "Some styles were ignored"
 msgstr "Néhány stílus figyelmen kívül maradt"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "Néhány szövegrész az oldalon kívülre esik."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "Néhány szövegrész el van forgatva."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Valami más…"
@@ -4318,6 +4909,10 @@ msgstr "Valami más…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Valami rosszul sült el"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "Hiba történt a fájl beolvasása közben. Kérjük, próbáld újra."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "Térköz (függőleges)"
 msgid "Spanish"
 msgstr "spanyol"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "Írd ki a hónapot betűkkel, például \"2022. márc.\"."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "Támogatók"
@@ -4419,6 +5018,10 @@ msgstr "Kezdd az önéletrajzod építését azzal, hogy nevet adsz neki."
 msgid "Start building your resume from scratch"
 msgstr "Kezdd el az önéletrajzod építését a nulláról"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "Kezdj mindegyiket egy konkrét igével: épített, vezetett, csökkentett, migrált."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "Új téma indítása"
@@ -4427,6 +5030,10 @@ msgstr "Új téma indítása"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "Kezdés új oldalon"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "Kezdd az önéletrajzot a neveddel, saját sorban."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "Még mindig várok erre: {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "Állítsa le a generációt"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "Erősségek"
 
@@ -4473,7 +5080,7 @@ msgstr "A stíluslap végzetes hibákat tartalmaz"
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "Javaslatok"
 
@@ -4494,6 +5101,7 @@ msgstr "A Reactive Resume támogatása"
 msgid "Support the app by doing what you can!"
 msgstr "Támogasd az alkalmazást, amivel csak tudod!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "Cserélje fel a kezdő és befejező dátumot."
@@ -4532,6 +5140,10 @@ msgstr "Címkék"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "A címkékkel kulcsszavak alapján kategorizálhatod az önéletrajzodat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "A címkék egyértelmű olvasási sorrendet adnak a szoftvereknek. Kapcsold be őket exportáláskor, ha az eszközöd felkínálja."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "Szöveg igazítása"
 msgid "Text Color"
 msgstr "Szövegszín"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "A szöveg karakterenként külön van megírva."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "A szöveg az élőfej vagy élőláb területén helyezkedik el."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "thai"
@@ -4597,6 +5217,19 @@ msgstr "thai"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "Köszönjük szponzorainknak"
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "Ez a fájl nem olvasható be PDF-ként."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "Ez a fájl nem PDF. Exportáld az önéletrajzodat PDF-ként, és próbáld újra."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "Ez a fájl túl nagy ahhoz, hogy a böngészőben ellenőrizhető legyen."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "Az API kulcs törlése után többé nem fér hozzá az adataidhoz. Ez a
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "Az alkalmazás, amely ide küldte Önt, érvénytelen engedélyezési kérést küldött."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "A fenti ellenőrzések gépiesek. Ez megkérdezi egy nyelvi modelltől, mit gondolna egy olvasó a felsoroláspontjaidról, és átírási javaslatokat ad. Nem eredményez pontszámot."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "A keresett parancs nem létezik."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "A részletes ellenőrzés nem tudott befejeződni. Kérjük, próbáld újra."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Az importált fájlt nem sikerült érvényes folytatássá elemezni."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "A szöveg tárolási sorrendje jelentősen eltér az olvasási sorrendjétől."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "Lehetséges, hogy a keresett oldal áthelyeződött, vagy már nem létezik."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "Az oldalak képek, mögöttük nincs szöveg."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "A megadott jelszó helytelen"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "A PDF-et az ebben a lapon futó kód olvassa be. Semmi nincs feltöltve, semmi nincs tárolva, és nincs szükség fiókra. Ha szeretnéd, nyisd meg a böngésződ hálózati (network) lapját, és figyeld."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "A szolgáltató nem osztott meg e-mail-címet, amely a bejelentkezéshez
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "A szolgáltató elutasította ezt a bejelentkezési kísérletet. Kérjük, kezdje elölről."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "A szolgáltató olyan értékelést adott vissza, amely nem olvasható be. Próbáld újra."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "Az önéletrajz előnézetét nem sikerült frissíteni. Az utolsó érv
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "A megnyitni kívánt önéletrajz jelszóval védett"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "Ugyanaz a sor ismétlődik minden oldalon."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "A pontszám korlátozva van egy blokkoló probléma miatt: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "A szöveg olvashatatlanul kerül elő."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "Az első oldal teteje nem néz ki névnek."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "Téma"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Ezután írd be a folytatáshoz az alkalmazás által megadott 6 számjegyű kódot."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "Hiátus van két dátumozott pozíció között."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "Nincs link egy profilra, portfólióra vagy tárolóra (repository)."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "Nincs összefoglaló bekezdés."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "A DOCX generálása során probléma merült fel, kérjük, próbálja meg újra."
@@ -4695,6 +5381,10 @@ msgstr "Hiba történt a PDF létrehozásakor, kérjük, próbálja újra."
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Hiba történt az önéletrajz nyomtatásra való előkészítése során, kérjük, próbálja újra."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "Nem volt elég információ ennek az ellenőrzésnek a lefuttatásához."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "Ez az ügynökszál nem nyitható meg."
 msgid "This assistant could not be opened."
 msgstr "Ez az asszisztens nem nyitható meg."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "Ez az ellenőrzés nem vonatkozik erre a fájlra."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "Ez az ellenőrzés csak angol nyelvű önéletrajzokon fut."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "Ez a dátum nem lesz helyesen olvasható."
@@ -4757,13 +5455,73 @@ msgstr "Ez a bejegyzés véglegesen törlődik. Ezt nem lehet visszavonni."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Ehhez a funkcióhoz csatlakoztatott MI-szolgáltató szükséges. Kérjük, állítson be egyet a beállításokban."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "Ez a fájl űrlapmezőket tartalmaz."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "Ez a fájl olyan szöveget tartalmaz, amelyet az olvasó nem lát, így néhány találat erre a szövegre vonatkozhat."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "Ez a fájl láthatatlanul megjelenített szöveget tartalmaz."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "Ez a fájl fehér alapon fehér szöveget tartalmaz."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "Ez a fájl nem határoz meg nyelvet."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "Ennek a fájlnak nincsenek akadálymentesítési címkéi."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "Ez a fájl titkosítva van."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "Ez a fájl nagy méretű egy önéletrajzhoz képest."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "Ez a fájl nagyobb, mint amit sok jelentkezési űrlap elfogad."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "Ez a fájl sok különböző betűtípust használ."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "Ez a fájl Type 3 betűtípusokat használ, amelyek karakterek helyett rajzokat hordoznak."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "Ennek a fájlnak az oldaltartalmát nem sikerült időben megvizsgálni."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "Ezt a címsort nem az elemzők keresik."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "Ez egy PDF Portfolio: a látható oldal csak egy borító."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Ez az önéletrajzod URL‑barát neve."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "Ez egy XFA űrlap, így a legtöbb szoftver csak az üres vázat olvassa be."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "Ez nem egy megszokott önéletrajz-oldalméret."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "Ennek a linknek hiányzik a protokollja."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Ez néhány percet igénybe vehet, az AI szolgáltató válaszidejétől függően. Kérjük, ne zárd be az ablakot, és ne frissítsd az oldalt."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "Ez azt méri, mennyire hűen tudja egy szoftver kinyerni ennek a fájlnak a szövegét. Nem jósolja meg, hogy egy jelentkezést elutasítanak-e. Erre egyetlen eszköz sem képes. A fájlodat ebben a böngészőben olvastuk be, és soha nem lett feltöltve."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "Ez az oldal oszlopos elrendezésű, és a szöveg rossz sorrendben kerül kinyerésre."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "Ez az oldal nagyon sűrűn van teleírva."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "Ez a PDF jelszóval védett. Mentsd el egy nem védett másolatként, és próbáld újra."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "Ez az önéletrajz zárolva van"
 msgid "This resume is locked and cannot be updated."
 msgstr "Ez az önéletrajz zárolva van, és nem frissíthető."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "Ez az önéletrajz hosszú."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "Ezt az önéletrajzot egy mesterséges intelligencia által fejlesztett ügynök frissítette."
@@ -4796,6 +5574,10 @@ msgstr "Ezt az önéletrajzot egy mesterséges intelligencia által fejlesztett 
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Az önéletrajz megosztási beállításai máshol módosultak."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "Ez az értékelés egy nyelvi modell véleménye a szövegedről. Nem változtatja meg a fenti pontszámot, és tévedhet is. Tekintsd egy második véleménynek, ne végleges ítéletnek."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "Ez a szekció az adott önéletrajzhoz tartozó személyes jegyzeteidnek
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "Ez a szakasz oszlopokra van osztva."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "Ez a szakasz üres címsorként jelenik meg."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Gyorsított felvétel az önéletrajz Reactive Resume‑zal történő e
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Idővonal"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "Tipp"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "Próbáld újra"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "török"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "Kapcsold ki a diszkrecionális ligatúrákat exportáláskor."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "Önéletrajz frissítése..."
 msgid "Upload .csv"
 msgstr ".csv feltöltése"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "Tölts fel egy önéletrajzot, és nézd meg, mit olvas ki belőle valójában egy toborzórendszer (ATS). Minden ebben a böngészőben fut. A fájlod soha nincs feltöltve, és semmi nincs tárolva."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Mellékletek feltöltése"
@@ -5242,6 +6032,14 @@ msgstr "Használjon legalább 1,15-ös vonalmagasságot, hogy a sorok ne legyene
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "Használjon egyszerű címet, például név@example.com, körülvevő szöveg nélkül."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "Használj egyszerű nemzetközi formátumot, például +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Használj elfogadott formátumot, például \"2020. jan. - 2022. márc.\" vagy \"2020 - 2022\"."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Használjon elismert űrlapot, például \"2020. január – 2022. március\" vagy \"2020 - 2022\"."
@@ -5250,18 +6048,38 @@ msgstr "Használjon elismert űrlapot, például \"2020. január – 2022. márc
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Használjon elismert űrlapot, például \"2022. március\" vagy \"2022\"."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "Használj egyoszlopos elrendezést mindenhez, amit sorrendben kell olvasni."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "Használjon legalább 9 pt méretet, hogy az újra renderelt másolatok pontosak maradjanak."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "Használj A4-es vagy US Letter méretet, hogy az elrendezés túlélje az újrarenderelést."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "Használj legalább 9pt-os méretet."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Használja a {color} színt."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "Használj egyszerű címsorokat, például \"Tapasztalat\", \"Tanulmányok\" és \"Készségek\"."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "Minta használata"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "Használd a szerkesztőd normál felsorolásfunkcióját, hogy elkóborolt karakterjelek ne kerüljenek mondat közepére."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "Érvényes, hibákkal"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "Érvényes, figyelmeztetésekkel"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "Változtasd a mondatkezdéseket, hogy a szakasz ne hasson sablonosnak."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "A jelszó megerősítése kötelező a jelszó visszaállításakor."
 msgid "Version history"
 msgstr "Verzióelőzmények"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "Nagyon kevés szót sikerült kinyerni egy önéletrajzhoz képest."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "Nagyon kevés szöveget sikerült kinyerni ennyi oldalhoz képest."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "vietnámi"
@@ -5358,6 +6188,11 @@ msgstr "az előző 30 naphoz képest"
 msgid "Waiting for the agent…"
 msgstr "Várakozás az ügynökre…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "Szeretnél egy második véleményt a szövegről?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "Figyelmeztetés"
@@ -5395,6 +6230,14 @@ msgstr "Webes keresés"
 msgid "Website"
 msgstr "Weboldal"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "Amit egy feldolgozó (parser) beolvas"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "Amit egy ember lát"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Mit szeretnél csinálni?"
@@ -5406,6 +6249,14 @@ msgstr "Mire szeretnéd átnevezni ezt a szekciót?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Miben különbözik a Reactive Resume a többi önéletrajz‑készítőtől?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "Mit ellenőriz ez"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "Mit nem csinál ez"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "Honnan érkeznek a jelentkezések"
 msgid "Where your applications went"
 msgstr "Hová jutottak a jelentkezéseid"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "Hogy egy toborzó el tud-e érni téged."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "Hogy egy szoftver egyáltalán ki tudja-e nyerni a szavakat."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "Hogy a fájl valódi szöveget tartalmaz-e, vagy annak egy képét."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "Hogy az oldal geometriája megőrzi-e az olvasási sorrendet."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "Hogy az önéletrajz úgy van-e szegmentálva, ahogy a szoftverek elvárják."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "Hogy a szöveg abban a sorrendben kerül-e elő, ahogy egy ember olvasná."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "Hogy a megszokott szakaszok jelen vannak-e, és megkülönböztethetők-e."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "Hogy a neved, e-mail címed, telefonszámod és dátumaid sértetlenül megmaradnak-e."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "Hogy az idővonalad rekonstruálható-e."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "A szavak összefolynak, amikor a szöveg kinyerésre kerül."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Munka OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "Működik…"
 msgid "Worth a shot"
 msgstr "Megér egy próbát"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "Írj \"Jelenleg is\"-t a jelenlegi pozíciód záró dátumaként."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "Írj minden pozíciót egyértelmű beosztás és cég sorként, a dátumokkal mellette."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "Írd meg egy megszakítás nélküli egységként, különleges térköz nélkül."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "Írd ki a teljes címet, hogy linkként legyen felismerve."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "Írja be a teljes címet, beleértve a https://-t is."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "Szövegezés"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "Új üzeneted érkezett!"
 msgid "Your account has been deleted successfully."
 msgstr "A fiókodat sikeresen töröltük."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "Az AI szolgáltatód nem érhető el. Ellenőrizd a beállításait, és próbáld újra."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Az API kulcsodat a vágólapra másoltuk."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "A törzsszövege nagyon kicsi."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "A felsoroláspontjaid szokatlan karakterekkel vannak jelölve."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "A módosításaid automatikusan mentésre kerülnek."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "Az elérhetőségeid nem az első oldalon vannak."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "Az adataid biztonságban vannak, és soha nem adjuk el vagy osztjuk meg 
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Az adataid biztonságosan tároljuk, és soha nem osztjuk meg harmadik felekkel. A Reactive Resume‑t saját szervereiden is hosztolhatod, hogy teljes kontrollod legyen az adataid felett."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "A dátumaid többféleképpen vannak megírva."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "Az e-mail címed szövegdarabokra van törve."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "Az e-mail-címe nincs megerősítve a szolgáltatónál."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "A fájlod itt marad"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "A címsoraid ugyanúgy néznek ki, mint a törzsszöveged."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "A legutóbbi módosításokat nem sikerült menteni."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "A korábbi stílusok aktívak maradnak, amíg explicit módon nem aktiválja ezt a szemantikus CSS-tervezetet."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "A soraid nagyon szorosan vannak csomagolva."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "A margóid nagyon keskenyek."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "A jelszavadat sikeresen visszaállítottuk. Mostantól az új jelszóval
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "A jelszavadat sikeresen frissítettük."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "A telefonszámod szokatlan formában van megírva."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "Önéletrajza fényképet is tartalmaz."
 msgid "Your resume shows no work experience."
 msgstr "Az önéletrajzában nincs munkatapasztalat."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "Az önéletrajzod \"én\"-t és \"enyém\"-et használ."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Az önéletrajzod nyilvános linkje jelenleg jelszóval védett. A jelszót csak megbízható személyekkel oszd meg."
@@ -5622,4 +6575,3 @@ msgstr "Kicsinyítés"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

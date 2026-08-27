@@ -4,6 +4,7 @@ import type { AtsFinding, AtsFindingParams } from "./types";
 import type { WalkedSection } from "./walk";
 import { atsRuleSeverity } from "./catalog";
 import { isFutureEndpoint, isReversedPeriod, parsePeriod, parseSingleDate } from "./period";
+import { SECTION_TITLE_ALIASES } from "./section-aliases";
 import { isRenderedSection } from "./walk";
 
 export type RuleContext = {
@@ -22,38 +23,6 @@ const ALLOWED_URL_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
 const PERIOD_REQUIRED_TYPES = new Set<CustomSectionType>(["experience", "education"]);
 
 const PROSE_SECTION_TYPES = new Set<CustomSectionType>(["summary", "experience", "education", "projects", "volunteer"]);
-
-const SECTION_TITLE_ALIASES: Partial<Record<CustomSectionType, ReadonlySet<string>>> = {
-	summary: new Set([
-		"summary",
-		"professional summary",
-		"profile",
-		"about",
-		"about me",
-		"objective",
-		"career objective",
-	]),
-	experience: new Set([
-		"experience",
-		"work experience",
-		"professional experience",
-		"employment",
-		"employment history",
-		"work history",
-		"career history",
-	]),
-	education: new Set(["education", "academic background", "education & training", "educational background"]),
-	projects: new Set(["projects", "personal projects", "selected projects", "side projects"]),
-	skills: new Set(["skills", "technical skills", "core competencies", "competencies", "skills & expertise"]),
-	languages: new Set(["languages"]),
-	interests: new Set(["interests", "hobbies", "hobbies & interests"]),
-	awards: new Set(["awards", "honors", "awards & honors", "achievements"]),
-	certifications: new Set(["certifications", "certificates", "licenses", "licenses & certifications"]),
-	publications: new Set(["publications", "papers", "research"]),
-	volunteer: new Set(["volunteer", "volunteering", "volunteer experience", "community involvement"]),
-	references: new Set(["references"]),
-	profiles: new Set(["profiles", "links", "social profiles"]),
-};
 
 const MIN_BODY_FONT_SIZE = 9;
 const MIN_LINE_HEIGHT = 1.15;
@@ -185,18 +154,14 @@ const dateRules: AtsRule = (context) => {
 const structureRules: AtsRule = (context) => {
 	const findings: AtsFinding[] = [];
 
+	// A section with no items is not reported: every template's renderer returns null before it
+	// emits a heading, so an empty section produces nothing on the page rather than a bare title.
+	// Only content that can never render — placed on no page at all — is worth a finding.
 	for (const section of context.sections) {
 		if (isCoverLetter(section) || section.hidden) continue;
 
-		if (section.placement === "none") {
-			if (section.items.length > 0) {
-				findings.push(finding("SECTION_MISSING_FROM_LAYOUT", section.pointer, { section: section.id }));
-			}
-			continue;
-		}
-
-		if (section.items.length === 0) {
-			findings.push(finding("EMPTY_RENDERED_SECTION", section.pointer, { section: section.id }));
+		if (section.placement === "none" && section.items.length > 0) {
+			findings.push(finding("SECTION_MISSING_FROM_LAYOUT", section.pointer, { section: section.id }));
 		}
 	}
 

@@ -53,6 +53,24 @@ msgstr "Sledováno {0} žádostí"
 msgid "{0} characters"
 msgstr "{0} znaků"
 
+#. placeholder {0}: report.passedChecks
+#. placeholder {1}: report.applicableChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} of {1} applicable checks passed"
+msgstr "{0} z {1} použitelných kontrol prošlo"
+
+#. placeholder {0}: category.passedChecks
+#. placeholder {1}: category.applicableChecks
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} of {1} applicable checks passed."
+msgstr "{0} z {1} použitelných kontrol prošlo."
+
+#. placeholder {0}: jd.matchedCount
+#. placeholder {1}: jd.totalTerms
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "{0} of {1} terms found"
+msgstr "{0} z {1} termínů nalezeno"
+
 #. placeholder {0}: importable.length
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} ready to import"
@@ -63,10 +81,20 @@ msgstr "{0} připraveno k importu"
 msgid "{0} rejected"
 msgstr "{0} zamítnuto"
 
+#. placeholder {0}: report.skippedChecks
+#: src/features/ats-checker/report/score-header.tsx
+msgid "{0} skipped"
+msgstr "{0} přeskočeno"
+
 #. placeholder {0}: parsed.skipped
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "{0} skipped (missing company/role)"
 msgstr "{0} přeskočeno (chybí společnost/role)"
+
+#. placeholder {0}: findings.length
+#: src/features/ats-checker/report/report-view.tsx
+msgid "{0} to fix"
+msgstr "{0} k opravě"
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -130,9 +158,29 @@ msgstr "3 měsíce"
 msgid "6 months"
 msgstr "6 měsíců"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A clean single-column export keeps every fact. Columns and images are where they get lost."
+msgstr "Čistý jednosloupcový export zachová každý fakt. Sloupce a obrázky jsou místem, kde se ztrácí."
+
 #: src/features/settings/pages/profile.tsx
 msgid "A confirmation link has been sent to your current email address. Please check your inbox to confirm the change."
 msgstr "Potvrzovací odkaz byl odeslán na vaši současnou e-mailovou adresu. Zkontrolujte prosím svou e-mailovou schránku a potvrďte změnu."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date is in the future."
+msgstr "Datum je v budoucnosti."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range ends before it starts."
+msgstr "Časové rozmezí končí dříve, než začíná."
+
+#: src/features/ats-checker/messages.ts
+msgid "A date range is written in a form most software cannot read."
+msgstr "Časové rozmezí je zapsáno ve formátu, který většina softwaru nedokáže přečíst."
+
+#: src/features/ats-checker/messages.ts
+msgid "A font is referenced but not embedded."
+msgstr "Písmo je odkazováno, ale není vloženo."
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
@@ -141,6 +189,18 @@ msgstr "Bezplatný nástroj pro tvorbu životopisů s otevřeným zdrojovým kó
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Přátelské pošťouchnutí pro náboráře"
+
+#: src/features/ats-checker/messages.ts
+msgid "A full-height gap splits this page into two columns."
+msgstr "Mezera přes celou výšku rozděluje tuto stránku na dva sloupce."
+
+#: src/features/ats-checker/messages.ts
+msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
+msgstr "Mezera není problém. Pokud chcete, přidejte jednořádkové vysvětlení; mnoho kvalitních životopisů to ale nedělá."
+
+#: src/features/ats-checker/messages.ts
+msgid "A link points somewhere other than the address it shows."
+msgstr "Odkaz vede jinam, než ukazuje zobrazená adresa."
 
 #: src/routes/builder/$resumeId/-components/dock.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
@@ -155,13 +215,29 @@ msgstr "Spousta lidí mi během let psala, aby se podělili o své zkušenosti s
 msgid "A new verification link has been sent to your email address. Please check your inbox to verify your account."
 msgstr "Nový ověřovací odkaz byl odeslán na vaši e-mailovou adresu. Zkontrolujte prosím svou e-mailovou schránku a ověřte svůj účet."
 
+#: src/features/ats-checker/messages.ts
+msgid "A numeric date reads differently in different countries."
+msgstr "Číselné datum se v různých zemích čte odlišně."
+
+#: src/features/ats-checker/messages.ts
+msgid "A page is rotated."
+msgstr "Stránka je otočená."
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Osobní projekt <0>Amruth Pillai</0>."
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "A resume laid out for a human reader, with a photo, headings and columns"
+msgstr "Životopis navržený pro lidského čtenáře, s fotografií, nadpisy a sloupci"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A stretch"
 msgstr "Protažení"
+
+#: src/features/ats-checker/messages.ts
+msgid "A web address is written without https://."
+msgstr "Webová adresa je zapsána bez https://."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "A4"
@@ -284,6 +360,14 @@ msgstr "Přidat poznámku…"
 msgid "Add a period such as \"Jan 2020 - Present\" so it lands on your timeline."
 msgstr "Add a period such as \\\"Jan 2020 - Present\\\" so it lands on your timeline."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Education\". Many systems have a required education field."
+msgstr "Přidejte sekci nazvanou „Vzdělání“. Mnoho systémů má povinné pole pro vzdělání."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add a section headed \"Experience\" or \"Work Experience\". It is the field most systems rank on."
+msgstr "Přidejte sekci nazvanou „Zkušenosti“ nebo „Pracovní zkušenosti“. Je to pole, podle kterého většina systémů hodnotí."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add a tag and press Enter…"
 msgstr "Přidejte štítek a stiskněte Enter…"
@@ -291,10 +375,6 @@ msgstr "Přidejte štítek a stiskněte Enter…"
 #: src/libs/resume/ats.ts
 msgid "Add an entry, or use projects and volunteer work to show equivalent history."
 msgstr "Přidejte záznam nebo použijte projekty a dobrovolnou práci k zobrazení ekvivalentní historie."
-
-#: src/libs/resume/ats.ts
-msgid "Add an item to it, or hide it."
-msgstr "Přidejte do něj položku nebo ji skryjte."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
@@ -314,6 +394,10 @@ msgstr "Přidejte alespoň město a zemi, aby bylo možné role přizpůsobit va
 msgid "Add contact"
 msgstr "Přidat kontakt"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add figures where you have them: volumes, percentages, timeframes, team sizes."
+msgstr "Uveďte čísla, kde je máte: objemy, procenta, časové rámce, velikosti týmů."
+
 #: src/components/input/chip-input.tsx
 msgid "Add keyword"
 msgstr "Přidat klíčové slovo"
@@ -327,6 +411,14 @@ msgstr "Přidat odkaz"
 msgid "Add multiple roles to show career progression at the same company."
 msgstr "Přidejte více rolí, abyste ukázali kariérní postup ve stejné společnosti."
 
+#: src/features/ats-checker/messages.ts
+msgid "Add one link that shows your work."
+msgstr "Přidejte jeden odkaz, který ukazuje vaši práci."
+
+#: src/features/ats-checker/messages.ts
+msgid "Add one with its country code; some application forms require it before you can submit."
+msgstr "Přidejte jedno s předvolbou země; některé přihlašovací formuláře jej vyžadují před odesláním."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Add Page"
 msgstr "Přidat stránku"
@@ -339,6 +431,10 @@ msgstr "Přidat poskytovatele"
 msgid "Add Role"
 msgstr "Přidat roli"
 
+#: src/features/ats-checker/messages.ts
+msgid "Add some whitespace between sections so a person can skim it."
+msgstr "Přidejte mezi sekce trochu volného místa, aby je čtenář mohl rychle přelétnout."
+
 #: src/features/applications/components/table-view.tsx
 msgid "Add tag"
 msgstr "Přidat štítek"
@@ -346,6 +442,10 @@ msgstr "Přidat štítek"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Add to pipeline"
 msgstr "Přidat do kanálu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Add two or three lines at the top describing what you do."
+msgstr "Přidejte na začátek dva až tři řádky popisující, čím se zabýváte."
 
 #: src/libs/resume/ats.ts
 msgid "Add your full name under Basics."
@@ -359,9 +459,17 @@ msgstr "Upravte životopis pro roli zaměřenou na práci na dálku, která si c
 msgid "Advanced"
 msgstr "Moderní"
 
+#: src/features/ats-checker/messages.ts
+msgid "Advice for the person reading it. None of this affects the score."
+msgstr "Rady pro člověka, který si to čte. Nic z toho neovlivňuje skóre."
+
 #: src/libs/locale.ts
 msgid "Afrikaans"
 msgstr "Afrikánština"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Against the job description"
+msgstr "Vůči popisu práce"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
@@ -392,6 +500,10 @@ msgstr "Nastavení agenta AI není k dispozici, dokud nejsou nakonfigurovány pa
 msgid "AI assistant"
 msgstr "Asistent s umělou inteligencí"
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI provider"
+msgstr "Poskytovatel AI"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI provider management is unavailable until REDIS_URL and ENCRYPTION_SECRET are configured."
 msgstr "Správa poskytovatelů AI není k dispozici, dokud nejsou nakonfigurovány parametry REDIS_URL a ENCRYPTION_SECRET."
@@ -403,6 +515,10 @@ msgstr "Správa poskytovatelů umělé inteligence není k dispozici. Zkuste to 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI Providers"
 msgstr "Poskytovatelé umělé inteligence"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "AI providers are unavailable until ENCRYPTION_SECRET is configured."
+msgstr "Poskytovatelé AI nejsou dostupní, dokud není nastaveno ENCRYPTION_SECRET."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
@@ -416,6 +532,14 @@ msgstr "Albánština"
 msgid "Allow Public Access"
 msgstr "Povolit veřejný přístup"
 
+#: src/features/ats-checker/messages.ts
+msgid "Almost none of your bullets carry a number."
+msgstr "Téměř žádná z vašich odrážek neobsahuje číslo."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Already covered"
+msgstr "Již pokryto"
+
 #: src/features/auth/pages/register.tsx
 msgid "Already have an account? <0/>"
 msgstr "Máte již účet? <0/>"
@@ -423,6 +547,10 @@ msgstr "Máte již účet? <0/>"
 #: src/libs/locale.ts
 msgid "Amharic"
 msgstr "Amharština"
+
+#: src/features/ats-checker/messages.ts
+msgid "An embedded font could not be read."
+msgstr "Vložené písmo se nepodařilo přečíst."
 
 #: src/components/layout/error-screen.tsx
 msgid "An unexpected error stopped this page from loading. You can try again or head back."
@@ -432,14 +560,6 @@ msgstr "Neočekávaná chyba zastavila načítání této stránky. Můžete to 
 #: src/dialogs/resume/import.tsx
 msgid "An unknown error occurred while importing your resume."
 msgstr "Při importu vašeho životopisu došlo k neznámé chybě."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyze Resume"
-msgstr "Analýza životopisu"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Analyzing…"
-msgstr "Analýza…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "And many more..."
@@ -629,6 +749,12 @@ msgstr "Atlas Cloud podporuje Reactive Resume jako sponzora projektu. Pokud by v
 msgid "ATS Check"
 msgstr "Kontrola ATS"
 
+#: src/routes/_home/-sections/features.tsx
+#: src/routes/_home/ats-checker.tsx
+#: src/routes/dashboard/-components/sidebar.tsx
+msgid "ATS Checker"
+msgstr "Kontrola ATS"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Attach a cover letter (PDF)"
@@ -663,6 +789,10 @@ msgstr "Automatické vyplnění se nezdařilo."
 #: src/routes/_home/-sections/features.tsx
 msgid "Available in multiple languages. If you would like to contribute, check out Crowdin."
 msgstr "K dispozici v mnoha jazycích. Pokud chcete přispět, podívejte se na Crowdin."
+
+#: src/features/ats-checker/messages.ts
+msgid "Avoid heavy letter-spacing effects, then re-export."
+msgstr "Vyhněte se výrazným efektům prostrkání písma a poté znovu exportujte."
 
 #: src/dialogs/resume/sections/award.tsx
 msgctxt "(noun) person, organization, or entity that gives an award"
@@ -730,6 +860,10 @@ msgstr "Nejlepší pro aplikace, sdílení a tisk."
 msgid "Blank draft"
 msgstr "Prázdný koncept"
 
+#: src/features/ats-checker/messages.ts
+msgid "Blocker"
+msgstr "Blokující problém"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Rada"
@@ -750,6 +884,10 @@ msgstr "Zaoblení rohů"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Border Width"
 msgstr "Šířka ohraničení"
+
+#: src/features/ats-checker/messages.ts
+msgid "Break the resume into the usual sections so it can be segmented."
+msgstr "Rozdělte životopis do obvyklých sekcí, aby jej bylo možné segmentovat."
 
 #: src/features/resume/public/public-resume.tsx
 msgid "Build your own resume"
@@ -860,6 +998,14 @@ msgstr "Protokol změn"
 msgid "Chat"
 msgstr "Povídání"
 
+#: src/features/ats-checker/tool.tsx
+msgid "Check again"
+msgstr "Zkontrolovat znovu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Check the exported file contains everything you expect, and that all of it is selectable text."
+msgstr "Zkontrolujte, že exportovaný soubor obsahuje vše, co očekáváte, a že celý text lze označit."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Check your email for a link to reset your password."
 msgstr "Zkontrolujte svůj e-mail, kde najdete odkaz pro obnovení hesla."
@@ -868,6 +1014,10 @@ msgstr "Zkontrolujte svůj e-mail, kde najdete odkaz pro obnovení hesla."
 msgid "Check your email for a link to verify your account."
 msgstr "Zkontrolujte svůj e-mail, kde najdete odkaz pro ověření účtu."
 
+#: src/features/ats-checker/uploader.tsx
+msgid "Checked in your browser. The file is never uploaded."
+msgstr "Kontrolováno ve vašem prohlížeči. Soubor se nikdy nenahrává."
+
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking"
 msgstr "Kontrola"
@@ -875,6 +1025,10 @@ msgstr "Kontrola"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Checking draft"
 msgstr "Kontrola návrhu"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Checking…"
+msgstr "Kontroluje se…"
 
 #: src/libs/locale.ts
 msgid "Chinese (Simplified)"
@@ -887,6 +1041,10 @@ msgstr "Čínština (tradiční)"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Choose a model and resume draft."
 msgstr "Vyberte si model a návrh životopisu."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "Choose a PDF"
+msgstr "Vyberte PDF"
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -982,6 +1140,10 @@ msgstr "Porovnejte tento životopis s URL adresou této pozice a aktualizujte kl
 msgid "Completely free, forever, no hidden costs."
 msgstr "Zcela zdarma, navždy, bez skrytých poplatků."
 
+#: src/features/ats-checker/messages.ts
+msgid "Compress or remove large images to keep uploads quick."
+msgstr "Zkomprimujte nebo odstraňte velké obrázky, aby nahrávání zůstalo rychlé."
+
 #. Account deletion confirmation dialog confirm action in account settings
 #. Create API key dialog acknowledgment action after copying
 #: src/dialogs/api-key/create.tsx
@@ -995,6 +1157,10 @@ msgstr "Potvrdit"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Připojit"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
+msgstr "Připojte vlastního poskytovatele AI a získejte hodnocení textu. Kontroly výše nevyžadují žádného poskytovatele ani účet."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Connected"
@@ -1012,6 +1178,10 @@ msgstr "Připojení se nezdařilo."
 msgid "Connection verified — provider is ready to use."
 msgstr "Připojení ověřeno – poskytovatel je připraven k použití."
 
+#: src/features/ats-checker/messages.ts
+msgid "Contact details"
+msgstr "Kontaktní údaje"
+
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Contacts"
 msgstr "Kontakty"
@@ -1020,6 +1190,10 @@ msgstr "Kontakty"
 #: src/dialogs/resume/sections/summary-item.tsx
 msgid "Content"
 msgstr "Obsah"
+
+#: src/features/ats-checker/messages.ts
+msgid "Content is laid out in a grid."
+msgstr "Obsah je uspořádán do mřížky."
 
 #. Button label to continue to dashboard after successful registration
 #. Final action button after saving backup codes
@@ -1090,6 +1264,10 @@ msgstr "Kopírovat stylový list"
 msgid "Copy the entire job description from the posting and paste it below. We'll fill in the fields for you and keep the text with this application for match scoring and tailoring."
 msgstr "Zkopírujte celý popis práce z inzerátu a vložte jej níže. Pole za vás vyplníme a text uložíme k této aplikaci pro hodnocení shody a přizpůsobení."
 
+#: src/features/ats-checker/messages.ts
+msgid "Copy the text out of the exported file and read it through; fix anything that arrives in the wrong place."
+msgstr "Zkopírujte text z exportovaného souboru a pročtěte si jej; opravte vše, co se ocitne na špatném místě."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Copy this secret key and use it in your applications to access your data."
 msgstr "Zkopírujte tento tajný klíč a použijte ho ve svých aplikacích pro přístup k vašim datům."
@@ -1102,6 +1280,10 @@ msgstr "Kopírovat URL"
 #: src/libs/resume/ats.ts
 msgid "Correct the year, or use \"Present\" for ongoing work."
 msgstr "Correct the year, or use \\\"Present\\\" for ongoing work."
+
+#: src/features/ats-checker/messages.ts
+msgid "Correct the year, or write \"Present\" for ongoing work."
+msgstr "Opravte rok, nebo pro probíhající práci napište „současnost“."
 
 #. Error shown when AI provider is unreachable during PDF/DOCX resume import
 #: src/dialogs/resume/import.tsx
@@ -1160,6 +1342,10 @@ msgstr "Soubor se nepodařilo nahrát. Zkuste to prosím znovu."
 #: src/features/applications/components/insights-view.tsx
 msgid "Count by source"
 msgstr "Počet podle zdroje"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Counted separately from the parse score. Coverage is not a prediction of anything."
+msgstr "Počítá se odděleně od skóre analýzy. Pokrytí není predikcí ničeho."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
@@ -1390,6 +1576,11 @@ msgstr "Datum"
 msgid "Date applied"
 msgstr "Datum podání"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Dates"
+msgstr "Data"
+
 #: src/components/input/rich-input.tsx
 msgid "Decrease indent"
 msgstr "Zmenšit odsazení"
@@ -1397,6 +1588,10 @@ msgstr "Zmenšit odsazení"
 #: src/routes/agent/-components/resume-pane.tsx
 msgid "Decrease zoom"
 msgstr "Zmenšit přiblížení"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Deep check"
+msgstr "Hloubková kontrola"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "DeepSeek"
@@ -1431,6 +1626,10 @@ msgstr "Odstranit"
 #: src/features/settings/pages/account.tsx
 msgid "Delete Account"
 msgstr "Smazat účet"
+
+#: src/features/ats-checker/messages.ts
+msgid "Delete it. Hidden keywords are treated as a deliberate attempt to game the search."
+msgstr "Odstraňte je. Skrytá klíčová slova jsou brána jako úmyslný pokus obelstít vyhledávání."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Delete Page"
@@ -1487,6 +1686,10 @@ msgstr "Zamítnuto — čeká se na agenta…"
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Zamítnout"
+
+#: src/features/ats-checker/messages.ts
+msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
+msgstr "Popište každou roli krátkými odrážkami. Souvislé odstavce se hůře přelétávají a segmentují."
 
 #: src/libs/resume/ats.ts
 msgid "Describe what you did so the entry contributes keywords for matching."
@@ -1611,6 +1814,10 @@ msgstr "Přetažením sekce sem je přesunete mezi sloupci"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Přetažením změňte pozici a před nahráním použijte posuvník pro přiblížení/zvětšení."
+
+#: src/features/ats-checker/messages.ts
+msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
+msgstr "Vynechte zájmena a začněte slovesem. To je konvence na většině trhů."
 
 #. Resume card context menu action to create a copy
 #. Resume card dropdown action to create a copy
@@ -1737,6 +1944,10 @@ msgstr "E-mailová adresa"
 msgid "Email delivery isn't configured on this instance, so verification is disabled."
 msgstr "Doručování e-mailů není v této instanci nakonfigurováno, takže ověřování je zakázáno."
 
+#: src/features/ats-checker/messages.ts
+msgid "Embed all fonts when exporting, so characters map the way you intended."
+msgstr "Při exportu vložte všechna písma, aby se znaky zobrazily tak, jak jste zamýšleli."
+
 #: src/features/settings/authentication/components/two-factor.tsx
 msgid "Enable 2FA"
 msgstr "Aktivovat 2FA"
@@ -1760,6 +1971,10 @@ msgstr "Aktivace ochrany heslem…"
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
 msgstr "Povolení dvoufaktorového ověřování…"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Enforce a one-page rule, or treat a font or a career gap as a fault."
+msgstr "Vynucuje pravidlo jedné stránky, nebo považuje písmo či mezeru v kariéře za chybu."
 
 #: src/libs/locale.ts
 msgid "English"
@@ -1856,6 +2071,10 @@ msgstr "Export"
 msgid "Export Data"
 msgstr "Exportovat data"
 
+#: src/features/ats-checker/messages.ts
+msgid "Export from the original document instead of scanning or screenshotting it."
+msgstr "Exportujte z původního dokumentu, místo abyste jej skenovali nebo fotili obrazovku."
+
 #: src/features/settings/pages/account.tsx
 msgid "Export my data"
 msgstr "Exportovat má data"
@@ -1863,6 +2082,10 @@ msgstr "Exportovat má data"
 #: src/features/applications/components/insights-view.tsx
 msgid "Export PNG"
 msgstr "Exportovat PNG"
+
+#: src/features/ats-checker/messages.ts
+msgid "Export the resume as a text PDF rather than as an image or a scan."
+msgstr "Exportujte životopis jako textové PDF, nikoli jako obrázek nebo sken."
 
 #: src/features/resume/export/download-dialog.tsx
 msgid "Export your resume or cover letter in the format you need."
@@ -1879,10 +2102,6 @@ msgstr "Exportovaný soubor pipeline-flow.png"
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
 msgstr "Selhalo"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Failed to analyze resume."
-msgstr "Nepodařilo se analyzovat životopis."
 
 #: src/routes/agent/-components/agent-chat.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
@@ -1967,6 +2186,10 @@ msgstr "Nepodařilo se znovu odeslat ověřovací e-mail. Zkuste to prosím znov
 #: src/features/auth/pages/reset-password.tsx
 msgid "Failed to reset your password. Please try again."
 msgstr "Nepodařilo se obnovit heslo. Zkuste to prosím znovu."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Failed to review this resume."
+msgstr "Hodnocení tohoto životopisu se nezdařilo."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Failed to save AI provider."
@@ -2094,6 +2317,10 @@ msgstr "Ohňostroj"
 msgid "Fit to view"
 msgstr "Přizpůsobit zobrazení"
 
+#: src/features/ats-checker/messages.ts
+msgid "Flatten the form so the text is part of the page."
+msgstr "Zploštěte formulář, aby byl text součástí stránky."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Flexibility"
 msgstr "Flexibilita"
@@ -2210,14 +2437,6 @@ msgstr "Vygenerovat náhodný název"
 msgid "German"
 msgstr "Němčina"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get a review of your resume with an overall score, strengths, and actionable suggestions."
-msgstr "Získejte přehled o svém životopisu s celkovým hodnocením, silnými stránkami a doporučeními, která lze využít."
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Get an in-depth AI-powered review of your resume with an overall score, key strengths, and practical suggestions. To activate this feature, please update your AI settings."
-msgstr "Získejte hloubkovou recenzi svého životopisu s celkovým hodnocením, klíčovými přednostmi a praktickými návrhy. Chcete-li tuto funkci aktivovat, aktualizujte nastavení umělé inteligence."
-
 #: src/routes/_home/-sections/hero.tsx
 msgid "Get Started"
 msgstr "Začít"
@@ -2229,6 +2448,14 @@ msgstr "Začít"
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
 msgstr "GitHub"
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
+msgstr "Uveďte u každé role období, například „led 2020 – současnost“, aby bylo možné rekonstruovat vaši časovou osu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Give every role and qualification a date range."
+msgstr "Uveďte u každé role a kvalifikace časové rozmezí."
 
 #. Secondary navigation button on backup-code verification screen
 #: src/features/auth/pages/verify-2fa.tsx
@@ -2318,6 +2545,7 @@ msgstr "Nadpis 5"
 msgid "Heading 6"
 msgstr "Nadpis 6"
 
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Headline"
 msgstr "Titulek"
@@ -2388,10 +2616,9 @@ msgstr "Skrýt obrázek"
 msgid "Hide Section Icons"
 msgstr "Skrýt ikony sekcí"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "High"
-msgstr "Vysoká"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "High impact"
+msgstr "Vysoký dopad"
 
 #: src/components/input/rich-input.tsx
 msgid "Highlight"
@@ -2437,6 +2664,14 @@ msgstr "Ikona"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements."
 msgstr "Identifikujte mezery v systému sledování uchazečů a používejte pouze vylepšení klíčových slov s vysokou mírou spolehlivosti."
+
+#: src/features/ats-checker/messages.ts
+msgid "If it came from a scan, that is expected. Otherwise remove it; recruiters read it as keyword stuffing."
+msgstr "Pokud to pochází ze skenu, je to očekávané. Jinak to odstraňte; náboráři to vnímají jako nacpávání klíčových slov."
+
+#: src/features/ats-checker/messages.ts
+msgid "Images cover most of the page."
+msgstr "Obrázky pokrývají většinu stránky."
 
 #: src/dialogs/resume/import.tsx
 #: src/routes/dashboard/resumes/index.tsx
@@ -2484,6 +2719,11 @@ msgstr "Importování životopisu…"
 msgid "Importing…"
 msgstr "Import…"
 
+#. placeholder {0}: suggestion.section
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "In {0}"
+msgstr "V {0}"
+
 #: src/features/resume/export/download-dialog.tsx
 msgid "Include resume header"
 msgstr "Zahrnout záhlaví životopisu"
@@ -2491,6 +2731,10 @@ msgstr "Zahrnout záhlaví životopisu"
 #: src/components/input/rich-input.tsx
 msgid "Increase indent"
 msgstr "Zvětšit odsazení"
+
+#: src/features/ats-checker/messages.ts
+msgid "Increase line spacing so two lines are not merged into one."
+msgstr "Zvětšete řádkování, aby se dva řádky nespojily v jeden."
 
 #: src/libs/resume/ats.ts
 msgid "Increase them so content stays inside the reliably read area."
@@ -2515,6 +2759,12 @@ msgstr "Řádkový kód"
 #: src/routes/dashboard/applications/index.tsx
 msgid "Insights"
 msgstr "Přehledy"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Inspecting page {0} of {1}…"
+msgstr "Kontroluje se stránka {0} z {1}…"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Instant Generation"
@@ -2567,6 +2817,11 @@ msgstr "Práce"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Job description"
 msgstr "Popis práce"
+
+#: src/features/ats-checker/tool.tsx
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Job description (optional)"
+msgstr "Popis práce (nepovinné)"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Job posting"
@@ -2622,6 +2877,30 @@ msgstr "Zarovnání do bloku"
 msgid "Kannada"
 msgstr "Kannadština"
 
+#: src/features/ats-checker/messages.ts
+msgid "Keep a single address, so nothing has to guess which one to use."
+msgstr "Ponechte jednu adresu, aby nikdo nemusel hádat, kterou použít."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
+msgstr "Udržujte jej pod 2,5 MB, obvykle odstraněním nebo zmenšením obrázků."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep resume content as real text rather than as pictures of text."
+msgstr "Udržujte obsah životopisu jako skutečný text, ne jako obrázky textu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
+msgstr "Udržujte záhlaví krátká, nebo je vynechte. Opakují se i v extrahovaném textu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep them to roughly two lines, so a skim-reader finishes them."
+msgstr "Udržujte je zhruba na dvou řádcích, aby je čtenář při rychlém čtení dočetl."
+
+#: src/features/ats-checker/messages.ts
+msgid "Keep to two or three families. Each extra font is another chance for one to map badly."
+msgstr "Držte se dvou až tří rodin písem. Každé další písmo je další příležitost, aby se zobrazilo špatně."
+
 #. Layout editor toggle that prevents a section from splitting across pages
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
@@ -2671,10 +2950,6 @@ msgstr "Jazyk"
 msgid "Languages"
 msgstr "Jazyky"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Last analyzed on {updatedAtLabel}"
-msgstr "Naposledy analyzováno {updatedAtLabel}"
-
 #. placeholder {0}: statistics.lastDownloadedAt.toDateString()
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Last downloaded on {0}"
@@ -2702,6 +2977,11 @@ msgstr "Naposledy zobrazeno {0}"
 msgid "Latvian"
 msgstr "Lotyština"
 
+#: src/features/ats-checker/messages.ts
+msgid "Lay the text out horizontally. Rotated runs are often dropped or misplaced."
+msgstr "Uspořádejte text vodorovně. Otočené úseky bývají často vynechány nebo umístěny špatně."
+
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/section.tsx
 msgid "Layout"
 msgstr "Rozvržení"
@@ -2715,6 +2995,10 @@ msgstr "Zjistit více"
 msgid "Leave"
 msgstr "Odejít"
 
+#: src/features/ats-checker/messages.ts
+msgid "Leave at least half an inch around the page."
+msgstr "Ponechte kolem stránky alespoň půl palce okraje."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Leave empty to reset the title to the original."
 msgstr "Ponechte prázdné pro resetování názvu na původní."
@@ -2726,6 +3010,10 @@ msgstr "Nechat nastavit poskytovatele AI?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Zarovnat vlevo"
+
+#: src/features/ats-checker/messages.ts
+msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
+msgstr "Délka není vadou a neexistuje univerzální pravidlo jedné stránky. Ponechte stránky, které si své místo zaslouží."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Letter"
@@ -2745,6 +3033,10 @@ msgstr "Úroveň {level} z 5"
 #: src/components/ui/copyright.tsx
 msgid "Licensed under <0>MIT</0>."
 msgstr "Licencováno pod <0>MIT</0>."
+
+#: src/features/ats-checker/messages.ts
+msgid "Ligatures can drop letters out of words such as \"workflow\"."
+msgstr "Ligatury mohou ze slov jako „workflow“ vypustit písmena."
 
 #. Appearance theme option for light mode
 #: src/features/user/dropdown-menu.tsx
@@ -2802,6 +3094,10 @@ msgstr "Propojuji váš účet {providerName}…"
 msgid "List"
 msgstr "Seznam"
 
+#: src/features/ats-checker/messages.ts
+msgid "List the tools and technologies you use. Recruiters search skills more than any other field."
+msgstr "Vypište nástroje a technologie, které používáte. Náboráři vyhledávají podle dovedností více než podle jiného pole."
+
 #: src/libs/locale.ts
 msgid "Lithuanian"
 msgstr "Litevština"
@@ -2814,8 +3110,8 @@ msgstr "Načítání poskytovatelů umělé inteligence. Zkuste to prosím znovu
 msgid "Loading applications…"
 msgstr "Načítání aplikací…"
 
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
-#: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Loading providers…"
 msgstr "Načítání poskytovatelů…"
 
@@ -2838,6 +3134,7 @@ msgstr "Načítání…"
 #: src/dialogs/resume/sections/volunteer.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Location"
 msgstr "Lokalita"
@@ -2855,6 +3152,10 @@ msgstr "Zámek"
 msgid "Logout"
 msgstr "Odhlásit se"
 
+#: src/features/ats-checker/messages.ts
+msgid "Long stretches are set in capitals."
+msgstr "Dlouhé úseky jsou psány velkými písmeny."
+
 #: src/routes/_home/-sections/donate.tsx
 msgid "Long-term Sustainability"
 msgstr "Dlouhodobá udržitelnost"
@@ -2864,10 +3165,9 @@ msgstr "Dlouhodobá udržitelnost"
 msgid "Lost access to your authenticator?"
 msgstr "Ztratili jste přístup ke své autentizační aplikaci?"
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Low"
-msgstr "Nízká"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Low impact"
+msgstr "Nízký dopad"
 
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -2882,6 +3182,14 @@ msgstr "Hlavní navigace"
 msgid "Make the experience section more results-oriented and remove vague responsibilities."
 msgstr "Zaměřte sekci věnovanou zkušenostem více na výsledky a odstraňte vágní odpovědnosti."
 
+#: src/features/ats-checker/messages.ts
+msgid "Make the visible text and the destination match."
+msgstr "Zajistěte, aby se viditelný text a cíl odkazu shodovaly."
+
+#: src/features/ats-checker/messages.ts
+msgid "Make them visibly larger, bolder or capitalised."
+msgstr "Udělejte je viditelně větší, tučnější nebo velkými písmeny."
+
 #: src/libs/locale.ts
 msgid "Malay"
 msgstr "Malajština"
@@ -2889,6 +3197,10 @@ msgstr "Malajština"
 #: src/libs/locale.ts
 msgid "Malayalam"
 msgstr "Malajálamština"
+
+#: src/features/ats-checker/messages.ts
+msgid "Many bullets start with the same phrase."
+msgstr "Mnoho odrážek začíná stejnou frází."
 
 #: src/libs/locale.ts
 msgid "Marathi"
@@ -2910,10 +3222,9 @@ msgstr "Mark odmítl"
 msgid "Match scoring failed."
 msgstr "Bodování zápasu se nezdařilo."
 
-#. Impact severity label in resume analysis suggestion card
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Medium"
-msgstr "Střední"
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Medium impact"
+msgstr "Střední dopad"
 
 #. File format label in import source selector
 #. File format label in import source selector
@@ -2933,13 +3244,33 @@ msgstr "Mistral AI"
 msgid "Model"
 msgstr "Model"
 
+#: src/features/ats-checker/messages.ts
+msgid "More than one email address appears."
+msgstr "Objevuje se více než jedna e-mailová adresa."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most bullets open with filler rather than something you did."
+msgstr "Většina odrážek začíná výplňovými slovy místo tím, co jste udělali."
+
+#: src/features/ats-checker/messages.ts
+msgid "Most entries have no dates."
+msgstr "Většina položek nemá data."
+
 #: src/libs/resume/ats.ts
 msgid "Most systems file candidates by email. Add one under Basics."
 msgstr "Většina systémů podává kandidáty e-mailem. Přidejte jeden pod Základy."
 
+#: src/features/ats-checker/messages.ts
+msgid "Move all content inside the page boundaries and re-export."
+msgstr "Přesuňte veškerý obsah dovnitř hranic stránky a znovu exportujte."
+
 #: src/libs/resume/ats.ts
 msgid "Move it into the main column and keep the sidebar for short lists."
 msgstr "Přesuňte jej do hlavního sloupce a postranní panel ponechte pro krátké seznamy."
+
+#: src/features/ats-checker/messages.ts
+msgid "Move real content into the body of the page; some software discards the margins."
+msgstr "Přesuňte skutečný obsah do těla stránky; některý software okraje zahazuje."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move section to another column or page"
@@ -2955,6 +3286,10 @@ msgstr "Přesunout scénu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Move to"
 msgstr "Přesunout do"
+
+#: src/features/ats-checker/messages.ts
+msgid "Move your email and phone number to the top of page one."
+msgstr "Přesuňte svůj e-mail a telefonní číslo na začátek první stránky."
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
@@ -2977,6 +3312,7 @@ msgstr "Musí začít na https://"
 #: src/dialogs/resume/sections/reference.tsx
 #: src/dialogs/resume/sections/skill.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/settings/pages/profile.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
@@ -3058,14 +3394,42 @@ msgstr "Žádné aplikace neodpovídají vašim filtrům."
 msgid "No applications yet — add a few to see your funnel and reply rates."
 msgstr "Zatím žádné žádosti – přidejte několik a podívejte se na svůj prodejní trychtýř a míru odpovědí."
 
+#: src/features/ats-checker/messages.ts
+msgid "No bullet lists were found."
+msgstr "Nebyly nalezeny žádné odrážkové seznamy."
+
+#: src/features/ats-checker/messages.ts
+msgid "No conventional section headings were found."
+msgstr "Nebyly nalezeny žádné obvyklé nadpisy sekcí."
+
 #. Error shown when AI import endpoint returns no parsed resume data
 #: src/dialogs/resume/import.tsx
 msgid "No data was returned from the AI provider."
 msgstr "Od poskytovatele UI nebyly vráceny žádné údaje."
 
+#: src/features/ats-checker/messages.ts
+msgid "No dates were found."
+msgstr "Nebyla nalezena žádná data."
+
+#: src/features/ats-checker/messages.ts
+msgid "No education section was found."
+msgstr "Nebyla nalezena sekce vzdělání."
+
+#: src/features/ats-checker/messages.ts
+msgid "No email address was found."
+msgstr "Nebyla nalezena žádná e-mailová adresa."
+
+#: src/features/ats-checker/messages.ts
+msgid "No lines look like a job title paired with an employer."
+msgstr "Žádný řádek nevypadá jako pracovní pozice spárovaná se zaměstnavatelem."
+
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "No passkeys registered yet."
 msgstr "Zatím nebyly zaregistrovány žádné pasové klíče."
+
+#: src/features/ats-checker/messages.ts
+msgid "No phone number was found."
+msgstr "Nebylo nalezeno žádné telefonní číslo."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "No prior data"
@@ -3092,17 +3456,33 @@ msgstr "Zatím žádné životopisy."
 msgid "No saved versions yet."
 msgstr "Zatím žádné uložené verze."
 
+#: src/features/ats-checker/messages.ts
+msgid "No skills section was found."
+msgstr "Nebyla nalezena sekce dovedností."
+
 #: src/features/applications/components/insights-view.tsx
 msgid "No source data yet."
 msgstr "Zatím žádné zdrojové údaje."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "No specific terms could be pulled out of that job description, so it may be mostly boilerplate. Paste the requirements section for a more useful comparison."
+msgstr "Z tohoto popisu práce se nepodařilo vytáhnout žádné konkrétní termíny, může tedy jít převážně o obecný text. Vložte sekci s požadavky pro užitečnější srovnání."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "No tested provider"
 msgstr "Žádný ověřený poskytovatel"
 
+#: src/features/ats-checker/messages.ts
+msgid "No text could be read from this file."
+msgstr "Z tohoto souboru se nepodařilo přečíst žádný text."
+
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
 msgstr "Zatím žádná vlákna."
+
+#: src/features/ats-checker/messages.ts
+msgid "No work-experience section was found."
+msgstr "Nebyla nalezena sekce pracovních zkušeností."
 
 #: src/libs/locale.ts
 msgid "Norwegian"
@@ -3111,6 +3491,18 @@ msgstr "Norština"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Not connected"
 msgstr "Nepřipojeno"
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "Not evidenced in your resume"
+msgstr "Ve vašem životopise nedoloženo"
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Not in your resume"
+msgstr "Není ve vašem životopise"
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Not scored"
+msgstr "Neohodnoceno"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Not sure what to write?"
@@ -3124,6 +3516,22 @@ msgstr "Poznámka"
 #: src/libs/resume/section.tsx
 msgid "Notes"
 msgstr "Poznámky"
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing marks a role as ongoing."
+msgstr "Nic neoznačuje roli jako probíhající."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to fix here."
+msgstr "Zde není co opravovat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Nothing to fix. The remaining pages were simply not covered by this report."
+msgstr "Není co opravovat. Zbývající stránky tato zpráva jednoduše nepokrývá."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Nothing to suggest."
+msgstr "Není co navrhnout."
 
 #: src/libs/locale.ts
 msgid "Odia"
@@ -3146,9 +3554,22 @@ msgstr "Průběžná údržba"
 msgid "Only applies when the section fits on a single page."
 msgstr "Platí pouze tehdy, když se sekce vejde na jednu stránku."
 
+#: src/features/ats-checker/messages.ts
+msgid "Only one recognisable section heading was found."
+msgstr "Byl nalezen pouze jeden rozpoznatelný nadpis sekce."
+
+#. placeholder {0}: report.document.pageCount
+#: src/features/ats-checker/report/report-view.tsx
+msgid "Only the first {0} pages were checked, so this report does not cover the whole file."
+msgstr "Zkontrolováno bylo pouze prvních {0} stránek, takže tato zpráva nepokrývá celý soubor."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the rest."
 msgstr "Najednou se importuje pouze prvních {MAX_IMPORT} řádků — {overflow} bude vynecháno. Pro import zbytku soubor rozdělte."
+
+#: src/features/ats-checker/messages.ts
+msgid "Only the first pages were checked."
+msgstr "Zkontrolovány byly pouze první stránky."
 
 #. Resume card context menu action to open the resume editor
 #. Resume card dropdown action to open the resume editor
@@ -3178,13 +3599,17 @@ msgstr "Otevřít režim ostření"
 msgid "Open in builder"
 msgstr "Otevřít v editoru"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Open Integrations Settings"
 msgstr "Otevřít Nastavení integrace"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Open Source"
 msgstr "Open source"
+
+#: src/features/ats-checker/messages.ts
+msgid "Open the exported file and confirm you can select and copy every part of it."
+msgstr "Otevřete exportovaný soubor a ověřte, že v něm můžete označit a zkopírovat každou část."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI"
@@ -3193,6 +3618,10 @@ msgstr "OpenAI"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
 msgstr "Kompatibilní s OpenAI"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Opening the file…"
+msgstr "Otevírá se soubor…"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenRouter"
@@ -3216,6 +3645,10 @@ msgstr "Volitelná poznámka pro agenta…"
 msgid "Optionally, set a password so that only people with the password can view your resume through the link."
 msgstr "Volitelně můžete nastavit heslo, aby si váš životopis mohli přes odkaz prohlédnout jen lidé, kteří heslo znají."
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Optionally, which terms from a job posting already appear."
+msgstr "Volitelně, které termíny z pracovní nabídky se již vyskytují."
+
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-item.tsx
 msgid "Options for {title}"
 msgstr "Možnosti pro {title}"
@@ -3237,9 +3670,9 @@ msgstr "Číslovaný seznam"
 msgid "Organization"
 msgstr "Organizace"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Overall Score"
-msgstr "Celkové skóre"
+#: src/features/ats-checker/report/score-header.tsx
+msgid "out of 100"
+msgstr "ze 100"
 
 #: src/libs/resume/section.tsx
 msgid "Page"
@@ -3314,6 +3747,10 @@ msgstr "Ochrana heslem byla deaktivována."
 msgid "Password protection has been enabled."
 msgstr "Ochrana heslem byla aktivována."
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Paste a posting to see which of its terms already appear in your resume."
+msgstr "Vložte nabídku a zjistěte, které její termíny se již objevují ve vašem životopise."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and Tags."
 msgstr "Vložte řádky nebo nahrajte soubor .csv. Namapujeme sloupce jako Společnost, Role, Fáze, Datum fáze, Plat, Zdroj a Štítky."
@@ -3321,6 +3758,10 @@ msgstr "Vložte řádky nebo nahrajte soubor .csv. Namapujeme sloupce jako Spole
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Paste the full job description here…"
 msgstr "Sem vložte celý popis práce…"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Paste the posting to see which of its terms already appear in your resume."
+msgstr "Vložte nabídku a zjistěte, které její termíny se již objevují ve vašem životopise."
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Pasting fills the fields automatically."
@@ -3376,6 +3817,7 @@ msgid "Personalize your resume with any colors, fonts or designs, and make it yo
 msgstr "Personalizujte svůj životopis libovolnými barvami, písmy nebo designem a udělejte ho jedinečným."
 
 #: src/dialogs/resume/sections/reference.tsx
+#: src/features/ats-checker/parse-preview.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/basics.tsx
 msgid "Phone"
 msgstr "Telefon"
@@ -3383,6 +3825,10 @@ msgstr "Telefon"
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Vyberte ikonu"
+
+#: src/features/ats-checker/messages.ts
+msgid "Pick one format and use it everywhere."
+msgstr "Vyberte si jeden formát a používejte jej všude."
 
 #: src/libs/resume/section.tsx
 msgid "Picture"
@@ -3454,9 +3900,17 @@ msgstr "Portugalština (Portugalsko)"
 msgid "Position"
 msgstr "Pozice"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Predict whether you will be rejected. No tool can."
+msgstr "Předpovědět, zda budete odmítnuti. To nedokáže žádný nástroj."
+
 #: src/libs/resume/ats.ts
 msgid "Prefer a conventional heading such as \"Work Experience\" or \"Education\"."
 msgstr "Prefer a conventional heading such as \\\"Work Experience\\\" or \\\"Education\\\"."
+
+#: src/features/ats-checker/messages.ts
+msgid "Prefer a single column, or keep the side column to short, self-contained lists."
+msgstr "Preferujte jeden sloupec, nebo ponechte boční sloupec pouze pro krátké samostatné seznamy."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/preferences/index.tsx
@@ -3501,6 +3955,10 @@ msgstr "Náhled a export zachovají platné styly a neplatné ignorují."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Hlavní barva"
+
+#: src/features/ats-checker/messages.ts
+msgid "Print or export the form to a flat PDF before sending it."
+msgstr "Před odesláním formulář vytiskněte nebo exportujte do plochého PDF."
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -3558,9 +4016,37 @@ msgstr "Publikace"
 msgid "Publisher"
 msgstr "Vydavatel"
 
+#: src/features/ats-checker/messages.ts
+msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
+msgstr "Umístěte prostou e-mailovou adresu blízko horní části první stránky. Podle ní vás většina systémů eviduje."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Raw JSON"
 msgstr "Surový JSON"
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from a single-column layout, then copy the text out and check it reads top to bottom."
+msgstr "Znovu exportujte z jednosloupcového rozvržení, poté zkopírujte text a ověřte, že se čte shora dolů."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document rather than converting from another format."
+msgstr "Znovu exportujte z původního dokumentu, místo převodu z jiného formátu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export from the original document with fonts embedded properly."
+msgstr "Znovu exportujte z původního dokumentu se správně vloženými písmy."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export using an ordinary TrueType or OpenType font."
+msgstr "Znovu exportujte s použitím běžného písma TrueType nebo OpenType."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, and check the text copies out cleanly."
+msgstr "Znovu exportujte s vloženými písmy a ověřte, že se text čistě zkopíruje."
+
+#: src/features/ats-checker/messages.ts
+msgid "Re-export with fonts embedded, then open the file and check that the text copies out cleanly."
+msgstr "Znovu exportujte s vloženými písmy, poté soubor otevřete a ověřte, že se text čistě zkopíruje."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Re-score"
@@ -3620,6 +4106,16 @@ msgstr "Přečtěte si průvodce Použití vlastních stylů."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Přečetl životopis"
+
+#: src/features/ats-checker/messages.ts
+msgid "Readability"
+msgstr "Čitelnost"
+
+#. placeholder {0}: progress.page
+#. placeholder {1}: progress.pageCount
+#: src/features/ats-checker/tool.tsx
+msgid "Reading page {0} of {1}…"
+msgstr "Čte se stránka {0} z {1}…"
 
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
@@ -3720,6 +4216,10 @@ msgstr "Odstraňování ochrany heslem…"
 msgid "Rename"
 msgstr "Přejmenovat"
 
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded."
+msgstr "Vykreslí váš aktuální životopis do PDF a spustí úplnou kontrolu souboru ve vašem prohlížeči. Nic se nenahrává."
+
 #: src/dialogs/resume/sections/experience.tsx
 msgid "Reorder"
 msgstr "Změnit pořadí"
@@ -3727,6 +4227,23 @@ msgstr "Změnit pořadí"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
 msgid "Reorder custom field"
 msgstr "Změnit pořadí vlastního pole"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Repeat the claim that most resumes are thrown out automatically."
+msgstr "Opakuje tvrzení, že většina životopisů je automaticky vyřazena."
+
+#. placeholder {0}: jd.stuffedTerms.join(", ")
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "Repeated far more often than the posting itself uses them: {0}. Recruiters notice."
+msgstr "Opakuje se mnohem častěji, než je používá samotná nabídka: {0}. Náboráři si toho všimnou."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace icon fonts with plain text, then re-export."
+msgstr "Nahraďte ikonová písma prostým textem a poté znovu exportujte."
+
+#: src/features/ats-checker/messages.ts
+msgid "Replace tables with plain paragraphs and lists. Cells extract in storage order, not reading order."
+msgstr "Nahraďte tabulky prostými odstavci a seznamy. Buňky se extrahují v pořadí uložení, nikoli v pořadí čtení."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
@@ -3743,6 +4260,10 @@ msgstr "Znovu odeslat ověřovací e-mail"
 #: src/features/settings/pages/profile.tsx
 msgid "Resending verification email..."
 msgstr "Opětovné odesílání ověřovacího e-mailu…"
+
+#: src/features/ats-checker/messages.ts
+msgid "Reserve capitals for short headings. They slow reading and can defeat case-sensitive search."
+msgstr "Vyhraďte velká písmena pro krátké nadpisy. Zpomalují čtení a mohou zmařit vyhledávání rozlišující velikost písmen."
 
 #. Destructive confirmation button label when resetting a resume section
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
@@ -3784,14 +4305,6 @@ msgstr "Obnovit tuto verzi?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "Resumé"
-
-#: src/libs/resume/section.tsx
-msgid "Resume Analysis"
-msgstr "Analýza životopisu"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Resume analysis complete."
-msgstr "Analýza životopisu dokončena."
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -3837,9 +4350,17 @@ msgstr "Zkontrolovat úpravy"
 msgid "Review the resume against a job description and ask me questions before changing uncertain sections."
 msgstr "Projděte si životopis s ohledem na popis práce a před změnou nejasných částí se mě zeptejte na otázky."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Review the writing with AI"
+msgstr "Ohodnotit text pomocí AI"
+
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Review this edit"
 msgstr "Zkontrolovat tuto úpravu"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Reviewing…"
+msgstr "Hodnotí se…"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rework the summary so it targets a senior engineering manager role without sounding generic."
@@ -3877,9 +4398,17 @@ msgstr "Rumunština"
 msgid "Rotation"
 msgstr "Otočení"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Run your first analysis to get a scorecard, strengths, and prioritized suggestions."
-msgstr "Proveďte první analýzu a získejte hodnotící tabulku, silné stránky a návrhy priorit."
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run again"
+msgstr "Spustit znovu"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Run AI review"
+msgstr "Spustit hodnocení AI"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "Run deep check"
+msgstr "Spustit hloubkovou kontrolu"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Running…"
@@ -3912,6 +4441,10 @@ msgstr "Poskytovatel uložení a testování"
 msgid "Save & Upload"
 msgstr "Uložit a nahrát"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save an unprotected copy, with no password and no permissions restrictions."
+msgstr "Uložte nechráněnou kopii, bez hesla a bez omezení oprávnění."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Save changes"
 msgstr "Uložit změny"
@@ -3940,6 +4473,10 @@ msgstr "Uložit změny"
 msgid "Save model"
 msgstr "Uložit model"
 
+#: src/features/ats-checker/messages.ts
+msgid "Save the file with every page upright."
+msgstr "Uložte soubor se všemi stránkami ve svislé poloze."
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saved"
 msgstr "Uloženo"
@@ -3959,10 +4496,6 @@ msgstr "Škola"
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Score my fit"
 msgstr "Skóruj můj fit"
-
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
-msgid "Scorecard"
-msgstr "Hodnotící karta"
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Scoring your fit…"
@@ -4017,9 +4550,18 @@ msgstr "Možnosti sekce"
 msgid "Section Type"
 msgstr "Typ sekce"
 
+#: src/features/ats-checker/messages.ts
+#: src/features/ats-checker/parse-preview.tsx
+msgid "Sections"
+msgstr "Sekce"
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "See how this resume matches the posting"
 msgstr "Podívejte se, jak tento životopis odpovídá inzerátu"
+
+#: src/routes/_home/-sections/features.tsx
+msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
+msgstr "Zjistěte, co dokáže systém pro sledování uchazečů (ATS) přečíst z vašeho životopisu. Běží ve vašem prohlížeči."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4042,7 +4584,7 @@ msgstr "Vybrat vše"
 msgid "Select an agent model"
 msgstr "Vyberte model agenta"
 
-#: src/routes/agent/-components/new-thread-setup.tsx
+#: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
 msgstr "Vyberte poskytovatele umělé inteligence"
 
@@ -4075,9 +4617,21 @@ msgstr "Odeslat zprávu"
 msgid "Send Password Reset Email"
 msgstr "Odeslat e-mail pro obnovení hesla"
 
+#: src/features/ats-checker/messages.ts
+msgid "Send the resume itself rather than a portfolio wrapper."
+msgstr "Odešlete samotný životopis, nikoli obal portfolia."
+
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Sending password reset email..."
 msgstr "Odesílání e-mailu pro obnovení hesla…"
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Odesílá text již extrahovaný z vašeho PDF poskytovateli AI, kterého zvolíte níže. Samotný soubor PDF se nikdy nenahrává."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
+msgstr "Odesílá text již extrahovaný z vašeho PDF spolu s vloženým popisem práce poskytovateli AI, kterého zvolíte níže. Samotný soubor PDF se nikdy nenahrává."
 
 #: src/components/input/rich-input.tsx
 msgid "Separator"
@@ -4091,6 +4645,10 @@ msgstr "Srbština"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
 msgstr "Nastavit heslo"
+
+#: src/features/ats-checker/messages.ts
+msgid "Set the document language when exporting."
+msgstr "Při exportu nastavte jazyk dokumentu."
 
 #: src/dialogs/resume/import.tsx
 msgid "Set up a provider"
@@ -4203,9 +4761,14 @@ msgid "Sidebar Width"
 msgstr "Šířka postranního panelu"
 
 #. Primary action button label on login form
+#: src/features/ats-checker/ai-review/locked-card.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Sign in"
 msgstr "Přihlásit se"
+
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Sign in and connect your own AI provider to get rewrite suggestions for weak bullets. The checks above are free and need no account."
+msgstr "Přihlaste se a připojte vlastního poskytovatele AI, abyste získali návrhy na přepsání slabých odrážek. Kontroly výše jsou zdarma a nevyžadují účet."
 
 #. Call-to-action link from forgot-password page to login page
 #. Call-to-action link from registration page to login page
@@ -4303,6 +4866,26 @@ msgstr "Slug"
 msgid "Some application systems require one before you can submit."
 msgstr "Některé aplikační systémy vyžadují jeden před odesláním."
 
+#: src/features/ats-checker/messages.ts
+msgid "Some bullets run long."
+msgstr "Některé odrážky jsou příliš dlouhé."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some characters come out as question marks."
+msgstr "Některé znaky se zobrazí jako otazníky."
+
+#: src/features/ats-checker/report/score-header.tsx
+msgid "Some checks need information this file does not carry: page contents that could not be inspected, or text in a language these checks do not cover. They are counted as neither passed nor failed."
+msgstr "Některé kontroly potřebují informace, které tento soubor neobsahuje: obsah stránky, který se nepodařilo zkontrolovat, nebo text v jazyce, který tyto kontroly nepokrývají. Nepočítají se ani jako úspěšné, ani jako neúspěšné."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some glyphs have no meaning outside this file."
+msgstr "Některé glyfy nemají mimo tento soubor žádný význam."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some lines are stored out of reading order."
+msgstr "Některé řádky jsou uloženy mimo pořadí čtení."
+
 #: src/libs/resume/ats.ts
 msgid "Some parsers mishandle images, and photos are discouraged in some regions."
 msgstr "Některé analyzátory špatně zacházejí s obrázky a v některých oblastech se fotografie nedoporučuje."
@@ -4311,6 +4894,14 @@ msgstr "Některé analyzátory špatně zacházejí s obrázky a v některých o
 msgid "Some styles were ignored"
 msgstr "Některé styly byly ignorovány"
 
+#: src/features/ats-checker/messages.ts
+msgid "Some text falls outside the page."
+msgstr "Část textu je mimo stránku."
+
+#: src/features/ats-checker/messages.ts
+msgid "Some text is rotated."
+msgstr "Část textu je otočená."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Něco jiného…"
@@ -4318,6 +4909,10 @@ msgstr "Něco jiného…"
 #: src/components/layout/error-screen.tsx
 msgid "Something went wrong"
 msgstr "Něco se pokazilo"
+
+#: src/features/ats-checker/tool.tsx
+msgid "Something went wrong while reading that file. Please try again."
+msgstr "Při čtení souboru došlo k chybě. Zkuste to prosím znovu."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -4370,6 +4965,10 @@ msgstr "Rozestupy (svislé)"
 msgid "Spanish"
 msgstr "Španělština"
 
+#: src/features/ats-checker/messages.ts
+msgid "Spell the month, as in \"Mar 2022\"."
+msgstr "Vypište měsíc slovy, například „bře 2022“."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Sponsors"
 msgstr "Sponzoři"
@@ -4419,6 +5018,10 @@ msgstr "Začněte vytvářet životopis tak, že mu dáte název."
 msgid "Start building your resume from scratch"
 msgstr "Začněte vytvářet životopis od nuly"
 
+#: src/features/ats-checker/messages.ts
+msgid "Start each one with a concrete verb: built, led, reduced, migrated."
+msgstr "Začněte každou konkrétním slovesem: vytvořil, vedl, snížil, migroval."
+
 #: src/routes/agent/index.tsx
 msgid "Start new thread"
 msgstr "Začít nové vlákno"
@@ -4427,6 +5030,10 @@ msgstr "Začít nové vlákno"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Start on new page"
 msgstr "Začít na nové stránce"
+
+#: src/features/ats-checker/messages.ts
+msgid "Start the resume with your name on its own line."
+msgstr "Začněte životopis svým jménem na samostatném řádku."
 
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start Thread"
@@ -4449,7 +5056,7 @@ msgstr "Stále čekám na {provider}… {elapsedSeconds}s"
 msgid "Stop generation"
 msgstr "Zastavit generování"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Strengths"
 msgstr "Silné stránky"
 
@@ -4473,7 +5080,7 @@ msgstr "Stylový list obsahuje fatální chyby"
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/resume-analysis.tsx
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
 msgid "Suggestions"
 msgstr "Návrhy"
 
@@ -4494,6 +5101,7 @@ msgstr "Podpořte Reactive Resume"
 msgid "Support the app by doing what you can!"
 msgstr "Podpořte aplikaci tím, co můžete!"
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Swap the start and end dates."
 msgstr "Vyměňte počáteční a koncové datum."
@@ -4532,6 +5140,10 @@ msgstr "Tagy"
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Tagy lze použít k kategorizaci životopisu podle klíčových slov."
+
+#: src/features/ats-checker/messages.ts
+msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
+msgstr "Značky dávají softwaru explicitní pořadí čtení. Pokud to váš nástroj umožňuje, povolte je při exportu."
 
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "Tailor my resume"
@@ -4590,6 +5202,14 @@ msgstr "Zarovnání textu"
 msgid "Text Color"
 msgstr "Barva textu"
 
+#: src/features/ats-checker/messages.ts
+msgid "Text is written one character at a time."
+msgstr "Text je zapsán po jednotlivých znacích."
+
+#: src/features/ats-checker/messages.ts
+msgid "Text sits in the header or footer area."
+msgstr "Text se nachází v oblasti záhlaví nebo zápatí."
+
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "Thajština"
@@ -4597,6 +5217,19 @@ msgstr "Thajština"
 #: src/routes/_home/-sections/sponsors.tsx
 msgid "Thank you to our sponsors"
 msgstr "Děkujeme našim sponzorům"
+
+#: src/features/ats-checker/tool.tsx
+msgid "That file could not be read as a PDF."
+msgstr "Tento soubor se nepodařilo přečíst jako PDF."
+
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is not a PDF. Export your resume as a PDF and try again."
+msgstr "Tento soubor není PDF. Exportujte svůj životopis jako PDF a zkuste to znovu."
+
+#: src/features/ats-checker/tool.tsx
+#: src/features/ats-checker/uploader.tsx
+msgid "That file is too large to check in the browser."
+msgstr "Tento soubor je příliš velký na kontrolu v prohlížeči."
 
 #: src/features/auth/pages/error.tsx
 msgid "That provider account is already linked to a different user."
@@ -4626,23 +5259,43 @@ msgstr "API klíč po smazání již nebude mít přístup k vašim datům. Tuto
 msgid "The application that sent you here made an invalid authorization request."
 msgstr "Aplikace, která vás sem poslala, odeslala neplatný požadavek na autorizaci."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The checks above are mechanical. This asks a language model what a reader would think of your bullets, and suggests rewrites. It produces no score."
+msgstr "Kontroly výše jsou mechanické. Toto se ptá jazykového modelu, co by si čtenář myslel o vašich odrážkách, a navrhuje přepsání. Nevytváří žádné skóre."
+
 #. Empty-state message when no command palette results match the search query
 #: src/features/command-palette/index.tsx
 msgid "The command you're looking for doesn't exist."
 msgstr "Příkaz, který hledáte, neexistuje."
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
+msgid "The deep check could not finish. Please try again."
+msgstr "Hloubkovou kontrolu se nepodařilo dokončit. Zkuste to prosím znovu."
 
 #. Error shown when AI parsing returns invalid resume structure during import
 #: src/dialogs/resume/import.tsx
 msgid "The imported file could not be parsed into a valid resume."
 msgstr "Importovaný soubor se nepodařilo analyzovat do platného resumé."
 
+#: src/features/ats-checker/messages.ts
+msgid "The order the text is stored in disagrees badly with the order it reads in."
+msgstr "Pořadí, ve kterém je text uložen, se výrazně liší od pořadí, ve kterém se čte."
+
 #: src/components/layout/not-found-screen.tsx
 msgid "The page you're looking for may have been moved or no longer exists."
 msgstr "Stránka, kterou hledáte, mohla být přesunuta nebo již neexistuje."
 
+#: src/features/ats-checker/messages.ts
+msgid "The pages are pictures, with no text behind them."
+msgstr "Stránky jsou obrázky, bez textu na pozadí."
+
 #: src/features/auth/pages/resume-password.tsx
 msgid "The password you entered is incorrect"
 msgstr "Zadané heslo je nesprávné"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "The PDF is read by code running in this tab. Nothing is uploaded, nothing is stored, and no account is needed. Open your browser's network tab and watch, if you like."
+msgstr "PDF čte kód běžící v této kartě. Nic se nenahrává, nic se neukládá a není potřeba žádný účet. Pokud chcete, otevřete si síťovou kartu svého prohlížeče a sledujte to."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider didn't share an email address, which is required to sign in."
@@ -4651,6 +5304,10 @@ msgstr "Poskytovatel nesdílel e-mailovou adresu, která je k přihlášení nut
 #: src/features/auth/pages/error.tsx
 msgid "The provider rejected this sign-in attempt. Please start again."
 msgstr "Poskytovatel tento pokus o přihlášení odmítl. Začněte prosím znovu."
+
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "The provider returned a review that could not be read. Try again."
+msgstr "Poskytovatel vrátil hodnocení, které se nepodařilo přečíst. Zkuste to znovu."
 
 #: src/features/auth/pages/error.tsx
 msgid "The provider's response could not be verified. Please start again."
@@ -4663,6 +5320,23 @@ msgstr "Náhled životopisu se nepodařilo aktualizovat. Stále se zobrazuje pos
 #: src/features/auth/pages/resume-password.tsx
 msgid "The resume you are trying to access is password protected"
 msgstr "Životopis, ke kterému se snažíte získat přístup, je chráněn heslem"
+
+#: src/features/ats-checker/messages.ts
+msgid "The same line repeats on every page."
+msgstr "Stejný řádek se opakuje na každé stránce."
+
+#. placeholder {0}: getPdfFindingMessage(cap).title
+#: src/features/ats-checker/report/score-header.tsx
+msgid "The score is capped because of a blocking problem: {0}"
+msgstr "Skóre je omezeno kvůli blokujícímu problému: {0}"
+
+#: src/features/ats-checker/messages.ts
+msgid "The text comes out unreadable."
+msgstr "Text vychází nečitelný."
+
+#: src/features/ats-checker/messages.ts
+msgid "The top of the first page does not look like a name."
+msgstr "Horní část první stránky nevypadá jako jméno."
 
 #: src/components/input/rich-input.tsx
 msgid "The URL you entered is not valid."
@@ -4683,6 +5357,18 @@ msgstr "Motiv"
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Poté zadejte šestimístný kód, který aplikace poskytne, abyste mohli pokračovat."
 
+#: src/features/ats-checker/messages.ts
+msgid "There is a gap between two dated roles."
+msgstr "Mezi dvěma datovanými rolemi je mezera."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no link to a profile, portfolio or repository."
+msgstr "Chybí odkaz na profil, portfolio nebo repozitář."
+
+#: src/features/ats-checker/messages.ts
+msgid "There is no summary paragraph."
+msgstr "Chybí souhrnný odstavec."
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while generating the DOCX, please try again."
 msgstr "Při generování DOCX došlo k problému, zkuste to prosím znovu."
@@ -4695,6 +5381,10 @@ msgstr "Při generování PDF došlo k problému, zkuste to prosím znovu."
 #: src/features/resume/export/use-resume-export.ts
 msgid "There was a problem while preparing your resume for printing, please try again."
 msgstr "Při přípravě životopisu k tisku došlo k problému, zkuste to prosím znovu."
+
+#: src/features/ats-checker/messages.ts
+msgid "There was not enough information to run this check."
+msgstr "Nebylo dostatek informací ke spuštění této kontroly."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They ask whether a machine can read your resume, not whether it reads well."
@@ -4733,6 +5423,14 @@ msgstr "Toto vlákno agenta se nepodařilo otevřít."
 msgid "This assistant could not be opened."
 msgstr "Tohoto asistenta se nepodařilo otevřít."
 
+#: src/features/ats-checker/messages.ts
+msgid "This check does not apply to this file."
+msgstr "Tato kontrola se na tento soubor nevztahuje."
+
+#: src/features/ats-checker/messages.ts
+msgid "This check only runs on resumes written in English."
+msgstr "Tato kontrola se spouští pouze u životopisů psaných v angličtině."
+
 #: src/libs/resume/ats.ts
 msgid "This date will not be read correctly."
 msgstr "Toto datum nebude správně přečteno."
@@ -4757,13 +5455,73 @@ msgstr "Tento záznam bude trvale odstraněn. Tuto akci nelze vrátit zpět."
 msgid "This feature requires a connected AI provider. Please set one up in the settings."
 msgstr "Tato funkce vyžaduje připojeného poskytovatele umělé inteligence. Nastavte si ho prosím v nastavení."
 
+#: src/features/ats-checker/messages.ts
+msgid "This file contains form fields."
+msgstr "Tento soubor obsahuje pole formuláře."
+
+#: src/features/ats-checker/report/jd-coverage.tsx
+msgid "This file contains text a reader cannot see, so some of these matches may be against it."
+msgstr "Tento soubor obsahuje text, který čtenář nevidí, takže některé z těchto shod se mohou týkat právě jeho."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains text drawn invisibly."
+msgstr "Tento soubor obsahuje text vykreslený neviditelně."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file contains white-on-white text."
+msgstr "Tento soubor obsahuje bílý text na bílém pozadí."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file declares no language."
+msgstr "Tento soubor nedeklaruje žádný jazyk."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file has no accessibility tags."
+msgstr "Tento soubor nemá žádné značky přístupnosti."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is encrypted."
+msgstr "Tento soubor je šifrovaný."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is large for a resume."
+msgstr "Tento soubor je na životopis velký."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file is larger than many application forms accept."
+msgstr "Tento soubor je větší, než mnoho přihlašovacích formulářů akceptuje."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses a lot of different fonts."
+msgstr "Tento soubor používá mnoho různých písem."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file uses Type 3 fonts, which carry drawings instead of characters."
+msgstr "Tento soubor používá písma typu 3, která obsahují kresby místo znaků."
+
+#: src/features/ats-checker/messages.ts
+msgid "This file's page contents could not be inspected in time."
+msgstr "Obsah stránek tohoto souboru se nepodařilo včas zkontrolovat."
+
 #: src/libs/resume/ats.ts
 msgid "This heading is not one parsers look for."
 msgstr "Tento nadpis nehledají analyzátory."
 
+#: src/features/ats-checker/messages.ts
+msgid "This is a PDF Portfolio: the visible page is only a cover."
+msgstr "Toto je PDF Portfolio: viditelná stránka je pouze obálka."
+
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
 msgstr "Toto je název vašeho životopisu vhodný pro URL adresu."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is an XFA form, so most software reads only the empty shell."
+msgstr "Toto je formulář XFA, takže většina softwaru přečte pouze prázdnou schránku."
+
+#: src/features/ats-checker/messages.ts
+msgid "This is not a common resume page size."
+msgstr "Toto není běžná velikost stránky pro životopis."
 
 #: src/libs/resume/ats.ts
 msgid "This link is missing its protocol."
@@ -4772,6 +5530,22 @@ msgstr "U tohoto odkazu chybí protokol."
 #: src/dialogs/resume/import.tsx
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "Může to trvat několik minut v závislosti na odezvě poskytovatele AI. Nezavírejte prosím okno ani neobnovujte stránku."
+
+#: src/features/ats-checker/report/report-view.tsx
+msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected. No tool can. Your file was read in this browser and never uploaded."
+msgstr "Toto měří, jak věrně dokáže software extrahovat text tohoto souboru. Nepředpovídá, zda bude přihláška odmítnuta. To nedokáže žádný nástroj. Váš soubor byl přečten v tomto prohlížeči a nikdy nebyl nahrán."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is in columns, and the text extracts out of order."
+msgstr "Tato stránka je ve sloupcích a text se extrahuje mimo pořadí."
+
+#: src/features/ats-checker/messages.ts
+msgid "This page is very densely packed."
+msgstr "Tato stránka je velmi hustě zaplněná."
+
+#: src/features/ats-checker/tool.tsx
+msgid "This PDF is password protected. Save an unprotected copy and try again."
+msgstr "Toto PDF je chráněno heslem. Uložte nechráněnou kopii a zkuste to znovu."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -4789,6 +5563,10 @@ msgstr "Tento životopis je uzamčen"
 msgid "This resume is locked and cannot be updated."
 msgstr "Tento životopis je uzamčen a nelze ho aktualizovat."
 
+#: src/features/ats-checker/messages.ts
+msgid "This resume is long."
+msgstr "Tento životopis je dlouhý."
+
 #: src/features/resume/builder/draft.ts
 msgid "This resume was updated by an AI agent."
 msgstr "Tento životopis byl aktualizován agentem s umělou inteligencí."
@@ -4796,6 +5574,10 @@ msgstr "Tento životopis byl aktualizován agentem s umělou inteligencí."
 #: src/features/resume/builder/draft.ts
 msgid "This resume's sharing settings changed elsewhere."
 msgstr "Nastavení sdílení tohoto životopisu se změnilo jinde."
+
+#: src/features/ats-checker/ai-review/ai-review-results.tsx
+msgid "This review is a language model's opinion of your writing. It does not change the score above, and it can be wrong. Read it as a second opinion, not a verdict."
+msgstr "Toto hodnocení je názor jazykového modelu na váš text. Nemění skóre uvedené výše a může se mýlit. Berte jej jako druhý názor, nikoli jako verdikt."
 
 #: src/libs/resume/ats.ts
 msgid "This role has no description."
@@ -4812,10 +5594,6 @@ msgstr "Tato sekce je vyhrazena pro vaše osobní poznámky k tomuto životopisu
 #: src/libs/resume/ats.ts
 msgid "This section is split across columns."
 msgstr "Tato sekce je rozdělena do sloupců."
-
-#: src/libs/resume/ats.ts
-msgid "This section renders as an empty heading."
-msgstr "Tato sekce se vykreslí jako prázdný nadpis."
 
 #: src/libs/resume/ats.ts
 msgid "This section sits in the sidebar."
@@ -4888,6 +5666,10 @@ msgstr "Časosběrná ukázka vytváření životopisu v Reactive Resume"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Časová osa"
+
+#: src/features/ats-checker/messages.ts
+msgid "Tip"
+msgstr "Tip"
 
 #: src/dialogs/api-key/create.tsx
 msgid "Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later."
@@ -4975,6 +5757,10 @@ msgstr "Zkuste to znovu"
 #: src/libs/locale.ts
 msgid "Turkish"
 msgstr "Turečtina"
+
+#: src/features/ats-checker/messages.ts
+msgid "Turn off discretionary ligatures when exporting."
+msgstr "Při exportu vypněte volitelné ligatury."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can see your resume's statistics."
@@ -5208,6 +5994,10 @@ msgstr "Aktualizace životopisu…"
 msgid "Upload .csv"
 msgstr "Nahrát soubor .csv"
 
+#: src/routes/_home/ats-checker.tsx
+msgid "Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this browser. Your file is never uploaded, and nothing is stored."
+msgstr "Nahrajte životopis a zjistěte, co z něj systém pro sledování uchazečů (ATS) skutečně přečte. Vše běží v tomto prohlížeči. Váš soubor se nikdy nenahrává a nic se neukládá."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Upload attachments"
 msgstr "Nahrát přílohy"
@@ -5242,6 +6032,14 @@ msgstr "Použijte výšku řádku alespoň 1,15, aby se řádky neslučovaly doh
 msgid "Use a plain address such as name@example.com, with no surrounding text."
 msgstr "Použijte prostou adresu, například jméno@example.com, bez okolního textu."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a plain international form, such as +1 555 010 1234."
+msgstr "Použijte prostý mezinárodní formát, například +1 555 010 1234."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use a recognised form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
+msgstr "Použijte rozpoznávaný formát, například „led 2020 – bře 2022“ nebo „2020 – 2022“."
+
 #: src/libs/resume/ats.ts
 msgid "Use a recognized form such as \"Jan 2020 - Mar 2022\" or \"2020 - 2022\"."
 msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 2022\\\"."
@@ -5250,18 +6048,38 @@ msgstr "Use a recognized form such as \\\"Jan 2020 - Mar 2022\\\" or \\\"2020 - 
 msgid "Use a recognized form such as \"March 2022\" or \"2022\"."
 msgstr "Use a recognized form such as \\\"March 2022\\\" or \\\"2022\\\"."
 
+#: src/features/ats-checker/messages.ts
+msgid "Use a single column for anything that has to be read in sequence."
+msgstr "Použijte jeden sloupec pro vše, co má být čteno v pořadí."
+
 #: src/libs/resume/ats.ts
 msgid "Use a size of at least 9pt so re-rendered copies stay accurate."
 msgstr "Použijte velikost alespoň 9 bodů, aby znovu vykreslené kopie zůstaly přesné."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use A4 or US Letter so the layout survives being re-rendered."
+msgstr "Použijte formát A4 nebo US Letter, aby rozvržení přežilo opětovné vykreslení."
+
+#: src/features/ats-checker/messages.ts
+msgid "Use at least 9pt."
+msgstr "Použijte alespoň 9 bodů."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Use color {color}"
 msgstr "Použijte barvu {color}"
 
+#: src/features/ats-checker/messages.ts
+msgid "Use plain headings such as \"Experience\", \"Education\" and \"Skills\"."
+msgstr "Použijte prosté nadpisy, například „Zkušenosti“, „Vzdělání“ a „Dovednosti“."
+
 #: src/features/applications/components/import-applications-sheet.tsx
 msgid "Use sample"
 msgstr "Použít vzorek"
+
+#: src/features/ats-checker/messages.ts
+msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
+msgstr "Použijte běžný odrážkový seznam svého editoru, aby se v polovině věty neobjevily zbloudilé znaky."
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -5293,6 +6111,10 @@ msgstr "Platné s chybami"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Valid with warnings"
 msgstr "Platné s varováními"
+
+#: src/features/ats-checker/messages.ts
+msgid "Vary the openings so the section does not read as boilerplate."
+msgstr "Obměňujte začátky, aby sekce nepůsobila jako obecný text."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Vercel AI Gateway"
@@ -5336,6 +6158,14 @@ msgstr "Ověření e-mailu je při obnovování hesla povinné."
 msgid "Version history"
 msgstr "Historie verzí"
 
+#: src/features/ats-checker/messages.ts
+msgid "Very few words were recovered for a resume."
+msgstr "Pro životopis se podařilo obnovit jen velmi málo slov."
+
+#: src/features/ats-checker/messages.ts
+msgid "Very little text was recovered for this many pages."
+msgstr "Pro tento počet stránek se podařilo obnovit jen velmi málo textu."
+
 #: src/libs/locale.ts
 msgid "Vietnamese"
 msgstr "Vietnamština"
@@ -5358,6 +6188,11 @@ msgstr "oproti předchozím 30 dnům"
 msgid "Waiting for the agent…"
 msgstr "Čekání na agenta…"
 
+#: src/features/ats-checker/ai-review/locked-card.tsx
+msgid "Want a second opinion on the writing?"
+msgstr "Chcete druhý názor na text?"
+
+#: src/features/ats-checker/messages.ts
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Warning"
 msgstr "Varování"
@@ -5395,6 +6230,14 @@ msgstr "Vyhledávání na webu"
 msgid "Website"
 msgstr "Web"
 
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a parser reads"
+msgstr "Co čte analyzátor"
+
+#: src/features/ats-checker/parse-preview.tsx
+msgid "What a person sees"
+msgstr "Co vidí člověk"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "What do you want to do?"
 msgstr "Co chceš dělat?"
@@ -5406,6 +6249,14 @@ msgstr "Na jaký název chcete tuto sekci přejmenovat?"
 #: src/routes/_home/-sections/faq.tsx
 msgid "What makes Reactive Resume different from other resume builders?"
 msgstr "Čím se Reactive Resume liší od ostatních nástrojů pro tvorbu životopisů?"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this checks"
+msgstr "Co tato kontrola prověřuje"
+
+#: src/routes/_home/ats-checker.tsx
+msgid "What this does not do"
+msgstr "Co tato kontrola nedělá"
 
 #: src/routes/_home/-sections/hero.tsx
 msgid "What's new in the latest version?"
@@ -5424,6 +6275,46 @@ msgstr "Odkud pocházejí žádosti"
 msgid "Where your applications went"
 msgstr "Kam se vaše žádosti poděly"
 
+#: src/features/ats-checker/messages.ts
+msgid "Whether a recruiter can reach you."
+msgstr "Zda vás náborář dokáže kontaktovat."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether software can recover the words at all."
+msgstr "Zda software dokáže vůbec obnovit slova."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the file holds real text, or a picture of it."
+msgstr "Zda soubor obsahuje skutečný text, nebo jeho obrázek."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the page geometry preserves reading order."
+msgstr "Zda geometrie stránky zachovává pořadí čtení."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether the resume is segmented the way software expects."
+msgstr "Zda je životopis segmentován způsobem, který software očekává."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the text comes out in the order a person would read it."
+msgstr "Zda text vychází v pořadí, ve kterém by jej člověk četl."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether the usual sections are there and can be told apart."
+msgstr "Zda jsou přítomny obvyklé sekce a lze je od sebe rozlišit."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Whether your name, email, phone and dates survive intact."
+msgstr "Zda vaše jméno, e-mail, telefon a data zůstanou neporušené."
+
+#: src/features/ats-checker/messages.ts
+msgid "Whether your timeline can be reconstructed."
+msgstr "Zda lze rekonstruovat vaši časovou osu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Words run together when the text is extracted."
+msgstr "Slova se při extrakci textu spojují dohromady."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Práce s OpenAI"
@@ -5436,9 +6327,29 @@ msgstr "Funguje…"
 msgid "Worth a shot"
 msgstr "Stojí za to vyzkoušet"
 
+#: src/features/ats-checker/messages.ts
+msgid "Write \"Present\" as the end date of your current role."
+msgstr "Jako datum konce vaší současné role napište „současnost“."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write each role as a clear title and company line, with the dates alongside."
+msgstr "Zapište každou roli jako jasný řádek s pozicí a firmou, s daty vedle."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write it as one uninterrupted piece, with no special spacing."
+msgstr "Napište to jako jeden nepřerušený celek, bez zvláštního rozestupu."
+
+#: src/features/ats-checker/messages.ts
+msgid "Write the full address so it is recognised as a link."
+msgstr "Napište celou adresu, aby byla rozpoznána jako odkaz."
+
 #: src/libs/resume/ats.ts
 msgid "Write the full address, including https://."
 msgstr "Napište celou adresu včetně https://."
+
+#: src/features/ats-checker/messages.ts
+msgid "Writing"
+msgstr "Psaní"
 
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
@@ -5489,17 +6400,30 @@ msgstr "Máte poštu!"
 msgid "Your account has been deleted successfully."
 msgstr "Váš účet byl úspěšně smazán."
 
+#: src/features/ats-checker/ai-review/ai-review-card.tsx
+msgid "Your AI provider could not be reached. Check its settings and try again."
+msgstr "Vašeho poskytovatele AI se nepodařilo kontaktovat. Zkontrolujte jeho nastavení a zkuste to znovu."
+
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Váš API klíč byl zkopírován do schránky."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your body text is very small."
 msgstr "Váš hlavní text je velmi malý."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your bullets are drawn with unusual characters."
+msgstr "Vaše odrážky jsou vykresleny neobvyklými znaky."
+
 #: src/routes/builder/$resumeId/-components/preview-page.tsx
 msgid "Your changes are saved automatically."
 msgstr "Vaše změny se ukládají automaticky."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your contact details are not on the first page."
+msgstr "Vaše kontaktní údaje nejsou na první stránce."
 
 #: src/features/settings/pages/account.tsx
 msgid "Your data has been exported successfully."
@@ -5513,9 +6437,25 @@ msgstr "Vaše data jsou v bezpečí a nikdy nejsou s nikým sdílena ani prodáv
 msgid "Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data."
 msgstr "Vaše data jsou ukládána bezpečně a nikdy nejsou sdílena s třetími stranami. Reactive Resume si můžete také hostovat sami na vlastních serverech a mít tak nad svými daty plnou kontrolu."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your dates are written several different ways."
+msgstr "Vaše data jsou zapsána několika různými způsoby."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your email address is broken across pieces of text."
+msgstr "Vaše e-mailová adresa je rozdělena mezi kusy textu."
+
 #: src/features/auth/pages/error.tsx
 msgid "Your email address isn't verified with the provider."
 msgstr "Vaše e-mailová adresa není u poskytovatele ověřená."
+
+#: src/routes/_home/ats-checker.tsx
+msgid "Your file stays here"
+msgstr "Váš soubor zůstává zde"
+
+#: src/features/ats-checker/messages.ts
+msgid "Your headings look the same as your body text."
+msgstr "Vaše nadpisy vypadají stejně jako běžný text."
 
 #: src/features/resume/builder/draft.ts
 msgid "Your latest changes could not be saved."
@@ -5525,9 +6465,14 @@ msgstr "Vaše poslední změny se nepodařilo uložit."
 msgid "Your legacy styles remain active until you explicitly activate this Semantic CSS draft."
 msgstr "Vaše starší styly zůstanou aktivní, dokud explicitně neaktivujete tento koncept sémantického CSS."
 
+#: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
 msgid "Your lines are packed very tightly."
 msgstr "Vaše linky jsou nabité velmi pevně."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your margins are very narrow."
+msgstr "Vaše okraje jsou velmi úzké."
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -5540,6 +6485,10 @@ msgstr "Vaše heslo bylo úspěšně obnoveno. Nyní se můžete přihlásit pom
 #: src/dialogs/auth/change-password.tsx
 msgid "Your password has been updated successfully."
 msgstr "Vaše heslo bylo úspěšně aktualizováno."
+
+#: src/features/ats-checker/messages.ts
+msgid "Your phone number is written in an unusual shape."
+msgstr "Vaše telefonní číslo je zapsáno v neobvyklém formátu."
 
 #: src/features/settings/pages/profile.tsx
 msgid "Your profile has been updated successfully."
@@ -5594,6 +6543,10 @@ msgstr "Váš životopis obsahuje fotografii."
 msgid "Your resume shows no work experience."
 msgstr "Váš životopis neukazuje žádné pracovní zkušenosti."
 
+#: src/features/ats-checker/messages.ts
+msgid "Your resume uses \"I\" and \"my\"."
+msgstr "Váš životopis používá „já“ a „můj“."
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Your resume's public link is currently protected by a password. Share the password only with people you trust."
 msgstr "Veřejný odkaz na váš životopis je aktuálně chráněn heslem. Heslo sdílejte jen s lidmi, kterým důvěřujete."
@@ -5622,4 +6575,3 @@ msgstr "Oddálit"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

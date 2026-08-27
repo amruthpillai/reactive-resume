@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 import type { ExperienceItem, ResumeData } from "@reactive-resume/schema/resume/data";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -11,8 +11,46 @@ const resumeState = vi.hoisted(() => ({ data: undefined as ResumeData | undefine
 const sidebarState = vi.hoisted(() => ({ toggleSidebar: vi.fn() }));
 const sectionState = vi.hoisted(() => ({ setCollapsed: vi.fn() }));
 
+const deepCheckMocks = vi.hoisted(() => ({
+	createResumePdfBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
+	runAtsCheck: vi.fn(async () => ({
+		report: {
+			version: 1 as const,
+			score: 91,
+			cappedBy: [],
+			categories: [],
+			checks: [],
+			findings: [],
+			tips: [],
+			counts: { blocker: 0, warning: 0, tip: 0 },
+			applicableChecks: 40,
+			passedChecks: 40,
+			skippedChecks: 2,
+			jd: null,
+			file: { name: "resume.pdf", sizeBytes: 4, magicBytesOk: true },
+			document: { pageCount: 1, truncated: false, wordCount: 320, operatorsAvailable: true },
+		},
+		fullText: "Ada Lovelace",
+	})),
+}));
+
 type SectionBaseProps = { children: React.ReactNode };
 type SectionStoreSelector = (state: { setCollapsed: typeof sectionState.setCollapsed }) => unknown;
+
+// The renderer and the engine are exercised by their own tests; here they only have to be callable.
+vi.mock("@/features/resume/export/pdf-document", () => ({
+	createResumePdfBlob: deepCheckMocks.createResumePdfBlob,
+}));
+vi.mock("@/features/ats-checker/run-ats-check", () => ({
+	runAtsCheck: deepCheckMocks.runAtsCheck,
+	blobToPdfFile: (blob: Blob, name: string) => new File([blob], name, { type: "application/pdf" }),
+}));
+vi.mock("@/features/ats-checker/report/report-view", () => ({
+	AtsPdfReportView: ({ report }: { report: { score: number } }) => <div>Deep report: {report.score}</div>,
+}));
+vi.mock("@/features/ats-checker/ai-review/ai-review-card", () => ({
+	AiReviewCard: () => <div>AI review card</div>,
+}));
 
 vi.mock("@/features/resume/builder/draft", () => ({
 	useResumeData: () => resumeState.data,
@@ -75,16 +113,18 @@ const renderPanel = () =>
 	);
 
 describe("AtsCheckSectionBuilder", () => {
-	it("renders nothing before the resume is ready", () => {
-		const { container } = renderPanel();
-		expect(container).toBeEmptyDOMElement();
+	it("shows no checks at all before the resume is ready", () => {
+		renderPanel();
+
+		expect(screen.queryByText(/checks passed/)).toBeNull();
+		expect(screen.queryByText(/Deep check/)).toBeNull();
 	});
 
 	it("reports a clean resume as fully passing", () => {
 		resumeState.data = makeResume();
 		renderPanel();
 
-		expect(screen.getByText("22 of 22 checks passed")).toBeTruthy();
+		expect(screen.getByText("21 of 21 checks passed")).toBeTruthy();
 		expect(screen.getByText(/Every check passed/)).toBeTruthy();
 	});
 
@@ -96,7 +136,7 @@ describe("AtsCheckSectionBuilder", () => {
 
 		expect(screen.getByText("This email address will not be recognized.")).toBeTruthy();
 		expect(screen.getByText(/Use a plain address/)).toBeTruthy();
-		expect(screen.getByText("21 of 22 checks passed")).toBeTruthy();
+		expect(screen.getByText("20 of 21 checks passed")).toBeTruthy();
 	});
 
 	it("counts findings by severity", () => {
@@ -132,6 +172,59 @@ describe("AtsCheckSectionBuilder", () => {
 
 		expect(sidebarState.toggleSidebar).toHaveBeenCalledWith("right", true);
 		expect(sectionState.setCollapsed).toHaveBeenCalledWith("typography", false);
+	});
+});
+
+describe("the deep check tier", () => {
+	beforeEach(() => {
+		resumeState.data = makeResume();
+	});
+
+	it("offers a deep check alongside the live lint", () => {
+		renderPanel();
+
+		expect(screen.getByText("Deep check")).toBeTruthy();
+		expect(screen.getByRole("button", { name: /Run deep check/ })).toBeTruthy();
+	});
+
+	it("renders the current resume to PDF and reports on those bytes", async () => {
+		renderPanel();
+
+		fireEvent.click(screen.getByRole("button", { name: /Run deep check/ }));
+
+		await waitFor(() => expect(screen.getByText(/Deep report: 91/)).toBeTruthy());
+		expect(deepCheckMocks.createResumePdfBlob).toHaveBeenCalledWith(resumeState.data);
+		expect(deepCheckMocks.runAtsCheck).toHaveBeenCalledWith(expect.any(File), { jobDescription: "" });
+	});
+
+	it("offers the AI review only once a deep check has produced a report", async () => {
+		renderPanel();
+
+		expect(screen.queryByText("AI review card")).toBeNull();
+
+		fireEvent.click(screen.getByRole("button", { name: /Run deep check/ }));
+
+		await waitFor(() => expect(screen.getByText("AI review card")).toBeTruthy());
+	});
+
+	it("passes a pasted job description through to the check", async () => {
+		renderPanel();
+
+		fireEvent.change(screen.getByLabelText(/Job description/), { target: { value: "Kubernetes" } });
+		fireEvent.click(screen.getByRole("button", { name: /Run deep check/ }));
+
+		await waitFor(() =>
+			expect(deepCheckMocks.runAtsCheck).toHaveBeenCalledWith(expect.any(File), { jobDescription: "Kubernetes" }),
+		);
+	});
+
+	it("says so plainly when the check cannot finish", async () => {
+		deepCheckMocks.createResumePdfBlob.mockRejectedValueOnce(new Error("render failed"));
+		renderPanel();
+
+		fireEvent.click(screen.getByRole("button", { name: /Run deep check/ }));
+
+		await waitFor(() => expect(screen.getByText(/could not finish/)).toBeTruthy());
 	});
 });
 

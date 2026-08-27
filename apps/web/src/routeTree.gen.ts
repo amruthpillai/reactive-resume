@@ -15,6 +15,7 @@ import { Route as AuthRouteRouteImport } from "./routes/auth/route";
 import { Route as DashboardRouteRouteImport } from "./routes/dashboard/route";
 import { Route as UsernameSlugRouteImport } from "./routes/$username/$slug";
 import { Route as HomeIndexRouteImport } from "./routes/_home/index";
+import { Route as HomeAtsCheckerRouteImport } from "./routes/_home/ats-checker";
 import { Route as AgentIndexRouteImport } from "./routes/agent/index";
 import { Route as AgentThreadIdRouteImport } from "./routes/agent/$threadId";
 import { Route as AgentNewRouteImport } from "./routes/agent/new";
@@ -68,6 +69,11 @@ const UsernameSlugRoute = UsernameSlugRouteImport.update({
 const HomeIndexRoute = HomeIndexRouteImport.update({
   id: "/",
   path: "/",
+  getParentRoute: () => HomeRouteRoute,
+} as any);
+const HomeAtsCheckerRoute = HomeAtsCheckerRouteImport.update({
+  id: "/ats-checker",
+  path: "/ats-checker",
   getParentRoute: () => HomeRouteRoute,
 } as any);
 const AgentIndexRoute = AgentIndexRouteImport.update({
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   "/dashboard": typeof DashboardRouteRouteWithChildren;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
+  "/ats-checker": typeof HomeAtsCheckerRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
   "/auth/error": typeof AuthErrorRoute;
@@ -238,6 +245,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/$username/$slug": typeof UsernameSlugRoute;
+  "/ats-checker": typeof HomeAtsCheckerRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
   "/auth/error": typeof AuthErrorRoute;
@@ -272,6 +280,7 @@ export interface FileRoutesById {
   "/dashboard": typeof DashboardRouteRouteWithChildren;
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
+  "/_home/ats-checker": typeof HomeAtsCheckerRoute;
   "/agent/$threadId": typeof AgentThreadIdRoute;
   "/agent/new": typeof AgentNewRoute;
   "/auth/error": typeof AuthErrorRoute;
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | "/dashboard"
     | "/builder/$resumeId"
     | "/$username/$slug"
+    | "/ats-checker"
     | "/agent/$threadId"
     | "/agent/new"
     | "/auth/error"
@@ -334,6 +344,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/$username/$slug"
+    | "/ats-checker"
     | "/agent/$threadId"
     | "/agent/new"
     | "/auth/error"
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | "/dashboard"
     | "/builder/$resumeId"
     | "/$username/$slug"
+    | "/_home/ats-checker"
     | "/agent/$threadId"
     | "/agent/new"
     | "/auth/error"
@@ -446,6 +458,13 @@ declare module "@tanstack/react-router" {
       path: "/";
       fullPath: "/";
       preLoaderRoute: typeof HomeIndexRouteImport;
+      parentRoute: typeof HomeRouteRoute;
+    };
+    "/_home/ats-checker": {
+      id: "/_home/ats-checker";
+      path: "/ats-checker";
+      fullPath: "/ats-checker";
+      preLoaderRoute: typeof HomeAtsCheckerRouteImport;
       parentRoute: typeof HomeRouteRoute;
     };
     "/agent/": {
@@ -627,10 +646,12 @@ declare module "@tanstack/react-router" {
 }
 
 interface HomeRouteRouteChildren {
+  HomeAtsCheckerRoute: typeof HomeAtsCheckerRoute;
   HomeIndexRoute: typeof HomeIndexRoute;
 }
 
 const HomeRouteRouteChildren: HomeRouteRouteChildren = {
+  HomeAtsCheckerRoute: HomeAtsCheckerRoute,
   HomeIndexRoute: HomeIndexRoute,
 };
 
