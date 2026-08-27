@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { useId } from "react";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "./form";
 import { InputGroup, InputGroupInput } from "./input-group";
 import { Slider } from "./slider";
@@ -104,6 +105,42 @@ describe("FormControl", () => {
 		expect(sliderInput).toBeInTheDocument();
 		expect(sliderInput.id).toBe(htmlFor);
 		expect(sliderInput.getAttribute("aria-labelledby")).toBe(labelId);
+	});
+
+	it("keeps ids distinct when a FormItem contains a Slider and an InputGroup control", () => {
+		function TestField() {
+			const labelId = useId();
+
+			return (
+				<FormItem>
+					<FormLabel id={labelId}>Sidebar Width</FormLabel>
+					<div className="flex items-center gap-4">
+						<Slider defaultValue={[30]} aria-labelledby={labelId} />
+						<FormControl
+							render={
+								<InputGroup data-testid="group">
+									<InputGroupInput data-testid="input" />
+								</InputGroup>
+							}
+						/>
+					</div>
+				</FormItem>
+			);
+		}
+
+		render(<TestField />);
+
+		const label = screen.getByText("Sidebar Width");
+		const numericInput = screen.getByTestId("input") as HTMLInputElement;
+		const sliderInput = document.querySelector('input[type="range"]') as HTMLInputElement;
+
+		expect(label).toHaveAttribute("for", numericInput.id);
+		expect(sliderInput).toHaveAttribute("aria-labelledby", label.id);
+		expect(sliderInput.id).not.toBe(numericInput.id);
+
+		const allInputs = document.querySelectorAll("input");
+		const uniqueIds = new Set(Array.from(allInputs).map((input) => input.id));
+		expect(uniqueIds.size).toBe(allInputs.length);
 	});
 
 	it("warns when the generated id lands on a non-labelable wrapper", () => {
