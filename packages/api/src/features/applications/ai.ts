@@ -31,7 +31,7 @@ async function resolveModel(userId: string) {
 
 // --- AI provider failure translation ------------------------------------------
 // AI SDK throws `AISDKError` for provider-side failures (bad key, unknown model,
-// quota, 5xx).  Translating those to BAD_GATEWAY gives the client a actionable
+// quota, 5xx).  Translating those to BAD_GATEWAY gives the client an actionable
 // status code instead of an opaque 500.  Mirrors features/ai/router.ts.
 
 function isAiProviderGatewayError(error: unknown): boolean {
