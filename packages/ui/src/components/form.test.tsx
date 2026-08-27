@@ -107,6 +107,20 @@ describe("FormControl", () => {
 		expect(sliderInput.getAttribute("aria-labelledby")).toBe(labelId);
 	});
 
+	it("reflects the FormControl error state as aria-invalid on the Slider control", () => {
+		render(
+			<FormItem hasError>
+				<FormLabel>Sidebar Width</FormLabel>
+				<FormControl render={<Slider defaultValue={[30]} />} />
+			</FormItem>,
+		);
+
+		const sliderInput = document.querySelector('input[type="range"]') as HTMLInputElement;
+
+		expect(sliderInput).toBeInTheDocument();
+		expect(sliderInput.getAttribute("aria-invalid")).toBe("true");
+	});
+
 	it("keeps ids distinct when a FormItem contains a Slider and an InputGroup control", () => {
 		function TestField() {
 			const labelId = useId();

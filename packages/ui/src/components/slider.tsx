@@ -9,9 +9,11 @@ function Slider({
 	value,
 	min = 0,
 	max = 100,
+	// Consumed by Base UI's LabelableProvider and applied to the real control
+	// input — re-applying it here would duplicate the id on the wrapper div.
 	id: _id,
 	"aria-describedby": ariaDescribedBy,
-	"aria-invalid": _ariaInvalid,
+	"aria-invalid": ariaInvalid,
 	...props
 }: SliderPrimitive.Root.Props) {
 	const _values = Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max];
@@ -21,6 +23,18 @@ function Slider({
 				? THUMB_POSITION_KEYS[0]
 				: (THUMB_POSITION_KEYS[position + 1] ?? `thumb-${position}-${thumbValue}`),
 	}));
+
+	// Base UI renders the accessible control (input[type=range]) from a fixed
+	// prop list and only applies aria-invalid through its own Field validation
+	// context, so bridge FormControl's error state onto the input via inputRef.
+	const syncThumbInputValidity = (input: HTMLInputElement | null) => {
+		if (!input) return;
+		if (ariaInvalid == null) {
+			input.removeAttribute("aria-invalid");
+		} else {
+			input.setAttribute("aria-invalid", String(ariaInvalid));
+		}
+	};
 
 	return (
 		<SliderPrimitive.Root
@@ -48,6 +62,7 @@ function Slider({
 						data-slot="slider-thumb"
 						key={thumb.key}
 						aria-describedby={ariaDescribedBy}
+						inputRef={syncThumbInputValidity}
 						className="relative block size-3 shrink-0 select-none rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-3 focus-visible:outline-hidden focus-visible:ring-3 active:ring-3 disabled:pointer-events-none disabled:opacity-50"
 					/>
 				))}
