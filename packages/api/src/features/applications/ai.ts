@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/client";
-import { AISDKError, generateText } from "ai";
+import { APICallError, generateText, RetryError } from "ai";
 import z from "zod";
 import { generateId, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
@@ -30,12 +30,16 @@ async function resolveModel(userId: string) {
 }
 
 // --- AI provider failure translation ------------------------------------------
-// AI SDK throws `AISDKError` for provider-side failures (bad key, unknown model,
-// quota, 5xx).  Translating those to BAD_GATEWAY gives the client an actionable
-// status code instead of an opaque 500.  Mirrors features/ai/router.ts.
+// The AI SDK surfaces provider-side failures as `APICallError` (HTTP 4xx/5xx from
+// the provider) or `RetryError` with `reason: "maxRetriesExceeded"`.  Translating
+// only those to BAD_GATEWAY gives the client an actionable status code instead of
+// an opaque 500.  Validation, credential, model-resolution, and response-parsing
+// errors rethrow unchanged.
 
 function isAiProviderGatewayError(error: unknown): boolean {
-	return error instanceof AISDKError;
+	if (APICallError.isInstance(error)) return true;
+	if (RetryError.isInstance(error) && error.reason === "maxRetriesExceeded") return true;
+	return false;
 }
 
 /** Throws a BAD_GATEWAY ORPCError, preserving the original cause for upstream error reporters. */
