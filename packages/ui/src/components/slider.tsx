@@ -44,8 +44,8 @@ function Slider({
 			min={min}
 			max={max}
 			thumbAlignment="edge"
-			{...props}
 			data-slot="slider"
+			{...props}
 		>
 			<SliderPrimitive.Control className="relative flex w-full touch-none select-none items-center data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col data-disabled:opacity-50">
 				<SliderPrimitive.Track
