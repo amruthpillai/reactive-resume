@@ -220,6 +220,11 @@ of *OpenAI*. The same applies to `Open in builder`.
 **Close** — likewise the verb, as in `Close AI assistant`. Not "an assistant for closing things",
 and not the adjective "close/nearby".
 
+The app names two different surfaces here, and both strings are real: **AI agent** is the
+full workspace at `/agent`, opened from the builder dock (`Open AI agent`), while **AI assistant**
+is the panel that slides out inside the builder (`Open AI assistant`, `Close AI assistant`).
+Translate them as two distinct names, the way the English does.
+
 **Clear** — the verb, to empty a field or remove filters. Not the adjective "transparent",
 "obvious", or "clear-cut".
 
