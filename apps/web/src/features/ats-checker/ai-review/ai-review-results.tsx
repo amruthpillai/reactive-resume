@@ -125,7 +125,7 @@ export function AiReviewResults({ review }: AiReviewResultsProps) {
 			<p className="text-muted-foreground text-xs leading-normal">
 				<Trans>
 					This review is a language model's opinion of your writing. It does not change the score above, and it can be
-					wrong. Treat it as a second opinion.
+					wrong. Treat it as a second opinion, not a verdict.
 				</Trans>
 			</p>
 		</div>
