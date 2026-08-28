@@ -46,169 +46,96 @@ Rules:
 
 ## Agent skills
 
-### Issue tracker
+- Issues and specs: GitHub Issues for `amruthpillai/reactive-resume`. See `docs/agents/issue-tracker.md`.
+- Domain docs use a multi-context layout. See `docs/agents/domain.md`.
 
-Issues and specs are tracked in GitHub Issues for `amruthpillai/reactive-resume`. See `docs/agents/issue-tracker.md`.
+## Overview
 
-### Domain docs
+Reactive Resume is a pnpm monorepo (Turborepo) with two deployable apps: `apps/web` (TanStack Start / React 19 / Vite) and `apps/server` (Hono / Node.js). The production Docker image runs a single Node.js process on port 3000; `apps/server` mounts the API/auth/MCP/static routes and serves the built web app.
 
-This repository uses a multi-context domain-doc layout. See `docs/agents/domain.md`.
+Internal packages are source-consumed through `package.json` export maps pointing at `src` files. Do not assume package-local `dist` output exists unless a package explicitly adds it.
 
-## Cursor Cloud specific instructions
+Prerequisites: **Node.js 24** (matches Dockerfile `ARG NODE_VERSION=24`), **pnpm 11.21.0** ([install guide](https://pnpm.io/installation)), and **Docker** for PostgreSQL (`sudo dockerd &` if the daemon isn't running).
 
-### Overview
+## Ownership map
 
-Reactive Resume is a pnpm monorepo (Turborepo) with two deployable apps: `apps/web` (TanStack Start / React 19 / Vite) and `apps/server` (Hono / Node.js). The production Docker image runs a single Node.js process on port 3000, with `apps/server` mounting the API/auth/MCP/static routes and serving the built web app.
+Where each concern lives, and where new code for it goes:
 
-Internal packages are source-consumed through `package.json` export maps that point at `src` files. Do not assume package-local `dist` output exists unless a package explicitly adds it.
+| Area | Owner |
+|------|-------|
+| Web routes, loaders, user-facing workflows | `apps/web/src/routes`, `apps/web/src/features` (file-based; never hand-edit `routeTree.gen.ts`) |
+| Server HTTP routes/adapters, startup checks, static handlers, MCP transport, OpenAPI/well-known | `apps/server/src/{http,rpc,mcp,openapi,static,startup}` |
+| Authenticated API contracts + business logic | `packages/api/src/features/*` (oRPC routers, DTOs, rate limiting; aggregated at `@reactive-resume/api/routers` for `/api/rpc`) |
+| Auth | `packages/auth` (Better Auth config/helpers/types; `apps/server/src/http/auth.ts` delegates to `auth.handler`) |
+| DB client + schema | `packages/db` (Drizzle; migrations at repo root `migrations/`) |
+| Server env validation | `packages/env` (auto-loads root `.env`) |
+| Resume/page/template Zod schemas | `packages/schema` |
+| Pure resume-domain behavior (no DB/HTTP/DOM/renderer deps) | `packages/resume` (JSON Patch helpers, social-network icons) |
+| Resume PDF rendering | `packages/pdf` (React PDF document, font registration, template primitives, browser/server adapters) |
+| PDF.js viewer/canvas UI | `apps/web/src/features/resume` — never in `packages/pdf` |
+| DOCX export | `packages/docx` |
+| MCP tools/prompts/resources/server-card | `packages/mcp` |
+| Generic UI primitives + hooks | `packages/ui` (Base UI/shadcn-style); workflow-specific UI stays in the owning web feature |
+| Focused support surfaces | `packages/fonts`, `packages/email`, `packages/import`, `packages/ai`, `packages/utils`, `packages/config` — prefer existing exports over cross-package shortcuts |
+| Dev-only scripts | `tooling/`, not `packages/`, so packages only hold runtime-bundled code |
 
-### Prerequisites
+Narrow cross-cutting helpers go in `packages/utils` only after checking no domain package is a better owner. Specifically: resume JSON Patch behavior belongs in `@reactive-resume/resume/patch` and DOCX builders in `@reactive-resume/docx` — not in `@reactive-resume/utils`.
 
-- **Node.js 24** (matches Dockerfile `ARG NODE_VERSION=24`). Use `nvm install 24 && nvm use 24` if needed.
-- **Docker** is required to run PostgreSQL. Start it with `sudo dockerd &` if the daemon isn't running.
-- **pnpm 11.21.0**. Install pnpm directly using the [official installation guide](https://pnpm.io/installation).
+## Web app conventions
 
-### Codebase map
+- `apps/web/src/router.tsx` initializes router context with `queryClient`, `orpc`, `theme`, `locale`, `session`, and `flags`. Reuse route context instead of refetching these ad hoc.
+- Builder shell: `apps/web/src/routes/builder/$resumeId`. Its nested preview route is client-only (`ssr: false`); the public resume route `apps/web/src/routes/$username/$slug.tsx` uses `ssr: "data-only"`.
+- Browser-only preview code: `apps/web/src/features/resume/preview`. Public PDF viewer: `apps/web/src/features/resume/public`. Keep PDF.js/canvas/browser APIs out of SSR paths.
+- Isomorphic oRPC client: `apps/web/src/libs/orpc/client.ts` — server calls use an in-process router client, browser calls use `/api/rpc` with credentials included.
+- For React components with explicit props, use a named props type (e.g. `type FooProps = {...}` with `function Foo(props: FooProps)`) rather than inline object annotations, especially with more than one field or with generics.
 
-- `apps/web` owns TanStack Start routes, Vite config, PWA setup, oRPC browser client wiring, web features, and the resume builder UI.
-- `apps/server` owns the production Hono app, route composition, auth/RPC/MCP/OpenAPI handlers, static uploads, schema JSON, web-dist fallback serving, and startup checks.
-- `packages/api` contains oRPC routers, DTOs, rate limiting, and feature-owned API modules under `packages/api/src/features/*`. The router export at `@reactive-resume/api/routers` aggregates those feature routers for `/api/rpc`.
-- `packages/auth` contains Better Auth config, auth helper functions, and exported auth types. The server auth adapter in `apps/server/src/http/auth.ts` delegates to `auth.handler`.
-- `packages/db` contains the Drizzle client and schema. Migration files live at the repo root in `migrations/`.
-- `packages/env` defines server environment validation and auto-loads the root `.env` for app/server code.
-- `packages/schema` contains Zod schemas and typed resume/page/template models.
-- `packages/pdf` contains the React PDF document, font registration, shared template primitives, template implementations, and browser/server PDF generation adapters. PDF.js viewer UI stays in `apps/web`.
-- `packages/resume` contains pure resume-domain behavior such as JSON Patch helpers and social-network icon mapping.
-- `packages/docx` contains DOCX export generation.
-- `packages/mcp` contains MCP tools, prompts, resources, server-card generation, and tool metadata.
-- `packages/ui` contains shared Base UI/shadcn-style components and hooks.
-- `packages/fonts`, `packages/email`, `packages/import`, `packages/ai`, `packages/utils`, and `packages/config` provide focused support surfaces. Prefer their existing exports over adding cross-package shortcuts.
-- Development-only scripts live in `tooling/`, not under `packages/`, so packages only contain code bundled by the app/runtime.
+## Package boundaries
 
-### Web app conventions
+`pnpm exec turbo boundaries` is the executable check. Rules:
 
-- Routes are file-based under `apps/web/src/routes`. Do not hand-edit `apps/web/src/routeTree.gen.ts`; it is generated by TanStack Router tooling.
-- Server-owned HTTP behavior lives in `apps/server/src/{http,rpc,mcp,openapi,static,startup}`. Keep API/RPC/auth/MCP/static route wiring in `apps/server`, not in web routes.
-- `apps/web/src/router.tsx` initializes router context with `queryClient`, `orpc`, `theme`, `locale`, `session`, and `flags`. Reuse route context where possible instead of refetching these concerns ad hoc.
-- The builder shell lives under `apps/web/src/routes/builder/$resumeId`. The nested preview route is client-only (`ssr: false`), while the public resume route `apps/web/src/routes/$username/$slug.tsx` uses `ssr: "data-only"`.
-- Browser-only resume preview code lives under `apps/web/src/features/resume/preview`, and public resume PDF viewer code lives under `apps/web/src/features/resume/public`. Keep PDF.js/canvas/browser APIs out of SSR paths and out of `packages/pdf`.
-- The isomorphic oRPC client is in `apps/web/src/libs/orpc/client.ts`; server calls use an in-process router client and browser calls use `/api/rpc` with credentials included.
-- For React components with explicit props, prefer a named TypeScript props type over inline object annotations in the function signature, especially once the props include more than one field or generics. For example:
+- Workspace deps go through package names and export maps. Never import another workspace's `src` tree via repo paths, `@reactive-resume/*/src/*`, or TS path aliases.
+- Workspace `turbo.json` files declare coarse tags: `app:web`, `app:server`, `runtime:server` (server-only packages: API/auth/db/env/email/MCP), `runtime:browser` (browser-only shared UI), `runtime:universal` (environment-neutral domain packages), plus `role:domain|infra|adapter|api|rendering|tooling` for intent.
+- Runtime-specific code lives behind explicit export subpaths (`@reactive-resume/pdf/browser`, `@reactive-resume/pdf/server`, `@reactive-resume/env/server`). Keep root exports environment-neutral unless the package is intentionally server-only.
+- Wildcard exports are allowed only for leaf libraries with an intentionally file-like surface — currently `@reactive-resume/ui/components/*`, `@reactive-resume/ui/hooks/*`, and schema resume model files. Prefer explicit exports for packages owning runtime behavior.
+- Prefer `protectedProcedure` from `packages/api/src/context.ts` for authenticated procedures. Expose only intentional public surfaces through `packages/api/package.json`.
+- Shared PDF section filtering: `packages/pdf/src/templates/shared/filtering.ts`. Template-specific visual exceptions stay in the owning template directory unless multiple templates need the behavior. `packages/pdf/src/hooks/use-register-fonts.ts` owns font registration, standard PDF fonts, CJK fallback stacks, and global hyphenation.
 
-```ts
-type IntentSelectFieldProps<TValue extends string> = {
-	label: string;
-	id: string;
-	value: TValue | undefined;
-	options: readonly ComboboxOption<TValue>[];
-	onChange: (value: TValue | undefined) => void;
-};
+Multi-place changes:
 
-function IntentSelectField<TValue extends string>(props: IntentSelectFieldProps<TValue>) {
-	// ...
-}
-```
+- **Resume data shape**: `packages/schema/src/resume/*` first, then API DTOs, importers, PDF rendering, and web forms consuming it.
+- **New template**: `packages/schema/src/templates.ts`, `packages/pdf/src/templates/index.ts`, source under `packages/pdf/src/templates/<name>/`, and previews under `apps/web/public/templates/{jpg,pdf}`.
+- **New DB column/table**: `packages/db/src/schema/*`, then `dotenvx run -f .env.local -- pnpm db:generate`.
+- **New env var**: `packages/env/src/server.ts` **and** the `globalEnv` array in `turbo.json`. Turborepo 2.x strict env mode filters out unlisted vars, so the variable will be `undefined` in child processes at runtime even when correctly set in the OS/container environment.
 
-### Package and feature boundaries
+## Environment and database
 
-- Workspace dependencies must go through package names and package export maps. Do not import another workspace's `src` tree through repository paths, `@reactive-resume/*/src/*`, or TypeScript path aliases.
-- `turbo boundaries` is the executable package-boundary check. Workspace-level `turbo.json` files declare coarse tags:
-  - `app:web` for the TanStack Start app.
-  - `app:server` and `runtime:server` for the Node/Hono process.
-  - `runtime:server` for server-only packages such as API/auth/db/env/email/MCP.
-  - `runtime:browser` for browser-only shared UI.
-  - `runtime:universal` for environment-neutral domain packages.
-  - `role:domain`, `role:infra`, `role:adapter`, `role:api`, `role:rendering`, and `role:tooling` for package intent.
-- Browser/server runtime-specific code should live behind explicit export subpaths such as `@reactive-resume/pdf/browser`, `@reactive-resume/pdf/server`, or `@reactive-resume/env/server`. Keep root exports environment-neutral unless the package is intentionally server-only.
-- Wildcard exports are allowed only for leaf libraries whose public surface is intentionally file-like, currently `@reactive-resume/ui/components/*`, `@reactive-resume/ui/hooks/*`, and schema resume model files. Prefer explicit exports for packages that own runtime behavior.
-- Add new API procedures and business logic inside the owning `packages/api/src/features/*` module. Keep route wiring, DTO usage, helpers, and services colocated by feature/capability, then expose only intentional public surfaces through `packages/api/package.json`. Prefer `protectedProcedure` from `packages/api/src/context.ts` for authenticated procedures.
-- Add database columns/tables in `packages/db/src/schema/*`, then generate root-level migrations with `dotenvx run -f .env.local -- pnpm db:generate`.
-- Add or change resume data shape in `packages/schema/src/resume/*` first, then update API DTOs, importers, PDF rendering, and web forms that consume that shape.
-- Add or rename templates in all relevant places: `packages/schema/src/templates.ts`, `packages/pdf/src/templates/index.ts`, template source under `packages/pdf/src/templates/<name>/`, and static previews under `apps/web/public/templates/{jpg,pdf}`.
-- Resume JSON Patch behavior belongs in `@reactive-resume/resume/patch`; do not put resume-domain helpers in `@reactive-resume/utils`.
-- DOCX export behavior belongs in `@reactive-resume/docx`; do not put DOCX builders in `@reactive-resume/utils`.
-- Shared PDF section filtering lives in `packages/pdf/src/templates/shared/filtering.ts`. Keep template-specific visual exceptions in the owning template directory unless multiple templates need the same behavior.
-- `packages/pdf/src/hooks/use-register-fonts.ts` owns React PDF font registration, standard PDF font handling, CJK fallback stacks, and global hyphenation behavior.
-- PDF generation helpers live behind `@reactive-resume/pdf/browser` and `@reactive-resume/pdf/server`; locale-specific section-title resolution stays in the caller.
-- MCP implementation belongs in `@reactive-resume/mcp`; app packages must not import MCP implementation from another app's source tree.
-- `packages/utils` has narrowly exported helpers. If another package needs a utility, add an explicit export path instead of importing private files.
+Copy `.env.example` to `.env.local`. Three required vars: `APP_URL` (default `http://localhost:3000`), `DATABASE_URL` (default `postgresql://postgres:postgres@localhost:5432/postgres`), `AUTH_SECRET` (any non-empty string).
 
-Placement decision tree:
+- **S3/SeaweedFS optional.** If `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, and `S3_BUCKET` are all set, the app uses S3-compatible storage. `.env.example` ships SeaweedFS defaults, so either start the `seaweedfs` compose service or comment those vars out to use local filesystem storage under `<workspace>/data`. `LOCAL_STORAGE_PATH` must be absolute when set.
+- **`REDIS_URL` and `ENCRYPTION_SECRET`** are optional for core resume flows but both required for saved AI providers and the authenticated `/agent` workspace. Host-run dev uses `REDIS_URL=redis://localhost:6379`; the container-run app uses `redis://redis:6379`.
+- **`drizzle-kit` (used by `pnpm db:migrate`) reads `DATABASE_URL` from `process.env` directly** — it does not auto-load `.env`. Run migration commands through `dotenvx`.
+- The production server auto-runs migrations at startup before serving traffic, so manual `pnpm db:migrate` is mainly for first setup, migration debugging, or applying migrations without starting the app.
 
-1. If the change is a web route, route loader, or user-facing web workflow, start in `apps/web/src/routes` or `apps/web/src/features`.
-2. If the change is a server HTTP route/adapter, startup check, static handler, MCP transport, or OpenAPI/well-known handler, start in `apps/server/src`.
-3. If it is authenticated API behavior, put the contract and implementation in the owning `packages/api/src/features/*` module.
-4. If it is pure resume data behavior with no DB, HTTP, DOM, or PDF renderer dependency, put it in `packages/resume`.
-5. If it renders resume PDFs, put shared React PDF/template code in `packages/pdf`; put PDF.js viewer/canvas UI in `apps/web/src/features/resume`.
-6. If it creates DOCX exports, put it in `packages/docx`.
-7. If it exposes MCP tools/prompts/resources, put it in `packages/mcp`.
-8. If it is a generic UI primitive or hook, put it in `packages/ui`; if it is workflow-specific UI, keep it in the owning web feature.
-9. If it is a narrow cross-cutting helper, add an explicit `packages/utils` export only after checking that no domain package is a better owner.
+## Commands
 
-### Database
-
-PostgreSQL runs via Docker Compose:
+Prefix dev servers and migration commands with `dotenvx run -f .env.local --`. Tests, typechecks, linters, boundary checks, and `pnpm build` do not need it; if one fails on a missing env var, rerun it with the prefix.
 
 ```
-sudo docker compose -f compose.dev.yml up -d postgres
+sudo docker compose -f compose.dev.yml up -d postgres                                    # DB only
+sudo docker compose -f compose.dev.yml up -d postgres redis seaweedfs seaweedfs_create_bucket   # full infra
+dotenvx run -f .env.local -- pnpm dev            # port 3000 (dev:web for web only)
+dotenvx run -f .env.local -- pnpm db:generate    # db:migrate to apply
+pnpm check                                       # Biome — WRITE-CAPABLE (--write --unsafe)
+pnpm test | pnpm typecheck | pnpm build | pnpm exec turbo boundaries
 ```
 
-The dev default connection string is `postgresql://postgres:postgres@localhost:5432/postgres`.
+Prefer package filters over repo-wide runs, e.g. `pnpm --filter web typecheck`, `pnpm --filter @reactive-resume/pdf test`. Vitest paths are package-relative under `pnpm --filter <package> test -- <path>`.
 
-**Important**: `drizzle-kit` (used by `pnpm db:migrate`) reads `DATABASE_URL` from `process.env` directly — it does **not** auto-load the `.env` file. Run migration commands through `dotenvx`, for example `dotenvx run -f .env.local -- pnpm db:migrate`, so `DATABASE_URL` is present in the process environment.
+## Gotchas
 
-The production server runs migrations during startup before serving traffic. Manual `pnpm db:migrate` is mainly for first setup, migration debugging, or applying migrations without starting the app.
-
-### Environment
-
-Copy `.env.example` to `.env.local`. The three required variables are:
-
-- `APP_URL` (default `http://localhost:3000`)
-- `DATABASE_URL` (default `postgresql://postgres:postgres@localhost:5432/postgres`)
-- `AUTH_SECRET` (any non-empty string)
-
-S3/SeaweedFS is optional. If `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, and `S3_BUCKET` are all set, the app uses S3-compatible storage. The checked-in `.env.example` sets SeaweedFS defaults, so either start the `seaweedfs` compose service too or comment out those S3 vars to use local filesystem storage under `<workspace>/data`. `LOCAL_STORAGE_PATH` must be absolute when set.
-
-`REDIS_URL` and `ENCRYPTION_SECRET` are optional for core resume flows, but both are required for saved AI providers and the authenticated `/agent` workspace. Start the `redis` compose service and set both vars in `.env.local` when working on those features. For host-run development, use `REDIS_URL=redis://localhost:6379`; the container-run app uses `REDIS_URL=redis://redis:6379`.
-
-When running dev servers or migration commands, prefix the command with `dotenvx run -f .env.local --`. For example: `dotenvx run -f .env.local -- pnpm dev`. Tests, typechecks, linters, boundary checks, and `pnpm build` do not need this prefix by default. If one of those commands fails because a specific environment variable is required, rerun it with the `dotenvx run -f .env.local --` prefix.
-
-### Common commands
-
-| Task | Command |
-|------|---------|
-| Install deps | `pnpm install` |
-| Start Postgres only | `sudo docker compose -f compose.dev.yml up -d postgres` |
-| Start Postgres + SeaweedFS | `sudo docker compose -f compose.dev.yml up -d postgres seaweedfs seaweedfs_create_bucket` |
-| Start full dev infrastructure | `sudo docker compose -f compose.dev.yml up -d postgres redis seaweedfs seaweedfs_create_bucket` |
-| Generate migrations | `dotenvx run -f .env.local -- pnpm db:generate` |
-| Run migrations | `dotenvx run -f .env.local -- pnpm db:migrate` |
-| Dev server | `dotenvx run -f .env.local -- pnpm dev` (starts on port 3000) |
-| Web dev server only | `dotenvx run -f .env.local -- pnpm dev:web` |
-| Lint/format | `pnpm check` (Biome) |
-| Boundary check | `pnpm exec turbo boundaries` |
-| Tests | `pnpm test` (Vitest) |
-| Build | `pnpm build` |
-| Typecheck | `pnpm typecheck` |
-
-For focused validation, prefer package filters before repo-wide commands, for example:
-
-```
-pnpm --filter web typecheck
-pnpm --filter @reactive-resume/pdf test
-pnpm --filter @reactive-resume/api test
-pnpm exec turbo boundaries
-```
-
-Vitest test paths are package-relative when running through `pnpm --filter <package> test -- <path>`.
-
-### Gotchas
-
-- The server startup path auto-runs migrations before serving traffic, so `pnpm db:migrate` is mainly needed for first-time setup, migration debugging, or applying migrations without starting the app.
-- Email sending requires SMTP config; without it, emails are logged to console. This is fine for dev — the app still functions, but email verification links appear in server logs.
-- The `lefthook.yml` pre-commit hook runs `biome check` on staged files. Run `pnpm check` before committing to avoid hook failures.
-- `pnpm check` is write-capable (`biome check --write --unsafe .`). Call that out when using it, and use narrower Biome commands if you need a non-mutating inspection.
-- Biome uses tabs, double quotes, line width 120, organized import groups, and sorted Tailwind classes for `clsx`, `cva`, and `cn`.
-- Most packages use `tsgo --noEmit` for typechecking and `vitest run --passWithNoTests` for tests.
-- There may be unrelated local edits in the worktree. Inspect `git status --short` first and avoid reverting files you did not touch.
-- **New env vars require a `turbo.json` entry.** Turborepo 2.x runs in strict env mode by default — it filters out env vars that are not listed in `globalEnv` (or task-level `env`/`passThroughEnv`). Any new environment variable added to `packages/env/src/server.ts` must also be added to the `globalEnv` array in `turbo.json`, or the variable will be `undefined` inside child processes at runtime even if it is correctly set in the OS/container environment.
+- Email sending needs SMTP config; without it emails are logged to console. Dev still works — verification links appear in server logs.
+- `lefthook.yml` pre-commit runs `biome check` on staged files. Run `pnpm check` before committing.
+- `pnpm check` is write-capable. Call that out when using it, and use narrower Biome commands for a non-mutating inspection.
+- Biome: tabs, double quotes, line width 120, organized import groups, sorted Tailwind classes for `clsx`, `cva`, `cn`.
+- Most packages typecheck with `tsgo --noEmit` and test with `vitest run --passWithNoTests`.
+- There may be unrelated local edits in the worktree. Check `git status --short` first; do not revert files you did not touch.
