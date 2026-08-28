@@ -33,18 +33,19 @@ function errorMessage(error: unknown): string {
 function errorHint(error: unknown): string {
 	if (!(error instanceof ORPCError)) return "";
 
-	const { unlockResume, listResumes, getResume } = MCP_TOOL_NAME;
+	const { unlockResume, listResumes, listApplications } = MCP_TOOL_NAME;
 	const { code, status } = error;
 
 	// Check codes before statuses: RESUME_SLUG_ALREADY_EXISTS is thrown with status 400.
 	if (code === "RESUME_SLUG_ALREADY_EXISTS") return "\n\nHint: The slug is already in use. Try a different one.";
 	if (code === "RESUME_LOCKED") return `\n\nHint: This resume is locked. Use \`${unlockResume}\` first.`;
+	// Every tool shares this handler, so the wording stays entity-agnostic: `NOT_FOUND` is
+	// thrown by the application procedures too, and resume-flavoured advice misdirects there.
 	if (code === "NOT_FOUND" || status === 404)
-		return `\n\nHint: Resume not found. Use \`${listResumes}\` to find valid IDs.`;
+		return `\n\nHint: Not found. Check the ID — \`${listResumes}\` and \`${listApplications}\` return valid ones.`;
 	if (code === "FORBIDDEN" || status === 403)
-		return `\n\nHint: Permission denied. The resume may be locked; use \`${unlockResume}\` first.`;
-	if (status === 400)
-		return `\n\nHint: Invalid request. Check the input parameters or use \`${getResume}\` to inspect the resume structure.`;
+		return "\n\nHint: Permission denied. This account cannot access that record.";
+	if (status === 400) return "\n\nHint: Invalid request. Check the input parameters against the tool's schema.";
 	return "";
 }
 

@@ -369,10 +369,14 @@ describe("registerTools", () => {
 		// (or oRPC's default, "Not Found") and the status never appears in it.
 		it.each([
 			["RESUME_LOCKED", undefined, `Use \`${MCP_TOOL_NAME.unlockResume}\` first.`],
-			["NOT_FOUND", undefined, `Use \`${MCP_TOOL_NAME.listResumes}\` to find valid IDs.`],
+			[
+				"NOT_FOUND",
+				undefined,
+				`\`${MCP_TOOL_NAME.listResumes}\` and \`${MCP_TOOL_NAME.listApplications}\` return valid ones.`,
+			],
 			["RESUME_SLUG_ALREADY_EXISTS", 400, "The slug is already in use."],
 			["FORBIDDEN", undefined, "Permission denied."],
-			["BAD_REQUEST", undefined, `use \`${MCP_TOOL_NAME.getResume}\` to inspect the resume structure.`],
+			["BAD_REQUEST", undefined, "Check the input parameters against the tool's schema."],
 		])("hints on %s", async (code, status, expected) => {
 			const result = await readResume(new ORPCError(code, status ? { status } : undefined));
 
