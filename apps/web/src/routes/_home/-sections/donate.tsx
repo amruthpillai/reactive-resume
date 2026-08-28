@@ -161,8 +161,8 @@ export const DonationBanner = () => (
 					transition={{ duration: 0.6, delay: 0.2 }}
 				>
 					<Trans>
-						Reactive Resume is a free and open-source project, built with love and maintained by me and a community of
-						contributors. Your donations help keep the lights on and the code flowing.
+						Reactive Resume is a free and open-source project, maintained by me and a community of contributors. Your
+						donations cover the running costs and keep development going.
 					</Trans>
 				</m.p>
 			</m.div>
@@ -172,19 +172,19 @@ export const DonationBanner = () => (
 				<FeatureCard
 					icon={RocketIcon}
 					title={t`Long-term Sustainability`}
-					description={t`Your support ensures the project remains free and accessible for everyone, now and in the future.`}
+					description={t`Your support keeps the project free and open to everyone, now and later.`}
 					delay={0.3}
 				/>
 				<FeatureCard
 					icon={WrenchIcon}
 					title={t`Ongoing Maintenance`}
-					description={t`Contributions fund bug fixes, security updates, and continuous improvements to keep the app running smoothly.`}
+					description={t`Donations pay for bug fixes, security updates, and the ordinary work of keeping the app running.`}
 					delay={0.4}
 				/>
 				<FeatureCard
 					icon={UsersIcon}
 					title={t`Grow the Team`}
-					description={t`Help me bring more experienced contributors on board, reducing the burden on a single maintainer and accelerating development.`}
+					description={t`Help me bring more experienced contributors on board, so the work doesn't rest on one maintainer.`}
 					delay={0.5}
 				/>
 			</div>
@@ -233,7 +233,7 @@ export const DonationBanner = () => (
 				transition={{ duration: 0.6, delay: 0.8 }}
 			>
 				<Trans>
-					Every contribution, big or small, makes a huge difference to the project.
+					Every contribution helps, however small.
 					<br />
 					Thank you for your support!
 				</Trans>

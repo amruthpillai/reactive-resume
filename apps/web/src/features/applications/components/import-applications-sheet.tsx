@@ -125,8 +125,8 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 							{overflow > 0 && (
 								<p className="mt-1.5 text-amber-600 text-xs dark:text-amber-500">
 									<Trans>
-										Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the
-										rest.
+										Only the first {MAX_IMPORT} rows import at once, leaving out {overflow}. Split the file to import
+										the rest.
 									</Trans>
 								</p>
 							)}

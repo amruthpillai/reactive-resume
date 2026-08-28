@@ -73,7 +73,7 @@ function ThreadActions({ thread, activeThreadId }: ThreadActionsProps) {
 
 	const handleDelete = async () => {
 		const confirmed = await confirm(t`Delete this agent thread?`, {
-			description: t`This action cannot be undone. Messages and thread attachments will be removed.`,
+			description: t`This action cannot be undone. It deletes the thread's messages and uploaded attachments.`,
 		});
 
 		if (!confirmed) return;

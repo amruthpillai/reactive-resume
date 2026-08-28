@@ -25,7 +25,7 @@ describe("Prefooter", () => {
 
 	it("renders the community-thanks paragraph", () => {
 		renderPrefooter();
-		expect(screen.getByText(/vibrant community/)).toBeInTheDocument();
+		expect(screen.getByText(/people give it their time/)).toBeInTheDocument();
 	});
 
 	it("renders the decorative TextMaskEffect (svg)", () => {

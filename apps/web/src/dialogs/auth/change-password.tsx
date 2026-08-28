@@ -70,7 +70,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 				return;
 			}
 
-			toast.add({ type: "success", description: t`Your password has been updated successfully.`, id: toastId });
+			toast.add({ type: "success", description: t`Your password has been updated.`, id: toastId });
 			void queryClient.invalidateQueries({ queryKey: ["auth", "accounts"] });
 			closeDialog();
 		},

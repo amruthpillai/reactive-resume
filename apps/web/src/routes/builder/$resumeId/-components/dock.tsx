@@ -108,7 +108,7 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 					title={t`Copy URL`}
 					onClick={async () => {
 						await copyToClipboard(publicUrl);
-						toast.add({ type: "success", description: t`A link to your resume has been copied to clipboard.` });
+						toast.add({ type: "success", description: t`Resume link copied to clipboard.` });
 					}}
 				/>
 			</m.div>

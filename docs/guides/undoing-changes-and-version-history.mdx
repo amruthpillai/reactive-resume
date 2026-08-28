@@ -5,14 +5,14 @@ description: "Undo and redo edits with keyboard shortcuts in the Reactive Resume
 
 Reactive Resume keeps two layers of change history for every resume:
 
-- **Undo and redo** — a live timeline of the changes you've made in the current builder session.
-- **Version history** — server-side snapshots taken at meaningful moments, kept even after you close the builder.
+- **Undo and redo**: a live timeline of the changes you've made in the current builder session.
+- **Version history**: server-side snapshots taken at meaningful moments, kept even after you close the builder.
 
 Use undo for a quick correction. Use version history to jump back to a template switch, an import, or an AI edit you made earlier.
 
 ## Undo and redo
 
-Every change in the builder is undoable — typing, drag-and-drop reordering, template and layout switches, and edits applied by the AI assistant.
+Every change in the builder is undoable: typing, drag-and-drop reordering, template and layout switches, and edits applied by the AI assistant.
 
 <Steps>
   <Step title="Open your resume in the builder">
@@ -27,7 +27,7 @@ Every change in the builder is undoable — typing, drag-and-drop reordering, te
     | `Cmd/Ctrl+Z` | Undo the last change |
     | `Cmd/Ctrl+Shift+Z` | Redo the last undone change |
 
-    Rapid typing collapses into a single step, so undo feels natural.
+    Rapid typing collapses into a single step, so one undo removes a phrase rather than one letter.
   </Step>
 </Steps>
 
@@ -37,11 +37,11 @@ Every change in the builder is undoable — typing, drag-and-drop reordering, te
   a template switch.
 </Tip>
 
-Undo history lives in your browser for the current session. Reloading the builder clears it — use version history for longer-range recovery.
+Undo history lives in your browser for the current session. Reloading the builder clears it, so use version history for anything older.
 
 ## Version history
 
-Reactive Resume automatically snapshots your resume at key moments:
+Reactive Resume snapshots your resume automatically:
 
 - when you import a resume;
 - when you switch templates;

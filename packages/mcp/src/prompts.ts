@@ -31,7 +31,7 @@ function resumeContext(id: string) {
 				resource: {
 					uri: "resume://_meta/schema",
 					mimeType: "application/json",
-					text: "Resume data JSON Schema — use this to understand valid paths and types for JSON Patch operations",
+					text: "Resume data JSON Schema: use this to understand valid paths and types for JSON Patch operations",
 				},
 			},
 		},
@@ -93,11 +93,11 @@ export function registerPrompts(server: McpServer) {
 							"7. **Design** — Offer to adjust template, typography, and color scheme.",
 							"",
 							"For each section, ask targeted questions, draft the content, and wait for my approval before applying.",
-							"Do NOT fabricate any information — only use what I provide or explicitly ask you to generate.",
+							"Do NOT fabricate any information. Use only what I provide or explicitly ask you to generate.",
 							"",
 							PATCH_REFERENCE,
 							"",
-							"The resume data and schema are attached above. Let's begin!",
+							"The resume data and schema are attached above. Start with step 1.",
 						].join("\n"),
 					},
 				},
@@ -139,7 +139,7 @@ export function registerPrompts(server: McpServer) {
 							"2. Work through improvements **one section at a time**.",
 							"3. For each suggestion, explain the **rationale** and show the before/after.",
 							`4. Wait for my **approval** before applying changes via \`${T.patchResume}\`.`,
-							"5. Do NOT fabricate information — suggest improvements based on what exists, ask me for missing details.",
+							"5. Do NOT fabricate information. Suggest improvements based on what exists, and ask me for missing details.",
 							"",
 							PATCH_REFERENCE,
 						].join("\n"),
@@ -155,7 +155,7 @@ export function registerPrompts(server: McpServer) {
 		{
 			title: "Review Resume",
 			description:
-				"Get a structured, professional critique with a scorecard and prioritized recommendations. Read-only — no changes are made.",
+				"Get a structured, professional critique with a scorecard and prioritized recommendations. Read-only: no changes are made.",
 			argsSchema: { id: resumeIdArg },
 		},
 		({ id }) => ({

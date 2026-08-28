@@ -139,9 +139,9 @@ export function PatchApprovalCard({ part, disabled, onRespond }: PatchApprovalCa
 			) : (
 				<p className={cn("text-muted-foreground text-xs")}>
 					{fields.approval?.approved === false ? (
-						<Trans>Denied — waiting for the agent…</Trans>
+						<Trans>Denied, waiting for the agent…</Trans>
 					) : fields.approval?.approved === true ? (
-						<Trans>Approved — waiting for the agent…</Trans>
+						<Trans>Approved, waiting for the agent…</Trans>
 					) : (
 						<Trans>This edit request can no longer be answered.</Trans>
 					)}

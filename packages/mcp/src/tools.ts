@@ -31,7 +31,7 @@ function errorHint(error: unknown): string {
 	if (msg.includes("400"))
 		return `\n\nHint: Invalid request. Check the input parameters or use \`${getResume}\` to inspect the resume structure.`;
 	if (msg.includes("403"))
-		return `\n\nHint: Permission denied. The resume may be locked — use \`${unlockResume}\` first.`;
+		return `\n\nHint: Permission denied. The resume may be locked; use \`${unlockResume}\` first.`;
 	return "";
 }
 
@@ -291,7 +291,7 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 			const shareUrl =
 				username !== ""
 					? buildResumeShareUrl(username, resume.slug)
-					: "(could not build share URL — missing username on account)";
+					: "(could not build share URL: missing username on account)";
 
 			const payload = {
 				id: resume.id,
@@ -320,7 +320,7 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 		withErrorHandling("deleting resume", async ({ id }: { id: string }) => {
 			await client.resume.delete({ id });
 
-			return text(`Successfully deleted resume (${id}) and all associated files.`);
+			return text(`Deleted resume (${id}) and all associated files.`);
 		}),
 	);
 

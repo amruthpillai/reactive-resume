@@ -80,7 +80,7 @@ describe("PatchApprovalCard", () => {
 		);
 
 		expect(screen.queryByRole("button", { name: "Approve" })).not.toBeInTheDocument();
-		expect(screen.getByText("Approved — waiting for the agent…")).toBeInTheDocument();
+		expect(screen.getByText("Approved, waiting for the agent…")).toBeInTheDocument();
 	});
 
 	it("renders the declined terminal state", () => {

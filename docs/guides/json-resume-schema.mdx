@@ -1,13 +1,13 @@
 ---
-title: "JSON Resume Schema"
-description: "Learn about the Reactive Resume JSON Schema, available at /schema.json, and how it aims to become the gold standard for portable resume data."
+title: "JSON Resume schema"
+description: "The Reactive Resume JSON Schema, published at /schema.json: what it covers, how to validate resume data against it, and how to build on it."
 ---
 
-## The Vision
+## The vision
 
-I envision a world where applying for a job is as simple as transferring a JSON file from one service to a job listing portal—without any parsing errors, format inconsistencies, or human bias from subjective resume formatting.
+I want applying for a job to be as simple as sending a JSON file from one service to a job listing portal, without parsing errors, format inconsistencies, or bias from how a resume happens to be laid out.
 
-Reactive Resume aims to be the **gold standard in JSON Resume Schemas**. A universal, well-documented, and rigorously typed schema that any service can adopt to enable seamless resume portability across the entire job application ecosystem.
+Reactive Resume aims to be the gold standard in JSON resume schemas: one documented, strictly typed schema that any service can adopt so resumes move between tools without loss.
 
 Imagine:
 
@@ -18,20 +18,20 @@ Imagine:
 
 This is the future I'm hoping to build toward.
 
-## The Schema Endpoint
+## The schema endpoint
 
 The Reactive Resume JSON Schema is publicly available at:
 
 <Info>[https://rxresu.me/schema.json](https://rxresu.me/schema.json)</Info>
 
-This endpoint returns a complete JSON Schema using the draft 2020-12 dialect. It describes the structure of a Reactive Resume document and includes:
+The endpoint returns a complete JSON Schema in the draft 2020-12 dialect. It describes the structure of a Reactive Resume document and covers:
 
 - **All resume sections**: basics, summary, experience, education, projects, skills, languages, interests, awards, certifications, publications, volunteer work, and references
 - **Custom sections**: user-defined sections whose `type` selects one of the documented item shapes
 - **Metadata**: template, layout, typography, colors, page settings, and custom CSS
 - **Full descriptions**: every field is documented with its purpose and expected format
 
-## Schema Dialect and Document Shape
+## Schema dialect and document shape
 
 The schema document declares its JSON Schema dialect in its own `$schema` field:
 
@@ -45,9 +45,9 @@ The schema document declares its JSON Schema dialect in its own `$schema` field:
 Resume documents do not include a top-level `version` property. They also do not include the schema document's
 `$schema` field. Validate the exported resume object directly against the canonical schema endpoint.
 
-## Using the Schema
+## Using the schema
 
-### Validating Resume Data
+### Validating resume data
 
 You can use the schema to validate resume JSON files in any language that supports JSON Schema validation:
 
@@ -64,7 +64,7 @@ if (!isValid) {
 }
 ```
 
-### IDE Autocompletion
+### IDE autocompletion
 
 Associate exported resume files with the canonical schema in VS Code's `settings.json`:
 
@@ -81,7 +81,7 @@ Associate exported resume files with the canonical schema in VS Code's `settings
 
 This keeps editor configuration outside the resume data and avoids adding unsupported top-level properties.
 
-### Building Integrations
+### Building integrations
 
 The schema enables third-party integrations:
 
@@ -90,7 +90,7 @@ The schema enables third-party integrations:
 - **Other resume builders** can import/export using a common format
 - **AI tools** can understand resume structure for analysis or enhancement
 
-## Schema Structure Overview
+## Schema structure overview
 
 The resume data is organized into these top-level sections:
 
@@ -130,22 +130,22 @@ Each section within `sections` follows a consistent structure:
 }
 ```
 
-## For Developers & Job Portals
+## For developers and job portals
 
-If you're building a job portal, HR system, or any service that handles resumes, I encourage you to adopt this schema. Benefits include:
+If you're building a job portal, HR system, or any other service that handles resumes, I'd encourage you to adopt this schema:
 
 - **Zero parsing errors**: structured data means no OCR or PDF parsing mistakes
 - **Complete information**: all resume data is preserved, including links and metadata
 - **Easy integration**: JSON is universally supported across all platforms
 - **Canonical contract**: one public schema endpoint tracks the current Reactive Resume data model
 
-Want to integrate? The schema is open and freely available. You can fetch it programmatically or reference it in your systems.
+The schema is open and free to use. Fetch it programmatically, or reference it by URL from your own systems.
 
 ## Complete JSON Schema
 
-Below is the complete JSON Schema for Reactive Resume. You can also fetch the latest version directly from [https://rxresu.me/schema.json](https://rxresu.me/schema.json).
+The full JSON Schema for Reactive Resume follows. You can also fetch the latest version directly from [https://rxresu.me/schema.json](https://rxresu.me/schema.json).
 
-<Tip>Copy the schema from the live endpoint to ensure you always have the latest version.</Tip>
+<Tip>Copy the schema from the live endpoint so you always have the latest version.</Tip>
 
 <!-- RESUME-JSON-SCHEMA:START -->
 ```json /schema.json lines expandable

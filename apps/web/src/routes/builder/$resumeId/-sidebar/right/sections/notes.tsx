@@ -25,19 +25,13 @@ function NotesSectionForm() {
 	return (
 		<div className="space-y-4">
 			<p>
-				<Trans>
-					This section is reserved for your personal notes specific to this resume. The content here remains private and
-					is not shared with anyone else.
-				</Trans>
+				<Trans>Keep private notes about this resume here. Nobody else can see them.</Trans>
 			</p>
 
 			<RichInput value={notes} onChange={onChange} />
 
 			<p className="text-muted-foreground">
-				<Trans>
-					For example, information regarding which companies you sent this resume to or the links to the job
-					descriptions can be noted down here.
-				</Trans>
+				<Trans>For example, note which companies you sent this resume to, or links to the job descriptions.</Trans>
 			</p>
 		</div>
 	);

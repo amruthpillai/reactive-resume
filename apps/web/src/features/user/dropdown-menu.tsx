@@ -114,7 +114,7 @@ export function UserDropdownMenu({ children }: Props) {
 
 				<DropdownMenuItem onClick={handleLogout}>
 					<SignOutIcon />
-					<Trans comment="User menu action to sign out of current account">Logout</Trans>
+					<Trans comment="User menu action to sign out of current account">Sign out</Trans>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

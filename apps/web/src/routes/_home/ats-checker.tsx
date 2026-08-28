@@ -99,8 +99,8 @@ function Header() {
 
 					<p className="max-w-lg text-base text-muted-foreground leading-relaxed md:text-lg">
 						<Trans>
-							Upload a resume and see what an applicant tracking system actually reads from it. Everything runs in this
-							browser. Your file is never uploaded, and nothing is stored.
+							Upload a resume and see what an applicant tracking system reads from it. Everything runs in this browser.
+							Your file is never uploaded, and nothing is stored.
 						</Trans>
 					</p>
 				</m.div>
@@ -184,7 +184,7 @@ function HonestyPanel() {
 			>
 				<ul className="space-y-1.5 text-muted-foreground text-sm leading-relaxed">
 					<li>
-						<Trans>No prediction of whether you will be rejected — no tool can do that.</Trans>
+						<Trans>No prediction of whether you will be rejected. No tool can do that.</Trans>
 					</li>
 					<li>
 						<Trans>No repeating the claim that most resumes are thrown out automatically.</Trans>

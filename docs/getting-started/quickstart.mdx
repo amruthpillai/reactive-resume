@@ -1,26 +1,26 @@
 ---
 title: "Quickstart"
-description: "Get started with Reactive Resume in minutes by signing in to the hosted version or deploying your own self-hosted instance with Docker Compose."
+description: "Sign in to the hosted version of Reactive Resume, or deploy your own self-hosted instance with Docker Compose."
 ---
 
 ## Options
 
-Reactive Resume offers flexibility in how you want to use it. Choose the option that best fits your needs:
+There are two ways to use Reactive Resume:
 
 <CardGroup cols={2}>
-  <Card title="Use the Cloud Version" icon="cloud" href="#use-the-cloud-version">
-    The fastest way to get started. **Recommended for most users.**
+  <Card title="Use the Cloud Version" icon="cloud" href="#using-the-cloud-version">
+    The fastest way to get started, and the right choice for most people.
   </Card>
   <Card title="Self-Host with Docker" icon="docker" href="#self-host-with-docker">
-    Deploy your own instance with complete control. **Requires some technical knowledge.**
+    Deploy your own instance and keep full control. Requires some technical knowledge.
   </Card>
 </CardGroup>
 
 ---
 
-## Using the Cloud Version
+## Using the cloud version
 
-The easiest way to use Reactive Resume is through our cloud version at [rxresu.me](https://rxresu.me). **This service is completely free and will always remain free.**
+The easiest way to use Reactive Resume is our cloud version at [rxresu.me](https://rxresu.me). It is free, and it will stay free.
 
 <Steps>
 	<Step title="Create an Account">
@@ -33,12 +33,12 @@ The easiest way to use Reactive Resume is through our cloud version at [rxresu.m
     </Step>
 
     <Step title="Fill in Your Details">
-    	Use our intuitive builder to add your: - Personal information - Work experience - Education - Skills - Projects -
+    	Use the builder to add your: - Personal information - Work experience - Education - Skills - Projects -
     	And more...
     </Step>
 
     <Step title="Export & Share">
-    	When you're ready, export your resume as a PDF or share it via a unique public link.
+    	When you're ready, export your resume as a PDF or share it at its public URL.
     </Step>
 
 </Steps>
@@ -47,9 +47,9 @@ The easiest way to use Reactive Resume is through our cloud version at [rxresu.m
 
 ---
 
-## Self-Host with Docker
+## Self-host with Docker
 
-For users who prefer complete control over their data, you can deploy Reactive Resume on your own infrastructure using Docker.
+You can deploy Reactive Resume on your own infrastructure using Docker.
 
 <Info>
   **From v5.1.0 onwards** — PDF generation now runs entirely client-side via `@react-pdf/renderer`. Self-hosted deployments no longer require Browserless, Chromium, or any external print service as a dependency. The `PRINTER_*` and `BROWSERLESS_*` environment variables are no longer read and can be removed from your `.env`.
@@ -64,10 +64,10 @@ Before you begin, ensure you have the following installed:
 
 <Info>
   There is <strong>no difference in features</strong> between the cloud-hosted version and the self-hosted option. Both
-  provide the same privacy, customization, and functionality. Choose whichever deployment type suits your needs!
+  offer the same privacy and customization. Pick whichever deployment type suits you.
 </Info>
 
-### Quick Deployment
+### Quick deployment
 
 <Steps>
 	<Step title="Clone the Repository">
@@ -130,7 +130,7 @@ ENCRYPTION_SECRET=your-secure-encryption-secret-here
 
 </Steps>
 
-### Docker Compose Services
+### Docker Compose services
 
 Here's what each service in the stack does:
 
@@ -147,9 +147,9 @@ Here's what each service in the stack does:
   require S3-compatible storage; local storage rejects private objects.
 </Note>
 
-### Health Checks
+### Health checks
 
-All services include built-in health checks. You can verify everything is running correctly:
+All services include health checks. To verify that everything is running:
 
 ```bash
 docker compose ps
@@ -159,11 +159,11 @@ You should see all services with a `healthy` status.
 
 ---
 
-## Environment Variables Reference
+## Environment variables reference
 
-Here's a complete list of environment variables you can configure:
+A complete list of the environment variables you can configure:
 
-### Required Variables
+### Required variables
 
 | Variable       | Description                    | Example                               |
 | -------------- | ------------------------------ | ------------------------------------- |
@@ -171,7 +171,7 @@ Here's a complete list of environment variables you can configure:
 | `AUTH_SECRET`  | Secret key for authentication  | Generate with `openssl rand -hex 32`  |
 | `APP_URL`      | Public URL of your Application | `https://rxresu.me`                   |
 
-### Optional Variables
+### Optional variables
 
 | Variable                              | Description                                                 | Default                |
 | ------------------------------------- | ----------------------------------------------------------- | ---------------------- |
@@ -221,7 +221,7 @@ Here's a complete list of environment variables you can configure:
 
 ---
 
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
   <Card title="Development Setup" icon="code" href="/contributing/development">

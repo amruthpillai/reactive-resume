@@ -29,7 +29,7 @@ export function AccountSettingsPage() {
 			onSuccess: (data) => {
 				const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
 				downloadWithAnchor(blob, generateFilename("reactive-resume-export", "json"));
-				toast.add({ type: "success", description: t`Your data has been exported successfully.` });
+				toast.add({ type: "success", description: t`Your data has been exported.` });
 			},
 			onError: (error) => {
 				toast.add({
@@ -65,7 +65,7 @@ export function AccountSettingsPage() {
 
 		deleteAccount(undefined, {
 			onSuccess: async () => {
-				toast.add({ type: "success", description: t`Your account has been deleted successfully.`, id: toastId });
+				toast.add({ type: "success", description: t`Your account has been deleted.`, id: toastId });
 				await authClient.signOut();
 				void navigate({ to: "/" });
 			},
@@ -113,7 +113,7 @@ export function AccountSettingsPage() {
 			<hr className="border-border" />
 
 			<p className="leading-relaxed">
-				<Trans>To delete your account, you need to enter the confirmation text and click the button below.</Trans>
+				<Trans>To delete your account, type the confirmation text below, then click the button.</Trans>
 			</p>
 
 			<Input

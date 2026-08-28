@@ -80,7 +80,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 				const blob = await buildDocx(data, resolveTitle);
 				downloadWithAnchor(blob, generateFilename(getTargetExportName(resume, target), "docx"));
 			} catch {
-				toast.add({ type: "error", description: t`There was a problem while generating the DOCX, please try again.` });
+				toast.add({ type: "error", description: t`Could not generate the DOCX. Please try again.` });
 			}
 		},
 		[resume],
@@ -92,7 +92,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 			if (target === "cover-letter" && !resumeHasCoverLetter(resume.data)) return;
 			const toastId = toast.add({
 				type: "loading",
-				description: t`Please wait while your PDF is being generated...`,
+				description: t`Generating your PDF...`,
 			});
 			setIsExporting(true);
 			try {
@@ -108,7 +108,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 						);
 				downloadWithAnchor(blob, generateFilename(getTargetExportName(resume, target), "pdf"));
 			} catch {
-				toast.add({ type: "error", description: t`There was a problem while generating the PDF, please try again.` });
+				toast.add({ type: "error", description: t`Could not generate the PDF. Please try again.` });
 			} finally {
 				setIsExporting(false);
 				toast.close(toastId);
@@ -147,7 +147,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 		} catch {
 			toast.add({
 				type: "error",
-				description: t`There was a problem while preparing your resume for printing, please try again.`,
+				description: t`Could not prepare your resume for printing. Please try again.`,
 			});
 		} finally {
 			setIsExporting(false);

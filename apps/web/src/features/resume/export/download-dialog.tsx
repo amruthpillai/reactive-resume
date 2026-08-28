@@ -88,7 +88,7 @@ export function ResumeDownloadDialog({ resume, trigger }: ResumeDownloadDialogPr
 						<Trans>Download</Trans>
 					</DialogTitle>
 					<DialogDescription>
-						<Trans>Export your resume or cover letter in the format you need.</Trans>
+						<Trans>Pick a format for your resume or cover letter.</Trans>
 					</DialogDescription>
 				</DialogHeader>
 
@@ -168,7 +168,7 @@ export function ResumeDownloadDialog({ resume, trigger }: ResumeDownloadDialogPr
 					<FormatRow
 						icon={<MarkdownLogoIcon className="size-5" />}
 						title="Markdown"
-						description={<Trans>Plain text, ideal for AI tools and quick edits.</Trans>}
+						description={<Trans>Plain text, for AI tools and quick edits.</Trans>}
 						action={
 							<Button
 								size="sm"

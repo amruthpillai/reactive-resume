@@ -89,7 +89,7 @@ export function ParsePreview() {
 			</div>
 
 			<figcaption className="border-t px-3 py-2 text-muted-foreground text-xs leading-normal">
-				<Trans>A clean single-column export keeps every fact. Columns and images are where they get lost.</Trans>
+				<Trans>A single-column export keeps every fact. Columns and images are where facts get lost.</Trans>
 			</figcaption>
 		</figure>
 	);

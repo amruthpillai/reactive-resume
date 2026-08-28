@@ -53,13 +53,13 @@ const getFeatures = (): Feature[] => [
 		id: "no-ads",
 		icon: ProhibitIcon,
 		title: t`No Advertising, No Tracking`,
-		description: t`For a secure and distraction-free experience.`,
+		description: t`No ads and no trackers, so nothing gets in your way.`,
 	},
 	{
 		id: "instant-generation",
 		icon: FilePdfIcon,
 		title: t`Instant Generation`,
-		description: t`Export your resume to PDF instantly, without any waiting or delays.`,
+		description: t`Export your resume to PDF in one click, with no waiting.`,
 	},
 	{
 		id: "data-security",
@@ -71,13 +71,13 @@ const getFeatures = (): Feature[] => [
 		id: "self-host",
 		icon: CloudArrowUpIcon,
 		title: t`Self-Host with Docker`,
-		description: t`You also have the option to deploy on your own servers using the Docker image.`,
+		description: t`Deploy it on your own servers using the Docker image.`,
 	},
 	{
 		id: "languages",
 		icon: TranslateIcon,
 		title: t`Multilingual`,
-		description: t`Available in multiple languages. If you would like to contribute, check out Crowdin.`,
+		description: t`Available in multiple languages. If you want to help translate, head over to Crowdin.`,
 	},
 	{
 		id: "auth",
@@ -89,37 +89,37 @@ const getFeatures = (): Feature[] => [
 		id: "2fa",
 		icon: ShieldCheckIcon,
 		title: t`Passkeys & 2FA`,
-		description: t`Enhance the security of your account with additional layers of protection.`,
+		description: t`Add another layer of protection to your account.`,
 	},
 	{
 		id: "unlimited-resumes",
 		icon: FilesIcon,
 		title: t`Unlimited Resumes`,
-		description: t`Create as many resumes as you want, without limits.`,
+		description: t`Create as many resumes as you want.`,
 	},
 	{
 		id: "design",
 		icon: PaletteIcon,
 		title: t`Flexibility`,
-		description: t`Personalize your resume with any colors, fonts or designs, and make it your own.`,
+		description: t`Change the colors, fonts, and design to suit you.`,
 	},
 	{
 		id: "templates",
 		icon: LayoutIcon,
-		title: t`12+ Templates`,
-		description: t`Beautiful templates to choose from, with more on the way.`,
+		title: t`15 Templates`,
+		description: t`A range of designs to choose from, with more on the way.`,
 	},
 	{
 		id: "public",
 		icon: GlobeIcon,
 		title: t`Shareable Links`,
-		description: t`Share your resume with a public URL, and let others view it.`,
+		description: t`Share your resume with a public URL.`,
 	},
 	{
 		id: "password-protection",
 		icon: LockSimpleIcon,
 		title: t`Password Protection`,
-		description: t`Protect your resume with a password, and let only people with the password view it.`,
+		description: t`Put a password on your resume so only the people you give it to can read it.`,
 	},
 	{
 		id: "api-access",
@@ -138,7 +138,7 @@ const getFeatures = (): Feature[] => [
 		id: "more",
 		icon: DotsThreeIcon,
 		title: t`And many more...`,
-		description: t`New features are constantly being added and improved, so be sure to check back often.`,
+		description: t`New features land regularly, so check back now and then.`,
 	},
 ];
 
@@ -204,8 +204,8 @@ export function Features() {
 
 				<p className="max-w-2xl text-muted-foreground leading-relaxed">
 					<Trans>
-						Everything you need to create, customize, and share professional resumes. Built with privacy in mind,
-						powered by open source, and completely free forever.
+						Create, customize, and share your resume. Reactive Resume is open source, it doesn't track you, and it stays
+						free.
 					</Trans>
 				</p>
 			</m.div>

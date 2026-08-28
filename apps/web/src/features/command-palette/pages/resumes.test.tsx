@@ -123,7 +123,7 @@ describe("ResumesCommandGroup", () => {
 
 		expect(useCommandPaletteStore.getState().pages).toEqual([page]);
 		expect(await screen.findByText(createLabel)).toBeInTheDocument();
-		expect(screen.queryByText("The command you're looking for doesn't exist.")).not.toBeInTheDocument();
+		expect(screen.queryByText("No commands match that search.")).not.toBeInTheDocument();
 	});
 
 	it.each([

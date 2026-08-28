@@ -36,7 +36,7 @@ export function ApplicationInsights({ applications }: { applications: Applicatio
 	if (insights.total === 0) {
 		return (
 			<p className="py-16 text-center text-muted-foreground text-sm">
-				<Trans>No applications yet — add a few to see your funnel and reply rates.</Trans>
+				<Trans>No applications yet. Add a few to see your funnel and reply rates.</Trans>
 			</p>
 		);
 	}

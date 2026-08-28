@@ -1,5 +1,5 @@
 ---
-title: "Using the Patch API"
+title: "Using the patch API"
 description: "Partially update a Reactive Resume with JSON Patch (RFC 6902) operations to add, remove, replace, and move fields without sending the full document."
 ---
 
@@ -7,7 +7,7 @@ The Patch API lets you make small, targeted changes to your resume without sendi
 
 This is based on the [JSON Patch (RFC 6902)](https://datatracker.ietf.org/doc/html/rfc6902) standard.
 
-## When to Use PATCH vs PUT
+## When to use PATCH vs PUT
 
 | Use case                                     | Method    |
 | -------------------------------------------- | --------- |
@@ -35,7 +35,7 @@ All requests require your API key in the `x-api-key` header. See [Using the API]
 PATCH /api/openapi/resume/{id}
 ```
 
-### Request Body
+### Request body
 
 The resume ID is taken from the URL path, so the request body only requires the `operations` array:
 
@@ -56,7 +56,7 @@ Each operation is an object with the following properties:
 
 ## Examples
 
-### Replace a Basic Field
+### Replace a basic field
 
 Update the resume holder's name and headline:
 
@@ -72,7 +72,7 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
   }'
 ```
 
-### Add an Experience Entry
+### Add an experience entry
 
 Append a new item to the experience section:
 
@@ -105,7 +105,7 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
   insert at a specific position, use a numeric index like `/sections/experience/items/0` for the beginning.
 </Tip>
 
-### Remove an Item from a Section
+### Remove an item from a section
 
 Remove the second skill (index `1`) from the skills section:
 
@@ -120,7 +120,7 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
   }'
 ```
 
-### Update Metadata (Template, Colors, Fonts)
+### Update metadata (template, colors, fonts)
 
 Switch the template and update the primary color:
 
@@ -136,9 +136,9 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
   }'
 ```
 
-### Test-Then-Replace (Optimistic Concurrency)
+### Test then replace (optimistic concurrency)
 
-The `test` operation checks that a value matches before proceeding. If the test fails, the entire patch is rejected. This is useful to avoid overwriting changes made by another client:
+The `test` operation checks that a value matches before the rest of the patch runs. If the test fails, the whole patch is rejected, which keeps you from overwriting changes made by another client:
 
 ```bash
 curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
@@ -154,7 +154,7 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
 
 If `/basics/name` is not `"Albert Einstein"` at the time of the request, the entire patch will fail with a `400` error and no changes will be applied.
 
-### Move an Item Within a Section
+### Move an item within a section
 
 Move the first experience item to the third position:
 
@@ -169,7 +169,7 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
   }'
 ```
 
-## Error Handling
+## Error handling
 
 | Status | Error Code                 | Description                                                                                                               |
 | ------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -185,7 +185,7 @@ curl -X PATCH "https://rxresu.me/api/openapi/resume/YOUR_RESUME_ID" \
 
 ## Tips
 
-- **Fetch first, then patch.** Use `GET /resume/{id}` to inspect the current structure before crafting your operations. This helps you target the correct paths and array indices.
-- **Use `test` for safety.** When updating a value you expect to be a specific value, combine `test` + `replace` to avoid accidentally overwriting concurrent changes.
-- **Batch related changes.** You can send multiple operations in a single request. They are applied in order, so later operations can depend on earlier ones.
-- **The `-` index appends.** When adding items to arrays, use `-` as the index (e.g., `/sections/skills/items/-`) to append to the end.
+- Fetch first, then patch. Use `GET /resume/{id}` to inspect the current structure before writing your operations, so you target the correct paths and array indices.
+- Use `test` for safety. When you expect a field to hold a specific value, combine `test` + `replace` so you don't overwrite a concurrent change.
+- Batch related changes. You can send multiple operations in one request. They are applied in order, so a later operation can depend on an earlier one.
+- The `-` index appends. When adding items to arrays, use `-` as the index (e.g., `/sections/skills/items/-`) to append to the end.

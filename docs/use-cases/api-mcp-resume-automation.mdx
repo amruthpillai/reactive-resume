@@ -1,21 +1,21 @@
 ---
-title: "API and MCP Resume Automation"
+title: "API and MCP resume automation"
 description: "Automate resume workflows in Reactive Resume with API keys, the Patch API, the MCP server, AI agent tools, and the JSON resume schema."
 ---
 
-Reactive Resume supports automation through authenticated API access and an MCP server that lets compatible tools work with resumes and job applications. Agents can list, read, create, import, duplicate, and patch resumes, then track applications, move opportunities through stages, add notes and follow-ups, attach sent documents, and run Application Copilot actions.
+Reactive Resume supports automation through authenticated API access and an MCP server, so compatible tools can work with your resumes and job applications. Agents can list, read, create, import, duplicate, and patch resumes. They can also track applications, move opportunities through stages, add notes and follow-ups, attach sent documents, and run Application Copilot actions.
 
 ## Automation options
 
-Use the API when you want direct programmatic access from scripts, services, or integrations. Use MCP when you want an AI tool or agent that supports the Model Context Protocol to work with your resumes through exposed tools.
+Use the API for direct programmatic access from scripts, services, or integrations. Use MCP when you want an AI tool or agent that speaks the Model Context Protocol to work with your resumes through exposed tools.
 
 Key docs:
 
 - [Using the API](/guides/using-the-api)
-- [Using the Patch API](/guides/using-the-patch-api)
-- [Using the MCP Server](/guides/using-the-mcp-server)
-- [AI Agent Tools](/guides/ai-agent-tools)
-- [JSON Resume Schema](/guides/json-resume-schema)
+- [Using the patch API](/guides/using-the-patch-api)
+- [Using the MCP server](/guides/using-the-mcp-server)
+- [AI Agent tools](/guides/ai-agent-tools)
+- [JSON Resume schema](/guides/json-resume-schema)
 
 ## Common automation workflows
 
@@ -33,11 +33,11 @@ You can build workflows that:
 - Score a linked resume against a job description and create a tailored resume copy.
 - Draft cover letters and recruiter follow-ups from saved application context.
 
-The Patch API is the safest starting point for targeted resume updates because it is designed around explicit changes to existing resume data.
+Start with the Patch API for targeted resume updates. It is the safest option because it is built around explicit changes to existing resume data.
 
 ## Authentication and scope
 
-API requests use API keys. MCP can use OAuth2 in clients that support it, with API keys available as a fallback. If you self-host, use your own instance URL for API and MCP endpoints.
+API requests use API keys. MCP can use OAuth2 in clients that support it, with API keys as a fallback. If you self-host, use your own instance URL for the API and MCP endpoints.
 
 <Info>
   Automation changes affect the resumes available to the authenticated account or instance. Test workflows on a copy of a
@@ -46,8 +46,8 @@ API requests use API keys. MCP can use OAuth2 in clients that support it, with A
 
 ## When not to use automation
 
-Do not start with API or MCP automation when you only need to edit one resume manually. The builder is usually faster for one-off changes, template selection, and visual review. Avoid automation for important resume updates unless you can test the exact changes on a copy first.
+Do not reach for API or MCP automation when you only need to edit one resume by hand. The builder is faster for one-off changes, template selection, and visual review. Avoid automation for important resume updates unless you can test the exact changes on a copy first.
 
 ## Next action
 
-For scripts and integrations, create an API key with [Using the API](/guides/using-the-api), then use [Using the Patch API](/guides/using-the-patch-api) for targeted edits. For agent workflows, start with [Using the MCP Server](/guides/using-the-mcp-server).
+For scripts and integrations, create an API key with [Using the API](/guides/using-the-api), then use [Using the patch API](/guides/using-the-patch-api) for targeted edits. For agent workflows, start with [Using the MCP server](/guides/using-the-mcp-server).

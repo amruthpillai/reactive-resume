@@ -40,7 +40,7 @@ describe("TemplateGalleryDialog", () => {
 	it("renders the documented title and intro copy", () => {
 		renderGallery();
 		expect(screen.getByText("Template Gallery")).toBeInTheDocument();
-		expect(screen.getByText(/range of resume templates/)).toBeInTheDocument();
+		expect(screen.getByText(/Resume templates for different professions/)).toBeInTheDocument();
 	});
 
 	it("renders one tile per template", () => {

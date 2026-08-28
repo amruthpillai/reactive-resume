@@ -163,7 +163,7 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 								/>
 								<FormMessage errors={field.state.meta.errors} />
 								<FormDescription>
-									<Trans>You can also use your username to login.</Trans>
+									<Trans>You can also sign in with your username.</Trans>
 								</FormDescription>
 							</FormItem>
 						)}

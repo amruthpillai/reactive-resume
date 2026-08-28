@@ -132,8 +132,8 @@ function LiveLintTier() {
 			<div className="space-y-3 rounded-md border bg-card p-3">
 				<p className="text-muted-foreground text-xs leading-normal">
 					<Trans>
-						These checks run as you type and never leave your browser. They ask whether a machine can read your resume,
-						not whether it reads well.
+						These checks run as you type and never leave your browser. They test whether software can read your resume,
+						not how well it is written.
 					</Trans>
 				</p>
 
@@ -221,7 +221,7 @@ function DeepCheckTier() {
 					</p>
 					<p className="text-muted-foreground text-xs leading-normal">
 						<Trans>
-							Renders your current resume to PDF and runs the full file check, in your browser. Nothing is uploaded.
+							Renders your current resume to PDF and runs the full file check in your browser. Nothing is uploaded.
 						</Trans>
 					</p>
 				</div>

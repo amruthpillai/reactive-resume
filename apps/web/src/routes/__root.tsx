@@ -45,7 +45,7 @@ const tagline = "A free and open-source resume builder";
 const title = `${appName} — ${tagline}`;
 // Keep under ~120 characters so Google's mobile SERP snippet is not truncated at 3 lines.
 const description =
-	"Free, open-source resume builder. Create, update, and share a professional resume in minutes — no ads, no paywall.";
+	"Free, open-source resume builder. Create, update, and share your resume, with no ads and no paywall.";
 const iconContextValue: IconProps = { size: 16, weight: "regular" };
 
 export const Route = createRootRouteWithContext<RouterContext>()({

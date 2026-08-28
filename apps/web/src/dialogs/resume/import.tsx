@@ -201,7 +201,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				toast.add({
 					type: "success",
 					title: null,
-					description: t`Your resume has been imported successfully.`,
+					description: t`Your resume has been imported.`,
 					id: toastId,
 				});
 				closeDialog();
@@ -288,8 +288,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				</DialogTitle>
 				<DialogDescription>
 					<Trans>
-						Continue where you left off by importing an existing resume you created using Reactive Resume or any another
-						resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume.
+						Continue where you left off by importing a resume you built in Reactive Resume or another resume builder.
+						Supported formats are PDF, Microsoft Word, and JSON files from Reactive Resume.
 					</Trans>
 				</DialogDescription>
 			</DialogHeader>
@@ -401,7 +401,7 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 								/>
 								{!field.state.value && (
 									<p className="text-muted-foreground text-xs">
-										<Trans>We couldn't detect the format automatically — please choose it above.</Trans>
+										<Trans>We couldn't detect the format automatically. Choose it above.</Trans>
 									</p>
 								)}
 								<FormMessage errors={field.state.meta.errors} />

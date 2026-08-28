@@ -332,8 +332,7 @@ function EmptyState({ onAdd, onImport }: { onAdd: () => void; onImport: () => vo
 				</h2>
 				<p className="text-muted-foreground text-sm">
 					<Trans>
-						Add a job you're applying to, link the resume you sent, and move it through your pipeline as things
-						progress.
+						Add a job you're applying to and link the resume you sent. Move it across the board as you hear back.
 					</Trans>
 				</p>
 			</div>

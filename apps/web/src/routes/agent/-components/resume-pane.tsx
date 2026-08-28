@@ -76,7 +76,7 @@ export function ResumePane({ resume }: ResumePaneProps) {
 		const filename = generateFilename(resume.name || resume.data.basics.name || resume.id, "pdf");
 		const toastId = toast.add({
 			type: "loading",
-			description: t`Please wait while your PDF is being generated…`,
+			description: t`Generating your PDF...`,
 		});
 
 		setIsPrinting(true);
@@ -85,7 +85,7 @@ export function ResumePane({ resume }: ResumePaneProps) {
 			const blob = await createResumePdfBlob(resume.data);
 			downloadWithAnchor(blob, filename);
 		} catch {
-			toast.add({ type: "error", description: t`There was a problem while generating the PDF, please try again.` });
+			toast.add({ type: "error", description: t`Could not generate the PDF. Please try again.` });
 		} finally {
 			setIsPrinting(false);
 			toast.close(toastId);

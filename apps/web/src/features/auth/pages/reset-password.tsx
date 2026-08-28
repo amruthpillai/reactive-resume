@@ -47,7 +47,7 @@ export function ResetPasswordPage({ token }: Props) {
 
 			toast.add({
 				type: "success",
-				description: t`Your password has been reset successfully. You can now sign in with your new password.`,
+				description: t`Your password has been reset. You can now sign in with your new password.`,
 				id: toastId,
 			});
 
@@ -63,7 +63,7 @@ export function ResetPasswordPage({ token }: Props) {
 				</h1>
 
 				<div className="text-muted-foreground">
-					<Trans>Please enter a new password for your account</Trans>
+					<Trans>Enter a new password for your account</Trans>
 				</div>
 			</div>
 

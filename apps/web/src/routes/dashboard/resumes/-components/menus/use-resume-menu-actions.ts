@@ -39,8 +39,7 @@ export function useResumeMenuActions(resume: Resume) {
 		deleteResume(
 			{ id: resume.id },
 			{
-				onSuccess: () =>
-					toast.add({ type: "success", description: t`Your resume has been deleted successfully.`, id: toastId }),
+				onSuccess: () => toast.add({ type: "success", description: t`Your resume has been deleted.`, id: toastId }),
 				onError: (error) => toast.add({ type: "error", description: getResumeErrorMessage(error), id: toastId }),
 			},
 		);

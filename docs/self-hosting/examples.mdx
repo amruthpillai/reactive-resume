@@ -1,5 +1,5 @@
 ---
-title: "Docker Compose Examples"
+title: "Docker Compose examples"
 description: "Ready-to-use Docker Compose examples for self-hosting Reactive Resume with Postgres, Traefik, Caddy, Nginx Proxy Manager, and other common deployment stacks."
 ---
 
@@ -9,25 +9,23 @@ description: "Ready-to-use Docker Compose examples for self-hosting Reactive Res
 
 ## Overview
 
-Every self-hosted setup is unique. You might be running on a single VPS, a Kubernetes cluster, behind Cloudflare Tunnel, or using a specific reverse proxy like Traefik or nginx. This page provides real-world Docker Compose configurations for various deployment scenarios to help you get started faster.
+Self-hosted setups vary. You might run on a single VPS or a Kubernetes cluster, behind Cloudflare Tunnel, or behind a reverse proxy like Traefik or nginx. This page collects Docker Compose configurations for those cases.
 
-These examples go beyond the basic setup in the [Self-Hosting with Docker](/self-hosting/docker) guide, showing production-ready configurations with reverse proxies, SSL termination, and other common patterns.
+They go further than the basic setup in the [Self-hosting with Docker](/self-hosting/docker) guide, with reverse proxies, SSL termination, and other common patterns.
 
 <Info>
-  **Help others by sharing your setup!** If you have a working configuration that isn't covered here, I'd love to
-  include it. Simply [open a pull request](https://github.com/amruthpillai/reactive-resume) with your example added to
-  this page. Your contribution helps the community and makes self-hosting easier for everyone.
+  **Share your setup.** If you have a working configuration that isn't covered here, I'd love to include it. [Open a
+  pull request](https://github.com/amruthpillai/reactive-resume) with your example added to this page.
 </Info>
 
 ---
 
 ## Docker with Traefik
 
-This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik—Postgres remains on an internal network.
+This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik. Postgres stays on an internal network.
 
 <Tip>
-  Traefik automatically discovers services via Docker labels and handles SSL certificates, making it ideal for setups
-  where you want minimal configuration.
+  Traefik discovers services through Docker labels and handles SSL certificates, so it needs very little configuration.
 </Tip>
 
 ```yaml compose-traefik.yml lines expandable
@@ -269,11 +267,11 @@ http {
 
 ## Docker Swarm
 
-This example demonstrates a production-grade Docker Swarm deployment with multiple replicas, health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
+This example is a Docker Swarm deployment with multiple replicas, health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
 
 <Tip>
-  Docker Swarm is great for multi-node deployments where you need high availability and easy scaling. The app service is
-  configured with 2 replicas and rolling update strategy.
+  Docker Swarm suits multi-node deployments that need high availability and simple scaling. The app service here uses 2
+  replicas and a rolling update strategy.
 </Tip>
 
 ```yaml compose-swarm.yml lines expandable
@@ -429,9 +427,9 @@ docker stack rm reactive_resume
 
 ---
 
-## Contributing Your Setup
+## Contributing your setup
 
-Have a different deployment setup that works well? Consider contributing it here. Some examples include:
+Have a different deployment setup that works well? Consider contributing it here. Some examples:
 
 - Kubernetes / Helm charts
 - Cloudflare Tunnel

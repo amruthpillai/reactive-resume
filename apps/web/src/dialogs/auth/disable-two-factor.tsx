@@ -59,7 +59,7 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 
 			toast.add({
 				type: "success",
-				description: t`Two-factor authentication has been disabled successfully.`,
+				description: t`Two-factor authentication is now disabled.`,
 				id: toastId,
 			});
 			void router.invalidate();

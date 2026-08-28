@@ -55,7 +55,7 @@ export function ScoreHeader({ report }: ScoreHeaderProps) {
 						<TooltipContent side="bottom" className="max-w-64">
 							<Trans>
 								Some checks need information this file does not carry: page contents that could not be inspected, or
-								text in a language these checks do not cover. They are counted as neither passed nor failed.
+								text in a language these checks do not cover. They count as neither a pass nor a fail.
 							</Trans>
 						</TooltipContent>
 					</Tooltip>

@@ -64,7 +64,7 @@ export function ProfileSettingsPage({ session }: Props) {
 				return;
 			}
 
-			toast.add({ type: "success", description: t`Your profile has been updated successfully.` });
+			toast.add({ type: "success", description: t`Your profile has been updated.` });
 			form.reset({ name: value.name, username: value.username, email: session.user.email });
 			void router.invalidate();
 
@@ -90,7 +90,7 @@ export function ProfileSettingsPage({ session }: Props) {
 
 				toast.add({
 					type: "success",
-					description: t`A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.`,
+					description: t`We sent a confirmation link to your new email address. Open it to confirm the change.`,
 				});
 				form.reset({ name: value.name, username: value.username, email: session.user.email });
 				void router.invalidate();
@@ -129,7 +129,7 @@ export function ProfileSettingsPage({ session }: Props) {
 
 		toast.add({
 			type: "success",
-			description: t`A new verification link has been sent to your email address. Please check your inbox to verify your account.`,
+			description: t`We sent a new verification link to your email address. Open it to verify your account.`,
 			id: toastId,
 		});
 		void router.invalidate();

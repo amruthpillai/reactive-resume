@@ -96,8 +96,8 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 				</DialogTitle>
 				<DialogDescription>
 					<Trans>
-						This will generate a new API key to access the Reactive Resume API to allow machines to interact with your
-						resume data.
+						This creates a new API key, which lets other programs read and change your resume data through the Reactive
+						Resume API.
 					</Trans>
 				</DialogDescription>
 			</DialogHeader>
@@ -130,9 +130,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 							/>
 							<FormMessage errors={field.state.meta.errors} />
 							<FormDescription>
-								<Trans>
-									Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later.
-								</Trans>
+								<Trans>Names help you tell keys apart, so name it after what you will use it for.</Trans>
 							</FormDescription>
 						</FormItem>
 					)}
@@ -231,7 +229,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 				</InputGroup>
 
 				<span className="font-medium text-muted-foreground text-sm">
-					<Trans>For security reasons, this key will only be displayed once.</Trans>
+					<Trans>This key is shown only once. Copy it before you close this dialog.</Trans>
 				</span>
 			</div>
 

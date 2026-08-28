@@ -72,7 +72,7 @@ export const getRootStructuredData = (canonicalUrl: string): JsonLd[] => [
 		name: appName,
 		url: canonicalUrl,
 		description:
-			"Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
+			"Reactive Resume is a free and open-source resume builder that makes it easy to create, update, and share your resume.",
 		applicationCategory: "BusinessApplication",
 		operatingSystem: "Web",
 		isAccessibleForFree: true,
@@ -112,31 +112,29 @@ const homeFaqJsonLdItems = [
 	{
 		question: "Is Reactive Resume really free?",
 		answer:
-			"Yes! Reactive Resume is completely free to use, with no hidden costs, premium tiers, or subscription fees. It's open-source and will always remain free.",
+			"Yes. Reactive Resume is free to use, with no hidden costs, premium tiers, or subscription fees. It's open source, and it will stay free.",
 	},
 	{
 		question: "How is my data protected?",
 		answer:
-			"Your data is stored securely and is never shared with third parties. You can also self-host Reactive Resume on your own servers for complete control over your data.",
+			"Your data is stored securely and never shared with third parties. If you want full control over it, you can self-host Reactive Resume on your own servers.",
 	},
 	{
 		question: "Can I export my resume to PDF?",
-		answer:
-			"Absolutely! You can export your resume to PDF with a single click. The exported PDF maintains all your formatting and styling perfectly.",
+		answer: "Yes. One click exports your resume to PDF, with your formatting and styling intact.",
 	},
 	{
 		question: "Is Reactive Resume available in multiple languages?",
 		answer:
-			"Yes, Reactive Resume is available in multiple languages. You can choose your preferred language in the settings page, or using the language switcher in the top right corner. If you don't see your language, or you would like to improve the existing translations, you can contribute to the translations on Crowdin.",
+			"Yes. Pick your language on the settings page, or with the language switcher in the top right corner. If your language is missing, or the existing translation could be better, you can contribute to the translations on Crowdin.",
 	},
 	{
 		question: "What makes Reactive Resume different from other resume builders?",
 		answer:
-			"Reactive Resume is open-source, privacy-focused, and completely free. Unlike other resume builders, it doesn't show ads, track your data, or limit your features behind a paywall.",
+			"Reactive Resume is open source, private, and free. It shows no ads, doesn't track what you do, and doesn't lock features behind a paywall.",
 	},
 	{
 		question: "How do I share my resume?",
-		answer:
-			"You can share your resume via a unique public URL, protect it with a password, or download it as a PDF to share directly. The choice is yours!",
+		answer: "Share it with a public URL, put a password on that URL, or download the PDF and send it yourself.",
 	},
 ] as const;

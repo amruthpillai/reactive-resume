@@ -1,5 +1,5 @@
 ---
-title: "Development Setup"
+title: "Development setup"
 description: "Set up a local development environment for Reactive Resume with pnpm, Docker services, environment variables, and the web and server apps."
 ---
 
@@ -8,11 +8,11 @@ description: "Set up a local development environment for Reactive Resume with pn
   [Docker](https://docs.docker.com/get-docker/) and Docker Compose - [Git](https://git-scm.com/)
 </Info>
 
-This guide walks you through setting up Reactive Resume for local development. Whether you're contributing to the project or customizing it for your needs, these steps will get you up and running.
+These steps set up Reactive Resume for local development, whether you're contributing to the project or customizing it for yourself.
 
 ---
 
-## Setting Up Your Development Environment
+## Setting up your development environment
 
 <Steps>
   <Step title="Clone the Repository">
@@ -63,7 +63,7 @@ This guide walks you through setting up Reactive Resume for local development. W
     cp .env.example .env.local
     ```
 
-    Then edit `.env.local` as needed — for local development on the host, set at minimum:
+    Then edit `.env.local` as needed. For local development on the host, set at minimum:
 
     ```bash
     # Application
@@ -95,7 +95,7 @@ This guide walks you through setting up Reactive Resume for local development. W
     ```
 
     <Tip>
-      **Email Testing**: The development stack includes [Mailpit](https://mailpit.axllent.org/), an email testing tool. All emails sent by the application will be captured and viewable at [http://localhost:8025](http://localhost:8025). No emails will actually be sent to real addresses during development.
+      **Email testing**: The development stack includes [Mailpit](https://mailpit.axllent.org/). Emails the app sends are captured there and viewable at [http://localhost:8025](http://localhost:8025), so nothing reaches a real address during development.
     </Tip>
 
   </Step>
@@ -120,9 +120,9 @@ This guide walks you through setting up Reactive Resume for local development. W
 
 ---
 
-## Available Scripts
+## Available scripts
 
-Here are the most commonly used scripts during development:
+The scripts you will use most during development:
 
 ### Development
 
@@ -151,9 +151,7 @@ Here are the most commonly used scripts during development:
 | ------------------------- | -------------------------------------- |
 | `pnpm run lingui:extract` | Extract translatable strings from code |
 
-## Understanding the Project Structure
-
-Understanding the project structure will help you navigate the codebase:
+## Understanding the project structure
 
 ```
 reactive-resume/
@@ -179,9 +177,9 @@ reactive-resume/
 
 ---
 
-## Working with the Database
+## Working with the database
 
-### Viewing the Database
+### Viewing the database
 
 Use Drizzle Studio to explore and manage your database:
 
@@ -191,7 +189,7 @@ dotenvx run -f .env.local -- pnpm run db:studio
 
 This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizzle.studio).
 
-### Making Schema Changes
+### Making schema changes
 
 1. Edit the schema in `packages/db/src/schema/*`
 2. Generate a migration:
@@ -207,11 +205,11 @@ This opens a web-based GUI at [https://local.drizzle.studio](https://local.drizz
 
 ---
 
-## Working with Translations
+## Working with translations
 
 Reactive Resume uses [Lingui](https://lingui.dev/) for internationalization.
 
-### Adding Translatable Text
+### Adding translatable text
 
 Use the `t` macro for strings or `<Trans>` component for JSX:
 
@@ -226,7 +224,7 @@ const message = t`Hello, World!`;
 <Trans>Welcome to Reactive Resume</Trans>;
 ```
 
-### Extracting Translations
+### Extracting translations
 
 After adding new translatable text, extract them to the locale files:
 
@@ -234,13 +232,13 @@ After adding new translatable text, extract them to the locale files:
 pnpm run lingui:extract
 ```
 
-Translation files are located in `apps/web/locales` in `.po` format.
+Translation files live in `apps/web/locales`, in `.po` format.
 
 ---
 
-## Code Quality
+## Code quality
 
-### Linting & Formatting
+### Linting & formatting
 
 Uses [Biome](https://biomejs.dev/) for linting, formatting, import organization, and Tailwind class sorting:
 
@@ -252,7 +250,7 @@ pnpm exec biome check .
 pnpm check
 ```
 
-### Type Checking
+### Type checking
 
 Run TypeScript type checking:
 
@@ -314,11 +312,11 @@ pnpm run typecheck
 
 ---
 
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
   <Card title="Project Architecture" icon="folder-open" href="/contributing/architecture">
-    Deep dive into the project architecture and codebase structure.
+    How the project and codebase are structured.
   </Card>
   <Card title="GitHub Repository" icon="github" href="https://github.com/amruthpillai/reactive-resume">
     View the source code and contribute to the project.

@@ -86,7 +86,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 				setStep("verify");
 				toast.close(toastId);
 			} else {
-				toast.add({ type: "error", description: t`Failed to setup two-factor authentication.`, id: toastId });
+				toast.add({ type: "error", description: t`Could not set up two-factor authentication.`, id: toastId });
 			}
 		},
 	});
@@ -133,7 +133,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 	});
 
 	const onConfirmBackup = () => {
-		toast.add({ type: "success", description: t`Two-factor authentication has been setup successfully.` });
+		toast.add({ type: "success", description: t`Two-factor authentication is now enabled.` });
 		void router.invalidate();
 		closeDialog();
 		onReset();
@@ -373,8 +373,8 @@ function TwoFactorDialogDescription({ step }: TwoFactorStepProps) {
 	return match(step)
 		.with("enable", () => (
 			<Trans>
-				Enter your password to confirm setting up two-factor authentication. When enabled, you'll need to enter a code
-				from your authenticator app every time you log in.
+				Enter your password to confirm setting up two-factor authentication. Once it is on, you need a code from your
+				authenticator app every time you sign in.
 			</Trans>
 		))
 		.with("verify", () => (

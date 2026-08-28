@@ -54,11 +54,7 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 					<Trans>Template Gallery</Trans>
 				</DialogTitle>
 				<DialogDescription className="leading-relaxed">
-					<Trans>
-						Here's a range of resume templates for different professions and personalities. Whether you prefer modern or
-						classic, bold or simple, there is a design to match you. Look through the options below and choose a
-						template that fits your style.
-					</Trans>
+					<Trans>Resume templates for different professions and tastes. Pick the one that suits you.</Trans>
 				</DialogDescription>
 			</DialogHeader>
 

@@ -63,8 +63,7 @@ export function Footer() {
 						<h2 className="font-semibold text-lg tracking-tight">Reactive Resume</h2>
 						<p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
 							<Trans>
-								A free and open-source resume builder that simplifies the process of creating, updating, and sharing
-								your resume.
+								A free and open-source resume builder that makes it easy to create, update, and share your resume.
 							</Trans>
 						</p>
 					</div>

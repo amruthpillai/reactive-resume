@@ -37,11 +37,11 @@ export function PasskeysSection() {
 				return;
 			}
 
-			toast.add({ type: "success", description: t`Passkey registered successfully.` });
+			toast.add({ type: "success", description: t`Passkey registered.` });
 			await queryClient.invalidateQueries({ queryKey: ["auth", "passkeys"] });
 
 			const name = await prompt(t`Enter a name for your passkey.`, {
-				description: t`This will help you identify it later, if you plan to have multiple passkeys.`,
+				description: t`Names help you tell passkeys apart if you register more than one.`,
 				defaultValue: "",
 				confirmText: t({
 					comment: "Passkey rename prompt confirm action in authentication settings",
@@ -93,7 +93,7 @@ export function PasskeysSection() {
 				return;
 			}
 
-			toast.add({ type: "success", description: t`Passkey deleted successfully.` });
+			toast.add({ type: "success", description: t`Passkey deleted.` });
 			await queryClient.invalidateQueries({ queryKey: ["auth", "passkeys"] });
 		},
 		onError: () => {

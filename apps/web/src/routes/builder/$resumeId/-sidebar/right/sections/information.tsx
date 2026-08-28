@@ -14,12 +14,12 @@ export function InformationSectionBuilder() {
 				<div className="space-y-2 text-xs leading-normal">
 					<Trans>
 						<p>
-							Thank you for using Reactive Resume! This app is a labor of love, created mostly in my spare time, with
-							wonderful support from open-source contributors around the world.
+							Thank you for using Reactive Resume. I build this app mostly in my spare time, with help from open-source
+							contributors around the world.
 						</p>
 						<p>
-							If Reactive Resume has been helpful to you, and you'd like to help keep it free and open for everyone,
-							please consider making a donation. Every little bit is appreciated!
+							If it has been useful to you and you'd like to keep it free and open for everyone, please consider
+							donating. Any amount helps.
 						</p>
 					</Trans>
 				</div>

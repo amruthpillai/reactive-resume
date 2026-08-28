@@ -162,7 +162,7 @@ export function VerifyEmail({ url }: VerifyEmailProps) {
 			preview={`Verify your email for ${appName}`}
 			heading="Verify Email"
 			intro={`Thanks for signing up for ${appName}. Please verify your email address to continue.`}
-			details="Verification helps us protect your account and keep your sign-in secure."
+			details="This confirms the address belongs to you, which keeps your account secure."
 			actionLabel="Verify Email"
 			actionUrl={url}
 			outro="If you did not create this account, you can safely ignore this email."
@@ -181,11 +181,11 @@ export function VerifyEmailChange({ url, previousEmail, newEmail }: VerifyEmailC
 		<AuthEmailLayout
 			preview={`Confirm your new ${appName} email address`}
 			heading="Confirm Email Change"
-			intro={`You requested to change your ${appName} email from ${previousEmail} to ${newEmail}.`}
-			details="Confirm this change to complete the update and keep your account access uninterrupted."
+			intro={`You asked to change your ${appName} email from ${previousEmail} to ${newEmail}.`}
+			details="The change takes effect once you confirm it here."
 			actionLabel="Verify New Email"
 			actionUrl={url}
-			outro="If you did not request this change, ignore this email and secure your account."
+			outro="If you did not request this change, ignore this email and your address stays as it is."
 		/>
 	);
 }

@@ -463,7 +463,7 @@ function CreateProviderForm() {
 
 			if (tested.testStatus === "success") {
 				setForm(emptyForm);
-				setResult({ ok: true, message: t`Connection verified — provider is ready to use.` });
+				setResult({ ok: true, message: t`Connection verified. The provider is ready to use.` });
 			} else {
 				// ponytail: provider stays persisted on failure so it shows in the list; a re-save creates a new row.
 				setResult({

@@ -122,7 +122,7 @@ function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerification
 								{backupCode ? (
 									<Trans comment="Secondary navigation button on backup-code verification screen">Go Back</Trans>
 								) : (
-									<Trans comment="Secondary navigation button on 2FA verification screen">Back to Login</Trans>
+									<Trans comment="Secondary navigation button on 2FA verification screen">Back to sign in</Trans>
 								)}
 							</Link>
 						}

@@ -104,7 +104,7 @@ export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 							{usableProviders.length === 0 && !isLoadingProviders ? (
 								<div className="flex flex-col gap-3 rounded-md border border-dashed p-3 text-sm lg:flex-row lg:items-center lg:justify-between">
 									<span className="text-muted-foreground">
-										<Trans>Set up an AI provider to get started.</Trans>
+										<Trans>Set up an AI provider first.</Trans>
 									</span>
 									<Button
 										size="sm"
@@ -142,7 +142,7 @@ export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 							<div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
 								<Badge variant="secondary" className="h-7 gap-1.5 rounded-md px-2">
 									<FilePlusIcon />
-									{sourceResumeId ? <Trans>Duplicate as AI Draft</Trans> : <Trans>Blank draft</Trans>}
+									{sourceResumeId ? <Trans>Duplicate as AI draft</Trans> : <Trans>Blank draft</Trans>}
 								</Badge>
 							</div>
 						</div>
@@ -179,7 +179,7 @@ export function NewThreadSetup({ resumeId }: NewThreadSetupProps) {
 							)
 						}
 					>
-						<Trans>Start Thread</Trans>
+						<Trans>Start thread</Trans>
 						{isPending ? <Spinner /> : <ArrowRightIcon />}
 					</Button>
 				</div>

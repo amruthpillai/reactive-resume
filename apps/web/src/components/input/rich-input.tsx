@@ -309,7 +309,7 @@ function useEditorToolbarState(editor: Editor) {
 				// Link
 				isLink: ctx.editor.isActive("link") ?? false,
 				setLink: async () => {
-					const url = await prompt(t`Please enter the URL you want to link to:`, {
+					const url = await prompt(t`Enter the URL you want to link to:`, {
 						defaultValue: "https://",
 					});
 

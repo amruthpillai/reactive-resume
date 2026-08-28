@@ -224,7 +224,7 @@ function BuilderHeaderDropdown() {
 			{ id },
 			{
 				onSuccess: () => {
-					toast.add({ type: "success", description: t`Your resume has been deleted successfully.`, id: toastId });
+					toast.add({ type: "success", description: t`Your resume has been deleted.`, id: toastId });
 					void navigate({ to: "/dashboard/resumes", search: { sort: "lastUpdatedAt", tags: [] } });
 				},
 				onError: (error) => {

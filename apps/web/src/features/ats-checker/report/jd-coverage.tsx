@@ -37,7 +37,7 @@ export function JdCoverage({ jd }: JdCoverageProps) {
 					</Trans>
 				</p>
 				<p className="text-muted-foreground text-xs leading-normal">
-					<Trans>Counted separately from the parse score. Coverage is not a prediction of anything.</Trans>
+					<Trans>Counted separately from the parse score. Coverage does not predict anything.</Trans>
 				</p>
 			</div>
 

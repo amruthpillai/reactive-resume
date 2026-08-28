@@ -67,7 +67,7 @@ export function AtsPdfReportView({ report, className }: ReportViewProps) {
 			<p className="text-muted-foreground text-xs leading-normal">
 				<Trans>
 					This measures how faithfully software can extract this file's text. It does not predict whether an application
-					will be rejected. No tool can. Your file was read in this browser and never uploaded.
+					will be rejected, and no tool can. Your file was read in this browser and never uploaded.
 				</Trans>
 			</p>
 		</div>

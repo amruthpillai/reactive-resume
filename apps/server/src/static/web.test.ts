@@ -66,7 +66,7 @@ describe("web app fallback classification", () => {
 					<title>Reactive Resume — A free and open-source resume builder</title>
 					<meta
 						name="description"
-						content="Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
+						content="Reactive Resume is a free and open-source resume builder that makes it easy to create, update, and share your resume."
 					>
 				</head>
 				<body><div id="app"></div></body>

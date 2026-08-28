@@ -82,7 +82,7 @@ function RouteComponent() {
 			<div className="grid h-svh place-items-center bg-background p-6 text-center">
 				<div className="space-y-4">
 					<p className="text-muted-foreground">
-						<Trans>This agent thread could not be opened.</Trans>
+						<Trans>We couldn't open this thread.</Trans>
 					</p>
 					<Button onClick={() => void navigate({ to: "/agent/new" })}>
 						<Trans>Start a new thread</Trans>

@@ -5,7 +5,7 @@ description: "Step-by-step guide to migrate a self-hosted Reactive Resume instan
 
 ## Overview
 
-This guide walks you through migrating your Reactive Resume installation from **v4 to v5**. The migration process involves setting up a new v5 instance alongside your existing v4 instance, then transferring your users and resumes to the new system.
+To move a Reactive Resume installation from **v4 to v5**, you set up a new v5 instance alongside your existing v4 instance, then transfer your users and resumes across.
 
 <Info>
   This page is for **v4 → v5 data migration** only. For normal v5 upgrades, use the [Self-Hosting with
@@ -13,8 +13,8 @@ This guide walks you through migrating your Reactive Resume installation from **
 </Info>
 
 <Warning>
-  **Keep your v4 instance running** until you have successfully migrated all data to v5 and verified everything works
-  correctly. This ensures you have a fallback in case anything goes wrong during the migration.
+  **Keep your v4 instance running** until you have migrated all data to v5 and checked that everything works. That way
+  you have a fallback if the migration goes wrong.
 </Warning>
 
 ## Prerequisites
@@ -24,16 +24,16 @@ Before starting the migration, ensure you have:
 <CardGroup cols={2}>
   <Card title="Running v4 Instance">Your existing Reactive Resume v4 instance should be running and accessible.</Card>
   <Card title="New v5 Instance">
-    A fresh Reactive Resume v5 instance set up and running. Follow the [Self-Hosting with Docker](/self-hosting/docker)
+    A fresh Reactive Resume v5 instance set up and running. Follow the [Self-hosting with Docker](/self-hosting/docker)
     guide if you haven't done this yet.
   </Card>
   <Card title="Database Access">
     Access to both your v4 PostgreSQL database (source) and v5 PostgreSQL database (target).
   </Card>
-  <Card title="Backup">A recent backup of your v4 database. Always backup before any migration.</Card>
+  <Card title="Backup">A recent backup of your v4 database. Always back up before any migration.</Card>
 </CardGroup>
 
-## Choosing a Migration Method
+## Choosing a migration method
 
 The best migration approach depends on the size of your instance:
 
@@ -48,7 +48,7 @@ The best migration approach depends on the size of your instance:
   </Card>
 </CardGroup>
 
-## Manual Migration (Small Instances)
+## Manual migration (small instances)
 
 If you have only a few resumes to migrate, the simplest approach is to use the **Import Dialog** feature in v5.
 
@@ -58,7 +58,7 @@ If you have only a few resumes to migrate, the simplest approach is to use the *
   </Step>
 
 <Step title="Import into v5">
-  In your new v5 instance: 1. Log in or create a new account 2. Click **Create Resume** or use the **Import** option 3.
+  In your new v5 instance: 1. Sign in or create a new account 2. Click **Create Resume** or use the **Import** option 3.
   Select the **Reactive Resume v4** format 4. Upload your exported JSON file The import process automatically converts
   the v4 format to v5.
 </Step>
@@ -73,7 +73,7 @@ If you have only a few resumes to migrate, the simplest approach is to use the *
   between v4 and v5.
 </Tip>
 
-## Automated Migration (Large Instances)
+## Automated migration (large instances)
 
 For instances with many users and resumes, use the migration scripts to automate the process. The migration happens in two phases: first users, then resumes.
 
@@ -105,7 +105,7 @@ To run the migration scripts, you need the following installed on your host mach
   v4 and v5 databases; keep your actual v5 deployment on the latest version.
 </Info>
 
-### Environment Setup
+### Environment setup
 
 Create a `.env` file in the root of the repository with the following variables:
 
@@ -124,7 +124,7 @@ PRODUCTION_DATABASE_URL="postgresql://user:password@localhost:5432/reactive_resu
 
 <Warning>`PRODUCTION_DATABASE_URL` is used only by these migration scripts. It is not a runtime app variable.</Warning>
 
-### Step 1: Migrate Users
+### Step 1: Migrate users
 
 The user migration script transfers all user accounts, authentication data, and two-factor settings from v4 to v5.
 
@@ -165,7 +165,7 @@ dotenvx run -- tsx scripts/migration/user.ts
 ✅ User migration complete!
 ```
 
-### Step 2: Migrate Resumes
+### Step 2: Migrate resumes
 
 After users are migrated, run the resume migration script. This script depends on the user ID mapping created in the previous step.
 
@@ -203,7 +203,7 @@ dotenvx run -- tsx scripts/migration/resume.ts
 ✅ Resume migration complete!
 ```
 
-### Progress and Recovery
+### Progress and recovery
 
 Both migration scripts support graceful shutdown and resume:
 
@@ -217,17 +217,17 @@ Both migration scripts support graceful shutdown and resume:
   running the scripts again.
 </Tip>
 
-## Post-Migration Steps
+## Post-migration steps
 
 After completing the migration:
 
 <Steps>
   <Step title="Verify data integrity">
-    Log into your v5 instance and spot-check several user accounts and resumes to ensure data transferred correctly.
+    Sign in to your v5 instance and spot-check several user accounts and resumes to ensure data transferred correctly.
   </Step>
 
 <Step title="Test functionality">
-  - Create a test resume and export it as PDF - Verify social logins work (if configured) - Check that two-factor
+  - Create a test resume and export it as PDF - Verify social sign-in works (if configured) - Check that two-factor
   authentication works for migrated users
 </Step>
 
@@ -240,7 +240,7 @@ After completing the migration:
   </Step>
 </Steps>
 
-## Important Notes
+## Important notes
 
 <AccordionGroup>
   <Accordion title="User passwords are preserved">

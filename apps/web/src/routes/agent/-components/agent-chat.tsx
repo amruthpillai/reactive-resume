@@ -398,18 +398,18 @@ function chunkPrompts(prompts: string[], columns: number) {
 
 function StarterPromptMarquee({ onSelect }: StarterPromptMarqueeProps) {
 	const prompts = [
-		t`Tailor this resume to a product manager job description and emphasize roadmap ownership, stakeholder communication, and measurable launch outcomes.`,
-		t`Compare this resume against this role URL and update keywords while keeping the voice concise and credible.`,
-		t`Find weak bullets and rewrite them with stronger outcomes, numbers, scope, and sharper verbs.`,
-		t`Rework the summary so it targets a senior engineering manager role without sounding generic.`,
-		t`Identify gaps for an applicant tracking system and apply only high-confidence keyword improvements.`,
-		t`Rewrite this resume for a startup founder-to-product-lead transition with clear business impact.`,
-		t`Make the experience section more results-oriented and remove vague responsibilities.`,
+		t`Tailor this resume to a product manager job description, and emphasize roadmap ownership, stakeholder communication, and measurable launch outcomes.`,
+		t`Compare this resume against this job posting URL and update the keywords without overselling anything.`,
+		t`Find the weak bullet points and rewrite them with stronger outcomes, numbers, scope, and sharper verbs.`,
+		t`Rewrite the summary for a senior engineering manager role, and keep it specific.`,
+		t`Check what an applicant tracking system would miss, and only add keywords you're sure about.`,
+		t`Rewrite this resume for a startup founder moving into a product lead role, and show the business impact.`,
+		t`Make the experience section about results and cut the vague responsibilities.`,
 		t`Adjust the resume for a remote-first role that values async communication and ownership.`,
-		t`Review the resume against a job description and ask me questions before changing uncertain sections.`,
+		t`Review the resume against a job description, and ask me before changing anything you're unsure about.`,
 		t`Tighten the skills section so it supports the target role instead of reading like a keyword dump.`,
-		t`Update project bullets to show leadership, constraints, tradeoffs, and measurable outcomes.`,
-		t`Prepare a conservative patch that improves clarity without changing my career narrative.`,
+		t`Update the project bullets to show leadership, constraints, tradeoffs, and measurable outcomes.`,
+		t`Prepare a conservative patch that improves clarity without changing the story of my career.`,
 	];
 
 	const promptRows = chunkPrompts(prompts, 3);
@@ -854,7 +854,7 @@ export function AgentChat({
 
 	const handleDelete = async () => {
 		const confirmation = await confirm(t`Delete this agent thread?`, {
-			description: t`This action cannot be undone. Conversation messages and uploaded attachments will be removed. The working resume remains in your dashboard and can be deleted separately.`,
+			description: t`This action cannot be undone. It deletes the thread's messages and uploaded attachments. The working resume stays in your dashboard, and you can delete it separately.`,
 		});
 
 		if (!confirmation) return;
@@ -1178,7 +1178,7 @@ function AgentChatReadOnlyBanner({ isReadOnly, readOnlyReason }: AgentChatReadOn
 	return (
 		<div className="border-amber-300 border-b bg-amber-50 px-4 py-2 text-amber-950 text-sm dark:bg-amber-950/20 dark:text-amber-200">
 			{readOnlyReason === "archived" ? (
-				<Trans>This thread is archived. New messages cannot be sent.</Trans>
+				<Trans>This thread is archived. You can't send new messages.</Trans>
 			) : (
 				<Trans>This thread is read-only because the working resume or AI provider is unavailable.</Trans>
 			)}

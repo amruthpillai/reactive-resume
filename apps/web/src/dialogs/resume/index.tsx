@@ -80,7 +80,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 			createResume(value, {
 				onSuccess: (id) => {
 					didCreateRef.current = true;
-					toast.add({ type: "success", description: t`Your resume has been created successfully.`, id: toastId });
+					toast.add({ type: "success", description: t`Your resume has been created.`, id: toastId });
 					closeDialog();
 					void navigate({ to: "/builder/$resumeId", params: { resumeId: id } });
 				},
@@ -117,7 +117,7 @@ export function CreateResumeDialog(_: DialogProps<"resume.create">) {
 		createResume(data, {
 			onSuccess: (id) => {
 				didCreateRef.current = true;
-				toast.add({ type: "success", description: t`Your resume has been created successfully.`, id: toastId });
+				toast.add({ type: "success", description: t`Your resume has been created.`, id: toastId });
 				closeDialog();
 				void navigate({ to: "/builder/$resumeId", params: { resumeId: id } });
 			},
@@ -215,7 +215,7 @@ export function UpdateResumeDialog({ data }: DialogProps<"resume.update">) {
 						});
 					}
 
-					toast.add({ type: "success", description: t`Your resume has been updated successfully.`, id: toastId });
+					toast.add({ type: "success", description: t`Your resume has been updated.`, id: toastId });
 					closeDialog();
 				},
 				onError: (error) => {
@@ -285,7 +285,7 @@ export function DuplicateResumeDialog({ data }: DialogProps<"resume.duplicate">)
 
 			duplicateResume(value, {
 				onSuccess: (id) => {
-					toast.add({ type: "success", description: t`Your resume has been duplicated successfully.`, id: toastId });
+					toast.add({ type: "success", description: t`Your resume has been duplicated.`, id: toastId });
 					closeDialog();
 
 					if (!data.shouldRedirect) return;
@@ -378,7 +378,7 @@ const ResumeForm = withForm({
 							</div>
 							<FormMessage errors={field.state.meta.errors} />
 							<FormDescription>
-								<Trans>Tip: You can name the resume referring to the position you are applying for.</Trans>
+								<Trans>Name the resume after the position you are applying for.</Trans>
 							</FormDescription>
 						</FormItem>
 					)}

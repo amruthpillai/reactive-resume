@@ -30,7 +30,7 @@ export function ApiKeysSettingsPage() {
 
 	const onDelete = async (id: string) => {
 		const confirmation = await confirm(t`Are you sure you want to delete this API key?`, {
-			description: t`The API key will no longer be able to access your data after deletion. This action cannot be undone.`,
+			description: t`Once deleted, the key can no longer access your data. This cannot be undone.`,
 			confirmText: t({
 				comment: "API key deletion confirmation dialog confirm action in settings",
 				message: "Delete",
@@ -62,7 +62,7 @@ export function ApiKeysSettingsPage() {
 			return;
 		}
 
-		toast.add({ type: "success", description: t`The API key has been deleted successfully.`, id: toastId });
+		toast.add({ type: "success", description: t`The API key has been deleted.`, id: toastId });
 		void queryClient.invalidateQueries({ queryKey: ["auth", "api-keys"] });
 	};
 
@@ -85,8 +85,8 @@ export function ApiKeysSettingsPage() {
 
 					<p className="text-muted-foreground leading-relaxed">
 						<Trans>
-							Explore the API documentation to learn how to integrate Reactive Resume with your applications. Find
-							detailed endpoints, request examples, and authentication methods.
+							The API documentation shows how to connect Reactive Resume to your own applications. It covers the
+							endpoints, the request format, and authentication.
 						</Trans>
 					</p>
 

@@ -1,6 +1,6 @@
 ---
-title: "Self-Hosting with Docker"
-description: "A comprehensive guide to self-host Reactive Resume with Docker (Postgres only), including a detailed environment variable reference and troubleshooting tips."
+title: "Self-hosting with Docker"
+description: "How to self-host Reactive Resume with Docker (Postgres only), with an environment variable reference and troubleshooting tips."
 ---
 
 <Info>
@@ -9,7 +9,7 @@ description: "A comprehensive guide to self-host Reactive Resume with Docker (Po
 
 ## Overview
 
-Reactive Resume can be self-hosted using Docker in a matter of minutes, and this guide will walk you through the process. Here are some of the services you'll need to get started:
+Reactive Resume can be self-hosted with Docker. These are the services you'll need:
 
 <CardGroup cols={2}>
   <Card title="PostgreSQL">Stores accounts, resumes, and application data.</Card>
@@ -315,8 +315,8 @@ openssl rand -hex 32
     - **`OAUTH_SCOPES`**: Space-separated scopes (defaults to `openid profile email`)
 
     Configure endpoints using **one** of these methods:
-    - **Option A — OIDC Discovery (preferred)**: Set `OAUTH_DISCOVERY_URL` to your provider's `.well-known/openid-configuration` URL
-    - **Option B — Manual URLs**: Set all three: `OAUTH_AUTHORIZATION_URL`, `OAUTH_TOKEN_URL`, and `OAUTH_USER_INFO_URL`
+    - **Option A (OIDC Discovery, preferred)**: Set `OAUTH_DISCOVERY_URL` to your provider's `.well-known/openid-configuration` URL
+    - **Option B (manual URLs)**: Set all three: `OAUTH_AUTHORIZATION_URL`, `OAUTH_TOKEN_URL`, and `OAUTH_USER_INFO_URL`
 
   </Accordion>
 
@@ -367,9 +367,9 @@ openssl rand -hex 32
 
 ## Updating your installation
 
-To update your Reactive Resume installation to the latest available version, follow these steps:
+To update your Reactive Resume installation to the latest version:
 
-1. **Back up your database and uploads first** (highly recommended before every update).
+1. **Back up your database and uploads first.** Do this before every update.
 
 2. **Pull the latest images** for all services defined in your Docker Compose file.
 
@@ -398,11 +398,11 @@ This process updates app services and automatically runs DB migrations on startu
 
 ## Backups (recommended)
 
-Regular backups are essential to protect your data. Reactive Resume stores data in two places: the PostgreSQL database and file uploads (either local storage or S3).
+Reactive Resume stores data in two places: the PostgreSQL database and file uploads (either local storage or S3). Back up both on a regular schedule.
 
 ### Database backups
 
-Your PostgreSQL database contains all user accounts, resumes, and application data. For self-hosted deployments, you can use `pg_dump` to create periodic backups of your database and store them in a secure location. Many hosting providers also offer automated backup solutions for managed PostgreSQL instances, which handle scheduling, retention, and restoration for you.
+Your PostgreSQL database holds all user accounts, resumes, and application data. Use `pg_dump` to take periodic backups and store them somewhere secure. Many providers of managed PostgreSQL also offer automated backups that handle scheduling, retention, and restores for you.
 
 ### Upload backups
 
@@ -410,7 +410,7 @@ If you're using local storage (the `./data` directory), include this directory i
 
 If you're using S3-compatible storage, consider enabling versioning on your bucket to protect against accidental deletions. Most S3 providers also support lifecycle rules for automatic cleanup of old versions and cross-region replication for disaster recovery.
 
-## Health Checks
+## Health checks
 
 Reactive Resume exposes a health check endpoint at `/api/health` that verifies the application and its dependencies. It checks **database** and **storage**; if either is unhealthy, the endpoint returns HTTP `503`.
 
@@ -444,7 +444,7 @@ This is particularly useful in high-availability setups where you have multiple 
 
 ### Manually checking health
 
-You can manually verify the health of your Reactive Resume instance:
+To check your instance yourself:
 
 ```bash
 # From outside the container
@@ -454,7 +454,7 @@ curl -f http://localhost:3000/api/health
 docker compose ps
 ```
 
-A healthy response returns HTTP 200. Any other response (or a connection failure) indicates a problem that should be investigated in the JSON response body and container logs.
+A healthy response returns HTTP 200. For anything else, including a connection failure, check the JSON response body and the container logs.
 
 ## Troubleshooting
 

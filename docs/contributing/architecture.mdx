@@ -1,6 +1,6 @@
 ---
-title: "Project Architecture"
-description: "Explore the Reactive Resume monorepo layout, runtime boundaries between the web and server apps, and the package ownership model."
+title: "Project architecture"
+description: "How the Reactive Resume monorepo is laid out, the runtime boundaries between the web and server apps, and the package ownership model."
 ---
 
 Reactive Resume is a pnpm/Turborepo monorepo. The product runs as one deployed Node.js process, while the source is split into a full-stack web app, a server adapter, and focused internal packages.
@@ -9,7 +9,7 @@ Internal packages are source-consumed through their `package.json` export maps. 
 
 ---
 
-## Runtime Shape
+## Runtime shape
 
 ```mermaid
 flowchart TD
@@ -39,7 +39,7 @@ flowchart TD
 
 ---
 
-## Workspace Map
+## Workspace map
 
 | Workspace | Ownership |
 | --- | --- |
@@ -65,7 +65,7 @@ flowchart TD
 
 ---
 
-## Boundary Rules
+## Boundary rules
 
 - Use `@reactive-resume/*` package exports for cross-workspace imports.
 - Do not import another workspace through `apps/**`, `packages/**`, `@reactive-resume/*/src/**`, or a TypeScript path alias to another workspace's `src`.
@@ -83,7 +83,7 @@ pnpm exec biome check biome.json turbo.json tooling/grit/no-cross-workspace-src-
 
 ---
 
-## Feature Placement
+## Feature placement
 
 When adding code, choose the owner by behavior:
 
@@ -102,7 +102,7 @@ When adding code, choose the owner by behavior:
 
 ---
 
-## Web Layout
+## Web layout
 
 `apps/web/src/routes` stays route-owned. Route files handle URL shape, loaders, redirects, metadata, and SSR flags.
 
@@ -114,7 +114,7 @@ Dialog runtime state is centralized in `apps/web/src/dialogs/store.ts`, while di
 
 ---
 
-## API Layout
+## API layout
 
 `packages/api/src/routers/index.ts` exports the top-level oRPC contract. Feature modules under `packages/api/src/features/*` own their procedure modules, services, helpers, tests, and public package exports.
 
@@ -122,7 +122,7 @@ Avoid reintroducing technical-layer folders such as `services/` or `helpers/` at
 
 ---
 
-## PDF And Export Boundaries
+## PDF and export boundaries
 
 `packages/pdf` owns React PDF generation:
 
@@ -136,7 +136,7 @@ DOCX export generation lives in `packages/docx`.
 
 ---
 
-## MCP Boundary
+## MCP boundary
 
 MCP implementation lives in `packages/mcp`. It exposes canonical unprefixed tool names such as `list_resumes`, `read_resume`, and `apply_resume_patch`.
 

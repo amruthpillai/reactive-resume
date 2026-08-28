@@ -1,9 +1,9 @@
 ---
-title: "Using the MCP Server"
+title: "Using the MCP server"
 description: "Connect Reactive Resume to AI tools like Claude Desktop, Cursor, and Codex through the Model Context Protocol to edit and manage resumes via chat."
 ---
 
-The Reactive Resume MCP server lets you manage and modify your resumes and job applications through any MCP-compatible AI tool - Claude Desktop, Cursor, Codex, and more. It connects to the Reactive Resume API and exposes tools for resume editing, Application Tracker workflows, and AI-assisted job application tasks using natural language.
+The Reactive Resume MCP server lets you manage your resumes and job applications from any MCP-compatible AI tool: Claude Desktop, Cursor, Codex, and others. It connects to the Reactive Resume API and exposes tools for resume editing, Application Tracker workflows, and AI-assisted job application tasks, driven by natural language.
 
 ## What is MCP?
 
@@ -23,7 +23,7 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is a standar
   </Step>
 
   <Step title="If using API key, create one">
-    Head over to [https://rxresu.me](https://rxresu.me) (or your self-hosted instance), sign in, and navigate to **Settings → API Keys**. Click **Create a new API key**, give it a name, and copy the secret — it's only shown once.
+    Head over to [https://rxresu.me](https://rxresu.me) (or your self-hosted instance), sign in, and navigate to **Settings → API Keys**. Click **Create a new API key**, give it a name, and copy the secret. It is shown only once.
 
     For the full walkthrough, see [Using the API](/guides/using-the-api).
 
@@ -99,7 +99,7 @@ If your client only supports `command` / `args` (for example, local-only Claude 
 | Codex             | `~/.codex/config.toml` or `.codex/config.toml` ([docs](https://developers.openai.com/codex/mcp)) |
 | Other MCP clients | Refer to the client's documentation                                                              |
 
-## Authentication Details (How Reactive Resume MCP Works)
+## Authentication details (how Reactive Resume MCP works)
 
 Reactive Resume MCP accepts authentication in this order:
 
@@ -110,7 +110,7 @@ If neither is valid, the MCP endpoint responds with `401` and advertises OAuth m
 
 - `WWW-Authenticate: Bearer resource_metadata="<instance>/.well-known/oauth-protected-resource"`
 
-This lets OAuth-capable MCP clients discover and complete the OAuth flow automatically.
+OAuth-capable MCP clients use this to discover and complete the OAuth flow automatically.
 
 ### OAuth2 flow used by this server
 
@@ -123,7 +123,7 @@ Reactive Resume is configured as an OAuth authorization server for MCP clients:
 - If the user is signed in, `/auth/oauth` validates `client_id` and `redirect_uri`, issues an authorization code, and redirects back to the client.
 - PKCE parameters (`code_challenge`, `code_challenge_method`) are preserved in the authorization flow.
 
-## Popular Client Setup
+## Popular client setup
 
 ### Cursor
 
@@ -162,7 +162,7 @@ Add server:
 codex mcp add reactive-resume --url https://rxresu.me/mcp
 ```
 
-Then log in with OAuth:
+Then sign in with OAuth:
 
 ```bash
 codex mcp login reactive-resume
@@ -184,7 +184,7 @@ Add `https://rxresu.me/mcp` as a custom remote MCP connector, then connect with 
 
 Use `mcp-remote` bridge with API key (example shown above in **Method 2**).
 
-## External References
+## External references
 
 - [Cursor MCP docs](https://cursor.sh/docs/mcp)
 - [MCP quickstart for users (Claude Desktop example)](https://modelcontextprotocol.io/quickstart/user)
@@ -192,7 +192,7 @@ Use `mcp-remote` bridge with API key (example shown above in **Method 2**).
 - [Claude custom connectors (remote MCP)](https://claude.com/docs/connectors/custom/remote-mcp)
 - [MCP Authorization spec](https://modelcontextprotocol.io/specification/latest/basic/authorization)
 
-## Self-Hosting
+## Self-hosting
 
 If you're running a self-hosted Reactive Resume instance, replace `https://rxresu.me/mcp` with your instance URL:
 
@@ -205,7 +205,7 @@ If you're running a self-hosted Reactive Resume instance, replace `https://rxres
 }
 ```
 
-## Available Tools
+## Available tools
 
 Tool names use canonical unprefixed `snake_case` names.
 
@@ -246,20 +246,20 @@ Tool names use canonical unprefixed `snake_case` names.
 
 Older clients may refer to prefixed or dot-separated names. Those names are no longer registered; update automations and saved prompts to the canonical names above.
 
-## Available Resources
+## Available resources
 
 Resources follow MCP conventions: **static** items appear in `resources/list`; **parameterized** access is declared in `resources/templates/list` and read via `resources/read` once you know the ID.
 
 | Discovery                             | What you get                                                                                  |
 | ------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `resources/list`                      | Static resources only — currently **`resume://_meta/schema`** (ResumeData JSON Schema)        |
-| `resources/templates/list` | **`resume://{id}`** — template for reading full resume JSON by ID (not enumerated per resume) |
-| `list_resumes` (tool)      | **Primary way to discover resume IDs** — resumes are not listed as separate MCP resources     |
+| `resources/list`                      | Static resources only: currently **`resume://_meta/schema`** (ResumeData JSON Schema)        |
+| `resources/templates/list` | **`resume://{id}`**: template for reading full resume JSON by ID (not enumerated per resume) |
+| `list_resumes` (tool)      | **Primary way to discover resume IDs**; resumes are not listed as separate MCP resources     |
 
 | URI                     | Description                                                              |
 | ----------------------- | ------------------------------------------------------------------------ |
-| `resume://_meta/schema` | ResumeData JSON Schema — use for valid JSON Patch paths and value types  |
-| `resume://{id}`         | Full resume data as JSON — use an ID from `list_resumes`                 |
+| `resume://_meta/schema` | ResumeData JSON Schema; use for valid JSON Patch paths and value types  |
+| `resume://{id}`         | Full resume data as JSON; use an ID from `list_resumes`                 |
 
 ### Breaking change (schema URI)
 
@@ -267,21 +267,21 @@ The schema resource was previously `resume://schema`. It is now **`resume://_met
 
 ### Static server card (`/.well-known/mcp/server-card.json`)
 
-`GET /.well-known/mcp/server-card.json` returns a JSON document ([SEP-1649](https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1649)) with `serverInfo`, optional authentication metadata, and summaries of tools, resources, resource templates, and prompts. It is generated to match the live MCP server and can be used for discovery when a client cannot run a full capability scan against `/mcp/`.
+`GET /.well-known/mcp/server-card.json` returns a JSON document ([SEP-1649](https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1649)) with `serverInfo`, optional authentication metadata, and summaries of tools, resources, resource templates, and prompts. It is generated to match the live MCP server, and a client that cannot run a full capability scan against `/mcp/` can use it for discovery.
 
-## Available Prompts
+## Available prompts
 
-Prompts are pre-built workflows that provide the AI with structured instructions and context. Each prompt embeds the resume data and the schema resource (`resume://_meta/schema`) automatically.
+Prompts are pre-built workflows that give the AI structured instructions and context. Each prompt embeds the resume data and the schema resource (`resume://_meta/schema`) automatically.
 
 | Prompt           | Description                                                                                                                                                  |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `build_resume`   | Guide you step-by-step through building a resume from scratch — basics, summary, experience, education, skills, and design                                   |
+| `build_resume`   | Guide you step-by-step through building a resume from scratch: basics, summary, experience, education, skills, and design                                   |
 | `improve_resume` | Review your resume and suggest concrete improvements to wording, impact, metrics, and structure                                                              |
-| `review_resume`  | Get a structured, professional critique with a scorecard (1–10 across seven dimensions) and prioritized recommendations. **Read-only** — no changes are made |
+| `review_resume`  | Get a structured, professional critique with a scorecard (1–10 across seven dimensions) and prioritized recommendations. **Read-only**; no changes are made |
 
-## Usage Examples
+## Usage examples
 
-Once your MCP client is connected, you can use natural language to interact with your resumes:
+Once your MCP client is connected, you can work with your resumes in natural language:
 
 ### Browsing
 
@@ -290,7 +290,7 @@ Once your MCP client is connected, you can use natural language to interact with
 - "What skills are listed on my resume?"
 - "Show me the stats for my resume"
 
-### Tracking Applications
+### Tracking applications
 
 - "Create an application for Senior Frontend Engineer at Acme, stage saved, source LinkedIn."
 - "List my archived applications tagged remote."
@@ -302,7 +302,7 @@ Once your MCP client is connected, you can use natural language to interact with
 
 For a complete workflow and prompt library, see [Managing applications with MCP](/guides/managing-applications-with-mcp).
 
-### Creating & Managing
+### Creating and managing
 
 - "Create a new resume called 'Frontend Engineer 2026'"
 - "Import this exported ResumeData JSON as a new resume"
@@ -328,16 +328,15 @@ For a complete workflow and prompt library, see [Managing applications with MCP]
 - "Set the primary color to blue"
 - "Hide the interests section"
 
-### Using Prompts
+### Using prompts
 
 - "Help me build my resume from scratch" (uses `build_resume`)
 - "Review my resume and give me a score" (uses `review_resume`)
 - "Improve the wording on my resume" (uses `improve_resume`)
 
 <Tip>
-  The AI will use `read_resume` to inspect your current resume before making changes with `apply_resume_patch`. This
-  ensures the correct JSON paths are used. Use `update_resume` for name, slug, tags, and public visibility (not for
-  section content).
+  The AI reads your current resume with `read_resume` before making changes with `apply_resume_patch`, so it targets the
+  correct JSON paths. Use `update_resume` for name, slug, tags, and public visibility, not for section content.
 </Tip>
 
 ## Troubleshooting
@@ -350,5 +349,5 @@ For a complete workflow and prompt library, see [Managing applications with MCP]
 | "API error (404)"                                             | The resume ID doesn't exist. Use `list_resumes` to find valid IDs                                                             |
 | "API error (403)"                                             | The resume is locked. Unlock it in the Reactive Resume dashboard                                                               |
 | Connection refused                                            | Check that the URL is correct and the instance is running                                                                      |
-| "ReferenceError: File is not defined" when using `mcp-remote` | You're running Node.js 18. `mcp-remote` requires **Node.js 20 or later** — upgrade with `nvm use 20` or `nvm alias default 20` |
+| "ReferenceError: File is not defined" when using `mcp-remote` | You're running Node.js 18. `mcp-remote` requires **Node.js 20 or later**; upgrade with `nvm use 20` or `nvm alias default 20` |
 | "Application documents must be PDF files"                     | `attach_application_document` only accepts `contentType: "application/pdf"` and base64-encoded PDF bytes                       |

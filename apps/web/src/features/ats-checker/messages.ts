@@ -257,7 +257,7 @@ export function getPdfFindingMessage(code: PdfRuleCode): PdfFindingMessage {
 			}))
 			.with("MULTIPLE_EMAILS", () => ({
 				title: t`More than one email address appears.`,
-				action: t`Keep a single address, so nothing has to guess which one to use.`,
+				action: t`Keep a single address, so software does not have to guess which one to use.`,
 			}))
 			.with("NO_PROFESSIONAL_LINK", () => ({
 				title: t`There is no link to a profile, portfolio or repository.`,

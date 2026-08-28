@@ -349,7 +349,7 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 								onChange={(value) => set("resumeFile", value)}
 							/>
 							<p className="text-[11px] text-muted-foreground">
-								<Trans>Linking a Reactive Resume enables AI match scoring and tailoring.</Trans>
+								<Trans>Link a Reactive Resume to use AI match scoring and tailoring.</Trans>
 							</p>
 						</div>
 					</Field>

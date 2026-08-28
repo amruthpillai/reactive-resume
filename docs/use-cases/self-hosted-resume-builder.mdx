@@ -1,13 +1,13 @@
 ---
-title: "Self-Hosted Resume Builder"
+title: "Self-hosted resume builder"
 description: "Run Reactive Resume as a self-hosted resume builder with Docker Compose, PostgreSQL, optional object storage, Single Sign-On, and v4 to v5 migration."
 ---
 
-Reactive Resume can be run as a self-hosted resume builder when you want to operate the app on your own infrastructure instead of using the hosted instance.
+You can run Reactive Resume on your own infrastructure instead of using the hosted instance.
 
 ## When self-hosting is a good fit
 
-Self-hosting is useful when you need control over deployment, domain, database, storage, email delivery, authentication providers, and operational policies. The Docker guide is the main setup path for most deployments.
+Self-hosting helps when you need control over the deployment, domain, database, storage, email delivery, authentication providers, and operational policy. The Docker guide is the main setup path for most deployments.
 
 Start here:
 
@@ -26,13 +26,13 @@ A typical self-hosted deployment uses:
 - Optional S3-compatible storage for uploads.
 - Optional SSO or custom OAuth configuration.
 
-The Docker guide includes the environment variable reference and a Compose example.
+The Docker guide has the environment variable reference and a Compose example.
 
 ## Feature considerations
 
-Some features require extra configuration. For example, saved AI providers need server-side encryption configuration, and the AI Agent workspace uses Redis. Self-hosted deployments can also expose API and MCP endpoints from their own domain.
+Some features need extra configuration. Saved AI providers need server-side encryption configured, and the AI Agent workspace uses Redis. Self-hosted deployments can also expose API and MCP endpoints from their own domain.
 
-For automation setup on self-hosted instances, see [Using the API](/guides/using-the-api) and [Using the MCP Server](/guides/using-the-mcp-server).
+For automation setup on a self-hosted instance, see [Using the API](/guides/using-the-api) and [Using the MCP server](/guides/using-the-mcp-server).
 
 <Tip>
   Replace hosted URLs such as <code>https://rxresu.me</code> with your own instance URL when following API, MCP, or

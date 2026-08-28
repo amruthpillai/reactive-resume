@@ -33,7 +33,7 @@ export function SharingSectionBuilder() {
 
 	const onCopyUrl = useCallback(async () => {
 		await copyToClipboard(publicUrl);
-		toast.add({ type: "success", description: t`A link to your resume has been copied to clipboard.` });
+		toast.add({ type: "success", description: t`Resume link copied to clipboard.` });
 	}, [publicUrl, copyToClipboard]);
 
 	const onTogglePublic = useCallback(
@@ -52,8 +52,8 @@ export function SharingSectionBuilder() {
 	);
 
 	const onSetPassword = useCallback(async () => {
-		const value = await prompt(t`Protect your resume from unauthorized access with a password`, {
-			description: t`Anyone visiting the resume's public URL must enter this password to access it.`,
+		const value = await prompt(t`Protect your resume with a password`, {
+			description: t`Anyone who opens the public URL will need this password.`,
 			confirmText: t`Set Password`,
 			inputProps: {
 				type: "password",
@@ -84,7 +84,7 @@ export function SharingSectionBuilder() {
 		if (!resume.hasPassword) return;
 
 		const confirmation = await confirm(t`Are you sure you want to remove password protection?`, {
-			description: t`Anyone who has the resume's public URL will be able to view and download your resume without entering a password.`,
+			description: t`Anyone with the public URL will be able to view and download your resume without a password.`,
 			confirmText: t`Confirm`,
 			cancelText: t`Cancel`,
 		});
@@ -145,13 +145,10 @@ export function SharingSectionBuilder() {
 					<p className="text-muted-foreground">
 						{isPasswordProtected ? (
 							<Trans>
-								Your resume's public link is currently protected by a password. Share the password only with people you
-								trust.
+								Your resume's public URL is protected by a password. Share the password only with people you trust.
 							</Trans>
 						) : (
-							<Trans>
-								Optionally, set a password so that only people with the password can view your resume through the link.
-							</Trans>
+							<Trans>Set a password if you want only people who know it to open the public URL.</Trans>
 						)}
 					</p>
 

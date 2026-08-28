@@ -5,7 +5,7 @@
 
   <h1>Reactive Resume</h1>
 
-  <p>Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.</p>
+  <p>Reactive Resume is a free and open-source resume builder that makes it easy to create, update, and share your resume.</p>
 
   <p>
     <a href="https://rxresu.me"><strong>Get Started</strong></a>
@@ -27,13 +27,13 @@
 
 ---
 
-Reactive Resume makes building resumes straightforward. Pick a template, fill in your details, and export to PDF—no account required for basic use. For those who want more control, the entire application can be self-hosted on your own infrastructure.
+Pick a template, fill in your details, and export to PDF. Basic use needs no account. If you want more control, you can run the whole application on your own infrastructure.
 
-Built with privacy as a core principle, Reactive Resume gives you complete ownership of your data. The codebase is fully open-source under the MIT license, with no tracking, no ads, and no hidden costs.
+You own your data. The codebase is open source under the MIT license, with no tracking, no ads, and no hidden costs.
 
 ## Sponsors
 
-Reactive Resume stays free, open-source, and independent because companies choose to support the work behind it. Thank you to every sponsor who helps fund hosting, maintenance, and continued development for the community.
+Sponsors pay for hosting, maintenance, and ongoing development, which is what keeps Reactive Resume free and independent. Thank you to everyone who chips in.
 
 <p>
   <a href="https://www.atlascloud.ai/?utm_source=github&utm_medium=link&utm_campaign=reactive-resume">
@@ -49,16 +49,16 @@ If your company would like to sponsor Reactive Resume, email [hello@amruthpillai
 
 **Resume Building**
 
-- Real-time preview as you type
+- Live preview as you type
 - Multiple export formats (PDF, JSON, DOCX)
 - Drag-and-drop section ordering
 - Custom sections for any content type
-- Rich text editor with formatting support
+- Rich text editor
 
 **Templates**
 
-- Professionally designed templates
-- A4 and Letter size support
+- 15 templates to choose from
+- A4 and Letter page sizes
 - Customizable colors, fonts, and spacing
 - Structured Style Rules for section and text styling
 
@@ -75,7 +75,7 @@ If your company would like to sponsor Reactive Resume, email [hello@amruthpillai
 - Multi-language support
 - Share resumes via unique links
 - Import from JSON Resume format
-- Dark mode support
+- Dark mode
 - Passkey and two-factor authentication
 
 ## Templates
@@ -187,14 +187,14 @@ For detailed setup instructions, environment configuration, and self-hosting gui
 
 ## Documentation
 
-Comprehensive guides are available at [docs.rxresu.me](https://docs.rxresu.me):
+The full documentation lives at [docs.rxresu.me](https://docs.rxresu.me):
 
 | Guide                                                                        | Description                      |
 | ---------------------------------------------------------------------------- | -------------------------------- |
 | [Getting Started](https://docs.rxresu.me/getting-started)                    | First-time setup and basic usage |
 | [Self-Hosting](https://docs.rxresu.me/self-hosting/docker)                   | Deploy on your own server        |
-| [Development Setup](https://docs.rxresu.me/contributing/development)         | Local development environment    |
-| [Project Architecture](https://docs.rxresu.me/contributing/architecture)     | Codebase structure and patterns  |
+| [Development setup](https://docs.rxresu.me/contributing/development)         | Local development environment    |
+| [Project architecture](https://docs.rxresu.me/contributing/architecture)     | Codebase structure and patterns  |
 | [Exporting Your Resume](https://docs.rxresu.me/guides/exporting-your-resume) | PDF and JSON export options      |
 
 ## Self-Hosting
@@ -204,7 +204,7 @@ Reactive Resume can be self-hosted using Docker. The stack includes:
 - **PostgreSQL** — Database for storing user data and resumes
 - **SeaweedFS** (optional) — S3-compatible storage for file uploads
 
-> **From v5.1.0 onwards** — PDF generation now runs entirely client-side via `@react-pdf/renderer`. New deployments no longer require Browserless, Chromium, or any external print service as a dependency. The `PRINTER_*` and `BROWSERLESS_*` environment variables are no longer read and can be removed from your `.env`.
+> **From v5.1.0 onwards** — PDF generation runs entirely client-side via `@react-pdf/renderer`. New deployments no longer need Browserless, Chromium, or any external print service. The `PRINTER_*` and `BROWSERLESS_*` environment variables are no longer read and can be removed from your `.env`.
 
 Pull the latest image from Docker Hub or GitHub Container Registry:
 
@@ -220,7 +220,7 @@ See the [self-hosting guide](https://docs.rxresu.me/self-hosting/docker) for com
 
 ## Support
 
-Reactive Resume is and always will be free and open-source. If it has helped you land a job or saved you time, please consider supporting continued development:
+Reactive Resume is and always will be free and open source. If it has helped you land a job or saved you time, please consider supporting continued development:
 
 <p>
   <a href="https://github.com/sponsors/AmruthPillai">
@@ -251,7 +251,7 @@ Other ways to support:
 
 ## Contributing
 
-Contributions make open-source thrive. Whether fixing a typo or adding a feature, all contributions are welcome.
+Every contribution helps, whether it is a typo fix or a new feature.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -259,7 +259,7 @@ Contributions make open-source thrive. Whether fixing a typo or adding a feature
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-See the [development setup guide](https://docs.rxresu.me/contributing/development) for detailed instructions on how to set up the project locally.
+See the [development setup guide](https://docs.rxresu.me/contributing/development) for how to run the project locally.
 
 Maintainers review the [`status: needs triage` queue](https://github.com/amruthpillai/reactive-resume/issues?q=is%3Aissue+is%3Aopen+label%3A%22status%3A+needs+triage%22)
 weekly. Triaged bugs become `status: confirmed`; feature proposals become `status: accepted`; reports that need details become

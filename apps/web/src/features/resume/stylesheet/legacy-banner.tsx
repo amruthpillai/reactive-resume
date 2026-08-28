@@ -17,7 +17,7 @@ export function LegacyStylesheetBanner({ disabled, onActivate }: LegacyStyleshee
 			</AlertTitle>
 			<AlertDescription className="space-y-3">
 				<p>
-					<Trans>Your legacy styles remain active until you explicitly activate this Semantic CSS draft.</Trans>
+					<Trans>Your legacy styles stay active until you activate this Semantic CSS draft.</Trans>
 				</p>
 				<Button type="button" size="sm" disabled={disabled} onClick={onActivate}>
 					<Trans>Activate Semantic CSS</Trans>
