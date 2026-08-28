@@ -185,7 +185,7 @@ export function VerifyEmailChange({ url, previousEmail, newEmail }: VerifyEmailC
 			details="The change takes effect once you confirm it here."
 			actionLabel="Verify New Email"
 			actionUrl={url}
-			outro="If you did not request this change, ignore this email and your address stays as it is."
+			outro="If you did not request this change, ignore this email. The address on the account will not change unless it is confirmed here."
 		/>
 	);
 }
