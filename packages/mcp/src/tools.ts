@@ -5,6 +5,7 @@ import type { resumePatchOperationsSchema } from "@reactive-resume/ai/tools/resu
 import type router from "@reactive-resume/api/routers";
 import type z from "zod";
 import { Buffer } from "node:buffer";
+import { ORPCError } from "@orpc/server";
 import { resolveUserFromRequestHeaders } from "@reactive-resume/api/context";
 import { createResumePdfDownloadUrl } from "@reactive-resume/api/features/resume/export";
 import { env } from "@reactive-resume/env/server";
@@ -21,17 +22,29 @@ function errorMessage(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
 }
 
+/**
+ * Maps a failed router call to an actionable next step for the model.
+ *
+ * Matches on the error's `code` and `status` rather than its message: procedures
+ * throw `new ORPCError("RESUME_LOCKED")` and friends without a message, so the
+ * message is the code itself (`"RESUME_LOCKED"`) or oRPC's own default
+ * (`"Not Found"` for `NOT_FOUND`), and HTTP status never appears in it at all.
+ */
 function errorHint(error: unknown): string {
-	const msg = errorMessage(error);
+	if (!(error instanceof ORPCError)) return "";
+
 	const { unlockResume, listResumes, getResume } = MCP_TOOL_NAME;
-	if (msg.includes("slug already exists")) return "\n\nHint: The slug is already in use. Try a different one.";
-	if (msg.includes("locked")) return `\n\nHint: This resume is locked. Use \`${unlockResume}\` first.`;
-	if (msg.includes("404") || msg.includes("not found"))
+	const { code, status } = error;
+
+	// Check codes before statuses: RESUME_SLUG_ALREADY_EXISTS is thrown with status 400.
+	if (code === "RESUME_SLUG_ALREADY_EXISTS") return "\n\nHint: The slug is already in use. Try a different one.";
+	if (code === "RESUME_LOCKED") return `\n\nHint: This resume is locked. Use \`${unlockResume}\` first.`;
+	if (code === "NOT_FOUND" || status === 404)
 		return `\n\nHint: Resume not found. Use \`${listResumes}\` to find valid IDs.`;
-	if (msg.includes("400"))
-		return `\n\nHint: Invalid request. Check the input parameters or use \`${getResume}\` to inspect the resume structure.`;
-	if (msg.includes("403"))
+	if (code === "FORBIDDEN" || status === 403)
 		return `\n\nHint: Permission denied. The resume may be locked; use \`${unlockResume}\` first.`;
+	if (status === 400)
+		return `\n\nHint: Invalid request. Check the input parameters or use \`${getResume}\` to inspect the resume structure.`;
 	return "";
 }
 

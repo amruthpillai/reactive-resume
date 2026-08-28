@@ -1,5 +1,7 @@
 // biome-ignore-all lint/style/noNonNullAssertion: These tests assert registered tool names before exercising handlers.
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ORPCError } from "@orpc/server";
 
 const mocks = vi.hoisted(() => ({
 	resolveUserFromRequestHeaders: vi.fn(),
@@ -350,5 +352,39 @@ describe("registerTools", () => {
 
 		expect(result.isError).toBe(true);
 		expect(clientMock.applications.attachDocument).not.toHaveBeenCalled();
+	});
+
+	describe("error hints", () => {
+		const readResume = (error: unknown) => {
+			clientMock.resume.getById.mockRejectedValueOnce(error);
+
+			const { server, registered } = makeFakeServer();
+			registerTools(server as never, clientMock as never, new Headers());
+
+			const tool = registered.find((item) => item.name === MCP_TOOL_NAME.getResume)!;
+			return tool.handler({ id: "resume-1" });
+		};
+
+		// Procedures throw these without a message, so the message is the code itself
+		// (or oRPC's default, "Not Found") and the status never appears in it.
+		it.each([
+			["RESUME_LOCKED", undefined, `Use \`${MCP_TOOL_NAME.unlockResume}\` first.`],
+			["NOT_FOUND", undefined, `Use \`${MCP_TOOL_NAME.listResumes}\` to find valid IDs.`],
+			["RESUME_SLUG_ALREADY_EXISTS", 400, "The slug is already in use."],
+			["FORBIDDEN", undefined, "Permission denied."],
+			["BAD_REQUEST", undefined, `use \`${MCP_TOOL_NAME.getResume}\` to inspect the resume structure.`],
+		])("hints on %s", async (code, status, expected) => {
+			const result = await readResume(new ORPCError(code, status ? { status } : undefined));
+
+			expect(result.isError).toBe(true);
+			expect(result.content[0]!.text).toContain(expected);
+		});
+
+		it("adds no hint for an unrecognized failure", async () => {
+			const result = await readResume(new Error("socket hang up"));
+
+			expect(result.isError).toBe(true);
+			expect(result.content[0]!.text).toBe("Error getting resume: socket hang up");
+		});
 	});
 });
