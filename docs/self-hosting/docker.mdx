@@ -454,7 +454,7 @@ curl -f http://localhost:3000/api/health
 docker compose ps
 ```
 
-A healthy response returns HTTP 200. For anything else, including a connection failure, check the JSON response body and the container logs.
+A healthy response returns HTTP 200. If you get a different status code, the JSON response body says what failed. If the connection is refused or times out there is no response to read, so check the container and reverse-proxy logs instead.
 
 ## Troubleshooting
 

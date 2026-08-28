@@ -22,7 +22,7 @@ They go further than the basic setup in the [Self-hosting with Docker](/self-hos
 
 ## Docker with Traefik
 
-This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik. Postgres stays on an internal network.
+This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Postgres stays on an internal network. The Traefik dashboard is also routed, at `traefik.${DOMAIN}` behind basic auth — drop those labels if you do not want it reachable.
 
 <Tip>
   Traefik discovers services through Docker labels and handles SSL certificates, so it needs very little configuration.
@@ -267,11 +267,11 @@ http {
 
 ## Docker Swarm
 
-This example is a Docker Swarm deployment with multiple replicas, health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
+This example is a Docker Swarm deployment with health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
 
 <Tip>
-  Docker Swarm suits multi-node deployments that need high availability and simple scaling. The app service here uses 2
-  replicas and a rolling update strategy.
+  Docker Swarm suits multi-node deployments that need high availability and simple scaling. Every service here starts
+  at one replica; raise `deploy.replicas` on `reactive_resume` once you have more than one node.
 </Tip>
 
 ```yaml compose-swarm.yml lines expandable
