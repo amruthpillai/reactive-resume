@@ -1,6 +1,6 @@
 import type { ApplicationStatus, Contact } from "@reactive-resume/schema/applications/data";
 import type { Application } from "./types";
-import { applicationStatusSchema, STAGES } from "@reactive-resume/schema/applications/data";
+import { applicationStatusSchema, contactSchema, STAGES } from "@reactive-resume/schema/applications/data";
 
 // Minimal RFC-4180-ish CSV parser: handles quoted fields, escaped quotes (""), commas and
 // newlines inside quotes, and \r\n. Enough for spreadsheet exports; not a full streaming parser.
@@ -190,15 +190,18 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 
 		const { contactName, contactRole, contactType, contactEmail, contactPhone, ...application } = record;
 		if (contactName) {
-			application.contacts = [
-				{
-					name: contactName,
-					role: contactRole ?? "",
-					type: contactType ?? "",
-					email: contactEmail ?? "",
-					phone: contactPhone ?? "",
-				},
-			];
+			const contact = contactSchema.safeParse({
+				name: contactName,
+				role: contactRole ?? "",
+				type: contactType ?? "",
+				email: contactEmail ?? "",
+				phone: contactPhone ?? "",
+			});
+			if (!contact.success) {
+				skipped++;
+				continue;
+			}
+			application.contacts = [contact.data];
 		}
 		rows.push(application as ParsedApplication);
 	}

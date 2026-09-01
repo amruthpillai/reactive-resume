@@ -55,6 +55,8 @@ const currentStageAnchorId = (activity: ApplicationTimelineEntry[], status: Appl
 const latestStageDate = (activity: ApplicationTimelineEntry[], status: ApplicationStatus) =>
 	[...activity].sort(byNewest).find((entry) => entry.type === "stage" && entry.stage === status)?.at;
 
+const INITIAL_CONTACT_DRAFT = { name: "", role: "", type: "", email: "", phone: "" };
+
 type Props = {
 	application: Application | null;
 	onOpenChange: (open: boolean) => void;
@@ -553,10 +555,10 @@ type ContactsEditorProps = {
 
 function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 	const [adding, setAdding] = useState(false);
-	const [draft, setDraft] = useState({ name: "", role: "", type: "", email: "", phone: "" });
+	const [draft, setDraft] = useState(INITIAL_CONTACT_DRAFT);
 
 	const reset = () => {
-		setDraft({ name: "", role: "", type: "", email: "", phone: "" });
+		setDraft(INITIAL_CONTACT_DRAFT);
 		setAdding(false);
 	};
 
@@ -578,6 +580,10 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 
 	const removeAt = (index: number) => onChange(contacts.filter((_, i) => i !== index));
 
+	const submitOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === "Enter") add();
+	};
+
 	return (
 		<div className="flex flex-col gap-2">
 			{contacts.map((contact, i) => (
@@ -589,12 +595,18 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 						<div className="truncate font-medium">{contact.name}</div>
 						{contact.role && <div className="truncate text-muted-foreground text-xs">{contact.role}</div>}
 						{contact.email && (
-							<a href={`mailto:${contact.email}`} className="block truncate text-primary text-xs hover:underline">
+							<a
+								href={`mailto:${encodeURIComponent(contact.email)}`}
+								className="block truncate text-primary text-xs hover:underline"
+							>
 								{contact.email}
 							</a>
 						)}
 						{contact.phone && (
-							<a href={`tel:${contact.phone}`} className="block truncate text-primary text-xs hover:underline">
+							<a
+								href={`tel:${encodeURIComponent(contact.phone)}`}
+								className="block truncate text-primary text-xs hover:underline"
+							>
 								{contact.phone}
 							</a>
 						)}
@@ -621,21 +633,21 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 						placeholder={t`Name`}
 						autoFocus
 						onChange={(event) => setDraft((d) => ({ ...d, name: event.target.value }))}
-						onKeyDown={(event) => {
-							if (event.key === "Enter") add();
-						}}
+						onKeyDown={submitOnEnter}
 					/>
 					<div className="grid grid-cols-2 gap-2">
 						<Input
 							value={draft.role}
 							placeholder={t`Role (optional)`}
 							onChange={(event) => setDraft((d) => ({ ...d, role: event.target.value }))}
+							onKeyDown={submitOnEnter}
 						/>
 						<Input
 							value={draft.type}
 							list="contact-types"
 							placeholder={t`Label`}
 							onChange={(event) => setDraft((d) => ({ ...d, type: event.target.value }))}
+							onKeyDown={submitOnEnter}
 						/>
 					</div>
 					<div className="grid grid-cols-2 gap-2">
@@ -644,12 +656,14 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 							value={draft.email}
 							placeholder={t`Email (optional)`}
 							onChange={(event) => setDraft((d) => ({ ...d, email: event.target.value }))}
+							onKeyDown={submitOnEnter}
 						/>
 						<Input
 							type="tel"
 							value={draft.phone}
 							placeholder={t`Phone (optional)`}
 							onChange={(event) => setDraft((d) => ({ ...d, phone: event.target.value }))}
+							onKeyDown={submitOnEnter}
 						/>
 					</div>
 					<datalist id="contact-types">

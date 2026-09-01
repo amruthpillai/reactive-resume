@@ -37,9 +37,7 @@ describe("mapCsvToApplications", () => {
 			stageEnteredAt: "2026-07-01",
 			salary: "$180k",
 			tags: ["remote", "react"],
-			contacts: [
-				{ name: "Jane Doe", role: "", type: "", email: "jane@example.com", phone: "+1 555 0100" },
-			],
+			contacts: [{ name: "Jane Doe", role: "", type: "", email: "jane@example.com", phone: "+1 555 0100" }],
 		});
 		expect(recognized).toEqual(
 			expect.arrayContaining(["company", "role", "status", "stageEnteredAt", "salary", "tags", "contactEmail"]),
@@ -54,5 +52,14 @@ describe("mapCsvToApplications", () => {
 		expect(rows[0]?.status).toBeUndefined(); // "bogus" dropped
 		expect(rows[0]?.stageEnteredAt).toBeUndefined(); // invalid date dropped
 		expect(skipped).toBe(2);
+	});
+
+	it("skips rows with malformed contact emails", () => {
+		const { rows, skipped } = mapCsvToApplications(
+			parseCsv("Company,Role,Contact Name,Contact Email\nStripe,Eng,Jane Doe,not-an-email"),
+		);
+
+		expect(rows).toEqual([]);
+		expect(skipped).toBe(1);
 	});
 });

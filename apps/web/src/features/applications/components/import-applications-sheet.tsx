@@ -74,8 +74,8 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 					</SheetTitle>
 					<SheetDescription>
 						<Trans>
-							Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source, Tags and
-							Contact Name.
+							Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source, Tags,
+							Contact Name, Contact Email and Contact Phone.
 						</Trans>
 					</SheetDescription>
 				</SheetHeader>
