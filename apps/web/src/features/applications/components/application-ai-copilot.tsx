@@ -15,7 +15,6 @@ import {
 } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { getResumeExportData } from "@reactive-resume/resume/export-sections";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { generateFilename } from "@reactive-resume/utils/file";
 import { cn } from "@reactive-resume/utils/style";
@@ -41,33 +40,36 @@ const toHtmlParagraphs = (value: string) =>
 		.join("");
 
 function createCoverLetterPdfData(data: ResumeData, text: string): ResumeData {
-	return getResumeExportData(
-		{
-			...data,
-			customSections: [
-				...data.customSections,
-				{
-					id: COPILOT_COVER_LETTER_SECTION_ID,
-					type: "cover-letter",
-					title: "",
-					icon: "",
-					columns: 1,
-					hidden: false,
-					keepTogether: false,
-					startOnNewPage: false,
-					items: [
-						{
-							id: `${COPILOT_COVER_LETTER_SECTION_ID}-item`,
-							hidden: false,
-							recipient: "",
-							content: toHtmlParagraphs(text),
-						},
-					],
-				},
-			],
+	return {
+		...data,
+		customSections: [
+			{
+				id: COPILOT_COVER_LETTER_SECTION_ID,
+				type: "cover-letter",
+				title: "",
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [
+					{
+						id: `${COPILOT_COVER_LETTER_SECTION_ID}-item`,
+						hidden: false,
+						recipient: "",
+						content: toHtmlParagraphs(text),
+					},
+				],
+			},
+		],
+		metadata: {
+			...data.metadata,
+			layout: {
+				...data.metadata.layout,
+				pages: [{ fullWidth: true, main: [COPILOT_COVER_LETTER_SECTION_ID], sidebar: [] }],
+			},
 		},
-		"cover-letter",
-	);
+	};
 }
 
 // Score bands drive the ring color and the label — a job-fit gauge, not a generic percentage.
@@ -154,6 +156,7 @@ type Props = { application: Application };
 export function ApplicationAiCopilot({ application }: Props) {
 	const queryClient = useQueryClient();
 	const [draft, setDraft] = useState<{ kind: string; text: string } | null>(null);
+	const [isGeneratingCoverLetter, setIsGeneratingCoverLetter] = useState(false);
 	const { data: resume } = useQuery({
 		...orpc.resume.getById.queryOptions({ input: { id: application.resumeId ?? "" } }),
 		enabled: !!application.resumeId,
@@ -204,20 +207,31 @@ export function ApplicationAiCopilot({ application }: Props) {
 	const score = application.matchScore;
 	const gaps = aiGaps(application);
 	const attachDraftAsPdf = async () => {
-		if (!draft || draft.kind !== "cover-letter") return;
+		if (draft?.kind !== "cover-letter" || isGeneratingCoverLetter) return;
 		if (!resume) {
 			toast.add({ type: "error", description: t`Link a resume to generate a cover letter PDF.` });
 			return;
 		}
 
+		setIsGeneratingCoverLetter(true);
+		let file: File;
 		try {
 			const blob = await createResumePdfBlob(createCoverLetterPdfData(resume.data, draft.text));
-			const file = new File([blob], generateFilename(`Cover Letter - ${application.company}`, "pdf"), {
+			file = new File([blob], generateFilename(`Cover Letter - ${application.company || "Untitled"}`, "pdf"), {
 				type: "application/pdf",
 			});
-			attachCoverLetter.mutate({ id: application.id, kind: "cover-letter", file });
 		} catch {
 			toast.add({ type: "error", description: t`Could not generate the cover letter PDF.` });
+			setIsGeneratingCoverLetter(false);
+			return;
+		}
+
+		try {
+			await attachCoverLetter.mutateAsync({ id: application.id, kind: "cover-letter", file });
+		} catch {
+			// Mutation onError displays the upload failure.
+		} finally {
+			setIsGeneratingCoverLetter(false);
 		}
 	};
 
@@ -337,12 +351,18 @@ export function ApplicationAiCopilot({ application }: Props) {
 							{draft.kind === "cover-letter" && (
 								<button
 									type="button"
-									disabled={attachCoverLetter.isPending}
+									disabled={isGeneratingCoverLetter || attachCoverLetter.isPending}
 									className="inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-foreground disabled:opacity-50"
 									onClick={() => void attachDraftAsPdf()}
 								>
 									<FilePdfIcon className="size-3.5" />
-									{attachCoverLetter.isPending ? <Trans>Attaching…</Trans> : <Trans>Generate PDF & attach</Trans>}
+									{isGeneratingCoverLetter ? (
+										<Trans>Generating PDF…</Trans>
+									) : attachCoverLetter.isPending ? (
+										<Trans>Attaching…</Trans>
+									) : (
+										<Trans>Generate PDF & attach</Trans>
+									)}
 								</button>
 							)}
 							<button
