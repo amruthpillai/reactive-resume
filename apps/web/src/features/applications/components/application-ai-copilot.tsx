@@ -235,6 +235,16 @@ export function ApplicationAiCopilot({ application }: Props) {
 		}
 	};
 
+	const copyDraft = async () => {
+		try {
+			if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+			await navigator.clipboard.writeText(draft?.text ?? "");
+			toast.add({ type: "success", description: t`Copied to clipboard.` });
+		} catch {
+			toast.add({ type: "error", description: t`Could not copy to clipboard. Please copy the text manually.` });
+		}
+	};
+
 	return (
 		<section className="overflow-hidden rounded-xl border border-primary/15 bg-primary/[0.04]">
 			<header className="flex items-center gap-2 px-3.5 pt-3">
@@ -341,10 +351,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 							<button
 								type="button"
 								className="inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-foreground"
-								onClick={() => {
-									void navigator.clipboard.writeText(draft.text);
-									toast.add({ type: "success", description: t`Copied to clipboard.` });
-								}}
+								onClick={() => void copyDraft()}
 							>
 								<CopyIcon className="size-3.5" /> <Trans>Copy</Trans>
 							</button>
