@@ -241,7 +241,10 @@ export function ApplicationAiCopilot({ application }: Props) {
 			await navigator.clipboard.writeText(draft?.text ?? "");
 			toast.add({ type: "success", description: t`Copied to clipboard.` });
 		} catch {
-			toast.add({ type: "error", description: t`Could not copy to clipboard. Please copy the text manually.` });
+			toast.add({
+				type: "error",
+				description: t`Could not copy to clipboard. Please copy the text manually.`,
+			});
 		}
 	};
 
