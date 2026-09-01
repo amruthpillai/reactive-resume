@@ -14,7 +14,7 @@ import {
 	SpinnerGapIcon,
 } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { generateFilename } from "@reactive-resume/utils/file";
 import { cn } from "@reactive-resume/utils/style";
@@ -235,7 +235,8 @@ export function ApplicationAiCopilot({ application }: Props) {
 		}
 	};
 
-	const copyDraft = async () => {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: keep review-requested callback dependencies explicit.
+	const copyDraft = useCallback(async () => {
 		try {
 			if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
 			await navigator.clipboard.writeText(draft?.text ?? "");
@@ -246,7 +247,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 				description: t`Could not copy to clipboard. Please copy the text manually.`,
 			});
 		}
-	};
+	}, [draft?.text, toast, t]);
 
 	return (
 		<section className="overflow-hidden rounded-xl border border-primary/15 bg-primary/[0.04]">
