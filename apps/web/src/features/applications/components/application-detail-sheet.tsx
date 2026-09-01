@@ -553,17 +553,26 @@ type ContactsEditorProps = {
 
 function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 	const [adding, setAdding] = useState(false);
-	const [draft, setDraft] = useState({ name: "", role: "", type: "" });
+	const [draft, setDraft] = useState({ name: "", role: "", type: "", email: "", phone: "" });
 
 	const reset = () => {
-		setDraft({ name: "", role: "", type: "" });
+		setDraft({ name: "", role: "", type: "", email: "", phone: "" });
 		setAdding(false);
 	};
 
 	const add = () => {
 		const name = draft.name.trim();
 		if (!name) return;
-		onChange([...contacts, { name, role: draft.role.trim(), type: draft.type.trim() }]);
+		onChange([
+			...contacts,
+			{
+				name,
+				role: draft.role.trim(),
+				type: draft.type.trim(),
+				email: draft.email.trim(),
+				phone: draft.phone.trim(),
+			},
+		]);
 		reset();
 	};
 
@@ -579,6 +588,16 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 					<div className="min-w-0 flex-1">
 						<div className="truncate font-medium">{contact.name}</div>
 						{contact.role && <div className="truncate text-muted-foreground text-xs">{contact.role}</div>}
+						{contact.email && (
+							<a href={`mailto:${contact.email}`} className="block truncate text-primary text-xs hover:underline">
+								{contact.email}
+							</a>
+						)}
+						{contact.phone && (
+							<a href={`tel:${contact.phone}`} className="block truncate text-primary text-xs hover:underline">
+								{contact.phone}
+							</a>
+						)}
 					</div>
 					{contact.type && (
 						<span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">{contact.type}</span>
@@ -617,6 +636,20 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 							list="contact-types"
 							placeholder={t`Label`}
 							onChange={(event) => setDraft((d) => ({ ...d, type: event.target.value }))}
+						/>
+					</div>
+					<div className="grid grid-cols-2 gap-2">
+						<Input
+							type="email"
+							value={draft.email}
+							placeholder={t`Email (optional)`}
+							onChange={(event) => setDraft((d) => ({ ...d, email: event.target.value }))}
+						/>
+						<Input
+							type="tel"
+							value={draft.phone}
+							placeholder={t`Phone (optional)`}
+							onChange={(event) => setDraft((d) => ({ ...d, phone: event.target.value }))}
 						/>
 					</div>
 					<datalist id="contact-types">

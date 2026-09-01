@@ -35,6 +35,40 @@ describe("applicationDto jobDescription", () => {
 	});
 });
 
+describe("applicationDto contacts", () => {
+	it("accepts contact email and phone details", () => {
+		const parsed = applicationDto.create.input.parse({
+			company: "Stripe",
+			role: "Engineer",
+			contacts: [{ name: "Jane Doe", email: "jane@example.com", phone: "+1 555 0100" }],
+		});
+
+		expect(parsed.contacts).toEqual([
+			{ name: "Jane Doe", role: "", type: "", email: "jane@example.com", phone: "+1 555 0100" },
+		]);
+	});
+
+	it("keeps legacy contacts compatible", () => {
+		const parsed = applicationDto.create.input.parse({
+			company: "Stripe",
+			role: "Engineer",
+			contacts: [{ name: "Jane Doe" }],
+		});
+
+		expect(parsed.contacts?.[0]).toMatchObject({ email: "", phone: "" });
+	});
+
+	it("rejects malformed contact emails", () => {
+		expect(() =>
+			applicationDto.create.input.parse({
+				company: "Stripe",
+				role: "Engineer",
+				contacts: [{ name: "Jane Doe", email: "not-an-email" }],
+			}),
+		).toThrow("Invalid email address.");
+	});
+});
+
 describe("applicationDto document uploads", () => {
 	it("accepts PDF application documents", () => {
 		const file = new File(["%PDF-1.4"], "resume.pdf", { type: "application/pdf" });

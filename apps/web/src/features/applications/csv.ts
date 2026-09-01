@@ -1,4 +1,4 @@
-import type { ApplicationStatus } from "@reactive-resume/schema/applications/data";
+import type { ApplicationStatus, Contact } from "@reactive-resume/schema/applications/data";
 import type { Application } from "./types";
 import { applicationStatusSchema, STAGES } from "@reactive-resume/schema/applications/data";
 
@@ -64,6 +64,15 @@ type ParsedApplication = {
 	sourceUrl?: string;
 	stageEnteredAt?: string;
 	tags?: string[];
+	contacts?: Contact[];
+};
+
+type CsvApplication = ParsedApplication & {
+	contactName?: string;
+	contactRole?: string;
+	contactType?: string;
+	contactEmail?: string;
+	contactPhone?: string;
 };
 
 function dateOnly(value: string) {
@@ -74,7 +83,7 @@ function dateOnly(value: string) {
 }
 
 // Header aliases → canonical field. Matched case-insensitively after trimming.
-const HEADER_ALIASES: Record<string, keyof ParsedApplication> = {
+const HEADER_ALIASES: Record<string, keyof CsvApplication> = {
 	company: "company",
 	employer: "company",
 	organization: "company",
@@ -99,6 +108,11 @@ const HEADER_ALIASES: Record<string, keyof ParsedApplication> = {
 	"job url": "sourceUrl",
 	"job posting": "sourceUrl",
 	tags: "tags",
+	"contact name": "contactName",
+	"contact role": "contactRole",
+	"contact type": "contactType",
+	"contact email": "contactEmail",
+	"contact phone": "contactPhone",
 };
 
 // Values a spreadsheet would evaluate as a formula: leading =, +, -, @ (and full-width variants),
@@ -145,7 +159,7 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 
 	const headers = headerRow.map((h) => h.trim());
 	const fieldFor = headers.map((h) => HEADER_ALIASES[h.toLowerCase()]);
-	const recognized = [...new Set(fieldFor.filter((f): f is keyof ParsedApplication => !!f))];
+	const recognized = [...new Set(fieldFor.filter((f): f is keyof CsvApplication => !!f))];
 	const isReactiveResumeExport = ["Stage History", "Timeline", "Archived", "Created At", "Updated At"].every((header) =>
 		headers.includes(header),
 	);
@@ -154,7 +168,7 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 	let skipped = 0;
 
 	for (const raw of dataRows) {
-		const record: Partial<ParsedApplication> = {};
+		const record: Partial<CsvApplication> = {};
 		fieldFor.forEach((field, i) => {
 			if (!field) return;
 			const rawValue = raw[i] ?? "";
@@ -173,7 +187,20 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 			skipped++;
 			continue;
 		}
-		rows.push(record as ParsedApplication);
+
+		const { contactName, contactRole, contactType, contactEmail, contactPhone, ...application } = record;
+		if (contactName) {
+			application.contacts = [
+				{
+					name: contactName,
+					role: contactRole ?? "",
+					type: contactType ?? "",
+					email: contactEmail ?? "",
+					phone: contactPhone ?? "",
+				},
+			];
+		}
+		rows.push(application as ParsedApplication);
 	}
 
 	return { rows, skipped, headers, recognized };
