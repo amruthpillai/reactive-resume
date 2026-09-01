@@ -189,7 +189,7 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 		}
 
 		const { contactName, contactRole, contactType, contactEmail, contactPhone, ...application } = record;
-		if (contactName) {
+		if (contactName || contactRole || contactType || contactEmail || contactPhone) {
 			const contact = contactSchema.safeParse({
 				name: contactName,
 				role: contactRole ?? "",

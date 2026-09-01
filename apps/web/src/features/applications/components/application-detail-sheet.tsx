@@ -563,6 +563,7 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 	};
 
 	const add = () => {
+		if (pending) return;
 		const name = draft.name.trim();
 		if (!name) return;
 		onChange([

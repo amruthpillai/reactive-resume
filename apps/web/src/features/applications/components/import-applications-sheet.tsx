@@ -118,7 +118,7 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 								<Trans>{importable.length} ready to import</Trans>
 								{parsed.skipped > 0 && (
 									<span className="text-muted-foreground text-xs">
-										· <Trans>{parsed.skipped} skipped (missing company/role)</Trans>
+										· <Trans>{parsed.skipped} skipped (invalid or missing data)</Trans>
 									</span>
 								)}
 							</div>

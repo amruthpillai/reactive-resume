@@ -62,4 +62,13 @@ describe("mapCsvToApplications", () => {
 		expect(rows).toEqual([]);
 		expect(skipped).toBe(1);
 	});
+
+	it("skips rows with contact fields but no contact name", () => {
+		const { rows, skipped } = mapCsvToApplications(
+			parseCsv("Company,Role,Contact Email,Contact Phone\nStripe,Eng,jane@example.com,+1 555 0100"),
+		);
+
+		expect(rows).toEqual([]);
+		expect(skipped).toBe(1);
+	});
 });
