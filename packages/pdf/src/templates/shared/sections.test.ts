@@ -81,6 +81,13 @@ describe("SkillsSectionInlineFormat", () => {
 		expect(getSkillsItemStyle(false, mockItem, mockMetrics)).toEqual({ rowGap: 2.5 });
 	});
 
+	it("does not apply alignItems: center when isInline is true and 0 secondary fields are present", () => {
+		// 0 secondary fields: no proficiency, no level, no keywords
+		const mockItem = createSkillItem();
+		const style = getSkillsItemStyle(true, mockItem, mockMetrics);
+		expect(style).not.toEqual(expect.arrayContaining([{ alignItems: "center" }]));
+	});
+
 	it("applies alignItems: center when isInline is true and exactly 1 secondary field is present", () => {
 		// 1 secondary field: level only
 		const mockItem = createSkillItem({ level: 3 });
@@ -88,9 +95,30 @@ describe("SkillsSectionInlineFormat", () => {
 		expect(style).toEqual(expect.arrayContaining([{ alignItems: "center" }]));
 	});
 
-	it("does not apply alignItems: center when isInline is true and 0 or multiple secondary fields are present", () => {
+	it("applies alignItems: center when isInline is true and proficiency is the only secondary field", () => {
+		// 1 secondary field: proficiency only
+		const mockItem = createSkillItem({ proficiency: "Advanced" });
+		const style = getSkillsItemStyle(true, mockItem, mockMetrics);
+		expect(style).toEqual(expect.arrayContaining([{ alignItems: "center" }]));
+	});
+
+	it("applies alignItems: center when isInline is true and keywords is the only secondary field", () => {
+		// 1 secondary field: keywords only
+		const mockItem = createSkillItem({ keywords: ["React", "TypeScript"] });
+		const style = getSkillsItemStyle(true, mockItem, mockMetrics);
+		expect(style).toEqual(expect.arrayContaining([{ alignItems: "center" }]));
+	});
+
+	it("does not apply alignItems: center when isInline is true and 2 secondary fields are present", () => {
 		// 2 secondary fields: level AND keywords
 		const mockItem = createSkillItem({ level: 3, keywords: ["React"] });
+		const style = getSkillsItemStyle(true, mockItem, mockMetrics);
+		expect(style).not.toEqual(expect.arrayContaining([{ alignItems: "center" }]));
+	});
+
+	it("does not apply alignItems: center when isInline is true and 3 secondary fields are present", () => {
+		// 3 secondary fields: proficiency, level, AND keywords
+		const mockItem = createSkillItem({ proficiency: "Advanced", level: 3, keywords: ["React"] });
 		const style = getSkillsItemStyle(true, mockItem, mockMetrics);
 		expect(style).not.toEqual(expect.arrayContaining([{ alignItems: "center" }]));
 	});
