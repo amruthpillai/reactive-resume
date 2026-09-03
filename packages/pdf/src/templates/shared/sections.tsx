@@ -1170,6 +1170,22 @@ const inlineSkillsItemStyle = {
 	columnGap: 4,
 } satisfies Style;
 
+export const getSkillsItemStyle = (
+	isInline: boolean,
+	item: SkillItem,
+	metrics: ReturnType<typeof getTemplateMetrics>,
+) => {
+	if (isInline) {
+		return composeStyles(
+			inlineSkillsItemStyle,
+			[hasSplitRowText(item.proficiency), Boolean(item.level), item.keywords.length > 0].filter(Boolean).length === 1
+				? { alignItems: "center" }
+				: undefined,
+		);
+	}
+	return { rowGap: metrics.gapY(0.25) };
+};
+
 const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<SkillItem> = {}) => {
 	const data = useRender();
 	const skills = sectionData ?? data.sections.skills;
@@ -1185,21 +1201,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 		<SectionShell sectionId={sectionId} title={skills.title}>
 			<SectionItems columns={skills.columns}>
 				{items.map((item) => (
-					<SectionItem
-						key={item.id}
-						itemId={item.id}
-						style={
-							isInlineSkillsItem
-								? composeStyles(
-										inlineSkillsItemStyle,
-										[hasSplitRowText(item.proficiency), Boolean(item.level), item.keywords.length > 0].filter(Boolean)
-											.length === 1
-											? { alignItems: "center" }
-											: undefined,
-									)
-								: { rowGap: metrics.gapY(0.25) }
-						}
-					>
+					<SectionItem key={item.id} itemId={item.id} style={getSkillsItemStyle(isInlineSkillsItem, item, metrics)}>
 						<SectionItemHeader>
 							<View style={composeStyles(inlineStyle)}>
 								<Icon name={item.icon as IconName} />
