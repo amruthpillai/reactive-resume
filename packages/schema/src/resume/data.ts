@@ -318,7 +318,7 @@ const publicationsSectionSchema = itemSection(
 	"The items to display in the publications section.",
 );
 const referencesSectionSchema = itemSection(referenceItemSchema, "The items to display in the references section.");
-const skillsSectionSchema = itemSection(skillItemSchema, "The items to display in the skills section.")
+export const skillsSectionSchema = itemSection(skillItemSchema, "The items to display in the skills section.")
 	.extend({
 		layout: z
 			.enum(["default", "inline"])

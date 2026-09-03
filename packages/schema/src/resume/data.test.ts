@@ -14,6 +14,7 @@ import {
 	resumeDataSchema,
 	sectionTypeSchema,
 	skillItemSchema,
+	skillsSectionSchema,
 	styleRuleSchema,
 	styleRulesSchema,
 	summarySchema,
@@ -682,5 +683,42 @@ describe("styleRulesSchema", () => {
 				slots: { heading: { opacity: 2, lineHeight: 10, letterSpacing: -17 } },
 			}).success,
 		).toBe(false);
+	});
+});
+
+describe("skillsSectionSchema", () => {
+	it("forces columns to 1 when layout is 'inline'", () => {
+		const result = skillsSectionSchema.parse({
+			title: "Skills",
+			columns: 2,
+			hidden: false,
+			layout: "inline",
+			items: [],
+		});
+		expect(result.columns).toBe(1);
+		expect(result.layout).toBe("inline");
+	});
+
+	it("preserves columns when layout is 'default'", () => {
+		const result = skillsSectionSchema.parse({
+			title: "Skills",
+			columns: 3,
+			hidden: false,
+			layout: "default",
+			items: [],
+		});
+		expect(result.columns).toBe(3);
+		expect(result.layout).toBe("default");
+	});
+
+	it("defaults layout to 'default' when missing", () => {
+		const result = skillsSectionSchema.parse({
+			title: "Skills",
+			columns: 2,
+			hidden: false,
+			items: [],
+		});
+		expect(result.layout).toBe("default");
+		expect(result.columns).toBe(2);
 	});
 });
