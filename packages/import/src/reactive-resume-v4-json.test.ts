@@ -424,3 +424,13 @@ describe("parseReactiveResumeV4JSON – rejects non-v4 input gracefully", () => 
 		expect(() => parseReactiveResumeV4JSON(arrayBranches)).toThrow(/v4/i);
 	});
 });
+
+describe("parseReactiveResumeV4JSON – skills section", () => {
+	it("defaults skills layout to 'default' when 'layout' is missing from v4 data", () => {
+		// 'layout' already omitted
+		const v4 = makeV4Base({});
+
+		const result = parseReactiveResumeV4JSON(JSON.stringify(v4));
+		expect(result.sections.skills.layout).toBe("default");
+	});
+});
