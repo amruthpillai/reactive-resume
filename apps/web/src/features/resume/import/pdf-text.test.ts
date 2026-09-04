@@ -97,3 +97,15 @@ describe("extractPdfLines", () => {
 		expect(nestedWorker.terminate).toHaveBeenCalledOnce();
 	});
 });
+
+describe("extractPdfLines worker cleanup", () => {
+	it("terminates the nested worker when the PDF worker cannot be constructed", async () => {
+		const nestedWorker = { terminate: vi.fn() } as unknown as Worker;
+		mocks.getDocument.mockImplementation(() => {
+			throw new Error("worker unavailable");
+		});
+
+		await expect(extractPdfLines(new ArrayBuffer(4), () => nestedWorker)).rejects.toThrow("worker unavailable");
+		expect(nestedWorker.terminate).toHaveBeenCalledOnce();
+	});
+});

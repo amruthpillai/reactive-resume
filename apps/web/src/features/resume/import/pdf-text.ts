@@ -87,11 +87,12 @@ export async function extractPdfLines(
 ): Promise<string[]> {
 	const { PDFWorker, getDocument } = await loadPdfModule();
 	const nestedWorker = createWorker();
-	const WorkerWithPort = PDFWorker as unknown as new (options: { port: Worker }) => InstanceType<typeof PDFWorker>;
-	const worker = new WorkerWithPort({ port: nestedWorker });
 	let loadingTask: ReturnType<typeof getDocument> | undefined;
+	let worker: InstanceType<typeof PDFWorker> | undefined;
 
 	try {
+		const WorkerWithPort = PDFWorker as unknown as new (options: { port: Worker }) => InstanceType<typeof PDFWorker>;
+		worker = new WorkerWithPort({ port: nestedWorker });
 		loadingTask = getDocument({ data: pdf.slice(0), worker });
 		const document = await loadingTask.promise;
 		const lines: string[] = [];
@@ -106,7 +107,7 @@ export async function extractPdfLines(
 	} finally {
 		try {
 			if (loadingTask) await loadingTask.destroy();
-			else worker.destroy();
+			else worker?.destroy();
 		} finally {
 			nestedWorker.terminate();
 		}

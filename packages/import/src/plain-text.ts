@@ -85,13 +85,20 @@ const BULLET_PATTERN = /^\s*[-–—•*◦‣·]\s+/;
 const EMAIL_PATTERN = /[\w.+-]+@[\w-]+\.[\w.-]*\w/;
 const URL_PATTERN = /\b(?:https?:\/\/|www\.)[^\s,;|•·]+/gi;
 const PHONE_CANDIDATE = /[+(]?\d[\d\s().+-]{5,}\d/g;
+const URL_TEST = /\b(?:https?:\/\/|www\.)\S+/i;
+const HEADER_SCAN_LINES = 6;
 const PERIOD_CANDIDATE =
 	/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
 const STRONG_SEPARATOR = /\s*[|•·]\s*|\s{2,}|\s+[–—]\s+/;
 const TRAILING_DATES = [/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?(?:19|20)\d{2}$/u, /(?:\d{1,2}[/.])?(?:19|20)\d{2}$/];
 
 const escapeHtml = (value: string) =>
-	value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+	value
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;");
 
 const normalizeHeading = (line: string) =>
 	line
@@ -151,6 +158,24 @@ function extractPhone(text: string): string {
 	}
 
 	return "";
+}
+
+function isDateLine(line: string): boolean {
+	if (findPeriod(line)) return true;
+
+	const bare = line.replace(BULLET_PATTERN, "").trim();
+	return bare !== "" && parseSingleDate(bare) !== null;
+}
+
+function headerBoundary(lines: string[]): number {
+	let boundary = 0;
+
+	for (const [index, line] of lines.slice(0, HEADER_SCAN_LINES).entries()) {
+		if (knownHeading(line)) break;
+		if (EMAIL_PATTERN.test(line) || URL_TEST.test(line) || extractPhone(line)) boundary = index;
+	}
+
+	return boundary;
 }
 
 function splitHeaderParts(text: string): string[] {
@@ -221,6 +246,11 @@ function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
 		const startsEntry = !BULLET_PATTERN.test(line) && next !== undefined && dateOf(next) !== "";
 
 		if (startsEntry) {
+			if (current && !current.period && current.body.length === 0) {
+				current.headerParts.push(...splitHeaderParts(line));
+				continue;
+			}
+
 			if (current) entries.push(current);
 			current = { period: "", headerParts: splitHeaderParts(line), body: [] };
 			continue;
@@ -387,25 +417,26 @@ function buildSectionItems(key: SectionKey, lines: string[]): unknown[] {
 }
 
 function segment(lines: string[]): { header: string[]; segments: Segment[] } {
+	const cleaned = lines.map((line) => line.trim()).filter(Boolean);
+	const boundary = headerBoundary(cleaned);
 	const header: string[] = [];
 	const segments: Segment[] = [];
 	let current: Segment | null = null;
 
-	for (const line of lines) {
-		const trimmed = line.trim();
-		if (!trimmed) continue;
-
-		const key = knownHeading(trimmed);
-		const unknown = key === null && current !== null && looksLikeHeading(trimmed);
+	for (const [index, line] of cleaned.entries()) {
+		const key = knownHeading(line);
+		const next = cleaned[index + 1];
+		const introducesEntry = next !== undefined && isDateLine(next);
+		const unknown = key === null && index > boundary && !introducesEntry && looksLikeHeading(line);
 
 		if (key !== null || unknown) {
 			if (current) segments.push(current);
-			current = { key, title: trimmed.replace(/[:：]\s*$/, "").trim(), lines: [] };
+			current = { key, title: line.replace(/[:：]\s*$/, "").trim(), lines: [] };
 			continue;
 		}
 
-		if (current) current.lines.push(trimmed);
-		else header.push(trimmed);
+		if (current) current.lines.push(line);
+		else header.push(line);
 	}
 
 	if (current) segments.push(current);

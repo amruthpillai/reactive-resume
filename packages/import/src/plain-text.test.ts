@@ -152,3 +152,40 @@ describe("parseResumeText edge cases", () => {
 		expect(data.sections.skills.items.map((item) => item.name)).toEqual(["Rust", "Go"]);
 	});
 });
+
+describe("parseResumeText review findings", () => {
+	it("keeps a section whose heading is the first one in the document", () => {
+		const data = parseResumeText(
+			"Ada Lovelace\nada@example.com\n\nCAREER HIGHLIGHTS\nShipped the difference engine\nMentored the team\n",
+		);
+
+		expect(data.customSections).toHaveLength(1);
+		expect(data.customSections[0]).toMatchObject({ title: "CAREER HIGHLIGHTS" });
+		expect(JSON.stringify(data)).toContain("Shipped the difference engine");
+	});
+
+	it("keeps one entry when company, position and dates sit on separate lines", () => {
+		const data = parseResumeText(
+			"EXPERIENCE\nAnalytical Engines\nSenior Engineer\nJan 2020 - Present\n• Led the rewrite\n",
+		);
+
+		expect(data.sections.experience.items).toHaveLength(1);
+		expect(data.sections.experience.items[0]).toMatchObject({
+			company: "Analytical Engines",
+			position: "Senior Engineer",
+			period: "Jan 2020 - Present",
+		});
+	});
+
+	it("does not turn an uppercase company name into a section heading", () => {
+		const data = parseResumeText("EXPERIENCE\nACME CORPORATION\nJan 2020 - Present\n• Did the work\n");
+
+		expect(data.customSections).toHaveLength(0);
+		expect(data.sections.experience.items[0]).toMatchObject({ company: "ACME CORPORATION" });
+	});
+
+	it("escapes single quotes in extracted text", () => {
+		const data = parseResumeText("SUMMARY\nIt's a resume\n");
+		expect(data.summary.content).toContain("&#39;");
+	});
+});
