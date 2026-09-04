@@ -1,0 +1,498 @@
+import type { ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
+import { parsePeriod, parseSingleDate } from "@reactive-resume/resume/ats";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { generateId } from "@reactive-resume/utils/string";
+
+type SectionKey = SectionType | "summary";
+
+type Segment = {
+	key: SectionKey | null;
+	title: string;
+	lines: string[];
+};
+
+type RawEntry = {
+	period: string;
+	headerParts: string[];
+	body: string[];
+};
+
+const MAX_HEADING_WORDS = 4;
+const MAX_HEADING_LENGTH = 48;
+const MAX_LIST_ITEMS = 60;
+const MIN_PHONE_DIGITS = 7;
+const MAX_PHONE_DIGITS = 15;
+
+const SECTION_ALIASES: Readonly<Record<string, SectionKey>> = {
+	summary: "summary",
+	"professional summary": "summary",
+	"career summary": "summary",
+	profile: "summary",
+	"personal profile": "summary",
+	about: "summary",
+	"about me": "summary",
+	objective: "summary",
+	"career objective": "summary",
+	experience: "experience",
+	"work experience": "experience",
+	"professional experience": "experience",
+	employment: "experience",
+	"employment history": "experience",
+	"work history": "experience",
+	"career history": "experience",
+	education: "education",
+	"academic background": "education",
+	"education and training": "education",
+	qualifications: "education",
+	skills: "skills",
+	"technical skills": "skills",
+	"key skills": "skills",
+	"core competencies": "skills",
+	competencies: "skills",
+	expertise: "skills",
+	projects: "projects",
+	"personal projects": "projects",
+	"selected projects": "projects",
+	"side projects": "projects",
+	languages: "languages",
+	interests: "interests",
+	hobbies: "interests",
+	"hobbies and interests": "interests",
+	awards: "awards",
+	honors: "awards",
+	honours: "awards",
+	"awards and honors": "awards",
+	achievements: "awards",
+	certifications: "certifications",
+	certificates: "certifications",
+	licenses: "certifications",
+	"licenses and certifications": "certifications",
+	publications: "publications",
+	papers: "publications",
+	research: "publications",
+	volunteer: "volunteer",
+	volunteering: "volunteer",
+	"volunteer experience": "volunteer",
+	"community involvement": "volunteer",
+	references: "references",
+	profiles: "profiles",
+	links: "profiles",
+	"social profiles": "profiles",
+};
+
+const BULLET_PATTERN = /^\s*[-–—•*◦‣·]\s+/;
+const EMAIL_PATTERN = /[\w.+-]+@[\w-]+\.[\w.-]*\w/;
+const URL_PATTERN = /\b(?:https?:\/\/|www\.)[^\s,;|•·]+/gi;
+const PHONE_CANDIDATE = /[+(]?\d[\d\s().+-]{5,}\d/g;
+const PERIOD_CANDIDATE =
+	/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
+const STRONG_SEPARATOR = /\s*[|•·]\s*|\s{2,}|\s+[–—]\s+/;
+const TRAILING_DATES = [/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?(?:19|20)\d{2}$/u, /(?:\d{1,2}[/.])?(?:19|20)\d{2}$/];
+
+const escapeHtml = (value: string) =>
+	value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const normalizeHeading = (line: string) =>
+	line
+		.replace(/[:：]\s*$/, "")
+		.replace(/&/g, " and ")
+		.replace(/[^\p{L}\p{N}\s]/gu, " ")
+		.replace(/\s+/g, " ")
+		.trim()
+		.toLowerCase();
+
+function knownHeading(line: string): SectionKey | null {
+	const normalized = normalizeHeading(line);
+	if (!normalized || normalized.split(" ").length > MAX_HEADING_WORDS) return null;
+
+	return SECTION_ALIASES[normalized] ?? null;
+}
+
+function looksLikeHeading(line: string): boolean {
+	const trimmed = line.trim().replace(/[:：]$/, "");
+	if (!trimmed || trimmed.length > MAX_HEADING_LENGTH || /\d/.test(trimmed)) return false;
+	if (trimmed.split(/\s+/).length > MAX_HEADING_WORDS) return false;
+
+	const letters = trimmed.replace(/[^\p{L}]/gu, "");
+	if (letters.length < 3) return false;
+
+	return letters === letters.toLocaleUpperCase() && letters !== letters.toLocaleLowerCase();
+}
+
+function findPeriod(line: string): string {
+	PERIOD_CANDIDATE.lastIndex = 0;
+
+	for (const match of line.match(PERIOD_CANDIDATE) ?? []) {
+		if (parsePeriod(match)) return match.trim();
+	}
+
+	return "";
+}
+
+function findSingleDate(text: string): string {
+	const trimmed = text.trim();
+
+	for (const pattern of TRAILING_DATES) {
+		const value = pattern.exec(trimmed)?.[0]?.trim();
+		if (value && parseSingleDate(value)) return value;
+	}
+
+	return "";
+}
+
+function extractPhone(text: string): string {
+	for (const candidate of text.match(PHONE_CANDIDATE) ?? []) {
+		const digits = candidate.replace(/\D/g, "");
+		if (digits.length < MIN_PHONE_DIGITS || digits.length > MAX_PHONE_DIGITS) continue;
+		if (parsePeriod(candidate)) continue;
+
+		return candidate.trim();
+	}
+
+	return "";
+}
+
+function splitHeaderParts(text: string): string[] {
+	return text
+		.split(STRONG_SEPARATOR)
+		.map((part) => part.replace(/^[\s,;|•·–—-]+|[\s,;|•·–—-]+$/g, "").trim())
+		.filter(Boolean);
+}
+
+function toHtml(lines: string[]): string {
+	const cleaned = lines.map((line) => line.trim()).filter(Boolean);
+	if (cleaned.length === 0) return "";
+
+	const bulleted = cleaned.filter((line) => BULLET_PATTERN.test(line));
+	if (bulleted.length >= 2 && bulleted.length * 2 >= cleaned.length) {
+		const items = cleaned.map((line) => `<li>${escapeHtml(line.replace(BULLET_PATTERN, ""))}</li>`).join("");
+		return `<ul>${items}</ul>`;
+	}
+
+	return cleaned.map((line) => `<p>${escapeHtml(line.replace(BULLET_PATTERN, ""))}</p>`).join("");
+}
+
+function splitList(lines: string[]): string[] {
+	const values: string[] = [];
+
+	for (const line of lines) {
+		for (const piece of line.replace(BULLET_PATTERN, "").split(/[,;|•·]|\s{3,}/)) {
+			const value = piece.trim();
+			if (value) values.push(value);
+		}
+	}
+
+	return [...new Set(values)].slice(0, MAX_LIST_ITEMS);
+}
+
+function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
+	const cleaned = lines.map((line) => line.trim()).filter(Boolean);
+	const entries: RawEntry[] = [];
+	let current: RawEntry | null = null;
+
+	const dateOf = (line: string) => {
+		if (BULLET_PATTERN.test(line)) return "";
+
+		const period = findPeriod(line);
+		if (period) return period;
+
+		return allowSingleDate ? findSingleDate(line) : "";
+	};
+
+	for (const [index, line] of cleaned.entries()) {
+		const date = dateOf(line);
+
+		if (date) {
+			const remainder = splitHeaderParts(line.replace(date, " "));
+
+			if (current && !current.period && current.body.length === 0) {
+				current.period = date;
+				current.headerParts.push(...remainder);
+				continue;
+			}
+
+			if (current) entries.push(current);
+			current = { period: date, headerParts: remainder, body: [] };
+			continue;
+		}
+
+		const next = cleaned[index + 1];
+		const startsEntry = !BULLET_PATTERN.test(line) && next !== undefined && dateOf(next) !== "";
+
+		if (startsEntry) {
+			if (current) entries.push(current);
+			current = { period: "", headerParts: splitHeaderParts(line), body: [] };
+			continue;
+		}
+
+		if (!current) {
+			current = { period: "", headerParts: splitHeaderParts(line), body: [] };
+			continue;
+		}
+
+		current.body.push(line);
+	}
+
+	if (current) entries.push(current);
+
+	return entries.filter((entry) => entry.period || entry.headerParts.length > 0 || entry.body.length > 0);
+}
+
+function entryDescription(entry: RawEntry, usedParts: number): string {
+	const leftover = entry.headerParts.slice(usedParts);
+	return toHtml([...leftover, ...entry.body]);
+}
+
+const baseItem = () => ({ id: generateId(), hidden: false });
+
+const emptyWebsite = { url: "", label: "", inlineLink: false };
+
+function buildSectionItems(key: SectionKey, lines: string[]): unknown[] {
+	if (key === "skills" || key === "interests") {
+		return splitList(lines).map((name) => ({
+			...baseItem(),
+			icon: "",
+			iconColor: "",
+			name,
+			...(key === "skills" ? { proficiency: "", level: 0, keywords: [] } : { keywords: [] }),
+		}));
+	}
+
+	if (key === "languages") {
+		return lines
+			.map((line) => line.replace(BULLET_PATTERN, "").trim())
+			.filter(Boolean)
+			.map((line) => {
+				const match = /^(.+?)\s*[([–—-]\s*(.+?)\s*[)\]]?$/.exec(line);
+				return {
+					...baseItem(),
+					language: (match?.[1] ?? line).trim(),
+					fluency: (match?.[2] ?? "").trim(),
+					level: 0,
+				};
+			});
+	}
+
+	if (key === "profiles") {
+		return lines
+			.map((line) => line.replace(BULLET_PATTERN, "").trim())
+			.filter(Boolean)
+			.map((line) => {
+				const url = line.match(URL_PATTERN)?.[0] ?? "";
+				const network = splitHeaderParts(line.replace(url, " "))[0] ?? line;
+				return {
+					...baseItem(),
+					icon: "",
+					iconColor: "",
+					network,
+					username: "",
+					website: { url, label: "", inlineLink: false },
+				};
+			});
+	}
+
+	const dated = key === "awards" || key === "certifications" || key === "publications";
+	const entries = groupEntries(lines, dated);
+
+	if (key === "experience") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			company: entry.headerParts[0] ?? "",
+			position: entry.headerParts[1] ?? "",
+			location: entry.headerParts[2] ?? "",
+			period: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 3),
+			roles: [],
+		}));
+	}
+
+	if (key === "education") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			school: entry.headerParts[0] ?? "",
+			degree: entry.headerParts[1] ?? "",
+			area: "",
+			grade: "",
+			location: entry.headerParts[2] ?? "",
+			period: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 3),
+		}));
+	}
+
+	if (key === "projects") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			name: entry.headerParts[0] ?? "",
+			period: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 1),
+		}));
+	}
+
+	if (key === "volunteer") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			organization: entry.headerParts[0] ?? "",
+			location: entry.headerParts[1] ?? "",
+			period: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 2),
+		}));
+	}
+
+	if (key === "awards") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			title: entry.headerParts[0] ?? "",
+			awarder: entry.headerParts[1] ?? "",
+			date: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 2),
+		}));
+	}
+
+	if (key === "certifications") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			title: entry.headerParts[0] ?? "",
+			issuer: entry.headerParts[1] ?? "",
+			date: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 2),
+		}));
+	}
+
+	if (key === "publications") {
+		return entries.map((entry) => ({
+			...baseItem(),
+			title: entry.headerParts[0] ?? "",
+			publisher: entry.headerParts[1] ?? "",
+			date: entry.period,
+			website: emptyWebsite,
+			description: entryDescription(entry, 2),
+		}));
+	}
+
+	return entries.map((entry) => ({
+		...baseItem(),
+		name: entry.headerParts[0] ?? "",
+		position: entry.headerParts[1] ?? "",
+		phone: "",
+		website: emptyWebsite,
+		description: entryDescription(entry, 2),
+	}));
+}
+
+function segment(lines: string[]): { header: string[]; segments: Segment[] } {
+	const header: string[] = [];
+	const segments: Segment[] = [];
+	let current: Segment | null = null;
+
+	for (const line of lines) {
+		const trimmed = line.trim();
+		if (!trimmed) continue;
+
+		const key = knownHeading(trimmed);
+		const unknown = key === null && current !== null && looksLikeHeading(trimmed);
+
+		if (key !== null || unknown) {
+			if (current) segments.push(current);
+			current = { key, title: trimmed.replace(/[:：]\s*$/, "").trim(), lines: [] };
+			continue;
+		}
+
+		if (current) current.lines.push(trimmed);
+		else header.push(trimmed);
+	}
+
+	if (current) segments.push(current);
+
+	return { header, segments };
+}
+
+function parseHeader(lines: string[]) {
+	const joined = lines.join(" ");
+	const email = joined.match(EMAIL_PATTERN)?.[0] ?? "";
+	const phone = extractPhone(joined);
+	const urls = joined.match(URL_PATTERN) ?? [];
+
+	const strip = (value: string) => {
+		let result = value;
+		if (email) result = result.replace(email, " ");
+		if (phone) result = result.replace(phone, " ");
+		for (const url of urls) result = result.replace(url, " ");
+		return result.replace(/\s+/g, " ").trim();
+	};
+
+	const remaining = lines.map(strip).filter(Boolean);
+	const name = remaining[0] ?? "";
+	const rest = remaining.slice(1).flatMap(splitHeaderParts).filter(Boolean);
+	const locationIndex = rest.findIndex((part) => /,/.test(part) && !/\d{4}/.test(part));
+
+	return {
+		name,
+		headline: locationIndex === 0 ? (rest[1] ?? "") : (rest[0] ?? ""),
+		location: locationIndex === -1 ? "" : (rest[locationIndex] ?? ""),
+		email,
+		phone,
+		website: urls[0] ?? "",
+	};
+}
+
+export function parseResumeText(text: string): ResumeData {
+	const lines = text.replace(/\r\n?/g, "\n").split("\n");
+	const { header, segments } = segment(lines);
+	const contact = parseHeader(header);
+
+	const data: ResumeData = structuredClone(defaultResumeData);
+	const order: string[] = [];
+
+	data.basics.name = contact.name;
+	data.basics.headline = contact.headline;
+	data.basics.email = contact.email;
+	data.basics.phone = contact.phone;
+	data.basics.location = contact.location;
+	data.basics.website = { url: contact.website, label: "" };
+
+	for (const item of segments) {
+		if (item.lines.length === 0) continue;
+
+		if (item.key === "summary") {
+			const content = toHtml(item.lines);
+			data.summary.content = data.summary.content ? `${data.summary.content}${content}` : content;
+			if (!order.includes("summary")) order.push("summary");
+			continue;
+		}
+
+		if (item.key === null) {
+			const id = generateId();
+			data.customSections.push({
+				id,
+				type: "summary",
+				title: item.title,
+				icon: "",
+				columns: 1,
+				hidden: false,
+				keepTogether: false,
+				startOnNewPage: false,
+				items: [{ id: generateId(), hidden: false, content: toHtml(item.lines) }],
+			});
+			order.push(id);
+			continue;
+		}
+
+		const items = buildSectionItems(item.key, item.lines);
+		if (items.length === 0) continue;
+
+		const section = data.sections[item.key];
+		section.items = [...section.items, ...items] as typeof section.items;
+		if (!order.includes(item.key)) order.push(item.key);
+	}
+
+	data.metadata.layout.pages = [{ fullWidth: true, main: order, sidebar: [] }];
+
+	return parseResumeData(data);
+}

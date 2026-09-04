@@ -88,25 +88,54 @@ const renderDialog = () => {
 	);
 };
 
-// A real "%PDF" header so the dialog auto-detects the type and shows the provider notice.
-const createPdfFile = () =>
-	new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "resume.pdf", { type: "application/pdf" });
+// Word still needs a provider, so it is what surfaces the notice. PDF falls back to a local parse.
+const createWordFile = () =>
+	new File([new Uint8Array([0x50, 0x4b, 0x03, 0x04])], "resume.docx", {
+		type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	});
 
 // The dialog renders through a portal, so query the document rather than the render container.
-async function selectPdfFile() {
+async function selectWordFile() {
 	const input = document.querySelector<HTMLInputElement>('input[type="file"]');
 	if (!input) throw new Error("File input not found");
 
-	fireEvent.change(input, { target: { files: [createPdfFile()] } });
+	fireEvent.change(input, { target: { files: [createWordFile()] } });
 
 	return await screen.findByText("Set up a provider");
 }
+
+const createPdfFile = () =>
+	new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "resume.pdf", { type: "application/pdf" });
+
+describe("ImportResumeDialog — PDF without a provider", () => {
+	it("offers a local parse instead of demanding an AI provider", async () => {
+		renderDialog();
+		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+		if (!input) throw new Error("File input not found");
+
+		fireEvent.change(input, { target: { files: [createPdfFile()] } });
+
+		expect(await screen.findByText(/read the text out of the PDF here in your browser/)).toBeInTheDocument();
+		expect(screen.queryByText("Set up a provider")).not.toBeInTheDocument();
+	});
+
+	it("keeps the import button usable", async () => {
+		renderDialog();
+		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+		if (!input) throw new Error("File input not found");
+
+		fireEvent.change(input, { target: { files: [createPdfFile()] } });
+		await screen.findByText(/read the text out of the PDF here in your browser/);
+
+		expect(screen.getByRole("button", { name: "Import" })).not.toBeDisabled();
+	});
+});
 
 describe("ImportResumeDialog — Set up a provider", () => {
 	// https://github.com/amruthpillai/reactive-resume/issues/3307
 	it("confirms before leaving instead of navigating behind the dialog", async () => {
 		renderDialog();
-		const link = await selectPdfFile();
+		const link = await selectWordFile();
 
 		fireEvent.click(link);
 
@@ -118,7 +147,7 @@ describe("ImportResumeDialog — Set up a provider", () => {
 
 	it("stays put and keeps the selected file when the user cancels", async () => {
 		renderDialog();
-		const link = await selectPdfFile();
+		const link = await selectWordFile();
 
 		fireEvent.click(link);
 		fireEvent.click(await screen.findByText("Stay"));
@@ -130,12 +159,12 @@ describe("ImportResumeDialog — Set up a provider", () => {
 		expect(routerNavigate).not.toHaveBeenCalled();
 		expect(navigate).not.toHaveBeenCalled();
 		expect(useDialogStore.getState().open).toBe(true);
-		expect(screen.getByText("resume.pdf")).toBeInTheDocument();
+		expect(screen.getByText("resume.docx")).toBeInTheDocument();
 	});
 
 	it("closes the dialog and navigates once the user confirms", async () => {
 		renderDialog();
-		const link = await selectPdfFile();
+		const link = await selectWordFile();
 
 		fireEvent.click(link);
 		fireEvent.click(await screen.findByText("Leave"));
@@ -152,7 +181,7 @@ describe("ImportResumeDialog — Set up a provider", () => {
 
 	it("leaves modifier clicks to the browser so the link can open in a new tab", async () => {
 		renderDialog();
-		const link = await selectPdfFile();
+		const link = await selectWordFile();
 
 		const event = new MouseEvent("click", { bubbles: true, cancelable: true, metaKey: true });
 		fireEvent(link, event);
@@ -164,7 +193,7 @@ describe("ImportResumeDialog — Set up a provider", () => {
 
 	it("leaves middle clicks to the browser too", async () => {
 		renderDialog();
-		const link = await selectPdfFile();
+		const link = await selectWordFile();
 
 		const event = new MouseEvent("click", { bubbles: true, cancelable: true, button: 1 });
 		fireEvent(link, event);
