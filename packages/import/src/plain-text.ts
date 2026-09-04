@@ -87,6 +87,7 @@ const URL_PATTERN = /\b(?:https?:\/\/|www\.)[^\s,;|•·]+/gi;
 const PHONE_CANDIDATE = /[+(]?\d[\d\s().+-]{5,}\d/g;
 const URL_TEST = /\b(?:https?:\/\/|www\.)\S+/i;
 const HEADER_SCAN_LINES = 6;
+const ENTRY_PREAMBLE_LOOKAHEAD = 2;
 const PERIOD_CANDIDATE =
 	/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
 const STRONG_SEPARATOR = /\s*[|•·]\s*|\s{2,}|\s+[–—]\s+/;
@@ -165,6 +166,16 @@ function isDateLine(line: string): boolean {
 
 	const bare = line.replace(BULLET_PATTERN, "").trim();
 	return bare !== "" && parseSingleDate(bare) !== null;
+}
+
+function introducesEntry(lines: readonly string[], index: number): boolean {
+	for (let offset = 1; offset <= ENTRY_PREAMBLE_LOOKAHEAD; offset++) {
+		const line = lines[index + offset];
+		if (line === undefined || BULLET_PATTERN.test(line)) return false;
+		if (isDateLine(line)) return true;
+	}
+
+	return false;
 }
 
 function headerBoundary(lines: string[]): number {
@@ -425,9 +436,7 @@ function segment(lines: string[]): { header: string[]; segments: Segment[] } {
 
 	for (const [index, line] of cleaned.entries()) {
 		const key = knownHeading(line);
-		const next = cleaned[index + 1];
-		const introducesEntry = next !== undefined && isDateLine(next);
-		const unknown = key === null && index > boundary && !introducesEntry && looksLikeHeading(line);
+		const unknown = key === null && index > boundary && !introducesEntry(cleaned, index) && looksLikeHeading(line);
 
 		if (key !== null || unknown) {
 			if (current) segments.push(current);

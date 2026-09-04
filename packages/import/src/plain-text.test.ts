@@ -189,3 +189,38 @@ describe("parseResumeText review findings", () => {
 		expect(data.summary.content).toContain("&#39;");
 	});
 });
+
+describe("parseResumeText multi-line entry preambles", () => {
+	it("keeps an uppercase company followed by a separate role line as one entry", () => {
+		const data = parseResumeText(
+			"EXPERIENCE\nACME CORPORATION\nSenior Engineer\nJan 2020 - Present\n• Led the rewrite\n",
+		);
+
+		expect(data.customSections).toHaveLength(0);
+		expect(data.sections.experience.items).toHaveLength(1);
+		expect(data.sections.experience.items[0]).toMatchObject({
+			company: "ACME CORPORATION",
+			position: "Senior Engineer",
+			period: "Jan 2020 - Present",
+		});
+	});
+
+	it("keeps an uppercase school followed by a separate degree line as one entry", () => {
+		const data = parseResumeText("EDUCATION\nUNIVERSITY OF LONDON\nBSc Mathematics\n2012 - 2016\n");
+
+		expect(data.customSections).toHaveLength(0);
+		expect(data.sections.education.items).toHaveLength(1);
+		expect(data.sections.education.items[0]).toMatchObject({
+			school: "UNIVERSITY OF LONDON",
+			degree: "BSc Mathematics",
+			period: "2012 - 2016",
+		});
+	});
+
+	it("still recognizes a real heading whose section starts with bullets", () => {
+		const data = parseResumeText("Ada\nada@example.com\n\nCAREER HIGHLIGHTS\n• Shipped in 2019\n• Grew the team\n");
+
+		expect(data.customSections).toHaveLength(1);
+		expect(data.customSections[0]).toMatchObject({ title: "CAREER HIGHLIGHTS" });
+	});
+});
