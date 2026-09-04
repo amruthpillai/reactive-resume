@@ -224,3 +224,32 @@ describe("parseResumeText multi-line entry preambles", () => {
 		expect(data.customSections[0]).toMatchObject({ title: "CAREER HIGHLIGHTS" });
 	});
 });
+
+describe("parseResumeText four-line entry preambles", () => {
+	it("keeps company, role, location and dates as one entry", () => {
+		const data = parseResumeText(
+			"EXPERIENCE\nACME CORPORATION\nSenior Engineer\nBerlin, Germany\nJan 2020 - Present\n• Led the rewrite\n",
+		);
+
+		expect(data.customSections).toHaveLength(0);
+		expect(data.sections.experience.items).toHaveLength(1);
+		expect(data.sections.experience.items[0]).toMatchObject({
+			company: "ACME CORPORATION",
+			position: "Senior Engineer",
+			location: "Berlin, Germany",
+			period: "Jan 2020 - Present",
+		});
+	});
+
+	it("keeps school, degree, location and dates as one entry", () => {
+		const data = parseResumeText("EDUCATION\nUNIVERSITY OF LONDON\nBSc Mathematics\nLondon, UK\n2012 - 2016\n");
+
+		expect(data.customSections).toHaveLength(0);
+		expect(data.sections.education.items).toHaveLength(1);
+		expect(data.sections.education.items[0]).toMatchObject({
+			school: "UNIVERSITY OF LONDON",
+			degree: "BSc Mathematics",
+			period: "2012 - 2016",
+		});
+	});
+});

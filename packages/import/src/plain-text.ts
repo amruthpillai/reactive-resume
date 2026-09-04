@@ -87,7 +87,7 @@ const URL_PATTERN = /\b(?:https?:\/\/|www\.)[^\s,;|•·]+/gi;
 const PHONE_CANDIDATE = /[+(]?\d[\d\s().+-]{5,}\d/g;
 const URL_TEST = /\b(?:https?:\/\/|www\.)\S+/i;
 const HEADER_SCAN_LINES = 6;
-const ENTRY_PREAMBLE_LOOKAHEAD = 2;
+const ENTRY_PREAMBLE_LOOKAHEAD = 4;
 const PERIOD_CANDIDATE =
 	/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
 const STRONG_SEPARATOR = /\s*[|•·]\s*|\s{2,}|\s+[–—]\s+/;
@@ -242,7 +242,7 @@ function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
 		if (date) {
 			const remainder = splitHeaderParts(line.replace(date, " "));
 
-			if (current && !current.period && current.body.length === 0) {
+			if (current && !current.period) {
 				current.period = date;
 				current.headerParts.push(...remainder);
 				continue;
@@ -253,21 +253,21 @@ function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
 			continue;
 		}
 
-		const next = cleaned[index + 1];
-		const startsEntry = !BULLET_PATTERN.test(line) && next !== undefined && dateOf(next) !== "";
-
-		if (startsEntry) {
-			if (current && !current.period && current.body.length === 0) {
-				current.headerParts.push(...splitHeaderParts(line));
-				continue;
-			}
-
-			if (current) entries.push(current);
+		if (!current) {
 			current = { period: "", headerParts: splitHeaderParts(line), body: [] };
 			continue;
 		}
 
-		if (!current) {
+		const isBullet = BULLET_PATTERN.test(line);
+		const leadsToDate = !isBullet && introducesEntry(cleaned, index);
+
+		if (leadsToDate && !current.period && current.body.length === 0) {
+			current.headerParts.push(...splitHeaderParts(line));
+			continue;
+		}
+
+		if (leadsToDate) {
+			entries.push(current);
 			current = { period: "", headerParts: splitHeaderParts(line), body: [] };
 			continue;
 		}
