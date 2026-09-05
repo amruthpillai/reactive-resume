@@ -1,17 +1,17 @@
-import { createSampleResumeFromDashboard, openSidebarSection } from "../fixtures/resume";
+import { createSampleResumeFromDashboard } from "../fixtures/resume";
 import { expect, test } from "../fixtures/test";
 
-test("uploads a large JPEG after cropping without expanding it into PNG", async ({ authPage: page }, testInfo) => {
+test("uploads a large JPEG after cropping without exceeding the upload limit", async ({ authPage: page }, testInfo) => {
 	await createSampleResumeFromDashboard(page, testInfo);
-	await openSidebarSection(page, "Picture");
+	await expect(page.locator("#sidebar-picture")).toBeVisible();
 
-	// A deterministic high-detail image: JPEG fits the upload limit, but lossless PNG does not.
+	// A deterministic high-detail image: JPEG fits the upload limit, but re-encoding at higher quality does not.
 	const dataUrl = await page.evaluate(() => {
 		const canvas = document.createElement("canvas");
-		canvas.width = canvas.height = 3200;
+		canvas.width = canvas.height = 4400;
 		const context = canvas.getContext("2d");
 		if (!context) throw new Error("Canvas is unavailable");
-		const pixels = context.createImageData(3200, 3200);
+		const pixels = context.createImageData(4400, 4400);
 		let seed = 42;
 		for (let i = 0; i < pixels.data.length; i += 4) {
 			for (let channel = 0; channel < 3; channel++) {
@@ -21,7 +21,7 @@ test("uploads a large JPEG after cropping without expanding it into PNG", async 
 			pixels.data[i + 3] = 255;
 		}
 		context.putImageData(pixels, 0, 0);
-		return canvas.toDataURL("image/jpeg", 0.8);
+		return canvas.toDataURL("image/jpeg", 0.65);
 	});
 	const buffer = Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
 	expect(buffer.byteLength).toBeLessThan(10 * 1024 * 1024);
