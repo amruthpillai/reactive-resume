@@ -46,6 +46,9 @@ function resolveInternalBaseUrl(): string {
 const internalBaseUrl = resolveInternalBaseUrl();
 
 const oauthAudienceBase = authBaseUrl.replace(/\/$/, "");
+// These identify the same account-wide API/MCP resource, not separate permission
+// tiers. Protected-resource metadata advertises the root; MCP clients may also
+// select the mounted endpoint or normalize either URI with a trailing slash.
 const OAUTH_AUDIENCES = [
 	oauthAudienceBase,
 	`${oauthAudienceBase}/`,
