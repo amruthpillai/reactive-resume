@@ -188,8 +188,8 @@ const defaultSectionHeadingContainerStyle = {
 	columnGap: 4,
 } satisfies Style;
 
-const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] =>
-	composeStyles(...styles).map(
+export const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] => {
+	const textStyles = composeStyles(...styles).map(
 		({
 			borderBottomWidth: _borderBottomWidth,
 			borderLeftWidth: _borderLeftWidth,
@@ -210,6 +210,13 @@ const getSectionHeadingTextStyle = (...styles: StyleInput[]): Style[] =>
 			...textStyle
 		}) => textStyle,
 	);
+
+	if (textStyles.length === 0) return [{ paddingLeft: 1 }];
+
+	const lastIndex = textStyles.length - 1;
+	const lastTextStyle: Style = { ...textStyles[lastIndex], paddingLeft: 1 };
+	return [...textStyles.slice(0, lastIndex), lastTextStyle];
+};
 
 const useSectionItemsContext = () => use(SectionItemsContext);
 

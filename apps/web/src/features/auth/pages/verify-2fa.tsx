@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowLeftIcon, CheckIcon } from "@phosphor-icons/react";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter, useSearch } from "@tanstack/react-router";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
 import { FormControl, FormItem, FormMessage } from "@reactive-resume/ui/components/form";
@@ -9,6 +9,7 @@ import { Input } from "@reactive-resume/ui/components/input";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { useAppForm } from "@/libs/tanstack-form";
+import { getAuthRedirectOptions, getOAuthSignInOptions, isOAuthRedirect } from "../redirect";
 
 const totpSchema = z.object({
 	code: z.string().length(6, "Code must be 6 digits"),
@@ -24,6 +25,7 @@ type TwoFactorVerificationPageProps = {
 
 function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerificationPageProps) {
 	const router = useRouter();
+	const { callbackURL, reauthenticate } = useSearch({ from: "/auth" });
 	const navigate = useNavigate();
 
 	const form = useAppForm({
@@ -35,9 +37,9 @@ function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerification
 				description: backupCode ? t`Verifying backup code...` : t`Verifying code...`,
 			});
 			const code = backupCode ? `${value.code.slice(0, 5)}-${value.code.slice(5)}` : value.code;
-			const { error } = backupCode
-				? await authClient.twoFactor.verifyBackupCode({ code })
-				: await authClient.twoFactor.verifyTotp({ code });
+			const { data, error } = backupCode
+				? await authClient.twoFactor.verifyBackupCode({ code, ...getOAuthSignInOptions(callbackURL) })
+				: await authClient.twoFactor.verifyTotp({ code, ...getOAuthSignInOptions(callbackURL) });
 
 			if (error) {
 				toast.add({
@@ -59,8 +61,9 @@ function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerification
 			}
 
 			toast.close(toastId);
+			if (isOAuthRedirect(data)) return;
 			await router.invalidate();
-			void navigate({ to: "/dashboard", replace: true });
+			void navigate(getAuthRedirectOptions(callbackURL));
 		},
 	});
 
@@ -117,7 +120,7 @@ function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerification
 						className="flex-1"
 						nativeButton={false}
 						render={
-							<Link to={backupCode ? "/auth/verify-2fa" : "/auth/login"}>
+							<Link to={backupCode ? "/auth/verify-2fa" : "/auth/login"} search={{ callbackURL, reauthenticate }}>
 								<ArrowLeftIcon />
 								{backupCode ? (
 									<Trans comment="Secondary navigation button on backup-code verification screen">Go Back</Trans>
@@ -145,7 +148,7 @@ function TwoFactorVerificationPage({ backupCode = false }: TwoFactorVerification
 					nativeButton={false}
 					className="h-auto justify-self-center p-0 text-sm"
 					render={
-						<Link to="/auth/verify-2fa-backup">
+						<Link to="/auth/verify-2fa-backup" search={{ callbackURL, reauthenticate }}>
 							<Trans comment="Link to backup-code verification flow when authenticator app is unavailable">
 								Lost access to your authenticator?
 							</Trans>

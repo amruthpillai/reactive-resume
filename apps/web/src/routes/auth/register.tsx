@@ -1,11 +1,12 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { RegisterPage } from "@/features/auth/pages/register";
+import { getAuthRedirectOptions } from "@/features/auth/redirect";
 
 export const Route = createFileRoute("/auth/register")({
 	component: RouteComponent,
-	beforeLoad: ({ context }) => {
-		if (context.session) throw redirect({ to: "/dashboard", replace: true });
-		if (context.flags.disableSignups) throw redirect({ to: "/auth/login", replace: true });
+	beforeLoad: ({ context, search }) => {
+		if (context.session && !search.reauthenticate) throw redirect(getAuthRedirectOptions(search.callbackURL));
+		if (context.flags.disableSignups) throw redirect({ to: "/auth/login", search, replace: true });
 		return { session: null };
 	},
 });

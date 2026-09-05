@@ -17,6 +17,7 @@ import { AnimatePresence, m } from "motion/react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { Badge } from "@reactive-resume/ui/components/badge";
+import { useFormControl } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Kbd } from "@reactive-resume/ui/components/kbd";
 import { cn } from "@reactive-resume/utils/style";
@@ -152,8 +153,17 @@ export function ChipInput({
 	onChange,
 	className,
 	hideDescription = false,
+	id: idProp,
+	"aria-describedby": ariaDescribedByProp,
+	"aria-invalid": ariaInvalidProp,
 	...props
 }: Props) {
+	const formControl = useFormControl();
+	const controlId = idProp ?? formControl.id;
+	const describedBy = ariaDescribedByProp ?? formControl["aria-describedby"];
+	const invalid = ariaInvalidProp ?? formControl["aria-invalid"];
+	const labelId = formControl.labelId;
+
 	const [chips, setChips] = useControlledState<string[]>({
 		value,
 		defaultValue,
@@ -368,9 +378,16 @@ export function ChipInput({
 							<Input
 								ref={inputRef}
 								type="text"
+								id={controlId}
 								value={input}
 								autoComplete="off"
+								// A resolvable aria-labelledby outranks aria-label, so a rendered FormLabel still wins;
+								// when the FormControl has no FormLabel the reference dangles and the accessible name
+								// falls back to aria-label instead of going empty.
 								aria-label={isEditingKeyword ? t`Edit keyword` : t`Add keyword`}
+								aria-labelledby={labelId}
+								aria-describedby={describedBy}
+								aria-invalid={invalid}
 								placeholder={isEditingKeyword ? t`Editing keyword...` : t`Add a keyword...`}
 								onKeyDown={handleKeyDown}
 								onChange={handleInputChange}

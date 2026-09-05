@@ -239,6 +239,21 @@ describe("semantic issue fixtures", () => {
 		expect(mergedStyle(findText(document, "Analytical Engines")).fontWeight).not.toBe("400");
 	});
 
+	it("preserves the first character of a section heading with a leading text padding (#3380)", async () => {
+		const data = buildIssueFixture();
+		data.sections.experience.title = "Experience";
+		data.metadata.page.hideSectionIcons = false;
+
+		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+		const instance = pdf(element);
+		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+		const document = instance.container.document as HostNode;
+		const heading = findText(document, "Experience");
+
+		expect(heading).toBeDefined();
+		expect(mergedStyle(heading).paddingLeft).toBe(1);
+	});
+
 	it("renders descriptor filtering and stable item order instead of remapping raw arrays", async () => {
 		const data = buildIssueFixture();
 		data.sections.skills.items = ["First", "Hidden", "Last"].map((name, index) => ({

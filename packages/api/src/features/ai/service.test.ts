@@ -9,6 +9,7 @@ const envMock = vi.hoisted(() => ({
 vi.mock("@reactive-resume/env/server", () => ({ env: envMock }));
 
 afterEach(() => {
+	vi.unstubAllEnvs();
 	vi.unstubAllGlobals();
 	vi.useRealTimers();
 });
@@ -166,6 +167,46 @@ describe("AI provider connection test", () => {
 			expect(result.message).not.toContain("tok123");
 			expect(result.message).toContain("***");
 		}
+	});
+});
+
+describe("AI provider test connection timeout", () => {
+	/**
+	 * Re-import the service module with `AI_TEST_TIMEOUT_MS` set to a specific value.
+	 *
+	 * @param value - The environment value to test, or `undefined` to unset it.
+	 * @returns The `testConnection` function from the freshly imported module.
+	 */
+	async function loadWithTimeout(value: string | undefined) {
+		vi.stubEnv("AI_TEST_TIMEOUT_MS", value);
+		vi.resetModules();
+		const mod = await import("./service");
+		return mod.testConnection;
+	}
+
+	it("uses a valid custom timeout", async () => {
+		const testConnectionWithEnv = await loadWithTimeout("5000");
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 5 seconds"),
+		});
+	});
+
+	it.each([
+		["negative", "-1"],
+		["fractional", "30.5"],
+		["non-numeric", "not-a-number"],
+		["out-of-range", "999999999999"],
+	])("falls back to the default for %s values", async (_label, value) => {
+		const testConnectionWithEnv = await loadWithTimeout(value);
+		stubRejectedFetch(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+
+		await expect(testConnectionWithEnv(testInput())).resolves.toMatchObject({
+			ok: false,
+			message: expect.stringContaining("did not respond within 30 seconds"),
+		});
 	});
 });
 

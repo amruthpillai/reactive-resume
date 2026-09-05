@@ -1,10 +1,6 @@
-import crypto from "node:crypto";
-import { eq } from "drizzle-orm";
+import { APIError } from "better-auth/api";
 import { auth } from "@reactive-resume/auth/config";
-import { db } from "@reactive-resume/db/client";
-import { oauthClient, verification } from "@reactive-resume/db/schema";
 import { env } from "@reactive-resume/env/server";
-import { generateId } from "@reactive-resume/utils/string";
 import { isAllowedOAuthRedirectUri } from "@reactive-resume/utils/url-security.node";
 
 const oauthAuthorizeSanitizedParams = [
@@ -19,8 +15,6 @@ const oauthAuthorizeSanitizedParams = [
 	"resource",
 ] as const;
 
-const oauthCallbackPassthroughExcludedParams = new Set(["exp", "sig"]);
-
 function sanitizeOAuthAuthorizeRequest(request: Request): Request {
 	if (request.method !== "GET") return request;
 
@@ -33,9 +27,10 @@ function sanitizeOAuthAuthorizeRequest(request: Request): Request {
 			.replace(/\s+/g, " ")
 			.trim();
 	const sanitizeParam = (key: string) => {
-		const value = url.searchParams.get(key);
-		if (!value) return;
-		url.searchParams.set(key, sanitizeValue(value));
+		const values = url.searchParams.getAll(key);
+		if (!values.length) return;
+		url.searchParams.delete(key);
+		for (const value of values) url.searchParams.append(key, sanitizeValue(value));
 	};
 
 	for (const key of oauthAuthorizeSanitizedParams) sanitizeParam(key);
@@ -56,6 +51,10 @@ function sanitizeOAuthAuthorizeRequest(request: Request): Request {
 	return new Request(url.toString(), request);
 }
 
+function isRegistrationPayload(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 async function defaultPublicClientRegistration(request: Request): Promise<Request> {
 	if (request.method !== "POST") return request;
 
@@ -66,9 +65,21 @@ async function defaultPublicClientRegistration(request: Request): Promise<Reques
 	let body: Record<string, unknown>;
 
 	try {
-		body = await cloned.json();
+		const payload: unknown = await cloned.json();
+		if (!isRegistrationPayload(payload)) return request;
+		body = payload;
 	} catch {
 		return request;
+	}
+
+	// MCP native clients often omit OIDC application_type. Infer it only for
+	// exact HTTP loopback callbacks; the provider still validates every URI.
+	if (body.application_type === undefined && Array.isArray(body.redirect_uris) && body.redirect_uris.length > 0) {
+		const allLoopback = body.redirect_uris.every(
+			(uri: unknown) =>
+				typeof uri === "string" && /^http:\/\/(?:localhost|127\.0\.0\.1|\[::1\])(?::[0-9]+)?(?:[/?]|$)/i.test(uri),
+		);
+		if (allLoopback) body.application_type = "native";
 	}
 
 	if (!request.headers.get("authorization")) {
@@ -92,7 +103,11 @@ async function validateDynamicClientRegistrationRequest(request: Request): Promi
 	let body: Record<string, unknown>;
 
 	try {
-		body = await cloned.json();
+		const payload: unknown = await cloned.json();
+		if (!isRegistrationPayload(payload)) {
+			return Response.json({ message: "Invalid registration payload" }, { status: 400 });
+		}
+		body = payload;
 	} catch {
 		return Response.json({ message: "Invalid registration payload" }, { status: 400 });
 	}
@@ -125,90 +140,68 @@ export async function handleAuth(request: Request) {
 	return auth.handler(finalRequest);
 }
 
-function generateCode() {
-	return crypto.randomBytes(32).toString("base64url");
-}
-
-function hashCode(code: string) {
-	return crypto.createHash("sha256").update(code).digest("base64url");
-}
-
 export async function handleOAuth(request: Request) {
+	try {
+		return await resumeOAuth(request);
+	} catch (error) {
+		// Before-hooks can throw even when the provider is called with asResponse.
+		if (error instanceof APIError) return Response.json(error.body, { status: error.statusCode });
+		throw error;
+	}
+}
+
+async function resumeOAuth(request: Request) {
 	const session = await auth.api.getSession({ headers: request.headers });
 	const url = new URL(request.url);
 
 	if (session?.user) {
-		const clientId = url.searchParams.get("client_id");
-		const redirectUri = url.searchParams.get("redirect_uri");
-		const state = url.searchParams.get("state");
-		const scope = url.searchParams.get("scope");
-		const codeChallenge = url.searchParams.get("code_challenge");
-		const codeChallengeMethod = url.searchParams.get("code_challenge_method");
-
-		if (!clientId || !redirectUri) {
-			return Response.json({ error: "missing client_id or redirect_uri" }, { status: 400 });
-		}
-
-		const [client] = await db.select().from(oauthClient).where(eq(oauthClient.clientId, clientId)).limit(1);
-
-		if (!client) {
-			return Response.json({ error: "invalid client" }, { status: 400 });
-		}
-
-		if (!client.redirectUris.includes(redirectUri)) {
-			return Response.json({ error: "invalid redirect_uri" }, { status: 400 });
-		}
-
-		const code = generateCode();
-		const hashedCode = hashCode(code);
-		const now = new Date();
-		const expiresAt = new Date(now.getTime() + 600_000);
-
-		await db.insert(verification).values({
-			id: generateId(),
-			identifier: hashedCode,
-			value: JSON.stringify({
-				type: "authorization_code",
-				query: {
-					response_type: "code",
-					client_id: clientId,
-					redirect_uri: redirectUri,
-					scope,
-					state,
-					code_challenge: codeChallenge,
-					code_challenge_method: codeChallengeMethod,
-				},
-				userId: session.user.id,
-				sessionId: session.session.id,
-				authTime: new Date(session.session.createdAt).getTime(),
-			}),
-			expiresAt,
-			createdAt: now,
-			updatedAt: now,
+		// Resume authorization without granting consent. The provider decides whether
+		// the user must sign in, explicitly approve a client, or reuse an existing grant.
+		// Its signed query must survive the login round trip byte-for-byte.
+		const response = await auth.api.oauth2Continue({
+			asResponse: true,
+			request,
+			headers: request.headers,
+			body: { postLogin: true, oauth_query: url.search.slice(1) },
 		});
-
-		const callbackUrl = new URL(redirectUri);
-		callbackUrl.searchParams.set("code", code);
-		if (state) callbackUrl.searchParams.set("state", state);
-		callbackUrl.searchParams.set("iss", `${env.APP_URL}/api/auth`);
-
-		return new Response(null, {
-			status: 302,
-			headers: { Location: callbackUrl.toString() },
-		});
+		if (!(response instanceof Response)) throw new Error("OAuth provider did not return a response");
+		if (!response.ok) return response;
+		const result: unknown = await response.json().catch(() => null);
+		if (
+			!result ||
+			typeof result !== "object" ||
+			!("url" in result) ||
+			typeof result.url !== "string" ||
+			!result.url ||
+			!(result.url.startsWith("/") || URL.canParse(result.url)) ||
+			!URL.canParse(result.url, env.APP_URL)
+		)
+			return Response.json({ error: "invalid_provider_response" }, { status: 502 });
+		const headers = new Headers(response.headers);
+		headers.delete("content-type");
+		headers.delete("content-length");
+		const target = new URL(result.url, env.APP_URL);
+		if (["javascript:", "data:", "vbscript:", "file:", "blob:"].includes(target.protocol)) {
+			return Response.json({ error: "invalid_provider_response" }, { status: 502 });
+		}
+		if (target.origin === new URL(env.APP_URL).origin && target.pathname === "/api/auth/oauth") {
+			return redirectToOAuthLogin(target, true, headers);
+		}
+		headers.set("Location", result.url);
+		return new Response(null, { status: 302, headers });
 	}
 
-	const loginUrl = new URL("/auth/login", env.APP_URL);
-	const oauthParams = new URLSearchParams();
-	for (const [key, value] of url.searchParams) {
-		if (!oauthCallbackPassthroughExcludedParams.has(key)) {
-			oauthParams.set(key, value);
-		}
-	}
-	loginUrl.searchParams.set("callbackURL", `/api/auth/oauth?${oauthParams.toString()}`);
+	return redirectToOAuthLogin(url);
+}
 
+function redirectToOAuthLogin(url: URL, reauthenticate = false, headers = new Headers()) {
+	const prompt = new Set(url.searchParams.get("prompt")?.split(" ") ?? []);
+	const loginUrl = new URL(prompt.has("create") ? "/auth/register" : "/auth/login", env.APP_URL);
+	if (reauthenticate) loginUrl.searchParams.set("reauthenticate", "true");
+	loginUrl.searchParams.set("callbackURL", `/api/auth/oauth${url.search}`);
+	headers.set("Location", `${loginUrl.pathname}${loginUrl.search}`);
 	return new Response(null, {
 		status: 302,
-		headers: { Location: `${loginUrl.pathname}${loginUrl.search}` },
+		headers,
 	});
 }

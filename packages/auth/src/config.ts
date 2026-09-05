@@ -46,6 +46,9 @@ function resolveInternalBaseUrl(): string {
 const internalBaseUrl = resolveInternalBaseUrl();
 
 const oauthAudienceBase = authBaseUrl.replace(/\/$/, "");
+// These identify the same account-wide API/MCP resource, not separate permission
+// tiers. Protected-resource metadata advertises the root; MCP clients may also
+// select the mounted endpoint or normalize either URI with a trailing slash.
 const OAUTH_AUDIENCES = [
 	oauthAudienceBase,
 	`${oauthAudienceBase}/`,
@@ -301,11 +304,12 @@ const getAuthConfig = () => {
 			}),
 			oauthProvider({
 				loginPage: "/api/auth/oauth",
-				consentPage: "/api/auth/oauth",
-				validAudiences: OAUTH_AUDIENCES,
+				consentPage: "/auth/consent",
+				resources: OAUTH_AUDIENCES,
+				clientRegistrationDefaultResources: OAUTH_AUDIENCES,
 				allowDynamicClientRegistration: true,
-				// Required for MCP client onboarding (RFC 7591). Phishing vector is closed by the
-				// redirect_uri policy in the hooks.before middleware above and server auth preflight.
+				// Required for MCP client onboarding (RFC 7591). Redirect URI validation
+				// and explicit user consent protect access by dynamically registered clients.
 				allowUnauthenticatedClientRegistration: true,
 				rateLimit: oauthProviderRateLimit,
 				silenceWarnings: { oauthAuthServerConfig: true },

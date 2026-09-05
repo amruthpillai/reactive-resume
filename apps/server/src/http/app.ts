@@ -36,6 +36,14 @@ const getTrustedClient = (context: Context<ServerEnvironment>): string => {
 export function createApp() {
 	const app = new Hono<ServerEnvironment>();
 
+	app.use("/auth/*", async (c, next) => {
+		await next();
+		c.header("Content-Security-Policy", "frame-ancestors 'none'");
+		c.header("X-Frame-Options", "DENY");
+		c.header("Referrer-Policy", "no-referrer");
+		c.header("Cache-Control", "no-store");
+	});
+
 	app.all("/api/rpc", (c) => handleRpc(c.req.raw, getTrustedClient(c)));
 	app.all("/api/rpc/*", (c) => handleRpc(c.req.raw, getTrustedClient(c)));
 	app.all("/api/openapi", (c) => handleOpenApi(c.req.raw, getTrustedClient(c)));

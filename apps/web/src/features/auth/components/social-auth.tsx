@@ -3,13 +3,14 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { FingerprintIcon, GithubLogoIcon, GoogleLogoIcon, LinkedinLogoIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, useSearch } from "@tanstack/react-router";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Skeleton } from "@reactive-resume/ui/components/skeleton";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
 import { authClient } from "@/libs/auth/client";
 import { orpc } from "@/libs/orpc/client";
+import { getAuthRedirectOptions, getOAuthPasskeyOptions, getOAuthSignInOptions, isOAuthRedirect } from "../redirect";
 
 export function SocialAuth() {
 	const { data: providers = {}, isLoading } = useQuery(orpc.auth.providers.list.queryOptions());
@@ -48,10 +49,14 @@ type SocialAuthButtonsProps = {
 
 function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 	const router = useRouter();
+	const { callbackURL } = useSearch({ from: "/auth" });
 
-	const runSignIn = async (fn: () => Promise<{ error: { message?: string } | null }>) => {
+	const runSignIn = async (
+		fn: () => Promise<{ data?: unknown; error: { message?: string } | null }>,
+		isPasskey = false,
+	) => {
 		const toastId = toast.add({ type: "loading", description: t`Signing in...` });
-		const { error } = await fn();
+		const { data, error } = await fn();
 		if (error) {
 			toast.add({
 				type: "error",
@@ -66,7 +71,9 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 			return;
 		}
 		toast.close(toastId);
+		if (isOAuthRedirect(data)) return;
 		await router.invalidate();
+		if (isPasskey) void router.navigate(getAuthRedirectOptions(callbackURL));
 	};
 
 	return (
@@ -77,7 +84,8 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 					runSignIn(() =>
 						authClient.signIn.social({
 							provider: "custom",
-							callbackURL: "/dashboard",
+							callbackURL: callbackURL ?? "/dashboard",
+							...getOAuthSignInOptions(callbackURL),
 						}),
 					)
 				}
@@ -89,7 +97,9 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 
 			<Button
 				variant="secondary"
-				onClick={() => runSignIn(() => authClient.signIn.passkey({ autoFill: false }))}
+				onClick={() =>
+					runSignIn(() => authClient.signIn.passkey({ autoFill: false, ...getOAuthPasskeyOptions(callbackURL) }), true)
+				}
 				className={cn("hidden", "passkey" in providers && "inline-flex")}
 			>
 				<FingerprintIcon />
@@ -97,7 +107,15 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 			</Button>
 
 			<Button
-				onClick={() => runSignIn(() => authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" }))}
+				onClick={() =>
+					runSignIn(() =>
+						authClient.signIn.social({
+							provider: "google",
+							callbackURL: callbackURL ?? "/dashboard",
+							...getOAuthSignInOptions(callbackURL),
+						}),
+					)
+				}
 				className={cn(
 					"hidden flex-1 bg-[#4285F4] text-white hover:bg-[#4285F4]/80",
 					"google" in providers && "inline-flex",
@@ -108,7 +126,15 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 			</Button>
 
 			<Button
-				onClick={() => runSignIn(() => authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" }))}
+				onClick={() =>
+					runSignIn(() =>
+						authClient.signIn.social({
+							provider: "github",
+							callbackURL: callbackURL ?? "/dashboard",
+							...getOAuthSignInOptions(callbackURL),
+						}),
+					)
+				}
 				className={cn(
 					"hidden flex-1 bg-[#2b3137] text-white hover:bg-[#2b3137]/80",
 					"github" in providers && "inline-flex",
@@ -119,7 +145,15 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 			</Button>
 
 			<Button
-				onClick={() => runSignIn(() => authClient.signIn.social({ provider: "linkedin", callbackURL: "/dashboard" }))}
+				onClick={() =>
+					runSignIn(() =>
+						authClient.signIn.social({
+							provider: "linkedin",
+							callbackURL: callbackURL ?? "/dashboard",
+							...getOAuthSignInOptions(callbackURL),
+						}),
+					)
+				}
 				className={cn(
 					"hidden flex-1 bg-[#0A66C2] text-white hover:bg-[#0A66C2]/80",
 					"linkedin" in providers && "inline-flex",

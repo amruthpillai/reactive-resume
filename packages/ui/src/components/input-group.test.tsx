@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, test } from "vitest";
 import { createPortal } from "react-dom";
+import { FormControl, FormItem, FormLabel } from "./form";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -26,6 +27,43 @@ describe("InputGroup", () => {
 	it("merges custom className", () => {
 		render(<InputGroup data-testid="g" className="my-class" />);
 		expect(screen.getByTestId("g")).toHaveClass("my-class");
+	});
+
+	it("preserves explicit fieldset identity and description in standalone usage", () => {
+		// Standalone (no FormControl ancestor) the native fieldset props must
+		// survive: the generated-prop strip only applies to FormControl
+		// compositions, where the inner control carries them via context.
+		render(
+			<InputGroup id="caller-group" aria-describedby="hint" data-testid="g">
+				<InputGroupInput data-testid="i" />
+			</InputGroup>,
+		);
+
+		const g = screen.getByTestId("g");
+		expect(g).toHaveAttribute("id", "caller-group");
+		expect(g).toHaveAttribute("aria-describedby", "hint");
+	});
+
+	it("keeps the generated control id off the fieldset inside a FormControl", () => {
+		render(
+			<FormItem>
+				<FormLabel>Slug</FormLabel>
+				<FormControl
+					render={
+						<InputGroup data-testid="g">
+							<InputGroupInput data-testid="i" />
+						</InputGroup>
+					}
+				/>
+			</FormItem>,
+		);
+
+		const g = screen.getByTestId("g");
+		const input = screen.getByTestId("i");
+
+		expect(input).toHaveAttribute("id");
+		expect(input.getAttribute("id")).toMatch(/-form-item$/);
+		expect(g).not.toHaveAttribute("id");
 	});
 });
 

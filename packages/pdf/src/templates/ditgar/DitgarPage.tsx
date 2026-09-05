@@ -20,6 +20,7 @@ import { TemplateProvider } from "../shared/context";
 import { getFeaturedSummaryLayout } from "../shared/featured-summary";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
+import { PageMarginBackground } from "../shared/page-margin-background";
 import { hasTemplatePicture } from "../shared/picture";
 import {
 	Heading,
@@ -87,15 +88,25 @@ export const DitgarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 		<Page
 			{...semanticPageProps}
 			size={semanticPageSize ?? pageSize}
-			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+			style={composeStyles(
+				styles.page,
+				{ paddingVertical: metrics.page.paddingVertical },
+				pageMinHeightStyle,
+				semanticPageStyle,
+			)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors} features={ditgarFeatures}>
 				{showSidebar && (
 					<View
 						style={composeStyles(styles.sidebarColumn, {
 							width: `${metadata.layout.sidebarWidth}%`,
+							marginTop: -metrics.page.paddingVertical,
 						})}
 					>
+						<PageMarginBackground
+							color={colors.sidebarBackground ?? colors.background}
+							margin={metrics.page.paddingVertical}
+						/>
 						{showHeader && <Header styles={styles} colors={colors} />}
 
 						{!page.fullWidth && (
@@ -111,7 +122,7 @@ export const DitgarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 					</View>
 				)}
 
-				<View style={styles.mainColumn}>
+				<View style={composeStyles(styles.mainColumn, { marginTop: -metrics.page.paddingVertical })}>
 					{featuredSummarySection && (
 						<SemanticRegionTemplatePartView
 							region="featured"
@@ -244,7 +255,6 @@ const useDitgarTemplate = (): DitgarTemplate => {
 			sidebarContent: {
 				paddingHorizontal: metrics.page.paddingHorizontal,
 				paddingTop: metrics.page.paddingVertical,
-				paddingBottom: metrics.page.paddingVertical,
 			},
 			mainColumn: {
 				flex: 1,
@@ -252,7 +262,6 @@ const useDitgarTemplate = (): DitgarTemplate => {
 			mainContent: {
 				paddingHorizontal: metrics.page.paddingHorizontal,
 				paddingTop: metrics.page.paddingVertical,
-				paddingBottom: metrics.page.paddingVertical,
 			},
 			specialContainer: {
 				backgroundColor: primaryTint,

@@ -75,12 +75,17 @@ export const DittoPage = ({ page, pageSize, pageMinHeightStyle, showHeader, page
 		<Page
 			{...semanticPageProps}
 			size={semanticPageSize ?? pageSize}
-			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+			style={composeStyles(
+				styles.page,
+				{ paddingVertical: metrics.page.paddingVertical },
+				pageMinHeightStyle,
+				semanticPageStyle,
+			)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
-				<View style={composeStyles(styles.contentRow, { paddingTop: metrics.headerGap })}>
+				<View style={composeStyles(styles.contentRow, { paddingTop: showHeader ? metrics.headerGap : 0 })}>
 					<SemanticRegionView
 						region="sidebar"
 						style={composeStyles(styles.sidebarColumn, {
@@ -199,6 +204,7 @@ const useDittoTemplate = (): DittoTemplate => {
 				backgroundColor: primary,
 			},
 			header: {
+				marginTop: -metrics.page.paddingVertical,
 				position: "relative",
 			},
 			headerBand: {

@@ -971,3 +971,69 @@ describe("statistics.increment", () => {
 		expect(txInsert).toHaveBeenCalledTimes(2);
 	});
 });
+
+describe("statistics.recordDownload", () => {
+	const input = { username: "owner", slug: "resume", requestHeaders: new Headers() };
+	const publicResume = { id: "r1", userId: "u1", isPublic: true, passwordHash: null };
+	const selectResume = (rows: unknown[]) =>
+		dbMock.select.mockReturnValueOnce({
+			from: () => ({ innerJoin: () => ({ where: () => Promise.resolve(rows) }) }),
+		});
+	const captureWrites = () => {
+		const values = vi.fn((_input: unknown) => ({ onConflictDoUpdate: vi.fn(async () => undefined) }));
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ insert: () => ({ values }) }),
+		);
+		return values;
+	};
+
+	it.each([undefined, "another-user"])(
+		"counts a public visitor (%s) in totals and daily downloads without adding views",
+		async (currentUserId) => {
+			selectResume([publicResume]);
+			const values = captureWrites();
+			await resumeService.statistics.recordDownload({ ...input, ...(currentUserId ? { currentUserId } : {}) });
+			expect(values).toHaveBeenCalledTimes(2);
+			expect(values.mock.calls[0]?.[0]).toMatchObject({ resumeId: "r1", views: 0, downloads: 1 });
+			expect(values.mock.calls[0]?.[0]).toHaveProperty("lastDownloadedAt");
+			expect(values.mock.calls[0]?.[0]).toHaveProperty("lastViewedAt", undefined);
+			expect(values.mock.calls[1]?.[0]).toMatchObject({
+				resumeId: "r1",
+				views: 0,
+				downloads: 1,
+				date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+			});
+		},
+	);
+
+	it("does not count the owner's own download", async () => {
+		selectResume([publicResume]);
+		await resumeService.statistics.recordDownload({ ...input, currentUserId: "u1" });
+		expect(dbMock.transaction).not.toHaveBeenCalled();
+	});
+
+	it.each([{ rows: [] }, { rows: [{ ...publicResume, isPublic: false }] }])(
+		"rejects unavailable resumes without recording a download",
+		async ({ rows }) => {
+			selectResume(rows);
+			await expect(resumeService.statistics.recordDownload(input)).rejects.toMatchObject({ code: "NOT_FOUND" });
+			expect(dbMock.transaction).not.toHaveBeenCalled();
+		},
+	);
+
+	it("requires current password access before recording a download", async () => {
+		selectResume([{ ...publicResume, passwordHash: "hash" }]);
+		hasResumeAccessMock.mockReturnValueOnce(false);
+		await expect(resumeService.statistics.recordDownload(input)).rejects.toMatchObject({ code: "NEED_PASSWORD" });
+		expect(hasResumeAccessMock).toHaveBeenCalledWith(input.requestHeaders, "r1", "hash");
+		expect(dbMock.transaction).not.toHaveBeenCalled();
+	});
+
+	it("records a visitor with valid password access", async () => {
+		selectResume([{ ...publicResume, passwordHash: "hash" }]);
+		hasResumeAccessMock.mockReturnValueOnce(true);
+		const values = captureWrites();
+		await resumeService.statistics.recordDownload(input);
+		expect(values).toHaveBeenCalledTimes(2);
+	});
+});

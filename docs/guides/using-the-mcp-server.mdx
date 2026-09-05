@@ -118,9 +118,9 @@ Reactive Resume is configured as an OAuth authorization server for MCP clients:
 
 - The MCP endpoint is `https://rxresu.me/mcp`.
 - OAuth discovery metadata is exposed under `/.well-known/*` endpoints.
-- The login/authorization route is `/auth/oauth`.
-- If the user is not signed in, `/auth/oauth` redirects to `/auth/login`, then resumes OAuth.
-- If the user is signed in, `/auth/oauth` validates `client_id` and `redirect_uri`, issues an authorization code, and redirects back to the client.
+- The login/authorization route is `/api/auth/oauth`.
+- If the user is not signed in, `/api/auth/oauth` redirects to `/auth/login`, then resumes OAuth.
+- If the user is signed in, `/api/auth/oauth` uses the OAuth provider to validate the signed request, registered redirect URI, scopes, resource grants, and PKCE before issuing an authorization code, and redirects back to the client.
 - PKCE parameters (`code_challenge`, `code_challenge_method`) are preserved in the authorization flow.
 
 ## Popular client setup
@@ -204,6 +204,12 @@ If you're running a self-hosted Reactive Resume instance, replace `https://rxres
   }
 }
 ```
+
+### Reconnecting after the OAuth provider upgrade
+
+Self-hosted instances automatically apply the additive OAuth schema migration at startup. This preserves existing client and token records and adds the provider's resource and client-resource tables.
+
+Clients registered before OAuth provider 1.7 do not have per-resource grants. Remove the old connection from your MCP client and add it again so it dynamically registers a new client, then sign in again. Refreshing an existing token does not create these grants. New registrations receive only the resources configured for this instance; existing clients are not automatically granted access.
 
 ## Available tools
 
