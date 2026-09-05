@@ -160,7 +160,8 @@ Stable filenames and the exports' two-space indentation make field changes easie
 ### Recover an earlier resume without replacing the current one
 
 Choose the committed revision of `resume.json` that you want to recover. List commits that changed the file, then inspect
-the selected revision from the backup folder:
+the selected revision from the backup folder. Choose a fresh, unused output filename; the example assumes
+`recovered-resume.json` does not already exist:
 
 ```bash
 git log --oneline -- resume.json
