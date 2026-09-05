@@ -147,15 +147,18 @@ function parseTags(value: string) {
 export type CsvMapResult = {
 	rows: ParsedApplication[];
 	skipped: number;
+	contactsSkipped: number;
 	headers: string[];
 	recognized: string[];
 };
 
 // Maps parsed CSV rows to application inputs using the header row. Rows missing company or role
-// are skipped (and counted). Status is coerced to a valid stage or dropped.
+// are skipped (and counted). Status is coerced to a valid stage or dropped. A contact that fails
+// validation (bad email, or contact columns with no name) is dropped on its own — the application
+// still imports, since losing the whole row would silently discard company/role/salary/tags too.
 export function mapCsvToApplications(table: string[][]): CsvMapResult {
 	const [headerRow, ...dataRows] = table;
-	if (!headerRow) return { rows: [], skipped: 0, headers: [], recognized: [] };
+	if (!headerRow) return { rows: [], skipped: 0, contactsSkipped: 0, headers: [], recognized: [] };
 
 	const headers = headerRow.map((h) => h.trim());
 	const fieldFor = headers.map((h) => HEADER_ALIASES[h.toLowerCase()]);
@@ -166,6 +169,7 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 
 	const rows: ParsedApplication[] = [];
 	let skipped = 0;
+	let contactsSkipped = 0;
 
 	for (const raw of dataRows) {
 		const record: Partial<CsvApplication> = {};
@@ -197,16 +201,13 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 				email: contactEmail ?? "",
 				phone: contactPhone ?? "",
 			});
-			if (!contact.success) {
-				skipped++;
-				continue;
-			}
-			application.contacts = [contact.data];
+			if (contact.success) application.contacts = [contact.data];
+			else contactsSkipped++;
 		}
 		rows.push(application as ParsedApplication);
 	}
 
-	return { rows, skipped, headers, recognized };
+	return { rows, skipped, contactsSkipped, headers, recognized };
 }
 
 export type ApplicationExportOptions = {

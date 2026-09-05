@@ -42,12 +42,20 @@ Supported headers include:
 | **Notes** | `Notes`, `Note` |
 | **Job posting URL** | `URL`, `Link`, `Job URL`, `Job Posting` |
 | **Tags** | `Tags` |
+| **Contact name** | `Contact Name` |
+| **Contact role** | `Contact Role` |
+| **Contact label** | `Contact Type` |
+| **Contact email** | `Contact Email` |
+| **Contact phone** | `Contact Phone` |
 
 Tags can be separated with commas, semicolons, or vertical bars.
 
+Each row can carry one contact. A contact needs a `Contact Name`, and `Contact Email` must be a valid email address — if
+either is wrong, the contact is dropped and the application still imports.
+
 ```csv
-Company,Role,Stage,Location,Salary,Source,Tags
-Stripe,Frontend Engineer,applied,Remote,$180k,LinkedIn,remote;react
+Company,Role,Stage,Location,Salary,Source,Tags,Contact Name,Contact Email,Contact Phone
+Stripe,Frontend Engineer,applied,Remote,$180k,LinkedIn,remote;react,Jane Doe,jane@example.com,+1 555 0100
 ```
 
 ## Import applications
@@ -63,6 +71,7 @@ Stripe,Frontend Engineer,applied,Remote,$180k,LinkedIn,remote;react
 
   <Step title="Fix skipped rows">
     Rows without a company or role are skipped. Add the missing values before importing if you want those rows included.
+    The preview also counts skipped contacts — those rows still import, just without the contact.
   </Step>
 
   <Step title="Import">
@@ -100,6 +109,11 @@ Reactive Resume imports up to 500 applications at a time. If your CSV has more t
 ### Some rows were skipped
 
 Make sure every row has both a company and a role. These fields are required.
+
+### A contact did not import
+
+The contact needs a `Contact Name`, and `Contact Email` must be a valid address. The application imports either way — fix
+the contact columns and import that row again if you want the contact.
 
 ### A column was not recognized
 

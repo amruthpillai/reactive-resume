@@ -54,21 +54,26 @@ describe("mapCsvToApplications", () => {
 		expect(skipped).toBe(2);
 	});
 
-	it("skips rows with malformed contact emails", () => {
-		const { rows, skipped } = mapCsvToApplications(
+	it("keeps the application and drops only the contact when the email is malformed", () => {
+		const { rows, skipped, contactsSkipped } = mapCsvToApplications(
 			parseCsv("Company,Role,Contact Name,Contact Email\nStripe,Eng,Jane Doe,not-an-email"),
 		);
 
-		expect(rows).toEqual([]);
-		expect(skipped).toBe(1);
+		expect(rows).toHaveLength(1);
+		expect(rows[0]?.company).toBe("Stripe");
+		expect(rows[0]?.contacts).toBeUndefined();
+		expect(skipped).toBe(0);
+		expect(contactsSkipped).toBe(1);
 	});
 
-	it("skips rows with contact fields but no contact name", () => {
-		const { rows, skipped } = mapCsvToApplications(
+	it("keeps the application when contact fields are present but the contact name is missing", () => {
+		const { rows, skipped, contactsSkipped } = mapCsvToApplications(
 			parseCsv("Company,Role,Contact Email,Contact Phone\nStripe,Eng,jane@example.com,+1 555 0100"),
 		);
 
-		expect(rows).toEqual([]);
-		expect(skipped).toBe(1);
+		expect(rows).toHaveLength(1);
+		expect(rows[0]?.contacts).toBeUndefined();
+		expect(skipped).toBe(0);
+		expect(contactsSkipped).toBe(1);
 	});
 });

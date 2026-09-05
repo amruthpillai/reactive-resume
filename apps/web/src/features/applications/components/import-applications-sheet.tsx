@@ -122,6 +122,14 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 									</span>
 								)}
 							</div>
+							{parsed.contactsSkipped > 0 && (
+								<p className="mt-1.5 text-muted-foreground text-xs">
+									<Trans>
+										{parsed.contactsSkipped} contact(s) skipped (invalid email or missing Contact Name). Those
+										applications still import.
+									</Trans>
+								</p>
+							)}
 							{overflow > 0 && (
 								<p className="mt-1.5 text-amber-600 text-xs dark:text-amber-500">
 									<Trans>

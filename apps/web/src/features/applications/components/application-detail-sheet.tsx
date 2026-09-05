@@ -14,7 +14,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { STAGES } from "@reactive-resume/schema/applications/data";
+import { contactSchema, STAGES } from "@reactive-resume/schema/applications/data";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	Dialog,
@@ -556,26 +556,25 @@ type ContactsEditorProps = {
 function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 	const [adding, setAdding] = useState(false);
 	const [draft, setDraft] = useState(INITIAL_CONTACT_DRAFT);
+	const [error, setError] = useState("");
 
 	const reset = () => {
 		setDraft(INITIAL_CONTACT_DRAFT);
+		setError("");
 		setAdding(false);
 	};
 
+	// The inputs aren't in a <form>, so `type="email"` never runs native constraint validation.
+	// Parse with the schema the API enforces, otherwise a typo'd email is rejected server-side
+	// after reset() has already thrown the draft away, leaving only a generic error toast.
 	const add = () => {
-		if (pending) return;
-		const name = draft.name.trim();
-		if (!name) return;
-		onChange([
-			...contacts,
-			{
-				name,
-				role: draft.role.trim(),
-				type: draft.type.trim(),
-				email: draft.email.trim(),
-				phone: draft.phone.trim(),
-			},
-		]);
+		if (pending || !draft.name.trim()) return;
+		const parsed = contactSchema.safeParse(draft);
+		if (!parsed.success) {
+			setError(t`Enter a valid email address.`);
+			return;
+		}
+		onChange([...contacts, parsed.data]);
 		reset();
 	};
 
@@ -656,7 +655,10 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 							type="email"
 							value={draft.email}
 							placeholder={t`Email (optional)`}
-							onChange={(event) => setDraft((d) => ({ ...d, email: event.target.value }))}
+							onChange={(event) => {
+								setError("");
+								setDraft((d) => ({ ...d, email: event.target.value }));
+							}}
 							onKeyDown={submitOnEnter}
 						/>
 						<Input
@@ -673,6 +675,7 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 						<option value="Referral" />
 						<option value="Interviewer" />
 					</datalist>
+					{error && <p className="text-destructive text-xs">{error}</p>}
 					<div className="flex justify-end gap-2">
 						<Button type="button" size="sm" variant="ghost" onClick={reset}>
 							<Trans>Cancel</Trans>
