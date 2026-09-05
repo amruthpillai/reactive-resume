@@ -50,5 +50,4 @@ export const coverLetterDto = {
 };
 
 export type CoverLetterListInput = z.infer<typeof coverLetterDto.list.input>;
-export type CoverLetterCreateInput = z.infer<typeof coverLetterDto.create.input>;
 export type CoverLetterUpdateInput = z.infer<typeof coverLetterDto.update.input>;

@@ -10,7 +10,7 @@ import { Label } from "@reactive-resume/ui/components/label";
 import { RichInput } from "@/components/input/rich-input";
 import { getReadableErrorMessage } from "@/libs/error-message";
 
-export type CoverLetterChanges = Pick<CoverLetter, "name" | "recipient" | "content"> & { expectedRevision: number };
+type CoverLetterChanges = Pick<CoverLetter, "name" | "recipient" | "content"> & { expectedRevision: number };
 export type CoverLetterEditorProps = {
 	letter: CoverLetter;
 	disabled?: boolean;
