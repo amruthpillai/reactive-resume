@@ -78,13 +78,45 @@ The agent works best with concrete instructions:
 
 You can attach files or images from the composer. The agent reads uploaded attachments when they are relevant to your request.
 
+For supplied text, paste the content directly into the chat. Plain text, Markdown, and JSON attachments are available to the agent as extracted text. Images and supported files such as PDFs are passed directly to the selected provider when it can use them. If an attachment format is unsupported by the selected provider, paste the relevant text instead.
+
 <Note>
   Text input is supported. Voice input is not supported in the agent workspace yet.
 </Note>
 
+## Tailor a resume to a supplied job description
+
+Use this controlled workflow to test tailoring without relying on live web research:
+
+<Steps>
+  <Step title="Set up an AI provider">
+    In **Dashboard → Settings → Integrations**, configure a supported AI provider, test it, and make sure it is enabled. Then return to **Agents**.
+  </Step>
+
+  <Step title="Open a synthetic resume draft">
+    Start a new thread and select a resume containing synthetic experience data. The agent creates an isolated AI draft, so the source resume remains unchanged.
+  </Step>
+
+  <Step title="Supply the target role">
+    Paste this synthetic job description into the chat:
+
+    ```text
+    Target role: backend engineer. Required: TypeScript and PostgreSQL.
+    ```
+
+    Then ask: "Tailor the existing experience for this role. Do not invent qualifications or experience."
+  </Step>
+
+  <Step title="Review and restore if needed">
+    Before sending the request, open the thread menu and enable **Review edits** if you want to approve or deny each proposed patch. After a patch is applied, review the updated draft and open **Patch applied** to inspect it. Use **Restore** to roll the draft back to the state before that patch; restoring an older patch also rolls back later patches.
+  </Step>
+</Steps>
+
+This workflow also works when the selected provider/model has no live web search. Supplying the job description gives the agent the context it needs for ordinary resume editing.
+
 ## Review patches
 
-When the agent edits the resume, the patch is applied immediately to the AI draft. The chat shows a small **Patch applied** line.
+By default, the agent applies resume patches immediately to the AI draft. Turn on **Review edits** in the thread menu if you want to approve or deny patches before they are applied. Applied patches appear in chat as a small **Patch applied** line.
 
 Open the line to inspect the raw JSON Patch and use **Restore** if you want to roll the draft back to the state before that patch. Restoring an older patch also rolls back patches applied after it.
 

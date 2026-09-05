@@ -45,7 +45,11 @@ Restoring an older patch rolls back that patch and any patches applied after it.
 
 Live web research is handled only by the selected AI provider's native web search tool. When the provider/model supports it, the agent can use `web_search` for current company, industry, role, or URL-based context.
 
+Provider-native `web_search` is not JSearch and does not restore the removed structured job-listings experience. It supplies web context to the agent; it does not provide a structured job-results API or guarantee that a provider/model can search.
+
 When the provider/model does not support native web search, the agent still works for normal resume editing. If you ask it to browse, search the web, fetch a URL, or use current online context, it should tell you that live web research is unavailable with the selected provider/model and ask you to paste or attach the relevant content instead.
+
+For a controlled workflow that works without live research, follow [Tailor a resume to a supplied job description](/guides/using-ai-agent#tailor-a-resume-to-a-supplied-job-description). Configure, test, and enable providers as described in [Using artificial intelligence](/guides/using-ai).
 
 For self-hosted deployments:
 
