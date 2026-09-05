@@ -82,25 +82,25 @@ function backgroundAt(raster: Awaited<ReturnType<typeof rasterizePdf>>[number], 
 }
 
 describe("physical page margins (#3337, #3175)", () => {
-	it.each(["#00ff00", "rgba(0, 255, 0, 0.5)"])(
-		"keeps Glalie semantic background continuous through margins (%s)",
-		async (color) => {
-			const { rasters } = await renderOverflow(
-				"glalie",
-				"main",
-				"en-US",
-				"semantic",
-				undefined,
-				`@version 1; template-part[name="sidebar-background"] { background-color: ${color}; }`,
-			);
-			const overflow = rasters[1];
-			if (!overflow) throw new Error("Missing overflow raster");
-			const inside = backgroundAt(overflow, 3, 100);
-			expect(inside).not.toEqual([242, 178, 178]);
-			expect(backgroundAt(overflow, 3, 3)).toEqual(inside);
-			expect(backgroundAt(overflow, 3, overflow.height - 4)).toEqual(inside);
-		},
-	);
+	it.each([
+		["#00ff00", [44, 212, 8]],
+		["rgba(0, 255, 0, 0.5)", [146, 212, 110]],
+	] as const)("keeps Glalie semantic background continuous through margins (%s)", async (color, expected) => {
+		const { rasters } = await renderOverflow(
+			"glalie",
+			"main",
+			"en-US",
+			"semantic",
+			undefined,
+			`@version 1; template-part[name="sidebar-background"] { background-color: ${color}; }`,
+		);
+		const overflow = rasters[1];
+		if (!overflow) throw new Error("Missing overflow raster");
+		const inside = backgroundAt(overflow, 3, 100);
+		expect(inside).toEqual(expected);
+		expect(backgroundAt(overflow, 3, 3)).toEqual(inside);
+		expect(backgroundAt(overflow, 3, overflow.height - 4)).toEqual(inside);
+	});
 	it("preserves the existing Glalie sidebar background on full-width overflow", async () => {
 		const { rasters } = await renderOverflow("glalie", "main", "en-US", "semantic", undefined, "@version 1;", true);
 		const overflow = rasters[1];
