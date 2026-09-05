@@ -130,6 +130,33 @@ describe("skill rating alignment (#3343)", () => {
 		expect(rows).toHaveLength(2);
 		expect(text).toContain("Keyword11");
 	});
+	it("aligns language ratings in multi-column rows with unequal fluency text", async () => {
+		const {
+			rows: [rows],
+			text,
+		} = await renderRatings({
+			columns: 2,
+			count: 0,
+			configure: (data) => {
+				data.metadata.layout.pages = [{ fullWidth: true, main: ["languages"], sidebar: [] }];
+				data.sections.languages.columns = 2;
+				data.sections.languages.items = [
+					{ id: "english", hidden: false, language: "English", fluency: "Native", level: 5 },
+					{
+						id: "german",
+						hidden: false,
+						language: "German",
+						fluency:
+							"Professional working proficiency with deliberately long wrapping text across several lines in the language grid",
+						level: 5,
+					},
+				];
+			},
+		});
+		expect(rows).toHaveLength(1);
+		expect(rows?.[0]?.circles).toBe(10);
+		expect(text).toContain("Professional working proficiency");
+	});
 	it("does not add a rating for a skill with level zero", async () => {
 		const {
 			rows: [rows],

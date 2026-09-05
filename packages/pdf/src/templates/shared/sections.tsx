@@ -1191,10 +1191,12 @@ const LanguagesSection = ({ sectionId = "languages", sectionData }: ItemSectionP
 			<SectionItems columns={languages.columns}>
 				{items.map((item) => (
 					<SectionItem key={item.id} itemId={item.id}>
-						<SectionItemHeader>
-							<Bold semanticField="language">{item.language}</Bold>
-							<Text semanticField="fluency">{item.fluency}</Text>
-						</SectionItemHeader>
+						<View style={{ flexGrow: languages.columns > 1 ? 1 : 0 }}>
+							<SectionItemHeader>
+								<Bold semanticField="language">{item.language}</Bold>
+								<Text semanticField="fluency">{item.fluency}</Text>
+							</SectionItemHeader>
+						</View>
 						<LevelDisplay level={item.level} />
 					</SectionItem>
 				))}
