@@ -416,16 +416,16 @@ To update your Reactive Resume installation to the latest version:
    The database and upload storage are independent resources. Recreating the app container must preserve both the
    PostgreSQL data volume or managed database and the `/app/data` mount or S3 bucket.
 
-2. **Pull the latest images** for all services defined in your Docker Compose file.
+2. **Pull the latest app image.** Leave the PostgreSQL service unchanged.
 
    ```bash
-   docker compose pull
+   docker compose pull reactive-resume
    ```
 
-3. **Restart the containers** to run the new images.
+3. **Recreate only the app container** to run the new image.
 
    ```bash
-   docker compose up -d
+   docker compose up -d --no-deps reactive-resume
    ```
 
 4. **Check migration/startup logs** after deploy.
@@ -439,10 +439,12 @@ To update your Reactive Resume installation to the latest version:
    docker image prune -f
    ```
 
-This process updates app services and automatically runs DB migrations on startup. If migration fails, restore from backup and fix configuration before retrying.
+This process updates the app container and automatically runs DB migrations on startup. If migration fails, restore from backup and fix configuration before retrying.
 
-Update PostgreSQL separately from the app. For a PostgreSQL major-version upgrade, follow the upgrade procedure for your
-database image, host, or managed provider; pulling a new app image does not upgrade or migrate the PostgreSQL server.
+Update PostgreSQL separately from the app. Choose a supported, major-pinned PostgreSQL image or select the target version
+through your managed provider, then follow that image's, host's, or provider's upgrade procedure. Back up the database
+and verify that the backup can be restored before a major-version upgrade. Pulling a new app image and running app
+migrations do not upgrade the PostgreSQL server.
 
 ## Backups (recommended)
 
