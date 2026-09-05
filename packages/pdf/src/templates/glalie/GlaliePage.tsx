@@ -19,6 +19,7 @@ import {
 import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
+import { PageMarginBackground } from "../shared/page-margin-background";
 import { hasTemplatePicture } from "../shared/picture";
 import {
 	Heading,
@@ -78,24 +79,34 @@ export const GlaliePage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 		<Page
 			{...semanticPageProps}
 			size={semanticPageSize ?? pageSize}
-			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+			style={composeStyles(
+				styles.page,
+				{ paddingVertical: metrics.page.paddingVertical },
+				pageMinHeightStyle,
+				semanticPageStyle,
+			)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors} features={glalieFeatures}>
 				{showSidebar && (
 					<SemanticTemplatePartView
 						ownerNodeKey={semanticNodeKeys.region(pageNodeKey, "sidebar")}
 						partKeys={["sidebar-background"]}
+						fixed
 						style={styles.sidebarBackground}
 					/>
 				)}
 
-				<View style={styles.layout}>
+				<View style={composeStyles(styles.layout, { marginTop: -metrics.page.paddingVertical })}>
 					{showSidebar && (
 						<View
 							style={composeStyles(styles.sidebarColumn, {
 								width: `${metadata.layout.sidebarWidth}%`,
 							})}
 						>
+							<PageMarginBackground
+								color={colors.sidebarBackground ?? colors.background}
+								margin={metrics.page.paddingVertical}
+							/>
 							{showHeader && <Header styles={styles} />}
 
 							{!page.fullWidth && (

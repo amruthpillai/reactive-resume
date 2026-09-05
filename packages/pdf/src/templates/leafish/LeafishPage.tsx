@@ -79,12 +79,17 @@ export const LeafishPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pa
 		<Page
 			{...semanticPageProps}
 			size={semanticPageSize ?? pageSize}
-			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+			style={composeStyles(
+				styles.page,
+				{ paddingVertical: metrics.page.paddingVertical },
+				pageMinHeightStyle,
+				semanticPageStyle,
+			)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
 
-				<View style={styles.body}>
+				<View style={composeStyles(styles.body, showHeader ? undefined : { paddingTop: 0 })}>
 					<SemanticRegionView region="main" style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
 						{mainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
@@ -183,7 +188,7 @@ const useLeafishTemplate = (): LeafishTemplate => {
 			levelItemActive: {
 				backgroundColor: primary,
 			},
-			header: {},
+			header: { marginTop: -metrics.page.paddingVertical },
 			headerIntro: {
 				backgroundColor: primaryTintLight,
 				paddingHorizontal: metrics.page.paddingHorizontal,

@@ -18,6 +18,7 @@ import {
 import { TemplateProvider } from "../shared/context";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
+import { PageMarginBackground } from "../shared/page-margin-background";
 import { hasTemplatePicture } from "../shared/picture";
 import {
 	Heading,
@@ -65,20 +66,26 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader, 
 	const hasPicture = hasTemplatePicture(picture);
 	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
 	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
+	const sidebarStyle = useResolvedNode(semanticNodeKeys.region(pageNodeKey, "sidebar")).style;
 
 	return (
 		<Page
 			{...semanticPageProps}
 			size={semanticPageSize ?? pageSize}
-			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+			style={composeStyles(
+				styles.page,
+				{ paddingVertical: metrics.page.paddingVertical },
+				pageMinHeightStyle,
+				semanticPageStyle,
+			)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				<SemanticRegionView
 					region="main"
 					style={composeStyles(styles.mainColumn, {
+						marginTop: -metrics.page.paddingVertical,
 						paddingTop: metrics.page.paddingVertical,
 						paddingRight: page.fullWidth ? metrics.page.paddingHorizontal : metrics.columnGap,
-						paddingBottom: metrics.page.paddingVertical,
 						paddingLeft: metrics.page.paddingHorizontal,
 						rowGap: metrics.sectionGap,
 					})}
@@ -95,16 +102,20 @@ export const ChikoritaPage = ({ page, pageSize, pageMinHeightStyle, showHeader, 
 					style={composeStyles(styles.sidebarColumn, {
 						display: page.fullWidth ? "none" : "flex",
 						flexBasis: `${metadata.layout.sidebarWidth}%`,
+						marginTop: -metrics.page.paddingVertical,
 						paddingTop:
 							showHeader && hasPicture
 								? metrics.page.paddingVertical + picture.size + metrics.itemGapY * 3
 								: metrics.page.paddingVertical,
 						paddingRight: metrics.page.paddingHorizontal,
-						paddingBottom: metrics.page.paddingVertical,
 						paddingLeft: metrics.columnGap,
 						rowGap: metrics.sectionGap,
 					})}
 				>
+					<PageMarginBackground
+						color={sidebarStyle?.backgroundColor ?? colors.primary}
+						margin={metrics.page.paddingVertical}
+					/>
 					{sidebarSections.map((section) => (
 						<Fragment key={section}>
 							<Section section={section} placement="sidebar" />
