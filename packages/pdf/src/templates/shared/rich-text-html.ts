@@ -167,7 +167,10 @@ export const convertPseudoBulletParagraphs = (html: string, direction: "ltr" | "
 		const level = Number(parse(full).querySelector("p")?.getAttribute("data-indent"));
 		if (!Number.isInteger(level) || level <= 0 || level > 8) return converted;
 		// Keep the original paragraph's offset around the entire generated list.
-		return converted.replace("<ul>", `<ul style="margin-${direction === "rtl" ? "right" : "left"}: ${level * 18}pt">`);
+		return converted.replace(
+			"<ul>",
+			`<ul data-paragraph-indent="${level}" style="margin-${direction === "rtl" ? "right" : "left"}: ${level * 18}pt">`,
+		);
 	});
 
 const decodeSoftHyphens = (node: Node): void => {

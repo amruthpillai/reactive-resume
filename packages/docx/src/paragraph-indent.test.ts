@@ -39,6 +39,13 @@ describe("DOCX paragraph indentation (#3397)", () => {
 		expect(xml).toContain('"w:i"');
 	});
 
+	it("preserves the quote inset on code blocks without indenting ordinary code blocks", () => {
+		const quoted = paragraphXml("<blockquote><pre><code>First</code></pre></blockquote>");
+		expect(quoted).toContain('"w:start":720');
+		expect(quoted).toContain("Courier New");
+		expect(paragraphXml("<pre><code>First</code></pre>")).not.toContain('"w:ind"');
+	});
+
 	it.each(["en-US", "he-IL", "ar-SA"])(
 		"uses the resume locale for logical indentation in %s DOCX documents",
 		(locale) => {

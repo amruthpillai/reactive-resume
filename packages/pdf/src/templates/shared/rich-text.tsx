@@ -21,7 +21,7 @@ import {
 	richTextMarkClassName,
 	richTextSemanticNodeKeyAttribute,
 } from "./rich-text-html";
-import { renderRichTextParagraph, toRichTextStyleArray } from "./rich-text-renderers";
+import { renderRichTextParagraph, renderWithBoundedIndent, toRichTextStyleArray } from "./rich-text-renderers";
 import {
 	createRichTextProseSpacing,
 	getRichTextEdgeTrimStyle,
@@ -122,6 +122,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 		element.getAttribute(richTextSemanticNodeKeyAttribute) ??
 		(richTextNodeKey ? getRichTextSemanticNodeKey(richTextNodeKey, element, richTextMarkClassName) : undefined);
 	const resolvedFor = (element: Parameters<typeof getRichTextSemanticNodeKey>[1]) => resolveNode(keyFor(element));
+
 	const renderText = ({
 		element,
 		style,
@@ -135,11 +136,14 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 		const resolved = resolveNode(nodeKey);
 		const visible = isNodeVisible(nodeKey);
 		if (!visible) return null;
-		return (
+		const text = (
 			<PdfText {...resolvedPdfTextProps(resolved)} style={composeStyles(style, resolved.style, safeTextStyle)}>
 				{textChildren}
 			</PdfText>
 		);
+		return /^H[1-6]$/.test(element.tagName) && Number(element.attributes["data-indent"]) > 0
+			? renderWithBoundedIndent(text, rtl)
+			: text;
 	};
 	const renderView = ({
 		element,
@@ -154,11 +158,12 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 		const resolved = resolveNode(nodeKey);
 		const visible = isNodeVisible(nodeKey);
 		if (!visible) return null;
-		return (
+		const view = (
 			<View {...resolvedPdfFlowProps(resolved)} style={composeStyles(style, resolved.style)}>
 				{viewChildren}
 			</View>
 		);
+		return Number(element.attributes["data-paragraph-indent"]) > 0 ? renderWithBoundedIndent(view, rtl) : view;
 	};
 
 	return (
@@ -223,6 +228,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					const paragraphProps = {
 						...props,
 						style: props.style,
+						indent: Number(props.element.attributes["data-indent"]),
 						semanticStyle: resolved.style,
 						textProps: { ...resolvedPdfTextProps(resolved), hyphenationCallback },
 						rtl,

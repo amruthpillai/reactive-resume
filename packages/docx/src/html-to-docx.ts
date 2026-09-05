@@ -224,6 +224,7 @@ function processBlockElement(
 			paragraphs.push(
 				new Paragraph({
 					children: [new TextRun({ text, font: "Courier New", ...mergedStyle })],
+					...(quoteIndent ? { indent: { start: quoteIndent } } : {}),
 				}),
 			);
 		}
