@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 114 issues audited; verification continues for reports needing exact fixtures or deployment reproduction.
-- 16 fix PRs created: 15 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
+- 20 fix PRs created: 19 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
 - Eight other issues closed with evidence: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: #3392 MCP OAuth integration, #3360 approved download-button preference, #3337/#3175 continuation margins, and #3255 approved cover-letter library design.
+- In progress: #3255 approved cover-letter library, #3017 picture borders/shadows, and OAuth CI verification.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -38,6 +38,11 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3366](https://github.com/amruthpillai/reactive-resume/issues/3366) | [#3414](https://github.com/amruthpillai/reactive-resume/pull/3414) | Public PDF downloads record explicit events after browser save initiation. CI confirms PDF bytes, totals/daily downloads and unchanged views. |
 | [#3348](https://github.com/amruthpillai/reactive-resume/issues/3348) | [#3415](https://github.com/amruthpillai/reactive-resume/pull/3415) | Semantic section heading and icon colors reach actual PDF drawing commands. Five graphics-state regressions and 688 PDF tests passed. |
 | [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180) | [#3417](https://github.com/amruthpillai/reactive-resume/pull/3417) | Moving items validates destinations and prunes only emptied custom source sections and affected empty pages; exact round-trip JSON, undo, 605 web tests and typecheck verified. |
+| [#3360](https://github.com/amruthpillai/reactive-resume/issues/3360) | [#3419](https://github.com/amruthpillai/reactive-resume/pull/3419) | Approved per-resume download-button preference persists, backs up with account data, and hides both public buttons. Browser E2E and combined migration fresh/upgrade verification passed. |
+| [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305) | [#3420](https://github.com/amruthpillai/reactive-resume/pull/3420) | JPEG/WebP encoding is preserved and oversized crops shrink proportionally until within 10MiB. Near-limit JPEG browser reproduction now uploads successfully; transparency is preserved for PNG/WebP. Validation errors explain the upload limit. |
+| [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) | [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421) | MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; CI test-isolation follow-up underway. |
+| [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | PDF page padding repeats across overflow while preserving template backgrounds; 42 actual-PDF geometry/raster cases pass. |
+| [#3175](https://github.com/amruthpillai/reactive-resume/issues/3175) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | Shared continuation-margin fix covers five affected templates, explicit headerless pages and full-width pages. |
 
 ## Product decisions
 
@@ -143,6 +148,10 @@ Classification describes the reported problem against the audit baseline; implem
 - Split into isolated fixes: additive DB schema/migration aligned against installed plugin; register resources and default DCR resource links; preserve safe callbackURL across login/register/2FA/social/passkey paths.
 - Do not blindly accept generated drops, nullability, unique/index changes. Verify existing populated OAuth rows survive upgrade.
 - Integration: fresh and upgraded DB DCR -> consent -> code -> token -> MCP; anonymous and existing session; TOTP and backup code; reject external/protocol-relative/backslash callback URLs.
+
+**Implementation:** [PR #3421](https://github.com/amruthpillai/reactive-resume/pull/3421). MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; CI test-isolation follow-up underway.
+
+**Related PRs:** [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421)
 
 ### [#3391](https://github.com/amruthpillai/reactive-resume/issues/3391) — Show Notes on job application detail view
 
@@ -338,7 +347,11 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Add per-resume presentation flag defaulting to visible, UI toggle in Sharing, and hide both public download controls. Preserve builder export. Test default, saved flag and public route.
 
+**Implementation:** [PR #3419](https://github.com/amruthpillai/reactive-resume/pull/3419). Approved per-resume download-button preference persists, backs up with account data, and hides both public buttons. Browser E2E and combined migration fresh/upgrade verification passed.
+
 **Product/scope note:** User approved; explicitly no limitation explanation in app.
+
+**Related PRs:** [#3419](https://github.com/amruthpillai/reactive-resume/pull/3419)
 
 ### [#3359](https://github.com/amruthpillai/reactive-resume/issues/3359) — Incorrect Link Preview Shows Template CV Instead of User's CV
 
@@ -523,10 +536,16 @@ Classification describes the reported problem against the audit baseline; implem
 - DitgarPage.tsx:213-216 puts no vertical padding on Page, while mainContent/sidebarContent :244-255 carry padding; ChikoritaPage.tsx:76-105 likewise pads nested regions. Glalie mainContent :223-226 lacks bottom padding.
 - Pikachu uses shared page-shell unlike affected templates. Static evidence supports pagination-padding cause, but exact multipage PDF fixture not generated yet.
 - Actual PDF geometry reproduction at main e549d114e: 60-paragraph experience, vertical margin48, two-column page. Ditgar/Chikorita/Glalie/Leafish second physical page text top=-1pt, first-page bottom14-25pt; Ditto second-page top2pt and first-page bottom11pt. Pikachu/Onyx controls respect top47-50pt and bottom>66pt. /tmp/audit-3337-margins.json and /tmp/margins-{template}.pdf. Separate exact template reports preserved; shared symptom positively reproduced.
+- Fix in .worktrees/issue-3337-page-margins: physical Page padding on Ditgar/Chikorita/Glalie/Leafish/Ditto; first-page offset retained, sidebar margin paint preserves baseline colors. Actual-PDF regression red10/14 -> green28 cases (semantic, legacy, both columns, RTL; all60 paragraphs retained; raster corner colors and first-header position guarded). PDF typecheck + Biome pass. Current fixture geometry /tmp/audit-3337-margins-fixed.json; baseline /tmp/audit-3337-margins.json.
+- Additional explicit-headerless/fullWidth PDF regression: Ditto initially started content at 96.5pt for marginY48 (2 failures, other 12 cases passed); conditional header gap fixes to requested margin. Final page-margins.test.tsx 42 tests pass, PDF typecheck passes. Earlier full PDF suite58files711tests passed before this bounded headerless correction.
 
 **Action plan:**
 
 - Generate long sections in Ditgar, Chikorita, Glalie, Leafish and control Pikachu; assert every physical page content honors marginY; move repeating margins to page shell while preserving edge-to-edge backgrounds.
+
+**Implementation:** [PR #3422](https://github.com/amruthpillai/reactive-resume/pull/3422). PDF page padding repeats across overflow while preserving template backgrounds; 42 actual-PDF geometry/raster cases pass.
+
+**Related PRs:** [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422)
 
 ### [#3334](https://github.com/amruthpillai/reactive-resume/issues/3334) — Import a PDF resume without requiring an AI provider
 
@@ -593,11 +612,17 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Evidence:**
 
-- Issue logs contain files 12,598,408–32,635,688 bytes. packages/api/src/features/storage/router.ts:9 caps size at 10*1024*1024. picture.tsx:492-515 uploads with no preflight size check; rejected server input surfaces generic validation message via getReadableErrorMessage.
+- Issue logs contain uploaded image/png files named .jpg, sizes12,598,408–32,635,688, above existing10MiB upload limit.
+- Actual Chromium execution of production crop function expanded deterministic6,498,294-byte JPEG into34,895,680-byte PNG. Preserving original JPEG compression produces7,725,008 bytes.
+- getReadableErrorMessage discarded ORPC BAD_REQUEST data.issues details. Two new regressions fail before fix and25tests pass afterward;602webtests/typecheck pass.
 
 **Action plan:**
 
-- Keep documented 10MB limit. Validate cropped file size before upload and show exact size limit; preserve server validation and map its issue detail into readable error. Test exact boundary, oversize cropped file, and crop fallback.
+- Merge/release PR3420 after browser UI regression passes. Preserve JPEG/WebP encoding during crop and show existing API size rejection for files still too large.
+
+**Implementation:** [PR #3420](https://github.com/amruthpillai/reactive-resume/pull/3420). JPEG/WebP encoding is preserved and oversized crops shrink proportionally until within 10MiB. Near-limit JPEG browser reproduction now uploads successfully; transparency is preserved for PNG/WebP. Validation errors explain the upload limit.
+
+**Related PRs:** [#3420](https://github.com/amruthpillai/reactive-resume/pull/3420)
 
 ### [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291) — [Bug] color picker visual bug
 
@@ -818,10 +843,16 @@ Classification describes the reported problem against the audit baseline; implem
 - Report specifically Ditto long section missing top margin; #3337 names different two-column templates. Do not collapse templates without comparison.
 - Nested-region padding/physical-page wrapping is shared risk; PDF pagination tests currently prove authored page CSS stability, not per-template content margins.
 - Actual PDF geometry reproduction at main e549d114e: 60-paragraph experience, vertical margin48, two-column page. Ditgar/Chikorita/Glalie/Leafish second physical page text top=-1pt, first-page bottom14-25pt; Ditto second-page top2pt and first-page bottom11pt. Pikachu/Onyx controls respect top47-50pt and bottom>66pt. /tmp/audit-3337-margins.json and /tmp/margins-{template}.pdf. Separate exact template reports preserved; shared symptom positively reproduced.
+- Fix in .worktrees/issue-3337-page-margins: physical Page padding on Ditgar/Chikorita/Glalie/Leafish/Ditto; first-page offset retained, sidebar margin paint preserves baseline colors. Actual-PDF regression red10/14 -> green28 cases (semantic, legacy, both columns, RTL; all60 paragraphs retained; raster corner colors and first-header position guarded). PDF typecheck + Biome pass. Current fixture geometry /tmp/audit-3337-margins-fixed.json; baseline /tmp/audit-3337-margins.json.
+- Additional explicit-headerless/fullWidth PDF regression: Ditto initially started content at 96.5pt for marginY48 (2 failures, other 12 cases passed); conditional header gap fixes to requested margin. Final page-margins.test.tsx 42 tests pass, PDF typecheck passes. Earlier full PDF suite58files711tests passed before this bounded headerless correction.
 
 **Action plan:**
 
 - Generate actual Ditto overflowing section and verify physical page top/bottom bounds; use margin matrix with #3337; fix common shell if same cause.
+
+**Implementation:** [PR #3422](https://github.com/amruthpillai/reactive-resume/pull/3422). Shared continuation-margin fix covers five affected templates, explicit headerless pages and full-width pages.
+
+**Related PRs:** [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422)
 
 ### [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174) — [Bug] Inputting a large line height causes custom rules deletion
 
