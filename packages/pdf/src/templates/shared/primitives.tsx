@@ -18,8 +18,9 @@ import {
 import { semanticNodeKeys } from "../../semantic/node-keys";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplatePageNodeKey, useTemplateStyle } from "./context";
 import { resolveIconSize } from "./icon-size";
+import { getPictureShadow } from "./picture-shadow";
 import { safeTextStyle } from "./safe-text-style";
-import { composeLinkStyles, composeStyles } from "./styles";
+import { composeLinkStyles, composeStyles, mergeStyles } from "./styles";
 
 const asStyleInput = (style: unknown): StyleInput => style as StyleInput;
 
@@ -451,7 +452,67 @@ export const SemanticHeaderPicture = ({ style, ...props }: ComponentProps<typeof
 	const visible = useSemanticNodeVisible(nodeKey);
 	if (!visible) return null;
 
-	return <Image {...props} style={composeStyles(asStyleInput(style), resolved.style)} />;
+	const pictureStyle = mergeStyles(asStyleInput(style), resolved.style);
+	// React PDF draws images over their borders unless the bitmap is inset.
+	const borderPadding = {
+		paddingTop: pictureStyle.borderTopWidth ?? pictureStyle.borderWidth ?? 0,
+		paddingRight: pictureStyle.borderRightWidth ?? pictureStyle.borderWidth ?? 0,
+		paddingBottom: pictureStyle.borderBottomWidth ?? pictureStyle.borderWidth ?? 0,
+		paddingLeft: pictureStyle.borderLeftWidth ?? pictureStyle.borderWidth ?? 0,
+	};
+	const shadow = getPictureShadow(pictureStyle);
+	if (!shadow) return <Image {...props} style={composeStyles(borderPadding, asStyleInput(style), resolved.style)} />;
+	const frameStyle = { ...pictureStyle };
+	delete frameStyle.overflow;
+	return (
+		<View
+			wrap={false}
+			style={composeStyles(frameStyle, {
+				borderWidth: 0,
+				borderTopWidth: 0,
+				borderRightWidth: 0,
+				borderBottomWidth: 0,
+				borderLeftWidth: 0,
+				padding: 0,
+				paddingTop: 0,
+				paddingRight: 0,
+				paddingBottom: 0,
+				paddingLeft: 0,
+				backgroundColor: "transparent",
+				opacity: 1,
+			})}
+		>
+			<Image
+				src={shadow.src}
+				style={{
+					position: "absolute",
+					left: -shadow.extent,
+					top: -shadow.extent,
+					right: -shadow.extent,
+					bottom: -shadow.extent,
+					opacity: pictureStyle.opacity ?? 1,
+				}}
+			/>
+			<Image
+				{...props}
+				style={composeStyles(borderPadding, pictureStyle, {
+					position: "relative",
+					top: 0,
+					right: 0,
+					bottom: 0,
+					left: 0,
+					width: "100%",
+					height: "100%",
+					margin: 0,
+					marginTop: 0,
+					marginRight: 0,
+					marginBottom: 0,
+					marginLeft: 0,
+					transform: "rotate(0deg)",
+				})}
+			/>
+		</View>
+	);
 };
 
 export const SectionHeadingIcon = ({
